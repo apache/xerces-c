@@ -17,7 +17,7 @@
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: December 20, 2002">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: December 24, 2002">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=08%2F28%2F02&amp;chfieldto=Now&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &XercesCVersion;.
@@ -27,6 +27,197 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>Date</td>
         <td>Contributor</td>
         <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2002-12-13</td>
+        <td>Khaled Noaman</td>
+        <td>Schema Errata:
+            <br/>1. E1-2
+            <br/>2. E1-10
+            <br/>3. E1-15
+            <br/>4. E1-16
+            <br/>5. E1-20
+            <br/>6. E1-21
+            <br/>7. E1-23
+            <br/>8. E1-27
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-13</td>
+        <td>PeiYong Zhang</td>
+        <td>Schema Errata:
+            <br/>1. E2-9  Base64.
+            <br/>2. E2-12 gMonth.
+            <br/>3. E2-16 maxExclusive.
+            <br/>4. E2-23 seconds part shall have at least one digit after the dot if it appears.
+            <br/>5. E2-24 Duration 'T': allow SchemaDateTimeException be propogated to client.
+            <br/>6. E2-25 language.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-13</td>
+        <td>Khaled Noaman</td>
+        <td>Performance:
+            <br/>1. [Bug 13695] Performance problem with large text nodes and XMLFormatter.cpp.
+            <br/>2. Make getNextChar/peekNextChar inline.
+            <br/>3. Reduce instruction counts in XMLReader.
+            <br/>4. Do not call XMLString::stringLen in XMLString::indexOf.
+            <br/>5. Use existing QName in XMLElementDecl instead of creating a new one everytime.
+            <br/>6. Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
+            <br/>7. Enable/disable calculation of src offset.
+            <br/>8. No need to use temporary buffer to hold namespace value in SAX2XMLReaderImpl.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-13</td>
+        <td>Tinny Ng</td>
+        <td>Performance:
+            <br/>1. DOM: call fParent.fOwnerDocument directly instead of fNode.getOwnerDocument.
+            <br/>2. Check for null string directly isntead of calling XMLString::stringLen.
+            <br/>3. New inline function XMLString::equals that simply returns true or false,
+                    use it instead of XMLString::compareString wherever applicable.
+            <br/>4. XERCES_XMLCH should not be classified as XMLRecognizer::OtherEncodings.
+            <br/>5. Pre uppercase the encodingString before calling encodingForName to avoid calling compareIString.
+            <br/>6. Use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
+            <br/>7. Reduce some instruction counts in XMLUTF8Transcoder.
+            <br/>8. [Bug 13447] Using LocalFileFormatTarget with DOMWriter is very slow.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-10</td>
+        <td>PeiYong Zhang</td>
+        <td>Validating Schema Float/Double in value space. Converting out-of-bound value into special values.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-10</td>
+        <td>Tinny Ng</td>
+        <td>NLS: DOMWriter should use message loader to load message instead of using hardcoded static stirng.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-06</td>
+        <td>Kevin King</td>
+        <td>[BUg 13840] DOMWriter: more pretty-print format feature.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-06</td>
+        <td>Tinny Ng</td>
+        <td>Fix: for file protocol, need to manually replace any character reference %xx first.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-06</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 9083] Make some classes be exportable.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-06</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 9697] Make GrammarResolver to be exportable.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-04</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Scanner Reorganization.  Create
+            XMLScannerResolver, WFXMLScanner, IGXMLScanner, DGXMLScanner, and SGXMLScanner.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-02</td>
+        <td>Andrew Bachmann</td>
+        <td>[Bug 12490] Patches required to build Xerces-C++ on BeOS R5.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-02</td>
+        <td>Adam Zell</td>
+        <td>[Bug 14723] Memory leak in atomicOpsMutex.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-02</td>
+        <td>Abe Backus</td>
+        <td>[Bug 13804] Update build and installation docs for cygwin.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-02</td>
+        <td>Peter A. Volchek</td>
+        <td>[Bug 14960] Opened up interface to expose user defined and built in registries.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-02</td>
+        <td>Gareth Reakes and Peter A. Volchek</td>
+        <td>[Bug 12188] Create NMTOKEN, ID, IDREF, ENTITY, NAME, NCNAME with appropriate base types. Some reordering of creation was required where dependencies resulted.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-02</td>
+        <td>Peter A. Volchek</td>
+        <td>[Bug 12238] Attributes without type declarations should be validated using AnySimpleTypeValidator, not the string validator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-26</td>
+        <td>Tinny Ng</td>
+        <td>Namespace Check:
+            <br/>1. xmlns:a="" where namespace URI is null is not valid.
+            <br/>2. xmlns:doc where xmlns is used as element prefix is not valid.
+            <br/>3. xmlns:xmlns where xmlns is used as prefix is not valid.
+            <br/>4. xmlns:xml="a" where xml is used as prefix but URI does not match the xml uri (http://www.w3.org/XML/1999/namespace) is not valid.
+            <br/>5. if validation is on, attribute values declared to be of types ID, IDREF(S), ENTITY(IES), and NOTATION are also Names, and thus should be colon-free.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-25</td>
+        <td>Tinny Ng</td>
+        <td>Thread-safe the static variable TransService::gMappings.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-22</td>
+        <td>Robert Buck</td>
+        <td>Add autodetection of MSVC++ version in packageBinaries.pl.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-22</td>
+        <td>Chris Larsson and Stephen Dulin</td>
+        <td>390: support record-oriented MVS datasets with the DOM Level 3 serialization APIs.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-11-22</td>
+        <td>Chris Larsson and Stephen Dulin</td>
+        <td>390: Uniconv390 support.
+        </td>
     </tr>
 
     <tr>
@@ -165,16 +356,16 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     </tr>
 
     <tr>
-        <td>2002-11-06</td>
-        <td>PeiYong Zhang</td>
-        <td>Samples Update: add command line option for "locale".
+        <td>2002-11-12</td>
+        <td>Tinny Ng</td>
+        <td>DOM Message: introduce a new message domain, XMLDOMMsg, for DOM Messages.
         </td>
     </tr>
 
     <tr>
         <td>2002-11-06</td>
         <td>PeiYong Zhang</td>
-        <td>Schema-Errata: E2-12: gMonth.
+        <td>Samples Update: add command line option for "locale".
         </td>
     </tr>
 
@@ -225,13 +416,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>2002-10-17</td>
         <td>PeiYong Zhang</td>
         <td>[Bug 13640] Getter methods not public in DecimalDatatypeValidator.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-10-16</td>
-        <td>Khaled Noaman</td>
-        <td>[Bug 13695] Performance problem with large text nodes and XMLFormatter.cpp.
         </td>
     </tr>
 
@@ -376,21 +560,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     </tr>
 
     <tr>
-        <td>2002-09-24</td>
-        <td>Tinny Ng</td>
-        <td>Performance: check for null string directly isntead of calling XMLString::stringLen.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-09-24</td>
-        <td>Tinny Ng</td>
-        <td>Performance: New inline function XMLString::equals that simply returns true or false,
-            use it instead of XMLString::compareString wherever applicable.
-        </td>
-    </tr>
-
-    <tr>
         <td>2002-09-23</td>
         <td>PeiYong Zhang</td>
         <td>Issue Panic_CantLoadMsgDomain if loadAMsgSet() fails.
@@ -406,14 +575,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
 
     <tr>
         <td>2002-09-23</td>
-        <td>Tinny Ng</td>
-        <td>DOM Performance: call fParent.fOwnerDocument directly instead of fNode.getOwnerDocument.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-09-23</td>
-        <td>Tinny Ng, Gareth Reakes and Thomas Ford</td>
+        <td>Gareth Reakes, Thomas Ford and Tinny Ng</td>
         <td>DOM L3: Support baseURI.
         </td>
     </tr>
