@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2004/03/01 15:03:08  peiyongz
+ * new getter: getHashModulus
+ *
  * Revision 1.6  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -265,6 +268,13 @@ MemoryManager* RefHash2KeysTableOf<TVal>::getMemoryManager() const
 {
     return fMemoryManager;
 }
+
+template <class TVal>
+unsigned int RefHash2KeysTableOf<TVal>::getHashModulus() const
+{
+    return fHashModulus;
+}
+
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOf: Putters
 // ---------------------------------------------------------------------------

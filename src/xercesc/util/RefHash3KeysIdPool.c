@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2004/03/01 15:03:08  peiyongz
+ * new getter: getHashModulus
+ *
  * Revision 1.10  2004/01/29 11:48:46  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -339,6 +342,13 @@ MemoryManager* RefHash3KeysIdPool<TVal>::getMemoryManager() const
 {
     return fMemoryManager;
 }
+
+template <class TVal>
+unsigned int RefHash3KeysIdPool<TVal>::getHashModulus() const
+{
+    return fHashModulus;
+}
+
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Putters
 // ---------------------------------------------------------------------------

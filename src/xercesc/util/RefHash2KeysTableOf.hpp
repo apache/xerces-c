@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/03/01 15:03:08  peiyongz
+ * new getter: getHashModulus
+ *
  * Revision 1.9  2004/01/29 11:48:46  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -201,6 +204,8 @@ public:
     const TVal* get(const void* const key1, const int key2) const;
 
     MemoryManager* getMemoryManager() const;
+    unsigned int   getHashModulus()   const;
+
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
