@@ -98,20 +98,19 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
         exit(-1);
     }
 };
-#endif
+
+
+#elif defined (AIX) || (SOLARIS) || (LINUX) || (HPUX)
+#include <pthread.h>
+#include <unistd.h>
+#include <errno.h>
+
 
 //------------------------------------------------------------------------------
 //
 //   UNIX specific code for starting threads
 //
 //------------------------------------------------------------------------------
-
-#if defined (AIX) || (SOLARIS)
-#include <pthread.h>
-#include <unistd.h>
-#include <errno.h>
-
-
 
 
 typedef void (*ThreadFunc)(void *);
@@ -150,6 +149,8 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 	
 	//pthread_join(tId, NULL);
 };    
+#else
+#error This platform is not supported
 #endif
 
 
