@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/06/14 21:03:48  knoaman
+ * Changed ref on elements to traverse the actual element decl, instead of just returning the qname.
+ *
  * Revision 1.20  2001/06/11 15:17:22  knoaman
  * StringTokenizer renamed to XMLStringTokenizer.
  *
@@ -1070,9 +1073,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     fCurrentScope = previousScope;
     resetCurrentTypeNameStack(0);
-    if (fCurrentScope == Grammar::TOP_LEVEL_SCOPE) {
-        fScopeCount = 0;
-    }
+
 
     return typeNameIndex;
 }
@@ -3333,7 +3334,7 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
                                                        localPart, 0,
                                                        Grammar::TOP_LEVEL_SCOPE);
 
-    //if not found, traverse the top level element that if referenced
+    //if not found, traverse the top level element that is referenced
     if (elemIndex == XMLElementDecl::fgInvalidElemId) {
 
         DOM_Element targetElem =
@@ -3345,6 +3346,9 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::RefElementNotFound, localPart);
             // REVISIT do we return 0 or what? for now we will return QName created
             return eltName;
+        }
+        else {
+            return traverseElementDecl(targetElem);
         }
     }
 
