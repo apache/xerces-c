@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/11/20 18:05:16  knoaman
+ * PSVI: Use a copy of the content spec node when creating the content model.
+ *
  * Revision 1.19  2003/11/13 23:20:47  peiyongz
  * initSize
  *
@@ -490,6 +493,7 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
 
     // expand the content spec first
     ContentSpecNode* aSpecNode = specNode;
+    XMLContentModel* retModel = 0;
     if (aSpecNode) {
 
         fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
@@ -497,21 +501,18 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
             fContentSpecOrgURISize * sizeof(unsigned int)
         ); //new unsigned int[fContentSpecOrgURISize];
         aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
+        retModel = buildContentModel(aSpecNode);
         fSpecNodesToDelete->addElement(aSpecNode);
     }
     else {
-        aSpecNode = convertContentSpecTree(fContentSpec, checkUPA);
-        if (aSpecNode != fContentSpec) {
-            if (!fAdoptContentSpec && (aSpecNode == fContentSpec->getFirst()))
-                fAdoptContentSpec = false;
-            else
-                fAdoptContentSpec = true;
-
-            fContentSpec = aSpecNode;
-        }
+        // building content model for the complex type
+        aSpecNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
+        aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
+        retModel = buildContentModel(aSpecNode);
+        delete aSpecNode;
     }
 
-    return buildContentModel(aSpecNode);
+    return retModel;
 }
 
 XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpecNode)
@@ -608,7 +609,7 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
         );
     }
      else if (((specType & 0x0f) == ContentSpecNode::Choice)
-          ||  (specType == ContentSpecNode::Sequence))
+          ||  ((specType & 0x0f) == ContentSpecNode::Sequence))
     {
         //
         //  Lets see if both of the children are leafs. If so, then it has to
@@ -698,7 +699,7 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
     }
     else if (((curType & 0x0f) == ContentSpecNode::Choice)
         ||   (curType == ContentSpecNode::All)
-        ||   (curType == ContentSpecNode::Sequence))
+        ||   ((curType & 0x0f) == ContentSpecNode::Sequence))
     {
         ContentSpecNode* childNode = curNode->getFirst();
         ContentSpecNode* leftNode = convertContentSpecTree(childNode, checkUPA);
