@@ -318,7 +318,36 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\TreeWalkerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDeclImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMException.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttribute.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttributeList.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIElement.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIItem.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\ValidationContextImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAnnotation.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeDeclaration.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeGroupDefinition.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeUse.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSComplexTypeDefinition.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSElementDeclaration.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSFacet.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSIDCDefinition.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSModel.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSModelGroup.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSModelGroupDefinition.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSMultiValueFacet.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSNamespaceItem.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSNotationDeclaration.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSObject.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSParticle.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSSimpleTypeDefinition.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSTypeDefinition.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileOutputStream.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinOutputStream.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj"/>
     <RESFILES value="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -328,7 +357,7 @@
     <LIBRARIES value=""/>
     <SPARELIBS value="rtl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi"/>
-    <PATHCPP value=".;"/>
+    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\Platforms\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -681,6 +710,35 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.cpp" FORMNAME="" UNITNAME="XMLDeclImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMException.cpp" FORMNAME="" UNITNAME="DOMException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMRangeException.cpp" FORMNAME="" UNITNAME="DOMRangeException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.cpp" FORMNAME="" UNITNAME="PSVIAttribute" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.cpp" FORMNAME="" UNITNAME="PSVIAttributeList" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.cpp" FORMNAME="" UNITNAME="PSVIElement" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.cpp" FORMNAME="" UNITNAME="PSVIItem" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.cpp" FORMNAME="" UNITNAME="ValidationContextImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.cpp" FORMNAME="" UNITNAME="XSAnnotation" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.cpp" FORMNAME="" UNITNAME="XSAttributeDeclaration" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.cpp" FORMNAME="" UNITNAME="XSAttributeGroupDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeUse.cpp" FORMNAME="" UNITNAME="XSAttributeUse" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSComplexTypeDefinition.cpp" FORMNAME="" UNITNAME="XSComplexTypeDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSElementDeclaration.cpp" FORMNAME="" UNITNAME="XSElementDeclaration" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSFacet.cpp" FORMNAME="" UNITNAME="XSFacet" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSIDCDefinition.cpp" FORMNAME="" UNITNAME="XSIDCDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSModel.cpp" FORMNAME="" UNITNAME="XSModel" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroup.cpp" FORMNAME="" UNITNAME="XSModelGroup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroupDefinition.cpp" FORMNAME="" UNITNAME="XSModelGroupDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp" FORMNAME="" UNITNAME="XSMultiValueFacet" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.cpp" FORMNAME="" UNITNAME="XSNamespaceItem" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSNotationDeclaration.cpp" FORMNAME="" UNITNAME="XSNotationDeclaration" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSObject.cpp" FORMNAME="" UNITNAME="XSObject" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.cpp" FORMNAME="" UNITNAME="XSParticle" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.cpp" FORMNAME="" UNITNAME="XSSimpleTypeDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp" FORMNAME="" UNITNAME="XSTypeDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp" FORMNAME="" UNITNAME="XSWildcard" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp" FORMNAME="" UNITNAME="BinFileOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp" FORMNAME="" UNITNAME="BinOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp" FORMNAME="" UNITNAME="DOMXPathException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp" FORMNAME="" UNITNAME="XSObjectFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1047Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
