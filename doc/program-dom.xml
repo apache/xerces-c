@@ -1014,7 +1014,7 @@
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/schema</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable the parser's schema support.  </td></tr>
                 <tr><th><em>false:</em></th><td> Disable the parser's schema support. </td></tr>
-                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>note</em></th><td> If set to true, namespace processing must also be turned on. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="builder-namespaces">namespaces</link>
