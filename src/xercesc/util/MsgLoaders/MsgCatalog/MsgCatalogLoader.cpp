@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/12/12 16:46:18  peiyongz
+ * MsgCatalog file name changed.
+ *
  * Revision 1.10  2002/12/06 16:49:47  peiyongz
  * $XERCESCROOT/msg created as home directory for message files.
  *
@@ -173,14 +176,14 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     char catuser[1024];
     memset(catuser, 0, sizeof catuser);
     strcpy(catuser, catpath);
-    strcat(catuser, "XMLMessages_");
+    strcat(catuser, "XercesMessages_");
     strcat(catuser, XMLMsgLoader::getLocale());
     strcat(catuser, ".cat");
         
     char catdefault[1024];
     memset(catdefault, 0, sizeof catdefault);
     strcpy(catdefault, catpath);
-    strcat(catdefault, "XMLMessages_en_US.cat");
+    strcat(catdefault, "XercesMessages_en_US.cat");
 
    /**
     * To open user-specified locale specific cat file
