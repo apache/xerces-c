@@ -90,10 +90,12 @@ public :
 	void doCleanup() {
 		// When performing cleanup, we only do this once, but we can
 		// cope if somehow we have been called twice.
-		if (m_cleanupFn) {
-			m_cleanupFn();
-			unregisterCleanup();
-		}
+		if (m_cleanupFn) 
+            m_cleanupFn();
+
+        // We need to remove "this" from the list
+        // irregardless of the cleanup Function
+        unregisterCleanup();
 	}
 
 	// This function is called during initialisation of static data to
@@ -125,7 +127,20 @@ public :
 	void unregisterCleanup() {
 		gXMLCleanupListMutex->lock();
 
-		// Unlink this object from the cleanup list
+        //
+        // To protect against some compiler's (eg hp11) optimization
+        // to change "this" as they update gXMLCleanupList
+        //
+        // refer to 
+        // void XMLPlatformUtils::Terminate()
+        //       ... 
+        //       while (gXMLCleanupList)
+		//            gXMLCleanupList->doCleanup();
+        //
+
+        XMLRegisterCleanup *tmpThis = (XMLRegisterCleanup*) this;
+
+        // Unlink this object from the cleanup list
 		if (m_nextCleanup) m_nextCleanup->m_prevCleanup = m_prevCleanup;
 		
 		if (!m_prevCleanup) gXMLCleanupList = m_nextCleanup;
@@ -134,7 +149,7 @@ public :
 		gXMLCleanupListMutex->unlock();
 		
 		// Reset the object to the default state
-		resetCleanup();
+		tmpThis->resetCleanup();
 	}
 
 	// The default constructor sets a state that ensures that this object
