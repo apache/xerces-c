@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/06/19 18:12:56  rahulj
+ * Suppress the comments, characters, ignoreableWhitespaces before
+ * root element. Only allow the PI's to get through. Still need to come
+ * to a consensus on this.
+ *
  * Revision 1.12  2000/06/17 02:00:55  rahulj
  * Also pass any PI's, comment's, character's occuring before root
  * element to the registered document Handler. Defect identified
@@ -512,6 +517,10 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
                                 , const unsigned int    length
                                 , const bool            cdataSection)
 {
+    // Suppress the chars before the root element.
+    if (!fElemDepth)
+        return;
+
     // Just map to the SAX document handler
     if (fDocHandler)
         fDocHandler->characters(chars, length);
@@ -527,6 +536,10 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
 
 void SAXParser::docComment(const XMLCh* const commentText)
 {
+    // Suppress passing through any comments before the root element.
+    if (!fElemDepth)
+        return;
+
     //
     //  SAX has no way to report this. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
@@ -614,6 +627,10 @@ void SAXParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const unsigned int    length
                                     , const bool            cdataSection)
 {
+    // Do not report the whitespace before the root element.
+    if (!fElemDepth)
+        return;
+
     // Just map to the SAX document handler
     if (fDocHandler)
         fDocHandler->ignorableWhitespace(chars, length);
