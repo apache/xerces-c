@@ -139,6 +139,10 @@ bool DOMParentNode::hasChildNodes() const
 
 
 DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
+    //not really in the specs, but better than nothing
+    if(newChild==NULL)
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
+
     DOMNodeImpl *thisNodeImpl = castToNodeImpl(this);
     if (thisNodeImpl->isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMParentNodeMemoryManager);
