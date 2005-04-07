@@ -1,5 +1,5 @@
 /*
- * Copyright 2001,2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2005/04/07 15:30:57  knoaman
+ * Update chars table with an NCName char mask instead of an XML letter mask
+ *
  * Revision 1.16  2005/01/07 15:28:49  amassari
  * Removed warnings
  *
@@ -1356,7 +1359,7 @@ int XPathScanner::scanNCName(const XMLCh* const data,
 
     XMLCh ch = data[currentOffset];
 
-    if (!XMLChar1_0::isXMLLetter(ch) && ch != chUnderscore) {
+    if (!XMLChar1_0::isFirstNCNameChar(ch)) {
         return currentOffset;
     }
 
@@ -1364,7 +1367,7 @@ int XPathScanner::scanNCName(const XMLCh* const data,
 
         ch = data[currentOffset];
 
-        if (ch == chColon || !XMLChar1_0::isNameChar(ch)) {
+        if (!XMLChar1_0::isNCNameChar(ch)) {
             break;
         }
     }

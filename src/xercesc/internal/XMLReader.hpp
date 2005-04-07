@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2001,2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2005/04/07 15:30:56  knoaman
+ * Update chars table with an NCName char mask instead of an XML letter mask
+ *
  * Revision 1.22  2005/04/04 15:11:38  cargilld
  * Fix a problem where illegal qualified names were not reported as errors.  Also store the colon position when searching for a qualified name to avoid looking it up again.
  *
@@ -243,6 +246,8 @@ public:
     bool isWhitespace(const XMLCh toCheck) const;
     bool isControlChar(const XMLCh toCheck) const;
     bool isPublicIdChar(const XMLCh toCheck) const;
+    bool isFirstNCNameChar(const XMLCh toCheck) const;
+    bool isNCNameChar(const XMLCh toCheck) const;    
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
@@ -602,6 +607,11 @@ inline bool XMLReader::isNameChar(const XMLCh toCheck) const
     return ((fgCharCharsTable[toCheck] & gNameCharMask) != 0);
 }
 
+inline bool XMLReader::isNCNameChar(const XMLCh toCheck) const
+{
+    return ((fgCharCharsTable[toCheck] & gNCNameCharMask) != 0);
+}
+
 inline bool XMLReader::isPlainContentChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
@@ -611,6 +621,12 @@ inline bool XMLReader::isPlainContentChar(const XMLCh toCheck) const
 inline bool XMLReader::isFirstNameChar(const XMLCh toCheck) const
 {
     return ((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0);
+}
+
+inline bool XMLReader::isFirstNCNameChar(const XMLCh toCheck) const
+{
+    return (((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0) 
+            && (toCheck != chColon));
 }
 
 inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck) const
@@ -625,7 +641,8 @@ inline bool XMLReader::isXMLChar(const XMLCh toCheck) const
 
 inline bool XMLReader::isXMLLetter(const XMLCh toCheck) const
 {
-    return ((fgCharCharsTable[toCheck] & gLetterCharMask) != 0);
+    return (((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0)
+            && (toCheck != chColon) && (toCheck != chUnderscore));
 }
 
 inline bool XMLReader::isWhitespace(const XMLCh toCheck) const

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002,2004 The Apache Software Foundation.
+ * Copyright 2002-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/04/07 15:30:57  knoaman
+ * Update chars table with an NCName char mask instead of an XML letter mask
+ *
  * Revision 1.5  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -44,7 +47,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  This file defines Char and utility that conforms to XML 1.0 and XML 1.1
 // ---------------------------------------------------------------------------
 // Masks for the fgCharCharsTable1_0 array
-const XMLByte   gLetterCharMask             = 0x1;
+const XMLByte   gNCNameCharMask             = 0x1;
 const XMLByte   gFirstNameCharMask          = 0x2;
 const XMLByte   gNameCharMask               = 0x4;
 const XMLByte   gPlainContentCharMask       = 0x8;
@@ -113,6 +116,8 @@ public:
     static bool isControlChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
 
     static bool isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
+    static bool isFirstNCNameChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
+    static bool isNCNameChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
 
     // -----------------------------------------------------------------------
     //  Special Non-conformant Public, static methods
@@ -157,8 +162,11 @@ private:
 // ---------------------------------------------------------------------------
 inline bool XMLChar1_0::isXMLLetter(const XMLCh toCheck, const XMLCh toCheck2)
 {
-    if (!toCheck2)
-        return ((fgCharCharsTable1_0[toCheck] & gLetterCharMask) != 0);
+    // An XML letter is a FirstNameChar minus ':' and '_'.
+    if (!toCheck2) {
+        return (((fgCharCharsTable1_0[toCheck] & gFirstNameCharMask) != 0)
+                && (toCheck != chColon) && (toCheck != chUnderscore));
+    }
     return false;
 }
 
@@ -169,10 +177,26 @@ inline bool XMLChar1_0::isFirstNameChar(const XMLCh toCheck, const XMLCh toCheck
     return false;
 }
 
+inline bool XMLChar1_0::isFirstNCNameChar(const XMLCh toCheck, const XMLCh toCheck2)
+{
+    if (!toCheck2) {
+        return (((fgCharCharsTable1_0[toCheck] & gFirstNameCharMask) != 0) && (toCheck != chColon));
+    }
+
+    return false;
+}
+
 inline bool XMLChar1_0::isNameChar(const XMLCh toCheck, const XMLCh toCheck2)
 {
     if (!toCheck2)
         return ((fgCharCharsTable1_0[toCheck] & gNameCharMask) != 0);
+    return false;
+}
+
+inline bool XMLChar1_0::isNCNameChar(const XMLCh toCheck, const XMLCh toCheck2)
+{
+    if (!toCheck2)
+        return ((fgCharCharsTable1_0[toCheck] & gNCNameCharMask) != 0);
     return false;
 }
 
@@ -291,6 +315,8 @@ public:
     static bool isControlChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
 
     static bool isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
+    static bool isFirstNCNameChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
+    static bool isNCNameChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
 
 private:
     // -----------------------------------------------------------------------
@@ -318,9 +344,8 @@ private:
 // ---------------------------------------------------------------------------
 inline bool XMLChar1_1::isXMLLetter(const XMLCh toCheck, const XMLCh toCheck2)
 {
-    if (!toCheck2)
-        return ((fgCharCharsTable1_1[toCheck] & gLetterCharMask) != 0);
-    return false;
+    /** XML 1.1 does not define a letter, so we use the 1.0 definition */
+    return XMLChar1_0::isXMLLetter(toCheck, toCheck2);
 }
 
 inline bool XMLChar1_1::isFirstNameChar(const XMLCh toCheck, const XMLCh toCheck2)
@@ -335,10 +360,35 @@ inline bool XMLChar1_1::isFirstNameChar(const XMLCh toCheck, const XMLCh toCheck
     return false;
 }
 
+inline bool XMLChar1_1::isFirstNCNameChar(const XMLCh toCheck, const XMLCh toCheck2)
+{
+    if (!toCheck2) {
+        return (((fgCharCharsTable1_1[toCheck] & gFirstNameCharMask) != 0) && (toCheck != chColon));
+    }
+    else {
+        if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
+           if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
+               return true;
+    }
+    return false;
+}
+
 inline bool XMLChar1_1::isNameChar(const XMLCh toCheck, const XMLCh toCheck2)
 {
     if (!toCheck2)
         return ((fgCharCharsTable1_1[toCheck] & gNameCharMask) != 0);
+    else {
+        if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
+           if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
+               return true;
+    }
+    return false;
+}
+
+inline bool XMLChar1_1::isNCNameChar(const XMLCh toCheck, const XMLCh toCheck2)
+{
+    if (!toCheck2)
+        return ((fgCharCharsTable1_1[toCheck] & gNCNameCharMask) != 0);
     else {
         if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
            if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
