@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2005/04/12 07:31:19  amassari
+ * Fix compiler errors on IRIX (jira# 1405)
+ *
  * Revision 1.16  2004/12/10 10:37:56  cargilld
  * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
  *
@@ -88,6 +91,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/internal/XMLReader.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -137,14 +141,14 @@ bool Base64::isInitialized = false;
  *
  */
 
-static inline void* getExternalMemory(MemoryManager* const allocator
-                                    , unsigned int const   sizeToAllocate)
+static void* getExternalMemory(  MemoryManager* const allocator
+                               , unsigned int const   sizeToAllocate)
 {
    return allocator ? allocator->allocate(sizeToAllocate)
        : ::operator new(sizeToAllocate);
 }
 
-static inline void* getInternalMemory(unsigned int const   sizeToAllocate)
+static void* getInternalMemory(unsigned int const   sizeToAllocate)
 {
     return XMLPlatformUtils::fgMemoryManager->allocate(sizeToAllocate);
 }
@@ -152,8 +156,8 @@ static inline void* getInternalMemory(unsigned int const   sizeToAllocate)
 /***
  * internal memory is deallocated by janitorArray
  */ 
-static inline void returnExternalMemory(MemoryManager* const allocator
-                                      , void*                buffer)
+static void returnExternalMemory(  MemoryManager* const allocator
+                                 , void*                buffer)
 {
     allocator ? allocator->deallocate(buffer)
         : ::operator delete(buffer);
