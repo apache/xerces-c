@@ -612,7 +612,36 @@
                 <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
             <p/>         
+
+            <anchor name="IgnoreAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>setIgnoreAnnotations</em></th></tr>
+                <tr><th><em>true:</em></th><td> Do not generate XSAnnotations when traversing a schema.</td></tr>
+                <tr><th><em>false:</em></th><td> Generate XSAnnotations when traversing a schema.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+            </table>
+            <p/>    
             
+            <anchor name="DisableDefaultEntityResolution"/>
+            <table>
+                <tr><th colspan="2"><em>setDisableDefaultEntityResolution</em></th></tr>
+                <tr><th><em>true:</em></th><td> The parser will not attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
+                <tr><th><em>false:</em></th><td> The parser will attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="SkipDTDValidation"/>
+            <table>
+                <tr><th colspan="2"><em>setSkipDTDValidation</em></th></tr>
+                <tr><th><em>true:</em></th><td> When schema validation is on the parser will ignore the DTD, except for entities.</td></tr>
+                <tr><th><em>false:</em></th><td> The parser will not ignore DTDs when validating.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>see:</em></th><td>
+                <link anchor="schema">DoSchema</link></td></tr>                
+            </table>
+            <p/>                                               
+                        
             <anchor name="XercesIgnoreCachedDTD"/>
             <table>            
                 <tr><th colspan="2"><em>setIgnoreCachedDTD</em></th></tr>
@@ -1337,6 +1366,38 @@
             </table>
             <p/>
             
+            <anchor name="builder-IgnoreAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/schema/ignore-annotations</em></th></tr>
+                <tr><th><em>true:</em></th><td> Do not generate XSAnnotations when traversing a schema.</td></tr>
+                <tr><th><em>false:</em></th><td> Generate XSAnnotations when traversing a schema.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>     
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIgnoreAnnotations </td></tr>           
+            </table>
+            <p/>    
+            
+            <anchor name="builder-DisableDefaultEntityResolution"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/disable-default-entity-resolution</em></th></tr>
+                <tr><th><em>true:</em></th><td> The parser will not attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
+                <tr><th><em>false:</em></th><td> The parser will attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>       
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDisableDefaultEntityResolution </td></tr>         
+            </table>
+            <p/>
+            
+            <anchor name="builder-SkipDTDValidation"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/validation/schema/skip-dtd-validation</em></th></tr>
+                <tr><th><em>true:</em></th><td> When schema validation is on the parser will ignore the DTD, except for entities.</td></tr>
+                <tr><th><em>false:</em></th><td> The parser will not ignore DTDs when validating.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSkipDTDValidation </td></tr>
+                <tr><th><em>see:</em></th><td>
+                <link anchor="builder-schema">Schema Validation</link></td></tr>                
+            </table>
+            <p/>                                               
+                        
             <anchor name="builder-IgnoreCachedDTD"/>
             <table>            
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/ignoreCachedDTD</em></th></tr>
