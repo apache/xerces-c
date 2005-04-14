@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2005/04/14 10:40:58  gareth
+ * Fix Jira 1406. Added include.
+ *
  * Revision 1.4  2004/09/08 13:56:09  peiyongz
  * Apache License Version 2.0
  *
@@ -37,6 +40,7 @@
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
