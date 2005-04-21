@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.58  2005/04/21 09:05:57  cargilld
+ * Add detection for UCS-2 and treat as another UTF16 alias.
+ *
  * Revision 1.57  2005/03/20 19:02:45  cargilld
  * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
  *
@@ -1824,7 +1827,9 @@ void DOMWriterImpl::processBOM()
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString2) == 0) ||
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString3) == 0) ||
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString4) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString5) == 0)  ) 
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString5) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString6) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString7) == 0)  ) 
     {
 #if defined(ENDIANMODE_LITTLE)
             fFormatter->writeBOM(BOM_utf16le, 2);

@@ -699,6 +699,33 @@ void Uniconv390TransService::initTransService()
        );
        gMappings->put
        (
+   		(void*)XMLUni::fgUTF16EncodingString5,
+           new EEndianNameMapFor<XMLUTF16Transcoder>
+           (
+               XMLUni::fgUTF16EncodingString5
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUTF16EncodingString6,
+           new EEndianNameMapFor<XMLUTF16Transcoder>
+           (
+               XMLUni::fgUTF16EncodingString6
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUTF16EncodingString7,
+           new EEndianNameMapFor<XMLUTF16Transcoder>
+           (
+               XMLUni::fgUTF16EncodingString7
+               , false
+           )
+       );
+       gMappings->put
+       (
    		(void*)XMLUni::fgUCS4EncodingString,
            new EEndianNameMapFor<XMLUCS4Transcoder>
            (
@@ -938,6 +965,33 @@ void Uniconv390TransService::initTransService()
            new EEndianNameMapFor<XMLUTF16Transcoder>
            (
                XMLUni::fgUTF16EncodingString4
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUTF16EncodingString5,
+           new EEndianNameMapFor<XMLUTF16Transcoder>
+           (
+               XMLUni::fgUTF16EncodingString5
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUTF16EncodingString6,
+           new EEndianNameMapFor<XMLUTF16Transcoder>
+           (
+               XMLUni::fgUTF16EncodingString6
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUTF16EncodingString7,
+           new EEndianNameMapFor<XMLUTF16Transcoder>
+           (
+               XMLUni::fgUTF16EncodingString7
                , false
            )
        );

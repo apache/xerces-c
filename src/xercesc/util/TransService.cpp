@@ -425,6 +425,24 @@ void XMLTransService::initTransService()
     );
     gMappings->put
     (
+		(void*)XMLUni::fgUTF16EncodingString6,
+        new EEndianNameMapFor<XMLUTF16Transcoder>
+        (
+            XMLUni::fgUTF16EncodingString6
+            , false
+        )
+    );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUTF16EncodingString7,
+        new EEndianNameMapFor<XMLUTF16Transcoder>
+        (
+            XMLUni::fgUTF16EncodingString7
+            , false
+        )
+    );
+    gMappings->put
+    (
 		(void*)XMLUni::fgUCS4EncodingString,
         new EEndianNameMapFor<XMLUCS4Transcoder>
         (

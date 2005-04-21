@@ -1219,7 +1219,9 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString2)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString3)
         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5))
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5)
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString6)
+        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString7))
         {
             fMemoryManager->deallocate(inputEncoding);
 

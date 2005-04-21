@@ -119,6 +119,8 @@ public :
     static const XMLCh fgUTF16EncodingString3[];
     static const XMLCh fgUTF16EncodingString4[];
     static const XMLCh fgUTF16EncodingString5[];
+    static const XMLCh fgUTF16EncodingString6[];
+    static const XMLCh fgUTF16EncodingString7[];
     static const XMLCh fgUTF16BEncodingString[];
     static const XMLCh fgUTF16BEncodingString2[];
     static const XMLCh fgUTF16LEncodingString[];
