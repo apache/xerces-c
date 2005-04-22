@@ -135,7 +135,7 @@ private:
 
 
 template <class Base>
-CComObjectPool<Base>::CComObjectPool<Base>(unsigned long poolSize) {
+CComObjectPool<Base>::CComObjectPool(unsigned long poolSize) {
 	m_pool = NULL;
 	m_size = poolSize;
 	m_pool = new Base*[m_size];
@@ -146,7 +146,7 @@ CComObjectPool<Base>::CComObjectPool<Base>(unsigned long poolSize) {
 }
 
 template <class Base>
-CComObjectPool<Base>::~CComObjectPool<Base>() {
+CComObjectPool<Base>::~CComObjectPool() {
 	for(unsigned long i = 0; i < m_size; i++) {
 		if(m_pool[i]) delete m_pool[i];
 	}
