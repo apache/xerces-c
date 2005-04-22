@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2005/04/22 20:02:34  cargilld
+ * Use isspace instead of isSpace as data is char not xmlch.
+ *
  * Revision 1.22  2005/04/05 20:26:48  cargilld
  * Update XSValue to handle leading and trailing whitespace.
  *
@@ -90,6 +93,10 @@
 
 #include <limits.h>
 #include <errno.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <float.h>
 
 #include <xercesc/framework/psvi/XSValue.hpp>
 
@@ -1720,7 +1727,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
                 (retVal.f_long > SHRT_MAX))
             {
                 status = st_FOCA0002;
-                return 0;
+                return false;
             }
             break;
         case XSValue::dt_byte:
@@ -1728,7 +1735,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
                 (retVal.f_long > SCHAR_MAX))
             {
                 status = st_FOCA0002;
-                return 0;
+                return false;
             }
             break;        
         case XSValue::dt_unsignedInt:
@@ -1774,7 +1781,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
     if ( (endptr - nptr) != strLen)
     {
         for (unsigned int i=endptr - nptr; i <strLen; i++) {
-            if (!XMLPlatformUtils::fgTransService->isSpace(nptr[i])) {
+            if (!isspace(nptr[i])) {
                 status = st_FOCA0002;
                 return false;
             }
