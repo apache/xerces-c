@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.22  2005/04/22 16:12:48  dbertoni
+ * Patch for Jira issue XERCESC-1410.
+ *
  * Revision 1.21  2005/02/25 09:16:51  gareth
  * Fix thread safety issues. Jira #30380. Thanks to David Bertoni.
  *
@@ -462,6 +465,12 @@ template <class TVal>
 unsigned int RefHashTableOf<TVal>::getHashModulus() const
 {
     return fHashModulus;
+}
+
+template <class TVal>
+unsigned int RefHashTableOf<TVal>::getCount() const
+{
+    return fCount;
 }
 
 // ---------------------------------------------------------------------------

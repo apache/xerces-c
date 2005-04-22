@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2005/04/22 16:12:48  dbertoni
+ * Patch for Jira issue XERCESC-1410.
+ *
  * Revision 1.17  2005/02/08 09:21:11  amassari
  * Removed warnings
  *
@@ -210,6 +213,7 @@ public:
     const TVal* get(const void* const key) const;
     MemoryManager* getMemoryManager() const;   
     unsigned int   getHashModulus()   const;
+    unsigned int   getCount() const;
 
     // -----------------------------------------------------------------------
     //  Setters
