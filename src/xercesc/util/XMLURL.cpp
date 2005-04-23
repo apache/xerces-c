@@ -623,7 +623,7 @@ BinInputStream* XMLURL::makeNewStream() const
             }
 
 
-            BinFileInputStream* retStrm = new (fMemoryManager) BinFileInputStream(realPath);
+            BinFileInputStream* retStrm = new (fMemoryManager) BinFileInputStream(realPath, fMemoryManager);
             if (!retStrm->getIsOpen())
             {
                 delete retStrm;
