@@ -308,6 +308,10 @@ en_US {
 		"The namespace for 'xml' cannot be bound to any prefix other than 'xml'. " ,
 		"Element '{0}' cannot have 'xmlns' as its prefix. " ,
 		"Complex Type Definition Representation OK - 2.2: <restriction> must have a <simpleType> child. " ,
+		"DOCTYPE root element qname beginning with '{0}' invalid " ,
+		"Element qname beginning with '{0}' invalid " ,
+		"Attribute qname beginning with '{0}' invalid " ,
+		"Entity qname for reference beginning '{0}' invalid " ,
 		"F_ End " ,
 		} 
 
@@ -482,7 +486,7 @@ en_US {
 		"The end of input was not expected " ,
 		"The hash modulus cannot be zero " ,
 		"Hashing the key returned an invalid bad hash value " ,
-		"The key '{0}' could not be found in the hash table " ,
+		"The key could not be found in the hash table " ,
 		"Could not create mutex " ,
 		"Could not close mutex " ,
 		"Could not lock mutex " ,

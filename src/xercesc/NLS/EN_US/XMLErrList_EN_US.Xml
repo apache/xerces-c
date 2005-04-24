@@ -313,6 +313,10 @@
             <Message Id="XMLURINotMatchXMLPrefix" Text="The namespace for 'xml' cannot be bound to any prefix other than 'xml'."/>
             <Message Id="NoXMLNSAsElementPrefix" Text="Element '{0}' cannot have 'xmlns' as its prefix."/>
             <Message Id="CT_SimpleTypeChildRequired" Text="Complex Type Definition Representation OK - 2.2: &lt;restriction&gt; must have a &lt;simpleType&gt; child."/>
+			<Message Id="InvalidRootElemInDOCTYPE" Text="DOCTYPE root element qname beginning with '{0}' invalid"/>
+			<Message Id="InvalidElementName" Text="Element qname beginning with '{0}' invalid"/>
+			<Message Id="InvalidAttrName" Text="Attribute qname beginning with '{0}' invalid"/>
+			<Message Id="InvalidEntityRefName" Text="Entity qname for reference beginning '{0}' invalid"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
@@ -481,7 +485,7 @@
             <Message Id="Gen_UnexpectedEOF" Text="The end of input was not expected"/>
             <Message Id="HshTbl_ZeroModulus" Text="The hash modulus cannot be zero"/>
             <Message Id="HshTbl_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
-            <Message Id="HshTbl_NoSuchKeyExists" Text="The key '{0}' could not be found in the hash table"/>
+            <Message Id="HshTbl_NoSuchKeyExists" Text="The key could not be found in the hash table"/>
             <Message Id="Mutex_CouldNotCreate" Text="Could not create mutex"/>
             <Message Id="Mutex_CouldNotClose" Text="Could not close mutex"/>
             <Message Id="Mutex_CouldNotLock" Text="Could not lock mutex"/>

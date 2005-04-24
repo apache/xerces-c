@@ -2876,8 +2876,11 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
     bool validName = fDoNamespaces ? fReaderMgr.getQName(bbName.getBuffer(), &colonPosition) :
                                      fReaderMgr.getName(bbName.getBuffer());
     if (!validName)
-    {
-        emitError(XMLErrs::ExpectedEntityRefName);
+    {        
+        if (bbName.isEmpty())
+            emitError(XMLErrs::ExpectedEntityRefName);
+        else
+            emitError(XMLErrs::InvalidEntityRefName, bbName.getRawBuffer());  
         return EntityExp_Failed;
     }
 

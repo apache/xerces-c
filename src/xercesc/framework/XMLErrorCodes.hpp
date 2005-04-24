@@ -321,7 +321,11 @@ public :
       , XMLURINotMatchXMLPrefix            = 304
       , NoXMLNSAsElementPrefix             = 305
       , CT_SimpleTypeChildRequired         = 306
-      , F_HighBounds                       = 307
+      , InvalidRootElemInDOCTYPE           = 307
+      , InvalidElementName                 = 308
+      , InvalidAttrName                    = 309
+      , InvalidEntityRefName               = 310
+      , F_HighBounds                       = 311
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

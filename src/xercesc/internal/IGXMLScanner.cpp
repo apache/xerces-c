@@ -636,8 +636,11 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  the input.
             int colonPosition;
             if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
-            {
-                emitError(XMLErrs::ExpectedAttrName);
+            {                
+                if (fAttNameBuf.isEmpty())
+                    emitError(XMLErrs::ExpectedAttrName);
+                else
+                    emitError(XMLErrs::InvalidAttrName, fAttNameBuf.getRawBuffer()); 
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return attCount;
             }
@@ -1242,8 +1245,11 @@ void IGXMLScanner::scanDocTypeDecl()
     bool validName = fDoNamespaces ? fReaderMgr.getQName(bbRootName.getBuffer(), &colonPosition) :
                                      fReaderMgr.getName(bbRootName.getBuffer());
     if (!validName)
-    {
-        emitError(XMLErrs::NoRootElemInDOCTYPE);
+    {        
+        if (bbRootName.isEmpty())
+            emitError(XMLErrs::NoRootElemInDOCTYPE);
+        else
+            emitError(XMLErrs::InvalidRootElemInDOCTYPE, bbRootName.getRawBuffer());
         fReaderMgr.skipPastChar(chCloseAngle);
         return;
     }
@@ -2126,8 +2132,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  in the element name.
     int prefixColonPos;
     if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
-    {
-        emitError(XMLErrs::ExpectedElementName);
+    {        
+        if (fQNameBuf.isEmpty())
+            emitError(XMLErrs::ExpectedElementName);
+        else
+            emitError(XMLErrs::InvalidElementName, fQNameBuf.getRawBuffer());
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }

@@ -194,8 +194,11 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     //  in the element name.
     int prefixColonPos;
     if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
-    {
-        emitError(XMLErrs::ExpectedElementName);
+    {       
+        if (fQNameBuf.isEmpty())
+            emitError(XMLErrs::ExpectedElementName);
+        else
+            emitError(XMLErrs::InvalidElementName, fQNameBuf.getRawBuffer());
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }

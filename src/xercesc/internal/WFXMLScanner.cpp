@@ -1099,8 +1099,11 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
     //  in the element name.
     int colonPosition;
     if (!fReaderMgr.getQName(fQNameBuf, &colonPosition))
-    {
-        emitError(XMLErrs::ExpectedElementName);
+    {        
+        if (fQNameBuf.isEmpty())
+            emitError(XMLErrs::ExpectedElementName);
+        else
+            emitError(XMLErrs::InvalidElementName, fQNameBuf.getRawBuffer());
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }
@@ -1185,8 +1188,11 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             //  the input.
             int colonPosition;
             if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
-            {
-                emitError(XMLErrs::ExpectedAttrName);
+            {                
+                if (fAttNameBuf.isEmpty())
+                    emitError(XMLErrs::ExpectedAttrName);
+                else
+                    emitError(XMLErrs::InvalidAttrName, fAttNameBuf.getRawBuffer()); 
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return false;
             }

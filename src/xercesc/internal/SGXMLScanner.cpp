@@ -562,8 +562,11 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             //  the input.
             int colonPosition;
             if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
-            {
-                emitError(XMLErrs::ExpectedAttrName);
+            {                
+                if (fAttNameBuf.isEmpty())
+                    emitError(XMLErrs::ExpectedAttrName);
+                else
+                    emitError(XMLErrs::InvalidAttrName, fAttNameBuf.getRawBuffer());   
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return attCount;
             }
@@ -1082,7 +1085,10 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     int prefixColonPos;
     if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
     {
-        emitError(XMLErrs::ExpectedElementName);
+        if (fQNameBuf.isEmpty())
+            emitError(XMLErrs::ExpectedElementName);
+        else
+            emitError(XMLErrs::InvalidElementName, fQNameBuf.getRawBuffer());
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }
@@ -4446,8 +4452,11 @@ SGXMLScanner::scanEntityRef(  const   bool
     XMLBufBid bbName(&fBufMgr);
     int colonPosition;
     if (!fReaderMgr.getQName(bbName.getBuffer(), &colonPosition))
-    {
-        emitError(XMLErrs::ExpectedEntityRefName);
+    {        
+        if (bbName.isEmpty())
+            emitError(XMLErrs::ExpectedEntityRefName);
+        else
+            emitError(XMLErrs::InvalidEntityRefName, bbName.getRawBuffer());
         return EntityExp_Failed;
     }
 

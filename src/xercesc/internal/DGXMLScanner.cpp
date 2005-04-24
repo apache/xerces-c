@@ -791,7 +791,10 @@ void DGXMLScanner::scanDocTypeDecl()
                                      fReaderMgr.getName(bbRootName.getBuffer());
     if (!validName)
     {
-        emitError(XMLErrs::NoRootElemInDOCTYPE);
+        if (bbRootName.isEmpty())
+            emitError(XMLErrs::NoRootElemInDOCTYPE);
+        else
+            emitError(XMLErrs::InvalidRootElemInDOCTYPE, bbRootName.getRawBuffer());
         fReaderMgr.skipPastChar(chCloseAngle);
         return;
     }
@@ -1105,7 +1108,10 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                                      fReaderMgr.getName(fQNameBuf);
     if (!validName)
     {
-        emitError(XMLErrs::ExpectedElementName);
+        if (fQNameBuf.isEmpty())
+            emitError(XMLErrs::ExpectedElementName);
+        else
+            emitError(XMLErrs::InvalidElementName, fQNameBuf.getRawBuffer());        
         fReaderMgr.skipToChar(chOpenAngle);
         return false;
     }
@@ -1258,7 +1264,10 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                                         fReaderMgr.getName(fAttNameBuf);                
             if (!validName)            
             {
-                emitError(XMLErrs::ExpectedAttrName);
+                if (fAttNameBuf.isEmpty())
+                    emitError(XMLErrs::ExpectedAttrName);
+                else
+                    emitError(XMLErrs::InvalidAttrName, fAttNameBuf.getRawBuffer());                 
                 fReaderMgr.skipPastChar(chCloseAngle);
                 return false;
             }
@@ -3160,7 +3169,10 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
                                      fReaderMgr.getName(bbName.getBuffer()); 
     if (!validName)    
     {
-        emitError(XMLErrs::ExpectedEntityRefName);
+        if (bbName.isEmpty())
+            emitError(XMLErrs::ExpectedEntityRefName);
+        else
+            emitError(XMLErrs::InvalidEntityRefName, bbName.getRawBuffer());        
         return EntityExp_Failed;
     }
 

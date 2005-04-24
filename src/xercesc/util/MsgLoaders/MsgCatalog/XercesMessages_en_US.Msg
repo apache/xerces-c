@@ -301,6 +301,10 @@ $set 1
 304  The namespace for 'xml' cannot be bound to any prefix other than 'xml'.
 305  Element '{0}' cannot have 'xmlns' as its prefix.
 306  Complex Type Definition Representation OK - 2.2: <restriction> must have a <simpleType> child.
+307  DOCTYPE root element qname beginning with '{0}' invalid
+308  Element qname beginning with '{0}' invalid
+309  Attribute qname beginning with '{0}' invalid
+310  Entity qname for reference beginning '{0}' invalid
 
 
 $set 2
@@ -465,7 +469,7 @@ $set 3
 47  The end of input was not expected
 48  The hash modulus cannot be zero
 49  Hashing the key returned an invalid bad hash value
-50  The key '{0}' could not be found in the hash table
+50  The key could not be found in the hash table
 51  Could not create mutex
 52  Could not close mutex
 53  Could not lock mutex
