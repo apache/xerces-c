@@ -22,7 +22,9 @@ Edward Bortner
 Sean Bright
 Phil Brown
 Robert Buck
+Scott Cantor
 David Cargill
+Chris Cates
 Sumit Chawla
 Nick Chiang
 Chih Hsiang Chou
@@ -37,6 +39,7 @@ Zeid Derhally
 James Devries
 Ailian Ding
 Steve Dulin
+David Earlam
 Helmut Eiken
 Mark Everline
 Andrew Fang
@@ -51,6 +54,7 @@ Natalie Gorden
 Max Gotlib
 Petr Gotthard
 Neil Graham
+Matthew Hall
 Susan Hardenbrook
 Jeff Harrell
 Andrew Hefford
@@ -94,6 +98,7 @@ Kevin Philips
 Mike Pogue
 Joe Polastre
 John Ponzo
+Vitaly Prapirny
 Shengkai Qu
 Gareth Reakes
 Jim Reitz
@@ -103,6 +108,7 @@ John Roper
 Dan Rosen
 Steven Rosenthal
 Erik Rydgren
+Markus Scherer
 Bill Schindler
 Erik Schroeder
 Christian Schuhegger
@@ -121,9 +127,11 @@ John Warrier
 Tom Watson
 Mark Weaver
 Roger Webster
+Axel Weib
 Robert Weir
 Carolyn Weiss
 Kari Whitcomb
+Christian Will
 Dietrich Wolf
 Kirk Wylie
 Peter A. Volchek
