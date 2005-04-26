@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.60  2005/04/26 17:51:01  cargilld
+ * Schema updates to match spec: both the default value and the canonical representation of that value have to fit the pattern and it is an error for NOTATION to be used directly in a schema.
+ *
  * Revision 1.59  2004/11/25 15:16:04  knoaman
  * PSVI: fix for getIsSchemaSpecified on empty elements with default values.
  *
@@ -440,6 +443,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                 else
                 {
                     DatatypeValidator::ValidatorType eleDefDVType = fCurrentDatatypeValidator->getType();
+                    bool validateCanonical = false;
                     if (eleDefDVType == DatatypeValidator::NOTATION)
                     {
                         // if notation, need to bind URI to notation first
@@ -477,8 +481,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             // is neither the one in the element nor the one in the current
                             // complex type (if any)
                             if ((fCurrentDatatypeValidator != ((SchemaElementDecl*)elemDecl)->getDatatypeValidator())
-                                && (!fTypeStack->peek() || (fCurrentDatatypeValidator != fTypeStack->peek()->getDatatypeValidator())))
+                                && (!fTypeStack->peek() || (fCurrentDatatypeValidator != fTypeStack->peek()->getDatatypeValidator()))) {
                                 value = elemDefaultValue;
+                                validateCanonical = true;
+                            }
                             else
                                 value = 0;
                         }
@@ -508,6 +514,11 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                     {
                         try {
                             fCurrentDatatypeValidator->validate(value, getScanner()->getValidationContext(), fMemoryManager);
+                            if (validateCanonical) {
+                                XMLCh* canonical = (XMLCh*) fCurrentDatatypeValidator->getCanonicalRepresentation(value, fMemoryManager);
+                                ArrayJanitor<XMLCh> tempCanonical(canonical, fMemoryManager);
+                                fCurrentDatatypeValidator->validate(canonical, getScanner()->getValidationContext(), fMemoryManager);
+                            }
                         }
                         catch (XMLException& idve)
                         {

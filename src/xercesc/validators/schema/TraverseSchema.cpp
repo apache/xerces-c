@@ -6879,7 +6879,7 @@ void TraverseSchema::checkEnumerationRequiredNotation(const DOMElement* const el
 
     const XMLCh* localPart = getLocalPart(type);
 
-    if (XMLString::equals(localPart, SchemaSymbols::fgELT_NOTATION)) {
+    if (XMLString::equals(localPart, XMLUni::fgNotationString)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNotationType, name);
     }
 }
@@ -8586,6 +8586,11 @@ TraverseSchema::checkElemDeclValueConstraint(const DOMElement* const elem,
         try
         {
             validator->validate(valConstraint,0,fMemoryManager);
+
+            XMLCh* canonical = (XMLCh*) validator->getCanonicalRepresentation(valConstraint, fMemoryManager);
+            ArrayJanitor<XMLCh> tempCanonical(canonical, fMemoryManager);
+            validator->validate(canonical, 0, fMemoryManager);
+
             isValid = true;
         }
         catch(const XMLException& excep)
