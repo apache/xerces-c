@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/04/26 17:58:12  cargilld
+ * Fix for xercesc-1413: invalid operator equal template signature
+ *
  * Revision 1.6  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -143,7 +146,7 @@ private :
     // -----------------------------------------------------------------------
 	ArrayJanitor();
     ArrayJanitor(const ArrayJanitor<T>& copy);
-    ArrayJanitor& operator=(const ArrayJanitor<T>& copy);    
+    ArrayJanitor<T>& operator=(const ArrayJanitor<T>& copy);    
 
     // -----------------------------------------------------------------------
     //  Private data members
