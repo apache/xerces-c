@@ -156,13 +156,17 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
 
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
-    {
+    {        
+        if (topElem->fPrefixColonPos != -1)
+            fPrefixBuf.set(elemName, topElem->fPrefixColonPos);
+        else
+            fPrefixBuf.reset();        
         fDocHandler->endElement
         (
             *topElem->fThisElement
             , uriId
             , isRoot
-            , topElem->fThisElement->getElementName()->getPrefix()
+            , fPrefixBuf.getRawBuffer()            
         );
     }
 
@@ -259,6 +263,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     //  to expand up to get ready.
     unsigned int elemDepth = fElemStack.addLevel();
     fElemStack.setValidationFlag(fValidate);
+    fElemStack.setPrefixColonPos(prefixColonPos);
 
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.

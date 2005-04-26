@@ -1160,13 +1160,22 @@ void IGXMLScanner::scanEndTag(bool& gotData)
 
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
-    {
+    {        
+        if (fGrammarType == Grammar::SchemaGrammarType) {
+            if (topElem->fPrefixColonPos != -1)
+                fPrefixBuf.set(elemName, topElem->fPrefixColonPos);
+            else
+                fPrefixBuf.reset();
+        }
+        else {
+            fPrefixBuf.set(topElem->fThisElement->getElementName()->getPrefix());
+        }
         fDocHandler->endElement
         (
             *topElem->fThisElement
             , uriId
             , isRoot           
-            , topElem->fThisElement->getElementName()->getPrefix()
+            , fPrefixBuf.getRawBuffer()
         );
     }
 
@@ -2203,6 +2212,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  to expand up to get ready.
     unsigned int elemDepth = fElemStack.addLevel();
     fElemStack.setValidationFlag(fValidate);
+    fElemStack.setPrefixColonPos(prefixColonPos);
 
     //  Check if there is any external schema location specified, and if we are at root,
     //  go through them first before scanning those specified in the instance document

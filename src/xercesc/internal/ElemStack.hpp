@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2005/04/26 17:37:50  cargilld
+ * Prefix mapping update to handle schema correctly.
+ *
  * Revision 1.11  2004/09/08 13:56:13  peiyongz
  * Apache License Version 2.0
  *
@@ -192,6 +195,8 @@ public :
         unsigned int        fCurrentURI;
         XMLCh *             fSchemaElemName;
         unsigned int        fSchemaElemNameMaxLen;
+        
+        int                 fPrefixColonPos;
     };
 
     enum MapModes
@@ -243,6 +248,9 @@ public :
 
     inline void setCurrentSchemaElemName(const XMLCh * const schemaElemName);
     inline XMLCh *getCurrentSchemaElemName();
+
+    void setPrefixColonPos(int colonPos);
+    int getPrefixColonPos() const;
 
     // -----------------------------------------------------------------------
     //  Prefix map methods
@@ -621,6 +629,15 @@ inline unsigned int ElemStack::getPrefixId(const XMLCh* const prefix) const
 inline const XMLCh* ElemStack::getPrefixForId(unsigned int prefId) const
 {
     return fPrefixPool.getValueForId(prefId);
+}
+
+inline void ElemStack::setPrefixColonPos(int colonPos)
+{
+    fStack[fStackTop-1]->fPrefixColonPos = colonPos;
+}
+ 
+inline int ElemStack::getPrefixColonPos() const {
+    return fStack[fStackTop-1]->fPrefixColonPos;
 }
 
 // ---------------------------------------------------------------------------
