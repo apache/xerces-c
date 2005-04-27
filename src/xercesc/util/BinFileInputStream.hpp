@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/04/27 18:21:51  cargilld
+ * Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.
+ *
  * Revision 1.7  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -131,7 +134,7 @@ private :
 // ---------------------------------------------------------------------------
 inline bool BinFileInputStream::getIsOpen() const
 {
-    return (fSource != 0);
+    return (fSource != (FileHandle) XERCES_Invalid_File_Handle);
 }
 
 XERCES_CPP_NAMESPACE_END

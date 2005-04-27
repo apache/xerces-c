@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2005/04/27 18:21:51  cargilld
+ * Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.
+ *
  * Revision 1.11  2004/11/02 17:09:42  peiyongz
  * Handling OutOfMemory exception
  *
@@ -72,7 +75,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const XMLCh* const   fileName
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
 
-    if (!fSource)
+    if (fSource == (FileHandle) XERCES_Invalid_File_Handle)
         ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
 
     // Buffer is one larger than capacity, to allow for zero term
@@ -96,7 +99,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
 
-    if (!fSource)
+    if (fSource == (FileHandle) XERCES_Invalid_File_Handle)
         ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
 
     // Buffer is one larger than capacity, to allow for zero term

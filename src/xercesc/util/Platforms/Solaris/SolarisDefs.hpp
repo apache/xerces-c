@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/04/27 18:21:51  cargilld
+ * Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.
+ *
  * Revision 1.5  2004/09/08 13:56:42  peiyongz
  * Apache License Version 2.0
  *
@@ -64,6 +67,9 @@
 #endif 
  
 typedef int FileHandle;
+
+#undef  XERCES_Invalid_File_Handle
+#define XERCES_Invalid_File_Handle -1
  
 #ifndef SOLARIS
 #define SOLARIS

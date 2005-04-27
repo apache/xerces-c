@@ -215,11 +215,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
 FileHandle XMLPlatformUtils::openFile(const char* const fileName
                                       , MemoryManager* const manager)
 {
-    int retVal = open( fileName , O_RDONLY | O_LARGEFILE);
-
-    if (retVal == -1)
-        return 0;
-    return (FileHandle)retVal;
+    return (FileHandle) open( fileName , O_RDONLY | O_LARGEFILE);
 }
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
@@ -227,11 +223,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
 {
     const char* tmpFileName = XMLString::transcode(fileName, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
-    int retVal = open( tmpFileName , O_RDONLY | O_LARGEFILE);
-
-    if (retVal == -1)
-        return 0;
-    return (FileHandle)retVal;
+    return (FileHandle) open( tmpFileName , O_RDONLY | O_LARGEFILE); 
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName

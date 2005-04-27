@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2005/04/27 18:21:51  cargilld
+ * Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.
+ *
  * Revision 1.19  2004/09/08 13:56:25  peiyongz
  * Apache License Version 2.0
  *
@@ -205,7 +208,7 @@
 // ---------------------------------------------------------------------------
 #include    <xercesc/util/AutoSense.hpp>
 
-
+#define XERCES_Invalid_File_Handle 0
 
 // ---------------------------------------------------------------------------
 //  According to the platform we include a platform specific file. This guy
