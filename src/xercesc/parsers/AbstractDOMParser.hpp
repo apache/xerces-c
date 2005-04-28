@@ -1857,11 +1857,6 @@ inline void AbstractDOMParser::setCurrentNode(DOMNode* toSet)
     fCurrentNode = toSet;
 }
 
-inline void AbstractDOMParser::setDocument(DOMDocument* toSet)
-{
-    fDocument = (DOMDocumentImpl *)toSet;
-}
-
 inline void AbstractDOMParser::setParseInProgress(const bool toSet)
 {
     fParseInProgress = toSet;

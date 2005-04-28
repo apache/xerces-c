@@ -478,6 +478,11 @@ void AbstractDOMParser::setSkipDTDValidation(const bool newValue)
     fScanner->setSkipDTDValidation(newValue);
 }
 
+void AbstractDOMParser::setDocument(DOMDocument* toSet)
+{
+    fDocument = (DOMDocumentImpl *)toSet;
+}
+
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Parsing methods
 // ---------------------------------------------------------------------------
