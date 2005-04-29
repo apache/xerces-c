@@ -541,7 +541,7 @@ private:
 
           ret = match(context, op->elementAt(i), offset, direction);
 
-          if (ret == context->fLimit)
+          if (ret >= 0 && ret <= context->fLimit)
               return ret;
       }
 
