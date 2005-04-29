@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2005/04/29 20:21:02  dbertoni
+ * Patch for Jira issue XERCESC-1407.
+ *
  * Revision 1.31  2005/03/20 14:53:35  knoaman
  * [jira 1381] Memory leak in GrammarResolver - patch by Christian Will.
  *
@@ -446,11 +449,16 @@ Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
         {
             if (fGrammarFromPool->containsKey(nameSpaceKey))
                 fGrammarFromPool->removeKey(nameSpaceKey);
-            return grammar;
-        }       
-        // It failed to remove it from the grammar pool either because it
-        // didn't exist or because it is locked.
-        return 0;
+        }
+        // Check to see if it's in fGrammarBucket, since
+        // we put it there if the grammar pool refused to
+        // cache it.
+        else if (fGrammarBucket->containsKey(nameSpaceKey))
+        {
+            grammar = fGrammarBucket->orphanKey(nameSpaceKey);
+        }
+
+        return grammar;
     }
     else
     {
