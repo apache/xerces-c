@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.25  2005/05/05 09:46:11  cargilld
+ * Update XSValue to handle float and double the same way the main library does, converting values to infinityr or zero, as the C ranges for float and double are less than the schema ranges.
+ *
  * Revision 1.24  2004/09/09 20:09:30  peiyongz
  * getDataOverflowed()
  *
@@ -182,6 +185,8 @@ public:
 
     inline  double        getValue() const;
 
+    inline  LiteralType   getType() const;
+
     /***
      *
      * The decimal point delimiter for the schema double/float type is
@@ -293,6 +298,11 @@ inline bool XMLAbstractDoubleFloat::isDataOverflowed() const
 inline double XMLAbstractDoubleFloat::getValue() const
 {
     return fValue;
+}
+
+inline  XMLAbstractDoubleFloat::LiteralType   XMLAbstractDoubleFloat::getType() const
+{
+    return fType;
 }
 
 XERCES_CPP_NAMESPACE_END

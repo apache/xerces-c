@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.17  2005/05/05 09:46:11  cargilld
+* Update XSValue to handle float and double the same way the main library does, converting values to infinityr or zero, as the C ranges for float and double are less than the schema ranges.
+*
 * Revision 1.16  2005/04/05 20:26:48  cargilld
 * Update XSValue to handle leading and trailing whitespace.
 *
@@ -209,20 +212,41 @@ static bool compareActualValue( const XSValue::DataType             datatype
             return false;
 
         case XSValue::dt_decimal:
-        case XSValue::dt_double:
             if (fabs(actValue.fValue.f_double - expValue.fValue.f_double) < fabs(actValue.fValue.f_double)/1000)
                 return true;
             printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
-                    actValue.fValue.f_double, expValue.fValue.f_double);
+                actValue.fValue.f_double, expValue.fValue.f_double);
             return false;
-        
-        case XSValue::dt_float:            
-            if (fabs(actValue.fValue.f_float - expValue.fValue.f_float) < fabs(actValue.fValue.f_float)/1000)
-                return true;
-            printf("ACTVALUE_TEST Unexpected XSValue for dt_float, got %f expected %f\n",
-                    actValue.fValue.f_float, expValue.fValue.f_float);
-            return false;
-         
+        case XSValue::dt_double:
+            if (actValue.fValue.f_doubleType.f_doubleEnum == XSValue::DoubleFloatType_Normal) {
+                if (fabs(actValue.fValue.f_double - expValue.fValue.f_double) < fabs(actValue.fValue.f_double)/1000)
+                    return true;
+                printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
+                        actValue.fValue.f_double, expValue.fValue.f_double);
+                return false;
+            }
+            else {
+                if (actValue.fValue.f_doubleType.f_doubleEnum == expValue.fValue.f_doubleType.f_doubleEnum)
+                    return true;
+                printf("ACTVALUE_TEST Unexpected XSValue enum for datatype %s, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
+                        actValue.fValue.f_doubleType.f_doubleEnum, expValue.fValue.f_doubleType.f_doubleEnum);
+                return false;
+            }        
+        case XSValue::dt_float:   
+            if (actValue.fValue.f_floatType.f_floatEnum == XSValue::DoubleFloatType_Normal) {
+                if (fabs(actValue.fValue.f_float - expValue.fValue.f_float) < fabs(actValue.fValue.f_float)/1000)
+                    return true;
+                printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
+                        actValue.fValue.f_float, expValue.fValue.f_float);
+                return false;
+            }
+            else {
+                if (actValue.fValue.f_floatType.f_floatEnum == expValue.fValue.f_floatType.f_floatEnum)
+                    return true;
+                printf("ACTVALUE_TEST Unexpected XSValue enum for datatype %s, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
+                        actValue.fValue.f_floatType.f_floatEnum, expValue.fValue.f_floatType.f_floatEnum);
+                return false;
+            }                     
         case XSValue::dt_duration:
         case XSValue::dt_dateTime:
         case XSValue::dt_time:            
@@ -974,6 +998,15 @@ void test_dt_float()
     const char lex_v_ran_iv_3[]="+1.175494351e-39";
     const char lex_v_ran_iv_4[]="-1.175494351e-39";
 
+    XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_float = (float)0.0; 
+    lex_iv_ran_v_1.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_PosINF;
+    XSValue::XSValue_Data lex_iv_ran_v_2; lex_iv_ran_v_2.fValue.f_float = (float)0.0;
+    lex_iv_ran_v_2.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_NegINF;
+    XSValue::XSValue_Data lex_iv_ran_v_3; lex_iv_ran_v_3.fValue.f_float = (float)0.0;
+    lex_iv_ran_v_3.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_Zero;
+    XSValue::XSValue_Data lex_iv_ran_v_4; lex_iv_ran_v_4.fValue.f_float = (float)0.0;
+    lex_iv_ran_v_4.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_Zero;
+
     const char lex_v_ran_iv_1_canrep[]="3.402823466E39";
     const char lex_v_ran_iv_2_canrep[]="-3.402823466E39";
     const char lex_v_ran_iv_3_canrep[]="1.175494351E-39";
@@ -1029,10 +1062,10 @@ void test_dt_float()
     VALIDATE_TEST(lex_v_ran_v_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, range invalid
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
-    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
-    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
+    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
+    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
     VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
@@ -1073,10 +1106,10 @@ void test_dt_float()
         ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_4);
 
         // lexical valid, range invalid
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
-        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
-        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_3);
+        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_4);
 
         // lexical invalid
         ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
@@ -1121,23 +1154,15 @@ void test_dt_float()
         // lexical invalid
         CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
         CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
+
+        // lexical valid, range invalid (however XML4C ignores that)
+        CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
+        CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_2_canrep,    DONT_CARE);
+        CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_3_canrep,    DONT_CARE);
+        CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_4_canrep,    DONT_CARE);
     }
-
-    // lexical valid, range invalid
-
-    toValidate = true;
-    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-
-    toValidate = false;
-    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
-    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_2_canrep,    DONT_CARE);
-    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_3_canrep,    DONT_CARE);
-    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_4_canrep,    DONT_CARE);
-
 }
+
 /***
 DBL_EPSILON 2.2204460492503131e-016
 DBL_MAX 1.7976931348623158e+308
@@ -1150,7 +1175,7 @@ void test_dt_double()
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="   1234.e+10   \n";
-    const char lex_v_ran_v_1[]="+1.7976931348623158e+308";
+    const char lex_v_ran_v_1[]="+1.7976931348623158e+308";    
     const char lex_v_ran_v_2[]="-1.7976931348623158e+308";
     const char lex_v_ran_v_3[]="+2.2250738585072014e-308";
     const char lex_v_ran_v_4[]="-2.2250738585072014e-308";
@@ -1173,6 +1198,15 @@ void test_dt_double()
     const char lex_v_ran_iv_2_canrep[]="-1.7976931348623158E309";
     const char lex_v_ran_iv_3_canrep[]="2.2250738585072014E-329";
     const char lex_v_ran_iv_4_canrep[]="-2.2250738585072014E-329";
+
+    XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_double = (double)0.0; 
+    lex_iv_ran_v_1.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_PosINF;
+    XSValue::XSValue_Data lex_iv_ran_v_2; lex_iv_ran_v_2.fValue.f_double = (double)0.0;
+    lex_iv_ran_v_2.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_NegINF;
+    XSValue::XSValue_Data lex_iv_ran_v_3; lex_iv_ran_v_3.fValue.f_double = (double)0.0;
+    lex_iv_ran_v_3.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_Zero;
+    XSValue::XSValue_Data lex_iv_ran_v_4; lex_iv_ran_v_4.fValue.f_double = (double)0.0;
+    lex_iv_ran_v_4.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_Zero;
 
     const char lex_iv_1[]="12x.e+10";
     const char lex_iv_2[]="12.e+1x";
@@ -1223,11 +1257,11 @@ void test_dt_double()
     VALIDATE_TEST(lex_v_ran_v_3 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran_v_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
-    // lexical valid, range invalid
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
-    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
-    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
-    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
+    // lexical valid, range invalid however XML4C converts to INF / ZERO
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_TRUE, DONT_CARE);    
+    VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
+    VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
+    VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical invalid
     VALIDATE_TEST(lex_iv_1         , dt, EXP_RET_VALID_FALSE, XSValue::st_FOCA0002);
@@ -1267,11 +1301,11 @@ void test_dt_double()
         ACTVALUE_TEST(lex_v_ran_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_3);
         ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_4);
 
-        // lexical valid, range invalid
-        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
-        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
-        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
-        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
+        // lexical valid, range invalid        
+        ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_1);
+        ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_2);
+        ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_3);
+        ACTVALUE_TEST(lex_v_ran_iv_4, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_4);
 
         // lexical invalid
         ACTVALUE_TEST(lex_iv_1      , dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran_v_0);
@@ -1316,22 +1350,13 @@ void test_dt_double()
         // lexical invalid
         CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
         CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
+
+        // lexical valid, range invalid (XML4C doesn't treat as invalid)
+        CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
+        CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_2_canrep,    DONT_CARE);
+        CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_3_canrep,    DONT_CARE);
+        CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_4_canrep,    DONT_CARE);
     }
-
-    // lexical valid, range invalid
-
-    toValidate = true;
-    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-
-    toValidate = false;
-    CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
-    CANREP_TEST(lex_v_ran_iv_2,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_2_canrep,    DONT_CARE);
-    CANREP_TEST(lex_v_ran_iv_3,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_3_canrep,    DONT_CARE);
-    CANREP_TEST(lex_v_ran_iv_4,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_4_canrep,    DONT_CARE);
-
 }
 
 /***

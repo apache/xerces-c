@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2005/05/05 09:46:11  cargilld
+ * Update XSValue to handle float and double the same way the main library does, converting values to infinityr or zero, as the C ranges for float and double are less than the schema ranges.
+ *
  * Revision 1.19  2004/12/23 16:11:21  cargilld
  * Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
  *
@@ -154,7 +157,7 @@ public:
             st_NotSupported,
             st_CantCreateRegEx,
             st_FOCA0002,        //invalid lexical value 
-            st_FOCA0001,        //input value too large for decimal 
+            st_FOCA0001,        //input value too large/too small for decimal 
             st_FOCA0003,        //input value too large for integer 
             st_FODT0003,        //invalid timezone value 
             st_UnknownType
@@ -164,6 +167,15 @@ public:
             dg_numerics,            
             dg_datetimes,
             dg_strings
+    };
+
+    enum DoubleFloatType
+    {
+        DoubleFloatType_NegINF,
+        DoubleFloatType_PosINF,
+        DoubleFloatType_NaN,
+        DoubleFloatType_Zero,
+        DoubleFloatType_Normal
     };
 
     //  Constructors and Destructor
@@ -283,6 +295,18 @@ public:
                                 double    f_milisec;
 
                 } f_datetime;
+
+                struct doubletype {
+                                double          f_double;
+                                DoubleFloatType f_doubleEnum;
+                } f_doubleType;
+
+                struct floattype {
+                                float           f_float;
+                                DoubleFloatType f_floatEnum;
+                } f_floatType;
+
+
 
         } fValue;
 

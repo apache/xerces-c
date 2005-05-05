@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2005/05/05 09:46:11  cargilld
+ * Update XSValue to handle float and double the same way the main library does, converting values to infinityr or zero, as the C ranges for float and double are less than the schema ranges.
+ *
  * Revision 1.23  2005/04/22 20:02:34  cargilld
  * Use isspace instead of isSpace as data is char not xmlch.
  *
@@ -535,11 +538,6 @@ XSValue::validateNumerics(const XMLCh*         const content
                 //XMLFloat takes care of 0, -0, -INF, INF and NaN
                 //XMLFloat::checkBoundary() handles error and outofbound issues
                 XMLFloat data(content, manager);
-                if (data.isDataConverted())
-                {
-                    status = st_FOCA0002;
-                    return false;
-                }
                 break;
             }
         case XSValue::dt_double:
@@ -547,11 +545,6 @@ XSValue::validateNumerics(const XMLCh*         const content
                 //XMLDouble takes care of 0, -0, -INF, INF and NaN
                 //XMLDouble::checkBoundary() handles error and outofbound issues
                 XMLDouble  data(content, manager);
-                if (data.isDataConverted())
-                {
-                    status = st_FOCA0002;
-                    return false;
-                }
                 break;
             }
         /***
@@ -1336,35 +1329,65 @@ XSValue::getActValNumerics(const XMLCh*         const content
             //XMLFloat takes care of 0, -0, -INF, INF and NaN
             //XMLFloat::checkBoundary() handles error and outofbound issues
             XMLFloat data(content, manager);
+            XSValue* retVal = new (manager) XSValue(dt_float, manager);
+            
             if (data.isDataConverted())
             {
-                status = st_FOCA0002;
-                return 0;
+                retVal->fData.fValue.f_floatType.f_float = 0.0; 
+                retVal->fData.fValue.f_floatType.f_floatEnum = DoubleFloatType_Zero;
+           
+                switch(data.getType()) {
+                    case XMLAbstractDoubleFloat::NegINF:
+                        retVal->fData.fValue.f_floatType.f_floatEnum = DoubleFloatType_NegINF;
+                        break;
+                    case XMLAbstractDoubleFloat::PosINF:
+                        retVal->fData.fValue.f_floatType.f_floatEnum = DoubleFloatType_PosINF;
+                        break;
+                    case XMLAbstractDoubleFloat::NaN:
+                        retVal->fData.fValue.f_floatType.f_floatEnum = DoubleFloatType_NaN;
+                        break;
+                    default:
+                        break;
+                }
             }
-            else
-            {
-                XSValue* retVal = new (manager) XSValue(dt_float, manager);
-                retVal->fData.fValue.f_float = (float) data.getValue();
-                return retVal;
-            }
-            break;
+            else {
+                retVal->fData.fValue.f_floatType.f_floatEnum = DoubleFloatType_Normal;
+                retVal->fData.fValue.f_floatType.f_float = (float) data.getValue(); 
+            }                                       
+            return retVal;
+            break;                   
         }
         case XSValue::dt_double:
         {
             //XMLDouble takes care of 0, -0, -INF, INF and NaN
             //XMLDouble::checkBoundary() handles error and outofbound issues
             XMLDouble  data(content, manager);
+            XSValue* retVal = new (manager) XSValue(dt_double, manager);
+            
             if (data.isDataConverted())
             {
-                status = st_FOCA0002;
-                return 0;
+                retVal->fData.fValue.f_doubleType.f_double = 0.0; 
+                retVal->fData.fValue.f_doubleType.f_doubleEnum = DoubleFloatType_Zero;
+           
+                switch(data.getType()) {
+                    case XMLAbstractDoubleFloat::NegINF:
+                        retVal->fData.fValue.f_doubleType.f_doubleEnum = DoubleFloatType_NegINF;
+                        break;
+                    case XMLAbstractDoubleFloat::PosINF:
+                        retVal->fData.fValue.f_doubleType.f_doubleEnum = DoubleFloatType_PosINF;
+                        break;
+                    case XMLAbstractDoubleFloat::NaN:
+                        retVal->fData.fValue.f_doubleType.f_doubleEnum = DoubleFloatType_NaN;
+                        break;
+                    default:
+                        break;                      
+                }
             }
-            else
-            {
-                XSValue* retVal = new (manager) XSValue(dt_double, manager);
-                retVal->fData.fValue.f_double = data.getValue();
-                return retVal;
-            }
+            else {
+                retVal->fData.fValue.f_doubleType.f_doubleEnum = DoubleFloatType_Normal;
+                retVal->fData.fValue.f_doubleType.f_double = data.getValue(); 
+            }                                       
+            return retVal;
             break;
         }
         case XSValue::dt_integer:
