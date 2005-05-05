@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2005/05/05 01:12:24  dbertoni
+ * Fix for Jira issue XERCESC-1391.
+ *
  * Revision 1.10  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -75,6 +78,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <assert.h>
+
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
@@ -572,8 +577,7 @@ Token* RangeToken::complementRanges(RangeToken* const tok,
 // ---------------------------------------------------------------------------
 bool RangeToken::match(const XMLInt32 ch) {
 
-    if (fMap == 0)
-        createMap();
+    createMap();
 
     bool ret;
 
@@ -631,7 +635,9 @@ void RangeToken::expand(const unsigned int length) {
     fMaxCount = newMax;
 }
 
-void RangeToken::createMap() {
+void RangeToken::doCreateMap() {
+
+    assert(!fMap);
 
     int asize = MAPSIZE/32;
     fMap = (int*) fMemoryManager->allocate(asize * sizeof(int));//new int[asize];

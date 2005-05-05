@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/05/05 01:12:24  dbertoni
+ * Fix for Jira issue XERCESC-1391.
+ *
  * Revision 1.8  2004/11/12 23:24:58  knoaman
  * Fix multi threading problem.
  *
@@ -150,9 +153,13 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
 
     tok->setRangeValues(wsRange, wsTblLen);
     setupRange(wsRange, gWhitespaceChars, 0);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLSpace, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLSpace, tok , true);
 
     // Create digits ranges
@@ -165,9 +172,13 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
 
     tok->setRangeValues(digitRange, digitTblLen);
     setupRange(digitRange, gDigitChars, 0);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLDigit, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLDigit, tok , true);
 
     // Build word ranges
@@ -208,9 +219,13 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     nameRange[nameTblLen++] = chUnderscore;
     tok->sortRanges();
     tok->compactRanges();
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLNameChar, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLNameChar, tok , true);
 
     // Create initialNameChar ranges
@@ -229,9 +244,13 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     initialNameRange[initialNameTblLen++] = chUnderscore;
     tok->sortRanges();
     tok->compactRanges();
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok , true);
 
     // Create word range
@@ -240,9 +259,13 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     janWordRange.orphan();
     tok->sortRanges();
     tok->compactRanges();
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLWord, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgXMLWord, tok , true);
 
     fRangesCreated = true;

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2005/05/05 01:12:24  dbertoni
+ * Fix for Jira issue XERCESC-1391.
+ *
  * Revision 1.25  2005/04/05 18:18:34  knoaman
  * Performance: do not make a copy of the expression to match.
  *
@@ -1553,6 +1556,8 @@ void RegularExpression::prepare() {
 			rangeTok->compactRanges();
 			fFirstChar = rangeTok;
 		}
+
+        rangeTok->createMap();
 	}
 
 	if (fOperations != 0 && fOperations->getNextOp() == 0 &&

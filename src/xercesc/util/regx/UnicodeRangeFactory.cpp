@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/05/05 01:12:24  dbertoni
+ * Fix for Jira issue XERCESC-1391.
+ *
  * Revision 1.7  2004/11/12 23:24:58  knoaman
  * Fix multi threading problem.
  *
@@ -172,6 +175,8 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
 
     for (int k=0; k < UNICATEGSIZE; k++) {
         tok = (RangeToken*) RangeToken::complementRanges(ranges[k], tokFactory);
+        // build the internal map.
+        tok->createMap();
         rangeTokMap->setRangeToken(uniCategNames[k], ranges[k]);
         rangeTokMap->setRangeToken(uniCategNames[k], tok , true);
     }
@@ -179,6 +184,8 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     // Create all range
     tok = tokFactory->createRange();
     tok->addRange(0, Token::UTF16_MAX);
+    // build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgUniAll, tok);
 
     // Create alpha range
@@ -186,37 +193,58 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->mergeRanges(ranges[XMLUniCharacter::UPPERCASE_LETTER]);
     tok->mergeRanges(ranges[XMLUniCharacter::LOWERCASE_LETTER]);
     tok->mergeRanges(ranges[XMLUniCharacter::OTHER_LETTER]);
+    // build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsAlpha, tok);
 
     // Create alpha-num range
     RangeToken* alnumTok = tokFactory->createRange();
     alnumTok->mergeRanges(tok);
     alnumTok->mergeRanges(ranges[XMLUniCharacter::DECIMAL_DIGIT_NUMBER]);
+    // build the internal map.
+    alnumTok->createMap();
     rangeTokMap->setRangeToken(fgUniIsAlnum, alnumTok);
 
     // Create word range
     tok = tokFactory->createRange();
     tok->mergeRanges(alnumTok);
     tok->addRange(chUnderscore, chUnderscore);
+    // build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsWord, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsWord, tok , true);
 
     // Create assigned range
-    tok = ranges[XMLUniCharacter::UNASSIGNED];
-    rangeTokMap->setRangeToken(fgUniAssigned,(RangeToken*)RangeToken::complementRanges(tok,
-		          tokFactory, tokFactory->getMemoryManager()));
+    tok = (RangeToken*)RangeToken::complementRanges(
+                ranges[XMLUniCharacter::UNASSIGNED],
+		        tokFactory,
+                tokFactory->getMemoryManager());
+    // build the internal map.
+    tok->createMap();
+    rangeTokMap->setRangeToken(fgUniAssigned,tok);
 
     // Create space range
     tok = tokFactory->createRange();
     tok->mergeRanges(ranges[XMLUniCharacter::SPACE_SEPARATOR]);
     tok->mergeRanges(ranges[XMLUniCharacter::LINE_SEPARATOR]);
     //tok->mergeRanges(ranges[XMLUniCharacter::PARAGRAPH_SEPARATOR]);
+    // build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsSpace, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsSpace, tok , true);
+
+    // build the internal maps.
+    for (int i=0; i < UNICATEGSIZE; i++) {
+        ranges[i]->createMap();
+    }
 
     fRangesCreated = true;
 }

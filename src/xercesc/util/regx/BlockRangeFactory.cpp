@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/05/05 01:12:24  dbertoni
+ * Fix for Jira issue XERCESC-1391.
+ *
  * Revision 1.8  2004/11/12 23:24:58  knoaman
  * Fix multi threading problem.
  *
@@ -387,8 +390,13 @@ void BlockRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
             tok->addRange(0x100000, 0x10FFFD);
             foundPrivate = true;
         }
+
+        // Build the internal map.
+        tok->createMap();
         rangeTokMap->setRangeToken(fgBlockNames[i], tok);
         tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+        // Build the internal map.
+        tok->createMap();
         rangeTokMap->setRangeToken(fgBlockNames[i], tok , true);
     }
 

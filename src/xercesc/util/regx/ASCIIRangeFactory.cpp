@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/05/05 01:12:24  dbertoni
+ * Fix for Jira issue XERCESC-1391.
+ *
  * Revision 1.6  2004/11/12 23:24:58  knoaman
  * Fix multi threading problem.
  *
@@ -100,17 +103,33 @@ void ASCIIRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->addRange(chFF, chFF);
     tok->addRange(chCR, chCR);
     tok->addRange(chSpace, chSpace);
+
+    // Build the internal map.
+    tok->createMap();
+
     rangeTokMap->setRangeToken(fgASCIISpace, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+
+    // Build the internal map.
+    tok->createMap();
+
     rangeTokMap->setRangeToken(fgASCIISpace, tok , true);
 
     // Create digits ranges
     tok = tokFactory->createRange();
     tok->addRange(chDigit_0, chDigit_9);
+
+    // Build the internal map.
+    tok->createMap();
+
     rangeTokMap->setRangeToken(fgASCIIDigit, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+
+    // Build the internal map.
+    tok->createMap();
+
     rangeTokMap->setRangeToken(fgASCIIDigit, tok , true);
 
     // Create word ranges
@@ -119,9 +138,13 @@ void ASCIIRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->addRange(chLatin_A, chLatin_Z);
     tok->addRange(chUnderscore, chUnderscore);
     tok->addRange(chLatin_a, chLatin_z);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgASCIIWord, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgASCIIWord, tok , true);
 
     // Create xdigit ranges
@@ -129,17 +152,26 @@ void ASCIIRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->addRange(chDigit_0, chDigit_9);
     tok->addRange(chLatin_A, chLatin_F);
     tok->addRange(chLatin_a, chLatin_a);
+    // Build the internal map.
+    tok->createMap();
+
     rangeTokMap->setRangeToken(fgASCIIXDigit, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgASCIIXDigit, tok , true);
 
     // Create ascii ranges
     tok = tokFactory->createRange();
     tok->addRange(0x00, 0x7F);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgASCII, tok);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    // Build the internal map.
+    tok->createMap();
     rangeTokMap->setRangeToken(fgASCII, tok , true);
 
     fRangesCreated = true;

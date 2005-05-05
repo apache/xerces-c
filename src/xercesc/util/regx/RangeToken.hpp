@@ -78,6 +78,13 @@ public:
     // -----------------------------------------------------------------------
     bool match(const XMLInt32 ch);
 
+    // -----------------------------------------------------------------------
+    //  Creates the map.  This will happen automatically,
+    //  necessary.
+    // -----------------------------------------------------------------------
+    void
+    createMap();
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -88,8 +95,9 @@ private:
     // -----------------------------------------------------------------------
     // Private Helper methods
     // -----------------------------------------------------------------------
-    void createMap();
     void expand(const unsigned int length);
+
+    void doCreateMap();
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -104,6 +112,16 @@ private:
     RangeToken*  fCaseIToken;
     MemoryManager* fMemoryManager;
 };
+
+
+inline void RangeToken::createMap()
+{
+    if (!fMap)
+    {
+        doCreateMap();
+    }
+}
+
 
 XERCES_CPP_NAMESPACE_END
 
