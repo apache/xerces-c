@@ -439,8 +439,8 @@ if test $bitsToBuild = 64; then
                if test $cppcompiler; then
                    case $cppcompiler in
                        aCC)
-                          bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
-                          bitstobuildLink=" +DA2.0W " ;;     
+                          bitstobuildDefines=" $bitstobuildDefines +DD64 "
+                          bitstobuildLink=" +DD64 " ;;     
                        aCC05)
                           bitstobuildDefines=" $bitstobuildDefines +DD64 "
                           bitstobuildLink=" +DD64 " ;;
