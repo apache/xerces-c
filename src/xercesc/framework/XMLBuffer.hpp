@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/05/05 04:12:57  dbertoni
+ * Fix for Jira issue XERCESC-1416
+ *
  * Revision 1.9  2004/12/13 16:36:43  cargilld
  * Performance improvement from Christian Will and bug fix from David Bertoni.
  *
@@ -313,6 +316,8 @@ private :
 class XMLPARSER_EXPORT XMLBufferFullHandler
 {
 public :
+
+    virtual ~XMLBufferFullHandler() {}
 
     /**
      * Callback method, intended to allow clients of an XMLBuffer which has
