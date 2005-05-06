@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2005/05/06 21:45:45  dbertoni
+ * Change for loop control variable for compilers that don't enforce for scope.
+ *
  * Revision 1.8  2005/05/05 01:12:24  dbertoni
  * Fix for Jira issue XERCESC-1391.
  *
@@ -242,8 +245,8 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     rangeTokMap->setRangeToken(fgUniIsSpace, tok , true);
 
     // build the internal maps.
-    for (int i=0; i < UNICATEGSIZE; i++) {
-        ranges[i]->createMap();
+    for (int l=0; l < UNICATEGSIZE; l++) {
+        ranges[l]->createMap();
     }
 
     fRangesCreated = true;
