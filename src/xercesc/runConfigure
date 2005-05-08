@@ -650,12 +650,14 @@ case $cppcompiler in
       CXX="aCC"
       CXXVER="aCC05"
       ;;      
+
    '')
    	  echo "C++ compiler not specified...we'll assume that configure will find it..."
    	  ;;
 
    *)
-      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway..."
+      echo "I do not recognize the C++ compiler '$cppcompiler', but don't worry, 'cause I'm trusting you..."
+      CXX="$cppcompiler"
       ;;
 esac
 
