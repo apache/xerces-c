@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="ws2_32.lib"
+				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_6.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
@@ -93,7 +93,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="ws2_32.lib"
+				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_6D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
