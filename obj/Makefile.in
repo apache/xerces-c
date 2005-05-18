@@ -48,9 +48,9 @@ include ../src/xercesc/Makefile.incl
 LIB=${XERCESCROOT}/lib
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET = "//'${LOADMOD}(IXM4C55)'"
-BATCH_EXP = "//'${LOADEXP}(IXM4C55)'"
-DEPDOM_TARGET = "//'${LOADMOD}(IXMDD55)'"
+BATCH_TARGET = "//'${LOADMOD}(IXM4C56)'"
+BATCH_EXP = "//'${LOADEXP}(IXM4C56)'"
+DEPDOM_TARGET = "//'${LOADMOD}(IXMDD56)'"
 endif
 
 ALL_OBJECTS=$(wildcard $(PLATFORM)/*.o)

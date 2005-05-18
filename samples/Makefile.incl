@@ -309,26 +309,39 @@ endif
 #   export LOADMOD=USERID.LOAD                                    #
 #   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the IXM4C55X definition sidedeck    #
+# to specify your LOADMOD and the IXM4C56X definition sidedeck    #
 # dataset.  				                          #
 ###################################################################
 
 ifeq (${PLATFORM}, OS390)
-CMP= -c -DOS390 ${CXXFLAGS}
+ifeq (${OS390_XPLINK},1)
+XPLINK_CCOPTS=-Wc,'XPLINK'
+XPLINK_LKOPTS=-Wl,'XPLINK'
+else
+XPLINK_CCOPTS=
+XPLINK_LKOPTS=
+endif
+CMP= -c -DOS390 ${CXXFLAGS} ${XPLINK_CCOPTS}
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
 CC = _CXX_CXXSUFFIX="cpp" c++ -W0,"langlvl(extended)" -Wc,"TMPLPARSE(NO)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
 else
 CC = _CXX_CXXSUFFIX="cpp" c++ -W0,"langlvl(extended)" -Wc,"TMPLPARSE(NO)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
 endif
-LINK =  ${CC} ${LDFLAGS}
+LINK =  ${CC} ${LDFLAGS} ${XPLINK_LKOPTS}
 PLATFORM_LIB_LINK_OPTIONS=
 EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
 SHLIBSUFFIX=.dll
+ifeq (${OS390_XPLINK},1)
+OS390SIDEDECK=.xplink.x
+OS390BATCH_MAIN_DLL=IXM4C6XX
+else
 OS390SIDEDECK=.x
+OS390BATCH_MAIN_DLL=IXM4C56X
+endif
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(IXM4C55X)'"
+LIBRARY_NAMES="//'${LOADEXP}(${OS390BATCH_MAIN_DLL})'"
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
 endif
