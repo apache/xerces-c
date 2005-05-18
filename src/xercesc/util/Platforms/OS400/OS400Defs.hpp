@@ -1,3 +1,7 @@
+#if (__OS400_TGTVRM__>=510)                               /* @01a */
+    #pragma datamodel(P128)                               /* @01a */
+#endif                                                    /* @01a */
+
 /*
  * Copyright 1999-2000,2004 The Apache Software Foundation.
  * 
@@ -16,6 +20,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2005/05/18 13:44:43  cargilld
+ * OS400 updates from Jay Hansen.
+ *
  * Revision 1.3  2004/09/23 21:44:13  cargilld
  * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
  *
@@ -44,3 +51,7 @@
 //  And define our file handle abstraction
 // ---------------------------------------------------------------------------
 typedef void* FileHandle;
+#if (__OS400_TGTVRM__>=510)                                /* @01a */  
+     #pragma datamodel(pop)                                /* @01a */ 
+#endif                                                     /* @01a */
+

@@ -1,3 +1,7 @@
+#if (__OS400_TGTVRM__>=510)                               /* @01a */
+    #pragma datamodel(P128)                               /* @01a */
+#endif                                                    /* @01a */
+
 /*
  * Copyright 1999-2001,2004 The Apache Software Foundation.
  * 
@@ -16,6 +20,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2005/05/18 13:44:44  cargilld
+ * OS400 updates from Jay Hansen.
+ *
  * Revision 1.3  2004/09/08 13:56:45  peiyongz
  * Apache License Version 2.0
  *
@@ -34,13 +41,14 @@
  */
 
 
-const char* iconv_getDefaultCodepage(void);
-
-
 #include "utypes.h"
 #include <iconv.h>
 
-extern "C" int QlgCvtTextDescToDesc (int, int, char *, int, char*, int, int);
+XERCES_CPP_NAMESPACE_BEGIN
+
+const char* iconv_getDefaultCodepage(void);
+
+// extern "C" int QlgCvtTextDescToDesc (int, int, char *, int, char*, int, int);
 
 #define MAX_CONVERTER_NAME_LENGTH 60
 #define MAX_SUBCHAR_LEN 4
@@ -127,3 +135,7 @@ static void   initializeDataConverter (UConverter * myUConverter);
 UConverter *createConverter (const char *converterName, UErrorCode * err);
 
 XERCES_CPP_NAMESPACE_END
+#if (__OS400_TGTVRM__>=510)                                /* @01a */  
+     #pragma datamodel(pop)                                /* @01a */ 
+#endif                                                     /* @01a */
+

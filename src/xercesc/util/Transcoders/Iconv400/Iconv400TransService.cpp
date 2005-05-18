@@ -17,12 +17,15 @@
 /**
  * @01A D998714.1 V5R2M0    100301   Swan    :Fix error return flags
  * @02A           V5R2M0    200419   jrhansen : support lowercase function
+ * @03A D93234.1  V1R1M0    102804   JRHansen :fix transcode overflow 
+ * @04A D93234.3  V1R1M0    022505   JRHansen :fix transcode error check 
  * $Id$
  */
 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include "Iconv400TransService.hpp"
 #include <string.h>
@@ -30,7 +33,6 @@
 #include "iconv_cnv.hpp"
 #include "iconv_util.hpp"
 #include <qusec.h>
-#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 
@@ -381,7 +383,9 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
         , &err
     );
 
-    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
+
+    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR) &&
+	(err != U_BUFFER_OVERFLOW_ERROR))   // @03c
     {
         if (orgTarget != (UChar*)toFill)
             getMemoryManager()->deallocate(orgTarget);//delete [] orgTarget;
@@ -856,10 +860,11 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode)
             , &err
         );
 
-        if (err != U_BUFFER_OVERFLOW_ERROR)
+        if (err == U_BUFFER_OVERFLOW_ERROR)  // @04c
 	{
 
         err = U_ZERO_ERROR;
+	delete [] retVal;  // @04a
         retVal = new XMLCh[targetCap];
         ucnv_toUChars
         (
@@ -928,10 +933,11 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode,
             , &err
         );
 
-        if (err != U_BUFFER_OVERFLOW_ERROR)
+        if (err == U_BUFFER_OVERFLOW_ERROR)  // @04c
 	{
 
         err = U_ZERO_ERROR;
+        manager->deallocate(retVal);  //@04a
         retVal = (XMLCh*) manager->allocate(targetCap * sizeof(XMLCh));//new XMLCh[targetCap];
         ucnv_toUChars
         (

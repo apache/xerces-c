@@ -1,3 +1,7 @@
+#if (__OS400_TGTVRM__>=510)                               /* @01a */
+    #pragma datamodel(P128)                               /* @01a */
+#endif                                                    /* @01a */
+
 /*
  * Copyright 1999-2002,2004 The Apache Software Foundation.
  * 
@@ -57,7 +61,7 @@
 //  Indicate that we support C++ namespace
 //  Do not define it if the compile cannot handle C++ namespace
 // ---------------------------------------------------------------------------
-// #define XERCES_HAS_CPP_NAMESPACE
+#define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
@@ -107,3 +111,7 @@ typedef int            XMLInt32;
 const char* const Xerces_DLLName = "libxercesc";
 
 #endif //OS400SETDEFS_H
+#if (__OS400_TGTVRM__>=510)                                /* @01a */  
+     #pragma datamodel(pop)                                /* @01a */ 
+#endif                                                     /* @01a */
+

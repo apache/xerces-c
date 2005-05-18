@@ -22,12 +22,13 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #define MY_XP_CPLUSPLUS
+#include    <xercesc/util/XMLUniDefs.hpp>
+#include    <xercesc/util/XercesDefs.hpp>
 #include    <pthread.h>
 #include    <xercesc/util/PlatformUtils.hpp>
 #include    <xercesc/util/RuntimeException.hpp>
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/XMLString.hpp>
-#include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/PanicHandler.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
@@ -48,7 +49,9 @@
 
 #if defined (XML_USE_ICONV400_TRANSCODER)
     #include <xercesc/util/Transcoders/Iconv400/Iconv400TransService.hpp>
+XERCES_CPP_NAMESPACE_BEGIN    
 	void cleanupDefaultConverter();
+XERCES_CPP_NAMESPACE_END    
 #elif defined (XML_USE_ICU_TRANSCODER)
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
 #else
@@ -340,28 +343,176 @@ void XMLPlatformUtils::resetFile(FileHandle theFile
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File system methods
 // ---------------------------------------------------------------------------
-/* since we do not have the realpath function on AS/400 and it appears
-to no be important that we convert the name to the real path we will
-only verify that the path exists  - note that this may make AS/400 output a different error for the pathname but customer should
-be able to determine what the name is suppose to be*/
 
-char *realpath(const char *file_name, char *resolved_name)
-{
- if (file_name== NULL)
- {
-   errno = EINVAL;
-   return(NULL);
- }
- if (access(file_name,F_OK)) /* verify that the file exists*/
- {
-  errno = EACCES;
-  return(NULL);
- }
- else
- /* code says that we make a copy of the file name so do it */
-  strcpy(resolved_name,file_name);
-  return(resolved_name);
+//-------------------------
+//-- BEGIN realpath code --
+//-------------------------
+
+#include <limits.h>
+#include <unistd.h>
+#include <errno.h>
+
+//
+// realpath
+//
+// Resolve a file name into its absolute name
+// This function doesn't exist in the iSeries C runtime library so this partial replacement was
+//  written to handle most of its function.  This implementation doesn't resolve symbolic links
+//  to their "real" paths because for the purposes of reading files the symlinks will work just
+//  fine.
+//
+char *realpath(const char *file_name, char *resolved_name) {
+    // Input: file_name - the name of a file or directory
+    // Output: resolved_name - file_name with a fully qualified path and all "extraneous" path stuff removed
+    // Returned value: Same as resolved_name unless there is an error in which case NULL is returned
+    //
+    // Possible errors:  (no)==we don't check that
+    //  EACCES      Read or search permission was denied for a component of the path name.
+    //  EINVAL     File_name or resolved_name is a null pointer.
+    //  (no) ELOOP     Too many symbolic links are encountered in translating file_name.
+    //  ENAMETOOLONG     The length of file_name or resolved_name exceeds PATH_MAX or a path name component is longer than NAME_MAX.
+    //  ENOENT     The file_name parameter does not exist or points to an empty string.
+    //  (no) ENOTDIR     A component of the file_name prefix is not a directory.
+    // If there is an error in resolving the name the return value will be NULL (i.e., 0) and resolved_name
+    //  will be changed to an empty string (a 0 will be written into its first character position)
+
+    // Note for future expansion:  "readlink" for links
+
+    // Check for null name errors
+     if (resolved_name == NULL) {
+        errno = EINVAL;
+        return(NULL);
+     }
+    // Assumption: At this point resolved_name points to a character array large enough to hold at least PATH_MAX characters
+     if (file_name == NULL) {
+        errno = EINVAL;
+        *resolved_name = '\0';
+        return(NULL);
+     }
+    // Assumption: At this point file_name is a valid null terminated string
+
+    // Check for empty name error
+     if (*file_name == '\0') {
+        errno = ENOENT;
+        *resolved_name = '\0';
+        return(NULL);
+     }
+
+    char *from = (char*)file_name;
+    char *to = resolved_name;
+    int fromIdx=0, toIdx=0;
+
+    if (*file_name == '/') {
+        // If file_name starts with a '/', it's an absolute path
+        // Everything's already set up properly
+        to[toIdx++] = '/';
+    } // if
+    else {
+        // file_name doesn't start with a '/' so it is relative to the current directory
+        // Prepend the current working directory before the file name
+        getcwd(to, PATH_MAX);
+        size_t cwd_len = strlen(resolved_name);
+        // Assumption: getcwd returns a non-empty, valid, null terminated string
+
+        // Add '/' on the cwd if needed
+        // Note: I think the only time a '/' will end the cwd is if it is just "/"
+        //  but this covers otherwise just in case
+        toIdx = cwd_len;
+        if ((toIdx < PATH_MAX-1) &&
+            (to[toIdx] != '/')) {
+             to[toIdx++] = '/';
+        } // if
+    } // else
+
+    // The target ends in a '/' at this point
+    // Skip any leading '/'s in the source
+    while (from[fromIdx] == '/') {
+        fromIdx++;
+    } // while
+
+    // Copy from the source to the target removing extraneous "."s, "/"s, and ".."s as we go
+    // Assumption: looking ahead for characters is OK because all the string end with '/0'
+    while (from[fromIdx] != '\0' ) {
+        // Assumption - at top of loop we are either at '..', '.', or 'xxxxxxxx' (where x is any non-'/' character), each either followed by a '/' or a closing '\0'
+        //  "../" => "/", also strips trailing ".."
+        if ((from[fromIdx] == '.') &&
+            (from[fromIdx+1] == '.') &&
+            ((from[fromIdx+2] == '/') || (from[fromIdx+2] == '\0'))) {
+            fromIdx += (from[fromIdx+2] == '\0') ? 2 : 3;
+            // Back up to the previous '/' in the target except if we are at the first '/' already
+            if (toIdx >= 2) {
+                // Back up past the current '/'
+                --toIdx;
+                // Look back until we find the previous '/'
+                while(to[toIdx-1] != '/') {
+                     --toIdx;
+                } // while
+            } // if
+        } // if
+
+        // "./" => "/", also strips trailing "."
+        else if ((from[fromIdx] == '.') &&
+                 ((from[fromIdx+1] == '/') || (from[fromIdx+1] == '\0'))) {
+             fromIdx += (from[fromIdx+1] == '\0') ? 1 : 2;
+        } // else if
+
+        else {
+            // Copy the characters up to the next '/' or to the closing '\0'
+            while((from[fromIdx] != '/') && (from[fromIdx] != '\0')) {
+                // Check that the file name won't be too long (allow for the '\0' too)
+                if (toIdx >= PATH_MAX-1) {
+                    errno = ENAMETOOLONG;
+                    *resolved_name = '\0';
+                    return(NULL);
+                } // if
+
+                to[toIdx++] = from[fromIdx++];
+            } // while
+        } // else
+
+        if (from[fromIdx] == '/') {
+            // Skip any remaining '/'s in the source
+            while (from[fromIdx] == '/') {
+                fromIdx++;
+            } // while
+
+            // insert a '/' if there's more path to come (and room for it)
+            if (from[fromIdx] != '\0') {
+                // Check that the file name won't be too long (allow for the '\0' too)
+                if (toIdx >= PATH_MAX-1) {
+                    errno = ENAMETOOLONG;
+                    *resolved_name = '\0';
+                    return(NULL);
+                } // if
+
+                to[toIdx++] = '/';
+            } // if
+        } // if
+
+    } // while
+
+    // Remove a trailing '/' (except from "/")
+    if ((toIdx > 1) &&
+        (to[toIdx-1] == '/'))
+        --toIdx;
+
+    // End the string properly
+    to[toIdx] = '\0';
+
+    // Check if the file exists
+    if (access(resolved_name,F_OK)) {
+        errno = EACCES;
+        *resolved_name = '\0';
+        return(NULL);
+    } // if
+
+    // The file exists, return its name.
+     return(resolved_name);
 }
+
+//-----------------------
+//-- END realpath code --
+//-----------------------
 
 
 
@@ -562,7 +713,7 @@ public:
 
     RecursiveMutex() {
 		       if (pthread_mutex_init(&mutex, NULL))
-			        XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
+			    XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
                        recursionCount = 0;
                        tid.reservedHiId = 0;
 		       tid.reservedLoId = 0;
@@ -593,7 +744,7 @@ public:
 
 			  if (pthread_mutex_unlock(&mutex) != 0)
 			      XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
-              tid.reservedHandle= 0;
+                          tid.reservedHandle= 0;
 			  tid.reservedHiId = 0;
 			  tid.reservedLoId = 0;
                        }
@@ -746,7 +897,7 @@ return;
 
 FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 {
-    return (FileHandle)fdopen(dup(0), "rb");
+    return (FileHandle)fdopen(dup(0), "r");
 }
 
 void XMLPlatformUtils::platformTerm()

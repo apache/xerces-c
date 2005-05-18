@@ -1,3 +1,7 @@
+#if (__OS400_TGTVRM__>=510)                               /* @01a */
+    #pragma datamodel(P128)                               /* @01a */
+#endif                                                    /* @01a */
+
 /*
  * Copyright 1999-2001,2004 The Apache Software Foundation.
  * 
@@ -16,6 +20,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2005/05/18 13:44:44  cargilld
+ * OS400 updates from Jay Hansen.
+ *
  * Revision 1.3  2004/09/08 13:56:45  peiyongz
  * Apache License Version 2.0
  *
@@ -314,4 +321,8 @@ U_CAPI
 XERCES_CPP_NAMESPACE_END
 
 #endif
+
+#if (__OS400_TGTVRM__>=510)                                /* @01a */  
+     #pragma datamodel(pop)                                /* @01a */ 
+#endif                                                     /* @01a */
 

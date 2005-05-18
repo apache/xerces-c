@@ -16,6 +16,12 @@
 
 /**
  * $Log$
+ * Revision 1.5  2005/05/18 13:44:44  cargilld
+ * OS400 updates from Jay Hansen.
+ *
+ * Revision 1.5  2005/03/09 21:44:13  jrhansen
+ * Use qlgusr.h instead of QlgCvtTextDescToDesc prototype  jrhansen  @15
+ * 
  * Revision 1.4  2004/09/23 21:44:13  cargilld
  * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
  *
@@ -39,14 +45,16 @@
  *
  */
 
-#include <iconv.h>
 #include <xercesc/util/XercesDefs.hpp>
+#include <iconv.h>
 #include <xercesc/util/Platforms/OS400/OS400PlatformUtils.hpp>
 #include <stdlib.h>
 #include <unistd.h>
 #include <iconv_util.hpp>
 #include <iconv_cnv.hpp>
 #include <ctype.h>
+#include <qlgusr.h>   // @15a
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -58,8 +66,8 @@ static UErrorCode gErr = U_ZERO_ERROR;
 
 #include "utypes.h"
 
-void   shareConverterData (UConverterSharedData * data,char *InDescriptor) ;
-UConverterSharedData *getSharedConverterData(char *Descriptor);
+// void   shareConverterData (UConverterSharedData * data,char *InDescriptor) ;
+// UConverterSharedData *getSharedConverterData(char *Descriptor);
 #define defaultConverter (_defaultConverter==NULL)?_defaultConverter=ucnv_open(NULL, &gErr):_defaultConverter
 
 
@@ -124,7 +132,7 @@ char* u_austrcpy(char *s1,
  * -Call dataConverter initializer (Data=TRUE, Cached=TRUE)
  * -Call AlgorithmicConverter initializer (Data=FALSE, Cached=TRUE)
  */
-int QlgCvtTextDescToDesc(int,int,char *,int,char *,int,int);
+// int QlgCvtTextDescToDesc(int,int,char *,int,char *,int,int);  @14d
 
 
 

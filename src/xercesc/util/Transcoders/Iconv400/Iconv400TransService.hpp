@@ -1,3 +1,7 @@
+#if (__OS400_TGTVRM__>=510)                               /* @01a */
+    #pragma datamodel(P128)                               /* @01a */
+#endif                                                    /* @01a */
+
 /*
  * Copyright 1999-2002,2004 The Apache Software Foundation.
  * 
@@ -252,3 +256,7 @@ private :
 XERCES_CPP_NAMESPACE_END
 
 #endif
+#if (__OS400_TGTVRM__>=510)                                /* @01a */  
+     #pragma datamodel(pop)                                /* @01a */ 
+#endif                                                     /* @01a */
+
