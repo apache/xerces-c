@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.31  2005/05/18 18:24:44  cargilld
+ * For time schema datatypes, ensure milisecond only contains 0-9.
+ *
  * Revision 1.30  2005/01/07 15:12:10  amassari
  * Removed warnings
  *
@@ -1473,30 +1476,21 @@ int XMLDateTime::parseInt(const int start, const int end) const
 //
 double XMLDateTime::parseMiliSecond(const int start, const int end) const
 {
+    double div = 10;
+    double retval = 0;
+    
+    for (int i=start; i < end; i++) {
 
-    unsigned int  miliSecLen = (end-1) - (start-1) + 1; //to include the '.'
-    XMLCh* miliSecData = (XMLCh*) fMemoryManager->allocate( (miliSecLen + 1) * sizeof(XMLCh));
-    ArrayJanitor<XMLCh> janMili(miliSecData, fMemoryManager);
-    XMLString::copyNString(miliSecData, &(fBuffer[start-1]), miliSecLen);
-    *(miliSecData + miliSecLen) = chNull;
+        if (fBuffer[i] < chDigit_0 || fBuffer[i] > chDigit_9)
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, fMemoryManager);
 
-    char *nptr = XMLString::transcode(miliSecData, fMemoryManager);
-    ArrayJanitor<char> jan(nptr, fMemoryManager);
-    int   strLen = strlen(nptr);
-    char *endptr = 0;
-    errno = 0;
-
-    //printf("milisec=<%s>\n", nptr);
-
-    double retVal = strtod(nptr, &endptr);
-
-    // check if all chars are valid char
-    if ( (endptr - nptr) != strLen)
-        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, fMemoryManager);
+        retval += (fBuffer[i] == chDigit_0) ? 0 : ((double) (fBuffer[i] - chDigit_0)/div);
+        div *= 10;
+    }
 
     // we don't check underflow occurs since
     // nothing we can do about it.
-    return retVal;
+    return retval;
 }
 
 //
