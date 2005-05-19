@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2005/05/19 15:46:32  cargilld
+ * 390 update: use ICU table which is present with the uniconv390.
+ *
  * Revision 1.4  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -42,7 +45,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
 
-#if defined (XML_USE_ICU_TRANSCODER)
+#if defined (XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
    #include <unicode/uchar.h>
 #else
    #include <xercesc/util/regx/UniCharTable.hpp>
@@ -55,7 +58,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 unsigned short XMLUniCharacter::getType(const XMLCh ch) {
 
-#if defined (XML_USE_ICU_TRANSCODER)
+#if defined (XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
 	return (unsigned short) u_charType(ch);
 #else
 	return (unsigned short) fgUniCharsTable[ch];
