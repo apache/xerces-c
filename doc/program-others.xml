@@ -35,7 +35,7 @@
         <p>The minor and revision (patch level) numbers have two digits of resolution
            which means that '3' becomes '03' and '4' becomes '04' in this example.
         </p>
-        <p>There are also other string macro, or constants to represent the Xerces-C++ version.
+        <p>There are also other string macros or constants to represent the Xerces-C++ version.
            Please refer to the header xercesc/util/XercesVersion.hpp for further details.
         </p>
     </s2>
