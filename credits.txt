@@ -2,6 +2,7 @@ The following people (in alphabetical order) have contributed to the
 development and ports of the XML4C source code, which was submitted to
 the Apache Software Foundation.
 
+
 Nadav Aharoni
 Curt Arnold
 Edward Avis
