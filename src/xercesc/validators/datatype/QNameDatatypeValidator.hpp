@@ -115,6 +115,11 @@ protected:
     virtual void checkValueSpace(const XMLCh* const content
                                 , MemoryManager* const manager);
 
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase
+                            , MemoryManager* const manager);
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
