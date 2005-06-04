@@ -541,7 +541,7 @@ UTIL_CPP_PUBHEADERS = \
 	XMLInitializer.hpp \
 	XMLInteger.hpp \
 	XMLMsgLoader.hpp \
-	XMLMutexHolder.hpp \
+	XMLHolder.hpp \
 	XMLNetAccessor.hpp \
 	XMLNumber.hpp \
 	XMLRegisterCleanup.hpp \
@@ -582,7 +582,7 @@ C_FILES = \
 	ValueStackOf.c \
 	ValueVectorOf.c \
 	XMLDeleterFor.c \
-	XMLMutexHolder.c \
+	XMLHolder.c \
 	LogicalPath.c
 
 UTIL_CPP_OBJECTS = \
