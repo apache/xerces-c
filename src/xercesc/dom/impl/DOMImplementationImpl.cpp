@@ -91,7 +91,7 @@ static XMLMutex& getMutex4DOM()
         // If we got here first, then register it and set the registered flag
         if (!sMutex4DOM)
         {
-            sMutex4DOM = new XMLMutex;
+            sMutex4DOM = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             mutex4DOMCleanup.registerCleanup(reinitMutex4DOM);
         }
     }

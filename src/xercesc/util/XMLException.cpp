@@ -59,7 +59,7 @@ static XMLMutex& gMsgMutex()
 
         if (!sScannerMutexRegistered)
         {
-            sMsgMutex = new XMLMutex;
+            sMsgMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             msgMutexCleanup.registerCleanup(XMLException::reinitMsgMutex);
             sScannerMutexRegistered = true;
         }

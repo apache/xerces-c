@@ -45,6 +45,7 @@ XMLSynchronizedStringPool::XMLSynchronizedStringPool(const XMLStringPool *constP
 
     XMLStringPool(modulus, manager)
     , fConstPool(constPool)
+    , fMutex(manager)
 {
 }
 

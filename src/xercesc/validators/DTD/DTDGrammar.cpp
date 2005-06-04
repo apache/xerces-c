@@ -291,7 +291,7 @@ void DTDGrammar::resetEntityDeclPool() {
         {
             XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
             if (!sEntityPoolMutex)
-                sEntityPoolMutex = new XMLMutex;
+                sEntityPoolMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
         }
 
         // Use a faux scope to synchronize while we do this

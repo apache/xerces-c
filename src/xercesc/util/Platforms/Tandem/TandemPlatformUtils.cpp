@@ -94,6 +94,7 @@
 #include    <sys/timeb.h>
 #include    <string.h>
 #include    <xercesc/util/OutOfMemoryException.hpp>
+#include    <xercesc/util/XMLHolder.hpp>
 
 #if defined (XML_USE_ICU_MESSAGELOADER)
     #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
@@ -123,11 +124,11 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     try
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
-        retVal = new ICUMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
-        retVal = new MsgCatalogLoader(msgDomain);
+        retVal = new (fgMemoryManager) MsgCatalogLoader(msgDomain);
 #else
-        retVal = new InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #endif
     }
     catch(const OutOfMemoryException&)
@@ -312,49 +313,60 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 // -----------------------------------------------------------------------
 //  Mutex methods
 // -----------------------------------------------------------------------
+
+typedef XMLHolder<pthread_mutex_t>  MutexHolderType;
+
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-    if (mtxHandle == NULL)
-        return;
-    if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
+    if (mtxHandle != NULL)
     {
-        throw XMLPlatformUtilsException("Could not destroy a mutex");
+        MutexHolderType* const  holder =
+            MutexHolderType::castTo(mtxHandle);
+
+        if (pthread_mutex_destroy(&holder->fInstance))
+        {
+            delete holder;
+
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                     XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
+        }
+        delete holder;
     }
-    if ( (pthread_mutex_t*)mtxHandle)
-        delete (pthread_mutex_t*) mtxHandle;
 }
+
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-    if (mtxHandle == NULL)
-        return;
-    if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
+    if (mtxHandle != NULL)
     {
-        throw XMLPlatformUtilsException("Could not lock a mutex");
+        if (pthread_mutex_lock(&MutexHolderType::castTo(mtxHandle)->fInstance))
+        {
+            panic(PanicHandler::Panic_MutexErr);
+        }
     }
-
 }
-void* XMLPlatformUtils::makeMutex()
+
+void* XMLPlatformUtils::makeMutex(MemoryManager* manager)
 {
-    pthread_mutex_t* mutex = new pthread_mutex_t;
-    if (mutex == NULL)
+    MutexHolderType* const  holder = new (manager) MutexHolderType;
+
+    if (pthread_mutex_init(&holder->fInstance, NULL))
     {
-        throw XMLPlatformUtilsException("Could not initialize a mutex");
+        delete holder;
+
+        panic(PanicHandler::Panic_MutexErr);
     }
 
-    if (pthread_mutex_init(mutex, NULL))
-    {
-        throw XMLPlatformUtilsException("Could not create a mutex");
-    }
-
-    return (void*)(mutex);
+    return holder;
 }
+
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-    if (mtxHandle == NULL)
-        return;
-    if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
+    if (mtxHandle != NULL)
     {
-        throw XMLPlatformUtilsException("Could not unlock a mutex");
+        if (pthread_mutex_unlock(&MutexHolderType::castTo(mtxHandle)->fInstance))
+        {
+            panic(PanicHandler::Panic_MutexErr);
+        }
     }
 }
 

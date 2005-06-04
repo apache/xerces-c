@@ -49,6 +49,7 @@
 #include    <xercesc/util/RuntimeException.hpp>
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/Mutexes.hpp>
+#include    <xercesc/util/XMLHolder.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/XMLUni.hpp>
@@ -93,9 +94,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_SOCKET)
-    return new SocketNetAccessor();
+    return new (fgMemoryManager) SocketNetAccessor();
 #elif defined (XML_USE_NETACCESSOR_LIBWWW)
-    return new LibWWWNetAccessor();
+    return new (fgMemoryManager) LibWWWNetAccessor();
 #else
     return 0;
 #endif
@@ -114,12 +115,12 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     try
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
-        retVal = new ICUMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
-        retVal = new MsgCatalogLoader(msgDomain);
+        retVal = new (fgMemoryManager) MsgCatalogLoader(msgDomain);
 #else
         // same as -DXML_USE_INMEM_MESSAGELOADER
-        retVal = new InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #endif
     }
     catch(const OutOfMemoryException&)
@@ -146,15 +147,15 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 #if defined (XML_USE_ICU_TRANSCODER)
     // Use ICU transcoding services.
     // same as -DXML_USE_ICU_MESSAGELOADER
-    return new ICUTransService;
+    return new (fgMemoryManager) ICUTransService;
 #elif defined (XML_USE_GNU_TRANSCODER)
-    return new IconvGNUTransService;
+    return new (fgMemoryManager) IconvGNUTransService;
 #elif defined (XML_USE_CYGWIN_TRANSCODER)
-    return new CygwinTransService;
+    return new (fgMemoryManager) CygwinTransService;
 #else
     // Use native transcoding services.
     // same as -DXML_USE_NATIVE_TRANSCODER
-    return new IconvTransService;
+    return new (fgMemoryManager) IconvTransService;
 
 #endif
 }
@@ -464,27 +465,33 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
-void* XMLPlatformUtils::makeMutex()
+typedef XMLHolder<CRITICAL_SECTION>  MutexHolderType;
+
+void* XMLPlatformUtils::makeMutex(MemoryManager* manager)
 {
-	CRITICAL_SECTION* newCS = new CRITICAL_SECTION;
-	::InitializeCriticalSection(newCS);
-	return newCS;
+    MutexHolderType* const  holder = new (manager) MutexHolderType;
+
+    InitializeCriticalSection(&holder->fInstance);
+
+    return holder;
 }
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-	::DeleteCriticalSection((LPCRITICAL_SECTION)mtxHandle);
-	delete (CRITICAL_SECTION*)mtxHandle;
+    MutexHolderType* const  holder = MutexHolderType::castTo(mtxHandle);
+
+    ::DeleteCriticalSection(&holder->fInstance);
+    delete holder;
 }
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-	::EnterCriticalSection((LPCRITICAL_SECTION)mtxHandle);
+    ::EnterCriticalSection(&MutexHolderType::castTo(mtxHandle)->fInstance);
 }
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-	::LeaveCriticalSection((LPCRITICAL_SECTION)mtxHandle);
+    ::LeaveCriticalSection(&MutexHolderType::castTo(mtxHandle)->fInstance);
 }
 
 void* XMLPlatformUtils::compareAndSwap (void**             toFill,
@@ -522,20 +529,20 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager*)
 {
 	return 0;
 }
 
-void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+void XMLPlatformUtils::closeMutex(void* const)
 {
 }
 
-void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+void XMLPlatformUtils::lockMutex(void* const)
 {
 }
 
-void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+void XMLPlatformUtils::unlockMutex(void* const)
 {
 }
 

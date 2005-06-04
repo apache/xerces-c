@@ -270,11 +270,11 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     platformInit();
 
     // Create the local sync mutex
-    gSyncMutex = new XMLMutex;
+    gSyncMutex = new XMLMutex(fgMemoryManager);
 
 	// Create the mutex for the static data cleanup list
-    gXMLCleanupListMutex = new XMLMutex;
-    fgAtomicMutex = new XMLMutex;
+    gXMLCleanupListMutex = new XMLMutex(fgMemoryManager);
+    fgAtomicMutex = new XMLMutex(fgMemoryManager);
 
     //
     //  Ask the per-platform code to make the desired transcoding service for

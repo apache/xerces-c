@@ -24,6 +24,8 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/XMLHolder.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -638,34 +640,40 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 }
 
 
+typedef XMLHolder<CRITICAL_SECTION>  MutexHolderType;
+
 
 // ---------------------------------------------------------------------------
 //  Mutex methods
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-    ::DeleteCriticalSection((LPCRITICAL_SECTION)mtxHandle);
-    delete (CRITICAL_SECTION*)mtxHandle;
+    MutexHolderType* const  holder = MutexHolderType::castTo(mtxHandle);
+
+    ::DeleteCriticalSection(&holder->fInstance);
+    delete holder;
 }
 
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-    ::EnterCriticalSection((LPCRITICAL_SECTION)mtxHandle);
+    ::EnterCriticalSection(&MutexHolderType::castTo(mtxHandle)->fInstance);
 }
 
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager* manager)
 {
-    CRITICAL_SECTION* newCS = new CRITICAL_SECTION;
-    InitializeCriticalSection(newCS);
-    return newCS;
+    MutexHolderType* const  holder = new (manager) MutexHolderType;
+
+    InitializeCriticalSection(&holder->fInstance);
+
+    return holder;
 }
 
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-    ::LeaveCriticalSection((LPCRITICAL_SECTION)mtxHandle);
+    ::LeaveCriticalSection(&MutexHolderType::castTo(mtxHandle)->fInstance);
 }
 
 
@@ -745,9 +753,9 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
-    return new LibWWWNetAccessor();
+    return new (fgMemoryManager) LibWWWNetAccessor();
 #elif defined (XML_USE_NETACCESSOR_WINSOCK)
-    return new WinSockNetAccessor();
+    return new (fgMemoryManager) WinSockNetAccessor();
 #else
     return 0;
 #endif
@@ -762,11 +770,11 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
 #if defined (XML_USE_INMEM_MESSAGELOADER)
-    return new InMemMsgLoader(msgDomain);
+    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #elif defined (XML_USE_WIN32_MSGLOADER)
-    return new Win32MsgLoader(msgDomain);
+    return new (fgMemoryManager) Win32MsgLoader(msgDomain);
 #elif defined (XML_USE_ICU_MESSAGELOADER)
-    return new ICUMsgLoader(msgDomain);
+    return new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #else
     #error You must provide a message loader
 #endif
@@ -788,11 +796,11 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     //  to our DLL.
     //
 #if defined (XML_USE_ICU_TRANSCODER)
-    return new ICUTransService;
+    return new (fgMemoryManager) ICUTransService;
 #elif defined (XML_USE_WIN32_TRANSCODER)
-    return new Win32TransService;
+    return new (fgMemoryManager) Win32TransService;
 #elif defined (XML_USE_CYGWIN_TRANSCODER)
-    return new CygwinTransService;
+    return new (fgMemoryManager) CygwinTransService;
 #else
     #error You must provide a transcoding service implementation
 #endif

@@ -167,8 +167,6 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
         return 0;
     }
 
-	XMLMutexLock lockInit(&fMutex);
-
 	fOptions = options;
 	fOffset = 0;
 	fNoGroups = 1;

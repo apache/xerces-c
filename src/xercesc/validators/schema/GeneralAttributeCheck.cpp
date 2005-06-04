@@ -264,7 +264,7 @@ void GeneralAttributeCheck::mapElements()
             XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 
             if (!sGeneralAttCheckMutex)
-                sGeneralAttCheckMutex = new XMLMutex;
+                sGeneralAttCheckMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
         }
 
         // Use a faux scope to synchronize while we do this

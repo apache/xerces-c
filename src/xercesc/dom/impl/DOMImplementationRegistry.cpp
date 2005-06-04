@@ -90,7 +90,7 @@ XMLMutex& getDOMImplSrcVectorMutex()
 
         if (!gDOMImplSrcVectorMutex)
         {
-            gDOMImplSrcVectorMutex = new XMLMutex;
+            gDOMImplSrcVectorMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             cleanupDOMImplSrcVectorMutex.registerCleanup(reinitDOMImplSrcVectorMutex);
         }
     }
@@ -101,7 +101,7 @@ XMLMutex& getDOMImplSrcVectorMutex()
 void XMLInitializer::initializeDOMImplementationRegistry()
 {
     // mutex
-    gDOMImplSrcVectorMutex = new XMLMutex;
+    gDOMImplSrcVectorMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
     if (gDOMImplSrcVectorMutex) {
         cleanupDOMImplSrcVectorMutex.registerCleanup(reinitDOMImplSrcVectorMutex);
     }

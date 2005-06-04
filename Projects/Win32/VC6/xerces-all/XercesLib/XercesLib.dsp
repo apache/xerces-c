@@ -903,6 +903,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLMutexHolder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLNetAccessor.hpp
 # End Source File
 # Begin Source File

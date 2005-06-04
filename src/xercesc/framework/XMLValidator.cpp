@@ -132,7 +132,7 @@ static XMLMutex& gValidatorMutex()
 
         if (!sMsgMutex)
         {
-            sMsgMutex = new XMLMutex;
+            sMsgMutex = new (XMLPlatformUtils::fgMemoryManager) XMLMutex(XMLPlatformUtils::fgMemoryManager);
             validatorMutexCleanup.registerCleanup(XMLValidator::reinitMsgMutex);
         }
     }

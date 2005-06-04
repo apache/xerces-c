@@ -78,7 +78,7 @@ static XMLMutex& getEncValMutex()
         // If we got here first, then register it and set the registered flag
         if (!sEncValMutex)
         {
-            sEncValMutex = new XMLMutex;
+            sEncValMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             encValRegistryCleanup.registerCleanup(reinitEncValMutex);
         }
     }

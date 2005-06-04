@@ -234,7 +234,7 @@ static XMLMutex& gXSValueMutex()
 
         if (!sXSValueMutext)
         {
-            sXSValueMutext = new XMLMutex;
+            sXSValueMutext = new (XMLPlatformUtils::fgMemoryManager) XMLMutex(XMLPlatformUtils::fgMemoryManager);
             XSValueRegExCleanup.registerCleanup(XSValue::reinitMutex);
         }
     }

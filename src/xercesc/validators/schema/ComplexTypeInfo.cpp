@@ -261,7 +261,7 @@ ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
         {
             XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
             if (!sAnyTypeMutex)
-                sAnyTypeMutex = new XMLMutex;
+                sAnyTypeMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
         }
 
         // Use a faux scope to synchronize while we do this

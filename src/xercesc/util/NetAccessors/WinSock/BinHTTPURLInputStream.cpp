@@ -276,7 +276,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     {
         if (!fInitMutex)
         {
-            XMLMutex* tmpMutex = new XMLMutex();
+            XMLMutex* tmpMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             if (XMLPlatformUtils::compareAndSwap((void**)&fInitMutex, tmpMutex, 0))
             {
                 // Someone beat us to it, so let's clean up ours

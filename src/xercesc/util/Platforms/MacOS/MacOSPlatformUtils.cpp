@@ -201,7 +201,7 @@ XMLPlatformUtils::openFile(const char* const fileName
     if (!gFileSystemCompatible)
         ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
-    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile(manager));
     
     return (file->open(fileName, false)) ? file.release() : NULL;
 }
@@ -214,7 +214,7 @@ XMLPlatformUtils::openFile(const XMLCh* const fileName, MemoryManager* const man
     if (!gFileSystemCompatible)
         ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
-    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile(manager));
 
     return (file->open(fileName, false)) ? file.release() : NULL;
 }
@@ -390,7 +390,7 @@ XMLPlatformUtils::getCurrentMillis()
 // ---------------------------------------------------------------------------
 
 void*
-XMLPlatformUtils::makeMutex()
+XMLPlatformUtils::makeMutex(MemoryManager*)
 {
 	if (gHasMPAPIs)
 	{
@@ -586,13 +586,13 @@ XMLPlatformUtils::makeNetAccessor()
 
 #if (defined(USE_URLACCESSCF))
     //	Use the URLAccess code that relies only on CoreFoundation
-	return new MacOSURLAccessCF;
+	return new (fgMemoryManager) MacOSURLAccessCF;
 #elif (defined(USE_URLACCESS))
 	//	Only try to use URLAccess if it's actually available
 	if (URLAccessAvailable())
-		return new MacOSURLAccess;
+		return new (fgMemoryManager) MacOSURLAccess;
 #elif (defined(XML_USE_NETACCESSOR_SOCKET))
-	return new SocketNetAccessor;
+	return new (fgMemoryManager) SocketNetAccessor;
 #endif
 
 	//	No netaccessor available--we can live with it, but you won't
@@ -609,7 +609,7 @@ XMLMsgLoader*
 XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
 #if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
-    return new InMemMsgLoader(msgDomain);
+    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #else
     #error You must provide a message loader
     return 0;
@@ -627,10 +627,10 @@ XMLTransService*
 XMLPlatformUtils::makeTransService()
 {
 #if defined (XML_USE_ICU_TRANSCODER)
-	return new ICUTransService;
+	return new (fgMemoryManager) ICUTransService;
 #elif (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
     if (MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported())
-        return new MacOSUnicodeConverter;
+        return new (fgMemoryManager) MacOSUnicodeConverter;
 #else
     #error You must provide a transcoding service implementation
 #endif
@@ -735,14 +735,14 @@ ConvertSlashToColon(char* p, std::size_t charCount)
 //	Factory method to make an appropriate subclass of XMLMacAbstractFile
 //	for our use
 XMLMacAbstractFile*
-XMLMakeMacFile(void)
+XMLMakeMacFile(MemoryManager* manager)
 {
 	XMLMacAbstractFile* result = NULL;
 	
 	if (gUsePosixFiles)
-		result = new XMLMacPosixFile;
+		result = new (manager) XMLMacPosixFile;
 	else
-		result = new XMLMacCarbonFile;
+		result = new (manager) XMLMacCarbonFile;
 		
 	return result;
 }
