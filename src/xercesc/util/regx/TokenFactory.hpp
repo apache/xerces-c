@@ -98,6 +98,8 @@ public:
 	Token* getGraphemePattern();
     MemoryManager* getMemoryManager() const;
 
+    static RangeToken* staticGetRange(const XMLCh* const name,const bool complement=false);
+
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
@@ -137,6 +139,11 @@ private:
     Token*              fGrapheme;
     MemoryManager*      fMemoryManager;
 };
+
+inline RangeToken* TokenFactory::getRange(const XMLCh* const name,const bool complement)
+{
+    return staticGetRange(name, complement);
+}
 
 inline MemoryManager* TokenFactory::getMemoryManager() const
 {

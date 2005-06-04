@@ -125,6 +125,74 @@ void QNameDatatypeValidator::checkValueSpace(const XMLCh* const content
     }
 }
 
+void QNameDatatypeValidator::checkContent( const XMLCh*             const content
+                                          ,       ValidationContext* const context
+                                          ,       bool                     asBase
+                                          ,       MemoryManager*     const manager
+                                          )
+{
+
+    //validate against base validator if any
+    QNameDatatypeValidator *pBaseValidator = (QNameDatatypeValidator*) this->getBaseValidator();
+    if (pBaseValidator)
+        pBaseValidator->checkContent(content, context, true, manager);
+
+    int thisFacetsDefined = getFacetsDefined();
+
+    // we check pattern first
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_PATTERN ) != 0 )
+    {
+        // lazy construction
+        if (getRegex() ==0) {
+            try {
+                // REVISIT: cargillmem fMemoryManager or manager?
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));                
+            }
+            catch (XMLException &e)
+            {
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
+            }
+        }
+
+        if (getRegex()->matches(content, manager) ==false)
+        {
+            ThrowXMLwithMemMgr2(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_NotMatch_Pattern
+                    , content
+                    , getPattern()
+                    , manager);
+        }
+    }
+
+    // if this is a base validator, we only need to check pattern facet
+    // all other facet were inherited by the derived type
+    if (asBase)
+        return;
+
+    checkValueSpace(content, manager);
+
+    if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
+        (getEnumeration() != 0))
+    {
+        XMLCh* normContent = XMLString::replicate(content, manager);
+        ArrayJanitor<XMLCh>  jan(normContent, manager);
+        normalizeContent(normContent, manager);
+
+        int i=0;
+        int enumLength = getEnumeration()->size();
+        for ( ; i < enumLength; i++)
+        {
+            if (XMLString::equals(normContent, getEnumeration()->elementAt(i)))
+                break;
+        }
+
+        if (i == enumLength)
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
+    }
+
+    checkAdditionalFacet(content, manager);
+}
+
 /***
  * Support for Serialization/De-serialization
  ***/

@@ -133,6 +133,8 @@
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -154,6 +156,17 @@ const unsigned short RegularExpression::WT_IGNORE = 0;
 const unsigned short RegularExpression::WT_LETTER = 1;
 const unsigned short RegularExpression::WT_OTHER = 2;
 RangeToken*          RegularExpression::fWordRange = 0;
+
+
+static void
+localCleanup()
+{
+    RegularExpression::staticCleanup();
+}
+
+static XMLRegisterCleanup WordRangeCleanup;
+
+
 
 // ---------------------------------------------------------------------------
 //  RegularExpression::Context: Constructors and Destructor
@@ -421,6 +434,8 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 	fTokenTree = regxParser->parse(fPattern, fOptions);
 	fNoGroups = regxParser->getNoParen();
 	fHasBackReferences = regxParser->hasBackReferences();
+
+    prepare();
 }
 
 // ---------------------------------------------------------------------------
@@ -488,9 +503,6 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
                                 const int end, Match* const pMatch
                                 , MemoryManager* const manager)	{
 		
-	if (fOperations == 0)
-		prepare();
-
 	Context context(manager);
 	int		 strLength = XMLString::stringLen(expression);
 
@@ -694,9 +706,6 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
                                                      const int start, const int end,
                                                      RefVectorOf<Match> *subEx){
   
-  if (fOperations == 0)
-	  prepare();
-
   RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true, fMemoryManager);
 
   Context context(fMemoryManager);
@@ -890,6 +899,31 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
   return XMLString::replicate(result.getRawBuffer(), fMemoryManager); 
     
 }
+
+
+// -----------------------------------------------------------------------
+//  Static initialize and cleanup methods
+// -----------------------------------------------------------------------
+void
+XMLInitializer::initializeRegularExpression()
+{
+    RegularExpression::staticInitialize(XMLPlatformUtils::fgMemoryManager);
+}
+
+
+
+void
+RegularExpression::staticInitialize(MemoryManager*  memoryManager)
+{
+    fWordRange = TokenFactory::staticGetRange(fgUniIsWord, false);
+
+	if (fWordRange == 0)
+		ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, memoryManager);
+
+    WordRangeCleanup.registerCleanup(localCleanup);
+}
+
+
 
 // ---------------------------------------------------------------------------
 //  RegularExpression: Helpers methods
@@ -1533,12 +1567,11 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
 }
 
 
+
 /*
- * Prepares for matching. This method is called just before starting matching
+ * Prepares for matching. This method is called during construction.
  */
 void RegularExpression::prepare() {
-
-	XMLMutexLock lockInit(&fMutex);
 
 	compile(fTokenTree);
 
@@ -1622,7 +1655,7 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 
 		if (isSet(fOptions, USE_UNICODE_CATEGORY)) {
 
-			if (fWordRange == 0) {
+            if (fWordRange == 0) {
 
 				fWordRange = fTokenFactory->getRange(fgUniIsWord);
 				if (fWordRange == 0)

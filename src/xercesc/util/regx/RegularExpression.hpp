@@ -27,7 +27,6 @@
 #include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/regx/Op.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/BMPattern.hpp>
@@ -138,6 +137,15 @@ public:
     XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString);
     XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString,
                    const int start, const int end);
+
+    // -----------------------------------------------------------------------
+    //  Static initialize and cleanup methods
+    // -----------------------------------------------------------------------
+    static void
+    staticInitialize(MemoryManager*  memoryManager);
+
+    static void
+    staticCleanup();
 
 private:
     // -----------------------------------------------------------------------
@@ -288,11 +296,19 @@ private:
     RangeToken*        fFirstChar;
     static RangeToken* fWordRange;
     OpFactory          fOpFactory;
-    XMLMutex           fMutex;
     TokenFactory*      fTokenFactory;
     MemoryManager*     fMemoryManager;
 };
 
+
+
+  // -----------------------------------------------------------------------
+  //  RegularExpression: Static initialize and cleanup methods
+  // -----------------------------------------------------------------------
+  inline void RegularExpression::staticCleanup()
+  {
+      fWordRange = 0;
+  }
 
   // ---------------------------------------------------------------------------
   //  RegularExpression: Cleanup methods

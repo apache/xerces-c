@@ -51,6 +51,7 @@ void XMLInitializer::InitializeAllStaticData()
         initializeXSDErrReporterMsgLoader();
         initializeDTDGrammarDfltEntities();
         initializeRangeTokenMap();
+        initializeRegularExpression();
         initializeAnyType();
     }
     catch(...) {

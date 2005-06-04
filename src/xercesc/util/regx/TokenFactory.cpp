@@ -258,7 +258,7 @@ ConditionToken* TokenFactory::createCondition(const int refNo,
 // ---------------------------------------------------------------------------
 //  TokenFactory - Getter methods
 // ---------------------------------------------------------------------------
-RangeToken* TokenFactory::getRange(const XMLCh* const keyword,
+RangeToken* TokenFactory::staticGetRange(const XMLCh* const keyword,
                                    const bool complement) {
 
 	return RangeTokenMap::instance()->getRange(keyword, complement);

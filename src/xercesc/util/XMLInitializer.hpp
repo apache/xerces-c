@@ -76,6 +76,7 @@ private :
     static void initializeXSDErrReporterMsgLoader();
     static void initializeDTDGrammarDfltEntities();
     static void initializeRangeTokenMap();
+    static void initializeRegularExpression();
     static void initializeAnyType();
 
     //@}
