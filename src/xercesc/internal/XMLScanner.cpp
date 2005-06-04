@@ -89,7 +89,7 @@ static XMLMutex& gScannerMutex()
 
         if (!sRegistered)
         {
-            sScannerMutex = new XMLMutex;
+            sScannerMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             scannerMutexCleanup.registerCleanup(XMLScanner::reinitScannerMutex);
             sRegistered = true;
         }
@@ -127,7 +127,7 @@ void XMLInitializer::initializeScannerMsgLoader()
         cleanupMsgLoader.registerCleanup(XMLScanner::reinitMsgLoader);
     }
 
-    sScannerMutex = new XMLMutex;
+    sScannerMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
     if (sScannerMutex) {
         scannerMutexCleanup.registerCleanup(XMLScanner::reinitScannerMutex);
         sRegistered = true;

@@ -92,7 +92,7 @@ XMLMutex& DOMStringHandle::getMutex()
 {
     if (!DOMStringHandleMutex)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
+        XMLMutex* tmpMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
         if (XMLPlatformUtils::compareAndSwap((void**)&DOMStringHandleMutex, tmpMutex, 0))
         {
             // Someone beat us to it, so let's clean up ours

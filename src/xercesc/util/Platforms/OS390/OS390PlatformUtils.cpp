@@ -45,6 +45,7 @@
 #include    <string.h>
 #include    <unistd.h>
 #include    <limits.h>
+#include    <xercesc/util/XMLHolder.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/XMLUni.hpp>
@@ -140,7 +141,7 @@ void XMLPlatformUtils::platformInit()
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_SOCKET)
-    return new SocketNetAccessor();
+    return new (fgMemoryManager) SocketNetAccessor();
 #else
     return 0;
 #endif
@@ -157,11 +158,11 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     try
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
-        retVal = new ICUMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
-        retVal = new MsgCatalogLoader(msgDomain);
+        retVal = new (fgMemoryManager) MsgCatalogLoader(msgDomain);
 #else
-        retVal = new InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #endif
     }
     catch(const OutOfMemoryException&)
@@ -185,16 +186,16 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 #if defined (XML_USE_ICU_TRANSCODER)
 {
 
-    return new ICUTransService;
+    return new (fgMemoryManager) ICUTransService;
 }
 #elif defined (XML_USE_UNICONV390_TRANSCODER)
 {
 
-    return new Uniconv390TransService;
+    return new (fgMemoryManager) Uniconv390TransService;
 }
 #else
 {
-    return new Iconv390TransService;
+    return new (fgMemoryManager) Iconv390TransService;
 }
 #endif
 
@@ -957,21 +958,25 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 //  locking mechanism is developed
 // -----------------------------------------------------------------------
 #ifndef APP_NO_THREADS
+typedef XMLHolder<pthread_mutex_t  PThreadMutexHolderType;
+typedef XMLHolder<int>             IntMutexHolderType;
+
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
     if (mtxHandle == NULL)
         return;
     if (isPosixEnabled) {
-        if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
+        PThreadMutexHolderType* const  holder = PThreadMutexHolderType::castTo(mtxHandle);
+        if (pthread_mutex_destroy(&holder->fInstance))
         {
+            delete holder;
+ 
             ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
         }
-        if ( (pthread_mutex_t*)mtxHandle)
-            delete (pthread_mutex_t*) mtxHandle;
+        delete holder;
     } // __isPosixOn
     else {
-        if ( (int*)mtxHandle)
-            delete (int*) mtxHandle;
+        delete IntMutexHolderType::castTo(mtxHandle);
     }
 }
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
@@ -979,7 +984,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
     if (isPosixEnabled) {
-        if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
+        if (pthread_mutex_lock(&PThreadMutexHolderType::castTo(mtxHandle)->fInstance))
         {
             panic(PanicHandler::Panic_MutexErr);
         }
@@ -987,40 +992,42 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     else {
         int locked = 1, unlocked;
 
+        int*    mutex =
+            &IntMutexHolderType::castTo(mtxHandle)->fInstance;
+
         do {
             unlocked = 0;
-            compareAndSwap( (void**) &mtxHandle, (void*) locked, (void*) unlocked );
+            compareAndSwap( (void**) &mutex, (void*) locked, (void*) unlocked );
         } while( unlocked != 0 );
     }
     return;
 
 }
-void* XMLPlatformUtils::makeMutex()
+
+void* XMLPlatformUtils::makeMutex(MemoryManager* manager)
 {
     if (isPosixEnabled) {
-    pthread_mutex_t* mutex = new pthread_mutex_t;
-    if (mutex == NULL)
+    PThreadMutexHolderType* const  holder = new (manager) PThreadMutexHolderType;
+
+    pthread_mutexattr_t  attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_setkind_np(&attr, __MUTEX_RECURSIVE);
+    if (pthread_mutex_init(&holder->fInstance, &attr))
     {
+        delete holder;
+
         panic(PanicHandler::Panic_MutexErr);
     }
+    pthread_mutexattr_destroy(&attr);
 
-    pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
-    pthread_mutexattr_init(attr);
-    pthread_mutexattr_setkind_np(attr, __MUTEX_RECURSIVE);
-    if (pthread_mutex_init(mutex, attr))
-    {
-        panic(PanicHandler::Panic_MutexErr);
-    }
-    pthread_mutexattr_destroy(attr);
-    delete attr;
-
-    return (void*)(mutex);
+    return holder;
 
     } // __isPosixOn
-    else {
-   int* mutex = new int;
-   *mutex = 0;
-   return (void*)(mutex);
+    else
+    {
+        IntMutexHolderType* holder = new (manager) IntMutexHolderType;
+        holder->fInstance = 0;
+        return holder;
     }
 }
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
@@ -1028,33 +1035,36 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
     if (isPosixEnabled) {
-        if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
+        if (pthread_mutex_unlock(&PThreadMutexHolderType::castTo(mtxHandle)->fInstance))
         {
             panic(PanicHandler::Panic_MutexErr);
         }
     } // __isPosixOn
     else {
-        if (*(int*) mtxHandle == 0 )
-            *(int*) mtxHandle = 0;
+        int&    mutex =
+            IntMutexHolderType::castTo(mtxHandle)->fInstance;
+
+        if (mutex == 0)
+            mutex = 0;
     }
 }
 
 #else // #ifndef APP_NO_THREADS
 
-void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+void XMLPlatformUtils::closeMutex(void* const)
 {
 }
 
-void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+void XMLPlatformUtils::lockMutex(void* const)
 {
 }
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager*)
 {
         return 0;
 }
 
-void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+void XMLPlatformUtils::unlockMutex(void* const)
 {
 }
 

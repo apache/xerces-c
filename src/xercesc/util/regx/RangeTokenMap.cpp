@@ -128,7 +128,7 @@ static XMLMutex& getRangeTokMapMutex()
         // If we got here first, then register it and set the registered flag
         if (!sRangeTokMapMutex)
         {
-            sRangeTokMapMutex = new XMLMutex;
+            sRangeTokMapMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             rangeTokMapRegistryCleanup.registerCleanup(reinitRangeTokMapMutex);
         }
     }
@@ -142,7 +142,7 @@ RangeTokenMap* RangeTokenMap::fInstance = 0;
 
 void XMLInitializer::initializeRangeTokenMap()
 {
-    RangeTokenMap::fInstance = new RangeTokenMap();
+    RangeTokenMap::fInstance = new RangeTokenMap(XMLPlatformUtils::fgMemoryManager);
     if (RangeTokenMap::fInstance)
     {
         rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
@@ -170,17 +170,18 @@ RangeTokenElemMap::~RangeTokenElemMap()
 // ---------------------------------------------------------------------------
 //  RangeTokenMap: Constructors and Destructor
 // ---------------------------------------------------------------------------
-RangeTokenMap::RangeTokenMap() :
+RangeTokenMap::RangeTokenMap(MemoryManager* manager) :
     fTokenRegistry(0)
     , fRangeMap(0)
     , fCategories(0)
     , fTokenFactory(0)
+    , fMutex(manager)
 {
     try {
-        fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
-        fRangeMap = new RefHashTableOf<RangeFactory>(29);
-        fCategories = new XMLStringPool(109);
-        fTokenFactory = new TokenFactory();
+        fTokenRegistry = new (manager) RefHashTableOf<RangeTokenElemMap>(109, manager);
+        fRangeMap = new (manager) RefHashTableOf<RangeFactory>(29, manager);
+        fCategories = new (manager) XMLStringPool(109, manager);
+        fTokenFactory = new (manager) TokenFactory(manager);
         initializeRegistry();
     }
     catch(...) {
@@ -362,7 +363,7 @@ RangeTokenMap* RangeTokenMap::instance()
 
         if (!fInstance)
         {
-            fInstance = new RangeTokenMap();
+            fInstance = new RangeTokenMap(XMLPlatformUtils::fgMemoryManager);
             rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
         }
     }

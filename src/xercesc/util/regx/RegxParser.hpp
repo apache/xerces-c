@@ -29,7 +29,6 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/Mutexes.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -203,7 +202,6 @@ private:
 	XMLCh*                          fString;
 	RefVectorOf<ReferencePosition>* fReferences;
     TokenFactory*                   fTokenFactory;
-	XMLMutex						fMutex;
 };
 
 

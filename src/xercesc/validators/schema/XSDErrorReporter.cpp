@@ -111,7 +111,7 @@ static XMLMutex& getErrRprtrMutex()
 
         if (!sErrRprtrMutex)
         {
-            sErrRprtrMutex = new XMLMutex;
+            sErrRprtrMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             errRprtrMutexCleanup.registerCleanup(reinitErrRprtrMutex);
         }
     }

@@ -375,7 +375,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         {
             XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
             if (!sBuiltInRegistryMutex)
-                sBuiltInRegistryMutex = new XMLMutex;
+                sBuiltInRegistryMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
         }
 
         // Use a faux scope to synchronize while we do this

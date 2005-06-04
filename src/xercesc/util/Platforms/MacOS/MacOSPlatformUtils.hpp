@@ -53,7 +53,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 //	Factory method to create an appropriate concrete object
 //	descended from XMLMacAbstractFile.
-XMLUTIL_EXPORT XMLMacAbstractFile* XMLMakeMacFile(void);
+XMLUTIL_EXPORT XMLMacAbstractFile* XMLMakeMacFile(MemoryManager* manager);
 
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!

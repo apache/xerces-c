@@ -35,6 +35,7 @@
 #include    <xercesc/util/PlatformUtils.hpp>
 #include    <xercesc/util/RuntimeException.hpp>
 #include    <xercesc/util/Mutexes.hpp>
+#include    <xercesc/util/XMLHolder.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUni.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
@@ -83,11 +84,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
 {
-    return new LibWWWNetAccessor();
+    return new (fgMemoryManager) LibWWWNetAccessor();
 }
 #elif defined (XML_USE_NETACCESSOR_SOCKET)
 {
-    return new SocketNetAccessor();
+    return new (fgMemoryManager) SocketNetAccessor();
 }
 #else
 {
@@ -106,11 +107,11 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
   try
   {
 #if defined (XML_USE_ICU_MESSAGELOADER)
-    retVal = new ICUMsgLoader(msgDomain);
+    retVal = new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
-    retVal = new MsgCatalogLoader(msgDomain);
+    retVal = new (fgMemoryManager) MsgCatalogLoader(msgDomain);
 #else
-    retVal = new InMemMsgLoader(msgDomain);
+    retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #endif
   }
   catch(const OutOfMemoryException&)
@@ -134,15 +135,15 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService* XMLPlatformUtils::makeTransService()
 #if defined (XML_USE_ICU_TRANSCODER)
 {
-  return new ICUTransService;
+  return new (fgMemoryManager) ICUTransService;
 }
 #elif defined (XML_USE_ICONV_TRANSCODER)
 {
-  return new IconvTransService;
+  return new (fgMemoryManager) IconvTransService;
 }
 #else // Use Native transcoding service
 {
-  return new IconvTransService;
+  return new (fgMemoryManager) IconvTransService;
 }
 #endif
 
@@ -387,7 +388,9 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
-static pthread_mutex_t* gAtomicOpMutex =0 ;
+typedef XMLHolder<pthread_mutex_t>  MutexHolderType;
+
+static MutexHolderType* gAtomicOpMutex = 0;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -399,9 +402,10 @@ void XMLPlatformUtils::platformInit()
   // circular dependency between compareAndExchange() and
   // mutex creation that must be broken.
 
-  gAtomicOpMutex = new pthread_mutex_t;	
+  gAtomicOpMutex = new (fgMemoryManager) MutexHolderType;
 
-  if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
+
+  if (pthread_mutex_init(&gAtomicOpMutex->fInstance, NULL)) {
 	delete gAtomicOpMutex;
 	gAtomicOpMutex = 0;
     panic( PanicHandler::Panic_SystemInit );
@@ -420,19 +424,22 @@ public:
   pthread_mutex_t   mutex;
   int               recursionCount;
   pthread_t         tid;
+  MemoryManager* const    fMemoryManager;
 
-  RecursiveMutex()
+  RecursiveMutex(MemoryManager* manager) :
+        mutex(),
+        recursionCount(0),
+        tid(0),
+        fMemoryManager(manager)
   {
     if (pthread_mutex_init(&mutex, NULL))
         XMLPlatformUtils::panic(PanicHandler::Panic_MutexErr);
-    recursionCount = 0;
-    tid = 0;
   }
 
   ~RecursiveMutex()
   {
     if (pthread_mutex_destroy(&mutex))
-      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, XMLPlatformUtils::fgMemoryManager);
+      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, fMemoryManager);
   }
 
   void lock()
@@ -460,9 +467,9 @@ public:
   }
 };
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager* manager)
 {
-  return new RecursiveMutex;
+  return new (manager) RecursiveMutex(manager);
 }
 
 
@@ -506,14 +513,14 @@ void* XMLPlatformUtils::compareAndSwap (void** toFill,
   // the below calls are temporarily made till the above functions are part of user library
   // Currently its supported only in the kernel mode
 
-  if (pthread_mutex_lock( gAtomicOpMutex))
+  if (pthread_mutex_lock( &gAtomicOpMutex->fInstance))
     panic(PanicHandler::Panic_SynchronizationErr);
 
   void *retVal = *toFill;
   if (*toFill == toCompare)
     *toFill = (void *)newValue;
 
-  if (pthread_mutex_unlock( gAtomicOpMutex))
+  if (pthread_mutex_unlock( &gAtomicOpMutex->fInstance))
     panic(PanicHandler::Panic_SynchronizationErr);
 
   return retVal;
@@ -523,12 +530,12 @@ int XMLPlatformUtils::atomicIncrement(int &location)
 {
   //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
 
-  if (pthread_mutex_lock( gAtomicOpMutex))
+  if (pthread_mutex_lock( &gAtomicOpMutex->fInstance))
     panic(PanicHandler::Panic_SynchronizationErr);
 
   int tmp = ++location;
 
-  if (pthread_mutex_unlock( gAtomicOpMutex))
+  if (pthread_mutex_unlock( &gAtomicOpMutex->fInstance))
     panic(PanicHandler::Panic_SynchronizationErr);
 
   return tmp;
@@ -537,12 +544,12 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 {
   //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
 
-  if (pthread_mutex_lock( gAtomicOpMutex))
+  if (pthread_mutex_lock( &gAtomicOpMutex->fInstance))
     panic(PanicHandler::Panic_SynchronizationErr);
 	
   int tmp = --location;
 
-  if (pthread_mutex_unlock( gAtomicOpMutex))
+  if (pthread_mutex_unlock( &gAtomicOpMutex->fInstance))
     panic(PanicHandler::Panic_SynchronizationErr);
 
   return tmp;
@@ -555,20 +562,20 @@ void XMLPlatformUtils::platformInit()
    // do nothing
 }
 
-void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+void XMLPlatformUtils::closeMutex(void* const)
 {
 }
 
-void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+void XMLPlatformUtils::lockMutex(void* const)
 {
 }
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager*)
 {
   return 0;
 }
 
-void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+void XMLPlatformUtils::unlockMutex(void* const)
 {
 }
 
@@ -604,7 +611,7 @@ FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
 void XMLPlatformUtils::platformTerm()
 {
 #if !defined (APP_NO_THREADS)
-	pthread_mutex_destroy(gAtomicOpMutex);
+	pthread_mutex_destroy(&gAtomicOpMutex->fInstance);
 	delete gAtomicOpMutex;
 	gAtomicOpMutex = 0;
 #endif

@@ -55,6 +55,7 @@
 #define MUTEXES_HPP
 
 #include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -64,7 +65,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    XMLMutex();
+    XMLMutex(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     ~XMLMutex();
 

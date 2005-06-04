@@ -139,6 +139,7 @@
 #include    <xercesc/util/RuntimeException.hpp>
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/Mutexes.hpp>
+#include    <xercesc/util/XMLHolder.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/XMLUni.hpp>
@@ -491,7 +492,9 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static pthread_mutex_t* gAtomicOpMutex =0 ;
+typedef XMLHolder<pthread_mutex_t>  MutexHolderType;
+
+static MutexHolderType* gAtomicOpMutex = 0;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -503,10 +506,14 @@ void XMLPlatformUtils::platformInit()
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
 
-    gAtomicOpMutex = new pthread_mutex_t;
+    gAtomicOpMutex = new (fgMemoryManager) MutexHolderType;
 
-    if (pthread_mutex_init(gAtomicOpMutex, NULL))
+    if (pthread_mutex_init(&gAtomicOpMutex->fInstance, NULL))
+    {
+        delete gAtomicOpMutex;
+        gAtomicOpMutex = 0;
         panic( PanicHandler::Panic_SystemInit );
+    }
 }
 
 class  RecursiveMutex : public XMemory
@@ -593,14 +600,14 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
                     const void* const newValue ,
                     const void* const toCompare)
 {
-    if (pthread_mutex_lock( gAtomicOpMutex))
+    if (pthread_mutex_lock( &gAtomicOpMutex->fInstance))
         panic(PanicHandler::Panic_SynchronizationErr);
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
-    if (pthread_mutex_unlock( gAtomicOpMutex))
+    if (pthread_mutex_unlock( &gAtomicOpMutex->fInstance))
         panic(PanicHandler::Panic_SynchronizationErr);
 
 
@@ -609,12 +616,12 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
 
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
-    if (pthread_mutex_lock( gAtomicOpMutex))
+    if (pthread_mutex_lock( &gAtomicOpMutex->fInstance))
         panic(PanicHandler::Panic_SynchronizationErr);
 
     int tmp = ++location;
 
-    if (pthread_mutex_unlock( gAtomicOpMutex))
+    if (pthread_mutex_unlock( &gAtomicOpMutex->fInstance))
         panic(PanicHandler::Panic_SynchronizationErr);
 
     return tmp;
@@ -622,12 +629,12 @@ int XMLPlatformUtils::atomicIncrement(int &location)
 
 int XMLPlatformUtils::atomicDecrement(int &location)
 {
-    if (pthread_mutex_lock( gAtomicOpMutex))
+    if (pthread_mutex_lock( &gAtomicOpMutex->fInstance))
         panic(PanicHandler::Panic_SynchronizationErr);
 
     int tmp = --location;
 
-    if (pthread_mutex_unlock( gAtomicOpMutex))
+    if (pthread_mutex_unlock( &gAtomicOpMutex->fInstance))
         panic(PanicHandler::Panic_SynchronizationErr);
 
     return tmp;
@@ -639,20 +646,20 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager*)
 {
 	return 0;
 }
 
-void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+void XMLPlatformUtils::closeMutex(void* const)
 {
 }
 
-void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+void XMLPlatformUtils::lockMutex(void* const)
 {
 }
 
-void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+void XMLPlatformUtils::unlockMutex(void* const)
 {
 }
 
@@ -684,7 +691,7 @@ void XMLPlatformUtils::platformTerm()
 {
 #if !defined (APP_NO_THREADS)
     // delete the mutex we created
-	pthread_mutex_destroy(gAtomicOpMutex);
+	pthread_mutex_destroy(&gAtomicOpMutex->fInstance);
     delete gAtomicOpMutex;
 	gAtomicOpMutex = 0;
 #endif

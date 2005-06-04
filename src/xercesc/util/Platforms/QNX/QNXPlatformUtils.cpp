@@ -34,6 +34,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/XMLHolder.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -253,41 +254,63 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 //  Mutex methods
 // ---------------------------------------------------------------------------
 
-void* XMLPlatformUtils::makeMutex()
+typedef XMLHolder<pthread_mutex_t>  MutexHolderType;
+
+void* XMLPlatformUtils::makeMutex(MemoryManager* manager)
 {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init( &attr );
     pthread_mutexattr_setrecursive( &attr, PTHREAD_RECURSIVE_ENABLE );
-    pthread_mutex_t *mutex = new pthread_mutex_t;
-    if( pthread_mutex_init( mutex, &attr ) != EOK ) {
-        delete mutex;
+
+    MutexHolderType* const  holder = new (manager) MutexHolderType;
+
+    if( pthread_mutex_init( &holder->fInstance, &attr ) != EOK ) {
+        delete holder;
         panic(PanicHandler::Panic_MutexErr);
     }
     pthread_mutexattr_destroy( &attr );
-    return mutex;
+    return holder;
 }
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-    if( mtxHandle == NULL || pthread_mutex_destroy( (pthread_mutex_t *)mtxHandle ) != EOK ) {
-        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotClose, fgMemoryManager);
+    if (mtxHandle != NULL)
+    {
+        MutexHolderType* const  holder =
+            MutexHolderType::castTo(mtxHandle);
+
+        if (pthread_mutex_destroy(&holder->fInstance))
+        {
+            delete holder;
+
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                     XMLExcepts::Mutex_CouldNotDestroy, fgMemoryManager);
+        }
+        delete holder;
     }
-    delete mtxHandle;
 }
 
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-    if( mtxHandle == NULL || pthread_mutex_lock( (pthread_mutex_t *)mtxHandle ) != EOK ) {
-        panic(PanicHandler::Panic_MutexErr);
+    if (mtxHandle != NULL)
+    {
+        if (pthread_mutex_lock(&MutexHolderType::castTo(mtxHandle)->fInstance))
+        {
+            panic(PanicHandler::Panic_MutexErr);
+        }
     }
 }
 
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-    if( mtxHandle == NULL || pthread_mutex_unlock( (pthread_mutex_t *)mtxHandle ) != EOK ) {
-        panic(PanicHandler::Panic_MutexErr);
+    if (mtxHandle != NULL)
+    {
+        if (pthread_mutex_unlock(&MutexHolderType::castTo(mtxHandle)->fInstance))
+        {
+            panic(PanicHandler::Panic_MutexErr);
+        }
     }
 }
 
@@ -340,9 +363,9 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
-    return new LibWWWNetAccessor();
+    return new (fgMemoryManager) LibWWWNetAccessor();
 #else 
-    return new SocketNetAccessor();
+    return new (fgMemoryManager) SocketNetAccessor();
 #endif
 }
 
@@ -355,9 +378,9 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
 #if defined (XML_USE_ICU_MESSAGELOADER)
-    return new ICUMsgLoader(msgDomain);
+    return new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #else
-    return new InMemMsgLoader(msgDomain);
+    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #endif
 }
 
@@ -371,9 +394,9 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
 #if defined (XML_USE_ICU_TRANSCODER)
-    return new ICUTransService;
+    return new (fgMemoryManager) ICUTransService;
 #elif defined (XML_USE_GNU_TRANSCODER)
-    return new IconvGNUTransService;
+    return new (fgMemoryManager) IconvGNUTransService;
 #else
     #error You must provide a transcoding service implementation
 #endif

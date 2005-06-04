@@ -59,12 +59,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XMLMutex: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLMutex::XMLMutex() :
+XMLMutex::XMLMutex(MemoryManager* const manager) :
 
     fHandle(0)
 {
     // Ask the per-platform driver to make us a mutex
-    fHandle = XMLPlatformUtils::makeMutex();
+    fHandle = XMLPlatformUtils::makeMutex(manager);
 }
 
 

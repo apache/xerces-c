@@ -134,7 +134,7 @@ DOMNodeList *DOMNodeImpl::getChildNodes() const {
             XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 			
             if (!gEmptyNodeListMutex)
-                gEmptyNodeListMutex = new XMLMutex;
+                gEmptyNodeListMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
         }
 
         // Use a faux scope to synchronize while we do this

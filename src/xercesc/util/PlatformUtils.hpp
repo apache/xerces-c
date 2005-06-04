@@ -537,8 +537,10 @@ public :
       * the actual content of the passed mutex handle is. The returned
       * handle pointer will be eventually passed to closeMutex() which is
       * also implemented by the platform driver.
+      *
+      * @param manager The MemoryManager to use to allocate objects
       */
-    static void* makeMutex();
+    static void* makeMutex(MemoryManager* manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Unlocks a mutex
       *

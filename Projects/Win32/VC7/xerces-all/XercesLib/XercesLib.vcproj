@@ -457,7 +457,7 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLInitializer.hpp">
-			</File>			
+			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLInteger.hpp">
 			</File>
@@ -466,6 +466,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLMsgLoader.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLMutexHolder.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLNetAccessor.hpp">
@@ -1369,16 +1372,16 @@
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAXParser.cpp">
@@ -1976,10 +1979,10 @@
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLReader.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLFilter.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLFilter.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLReader.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\XMLReaderFactory.hpp">

@@ -86,7 +86,7 @@ static XMLMutex& gNormalizerMutex()
         // If we got here first, then register it and set the registered flag
         if (!sRegistered)
         {
-            sNormalizerMutex = new XMLMutex;
+            sNormalizerMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
             normalizerMutexCleanup.registerCleanup(DOMNormalizer::reinitNormalizerMutex);
             sRegistered = true;
         }

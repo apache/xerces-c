@@ -267,7 +267,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 #endif
 }
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager*)
 {
 #if ! defined(APP_NO_THREADS)
     HMTX hRet; // Mutex Handle
@@ -378,7 +378,7 @@ void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
 #if defined(XML_USE_INMEMORY_MSGLOADER)
-    return new InMemMsgLoader(msgDomain);
+    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #else
     return 0;
 #endif
@@ -392,9 +392,9 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
 #if defined(XML_USE_ICU_TRANSCODER)
-    return new ICUTransService;
+    return new (fgMemoryManager) ICUTransService;
 #elif defined(XML_USE_ICONV_TRANSCODER)
-    return new IconvTransService;
+    return new (fgMemoryManager) IconvTransService;
 #else
     return 0;
 #endif

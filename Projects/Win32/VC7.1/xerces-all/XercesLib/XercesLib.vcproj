@@ -576,6 +576,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLFloat.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLHolder.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp">
 			</File>
 			<File
