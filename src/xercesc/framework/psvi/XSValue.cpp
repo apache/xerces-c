@@ -122,6 +122,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/TransService.hpp>
+#include <xercesc/util/NumberFormatException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -699,7 +700,7 @@ XSValue::validateNumerics(const XMLCh*         const content
     {
         throw;
     }
-    catch (...)
+    catch (const NumberFormatException&)
     {
         //getActValue()/getCanonical() need to know the failure details
         //if validation is required
@@ -756,7 +757,7 @@ bool XSValue::validateDateTimes(const XMLCh*         const input_content
         return true; //parsing succeed
     }
 
-    catch (SchemaDateTimeException &e)
+    catch (const SchemaDateTimeException &e)
     {       
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
         return false;
@@ -765,7 +766,7 @@ bool XSValue::validateDateTimes(const XMLCh*         const input_content
     {
         throw;
     }
-    catch (...)
+    catch (const NumberFormatException&)
     {
         //getActValue()/getCanonical() need to know the failure details
         //if validation is required
@@ -1067,11 +1068,6 @@ bool XSValue::validateStrings(const XMLCh*         const content
     {
         throw;
     }
-    catch (...)
-    {
-        isValid = false; 
-        status = st_FOCA0002;
-    }
 
     if (isValid == false && status == st_Init) {
         status = st_FOCA0002;
@@ -1090,8 +1086,8 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
     try 
     {
 
-        // All getCanonicalRepresentation does lexcial space validation only
-        // (no range checking), therefore if validation is requied,
+        // getCanonicalRepresentation does lexical space validation only
+        // (no range checking), therefore if validation is required,
         // we need to pass the content to the validate interface for complete checking
         if (toValidate && !validateNumerics(content, datatype, status, manager))
             return 0;
@@ -1131,7 +1127,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
     {
         throw;
     }
-    catch (...)
+    catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
         return 0;
@@ -1193,7 +1189,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content
     {
         throw;
     }
-    catch (...)
+    catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
         return 0;
@@ -1290,11 +1286,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
     {
         throw;
     }
-    catch (...)
-    {
-        status = st_FOCA0002;
-        return 0;
-    }
+
     return 0;
 }
 
@@ -1477,7 +1469,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
     {
         throw;
     }
-    catch (...)
+    catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
         return 0; 
@@ -1566,7 +1558,7 @@ XSValue::getActValDateTimes(const XMLCh*         const input_content
     {
         throw;
     }
-    catch (...)
+    catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
         return 0; 
@@ -1681,11 +1673,7 @@ XSValue::getActValStrings(const XMLCh*         const content
     {
         throw;
     }
-    catch (...)
-    {
-        status = st_FOCA0002;
-        return 0; 
-    }
+
     return 0; 
 }
 

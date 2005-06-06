@@ -231,5 +231,38 @@ ArrayJanitor<T>::reset(T* p, MemoryManager* const manager)
     fMemoryManager = manager;
 }
 
-XERCES_CPP_NAMESPACE_END
 
+
+template <class T>
+JanitorMemFunCall<T>::JanitorMemFunCall(
+            T*      object,
+            MFPT    toCall) :
+    fObject(object),
+    fToCall(toCall)
+{
+}
+
+
+template <class T>
+JanitorMemFunCall<T>::~JanitorMemFunCall()
+{
+    if (fObject != 0 && fToCall != 0)
+    {
+        (fObject->*fToCall)();
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+//  Janitor: Public, non-virtual methods
+// ---------------------------------------------------------------------------
+template <class T> void
+JanitorMemFunCall<T>::release()
+{
+    fObject = 0;
+    fToCall = 0;
+}
+
+
+
+XERCES_CPP_NAMESPACE_END

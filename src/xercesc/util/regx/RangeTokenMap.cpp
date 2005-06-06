@@ -100,6 +100,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -170,6 +171,9 @@ RangeTokenElemMap::~RangeTokenElemMap()
 // ---------------------------------------------------------------------------
 //  RangeTokenMap: Constructors and Destructor
 // ---------------------------------------------------------------------------
+
+typedef JanitorMemFunCall<RangeTokenMap>    CleanupType;
+
 RangeTokenMap::RangeTokenMap(MemoryManager* manager) :
     fTokenRegistry(0)
     , fRangeMap(0)
@@ -177,6 +181,8 @@ RangeTokenMap::RangeTokenMap(MemoryManager* manager) :
     , fTokenFactory(0)
     , fMutex(manager)
 {
+    CleanupType cleanup(this, &RangeTokenMap::cleanUp);
+
     try {
         fTokenRegistry = new (manager) RefHashTableOf<RangeTokenElemMap>(109, manager);
         fRangeMap = new (manager) RefHashTableOf<RangeFactory>(29, manager);
@@ -184,25 +190,19 @@ RangeTokenMap::RangeTokenMap(MemoryManager* manager) :
         fTokenFactory = new (manager) TokenFactory(manager);
         initializeRegistry();
     }
-    catch(...) {
-        cleanUp();
+    catch(const OutOfMemoryException&)
+    {
+        cleanup.release();
+
         throw;
     }
+
+    cleanup.release();
 }
 
 RangeTokenMap::~RangeTokenMap() {
 
-    delete fTokenRegistry;
-    fTokenRegistry = 0;
-
-    delete fRangeMap;
-    fRangeMap = 0;
-
-    delete fCategories;
-    fCategories = 0;
-
-    delete fTokenFactory;
-    fTokenFactory = 0;
+    cleanUp();
 }
 
 // ---------------------------------------------------------------------------

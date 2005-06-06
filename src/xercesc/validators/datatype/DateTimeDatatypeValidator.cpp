@@ -119,6 +119,7 @@ DatatypeValidator* DateTimeDatatypeValidator::newInstance
 XMLDateTime* DateTimeDatatypeValidator::parse(const XMLCh* const content, MemoryManager* const manager)
 {
     XMLDateTime *pRetDate = new (manager) XMLDateTime(content, manager);
+    Janitor<XMLDateTime> jan(pRetDate);
 
     try
     {
@@ -126,15 +127,12 @@ XMLDateTime* DateTimeDatatypeValidator::parse(const XMLCh* const content, Memory
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        delete pRetDate;
+        jan.release();
+
         throw;
     }
 
-    return pRetDate;
+    return jan.release();
 }
 
 void DateTimeDatatypeValidator::parse(XMLDateTime* const pDate)

@@ -236,6 +236,9 @@ static const XMLCh PATH_SEPARATORS[] =
 //  XMLUri: Constructors and Helper methods
 // ---------------------------------------------------------------------------
 // ctor# 2
+
+typedef JanitorMemFunCall<XMLUri>   CleanupType;
+
 XMLUri::XMLUri(const XMLCh* const uriSpec,
                MemoryManager* const manager)
 : fPort(-1)
@@ -249,18 +252,19 @@ XMLUri::XMLUri(const XMLCh* const uriSpec,
 , fURIText(0)
 , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLUri::cleanUp);
+
     try {
         initialize((XMLUri *)0, uriSpec);
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 // ctor# 7 relative ctor
@@ -278,18 +282,19 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 , fURIText(0)
 , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLUri::cleanUp);
+
     try {
         initialize(baseURI, uriSpec);
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 //Copy constructor
@@ -307,36 +312,39 @@ XMLUri::XMLUri(const XMLUri& toCopy)
 , fURIText(0)
 , fMemoryManager(toCopy.fMemoryManager)
 {
+    CleanupType cleanup(this, &XMLUri::cleanUp);
+
     try {
         initialize(toCopy);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        cleanUp();
+        cleanup.release();
+
         throw;
     }
 
+    cleanup.release();
 }
 
 XMLUri& XMLUri::operator=(const XMLUri& toAssign)
 {
     cleanUp();
+
+    CleanupType cleanup(this, &XMLUri::cleanUp);
+
     try {
         initialize(toAssign);
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
+
     return *this;
 }
 
@@ -788,18 +796,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
         if (portStr && *portStr)
         {
-            try
-            {
-                port = XMLString::parseInt(portStr, fMemoryManager);
-            }
-            catch(const OutOfMemoryException&)
-            {
-                throw;
-            }
-            catch (...)
-            {
-                throw;
-            }
+            port = XMLString::parseInt(portStr, fMemoryManager);
         }
     } // if > 0
 
@@ -1144,18 +1141,7 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
                 , fMemoryManager);
     }
 
-    try
-    {
-        isConformantUserInfo(newUserInfo, fMemoryManager);
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...)
-    {
-        throw;
-    }
+    isConformantUserInfo(newUserInfo, fMemoryManager);
 
     if (getUserInfo())
     {
@@ -2587,4 +2573,3 @@ XMLUri::XMLUri(MemoryManager* const manager)
 }
 
 XERCES_CPP_NAMESPACE_END
-

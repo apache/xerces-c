@@ -173,6 +173,8 @@ UnionDatatypeValidator::UnionDatatypeValidator(
     fMemberTypeValidators = memberTypeValidators;
 }
 
+typedef JanitorMemFunCall<UnionDatatypeValidator>   CleanupType;
+
 UnionDatatypeValidator::UnionDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
@@ -210,19 +212,22 @@ UnionDatatypeValidator::UnionDatatypeValidator(
                 , manager);
     }
 
+    CleanupType cleanup(this, &UnionDatatypeValidator::cleanUp);
+
     try
     {
         init(baseValidator, facets, enums, manager);
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 void UnionDatatypeValidator::init(DatatypeValidator*            const baseValidator

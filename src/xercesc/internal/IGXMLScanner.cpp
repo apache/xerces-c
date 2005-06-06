@@ -47,6 +47,11 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+
+typedef JanitorMemFunCall<IGXMLScanner> CleanupType;
+typedef JanitorMemFunCall<ReaderMgr>    ReaderMgrResetType;
+
+
 // ---------------------------------------------------------------------------
 //  IGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -79,23 +84,22 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fPSVIElement(0)
     , fErrorStack(0)        
 {
+    CleanupType cleanup(this, &IGXMLScanner::cleanUp);
+
     try
     {
-         commonInit();
-
-         // use fDTDValidator as the default validator
-         if (!valToAdopt)
-             fValidator = fDTDValidator;
+        commonInit();
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
@@ -131,23 +135,22 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fPSVIElement(0)
     , fErrorStack(0)       
 {
+    CleanupType cleanup(this, &IGXMLScanner::cleanUp);
+
     try
     {	
         commonInit();
-
-        //use fDTDValidator as the default validator
-        if (!valToAdopt)
-            fValidator = fDTDValidator;
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 IGXMLScanner::~IGXMLScanner()
@@ -180,6 +183,8 @@ void IGXMLScanner::scanDocument(const InputSource& src)
     //  Bump up the sequence id for this parser instance. This will invalidate
     //  any previous progressive scan tokens.
     fSequenceId++;
+
+    ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
 
     try
     {
@@ -230,9 +235,6 @@ void IGXMLScanner::scanDocument(const InputSource& src)
 
         //cargill debug:
         //fGrammarResolver->getXSModel();
-
-        // Reset the reader manager to close all files, sockets, etc...
-        fReaderMgr.reset();
     }
     //  NOTE:
     //
@@ -241,13 +243,11 @@ void IGXMLScanner::scanDocument(const InputSource& src)
     //  to find out the position in the XML source of the error.
     catch(const XMLErrs::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
-        fReaderMgr.reset();
+        // This is a 'first failure' exception, so fall through
     }
     catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
-        fReaderMgr.reset();
+        // This is a 'first fatal error' type exit, so fall through
     }
     catch(const XMLException& excToCatch)
     {
@@ -280,26 +280,21 @@ void IGXMLScanner::scanDocument(const InputSource& src)
         }
         catch(const OutOfMemoryException&)
         {
-            throw;
-        }
-        catch(...)
-        {
-            // Flush the reader manager and rethrow user's error
-            fReaderMgr.reset();
-            throw;
-        }
+            // This is a special case for out-of-memory
+            // conditions, because resetting the ReaderMgr
+            // can be problematic.
+            resetReaderMgr.release();
 
-        // If it returned, then reset the reader manager and fall through
-        fReaderMgr.reset();
+            throw;
+        }
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        // Reset and rethrow
-        fReaderMgr.reset();
+        // This is a special case for out-of-memory
+        // conditions, because resetting the ReaderMgr
+        // can be problematic.
+        resetReaderMgr.release();
+
         throw;
     }
 }
@@ -314,6 +309,8 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
     // Find the next token and remember the reader id
     unsigned int orgReader;
     XMLTokens curToken;
+
+    ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
 
     bool retVal = true;
 
@@ -427,15 +424,13 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
     //  to find out the position in the XML source of the error.
     catch(const XMLErrs::Codes)
     {
-        // This is a 'first failure' exception, so reset and return failure
-        fReaderMgr.reset();
-        return false;
+        // This is a 'first failure' exception so return failure
+        retVal = false;
     }
     catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and reuturn failure
-        fReaderMgr.reset();
-        return false;
+        // This is a 'first fatal error' type exit, so return failure
+        retVal = false;
     }
     catch(const XMLException& excToCatch)
     {
@@ -468,33 +463,30 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
         }
         catch(const OutOfMemoryException&)
         {
-            throw;
-        }
-        catch(...)
-        {
-            // Reset and rethrow user error
-            fReaderMgr.reset();
+            // This is a special case for out-of-memory
+            // conditions, because resetting the ReaderMgr
+            // can be problematic.
+            resetReaderMgr.release();
+
             throw;
         }
 
-        // Reset and return failure
-        fReaderMgr.reset();
-        return false;
+        retVal = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        // Reset and rethrow original error
-        fReaderMgr.reset();
+        // This is a special case for out-of-memory
+        // conditions, because resetting the ReaderMgr
+        // can be problematic.
+        resetReaderMgr.release();
+
         throw;
     }
 
-    // If we hit the end, then flush the reader manager
-    if (!retVal)
-        fReaderMgr.reset();
+    // If we are not at the end, release the object that will
+    // reset the ReaderMgr.
+    if (retVal)
+        resetReaderMgr.release();
 
     return retVal;
 }
@@ -552,6 +544,10 @@ void IGXMLScanner::commonInit()
         7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
     );
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
+
+    // use fDTDValidator as the default validator
+    if (!fValidator)
+        fValidator = fDTDValidator;
 }
 
 void IGXMLScanner::cleanUp()
@@ -2945,6 +2941,8 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
 {
     Grammar* loadedGrammar = 0;
 
+    ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
+
     try
     {
         fGrammarResolver->cacheGrammarFromParse(false);
@@ -2971,9 +2969,6 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
         else if (grammarType == Grammar::DTDGrammarType) {
             loadedGrammar = loadDTDGrammar(src, toCache);
         }
-
-        // Reset the reader manager to close all files, sockets, etc...
-        fReaderMgr.reset();
     }
     //  NOTE:
     //
@@ -2982,14 +2977,11 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
     //  to find out the position in the XML source of the error.
     catch(const XMLErrs::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
-        fReaderMgr.reset();
+        // This is a 'first fatal error' type exit, so fall through
     }
     catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
-        fReaderMgr.reset();
-
+        // This is a 'first fatal error' type exit, so fall through
     }
     catch(const XMLException& excToCatch)
     {
@@ -3021,26 +3013,21 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
         }
         catch(const OutOfMemoryException&)
         {
-            throw;
-        }
-        catch(...)
-        {
-            // Flush the reader manager and rethrow user's error
-            fReaderMgr.reset();
-            throw;
-        }
+            // This is a special case for out-of-memory
+            // conditions, because resetting the ReaderMgr
+            // can be problematic.
+            resetReaderMgr.release();
 
-        // If it returned, then reset the reader manager and fall through
-        fReaderMgr.reset();
+            throw;
+        }
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        // Reset and rethrow
-        fReaderMgr.reset();
+        // This is a special case for out-of-memory
+        // conditions, because resetting the ReaderMgr
+        // can be problematic.
+        resetReaderMgr.release();
+
         throw;
     }
 

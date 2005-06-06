@@ -251,6 +251,8 @@ XercesDOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
     return 0;
 }
 
+typedef JanitorMemFunCall<XercesDOMParser>  ResetParseType;
+
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Grammar preparsing methods
 // ---------------------------------------------------------------------------
@@ -262,26 +264,21 @@ Grammar* XercesDOMParser::loadGrammar(const char* const systemId,
     if (getParseInProgress())
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetParseType  resetParse(this, &XercesDOMParser::resetParse);
+
     Grammar* grammar = 0;
+
     try
     {
         setParseInProgress(true);
         if (grammarType == Grammar::DTDGrammarType) 
             getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);        
-        setParseInProgress(false);
+        resetParse.release();
+
         throw;
     }
 
@@ -296,26 +293,21 @@ Grammar* XercesDOMParser::loadGrammar(const XMLCh* const systemId,
     if (getParseInProgress())
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetParseType  resetParse(this, &XercesDOMParser::resetParse);
+
     Grammar* grammar = 0;
+
     try
     {
         setParseInProgress(true);
         if (grammarType == Grammar::DTDGrammarType) 
             getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);        
-        setParseInProgress(false);
+        resetParse.release();
+
         throw;
     }
 
@@ -330,7 +322,10 @@ Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
     if (getParseInProgress())
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
-   Grammar* grammar = 0;
+    ResetParseType  resetParse(this, &XercesDOMParser::resetParse);
+
+    Grammar* grammar = 0;
+
     try
     {
         setParseInProgress(true);
@@ -343,17 +338,22 @@ Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
+        resetParse.release();
+
         throw;
     }
 
     return grammar;
+}
+
+void XercesDOMParser::resetParse()
+{
+    if (getScanner()->getDocTypeHandler() == 0)
+    {
+        getScanner()->setDocTypeHandler(this);
+    }
+
+    setParseInProgress(false);
 }
 
 void XercesDOMParser::resetCachedGrammarPool()

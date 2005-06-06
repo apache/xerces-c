@@ -56,6 +56,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  BMPattern: Constructors
 // ---------------------------------------------------------------------------
+
+typedef JanitorMemFunCall<BMPattern>    CleanupType;
+
 BMPattern::BMPattern( const XMLCh*         const pattern
                     ,       bool                 ignoreCase
                     ,       MemoryManager* const manager) :
@@ -67,19 +70,20 @@ BMPattern::BMPattern( const XMLCh*         const pattern
     , fUppercasePattern(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &BMPattern::cleanUp);
+
 	try {
         fPattern = XMLString::replicate(pattern, fMemoryManager);
 		initialize();
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...) {
 
-		cleanUp();
-		throw;
-	}
+    cleanup.release();
 }
 
 BMPattern::BMPattern( const XMLCh*         const pattern
@@ -94,19 +98,20 @@ BMPattern::BMPattern( const XMLCh*         const pattern
     , fUppercasePattern(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &BMPattern::cleanUp);
+
 	try {
         fPattern = XMLString::replicate(pattern, fMemoryManager);
 		initialize();
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...) {
 
-		cleanUp();
-		throw;
-	}
+    cleanup.release();
 }
 
 BMPattern::~BMPattern() {

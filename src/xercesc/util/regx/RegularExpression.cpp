@@ -256,6 +256,9 @@ bool RegularExpression::Context::nextCh(XMLInt32& ch, int& offset,
 // ---------------------------------------------------------------------------
 //  RegularExpression: Constructors and Destructors
 // ---------------------------------------------------------------------------
+
+typedef JanitorMemFunCall<RegularExpression>    CleanupType;
+
 RegularExpression::RegularExpression(const char* const pattern,
                                      MemoryManager* const manager)
 	:fHasBackReferences(false),
@@ -274,6 +277,8 @@ RegularExpression::RegularExpression(const char* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &RegularExpression::cleanUp);
+
 	try {
 
 		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
@@ -282,13 +287,12 @@ RegularExpression::RegularExpression(const char* const pattern,
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...) {
 
-		cleanUp();
-		throw;
-	}
+    cleanup.release();
 }
 
 RegularExpression::RegularExpression(const char* const pattern,
@@ -310,6 +314,8 @@ RegularExpression::RegularExpression(const char* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &RegularExpression::cleanUp);
+
 	try {
 
 		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
@@ -320,13 +326,12 @@ RegularExpression::RegularExpression(const char* const pattern,
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...) {
 
-		cleanUp();
-		throw;
-	}
+    cleanup.release();
 }
 
 
@@ -348,19 +353,20 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &RegularExpression::cleanUp);
+
 	try {
 
 		setPattern(pattern);
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...) {
 
-		cleanUp();
-		throw;
-	}
+    cleanup.release();
 }
 
 RegularExpression::RegularExpression(const XMLCh* const pattern,
@@ -382,19 +388,20 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
      fTokenFactory(0),
      fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &RegularExpression::cleanUp);
+
 	try {
 
 		setPattern(pattern, options);
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch (...) {
 
-		cleanUp();
-		throw;
-	}
+    cleanup.release();
 }
 
 RegularExpression::~RegularExpression() {
@@ -1567,7 +1574,6 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
 }
 
 
-
 /*
  * Prepares for matching. This method is called during construction.
  */
@@ -1655,7 +1661,7 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 
 		if (isSet(fOptions, USE_UNICODE_CATEGORY)) {
 
-            if (fWordRange == 0) {
+			if (fWordRange == 0) {
 
 				fWordRange = fTokenFactory->getRange(fgUniIsWord);
 				if (fWordRange == 0)

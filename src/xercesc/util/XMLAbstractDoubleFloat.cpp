@@ -612,10 +612,8 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
 
         janRetBuffer.release();
         return retBuffer;
-
-    } //try
-
-    catch (...)
+    }
+    catch (const NumberFormatException&)
     {
         return 0;
     }

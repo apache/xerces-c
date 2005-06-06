@@ -43,34 +43,47 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+typedef JanitorMemFunCall<XPathMatcherStack>    CleanupType;
 
 // ---------------------------------------------------------------------------
 //  XPathMatherStack: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XPathMatcherStack::XPathMatcherStack(MemoryManager* const manager)
     : fMatchersCount(0)
-    , fContextStack(new (manager) ValueStackOf<int>(8, manager))
+    , fContextStack(0)
     , fMatchers(0)
 {
+    CleanupType cleanup(this, &XPathMatcherStack::cleanUp);
+
     try {
+        fContextStack = new (manager) ValueStackOf<int>(8, manager);
         fMatchers = new (manager) RefVectorOf<XPathMatcher>(8, true, manager);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        delete fContextStack;
         throw;
     }
+
+    cleanup.release();
 }
 
 XPathMatcherStack::~XPathMatcherStack() {
 
+    cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  XPathMatcherStack: Private helper methods.
+// ---------------------------------------------------------------------------
+void XPathMatcherStack::cleanUp()
+{
     delete fContextStack;
     delete fMatchers;
 }

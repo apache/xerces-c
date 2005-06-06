@@ -281,6 +281,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SAXParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
+
+
+typedef JanitorMemFunCall<SAXParser>    CleanupType;
+typedef JanitorMemFunCall<SAXParser>    ResetInProgressType;
+
+
 SAXParser::SAXParser( XMLValidator* const   valToAdopt
                     , MemoryManager* const  manager
                     , XMLGrammarPool* const gramPool):
@@ -304,19 +310,22 @@ SAXParser::SAXParser( XMLValidator* const   valToAdopt
     , fGrammarPool(gramPool)
     , fElemQNameBuf(1023, manager)
 {
+    CleanupType cleanup(this, &SAXParser::cleanUp);
+
     try
     {
         initialize();
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 
@@ -763,19 +772,17 @@ void SAXParser::parse(const InputSource& source)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAXParser::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(source);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 }
@@ -786,19 +793,17 @@ void SAXParser::parse(const XMLCh* const systemId)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAXParser::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 }
@@ -809,19 +814,17 @@ void SAXParser::parse(const char* const systemId)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAXParser::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 }
@@ -1510,20 +1513,18 @@ Grammar* SAXParser::loadGrammar(const char* const systemId,
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAXParser::resetInProgress);
+
     Grammar* grammar = 0;
     try
     {
         fParseInProgress = true;
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 
@@ -1538,20 +1539,18 @@ Grammar* SAXParser::loadGrammar(const XMLCh* const systemId,
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAXParser::resetInProgress);
+
     Grammar* grammar = 0;
     try
     {
         fParseInProgress = true;
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 
@@ -1566,24 +1565,27 @@ Grammar* SAXParser::loadGrammar(const InputSource& source,
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAXParser::resetInProgress);
+
     Grammar* grammar = 0;
     try
     {
         fParseInProgress = true;
         grammar = fScanner->loadGrammar(source, grammarType, toCache);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 
     return grammar;
+}
+
+void SAXParser::resetInProgress()
+{
+    fParseInProgress = false;
 }
 
 void SAXParser::resetCachedGrammarPool()

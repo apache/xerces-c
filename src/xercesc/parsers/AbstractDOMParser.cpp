@@ -69,6 +69,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Constructors and Destructor
 // ---------------------------------------------------------------------------
+
+
+typedef JanitorMemFunCall<AbstractDOMParser>    CleanupType;
+typedef JanitorMemFunCall<AbstractDOMParser>    ResetInProgressType;
+
+
 AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
                                     , MemoryManager* const  manager
                                     , XMLGrammarPool* const gramPool) :
@@ -98,19 +104,22 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
 , fInternalSubset(fBufMgr.bidOnBuffer())
 , fPSVIHandler(0)
 {
+    CleanupType cleanup(this, &AbstractDOMParser::cleanUp);
+
     try
     {
         initialize();
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-       cleanUp();
-       throw;
-    }
+
+    cleanup.release();
 }
 
 
@@ -182,6 +191,12 @@ void AbstractDOMParser::reset()
     fDocumentAdoptedByUser = false;
     fNodeStack->removeAllElements();
     fInternalSubset.reset();
+}
+
+
+void AbstractDOMParser::resetInProgress()
+{
+    fParseInProgress = false;
 }
 
 
@@ -492,21 +507,19 @@ void AbstractDOMParser::parse(const InputSource& source)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &AbstractDOMParser::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(source);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
+        resetInProgress.release();
+
         throw;
     }    
-    catch(...)
-    {
-        fParseInProgress = false;
-        throw;
-    }
 }
 
 void AbstractDOMParser::parse(const XMLCh* const systemId)
@@ -515,21 +528,19 @@ void AbstractDOMParser::parse(const XMLCh* const systemId)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &AbstractDOMParser::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
+        resetInProgress.release();
+
         throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
-        throw;
-    }
+    }    
 }
 
 void AbstractDOMParser::parse(const char* const systemId)
@@ -538,21 +549,19 @@ void AbstractDOMParser::parse(const char* const systemId)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &AbstractDOMParser::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
+        resetInProgress.release();
+
         throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
-        throw;
-    }
+    }    
 }
 
 

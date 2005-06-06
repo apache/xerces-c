@@ -430,6 +430,7 @@ void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
                 {
                     // ask the itemType for a complete check
                     BaseRefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i), manager);
+                    Janitor<BaseRefVectorOf<XMLCh> >    jan(tempList);
                     int tokenNumber = tempList->size();
 
                     try
@@ -439,15 +440,10 @@ void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
                     }
                     catch(const OutOfMemoryException&)
                     {
-                        throw;
-                    }
-                    catch (...)
-                    {
-                        delete tempList;
-                        throw;
-                    }
+                        jan.release();
 
-                    delete tempList;
+                        throw;
+                    }
 
                     // enum shall pass this->checkContent() as well.
                     checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);

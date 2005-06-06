@@ -346,6 +346,8 @@ XercesLocationPath::XercesLocationPath(MemoryManager* const)
 {
 }
 
+typedef JanitorMemFunCall<XercesXPath>  CleanupType;
+
 // ---------------------------------------------------------------------------
 //  XercesPath: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -360,6 +362,8 @@ XercesXPath::XercesXPath(const XMLCh* const xpathExpr,
     , fLocationPaths(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XercesXPath::cleanUp);
+
     try
     {
         fExpression = XMLString::replicate(xpathExpr, fMemoryManager);
@@ -371,13 +375,12 @@ XercesXPath::XercesXPath(const XMLCh* const xpathExpr,
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        cleanUp();
         throw;
     }
+
+    cleanup.release();
 }
 
 XercesXPath::~XercesXPath() {

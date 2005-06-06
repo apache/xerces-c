@@ -118,18 +118,7 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
                         , MemoryManager* const manager)
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::AnyURI, manager)
 {
-    try
-    {
-        init(enums, manager);
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...)
-    {        
-        throw;
-    }
+    init(enums, manager);
 }
 
 DatatypeValidator* AnyURIDatatypeValidator::newInstance(

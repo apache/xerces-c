@@ -158,6 +158,8 @@ enum {
     ENUM_ELT_SIZE
 };
 
+typedef JanitorMemFunCall<TraverseSchema>   CleanupType;
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -219,6 +221,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fAnnotation(0)
     , fAttributeCheck(manager)
 {
+    CleanupType cleanup(this, &TraverseSchema::cleanUp);
 
     try {
 
@@ -232,13 +235,12 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        cleanUp();
         throw;
     }
+
+    cleanup.release();
 }
 
 

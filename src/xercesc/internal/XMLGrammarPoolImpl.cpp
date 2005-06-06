@@ -386,7 +386,11 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     {
         ThrowXMLwithMemMgr(XSerializationException, XMLExcepts::XSer_GrammarPool_NotEmpty, memMgr);
     }
-    
+
+    // This object will take care of cleaning up if an exception is
+    // thrown during deserialization.
+    JanitorMemFunCall<XMLGrammarPoolImpl>   cleanup(this, &XMLGrammarPoolImpl::cleanUp);
+
     try 
     {
         XSerializeEngine  serEng(binIn, this);
@@ -426,18 +430,30 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     }
     catch(const OutOfMemoryException&)
     {
+        // This is a special case, because we don't want
+        // to execute cleanup code on out-of-memory
+        // conditions.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        fLocked = false; // need to unset it so we can clean it out..
-        clear();  //clear all deserialized grammars
-        throw;
-    }
+
+    // Everything is OK, so we can release the cleanup object.
+    cleanup.release();
+
     if (fLocked) 
     {
         createXSModel();              
     }
+}
+
+
+void
+XMLGrammarPoolImpl::cleanUp()
+{
+    fLocked = false;
+
+    clear();
 }
 
 

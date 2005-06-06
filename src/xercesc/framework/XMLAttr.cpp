@@ -45,6 +45,8 @@ XMLAttr::XMLAttr(MemoryManager* const manager) :
     fAttName = new (fMemoryManager) QName(fMemoryManager);
 }
 
+typedef JanitorMemFunCall<XMLAttr>  CleanupType;
+
 XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        attrName
                     , const XMLCh* const        attrPrefix
@@ -64,6 +66,8 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     , fDatatypeValidator(datatypeValidator)
     , fIsSchemaValidated(isSchema)
 {
+    CleanupType cleanup(this, &XMLAttr::cleanUp);
+
     try
     {
         //
@@ -75,12 +79,12 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 XMLAttr::XMLAttr(   const   unsigned int        uriId
@@ -101,6 +105,8 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     , fDatatypeValidator(datatypeValidator)
     , fIsSchemaValidated(isSchema)
 {
+    CleanupType cleanup(this, &XMLAttr::cleanUp);
+
     try
     {
         //  Just call the local setters to set up everything. Too much
@@ -110,12 +116,12 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 

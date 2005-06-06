@@ -138,6 +138,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+typedef JanitorMemFunCall<SchemaGrammar>    CleanupType;
+
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -160,6 +162,8 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fValidated(false)
     , fDatatypeRegistry(manager)
 {
+    CleanupType cleanup(this, &SchemaGrammar::cleanUp);
+
     //
     //  Init all the pool members.
     //
@@ -195,13 +199,12 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        cleanUp();
         throw;
     }
+
+    cleanup.release();
 }
 
 SchemaGrammar::~SchemaGrammar()

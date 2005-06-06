@@ -77,6 +77,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+typedef JanitorMemFunCall<IdentityConstraint>   CleanupType;
+
 // ---------------------------------------------------------------------------
 //  IdentityConstraint: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -90,19 +92,20 @@ IdentityConstraint::IdentityConstraint(const XMLCh* const identityConstraintName
     , fMemoryManager(manager)
     , fNamespaceURI(-1)
 {
+    CleanupType cleanup(this, &IdentityConstraint::cleanUp);
+
     try {
         fIdentityConstraintName = XMLString::replicate(identityConstraintName, fMemoryManager);
         fElemName = XMLString::replicate(elemName, fMemoryManager);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        cleanUp();
         throw;
     }
+
+    cleanup.release();
 }
 
 

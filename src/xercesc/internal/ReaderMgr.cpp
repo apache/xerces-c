@@ -387,6 +387,8 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
     if (!newStream)
         return 0;
 
+    Janitor<BinInputStream>   streamJanitor(newStream);
+
     //
     //  Create a new reader and return it. If the source has an encoding that
     //  it wants to force, then we call the constructor that does that.
@@ -438,19 +440,14 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...) //NetAccessorException&
-    {
-        delete newStream;
+        streamJanitor.release();
+
         throw;
     }
 
-    // If it failed for any reason, then return zero.
-    if (!retVal) {
-        delete newStream;
-        return 0;
-    }
+    assert(retVal);
+
+    streamJanitor.release();
 
     // Set the next available reader number on this reader
     retVal->setReaderNum(fNextReaderNum++);

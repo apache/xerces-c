@@ -134,6 +134,11 @@ void XMLInitializer::initializeScannerMsgLoader()
     }
 }
 
+
+typedef JanitorMemFunCall<XMLScanner>   CleanupType;
+typedef JanitorMemFunCall<ReaderMgr>    ReaderMgrResetType;
+
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -212,12 +217,22 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fWSNormalizeBuf(1023, manager)
     , fElemStack(manager)   
 {
-   commonInit();
+    CleanupType cleanup(this, &XMLScanner::cleanUp);
 
-   if (fValidator) {
-       fValidatorFromUser = true;
-       initValidator(fValidator);
-   }
+    try
+    {
+        commonInit();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
+        throw;
+    }
+
+    cleanup.release();
 }
 
 XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
@@ -300,28 +315,27 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fWSNormalizeBuf(1023, manager)
     , fElemStack(manager)
 {
-   commonInit();
+    CleanupType cleanup(this, &XMLScanner::cleanUp);
 
-   if (valToAdopt){
-       fValidatorFromUser = true;
-       initValidator(fValidator);
-   }
+    try
+    {
+        commonInit();
+    }
+    catch(const OutOfMemoryException&)
+    {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
+        throw;
+    }
+
+    cleanup.release();
 }
 
 XMLScanner::~XMLScanner()
 {
-    delete fAttrList;
-    delete fAttrDupChkRegistry;
-    delete fValidationContext;
-    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
-    fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
-    fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
-    // delete fUIntPool
-    for (unsigned int i=0; i<=fUIntPoolRow; i++)
-    {
-        fMemoryManager->deallocate(fUIntPool[i]);
-    }
-    fMemoryManager->deallocate(fUIntPool);
+    cleanUp();
 }
 
 
@@ -567,7 +581,9 @@ bool XMLScanner::scanFirst( const   InputSource&    src
     //  any previous tokens we've returned.
     fSequenceId++;
 
-    // Reset the scanner and its plugged in stuff for a new run.  This
+    ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
+
+   // Reset the scanner and its plugged in stuff for a new run.  This
     // resets all the data structures, creates the initial reader and
     // pushes it on the stack, and sets up the base document path
     scanReset(src);
@@ -597,14 +613,12 @@ bool XMLScanner::scanFirst( const   InputSource&    src
     //  to find out the position in the XML source of the error.
     catch(const XMLErrs::Codes)
     {
-        // This is a 'first failure' exception so reset and return a failure
-        fReaderMgr.reset();
+        // This is a 'first failure' exception so return failure
         return false;
     }
     catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and reuturn failure
-        fReaderMgr.reset();
+        // This is a 'first fatal error' type exit, return failure
         return false;
     }
     catch(const XMLException& excToCatch)
@@ -638,32 +652,33 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         }
         catch(const OutOfMemoryException&)
         {
-            throw;
-        }
-        catch(...)
-        {
-            // Reset and rethrow the user error
-            fReaderMgr.reset();
+            // This is a special case for out-of-memory
+            // conditions, because resetting the ReaderMgr
+            // can be problematic.
+            resetReaderMgr.release();
+
             throw;
         }
 
-        // Reset and return a failure
-        fReaderMgr.reset();
         return false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        // Reset and rethrow original error
-        fReaderMgr.reset();
+        // This is a special case for out-of-memory
+        // conditions, because resetting the ReaderMgr
+        // can be problematic.
+        resetReaderMgr.release();
+
         throw;
     }
 
     // Fill in the caller's token to make it legal and return success
     toFill.set(fScannerId, fSequenceId);
+
+    // Release the object that will reset the ReaderMgr, since there's
+    // more to scan.
+    resetReaderMgr.release();
+
     return true;
 }
 
@@ -747,8 +762,28 @@ void XMLScanner::commonInit()
 
     // Register self as handler for XMLBufferFull events on the CDATA buffer
     fCDataBuf.setFullHandler(this, fBufferSize);
+
+   if (fValidator) {
+       fValidatorFromUser = true;
+       initValidator(fValidator);
+   }
 }
 
+void XMLScanner::cleanUp()
+{
+    delete fAttrList;
+    delete fAttrDupChkRegistry;
+    delete fValidationContext;
+    fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
+    fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
+    fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
+    // delete fUIntPool
+    for (unsigned int i=0; i<=fUIntPoolRow; i++)
+    {
+        fMemoryManager->deallocate(fUIntPool[i]);
+    }
+    fMemoryManager->deallocate(fUIntPool);
+}
 
 void XMLScanner::initValidator(XMLValidator* theValidator) {
 
