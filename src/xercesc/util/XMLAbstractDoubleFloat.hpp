@@ -195,7 +195,7 @@ public:
      * from string to double/float.
      *
      ***/
-    void                  normalizeDecimalPoint(char* const toNormal);
+    static void            normalizeDecimalPoint(char* const toNormal);
 
     /***
      * Support for Serialization/De-serialization
@@ -229,9 +229,12 @@ protected:
                                       , MemoryManager* const manager);
 
     //
-    // to be overwritten by derived class
+    // to be overridden by derived class
     //
-    virtual void          checkBoundary(const XMLCh* const strValue) = 0;
+    virtual void          checkBoundary(char* const strValue) = 0;
+
+    void
+    convert(char* const strValue);
 
 private:
     //

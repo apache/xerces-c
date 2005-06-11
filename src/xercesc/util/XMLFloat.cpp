@@ -136,56 +136,11 @@ XMLFloat::~XMLFloat()
 {
 }
 
-void XMLFloat::checkBoundary(const XMLCh* const strValue)
+void XMLFloat::checkBoundary(char* const strValue)
 {
-    char *nptr = XMLString::transcode(strValue, getMemoryManager());
+    convert(strValue);
 
-    normalizeDecimalPoint(nptr);
-
-    ArrayJanitor<char> jan1(nptr, getMemoryManager());
-    int   strLen = strlen(nptr);
-    char *endptr = 0;
-    errno = 0;
-    fValue = strtod(nptr, &endptr);
-
-    // check if all chars are valid char
-    if ( (endptr - nptr) != strLen)
-    {
-        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
-    }
-
-    // check if overflow/underflow occurs
-    if (errno == ERANGE)
-    {
-
-        fDataConverted = true;
-
-        if ( fValue < 0 )
-        {
-            if (fValue > (-1)*DBL_MIN)
-            {
-                fValue = 0;
-            }
-            else
-            {
-                fType = NegINF;
-                fDataOverflowed = true;
-            }
-        }
-        else if ( fValue > 0)
-        {
-            if (fValue < DBL_MIN )
-            {
-                fValue = 0;
-            }
-            else
-            {
-                fType = PosINF;
-                fDataOverflowed = true;
-            }
-        }
-    }
-    else
+    if (fDataConverted == false)
     {
         /**
          *  float related checking

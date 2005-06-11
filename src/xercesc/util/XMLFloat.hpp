@@ -122,7 +122,7 @@ public:
 
 protected:
 
-    void                  checkBoundary(const XMLCh* const strValue);
+    virtual void          checkBoundary(char* const strValue);
 
 private:
     //

@@ -1800,15 +1800,23 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
         status = st_FOCA0003;
         return false;
     }
-    // check if all chars are valid char
-    if ( (endptr - nptr) != strLen)
+    // check if all chars are valid char.  If they are, endptr will
+    // pointer to the null terminator, or all of the remaining
+    // characters will be whitespace characters.
+    while (*endptr != '\0')
     {
-        for (unsigned int i=endptr - nptr; i <strLen; i++) {
-            if (!isspace(nptr[i])) {
-                status = st_FOCA0002;
-                return false;
-            }
+        const char  ch = *endptr;
+
+        if (ch == '\t' || ch == '\n' || ch == '\r' || ch == ' ')
+        {
+            ++endptr;
         }
+        else
+        {
+            status = st_FOCA0002;
+            return false;
+        }
+        
     }
     return true;
 }

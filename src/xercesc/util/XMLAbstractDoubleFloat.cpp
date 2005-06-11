@@ -132,6 +132,8 @@
 #include <xercesc/util/Janitor.hpp>
 
 #include <locale.h>
+#include <float.h>
+#include <errno.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -199,7 +201,55 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
         // Normal case
         //
     {
-        checkBoundary(tmpStrValue);
+        // Use a stack-based buffer when possible.  Since all
+        // valid doubles or floats will only contain ASCII
+        // digits, a decimal point,  or the exponent character,
+        // they will all be single byte characters, and this will
+        // work.
+        static const unsigned int  maxStackSize = 100;
+
+        const unsigned int  lenTempStrValue =
+            XMLString::stringLen(tmpStrValue);
+
+        if (lenTempStrValue < maxStackSize)
+        {
+            char    buffer[maxStackSize + 1];
+
+            XMLString::transcode(
+                tmpStrValue,
+                buffer,
+                sizeof(buffer) - 1,
+                getMemoryManager());
+
+            // Do this for safety, because we've
+            // no guarantee we didn't overrun the
+            // capacity of the buffer when transcoding
+            // a bogus value.
+            buffer[maxStackSize] = '\0';
+
+            // If they aren't the same length, then some
+            // non-ASCII multibyte character was present.
+            // This will only happen in the case where the
+            // string has a bogus character, and it's long
+            // enough to overrun this buffer, but we need
+            // to check, even if it's unlikely to happen.
+            if (XMLString::stringLen(buffer) != lenTempStrValue)
+            {
+                ThrowXMLwithMemMgr(
+                    NumberFormatException,
+                    XMLExcepts::XMLNUM_Inv_chars,
+                    getMemoryManager());
+            }
+
+            checkBoundary(buffer);
+        }
+        else
+        {
+            char *nptr = XMLString::transcode(tmpStrValue, getMemoryManager());
+            const ArrayJanitor<char> janStr(nptr, fMemoryManager);
+
+            checkBoundary(nptr);
+        }
     }
 
 }
@@ -465,6 +515,58 @@ void XMLAbstractDoubleFloat::normalizeDecimalPoint(char* const toNormal)
         }
     }
 }
+
+
+void
+XMLAbstractDoubleFloat::convert(char* const strValue)
+{
+    normalizeDecimalPoint(strValue);
+
+    char *endptr = 0;
+    errno = 0;
+    fValue = strtod(strValue, &endptr);
+
+    // check if all chars are valid char.  If they are, endptr will
+    // pointer to the null terminator.
+    if (*endptr != '\0')
+    {
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
+    }
+
+    // check if overflow/underflow occurs
+    if (errno == ERANGE)
+    {
+            
+        fDataConverted = true;
+
+        if ( fValue < 0 )
+        {
+            if (fValue > (-1)*DBL_MIN)
+            {
+                fValue = 0;
+            }
+            else
+            {
+                fType = NegINF;
+                fDataOverflowed = true;
+            }
+        }
+        else if ( fValue > 0)
+        {
+            if (fValue < DBL_MIN )
+            {
+                fValue = 0;
+            }
+            else
+            {
+                fType = PosINF;
+                fDataOverflowed = true;
+            }
+        }
+    }
+}
+
+
 
 /***
  * E2-40
