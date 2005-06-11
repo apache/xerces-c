@@ -3884,27 +3884,94 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
     //  handler on every round.
-    XMLCh   nextCh;
-    XMLCh   secondCh = 0;
-    bool    gotLeadingSurrogate = false;
-    bool    escaped;
     while (true)
     {
         try
         {
             while(true)
             {
-                nextCh = fReaderMgr.getNextChar();
+                XMLCh nextCh = fReaderMgr.getNextChar();
 
-                if (!nextCh)
-                    ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
-
-                //  Check for our ending quote. It has to be in the same entity
-                //  as where we started. Quotes in nested entities are ignored.
-                if (nextCh == quoteCh)
+                if (nextCh != quoteCh)
                 {
+                    if (nextCh != chAmpersand)
+                    {
+                        if ((nextCh < 0xD800) || (nextCh > 0xDFFF))
+                        {
+                            // Its got to at least be a valid XML character
+                            if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
+                            {
+                                if (nextCh == 0)
+                                    ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
+
+                                XMLCh tmpBuf[9];
+                                XMLString::binToText
+                                (
+                                    nextCh
+                                    , tmpBuf
+                                    , 8
+                                    , 16
+                                    , fMemoryManager
+                                );
+                                emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                            }
+                        } else // its a surrogate
+                        {
+                            // Deal with surrogate pairs
+
+                            //  we expect a a leading surrogate.
+                            if (nextCh <= 0xDBFF)
+                            {
+                                toFill.append(nextCh);
+
+                                //  process the trailing surrogate
+                                nextCh = fReaderMgr.getNextChar();
+
+                                //  it should be a trailing surrogate.
+                                if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
+                                {
+                                    emitError(XMLErrs::Expected2ndSurrogateChar);
+                                }
+                            } else
+                            {
+                                //  Its a trailing surrogate, but we are not expecting it
+                                emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                            }
+                        }
+                    } else // its a chAmpersand
+                    {
+                        //  Check for an entity ref . We ignore the empty flag in
+                        //  this one.
+
+                        bool    escaped;
+                        XMLCh   firstCh;
+                        XMLCh   secondCh
+                            ;
+                        // If it was not returned directly, then jump back up
+                        if (scanEntityRef(true, firstCh, secondCh, escaped) == EntityExp_Returned)
+                        {
+                            //  If it was escaped, then put in a 0xFFFF value. This will
+                            //  be used later during validation and normalization of the
+                            //  value to know that the following character was via an
+                            //  escape char.
+                            if (escaped)
+                                toFill.append(0xFFFF);
+
+                            toFill.append(firstCh);
+                            if (secondCh)
+                                toFill.append(secondCh);
+                        }
+                        continue;
+                    }
+                } else // its a quoteCh
+                {
+                    //  Check for our ending quote. It has to be in the same entity
+                    //  as where we started. Quotes in nested entities are ignored.
+
                     if (curReader == fReaderMgr.getCurrentReaderNum())
+                    {
                         return true;
+                    }
 
                     // Watch for spillover into a previous entity
                     if (curReader > fReaderMgr.getCurrentReaderNum())
@@ -3914,89 +3981,14 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
                     }
                 }
 
-                //  Check for an entity ref . We ignore the empty flag in
-                //  this one.
-                escaped = false;
-                if (nextCh == chAmpersand)
-                {
-                    // If it was not returned directly, then jump back up
-                    if (scanEntityRef(true, nextCh, secondCh, escaped) != EntityExp_Returned)
-                    {
-                        gotLeadingSurrogate = false;
-                        continue;
-                    }
-                }
-                else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
-                {
-                    // Deal with surrogate pairs
-                    //  Its a leading surrogate. If we already got one, then
-                    //  issue an error, else set leading flag to make sure that
-                    //  we look for a trailing next time.
-                    if (gotLeadingSurrogate)
-                    {
-                        emitError(XMLErrs::Expected2ndSurrogateChar);
-                    }
-                    else
-                        gotLeadingSurrogate = true;
-                }
-                else
-                {
-                    //  If its a trailing surrogate, make sure that we are
-                    //  prepared for that. Else, its just a regular char so make
-                    //  sure that we were not expected a trailing surrogate.
-                    if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
-                    {
-                        // Its trailing, so make sure we were expecting it
-                        if (!gotLeadingSurrogate)
-                            emitError(XMLErrs::Unexpected2ndSurrogateChar);
-                    }
-                    else
-                    {
-                        //  Its just a char, so make sure we were not expecting a
-                        //  trailing surrogate.
-                        if (gotLeadingSurrogate) {
-                            emitError(XMLErrs::Expected2ndSurrogateChar);
-                        }
-                        // Its got to at least be a valid XML character
-                        else if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
-                        {
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                                , fMemoryManager
-                            );
-                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
-                        }
-                    }
-                    gotLeadingSurrogate = false;
-                }
-
-                //  If it was escaped, then put in a 0xFFFF value. This will
-                //  be used later during validation and normalization of the
-                //  value to know that the following character was via an
-                //  escape char.
-                if (escaped)
-                    toFill.append(0xFFFF);
-
-                // Else add it to the buffer
+                // add it to the buffer
                 toFill.append(nextCh);
 
-                if (secondCh)
-                {
-                    toFill.append(secondCh);
-                    secondCh=0;
-                }
             }
         }
         catch(const EndOfEntityException&)
         {
             // Just eat it and continue.
-            gotLeadingSurrogate = false;
-            escaped = false;
         }
     }
     return true;
