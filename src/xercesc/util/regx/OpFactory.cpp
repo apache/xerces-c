@@ -89,7 +89,7 @@ Op* OpFactory::createDotOp() {
 	return tmpOp;
 }
 
-CharOp* OpFactory::createCharOp(int data) {
+CharOp* OpFactory::createCharOp(XMLInt32 data) {
 
 	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_CHAR, data, fMemoryManager);
 
@@ -97,7 +97,7 @@ CharOp* OpFactory::createCharOp(int data) {
 	return tmpOp;
 }
 
-CharOp* OpFactory::createAnchorOp(int data) {
+CharOp* OpFactory::createAnchorOp(XMLInt32 data) {
 
 	CharOp* tmpOp = new (fMemoryManager) CharOp(Op::O_ANCHOR, data, fMemoryManager);
 
