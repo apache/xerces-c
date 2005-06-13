@@ -958,7 +958,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 //  locking mechanism is developed
 // -----------------------------------------------------------------------
 #ifndef APP_NO_THREADS
-typedef XMLHolder<pthread_mutex_t  PThreadMutexHolderType;
+typedef XMLHolder<pthread_mutex_t> PThreadMutexHolderType;
 typedef XMLHolder<int>             IntMutexHolderType;
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
