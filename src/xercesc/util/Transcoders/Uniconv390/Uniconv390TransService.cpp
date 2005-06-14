@@ -209,7 +209,7 @@ Uniconv390TransService::~Uniconv390TransService()
       fCaseConverter->ftolowerhand=UNICONV_NOHANDLE;
    }
    if (fCaseConverter) {
-      delete [] fCaseConverter;
+      delete fCaseConverter;
       fCaseConverter=0;
    }
    if (fICUService) {
