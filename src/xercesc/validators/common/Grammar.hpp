@@ -15,64 +15,15 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/01/29 11:51:21  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.9  2003/10/29 16:19:47  peiyongz
- * storeGrammar()/loadGrammar added
- *
- * Revision 1.8  2003/10/14 15:19:24  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.7  2003/09/22 19:47:14  neilg
- * change Grammar::putElemDecl(XMLElementDecl, bool) so that it does not require the Grammar object to be const.  Also, mark findOrAddGrammar as being dangerous in multithreaded situations
- *
- * Revision 1.6  2003/07/31 17:07:33  peiyongz
- * Grammar embed grammar description
- *
- * Revision 1.5  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/07/11 18:17:43  knoaman
- * Grammar caching/preparsing - initial implementation.
- *
- * Revision 1.2  2002/07/05 17:08:10  tng
- * [Bug 10119] Grammar::getGrammarType need a const modifier
- *
- * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/09/14 14:50:22  tng
- * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
- *
- * Revision 1.5  2001/05/28 20:56:18  tng
- * Schema: Move getTargetNamespace as virtual function in base class Grammar
- *
- * Revision 1.4  2001/05/11 13:27:18  tng
- * Copyright update.
- *
- * Revision 1.3  2001/05/03 20:34:40  tng
- * Schema: SchemaValidator update
- *
- * Revision 1.2  2001/04/19 18:17:31  tng
- * Schema: SchemaValidator update, and use QName in Content Model
- *
- * Revision 1.1  2001/03/21 21:56:27  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
+ * $Id$
  */
 
 
 
 #if !defined(GRAMMAR_HPP)
 #define GRAMMAR_HPP
+
+#include <limits.h>
 
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLEntityDecl.hpp>
@@ -113,8 +64,10 @@ public:
     };
 
     enum {
-         UNKNOWN_SCOPE = -2
-       , TOP_LEVEL_SCOPE = -1
+    	// These are well-known values that must simply be larger
+    	// than any reasonable scope
+		 UNKNOWN_SCOPE		= UINT_MAX - 0
+	   , TOP_LEVEL_SCOPE	= UINT_MAX - 1
     };
 
     // -----------------------------------------------------------------------
