@@ -549,7 +549,7 @@ XMLByte* Base64::decode (   const XMLByte*        const   inputData
     //
     // remove all XML whitespaces from the base64Data
     //
-    int inputLength = XMLString::stringLen( (const char* const)inputData );
+    int inputLength = XMLString::stringLen( (const char*)inputData );
     XMLByte* rawInputData = (XMLByte*) getExternalMemory(memMgr, (inputLength+1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> jan(rawInputData, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
 
