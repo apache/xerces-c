@@ -15,82 +15,6 @@
  */
 
 /*
- * $Log$
- * Revision 1.24  2005/05/05 09:46:11  cargilld
- * Update XSValue to handle float and double the same way the main library does, converting values to infinityr or zero, as the C ranges for float and double are less than the schema ranges.
- *
- * Revision 1.23  2005/04/22 20:02:34  cargilld
- * Use isspace instead of isSpace as data is char not xmlch.
- *
- * Revision 1.22  2005/04/05 20:26:48  cargilld
- * Update XSValue to handle leading and trailing whitespace.
- *
- * Revision 1.21  2004/12/23 16:11:21  cargilld
- * Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
- *
- * Revision 1.20  2004/12/10 10:37:55  cargilld
- * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
- *
- * Revision 1.19  2004/12/01 16:18:47  cargilld
- * Fix for bug xercesc-1304.
- *
- * Revision 1.18  2004/11/24 02:34:08  cargilld
- * Various bug fixes and code cleanup for XSValue.
- *
- * Revision 1.17  2004/11/14 19:01:22  peiyongz
- * st_InvalidRange removed
- * getActVal return double only for dt_decimal
- * error status re-specified for numeric data types
- *
- * Revision 1.16  2004/10/27 21:52:04  peiyongz
- * Set status for invalid data -- patch from David Bertoni
- *
- * Revision 1.15  2004/10/20 15:18:20  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
- * Revision 1.14  2004/10/13 19:23:34  peiyongz
- * using ValueHashTableOf to reduce footprint
- *
- * Revision 1.13  2004/09/28 08:54:34  amassari
- * Silence a warning about missing final "return"
- *
- * Revision 1.12  2004/09/23 21:22:47  peiyongz
- * Documentation
- * st_noContent added
- * unused parameter removed
- *
- * Revision 1.11  2004/09/13 21:24:20  peiyongz
- * 1. returned data to contain datatype in addition to value
- * 2. registry to map type name (in string) to type name enum
- *
- * Revision 1.10  2004/09/09 20:08:31  peiyongz
- * Using new error code
- *
- * Revision 1.9  2004/09/08 19:56:05  peiyongz
- * Remove parameter toValidate from validation interface
- *
- * Revision 1.8  2004/09/08 13:56:09  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2004/08/31 20:52:25  peiyongz
- * Return additional double value for decimal
- * remove tz_hh/tz_mm
- *
- * Revision 1.6  2004/08/31 15:14:47  peiyongz
- * remove XSValueContext
- *
- * Revision 1.5  2004/08/24 15:59:20  peiyongz
- * using SCHAR_MIN/SCHAR_MAX
- *
- * Revision 1.4  2004/08/17 21:11:41  peiyongz
- * no more Unrepresentable
- *
- * Revision 1.3  2004/08/13 21:29:21  peiyongz
- * fMemAllocated
- *
- * Revision 1.2  2004/08/11 17:06:44  peiyongz
- * Do not panic if can't create RegEx
- *
  * $Id$
  */
 
@@ -1688,7 +1612,6 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
 {
     char *nptr = XMLString::transcode(content, manager);
     ArrayJanitor<char> jan(nptr, manager);
-    int   strLen = strlen(nptr);
     char *endptr = 0;
     errno = 0;
 
@@ -1788,6 +1711,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
         status = st_FOCA0003;
         return false;
     }
+
     // check if all chars are valid char.  If they are, endptr will
     // pointer to the null terminator, or all of the remaining
     // characters will be whitespace characters.

@@ -89,19 +89,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DOMPrint.cpp
+SOURCE=..\..\..\..\src\DOMPrint\DOMPrint.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DOMPrintErrorHandler.cpp
+SOURCE=..\..\..\..\src\DOMPrint\DOMPrintErrorHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DOMPrintFilter.cpp
+SOURCE=..\..\..\..\src\DOMPrint\DOMPrintFilter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DOMTreeErrorReporter.cpp
+SOURCE=..\..\..\..\src\DOMPrint\DOMTreeErrorReporter.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -109,11 +109,11 @@ SOURCE=..\..\..\..\DOMPrint\DOMTreeErrorReporter.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DOMPrint.hpp
+SOURCE=..\..\..\..\src\DOMPrint\DOMPrint.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMPrint\DOMTreeErrorReporter.hpp
+SOURCE=..\..\..\..\src\DOMPrint\DOMTreeErrorReporter.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

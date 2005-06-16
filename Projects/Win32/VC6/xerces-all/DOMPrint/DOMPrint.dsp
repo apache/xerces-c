@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FR /FD /c
+# ADD CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FR /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -67,7 +67,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FD /c
+# ADD CPP /G6 /MDd /Ze /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -92,13 +92,13 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "DOMPrint - Win64 Release"
@@ -117,13 +117,13 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FR /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FR /FD /c
+# ADD CPP /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FR /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /machine:IX86 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /machine:IX86 /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -136,35 +136,31 @@ LINK32=link.exe
 # Name "DOMPrint - Win64 Release"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrint.cpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMPrint.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrint.hpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMPrintErrorHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintErrorHandler.cpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMPrintErrorHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintErrorHandler.hpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMPrintFilter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintFilter.cpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMPrintFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMPrintFilter.hpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMTreeErrorReporter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMTreeErrorReporter.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\samples\DOMPrint\DOMTreeErrorReporter.hpp
+SOURCE=..\..\..\..\..\samples\src\DOMPrint\DOMTreeErrorReporter.hpp
 # End Source File
 # End Target
 # End Project

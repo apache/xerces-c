@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -67,7 +67,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /G6 /MDd /Ze /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -92,7 +92,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -117,7 +117,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -136,27 +136,27 @@ LINK32=link.exe
 # Name "SAX2Print - Win64 Release"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.cpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2FilterHandlers.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.hpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2FilterHandlers.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2Print.cpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2Print.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2Print.hpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2Print.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2PrintHandlers.cpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2PrintHandlers.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2PrintHandlers.hpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2PrintHandlers.hpp
 # End Source File
 # End Target
 # End Project

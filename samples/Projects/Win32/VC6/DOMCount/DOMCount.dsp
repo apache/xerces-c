@@ -89,7 +89,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMCount\DOMCount.cpp
+SOURCE=..\..\..\..\src\DOMCount\DOMCount.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -97,7 +97,7 @@ SOURCE=..\..\..\..\DOMCount\DOMCount.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\DOMCount\DOMCount.hpp
+SOURCE=..\..\..\..\src\DOMCount\DOMCount.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

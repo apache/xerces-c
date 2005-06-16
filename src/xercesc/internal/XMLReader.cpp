@@ -1335,23 +1335,22 @@ void XMLReader::checkForSwapped()
     // Assume not swapped
     fSwapped = false;
 
-    #if defined(ENDIANMODE_LITTLE)
-
-        if ((fEncoding == XMLRecognizer::UTF_16B)
-        ||  (fEncoding == XMLRecognizer::UCS_4B))
-        {
-            fSwapped = true;
-        }
-
-    #elif defined(ENDIANMODE_BIG)
-
+	if (XMLPlatformUtils::fgXMLChBigEndian)
+	{
         if ((fEncoding == XMLRecognizer::UTF_16L)
         ||  (fEncoding == XMLRecognizer::UCS_4L))
         {
             fSwapped = true;
         }
-
-    #endif
+    }
+    else
+    {
+        if ((fEncoding == XMLRecognizer::UTF_16B)
+        ||  (fEncoding == XMLRecognizer::UCS_4B))
+        {
+            fSwapped = true;
+        }
+    }
 }
 
 

@@ -89,11 +89,11 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\StdInParse\StdInParse.cpp
+SOURCE=..\..\..\..\src\StdInParse\StdInParse.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\StdInParse\StdInParseHandlers.cpp
+SOURCE=..\..\..\..\src\StdInParse\StdInParseHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -101,11 +101,11 @@ SOURCE=..\..\..\..\StdInParse\StdInParseHandlers.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\StdInParse\StdInParse.hpp
+SOURCE=..\..\..\..\src\StdInParse\StdInParse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\StdInParse\StdInParseHandlers.hpp
+SOURCE=..\..\..\..\src\StdInParse\StdInParseHandlers.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

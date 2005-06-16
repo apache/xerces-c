@@ -89,11 +89,11 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\PParse\PParse.cpp
+SOURCE=..\..\..\..\src\PParse\PParse.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\PParse\PParseHandlers.cpp
+SOURCE=..\..\..\..\src\PParse\PParseHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -101,11 +101,11 @@ SOURCE=..\..\..\..\PParse\PParseHandlers.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\PParse\PParse.hpp
+SOURCE=..\..\..\..\src\PParse\PParse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\PParse\PParseHandlers.hpp
+SOURCE=..\..\..\..\src\PParse\PParseHandlers.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

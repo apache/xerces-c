@@ -24,20 +24,20 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-//	Abstract class for files. This could be used to allow multiple file paradigms.
-class XMLMacAbstractFile : public XMemory
+//	Abstract class for files. This is be used to allow multiple file handling implementations.
+class XMLAbstractFile : public XMemory
 {
     public:
         XMLMacAbstractFile() {}
         virtual ~XMLMacAbstractFile() {}
 
-        virtual unsigned int currPos() = 0;
+        virtual unsigned long currPos() = 0;
         virtual void close() = 0;
-        virtual unsigned int size() = 0;
+        virtual unsigned long size() = 0;
         virtual bool open(const XMLCh* path, bool toWrite = false) = 0;
         virtual bool open(const char* path, bool toWrite = false) = 0;
-        virtual unsigned int read(unsigned int byteCount, XMLByte* buffer) = 0;
-        virtual void write(long byteCount, const XMLByte* buffer) = 0;
+        virtual unsigned long read(unsigned long byteCount, XMLByte* buffer) = 0;
+        virtual void write(unsigned long byteCount, const XMLByte* buffer) = 0;
         virtual void reset() = 0;
 };
 

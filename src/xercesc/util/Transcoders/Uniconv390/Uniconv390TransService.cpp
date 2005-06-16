@@ -560,11 +560,8 @@ void Uniconv390TransService::initTransService()
        //
        //  Add in our mappings for UTF-16 and UCS-4, little endian
        //
-       bool swapped = false;
+       bool swapped = XMLPlatformUtils::fgXMLChBigEndian;
 
-       #if defined(ENDIANMODE_BIG)
-       swapped = true;
-       #endif
        gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUTF16Transcoder>(XMLUni::fgUTF16LEncodingString, swapped), XMLRecognizer::UTF_16L);
        gMappings->put
        (
@@ -610,10 +607,8 @@ void Uniconv390TransService::initTransService()
        //
        //  Add in our mappings for UTF-16 and UCS-4, big endian
        //
-       swapped = false;
-       #if defined(ENDIANMODE_LITTLE)
-       swapped = true;
-       #endif
+       swapped = !XMLPlatformUtils::fgXMLChBigEndian;
+
        gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUTF16Transcoder>(XMLUni::fgUTF16BEncodingString, swapped), XMLRecognizer::UTF_16B);
        gMappings->put
        (
@@ -831,11 +826,8 @@ void Uniconv390TransService::initTransService()
        //
        //  Add in our mappings for UTF-16 and UCS-4, little endian
        //
-       bool swapped = false;
+       bool swapped = XMLPlatformUtils::fgXMLChBigEndian;
 
-       #if defined(ENDIANMODE_BIG)
-       swapped = true;
-       #endif
        gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUTF16Transcoder>(XMLUni::fgUTF16LEncodingString, swapped), XMLRecognizer::UTF_16L);
        gMappings->put
        (
@@ -881,10 +873,8 @@ void Uniconv390TransService::initTransService()
        //
        //  Add in our mappings for UTF-16 and UCS-4, big endian
        //
-       swapped = false;
-       #if defined(ENDIANMODE_LITTLE)
-       swapped = true;
-       #endif
+       swapped = !XMLPlatformUtils::fgXMLChBigEndian;
+
        gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUTF16Transcoder>(XMLUni::fgUTF16BEncodingString, swapped), XMLRecognizer::UTF_16B);
        gMappings->put
        (

@@ -363,35 +363,6 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 
 
 
-char* Iconv390LCPTranscoder::transcode(const XMLCh* const toTranscode)
-{
-    if (!toTranscode)
-        return 0;
-
-    char* retVal = 0;
-    if (*toTranscode)
-    {
-        unsigned int  wLent = getWideCharLength(toTranscode);
-	//
-	//  Translate the input from Unicode XMLCh format into
-	//  ibm-037 char format via the lookup table.
-	//
-        retVal = new char[wLent + 1];
-        const XMLCh *srcPtr = toTranscode;
-        char *outPtr = retVal;
-
-	while (*srcPtr != 0)
-	    *outPtr++ = gUnicodeToIBM037XlatTable[*srcPtr++];
-	*outPtr=0;
-    }
-    else
-    {
-        retVal = new char[1];
-        retVal[0] = 0;
-    }
-    return retVal;
-}
-
 char* Iconv390LCPTranscoder::transcode(const XMLCh* const toTranscode,
                                        MemoryManager* const manager)
 {
@@ -450,55 +421,6 @@ bool Iconv390LCPTranscoder::transcode( const   XMLCh* const    toTranscode
     *outPtr=0;
 
     return true;
-}
-
-
-
-XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode)
-{
-    if (!toTranscode)
-        return 0;
-
-    XMLCh* retVal = 0;
-    if (*toTranscode)
-    {
-        const unsigned int len = calcRequiredSize(toTranscode);
-        if (len == 0)
-        {
-            retVal = new XMLCh[1];
-            retVal[0] = 0;
-            return retVal;
-        }
-
-
-        wchar_t       tmpWideCharArr[gTempBuffArraySize];
-        wchar_t*      allocatedArray = 0;
-        wchar_t*      wideCharBuf = 0;
-
-        retVal = new XMLCh[len + 1];
-
-        size_t retCode;
-        char *tmpInPtr = (char*) toTranscode;
-        char *tmpOutPtr = (char*) retVal;
-        size_t inByteLeft = len;
-        size_t outByteLeft = len*2;
-        {
-         XMLMutexLock lockConverter(&converter->fMutex);
-         retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
-        }
-        if (retCode == -1) {
-            delete [] retVal;
-            return 0;
-        }
-        retVal[len] = 0x00;
-        delete [] allocatedArray;
-    }
-    else
-    {
-        retVal = new XMLCh[1];
-        retVal[0] = 0;
-    }
-    return retVal;
 }
 
 XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode,

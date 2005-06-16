@@ -999,35 +999,6 @@ unsigned int CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 }
 
 
-char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode)
-{
-    if (!toTranscode)
-        return 0;
-
-    char* retVal = 0;
-    if (*toTranscode)
-    {
-        // Calc the needed size
-        const unsigned int neededLen = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, NULL, 0, NULL, NULL);
-        if (neededLen == 0)
-            return 0;
-
-        // Allocate a buffer of that size plus one for the null and transcode
-        // Returned length of WideCharToMultiByte includes terminating NUL.
-        retVal = new char[neededLen+1];
-        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, neededLen+1, NULL, NULL);
-
-        // And cap it off anyway just to make sure
-        retVal[neededLen] = 0;
-    }
-    else
-    {
-        retVal = new char[1];
-        retVal[0] = 0;
-    }
-    return retVal;
-}
-
 char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode,
                                      MemoryManager* const manager)
 {
@@ -1058,34 +1029,6 @@ char* CygwinLCPTranscoder::transcode(const XMLCh* const toTranscode,
     return retVal;
 }
 
-
-XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode)
-{
-    if (!toTranscode)
-        return 0;
-
-    XMLCh* retVal = 0;
-    if (*toTranscode)
-    {
-        // Calculate the buffer size required
-        const unsigned int neededLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, NULL, 0);
-        if (neededLen == 0)
-            return 0;
-
-        // Allocate a buffer of that size plus one for the null and transcode
-        retVal = new XMLCh[neededLen + 1];
-        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, neededLen + 1);
-
-        // Cap it off just to make sure. We are so paranoid!
-        retVal[neededLen] = 0;
-    }
-    else
-    {
-        retVal = new XMLCh[1];
-        retVal[0] = 0;
-    }
-    return retVal;
-}
 
 XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode,
                                       MemoryManager* const manager)

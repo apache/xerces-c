@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -67,7 +67,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
+# ADD CPP /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -93,7 +93,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
+# ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -119,7 +119,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -141,11 +141,11 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.cpp
+SOURCE=..\..\..\..\..\tests\src\XSerializerTest\XSerializerHandlers.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\tests\XSerializerTest\XSerializerTest.cpp
+SOURCE=..\..\..\..\..\tests\src\XSerializerTest\XSerializerTest.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -153,11 +153,11 @@ SOURCE=..\..\..\..\..\tests\XSerializerTest\XSerializerTest.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.hpp
+SOURCE=..\..\..\..\..\tests\src\XSerializerTest\XSerializerHandlers.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\tests\XSerializerTest\XSerializerTest.hpp
+SOURCE=..\..\..\..\..\tests\src\XSerializerTest\XSerializerTest.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

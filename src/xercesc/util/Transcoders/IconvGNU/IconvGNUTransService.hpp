@@ -328,32 +328,34 @@ public:
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
+    virtual char* transcode(const XMLCh* const toTranscode,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    virtual XMLCh* transcode(const char* const toTranscode,
+                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+
+    // -----------------------------------------------------------------------
+    //  DEPRECATED old transcode interface
+    // -----------------------------------------------------------------------
     virtual unsigned int calcRequiredSize(const char* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    virtual char* transcode(const XMLCh* const toTranscode);
-    virtual char* transcode(const XMLCh* const toTranscode,
-                            MemoryManager* const manager);
+    virtual bool transcode
+    (
+        const   char* const     toTranscode
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     virtual bool transcode
     (
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
-        , const unsigned int    maxBytes
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-    );
-
-    virtual XMLCh* transcode(const char* const toTranscode);
-    virtual XMLCh* transcode(const char* const toTranscode,
-                             MemoryManager* const manager);
-
-    virtual bool transcode
-    (
-        const   char* const     toTranscode
-        ,       XMLCh* const    toFill
         , const unsigned int    maxChars
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );

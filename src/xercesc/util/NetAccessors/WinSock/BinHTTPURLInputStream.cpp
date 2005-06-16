@@ -100,8 +100,6 @@
  *
  */
 
-
-#define INCL_WINSOCK_API_TYPEDEFS 1
 #include <winsock2.h>
 #include <windows.h>
 #include <tchar.h>
@@ -119,6 +117,19 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYNAME)(const char* name);
+typedef unsigned long(WSAAPI * LPFN_INET_ADDR)(const char* cp);
+typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYADDR)(const char* addr, int len, int type);
+typedef u_short (WSAAPI * LPFN_HTONS)(u_short hostshort);
+typedef SOCKET (WSAAPI * LPFN_SOCKET)(int af, int type, int protocol);
+typedef int (WSAAPI * LPFN_CONNECT)(SOCKET s, const struct sockaddr* name, int namelen);
+typedef int (WSAAPI * LPFN_SEND)(SOCKET s, const char* buf, int len, int flags);
+typedef int (WSAAPI * LPFN_RECV)(SOCKET s, char* buf, int len, int flags);
+typedef int (WSAAPI * LPFN_SHUTDOWN)(SOCKET s, int how);
+typedef int (WSAAPI * LPFN_CLOSESOCKET)(SOCKET s);
+typedef int (WSAAPI * LPFN_WSACLEANUP)();
+typedef int (WSAAPI * LPFN_WSASTARTUP)(WORD wVersionRequested, LPWSADATA lpWSAData);
 
 static HMODULE gWinsockLib = NULL;
 static LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;

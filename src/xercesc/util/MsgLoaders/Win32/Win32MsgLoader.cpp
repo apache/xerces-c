@@ -22,12 +22,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/XercesDefs.hpp>
+#include <windows.h>
+
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
-#include <windows.h>
 #include "Win32MsgLoader.hpp"
 
 

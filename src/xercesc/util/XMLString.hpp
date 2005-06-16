@@ -1372,15 +1372,11 @@ public:
       */
     static char* transcode
     (
-        const   XMLCh* const    toTranscode
-    );
-    static char* transcode
-    (
         const   XMLCh* const         toTranscode
-        ,       MemoryManager* const manager
+        ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    /** Transcodes a string to native code-page
+    /** Transcodes a string to native code-page (DEPRECATED)
       *
       * Be aware that when transcoding to an external encoding, that each
       * Unicode char can create multiple output bytes. So you cannot assume
@@ -1415,15 +1411,11 @@ public:
       */
     static XMLCh* transcode
     (
-        const   char* const     toTranscode
-    );
-    static XMLCh* transcode
-    (
         const   char* const          toTranscode
-        ,       MemoryManager* const manager
+        ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    /** Transcodes a string to native code-page
+    /** Transcodes a string to native code-page (DEPRECATED)
       * @param toTranscode The string tobe transcoded
       * @param toFill The buffer that is filled with the transcoded value.
       *        The size of this buffer should atleast be 'maxChars + 1'.

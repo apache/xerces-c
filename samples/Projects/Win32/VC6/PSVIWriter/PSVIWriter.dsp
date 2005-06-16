@@ -89,15 +89,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\PSVIWriter\PSVIUni.cpp
+SOURCE=..\..\..\..\src\PSVIWriter\PSVIUni.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\PSVIWriter\PSVIWriter.cpp
+SOURCE=..\..\..\..\src\PSVIWriter\PSVIWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\PSVIWriter\PSVIWriterHandlers.cpp
+SOURCE=..\..\..\..\src\PSVIWriter\PSVIWriterHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -105,15 +105,15 @@ SOURCE=..\..\..\..\PSVIWriter\PSVIWriterHandlers.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\PSVIWriter\PSVIUni.hpp
+SOURCE=..\..\..\..\src\PSVIWriter\PSVIUni.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\PSVIWriter\PSVIWriter.hpp
+SOURCE=..\..\..\..\src\PSVIWriter\PSVIWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\PSVIWriter\PSVIWriterHandlers.hpp
+SOURCE=..\..\..\..\src\PSVIWriter\PSVIWriterHandlers.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

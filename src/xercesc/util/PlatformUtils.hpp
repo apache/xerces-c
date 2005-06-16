@@ -22,8 +22,13 @@
 #if !defined(PLATFORMUTILS_HPP)
 #define PLATFORMUTILS_HPP
 
+#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/PanicHandler.hpp>
+
+#include <xercesc/util/XMLFileMgr.hpp>
+#include <xercesc/util/XMLMutexMgr.hpp>
+#include <xercesc/util/XMLAtomicOpMgr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -122,8 +127,14 @@ public :
       *   there is no reason, nor facility, to override it.
       */
     static MemoryManager*       fgArrayMemoryManager;
-
-    static XMLMutex*            fgAtomicMutex;
+	
+	static XMLFileMgr*			fgFileMgr;
+	static XMLMutexMgr*			fgMutexMgr;
+	static XMLAtomicOpMgr*		fgAtomicOpMgr;
+    
+    static XMLMutex*			fgAtomicMutex;
+    
+    static bool					fgXMLChBigEndian;
     
     //@}
 
@@ -201,6 +212,13 @@ public :
     /** @name File Methods */
     //@{
 
+    /** Make a new file object appropriate for the platform.
+      *
+      * @param manager The MemoryManager to use to allocate objects
+      */
+	static XMLFileMgr*
+	makeFileMgr(MemoryManager* const manager);
+	
     /** Get the current file position
       *
       * This must be implemented by the per-platform driver, which should
@@ -214,7 +232,7 @@ public :
       * @param theFile The file handle
       * @param manager The MemoryManager to use to allocate objects
       */
-    static unsigned int curFilePos(FileHandle theFile
+    static XMLFilePos curFilePos(FileHandle theFile
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Closes the file handle
@@ -240,7 +258,7 @@ public :
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the size of the file in bytes
       */
-    static unsigned int fileSize(FileHandle theFile
+    static XMLFilePos fileSize(FileHandle theFile
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
     /** Opens the file
@@ -323,10 +341,10 @@ public :
       *
       * @return Returns the number of bytes read from the stream or file
       */
-    static unsigned int readFileBuffer
+    static XMLSize_t readFileBuffer
     (
                 FileHandle      theFile
-        , const unsigned int    toRead
+        , const XMLSize_t	    toRead
         ,       XMLByte* const  toFill
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
@@ -348,7 +366,7 @@ public :
     static void writeBufferToFile
     (
           FileHandle     const  theFile
-        , long                  toWrite
+        , XMLSize_t             toWrite
         , const XMLByte* const  toFlush
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
@@ -513,6 +531,15 @@ public :
     /** @name Mutex Methods */
     //@{
 
+    /** Factory method for creating MutexMgr object.
+      *
+      * This factory method creates a mutexmgr that will be used
+      * on the particular platform.
+      *
+      * @param manager The MemoryManager to use to allocate objects
+      */
+	static XMLMutexMgr* makeMutexMgr(MemoryManager* const memmgr);
+
     /** Closes a mutex handle
       *
       * Each per-platform driver must implement this. Only it knows what
@@ -520,7 +547,7 @@ public :
       *
       * @param mtxHandle The mutex handle that you want to close
       */
-    static void closeMutex(void* const mtxHandle);
+    static void closeMutex(void* const mtxHandle, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Locks a mutex handle
       *
@@ -540,7 +567,7 @@ public :
       *
       * @param manager The MemoryManager to use to allocate objects
       */
-    static void* makeMutex(MemoryManager* manager = XMLPlatformUtils::fgMemoryManager);
+    static void* makeMutex(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Unlocks a mutex
       *
@@ -575,6 +602,16 @@ public :
 
     /** @name Miscellaneous synchronization methods */
     //@{
+
+    /** Factory method for creating MutexMgr object.
+      *
+      * This factory method creates an XMLAtomicOpMgr that will be used
+      * on the particular platform.
+      *
+      * @param manager The MemoryManager to use to allocate objects
+      */
+	static XMLAtomicOpMgr* makeAtomicOpMgr(MemoryManager* const memmgr);
+
 
     /** Conditionally updates or returns a single word variable atomically
       *

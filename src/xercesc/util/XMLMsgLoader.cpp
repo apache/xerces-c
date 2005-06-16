@@ -79,11 +79,25 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
      *           refer to phttp://oss.software.ibm.com/icu/userguide/locale.html
      *           for details.
      */
-	if (localeToAdopt)
+	if (localeToAdopt && strlen(localeToAdopt) == 2)
 	{
-		fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-        XMLString::transcode(fLocale, fLanguage, 2, XMLPlatformUtils::fgMemoryManager);
-        fLanguage[2] = 0;
+/*
+		size_t lettersWritten, bytesConsumed;
+		XMLCh localBuffer[3];
+        if (XMLString::transcode(localeToAdopt, localBuffer, 2, lettersWritten, bytesConsumed)
+		    && lettersWritten == 2)
+		{
+			fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
+			memcpy(fLanguage, localBuffer, 3 * sizeof(XMLCh));
+		}
+*/
+		XMLCh *transcoded = XMLString::transcode(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
+		if (transcoded[0] && transcoded[1] && !transcoded[2])
+		{
+			fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
+			memcpy(fLanguage, transcoded, 3 * sizeof(XMLCh));
+			XMLPlatformUtils::fgMemoryManager->deallocate(transcoded);
+		}
     }
 
 }

@@ -142,7 +142,7 @@ public :
 
 protected :
     // -----------------------------------------------------------------------
-    //  Protected virtual methods, implemented in Win32TransService2.cpp
+    //  Protected virtual methods
     // -----------------------------------------------------------------------
     virtual XMLTranscoder* makeNewXMLTranscoder
     (
@@ -278,19 +278,21 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
+    virtual char* transcode(const XMLCh* const toTranscode,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    virtual XMLCh* transcode(const char* const toTranscode,
+                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+
+    // -----------------------------------------------------------------------
+    //  DEPRECATED old transcode interface
+    // -----------------------------------------------------------------------
     virtual unsigned int calcRequiredSize(const char* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-
-    virtual char* transcode(const XMLCh* const toTranscode);
-    virtual char* transcode(const XMLCh* const toTranscode,
-                            MemoryManager* const manager);
-
-    virtual XMLCh* transcode(const char* const toTranscode);
-    virtual XMLCh* transcode(const char* const toTranscode,
-                             MemoryManager* const manager);
 
     virtual bool transcode
     (

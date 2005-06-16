@@ -74,15 +74,15 @@
 		<tr>
 			<td>3</td>
 			<td>Refactoring of x-platform support</td>
-			<td>Initial cut - James<br/>
-					Basic posix support - James<br/>
-					Mac re-port/test - James<br/>
+			<td>Initial cut - James (done)<br/>
+					Basic posix support - James (done)<br/>
+					Mac re-port/test - James (done)<br/>
 					Windows re-port/test - Alberto<br/>
 					Linux re-port/test: Gareth, Alberto [VMWare (Red Hat 9, Red Hat 7.3) and I can add more],
 						Scott Cantor [test], cargilld [w/ xlC]<br/>					
 					Solaris - Scott Cantor [test]<br/>
-					Cygwin - Neil<br/>
-					MingGW - Alberto<br/>
+					Cygwin - Neil/Alberto (mostly done?)<br/>
+					MingGW - Alberto (mostly done?)<br/>
 					Interix - Alberto<br/>
 					AIX - cargilld<br/>
 					OS390 - cargilld
@@ -96,13 +96,14 @@
 				Jason Stewart,
 				Scott Cantor,
 				John Snelson
+				(mostly done--pending ports of additional platforms)
 			</td>
 		</tr>
 
 		<tr>
 			<td>5</td>
 			<td>Add a libcurl based NetAccessor</td>
-			<td>James - as time permits</td>
+			<td>James (done)</td>
 		</tr>
 
 		<tr>

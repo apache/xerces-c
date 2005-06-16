@@ -23,7 +23,7 @@
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
+				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -81,7 +81,7 @@
 				ImproveFloatingPointConsistency="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
+				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
@@ -140,7 +140,7 @@
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32,XML_LIBRARY"
+				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT;XERCES_STATIC_LIBRARY"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
@@ -198,7 +198,7 @@
 				ImproveFloatingPointConsistency="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32,XML_LIBRARY"
+				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT;XERCES_STATIC_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				DisableLanguageExtensions="TRUE"
@@ -253,7 +253,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\..\..\..\..\tests\DOM\DOMMemTest\DOMMemTest.cpp">
+				RelativePath="..\..\..\..\..\tests\src\Dom\DOMMemTest\DOMMemTest.cpp">
 			</File>
 		</Filter>
 		<Filter

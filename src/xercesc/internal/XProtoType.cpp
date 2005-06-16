@@ -102,14 +102,18 @@ void XProtoType::load(XSerializeEngine& serEng
         //we don't have class name exceed this length in xerces
         XMLCh name1[256];
         XMLCh name2[256];
-        XMLString::transcode((char*)inName,    name1, 255, manager);
-        XMLString::transcode((char*)className, name2, 255, manager);
+        XMLCh *tmp = XMLString::transcode((char*)inName, manager);
+        XMLString::copyNString(name1, tmp, 255);
+        manager->deallocate(tmp);
+        tmp = XMLString::transcode((char*)className, manager);
+        XMLString::copyNString(name2, tmp, 255);
+        manager->deallocate(tmp);
 
         ThrowXMLwithMemMgr2(XSerializationException
                 , XMLExcepts::XSer_ProtoType_Name_Dif
                 , name1
                 , name2
-                , manager);  
+                , manager);
     }
 
     return;

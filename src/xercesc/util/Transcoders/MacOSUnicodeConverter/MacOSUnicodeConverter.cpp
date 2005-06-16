@@ -57,7 +57,6 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -308,7 +307,7 @@ MacOSUnicodeConverter::discoverLCPEncoding()
 	//  Since posix paths are utf-8 encoding on OS X, and the OS X
 	//  terminal uses utf-8 by default, this seems to make the most sense.
 	#if !defined(XML_MACOS_LCP_TRADITIONAL)
-	if (gMacOSXOrBetter)
+	if (true /*gMacOSXOrBetter*/)
 	{
 		//  Manufacture a text encoding for UTF8
 		encoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
@@ -807,15 +806,6 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 
 
 char*
-MacOSLCPTranscoder::transcode(const XMLCh* const srcText)
-{
-	//	Transcode using a memory manager that allocates
-	//	memory using new[].
-	return transcode(srcText, XMLPlatformUtils::fgArrayMemoryManager);
-}
-
-
-char*
 MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
                               MemoryManager* const manager)
 {
@@ -888,15 +878,6 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 	}
 
 	return result.release();
-}
-
-
-XMLCh*
-MacOSLCPTranscoder::transcode(const char* const srcText)
-{
-	//	Transcode using a memory manager that allocates
-	//	memory using new[].
-	return transcode(srcText, XMLPlatformUtils::fgArrayMemoryManager);
 }
 
 

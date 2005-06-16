@@ -24,7 +24,7 @@
 				ImproveFloatingPointConsistency="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CONSOLE,WIN32,NDEBUG,_WINDOWS,PLATFORM_WIN32"
+				PreprocessorDefinitions="_CONSOLE;WIN32;NDEBUG;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -82,7 +82,7 @@
 				Optimization="0"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CONSOLE,WIN32,_DEBUG,_WINDOWS,PLATFORM_WIN32"
+				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT"
 				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/DOMCount.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
@@ -140,7 +140,7 @@
 				ImproveFloatingPointConsistency="TRUE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CONSOLE,WIN32,NDEBUG,_WINDOWS,PLATFORM_WIN32,XML_LIBRARY"
+				PreprocessorDefinitions="_CONSOLE;WIN32;NDEBUG;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT;XERCES_STATIC_LIBRARY"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
@@ -198,7 +198,7 @@
 				Optimization="0"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CONSOLE,WIN32,_DEBUG,_WINDOWS,PLATFORM_WIN32,XML_LIBRARY"
+				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT;XERCES_STATIC_LIBRARY"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/DOMCount.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
@@ -248,10 +248,10 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\..\..\samples\DOMCount\DOMCount.cpp">
+			RelativePath="..\..\..\..\..\samples\src\DOMCount\DOMCount.cpp">
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\samples\DOMCount\DOMCount.hpp">
+			RelativePath="..\..\..\..\..\samples\src\DOMCount\DOMCount.hpp">
 		</File>
 	</Files>
 	<Globals>

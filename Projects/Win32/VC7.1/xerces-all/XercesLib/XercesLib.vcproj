@@ -24,7 +24,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_NO_CONFIGURE_SUPPORT;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -92,7 +92,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;PROJ_SAX2;_DEBUG;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK"
+				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_NO_CONFIGURE_SUPPORT;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS"
 				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XercesLib.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
@@ -155,7 +155,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_INMEM_MESSAGELOADER;XML_USE_NETACCESSOR_WINSOCK;XML_LIBRARY"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_NO_CONFIGURE_SUPPORT;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/XercesLib.pch"
@@ -205,7 +205,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;PROJ_SAX2;_DEBUG;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_DOM;PROJ_VALIDATORS;WIN32;_WINDOWS;XML_USE_WIN32_TRANSCODER;XML_USE_INMEM_MESSAGELOADER;XML_USE_NETACCESSOR_WINSOCK;XML_LIBRARY"
+				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_NO_CONFIGURE_SUPPORT;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/XercesLib.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
@@ -615,6 +615,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLNumber.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLResourceIdentifier.hpp">
 			</File>
 			<File
@@ -678,43 +684,7 @@
 				Name="Win32"
 				Filter=".cpp,.hpp">
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h">
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32PlatformUtils.cpp">
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp">
 				</File>
 			</Filter>
 			<Filter
@@ -748,6 +718,38 @@
 						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCustomBuildTool"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc">
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
 					</FileConfiguration>
 				</File>
 				<File
@@ -1066,6 +1068,36 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\regx\XMLUniCharacter.hpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="AtomicOpManager"
+				Filter="">
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\AtomicOpManagers\WindowsAtomicOpMgr.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\AtomicOpManagers\WindowsAtomicOpMgr.hpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="FileManager"
+				Filter="">
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\FileManagers\WindowsFileMgr.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\FileManagers\WindowsFileMgr.hpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="MutexManager"
+				Filter="">
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\MutexManagers\WindowsMutexMgr.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\MutexManagers\WindowsMutexMgr.hpp">
 				</File>
 			</Filter>
 		</Filter>
@@ -2610,35 +2642,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc">
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCResourceCompilerTool"
-					AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCResourceCompilerTool"
-					AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Static Release|Win32"
-				ExcludedFromBuild="TRUE">
-				<Tool
-					Name="VCResourceCompilerTool"
-					AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Static Debug|Win32"
-				ExcludedFromBuild="TRUE">
-				<Tool
-					Name="VCResourceCompilerTool"
-					AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
-			</FileConfiguration>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

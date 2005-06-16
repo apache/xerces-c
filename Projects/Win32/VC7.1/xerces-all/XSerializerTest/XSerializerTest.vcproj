@@ -23,7 +23,7 @@
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
+				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -80,7 +80,7 @@
 				Optimization="0"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
+				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XSerializerTest.pch"
@@ -138,7 +138,7 @@
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32,XML_LIBRARY"
+				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT;XERCES_STATIC_LIBRARY"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
@@ -195,7 +195,7 @@
 				Optimization="0"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32,XML_LIBRARY"
+				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_NO_CONFIGURE_SUPPORT;XERCES_STATIC_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/XSerializerTest.pch"
@@ -249,20 +249,20 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.cpp">
+				RelativePath="..\..\..\..\..\tests\src\XSerializerTest\XSerializerHandlers.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerTest.cpp">
+				RelativePath="..\..\..\..\..\tests\src\XSerializerTest\XSerializerTest.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.hpp">
+				RelativePath="..\..\..\..\..\tests\src\XSerializerTest\XSerializerHandlers.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerTest.hpp">
+				RelativePath="..\..\..\..\..\tests\src\XSerializerTest\XSerializerTest.hpp">
 			</File>
 		</Filter>
 		<Filter

@@ -89,15 +89,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\SAX2Print\SAX2Print.cpp
+SOURCE=..\..\..\..\src\SAX2Print\SAX2Print.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\SAX2Print\SAX2PrintHandlers.cpp
+SOURCE=..\..\..\..\src\SAX2Print\SAX2PrintHandlers.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\SAX2Print\SAX2FilterHandlers.cpp
+SOURCE=..\..\..\..\src\SAX2Print\SAX2FilterHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -105,15 +105,15 @@ SOURCE=..\..\..\..\SAX2Print\SAX2FilterHandlers.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\SAX2Print\SAX2Print.hpp
+SOURCE=..\..\..\..\src\SAX2Print\SAX2Print.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\SAX2Print\SAX2PrintHandlers.hpp
+SOURCE=..\..\..\..\src\SAX2Print\SAX2PrintHandlers.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\SAX2Print\SAX2FilterHandlers.hpp
+SOURCE=..\..\..\..\src\SAX2Print\SAX2FilterHandlers.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

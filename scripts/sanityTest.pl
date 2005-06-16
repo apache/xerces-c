@@ -202,7 +202,7 @@ system ("MemHandlerTest -v=always -n -r=2 -s -f personal-schema.xml");
 
 chdir "..".$pathsep."..";
 
-chdir "tests".$pathsep."DOM".$pathsep."TypeInfo";
+chdir "tests".$pathsep."src".$pathsep."DOM".$pathsep."TypeInfo";
 system ("DOMTypeInfoTest");
 
 chdir "..".$pathsep."..";

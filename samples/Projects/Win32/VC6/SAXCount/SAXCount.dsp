@@ -89,11 +89,11 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\SAXCount\SAXCount.cpp
+SOURCE=..\..\..\..\src\SAXCount\SAXCount.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\SAXCount\SAXCountHandlers.cpp
+SOURCE=..\..\..\..\src\SAXCount\SAXCountHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -101,11 +101,11 @@ SOURCE=..\..\..\..\SAXCount\SAXCountHandlers.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\SAXCount\SAXCount.hpp
+SOURCE=..\..\..\..\src\SAXCount\SAXCount.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\SAXCount\SAXCountHandlers.hpp
+SOURCE=..\..\..\..\src\SAXCount\SAXCountHandlers.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

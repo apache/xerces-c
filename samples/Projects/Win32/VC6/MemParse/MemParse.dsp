@@ -89,11 +89,11 @@ LINK32=link.exe
 # PROP Default_Filter "*.cpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\MemParse\MemParse.cpp
+SOURCE=..\..\..\..\src\MemParse\MemParse.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\MemParse\MemParseHandlers.cpp
+SOURCE=..\..\..\..\src\MemParse\MemParseHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -101,11 +101,11 @@ SOURCE=..\..\..\..\MemParse\MemParseHandlers.cpp
 # PROP Default_Filter "*.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\MemParse\MemParse.hpp
+SOURCE=..\..\..\..\src\MemParse\MemParse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\MemParse\MemParseHandlers.hpp
+SOURCE=..\..\..\..\src\MemParse\MemParseHandlers.hpp
 # End Source File
 # End Group
 # End Target

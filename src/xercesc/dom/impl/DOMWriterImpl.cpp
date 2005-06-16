@@ -1831,11 +1831,10 @@ void DOMWriterImpl::processBOM()
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString6) == 0) ||
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString7) == 0)  ) 
     {
-#if defined(ENDIANMODE_LITTLE)
-            fFormatter->writeBOM(BOM_utf16le, 2);
-#elif defined(ENDIANMODE_BIG)
+    	if (XMLPlatformUtils::fgXMLChBigEndian)
             fFormatter->writeBOM(BOM_utf16be, 2);
-#endif
+        else
+            fFormatter->writeBOM(BOM_utf16le, 2);
     }
     else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4LEncodingString)  == 0) ||
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4LEncodingString2) == 0)  )
@@ -1851,11 +1850,10 @@ void DOMWriterImpl::processBOM()
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString2) == 0) ||
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString3) == 0)  )
     {
-#if defined(ENDIANMODE_LITTLE)
-        fFormatter->writeBOM(BOM_ucs4le, 4);
-#elif defined(ENDIANMODE_BIG)
-        fFormatter->writeBOM(BOM_ucs4be, 4);
-#endif
+		if (XMLPlatformUtils::fgXMLChBigEndian)
+	        fFormatter->writeBOM(BOM_ucs4be, 4);
+	    else
+			fFormatter->writeBOM(BOM_ucs4le, 4);
     }
 
     return;

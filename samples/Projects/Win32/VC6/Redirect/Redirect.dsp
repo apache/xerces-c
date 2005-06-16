@@ -89,11 +89,11 @@ LINK32=link.exe
 # PROP Default_Filter "*.cpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\Redirect\Redirect.cpp
+SOURCE=..\..\..\..\src\Redirect\Redirect.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\Redirect\RedirectHandlers.cpp
+SOURCE=..\..\..\..\src\Redirect\RedirectHandlers.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -101,11 +101,11 @@ SOURCE=..\..\..\..\Redirect\RedirectHandlers.cpp
 # PROP Default_Filter "*.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\Redirect\Redirect.hpp
+SOURCE=..\..\..\..\src\Redirect\Redirect.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\Redirect\RedirectHandlers.hpp
+SOURCE=..\..\..\..\src\Redirect\RedirectHandlers.hpp
 # End Source File
 # End Group
 # End Target

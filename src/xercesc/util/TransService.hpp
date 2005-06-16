@@ -511,19 +511,30 @@ public :
     //          its assumed that the buffer is physically one char or byte
     //          larger.
     // -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
+    //  The 'normal' way to transcode a XMLCh-string from/to local string
+    //  representation
+    //
+    //  NOTE: Both methods return a string allocated via the MemoryManager.
+    //        It is the responsibility of the calling environment to
+    //        release this string after use.
+    // -----------------------------------------------------------------------
+    virtual char* transcode(const XMLCh* const toTranscode,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
+
+    virtual XMLCh* transcode(const char* const toTranscode,
+                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
+
+
+    // -----------------------------------------------------------------------
+    //  DEPRECATED old transcode interface
+    // -----------------------------------------------------------------------
     virtual unsigned int calcRequiredSize(const char* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
-
-    virtual char* transcode(const XMLCh* const toTranscode) = 0;
-    virtual char* transcode(const XMLCh* const toTranscode,
-                            MemoryManager* const manager) = 0;
-
-    virtual XMLCh* transcode(const char* const toTranscode) = 0;
-    virtual XMLCh* transcode(const char* const toTranscode,
-                             MemoryManager* const manager) = 0;
 
     virtual bool transcode
     (

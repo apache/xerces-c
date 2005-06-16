@@ -22,6 +22,19 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#if HAVE_CONFIG_H
+#	include <config.h>
+#else
+#	include <xercesc/util/Xerces_no_autoconf_config.hpp>
+#endif
+
+#if !HAVE_STRICMP
+#	include <lib/stricmp.h>
+#endif
+#if !HAVE_STRNICMP
+#	include <lib/strnicmp.h>
+#endif
+
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -536,30 +549,19 @@ unsigned int XMLString::stringLen(const char* const src)
 }
 
 
-char* XMLString::transcode(const XMLCh* const toTranscode)
-{
-    return gTranscoder->transcode(toTranscode);
-}
-
 char* XMLString::transcode(const XMLCh* const toTranscode,
                            MemoryManager* const manager)
 {
     return gTranscoder->transcode(toTranscode, manager);
 }
 
+
 bool XMLString::transcode(  const   XMLCh* const    toTranscode
                             ,       char* const     toFill
                             , const unsigned int    maxChars
                             , MemoryManager* const  manager)
 {
-    if (!gTranscoder->transcode(toTranscode, toFill, maxChars, manager))
-        return false;
-    return true;
-}
-
-XMLCh* XMLString::transcode(const char* const toTranscode)
-{
-    return gTranscoder->transcode(toTranscode);
+    return gTranscoder->transcode(toTranscode, toFill, maxChars, manager);
 }
 
 XMLCh* XMLString::transcode(const char* const toTranscode,
@@ -573,9 +575,7 @@ bool XMLString::transcode(  const   char* const     toTranscode
                             , const unsigned int    maxChars
                             , MemoryManager* const  manager)
 {
-    if (!gTranscoder->transcode(toTranscode, toFill, maxChars, manager))
-        return false;
-    return true;
+    return gTranscoder->transcode(toTranscode, toFill, maxChars, manager);
 }
 
 

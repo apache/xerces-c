@@ -58,6 +58,7 @@
 #if !defined(WIN32MSGLOADER_HPP)
 #define WIN32MSGLOADER_HPP
 
+#include <windows.h>
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 

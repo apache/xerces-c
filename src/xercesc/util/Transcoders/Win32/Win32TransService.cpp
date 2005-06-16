@@ -821,34 +821,6 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     return ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
 }
 
-// Return value using global operator new
-// Revisit: deprecate ?
-char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
-{
-    if (!toTranscode)
-        return 0;
-
-    char* retVal = 0;
-    if (*toTranscode)
-    {
-        // Calc the needed size
-        const unsigned int neededLen = calcRequiredSize(toTranscode);
-
-        // Allocate a buffer of that size plus one for the null and transcode
-        retVal = new char[neededLen + 1];
-        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, neededLen+1, NULL, NULL);
-
-        // And cap it off anyway just to make sure
-        retVal[neededLen] = 0;
-    }
-     else
-    {
-        retVal = new char[1];
-        retVal[0] = 0;
-    }
-    return retVal;
-}
-
 char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
                                     MemoryManager* const manager)
 {
@@ -871,40 +843,6 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
      else
     {
         retVal = (char*) manager->allocate(sizeof(char)); //new char[1];
-        retVal[0] = 0;
-    }
-    return retVal;
-}
-
-// Return value using global operator new
-// Revisit: deprecate ?
-XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
-{
-    if (!toTranscode)
-        return 0;
-
-    XMLCh* retVal = 0;
-    if (*toTranscode)
-    {
-        // Calculate the buffer size required
-        const unsigned int neededLen = calcRequiredSize(toTranscode);
-        if (neededLen == 0)
-        {
-            retVal = new XMLCh[1];
-            retVal[0] = 0;
-            return retVal;
-        }
-
-        // Allocate a buffer of that size plus one for the null and transcode
-        retVal = new XMLCh[neededLen + 1];
-        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, neededLen + 1);
-
-        // Cap it off just to make sure. We are so paranoid!
-        retVal[neededLen] = 0;
-    }
-     else
-    {
-        retVal = new XMLCh[1];
         retVal[0] = 0;
     }
     return retVal;
