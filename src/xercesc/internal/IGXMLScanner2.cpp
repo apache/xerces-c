@@ -41,6 +41,7 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 #include <xercesc/framework/psvi/PSVIElement.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
@@ -53,6 +54,7 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
+#include <xercesc/validators/schema/identity/ValueStore.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

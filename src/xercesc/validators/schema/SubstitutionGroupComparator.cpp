@@ -15,69 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2004/09/08 13:56:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2003/12/17 00:18:40  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/07/31 17:14:27  peiyongz
- * Grammar embed grammar description
- *
- * Revision 1.7  2003/06/25 22:38:18  peiyongz
- * to use new GrammarResolver::getGrammar()
- *
- * Revision 1.6  2003/01/13 20:16:51  knoaman
- * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
- *
- * Revision 1.5  2002/11/04 14:49:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/09/24 20:12:48  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.3  2002/07/12 15:17:48  knoaman
- * For a given global element, store info about a substitution group element
- * as a SchemaElementDecl and not as a string.
- *
- * Revision 1.2  2002/02/25 21:18:18  tng
- * Schema Fix: Ensure no invalid uri index for UPA checking.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:47  peiyongz
- * sane_include
- *
- * Revision 1.11  2001/11/28 16:46:03  tng
- * Schema fix: Initialize the temporary string as null terminated.
- *
- * Revision 1.10  2001/11/21 14:30:13  knoaman
- * Fix for UPA checking.
- *
- * Revision 1.9  2001/11/07 21:50:28  tng
- * Fix comment log that lead to error.
- *
- * Revision 1.8  2001/11/07 21:12:15  tng
- * Performance: Create QName in ContentSpecNode only if it is a leaf/Any/PCDataNode.
- *
- * Revision 1.7  2001/10/04 15:08:56  knoaman
- * Add support for circular import.
- *
- * Revision 1.6  2001/08/21 15:57:51  tng
- * Schema: Add isAllowedByWildcard.  Help from James Murphy.
- *
- * Revision 1.5  2001/05/29 19:47:22  knoaman
- * Fix bug -  memory was not allocated before call to XMLString::subString
- *
- * Revision 1.4  2001/05/28 20:55:42  tng
- * Schema: Null pointer checking in SubsitutionGropuComparator
- *
- * Revision 1.3  2001/05/11 13:27:37  tng
- * Copyright update.
- *
- * Revision 1.2  2001/05/04 14:50:28  tng
- * Fixed the cvs symbols.
- *
- *
+ * $Id $
  */
 
 
@@ -86,6 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>

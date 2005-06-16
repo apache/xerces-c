@@ -15,81 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.24  2005/01/06 21:39:43  amassari
- * Removed warnings
- *
- * Revision 1.23  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.22  2004/07/06 14:58:15  cargilld
- * Rename VALUE_CONSTRAINT enumeration names to avoid naming conflict with AIX system header which already uses VC_DEFAULT as a macro.  Will need to document that this fix breaks source code compatibility.
- *
- * Revision 1.21  2004/03/05 16:28:21  knoaman
- * PSVI: prohibited attributes should not be part of attribute use. Patch by Mike Boos.
- *
- * Revision 1.20  2004/02/05 18:09:53  cargilld
- * Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.
- *
- * Revision 1.19  2004/01/07 02:33:56  knoaman
- * PSVI: inherit facets from base type
- *
- * Revision 1.18  2004/01/06 15:24:42  neilg
- * make sure locally-declared attributes have declarations in the PSVI
- *
- * Revision 1.17  2004/01/06 03:55:26  knoaman
- * Various PSVI fixes.
- *
- * Revision 1.16  2003/12/30 19:46:15  neilg
- * use a null-terminated string when tokenizing pattern facets
- *
- * Revision 1.15  2003/12/29 16:45:06  knoaman
- * PSVI: add whitespace facet if missing
- *
- * Revision 1.14  2003/12/29 16:15:41  knoaman
- * More PSVI updates
- *
- * Revision 1.13  2003/12/24 17:42:02  knoaman
- * Misc. PSVI updates
- *
- * Revision 1.12  2003/12/17 20:50:35  knoaman
- * PSVI: fix for annotation of attributes in attributeGroup/derived types
- *
- * Revision 1.11  2003/12/17 19:58:25  knoaman
- * Check for NULL when building XSParticle
- *
- * Revision 1.10  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/12/10 05:14:00  neilg
- * fix seg fault caused when a complex type had simple content; we were not processing the complex type itself, only its base
- *
- * Revision 1.8  2003/12/01 20:41:25  neilg
- * fix for infinite loop between XSComplexTypeDefinitions and XSElementDeclarations; from David Cargill
- *
- * Revision 1.7  2003/11/27 16:42:00  neilg
- * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
- *
- * Revision 1.6  2003/11/25 17:50:15  knoaman
- * Fix AIX linking error
- *
- * Revision 1.5  2003/11/24 15:45:36  knoaman
- * PSVI: finish construction of XSSimpleTypeDefinition
- *
- * Revision 1.4  2003/11/23 16:49:26  knoaman
- * PSVI: create local elements of groups
- *
- * Revision 1.3  2003/11/23 16:21:40  knoaman
- * PSVI: create local elements of complex types
- *
- * Revision 1.2  2003/11/21 22:34:46  neilg
- * More schema component model implementation, thanks to David Cargill.
- * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
- * XSAttributeDeclaration and XSAttributeGroup implementations.
- *
- * Revision 1.1  2003/11/21 17:11:24  knoaman
- * Initial revision
- *
+ * $Id $
  */
 
 
@@ -113,6 +39,7 @@
 #include <xercesc/framework/psvi/XSNotationDeclaration.hpp>
 #include <xercesc/framework/psvi/XSFacet.hpp>
 #include <xercesc/framework/psvi/XSMultiValueFacet.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/SchemaAttDefList.hpp>

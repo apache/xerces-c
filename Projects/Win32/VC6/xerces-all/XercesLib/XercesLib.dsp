@@ -170,7 +170,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp
-# ADD CPP /Ze
 # End Source File
 # Begin Source File
 
@@ -183,7 +182,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp
-# ADD CPP /Ze
 # End Source File
 # Begin Source File
 
@@ -196,7 +194,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp
-# ADD CPP /Ze
 # End Source File
 # Begin Source File
 
@@ -205,7 +202,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStrea
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp
-# ADD CPP /Ze
 # End Source File
 # Begin Source File
 
@@ -575,10 +571,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HeaderDummy.cpp
 # End Source File
 # Begin Source File
 

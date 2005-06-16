@@ -27,6 +27,7 @@
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 
 

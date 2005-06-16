@@ -16,19 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.4  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2004/01/29 11:51:21  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2003/10/29 16:19:47  peiyongz
- * storeGrammar()/loadGrammar added
- *
- * Revision 1.1  2003/10/14 15:19:24  peiyongz
- * Implementation of Serialization/Deserialization
- *
  */
 
 #include <xercesc/validators/common/Grammar.hpp>
@@ -39,6 +26,7 @@
 
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

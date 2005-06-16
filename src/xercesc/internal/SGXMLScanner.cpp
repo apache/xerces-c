@@ -35,6 +35,7 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/psvi/PSVIHandler.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
@@ -44,6 +45,7 @@
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
+#include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/HashPtr.hpp>
 

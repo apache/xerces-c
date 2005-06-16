@@ -15,140 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.27  2005/03/17 08:22:29  amassari
- * Fully qualify enum (jira# 1383)
- *
- * Revision 1.26  2004/11/18 16:20:06  cargilld
- * Changes for linker problems with linux build using xlc.
- *
- * Revision 1.25  2004/10/20 15:19:07  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
- * Revision 1.24  2004/09/30 13:14:28  amassari
- * Fix jira#1280 - Borland leaks memory if break or continue are used inside a catch block
- *
- * Revision 1.23  2004/09/29 20:58:10  knoaman
- * [Bug 1209] Problem with id usage across schema
- * http://issues.apache.org/jira/browse/XERCESC-1209
- *
- * Revision 1.22  2004/09/08 13:56:56  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.21  2004/01/29 11:52:31  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.20  2004/01/13 16:17:09  knoaman
- * Fo sanity, use class name to qualify method
- *
- * Revision 1.19  2004/01/09 22:41:58  knoaman
- * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
- *
- * Revision 1.18  2003/12/17 00:18:40  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.17  2003/12/11 19:26:27  knoaman
- * Store non schema attributes from parent in XSAnnotation
- *
- * Revision 1.16  2003/11/12 20:35:31  peiyongz
- * Stateless Grammar: ValidationContext
- *
- * Revision 1.15  2003/10/20 15:57:22  knoaman
- * Fix multithreading problem.
- *
- * Revision 1.14  2003/10/01 16:32:41  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.13  2003/05/15 18:57:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.12  2003/01/17 15:35:57  knoaman
- * Fix for attribute checking of schema declarations.
- *
- * Revision 1.11  2003/01/15 18:33:11  knoaman
- * Make sure that the namespace of schema declarations is the schema namespace.
- *
- * Revision 1.10  2002/12/10 16:58:22  knoaman
- * Schema Errata E1-16.
- *
- * Revision 1.9  2002/11/04 14:49:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.8  2002/09/27 13:22:52  tng
- * [Bug 13073] GeneralAttributeCheck.cpp : compilation fails with Sun C++ 4.2 on Solaris2.7 system.
- *
- * Revision 1.7  2002/09/26 21:08:14  tng
- * [Bug12849] comparison is always false warning.  Patch from Gareth Reakes
- *
- * Revision 1.6  2002/09/24 20:18:14  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- * and check for null string directly isntead of calling XMLString::stringLen
- *
- * Revision 1.5  2002/05/27 19:54:33  knoaman
- * Performance: use pre-built element-attribute map table.
- *
- * Revision 1.4  2002/05/21 19:30:10  tng
- * DOM Reorganization: modify to use the new DOM interface.
- *
- * Revision 1.3  2002/03/21 15:34:40  knoaman
- * Add support for reporting line/column numbers of schema errors.
- *
- * Revision 1.2  2002/02/06 22:21:49  knoaman
- * Use IDOM for schema processing.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
- * sane_include
- *
- * Revision 1.16  2002/01/02 19:50:34  knoaman
- * Fix for error message when checking for attributes with a namespace prefix.
- *
- * Revision 1.15  2001/12/13 18:08:39  knoaman
- * Fix for bug 5410.
- *
- * Revision 1.14  2001/11/19 18:26:31  knoaman
- * no message
- *
- * Revision 1.13  2001/11/19 17:37:55  knoaman
- * Use the instance of ID datatye validator directly.
- *
- * Revision 1.12  2001/11/16 15:03:37  knoaman
- * Design change: GeneralAttributeCheck is not longer a singleton class.
- *
- * Revision 1.11  2001/11/02 14:13:45  knoaman
- * Add support for identity constraints.
- *
- * Revision 1.10  2001/10/25 15:07:46  tng
- * Thread safe the static instance.
- *
- * Revision 1.9  2001/10/23 23:14:55  peiyongz
- * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
- *
- * Revision 1.8  2001/10/16 17:01:58  knoaman
- * Extra constraint checking.
- *
- * Revision 1.7  2001/10/15 19:29:26  knoaman
- * Add support for <notation> declaration.
- *
- * Revision 1.6  2001/09/18 14:41:56  knoaman
- * Add support for <annotation>.
- *
- * Revision 1.5  2001/08/27 20:14:42  knoaman
- * Validate attributes in <all>, <redefine>, <group> and <attributeGroup> declarations.
- * Misc. fixes.
- *
- * Revision 1.4  2001/06/06 13:09:02  knoaman
- * Use BooleanDatatypeValidator to validate values.
- *
- * Revision 1.3  2001/05/18 20:05:30  knoaman
- * Modified wording of error messages.
- *
- * Revision 1.2  2001/05/17 18:11:15  knoaman
- * More constraint and attribute checking.
- *
- * Revision 1.1  2001/05/15 21:59:31  knoaman
- * TraverseSchema: add attribute checking + some fixes + more error messages.
- * More attribute cheking to come.
- *
+ * $Id $
  */
 
 // ---------------------------------------------------------------------------
@@ -156,16 +23,17 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/validators/schema/TraverseSchema.hpp>
+#include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/framework/XMLErrorCodes.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/framework/XMLErrorCodes.hpp>
-#include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
-#include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
