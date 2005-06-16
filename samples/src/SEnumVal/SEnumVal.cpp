@@ -16,64 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.20  2005/03/07 20:11:21  knoaman
- * Use index to access attributes instead of enumerator.
- *
- * Revision 1.19  2004/09/08 13:55:34  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.18  2004/09/02 14:59:30  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.17  2003/08/07 21:21:38  neilg
- * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
- *
- * Revision 1.16  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.15  2003/02/05 18:53:24  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.14  2003/01/14 15:32:45  knoaman
- * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
- *
- * Revision 1.13  2002/11/05 21:46:20  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.12  2002/07/12 15:51:52  knoaman
- * Retrieve the root grammar instead of using the validator.
- * Modify the way we print substitution group info.
- *
- * Revision 1.11  2002/06/25 15:30:46  peiyongz
- * Bug#10067: SEnumVal bugs found when porting to Visual Studio .NET
- *                     projects, patch from Robert Buck (rbuck@mathworks.com )
- *
- * Revision 1.10  2002/05/08 18:18:46  knoaman
- * Fix bor bug 8301: INFINITY used as enum member.
- *
- * Revision 1.9  2002/04/17 20:18:08  tng
- * [Bug 7493] The word "occured" is misspelled and it is a global error.
- *
- * Revision 1.8  2002/02/20 20:30:11  peiyongz
- * Make the code compilable on Solaris 2.6's CC
- *
- * Revision 1.7  2002/02/14 15:14:58  peiyongz
- * getEnumString()
- *
- * Revision 1.6  2002/02/01 22:41:28  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/11/22 14:47:48  tng
- * Use the phrase "Grammar" instead of "Validator" in EnumVal and SEnumVal Description.
- *
- * Revision 1.4  2001/11/21 22:09:49  peiyongz
- * Copy Right date
- *
- * Revision 1.3  2001/11/21 19:05:23  peiyongz
- * SEnumVal: GrammarType checked
- *
- *
  */
 // ---------------------------------------------------------------------------
 //  Includes
@@ -81,10 +23,11 @@
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
-#include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>

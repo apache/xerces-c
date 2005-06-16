@@ -1588,9 +1588,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\sax\DTDHandler.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\sax\Dummy.cpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax\EntityResolver.hpp">
 			</File>
 			<File
