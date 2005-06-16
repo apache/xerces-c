@@ -19,14 +19,14 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\samples\PSVIWriter
+PATHCPP = ..\..\..\..\..\samples\src\PSVIWriter
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL;WIN32_LEAN_AND_MEAN
-INCLUDEPATH = ..\..\..\..\..\samples\PSVIWriter;..\..\..\..\..\src
-LIBPATH = ..\..\..\..\..\samples\PSVIWriter
+INCLUDEPATH = ..\..\..\..\..\samples\src\PSVIWriter;..\..\..\..\..\src
+LIBPATH = ..\..\..\..\..\samples\src\PSVIWriter
 WARNINGS= 
 # ---------------------------------------------------------------------------
 CFLAG1 = -Od -w -g0 -Tkh30000 -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM -tWC

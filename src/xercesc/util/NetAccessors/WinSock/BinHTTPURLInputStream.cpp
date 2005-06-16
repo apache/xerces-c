@@ -416,7 +416,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     {
         strcat(fBuffer, ":");
         int i = strlen(fBuffer);
-        _itoa(portNumber, fBuffer+i, 10);
+        itoa(portNumber, fBuffer+i, 10);
     }
     strcat(fBuffer, "\r\n");
 

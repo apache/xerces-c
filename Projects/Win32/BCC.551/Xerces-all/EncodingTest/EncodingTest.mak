@@ -16,13 +16,13 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\EncodingTest;
+PATHCPP = ..\..\..\..\..\tests\src\EncodingTest;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\EncodingTest;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\EncodingTest;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

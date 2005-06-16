@@ -18,14 +18,14 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\samples\SAX2Print
+PATHCPP = ..\..\..\..\..\samples\src\SAX2Print
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\samples\SAX2Print;..\..\..\..\..\src
-LIBPATH = ..\..\..\..\..\samples\SAX2Print
+INCLUDEPATH = ..\..\..\..\..\samples\src\SAX2Print;..\..\..\..\..\src
+LIBPATH = ..\..\..\..\..\samples\src\SAX2Print
 WARNINGS= 
 # ---------------------------------------------------------------------------
 CFLAG1 = -Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC

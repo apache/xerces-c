@@ -35,7 +35,13 @@
 
 #define XERCES_16BIT_INT short int
 #define XERCES_32BIT_INT int
-#define XERCES_XMLCH_T  unsigned short
+
+#ifdef __BORLANDC__
+  #define XERCES_XMLCH_T  wchar_t
+#else
+  #define XERCES_XMLCH_T  unsigned short
+#endif
+
 #define XERCES_SIZE_T   SIZE_T
 #define XERCES_SSIZE_T  SSIZE_T
 
@@ -52,6 +58,10 @@
 #define XERCES_PLATFORM_EXPORT __declspec(dllexport)
 #define XERCES_PLATFORM_IMPORT __declspec(dllimport)
 #define DLL_EXPORT
+#endif
+
+#ifdef __BORLANDC__
+#define XERCES_NO_MATCHING_DELETE_OPERATOR
 #endif
 
 // ---------------------------------------------------------------------------

@@ -19,14 +19,14 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\samples\DOMPrint
+PATHCPP = ..\..\..\..\..\samples\src\DOMPrint
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\samples\DOMPrint;..\..\..\..\..\src
-LIBPATH = ..\..\..\..\..\samples\DOMPrint
+INCLUDEPATH = ..\..\..\..\..\samples\src\DOMPrint;..\..\..\..\..\src
+LIBPATH = ..\..\..\..\..\samples\src\DOMPrint
 WARNINGS= 
 # ---------------------------------------------------------------------------
 CFLAG1 = -Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC

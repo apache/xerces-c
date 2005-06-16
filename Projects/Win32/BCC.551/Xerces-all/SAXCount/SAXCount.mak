@@ -17,14 +17,14 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\samples\SAXCount
+PATHCPP = ..\..\..\..\..\samples\src\SAXCount
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\samples\SAXCount;..\..\..\..\..\src
-LIBPATH = ..\..\..\..\..\samples\SAXCount
+INCLUDEPATH = ..\..\..\..\..\samples\src\SAXCount;..\..\..\..\..\src
+LIBPATH = ..\..\..\..\..\samples\src\SAXCount
 WARNINGS= 
 # ---------------------------------------------------------------------------
 CFLAG1 = -Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC

@@ -17,13 +17,13 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\samples\MemParse
+PATHCPP = ..\..\..\..\..\samples\src\MemParse
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\samples\MemParse;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\samples\src\MemParse;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

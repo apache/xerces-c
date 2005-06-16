@@ -18,13 +18,13 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\samples\PParse
+PATHCPP = ..\..\..\..\..\samples\src\PParse
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\samples\PParse;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\samples\src\PParse;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

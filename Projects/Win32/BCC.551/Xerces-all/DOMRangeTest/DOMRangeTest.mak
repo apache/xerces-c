@@ -17,13 +17,13 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\DOM\RangeTest;
+PATHCPP = ..\..\..\..\..\tests\src\DOM\RangeTest;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\DOM\RangeTest;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\DOM\RangeTest;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

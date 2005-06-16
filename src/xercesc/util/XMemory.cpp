@@ -89,7 +89,7 @@ void XMemory::operator delete(void* p)
 }
 
 //The Borland compiler is complaining about duplicate overloading of delete
-#if !defined(XML_BORLAND)
+#if !defined(XERCES_NO_MATCHING_DELETE_OPERATOR)
 
 void XMemory::operator delete(void* p, MemoryManager* manager)
 {

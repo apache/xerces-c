@@ -25,9 +25,9 @@ PATHCPP = .;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG;$(NO_DEPRDOM_PRODUCEMAIN)
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT;$(NO_DEPRDOM_PRODUCEMAIN)
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\DOM\DeprecatedDOMCount;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\DOM\DeprecatedDOMCount;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

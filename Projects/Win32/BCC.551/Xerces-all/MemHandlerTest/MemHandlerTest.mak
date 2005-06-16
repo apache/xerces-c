@@ -21,13 +21,13 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\tests\MemHandlerTest
+PATHCPP = .;..\..\..\..\..\tests\src\MemHandlerTest
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG;PLATFORM_WIN32;WIN32_LEAN_AND_MEAN;$(NO_DEPRDOM_PRODUCEMAIN)
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT;WIN32_LEAN_AND_MEAN;$(NO_DEPRDOM_PRODUCEMAIN)
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\MemHandlerTest;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\MemHandlerTest;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

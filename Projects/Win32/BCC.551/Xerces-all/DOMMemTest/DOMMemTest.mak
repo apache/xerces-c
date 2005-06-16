@@ -17,13 +17,13 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\DOM\DOMMemTest;
+PATHCPP = ..\..\..\..\..\tests\src\DOM\DOMMemTest;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\DOM\DOMMemTest;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\DOM\DOMMemTest;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

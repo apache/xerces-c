@@ -17,13 +17,13 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\DOM\TypeInfo;
+PATHCPP = ..\..\..\..\..\tests\src\DOM\TypeInfo;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG;WIN32_LEAN_AND_MEAN
+USERDEFINES = _DEBUG;WIN32_LEAN_AND_MEAN;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\DOM\TypeInfo;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\DOM\TypeInfo;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

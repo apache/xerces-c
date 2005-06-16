@@ -16,13 +16,13 @@ LIBRARIES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\ThreadTest
+PATHCPP = ..\..\..\..\..\tests\src\ThreadTest
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG;PLATFORM_WIN32
+USERDEFINES = _DEBUG;;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\ThreadTest;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\tests\src\ThreadTest;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------

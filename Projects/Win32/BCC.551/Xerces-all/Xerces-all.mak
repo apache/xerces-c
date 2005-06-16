@@ -3,7 +3,6 @@
 ROOT = $(MAKEDIR)\..
 !endif
 #------------------------------------------------------------------------------
-MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
 DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
@@ -14,7 +13,7 @@ default: all
 MakeBuildDirs: MakeBuildDirs.bat
   call $**
 
-MAKEN = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f
+MAKEN = $(ROOT)\bin\$(MAKE) -$(MAKEFLAGS) -f
 PROJECTNAMES = XercesLib DOMCount DOMPrint SAXCount SAXPrint SAX2Count SAX2Print \
   DOMTest DOMMemTest DOMRangeTest DOMTraversal EncodingTest InitTermTest \
   ThreadTest MemHandlerTest XSerializerTest PSVIWriter SCMPrint MemParse Redirect \

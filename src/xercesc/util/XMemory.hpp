@@ -97,7 +97,7 @@ public :
     void operator delete(void* p);
 
      //The Borland compiler is complaining about duplicate overloading of delete
-#if !defined(XML_BORLAND)
+#if !defined(XERCES_NO_MATCHING_DELETE_OPERATOR)
     /**
       * This method provides a matching delete for the custom operator new
       *
@@ -132,11 +132,9 @@ protected :
     }
     //@}
 
-#if defined(XML_BORLAND)
     virtual ~XMemory()
     {
     }
-#endif
 
 };
 

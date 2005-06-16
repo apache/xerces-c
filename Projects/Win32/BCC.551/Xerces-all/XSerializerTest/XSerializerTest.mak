@@ -18,14 +18,14 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = ..\..\..\..\..\tests\XSerializerTest
+PATHCPP = ..\..\..\..\..\tests\src\XSerializerTest
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\XSerializerTest;..\..\..\..\..\src
-LIBPATH = ..\..\..\..\..\tests\XSerializerTest
+INCLUDEPATH = ..\..\..\..\..\tests\src\XSerializerTest;..\..\..\..\..\src
+LIBPATH = ..\..\..\..\..\tests\src\XSerializerTest
 WARNINGS= 
 # ---------------------------------------------------------------------------
 CFLAG1 = -Od -w -g0 -Tkh30000 -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM -tWC
