@@ -556,7 +556,7 @@ void DOMDocumentImpl::setNodeValue(const XMLCh *x)
 
 
 //Introduced in DOM Level 2
-DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep)
+DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep)
 {
     return importNode(source, deep, false);
 }
@@ -995,7 +995,7 @@ void DOMDocumentImpl::setDOMConfiguration(DOMConfiguration *config) {
     fDOMConfiguration = config;
 }
 
-DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc)
+DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool cloningDoc)
 {
     DOMNode *newnode=0;
     bool oldErrorCheckingFlag = errorChecking;
@@ -1008,9 +1008,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
             if (source->getLocalName() == 0)
                 newelement = createElement(source->getNodeName());
             else
-                newelement = createElementNS(source->getNamespaceURI(),
-
-            source->getNodeName());
+                newelement = createElementNS(source->getNamespaceURI(), source->getNodeName());
             DOMNamedNodeMap *srcattr=source->getAttributes();
             if(srcattr!=0)
                 for(XMLSize_t i=0;i<srcattr->getLength();++i)
@@ -1040,8 +1038,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
         if (source->getLocalName() == 0)
             newnode = createAttribute(source->getNodeName());
         else
-            newnode = createAttributeNS(source->getNamespaceURI(),
-            source->getNodeName());
+            newnode = createAttributeNS(source->getNamespaceURI(), source->getNodeName());
         deep = true;
         // Kids carry value
 
@@ -1073,8 +1070,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
         }
         break;
     case DOMNode::PROCESSING_INSTRUCTION_NODE :
-        newnode = createProcessingInstruction(source->getNodeName(),
-            source->getNodeValue());
+        newnode = createProcessingInstruction(source->getNodeName(), source->getNodeValue());
         break;
     case DOMNode::COMMENT_NODE :
         newnode = createComment(source->getNodeValue());

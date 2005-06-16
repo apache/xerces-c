@@ -356,7 +356,7 @@ public:
      *   supported.
      * @since DOM Level 2
      */
-    virtual DOMNode        *importNode(DOMNode *importedNode, bool deep) = 0;
+    virtual DOMNode        *importNode(const DOMNode *importedNode, bool deep) = 0;
 
     /**
      * Creates an element of the given qualified name and namespace URI.

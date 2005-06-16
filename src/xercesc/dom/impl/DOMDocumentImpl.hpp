@@ -202,7 +202,7 @@ public:
     }
 
     //Introduced in DOM Level 2
-    virtual DOMNode*             importNode(DOMNode *source, bool deep);
+    virtual DOMNode*             importNode(const DOMNode *source, bool deep);
     virtual DOMElement*          createElementNS(const XMLCh *namespaceURI,
                                                  const XMLCh *qualifiedName);
     virtual DOMElement*          createElementNS(const XMLCh *namespaceURI,
@@ -285,7 +285,7 @@ public:
 
 private:
     //Internal helper functions
-    virtual DOMNode*             importNode(DOMNode *source, bool deep, bool cloningNode);
+    virtual DOMNode*             importNode(const DOMNode *source, bool deep, bool cloningNode);
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
