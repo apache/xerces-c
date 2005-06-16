@@ -15,232 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.34  2005/04/05 17:00:45  cargilld
- * Implement version of lowercase that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
- *
- * Revision 1.33  2005/03/20 19:02:45  cargilld
- * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
- *
- * Revision 1.32  2005/03/08 09:04:09  amassari
- * Improve performances of XMLString::tokenizeString (jira# 1363) - patch by Christian Will
- *
- * Revision 1.31  2004/12/21 16:02:51  cargilld
- * Attempt to fix various apidoc problems.
- *
- * Revision 1.30  2004/12/14 02:09:20  cargilld
- * Performance update from Christian Will.
- *
- * Revision 1.29  2004/12/06 10:47:01  amassari
- * Added XMLString::release(void**, MemoryManager*) [jira# 1301]
- *
- * Revision 1.28  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.27  2004/09/02 19:08:09  cargilld
- * Fix API Doc warning message
- *
- * Revision 1.26  2004/08/11 16:07:27  peiyongz
- * isValidNOTATION
- *
- * Revision 1.25  2004/05/25 18:11:32  peiyongz
- * removeChar() added
- *
- * Revision 1.24  2004/03/10 17:35:17  amassari
- * Fix documentation for binToText (bug# 9207)
- *
- * Revision 1.23  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.22  2003/12/17 20:00:49  cargilld
- * Update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.21  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.20  2003/10/02 11:07:26  gareth
- * Made the non-memory manager version of replicate not inlined. Updated the documentation for the memory manager versions so they don't tell you you should call release.
- *
- * Revision 1.19  2003/10/01 00:22:20  knoaman
- * Add a lastIndexOf method that takes the string length as one of the params.
- *
- * Revision 1.18  2003/08/25 20:39:47  neilg
- * fix XMLString::findAny(...) docs so that they match what the method actually does (and has done since time immemorial)
- *
- * Revision 1.17  2003/05/18 14:02:05  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.16  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.15  2003/04/21 20:07:05  knoaman
- * Performance: use memcpy in moveChars and replicate.
- *
- * Revision 1.14  2003/02/25 16:42:31  tng
- * [Bug 7072] Documentation for XMLString::transcode states invalid return value.
- *
- * Revision 1.13  2003/02/05 18:50:56  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.12  2003/01/24 23:16:33  peiyongz
- * removeWS() added;
- *
- * Revision 1.11  2002/12/20 22:10:21  tng
- * XML 1.1
- *
- * Revision 1.10  2002/12/18 14:17:54  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.9  2002/12/04 02:32:43  knoaman
- * #include cleanup.
- *
- * Revision 1.8  2002/11/05 17:42:39  peiyongz
- * equals( const char* const, const char* const)
- *
- * Revision 1.7  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.6  2002/10/01 19:45:22  tng
- * Performance in XMLString::equals, only need to check one string for null as they are equal already.
- *
- * Revision 1.5  2002/09/24 19:41:21  tng
- * New inline function equals that is modified from compareString but simply return true or false.
- *
- * Revision 1.4  2002/09/23 18:42:18  tng
- * DOM L3: Support baseURI.   Add utility fixURI to transform an absolute path filename to standard URI form.
- *
- * Revision 1.3  2002/08/27 19:24:43  peiyongz
- * Bug#12087: patch from Thomas Ford (tom@decisionsoft.com)
- *
- * Revision 1.2  2002/02/20 18:17:02  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:16  peiyongz
- * sane_include
- *
- * Revision 1.26  2001/08/10 16:23:06  peiyongz
- * isHex(), isAlphaNum(), isAllWhiteSpace() and patternMatch() Added
- *
- * Revision 1.25  2001/07/06 20:27:57  peiyongz
- * isValidaQName()
- *
- * Revision 1.24  2001/07/04 14:38:20  peiyongz
- * IDDatatypeValidator: created
- * DatatypeValidatorFactory: IDDTV enabled
- * XMLString:isValidName(): to validate Name (XML [4][5])
- *
- * Revision 1.23  2001/06/13 14:07:55  peiyongz
- * isValidaEncName() to validate an encoding name (EncName)
- *
- * Revision 1.22  2001/05/23 15:44:51  tng
- * Schema: NormalizedString fix.  By Pei Yong Zhang.
- *
- * Revision 1.21  2001/05/11 13:26:31  tng
- * Copyright update.
- *
- * Revision 1.20  2001/05/09 18:43:30  tng
- * Add StringDatatypeValidator and BooleanDatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.19  2001/05/03 20:34:35  tng
- * Schema: SchemaValidator update
- *
- * Revision 1.18  2001/05/03 19:17:35  knoaman
- * TraverseSchema Part II.
- *
- * Revision 1.17  2001/03/21 21:56:13  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
- * Revision 1.16  2001/03/02 20:52:46  knoaman
- * Schema: Regular expression - misc. updates for error messages,
- * and additions of new functions to XMLString class.
- *
- * Revision 1.15  2001/01/15 21:26:34  tng
- * Performance Patches by David Bertoni.
- *
- * Details: (see xerces-c-dev mailing Jan 14)
- * XMLRecognizer.cpp: the internal encoding string XMLUni::fgXMLChEncodingString
- * was going through this function numerous times.  As a result, the top hot-spot
- * for the parse was _wcsicmp().  The real problem is that the Microsofts wide string
- * functions are unbelievably slow.  For things like encodings, it might be
- * better to use a special comparison function that only considers a-z and
- * A-Z as characters with case.  This works since the character set for
- * encodings is limit to printable ASCII characters.
- *
- *  XMLScanner2.cpp: This also has some case-sensitive vs. insensitive compares.
- * They are also much faster.  The other tweak is to only make a copy of an attribute
- * string if it needs to be split.  And then, the strategy is to try to use a
- * stack-based buffer, rather than a dynamically-allocated one.
- *
- * SAX2XMLReaderImpl.cpp: Again, more case-sensitive vs. insensitive comparisons.
- *
- * KVStringPair.cpp & hpp: By storing the size of the allocation, the storage can
- * likely be re-used many times, cutting down on dynamic memory allocations.
- *
- * XMLString.hpp: a more efficient implementation of stringLen().
- *
- * DTDValidator.cpp: another case of using a stack-based buffer when possible
- *
- * These patches made a big difference in parse time in some of our test
- * files, especially the ones are very attribute-heavy.
- *
- * Revision 1.14  2000/10/13 22:47:57  andyh
- * Fix bug (failure to null-terminate result) in XMLString::trim().
- * Patch contributed by Nadav Aharoni
- *
- * Revision 1.13  2000/04/12 18:42:15  roddey
- * Improved docs in terms of what 'max chars' means in the method
- * parameters.
- *
- * Revision 1.12  2000/04/06 19:42:51  rahulj
- * Clarified how big the target buffer should be in the API
- * documentation.
- *
- * Revision 1.11  2000/03/23 01:02:38  roddey
- * Updates to the XMLURL class to correct a lot of parsing problems
- * and to add support for the port number. Updated the URL tests
- * to test some of this new stuff.
- *
- * Revision 1.10  2000/03/20 23:00:46  rahulj
- * Moved the inline definition of stringLen before the first
- * use. This satisfied the HP CC compiler.
- *
- * Revision 1.9  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/24 20:05:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.7  2000/02/16 18:51:52  roddey
- * Fixed some facts in the docs and reformatted the docs to stay within
- * a reasonable line width.
- *
- * Revision 1.6  2000/02/16 17:07:07  abagchi
- * Added API docs
- *
- * Revision 1.5  2000/02/06 07:48:06  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/12 00:16:23  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.3  1999/12/18 00:18:10  roddey
- * More changes to support the new, completely orthagonal support for
- * intrinsic encodings.
- *
- * Revision 1.2  1999/12/15 19:41:28  roddey
- * Support for the new transcoder system, where even intrinsic encodings are
- * done via the same transcoder abstraction as external ones.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:52  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:21  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id $
  */
 
 #if !defined(XMLSTRING_HPP)
@@ -893,48 +668,30 @@ public:
     /** @name Replication function */
     //@{
     /** Replicates a string
-      * NOTE: The returned buffer is dynamically allocated and is the
+      * NOTE: The returned buffer is allocated with the MemoryManager. It is the
       * responsibility of the caller to delete it when not longer needed.
       * You can call XMLString::release to release this returned buffer.
       *
       * @param toRep The string to replicate
-      * @return Returns a pointer to the replicated string
-      * @see   XMLString::release(char**)
-      */
-    static char* replicate(const char* const toRep);
-
-    /** Replicates a string
-      * NOTE: The returned buffer is allocated with the MemoryManager. It is the
-      * responsibility of the caller to delete it when not longer needed.
-      *
-      * @param toRep The string to replicate
       * @param manager The MemoryManager to use to allocate the string
       * @return Returns a pointer to the replicated string
+      * @see   XMLString::release(char**, MemoryManager*)
       */
     static char* replicate(const char* const toRep,
-                           MemoryManager* const manager);
-
-    /** Replicates a string
-      * NOTE: The returned buffer is dynamically allocated and is the
-      * responsibility of the caller to delete it when not longer needed.
-      * You can call XMLString::release to release this returned buffer.
-
-      * @param toRep The string to replicate
-      * @return Returns a pointer to the replicated string
-      * @see   XMLString::release(XMLCh**)
-      */
-    static XMLCh* replicate(const XMLCh* const toRep);
+                           MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Replicates a string
       * NOTE: The returned buffer is allocated with the MemoryManager. It is the
       * responsibility of the caller to delete it when not longer needed.
+      * You can call XMLString::release to release this returned buffer.
       *
       * @param toRep The string to replicate
       * @param manager The MemoryManager to use to allocate the string
       * @return Returns a pointer to the replicated string
+      * @see   XMLString::release(XMLCh**, MemoryManager*)
       */
     static XMLCh* replicate(const XMLCh* const toRep,
-                            MemoryManager* const manager);
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@}
 
@@ -1368,7 +1125,7 @@ public:
       *
       * @param toTranscode The string to be transcoded      
       * @return Returns the transcoded string
-      * @see   XMLString::release(XMLCh**)
+      * @see   XMLString::release(XMLCh**, MemoryManager*)
       */
     static char* transcode
     (
@@ -1407,7 +1164,7 @@ public:
       *
       * @param toTranscode The string to be transcoded     
       * @return Returns the transcoded string
-      * @see   XMLString::release(char**)
+      * @see   XMLString::release(char**, MemoryManager*)
       */
     static XMLCh* transcode
     (
@@ -1585,43 +1342,30 @@ public:
     /** @name String Memory Management functions */
     //@{
     /**
-     * Release the parameter char string that was allocated by the implementation (i.e.the parser).
-     *   The implementation will call operator delete[] and then turn the string to a null pointer.
-     *
-     * @param buf  The string to be deleted and become a null pointer.
-     */
-    static void release(char** buf);
-
-    /**
-     * Release the parameter XMLCh string that was allocated by the implementation (i.e.the parser).
-     *   The implementation will call operator delete[] and then turn the string to a null pointer.
-     *
-     * @param buf  The string to be deleted and become a null pointer.
-     */
-    static void release(XMLCh** buf);
-
-    /**
-     * Release the parameter XMLByte string that was allocated by the implementation (i.e.the parser).
-     *   The implementation will call operator delete[] and then turn the string to a null pointer.
-     *
-     * @param buf  The string to be deleted and become a null pointer.
-     */
-    static void release(XMLByte** buf);
-
-    /**
-     * Release the parameter string that was allocated using the version of XMLString::transcode
-     * that accepts a MemoryManager.
+     * Release the parameter string that was allocated by XMLString::transcode and XMLString::replicate.
      * The implementation will call MemoryManager::deallocate and then turn the string to a null pointer.
      *
      * @param buf  The string to be deleted and become a null pointer.
-     * @param manager The MemoryManager to use to allocate objects
+     * @param manager The MemoryManager used to allocate the string
      */
     static void release
     (
-        void**  buf
-        ,       MemoryManager* const manager
+        char**  buf
+        ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
+    /**
+     * Release the parameter string that was allocated by XMLString::transcode and XMLString::replicate.
+     * The implementation will call MemoryManager::deallocate and then turn the string to a null pointer.
+     *
+     * @param buf  The string to be deleted and become a null pointer.
+     * @param manager The MemoryManager used to allocate the string
+     */
+    static void release
+    (
+        XMLCh**  buf
+        ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     //@}
 
 

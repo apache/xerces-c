@@ -535,10 +535,10 @@ int main(int argC, char* argV[])
     //
     delete parser;
 
+    XMLString::release(&gOutputEncoding);
+
     // And call the termination method
     XMLPlatformUtils::Terminate();
-
-    XMLString::release(&gOutputEncoding);
 
     return retval;
 }

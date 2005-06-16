@@ -356,27 +356,27 @@ XMLUri::~XMLUri()
 void XMLUri::cleanUp()
 {
     if (fScheme)
-        XMLString::release((void**)&fScheme, fMemoryManager);//delete[] fScheme;
+        XMLString::release(&fScheme, fMemoryManager);//delete[] fScheme;
 
     if (fUserInfo)
-        XMLString::release((void**)&fUserInfo, fMemoryManager);//delete[] fUserInfo;
+        XMLString::release(&fUserInfo, fMemoryManager);//delete[] fUserInfo;
 
     if (fHost)
-        XMLString::release((void**)&fHost, fMemoryManager);//delete[] fHost;
+        XMLString::release(&fHost, fMemoryManager);//delete[] fHost;
         
     if (fRegAuth)
-        XMLString::release((void**)&fRegAuth, fMemoryManager);//delete[] fRegAuth;
+        XMLString::release(&fRegAuth, fMemoryManager);//delete[] fRegAuth;
 
     if (fPath)
-        XMLString::release((void**)&fPath, fMemoryManager);//delete[] fPath;
+        XMLString::release(&fPath, fMemoryManager);//delete[] fPath;
 
     if (fQueryString)
-        XMLString::release((void**)&fQueryString, fMemoryManager);//delete[] fQueryString;
+        XMLString::release(&fQueryString, fMemoryManager);//delete[] fQueryString;
 
     if (fFragment)
-        XMLString::release((void**)&fFragment, fMemoryManager);//delete[] fFragment;
+        XMLString::release(&fFragment, fMemoryManager);//delete[] fFragment;
 
-    XMLString::release((void**)&fURIText, fMemoryManager);//delete[] fURIText;
+    XMLString::release(&fURIText, fMemoryManager);//delete[] fURIText;
 }
 
 void XMLUri::initialize(const XMLUri& toCopy)

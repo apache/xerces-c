@@ -479,37 +479,6 @@ unsigned int XMLString::replaceTokens(          XMLCh* const    errText
 }
 
 
-XMLCh* XMLString::replicate(const XMLCh* const toRep)
-{
-    // If a null string, return a null string!
-    XMLCh* ret = 0;
-    if (toRep)
-    {
-        const unsigned int len = stringLen(toRep);
-        ret = new XMLCh[len + 1];
-        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
-    }
-    return ret;
-}
-
-char* XMLString::replicate(const char* const toRep)
-{
-    // If a null string, return a null string
-    if (!toRep)
-        return 0;
-
-    //
-    //  Get the len of the source and allocate a new buffer. Make sure to
-    //  account for the nul terminator.
-    //
-    const unsigned int srcLen = strlen(toRep);
-    char* ret = new char[srcLen+1];
-
-    // Copy over the text, adjusting for the size of a char
-    memcpy(ret, toRep, (srcLen+1) * sizeof(char));
-    return ret;
-}
-
 char* XMLString::replicate( const char* const    toRep
                           , MemoryManager* const manager)
 {
@@ -547,7 +516,6 @@ unsigned int XMLString::stringLen(const char* const src)
 {
     return strlen(src);
 }
-
 
 char* XMLString::transcode(const XMLCh* const toTranscode,
                            MemoryManager* const manager)
@@ -1920,28 +1888,16 @@ void XMLString::fixURI(const XMLCh* const str, XMLCh* const target)
     }
 }
 
-void XMLString::release(char** buf)
+void XMLString::release(char** buf, MemoryManager* const manager)
 {
-    delete [] *buf;
-    *buf = 0;
+	manager->deallocate(*buf);
+	*buf = 0;
 }
 
-void XMLString::release(XMLCh** buf)
+void XMLString::release(XMLCh** buf, MemoryManager* const manager)
 {
-    delete [] *buf;
-    *buf = 0;
-}
-
-void XMLString::release(XMLByte** buf)
-{
-    delete [] *buf;
-    *buf = 0;
-}
-
-void XMLString::release(void** buf, MemoryManager* const manager)
-{
-    manager->deallocate(*buf);
-    *buf = 0;
+	manager->deallocate(*buf);
+	*buf = 0;
 }
 
 // ---------------------------------------------------------------------------
