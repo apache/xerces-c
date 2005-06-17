@@ -16,17 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2004/09/08 13:57:06  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2004/08/24 16:00:15  peiyongz
- * To build on AIX/Win2003-ecl
- *
- * Revision 1.1  2004/08/19 17:17:21  peiyongz
- * XSValueTest
- *
- *
  */
 
 #if !defined(XSVALUE_TEST_HPP)

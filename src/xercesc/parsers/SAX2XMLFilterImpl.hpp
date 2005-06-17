@@ -15,16 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2005/03/09 16:07:09  amassari
- * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
- *
- * Revision 1.2  2005/01/06 21:39:44  amassari
- * Removed warnings
- *
- * Revision 1.1  2004/12/24 19:21:46  amassari
- * Add support for SAX2 filters (jira# 1133)
- *
+ * $Id$
  */
 
 #if !defined(SAX2XMLFilterImpl_HPP)

@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:20  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2004/01/29 11:46:32  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.5  2003/06/20 18:56:45  peiyongz
- * Stateless Grammar Pool :: Part I
- *
- * Revision 1.4  2003/05/15 18:27:11  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 14:55:45  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/05/07 17:45:52  knoaman
- * SAX2 documentation update.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/08/30 22:21:37  andyh
- * Unix Build script fixes.  Clean up some UNIX compiler warnings.
- *
- * Revision 1.2  2000/08/07 18:21:27  jpolast
- * change SAX_EXPORT module to SAX2_EXPORT
- *
- * Revision 1.1  2000/08/02 18:02:35  jpolast
- * initial checkin of sax2 implementation
- * submitted by Simon Fell (simon@fell.com)
- * and Joe Polastre (jpolast@apache.org)
- *
- *
+ * $Id$
  */
 
 #ifndef XMLREADERFACTORY_HPP

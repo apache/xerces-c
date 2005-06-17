@@ -15,26 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.4  2003/02/05 18:53:23  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.3  2002/02/01 22:38:52  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/08/09 22:40:15  jpolast
- * updates for changes to sax2 core functionality.
- *
- * Revision 1.1  2000/08/08 17:17:20  jpolast
- * initial checkin of SAX2Count
- *
- *
+ * $Id$
  */
 
 

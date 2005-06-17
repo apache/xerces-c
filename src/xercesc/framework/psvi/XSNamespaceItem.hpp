@@ -15,7 +15,7 @@
  */
 
 /*
- * $Id $
+ * $Id$
  */
 
 #if !defined(XSNAMESPACEITEM_HPP)

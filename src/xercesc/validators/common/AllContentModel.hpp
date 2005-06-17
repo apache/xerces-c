@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/11/25 14:36:40  knoaman
- * Fix problem with an All content model with minOccurs of 0.
- *
- * Revision 1.8  2004/09/16 13:32:03  amassari
- * Updated error message for UPA to also state the complex type that is failing the test
- *
- * Revision 1.7  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2004/01/29 11:51:21  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.5  2003/05/16 21:43:20  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/03/07 18:16:57  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/11/21 14:30:13  knoaman
- * Fix for UPA checking.
- *
- * Revision 1.1  2001/08/24 12:48:48  tng
- * Schema: AllContentModel
- *
+ * $Id$
  */
 
 

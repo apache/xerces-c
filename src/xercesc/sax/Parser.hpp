@@ -15,51 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/03/07 18:10:06  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/11/04 14:56:26  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/07/11 18:29:09  knoaman
- * Grammar caching/preparsing - initial implementation.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.8  2001/05/11 13:26:24  tng
- * Copyright update.
- *
- * Revision 1.7  2001/03/21 21:56:10  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
- * Revision 1.6  2000/03/02 19:54:35  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/24 20:12:55  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/12 03:31:55  rahulj
- * Removed duplicate CVS Log entries.
- *
- * Revision 1.3  2000/02/09 01:59:12  abagchi
- * Removed private function docs, added parse docs
- *
- * Revision 1.2  2000/02/06 07:47:58  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:46  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:02  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef PARSER_HPP

@@ -19,38 +19,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.10  2004/09/08 13:55:39  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2003/03/07 19:59:09  tng
- * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
- *
- * Revision 1.8  2002/11/04 15:09:25  tng
- * C++ Namespace Support.
- *
- * Revision 1.7  2002/08/22 15:04:57  tng
- * Remove unused parameter variables in inline functions.
- *
- * Revision 1.6  2002/06/06 20:53:07  tng
- * Documentation Fix: Update the API Documentation for DOM headers
- *
- * Revision 1.5  2002/06/04 14:24:04  peiyongz
- * Make DOMWriterFilter pure abstract class w/o implementing any method
- * and data
- *
- * Revision 1.4  2002/06/03 22:34:53  peiyongz
- * DOMWriterFilter: setter provided, and allows any SHOW setting
- *
- * Revision 1.3  2002/05/31 20:59:40  peiyongz
- * Add "introduced in DOM3"
- *
- * Revision 1.2  2002/05/30 16:25:33  tng
- * Fix doxygen warning message.
- *
- * Revision 1.1  2002/05/28 22:38:55  peiyongz
- * DOM3 Save Interface: DOMWriter/DOMWriterFilter
- *
  */
 
 /**

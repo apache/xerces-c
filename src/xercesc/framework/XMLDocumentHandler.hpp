@@ -15,70 +15,8 @@
  */
 
  /*
-  * $Log$
-  * Revision 1.11  2004/09/20 15:00:49  amassari
-  * Added a setCreateSchemaInfo method to the DOM parsers, to store PSVI informations in element and attribute nodes
-  *
-  * Revision 1.10  2004/09/08 13:55:58  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.9  2004/09/02 19:08:09  cargilld
-  * Fix API Doc warning message
-  *
-  * Revision 1.8  2004/02/25 18:29:16  amassari
-  * Fixed typo in documentation
-  *
-  * Revision 1.7  2004/01/29 11:46:29  cargilld
-  * Code cleanup changes to get rid of various compiler diagnostic messages.
-  *
-  * Revision 1.6  2003/11/28 05:14:34  neilg
-  * update XMLDocumentHandler to enable stateless passing of type information for elements.  Note that this is as yet unimplemented.
-  *
-  * Revision 1.5  2003/03/07 18:08:10  tng
-  * Return a reference instead of void for operator=
-  *
-  * Revision 1.4  2002/11/04 15:00:21  tng
-  * C++ Namespace Support.
-  *
-  * Revision 1.3  2002/05/28 20:41:11  tng
-  * [Bug 9104] prefixes dissapearing when schema validation turned on.
-  *
-  * Revision 1.2  2002/02/20 18:17:01  tng
-  * [Bug 5977] Warnings on generating apiDocs.
-  *
-  * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
-  * sane_include
-  *
-  * Revision 1.8  2000/03/02 19:54:24  roddey
-  * This checkin includes many changes done while waiting for the
-  * 1.1.0 code to be finished. I can't list them all here, but a list is
-  * available elsewhere.
-  *
-  * Revision 1.7  2000/02/24 20:00:23  abagchi
-  * Swat for removing Log from API docs
-  *
-  * Revision 1.6  2000/02/16 20:29:20  aruna1
-  * API Doc++ summary changes in
-  *
-  * Revision 1.5  2000/02/16 19:48:56  roddey
-  * More documentation updates
-  *
-  * Revision 1.4  2000/02/15 01:21:30  roddey
-  * Some initial documentation improvements. More to come...
-  *
-  * Revision 1.3  2000/02/09 19:47:27  abagchi
-  * Added docs for startElement
-  *
-  * Revision 1.2  2000/02/06 07:47:48  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:08:31  twl
-  * Initial checkin
-  *
-  * Revision 1.3  1999/11/08 20:44:37  rahul
-  * Swat for adding in Product name and CVS comment log variable.
-  *
-  */
+ * $Id$
+ */
 
 
 #if !defined(XMLDOCUMENTHANDLER_HPP)

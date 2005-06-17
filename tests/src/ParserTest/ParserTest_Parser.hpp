@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2002/11/05 21:47:36  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.7  2002/02/01 22:45:54  peiyongz
- * sane_include
- *
- * Revision 1.6  2000/03/02 19:55:46  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:48:37  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/24 20:38:56  roddey
- * Fixed some small bugs introduced in the recent move away from the util/* streams.
- *
- * Revision 1.3  2000/01/21 23:58:06  roddey
- * Initial move away from util streams was bad. Wide char APIs didn't allow enough
- * control to do canonical output, so changed to use std short char APIs.
- *
- * Revision 1.1  1999/11/09 01:02:23  twl
- * Initial revision
- *
- * Revision 1.3  1999/11/08 20:42:25  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

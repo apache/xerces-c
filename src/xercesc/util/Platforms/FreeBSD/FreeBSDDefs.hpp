@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.2  2004/09/08 13:56:39  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/11/29 18:25:18  tng
- * FreeBSD support by Michael Huedepohl.
- *
+/*
+ * $Id$
  */
 
 

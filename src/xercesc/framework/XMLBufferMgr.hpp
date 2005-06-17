@@ -15,51 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2004/01/29 11:46:29  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.6  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.5  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/12/04 02:32:43  knoaman
- * #include cleanup.
- *
- * Revision 1.3  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/08/21 18:54:52  tng
- * [Bug 11869] Add the const modifier (XMLBuffer.hpp).
- *
- * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/03/02 19:54:24  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/24 20:00:23  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/15 01:21:30  roddey
- * Some initial documentation improvements. More to come...
- *
- * Revision 1.2  2000/02/06 07:47:47  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:30  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:36  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

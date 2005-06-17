@@ -15,67 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2003/05/29 11:18:37  gareth
- * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
- *
- * Revision 1.6  2002/11/05 21:43:55  tng
- * Turn on C++ Namespace support only if using AIX xlC version 4 or higher.
- *
- * Revision 1.5  2002/11/04 14:45:20  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/05/28 12:57:17  tng
- * Fix typo.
- *
- * Revision 1.3  2002/05/27 18:02:40  tng
- * define XMLSize_t, XMLSSize_t and their associate MAX
- *
- * Revision 1.2  2002/05/21 19:45:53  tng
- * Define DOMSize_t and XMLSize_t
- *
- * Revision 1.1.1.1  2002/02/01 22:22:18  peiyongz
- * sane_include
- *
- * Revision 1.11  2001/03/02 20:52:54  knoaman
- * Schema: Regular expression - misc. updates for error messages,
- * and additions of new functions to XMLString class.
- *
- * Revision 1.10  2001/02/05 20:01:39  tng
- * define NO_NATIVE_BOOL macro only if not pre-defined/reserved
- *
- * Revision 1.9  2000/10/17 00:52:00  andyh
- * Change XMLCh back to unsigned short on all platforms.
- *
- * Revision 1.8  2000/03/09 18:54:44  abagchi
- * Added header-guards to include inlines only once
- *
- * Revision 1.7  2000/03/02 19:55:07  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/06 07:48:17  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/14 02:28:16  aruna1
- * Added L"string" support for cset compiler
- *
- * Revision 1.4  2000/01/12 19:11:49  aruna1
- * XMLCh now defined to wchar_t
- *
- * Revision 1.3  1999/11/12 20:36:51  rahulj
- * Changed library name to xerces-c.lib.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:31  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:22  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(CSETDEFS_HPP)

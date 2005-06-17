@@ -15,46 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/12/01 23:23:26  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.5  2003/08/13 15:43:24  knoaman
- * Use memory manager when creating SAX exceptions.
- *
- * Revision 1.4  2003/05/15 18:27:05  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 14:56:26  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/05/27 18:33:07  tng
- * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/02/24 20:12:55  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/12 01:27:19  aruna1
- * Documentation updated
- *
- * Revision 1.3  2000/02/09 19:24:49  abagchi
- * Inserted documentation for constructors and destructors
- *
- * Revision 1.2  2000/02/06 07:47:58  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:47  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:02  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

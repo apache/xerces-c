@@ -16,22 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.5  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/01/24 20:20:22  tng
- * Add method flush to XMLFormatTarget
- *
- * Revision 1.3  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/06/05 15:47:29  peiyongz
- * operator = modified
- *
- * Revision 1.1  2002/05/28 22:40:46  peiyongz
- * DOM3 Save Interface: DOMWriter/DOMWriterFilter
- *
  */
 
 #ifndef StdOutFormatTarget_HEADER_GUARD_

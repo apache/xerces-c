@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:55:34  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/02/15 19:43:15  amassari
- * Removed cause for warnings in VC 7.1
- *
- * Revision 1.9  2002/11/05 21:46:20  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.8  2002/02/01 22:41:17  peiyongz
- * sane_include
- *
- * Revision 1.7  2000/10/10 23:55:59  andyh
- * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
- * output to multi-byte encodings.
- *
- * Revision 1.6  2000/04/06 19:09:52  roddey
- * Some more improvements to output formatting. Now it will correctly
- * handle doing the 'replacement char' style of dealing with chars
- * that are unrepresentable.
- *
- * Revision 1.5  2000/04/05 00:20:32  roddey
- * More updates for the low level formatted output support
- *
- * Revision 1.4  2000/03/28 19:43:12  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.3  2000/03/02 19:53:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:24  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:29  twl
- * Initial checkin
- *
- * Revision 1.8  1999/11/08 20:43:42  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

@@ -15,20 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.2  2003/02/05 18:53:23  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.1  2000/08/02 19:16:14  jpolast
- * initial checkin of SAX2Print
- *
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

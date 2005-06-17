@@ -15,31 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:35  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/05/11 13:39:35  amassari
- * The net accessor input source now can be used to get data using PUT or POST, as well as GET
- *
- * Revision 1.3  2003/03/07 18:15:49  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 15:11:38  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/03/20 23:48:51  rahulj
- * Added Socket based NetAccessor. This will enable one to
- * use HTTP URL's for system id's. Default build options do
- * not use this NetAccessor. Specify the '-n socket' option
- * to 'runConfigure' to configure Xerces-C to use this new
- * feature. The code works under Solaris 2.6, Linux, AIX
- * and HPUX 11 with aCC.
- * Todo's: enable proper error handling.
- *
+ * $Id$
  */
 
 

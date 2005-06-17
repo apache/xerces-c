@@ -14,43 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.7  2004/09/08 13:56:36  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2004/05/05 22:08:07  amassari
- * Content reported by a web site as text/xml is now read correctly; added an extra way of getting the size of the document in case no redirection has been performed
- *
- * Revision 1.5  2004/01/29 11:51:20  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.4  2004/01/15 16:07:16  amassari
- * Fix for bug#24929; patch by Michael Wuschek
- *
- * Revision 1.3  2003/05/17 05:54:18  knoaman
- * Update NetAccessors to use the memory manager.
- *
- * Revision 1.2  2002/11/04 15:11:39  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:22  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/02/26 07:56:36  rahulj
- * Fixed the license header as pointed out by Bill Schindler <developer@bitranch.com>
- *
- * Revision 1.1  2000/02/17 22:06:19  rahulj
- * Moved the four LibWWW files to its own sub-directory in the
- * NetAccessor directory.
- *
- *
- * Revision 1.1  2000/01/15 01:08:04  rahulj
- * Added support for HTTP to the parser.
- * Error handling is not very good. Also cannot guarantee that
- * there are no memory leaks.
- * Only tested under NT 4.0 SP 5 using libWWW 5.2.8.
- *
+/*
+ * $Id$
  */
 
 #if !defined(BINURLINPUTSTREAM_HPP)

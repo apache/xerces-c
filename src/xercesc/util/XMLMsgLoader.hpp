@@ -15,55 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.7  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.6  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/03/07 18:11:55  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.4  2003/02/17 19:54:47  peiyongz
- * Allow set user specified error message file location in PlatformUtils::Initialize().
- *
- * Revision 1.3  2002/11/04 22:24:21  peiyongz
- * Locale setting for message loader
- *
- * Revision 1.2  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/03/28 19:43:20  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.4  2000/03/02 19:54:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:05:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:48:05  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:47  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:20  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

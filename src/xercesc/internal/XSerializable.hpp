@@ -16,27 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.6  2005/01/07 15:22:47  amassari
- * Removed warnings
- *
- * Revision 1.5  2004/11/29 16:20:35  cargilld
- * Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.
- *
- * Revision 1.4  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/10/29 16:16:08  peiyongz
- * GrammarPool' serialization/deserialization support
- *
- * Revision 1.2  2003/09/23 18:12:19  peiyongz
- * Macro re-organized: provide create/nocreate macros for abstract and
- * nonabstract classes
- *
- * Revision 1.1  2003/09/18 18:31:24  peiyongz
- * OSU: Object Serialization Utilities
- *
- *
  */
 
 #if !defined(XSERIALIZABLE_HPP)

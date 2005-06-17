@@ -18,43 +18,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/09/08 13:55:39  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2003/12/01 23:23:25  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.10  2003/05/30 16:11:43  gareth
- * Fixes so we compile under VC7.1. Patch by Alberto Massari.
- *
- * Revision 1.9  2003/05/14 18:06:53  gareth
- * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
- *
- * Revision 1.8  2003/03/07 19:59:04  tng
- * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
- *
- * Revision 1.7  2002/11/04 15:09:24  tng
- * C++ Namespace Support.
- *
- * Revision 1.6  2002/08/22 15:04:57  tng
- * Remove unused parameter variables in inline functions.
- *
- * Revision 1.5  2002/07/15 19:25:25  tng
- * DOM L3:  declare a dummy DOMError::set/getRelatedException
- *
- * Revision 1.4  2002/06/06 21:01:21  tng
- * [Bug 9639] enum_mem in DOMError clashes with constant.
- *
- * Revision 1.3  2002/06/06 20:53:06  tng
- * Documentation Fix: Update the API Documentation for DOM headers
- *
- * Revision 1.2  2002/05/30 19:24:48  knoaman
- * documentation update
- *
- * Revision 1.1  2002/05/23 15:47:24  knoaman
- * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
- *
+ * $Id$
  */
 
 

@@ -15,52 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:20  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2004/01/29 11:46:32  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.6  2003/12/02 14:33:13  amassari
- * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
- *
- * Revision 1.5  2002/11/04 14:55:45  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/08/20 16:53:56  tng
- * [Bug 6251] Info during compilation.
- *
- * Revision 1.3  2002/06/06 20:38:45  tng
- * Document Fix: document that the returned object from resolveEntity is owned by the parser
- *
- * Revision 1.2  2002/02/20 18:17:02  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
- * sane_include
- *
- * Revision 1.6  2002/01/28 17:08:33  knoaman
- * SAX2-ext's DeclHandler support.
- *
- * Revision 1.5  2001/11/13 13:24:05  tng
- * Fix documentation for DefaultHandler.
- *
- * Revision 1.4  2000/12/22 15:17:01  tng
- * SAX2-ext's LexicalHandler support added by David Bertoni.
- *
- * Revision 1.3  2000/08/14 18:56:14  aruna1
- * Virtual parameter inconsistency fixed
- *
- * Revision 1.2  2000/08/07 18:21:27  jpolast
- * change SAX_EXPORT module to SAX2_EXPORT
- *
- * Revision 1.1  2000/08/02 18:02:34  jpolast
- * initial checkin of sax2 implementation
- * submitted by Simon Fell (simon@fell.com)
- * and Joe Polastre (jpolast@apache.org)
- *
- *
+ * $Id$
  */
 
 

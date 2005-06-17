@@ -16,20 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2004/09/08 13:56:23  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/11/12 20:36:54  peiyongz
- * SchemaDateTimeException defined
- *
- *
  */
 
 

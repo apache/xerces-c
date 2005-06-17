@@ -15,34 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2004/01/07 02:33:56  knoaman
- * PSVI: inherit facets from base type
- *
- * Revision 1.7  2003/12/29 16:15:41  knoaman
- * More PSVI updates
- *
- * Revision 1.6  2003/12/24 17:42:02  knoaman
- * Misc. PSVI updates
- *
- * Revision 1.5  2003/12/17 20:50:35  knoaman
- * PSVI: fix for annotation of attributes in attributeGroup/derived types
- *
- * Revision 1.4  2003/11/25 18:11:54  knoaman
- * Make XSObjectFactory inherit from XMemory. Thanks to David Cargill.
- *
- * Revision 1.3  2003/11/24 15:45:36  knoaman
- * PSVI: finish construction of XSSimpleTypeDefinition
- *
- * Revision 1.2  2003/11/23 16:21:40  knoaman
- * PSVI: create local elements of complex types
- *
- * Revision 1.1  2003/11/21 17:11:24  knoaman
- * Initial revision
- *
+ * $Id$
  */
 
 #if !defined(XSOBJECTFACTORY_HPP)

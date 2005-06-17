@@ -16,68 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.19  2004/09/08 13:55:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.18  2003/08/14 16:31:13  gareth
- * Method added to allow serilization of custom nodes from derived classes.
- *
- * Revision 1.17  2003/05/29 18:47:52  knoaman
- * Apply memory manager.
- *
- * Revision 1.16  2003/05/22 02:10:51  knoaman
- * Default the memory manager.
- *
- * Revision 1.15  2003/05/15 18:25:54  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.14  2003/05/12 16:08:11  gareth
- * fix to #18832. Corrected serilization with regards to namespace nodes. Patch by Alby Massari.
- *
- * Revision 1.13  2003/03/16 05:42:04  peiyongz
- * Bug#17983 Formatter does not escape control characters
- *
- * Revision 1.12  2003/01/28 18:31:47  peiyongz
- * Bug#13694: Allow Xerces to write the BOM to XML files
- *
- * Revision 1.11  2003/01/20 16:50:13  tng
- * DOMWriter fix:
- * 1. wrong wrong nested cdata message
- * 2. pretty format the cdata section
- * 3. do not increment error count if warning was issued
- *
- * Revision 1.10  2002/12/10 21:01:32  tng
- * NLS: DOMWriter should use message loader to load message instead of using hardcoded static stirng
- *
- * Revision 1.9  2002/12/09 11:46:08  gareth
- * More pretty pretty print feature. Patch by Kevin King. Closes bug #13840.
- *
- * Revision 1.8  2002/11/04 15:07:35  tng
- * C++ Namespace Support.
- *
- * Revision 1.7  2002/06/25 16:17:16  tng
- * DOM L3: add release()
- *
- * Revision 1.6  2002/06/21 19:33:12  peiyongz
- * support for feature split_cdata_section and entities revised.
- *
- * Revision 1.5  2002/06/17 19:45:58  peiyongz
- * optimization on fFeatures and featureId introduced
- *
- * Revision 1.4  2002/06/14 15:39:02  peiyongz
- * Fix: Compilation error from ForteC on Solaris2.6
- *
- * Revision 1.3  2002/06/10 16:02:21  peiyongz
- * format-pretty-print partially supported
- * resolve encoding from DOMDocument Interface
- *
- * Revision 1.2  2002/06/05 16:03:03  peiyongz
- * delete[] used.
- *
- * Revision 1.1  2002/05/28 22:39:39  peiyongz
- * DOM3 Save Interface: DOMWriter/DOMWriterFilter
- *
  */
 
 /**
@@ -133,7 +71,7 @@
  * <p> Within markup, but outside of attributes, any occurrence of a character
  * that cannot be represented in the output character encoding is reported
  * as an error. An example would be serializing the element
- * &lt;LaCañada/&gt; with the encoding="us-ascii".
+ * &lt;LaCaï¿½ada/&gt; with the encoding="us-ascii".
  * <p> When requested by setting the <code>normalize-characters</code> feature
  * on <code>DOMWriterImpl</code>, all data to be serialized, both markup and
  * character data, is W3C Text normalized according to the rules defined in

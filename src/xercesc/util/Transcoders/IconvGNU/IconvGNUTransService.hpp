@@ -15,28 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/12/24 15:24:15  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.5  2003/05/17 16:32:18  knoaman
- * Memory manager implementation : transcoder update.
- *
- * Revision 1.4  2003/05/15 18:47:05  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/03/07 18:15:57  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 15:14:34  tng
- * C++ Namespace Support.
- *
- * Revision 1.1  2002/08/19 19:38:18  tng
- * [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
- *
+ * $Id$
  */
 
 #ifndef ICONVGNUTRANSSERVICE_HPP

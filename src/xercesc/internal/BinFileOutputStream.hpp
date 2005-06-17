@@ -15,26 +15,6 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/04/27 18:21:51  cargilld
- * Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.
- *
- * Revision 1.5  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/02/16 04:02:34  neilg
- * fix for bug 26936
- *
- * Revision 1.3  2004/01/29 11:46:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2003/12/17 13:58:02  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.1  2003/09/18 18:39:12  peiyongz
- * Binary File Output Stream:
- *
  * $Id$
  */
 

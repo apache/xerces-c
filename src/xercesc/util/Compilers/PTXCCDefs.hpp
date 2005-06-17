@@ -15,32 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2002/11/04 14:45:20  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/05/28 12:57:17  tng
- * Fix typo.
- *
- * Revision 1.3  2002/05/27 18:02:40  tng
- * define XMLSize_t, XMLSSize_t and their associate MAX
- *
- * Revision 1.2  2002/05/21 19:45:53  tng
- * Define DOMSize_t and XMLSize_t
- *
- * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/03/02 20:53:05  knoaman
- * Schema: Regular expression - misc. updates for error messages,
- * and additions of new functions to XMLString class.
- *
- * Revision 1.2  2000/04/04 21:07:39  abagchi
- * Fixed copyrights with initial checkin
- *
+ * $Id$
  */
 
 #if !defined(PTXCCDEFS_HPP)

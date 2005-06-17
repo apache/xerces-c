@@ -15,36 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.6  2003/02/05 18:53:24  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.5  2002/02/01 22:41:07  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/03/02 19:53:47  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/11 02:46:39  abagchi
- * Removed StrX::transcode
- *
- * Revision 1.2  2000/02/06 07:47:23  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:31  twl
- * Initial checkin
- *
- * Revision 1.5  1999/11/08 20:43:40  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

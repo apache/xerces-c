@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2004/10/28 20:18:26  peiyongz
- * Data member reshuffle
- *
- * Revision 1.16  2004/10/20 15:19:07  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
- * Revision 1.15  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.14  2004/01/29 11:52:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.13  2003/12/22 15:22:58  gareth
- * made getRootElemID const. Bug #25699
- *
- * Revision 1.12  2003/12/17 00:18:40  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.11  2003/10/14 15:20:42  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.10  2003/09/22 19:49:02  neilg
- * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
- *
- * Revision 1.9  2003/08/14 03:00:46  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.8  2003/07/31 17:09:59  peiyongz
- * Grammar embed grammar description
- *
- * Revision 1.7  2003/05/16 21:43:19  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.6  2003/05/15 18:54:50  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/08/22 15:05:39  tng
- * Remove unused parameter variables in inline functions.
- *
- * Revision 1.3  2002/07/11 18:19:28  knoaman
- * Grammar caching/preparsing - initial implementation.
- *
- * Revision 1.2  2002/07/05 17:08:10  tng
- * [Bug 10119] Grammar::getGrammarType need a const modifier
- *
- * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/09/14 14:50:22  tng
- * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
- *
- * Revision 1.4  2001/05/28 20:56:17  tng
- * Schema: Move getTargetNamespace as virtual function in base class Grammar
- *
- * Revision 1.3  2001/05/11 13:27:09  tng
- * Copyright update.
- *
- * Revision 1.2  2001/04/19 18:17:21  tng
- * Schema: SchemaValidator update, and use QName in Content Model
- *
- * Revision 1.1  2001/03/21 21:56:20  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
+ * $Id$
  */
 
 

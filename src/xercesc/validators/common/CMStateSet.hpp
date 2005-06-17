@@ -15,64 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2005/01/07 15:28:49  amassari
- * Removed warnings
- *
- * Revision 1.7  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.5  2003/05/16 21:43:20  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/07/16 12:50:08  tng
- * [Bug 10651] CMStateSet.hpp includes both memory.h and string.h.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/08/16 21:51:43  peiyongz
- * hashCode() added
- *
- * Revision 1.4  2001/05/11 13:27:17  tng
- * Copyright update.
- *
- * Revision 1.3  2001/05/03 21:02:28  tng
- * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
- *
- * Revision 1.2  2001/02/27 14:48:46  tng
- * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
- * Revision 1.1  2001/02/16 14:17:29  tng
- * Schema: Move the common Content Model files that are shared by DTD
- * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
- *
- * Revision 1.4  2000/03/02 19:55:37  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:16:48  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/09 21:42:36  abagchi
- * Copyright swat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:06  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:36  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //  DESCRIPTION:

@@ -15,30 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2004/02/15 19:43:15  amassari
- * Removed cause for warnings in VC 7.1
- *
- * Revision 1.5  2002/11/05 21:46:20  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.4  2002/02/01 22:40:44  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/10/10 23:55:55  andyh
- * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
- * output to multi-byte encodings.
- *
- * Revision 1.2  2000/08/09 22:20:39  jpolast
- * updates for changes to sax2 core functionality.
- *
- * Revision 1.1  2000/08/02 19:16:14  jpolast
- * initial checkin of SAX2Print
- *
- *
+ * $Id$
  */
 
 #include    <xercesc/sax2/DefaultHandler.hpp>

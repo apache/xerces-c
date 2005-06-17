@@ -15,22 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:20  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/03/07 18:10:30  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 14:55:45  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
- * sane_include
- *
- * Revision 1.1  2002/01/28 17:08:33  knoaman
- * SAX2-ext's DeclHandler support.
- *
+ * $Id$
  */
 
 

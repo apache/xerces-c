@@ -16,17 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2004/09/08 13:55:31  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/05 21:46:19  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.1  2002/05/29 21:19:50  peiyongz
- * DOM3 DOMWriter/DOMWriterFilter
- *
- *
  */
 
 

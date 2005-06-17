@@ -16,56 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.13  2004/09/08 13:56:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.12  2004/03/19 01:18:08  peiyongz
- * Let base dv to store/load (Max,Min)(Inc,Exc)sives
- *
- * Revision 1.11  2004/01/29 11:51:22  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.10  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.8  2003/10/17 21:13:24  peiyongz
- * loadNumber() moved to XMLNumber
- *
- * Revision 1.7  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.6  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.4  2002/11/04 14:53:27  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/10/18 16:52:14  peiyongz
- * Patch to Bug#13640: Getter methods not public in
- *                                    DecimalDatatypeValidator
- *
- * Revision 1.2  2002/02/14 15:17:31  peiyongz
- * getEnumString()
- *
- * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/11/22 20:23:20  peiyongz
- * _declspec(dllimport) and inline warning C4273
- *
- * Revision 1.2  2001/11/12 20:37:57  peiyongz
- * SchemaDateTimeException defined
- *
- * Revision 1.1  2001/10/01 16:13:56  peiyongz
- * DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
- *
  */
 
 #if !defined(ABSTRACT_NUMERIC_FACET_VALIDATOR_HPP)

@@ -15,77 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.22  2004/11/13 19:04:04  cargilld
- * Remove extra const.
- *
- * Revision 1.21  2004/11/08 03:56:47  peiyongz
- * setting/getting Storer level
- *
- * Revision 1.20  2004/10/27 20:38:52  peiyongz
- * Optimized alignment for various data types
- *
- * Revision 1.19  2004/10/26 14:49:27  peiyongz
- * Reset buffer/Provide position info for debugging
- *
- * Revision 1.18  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.17  2004/03/05 22:21:45  peiyongz
- * readBytes()/writeBytes between BinOutputStream/BinInputStream and
- * XSerializeEngine will always be the full size of the buffer to maintain the exact
- * position for aligned data.
- *
- * Revision 1.16  2004/03/01 23:19:03  peiyongz
- * Grant XSerializeEngine access to GrammarPool
- *
- * Revision 1.15  2004/02/20 20:57:39  peiyongz
- * Bug#27046: path from David Bertoni
- *
- * Revision 1.14  2004/02/11 20:38:50  peiyongz
- * Fix to bug#26864, thanks to David Bertoni.
- *
- * Revision 1.13  2004/01/29 11:46:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.12  2004/01/16 21:55:18  peiyongz
- * maintain the same size on both 32/64 bit architecture
- *
- * Revision 1.11  2004/01/15 23:42:32  peiyongz
- * proper allignment for built-in datatype read/write
- *
- * Revision 1.10  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/11/25 20:37:40  jberry
- * Cleanup build errors/warnings from CodeWarrior
- *
- * Revision 1.8  2003/11/11 22:48:13  knoaman
- * Serialization of XSAnnotation.
- *
- * Revision 1.7  2003/10/17 21:09:03  peiyongz
- * renaming methods
- *
- * Revision 1.6  2003/10/14 15:18:20  peiyongz
- * getMemoryManager()
- *
- * Revision 1.5  2003/10/09 19:11:53  peiyongz
- * Fix to linkage error on Solaris
- *
- * Revision 1.4  2003/10/07 19:38:31  peiyongz
- * API for Template_Class Object Serialization/Deserialization
- *
- * Revision 1.3  2003/09/25 22:22:00  peiyongz
- * Introduction of readString/writeString
- *
- * Revision 1.2  2003/09/19 04:29:11  neilg
- * fix compilation problems under GCC
- *
- * Revision 1.1  2003/09/18 18:31:24  peiyongz
- * OSU: Object Serialization Utilities
- *
  * $Id$
- *
  */
 
 #if !defined(XSERIALIZE_ENGINE_HPP)

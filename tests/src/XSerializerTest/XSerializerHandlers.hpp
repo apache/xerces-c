@@ -16,17 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2004/12/06 11:55:38  cargilld
- * Rename parameter named exception to get rid of warning msgs.
- *
- * Revision 1.2  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/12/16 16:57:58  peiyongz
- * XSerializerHanders
- *
- *
  */
 
 #if !defined(XSERIALIZER_HANDLER_HPP)

@@ -16,18 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2003/12/16 17:16:08  peiyongz
- * . Using BinMemInputStream/BinMemOutputStream
- * . Using SAX2XMLReader
- *
- * Revision 1.1  2003/12/12 18:17:25  peiyongz
- * XSerializerTest
- *
- *
  */
 
 #if !defined(XSERIALIZER_TEST_HPP)

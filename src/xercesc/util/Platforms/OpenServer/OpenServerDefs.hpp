@@ -15,13 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:56:41  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2002/02/27 22:57:59  peiyongz
- * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
- *
+ * $Id$
  */
 
 

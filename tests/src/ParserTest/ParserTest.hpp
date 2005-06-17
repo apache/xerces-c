@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/05/30 13:08:26  gareth
- * move over to macros for std:: and iostream/iostream.h issues.
- *
- * Revision 1.7  2003/02/05 18:55:21  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.6  2000/03/02 19:55:46  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:48:37  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/24 20:38:56  roddey
- * Fixed some small bugs introduced in the recent move away from the util/* streams.
- *
- * Revision 1.3  2000/01/21 23:58:06  roddey
- * Initial move away from util streams was bad. Wide char APIs didn't allow enough
- * control to do canonical output, so changed to use std short char APIs.
- *
- * Revision 1.1  1999/11/09 01:02:17  twl
- * Initial revision
- *
- * Revision 1.3  1999/11/08 20:42:25  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

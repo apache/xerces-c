@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:35  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2004/05/11 13:39:35  amassari
- * The net accessor input source now can be used to get data using PUT or POST, as well as GET
- *
- * Revision 1.6  2004/01/29 11:51:20  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.5  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.4  2002/12/09 13:12:12  tng
- * Fix compilation error.
- *
- * Revision 1.3  2002/12/09 09:57:27  gareth
- * Fixed compile error by adding private member. Not very efficient. Should be looked at again.
- *
- * Revision 1.2  2002/11/04 15:11:38  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/07/21 03:31:42  andyh
- * Improved (but still weak) http access by the parser.
- *
- * Revision 1.2  2000/03/22 00:58:12  rahulj
- * Now we throw exceptions when errors occur.
- * Simplified code based on assumption that calling
- * function will allocate enough storage to store the
- * incoming data.
- *
- * Revision 1.1  2000/03/20 23:48:51  rahulj
- * Added Socket based NetAccessor. This will enable one to
- * use HTTP URL's for system id's. Default build options do
- * not use this NetAccessor. Specify the '-n socket' option
- * to 'runConfigure' to configure Xerces-C to use this new
- * feature. The code works under Solaris 2.6, Linux, AIX
- * and HPUX 11 with aCC.
- * Todo's: enable proper error handling.
- *
+ * $Id$
  */
 
 #if !defined(UNIXHTTPURLINPUTSTREAM_HPP)

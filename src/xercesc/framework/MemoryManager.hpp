@@ -15,17 +15,8 @@
  */
 
  /*
-  * $Log$
-  * Revision 1.3  2004/09/08 13:55:57  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.2  2003/04/27 17:17:01  jberry
-  * Add include for stdlib to pull in size_t declaration
-  *
-  * Revision 1.1  2003/04/21 15:47:45  knoaman
-  * Initial check-in.
-  *
-  */
+ * $Id$
+ */
 
 
 #if !defined(MEMORYMANAGER_HPP)

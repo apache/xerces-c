@@ -15,46 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/12/01 23:23:26  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.4  2003/05/30 16:11:44  gareth
- * Fixes so we compile under VC7.1. Patch by Alberto Massari.
- *
- * Revision 1.3  2003/03/07 18:10:06  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 14:56:25  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.6  2000/04/27 19:33:15  rahulj
- * Included <util/XercesDefs.hpp> as suggested by David N Bertoni.
- *
- * Revision 1.5  2000/02/24 20:12:55  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/12 03:31:55  rahulj
- * Removed duplicate CVS Log entries.
- *
- * Revision 1.3  2000/02/12 01:27:19  aruna1
- * Documentation updated
- *
- * Revision 1.2  2000/02/06 07:47:57  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:45  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:00  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

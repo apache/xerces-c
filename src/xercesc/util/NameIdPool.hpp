@@ -15,66 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/11/19 00:50:22  cargilld
- * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
- *
- * Revision 1.11  2004/09/23 07:10:13  amassari
- * Removed const from variable declaration (jira#1259)
- *
- * Revision 1.10  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2004/01/29 11:48:46  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/10/29 16:17:48  peiyongz
- * size() added
- *
- * Revision 1.6  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/03/07 18:11:54  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/12/04 02:32:43  knoaman
- * #include cleanup.
- *
- * Revision 1.2  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
- * sane_include
- *
- * Revision 1.6  2000/09/09 00:11:48  andyh
- * Virtual Destructor Patch, submitted by Kirk Wylie
- *
- * Revision 1.5  2000/07/19 18:47:26  andyh
- * More Macintosh port tweaks, submitted by James Berry.
- *
- * Revision 1.4  2000/03/02 19:54:42  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:05:24  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:48:02  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:04:48  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:10  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

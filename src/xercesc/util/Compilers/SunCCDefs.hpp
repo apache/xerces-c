@@ -15,72 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/05/29 11:18:37  gareth
- * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
- *
- * Revision 1.5  2002/11/04 14:45:20  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/05/28 12:57:17  tng
- * Fix typo.
- *
- * Revision 1.3  2002/05/27 18:02:40  tng
- * define XMLSize_t, XMLSSize_t and their associate MAX
- *
- * Revision 1.2  2002/05/21 19:45:53  tng
- * Define DOMSize_t and XMLSize_t
- *
- * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
- * sane_include
- *
- * Revision 1.12  2001/03/02 20:53:07  knoaman
- * Schema: Regular expression - misc. updates for error messages,
- * and additions of new functions to XMLString class.
- *
- * Revision 1.11  2000/10/17 00:52:00  andyh
- * Change XMLCh back to unsigned short on all platforms.
- *
- * Revision 1.10  2000/10/13 23:38:37  andyh
- * Solaris:  change detection for native support for type bool to defined(_BOOL)
- * Contributed by Edward Bortner.
- *
- * Revision 1.9  2000/03/09 18:54:44  abagchi
- * Added header-guards to include inlines only once
- *
- * Revision 1.8  2000/03/02 19:55:09  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.7  2000/03/02 01:50:30  aruna1
- * Sun CC 5.0 related changes
- *
- * Revision 1.6  2000/02/06 07:48:18  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/14 02:52:14  aruna1
- * XMLCh now mapped to wchar_t
- *
- * Revision 1.4  1999/11/17 21:49:42  abagchi
- * Added the definitions of XMLUInt16 and XMLUInt32
- * PR:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.3  1999/11/12 20:37:00  rahulj
- * Changed library name to xerces-c.lib.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:39  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:25  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(SUNCCDEFS_HPP)

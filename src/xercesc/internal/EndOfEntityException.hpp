@@ -15,31 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2004/01/29 11:46:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2002/11/04 14:58:18  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/02/24 20:18:07  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:47:53  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:07  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:42  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

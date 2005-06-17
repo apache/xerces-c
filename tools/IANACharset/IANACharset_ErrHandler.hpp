@@ -15,16 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/05 22:14:31  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.1  2002/07/18 20:15:32  knoaman
- * Initial checkin: feature to control strict IANA encoding name.
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>

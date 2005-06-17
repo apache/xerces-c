@@ -15,60 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/11/19 00:50:22  cargilld
- * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
- *
- * Revision 1.11  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/03/01 15:03:08  peiyongz
- * new getter: getHashModulus
- *
- * Revision 1.9  2004/01/29 11:48:46  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/11/03 22:00:31  peiyongz
- * RefHashTable-like enumeration accessing added
- *
- * Revision 1.6  2003/10/29 16:17:48  peiyongz
- * size() added
- *
- * Revision 1.5  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/06/12 17:15:12  tng
- * Remove redundant include header file.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/12/22 01:06:08  jasons
- * Made the destructors virtual for:
- *
- * * ~RefHash2KeysTableOfEnumerator
- * * ~RefHash3KeysIdPoolEnumerator
- *
- * This fixes bug #5514
- *
- * Revision 1.3  2001/06/04 13:45:04  tng
- * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/11 13:26:29  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/21 21:56:12  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
+ * $Id$
  */
 
 

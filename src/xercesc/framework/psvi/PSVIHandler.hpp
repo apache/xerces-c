@@ -15,41 +15,8 @@
  */
 
  /*
-  * $Log$
-  * Revision 1.11  2005/01/06 21:39:43  amassari
-  * Removed warnings
-  *
-  * Revision 1.10  2004/09/23 21:22:15  peiyongz
-  * Documentation
-  *
-  * Revision 1.9  2004/09/22 20:38:45  peiyongz
-  * provide default implementation and documentation
-  *
-  * Revision 1.8  2004/09/21 16:09:37  peiyongz
-  * Handle partial PSVIElement
-  *
-  * Revision 1.7  2004/09/08 13:56:07  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.6  2003/12/01 23:23:26  neilg
-  * fix for bug 25118; thanks to Jeroen Witmond
-  *
-  * Revision 1.5  2003/11/28 05:13:45  neilg
-  * remove passing of prefixes in PSVIHandler
-  *
-  * Revision 1.4  2003/11/25 14:20:21  neilg
-  * clean up usage of const in PSVIHandler
-  *
-  * Revision 1.3  2003/11/17 18:12:00  neilg
-  * PSVIAttributeList needs to be included by PSVIHandler.  Thanks to Pete Lloyd for the patch
-  *
-  * Revision 1.2  2003/09/22 15:03:06  neilg
-  * clearly the local name of an element should be a string, not an XMLElementDecl...
-  *
-  * Revision 1.1  2003/09/16 14:33:36  neilg
-  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
-  *
-  */
+ * $Id$
+ */
 
 
 #if !defined(PSVIHANDLER_HPP)

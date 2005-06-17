@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/03/07 18:10:06  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/11/04 14:56:25  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/02/20 18:17:01  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/02/24 20:12:54  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/12 03:31:55  rahulj
- * Removed duplicate CVS Log entries.
- *
- * Revision 1.3  2000/02/12 01:27:19  aruna1
- * Documentation updated
- *
- * Revision 1.2  2000/02/06 07:47:57  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:44  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:54  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

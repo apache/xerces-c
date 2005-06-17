@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/20 14:47:13  amassari
- * Mark some methods as deprecated
- *
- * Revision 1.10  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2003/12/17 00:18:33  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/11/24 05:19:37  neilg
- * update XMLAttr class to carry information needed by DOMTypeInfo
- *
- * Revision 1.7  2003/05/22 02:10:51  knoaman
- * Default the memory manager.
- *
- * Revision 1.6  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.5  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/11/28 20:12:45  knoaman
- * Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
- *
- * Revision 1.3  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/02/20 18:17:01  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
- * sane_include
- *
- * Revision 1.9  2001/11/02 14:21:18  knoaman
- * Add support for identity constraints.
- *
- * Revision 1.8  2001/05/11 13:25:31  tng
- * Copyright update.
- *
- * Revision 1.7  2001/02/27 18:33:55  tng
- * Schema: Use QName in XMLAttr.
- *
- * Revision 1.6  2000/04/10 22:42:53  roddey
- * Extended the buffer reuse to the QName field, to further increase
- * performance of attribute heavy applications.
- *
- * Revision 1.5  2000/03/02 19:54:24  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/24 20:00:22  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/15 01:21:30  roddey
- * Some initial documentation improvements. More to come...
- *
- * Revision 1.2  2000/02/06 07:47:47  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:28  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(XMLATTR_HPP)

@@ -15,41 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2005/01/13 12:36:02  amassari
- * Support for UnixWare 7.1.1 (jira# 1148)
- *
- * Revision 1.6  2004/09/08 13:56:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2002/11/04 14:45:20  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/05/28 12:57:17  tng
- * Fix typo.
- *
- * Revision 1.3  2002/05/27 18:02:40  tng
- * define XMLSize_t, XMLSSize_t and their associate MAX
- *
- * Revision 1.2  2002/05/21 19:45:53  tng
- * Define DOMSize_t and XMLSize_t
- *
- * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/03/02 19:55:09  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:18  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1  1999/12/17 22:24:03  rahulj
- * Added missing UnixWare files to the repository.
- *
- * Created by Ron Record (rr@sco.com) and based on SunCCDefs.hpp
- * 14-Nov-1999
+ * $Id$
  */
 
 #if !defined(SCOCCDEFS_HPP)

@@ -18,26 +18,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.4  2005/05/18 13:44:43  cargilld
- * OS400 updates from Jay Hansen.
- *
- * Revision 1.3  2004/09/08 13:56:41  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 15:13:01  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:25  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/06/25 16:27:05  tng
- * AS400 changes by Linda Swan.
- *
- * Revision 1.1  2000/02/10 17:58:07  abagchi
- * Initial checkin
- *
+/*
+ * $Id$
  */
 
 #ifndef _OS400PLATFORMUTILS_H

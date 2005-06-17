@@ -16,22 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.5  2004/09/08 13:55:31  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2002/11/05 21:46:19  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.3  2002/06/04 14:22:51  peiyongz
- * Implement setter/getter from DOMWriterFilter
- *
- * Revision 1.2  2002/06/03 22:40:07  peiyongz
- * *** empty log message ***
- *
- * Revision 1.1  2002/05/29 13:33:32  peiyongz
- * DOM3 Save Interface: DOMWriter/DOMWriterFilter
- *
  */
 
 //////////////////////////////////////////////////////////////////////

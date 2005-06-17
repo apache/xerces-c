@@ -15,56 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:55:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2004/01/29 11:46:29  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.4  2003/12/01 23:23:25  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.3  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
- * sane_include
- *
- * Revision 1.7  2001/10/13 04:21:53  jasons
- * This patch resolves bug #2409: undocumented XMLException in LocalFileInputSource::new()
- *
- * Revision 1.6  2000/12/14 18:49:53  tng
- * Fix API document generation warning: "Warning: end of member group without matching begin"
- *
- * Revision 1.5  2000/02/24 20:00:22  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/15 23:59:06  roddey
- * More updated documentation of Framework classes.
- *
- * Revision 1.3  2000/02/15 01:21:30  roddey
- * Some initial documentation improvements. More to come...
- *
- * Revision 1.2  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1  2000/01/12 18:58:06  roddey
- * Putting this back with the correct lower case extension.
- *
- * Revision 1.1  2000/01/12 00:13:26  roddey
- * These were moved from internal/ to framework/, which was something that should have
- * happened long ago. They are really framework type of classes.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:10  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:43  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

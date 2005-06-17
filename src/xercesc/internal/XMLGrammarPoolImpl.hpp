@@ -15,69 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2004/11/29 16:20:35  cargilld
- * Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.
- *
- * Revision 1.17  2004/09/29 19:27:07  cargilld
- * Fix for Jira-1217: fixing problems with getXSModel.
- *
- * Revision 1.16  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.15  2004/04/07 14:13:42  peiyongz
- * systemId (to replace rootElemName) as DTDGrammar Key
- *
- * Revision 1.14  2003/12/19 23:02:43  cargilld
- * Fix compiler messages on OS390.
- *
- * Revision 1.13  2003/11/21 22:38:50  neilg
- * Enable grammar pools and grammar resolvers to manufacture
- * XSModels.  This also cleans up handling in the
- * parser classes by eliminating the need to tell
- * the grammar pool that schema compoments need to be produced.
- * Thanks to David Cargill.
- *
- * Revision 1.12  2003/11/14 22:34:20  neilg
- * removed methods made unnecessary by new XSModel implementation design; thanks to David Cargill
- *
- * Revision 1.11  2003/11/06 21:53:52  neilg
- * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
- *
- * Revision 1.10  2003/11/06 15:30:06  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.9  2003/11/05 18:19:45  peiyongz
- * Documentation update
- *
- * Revision 1.8  2003/10/29 16:16:08  peiyongz
- * GrammarPool' serialization/deserialization support
- *
- * Revision 1.7  2003/10/10 18:36:41  neilg
- * update XMLGrammarPool default implementation to reflect recent modifications to the base interface.
- *
- * Revision 1.6  2003/10/09 13:54:25  neilg
- * modify grammar pool implementation to that, once locked, a thread-safe StringPool is used
- *
- * Revision 1.5  2003/09/16 18:30:54  neilg
- * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
- *
- * Revision 1.4  2003/09/02 08:59:02  gareth
- * Added API to get enumerator of grammars.
- *
- * Revision 1.3  2003/07/31 17:05:03  peiyongz
- * Grammar embed Grammar Description
- * using getGrammar(URI)
- * update GrammarDescription info
- *
- * Revision 1.2  2003/06/23 21:06:21  peiyongz
- * to solve unresolved symbol on Solaris
- *
- * Revision 1.1  2003/06/20 18:38:39  peiyongz
- * Stateless Grammar Pool :: Part I
- *
  * $Id$
- *
  */
 
 #if !defined(XMLGrammarPoolImplIMPL_HPP)

@@ -15,17 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:38  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/02/23 05:34:57  jberry
- * Re-add BeOSDefs.hpp after munging repository
- *
- * Revision 1.1  2002/12/31 19:30:56  tng
- * [Bug 15590] BeOSDefs.hpp has wrong case in CVS.
- *
- *
+ * $Id$
  */
 
 

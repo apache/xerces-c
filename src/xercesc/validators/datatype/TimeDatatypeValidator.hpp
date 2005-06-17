@@ -16,44 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.11  2004/09/08 13:56:53  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/01/29 11:51:22  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.9  2003/12/23 21:50:36  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0,
- * only validate when required
- *
- * Revision 1.8  2003/12/17 00:18:39  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/11/28 18:53:07  peiyongz
- * Support for getCanonicalRepresentation
- *
- * Revision 1.6  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.5  2003/08/14 03:00:11  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.4  2003/05/15 18:53:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.2  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/11/07 19:18:52  peiyongz
- * DateTime Port
- *
  */
 
 #if !defined(TIME_DATATYPE_VALIDATOR_HPP)

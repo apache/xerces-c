@@ -15,42 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:23  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2004/01/29 11:48:46  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2003/04/22 12:53:38  neilg
- * change const static member to an enum to make MSVC happy
- *
- * change ENTITY_EXPANSION_LIMIT from a static const data member to an enum
- * 
- * Revision 1.1  2003/04/17 21:58:49  neilg
- * Adding a new property,
- * http://apache.org/xml/properties/security-manager, with
- * appropriate getSecurityManager/setSecurityManager methods on DOM
- * and SAX parsers.  Also adding a new SecurityManager class.
- *
- * The purpose of these modifications is to permit applications a
- * means to have the parser reject documents whose processing would
- * otherwise consume large amounts of system resources.  Malicious
- * use of such documents could be used to launch a denial-of-service
- * attack against a system running the parser.  Initially, the
- * SecurityManager only knows about attacks that can result from
- * exponential entity expansion; this is the only known attack that
- * involves processing a single XML document.  Other, simlar attacks
- * can be launched if arbitrary schemas may be parsed; there already
- * exist means (via use of the EntityResolver interface) by which
- * applications can deny processing of untrusted schemas.  In future,
- * the SecurityManager will be expanded to take these other exploits
- * into account.
- *
- * Initial checkin of SecurityManager
- *
  * $Id$
- *
  */
 
 #ifndef SECURITYMANAGER_HPP

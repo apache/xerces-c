@@ -15,25 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/04/07 15:30:57  knoaman
- * Update chars table with an NCName char mask instead of an XML letter mask
- *
- * Revision 1.5  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/08/11 16:08:04  peiyongz
- * isValidNmToken
- *
- * Revision 1.3  2004/01/29 11:48:47  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2003/08/14 02:57:27  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.1  2002/12/20 22:10:21  tng
- * XML 1.1
- *
+ * $Id$
  */
 
 #if !defined(XMLCHAR_HPP)

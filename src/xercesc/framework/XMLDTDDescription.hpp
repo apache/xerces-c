@@ -15,24 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/29 21:23:02  peiyongz
- * default implementation provided
- *
- * Revision 1.4  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2004/04/07 14:09:22  peiyongz
- * systemId (to replace rootElemName) as DTDGrammar Key
- *
- * Revision 1.2  2003/10/14 15:17:47  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.1  2003/06/20 18:37:39  peiyongz
- * Stateless Grammar Pool :: Part I
- *
  * $Id$
- *
  */
 
 #if !defined(XMLDTDDESCRIPTION_HPP)
