@@ -1261,6 +1261,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp">
 			</File>
 			<File
@@ -2248,9 +2251,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\sax2\sax2Dummy.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\SAX2XMLFilter.hpp">
