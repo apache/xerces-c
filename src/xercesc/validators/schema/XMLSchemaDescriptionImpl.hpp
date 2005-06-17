@@ -15,21 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/10/14 15:22:28  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.2  2003/07/31 17:14:27  peiyongz
- * Grammar embed grammar description
- *
- * Revision 1.1  2003/06/20 18:40:29  peiyongz
- * Stateless Grammar Pool :: Part I
- *
  * $Id$
- *
  */
 
 #if !defined(XMLSchemaDescriptionImplIMPL_HPP)
@@ -89,7 +75,7 @@ public :
       * getLocationHints
       *
       */	
-    virtual RefArrayVectorOf<XMLCh>*   getLocationHints() const;
+    virtual const RefArrayVectorOf<XMLCh>*   getLocationHints() const;
 
     /**
       * getTriggeringComponent

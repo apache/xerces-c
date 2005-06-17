@@ -84,7 +84,7 @@ const XMLCh* XMLSchemaDescriptionImpl::getTargetNamespace() const
     return fNamespace; 
 }
 
-RefArrayVectorOf<XMLCh>* XMLSchemaDescriptionImpl::getLocationHints() const
+const RefArrayVectorOf<XMLCh>* XMLSchemaDescriptionImpl::getLocationHints() const
 { 
     return fLocationHints; 
 }

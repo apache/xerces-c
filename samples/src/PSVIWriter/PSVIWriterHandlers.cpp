@@ -610,7 +610,7 @@ void PSVIWriterHandlers::processSchemaComponents(XSNamespaceItem* namespaceItem)
 }
 
 void PSVIWriterHandlers::processSchemaDocuments(XSNamespaceItem* namespaceItem) {
-	StringList* locations = namespaceItem->getDocumentLocations();
+	const StringList* locations = namespaceItem->getDocumentLocations();
 	if (locations==NULL) {
 		sendElementEmpty(PSVIUni::fgSchemaDocuments);
 	}
