@@ -206,7 +206,7 @@ XSNotationDeclaration *XSNamespaceItem::getNotationDeclaration(const XMLCh *name
     return 0;
 }
 
-StringList *XSNamespaceItem::getDocumentLocations()
+const StringList *XSNamespaceItem::getDocumentLocations()
 {
     if (fGrammar)
         return ((XMLSchemaDescriptionImpl*) fGrammar->getGrammarDescription())->getLocationHints();
