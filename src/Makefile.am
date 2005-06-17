@@ -615,7 +615,6 @@ sax2_sources = \
 
 util_headers = \
 	xercesc/util/ArrayIndexOutOfBoundsException.hpp \
-	xercesc/util/AutoSense.hpp \
 	xercesc/util/Base64.hpp \
 	xercesc/util/BaseRefVectorOf.hpp \
 	xercesc/util/BaseRefVectorOf.c \
@@ -746,6 +745,8 @@ util_headers = \
 	xercesc/util/XMLExceptMsgs.hpp \
 	xercesc/util/XMLFileMgr.hpp \
 	xercesc/util/XMLFloat.hpp \
+	xercesc/util/XMLHolder.hpp \
+	xercesc/util/XMLHolder.c \
 	xercesc/util/XMLIBM1047Transcoder.hpp \
 	xercesc/util/XMLIBM1140Transcoder.hpp \
 	xercesc/util/XMLInitializer.hpp \
