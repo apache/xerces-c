@@ -161,11 +161,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Version.rc
 # End Source File
 # Begin Source File
 

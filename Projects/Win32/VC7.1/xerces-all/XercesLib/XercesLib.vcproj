@@ -721,35 +721,35 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h">
+					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\resource.h">
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc">
+					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Version.rc">
 					<FileConfiguration
 						Name="Release|Win32">
 						<Tool
 							Name="VCResourceCompilerTool"
-							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32">
 						<Tool
 							Name="VCResourceCompilerTool"
-							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Static Release|Win32"
 						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCResourceCompilerTool"
-							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Static Debug|Win32"
 						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCResourceCompilerTool"
-							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\Platforms\Win32;$(NoInherit)"/>
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
 					</FileConfiguration>
 				</File>
 				<File
