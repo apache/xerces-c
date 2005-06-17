@@ -15,43 +15,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.5  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.3  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/04/25 00:12:34  jasons
- * fairly serious error in the two XMLCh* constructor, the fURL member
- * was being improperly initialized with the (systemID,publicID) instead
- * of (baseId,systemId)
- *
- * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/15 01:26:16  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.1  2000/01/12 00:13:26  roddey
- * These were moved from internal/ to framework/, which was something that should have
- * happened long ago. They are really framework type of classes.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:18  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:44  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

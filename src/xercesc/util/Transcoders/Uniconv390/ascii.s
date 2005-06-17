@@ -15,16 +15,7 @@
 *
 
 *
-* $Log$
-* Revision 1.3  2004/09/17 09:58:09  cargilld
-* Updates to build on OS390 from Steve Dulin.
-*
-* Revision 1.2  2004/09/08 13:56:46  peiyongz
-* Apache License Version 2.0
-*
-* Revision 1.1  2004/02/06 14:52:38  cargilld
-* Intrinsic transcoding support for 390.
-*
+* $Id$
 *
 
 TROTASC  CSECT

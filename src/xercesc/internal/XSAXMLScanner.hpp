@@ -15,10 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2004/09/27 20:58:14  knoaman
- * A new scanner used by TraverseSchema to validate annotations contents
- *
+ * $Id$
  */
 
 

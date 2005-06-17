@@ -16,23 +16,6 @@
 
 /*
  *  $Id$
- * $Log$
- * Revision 1.5  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.3  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2003/02/17 19:54:47  peiyongz
- * Allow set user specified error message file location in PlatformUtils::Initialize().
- *
- * Revision 1.1  2002/11/04 22:24:21  peiyongz
- * Locale setting for message loader
- *
- *
  */
 
 // ---------------------------------------------------------------------------

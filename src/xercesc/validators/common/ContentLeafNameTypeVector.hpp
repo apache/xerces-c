@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2005/03/25 10:54:22  amassari
- * On Windows, export the class from the DLL
- *
- * Revision 1.6  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/05/16 21:43:20  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/03/07 18:16:57  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/08/07 15:21:20  knoaman
- * The value of 'fLeafCount' was not set.
- *
- * Revision 1.3  2001/05/11 13:27:17  tng
- * Copyright update.
- *
- * Revision 1.2  2001/04/19 18:17:28  tng
- * Schema: SchemaValidator update, and use QName in Content Model
- *
- * Revision 1.1  2001/02/27 14:48:49  tng
- * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
+ * $Id$
  */
 
 

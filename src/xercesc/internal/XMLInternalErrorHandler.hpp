@@ -15,22 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2004/01/29 11:46:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2002/11/04 14:58:18  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/07/26 17:04:10  tng
- * Schema: Process should stop after fatal error, and user throws need to be rethrown.
- *
+ * $Id$
  */
 
 #if !defined(XMLINTERNALERRORHANDLER_HPP)

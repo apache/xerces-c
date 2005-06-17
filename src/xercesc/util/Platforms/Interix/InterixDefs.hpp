@@ -15,14 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:56:40  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2004/02/04 13:26:44  amassari
- * Added support for the Interix platform (Windows Services for Unix 3.5)
- *
- *
+ * $Id$
  */
 
 

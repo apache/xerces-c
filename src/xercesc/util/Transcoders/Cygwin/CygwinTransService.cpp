@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.14  2005/01/07 15:12:11  amassari
- * Removed warnings
- *
- * Revision 1.13  2004/09/08 13:56:43  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.12  2004/01/19 16:06:56  amassari
- * WideCharToMultiByte and MultiByteToWideChar return 0 on failure, not -1
- *
- * Revision 1.11  2004/01/13 16:34:22  cargilld
- * Misc memory management changes.
- *
- * Revision 1.10  2003/12/24 15:24:15  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.9  2003/11/08 23:37:00  neilg
- * fix for bug 24287 by Abe Backus.
- *
- * Revision 1.8  2003/05/17 16:32:17  knoaman
- * Memory manager implementation : transcoder update.
- *
- * Revision 1.7  2003/05/16 14:04:46  neilg
- * fix compilation error
- *
- * Revision 1.6  2003/05/16 06:01:57  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/05/15 18:47:02  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/03/09 17:02:20  peiyongz
- * PanicHandler
- *
- * Revision 1.3  2003/03/07 18:15:57  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 15:14:32  tng
- * C++ Namespace Support.
- *
- * Revision 1.1  2002/08/19 18:35:56  tng
- * [Bug 6467] Installing Xerces C++ on cygwin environment.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

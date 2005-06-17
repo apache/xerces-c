@@ -14,55 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.12  2005/01/07 15:12:10  amassari
- * Removed warnings
- *
- * Revision 1.11  2004/11/19 00:50:22  cargilld
- * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
- *
- * Revision 1.9  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/10/29 16:18:05  peiyongz
- * size() added and Reset() bug fixed
- *
- * Revision 1.6  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/09/24 19:51:24  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.2  2002/05/08 19:05:29  knoaman
- * [Bug 7701] NameIdPoolEnumerator copy constructor should call base class - fix by Martin Kalen
- *
- * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/03/02 19:54:42  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:02  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:04:47  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:10  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+/*
+ * $Id$
  */
 
 

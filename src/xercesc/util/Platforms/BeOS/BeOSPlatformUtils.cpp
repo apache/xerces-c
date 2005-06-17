@@ -15,61 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.15  2005/04/05 18:36:00  cargilld
- * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
- *
- * Revision 1.14  2004/09/08 13:56:38  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.13  2004/01/13 16:34:21  cargilld
- * Misc memory management changes.
- *
- * Revision 1.12  2004/01/06 17:31:20  neilg
- * fix static initialization problems, bug 28517; thanks to Reid Spencer
- *
- * Revision 1.11  2003/12/24 15:24:14  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.10  2003/12/17 15:16:10  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/12/17 13:58:02  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/10/01 16:32:39  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.7  2003/05/15 18:37:47  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.6  2003/04/25 17:18:53  peiyongz
- * throw exception if getcwd() fails
- *
- * Revision 1.5  2003/04/24 02:52:34  peiyongz
- * Logical Path Resolution
- *
- * Revision 1.4  2003/04/21 04:26:47  peiyongz
- * performance tuning
- *
- * Revision 1.3  2003/03/09 16:52:56  peiyongz
- * PanicHandler
- *
- * Revision 1.2  2003/02/05 18:28:39  tng
- * [Bug 13437] Incorrect memory management in XXXPlatformUtils.cpp.
- *
- * Revision 1.1  2002/12/12 21:24:20  peiyongz
- * typo fix
- *
- * Revision 1.2  2002/12/12 16:28:40  peiyongz
- * MsgCatalogLoader added.
- *
- * Revision 1.1  2002/12/02 20:42:30  tng
- * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
- *
- *
+ * $Id$
  */
 
 

@@ -16,64 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.9  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/12/01 23:23:27  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.6  2003/09/23 18:16:07  peiyongz
- * Inplementation for Serialization/Deserialization
- *
- * Revision 1.5  2003/05/16 06:01:53  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/12/11 00:20:02  peiyongz
- * Doing businesss in value space. Converting out-of-bound value into special values.
- *
- * Revision 1.3  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/02/20 18:17:02  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
- * sane_include
- *
- * Revision 1.11  2001/11/28 15:39:26  peiyongz
- * return Type& for operator=
- *
- * Revision 1.10  2001/11/22 20:23:00  peiyongz
- * _declspec(dllimport) and inline warning C4273
- *
- * Revision 1.9  2001/11/19 21:33:42  peiyongz
- * Reorganization: Double/Float
- *
- * Revision 1.8  2001/10/26 16:37:46  peiyongz
- * Add thread safe code
- *
- * Revision 1.6  2001/09/27 14:54:20  peiyongz
- * DTV Reorganization: derived from XMLAbstractDoubleFloat
- *
- * Revision 1.5  2001/08/29 19:03:03  peiyongz
- * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
- *
- * Revision 1.4  2001/07/31 13:48:29  peiyongz
- * fValue removed
- *
- * Revision 1.3  2001/07/26 18:21:15  peiyongz
- * Boundary Checking
- *
- * Revision 1.2  2001/07/24 21:52:27  peiyongz
- * XMLDouble: move fg...String to XMLUni
- *
- * Revision 1.1  2001/07/24 13:58:11  peiyongz
- * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
- *
  */
 
 #ifndef XML_DOUBLE_HPP

@@ -15,38 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2004/01/29 11:51:21  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.5  2003/12/17 00:18:37  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.4  2003/05/18 14:02:06  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.3  2003/05/16 00:03:10  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:17:00  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/01 14:15:36  knoaman
- * Add a return value to satisfy compilers that complain about
- * no return value, although that code will not be executed.
- *
- * Revision 1.2  2001/05/11 13:26:43  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/02 19:22:47  knoaman
- * Schema: Regular expression handling part I
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

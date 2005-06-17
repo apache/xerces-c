@@ -15,65 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.13  2004/09/08 13:56:43  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.12  2003/12/17 15:16:10  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.11  2003/12/17 13:58:03  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.10  2003/10/01 16:32:40  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.9  2003/05/15 18:37:49  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.8  2003/04/24 02:58:31  peiyongz
- * Logical Path Resolution
- *
- * Revision 1.7  2003/03/09 17:00:11  peiyongz
- * PanicHandler
- *
- * Revision 1.6  2003/02/05 18:29:27  tng
- * [Bug 13437] Incorrect memory management in XXXPlatformUtils.cpp.
- *
- * Revision 1.5  2003/01/09 15:30:39  tng
- * Missing panic function in Tandem
- *
- * Revision 1.4  2002/12/12 16:29:30  peiyongz
- * loadAMsgSet() added
- *
- * Revision 1.3  2002/11/04 15:13:01  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/05/21 20:31:48  tng
- * Minor update: Remove obsolete code
- *
- * Revision 1.1.1.1  2002/02/01 22:22:26  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/03/02 21:10:38  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.3  2000/03/02 19:55:32  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:24  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:32  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

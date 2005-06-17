@@ -14,35 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.12  2005/02/02 09:29:48  amassari
- * Removed warnings
- *
- * Revision 1.11  2004/11/19 00:50:22  cargilld
- * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
- *
- * Revision 1.9  2004/09/08 13:56:23  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/12/16 18:37:14  knoaman
- * Add nextElementKey method
- *
- * Revision 1.6  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/05/24 19:46:40  knoaman
- * Initial checkin.
- *
+/*
+ * $Id$
  */
 
 

@@ -16,14 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2002/09/30 22:09:28  peiyongz
- * To generate icu resource file (in text) for error message.
- *
- *
  */
 
 #ifndef ICU_RESBUND_FORMATTER_H

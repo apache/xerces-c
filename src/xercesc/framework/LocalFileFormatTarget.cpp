@@ -16,45 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.12  2005/04/27 18:21:51  cargilld
- * Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.
- *
- * Revision 1.11  2004/11/02 17:09:42  peiyongz
- * Handling OutOfMemory exception
- *
- * Revision 1.10  2004/09/08 13:55:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2003/12/17 13:58:02  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/12/17 00:18:33  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.6  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/01/24 20:20:22  tng
- * Add method flush to XMLFormatTarget
- *
- * Revision 1.4  2003/01/09 20:59:44  tng
- * [Bug 15928] Output with LocalFileFormatTarget fails silently.
- *
- * Revision 1.3  2002/11/27 18:09:25  tng
- * [Bug 13447] Performance: Using LocalFileFormatTarget with DOMWriter is very slow.
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1  2002/06/19 21:59:26  peiyongz
- * DOM3:DOMSave Interface support: LocalFileFormatTarget
- *
- *
  */
 
 #include <xercesc/framework/LocalFileFormatTarget.hpp>

@@ -15,15 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:51:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2000/09/06 23:46:36  jberry
- * Include new common prefix file for common options.
- * New common configuration options allow compile
- * time selection of NetAccessor, MsgLoader, Transcoder.
- *
+ * $Id$
  */
  
 #define _DEBUG

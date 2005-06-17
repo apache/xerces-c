@@ -15,33 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2004/03/03 23:04:17  peiyongz
- * deallocate fNamespace when loaded
- *
- * Revision 1.6  2003/12/24 15:24:16  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.5  2003/10/17 21:17:12  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.4  2003/10/14 15:22:28  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.3  2003/07/31 17:14:27  peiyongz
- * Grammar embed grammar description
- *
- * Revision 1.2  2003/06/20 22:19:12  peiyongz
- * Stateless Grammar Pool :: Part I
- *
- * Revision 1.1  2003/06/20 18:40:28  peiyongz
- * Stateless Grammar Pool :: Part I
- *
  * $Id$
- *
  */
 
 

@@ -14,40 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.6  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.4  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/03/02 19:54:44  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:03  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:04:56  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:12  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+/*
+ * $Id$
  */
 
 

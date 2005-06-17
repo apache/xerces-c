@@ -16,55 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.15  2005/01/07 15:12:10  amassari
- * Removed warnings
- *
- * Revision 1.14  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.13  2004/01/29 11:48:47  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.12  2004/01/13 19:50:56  peiyongz
- * remove parseContent()
- *
- * Revision 1.10  2003/10/17 21:10:55  peiyongz
- * loadNumber() added
- *
- * Revision 1.9  2003/10/02 19:18:12  peiyongz
- * enum NumberType
- *
- * Revision 1.8  2003/09/23 18:16:07  peiyongz
- * Inplementation for Serialization/Deserialization
- *
- * Revision 1.7  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.6  2003/05/09 15:13:46  peiyongz
- * Deprecated toString() in XMLNumber family
- *
- * Revision 1.5  2003/03/10 20:55:58  peiyongz
- * Schema Errata E2-40 double/float
- *
- * Revision 1.4  2003/02/02 23:54:43  peiyongz
- * getFormattedString() added to return original and converted value.
- *
- * Revision 1.3  2003/01/30 21:55:22  tng
- * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
- *
- * Revision 1.2  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/10/09 21:28:28  peiyongz
- * explicit ctor/dtor defined.
- *
- * Revision 1.1  2001/09/27 14:54:03  peiyongz
- * DTV Reorganization: new class
- *
  */
 
 #ifndef XMLNUMBER_HPP

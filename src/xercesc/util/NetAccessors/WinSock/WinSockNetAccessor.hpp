@@ -15,30 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:36  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/05/11 13:39:35  amassari
- * The net accessor input source now can be used to get data using PUT or POST, as well as GET
- *
- * Revision 1.3  2003/03/07 18:15:49  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 15:11:39  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:23  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/03/17 02:37:54  rahulj
- * First cut at adding HTTP capability via native sockets.
- * Still need to add:
- *   error handling capability, ports other than 80,
- *   escaped URL's
- * Will add options in project file only when I am done with these
- * above changes.
- *
+ * $Id$
  */
 
 

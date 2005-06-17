@@ -16,68 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.18  2004/09/08 13:56:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.17  2004/01/29 11:51:22  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.16  2004/01/13 21:18:18  peiyongz
- * revert code back to previous version
- *
- * Revision 1.15  2004/01/12 16:25:49  neilg
- * remove use of static buffers
- *
- * Revision 1.14  2004/01/06 18:13:59  peiyongz
- * using the no-exception-thrown ctor
- *
- * Revision 1.13  2003/12/19 23:02:25  cargilld
- * More memory management updates.
- *
- * Revision 1.12  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.11  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.10  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.9  2003/10/01 16:32:41  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.8  2003/08/14 03:00:11  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.7  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.6  2003/05/16 06:01:57  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/01/30 21:56:22  tng
- * Performance: call getRawData instead of toString
- *
- * Revision 1.3  2002/11/27 21:26:55  peiyongz
- * Schema Errat E2-24 Duration 'T': allow SchemaDateTimeException be
- * propogated to client.
- *
- * Revision 1.2  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/11/12 20:37:57  peiyongz
- * SchemaDateTimeException defined
- *
- * Revision 1.1  2001/11/07 19:18:52  peiyongz
- * DateTime Port
- *
  */
 
 // ---------------------------------------------------------------------------

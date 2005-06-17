@@ -15,53 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/26 01:06:31  cargilld
- * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
- *
- * Revision 1.5  2004/09/08 13:56:20  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/03/07 18:10:30  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/11/04 14:55:45  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/02/20 18:17:02  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/05/11 13:26:25  tng
- * Copyright update.
- *
- * Revision 1.4  2001/02/26 19:44:19  tng
- * Schema: add utility class QName, by Pei Yong Zhang.
- *
- * Revision 1.3  2000/08/09 22:19:28  jpolast
- * many conformance & stability changes:
- *   - ContentHandler::resetDocument() removed
- *   - attrs param of ContentHandler::startDocument() made const
- *   - SAXExceptions thrown now have msgs
- *   - removed duplicate function signatures that had 'const'
- *       [ eg: getContentHander() ]
- *   - changed getFeature and getProperty to apply to const objs
- *   - setProperty now takes a void* instead of const void*
- *   - SAX2XMLReaderImpl does not inherit from SAXParser anymore
- *   - Reuse Validator (http://apache.org/xml/features/reuse-validator) implemented
- *   - Features & Properties now read-only during parse
- *
- * Revision 1.2  2000/08/07 18:21:26  jpolast
- * change SAX_EXPORT module to SAX2_EXPORT
- *
- * Revision 1.1  2000/08/02 18:02:34  jpolast
- * initial checkin of sax2 implementation
- * submitted by Simon Fell (simon@fell.com)
- * and Joe Polastre (jpolast@apache.org)
- *
- *
+ * $Id$
  */
 
 #ifndef ATTRIBUTES_HPP

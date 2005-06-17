@@ -15,68 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2002/11/04 14:45:20  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/05/28 12:57:17  tng
- * Fix typo.
- *
- * Revision 1.3  2002/05/27 18:02:40  tng
- * define XMLSize_t, XMLSSize_t and their associate MAX
- *
- * Revision 1.2  2002/05/21 19:45:53  tng
- * Define DOMSize_t and XMLSize_t
- *
- * Revision 1.1.1.1  2002/02/01 22:22:18  peiyongz
- * sane_include
- *
- * Revision 1.11  2001/03/02 20:52:59  knoaman
- * Schema: Regular expression - misc. updates for error messages,
- * and additions of new functions to XMLString class.
- *
- * Revision 1.10  2000/03/29 00:41:07  aruna1
- * Modified bool warnings for HP CC
- *
- * Revision 1.9  2000/03/02 19:55:08  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/06 07:48:17  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/01/18 22:37:20  aruna1
- * Modified XMLCh to unsigned short
- *
- * Revision 1.6  2000/01/18 21:32:21  aruna1
- * XMLCh assigned to wchar_t
- *
- * Revision 1.5  1999/12/14 23:53:25  rahulj
- * Removed the offending Ctrl-M's from the commit message
- * logs which was giving packaging problems.
- *
- * PR:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.4  1999/11/23 02:00:12  rahulj
- * Code now works under HPUX 11. Tested inmemory message loader.
- * Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
- *
- * Revision 1.3  1999/11/12 20:36:57  rahulj
- * Changed library name to xerces-c.lib.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:34  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:23  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(HPCCDEFS_HPP)

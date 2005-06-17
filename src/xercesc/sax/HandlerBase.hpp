@@ -15,57 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2004/01/29 11:46:32  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/12/01 23:23:26  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.6  2003/05/30 16:11:44  gareth
- * Fixes so we compile under VC7.1. Patch by Alberto Massari.
- *
- * Revision 1.5  2002/11/04 14:56:25  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/07/16 18:15:00  tng
- * [Bug 6070] warning unused variable in HandlerBase.hpp
- *
- * Revision 1.3  2002/06/06 20:39:16  tng
- * Document Fix: document that the returned object from resolveEntity is owned by the parser
- *
- * Revision 1.2  2002/02/20 18:17:01  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.6  2000/03/02 19:54:35  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/24 20:12:55  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/12 03:31:55  rahulj
- * Removed duplicate CVS Log entries.
- *
- * Revision 1.3  2000/02/12 01:27:19  aruna1
- * Documentation updated
- *
- * Revision 1.2  2000/02/06 07:47:57  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:45  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:00  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

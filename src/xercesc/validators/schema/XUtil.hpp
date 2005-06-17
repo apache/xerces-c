@@ -15,34 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2004/01/29 11:52:31  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.4  2002/11/04 14:49:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/05/21 19:31:45  tng
- * DOM Reorganization: modify to use the new DOM interface and remove obsolete code in XUtil.
- *
- * Revision 1.2  2002/02/06 22:21:49  knoaman
- * Use IDOM for schema processing.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/11/02 14:13:45  knoaman
- * Add support for identity constraints.
- *
- * Revision 1.2  2001/05/11 13:27:39  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/30 16:06:00  tng
- * Schema: XUtil, added by Pei Yong Zhang
- *
+ * $Id$
  */
 
 #if !defined(XUTIL_HPP)

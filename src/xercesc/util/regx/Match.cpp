@@ -15,31 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/01/07 15:12:11  amassari
- * Removed warnings
- *
- * Revision 1.5  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/05/16 00:03:10  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 13:01:02  gareth
- * New functionality - tokenize and replace. Fixed REVISIT for case insensitive match. Patch by Jennifer Schachter.
- *
- * Revision 1.2  2002/11/04 15:17:00  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:29  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:26:42  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/02 19:22:40  knoaman
- * Schema: Regular expression handling part I
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

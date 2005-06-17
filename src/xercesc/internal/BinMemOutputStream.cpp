@@ -16,26 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.6  2004/10/26 14:50:13  peiyongz
- * Reinitialize buffer after expansion
- *
- * Revision 1.5  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/03/05 22:19:32  peiyongz
- * getSize() to return fCapacity to differentiate it from curPos()
- *
- * Revision 1.3  2004/02/16 04:02:34  neilg
- * fix for bug 26936
- *
- * Revision 1.2  2003/12/17 00:01:44  peiyongz
- * getSize()
- *
- * Revision 1.1  2003/12/16 16:56:51  peiyongz
- * BinMemOutputStream
- *
- *
  */
 
 #include <xercesc/internal/BinMemOutputStream.hpp>

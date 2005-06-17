@@ -15,59 +15,8 @@
  */
 
  /*
-  * $Log$
-  * Revision 1.8  2004/09/08 13:55:59  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.7  2003/10/30 21:37:31  knoaman
-  * Enhanced Entity Resolver Support. Thanks to David Cargill.
-  *
-  * Revision 1.6  2003/03/07 18:08:10  tng
-  * Return a reference instead of void for operator=
-  *
-  * Revision 1.5  2002/11/04 15:00:21  tng
-  * C++ Namespace Support.
-  *
-  * Revision 1.4  2002/06/06 20:41:51  tng
-  * Regression fix: should assign the returned InputSource from resolveEntity to srcToFill.
-  *
-  * Revision 1.3  2002/05/31 15:14:07  tng
-  * Fix doxygen documentation.
-  *
-  * Revision 1.2  2002/05/29 21:47:08  knoaman
-  * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
-  *
-  * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
-  * sane_include
-  *
-  * Revision 1.7  2000/03/02 19:54:25  roddey
-  * This checkin includes many changes done while waiting for the
-  * 1.1.0 code to be finished. I can't list them all here, but a list is
-  * available elsewhere.
-  *
-  * Revision 1.6  2000/02/24 20:00:23  abagchi
-  * Swat for removing Log from API docs
-  *
-  * Revision 1.5  2000/02/16 21:42:58  aruna1
-  * API Doc++ summary changes in
-  *
-  * Revision 1.4  2000/02/15 01:21:31  roddey
-  * Some initial documentation improvements. More to come...
-  *
-  * Revision 1.3  2000/02/06 07:47:48  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.2  1999/12/15 19:46:28  roddey
-  * Got rid of redundant 'const' on bool return value. Some compilers choke on this
-  * and its not useful anyway.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:08:33  twl
-  * Initial checkin
-  *
-  * Revision 1.2  1999/11/08 20:44:38  rahul
-  * Swat for adding in Product name and CVS comment log variable.
-  *
-  */
+ * $Id$
+ */
 
 
 #if !defined(XMLENTITYHANDLER_HPP)

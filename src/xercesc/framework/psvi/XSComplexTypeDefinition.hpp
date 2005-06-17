@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:56:08  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/12/24 17:42:02  knoaman
- * Misc. PSVI updates
- *
- * Revision 1.7  2003/12/01 23:23:26  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.6  2003/11/25 18:08:31  knoaman
- * Misc. PSVI updates. Thanks to David Cargill.
- *
- * Revision 1.5  2003/11/21 17:19:30  knoaman
- * PSVI update.
- *
- * Revision 1.4  2003/11/14 22:47:53  neilg
- * fix bogus log message from previous commit...
- *
- * Revision 1.3  2003/11/14 22:33:30  neilg
- * Second phase of schema component model implementation.  
- * Implement XSModel, XSNamespaceItem, and the plumbing necessary
- * to connect them to the other components.
- * Thanks to David Cargill.
- *
- * Revision 1.2  2003/11/06 15:30:04  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #if !defined(XSCOMPLEXTYPEDEFINITION_HPP)

@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2003/12/24 15:24:15  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.6  2003/05/17 16:32:18  knoaman
- * Memory manager implementation : transcoder update.
- *
- * Revision 1.5  2003/05/15 18:47:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/03/07 18:15:58  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/11/04 15:14:34  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/04/09 15:44:00  knoaman
- * Add lower case string support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
- * sane_include
- *
- * Revision 1.10  2000/05/09 00:22:45  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.9  2000/03/18 00:00:04  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.8  2000/03/07 23:45:36  roddey
- * First cut for additions to Win32 xcode. Based very loosely on a
- * prototype from Eric Ulevik.
- *
- * Revision 1.7  2000/03/02 19:55:36  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/06 07:48:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/25 22:49:58  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.4  2000/01/25 19:19:09  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.3  1999/12/18 00:22:33  roddey
- * Changes to support the new, completely orthagonal, transcoder architecture.
- *
- * Revision 1.2  1999/12/15 19:44:02  roddey
- * Now implements the new transcoding abstractions, with separate interface
- * classes for XML transcoders and local code page transcoders.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:06  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef WIN32TRANSSERVICE_HPP

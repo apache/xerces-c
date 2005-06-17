@@ -16,62 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.15  2004/09/08 13:56:53  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.14  2003/12/23 21:50:36  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0,
- * only validate when required
- *
- * Revision 1.13  2003/12/19 23:02:25  cargilld
- * More memory management updates.
- *
- * Revision 1.12  2003/12/17 00:18:39  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.11  2003/12/11 21:40:24  peiyongz
- * support for Canonical Representation for Datatype
- *
- * Revision 1.10  2003/11/28 18:53:07  peiyongz
- * Support for getCanonicalRepresentation
- *
- * Revision 1.9  2003/11/06 15:30:07  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.8  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.7  2003/10/01 16:32:41  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.6  2003/08/14 03:00:11  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.5  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/15 18:53:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.2  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/11/15 17:09:23  peiyongz
- * catch(...) only. (the invoker need to cath XMLException to display proper message)
- *
- * Revision 1.2  2001/11/14 22:02:25  peiyongz
- * rethrow exception with original error message.
- *
- * Revision 1.1  2001/11/07 19:18:52  peiyongz
- * DateTime Port
- *
  */
 
 // ---------------------------------------------------------------------------

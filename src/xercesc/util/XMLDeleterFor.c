@@ -15,21 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/03/02 19:54:48  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
+ * $Id$
  */
 
 

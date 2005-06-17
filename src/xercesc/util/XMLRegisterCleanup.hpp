@@ -16,29 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.5  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/02/24 22:57:28  peiyongz
- * XercesDeprecatedDOMLib
- *
- * Revision 1.3  2004/01/29 11:48:47  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/10/25 21:55:29  peiyongz
- * copy ctor explicity declared private to prevent supprise.
- *
- * Revision 1.3  2001/10/24 18:13:06  peiyongz
- * CVS tag added
- *
- *
  */
 
 #if !defined(XMLREGISTERCLEANUP_HPP)

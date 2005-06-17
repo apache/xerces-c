@@ -15,13 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:56:42  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/03/13 22:11:16  tng
- * [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
- *
+ * $Id$
  */
 
 

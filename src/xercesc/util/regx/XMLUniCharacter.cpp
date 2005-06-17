@@ -15,28 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2005/05/19 15:46:32  cargilld
- * 390 update: use ICU table which is present with the uniconv390.
- *
- * Revision 1.4  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2002/12/24 17:59:07  tng
- * Build with ICU 2.4
- *
- * Revision 1.2  2002/11/04 15:17:01  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:34  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:26:52  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/02 19:26:51  knoaman
- * Schema: Regular expression handling part II
- *
+ * $Id$
  */
 
 

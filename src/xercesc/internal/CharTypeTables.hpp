@@ -15,43 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2005/04/07 15:30:56  knoaman
- * Update chars table with an NCName char mask instead of an XML letter mask
- *
- * Revision 1.6  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2002/12/23 18:57:58  tng
- * XML 1.1: Fix typo
- *
- * Revision 1.4  2002/12/23 18:46:43  tng
- * XML 1.1
- *
- * Revision 1.3  2002/12/20 22:09:56  tng
- * XML 1.1
- *
- * Revision 1.2  2002/11/04 14:58:18  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:57  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/07/26 19:53:02  tng
- * [Bug 2751] Several NameChar characters missing from internal tables .
- *
- * Revision 1.3  2000/02/24 20:18:06  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:47:52  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:03  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:41  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(CHARTYPETABLES_HPP)

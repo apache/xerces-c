@@ -15,22 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:42  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 15:13:01  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:25  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/04/12 20:34:49  abagchi
- * Now just includes the Solaris file directly since they are identical
- *
- * Revision 1.2  2000/04/04 21:04:25  abagchi
- * Fixed copyrights with initial checkin
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

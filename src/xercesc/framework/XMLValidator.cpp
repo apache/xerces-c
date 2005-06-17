@@ -14,88 +14,9 @@
  * limitations under the License.
  */
 
-/**
-  * $Log$
-  * Revision 1.9  2004/10/20 15:18:20  knoaman
-  * Allow option of initializing static data in XMLPlatformUtils::Initialize
-  *
-  * Revision 1.8  2004/09/08 13:55:59  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.7  2004/01/09 04:39:56  knoaman
-  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap.
-  *
-  * Revision 1.6  2003/12/24 15:24:13  cargilld
-  * More updates to memory management so that the static memory manager.
-  *
-  * Revision 1.5  2003/12/17 00:18:34  cargilld
-  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
-  *
-  * Revision 1.4  2003/05/15 18:26:07  knoaman
-  * Partial implementation of the configurable memory manager.
-  *
-  * Revision 1.3  2003/03/09 16:38:04  peiyongz
-  * PanicHandler
-  *
-  * Revision 1.2  2002/11/04 15:00:21  tng
-  * C++ Namespace Support.
-  *
-  * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
-  * sane_include
-  *
-  * Revision 1.13  2001/11/30 22:18:18  peiyongz
-  * cleanUp function made member function
-  * cleanUp object moved to file scope
-  * double mutex lock removed
-  *
-  * Revision 1.12  2001/11/28 20:32:49  tng
-  * Do not increment the error count if it is a warning.
-  *
-  * Revision 1.11  2001/10/24 23:46:52  peiyongz
-  * [Bug 4342] fix the leak.
-  *
-  * Revision 1.10  2001/06/04 21:07:34  jberry
-  * Increment scanner error count from schema validator, not just in scanner itself.
-  *
-  * Revision 1.9  2001/05/11 13:25:33  tng
-  * Copyright update.
-  *
-  * Revision 1.8  2001/05/03 19:08:58  knoaman
-  * Support Warning/Error/FatalError messaging.
-  * Validity constraints errors are treated as errors, with the ability by user to set
-  * validity constraints as fatal errors.
-  *
-  * Revision 1.7  2001/03/21 21:56:02  tng
-  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
-  *
-  * Revision 1.6  2000/03/28 19:43:17  roddey
-  * Fixes for signed/unsigned warnings. New work for two way transcoding
-  * stuff.
-  *
-  * Revision 1.5  2000/03/02 19:54:25  roddey
-  * This checkin includes many changes done while waiting for the
-  * 1.1.0 code to be finished. I can't list them all here, but a list is
-  * available elsewhere.
-  *
-  * Revision 1.4  2000/02/06 07:47:49  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.3  1999/12/08 00:15:06  roddey
-  * Some small last minute fixes to get into the 3.0.1 build that is going to be
-  * going out anyway for platform fixes.
-  *
-  * Revision 1.2  1999/12/02 19:02:56  roddey
-  * Get rid of a few statically defined XMLMutex objects, and lazy eval them
-  * using atomic compare and swap. I somehow let it get by me that we don't
-  * want any static/global objects at all.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:08:37  twl
-  * Initial checkin
-  *
-  * Revision 1.3  1999/11/08 20:44:40  rahul
-  * Swat for adding in Product name and CVS comment log variable.
-  *
-  */
+/*
+ * $Id$
+ */
 
 // ---------------------------------------------------------------------------
 //  Includes

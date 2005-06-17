@@ -1,13 +1,4 @@
-$Log$
-Revision 1.3  2001/04/19 19:20:09  knoaman
-BCB project changes submitted by William I Hopper.
-
-Revision 1.2  2000/09/07 00:11:04  aruna1
-Borland related project files intoroduced
-
-Revision 1.1  2000/02/03 23:46:37  rahulj
-Initial checkin. Contributed by Dietrich Wolf.
-
+$Id$
 
 This directory and its children contain the project group
 and the project files for building Xerces for C++-Builder 4.

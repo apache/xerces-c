@@ -15,41 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:55:36  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/02/27 13:23:02  amassari
- * Fixed memory leaks
- *
- * Revision 1.3  2004/02/25 18:38:33  amassari
- * The COM wrapper doesn't use the deprecated DOM anymore
- *
- * Revision 1.2  2002/05/21 19:53:53  tng
- * DOM Reorganization: update include path for the old DOM interface in COM files
- *
- * Revision 1.1.1.1  2002/02/01 22:21:40  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/05/11 13:25:08  tng
- * Copyright update.
- *
- * Revision 1.5  2001/01/19 15:18:39  tng
- * COM Updates by Curt Arnold: changed 1.3 to 1.4, updated the GUID's so
- * both can coexist and fixed a new minor bugs.  Most of the changes involved
- * error reporting, now a DOM defined error will return an HRESULT of
- * 0x80040600 + code and will set an error description to the error name.
- *
- * Revision 1.4  2000/06/19 20:05:59  rahulj
- * Changes for increased conformance and stability. Submitted by
- * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
- *
- * Revision 1.3  2000/06/03 00:29:04  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 // xml4com.cpp : Implementation of DLL Exports.

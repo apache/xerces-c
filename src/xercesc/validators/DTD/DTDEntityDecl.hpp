@@ -15,41 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/10/10 16:24:51  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.4  2003/05/16 21:43:19  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.3  2003/03/07 18:17:12  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.2  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/02/24 20:16:49  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/09 21:42:37  abagchi
- * Copyright swat
- *
- * Revision 1.2  2000/01/20 01:57:07  rahulj
- * Reported by marc@ist.de
- * Removed extra 'const' qualifiers.
- *
- * Revision 1.1.1.1  1999/11/09 01:03:34  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:40  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

@@ -15,61 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:56:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.9  2003/12/17 03:56:15  neilg
- * add default memory manager parameter to loadMsg method that uses char * parameters
- *
- * Revision 1.8  2003/05/15 18:29:49  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.7  2003/03/09 16:41:40  peiyongz
- * PanicHandler
- *
- * Revision 1.6  2002/12/12 19:14:00  peiyongz
- * InMem Message file name changed.
- *
- * Revision 1.5  2002/11/12 17:26:53  tng
- * DOM Message: add new domain for DOM Messages.
- *
- * Revision 1.4  2002/11/04 15:10:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/09/24 19:57:59  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.2  2002/09/23 22:14:37  peiyongz
- * Code sharing and Array boundary checking added
- *
- * Revision 1.1.1.1  2002/02/01 22:22:21  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/03/28 19:43:21  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.4  2000/03/02 19:55:15  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:48:22  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/03 00:48:47  rahulj
- * Removed byteswapping logic as its not needed for InMemory message loading.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:19  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:45:26  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

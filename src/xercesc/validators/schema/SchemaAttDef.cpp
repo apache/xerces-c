@@ -15,69 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.16  2004/10/28 20:21:06  peiyongz
- * Data member reshuffle
- *
- * Revision 1.15  2004/10/13 17:55:40  cargilld
- * Serialization fix, fPVSIScope not serialized.  Problem reported by David Bertoni.
- *
- * Revision 1.14  2004/09/08 13:56:56  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.13  2004/01/29 11:52:31  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.12  2003/12/24 17:42:03  knoaman
- * Misc. PSVI updates
- *
- * Revision 1.11  2003/12/17 20:50:35  knoaman
- * PSVI: fix for annotation of attributes in attributeGroup/derived types
- *
- * Revision 1.10  2003/11/25 18:15:00  knoaman
- * Serialize enclosing complex type. Thanks to David Cargill.
- *
- * Revision 1.9  2003/11/21 22:34:46  neilg
- * More schema component model implementation, thanks to David Cargill.
- * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
- * XSAttributeDeclaration and XSAttributeGroup implementations.
- *
- * Revision 1.8  2003/10/17 21:17:12  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.7  2003/10/10 16:25:40  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.6  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.5  2003/05/16 21:43:21  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/02/06 13:51:55  gareth
- * fixed bug with multiple attributes being validated by the same union type.
- *
- * Revision 1.3  2003/01/29 19:47:16  gareth
- * added DOMTypeInfo and some PSVI methods
- *
- * Revision 1.2  2002/11/04 14:49:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/08/09 15:23:16  knoaman
- * add support for <anyAttribute> declaration.
- *
- * Revision 1.3  2001/07/31 15:26:54  knoaman
- * Added support for <attributeGroup>.
- *
- * Revision 1.2  2001/05/11 13:27:33  tng
- * Copyright update.
- *
- * Revision 1.1  2001/02/27 18:48:22  tng
- * Schema: Add SchemaAttDef, SchemaElementDecl, SchemaAttDefList.
- *
+ * $Id$
  */
 
 

@@ -15,42 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/03/07 18:17:12  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/08/14 15:20:38  knoaman
- * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
- *
- * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/06/19 16:43:46  tng
- * Correct description of DocTypeHandler
- *
- * Revision 1.4  2000/03/02 19:55:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:16:49  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/09 21:42:39  abagchi
- * Copyright swat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:21  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:43  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

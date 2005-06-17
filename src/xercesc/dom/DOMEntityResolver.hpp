@@ -18,28 +18,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:55:39  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/03/07 19:59:04  tng
- * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
- *
- * Revision 1.5  2002/11/04 15:09:24  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/08/22 15:04:57  tng
- * Remove unused parameter variables in inline functions.
- *
- * Revision 1.3  2002/06/06 20:53:06  tng
- * Documentation Fix: Update the API Documentation for DOM headers
- *
- * Revision 1.2  2002/05/30 19:24:48  knoaman
- * documentation update
- *
- * Revision 1.1  2002/05/29 21:28:02  knoaman
- * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
- *
+ * $Id$
  */
 
 

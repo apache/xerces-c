@@ -15,43 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2005/04/05 18:36:00  cargilld
- * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
- *
- * Revision 1.8  2004/10/20 15:18:35  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
- * Revision 1.7  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/12/24 17:12:21  cargilld
- * Memory management update.
- *
- * Revision 1.5  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.4  2003/05/22 18:15:16  neilg
- * The PanicHandler interface should not inherit from XMemory.
- * The reason for this is that the default implementation does not
- * allocate memory dynamically and if such an inheritance relation existed,
- * a user would have to be very careful about installing a memory
- * handler on their own PanicHandler before handing it to the
- * XMLPlatformUtils::Initialize() method, since otherwise
- * the (uninitialized) XMLPlatformUtils::fgMemoryManager would be used
- * upon construction of their PanicHandler implementation.
- *
- * Revision 1.3  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2003/03/10 16:05:11  peiyongz
- * assignment operator
- *
- * Revision 1.1  2003/03/09 17:06:16  peiyongz
- * PanicHandler
- *
  * $Id$
- *
  */
 
 #ifndef PANICHANDLER_HPP

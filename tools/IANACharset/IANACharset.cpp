@@ -16,19 +16,7 @@
 
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/01/29 15:00:01  knoaman
- * [Bug 15787] Reduce array size to reduce memory footprint.
- *
- * Revision 1.2  2002/11/04 15:24:50  tng
- * C++ Namespace Support.
- *
- * Revision 1.1  2002/07/18 20:15:32  knoaman
- * Initial checkin: feature to control strict IANA encoding name.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

@@ -15,28 +15,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.3  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/05/28 20:53:35  tng
- * Schema: move static data gInvalidTrans, gEOCFakeId, gEpsilonFakeId to XMLContentModel for others to access
- *
- * Revision 1.2  2000/02/06 07:47:47  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:30  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:37  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

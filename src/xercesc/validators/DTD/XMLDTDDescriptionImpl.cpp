@@ -15,27 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/10/28 20:18:39  peiyongz
- * store/load fSystemId
- *
- * Revision 1.5  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/04/07 14:10:04  peiyongz
- * systemId (to replace rootElemName) as DTDGrammar Key
- *
- * Revision 1.3  2004/03/03 23:04:38  peiyongz
- * deallocate fRootName when loaded
- *
- * Revision 1.2  2003/10/14 15:20:42  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.1  2003/06/20 18:39:33  peiyongz
- * Stateless Grammar Pool :: Part I
- *
  * $Id$
- *
  */
 
 

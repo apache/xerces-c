@@ -15,34 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2005/03/20 19:02:45  cargilld
- * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
- *
- * Revision 1.7  2005/01/07 15:12:10  amassari
- * Removed warnings
- *
- * Revision 1.6  2004/12/10 10:37:56  cargilld
- * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
- *
- * Revision 1.5  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/08/11 16:46:54  peiyongz
- * Decoding and getCanRep
- *
- * Revision 1.3  2002/11/04 15:22:03  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/04/18 14:55:38  peiyongz
- * Bug#7301: Redundant range-check in HexBin.cpp, patch from Martin Kalen
- *
- * Revision 1.1.1.1  2002/02/01 22:22:10  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/05/16 15:25:38  tng
- * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

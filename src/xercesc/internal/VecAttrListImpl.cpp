@@ -15,57 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.6  2003/05/15 18:26:29  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/11/04 14:58:18  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/09/24 20:02:20  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.3  2002/07/05 20:12:35  tng
- * [Bug 9788] VecAttrListImpl::getValue skips prefix if SAX namespace validation is on.
- *
- * Revision 1.2  2002/02/27 16:49:40  tng
- * Fix: AttributeList::getName should attach prefix if present
- *
- * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
- * sane_include
- *
- * Revision 1.6  2000/11/02 01:14:07  andyh
- * SAX bug fix:  Attribute lists were throwing exceptions rather than returning
- * null when an attribute could not be found by name.  Fixed by Tinny Ng.
- *
- * Revision 1.5  2000/03/13 20:19:11  rahulj
- * Fixed #54. Changed self-assignment to now use the parameter value.
- * Reported by Helmut Eiken <H.Eiken@cli.de>
- *
- * Revision 1.4  2000/03/02 19:54:29  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:53  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/15 19:49:37  roddey
- * Added second getValue() method which takes a short name for the attribute
- * to get the value for. Just a convenience method.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:19  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:44  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

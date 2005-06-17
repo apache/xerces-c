@@ -15,43 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/08/13 15:43:24  knoaman
- * Use memory manager when creating SAX exceptions.
- *
- * Revision 1.4  2003/04/21 21:07:38  knoaman
- * Use XMLString::release to prepare for configurable memory manager.
- *
- * Revision 1.3  2002/11/04 14:56:26  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/05/27 18:33:07  tng
- * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/09/07 23:55:02  andyh
- * Fix SAXException assignment operator.  Now non-virtual, and
- * SAXParseException invokes base class operator.
- *
- * Revision 1.3  2000/03/02 19:54:35  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:58  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:47  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:02  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

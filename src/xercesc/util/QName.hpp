@@ -15,70 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/10/28 20:14:41  peiyongz
- * Data member reshuffle
- *
- * Revision 1.11  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/01/29 11:48:46  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.9  2003/09/25 15:22:34  peiyongz
- * Implementation of Serialization
- *
- * Revision 1.8  2003/05/16 21:36:59  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.7  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.6  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/10/30 21:52:00  tng
- * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
- *
- * Revision 1.3  2002/09/05 16:06:41  tng
- * [Bug 12232] Make operator to be constant.
- *
- * Revision 1.2  2002/08/20 16:54:25  tng
- * [Bug 6251] Info during compilation.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
- * sane_include
- *
- * Revision 1.8  2001/12/06 17:48:36  tng
- * Performance Enhancement.  Added setNPrefix and setNLocalPart methods that allow code to take advantage of the fact that it knows the length of the prefix and local name, when possible.  That can avoid a copy of the prefix into a null-terminated temporary variable before copying into the fPrefix.
- * Also changed the getRawName method so that it would simply return the local part when there is no prefix, instead of allocating another buffer to copy the local part into the fRawName.
- * When there is a prefix, changed the getRawName to copy the prefix and local part into the fRawName using XMLString::moveChars instead of using XMLString::copyString and XMLString::catString.  The catString method has to loop past the prefix portion of the fRawName, which seems like a waste.
- * By Henry Zongaro.
- *
- * Revision 1.7  2001/07/24 18:31:47  knoaman
- * Added support for <group> + extra constraint checking for complexType
- *
- * Revision 1.6  2001/05/11 13:26:28  tng
- * Copyright update.
- *
- * Revision 1.5  2001/04/19 18:17:10  tng
- * Schema: SchemaValidator update, and use QName in Content Model
- *
- * Revision 1.4  2001/03/21 21:56:12  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
- * Revision 1.3  2001/02/27 14:48:39  tng
- * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
- * Revision 1.2  2001/02/26 21:56:16  tng
- * Schema: QName can also be constructed with rawName.
- *
- * Revision 1.1  2001/02/26 19:44:25  tng
- * Schema: add utility class QName, by Pei Yong Zhang.
- *
+ * $Id$
  */
 
 #if !defined(QNAME_HPP)

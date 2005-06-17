@@ -15,52 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/01/29 11:52:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.9  2003/07/10 19:50:12  peiyongz
- * Stateless Grammar: create grammar components with grammarPool's memory Manager
- *
- * Revision 1.8  2003/05/16 21:43:19  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.7  2003/05/15 18:54:51  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.6  2003/02/05 22:07:09  tng
- * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
- *
- * Revision 1.5  2002/12/04 02:47:25  knoaman
- * scanner re-organization.
- *
- * Revision 1.4  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/07/11 18:39:48  knoaman
- * Access entities through the DTDGrammar instead of the scanner.
- *
- * Revision 1.2  2002/05/30 16:17:19  tng
- * Add feature to optionally ignore external DTD.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:44  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/06/21 14:25:56  knoaman
- * Fix for bug 1946
- *
- * Revision 1.3  2001/05/11 13:27:10  tng
- * Copyright update.
- *
- * Revision 1.2  2001/04/19 18:17:22  tng
- * Schema: SchemaValidator update, and use QName in Content Model
- *
- * Revision 1.1  2001/03/21 21:56:20  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
+ * $Id$
  */
 
 

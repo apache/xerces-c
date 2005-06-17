@@ -15,21 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.2  2003/11/24 05:10:26  neilg
- * implement method for determining member type of union that validated some value
- *
- * Revision 1.1  2003/11/12 20:29:47  peiyongz
- * Stateless Grammar: ValidationContext
- *
- * $Id$ 
- *
+ * $Id$
  */
 
 

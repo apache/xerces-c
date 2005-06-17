@@ -15,43 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/28 02:14:13  cargilld
- * Add support for validating annotations.
- *
- * Revision 1.10  2004/09/08 13:56:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2004/04/02 16:51:05  peiyongz
- * Better error report support
- *
- * Revision 1.8  2003/12/19 07:18:56  neilg
- * remove a throw clause inserted during debugging (but should we really swallow this exception?)
- *
- * Revision 1.7  2003/12/15 19:04:55  neilg
- * fix segfault when a writeAnnotation() method was called
- *
- * Revision 1.6  2003/11/27 21:29:05  neilg
- * implement writeAnnotation; thanks to Dave Cargill
- *
- * Revision 1.5  2003/11/14 22:47:53  neilg
- * fix bogus log message from previous commit...
- *
- * Revision 1.4  2003/11/14 22:33:30  neilg
- * Second phase of schema component model implementation.  
- * Implement XSModel, XSNamespaceItem, and the plumbing necessary
- * to connect them to the other components.
- * Thanks to David Cargill.
- *
- * Revision 1.3  2003/11/11 22:48:13  knoaman
- * Serialization of XSAnnotation.
- *
- * Revision 1.2  2003/11/06 19:28:11  knoaman
- * PSVI support for annotations.
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #include <xercesc/framework/psvi/XSAnnotation.hpp>

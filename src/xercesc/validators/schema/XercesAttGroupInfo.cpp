@@ -15,46 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:56:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/11/20 17:06:05  knoaman
- * PSVI: store name and namespace information
- *
- * Revision 1.7  2003/11/13 23:20:47  peiyongz
- * initSize
- *
- * Revision 1.6  2003/10/17 21:17:12  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.5  2003/10/14 15:22:28  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.4  2003/05/15 18:57:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 14:49:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/09/24 20:12:48  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/11/20 20:21:49  knoaman
- * Add check for attribute derviation ok when redefining attribute group by restriction.
- *
- * Revision 1.3  2001/11/20 15:57:04  knoaman
- * Add check for multiple attributes with type derived from ID.
- *
- * Revision 1.2  2001/08/09 15:23:17  knoaman
- * add support for <anyAttribute> declaration.
- *
- * Revision 1.1  2001/07/31 15:26:54  knoaman
- * Added support for <attributeGroup>.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

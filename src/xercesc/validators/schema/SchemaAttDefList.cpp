@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/09/10 18:42:06  cargilld
- * Performance improvement fix to more efficiently findattdef.  Fix from Dave Bertoni.
- *
- * Revision 1.11  2004/09/08 13:56:56  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/01/29 11:52:31  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.9  2003/12/17 00:18:40  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/11/13 23:20:47  peiyongz
- * initSize
- *
- * Revision 1.7  2003/11/10 21:54:51  neilg
- * implementation for new stateless means of traversing attribute definition lists
- *
- * Revision 1.6  2003/10/20 11:46:28  gareth
- * Pass in memory manager to constructors and use for creation of enumerators.
- *
- * Revision 1.5  2003/10/17 21:17:12  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.4  2003/10/10 16:25:40  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.3  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.2  2002/11/04 14:49:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:27:34  tng
- * Copyright update.
- *
- * Revision 1.1  2001/02/27 18:48:22  tng
- * Schema: Add SchemaAttDef, SchemaElementDecl, SchemaAttDefList.
- *
+ * $Id$
  */
 
 

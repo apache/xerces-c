@@ -16,53 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.13  2004/12/01 17:44:20  cargilld
- * Minor code cleanup.
- *
- * Revision 1.12  2004/09/08 13:56:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2003/12/23 21:50:36  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0,
- * only validate when required
- *
- * Revision 1.10  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/12/11 21:40:24  peiyongz
- * support for Canonical Representation for Datatype
- *
- * Revision 1.8  2003/11/28 18:53:07  peiyongz
- * Support for getCanonicalRepresentation
- *
- * Revision 1.7  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.6  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.5  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/02/02 23:55:40  peiyongz
- * getFormattedString() added to return original and converted value.
- *
- * Revision 1.3  2003/01/30 21:56:22  tng
- * Performance: call getRawData instead of toString
- *
- * Revision 1.2  2002/11/04 14:53:27  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/10/09 21:16:31  peiyongz
- * . macro to simplify code
- *
- * Revision 1.1  2001/10/01 16:13:56  peiyongz
- * DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
- *
  */
 
 // ---------------------------------------------------------------------------

@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2004/01/29 11:46:29  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/11/10 21:53:54  neilg
- * add a means of statelessly traversing attribute lists.  mark the enumeration-based means as deprecated, since those are not stateless
- *
- * Revision 1.6  2003/10/20 11:47:30  gareth
- * Constructor take memory manager and get method for it.
- *
- * Revision 1.5  2003/10/10 16:23:29  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.4  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.3  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/02/24 20:00:22  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/15 01:21:30  roddey
- * Some initial documentation improvements. More to come...
- *
- * Revision 1.2  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:28  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(XMLATTDEFLIST_HPP)

@@ -15,36 +15,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.5  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/12/17 13:58:02  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.3  2003/05/16 03:11:30  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1  2000/01/12 00:13:26  roddey
- * These were moved from internal/ to framework/, which was something that should have
- * happened long ago. They are really framework type of classes.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:15  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:44  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

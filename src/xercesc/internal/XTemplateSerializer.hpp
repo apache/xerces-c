@@ -15,21 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/11/11 22:48:13  knoaman
- * Serialization of XSAnnotation.
- *
- * Revision 1.2  2003/10/29 16:16:08  peiyongz
- * GrammarPool' serialization/deserialization support
- *
- * Revision 1.1  2003/10/17 21:07:49  peiyongz
- * To support Template object serialization/deserialization
- *
  * $Id$
- *
  */
 
 #if !defined(XTEMPLATE_SERIALIZER_HPP)

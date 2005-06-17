@@ -15,52 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2004/09/08 13:55:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/09/30 18:14:34  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.7  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.6  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2003/04/21 20:46:01  knoaman
- * Use XMLString::release to prepare for configurable memory manager.
- *
- * Revision 1.4  2003/03/07 18:08:10  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2002/12/04 02:32:43  knoaman
- * #include cleanup.
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/07/07 22:23:38  jpolast
- * remove useless getKey() functions.
- *
- * Revision 1.4  2000/02/24 20:00:23  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.3  2000/02/15 01:21:31  roddey
- * Some initial documentation improvements. More to come...
- *
- * Revision 1.2  2000/02/06 07:47:49  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:37  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:40  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

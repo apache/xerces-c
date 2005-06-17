@@ -15,18 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2003/11/24 05:10:26  neilg
- * implement method for determining member type of union that validated some value
- *
- * Revision 1.1  2003/11/12 20:29:47  peiyongz
- * Stateless Grammar: ValidationContext
- *
  * $Id$
- *
  */
 
 #if !defined(VALIDATION_CONTEXTIMPL_HPP)

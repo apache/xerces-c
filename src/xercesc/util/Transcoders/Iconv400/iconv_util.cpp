@@ -14,35 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.5  2005/05/18 13:44:44  cargilld
- * OS400 updates from Jay Hansen.
- *
- * Revision 1.5  2005/03/09 21:44:13  jrhansen
- * Use qlgusr.h instead of QlgCvtTextDescToDesc prototype  jrhansen  @15
- * 
- * Revision 1.4  2004/09/23 21:44:13  cargilld
- * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
- *
- * Revision 1.3  2004/09/08 13:56:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 15:14:33  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/10/24 14:06:59  peiyongz
- * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
- *
- * Revision 1.1  2001/06/25 16:19:56  tng
- * Rename iconv_util.h to iconv_util.hpp.  AS400 changes by Linda Swan.
- *
- * Revision 1.1  2000/02/10 18:08:28  abagchi
- * Initial checkin
- *
+/*
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>

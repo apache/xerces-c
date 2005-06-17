@@ -15,47 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/09/08 13:56:09  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2004/05/04 19:02:40  cargilld
- * Enable IDs to work on all kinds of schema components
- *
- * Revision 1.10  2003/12/01 23:23:26  neilg
- * fix for bug 25118; thanks to Jeroen Witmond
- *
- * Revision 1.9  2003/11/25 15:10:44  jberry
- * Eliminate some compiler warnings concerning comments inside of comments
- *
- * Revision 1.8  2003/11/21 17:34:04  knoaman
- * PSVI update
- *
- * Revision 1.7  2003/11/15 21:18:39  neilg
- * fixes for compilation under gcc
- *
- * Revision 1.6  2003/11/14 22:47:53  neilg
- * fix bogus log message from previous commit...
- *
- * Revision 1.5  2003/11/14 22:33:30  neilg
- * Second phase of schema component model implementation.  
- * Implement XSModel, XSNamespaceItem, and the plumbing necessary
- * to connect them to the other components.
- * Thanks to David Cargill.
- *
- * Revision 1.4  2003/11/06 15:30:04  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.3  2003/10/24 10:59:26  gareth
- * changed C comments to C++ comments to prevent compiler warnings.
- *  (rephrased that message to eliminate compiler warnings on the message--this is recursive!)
- *
- * Revision 1.2  2003/10/10 18:37:51  neilg
- * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #if !defined(XSOBJECT_HPP)

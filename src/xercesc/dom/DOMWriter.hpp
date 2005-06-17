@@ -19,40 +19,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.11  2004/09/08 13:55:39  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2003/03/07 19:59:09  tng
- * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
- *
- * Revision 1.9  2002/11/27 18:46:39  tng
- * Documentation: clarify that DOMWriter::writeToString always returns string in UTF-16
- *
- * Revision 1.8  2002/11/04 15:09:25  tng
- * C++ Namespace Support.
- *
- * Revision 1.7  2002/08/22 15:04:57  tng
- * Remove unused parameter variables in inline functions.
- *
- * Revision 1.6  2002/06/25 16:04:49  tng
- * DOM L3: add function release().
- *
- * Revision 1.5  2002/06/06 20:53:07  tng
- * Documentation Fix: Update the API Documentation for DOM headers
- *
- * Revision 1.4  2002/06/03 22:33:21  peiyongz
- * DOMWriter: constants moved to XMLUni
- *
- * Revision 1.3  2002/05/31 20:59:40  peiyongz
- * Add "introduced in DOM3"
- *
- * Revision 1.2  2002/05/30 16:25:33  tng
- * Fix doxygen warning message.
- *
- * Revision 1.1  2002/05/28 22:38:55  peiyongz
- * DOM3 Save Interface: DOMWriter/DOMWriterFilter
- *
  */
 
 /**
@@ -109,7 +75,7 @@
  * <p> Within markup, but outside of attributes, any occurrence of a character
  * that cannot be represented in the output character encoding is reported
  * as an error. An example would be serializing the element
- * &lt;LaCañada/&gt; with the encoding="us-ascii".
+ * &lt;LaCaï¿½ada/&gt; with the encoding="us-ascii".
  * <p> When requested by setting the <code>normalize-characters</code> feature
  * on <code>DOMWriter</code>, all data to be serialized, both markup and
  * character data, is W3C Text normalized according to the rules defined in

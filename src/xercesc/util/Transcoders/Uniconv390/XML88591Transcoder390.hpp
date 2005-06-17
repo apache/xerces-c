@@ -15,16 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:46  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2004/04/22 22:46:46  neilg
- * not all 390 processors support the new transcoding instructions; this patch makes Xerces work there as well.  Thanks to Steve Dulin
- *
- * Revision 1.1  2004/02/06 15:02:11  cargilld
- * Intrinsic transcoding support for 390.
- *
+ * $Id$
  */
 
 #ifndef XML88591TRANSCODER390_HPP

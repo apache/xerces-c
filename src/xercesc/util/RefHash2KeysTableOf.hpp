@@ -15,70 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.15  2005/02/02 09:27:54  amassari
- * Added rehashing capabilities
- *
- * Revision 1.14  2004/12/30 14:52:34  amassari
- * Added API to remove all entries having the same primary key
- *
- * Revision 1.13  2004/11/19 00:50:22  cargilld
- * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
- *
- * Revision 1.12  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2004/08/30 15:18:35  amassari
- * - Added transferElement API
- * - The iterator class now can iterate over the items having the same primary key
- *
- * Revision 1.10  2004/03/01 15:03:08  peiyongz
- * new getter: getHashModulus
- *
- * Revision 1.9  2004/01/29 11:48:46  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/10/20 11:45:06  gareth
- * Made enumerators inherit from XMemory.
- *
- * Revision 1.6  2003/10/17 21:10:40  peiyongz
- * nextElementKey() added
- *
- * Revision 1.5  2003/05/18 14:02:05  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/15 19:04:35  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/06/12 17:15:12  tng
- * Remove redundant include header file.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/12/22 01:06:08  jasons
- * Made the destructors virtual for:
- *
- * * ~RefHash2KeysTableOfEnumerator
- * * ~RefHash3KeysIdPoolEnumerator
- *
- * This fixes bug #5514
- *
- * Revision 1.3  2001/06/04 13:45:03  tng
- * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/11 13:26:28  tng
- * Copyright update.
- *
- * Revision 1.1  2001/02/27 18:24:01  tng
- * Schema: Add utility RefHash2KeysTableOf.
- *
+ * $Id$
  */
 
 

@@ -16,13 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2004/09/08 13:56:54  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/12/11 21:38:41  peiyongz
- * support for Canonical Representation for Datatype
- *
  */
 
 #if !defined(XMLCANREPGROUP_HPP)

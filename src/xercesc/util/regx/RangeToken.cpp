@@ -15,64 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2005/05/05 01:12:24  dbertoni
- * Fix for Jira issue XERCESC-1391.
- *
- * Revision 1.10  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2003/12/17 00:18:37  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/05/16 21:37:00  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.7  2003/05/15 21:46:47  knoaman
- * Add missing include.
- *
- * Revision 1.6  2002/11/04 15:17:00  tng
- * C++ Namespace Support.
- *
- * Revision 1.5  2002/10/15 18:15:02  knoaman
- * [Bug 13490]: - new[]/delete mismatch in RangeToken.cpp
- *
- * Revision 1.4  2002/05/27 11:46:53  tng
- * Fix compilation error.  The definition should match declaration.
- *
- * Revision 1.3  2002/05/24 16:42:20  knoaman
- * Performance fixes: eliminate mulitple calls to addRange and sort.
- *
- * Revision 1.2  2002/03/18 19:29:53  knoaman
- * Change constant names to eliminate possible conflict with user defined ones.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:30  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/05/29 19:39:33  knoaman
- * Typo fix
- *
- * Revision 1.3  2001/05/11 13:26:45  tng
- * Copyright update.
- *
- * Revision 1.2  2001/05/03 18:17:37  knoaman
- * Some design changes:
- * o Changed the TokenFactory from a single static instance, to a
- *    normal class. Each RegularExpression object will have its own
- *    instance of TokenFactory, and that instance will be passed to
- *    other classes that need to use a TokenFactory to create Token
- *    objects (with the exception of RangeTokenMap).
- * o Added a new class RangeTokenMap to map a the different ranges
- *    in a given category to a specific RangeFactory object. In the old
- *    design RangeFactory had dual functionality (act as a Map, and as
- *    a factory for creating RangeToken(s)). The RangeTokenMap will
- *    have its own copy of the TokenFactory. There will be only one
- *    instance of the RangeTokenMap class, and that instance will be
- *    lazily deleted when XPlatformUtils::Terminate is called.
- *
- * Revision 1.1  2001/03/02 19:26:46  knoaman
- * Schema: Regular expression handling part II
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

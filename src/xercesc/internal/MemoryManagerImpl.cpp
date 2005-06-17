@@ -15,19 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/10/02 09:33:23  gareth
- * Removed ^Z from end of files which was preventing compilation under gcc 2.96.
- *
- * Revision 1.2  2003/10/01 16:32:38  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.1  2003/04/21 16:20:41  knoaman
- * Initial check-in.
- *
+ * $Id$
  */
 
 

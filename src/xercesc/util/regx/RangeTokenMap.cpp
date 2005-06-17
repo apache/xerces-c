@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.13  2004/11/12 23:24:58  knoaman
- * Fix multi threading problem.
- *
- * Revision 1.12  2004/10/20 15:18:49  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
- * Revision 1.11  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/07/22 15:37:18  knoaman
- * Use file static instance instead of local static instance
- *
- * Revision 1.9  2004/01/13 16:17:10  knoaman
- * Fo sanity, use class name to qualify method
- *
- * Revision 1.8  2004/01/09 22:41:58  knoaman
- * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
- *
- * Revision 1.7  2003/12/17 00:18:37  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.6  2003/10/17 16:44:34  knoaman
- * Fix multithreading problem.
- *
- * Revision 1.5  2003/05/18 14:02:06  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/15 19:10:23  knoaman
- * Add missing include.
- *
- * Revision 1.3  2003/03/04 21:11:12  knoaman
- * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
- *
- * Revision 1.2  2002/11/04 15:17:00  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:30  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/10/25 15:06:26  tng
- * Thread safe the static instance.
- *
- * Revision 1.4  2001/10/23 23:13:41  peiyongz
- * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
- *
- * Revision 1.3  2001/07/16 21:28:25  knoaman
- * fix bug - no delete for the static instance in destructor.
- *
- * Revision 1.2  2001/05/11 13:26:45  tng
- * Copyright update.
- *
- * Revision 1.1  2001/05/03 18:17:40  knoaman
- * Some design changes:
- * o Changed the TokenFactory from a single static instance, to a
- *    normal class. Each RegularExpression object will have its own
- *    instance of TokenFactory, and that instance will be passed to
- *    other classes that need to use a TokenFactory to create Token
- *    objects (with the exception of RangeTokenMap).
- * o Added a new class RangeTokenMap to map a the different ranges
- *    in a given category to a specific RangeFactory object. In the old
- *    design RangeFactory had dual functionality (act as a Map, and as
- *    a factory for creating RangeToken(s)). The RangeTokenMap will
- *    have its own copy of the TokenFactory. There will be only one
- *    instance of the RangeTokenMap class, and that instance will be
- *    lazily deleted when XPlatformUtils::Terminate is called.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

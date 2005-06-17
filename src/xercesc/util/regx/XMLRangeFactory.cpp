@@ -15,58 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2005/05/05 01:12:24  dbertoni
- * Fix for Jira issue XERCESC-1391.
- *
- * Revision 1.8  2004/11/12 23:24:58  knoaman
- * Fix multi threading problem.
- *
- * Revision 1.7  2004/10/20 15:18:49  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
- * Revision 1.6  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/05/18 14:02:06  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2002/11/04 15:17:01  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/05/24 16:42:20  knoaman
- * Performance fixes: eliminate mulitple calls to addRange and sort.
- *
- * Revision 1.2  2002/02/05 13:20:06  tng
- * [Bug 5716] Can't parse with Validation more than one file.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:34  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/10/15 20:18:32  knoaman
- * Fix for bug 4177.
- *
- * Revision 1.3  2001/05/11 13:26:52  tng
- * Copyright update.
- *
- * Revision 1.2  2001/05/03 18:18:02  knoaman
- * Some design changes:
- * o Changed the TokenFactory from a single static instance, to a
- *    normal class. Each RegularExpression object will have its own
- *    instance of TokenFactory, and that instance will be passed to
- *    other classes that need to use a TokenFactory to create Token
- *    objects (with the exception of RangeTokenMap).
- * o Added a new class RangeTokenMap to map a the different ranges
- *    in a given category to a specific RangeFactory object. In the old
- *    design RangeFactory had dual functionality (act as a Map, and as
- *    a factory for creating RangeToken(s)). The RangeTokenMap will
- *    have its own copy of the TokenFactory. There will be only one
- *    instance of the RangeTokenMap class, and that instance will be
- *    lazily deleted when XPlatformUtils::Terminate is called.
- *
- * Revision 1.1  2001/03/02 19:26:50  knoaman
- * Schema: Regular expression handling part II
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

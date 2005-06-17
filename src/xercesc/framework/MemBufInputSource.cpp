@@ -15,41 +15,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.7  2004/09/28 02:14:13  cargilld
- * Add support for validating annotations.
- *
- * Revision 1.6  2004/09/08 13:55:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/05/16 03:11:30  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/02/06 07:47:46  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1  2000/01/12 00:13:26  roddey
- * These were moved from internal/ to framework/, which was something that should have
- * happened long ago. They are really framework type of classes.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:10  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:42  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

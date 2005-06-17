@@ -15,19 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/02/23 15:57:48  cargilld
- * Copy performance change made to XMLUTF8Transcoder.cpp to the 390 version.
- *
- * Revision 1.5  2004/09/08 13:56:46  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/06/30 19:04:17  peiyongz
- * XML1.0-3rd Edition: UTF_8
- *
- * Revision 1.3  2004/02/06 18:23:55  cargilld
- * Misc 390 changes.
- *
+ * $Id$
  */
 
 

@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2004/09/20 14:47:13  amassari
- * Mark some methods as deprecated
- *
- * Revision 1.9  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2004/01/29 11:52:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/12/17 00:18:40  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.6  2003/10/10 16:24:51  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.5  2003/05/16 21:43:19  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/05/15 18:54:50  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/01/29 19:46:40  gareth
- * added DOMTypeInfo API
- *
- * Revision 1.2  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/02/24 20:16:48  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:26  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #if !defined(DTDATTDEF_HPP)

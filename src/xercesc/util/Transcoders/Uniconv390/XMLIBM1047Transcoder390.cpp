@@ -15,16 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:46  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2004/06/15 17:26:25  neilg
- * make sure tables are properly aligned; thanks to Steve Dulin
- *
- * Revision 1.1  2004/02/06 15:02:11  cargilld
- * Intrinsic transcoding support for 390.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

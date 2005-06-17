@@ -15,30 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/11/28 21:18:31  knoaman
- * Make use of canonical representation in PSVIElement
- *
- * Revision 1.5  2003/11/27 22:52:37  knoaman
- * PSVIElement implementation
- *
- * Revision 1.4  2003/11/21 22:34:45  neilg
- * More schema component model implementation, thanks to David Cargill.
- * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
- * XSAttributeDeclaration and XSAttributeGroup implementations.
- *
- * Revision 1.3  2003/11/06 21:50:33  neilg
- * fix compilation errors under gcc 3.3.
- *
- * Revision 1.2  2003/11/06 15:30:04  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #if !defined(PSVIELEMENT_HPP)

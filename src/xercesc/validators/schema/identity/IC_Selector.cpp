@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/10/14 15:24:23  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.5  2003/05/15 18:59:34  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/01/13 16:30:19  knoaman
- * [Bug 14469] Validator doesn't enforce xsd:key.
- *
- * Revision 1.3  2002/11/04 14:47:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/08/27 05:56:19  knoaman
- * Identity Constraint: handle case of recursive elements.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/11/23 18:35:33  tng
- * Eliminate Warning from AIX xlC 3.6:1540-399: (W) "XMLAttr" is undefined.  The delete operator will not call a destructor.
- *
- * Revision 1.2  2001/11/15 17:10:19  knoaman
- * Particle derivation checking support.
- *
- * Revision 1.1  2001/11/02 14:08:40  knoaman
- * Add support for identity constraints.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

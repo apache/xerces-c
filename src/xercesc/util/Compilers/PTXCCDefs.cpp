@@ -15,16 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:56:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/04/04 21:07:39  abagchi
- * Fixed copyrights with initial checkin
- *
+ * $Id$
  */ 
 
 // ---------------------------------------------------------------------------

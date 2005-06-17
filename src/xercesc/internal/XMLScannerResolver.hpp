@@ -15,23 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/07/10 19:47:24  peiyongz
- * Stateless Grammar: Initialize scanner with grammarResolver,
- *                                creating grammar through grammarPool
- *
- * Revision 1.3  2003/05/16 21:36:58  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.2  2003/05/15 18:26:29  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.1  2002/12/04 01:44:21  knoaman
- * Initial check-in.
- *
+ * $Id$
  */
 
 #if !defined(XMLSCANNERRESOLVER_HPP)

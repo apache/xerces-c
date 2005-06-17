@@ -15,33 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/11/21 22:34:45  neilg
- * More schema component model implementation, thanks to David Cargill.
- * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
- * XSAttributeDeclaration and XSAttributeGroup implementations.
- *
- * Revision 1.5  2003/11/21 17:19:30  knoaman
- * PSVI update.
- *
- * Revision 1.4  2003/11/14 22:47:53  neilg
- * fix bogus log message from previous commit...
- *
- * Revision 1.3  2003/11/14 22:33:30  neilg
- * Second phase of schema component model implementation.  
- * Implement XSModel, XSNamespaceItem, and the plumbing necessary
- * to connect them to the other components.
- * Thanks to David Cargill.
- *
- * Revision 1.2  2003/11/06 15:30:04  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #include <xercesc/framework/psvi/XSAttributeGroupDefinition.hpp>

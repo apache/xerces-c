@@ -15,25 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:55:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/03/07 18:07:17  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.4  2002/11/04 15:07:34  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/05/30 19:26:00  knoaman
- * documentation update
- *
- * Revision 1.2  2002/05/27 18:25:41  tng
- * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
- *
- * Revision 1.1  2002/05/23 15:47:24  knoaman
- * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
- *
+ * $Id$
  */
 
 

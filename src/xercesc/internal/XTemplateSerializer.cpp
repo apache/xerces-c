@@ -16,45 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.13  2005/04/04 15:03:14  cargilld
- * Add support for not creating xsannotations when deserializing a grammar.
- *
- * Revision 1.12  2005/02/19 22:26:19  cargilld
- * Store key for recreating table instead of using enclosingscope.
- *
- * Revision 1.11  2004/10/26 14:48:46  peiyongz
- * Maintain consistent order among multiple store/load session to allow comparison
- *
- * Revision 1.10  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2004/03/09 20:59:28  peiyongz
- * restore key string from string pool from datatypevalidator
- *
- * Revision 1.8  2004/03/01 23:20:46  peiyongz
- * For RefHashTableOf/RefHash2KeysTableOf/RefHashTable3KeysIdPool,
- * resovle "key string" either from the data itself or the GrammarPool's StringPool.
- *
- * Revision 1.6  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.5  2003/11/11 22:48:13  knoaman
- * Serialization of XSAnnotation.
- *
- * Revision 1.4  2003/11/03 22:01:27  peiyongz
- * Store/Load keys separately from SchemaElementDecl
- *
- * Revision 1.3  2003/10/31 22:15:31  peiyongz
- * fix bug in creating ElemVector
- *
- * Revision 1.2  2003/10/29 16:16:08  peiyongz
- * GrammarPool' serialization/deserialization support
- *
- * Revision 1.1  2003/10/17 21:07:49  peiyongz
- * To support Template object serialization/deserialization
- *
- *
  */
 
 

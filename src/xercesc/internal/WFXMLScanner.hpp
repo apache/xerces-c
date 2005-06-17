@@ -15,44 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/12/03 19:40:30  cargilld
- * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
- *
- * Revision 1.11  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/04/07 14:14:08  peiyongz
- * make resolveSystemId virutal
- *
- * Revision 1.9  2004/01/29 11:46:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2003/10/22 20:22:30  knoaman
- * Prepare for annotation support.
- *
- * Revision 1.7  2003/07/10 19:47:24  peiyongz
- * Stateless Grammar: Initialize scanner with grammarResolver,
- *                                creating grammar through grammarPool
- *
- * Revision 1.6  2003/05/16 21:36:57  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.5  2003/05/15 18:26:29  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/03/07 18:08:58  tng
- * Return a reference instead of void for operator=
- *
- * Revision 1.3  2003/01/15 15:49:49  knoaman
- * Change constant declaration name to match its value.
- *
- * Revision 1.2  2003/01/02 16:29:05  knoaman
- * Modified the way we handle element tags.
- *
- * Revision 1.1  2002/12/04 02:01:29  knoaman
- * Initial checkin.
- *
+ * $Id$
  */
 
 

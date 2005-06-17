@@ -15,20 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/26 01:06:31  cargilld
- * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
- *
- * Revision 1.2  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/10/30 21:37:32  knoaman
- * Enhanced Entity Resolver Support. Thanks to David Cargill.
- *
- *
- * Revision 1.1    1999/11/09 01:07:44  twl
- * Initial checkin
- *
+ * $Id$
  */
 
 #ifndef XMLENTITYRESOLVER_HPP

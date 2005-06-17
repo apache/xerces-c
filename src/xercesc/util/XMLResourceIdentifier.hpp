@@ -15,44 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2005/01/07 15:12:10  amassari
- * Removed warnings
- *
- * Revision 1.10  2004/12/21 16:32:52  cargilld
- * Attempt to fix various apidoc problems.
- *
- * Revision 1.9  2004/12/21 16:02:51  cargilld
- * Attempt to fix various apidoc problems.
- *
- * Revision 1.8  2004/12/03 19:40:32  cargilld
- * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
- *
- * Revision 1.7  2004/09/26 01:06:31  cargilld
- * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
- *
- * Revision 1.6  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2004/02/15 19:37:16  amassari
- * Removed cause for warnings in VC 7.1
- *
- * Revision 1.4  2004/02/13 14:28:30  cargilld
- * Fix for bug 26900 (remove virtual on destructor)
- *
- * Revision 1.3  2004/01/29 11:48:47  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.2  2003/11/25 18:16:38  knoaman
- * Documentation update. Thanks to David Cargill.
- *
- * Revision 1.1  2003/10/30 21:37:32  knoaman
- * Enhanced Entity Resolver Support. Thanks to David Cargill.
- *
- *
- * Revision 1.1    1999/11/09 01:07:44  twl
- * Initial checkin
- *
+ * $Id$
  */
 
 #ifndef XMLRESOURCEIDENTIFIER_HPP

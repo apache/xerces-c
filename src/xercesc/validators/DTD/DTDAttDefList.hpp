@@ -15,43 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2004/01/29 11:52:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.6  2003/11/10 21:54:51  neilg
- * implementation for new stateless means of traversing attribute definition lists
- *
- * Revision 1.5  2003/10/20 11:46:28  gareth
- * Pass in memory manager to constructors and use for creation of enumerators.
- *
- * Revision 1.4  2003/10/10 16:24:51  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.3  2002/12/06 13:27:22  tng
- * [Bug 9083] Make some classes be exportable.
- *
- * Revision 1.2  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/02/24 20:16:48  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:28  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

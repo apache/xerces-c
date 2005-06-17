@@ -15,43 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2003/12/17 00:18:41  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/10/01 16:32:42  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.8  2003/05/26 22:05:01  knoaman
- * Pass the memory manager to XMLString::replicate.
- *
- * Revision 1.7  2003/05/18 14:02:09  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.6  2003/05/15 18:59:34  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/11/04 14:47:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/08/28 13:41:20  knoaman
- * missing type info.
- *
- * Revision 1.3  2002/08/27 05:56:19  knoaman
- * Identity Constraint: handle case of recursive elements.
- *
- * Revision 1.2  2002/08/26 23:48:09  knoaman
- * Fix for ValueStore's null pointer.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/11/02 14:08:40  knoaman
- * Add support for identity constraints.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

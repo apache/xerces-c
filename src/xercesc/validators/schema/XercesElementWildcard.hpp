@@ -15,24 +15,8 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 14:49:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/11/21 14:30:13  knoaman
- * Fix for UPA checking.
- *
- * Revision 1.1  2001/08/21 15:58:42  tng
- * Schema: New files XercesElementWildCard.
- *
-
-*/
+ * $Id$
+ */
 
 
 #if !defined(XERCESELEMENTWILDCARD_HPP)

@@ -15,50 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:13  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.4  2003/05/16 21:36:57  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.3  2002/11/04 14:58:18  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/09/24 20:02:20  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.1.1.1  2002/02/01 22:21:58  peiyongz
- * sane_include
- *
- * Revision 1.7  2001/10/05 17:57:39  peiyongz
- * [BUG# 3831]: -1 returned from getIndex() needs to be checked
- *
- * Revision 1.6  2001/05/11 13:26:16  tng
- * Copyright update.
- *
- * Revision 1.5  2001/03/21 21:56:04  tng
- * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
- *
- * Revision 1.4  2001/02/26 19:44:14  tng
- * Schema: add utility class QName, by Pei Yong Zhang.
- *
- * Revision 1.3  2000/11/02 01:14:07  andyh
- * SAX bug fix:  Attribute lists were throwing exceptions rather than returning
- * null when an attribute could not be found by name.  Fixed by Tinny Ng.
- *
- * Revision 1.2  2000/08/09 22:11:16  jpolast
- * changes to allow const instances of the sax2
- * Attributes class.
- *
- * Revision 1.1  2000/08/02 18:09:14  jpolast
- * initial checkin: attributes vector needed for
- * Attributes class as defined by sax2 spec
- *
- *
+ * $Id$
  */
 
 

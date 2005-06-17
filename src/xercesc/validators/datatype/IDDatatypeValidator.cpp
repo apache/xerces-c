@@ -16,54 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.9  2004/09/08 13:56:53  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2003/12/17 00:18:39  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/11/12 20:31:33  peiyongz
- * Using ValidationContext to validate()
- *
- * Revision 1.6  2003/09/30 18:17:53  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.5  2003/05/16 21:43:21  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.4  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.2  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/10/09 20:50:02  peiyongz
- * init(): take 1 arg
- *
- * Revision 1.5  2001/09/27 13:51:25  peiyongz
- * DTV Reorganization: ctor/init created to be used by derived class
- *
- * Revision 1.4  2001/09/25 14:23:42  peiyongz
- * DTV Reorganization: checkValueSpace()
- *
- * Revision 1.3  2001/08/14 22:11:56  peiyongz
- * new exception message added
- *
- * Revision 1.2  2001/07/24 21:23:40  tng
- * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
- *
- * Revision 1.1  2001/07/04 14:38:25  peiyongz
- * IDDatatypeValidator: created
- * DatatypeValidatorFactory: IDDTV enabled
- * XMLString:isValidName(): to validate Name (XML [4][5])
- *
  */
 
 // ---------------------------------------------------------------------------

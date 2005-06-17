@@ -16,62 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.14  2004/09/08 13:56:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.13  2004/01/13 20:57:06  peiyongz
- * revert code back to previous version
- *
- * Revision 1.10  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.8  2003/11/06 15:30:07  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.7  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.6  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.5  2003/05/16 06:01:57  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.2  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/10/02 18:59:29  peiyongz
- * Invalid_Facet_Tag to display the tag name
- *
- * Revision 1.5  2001/10/01 21:03:55  peiyongz
- * DTV Reorganization:derived from AbstractNumericValidator
- *
- * Revision 1.4  2001/09/20 13:11:42  knoaman
- * Regx  + misc. fixes
- *
- * Revision 1.3  2001/08/21 18:42:53  peiyongz
- * Bugzilla# 2816: cleanUp() declared with external linkage and called
- *                          before defined as inline
- *
- * Revision 1.2  2001/08/15 18:08:44  peiyongz
- * Fix to potential leakage in strEnumeration
- *
- * Revision 1.1  2001/07/24 13:59:03  peiyongz
- * DoubleDTV
- *
  */
 
 // ---------------------------------------------------------------------------
