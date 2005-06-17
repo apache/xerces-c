@@ -926,6 +926,14 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
          fContentSpecOrgURI = 0;
          fContentSpecOrgURISize = 0;
          fUniqueURI = 0;
+
+         // Create the content model by calling getContentModel().  This
+         // will ensure the grammar can be used concurrently by multiple
+         // parsers.
+         // Don't bother to do check unique particle attribution, since
+         // this will already have been done when the grammar was first
+         // created (if full schema checking was enabled).
+         getContentModel(false);
     }
 }
 
