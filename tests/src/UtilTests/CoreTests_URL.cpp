@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2003/05/30 13:08:27  gareth
- * move over to macros for std:: and iostream/iostream.h issues.
- *
- * Revision 1.9  2002/02/01 22:46:28  peiyongz
- * sane_include
- *
- * Revision 1.8  2000/03/23 01:02:40  roddey
- * Updates to the XMLURL class to correct a lot of parsing problems
- * and to add support for the port number. Updated the URL tests
- * to test some of this new stuff.
- *
- * Revision 1.7  2000/03/02 19:55:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/17 18:51:10  roddey
- * Added a new test for pruning leading whitespace
- *
- * Revision 1.5  2000/02/06 07:48:39  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/19 00:59:06  roddey
- * Get rid of dependence on old utils output streams.
- *
- * Revision 1.3  2000/01/12 00:17:48  roddey
- * Removed validator tests temporarily, since they have changed and the tests need
- * to be rewritten. Added new tests for the new URL class.
- *
- * Revision 1.2  1999/12/07 23:11:01  roddey
- * Add in some new tests for transcoders and update the URL tests
- * a bit.
- *
- * Revision 1.1.1.1  1999/11/09 01:02:05  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:42:28  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

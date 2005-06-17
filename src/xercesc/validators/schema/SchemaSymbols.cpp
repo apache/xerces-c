@@ -15,63 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2002/11/04 14:49:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/05/27 19:39:25  knoaman
- * remove unused constants.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
- * sane_include
- *
- * Revision 1.14  2001/11/07 19:20:01  peiyongz
- * DateTime Port
- *
- * Revision 1.13  2001/09/18 14:41:56  knoaman
- * Add support for <annotation>.
- *
- * Revision 1.12  2001/08/24 20:36:37  knoaman
- * Add support for <redefine>.
- *
- * Revision 1.11  2001/08/24 17:12:02  knoaman
- * Add support for anySimpleType.
- * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
- *
- * Revision 1.10  2001/08/22 16:57:53  tng
- * typo in ##other.
- *
- * Revision 1.9  2001/08/01 18:49:32  peiyongz
- * AnyRUIDatatypeValidator
- *
- * Revision 1.8  2001/05/16 15:24:51  tng
- * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
- *
- * Revision 1.7  2001/05/15 21:59:34  knoaman
- * TraverseSchema: add attribute checking + some fixes + more error messages.
- * More attribute cheking to come.
- *
- * Revision 1.6  2001/05/14 17:53:48  tng
- * Schema: Update Schema URL
- *
- * Revision 1.5  2001/05/11 15:17:43  tng
- * Schema: Nillable fixes.
- *
- * Revision 1.4  2001/05/11 13:27:37  tng
- * Copyright update.
- *
- * Revision 1.3  2001/05/09 18:43:49  tng
- * Add StringDatatypeValidator and BooleanDatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/03 19:18:03  knoaman
- * TraverseSchema Part II.
- *
- * Revision 1.1  2001/03/21 21:39:21  knoaman
- * Schema symbols and Datatype validator part I
- *
+ * $Id$
  */
 
 

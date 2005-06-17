@@ -15,50 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/11/25 14:36:40  knoaman
- * Fix problem with an All content model with minOccurs of 0.
- *
- * Revision 1.10  2004/09/16 13:32:03  amassari
- * Updated error message for UPA to also state the complex type that is failing the test
- *
- * Revision 1.9  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2004/01/29 11:51:21  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.6  2003/11/20 18:09:18  knoaman
- * Store a copy of each child, instead of a reference, as the content spec node
- * tree is not guaranteed to be persistent.
- *
- * Revision 1.5  2003/05/18 14:02:06  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/09/24 19:48:39  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/11/21 14:30:13  knoaman
- * Fix for UPA checking.
- *
- * Revision 1.2  2001/08/27 12:19:00  tng
- * Schema: AllContentModel UPA Check typo fix
- *
- * Revision 1.1  2001/08/24 12:48:48  tng
- * Schema: AllContentModel
- *
+ * $Id$
  */
 
 

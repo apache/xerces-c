@@ -15,28 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2005/01/18 19:09:20  cargilld
- * Delete memory for parser and grammarpool.  Fix from Steve Dulin.
- *
- * Revision 1.6  2005/01/12 21:00:47  cargilld
- * Fix for xercesc-1219.
- *
- * Revision 1.5  2004/09/28 04:42:21  cargilld
- * Update sample to use an error handler and only generate xsmodel when a schema document has been loaded successfully.
- *
- * Revision 1.4  2004/09/08 13:55:34  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2004/09/02 14:59:29  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.2  2004/02/12 13:58:58  cargilld
- * Fix build errors.
- *
- * Revision 1.1  2004/02/11 20:53:05  peiyongz
- * SCMPrint
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

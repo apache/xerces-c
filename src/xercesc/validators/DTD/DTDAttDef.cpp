@@ -15,39 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:50  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/10/10 16:24:51  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.4  2003/05/16 21:43:19  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.3  2003/05/15 18:54:50  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 14:50:40  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:43  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/03/02 19:55:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swatswat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:24  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

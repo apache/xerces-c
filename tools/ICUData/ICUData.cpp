@@ -16,14 +16,7 @@
 
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2000/03/17 23:58:00  roddey
- * New utility for munging ICU UCM files and spitting out tables for
- * our intrinsic encoders.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

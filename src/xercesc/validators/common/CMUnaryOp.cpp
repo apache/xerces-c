@@ -15,50 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.3  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/05/11 13:27:17  tng
- * Copyright update.
- *
- * Revision 1.3  2001/02/27 14:48:47  tng
- * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
- * Revision 1.2  2001/02/16 14:58:57  tng
- * Schema: Update Makefile, configure files, project files, and include path in
- * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
- *
- * Revision 1.1  2001/02/16 14:17:29  tng
- * Schema: Move the common Content Model files that are shared by DTD
- * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
- *
- * Revision 1.3  2000/03/02 19:55:37  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swatswat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:08  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:37  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

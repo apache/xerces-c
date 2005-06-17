@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.19  2005/01/12 20:43:21  cargilld
- * Remove warning messages.
- *
- * Revision 1.18  2004/09/08 13:55:34  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.17  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.16  2003/03/17 21:03:45  peiyongz
- * Bug#17983
- *
- * Revision 1.15  2002/02/01 22:41:17  peiyongz
- * sane_include
- *
- * Revision 1.14  2001/05/11 13:24:58  tng
- * Copyright update.
- *
- * Revision 1.13  2001/05/03 16:00:25  tng
- * Schema: samples update with schema
- *
- * Revision 1.12  2000/10/10 23:55:58  andyh
- * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
- * output to multi-byte encodings.
- *
- * Revision 1.11  2000/07/25 22:41:32  aruna1
- * Char definitions in XMLUni moved to XMLUniDefs
- *
- * Revision 1.10  2000/06/17 01:58:06  rahulj
- * Now output the PI's with no space between ? and target.
- *
- * Revision 1.9  2000/05/31 23:58:19  rahulj
- * Needed an explicit char* cast to get it working under Solaris.
- *
- * Revision 1.8  2000/04/07 23:25:53  roddey
- * A couple more tweaks of the event handler output.
- *
- * Revision 1.7  2000/04/06 19:09:51  roddey
- * Some more improvements to output formatting. Now it will correctly
- * handle doing the 'replacement char' style of dealing with chars
- * that are unrepresentable.
- *
- * Revision 1.6  2000/04/05 00:20:32  roddey
- * More updates for the low level formatted output support
- *
- * Revision 1.5  2000/03/28 19:43:11  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.4  2000/03/02 19:53:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/11 03:05:35  abagchi
- * Removed second parameter from call to StrX constructor
- *
- * Revision 1.2  2000/02/06 07:47:24  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:29  twl
- * Initial checkin
- *
- * Revision 1.11  1999/11/08 20:43:42  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

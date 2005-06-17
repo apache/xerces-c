@@ -15,14 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:56:39  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2004/02/17 15:56:50  neilg
- * fix for bug 25035; much thanks to Abe Backus
- *
- *
+ * $Id$
  */
 
 

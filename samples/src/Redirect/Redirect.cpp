@@ -34,47 +34,7 @@
  * callback returns NULL indicating that do the default behaviour which is
  * to read the contents of 'personal.dtd'.
  *
- * $Log$
- * Revision 1.12  2005/04/05 15:16:36  cargilld
- * Update Redirect sample to use newer entity resolver callback.
- *
- * Revision 1.11  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/09/02 14:59:29  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.9  2003/08/07 21:21:38  neilg
- * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
- *
- * Revision 1.8  2003/05/30 09:36:35  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.7  2002/02/01 22:38:26  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/10/25 15:18:33  tng
- * delete the parser before XMLPlatformUtils::Terminate.
- *
- * Revision 1.5  2001/10/19 19:02:42  tng
- * [Bug 3909] return non-zero an exit code when error was encounted.
- * And other modification for consistent help display and return code across samples.
- *
- * Revision 1.4  2000/05/31 18:53:15  rahulj
- * Removed extraneous command line arguments.
- *
- * Revision 1.3  2000/02/11 02:38:28  abagchi
- * Removed StrX::transcode
- *
- * Revision 1.2  2000/02/06 07:47:21  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:37  twl
- * Initial checkin
- *
- * Revision 1.6  1999/11/08 20:43:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

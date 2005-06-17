@@ -15,48 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.13  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.12  2003/05/30 13:08:25  gareth
- * move over to macros for std:: and iostream/iostream.h issues.
- *
- * Revision 1.11  2002/02/01 22:45:54  peiyongz
- * sane_include
- *
- * Revision 1.10  2001/11/28 21:15:08  tng
- * Fix broken ParserTest.
- *
- * Revision 1.9  2000/06/22 04:31:27  roddey
- * Another do nothing change to make sure I can still commit
- * from home after changing my password.
- *
- * Revision 1.7  2000/03/02 19:55:46  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/06 07:48:36  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/01/26 19:35:57  roddey
- * When the /Debug output format is used, it will spit out source offset
- * data as well now.
- *
- * Revision 1.4  2000/01/21 23:58:06  roddey
- * Initial move away from util streams was bad. Wide char APIs didn't allow enough
- * control to do canonical output, so changed to use std short char APIs.
- *
- * Revision 1.2  2000/01/12 00:29:49  roddey
- * Changes for the new URL and InputSource changes.
- *
- * Revision 1.1.1.1  1999/11/09 01:02:14  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:42:25  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

@@ -16,17 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2005/04/05 18:36:00  cargilld
- * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
- *
- * Revision 1.2  2004/09/08 13:56:22  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/03/09 17:06:16  peiyongz
- * PanicHandler
- *
- *
  */
 
 

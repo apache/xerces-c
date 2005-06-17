@@ -15,25 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.4  2004/09/08 13:56:19  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.3  2003/08/13 15:43:24  knoaman
- * Use memory manager when creating SAX exceptions.
- *
- * Revision 1.2  2002/11/04 14:56:26  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:08  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/08/09 22:06:04  jpolast
- * more functionality to SAXException and its children.
- * msgs are now functional for SAXNotSupportedEx and
- * SAXNotRecognizedEx
- *
- *
+ * $Id$
  */
 
 #include "SAXException.hpp"

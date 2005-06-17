@@ -15,19 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:55:35  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1.1.1  2002/02/01 22:21:40  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/06/03 00:28:55  andyh
- * COM Wrapper changes from Curt Arnold
- *
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 // stdafx.h : include file for standard system include files,

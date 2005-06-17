@@ -15,419 +15,7 @@
  */
 
 /*
-* $Id$
-* $Log$
-* Revision 1.17  2005/05/05 09:46:11  cargilld
-* Update XSValue to handle float and double the same way the main library does, converting values to infinityr or zero, as the C ranges for float and double are less than the schema ranges.
-*
-* Revision 1.16  2005/04/05 20:26:48  cargilld
-* Update XSValue to handle leading and trailing whitespace.
-*
-* Revision 1.15  2005/02/25 18:30:46  cargilld
-* Attempt to fix compiler errors.
-*
-* Revision 1.14  2005/02/25 09:38:23  gareth
-* Fix for compile under gcc 4. Patch by Scott Cantor.
-*
-* Revision 1.13  2004/12/23 16:11:21  cargilld
-* Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
-*
-* Revision 1.12  2004/11/14 19:02:21  peiyongz
-* error status for numeric data types tested
-*
-* Revision 1.11  2004/09/13 21:25:11  peiyongz
-* DATATYPE_TEST added
-*
-* Revision 1.10  2004/09/10 13:55:00  peiyongz
-* to run on 64 box
-*
-* Revision 1.9  2004/09/09 20:10:04  peiyongz
-* Using new error code
-*
-* Revision 1.8  2004/09/08 19:56:32  peiyongz
-* Remove parameter toValidate from validation interface
-*
-* Revision 1.7  2004/09/08 13:57:06  peiyongz
-* Apache License Version 2.0
-*
-* Revision 1.6  2004/08/31 20:53:43  peiyongz
-* Testing time zone
-*
-* Revision 1.5  2004/08/31 15:15:16  peiyongz
-* remove XSValueContext
-*
-* Revision 1.4  2004/08/24 16:00:15  peiyongz
-* To build on AIX/Win2003-ecl
-*
-* Revision 1.3  2004/08/23 17:07:57  peiyongz
-* Minimum representable range on all platforms
-*
-* Revision 1.2  2004/08/19 21:29:28  peiyongz
-* no message
-*
-* Revision 1.1  2004/08/19 17:17:21  peiyongz
-* XSValueTest
-*
-*
-*/
-
-// ---------------------------------------------------------------------------
-//  Includes
-// ---------------------------------------------------------------------------
-#include "XSValueTest.hpp"
-
-#include <xercesc/validators/schema/SchemaSymbols.hpp>
-#include <xercesc/util/XMLUni.hpp>
-
-#if defined(XERCES_NEW_IOSTREAMS)
-#include <fstream>
-#else
-#include <fstream.h>
-#endif
-
-#include <stdio.h>
-#include <math.h>
-
-#include <xercesc/framework/psvi/XSValue.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-
-static const bool  EXP_RET_VALID_TRUE  = true;
-static const bool  EXP_RET_VALUE_TRUE  = true;
-static const bool  EXP_RET_CANREP_TRUE = true;
-
-static const bool  EXP_RET_VALID_FALSE  = false;
-static const bool  EXP_RET_VALUE_FALSE  = false;
-static const bool  EXP_RET_CANREP_FALSE = false;
-
-static const XSValue::Status DONT_CARE = XSValue::st_UnknownType;
-static bool  errSeen = false;
-
-static const XMLCh* getDataTypeString(const XSValue::DataType dt)
-{
-    switch(dt)
-    {
-    case XSValue::dt_string:
-        return SchemaSymbols::fgDT_STRING;
-    case XSValue::dt_boolean:
-        return SchemaSymbols::fgDT_BOOLEAN;
-    case XSValue::dt_decimal:
-        return SchemaSymbols::fgDT_DECIMAL;
-    case XSValue::dt_float:
-        return SchemaSymbols::fgDT_FLOAT;
-    case XSValue::dt_double:
-        return SchemaSymbols::fgDT_DOUBLE;      
-    case XSValue::dt_duration:
-        return SchemaSymbols::fgDT_DURATION;  
-    case XSValue::dt_dateTime:
-        return SchemaSymbols::fgDT_DATETIME;   
-    case XSValue::dt_time:
-        return SchemaSymbols::fgDT_TIME;      
-    case XSValue::dt_date:
-        return SchemaSymbols::fgDT_DATE; 
-    case XSValue::dt_gYearMonth:
-        return SchemaSymbols::fgDT_YEARMONTH; 
-    case XSValue::dt_gYear:
-        return SchemaSymbols::fgDT_YEAR; 
-    case XSValue::dt_gMonthDay:
-        return SchemaSymbols::fgDT_MONTHDAY;  
-    case XSValue::dt_gDay:
-        return SchemaSymbols::fgDT_DAY;   
-    case XSValue::dt_gMonth:
-        return SchemaSymbols::fgDT_MONTH;  
-    case XSValue::dt_hexBinary:
-        return SchemaSymbols::fgDT_HEXBINARY; 
-    case XSValue::dt_base64Binary:
-        return SchemaSymbols::fgDT_BASE64BINARY; 
-    case XSValue::dt_anyURI:
-        return SchemaSymbols::fgDT_ANYURI;   
-    case XSValue::dt_QName:
-        return SchemaSymbols::fgDT_QNAME; 
-    case XSValue::dt_NOTATION:
-        return XMLUni::fgNotationString;   
-    case XSValue::dt_normalizedString:
-        return SchemaSymbols::fgDT_NORMALIZEDSTRING; 
-    case XSValue::dt_token:
-        return SchemaSymbols::fgDT_TOKEN;         
-    case XSValue::dt_language:
-        return SchemaSymbols::fgDT_LANGUAGE;    
-    case XSValue::dt_NMTOKEN:
-        return XMLUni::fgNmTokenString;       
-    case XSValue::dt_NMTOKENS:
-        return XMLUni::fgNmTokensString;   
-    case XSValue::dt_Name:
-        return SchemaSymbols::fgDT_NAME;     
-    case XSValue::dt_NCName:
-        return SchemaSymbols::fgDT_NCNAME;  
-    case XSValue::dt_ID:
-        return XMLUni::fgIDString; 
-    case XSValue::dt_IDREF:
-        return XMLUni::fgIDRefString;   
-    case XSValue::dt_IDREFS:
-        return XMLUni::fgIDRefsString; 
-    case XSValue::dt_ENTITY:
-        return XMLUni::fgEntityString; 
-    case XSValue::dt_ENTITIES:
-        return XMLUni::fgEntitiesString;  
-    case XSValue::dt_integer:
-        return SchemaSymbols::fgDT_INTEGER;  
-    case XSValue::dt_nonPositiveInteger:
-        return SchemaSymbols::fgDT_NONPOSITIVEINTEGER; 
-    case XSValue::dt_negativeInteger:
-        return SchemaSymbols::fgDT_NEGATIVEINTEGER;
-    case XSValue::dt_long:
-        return SchemaSymbols::fgDT_LONG; 
-    case XSValue::dt_int:
-        return SchemaSymbols::fgDT_INT;  
-    case XSValue::dt_short:
-        return SchemaSymbols::fgDT_SHORT; 
-    case XSValue::dt_byte:
-        return SchemaSymbols::fgDT_BYTE;  
-    case XSValue::dt_nonNegativeInteger:
-        return SchemaSymbols::fgDT_NONNEGATIVEINTEGER;
-    case XSValue::dt_unsignedLong:
-        return SchemaSymbols::fgDT_ULONG; 
-    case XSValue::dt_unsignedInt:
-        return SchemaSymbols::fgDT_UINT;
-    case XSValue::dt_unsignedShort:
-        return SchemaSymbols::fgDT_USHORT;  
-    case XSValue::dt_unsignedByte:
-        return SchemaSymbols::fgDT_UBYTE;     
-    case XSValue::dt_positiveInteger:
-        return SchemaSymbols::fgDT_POSITIVEINTEGER;
-    default:
-        return 0;
-    }
-}
-
-static bool compareActualValue( const XSValue::DataType             datatype
-                              , const XSValue::XSValue_Data         actValue
-                              , const XSValue::XSValue_Data         expValue)
-{
-    switch (datatype) {                        
-        case XSValue::dt_boolean:
-            if (actValue.fValue.f_bool == expValue.fValue.f_bool)
-                return true;
-            printf("ACTVALUE_TEST Unexpected XSValue for dt_boolean, got %d expected %d\n",
-                    actValue.fValue.f_bool, expValue.fValue.f_bool);
-            return false;
-
-        case XSValue::dt_decimal:
-            if (fabs(actValue.fValue.f_double - expValue.fValue.f_double) < fabs(actValue.fValue.f_double)/1000)
-                return true;
-            printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
-                actValue.fValue.f_double, expValue.fValue.f_double);
-            return false;
-        case XSValue::dt_double:
-            if (actValue.fValue.f_doubleType.f_doubleEnum == XSValue::DoubleFloatType_Normal) {
-                if (fabs(actValue.fValue.f_double - expValue.fValue.f_double) < fabs(actValue.fValue.f_double)/1000)
-                    return true;
-                printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
-                        actValue.fValue.f_double, expValue.fValue.f_double);
-                return false;
-            }
-            else {
-                if (actValue.fValue.f_doubleType.f_doubleEnum == expValue.fValue.f_doubleType.f_doubleEnum)
-                    return true;
-                printf("ACTVALUE_TEST Unexpected XSValue enum for datatype %s, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
-                        actValue.fValue.f_doubleType.f_doubleEnum, expValue.fValue.f_doubleType.f_doubleEnum);
-                return false;
-            }        
-        case XSValue::dt_float:   
-            if (actValue.fValue.f_floatType.f_floatEnum == XSValue::DoubleFloatType_Normal) {
-                if (fabs(actValue.fValue.f_float - expValue.fValue.f_float) < fabs(actValue.fValue.f_float)/1000)
-                    return true;
-                printf("ACTVALUE_TEST Unexpected XSValue for datatype %s, got %f expected %f\n", StrX(getDataTypeString(datatype)).localForm(),
-                        actValue.fValue.f_float, expValue.fValue.f_float);
-                return false;
-            }
-            else {
-                if (actValue.fValue.f_floatType.f_floatEnum == expValue.fValue.f_floatType.f_floatEnum)
-                    return true;
-                printf("ACTVALUE_TEST Unexpected XSValue enum for datatype %s, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
-                        actValue.fValue.f_floatType.f_floatEnum, expValue.fValue.f_floatType.f_floatEnum);
-                return false;
-            }                     
-        case XSValue::dt_duration:
-        case XSValue::dt_dateTime:
-        case XSValue::dt_time:            
-        case XSValue::dt_date:            
-        case XSValue::dt_gYearMonth:           
-        case XSValue::dt_gYear:            
-        case XSValue::dt_gMonthDay:           
-        case XSValue::dt_gDay:            
-        case XSValue::dt_gMonth:
-            if (actValue.fValue.f_datetime.f_year   == expValue.fValue.f_datetime.f_year   &&
-                actValue.fValue.f_datetime.f_month  == expValue.fValue.f_datetime.f_month  &&
-                actValue.fValue.f_datetime.f_day    == expValue.fValue.f_datetime.f_day    &&
-                actValue.fValue.f_datetime.f_hour   == expValue.fValue.f_datetime.f_hour   &&
-                actValue.fValue.f_datetime.f_min    == expValue.fValue.f_datetime.f_min    &&
-                actValue.fValue.f_datetime.f_second == expValue.fValue.f_datetime.f_second &&
-                (fabs(actValue.fValue.f_datetime.f_milisec  - expValue.fValue.f_datetime.f_milisec) < 0.01))
-                return true;
-            printf("ACTVALUE_TEST Unexpected %s XSValue\n", StrX(getDataTypeString(datatype)).localForm());                    
-            printf(" Actual year = %d, month = %d, day = %d, hour = %d, min = %d, second = %d, milisec = %f\n",
-                actValue.fValue.f_datetime.f_year, actValue.fValue.f_datetime.f_month, actValue.fValue.f_datetime.f_day,
-                actValue.fValue.f_datetime.f_hour, actValue.fValue.f_datetime.f_min, actValue.fValue.f_datetime.f_second, actValue.fValue.f_datetime.f_milisec);
-            printf(" Expect year = %d, month = %d, day = %d, hour = %d, min = %d, second = %d, milisec = %f\n",
-                expValue.fValue.f_datetime.f_year, expValue.fValue.f_datetime.f_month, expValue.fValue.f_datetime.f_day,
-                expValue.fValue.f_datetime.f_hour, expValue.fValue.f_datetime.f_min, expValue.fValue.f_datetime.f_second, expValue.fValue.f_datetime.f_milisec);
-            return false;  
-                   
-        case XSValue::dt_hexBinary:
-            // in the tests in this file the hexBinary data is always 2 long...
-            if (actValue.fValue.f_byteVal[0] == expValue.fValue.f_byteVal[0] &&
-                actValue.fValue.f_byteVal[1] == expValue.fValue.f_byteVal[1]) 
-                return true;
-            printf("ACTVALUE_TEST Unexpected hexBinary value\n");
-            printf(" Actual Value = %x:%x\n",actValue.fValue.f_byteVal[0],actValue.fValue.f_byteVal[1]);
-            printf(" Expect Value = %x:%x\n",expValue.fValue.f_byteVal[0],expValue.fValue.f_byteVal[1]);    
-            return false;
-
-        case XSValue::dt_base64Binary:
-            // in the tests in this file the base64Binary data is always 9 long (XMLByte[9])
-            // however, a zero byte is used to indicate when the smaller data stream is empty
-            {
-                for (unsigned int i=0; i<9; i++)
-                {
-                    if (!expValue.fValue.f_byteVal[i])
-                        return true;
-                    if (actValue.fValue.f_byteVal[i] != expValue.fValue.f_byteVal[i])
-                    {
-                        printf("ACTVALUE_TEST Unexpected base64Binary value for byte %d\n", i);
-                        printf(" Actual Value = %x\n",actValue.fValue.f_byteVal[i]);
-                        printf(" Expect Value = %x\n",expValue.fValue.f_byteVal[i]);    
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-        case XSValue::dt_string:
-        case XSValue::dt_anyURI:            
-        case XSValue::dt_QName:           
-        case XSValue::dt_NOTATION:          
-        case XSValue::dt_normalizedString:            
-        case XSValue::dt_token:            
-        case XSValue::dt_language:            
-        case XSValue::dt_NMTOKEN:            
-        case XSValue::dt_NMTOKENS:            
-        case XSValue::dt_Name:            
-        case XSValue::dt_NCName:            
-        case XSValue::dt_ID:            
-        case XSValue::dt_IDREF:           
-        case XSValue::dt_IDREFS:            
-        case XSValue::dt_ENTITY:           
-        case XSValue::dt_ENTITIES:
-            printf("ACTVALUE_TEST no Actual Value for datatype %s\n", StrX(getDataTypeString(datatype)).localForm());
-            return false;
-
-        case XSValue::dt_integer:
-        case XSValue::dt_nonPositiveInteger:
-        case XSValue::dt_negativeInteger:            
-        case XSValue::dt_long:            
-            if (actValue.fValue.f_long == expValue.fValue.f_long)
-                return true;
-            printf("ACTVALUE_TEST Unexpected %s XSValue, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
-                    actValue.fValue.f_long, expValue.fValue.f_long);
-            return false;
-                                       
-        case XSValue::dt_int:
-            if (actValue.fValue.f_int == expValue.fValue.f_int)
-                return true;
-            printf("ACTVALUE_TEST Unexpected dt_int XSValue, got %d expected %d\n",
-                    actValue.fValue.f_int, expValue.fValue.f_int);
-            return false;
-        case XSValue::dt_short:
-            if (actValue.fValue.f_short == expValue.fValue.f_short)
-                return true;
-            printf("ACTVALUE_TEST Unexpected dt_short XSValue, got %d expected %d\n",
-                    actValue.fValue.f_short, expValue.fValue.f_short);
-            return false;
-        case XSValue::dt_byte:
-            if (actValue.fValue.f_char == expValue.fValue.f_char)
-                return true;
-            printf("ACTVALUE_TEST Unexpected dt_byte XSValue, got %d expected %d\n",
-                    actValue.fValue.f_char, expValue.fValue.f_char);
-            return false; 
-        case XSValue::dt_nonNegativeInteger:
-        case XSValue::dt_unsignedLong:
-        case XSValue::dt_positiveInteger:
-            if (actValue.fValue.f_ulong == expValue.fValue.f_ulong)
-                return true;
-            printf("ACTVALUE_TEST Unexpected %s XSValue, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
-                    actValue.fValue.f_ulong, expValue.fValue.f_ulong);
-            return false;                    
-        case XSValue::dt_unsignedInt:
-            if (actValue.fValue.f_uint == expValue.fValue.f_uint)
-                return true;
-            printf("ACTVALUE_TEST Unexpected dt_unsignedIntXSValue, got %d expected %d\n",
-                    actValue.fValue.f_uint, expValue.fValue.f_uint);
-            return false;
-        case XSValue::dt_unsignedShort:
-            if (actValue.fValue.f_ushort == expValue.fValue.f_ushort)
-                return true;
-            printf("ACTVALUE_TEST Unexpected dt_unsignedShort XSValue, got %d expected %d\n",
-                    actValue.fValue.f_ushort, expValue.fValue.f_ushort);
-            return false; 
-        case XSValue::dt_unsignedByte:
-            if (actValue.fValue.f_uchar == expValue.fValue.f_uchar)
-                return true;
-            printf("ACTVALUE_TEST Unexpected dt_unsignedByte XSValue, got %d expected %d\n",
-                    actValue.fValue.f_uchar, expValue.fValue.f_uchar);
-            return false;           
-        default:
-            printf("ACTVALUE_TEST Unexpected datatype\n");
-            return false;
-    }
-}
-
-
-static char* getStatusString(const XSValue::Status status)
-{
-    switch (status)
-    { 
-    case XSValue::st_Init:
-        return "st_Init";
-        break;
-    case XSValue::st_NoContent:
-        return "st_NoContent";
-        break;
-    case XSValue::st_NoCanRep:
-        return "st_NoCanRep";
-        break;
-    case XSValue::st_NoActVal:
-        return "st_NoActVal";
-        break;
-    case XSValue::st_NotSupported:
-        return "st_NotSupported";
-        break;
-    case XSValue::st_CantCreateRegEx:
-        return "st_CantCreateRegEx";
-        break;
-    case XSValue::st_FOCA0002:
-        return "st_FOCA0002";
-        break;
-    case XSValue::st_FOCA0001:
-        return "st_FOCA0001";
-        break;
-    case XSValue::st_FOCA0003:
-        return "st_FOCA0003";
-        break;
-    case XSValue::st_FODT0003:
-        return "st_FODT0003";
-        break;
-    case XSValue::st_UnknownType:
-        return "st_UnknownType";
-        break;
-    default:
-        return "st_UnknownType";
-        break;
-    }
-   
-}
-
-/**
- * This is to test methods for XSValue
+ * $Id$
  */
 
 
@@ -831,7 +419,7 @@ void test_dt_decimal()
  * 3.2.3.2 Canonical representation
  *
  * The canonical representation for decimal is defined by prohibiting certain options from the Lexical 
- * representation (§3.2.3.1). Specifically, 
+ * representation (ï¿½3.2.3.1). Specifically, 
  * 1. the preceding optional "+" sign is prohibited. 
  * 2. The decimal point is required. 
  * 3. Leading and trailing zeroes are prohibited subject to the following: 
@@ -1019,7 +607,7 @@ void test_dt_float()
  * 3.2.4.2 Canonical representation
  *
  * The canonical representation for float is defined by prohibiting certain options from the Lexical 
- * representation (§3.2.4.1). 
+ * representation (ï¿½3.2.4.1). 
  * Specifically, 
  * 1. the exponent must be indicated by "E". 
  * 2. Leading zeroes and the preceding optional "+" sign are prohibited in the exponent. 
@@ -1215,7 +803,7 @@ void test_dt_double()
  * 3.2.5.2 Canonical representation
  *
  * The canonical representation for float is defined by prohibiting certain options from the Lexical 
- * representation (§3.2.5.1). 
+ * representation (ï¿½3.2.5.1). 
  * Specifically, 
  * 1. the exponent must be indicated by "E". 
  * 2. Leading zeroes and the preceding optional "+" sign are prohibited in the exponent. 
@@ -1402,7 +990,7 @@ void test_dt_integer()
  * 3.3.13.2 Canonical representation
  *
  * The canonical representation for integer is defined by prohibiting certain options from the Lexical 
- * representation (§3.3.13.1). Specifically, 
+ * representation (ï¿½3.3.13.1). Specifically, 
  * 1. the preceding optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
  *
@@ -1554,7 +1142,7 @@ void test_dt_nonPositiveInteger()
  * 3.3.14.2 Canonical representation
  *
  * The canonical representation for nonPositiveInteger is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.14.1). Specifically, 
+ * Lexical representation (ï¿½3.3.14.1). Specifically, 
  * 1. the negative sign ("-") is required with the token "0" and 
  * 2. leading zeroes are prohibited.
  *
@@ -1700,7 +1288,7 @@ void test_dt_negativeInteger()
  * 3.3.15.2 Canonical representation
  *
  * The canonical representation for negativeInteger is defined by prohibiting certain options 
- * from the Lexical representation (§3.3.15.1). Specifically, 
+ * from the Lexical representation (ï¿½3.3.15.1). Specifically, 
  * 1. leading zeroes are prohibited.
  *
  ***/
@@ -1847,7 +1435,7 @@ void test_dt_long()
  * 3.3.16.2 Canonical representation
  *
  * The canonical representation for long is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.16.1). Specifically, 
+ * Lexical representation (ï¿½3.3.16.1). Specifically, 
  * 1. the the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
 
@@ -2004,7 +1592,7 @@ void test_dt_int()
  * 3.3.17.2 Canonical representation
  *
  * The canonical representation for int is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.17.1). Specifically, 
+ * Lexical representation (ï¿½3.3.17.1). Specifically, 
  * 1. the the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
  *
@@ -2158,7 +1746,7 @@ void test_dt_short()
  * 3.3.18.2 Canonical representation
  *
  * The canonical representation for short is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.18.1). Specifically, 
+ * Lexical representation (ï¿½3.3.18.1). Specifically, 
  * 1. the the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
  *
@@ -2312,7 +1900,7 @@ void test_dt_byte()
  * 3.3.19.2 Canonical representation
  *
  * The canonical representation for byte is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.19.1). Specifically, 
+ * Lexical representation (ï¿½3.3.19.1). Specifically, 
  * 1. the the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
  *
@@ -2465,7 +2053,7 @@ void test_dt_nonNegativeInteger()
  * 3.3.20.2 Canonical representation
  *
  * The canonical representation for nonNegativeInteger is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.20.1). Specifically, 
+ * Lexical representation (ï¿½3.3.20.1). Specifically, 
  * 1. the the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
  *
@@ -2618,7 +2206,7 @@ void test_dt_unsignedLong()
  * 3.3.16.2 Canonical representation
  *
  * The canonical representation for long is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.16.1). Specifically, 
+ * Lexical representation (ï¿½3.3.16.1). Specifically, 
  * 1. the the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
 
@@ -2776,7 +2364,7 @@ void test_dt_unsignedInt()
  * 3.3.22.2 Canonical representation
  *
  * The canonical representation for unsignedInt is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.22.1). Specifically, 
+ * Lexical representation (ï¿½3.3.22.1). Specifically, 
  * leading zeroes are prohibited.
  *
  ***/
@@ -2926,7 +2514,7 @@ void test_dt_unsignedShort()
  * 3.3.23.2 Canonical representation
  *
  * The canonical representation for unsignedShort is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.23.1). Specifically, 
+ * Lexical representation (ï¿½3.3.23.1). Specifically, 
  * 1. the leading zeroes are prohibited.
  *
  ***/
@@ -3076,7 +2664,7 @@ void test_dt_unsignedByte()
  * 3.3.24.2 Canonical representation
  *
  * The canonical representation for unsignedByte is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.24.1). Specifically, 
+ * Lexical representation (ï¿½3.3.24.1). Specifically, 
  * 1. leading zeroes are prohibited.
  *
  ***/
@@ -3227,7 +2815,7 @@ void test_dt_positiveInteger()
  * 3.3.25.2 Canonical representation 
  *
  * The canonical representation for positiveInteger is defined by prohibiting certain options from the 
- * Lexical representation (§3.3.25.1). Specifically, 
+ * Lexical representation (ï¿½3.3.25.1). Specifically, 
  * 1. the optional "+" sign is prohibited and 
  * 2. leading zeroes are prohibited.
  *
@@ -3487,7 +3075,7 @@ void test_dt_hexBinary()
  * 3.2.15.2 Canonical Rrepresentation
  *
  * The canonical representation for hexBinary is defined by prohibiting certain options from the 
- * Lexical Representation (§3.2.15.1). Specifically, 
+ * Lexical Representation (ï¿½3.2.15.1). Specifically, 
  * 1. the lower case hexadecimal digits ([a-f]) are not allowed.
  *
  ***/
@@ -4875,7 +4463,7 @@ void test_dt_time()
  * 3.2.8.2 Canonical representation
  *
  * The canonical representation for time is defined by prohibiting certain options 
- * from the Lexical representation (§3.2.8.1). Specifically, 
+ * from the Lexical representation (ï¿½3.2.8.1). Specifically, 
  * 1. either the time zone must be omitted or, 
  * 2. if present, the time zone must be Coordinated Universal Time (UTC) 
  *    indicated by a "Z". 

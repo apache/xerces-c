@@ -15,13 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:51:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2000/09/06 23:45:09  jberry
- * New file for configuration information common to other prefix files.
- *
+ * $Id$
  */
  
 //	Implementation configuration flags

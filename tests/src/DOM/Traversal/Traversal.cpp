@@ -24,61 +24,8 @@
 //     This is NOT a complete test of DOM functionality.
 //
 
-/**
- * $Log$
- * Revision 1.16  2004/09/08 13:57:04  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.15  2003/02/05 18:55:20  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.14  2002/11/12 17:52:12  tng
- * Test update: do not issue "Test Run Successfully" if there was an error.
- *
- * Revision 1.13  2002/11/05 21:47:36  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.12  2002/06/25 16:23:16  tng
- * DOM L3: use release()
- *
- * Revision 1.11  2002/06/04 16:14:44  tng
- * Use proper feature in DOMImplementationRegistry::getDOMImplementation
- *
- * Revision 1.10  2002/06/03 20:51:46  tng
- * DOM L3: Add DOMImplementationRegistry and DOMImplementationSource
- *
- * Revision 1.9  2002/05/27 21:11:26  tng
- * Add DOMDocumentRange and DOMDocumentTraversal.
- *
- * Revision 1.8  2002/05/21 18:52:35  tng
- * Test case update: modify to use the latest DOM interface.
- *
- * Revision 1.8  2002/03/07 21:41:58  peiyongz
- * Call Terminate() to avoid memory tools reporting memory leak
- *
- * Revision 1.7  2002/02/04 21:56:57  tng
- * Test DOM Level 2 function getRoot.
- *
- * Revision 1.6  2002/02/04 19:02:37  tng
- * Memory leak fix in samples / test cases.
- *
- * Revision 1.5  2002/02/01 22:44:51  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/11/23 16:18:54  tng
- * Elimiate compiler warning: Warning: String literal converted to char* in formal argument file in call to tassert(bool, char*, int).
- *
- * Revision 1.3  2001/07/19 20:45:16  tng
- * Add some test cases in the tests folder to sanityTest.pl
- *
- * Revision 1.2  2001/06/05 11:58:31  tng
- * Delete the document at the end for clearing the memory.
- *
- * Revision 1.1  2001/06/04 20:11:55  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- *
-
+/*
+ * $Id$
  */
 
 #include <stdio.h>

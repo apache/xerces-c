@@ -15,16 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:55:36  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1.1.1  2002/02/01 22:21:40  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/03/30 02:00:12  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #ifndef _XML4COMCP_H_

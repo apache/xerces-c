@@ -15,67 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2005/04/07 15:30:57  knoaman
- * Update chars table with an NCName char mask instead of an XML letter mask
- *
- * Revision 1.16  2005/01/07 15:28:49  amassari
- * Removed warnings
- *
- * Revision 1.15  2004/12/28 16:35:57  amassari
- * Store fAxisType as an integer, not as a XMLCh (bug# 1177)
- *
- * Revision 1.14  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.13  2004/01/29 11:52:32  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.12  2003/12/17 00:18:41  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.11  2003/10/17 21:18:04  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.10  2003/10/14 15:24:23  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.9  2003/10/01 16:32:42  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.8  2003/05/18 14:02:09  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.7  2003/05/16 21:43:22  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.6  2003/05/15 18:59:34  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/12/20 22:10:48  tng
- * XML 1.1
- *
- * Revision 1.4  2002/12/04 18:21:23  knoaman
- * Identity constraint fix.
- *
- * Revision 1.3  2002/11/04 14:47:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/10/30 21:52:01  tng
- * [Bug 13641] compiler-generated copy-constructor for QName doesn't do the right thing.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/11/15 17:10:19  knoaman
- * Particle derivation checking support.
- *
- * Revision 1.2  2001/11/07 14:25:36  knoaman
- * Fix compliation error on Unix.
- *
- * Revision 1.1  2001/11/02 14:08:40  knoaman
- * Add support for identity constraints.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2005/01/07 15:28:49  amassari
- * Removed warnings
- *
- * Revision 1.8  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.7  2003/10/01 16:32:42  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.6  2003/05/22 02:10:52  knoaman
- * Default the memory manager.
- *
- * Revision 1.5  2003/05/18 14:02:09  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/15 18:59:34  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 14:17:59  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.2  2002/11/04 14:47:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/11/02 14:08:40  knoaman
- * Add support for identity constraints.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

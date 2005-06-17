@@ -15,34 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/04/01 17:36:25  dbertoni
- * Fix for Jira issue XERCESC-1389.
- *
- * Revision 1.5  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/05/16 00:03:10  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/05/15 18:42:55  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:17:00  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:31  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/07 20:55:38  tng
- * Fix no newline at the end warning.  By Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/11 13:26:49  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/02 19:22:56  knoaman
- * Schema: Regular expression handling part I
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

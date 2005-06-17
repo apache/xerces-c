@@ -15,29 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2005/01/12 20:43:21  cargilld
- * Remove warning messages.
- *
- * Revision 1.6  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.4  2002/02/01 22:38:52  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/08/02 17:10:29  tng
- * Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
- *
- * Revision 1.2  2000/08/09 22:40:15  jpolast
- * updates for changes to sax2 core functionality.
- *
- * Revision 1.1  2000/08/08 17:17:20  jpolast
- * initial checkin of SAX2Count
- *
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

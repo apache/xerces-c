@@ -15,10 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2004/10/20 15:18:35  knoaman
- * Allow option of initializing static data in XMLPlatformUtils::Initialize
- *
+ * $Id$
  */
 
 

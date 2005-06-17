@@ -15,33 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/05/30 13:08:26  gareth
- * move over to macros for std:: and iostream/iostream.h issues.
- *
- * Revision 1.5  2002/02/01 22:46:28  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/03/02 19:55:49  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:48:39  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/19 00:59:06  roddey
- * Get rid of dependence on old utils output streams.
- *
- * Revision 1.1.1.1  1999/11/09 01:01:59  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:42:27  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

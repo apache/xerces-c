@@ -15,54 +15,7 @@
  */
 
 /**
- * $Log$
- * Revision 1.12  2004/10/28 20:10:50  peiyongz
- * Data member reshuffle and store/load fNameScopeId
- *
- * Revision 1.11  2004/09/08 13:55:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2003/11/21 22:34:46  neilg
- * More schema component model implementation, thanks to David Cargill.
- * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
- * XSAttributeDeclaration and XSAttributeGroup implementations.
- *
- * Revision 1.9  2003/11/06 15:30:06  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.8  2003/10/10 16:23:29  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.7  2003/10/01 16:32:38  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.6  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.5  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/04/21 20:46:01  knoaman
- * Use XMLString::release to prepare for configurable memory manager.
- *
- * Revision 1.3  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/08/22 19:27:41  tng
- * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/02/06 07:47:48  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:35  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

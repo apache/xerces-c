@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2005/04/12 07:31:19  amassari
- * Fix compiler errors on IRIX (jira# 1405)
- *
- * Revision 1.16  2004/12/10 10:37:56  cargilld
- * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
- *
- * Revision 1.15  2004/09/08 13:56:21  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.14  2004/08/17 21:10:33  peiyongz
- * fix bug in getting CanRep from decode()
- *
- * Revision 1.13  2004/08/11 16:47:32  peiyongz
- * Decoding and getCanRep
- *
- * Revision 1.12  2004/06/24 15:00:37  peiyongz
- * Schema-Errata: E2-54 new specs for base64
- *
- * Revision 1.11  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.10  2003/05/20 22:10:02  peiyongz
- * To differentiate external/internal memory
- *
- * Revision 1.8  2003/01/27 21:15:56  peiyongz
- * only zero or one space allowed in between B64 character.
- *
- * Revision 1.7  2002/12/20 22:10:20  tng
- * XML 1.1
- *
- * Revision 1.6  2002/11/25 18:14:35  peiyongz
- * Schema Errata: E2-9 Base64
- *
- * Revision 1.5  2002/11/04 15:22:03  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/03/19 17:01:20  peiyongz
- * Fix to Bug#7243 Base64 encoding is not working.
- *
- * Revision 1.3  2002/02/18 16:07:38  peiyongz
- * fix: "i" redefined on line 428 reported by compilers on some UNIX platforms
- *
- * Revision 1.2  2002/02/15 21:36:56  peiyongz
- * Interface redefined for conversion in XMLByte
- *
- * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/10/15 19:42:16  knoaman
- * Null-terminate base64Alphabet.
- *
- * Revision 1.5  2001/10/10 19:14:08  peiyongz
- * Patch from Petr Gotthard : encode() provided and some other changes
- *
- * Revision 1.4  2001/06/07 20:55:20  tng
- * Fix no newline at the end warning.  By Pei Yong Zhang.
- *
- * Revision 1.3  2001/05/28 21:11:16  tng
- * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
- *
- * Revision 1.2  2001/05/16 19:01:04  tng
- * Schema: Typo fix in Base64
- *
- * Revision 1.1  2001/05/16 15:25:36  tng
- * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -526,7 +460,7 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
  *     The above definition of the lexical space is more restrictive than that given 
  *     in [RFC 2045] as regards whitespace -- this is not an issue in practice. Any 
  *     string compatible with the RFC can occur in an element or attribute validated 
- *     by this type, because the ·whiteSpace· facet of this type is fixed to collapse, 
+ *     by this type, because the ï¿½whiteSpaceï¿½ facet of this type is fixed to collapse, 
  *     which means that all leading and trailing whitespace will be stripped, and all 
  *     internal whitespace collapsed to single space characters, before the above grammar 
  *     is enforced.

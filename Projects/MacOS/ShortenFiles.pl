@@ -8,16 +8,7 @@
 #
 
 #
-#	$Log$
-#	Revision 1.6  2001/10/19 20:55:41  jberry
-#	Add new file name shortening hints; chmod +x
-#
-#	Revision 1.5  2001/06/10 19:37:40  jberry
-#	Neaten formatting of output.
-#	
-#	Revision 1.4  2000/09/06 21:55:40  jberry
-#	Allow ShortenFiles to work even when the destination directory already exists
-#	
+#	$Id$	
 #
 
 use Config;

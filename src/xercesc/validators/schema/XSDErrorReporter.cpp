@@ -14,58 +14,9 @@
  * limitations under the License.
  */
 
-/**
-  * $Log$
-  * Revision 1.15  2004/10/20 15:19:07  knoaman
-  * Allow option of initializing static data in XMLPlatformUtils::Initialize
-  *
-  * Revision 1.14  2004/09/08 13:56:57  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.13  2004/07/22 15:37:18  knoaman
-  * Use file static instance instead of local static instance
-  *
-  * Revision 1.12  2004/01/09 22:41:58  knoaman
-  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
-  *
-  * Revision 1.11  2003/12/24 15:24:16  cargilld
-  * More updates to memory management so that the static memory manager.
-  *
-  * Revision 1.10  2003/03/09 17:05:01  peiyongz
-  * PanicHandler
-  *
-  * Revision 1.9  2003/01/13 16:13:37  knoaman
-  * We should load the validation message set.
-  *
-  * Revision 1.8  2003/01/09 15:30:09  tng
-  * Performance: construct message loader only when required.
-  *
-  * Revision 1.7  2002/12/04 02:32:43  knoaman
-  * #include cleanup.
-  *
-  * Revision 1.6  2002/11/27 18:05:38  tng
-  * Schema Fix: cast the toEmit back to XMLErrs:Codes so that it can be caught by the Scanner properly.
-  *
-  * Revision 1.5  2002/11/15 21:58:04  peiyongz
-  * Leave thread safety issue to message loader
-  *
-  * Revision 1.4  2002/11/04 14:49:42  tng
-  * C++ Namespace Support.
-  *
-  * Revision 1.3  2002/09/24 20:12:48  tng
-  * Performance: use XMLString::equals instead of XMLString::compareString
-  *
-  * Revision 1.2  2002/05/22 20:54:14  knoaman
-  * Prepare for DOM L3 :
-  * - Make use of the XMLEntityHandler/XMLErrorReporter interfaces, instead of using
-  * EntityHandler/ErrorHandler directly.
-  * - Add 'AbstractDOMParser' class to provide common functionality for XercesDOMParser
-  * and DOMBuilder.
-  *
-  * Revision 1.1  2002/03/21 15:34:40  knoaman
-  * Add support for reporting line/column numbers of schema errors.
-  *
-  */
+/*
+ * $Id$
+ */
 
 
 // ---------------------------------------------------------------------------

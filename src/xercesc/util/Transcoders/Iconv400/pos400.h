@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.2  2004/09/08 13:56:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/02/10 18:08:28  abagchi
- * Initial checkin
- *
+/*
+ * $Id$
  */
 
 /* Define the platform we're on. */

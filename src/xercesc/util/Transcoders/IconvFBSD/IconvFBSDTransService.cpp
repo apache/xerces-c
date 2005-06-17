@@ -15,71 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2004/09/08 13:56:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.16  2004/07/23 16:05:50  amassari
- * transcode was badly terminating the converted string (jira#1179)
- *
- * Revision 1.15  2003/12/24 15:24:15  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.14  2003/05/17 16:32:17  knoaman
- * Memory manager implementation : transcoder update.
- *
- * Revision 1.13  2003/05/16 21:37:00  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.12  2003/05/15 18:47:04  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.11  2003/03/09 17:02:57  peiyongz
- * PanicHandler
- *
- * Revision 1.10  2003/03/07 15:08:57  tng
- * [Bug 17571] fix building IconvFBSD (namespaces) .  Patch from Bjoern A. Zeeb.
- *
- * Revision 1.9  2003/03/07 14:42:45  tng
- * [Bug 17570] IconvFBSD build on alpha,sparc.  Patch from Bjoern A. Zeeb.
- *
- * Revision 1.8  2003/02/25 08:15:42  gareth
- * Patch to fix compile problem in bug #17358. Patch by Michael Cahill.
- *
- * Revision 1.7  2002/12/31 18:42:43  tng
- * [Bug 15608] IconvLCPTranscoder::transcode() is wrong at wcstombs() usage.
- *
- * Revision 1.6  2002/11/04 15:14:34  tng
- * C++ Namespace Support.
- *
- * Revision 1.5  2002/07/04 18:20:18  tng
- * [Bug 10253] Bugfix for the IconvFBSD transcoder.   Patch from Max Gotlib.
- *
- * Revision 1.4  2002/04/11 15:38:05  knoaman
- * String lower case support for FreeBSD by Max Gotlib
- *
- * Revision 1.3  2002/04/09 15:44:00  knoaman
- * Add lower case string support.
- *
- * Revision 1.2  2002/03/18 13:39:11  tng
- * [Bug 7162 ] IconvFreeBSDTransService.cpp needs an #include statement fixed to use xercesc.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
- * sane_include
- *
- * Revision 1.4  2002/01/14 19:45:15  tng
- * Support IconvFBSD in multi-threading environment with all the possible combinations of threading and transcoding options.  By Max Gotlib.
- *
- * Revision 1.3  2001/12/12 14:48:16  tng
- * More bug fixes in IconvFBSD Transcoder.  By Max Gotlib.
- *
- * Revision 1.2  2001/12/11 15:10:14  tng
- * More changes to IconvFBSDTransService.  Allow using "old" TransServece implementation (via '-t native' option to runConfigure) or
- * to employ libiconv (it is a part of FreeBSD ports-collection) services.  By Max Gotlib.
- *
- * Revision 1.1  2001/12/03 14:45:11  tng
- * FreeBSD native transcoder (IconvFBSD) added by Max Gotlib.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

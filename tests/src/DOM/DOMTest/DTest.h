@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/09/08 13:57:03  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2002/11/05 21:47:35  tng
- * Explicit code using namespace in application.
- *
- * Revision 1.10  2002/11/04 15:23:43  tng
- * C++ Namespace Support.
- *
- * Revision 1.9  2002/09/23 20:09:23  tng
- * DOM L3: Test baseURI with different parser's setting.
- *
- * Revision 1.8  2002/09/23 18:27:48  tng
- * DOM L3: Test baseURI.   Added by Gareth Reakes and Thomas Ford.
- *
- * Revision 1.7  2002/06/12 18:31:17  tng
- * DOM L3: test the DOMUserDataHandler and set/getUserData
- *
- * Revision 1.6  2002/05/21 18:50:16  tng
- * Test case update: modify to use the latest DOM interface
- *
- * Revision 1.3  2002/03/14 21:59:29  tng
- * Run methods test[NodeType] in the IDOMTest and other fixes.
- *
- * Revision 1.2  2002/02/01 22:44:24  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/08/09 19:28:47  tng
- * Port test case DOMTest to  IDOMTest
- *
+ * $Id$
  */
 
 

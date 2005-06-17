@@ -15,28 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/10/01 16:32:42  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.4  2003/05/18 14:02:09  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.3  2003/05/15 18:59:34  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 14:47:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/11/02 14:08:40  knoaman
- * Add support for identity constraints.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

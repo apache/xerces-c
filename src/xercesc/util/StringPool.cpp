@@ -15,66 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/12/13 16:35:21  cargilld
- * Performance improvement from Christian Will.
- *
- * Revision 1.11  2004/09/08 13:56:23  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/03/02 23:21:37  peiyongz
- * eliminate leakage
- *
- * Revision 1.9  2004/01/29 11:48:46  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/10/29 16:18:41  peiyongz
- * Implement serialization/deserialization
- *
- * Revision 1.6  2003/10/09 13:49:30  neilg
- * make StringPool functions virtual so that we can implement a synchronized version of StringPool for thread-safe updates.
- *
- * Revision 1.5  2003/05/18 14:02:05  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/16 06:01:52  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2003/05/15 19:07:45  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:22:04  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:12  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/10/22 15:43:35  tng
- * [Bug 3361] "String pool id was not legal" error in Attributes::getURI().
- *
- * Revision 1.5  2000/07/07 22:16:51  jpolast
- * remove old put(value) function.  use put(key,value) instead.
- *
- * Revision 1.4  2000/05/15 22:31:20  andyh
- * Replace #include<memory.h> with <string.h> everywhere.
- *
- * Revision 1.3  2000/03/02 19:54:46  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:04  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:05:10  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:14  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

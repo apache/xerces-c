@@ -15,14 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2005/02/07 13:20:40  amassari
- * Removed warnings
- *
- * Revision 1.1  2004/12/24 19:44:21  amassari
- * Add support for SAX2 filters (jira# 1133)
- *
- *
+ * $Id$
  */
 
 

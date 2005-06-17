@@ -16,34 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.7  2005/01/07 15:12:10  amassari
- * Removed warnings
- *
- * Revision 1.6  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2004/01/29 11:48:47  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.4  2003/10/17 21:10:55  peiyongz
- * loadNumber() added
- *
- * Revision 1.3  2003/09/23 18:16:07  peiyongz
- * Inplementation for Serialization/Deserialization
- *
- * Revision 1.2  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:15  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/10/09 21:28:28  peiyongz
- * explicit ctor/dtor defined.
- *
- * Revision 1.1  2001/09/27 14:54:03  peiyongz
- * DTV Reorganization: new class
- *
  */
 
 // ---------------------------------------------------------------------------

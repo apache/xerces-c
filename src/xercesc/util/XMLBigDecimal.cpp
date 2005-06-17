@@ -15,97 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.24  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.23  2004/08/11 16:17:58  peiyongz
- * Light weight parsing method
- *
- * Revision 1.22  2004/03/19 01:15:55  peiyongz
- * store/load fRawData
- *
- * Revision 1.21  2004/01/13 19:50:56  peiyongz
- * remove parseContent()
- *
- * Revision 1.18  2003/12/23 21:48:14  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0
- *
- * Revision 1.17  2003/12/17 20:42:16  neilg
- * fix two overflow conditions
- *
- * Revision 1.16  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.15  2003/12/11 21:38:12  peiyongz
- * support for Canonical Representation for Datatype
- *
- * Revision 1.14  2003/10/01 16:32:39  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.13  2003/09/25 22:24:28  peiyongz
- * Using writeString/readString
- *
- * Revision 1.12  2003/09/25 15:23:25  peiyongz
- * add sizeof(XMLCh) when allocating memory
- *
- * Revision 1.11  2003/09/23 18:16:07  peiyongz
- * Inplementation for Serialization/Deserialization
- *
- * Revision 1.10  2003/08/14 02:57:27  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.9  2003/05/16 06:01:53  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.8  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.7  2003/04/29 18:13:36  peiyongz
- * cut link to XMLBigInteger, patch from Khaled Noaman
- *
- * Revision 1.6  2003/02/25 17:24:18  peiyongz
- * Schema Errata: E2-44 totalDigits/fractDigits
- *
- * Revision 1.5  2003/02/02 23:54:43  peiyongz
- * getFormattedString() added to return original and converted value.
- *
- * Revision 1.4  2003/01/30 21:55:22  tng
- * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
- *
- * Revision 1.3  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/08/13 22:11:23  peiyongz
- * Fix to Bug#9442
- *
- * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
- * sane_include
- *
- * Revision 1.8  2001/08/08 18:33:44  peiyongz
- * fix: unresolved symbol warning for 'pow'.
- *
- * Revision 1.7  2001/07/25 19:07:42  peiyongz
- * Fix to AIX compilation error: The function abs must have a prototype.
- *
- * Revision 1.6  2001/07/24 13:58:11  peiyongz
- * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
- *
- * Revision 1.5  2001/06/07 20:55:21  tng
- * Fix no newline at the end warning.  By Pei Yong Zhang.
- *
- * Revision 1.4  2001/05/18 20:17:55  tng
- * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.3  2001/05/18 13:22:54  tng
- * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/11 13:26:30  tng
- * Copyright update.
- *
- * Revision 1.1  2001/05/10 20:51:20  tng
- * Schema: Add DecimalDatatypeValidator and XMLBigDecimal, XMLBigInteger.  By Pei Yong Zhang.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -370,7 +280,7 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
     /***
     E2-44 totalDigits
 
-     ... by restricting it to numbers that are expressible as i × 10^-n
+     ... by restricting it to numbers that are expressible as i ï¿½ 10^-n
      where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits. 
 
         normalization: remove all trailing zero after the '.'

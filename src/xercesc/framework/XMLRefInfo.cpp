@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-/**
-  * $Log$
-  * Revision 1.2  2004/09/08 13:55:59  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.1  2003/09/30 18:14:34  peiyongz
-  * Implementation of Serialization/Deserialization
-  *
-  * $Id$
-  *
-  */
+/*
+ * $Id$
+ */
 
 // ---------------------------------------------------------------------------
 //  Includes

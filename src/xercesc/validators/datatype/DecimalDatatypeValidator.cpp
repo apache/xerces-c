@@ -15,147 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.28  2004/09/08 13:56:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.27  2004/08/17 21:09:27  peiyongz
- * canRep for nonPositivieInteger
- *
- * Revision 1.26  2004/01/13 21:18:18  peiyongz
- * revert code back to previous version
- *
- * Revision 1.25  2004/01/12 16:25:09  neilg
- * remove use of static buffers
- *
- * Revision 1.24  2004/01/06 18:13:59  peiyongz
- * using the no-exception-thrown ctor
- *
- * Revision 1.23  2004/01/06 04:42:53  neilg
- * On some platforms, it is problematic to throw a different exception from inside the catch block of another exception
- *
- * Revision 1.22  2004/01/03 00:04:36  peiyongz
- * using ctor/parseContent to avoid exception thrown from ctor
- *
- * Revision 1.21  2003/12/23 21:50:36  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0,
- * only validate when required
- *
- * Revision 1.20  2003/12/19 23:02:25  cargilld
- * More memory management updates.
- *
- * Revision 1.19  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.18  2003/12/11 21:40:24  peiyongz
- * support for Canonical Representation for Datatype
- *
- * Revision 1.17  2003/11/28 18:53:07  peiyongz
- * Support for getCanonicalRepresentation
- *
- * Revision 1.16  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.15  2003/11/06 15:30:07  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.14  2003/10/31 22:16:58  peiyongz
- * to serialize/deserialize data member
- *
- * Revision 1.13  2003/10/02 19:21:06  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.12  2003/08/14 03:00:11  knoaman
- * Code refactoring to improve performance of validation.
- *
- * Revision 1.11  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.10  2003/05/16 06:01:57  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.9  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.8  2003/03/01 20:59:06  peiyongz
- * TotalDigits value must be a positiveInteger
- *
- * Revision 1.7  2003/02/25 17:24:37  peiyongz
- * Schema Errata: E2-44 totalDigits/fractDigits
- *
- * Revision 1.6  2003/01/30 21:56:22  tng
- * Performance: call getRawData instead of toString
- *
- * Revision 1.5  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.4  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/09/24 19:44:40  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.2  2002/04/01 20:17:46  peiyongz
- * Bug#7551: Exceptions are caught by value, rather than by reference
- *
- * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
- * sane_include
- *
- * Revision 1.19  2001/10/09 20:53:22  peiyongz
- * Optimization: save get***() to temp var
- *
- * Revision 1.18  2001/10/02 18:59:29  peiyongz
- * Invalid_Facet_Tag to display the tag name
- *
- * Revision 1.17  2001/10/01 21:04:40  peiyongz
- * DTV Reorganization:fix to memory leak in compare() method.
- *
- * Revision 1.16  2001/10/01 16:16:38  peiyongz
- * DTV Reorganization:derived from AbstractNumericValidator
- *
- * Revision 1.15  2001/09/20 13:11:42  knoaman
- * Regx  + misc. fixes
- *
- * Revision 1.14  2001/08/22 18:28:01  peiyongz
- * Memory leak: delete the bufffer allocated by ::toString()
- *
- * Revision 1.13  2001/08/21 18:42:53  peiyongz
- * Bugzilla# 2816: cleanUp() declared with external linkage and called
- *                          before defined as inline
- *
- * Revision 1.12  2001/08/15 18:08:44  peiyongz
- * Fix to potential leakage in strEnumeration
- *
- * Revision 1.11  2001/07/17 21:30:12  peiyongz
- * bug fix: numBase->getMinInclusive()->toString()
- *
- * Revision 1.10  2001/06/20 17:56:32  peiyongz
- * support for "fixed" option on constrainning facets
- *
- * Revision 1.8  2001/05/29 19:49:34  tng
- * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
- *
- * Revision 1.7  2001/05/28 21:11:18  tng
- * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
- *
- * Revision 1.6  2001/05/18 20:18:02  tng
- * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.5  2001/05/18 13:36:45  tng
- * Schema: Catch RegularExpression exception and NumberFormatException
- *
- * Revision 1.4  2001/05/18 13:23:46  tng
- * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.3  2001/05/11 17:17:23  tng
- * Schema: DatatypeValidator fixes.  By Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/11 13:27:28  tng
- * Copyright update.
- *
- * Revision 1.1  2001/05/10 20:51:29  tng
- * Schema: Add DecimalDatatypeValidator and XMLBigDecimal, XMLBigInteger.  By Pei Yong Zhang.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -621,7 +481,7 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
             /***
              E2-44 totalDigits
 
-             ... by restricting it to numbers that are expressible as i × 10^-n
+             ... by restricting it to numbers that are expressible as i ï¿½ 10^-n
              where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
             ***/
 

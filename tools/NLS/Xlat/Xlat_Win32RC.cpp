@@ -15,35 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/04/14 08:41:00  gareth
- * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
- *
- * Revision 1.5  2002/11/12 17:24:58  tng
- * DOM Message: add new domain for DOM Messages.
- *
- * Revision 1.4  2000/03/02 19:55:54  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:48:42  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/05 20:24:58  roddey
- * Some changes to simplify life for the Messge Catalog message loader. The formatter
- * for the message loader now spits out a simple header of ids that allows the loader to
- * be independent of hard coded set numbers.
- *
- * Revision 1.1.1.1  1999/11/09 01:01:30  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:42:07  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

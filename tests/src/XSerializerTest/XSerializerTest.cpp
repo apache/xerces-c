@@ -16,33 +16,6 @@
 
 /*
 * $Id$
-* $Log$
-* Revision 1.9  2004/09/08 13:57:07  peiyongz
-* Apache License Version 2.0
-*
-* Revision 1.8  2004/03/06 21:57:54  peiyongz
-* Make each test case run with distinct (de)serialization context, memMgr/gramPool/Parser
-*
-* Revision 1.7  2004/01/14 18:58:57  peiyongz
-* XSerializerTest documentation updated
-*
-* Revision 1.6  2003/12/17 00:02:41  peiyongz
-* Always display Serialization/Deserialization error
-*
-* Revision 1.5  2003/12/16 22:59:39  peiyongz
-* compilation error fix
-*
-* Revision 1.4  2003/12/16 21:21:20  peiyongz
-* fix compilation error
-*
-* Revision 1.3  2003/12/16 17:16:08  peiyongz
-* . Using BinMemInputStream/BinMemOutputStream
-* . Using SAX2XMLReader
-*
-* Revision 1.1  2003/12/12 18:17:25  peiyongz
-* XSerializerTest
-*
-*
 */
 
 // ---------------------------------------------------------------------------

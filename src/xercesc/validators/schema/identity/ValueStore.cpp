@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/01/29 11:52:32  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.9  2003/12/17 00:18:41  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.8  2003/12/16 18:41:15  knoaman
- * Make IC_Field stateless
- *
- * Revision 1.7  2003/05/18 14:02:09  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.6  2003/05/15 18:59:34  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/12/04 02:32:43  knoaman
- * #include cleanup.
- *
- * Revision 1.4  2002/11/04 14:47:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/09/24 19:57:20  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.2  2002/02/18 06:26:50  jberry
- * Quiet codewarrior compiler warnings
- *
- * Revision 1.1.1.1  2002/02/01 22:22:51  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/12/06 17:03:37  knoaman
- * Identity Constraint: fix for xpath expressions containing union operator(s).
- *
- * Revision 1.2  2001/11/20 20:32:52  knoaman
- * Bypass validating element's simple content if it's empty and element is nillable.
- *
- * Revision 1.1  2001/11/02 14:08:40  knoaman
- * Add support for identity constraints.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

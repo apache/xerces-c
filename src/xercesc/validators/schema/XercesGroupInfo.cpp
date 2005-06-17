@@ -15,49 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.12  2004/09/08 13:56:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2003/11/20 17:06:05  knoaman
- * PSVI: store name and namespace information
- *
- * Revision 1.10  2003/11/13 23:20:47  peiyongz
- * initSize
- *
- * Revision 1.9  2003/10/29 16:21:52  peiyongz
- * don't own the element list pointed to by fElements
- *
- * Revision 1.8  2003/10/17 21:17:12  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.7  2003/10/14 15:22:28  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.6  2003/05/18 14:02:08  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.5  2003/05/15 18:57:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/11/04 14:49:42  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/04/01 15:47:06  knoaman
- * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
- *
- * Revision 1.2  2002/03/25 20:25:32  knoaman
- * Move particle derivation checking from TraverseSchema to SchemaValidator.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/08/24 20:36:37  knoaman
- * Add support for <redefine>.
- *
- * Revision 1.1  2001/07/24 18:33:46  knoaman
- * Added support for <group> + extra constraint checking for complexType
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

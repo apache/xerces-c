@@ -15,29 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:55:58  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/12/17 00:18:33  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.5  2003/05/30 16:11:43  gareth
- * Fixes so we compile under VC7.1. Patch by Alberto Massari.
- *
- * Revision 1.4  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/07/19 14:57:28  knoaman
- * Add an adoptFlag parameter to the constructor and remove the setter method.
- * Documentation update.
- *
- * Revision 1.2  2002/07/15 18:26:46  tng
- * DOM L3: For consistency, add release() to DOMInputSource and thus Wrapper4InputSource.
- *
- * Revision 1.1  2002/06/18 19:07:07  knoaman
- * Initial checkin.
- *
+ * $Id$
  */
 
 

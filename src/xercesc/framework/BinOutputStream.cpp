@@ -15,15 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2004/09/08 13:55:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/09/18 18:29:58  peiyongz
- * Interface: Binary Output Stream
- *
  * $Id$
- *
  */
 
 

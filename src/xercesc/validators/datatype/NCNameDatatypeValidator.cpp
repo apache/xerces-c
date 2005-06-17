@@ -16,46 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.10  2004/09/08 13:56:53  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2004/01/29 11:51:22  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2003/12/17 00:18:39  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.6  2003/09/30 18:17:53  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.5  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.3  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/09/24 19:44:40  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/10/09 20:49:09  peiyongz
- * init(): take 1 arg
- *
- * Revision 1.2  2001/09/27 13:51:25  peiyongz
- * DTV Reorganization: ctor/init created to be used by derived class
- *
- * Revision 1.1  2001/09/25 15:58:45  peiyongz
- * DTV Reorganization: new class
- *
  */
 
 // ---------------------------------------------------------------------------

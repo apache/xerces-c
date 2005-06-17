@@ -15,22 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:56:20  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2002/11/04 14:55:45  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:09  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/08/02 18:02:35  jpolast
- * initial checkin of sax2 implementation
- * submitted by Simon Fell (simon@fell.com)
- * and Joe Polastre (jpolast@apache.org)
- *
- *
+ * $Id$
  */
 
 

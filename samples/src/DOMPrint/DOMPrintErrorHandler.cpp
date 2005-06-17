@@ -16,29 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.7  2004/09/08 13:55:31  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/05/30 09:36:35  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.5  2003/02/05 18:53:22  tng
- * [Bug 11915] Utility for freeing memory.
- *
- * Revision 1.4  2002/12/10 15:36:36  tng
- * DOMPrint minor update: print error message to XERCES_STD_QUALIFIER cerr.
- *
- * Revision 1.3  2002/06/13 14:55:01  peiyongz
- * Fix to UNIX compilation failure
- *
- * Revision 1.2  2002/06/11 19:46:28  peiyongz
- * Display error message received from the serializer.
- *
- * Revision 1.1  2002/05/29 21:19:50  peiyongz
- * DOM3 DOMWriter/DOMWriterFilter
- *
- *
  */
 
 #include <xercesc/util/XMLString.hpp>

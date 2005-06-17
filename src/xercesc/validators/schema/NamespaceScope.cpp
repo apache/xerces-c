@@ -15,37 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:56:56  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2003/12/17 00:18:40  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.5  2003/05/18 14:02:07  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/16 21:43:21  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.3  2003/05/15 18:57:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 14:49:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:45  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/07/31 15:26:54  knoaman
- * Added support for <attributeGroup>.
- *
- * Revision 1.2  2001/05/11 13:27:33  tng
- * Copyright update.
- *
- * Revision 1.1  2001/04/19 17:43:15  knoaman
- * More schema implementation classes.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

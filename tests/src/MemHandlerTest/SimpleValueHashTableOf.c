@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * $Log$
- * Revision 1.2  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2003/06/03 18:57:32  neilg
- * following tradition, use a .c extension for the body of a template class.
- *
+/*
+ * $Id$
  */
 
 #if defined(XERCES_TMPLSINC)

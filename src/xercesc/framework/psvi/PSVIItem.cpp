@@ -15,33 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2004/09/21 16:09:19  peiyongz
- * only vaild PSVIItem has actual value.
- *
- * Revision 1.7  2004/09/13 21:22:42  peiyongz
- * new method: getActualValue()
- *
- * Revision 1.6  2004/09/08 13:56:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/11/28 21:18:31  knoaman
- * Make use of canonical representation in PSVIElement
- *
- * Revision 1.4  2003/11/25 16:14:28  neilg
- * move inlines into PSVIItem.hpp
- *
- * Revision 1.3  2003/11/21 22:34:45  neilg
- * More schema component model implementation, thanks to David Cargill.
- * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
- * XSAttributeDeclaration and XSAttributeGroup implementations.
- *
- * Revision 1.2  2003/09/17 17:45:37  neilg
- * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #include <xercesc/framework/psvi/PSVIItem.hpp>

@@ -15,63 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2004/12/24 19:21:46  amassari
- * Add support for SAX2 filters (jira# 1133)
- *
- * Revision 1.17  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.16  2004/09/02 14:59:29  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.15  2004/02/06 15:04:16  cargilld
- * Misc 390 changes.
- *
- * Revision 1.14  2003/08/07 21:21:38  neilg
- * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
- *
- * Revision 1.13  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.12  2002/06/17 15:33:00  tng
- * Name Xerces features as XMLUni::fgXercesXXXX instead of XMLUni::fgSAX2XercesXXXX so that they can be shared with DOM parser.
- *
- * Revision 1.11  2002/05/28 20:20:26  tng
- * Add option '-n' to SAX2Print.
- *
- * Revision 1.10  2002/04/17 20:18:08  tng
- * [Bug 7493] The word "occured" is misspelled and it is a global error.
- *
- * Revision 1.9  2002/02/13 16:11:06  knoaman
- * Update samples to use SAX2 features/properties constants from XMLUni.
- *
- * Revision 1.8  2002/02/06 16:36:51  knoaman
- * Added a new flag '-p' to SAX2 samples to set the 'namespace-prefixes' feature.
- *
- * Revision 1.7  2002/02/01 22:40:44  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/10/25 15:18:33  tng
- * delete the parser before XMLPlatformUtils::Terminate.
- *
- * Revision 1.5  2001/10/19 19:02:43  tng
- * [Bug 3909] return non-zero an exit code when error was encounted.
- * And other modification for consistent help display and return code across samples.
- *
- * Revision 1.4  2001/08/02 17:10:29  tng
- * Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
- *
- * Revision 1.3  2001/08/01 19:11:01  tng
- * Add full schema constraint checking flag to the samples and the parser.
- *
- * Revision 1.2  2000/08/09 22:20:38  jpolast
- * updates for changes to sax2 core functionality.
- *
- * Revision 1.1  2000/08/02 19:16:14  jpolast
- * initial checkin of SAX2Print
- *
- *
+ * $Id$
  */
 
 

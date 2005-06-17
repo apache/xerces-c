@@ -15,73 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.15  2005/01/07 15:12:10  amassari
- * Removed warnings
- *
- * Revision 1.14  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.13  2004/08/23 16:06:49  peiyongz
- * Fix to memory leakage in getCanRep
- *
- * Revision 1.12  2004/08/17 21:09:04  peiyongz
- * canRep for nonPositivieInteger
- *
- * Revision 1.11  2004/08/11 16:48:24  peiyongz
- * String version compareValue
- *
- * Revision 1.10  2003/12/23 21:48:14  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0
- *
- * Revision 1.9  2003/12/17 20:42:16  neilg
- * fix two overflow conditions
- *
- * Revision 1.8  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.7  2003/12/11 21:38:12  peiyongz
- * support for Canonical Representation for Datatype
- *
- * Revision 1.6  2003/05/22 02:10:52  knoaman
- * Default the memory manager.
- *
- * Revision 1.5  2003/05/16 06:01:53  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.4  2003/05/15 19:07:46  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/08/13 22:11:23  peiyongz
- * Fix to Bug#9442
- *
- * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
- * sane_include
- *
- * Revision 1.7  2001/08/23 11:54:26  tng
- * Add newline at the end and various typo fixes.
- *
- * Revision 1.6  2001/07/24 13:58:11  peiyongz
- * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
- *
- * Revision 1.5  2001/05/31 17:50:26  knoaman
- * small modification to XMLBigInteger::toString.
- *
- * Revision 1.4  2001/05/18 20:17:57  tng
- * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.3  2001/05/18 13:23:01  tng
- * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
- *
- * Revision 1.2  2001/05/11 13:26:31  tng
- * Copyright update.
- *
- * Revision 1.1  2001/05/10 20:51:23  tng
- * Schema: Add DecimalDatatypeValidator and XMLBigDecimal, XMLBigInteger.  By Pei Yong Zhang.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

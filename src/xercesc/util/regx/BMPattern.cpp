@@ -15,31 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/01/07 15:12:11  amassari
- * Removed warnings
- *
- * Revision 1.5  2004/09/08 13:56:47  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/10/01 16:32:40  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.3  2003/05/15 18:42:54  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 15:17:00  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:28  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:26:40  tng
- * Copyright update.
- *
- * Revision 1.1  2001/03/02 19:22:31  knoaman
- * Schema: Regular expression handling part I
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

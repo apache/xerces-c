@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2004/09/08 13:55:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.10  2004/04/07 15:26:45  peiyongz
- * code cleaning
- *
- * Revision 1.9  2004/04/01 22:05:32  peiyongz
- * invoke DOMException with Memory Manager
- *
- * Revision 1.8  2004/01/29 11:44:26  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/12/02 14:33:13  amassari
- * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
- *
- * Revision 1.6  2003/09/04 14:38:25  gareth
- * Fix for bug #22008. Removed the ability to adopt the DOMObject.
- *
- * Revision 1.5  2003/05/14 18:06:53  gareth
- * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
- *
- * Revision 1.4  2002/11/04 15:07:34  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/07/15 19:25:49  tng
- * DOM L3:  declare a dummy DOMError::set/getRelatedException
- *
- * Revision 1.2  2002/05/24 14:02:07  knoaman
- * Fix complilation error.
- *
- * Revision 1.1  2002/05/23 15:47:24  knoaman
- * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
- *
+ * $Id$
  */
 
 #include "DOMErrorImpl.hpp"

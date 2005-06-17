@@ -15,53 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.15  2004/09/08 13:56:45  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.14  2004/07/23 15:29:09  amassari
- * transcode was badly terminating the converted string (jira#1206)
- *
- * Revision 1.13  2004/07/23 14:35:03  amassari
- * A global mutex was not cleaned up
- *
- * Revision 1.12  2004/02/25 14:53:24  peiyongz
- * Bug#27209: Xerces 2.5.0 does not build with option -t IconvGNU because of syntax errors!
- *
- * Revision 1.11  2003/12/24 15:24:15  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.10  2003/08/19 14:01:41  neilg
- * fix for bug 22537
- *
- * Revision 1.9  2003/05/17 16:32:18  knoaman
- * Memory manager implementation : transcoder update.
- *
- * Revision 1.8  2003/05/16 21:37:00  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.7  2003/05/15 18:47:05  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.6  2003/04/07 16:52:13  peiyongz
- * Bug# 18672: IconvGNUTranscoder can't be build when namespaces is on.
- *                       Patch from Bacek@yandex-team.ru (Vasily Tchekalkin)
- *
- * Revision 1.5  2003/03/09 17:03:25  peiyongz
- * PanicHandler
- *
- * Revision 1.4  2002/12/31 18:42:54  tng
- * [Bug 15608] IconvLCPTranscoder::transcode() is wrong at wcstombs() usage.
- *
- * Revision 1.3  2002/11/04 15:14:34  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/09/27 13:33:43  tng
- * [Bug 12547] Xerces C++ 2.1 fails to build on Linux 64 bits arch with -tlinux.  Patch from Guillaume Morin.
- *
- * Revision 1.1  2002/08/19 19:38:18  tng
- * [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

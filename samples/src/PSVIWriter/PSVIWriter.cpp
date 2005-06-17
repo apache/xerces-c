@@ -16,31 +16,7 @@
 
 //REVISIT
 /*
- * $Log$
- * Revision 1.7  2005/02/23 19:07:59  cargilld
- * Various PSVI fixes from Mike Boos.
- *
- * Revision 1.6  2005/01/12 20:43:21  cargilld
- * Remove warning messages.
- *
- * Revision 1.5  2004/09/08 13:55:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/09/02 14:59:29  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.3  2004/02/10 17:36:38  cargilld
- * Fix build problems.
- *
- * Revision 1.2  2004/02/09 13:23:45  cargilld
- * Fix build problems and update usage.
- *
- * Revision 1.1  2004/02/04 20:11:54  peiyongz
- * PSVIWriter
- *
- *
- * $Id: PSVIWriter
- *
+ * $Id$
  */
 
 

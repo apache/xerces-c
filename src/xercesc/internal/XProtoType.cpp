@@ -16,23 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.5  2004/09/08 13:56:14  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/01/13 16:34:20  cargilld
- * Misc memory management changes.
- *
- * Revision 1.3  2003/12/24 15:24:13  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.2  2003/12/17 00:18:34  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.1  2003/09/18 18:31:24  peiyongz
- * OSU: Object Serialization Utilities
- *
- *
  */
 
 // ---------------------------------------------------------------------------

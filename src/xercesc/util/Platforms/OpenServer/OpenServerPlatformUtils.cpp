@@ -15,61 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2005/04/05 18:36:01  cargilld
- * Change platform mutex code to do a panic instead of throwing an exception as the exception code uses mutexes and this can result in infinite recursion.
- *
- * Revision 1.16  2004/09/08 13:56:42  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.15  2004/01/29 11:51:20  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.14  2004/01/13 16:34:21  cargilld
- * Misc memory management changes.
- *
- * Revision 1.13  2003/12/24 15:24:14  cargilld
- * More updates to memory management so that the static memory manager.
- *
- * Revision 1.12  2003/12/17 19:58:05  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.11  2003/12/17 15:16:10  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.10  2003/12/17 13:58:03  cargilld
- * Platform update for memory management so that the static memory manager (one
- * used to call Initialize) is only for static data.
- *
- * Revision 1.9  2003/10/01 16:32:40  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.8  2003/05/15 18:37:49  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.7  2003/04/25 17:20:11  peiyongz
- * throw exception if getcwd() fails
- *
- * Revision 1.6  2003/04/24 02:55:58  peiyongz
- * Logical Path Resolution
- *
- * Revision 1.5  2003/03/09 16:57:18  peiyongz
- * PanicHandler
- *
- * Revision 1.4  2002/11/19 13:04:32  gareth
- * Bug# 14661 Caldera implemented openFileToWrite and writeBufferToFile. Patch from Cameron Dorrat.
- *
- * Revision 1.3  2002/11/04 15:13:01  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/05/21 20:31:47  tng
- * Minor update: Remove obsolete code
- *
- * Revision 1.1  2002/02/27 22:57:59  peiyongz
- * Bug# 6445 Caldera (SCO) OpenServer Port : patch from Martin Kalen
- *
+ * $Id$
  */
 
 

@@ -16,35 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.9  2004/09/08 13:55:57  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.8  2004/01/29 11:46:29  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/05/16 21:36:55  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.6  2003/05/15 18:26:07  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.5  2002/11/04 15:00:21  tng
- * C++ Namespace Support.
- *
- * Revision 1.4  2002/08/12 21:38:22  peiyongz
- * Bug#11462: MemBufFormatTarget issue(2) .., proposed patch from
- *                      Esmond Pitt (pitte@anz.com)
- *
- * Revision 1.3  2002/07/22 23:23:15  tng
- * DOM L3: MemBufFormatTarget stores fDataBuf as XMLByte directly, consistent design as MemBufInputSource
- *
- * Revision 1.2  2002/06/05 15:47:13  peiyongz
- * data member changed, reset() added.
- *
- * Revision 1.1  2002/05/28 22:40:46  peiyongz
- * DOM3 Save Interface: DOMWriter/DOMWriterFilter
- *
  */
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>

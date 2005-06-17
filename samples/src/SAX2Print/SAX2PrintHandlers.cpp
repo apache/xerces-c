@@ -15,42 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.11  2005/01/12 20:43:21  cargilld
- * Remove warning messages.
- *
- * Revision 1.10  2004/09/08 13:55:33  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.8  2003/03/17 21:03:52  peiyongz
- * Bug#17983
- *
- * Revision 1.7  2002/05/28 20:24:15  tng
- * XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as an empty string, should use XMLUni::fgZeroLenString instead
- *
- * Revision 1.6  2002/02/01 22:40:44  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/05/11 13:24:57  tng
- * Copyright update.
- *
- * Revision 1.4  2001/05/03 16:00:03  tng
- * Schema: samples update with schema
- *
- * Revision 1.3  2000/10/10 23:55:53  andyh
- * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
- * output to multi-byte encodings.
- *
- * Revision 1.2  2000/08/09 22:20:38  jpolast
- * updates for changes to sax2 core functionality.
- *
- * Revision 1.1  2000/08/02 19:16:14  jpolast
- * initial checkin of SAX2Print
- *
- *
+ * $Id$
  */
 
 

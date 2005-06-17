@@ -15,66 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.13  2004/09/29 20:58:10  knoaman
- * [Bug 1209] Problem with id usage across schema
- * http://issues.apache.org/jira/browse/XERCESC-1209
- *
- * Revision 1.12  2004/09/08 13:56:56  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.11  2003/12/11 19:26:27  knoaman
- * Store non schema attributes from parent in XSAnnotation
- *
- * Revision 1.10  2003/05/16 21:43:21  knoaman
- * Memory manager implementation: Modify constructors to pass in the memory manager.
- *
- * Revision 1.9  2002/11/04 14:49:41  tng
- * C++ Namespace Support.
- *
- * Revision 1.8  2002/09/24 20:12:48  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.7  2002/06/21 11:52:24  knoaman
- * cleanup
- *
- * Revision 1.6  2002/05/27 20:23:48  knoaman
- * Performance: lazily store top-level components to eliminate unnecessary traversal
- * of DOM tree when looking up for a top level component.
- *
- * Revision 1.5  2002/05/21 19:30:47  tng
- * DOM Reorganization: modify to use the new DOM interface.
- *
- * Revision 1.4  2002/03/19 21:22:39  knoaman
- * Fix for declarations referenced from a different NS in the case of a circular import.
- *
- * Revision 1.3  2002/03/19 15:57:12  knoaman
- * Fix for bug 7074.
- *
- * Revision 1.2  2002/02/06 22:24:59  knoaman
- * Use IDOM for schema processing.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/12/12 20:52:19  peiyongz
- * memory leak: fRedefineList
- *
- * Revision 1.5  2001/10/04 15:08:56  knoaman
- * Add support for circular import.
- *
- * Revision 1.4  2001/07/31 15:26:54  knoaman
- * Added support for <attributeGroup>.
- *
- * Revision 1.3  2001/07/09 14:29:43  knoaman
- * Fixes for import/include declarations
- *
- * Revision 1.2  2001/05/11 13:27:36  tng
- * Copyright update.
- *
- * Revision 1.1  2001/05/10 16:33:16  knoaman
- * Traverse Schema Part III + error messages.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

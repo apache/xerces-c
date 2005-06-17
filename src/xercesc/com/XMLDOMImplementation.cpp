@@ -15,19 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2004/09/08 13:55:35  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2004/02/25 18:38:33  amassari
- * The COM wrapper doesn't use the deprecated DOM anymore
- *
- * Revision 1.1.1.1  2002/02/01 22:21:41  peiyongz
- * sane_include
- *
- * Revision 1.2  2000/03/30 02:00:10  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #include "stdafx.h"

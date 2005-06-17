@@ -15,34 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.6  2005/01/07 15:28:49  amassari
- * Removed warnings
- *
- * Revision 1.5  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.3  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:38  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/05/11 13:27:17  tng
- * Copyright update.
- *
- * Revision 1.2  2001/04/19 18:17:28  tng
- * Schema: SchemaValidator update, and use QName in Content Model
- *
- * Revision 1.1  2001/02/27 14:48:49  tng
- * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
+ * $Id$
  */
 
 

@@ -15,64 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.17  2004/09/08 13:55:34  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.16  2004/09/02 14:59:30  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.15  2003/05/30 09:36:36  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.14  2003/05/16 15:32:12  knoaman
- * Change scope of 'src' so that it's deallocated properly.
- *
- * Revision 1.13  2002/02/01 22:41:37  peiyongz
- * sane_include
- *
- * Revision 1.12  2001/10/25 15:18:33  tng
- * delete the parser before XMLPlatformUtils::Terminate.
- *
- * Revision 1.11  2001/10/19 19:02:43  tng
- * [Bug 3909] return non-zero an exit code when error was encounted.
- * And other modification for consistent help display and return code across samples.
- *
- * Revision 1.10  2001/08/01 19:11:01  tng
- * Add full schema constraint checking flag to the samples and the parser.
- *
- * Revision 1.9  2001/05/11 13:24:59  tng
- * Copyright update.
- *
- * Revision 1.8  2001/05/03 16:00:32  tng
- * Schema: samples update with schema
- *
- * Revision 1.7  2001/02/22 20:59:57  tng
- * [Bug 678] StdInParse doesn't output filename or duration
- *
- * Revision 1.6  2000/06/20 02:23:10  rahulj
- * Help message added by Joe Polastre.
- *
- * Revision 1.5  2000/03/02 19:53:50  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/11 02:40:58  abagchi
- * Removed StrX::transcode
- *
- * Revision 1.3  2000/02/06 07:47:25  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/12 00:27:01  roddey
- * Updates to work with the new URL and input source scheme.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:27  twl
- * Initial checkin
- *
- * Revision 1.5  1999/11/08 20:43:43  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

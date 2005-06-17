@@ -15,109 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.24  2005/01/07 15:28:49  amassari
- * Removed warnings
- *
- * Revision 1.23  2004/09/08 13:56:52  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.22  2004/01/29 11:51:22  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.21  2004/01/13 21:18:18  peiyongz
- * revert code back to previous version
- *
- * Revision 1.20  2004/01/12 16:25:09  neilg
- * remove use of static buffers
- *
- * Revision 1.19  2004/01/06 18:13:59  peiyongz
- * using the no-exception-thrown ctor
- *
- * Revision 1.18  2003/12/31 10:38:00  amassari
- * Made virtual function checkAdditionalFacet 'const', so that it matches the declaration in a derived class
- *
- * Revision 1.17  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.16  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.15  2003/10/17 21:13:43  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.14  2003/10/07 19:39:37  peiyongz
- * Use of Template_Class Object Serialization/Deserialization API
- *
- * Revision 1.13  2003/09/29 21:47:35  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.12  2003/05/16 06:01:57  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.11  2003/05/15 18:53:26  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.10  2003/02/22 18:28:26  peiyongz
- * Schema Errata E2-35 Length, minLength and maxLength in different derivation steps.
- *
- * Revision 1.9  2003/01/27 19:24:17  peiyongz
- * normalize Base64 data before checking against enumeration.
- *
- * Revision 1.8  2003/01/24 23:18:34  peiyongz
- * normalizeEnumeration() added to remove optional ws in Base64 data.
- *
- * Revision 1.7  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.6  2002/11/04 14:53:27  tng
- * C++ Namespace Support.
- *
- * Revision 1.5  2002/10/02 13:29:12  tng
- * Since the compare function return int, so use XMLString::compareString instead of XMLString::equals there.
- *
- * Revision 1.4  2002/09/24 19:44:40  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.3  2002/04/01 20:17:46  peiyongz
- * Bug#7551: Exceptions are caught by value, rather than by reference
- *
- * Revision 1.2  2002/02/14 15:17:31  peiyongz
- * getEnumString()
- *
- * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
- * sane_include
- *
- * Revision 1.7  2001/12/13 16:48:29  peiyongz
- * Avoid dangling pointer
- *
- * Revision 1.6  2001/10/15 20:57:27  tng
- * Schema: we should propagate the exception thrown from checkContent.
- *
- * Revision 1.5  2001/10/09 21:00:54  peiyongz
- * . init() take 1 arg,
- * . make inspectFacetBase() virtual to allow ListDTV provide its own method,
- * . reorganize init() into assignFacet(), inspectFacet(), inspectFacetBase() and
- * inheritFacet() to improve mantainability.
- * . macro to simplify code
- * . save get***() to temp vars
- *
- * Revision 1.4  2001/09/24 15:30:16  peiyongz
- * DTV Reorganization: init() to be invoked from derived class' ctor to allow
- *        correct resolution of virtual methods like assignAdditionalFacet(),
- *        inheritAdditionalFacet(), etc.
- *
- * Revision 1.3  2001/09/19 18:48:27  peiyongz
- * DTV reorganization:getLength() added, move inline to class declaration to avoid inline
- * function interdependency.
- *
- * Revision 1.2  2001/09/18 21:16:42  peiyongz
- * DTV reorganization: temp vars to replace repeated invocation of getFacetsDefined()
- *
- * Revision 1.1  2001/09/18 14:45:04  peiyongz
- * DTV reorganization
- *
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -399,7 +297,7 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
                                    base'    length and derived' (minLength | maxLength)
 
      E2-35
-     It is an ·error· for both length and either of minLength or maxLength to be members of {facets},
+     It is an ï¿½errorï¿½ for both length and either of minLength or maxLength to be members of {facets},
      unless they are specified in different derivation steps in which case the following must be true: 
      the {value} of minLength <= the {value} of length <= the {value} of maxLength   
     ***/

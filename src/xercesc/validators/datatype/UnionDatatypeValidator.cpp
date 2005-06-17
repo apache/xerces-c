@@ -16,108 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.28  2004/09/08 13:56:53  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.27  2004/03/19 01:17:22  peiyongz
- * enumeration is ALWAYS owned, datatype validator not.
- *
- * Revision 1.26  2004/01/29 11:51:22  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.25  2004/01/13 21:18:18  peiyongz
- * revert code back to previous version
- *
- * Revision 1.24  2004/01/12 16:25:09  neilg
- * remove use of static buffers
- *
- * Revision 1.23  2004/01/06 18:13:59  peiyongz
- * using the no-exception-thrown ctor
- *
- * Revision 1.22  2003/12/23 21:50:36  peiyongz
- * Absorb exception thrown in getCanonicalRepresentation and return 0,
- * only validate when required
- *
- * Revision 1.21  2003/12/17 00:18:39  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.20  2003/12/10 20:55:18  neilg
- * fixes for canonical value production; memory management was not implemented correctly
- *
- * Revision 1.19  2003/11/28 18:53:07  peiyongz
- * Support for getCanonicalRepresentation
- *
- * Revision 1.18  2003/11/24 05:10:26  neilg
- * implement method for determining member type of union that validated some value
- *
- * Revision 1.17  2003/11/13 23:19:18  peiyongz
- * initSize
- *
- * Revision 1.16  2003/11/12 20:32:03  peiyongz
- * Statless Grammar: ValidationContext
- *
- * Revision 1.15  2003/10/31 22:17:11  peiyongz
- * solve ownership
- *
- * Revision 1.14  2003/10/17 21:13:44  peiyongz
- * using XTemplateSerializer
- *
- * Revision 1.13  2003/10/07 19:39:03  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.12  2003/10/01 16:32:41  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.11  2003/08/16 18:42:49  neilg
- * fix for bug 22457.  Union types that are restrictions of other union types were previously considered not to inherit their parents member types.  This is at variance with the behaviour of the Java parser and apparently with the spec, so I have changed this.
- *
- * Revision 1.10  2003/05/16 06:01:57  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.9  2003/05/15 18:53:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.8  2003/02/06 13:51:55  gareth
- * fixed bug with multiple attributes being validated by the same union type.
- *
- * Revision 1.7  2003/01/29 19:53:35  gareth
- * we now store information about which validator was used to validate.
- *
- * Revision 1.6  2002/12/18 14:17:55  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.5  2002/12/06 16:45:54  tng
- * header include cleanup.
- *
- * Revision 1.4  2002/11/04 14:53:28  tng
- * C++ Namespace Support.
- *
- * Revision 1.3  2002/09/24 19:44:40  tng
- * Performance: use XMLString::equals instead of XMLString::compareString
- *
- * Revision 1.2  2002/02/14 15:17:31  peiyongz
- * getEnumString()
- *
- * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
- * sane_include
- *
- * Revision 1.5  2001/10/02 18:59:29  peiyongz
- * Invalid_Facet_Tag to display the tag name
- *
- * Revision 1.4  2001/09/20 13:11:42  knoaman
- * Regx  + misc. fixes
- *
- * Revision 1.3  2001/08/21 18:42:54  peiyongz
- * Bugzilla# 2816: cleanUp() declared with external linkage and called
- *                          before defined as inline
- *
- * Revision 1.2  2001/08/14 22:11:56  peiyongz
- * new exception message added
- *
- * Revision 1.1  2001/07/13 14:10:40  peiyongz
- * UnionDTV
- *
  */
 
 // ---------------------------------------------------------------------------
@@ -477,8 +375,8 @@ const RefArrayVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
 /***
  * 2.5.1.3 Union datatypes
  *
- * The canonical-lexical-representation for a ·union· datatype is defined as the lexical form 
- * in which the values have the canonical lexical representation of the appropriate ·memberTypes·.       
+ * The canonical-lexical-representation for a ï¿½unionï¿½ datatype is defined as the lexical form 
+ * in which the values have the canonical lexical representation of the appropriate ï¿½memberTypesï¿½.       
  ***/
 const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                               ,       MemoryManager* const memMgr

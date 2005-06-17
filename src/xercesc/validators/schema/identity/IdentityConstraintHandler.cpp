@@ -16,14 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2004/09/08 13:56:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.1  2004/04/13 16:41:16  peiyongz
- * IdentityConstraintHandler
- *
- *
  */
 
 // ---------------------------------------------------------------------------

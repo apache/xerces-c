@@ -16,16 +16,6 @@
 
 /**
  * $Id$
- * $Log$
- * Revision 1.3  2004/09/08 13:55:59  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.2  2004/01/29 11:46:29  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.1  2003/10/14 15:16:58  peiyongz
- * Implementation of Serialization/Deserialization
- *
  */
 
 

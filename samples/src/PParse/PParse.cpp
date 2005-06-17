@@ -15,71 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2004/09/08 13:55:32  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.17  2004/09/02 14:59:29  cargilld
- * Add OutOfMemoryException block to samples.
- *
- * Revision 1.16  2003/08/07 21:21:38  neilg
- * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
- *
- * Revision 1.15  2003/05/30 09:36:35  gareth
- * Use new macros for iostream.h and std:: issues.
- *
- * Revision 1.14  2002/04/17 20:18:08  tng
- * [Bug 7493] The word "occured" is misspelled and it is a global error.
- *
- * Revision 1.13  2002/02/01 22:37:38  peiyongz
- * sane_include
- *
- * Revision 1.12  2001/10/25 15:18:33  tng
- * delete the parser before XMLPlatformUtils::Terminate.
- *
- * Revision 1.11  2001/10/19 18:52:04  tng
- * Since PParse can take any XML file as input file, it shouldn't hardcode to expect 16 elements.
- * Change it to work similar to SAXCount which just prints the number of elements, characters, attributes ... etc.
- * And other modification for consistent help display and return code across samples.
- *
- * Revision 1.10  2001/08/01 19:11:01  tng
- * Add full schema constraint checking flag to the samples and the parser.
- *
- * Revision 1.9  2001/05/11 13:24:55  tng
- * Copyright update.
- *
- * Revision 1.8  2001/05/03 15:59:48  tng
- * Schema: samples update with schema
- *
- * Revision 1.7  2000/06/20 02:23:08  rahulj
- * Help message added by Joe Polastre.
- *
- * Revision 1.6  2000/03/03 01:29:31  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.5  2000/03/02 19:53:44  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/11 02:37:48  abagchi
- * Removed StrX::transcode
- *
- * Revision 1.3  2000/02/06 07:47:20  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/12 00:27:00  roddey
- * Updates to work with the new URL and input source scheme.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:45  twl
- * Initial checkin
- *
- * Revision 1.5  1999/11/08 20:43:38  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 

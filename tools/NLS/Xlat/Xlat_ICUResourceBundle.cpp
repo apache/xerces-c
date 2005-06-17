@@ -16,26 +16,6 @@
 
 /*
  * $Id$
- * $Log$
- * Revision 1.6  2004/09/08 13:57:07  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.5  2003/04/14 08:41:00  gareth
- * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
- *
- * Revision 1.4  2002/12/17 17:39:09  tng
- * Xlat: generate icu message file with array format as default.
- *
- * Revision 1.3  2002/12/12 23:40:38  peiyongz
- * normlize locale string.
- *
- * Revision 1.2  2002/11/05 21:15:16  peiyongz
- * generate correct <locale>.txt file
- *
- * Revision 1.1  2002/09/30 22:09:28  peiyongz
- * To generate icu resource file (in text) for error message.
- *
- *
  */
 
 

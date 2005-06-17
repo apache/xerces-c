@@ -15,28 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:55:35  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2004/02/25 18:38:33  amassari
- * The COM wrapper doesn't use the deprecated DOM anymore
- *
- * Revision 1.3  2003/11/21 12:05:48  amassari
- * Updated version to 2.4
- *
- * Revision 1.2  2003/03/14 12:44:49  tng
- * [Bug 17147] C++ namespace breaks build of XercesCOM DLL
- *
- * Revision 1.1.1.1  2002/02/01 22:21:39  peiyongz
- * sane_include
- *
- * Revision 1.3  2000/07/07 00:12:51  jpolast
- * bug fixes for non-null terminated strings
- *
- * Revision 1.2  2000/03/30 02:00:13  abagchi
- * Initial checkin of working code with Copyright Notice
- *
+ * $Id$
  */
 
 #ifndef ___ixmldomcharacterdataimpl_h___

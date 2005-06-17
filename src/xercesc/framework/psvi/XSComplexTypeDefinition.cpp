@@ -15,55 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.15  2004/10/19 11:09:11  cargilld
- * More fixes to derviedFromType.
- *
- * Revision 1.14  2004/10/15 11:15:44  cargilld
- * Fix for jira bug 1234.  Infinite loop in XSComplexTypeDefinition::derviedFromType.
- *
- * Revision 1.13  2004/09/08 13:56:08  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.12  2004/01/29 11:46:30  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.11  2003/12/24 17:42:02  knoaman
- * Misc. PSVI updates
- *
- * Revision 1.10  2003/12/19 15:09:47  knoaman
- * PSVI: process 'final' information
- *
- * Revision 1.9  2003/12/15 17:23:48  cargilld
- * psvi updates; cleanup revisits and bug fixes
- *
- * Revision 1.8  2003/11/27 16:42:00  neilg
- * fixes for segfaults and infinite loops in schema component model implementation; thanks to David Cargill
- *
- * Revision 1.7  2003/11/25 18:08:31  knoaman
- * Misc. PSVI updates. Thanks to David Cargill.
- *
- * Revision 1.6  2003/11/21 17:19:30  knoaman
- * PSVI update.
- *
- * Revision 1.5  2003/11/14 22:47:53  neilg
- * fix bogus log message from previous commit...
- *
- * Revision 1.4  2003/11/14 22:33:30  neilg
- * Second phase of schema component model implementation.  
- * Implement XSModel, XSNamespaceItem, and the plumbing necessary
- * to connect them to the other components.
- * Thanks to David Cargill.
- *
- * Revision 1.3  2003/11/10 21:56:54  neilg
- * make internal code use the new, stateless, method of traversing attribute lists
- *
- * Revision 1.2  2003/11/06 15:30:04  neilg
- * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
- *
- * Revision 1.1  2003/09/16 14:33:36  neilg
- * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
- *
+ * $Id$
  */
 
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>

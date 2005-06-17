@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-/**
-  * $Log$
-  * Revision 1.4  2004/09/08 13:56:57  peiyongz
-  * Apache License Version 2.0
-  *
-  * Revision 1.3  2002/11/04 14:49:42  tng
-  * C++ Namespace Support.
-  *
-  * Revision 1.2  2002/05/27 18:44:07  tng
-  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
-  *
-  * Revision 1.1  2002/03/21 15:34:40  knoaman
-  * Add support for reporting line/column numbers of schema errors.
-  *
-  */
+/*
+ * $Id$
+ */
 
 
 // ---------------------------------------------------------------------------

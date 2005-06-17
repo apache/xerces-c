@@ -15,28 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.7  2004/09/08 13:57:05  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.6  2004/09/02 15:11:42  cargilld
- * Add OutOfMemoryException block to tests.
- *
- * Revision 1.5  2004/02/15 19:43:04  amassari
- * Removed cause for warnings in VC 7.1
- *
- * Revision 1.4  2003/06/03 21:42:42  neilg
- * update name of test in usage info
- *
- * Revision 1.3  2003/06/03 14:00:34  neilg
- * attempt to make VC6 happy.
- *
- * Revision 1.2  2003/06/03 13:50:44  neilg
- * make Forte compiler happy
- *
- * Revision 1.1  2003/06/02 22:22:26  neilg
- * new test for the pluggable memory management mechanism.  This tests all 4 common Xerces parsers (SAX, SAX2, DOMBuilder and DeprecatedDOM) and ensures all allocated memory is dallocated, and that the manager which created the memory is called to deallocate it.
- *
+ * $Id$
  */
 
 

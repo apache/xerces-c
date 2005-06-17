@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2004/09/08 13:56:51  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.4  2003/12/17 00:18:38  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.3  2003/05/15 18:48:27  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.2  2002/11/04 14:54:58  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
- * sane_include
- *
- * Revision 1.6  2001/08/08 13:23:27  knoaman
- * Fix condition check.
- *
- * Revision 1.5  2001/07/09 15:22:35  knoaman
- * complete <any> declaration.
- *
- * Revision 1.4  2001/06/07 20:58:38  tng
- * Fix no newline at the end warning.  By Pei Yong Zhang.
- *
- * Revision 1.3  2001/05/11 13:27:14  tng
- * Copyright update.
- *
- * Revision 1.2  2001/05/03 21:02:27  tng
- * Schema: Add SubstitutionGroupComparator and update exception messages.  By Pei Yong Zhang.
- *
- * Revision 1.1  2001/02/27 14:48:45  tng
- * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------

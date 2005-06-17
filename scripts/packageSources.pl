@@ -26,14 +26,8 @@
 # This script will not work with the perl provided by cygwin
 # -> use the ActiveState version of perl
 # =============================================================================
-# $Log$
-# Revision 1.50  2004/09/08 13:55:35  peiyongz
-# Apache License Version 2.0
-#
-# Revision 1.49  2003/10/06 19:45:51  peiyongz
-# Rewrite from Mike Pawlowski.
-#
 # $Id$
+#
 
 # Includes ////////////////////////////////////////////////////////////////////
 

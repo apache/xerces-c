@@ -15,40 +15,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2004/09/08 13:56:24  peiyongz
- * Apache License Version 2.0
- *
- * Revision 1.9  2004/02/05 18:08:38  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.8  2004/01/29 11:48:47  cargilld
- * Code cleanup changes to get rid of various compiler diagnostic messages.
- *
- * Revision 1.7  2003/12/17 00:18:35  cargilld
- * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
- *
- * Revision 1.6  2003/10/01 16:32:39  neilg
- * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
- *
- * Revision 1.5  2003/05/18 14:02:05  knoaman
- * Memory manager implementation: pass per instance manager.
- *
- * Revision 1.4  2003/05/16 03:11:22  knoaman
- * Partial implementation of the configurable memory manager.
- *
- * Revision 1.3  2002/12/18 14:17:54  gareth
- * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
- *
- * Revision 1.2  2002/11/04 15:22:05  tng
- * C++ Namespace Support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:16  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/06/11 15:15:46  knoaman
- * StringTokenizer renamed to XMLStringTokenizer.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
