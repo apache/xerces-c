@@ -263,6 +263,10 @@ public :
 private:
 
     virtual void    createXSModel();
+
+    void
+    cleanUp();
+
     // -----------------------------------------------------------------------
     /** name  Unimplemented copy constructor and operator= */
     // -----------------------------------------------------------------------

@@ -18,7 +18,6 @@
  * $Id$
  */
 
-
 #if !defined(XMLSCANNER_HPP)
 #define XMLSCANNER_HPP
 
@@ -807,6 +806,7 @@ private :
     //  Private helper methods
     // -----------------------------------------------------------------------
     void commonInit();
+    void cleanUp();
 
     // -----------------------------------------------------------------------
     //  Private scanning methods
