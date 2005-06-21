@@ -47,6 +47,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 //
 **/
 
+typedef JanitorMemFunCall<XMLBigDecimal>    CleanupType;
+
 XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
                              MemoryManager* const manager)
 : fSign(0)
@@ -59,6 +61,8 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
 {
     if ((!strValue) || (!*strValue))
         ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
+
+    CleanupType cleanup(this, &XMLBigDecimal::cleanUp);
 
     try
     {
@@ -74,13 +78,12 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLBigDecimal::~XMLBigDecimal()
@@ -129,14 +132,19 @@ XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawD
                                                ,       MemoryManager* const memMgr)
 {
 
-    try 
-    {
-
     XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData)+1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janName(retBuf, memMgr);
     int   sign, totalDigits, fractDigits;
 
-    XMLBigDecimal::parseDecimal(rawData, retBuf, sign, totalDigits, fractDigits, memMgr);
+    try
+    {
+        parseDecimal(rawData, retBuf, sign, totalDigits, fractDigits, memMgr);
+    }
+    catch (const NumberFormatException&)
+    {
+        return 0;
+    }
+
 
     //Extra space reserved in case strLen is zero
     int    strLen = XMLString::stringLen(retBuf);
@@ -188,13 +196,6 @@ XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawD
     }
             
     return retBuffer;
-
-    }//try
-    catch (...)
-    {
-        return 0;
-    }
-
 }
 
 void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
@@ -279,7 +280,7 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
     /***
     E2-44 totalDigits
 
-     ... by restricting it to numbers that are expressible as i ï¿½ 10^-n
+     ... by restricting it to numbers that are expressible as i × 10^-n
      where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits. 
 
         normalization: remove all trailing zero after the '.'

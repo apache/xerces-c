@@ -21,6 +21,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
@@ -38,6 +39,9 @@ const XMLCh fgDelimeters[] =
 // ---------------------------------------------------------------------------
 //  XMLStringTokenizer: Constructors and Destructor
 // ---------------------------------------------------------------------------
+
+typedef JanitorMemFunCall<XMLStringTokenizer>   CleanupType;
+
 XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
                                       , MemoryManager* const manager)
     : fOffset(0)
@@ -47,6 +51,8 @@ XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
     , fTokens(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLStringTokenizer::cleanUp);
+
 	try {
         if (fStringLen > 0) {
             fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
@@ -54,11 +60,12 @@ XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...) {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
@@ -71,6 +78,8 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
     , fTokens(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLStringTokenizer::cleanUp);
+
 	try {
 
         
@@ -81,11 +90,12 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...) {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 XMLStringTokenizer::~XMLStringTokenizer()

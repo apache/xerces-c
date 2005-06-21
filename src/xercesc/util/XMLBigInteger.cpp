@@ -68,9 +68,8 @@ XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawD
         jan.release();
         return retBuf;
 
-    }//
-
-    catch (...)
+    }
+    catch (const NumberFormatException&)
     {
         return 0;
     }
