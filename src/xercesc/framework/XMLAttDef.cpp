@@ -130,6 +130,8 @@ XMLAttDef::XMLAttDef( const XMLAttDef::AttTypes    type
 {
 }
 
+typedef JanitorMemFunCall<XMLAttDef>    CleanupType;
+
 XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
                     , const XMLAttDef::AttTypes    type
                     , const XMLAttDef::DefAttTypes defType
@@ -146,6 +148,8 @@ XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
     , fEnumeration(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLAttDef::cleanUp);
+
     try
     {
         fValue = XMLString::replicate(attrValue, fMemoryManager);
@@ -153,12 +157,12 @@ XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 

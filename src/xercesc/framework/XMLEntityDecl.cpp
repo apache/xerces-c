@@ -61,6 +61,8 @@ XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName,
     fName = XMLString::replicate(entName, fMemoryManager);
 }
 
+typedef JanitorMemFunCall<XMLEntityDecl>  CleanupType;
+
 XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
                             , const XMLCh* const   value
                             , MemoryManager* const manager) :
@@ -74,6 +76,8 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     , fBaseURI(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLEntityDecl::cleanUp);
+
     try
     {
         fValue = XMLString::replicate(value, fMemoryManager);
@@ -81,12 +85,12 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
@@ -102,6 +106,8 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     , fBaseURI(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLEntityDecl::cleanUp);
+
     try
     {
         XMLCh dummy[2] = { chNull, chNull };
@@ -111,12 +117,12 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 XMLEntityDecl::~XMLEntityDecl()
