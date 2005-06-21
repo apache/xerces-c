@@ -111,6 +111,50 @@ private :
     MemoryManager* fMemoryManager;
 };
 
+
+
+template <class T> class JanitorMemFunCall
+{
+public  :
+
+    typedef void (T::*MFPT) ();
+
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    JanitorMemFunCall(
+        T*      object,
+        MFPT    toCall);
+
+    ~JanitorMemFunCall();
+
+    // -----------------------------------------------------------------------
+    //  Public, non-virtual methods
+    // -----------------------------------------------------------------------
+	void release();
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    JanitorMemFunCall();
+    JanitorMemFunCall(const JanitorMemFunCall<T>&);
+    JanitorMemFunCall<T>& operator=(const JanitorMemFunCall<T>&);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fObject
+    //      This is the pointer to the object for which we will call the
+    //      member function when this object is destroyed.
+    // -----------------------------------------------------------------------
+    T*      fObject;
+    MFPT    fToCall;
+};
+
+
+
+
 XERCES_CPP_NAMESPACE_END
 
 #if !defined(XERCES_TMPLSINC)
