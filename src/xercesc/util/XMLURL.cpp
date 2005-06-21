@@ -164,6 +164,8 @@ XMLURL::XMLURL(MemoryManager* const manager) :
 {
 }
 
+typedef JanitorMemFunCall<XMLURL>   CleanupType;
+
 XMLURL::XMLURL(const XMLCh* const    baseURL
              , const XMLCh* const    relativeURL
              , MemoryManager* const manager) :
@@ -180,19 +182,20 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fURLText(0)
     , fHasInvalidChar(false)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
 	try
 	{	
         setURL(baseURL, relativeURL);
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLURL::XMLURL(const XMLCh* const  baseURL
@@ -211,6 +214,8 @@ XMLURL::XMLURL(const XMLCh* const  baseURL
     , fURLText(0)
     , fHasInvalidChar(false)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
     XMLCh* tmpRel = XMLString::transcode(relativeURL, fMemoryManager);
     ArrayJanitor<XMLCh> janRel(tmpRel, fMemoryManager);
 	try
@@ -219,13 +224,12 @@ XMLURL::XMLURL(const XMLCh* const  baseURL
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLURL::XMLURL(const XMLURL&         baseURL
@@ -243,19 +247,20 @@ XMLURL::XMLURL(const XMLURL&         baseURL
     , fURLText(0)
     , fHasInvalidChar(false)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
 	try
 	{
 		setURL(baseURL, relativeURL);
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLURL::XMLURL(const  XMLURL&        baseURL
@@ -273,6 +278,8 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
     , fURLText(0)
     , fHasInvalidChar(false)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
     XMLCh* tmpRel = XMLString::transcode(relativeURL, fMemoryManager);
     ArrayJanitor<XMLCh> janRel(tmpRel, fMemoryManager);
 	try
@@ -281,14 +288,12 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
 	}
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        cleanup();
+        cleanup.release();
+
         throw;
     }
 
+    cleanup.release();
 }
 
 XMLURL::XMLURL(const XMLCh* const urlText,
@@ -306,19 +311,20 @@ XMLURL::XMLURL(const XMLCh* const urlText,
     , fURLText(0)
     , fHasInvalidChar(false)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
 	try
 	{
 	    setURL(urlText);
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLURL::XMLURL(const char* const urlText,
@@ -336,6 +342,8 @@ XMLURL::XMLURL(const char* const urlText,
     , fURLText(0)
     , fHasInvalidChar(false)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
     XMLCh* tmpText = XMLString::transcode(urlText, fMemoryManager);
     ArrayJanitor<XMLCh> janRel(tmpText, fMemoryManager);
 	try
@@ -344,13 +352,12 @@ XMLURL::XMLURL(const char* const urlText,
 	}
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLURL::XMLURL(const XMLURL& toCopy) :
@@ -367,6 +374,8 @@ XMLURL::XMLURL(const XMLURL& toCopy) :
     , fURLText(0)
     , fHasInvalidChar(toCopy.fHasInvalidChar)
 {
+    CleanupType cleanup(this, &XMLURL::cleanUp);
+
     try
     {
         fFragment = XMLString::replicate(toCopy.fFragment, fMemoryManager);
@@ -379,18 +388,17 @@ XMLURL::XMLURL(const XMLURL& toCopy) :
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 XMLURL::~XMLURL()
 {
-    cleanup();
+    cleanUp();
 }
 
 
@@ -403,7 +411,7 @@ XMLURL& XMLURL::operator=(const XMLURL& toAssign)
         return *this;
 
     // Clean up our stuff
-    cleanup();
+    cleanUp();
 
     // And copy his stuff
     fMemoryManager = toAssign.fMemoryManager;
@@ -473,14 +481,14 @@ void XMLURL::setURL(const XMLCh* const urlText)
     //
     //  Try to parse the URL.
     //
-    cleanup();
+    cleanUp();
     parse(urlText);
 }
 
 void XMLURL::setURL(const XMLCh* const    baseURL
                   , const XMLCh* const    relativeURL)
 {
-    cleanup();
+    cleanUp();
 
     // Parse our URL string
     parse(relativeURL);
@@ -496,7 +504,7 @@ void XMLURL::setURL(const XMLCh* const    baseURL
 			XMLURL basePart(baseURL, fMemoryManager);
 			if (!conglomerateWithBase(basePart, false))
 			{
-				cleanup();
+				cleanUp();
 				ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_RelativeBaseURL, fMemoryManager);
 			}
 		}
@@ -510,7 +518,7 @@ bool XMLURL::setURL(const XMLCh* const    baseURL
                   , const XMLCh* const    relativeURL
                   , XMLURL& xmlURL)
 {
-    cleanup();
+    cleanUp();
 
     // Parse our URL string
     if (parse(relativeURL, xmlURL))
@@ -535,7 +543,7 @@ bool XMLURL::setURL(const XMLCh* const    baseURL
 void XMLURL::setURL(const XMLURL&         baseURL
                   , const XMLCh* const    relativeURL)
 {
-    cleanup();
+    cleanUp();
 
 	// Parse our URL string
     parse(relativeURL);
@@ -765,7 +773,7 @@ void XMLURL::buildFullText()
 //  Just a central place to handle cleanup, since its done from a number
 //  of different spots.
 //
-void XMLURL::cleanup()
+void XMLURL::cleanUp()
 {
     fMemoryManager->deallocate(fFragment);//delete [] fFragment;
     fMemoryManager->deallocate(fHost);//delete [] fHost;
@@ -1464,3 +1472,4 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 
 XERCES_CPP_NAMESPACE_END
 
+

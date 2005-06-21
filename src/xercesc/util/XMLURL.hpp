@@ -155,7 +155,7 @@ private:
     //  Private helper methods
     // -----------------------------------------------------------------------
     void buildFullText();
-    void cleanup();
+    void cleanUp();
     bool conglomerateWithBase(const XMLURL& baseURL, bool useExceptions=true);
     void parse
     (

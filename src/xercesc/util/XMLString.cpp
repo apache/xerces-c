@@ -43,6 +43,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUri.hpp>
+#include <xercesc/util/XMLURL.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -647,32 +648,37 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
         (colPos == nameLen - 1)  )     // <URI>':'
         return false;
 
-    // Examine URI
-    if (colPos > 0)
+
+    // Examine localpart
+    if (!XMLString::isValidNCName(&name[colPos+1]))
     {
-        XMLCh* temp = (XMLCh*) &(name[colPos]);
-        *temp = 0;
+        return false;
+    }
+    else if (colPos == 0)
+    {
+        return true;
+    }
+    else
+    {
+        // Examine URI
+        XMLCh* const temp =
+            (XMLCh*) manager->allocate((colPos + 1) * sizeof(XMLCh));
+        const ArrayJanitor<XMLCh> jan(temp, manager);
+
+        copyNString(temp, name, colPos);
+        temp[colPos] = 0;
 
         try
         {            
-            XMLUri  newURI(name, manager); // no relative uri support here
-            *temp = chColon;
+            XMLUri  newURI(temp, manager); // no relative uri support here
         }
-        catch(const OutOfMemoryException&)
+        catch (const MalformedURLException&)
         {
-            *temp = chColon;
             return false;
         }
-        catch (...)
-        {
-            *temp = chColon;
-            return false;
-        }
+
+        return true;
     }
-
-    // Examine localpart
-    return XMLString::isValidNCName(&(name[colPos+1]));
-
 }
 
 
@@ -1662,7 +1668,7 @@ void XMLString::replaceWS(XMLCh* const toConvert
     (
         (strLen+1) * sizeof(XMLCh)
     );//new XMLCh[strLen+1];
-    XMLCh* retPtr = &(retBuf[0]);
+    XMLCh* retPtr = &retBuf[0];
     XMLCh* startPtr = toConvert;
 
     while ( *startPtr )
@@ -1762,7 +1768,7 @@ void XMLString::collapseWS(XMLCh* const toConvert
     (
         (endPtr - startPtr + 1) * sizeof(XMLCh)
     );//new XMLCh[endPtr - startPtr + 1];
-    XMLCh* retPtr = &(retBuf[0]);
+    XMLCh* retPtr = &retBuf[0];
     bool  inSpace = false;
     while (startPtr < endPtr)
     {
@@ -1809,7 +1815,7 @@ void XMLString::removeWS(XMLCh* const toConvert
     (
         (XMLString::stringLen(toConvert) + 1) * sizeof(XMLCh)
     );//new XMLCh[ XMLString::stringLen(toConvert) + 1];
-    XMLCh* retPtr = &(retBuf[0]);
+    XMLCh* retPtr = &retBuf[0];
     XMLCh* startPtr = toConvert;
 
     while (*startPtr)
