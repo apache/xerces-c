@@ -22,6 +22,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <assert.h>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -150,10 +151,8 @@ bool LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
     {
         return false;
     }
-    catch (...)
-    {
-        return false;
-    }
+
+    assert(newBuf);
 
     // Copy over the old stuff
     memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);

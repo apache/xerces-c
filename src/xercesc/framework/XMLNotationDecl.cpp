@@ -42,6 +42,8 @@ XMLNotationDecl::XMLNotationDecl(MemoryManager* const manager) :
 {
 }
 
+typedef JanitorMemFunCall<XMLNotationDecl>  CleanupType;
+
 XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
                                 , const XMLCh* const   pubId
                                 , const XMLCh* const   sysId
@@ -55,6 +57,8 @@ XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
     , fBaseURI(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XMLNotationDecl::cleanUp);
+
     try
     {
         fName = XMLString::replicate(notName, fMemoryManager);
@@ -64,12 +68,12 @@ XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 XMLNotationDecl::~XMLNotationDecl()
