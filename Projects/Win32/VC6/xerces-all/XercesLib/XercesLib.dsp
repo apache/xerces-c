@@ -867,6 +867,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLHolder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp
 # End Source File
 # Begin Source File
@@ -900,10 +904,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\XMLMutexHolder.hpp
 # End Source File
 # Begin Source File
 
