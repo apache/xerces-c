@@ -22,9 +22,12 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/FieldValueMap.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+typedef JanitorMemFunCall<FieldValueMap>    CleanupType;
 
 // ---------------------------------------------------------------------------
 //  FieldValueMap: Constructors and Destructor
@@ -44,34 +47,41 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
     , fValues(0)
     , fMemoryManager(other.fMemoryManager)
 {
-    try {
-        if (other.fFields) {
+    if (other.fFields) {
+        CleanupType cleanup(this, &FieldValueMap::cleanUp);
 
-            unsigned int valuesSize = other.fValues->size();
+        try {
 
-            fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(*(other.fFields));
-            fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
-            fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(other.fFields->curCapacity(), true, fMemoryManager);
+                unsigned int valuesSize = other.fValues->size();
 
-            for (unsigned int i=0; i<valuesSize; i++) {
-                fValues->addElement(XMLString::replicate(other.fValues->elementAt(i), fMemoryManager));
-            }
+                fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(*(other.fFields));
+                fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
+                fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(other.fFields->curCapacity(), true, fMemoryManager);
+
+                for (unsigned int i=0; i<valuesSize; i++) {
+                    fValues->addElement(XMLString::replicate(other.fValues->elementAt(i), fMemoryManager));
+                }
         }
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch(...) {
+        catch(const OutOfMemoryException&)
+        {
+            cleanup.release();
 
-        delete fFields;
-        delete fValidators;
-        delete fValues;
-        throw;
+            throw;
+        }
+
+        cleanup.release();
     }
 }
 
 FieldValueMap::~FieldValueMap()
+{
+    cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  FieldValueMap: Private helper methods.
+// ---------------------------------------------------------------------------
+void FieldValueMap::cleanUp()
 {
     delete fFields;
     delete fValidators;

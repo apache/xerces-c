@@ -29,6 +29,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+typedef JanitorMemFunCall<ValueStoreCache>    CleanupType;
+
 // ---------------------------------------------------------------------------
 //  ValueStoreCache: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -40,17 +42,19 @@ ValueStoreCache::ValueStoreCache(MemoryManager* const manager)
     , fScanner(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &ValueStoreCache::cleanUp);
+
     try {
         init();
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...) {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 

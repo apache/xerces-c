@@ -31,6 +31,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+typedef JanitorMemFunCall<XPathMatcher>     CleanupType;
+
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -45,18 +47,19 @@ XPathMatcher::XPathMatcher( XercesXPath* const xpath
     , fIdentityConstraint(0)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XPathMatcher::cleanUp);
+
     try {
         init(xpath);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        cleanUp();
         throw;
     }
+
+    cleanup.release();
 }
 
 
@@ -72,18 +75,19 @@ XPathMatcher::XPathMatcher(XercesXPath* const xpath,
     , fIdentityConstraint(ic)
     , fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &XPathMatcher::cleanUp);
+
     try {
         init(xpath);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...) {
+        cleanup.release();
 
-        cleanUp();
         throw;
     }
+
+    cleanup.release();
 }
 
 

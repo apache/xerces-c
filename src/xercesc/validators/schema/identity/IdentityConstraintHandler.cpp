@@ -33,6 +33,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+typedef JanitorMemFunCall<IdentityConstraintHandler>    CleanupType;
+
 // ---------------------------------------------------------------------------
 //  IdentityConstraintHandler: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -44,6 +46,7 @@ IdentityConstraintHandler::IdentityConstraintHandler(XMLScanner*    const scanne
 , fValueStoreCache(0)
 , fFieldActivator(0)
 {
+    CleanupType cleanup(this, &IdentityConstraintHandler::cleanUp);
 
     try {
 
@@ -55,12 +58,12 @@ IdentityConstraintHandler::IdentityConstraintHandler(XMLScanner*    const scanne
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...) {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 IdentityConstraintHandler::~IdentityConstraintHandler()
