@@ -332,6 +332,7 @@ void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
                 {
                     // ask the itemType for a complete check
                     BaseRefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i), manager);
+                    Janitor<BaseRefVectorOf<XMLCh> >    jan(tempList);
                     int tokenNumber = tempList->size();
 
                     try
@@ -341,15 +342,10 @@ void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
                     }
                     catch(const OutOfMemoryException&)
                     {
-                        throw;
-                    }
-                    catch (...)
-                    {
-                        delete tempList;
-                        throw;
-                    }
+                        jan.release();
 
-                    delete tempList;
+                        throw;
+                    }
 
                     // enum shall pass this->checkContent() as well.
                     checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
@@ -385,9 +381,9 @@ void ListDatatypeValidator::inheritFacet()
 /***
  * 2.5.1.2 List datatypes   
  *   
- * The canonical-lexical-representation for the ï¿½listï¿½ datatype is defined as 
- * the lexical form in which each item in the ï¿½listï¿½ has the canonical 
- * lexical representation of its ï¿½itemTypeï¿½.
+ * The canonical-lexical-representation for the ·list· datatype is defined as 
+ * the lexical form in which each item in the ·list· has the canonical 
+ * lexical representation of its ·itemType·.
  ***/
 const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                              ,       MemoryManager* const memMgr
