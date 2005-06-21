@@ -605,6 +605,8 @@ DOMBuilderImpl::resolveEntity( XMLResourceIdentifier* resourceIdentifier )
     return 0;
 }
 
+typedef JanitorMemFunCall<DOMBuilderImpl>    ResetParseType;
+
 // ---------------------------------------------------------------------------
 //  DOMBuilderImpl: Grammar preparsing methods
 // ---------------------------------------------------------------------------
@@ -616,7 +618,10 @@ Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
     if (getParseInProgress())
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetParseType  resetParse(this, &DOMBuilderImpl::resetParse);
+
 	Grammar* grammar = 0;
+
     try
     {
         setParseInProgress(true);
@@ -628,20 +633,11 @@ Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
         DOMDocument* doc = adoptDocument();
         if (doc)
             doc->release();
-        
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
+        resetParse.release();
+
         throw;
     }
 
@@ -656,7 +652,10 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
     if (getParseInProgress())
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
-    Grammar* grammar = 0;
+    ResetParseType  resetParse(this, &DOMBuilderImpl::resetParse);
+
+	Grammar* grammar = 0;
+
     try
     {
         setParseInProgress(true);
@@ -668,20 +667,11 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
         DOMDocument* doc = adoptDocument();
         if (doc)
             doc->release();
-
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
+        resetParse.release();
+
         throw;
     }
 
@@ -696,7 +686,10 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
     if (getParseInProgress())
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetParseType  resetParse(this, &DOMBuilderImpl::resetParse);
+
     Grammar* grammar = 0;
+
     try
     {
         Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false, getMemoryManager());
@@ -710,20 +703,11 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
         DOMDocument* doc = adoptDocument();
         if (doc)
             doc->release();
-
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
+        resetParse.release();
+
         throw;
     }
 
@@ -733,6 +717,16 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
 void DOMBuilderImpl::resetCachedGrammarPool()
 {
     getGrammarResolver()->resetCachedGrammar();
+}
+
+void DOMBuilderImpl::resetParse()
+{
+    if (getScanner()->getDocTypeHandler() == 0)
+    {
+        getScanner()->setDocTypeHandler(this);
+    }
+
+    setParseInProgress(false);
 }
 
 Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey) const

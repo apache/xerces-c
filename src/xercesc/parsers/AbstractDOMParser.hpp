@@ -1648,6 +1648,7 @@ private :
     // -----------------------------------------------------------------------
     void initialize();
     void cleanUp();
+    void resetInProgress();
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
