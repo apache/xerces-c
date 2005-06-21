@@ -39,6 +39,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  WFXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
+
+
+typedef JanitorMemFunCall<WFXMLScanner> CleanupType;
+typedef JanitorMemFunCall<ReaderMgr>    ReaderMgrResetType;
+
+
 WFXMLScanner::WFXMLScanner( XMLValidator* const  valToAdopt
                           , GrammarResolver* const grammarResolver
                           , MemoryManager* const manager) :
@@ -51,19 +57,22 @@ WFXMLScanner::WFXMLScanner( XMLValidator* const  valToAdopt
     , fAttrNSList(0)
     , fElementLookup(0)
 {
+    CleanupType cleanup(this, &WFXMLScanner::cleanUp);
+
     try
     {
         commonInit();
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const docHandler
@@ -82,19 +91,22 @@ WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const docHandler
     , fAttrNSList(0)
     , fElementLookup(0)
 {
+    CleanupType cleanup(this, &WFXMLScanner::cleanUp);
+
     try
     {	
         commonInit();
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 WFXMLScanner::~WFXMLScanner()
@@ -123,6 +135,8 @@ void WFXMLScanner::scanDocument(const InputSource& src)
     //  Bump up the sequence id for this parser instance. This will invalidate
     //  any previous progressive scan tokens.
     fSequenceId++;
+
+    ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
 
     try
     {
@@ -159,9 +173,6 @@ void WFXMLScanner::scanDocument(const InputSource& src)
         // If we have a document handler, then call the end document
         if (fDocHandler)
             fDocHandler->endDocument();
-
-        // Reset the reader manager to close all files, sockets, etc...
-        fReaderMgr.reset();
     }
     //  NOTE:
     //
@@ -170,13 +181,11 @@ void WFXMLScanner::scanDocument(const InputSource& src)
     //  to find out the position in the XML source of the error.
     catch(const XMLErrs::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
-        fReaderMgr.reset();
+        // This is a 'first failure' exception, so fall through
     }
     catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and fall through
-        fReaderMgr.reset();
+        // This is a 'first fatal error' type exit, so fall through
     }
     catch(const XMLException& excToCatch)
     {
@@ -209,26 +218,21 @@ void WFXMLScanner::scanDocument(const InputSource& src)
         }
         catch(const OutOfMemoryException&)
         {
-            throw;
-        }
-        catch(...)
-        {
-            // Flush the reader manager and rethrow user's error
-            fReaderMgr.reset();
-            throw;
-        }
+            // This is a special case for out-of-memory
+            // conditions, because resetting the ReaderMgr
+            // can be problematic.
+            resetReaderMgr.release();
 
-        // If it returned, then reset the reader manager and fall through
-        fReaderMgr.reset();
+            throw;
+        }
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        // Reset and rethrow
-        fReaderMgr.reset();
+        // This is a special case for out-of-memory
+        // conditions, because resetting the ReaderMgr
+        // can be problematic.
+        resetReaderMgr.release();
+
         throw;
     }
 }
@@ -244,6 +248,8 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
     unsigned int orgReader;
     XMLTokens curToken;
     bool retVal = true;
+
+    ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
 
     try
     {
@@ -341,15 +347,13 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
     //  to find out the position in the XML source of the error.
     catch(const XMLErrs::Codes)
     {
-        // This is a 'first failure' exception, so reset and return failure
-        fReaderMgr.reset();
-        return false;
+        // This is a 'first failure' exception, so return failure
+        retVal = false;
     }
     catch(const XMLValid::Codes)
     {
-        // This is a 'first fatal error' type exit, so reset and reuturn failure
-        fReaderMgr.reset();
-        return false;
+        // This is a 'first fatal error' type exit, so return failure
+        retVal = false;
     }
     catch(const XMLException& excToCatch)
     {
@@ -382,33 +386,26 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
         }
         catch(const OutOfMemoryException&)
         {
-            throw;
-        }
-        catch(...)
-        {
-            // Reset and rethrow user error
-            fReaderMgr.reset();
+            // This is a special case for out-of-memory
+            // conditions, because resetting the ReaderMgr
+            // can be problematic.
+            resetReaderMgr.release();
+
             throw;
         }
 
-        // Reset and return failure
-        fReaderMgr.reset();
-        return false;
+        // Return failure
+        retVal = false;
     }
     catch(const OutOfMemoryException&)
     {
         throw;
     }
-    catch(...)
-    {
-        // Reset and rethrow original error
-        fReaderMgr.reset();
-        throw;
-    }
 
-    // If we hit the end, then flush the reader manager
-    if (!retVal)
-        fReaderMgr.reset();
+    // If we are not at the end, release the object that will
+    // reset the ReaderMgr.
+    if (retVal)
+        resetReaderMgr.release();
 
     return retVal;
 }
