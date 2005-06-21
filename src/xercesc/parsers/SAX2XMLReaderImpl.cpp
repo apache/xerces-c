@@ -47,6 +47,12 @@ const XMLCh gDTDEntityStr[] =
     chOpenSquare, chLatin_d, chLatin_t, chLatin_d, chCloseSquare, chNull
 };
 
+
+
+typedef JanitorMemFunCall<SAX2XMLReaderImpl>    CleanupType;
+typedef JanitorMemFunCall<SAX2XMLReaderImpl>    ResetInProgressType;
+
+
 SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
                                    , XMLGrammarPool* const gramPool):
 
@@ -78,19 +84,22 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fMemoryManager(manager)
     , fGrammarPool(gramPool)
 {
+    CleanupType cleanup(this, &SAX2XMLReaderImpl::cleanUp);
+
     try
     {
         initialize();
     }
     catch(const OutOfMemoryException&)
     {
+        // Don't cleanup when out of memory, since executing the
+        // code can cause problems.
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-        throw;
-    }
+
+    cleanup.release();
 }
 
 SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
@@ -379,19 +388,17 @@ void SAX2XMLReaderImpl::parse (const   InputSource&    source)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAX2XMLReaderImpl::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(source);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 }
@@ -402,19 +409,17 @@ void SAX2XMLReaderImpl::parse (const   XMLCh* const    systemId)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAX2XMLReaderImpl::resetInProgress);
+
     try
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 }
@@ -425,6 +430,8 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAX2XMLReaderImpl::resetInProgress);
+
     try
     {
         fParseInProgress = true;
@@ -433,11 +440,8 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch (...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 }
@@ -1461,20 +1465,18 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const char* const systemId,
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAX2XMLReaderImpl::resetInProgress);
+
     Grammar* grammar = 0;
     try
     {
         fParseInProgress = true;
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 
@@ -1489,20 +1491,18 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const XMLCh* const systemId,
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAX2XMLReaderImpl::resetInProgress);
+
     Grammar* grammar = 0;
     try
     {
         fParseInProgress = true;
         grammar = fScanner->loadGrammar(systemId, grammarType, toCache);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 
@@ -1517,24 +1517,27 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const InputSource& source,
     if (fParseInProgress)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
+    ResetInProgressType     resetInProgress(this, &SAX2XMLReaderImpl::resetInProgress);
+
     Grammar* grammar = 0;
     try
     {
         fParseInProgress = true;
         grammar = fScanner->loadGrammar(source, grammarType, toCache);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
-        throw;
-    }
-    catch(...)
-    {
-        fParseInProgress = false;
+        resetInProgress.release();
+
         throw;
     }
 
     return grammar;
+}
+
+void SAX2XMLReaderImpl::resetInProgress()
+{
+    fParseInProgress = false;
 }
 
 void SAX2XMLReaderImpl::resetCachedGrammarPool()
