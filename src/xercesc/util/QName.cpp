@@ -18,6 +18,7 @@
  * $Id$
  */
 
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/QName.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
@@ -38,6 +39,8 @@ QName::QName(MemoryManager* const manager)
 {
 }
 
+typedef JanitorMemFunCall<QName>    CleanupType;
+
 QName::QName( const XMLCh* const   prefix
             , const XMLCh* const   localPart
             , const unsigned int   uriId
@@ -51,6 +54,8 @@ QName::QName( const XMLCh* const   prefix
 ,fRawName(0)
 ,fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &QName::cleanUp);
+
     try
     {
         //
@@ -61,12 +66,12 @@ QName::QName( const XMLCh* const   prefix
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 QName::QName( const XMLCh* const rawName
@@ -81,6 +86,8 @@ QName::QName( const XMLCh* const rawName
 ,fRawName(0)
 ,fMemoryManager(manager)
 {
+    CleanupType cleanup(this, &QName::cleanUp);
+
     try
     {
         //
@@ -91,12 +98,12 @@ QName::QName( const XMLCh* const rawName
     }
     catch(const OutOfMemoryException&)
     {
+        cleanup.release();
+
         throw;
     }
-    catch(...)
-    {
-        cleanUp();
-    }
+
+    cleanup.release();
 }
 
 QName::~QName()
