@@ -54,6 +54,7 @@ Max Gotlib
 Petr Gotthard
 Neil Graham
 Matthew Hall
+Jay Hansen
 Susan Hardenbrook
 Jeff Harrell
 Andrew Hefford
@@ -93,6 +94,7 @@ David Nickerson
 Khaled Noaman
 Michael Ottati
 Anthony O'Dowd
+Mike Pawlowski
 Kevin Philips
 Mike Pogue
 Joe Polastre
