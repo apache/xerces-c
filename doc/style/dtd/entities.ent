@@ -60,7 +60,7 @@
 <!-- Entity for bug report information used in bug-report.xml -->
 <!ENTITY bug-report '
 <s2 title="How to report bugs">
-<p> Please report bugs to <jump href="http&colon;//nagoya.apache.org/jira">Jira</jump>,
+<p> Please report bugs to <jump href="http&colon;//issues.apache.org/jira">Jira</jump>,
 the Apache bug database.  Pick the product "Xerces-C++"
 using the following components&colon;
 </p>
@@ -82,14 +82,14 @@ using the following components&colon;
 </p>
 </s2>
 <s2 title="Search first">
-<p> Check the <jump href="http&colon;//nagoya.apache.org/jira">Jira</jump> database
+<p> Check the <jump href="http&colon;//issues.apache.org/jira">Jira</jump> database
 before submitting your bug report to avoid creating a duplicate report.
 Even the bug has been reported already, you may add a comment to the existing report
 since your contribution may lead to a quicker identification/resolution to the bug reported.
 </p>
 <p> Here is the list of
 <jump href=
-"http&colon;//nagoya.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=10510&amp;statusIds=1">
+"http&colon;//issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=10510&amp;statusIds=1">
 outstanding bugs</jump>  that are currently reported in Jira.
 </p>
 </s2>
