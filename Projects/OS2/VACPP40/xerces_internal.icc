@@ -1,8 +1,0 @@
-group xerces_internal =
-    BASE_DIR "\\src\\xercesc\\internal\\ElemStack.cpp",
-    BASE_DIR "\\src\\xercesc\\internal\\ReaderMgr.cpp",
-	BASE_DIR "\\src\\xercesc\\internal\\VecAttributesImpl.cpp",
-    BASE_DIR "\\src\\xercesc\\internal\\VecAttrListImpl.cpp",
-    BASE_DIR "\\src\\xercesc\\internal\\XMLReader.cpp",
-    BASE_DIR "\\src\\xercesc\\internal\\XMLScanner.cpp",
-    BASE_DIR "\\src\\xercesc\\internal\\XMLScanner2.cpp"

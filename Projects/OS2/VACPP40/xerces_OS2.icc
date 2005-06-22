@@ -1,2 +1,0 @@
-group xerces_os2 =
-   BASE_DIR "\\src\\xercesc\\util\\Platforms\\OS2\\OS2PlatformUtils.cpp"

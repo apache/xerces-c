@@ -1,5 +1,0 @@
-group xerces_parsers =
-    BASE_DIR "\\src\\xercesc\\parsers\\DOMParser.cpp",
-    BASE_DIR "\\src\\xercesc\\parsers\\IDOMParser.cpp",
-    BASE_DIR "\\src\\xercesc\\parsers\\SAX2XMLReaderImpl.cpp",
-    BASE_DIR "\\src\\xercesc\\parsers\\SAXParser.cpp"

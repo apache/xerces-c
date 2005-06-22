@@ -1,5 +1,0 @@
-group xerces_sax =
-    BASE_DIR "\\src\\xercesc\\sax\\Dummy.cpp",
-    BASE_DIR "\\src\\xercesc\\sax\\InputSource.cpp",
-	BASE_DIR "\\src\\xercesc\\sax\\SAXException.cpp",
-    BASE_DIR "\\src\\xercesc\\sax\\SAXParseException.cpp"
