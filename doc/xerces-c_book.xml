@@ -25,6 +25,7 @@
   <separator/>
 
      <document id="index"       label="Readme"             source="readme.xml"/>
+     <document id="charter"     label="Charter"             source="charter.xml"/>
      <document id="releases"    label="Release Info"     source="releases.xml"/>
      <hidden id="releases_archive"                   source="releases_archive.xml"/>
      &releases_plan;
@@ -92,7 +93,8 @@
 
   <separator/>
 
-   &cvs_repository;
-   &mail_archive;
+   &source_repository;
+   &mail_archive_user;
+   &mail_archive_devel;
 
 </book>

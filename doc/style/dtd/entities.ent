@@ -14,7 +14,9 @@
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
 <!ENTITY XercesCNSVersion     "xercesc_2_6">                  <!-- C++ namespace name with Version -->
-<!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCDevelEmailAddress  "c-dev@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCUserEmailAddress  "c-users@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY JiraURL  "http&colon;//issues.apache.org/jira/browse/XERCESC "> <!-- url -->
 <!ENTITY XercesDistDir        "xml.apache.org/xerces-c/download.cgi"> <!-- download directory -->
 
 <!ENTITY colon "&#58;">
@@ -40,15 +42,20 @@
 <entry id="faq-contributing" source="faq-contributing.xml"/>
 '>
 
-<!-- value for cvs_repository entity in xerces-c_book.xml -->
-<!ENTITY cvs_repository '
-<external href="http&colon;//xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/" label="CVS Repository"/>
+<!-- value for source_repository entity in xerces-c_book.xml -->
+<!ENTITY source_repository '
+<external href="http&colon;//svn.apache.org/viewcvs.cgi/xerces/?root=Apache-SVN" label="Source Repository"/>
 '>
 
 <!-- value for mail_archive entity in xerces-c_book.xml -->
-<!ENTITY mail_archive '
-<external href="http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev" label="Mail Archive"/>
+<!ENTITY mail_archive_user '
+<external href="http&colon;//marc.theaimsgroup.com/?l=c-users" label="User Mail Archive"/>
 '>
+
+<!ENTITY mail_archive_devel '
+<external href="http&colon;//marc.theaimsgroup.com/?l=c-dev" label="Devel Mail Archive"/>
+'>
+
 
 <!-- Entity for bug report information used in bug-report.xml -->
 <!ENTITY bug-report '
@@ -71,7 +78,7 @@ using the following components&colon;
 <tr><td>Miscellaneous</td><td>Items not covered in other categories</td></tr>
 </table>
 <p>A copy of your bug report is sent automatically to the discussion list
-<jump href="mailto&colon;&XercesCEmailAddress;">&XercesCName; mailing list</jump>.
+<jump href="mailto&colon;&XercesCDevelEmailAddress;">&XercesCName; development mailing list</jump>.
 </p>
 </s2>
 <s2 title="Search first">
@@ -136,7 +143,7 @@ purpose of your reporting of the bug.
 <p>If you are not using any of these compilers, you are taking a calculated risk
 by exploring new grounds. Your effort in making &XercesCName; work on this
 new compiler is greatly appreciated and any problems you face can be addressed
-on the <jump href="mailto&colon;&XercesCEmailAddress;">&XercesCName; mailing list</jump>.
+on the <jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>.
 </p>
 '>
 
@@ -167,8 +174,8 @@ http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev</jump>
 <faq title="I have a patch to the &XercesCName; source code. How do I submit it?">
 <q>I have a patch to the &XercesCName; source code. How do I submit it?</q>
 <a>
-<p>Mail it to the <jump href="mailto&colon;&XercesCEmailAddress;">&XercesCName;
-mailing list</jump>. There are no set rules about
+<p>Mail it to the <jump href="mailto&colon;&XercesCDevelEmailAddress;">&XercesCName;
+development mailing list</jump>. Its also a good idea to add a report to <jump href="&JiraURL;">Jira</jump> to track the issue There are no set rules about
 how or what must be included -- if you have fixed a problem or enhanced the code
 in some way, we really would like to get your changes, and will take them in
 any reasonable form.</p>
@@ -213,7 +220,7 @@ please refer to <jump href="releases_plan.html">Releases Plan</jump>.
 <!-- feedback info in schema.xml -->
 <!ENTITY schema-feedback-info '
 <p>We would very much appreciate feedback on the package via the &XercesCName; mailing list
-<jump href="mailto&colon;&XercesCEmailAddress;">&XercesCEmailAddress; </jump>, and we
+<jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCUserEmailAddress; </jump>, and we
 encourage the submission of bugs as described on our
 <jump href="bug-report.html">Bug-Reporting</jump> page.
 Please read this document before using this package.
@@ -229,7 +236,7 @@ read the answer to "<jump href="faq-other.html#faq-4"> Is there any kind
 of support available for &XercesCName;?</jump>". Browsing this
 documentation, may be the quickest way to get an answer. Of course, if
 all else fails, as mentioned in the link above, you can post a question
-to the <jump href="mailto&colon;&XercesCEmailAddress;">&XercesCName; mailing list</jump>.</p>
+to the <jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>.</p>
 <p>See <jump href="bug-report.html">Bug Reporting</jump> if you would like
 to report a defect (greatly appreciated!).</p>
 '>

@@ -150,7 +150,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             publish binaries for every platform. If you wish to
             contribute your time and effort in building binaries for a
             specific platform/environment then please send a mail to the
-            <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.
+            <jump href="mailto:&XercesCDevelEmailAddress;">&XercesCName; development mailing list</jump>.
             We can definitely use any extra help in this open source
             project</p>
         </a>
@@ -175,7 +175,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             them available in the future releases.</p>
 
             <p>All porting changes may be sent to the
-            <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>
+            <jump href="mailto:&XercesCDevelEmailAddress;">&XercesCName; development mailing list</jump>
             .</p>
         </a>
     </faq>
@@ -219,7 +219,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
         <a>
             <p>Yes! Read the license agreement first and if you still
             have further questions, then please address them to the
-            <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>
+            <jump href="mailto:&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>
             .</p>
 
         </a>
