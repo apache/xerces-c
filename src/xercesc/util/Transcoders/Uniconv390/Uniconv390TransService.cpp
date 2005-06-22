@@ -60,6 +60,7 @@
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
 #include <xercesc/util/XMLUTF16Transcoder.hpp>
 #include <xercesc/util/XMLWin1252Transcoder.hpp>
+#include <unicode/uchar.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -350,14 +351,14 @@ const XMLCh* Uniconv390TransService::getId() const
 
 bool Uniconv390TransService::isSpace(const XMLCh toCheck) const
 {
-DBGPRINTF2("isspace checking %x\n",toCheck);
-   unsigned short chartype = XMLUniCharacter::getType(toCheck);
-   if ( (chartype == XMLUniCharacter::SPACE_SEPARATOR) ||
-        (chartype == XMLUniCharacter::LINE_SEPARATOR)   ||
-        (chartype == XMLUniCharacter::PARAGRAPH_SEPARATOR) )
-      return true;
-   else
-      return false;
+	/* copied from ICU */
+    if ((toCheck == 0x09)
+    ||  (toCheck == 0x0A)
+    ||  (toCheck == 0x0D))
+    {
+        return true;
+    }
+    return (u_isspace(UChar(toCheck)) != 0);
 }
 
 bool Uniconv390TransService::supportsSrcOfs() const
