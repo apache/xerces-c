@@ -34,6 +34,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -950,7 +951,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     // Run up past any spaces
     while (*srcPtr)
     {
-        if (!XMLPlatformUtils::fgTransService->isSpace(*srcPtr))
+        if (!XMLChar1_0::isWhitespace(*srcPtr))
             break;
         srcPtr++;
     }
@@ -1242,7 +1243,7 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
     // Run up past any spaces
     while (*srcPtr)
     {
-        if (!XMLPlatformUtils::fgTransService->isSpace(*srcPtr))
+        if (!XMLChar1_0::isWhitespace(*srcPtr))
             break;
         srcPtr++;
     }

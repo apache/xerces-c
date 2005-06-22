@@ -28,6 +28,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -118,7 +119,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
 
     // Scan past any whitespace. If we hit the end, then return failure
     const XMLCh* startPtr = toConvert;
-    while (XMLPlatformUtils::fgTransService->isSpace(*startPtr))
+    while (XMLChar1_0::isWhitespace(*startPtr))
         startPtr++;
 
     if (!*startPtr)
@@ -126,7 +127,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
 
     // Start at the end and work back through any whitespace
     const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
-    while (XMLPlatformUtils::fgTransService->isSpace(*(endPtr - 1)))
+    while (XMLChar1_0::isWhitespace(*(endPtr - 1)))
         endPtr--;
 
     //

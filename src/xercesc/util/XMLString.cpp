@@ -1424,13 +1424,13 @@ void XMLString::trim(XMLCh* const toTrim)
     unsigned int skip, scrape;
     for (skip = 0; skip < len; skip++)
     {
-        if (!XMLPlatformUtils::fgTransService->isSpace(toTrim[skip]))
+        if (!XMLChar1_0::isWhitespace(toTrim[skip]))
             break;
     }
 
     for (scrape = len; scrape > skip; scrape--)
     {
-        if (!XMLPlatformUtils::fgTransService->isSpace(toTrim[scrape - 1]))
+        if (!XMLChar1_0::isWhitespace(toTrim[scrape - 1]))
             break;
     }
 
@@ -1541,7 +1541,7 @@ BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh*      const   toke
         // find the first non-space character
         for (skip = index; skip < len; skip++)
         {
-            if (!XMLPlatformUtils::fgTransService->isSpace(tokenizeStr[skip]))
+            if (!XMLChar1_0::isWhitespace(tokenizeStr[skip]))
                 break;
         }
         index = skip;
@@ -1549,7 +1549,7 @@ BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh*      const   toke
         // find the delimiter (space character)
         for (; skip < len; skip++)
         {
-            if (XMLPlatformUtils::fgTransService->isSpace(tokenizeStr[skip]))
+            if (XMLChar1_0::isWhitespace(tokenizeStr[skip]))
                 break;
         }
 
