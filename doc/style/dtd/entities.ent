@@ -49,11 +49,11 @@
 
 <!-- value for mail_archive entity in xerces-c_book.xml -->
 <!ENTITY mail_archive_user '
-<external href="http&colon;//marc.theaimsgroup.com/?l=c-users" label="User Mail Archive"/>
+<external href="http&colon;//marc.theaimsgroup.com/?l=xerces-c-users" label="User Mail Archive"/>
 '>
 
 <!ENTITY mail_archive_devel '
-<external href="http&colon;//marc.theaimsgroup.com/?l=c-dev" label="Devel Mail Archive"/>
+<external href="http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev" label="Devel Mail Archive"/>
 '>
 
 
