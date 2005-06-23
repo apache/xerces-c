@@ -14,8 +14,8 @@
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
 <!ENTITY XercesCNSVersion     "xercesc_2_6">                  <!-- C++ namespace name with Version -->
-<!ENTITY XercesCDevelEmailAddress  "c-dev@xerces.apache.org "> <!-- emailaddress -->
-<!ENTITY XercesCUserEmailAddress  "c-users@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCDevelEmailAddress  "xerces-c-dev@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCUserEmailAddress  "xerces-c-users@xerces.apache.org "> <!-- emailaddress -->
 <!ENTITY JiraURL  "http&colon;//issues.apache.org/jira/browse/XERCESC "> <!-- url -->
 <!ENTITY XercesDistDir        "xml.apache.org/xerces-c/download.cgi"> <!-- download directory -->
 
@@ -93,7 +93,7 @@ since your contribution may lead to a quicker identification/resolution to the b
 outstanding bugs</jump>  that are currently reported in Jira.
 </p>
 </s2>
-<s2 title="Write good bug report">
+<s2 title="Write a good bug report">
 <p> Writing a useful bug report, which makes the bug reproducible, is the first step
 towards the resolution of the bug. Specifics about the bug, like
 </p>
