@@ -31,6 +31,13 @@ AC_DEFUN([XERCES_MUTEXMGR_SELECTION],
 			windows* | cygwin* | mingw*)
 				mgr=Windows;
 				AC_DEFINE([XERCES_USE_MUTEXMGR_WINDOWS], 1, [Define to use the Windows mutex mgr])
+				
+				case $host_os in
+				mingw*)
+					CXXFLAGS="${CXXFLAGS} -mthreads"
+					;;
+				esac
+				
 				;;
 			esac
 		])
