@@ -200,6 +200,14 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
 
         if (!end) {
 
+            // handle '-' when appearing at the beginning of a positive character group
+            if (firstLoop && !isNRange && type == REGX_T_CHAR && ch == chDash)
+            {
+                tok->addRange(chDash, chDash);
+                firstLoop=false;
+                continue;
+            }
+
             if (type == REGX_T_CHAR
                 && (ch == chOpenSquare
                     || ch == chCloseSquare
@@ -218,8 +226,13 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
                 if ((type = getState()) == REGX_T_EOF)
                     ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, getMemoryManager());
 
-                if ((type == REGX_T_CHAR && getCharData() == chCloseSquare)
-                    || type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
+                // handle '-' when appearing at the end of a positive character group
+                if (!isNRange && type == REGX_T_CHAR && getCharData() == chCloseSquare) {
+                    tok->addRange(ch, ch);
+                    tok->addRange(chDash, chDash);
+                }
+                else if((type == REGX_T_CHAR && getCharData() == chCloseSquare)
+                        || type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
 
                     static const XMLCh dashStr[] = { chDash, chNull};
                     ThrowXMLwithMemMgr2(ParseException, XMLExcepts::Parser_CC6, dashStr, dashStr, getMemoryManager());
