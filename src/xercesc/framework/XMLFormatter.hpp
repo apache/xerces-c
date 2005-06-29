@@ -312,6 +312,22 @@ public:
     //@}
 
 
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /** @name Setter methods */
+    //@{
+    /**
+     * @return return the escape style for the formatted content
+     */
+    EscapeFlags getEscapeFlags() const;
+
+    /**
+     * @return return the reaction for unrepresentable character
+     */
+    UnRepFlags getUnRepFlags() const;
+    //@}
+
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -492,6 +508,19 @@ inline XMLFormatter& XMLFormatter::operator<<(const UnRepFlags newFlags)
 {
     fUnRepFlags = newFlags;
     return *this;
+}
+
+// ---------------------------------------------------------------------------
+//  XMLFormatter: Getter methods
+// ---------------------------------------------------------------------------
+inline XMLFormatter::EscapeFlags XMLFormatter::getEscapeFlags() const
+{
+    return fEscapeFlags;
+}
+
+inline XMLFormatter::UnRepFlags XMLFormatter::getUnRepFlags() const
+{
+    return fUnRepFlags;
 }
 
 XERCES_CPP_NAMESPACE_END
