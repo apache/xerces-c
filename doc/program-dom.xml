@@ -142,7 +142,7 @@
     //
 
     {
-        XMLCh* tempStr[100];
+        XMLCh tempStr[100];
 
         XMLString::transcode("Range", tempStr, 99);
         DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(tempStr, 0);
