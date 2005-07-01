@@ -77,12 +77,12 @@ typedef RefVectorOf<DatatypeValidator> DVRefVector;
 // ---------------------------------------------------------------------------
 static const XMLCh fgAnonSNamePrefix[] =
 {
-    chLatin_S, chNull
+    chUnderscore, chUnderscore, chLatin_A, chLatin_n, chLatin_o, chLatin_n, chLatin_S, chNull
 };
 
 static const XMLCh fgAnonCNamePrefix[] =
 {
-    chLatin_C, chNull
+    chUnderscore, chUnderscore, chLatin_A, chLatin_n, chLatin_o, chLatin_n, chLatin_C, chNull
 };
 
 static const XMLCh fgUnbounded[] =
