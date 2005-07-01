@@ -237,8 +237,6 @@ public:
     * method in a subclass to take specific actions at the start of
     * each namespace prefix mapping.</p>
     *
-	* NOTE : The current Implementation of SAX2Parser will _NEVER_ call this
-	*
     * @param prefix The namespace prefix used
     * @param uri The namespace URI used.
     * @exception SAXException Any SAX exception, possibly
@@ -258,8 +256,6 @@ public:
     * method in a subclass to take specific actions at the end of
     * each namespace prefix mapping.</p>
     *
-	* NOTE : The current Implementation of SAX2Parser will _NEVER_ call this
-	*
     * @param prefix The namespace prefix used
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
