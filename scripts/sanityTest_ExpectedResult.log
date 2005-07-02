@@ -984,7 +984,7 @@ Create Reason:	Declared
 ContentType:	
 Content Model:	(person,)
 ComplexType:
-	TypeName:	,C0
+	TypeName:	,__AnonC0
 	ContentType:	
 --------------------------------------------
 Name:			person
@@ -993,7 +993,7 @@ Create Reason:	Declared
 ContentType:	
 Content Model:	((name,email,url),link)
 ComplexType:
-	TypeName:	,C1
+	TypeName:	,__AnonC1
 	ContentType:	
 Attributes:
 	Name:			id
@@ -1030,21 +1030,21 @@ Create Reason:	Declared
 ContentType:	All
 Content Model:	All(family,given)
 ComplexType:
-	TypeName:	,C2
+	TypeName:	,__AnonC2
 	ContentType:	All
 --------------------------------------------
 Name:			family
 Model Type:		Simple
 Create Reason:	Declared
 ComplexType:
-	TypeName:	,C3
+	TypeName:	,__AnonC3
 Base Datatype:		string
 --------------------------------------------
 Name:			given
 Model Type:		Simple
 Create Reason:	Declared
 ComplexType:
-	TypeName:	,C4
+	TypeName:	,__AnonC4
 Base Datatype:		string
 --------------------------------------------
 Name:			email
@@ -1057,7 +1057,7 @@ Model Type:		Empty
 Create Reason:	Declared
 Content Model:	EMPTY
 ComplexType:
-	TypeName:	,C5
+	TypeName:	,__AnonC5
 Attributes:
 	Name:			href
 	Type:			CDATA
@@ -1071,7 +1071,7 @@ Model Type:		Empty
 Create Reason:	Declared
 Content Model:	EMPTY
 ComplexType:
-	TypeName:	,C6
+	TypeName:	,__AnonC6
 Attributes:
 	Name:			manager
 	Type:			IDREF
