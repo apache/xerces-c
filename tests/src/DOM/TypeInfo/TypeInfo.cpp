@@ -541,19 +541,19 @@ bool TypeInfo::testAnonymous() {
 
     //element anonymousTest
     DOMElement *testEle = findElement(X("anonymousTest"));
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("C1"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonC1"), X(""), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("partNum"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("S7"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("__AnonS7"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("S2"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonS2"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("S4"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonS4"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("S6"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonS6"), X(""), __LINE__);
 
     return passed;
 }
