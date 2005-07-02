@@ -39,16 +39,12 @@
 // ---------------------------------------------------------------------------
 
 //
-// If this is an autoconf configured build, we include Xerces_autoconf_config.
+// If this is an autoconf configured build, we include Xerces_autoconf_config.hpp
 // Otherwise we include a preconfigured config appropriate for the particular
-// platform.
+// platform that the specific makefile should copy over.
 //
-#ifdef XERCES_NO_CONFIGURE_SUPPORT
-#	include <xercesc/util/Xerces_no_autoconf_config.hpp>
-#else
 //  If the next line generates an error then you haven't run ./configure
-#	include	<xercesc/util/Xerces_autoconf_config.hpp>
-#endif
+#include	<xercesc/util/Xerces_autoconf_config.hpp>
 
 // ---------------------------------------------------------------------------
 //  Include the Xerces version information; this is kept in a separate file to

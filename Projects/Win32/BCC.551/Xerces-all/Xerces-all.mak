@@ -30,6 +30,7 @@ clearall:
 
 XercesLib: XercesLib\XercesLib.mak
   cd $<
+  copy ..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.borland.hpp ..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
   $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM) -DWITHASM=$(WITHASM)
   cd ..
 

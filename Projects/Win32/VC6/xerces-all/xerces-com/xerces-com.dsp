@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "_DEBUG" /D "_MBCS" /D "_ATL_DEBUG_INTERFACES" /D "_ATL_DEBUG_QI" /D "_ATL_DEBUG_REFCOUNT" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "WIN32" /D "_WINDOWS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -52,9 +52,9 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2D.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
-TargetDir=\Xerces\3.0-unstable\Build\Win32\xml4com\Debug
-TargetPath=\Xerces\3.0-unstable\Build\Win32\xml4com\Debug\xerces-com.dll
-InputPath=\Xerces\3.0-unstable\Build\Win32\xml4com\Debug\xerces-com.dll
+TargetDir=\Xerces\Xerces-C\Build\Win32\xml4com\Debug
+TargetPath=\Xerces\Xerces-C\Build\Win32\xml4com\Debug\xerces-com.dll
+InputPath=\Xerces\Xerces-C\Build\Win32\xml4com\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
@@ -85,7 +85,7 @@ BuildCmds= \
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
-# ADD CPP /MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "WIN32" /D "_WINDOWS" /D "XERCES_NO_CONFIGURE_SUPPORT" /Yu"stdafx.h" /FD /c
+# ADD CPP /MT /W3 /GX /O1 /I "..\..\..\..\..\src" /I "..\..\..\..\..\src\xercesc\com" /D "NDEBUG" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "_USRDLL" /D "DEVENV_VCPP" /D "XML_SINGLEDLL" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "WIN32" /D "_WINDOWS" /Yu"stdafx.h" /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -94,9 +94,9 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2.lib /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
-TargetDir=\Xerces\3.0-unstable\Build\Win32\xml4com\ReleaseMinDependency
-TargetPath=\Xerces\3.0-unstable\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
-InputPath=\Xerces\3.0-unstable\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
+TargetDir=\Xerces\Xerces-C\Build\Win32\xml4com\ReleaseMinDependency
+TargetPath=\Xerces\Xerces-C\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
+InputPath=\Xerces\Xerces-C\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \

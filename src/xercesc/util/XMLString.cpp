@@ -24,8 +24,6 @@
 // ---------------------------------------------------------------------------
 #if HAVE_CONFIG_H
 #	include <config.h>
-#else
-#	include <xercesc/util/Xerces_no_autoconf_config.hpp>
 #endif
 
 #if !HAVE_STRICMP

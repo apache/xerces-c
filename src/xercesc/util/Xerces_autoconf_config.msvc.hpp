@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004,2005 The Apache Software Foundation.
+ * Copyright 1999-2004 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,38 +18,50 @@
  * $Id$
  */
 
-// For non-autoconf based builds, this header is provided to set a reasonable set of defaults
+//
+// There are two primary xerces configuration header files:
+//
+//	Xerces_autoconf_config.hpp	--  For configuration of items that must be accessable
+//									through public headers. This file has limited information
+//									and carefully works to avoid collision of macro names, etc.
+//
+//									This file is included by XercesDefs.h.
+//									This version of the file is specific for Microsoft Visual C++
+//									family of compilers
+//
+//	config.h					--  This file is not used with Microsoft Visual C++; the macros
+//									it would specify are instead hardcoded in the makefiles
+//
 
-#ifndef XERCES_NO_AUTOCONFIG_CONFIG_HPP
-#define XERCES_NO_AUTOCONFIG_CONFIG_HPP
+#ifndef XERCES_AUTOCONFIG_CONFIG_HPP
+#define XERCES_AUTOCONFIG_CONFIG_HPP
 
 #include <basetsd.h>
 
-/* #undef XERCES_AUTOCONF */
-/* #undef XERCES_HAVE_SYS_TYPES_H */
-#define HAVE_STRICMP        1
-#define HAVE_STRNICMP       1
-#define HAVE_SYS_TIMEB_H    1
-#define HAVE_FTIME          1
-#define HAVE_LIMITS_H       1
+// silence the warning "while compiling class-template member function xxxx : identifier was truncated to '255' 
+// characters in the browser information"
+#pragma warning( disable: 4786 )
 
-#define XERCES_16BIT_INT short int
-#define XERCES_32BIT_INT int
+// ---------------------------------------------------------------------------
+//  These defines have been hardcoded for the Microsoft Visual C++ compilers
+// ---------------------------------------------------------------------------
+#undef XERCES_AUTOCONF
+#undef XERCES_HAVE_SYS_TYPES_H
+#undef XERCES_HAVE_INTTYPES_H
 
-#ifdef __BORLANDC__
-  #define XERCES_XMLCH_T  wchar_t
-#else
-  #define XERCES_XMLCH_T  unsigned short
-#endif
+#define XERCES_S16BIT_INT   INT16
+#define XERCES_S32BIT_INT   INT32
+#define XERCES_U16BIT_INT   UINT16
+#define XERCES_U32BIT_INT   UINT32
+#define XERCES_XMLCH_T      unsigned short
+#define XERCES_SIZE_T       SIZE_T
+#define XERCES_SSIZE_T      SSIZE_T
 
-#define XERCES_SIZE_T   SIZE_T
-#define XERCES_SSIZE_T  SSIZE_T
-
-#define XERCES_HAS_CPP_NAMESPACE
-#define XERCES_STD_NAMESPACE
-#define XERCES_NEW_IOSTREAMS
-/* #undef XERCES_NO_NATIVE_BOOL */
-#define XERCES_LSTRSUPPORT
+#define XERCES_HAS_CPP_NAMESPACE    1
+#define XERCES_STD_NAMESPACE        1
+#define XERCES_NEW_IOSTREAMS        1
+#undef XERCES_NO_NATIVE_BOOL
+#define XERCES_LSTRSUPPORT          1
 
 #ifdef XERCES_STATIC_LIBRARY
 #define XERCES_PLATFORM_EXPORT
@@ -60,9 +72,7 @@
 #define DLL_EXPORT
 #endif
 
-#ifdef __BORLANDC__
-#define XERCES_NO_MATCHING_DELETE_OPERATOR
-#endif
+#define XERCES_MFC_SUPPORT 
 
 // ---------------------------------------------------------------------------
 //  XMLSize_t is the unsigned integral type.
@@ -78,18 +88,19 @@ typedef XERCES_XMLCH_T				XMLCh;
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bit integers
 // ---------------------------------------------------------------------------
-typedef unsigned XERCES_16BIT_INT	XMLUInt16;
-typedef unsigned XERCES_32BIT_INT	XMLUInt32;
+typedef XERCES_U16BIT_INT			XMLUInt16;
+typedef XERCES_U32BIT_INT			XMLUInt32;
 
 // ---------------------------------------------------------------------------
 //  Define signed 32 bit integers
 // ---------------------------------------------------------------------------
-typedef XERCES_32BIT_INT			XMLInt32;
+typedef XERCES_S32BIT_INT			XMLInt32;
 
 // ---------------------------------------------------------------------------
 //  XMLFilePos is the type used to represent a file position.
 // ---------------------------------------------------------------------------
-typedef unsigned XERCES_32BIT_INT	XMLFilePos;
+typedef XERCES_U32BIT_INT			XMLFilePos;
+
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it is on in the build environment

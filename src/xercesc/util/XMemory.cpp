@@ -43,7 +43,7 @@ void* XMemory::operator new(size_t size)
     return (char*)block + headerSize;
 }
 
-#if defined(XML_VISUALCPP)
+#if defined(XERCES_MFC_SUPPORT)
 
 void* XMemory::operator new(size_t size, const char* /*file*/, int /*line*/)
 { 

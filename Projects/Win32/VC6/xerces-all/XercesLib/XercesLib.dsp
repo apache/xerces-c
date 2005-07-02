@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "XERCES_NO_CONFIGURE_SUPPORT" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "WIN32" /D "_WINDOWS" /D "XERCES_BUILDING_LIBRARY" /FD /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
@@ -54,7 +54,7 @@ RSC=rc.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.6.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.6.0
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "XERCES_NO_CONFIGURE_SUPPORT" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "WIN32" /D "_WINDOWS" /D "XERCES_BUILDING_LIBRARY" /FR /FD /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /FR /FD /c
 # ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -79,7 +79,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_6D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.6.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_6D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.6.0
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
@@ -98,7 +98,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
 # SUBTRACT BASE CPP /Fr /YX
-# ADD CPP /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "XERCES_NO_CONFIGURE_SUPPORT" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "WIN32" /D "_WINDOWS" /D "XERCES_BUILDING_LIBRARY" /FD /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /FD /c
 # ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -107,7 +107,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_4_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.4.0
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_6D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.6.0 /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_6D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.6.0 /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
@@ -125,7 +125,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /G6 /MD /Za /W3 /GX /O2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
-# ADD CPP /MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "XERCES_NO_CONFIGURE_SUPPORT" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "WIN32" /D "_WINDOWS" /D "XERCES_BUILDING_LIBRARY" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /FD /c
 # ADD BASE MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -134,7 +134,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_4_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.4.0
 # SUBTRACT BASE LINK32 /pdb:none /incremental:yes
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_6.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.6.0 /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_6.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.6.0 /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -751,6 +751,73 @@ SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\ValueVectorOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+
+!IF  "$(CFG)" == "XercesLib - Win32 Release"
+
+# PROP Ignore_Default_Tool 1
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+# Begin Custom Build
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+
+"$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
+
+# PROP Ignore_Default_Tool 1
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+# Begin Custom Build
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+
+"$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
+
+# PROP Ignore_Default_Tool 1
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+# Begin Custom Build
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+
+"$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
+
+# PROP Ignore_Default_Tool 1
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+# Begin Custom Build
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+
+"$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	
+# End Custom Build
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 

@@ -53,7 +53,7 @@ public :
       */
     void* operator new(size_t size);
 
-#if defined(XML_VISUALCPP)
+#if defined(XERCES_MFC_SUPPORT)
     /**
       * This method overrides the MFC debug version of the operator new
       * 
@@ -132,10 +132,11 @@ protected :
     }
     //@}
 
+#if defined(XERCES_NEED_XMEMORY_VIRTUAL_DESTRUCTOR)
     virtual ~XMemory()
     {
     }
-
+#endif
 };
 
 XERCES_CPP_NAMESPACE_END
