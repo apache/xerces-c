@@ -1276,131 +1276,14 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             //  See if this attribute is declared for this element. If we are
             //  not validating of course it will not be at first, but we will
             //  fault it into the pool (to avoid lots of redundant errors.)
-            XMLAttDef* attDef = ((DTDElementDecl *)elemDecl)->getAttDef ( fAttNameBuf.getRawBuffer());
             XMLCh * namePtr = fAttNameBuf.getRawBuffer();
-
-            //  Add this attribute to the attribute list that we use to
-            //  pass them to the handler. We reuse its existing elements
-            //  but expand it as required.
-            // Note that we want to this first since this will
-            // make a copy of the namePtr; we can then make use of
-            // that copy in the hashtable lookup that checks
-            // for duplicates.  This will mean we may have to update
-            // the type of the XMLAttr later.
-            XMLAttr* curAtt;
-            if (attCount >= curAttListSize)
-            {
-                if (fDoNamespaces) {
-                    curAtt = new (fMemoryManager) XMLAttr
-                    (
-                        fEmptyNamespaceId
-                        , fAttNameBuf.getRawBuffer()
-                        , XMLUni::fgZeroLenString
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                        , true
-                        , fMemoryManager
-                    );
-                }
-                else
-                {
-                    curAtt = new (fMemoryManager) XMLAttr
-                    (
-                        0
-                        , fAttNameBuf.getRawBuffer()
-                        , XMLUni::fgZeroLenString
-                        , XMLUni::fgZeroLenString
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                        , true
-                        , fMemoryManager
-                    );
-                }
-                fAttrList->addElement(curAtt);
-            }
-            else
-            {
-                curAtt = fAttrList->elementAt(attCount);
-
-                if (fDoNamespaces)
-                {
-                    curAtt->set
-                    (
-                        fEmptyNamespaceId
-                        , fAttNameBuf.getRawBuffer()
-                        , XMLUni::fgZeroLenString
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                    );
-                }
-                else
-                {
-                    curAtt->set
-                    (
-                        0
-                        , fAttNameBuf.getRawBuffer()
-                        , XMLUni::fgZeroLenString
-                        , XMLUni::fgZeroLenString
-                        , (attDef)?attDef->getType():XMLAttDef::CData
-                    );
-                }
-                curAtt->setSpecified(true);
-            }
-            // reset namePtr so it refers to newly-allocated memory
-            namePtr = (XMLCh *)curAtt->getName();
-
-            // now need to prepare for duplicate detection
-            if(attDef)
-            {
-                unsigned int *curCountPtr = fAttDefRegistry->get(attDef);
-                if(!curCountPtr)
-                {
-                    curCountPtr = getNewUIntPtr();
-                    *curCountPtr = fElemCount;
-                    fAttDefRegistry->put(attDef, curCountPtr);
-                }
-                else if(*curCountPtr < fElemCount)
-                    *curCountPtr = fElemCount;
-                else
-                {
-                    emitError
-                    ( 
-                        XMLErrs::AttrAlreadyUsedInSTag
-                        , attDef->getFullName()
-                        , elemDecl->getFullName()
-                    );
-                }
-            }
-            else
-            {
-                if(!fUndeclaredAttrRegistry->containsKey(namePtr))
-                    fUndeclaredAttrRegistry->put((void *)namePtr, 0);
-                else
-                {
-                    emitError
-                    ( 
-                        XMLErrs::AttrAlreadyUsedInSTag
-                        , namePtr
-                        , elemDecl->getFullName()
-                    );
-                }
-            }
-            if (fValidate)
-            {
-                if (!attDef)
-                {
-
-                    fValidator->emitError
-                    (
-                        XMLValid::AttNotDefinedForElement
-                        , fAttNameBuf.getRawBuffer()
-                        , qnameRawBuf
-                    );
-                }
-            }
+            XMLAttDef* attDef = ((DTDElementDecl *)elemDecl)->getAttDef(namePtr);
 
             //  Skip any whitespace before the value and then scan the att
             //  value. This will come back normalized with entity refs and
             //  char refs expanded.
             fReaderMgr.skipPastSpaces();
-            if (!scanAttValue(attDef, fAttNameBuf.getRawBuffer(), fAttValueBuf))
+            if (!scanAttValue(attDef, namePtr, fAttValueBuf))
             {
                 static const XMLCh tmpList[] =
                 {
@@ -1433,28 +1316,118 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                     return false;
                 }
             }
-            // must set the newly-minted value on the XMLAttr:
-            curAtt->setValue(fAttValueBuf.getRawBuffer());
 
-            //  Now that its all stretched out, lets look at its type and
-            //  determine if it has a valid value. It will output any needed
-            //  errors, but we just keep going. We only need to do this if
-            //  we are validating.
-            if (attDef)
-            {
-                // Let the validator pass judgement on the attribute value
-                if (fValidate)
+            //  Add this attribute to the attribute list that we use to
+            //  pass them to the handler. We reuse its existing elements
+            //  but expand it as required.
+            // Note that we want to this first since this will
+            // make a copy of the namePtr; we can then make use of
+            // that copy in the hashtable lookup that checks
+            // for duplicates.  This will mean we may have to update
+            // the type of the XMLAttr later.
+            XMLAttr* curAtt;
+            const XMLCh* attrValue = fAttValueBuf.getRawBuffer();
+
+            if (attCount >= curAttListSize) {
+                curAtt = new (fMemoryManager) XMLAttr(fMemoryManager);
+                fAttrList->addElement(curAtt);
+            }
+            else {
+                curAtt = fAttrList->elementAt(attCount);
+            }
+
+            curAtt->setSpecified(true);
+            if (fDoNamespaces) {
+                curAtt->set(
+                    fEmptyNamespaceId, namePtr, XMLUni::fgZeroLenString
+                    , (attDef)? attDef->getType() : XMLAttDef::CData
+                );
+
+                // each attribute has the prefix:suffix="value"
+                const XMLCh* attPrefix = curAtt->getPrefix();
+                const XMLCh* attLocalName = curAtt->getName();
+
+                if (attPrefix && *attPrefix) {
+                    if (XMLString::equals(attPrefix, XMLUni::fgXMLString)) {
+                        curAtt->setURIId(fXMLNamespaceId);
+                    }
+                    else if (XMLString::equals(attPrefix, XMLUni::fgXMLNSString)) {
+                        curAtt->setURIId(fXMLNSNamespaceId);
+                        updateNSMap(attPrefix, attLocalName, attrValue);
+                    }
+                    else {
+                        fAttrNSList->addElement(curAtt);
+                    }
+                }
+                else if (XMLString::equals(XMLUni::fgXMLNSString, attLocalName))
                 {
-                    fValidator->validateAttrValue
+                    updateNSMap(attPrefix, XMLUni::fgZeroLenString, attrValue);
+                }
+
+                // NOTE: duplicate attribute check will be done, when we map
+                //       namespaces to all attributes
+            }
+            else {
+                curAtt->set(
+                    0, namePtr, XMLUni::fgZeroLenString, XMLUni::fgZeroLenString
+                    , (attDef)?attDef->getType():XMLAttDef::CData
+                );
+
+                // now need to prepare for duplicate detection
+                if (attDef) {
+                    unsigned int *curCountPtr = fAttDefRegistry->get(attDef);
+                    if (!curCountPtr) {
+                        curCountPtr = getNewUIntPtr();
+                        *curCountPtr = fElemCount;
+                        fAttDefRegistry->put(attDef, curCountPtr);
+                    }
+                    else if (*curCountPtr < fElemCount) {
+                        *curCountPtr = fElemCount;
+                    }
+                    else {
+                        emitError( 
+                            XMLErrs::AttrAlreadyUsedInSTag
+                            , attDef->getFullName(), elemDecl->getFullName()
+                        );
+                    }
+                }
+                else
+                {
+                    // reset namePtr so it refers to newly-allocated memory
+                    namePtr = (XMLCh *)curAtt->getQName();
+                    if (!fUndeclaredAttrRegistry->containsKey(namePtr)) {
+                        fUndeclaredAttrRegistry->put((void *)namePtr, 0);
+                    }
+                    else
+                    {
+                        emitError( 
+                            XMLErrs::AttrAlreadyUsedInSTag
+                            , namePtr, elemDecl->getFullName()
+                        );
+                    }
+                }
+            }
+
+            if (fValidate)
+            {
+                if (attDef) {
+                    // Let the validator pass judgement on the attribute value
+                    fValidator->validateAttrValue(
+                        attDef, fAttValueBuf.getRawBuffer(), false, elemDecl
+                    );
+                }
+                else
+                {
+                    fValidator->emitError
                     (
-                        attDef
-                        , fAttValueBuf.getRawBuffer()
-                        , false
-                        , elemDecl
+                        XMLValid::AttNotDefinedForElement
+                        , fAttNameBuf.getRawBuffer(), qnameRawBuf
                     );
                 }
             }
 
+            // must set the newly-minted value on the XMLAttr:
+            curAtt->setValue(attrValue);
             attCount++;
 
             // And jump back to the top of the loop
@@ -2065,22 +2038,6 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
         }
     }
 
-    for (unsigned int i=0; i < fAttrNSList->size(); i++) {
-
-        XMLAttr* providedAttr = fAttrNSList->elementAt(i);
-
-        providedAttr->setURIId
-        (
-	        resolvePrefix
-            (
-                providedAttr->getPrefix(),
-                ElemStack::Mode_Attribute
-            )
-        );
-    }
-
-    fAttrNSList->removeAllElements();
-
     return retCount;
 }
 
@@ -2354,60 +2311,37 @@ void DGXMLScanner::updateNSMap(const    XMLCh* const attrPrefix
 void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount, 
                                                 XMLElementDecl*       elemDecl)
 {
+    // Map prefixes to uris
+    for (unsigned int i=0; i < fAttrNSList->size(); i++) {
+        XMLAttr* providedAttr = fAttrNSList->elementAt(i);
+        providedAttr->setURIId(
+            resolvePrefix(providedAttr->getPrefix(), ElemStack::Mode_Attribute)
+        );
+    }
 
-    //
-    // Decide if to use hash table to do duplicate checking
-    //
+    fAttrNSList->removeAllElements();
+
+     // Decide if to use hash table to do duplicate checking
     bool toUseHashTable = false;
-    setAttrDupChkRegistry((unsigned int&)attCount, toUseHashTable);
 
-    //  Make an initial pass through the list and find any xmlns attributes or
-    //  schema attributes.
-    //  When we find one, send it off to be used to update the element stack's
-    //  namespace mappings.
+	setAttrDupChkRegistry((unsigned int&)attCount, toUseHashTable);
     for (int index = 0; index < attCount; index++)
     {
-        // each attribute has the prefix:suffix="value"
-        XMLAttr* curAttr = theAttrList->elementAt(index);
-        const XMLCh* attPrefix = curAttr->getPrefix();
-        const XMLCh* attLocalName = curAttr->getName();
-
-        if (attPrefix && *attPrefix)
-        {
-            if (XMLString::equals(attPrefix, XMLUni::fgXMLString)) {
-                curAttr->setURIId(fXMLNamespaceId);
-            }
-            else if (XMLString::equals(attPrefix, XMLUni::fgXMLNSString)) {
-
-                curAttr->setURIId(fXMLNSNamespaceId);
-                updateNSMap(attPrefix, attLocalName, curAttr->getValue());
-            }
-            else {
-                fAttrNSList->addElement(curAttr);
-            }
-        }
-        else if (XMLString::equals(XMLUni::fgXMLNSString, attLocalName))
-        {
-            updateNSMap(attPrefix, XMLUni::fgZeroLenString, curAttr->getValue());
-        }
-		
         // check for duplicate namespace attributes:
         // by checking for qualified names with the same local part and with prefixes 
         // which have been bound to namespace names that are identical.         
-        XMLAttr* loopAttr;
-
+        XMLAttr* curAttr = theAttrList->elementAt(index);
         if (!toUseHashTable)
         {
+            XMLAttr* loopAttr;
             for (int attrIndex=0; attrIndex < index; attrIndex++) {
                 loopAttr = theAttrList->elementAt(attrIndex);
                 if (loopAttr->getURIId() == curAttr->getURIId() &&
                     XMLString::equals(loopAttr->getName(), curAttr->getName())) {
-                    emitError
-                        ( 
-                        XMLErrs::AttrAlreadyUsedInSTag
-                        , curAttr->getName()
+                    emitError( 
+                        XMLErrs::AttrAlreadyUsedInSTag, curAttr->getName()
                         , elemDecl->getFullName()
-                        );
+                    );
                 }
             }
         }
@@ -2415,12 +2349,10 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
         {
             if (fAttrDupChkRegistry->containsKey((void*)curAttr->getName(), curAttr->getURIId()))
             {
-                emitError
-                    ( 
+                emitError( 
                     XMLErrs::AttrAlreadyUsedInSTag
-                    , curAttr->getName()
-                    , elemDecl->getFullName()
-                    );
+                    , curAttr->getName(), elemDecl->getFullName()
+                );
             }
 
             fAttrDupChkRegistry->put((void*)curAttr->getName(), curAttr->getURIId(), curAttr);
