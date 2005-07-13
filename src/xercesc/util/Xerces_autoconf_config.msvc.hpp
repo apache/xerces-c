@@ -53,7 +53,13 @@
 #define XERCES_S32BIT_INT   INT32
 #define XERCES_U16BIT_INT   UINT16
 #define XERCES_U32BIT_INT   UINT32
+
+#ifdef _NATIVE_WCHAR_T_DEFINED 
+#define XERCES_XMLCH_T      wchar_t
+#else
 #define XERCES_XMLCH_T      unsigned short
+#endif
+
 #define XERCES_SIZE_T       SIZE_T
 #define XERCES_SSIZE_T      SSIZE_T
 
