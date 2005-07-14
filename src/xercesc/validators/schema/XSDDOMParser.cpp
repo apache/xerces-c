@@ -245,6 +245,8 @@ void XSDDOMParser::startElement( const XMLElementDecl&       elemDecl
     else
     {
         startAnnotationElement(elemDecl, attrList, attrCount);
+        if(isEmpty)
+            endElement(elemDecl, urlId, isRoot, elemPrefix);
         // avoid falling through; don't call startElement in this case
         return;
     }
