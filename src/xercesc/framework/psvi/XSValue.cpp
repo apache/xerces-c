@@ -343,8 +343,22 @@ bool XSValue::validate(const XMLCh*         const content
         !*content ||
         ((version == ver_10) && (XMLChar1_0::isAllSpaces(content, XMLString::stringLen(content)))) ||
         ((version == ver_11) && (XMLChar1_1::isAllSpaces(content, XMLString::stringLen(content)))) ) {
-        status = st_NoContent;
-        return false;
+
+        switch (datatype) {
+        case XSValue::dt_string:
+        case XSValue::dt_normalizedString:
+        case XSValue::dt_token:
+        case XSValue::dt_anyURI:
+        case XSValue::dt_hexBinary:
+        case XSValue::dt_base64Binary:
+            status = st_Init;
+            return true;
+            break;
+        default:
+            status = st_NoContent;
+            return false;
+            break;
+        }
     }  
 
     status = st_Init;
