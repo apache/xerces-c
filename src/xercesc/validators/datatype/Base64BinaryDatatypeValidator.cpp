@@ -67,8 +67,10 @@ DatatypeValidator* Base64BinaryDatatypeValidator::newInstance
 void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
                                                     , MemoryManager* const manager)
 {
+    if (!content || !*content)
+        return;
     if (getLength(content, manager) < 0)
-    {
+    { 
         ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Not_Base64
                 , content
@@ -79,6 +81,8 @@ void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
 int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content
                                          , MemoryManager* const manager) const
 {
+    if (!content || !*content)
+        return 0;
     return Base64::getDataLength(content, manager, Base64::Conf_Schema);
 }
 
