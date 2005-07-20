@@ -53,7 +53,7 @@ bool HexBin::isArrayByteHex(const XMLCh* const hexData)
         init();
 
     if (( hexData == 0 ) || ( *hexData == 0 )) // zero length
-        return false;
+        return true;
 
     int strLen = XMLString::stringLen(hexData);
     if ( strLen%2 != 0 )
