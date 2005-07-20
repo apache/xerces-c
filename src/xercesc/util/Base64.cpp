@@ -325,7 +325,7 @@ XMLByte* Base64::decodeToXMLByte(const XMLCh*         const   inputData
                     ,       MemoryManager* const   memMgr
                     ,       Conformance            conform )
 {
-	if (!inputData)
+	if (!inputData || !*inputData)
 		return 0;
 
     /***
