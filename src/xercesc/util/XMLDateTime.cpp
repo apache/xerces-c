@@ -568,9 +568,9 @@ void XMLDateTime::parseDay()
     fValue[Day]      = parseInt(fStart+3, fStart+5);
 
     if ( DAY_SIZE < fEnd )
-    {
-        int sign = findUTCSign(DAY_SIZE);
-        if ( sign < 0 )
+    {        
+        int pos = XMLString::indexOf(UTC_SET, fBuffer[DAY_SIZE]);
+        if (pos == -1 )
         {
             ThrowXMLwithMemMgr1(SchemaDateTimeException
                     , XMLExcepts::DateTime_gDay_invalid
@@ -579,7 +579,8 @@ void XMLDateTime::parseDay()
         }
         else
         {
-            getTimeZone(sign);
+            fValue[utc] = pos+1;
+            getTimeZone(DAY_SIZE);
         }
     }
 
@@ -623,9 +624,9 @@ void XMLDateTime::parseMonth()
     // parse TimeZone if any
     //
     if ( fStart < fEnd )
-    {
-        int sign = findUTCSign(fStart);
-        if ( sign < 0 )
+    {      
+        int pos = XMLString::indexOf(UTC_SET, fBuffer[fStart]);
+        if ( pos == NOT_FOUND )
         {
             ThrowXMLwithMemMgr1(SchemaDateTimeException
                     , XMLExcepts::DateTime_gMth_invalid
@@ -634,7 +635,8 @@ void XMLDateTime::parseMonth()
         }
         else
         {
-            getTimeZone(sign);
+            fValue[utc] = pos+1;
+            getTimeZone(fStart);
         }
     }
 
@@ -697,9 +699,9 @@ void XMLDateTime::parseMonthDay()
     fValue[Day]      = parseInt(5, 7);
 
     if ( MONTHDAY_SIZE < fEnd )
-    {
-        int sign = findUTCSign(MONTHDAY_SIZE);
-        if ( sign<0 )
+    {        
+        int pos = XMLString::indexOf(UTC_SET, fBuffer[MONTHDAY_SIZE]);
+        if ( pos == NOT_FOUND )
         {
             ThrowXMLwithMemMgr1(SchemaDateTimeException
                     , XMLExcepts::DateTime_gMthDay_invalid
@@ -708,7 +710,8 @@ void XMLDateTime::parseMonthDay()
         }
         else
         {
-            getTimeZone(sign);
+            fValue[utc] = pos+1;
+            getTimeZone(MONTHDAY_SIZE);
         }
     }
 
@@ -1091,21 +1094,19 @@ void XMLDateTime::getYearMonth()
 
 void XMLDateTime::parseTimeZone()
 {
-    if ( fStart < fEnd )
-    {
-        int sign = findUTCSign(fStart);
-        if ( sign < 0 )
-        {
+    //fStart points right after the date   	 
+  	if ( fStart < fEnd ) {
+        int pos = XMLString::indexOf(UTC_SET, fBuffer[fStart]);
+    	if (pos == NOT_FOUND) {
             ThrowXMLwithMemMgr1(SchemaDateTimeException
                     , XMLExcepts::DateTime_tz_noUTCsign
                     , fBuffer
                     , fMemoryManager);
-            //("Error in month parsing");
-        }
-        else
-        {
-            getTimeZone(sign);
-        }
+   		}
+   		else { 
+            fValue[utc] = pos+1;
+  	        getTimeZone(fStart);   		
+   		}
     }
 
     return;
