@@ -39,13 +39,12 @@ DOMPrintFilter::DOMPrintFilter(unsigned long whatToShow)
 short DOMPrintFilter::acceptNode(const DOMNode* node) const
 {
 	//
-	// The DOMWriter shall call getWhatToShow() before calling 
+	// The DOMLSSerializer shall call getWhatToShow() before calling 
 	// acceptNode(), to show nodes which are supposed to be 
 	// shown to this filter.
 	// 
-	// REVISIT: In case the DOMWriter does not follow the protocol, 
+	// REVISIT: In case the DOMLSSerializer does not follow the protocol, 
 	//          Shall the filter honour, or NOT, what it claimes
-	//         (when it is constructed/setWhatToShow()) 
 	//          it is interested in ?
 	// 
 	// The DOMLS specs does not specify that acceptNode() shall do
@@ -86,8 +85,8 @@ short DOMPrintFilter::acceptNode(const DOMNode* node) const
 		{
 			// even we say we are going to process document type,
 			// we are not able be to see this node since
-			// DOMWriterImpl (a XercesC's default implementation
-			// of DOMWriter) will not pass DocumentType node to
+			// DOMLSSerializerImpl (a XercesC's default implementation
+			// of DOMLSSerializer) will not pass DocumentType node to
 			// this filter.
 			//
 			return DOMNodeFilter::FILTER_REJECT;  // no effect

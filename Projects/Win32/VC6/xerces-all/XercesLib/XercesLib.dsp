@@ -1385,11 +1385,11 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\ValidationContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMLSInput.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMLSInput.hpp
 # End Source File
 # Begin Source File
 
@@ -1841,11 +1841,11 @@ SOURCE=..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMLSParserImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMLSParserImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -2844,6 +2844,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNamedNodeMapImpl.cpp
 # End Source File
 # Begin Source File
@@ -2964,14 +2972,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 # End Source File
 # Begin Source File
@@ -2982,10 +2982,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMAttr.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMBuilder.hpp
 # End Source File
 # Begin Source File
 
@@ -3073,11 +3069,35 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementationSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMInputSource.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLocator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSInput.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSParser.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSParserFilter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSSerializer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSSerializerFilter.hpp
 # End Source File
 # Begin Source File
 
@@ -3138,14 +3158,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMUserDataHandler.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriter.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp
 # End Source File
 # Begin Source File
 

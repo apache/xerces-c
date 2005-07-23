@@ -22,16 +22,16 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/framework/Wrapper4DOMInputSource.hpp>
-#include <xercesc/dom/DOMInputSource.hpp>
+#include <xercesc/framework/Wrapper4DOMLSInput.hpp>
+#include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  Wrapper4DOMInputSource: Constructor and Destructor
+//  Wrapper4DOMLSInput: Constructor and Destructor
 // ---------------------------------------------------------------------------
-Wrapper4DOMInputSource::Wrapper4DOMInputSource(DOMInputSource* const inputSource,
+Wrapper4DOMLSInput::Wrapper4DOMLSInput(DOMLSInput* const inputSource,
                                                const bool adoptFlag,
                                                MemoryManager* const  manager) :
     InputSource(manager)
@@ -42,7 +42,7 @@ Wrapper4DOMInputSource::Wrapper4DOMInputSource(DOMInputSource* const inputSource
         ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, getMemoryManager());
 }
 
-Wrapper4DOMInputSource::~Wrapper4DOMInputSource()
+Wrapper4DOMLSInput::~Wrapper4DOMLSInput()
 {
     if (fAdoptInputSource)
         delete fInputSource;
@@ -50,62 +50,62 @@ Wrapper4DOMInputSource::~Wrapper4DOMInputSource()
 
 
 // ---------------------------------------------------------------------------
-//  Wrapper4DOMInputSource: Getter methods
+//  Wrapper4DOMLSInput: Getter methods
 // ---------------------------------------------------------------------------
-bool Wrapper4DOMInputSource::getIssueFatalErrorIfNotFound() const
+bool Wrapper4DOMLSInput::getIssueFatalErrorIfNotFound() const
 {
     return fInputSource->getIssueFatalErrorIfNotFound();
 }
 
-const XMLCh* Wrapper4DOMInputSource::getEncoding() const
+const XMLCh* Wrapper4DOMLSInput::getEncoding() const
 {
     return fInputSource->getEncoding();
 }
 
-const XMLCh* Wrapper4DOMInputSource::getSystemId() const
+const XMLCh* Wrapper4DOMLSInput::getSystemId() const
 {
     return fInputSource->getSystemId();
 }
 
-const XMLCh* Wrapper4DOMInputSource::getPublicId() const
+const XMLCh* Wrapper4DOMLSInput::getPublicId() const
 {
     return fInputSource->getPublicId();
 }
 
 
 // ---------------------------------------------------------------------------
-//  Wrapper4DOMInputSource: Setter methods
+//  Wrapper4DOMLSInput: Setter methods
 // ---------------------------------------------------------------------------
-void Wrapper4DOMInputSource::setIssueFatalErrorIfNotFound(const bool flag)
+void Wrapper4DOMLSInput::setIssueFatalErrorIfNotFound(const bool flag)
 {
     fInputSource->setIssueFatalErrorIfNotFound(flag);
 }
 
 
-void Wrapper4DOMInputSource::setEncoding(const XMLCh* const encodingStr)
+void Wrapper4DOMLSInput::setEncoding(const XMLCh* const encodingStr)
 {
     fInputSource->setEncoding(encodingStr);
 }
 
 
-void Wrapper4DOMInputSource::setPublicId(const XMLCh* const publicId)
+void Wrapper4DOMLSInput::setPublicId(const XMLCh* const publicId)
 {
     fInputSource->setPublicId(publicId);
 }
 
 
-void Wrapper4DOMInputSource::setSystemId(const XMLCh* const systemId)
+void Wrapper4DOMLSInput::setSystemId(const XMLCh* const systemId)
 {
     fInputSource->setSystemId(systemId);
 }
 
 
 // ---------------------------------------------------------------------------
-//  Wrapper4DOMInputSource: Stream methods
+//  Wrapper4DOMLSInput: Stream methods
 // ---------------------------------------------------------------------------
-BinInputStream* Wrapper4DOMInputSource::makeStream() const
+BinInputStream* Wrapper4DOMLSInput::makeStream() const
 {
-    return fInputSource->makeStream();
+    return fInputSource->getByteStream();
 }
 
 XERCES_CPP_NAMESPACE_END

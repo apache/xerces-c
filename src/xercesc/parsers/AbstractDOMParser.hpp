@@ -47,7 +47,7 @@ class PSVIHandler;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
-  * It is used as a base for DOM parsers (i.e. XercesDOMParser, DOMBuilder).
+  * It is used as a base for DOM parsers (i.e. XercesDOMParser, DOMLSParser).
   */
 class PARSERS_EXPORT AbstractDOMParser :
 

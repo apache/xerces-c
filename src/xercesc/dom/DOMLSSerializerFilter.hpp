@@ -1,5 +1,5 @@
-#ifndef DOMWriterFilter_HEADER_GUARD_
-#define DOMWriterFilter_HEADER_GUARD_
+#ifndef DOMLSSerializerFilter_HEADER_GUARD_
+#define DOMLSSerializerFilter_HEADER_GUARD_
 
 /*
  * Copyright 2002,2004 The Apache Software Foundation.
@@ -23,12 +23,12 @@
 
 /**
  *
- * DOMWriterFilter.hpp: interface for the DOMWriterFilter class.
+ * DOMLSSerializerFilter.hpp: interface for the DOMLSSerializerFilter class.
  *
- * DOMWriterFilter provide applications the ability to examine nodes
+ * DOMLSSerializerFilter provide applications the ability to examine nodes
  * as they are being serialized.
  *
- * DOMWriterFilter lets the application decide what nodes should be
+ * DOMLSSerializerFilter lets the application decide what nodes should be
  * serialized or not.
  *
  * The DOMDocument, DOMDocumentType, DOMNotation, and DOMEntity nodes are not passed
@@ -43,14 +43,14 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DOMWriterFilter : public DOMNodeFilter {
+class CDOM_EXPORT DOMLSSerializerFilter : public DOMNodeFilter {
 protected:
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMWriterFilter() {};
+    DOMLSSerializerFilter() {};
     //@}
 
 private:
@@ -59,8 +59,8 @@ private:
     // -----------------------------------------------------------------------
     /** @name Unimplemented constructors and operators */
     //@{
-    DOMWriterFilter(const DOMWriterFilter &);
-    DOMWriterFilter & operator = (const DOMWriterFilter &);
+    DOMLSSerializerFilter(const DOMLSSerializerFilter &);
+    DOMLSSerializerFilter & operator = (const DOMLSSerializerFilter &);
     //@}
 
 
@@ -74,11 +74,11 @@ public:
      * Destructor
      *
      */
-    virtual ~DOMWriterFilter() {};
+    virtual ~DOMLSSerializerFilter() {};
     //@}
 
     // -----------------------------------------------------------------------
-    //  Virtual DOMWriterFilter interface
+    //  Virtual DOMLSSerializerFilter interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
@@ -89,30 +89,15 @@ public:
     virtual short acceptNode(const DOMNode* node) const = 0;
 
     /**
-     * Tells the DOMWriter what types of nodes to show to the filter.
+     * Tells the DOMLSSerializer what types of nodes to show to the filter.
      * See <code>DOMNodeFilter</code> for definition of the constants.
      * The constant SHOW_ATTRIBUTE is meaningless here, attribute nodes will
-     * never be passed to a DOMWriterFilter.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
+     * never be passed to a DOMLSSerializerFilter.
      *
      * @return The constants of what types of nodes to show.
-     * @see   setWhatToShow
      * @since DOM Level 3
      */
     virtual unsigned long getWhatToShow() const =0;
-
-    /**
-     * Set what types of nodes are to be presented.
-     * See <code>DOMNodeFilter</code> for definition of the constants.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param toShow The constants of what types of nodes to show.
-     * @see   getWhatToShow
-     * @since DOM Level 3
-     */
-    virtual void          setWhatToShow(unsigned long toShow) =0;
     //@}
 
 private:
@@ -123,7 +108,7 @@ private:
     //  fWhatToShow
     //
     //      The whatToShow mask.
-    //      Tells the DOMWriter what types of nodes to show to the filter.
+    //      Tells the DOMLSSerializer what types of nodes to show to the filter.
     //      See NodeFilter for definition of the constants.
     //      The constants
     //      SHOW_ATTRIBUTE,
@@ -133,7 +118,7 @@ private:
     //      SHOW_DOCUMENT_FRAGMENT are meaningless here,
     //      Entity nodes are not passed to the filter.
     //
-    //      Those nodes will never be passed to a DOMWriterFilter.
+    //      Those nodes will never be passed to a DOMLSSerializerFilter.
     //
     //   Derived class shall add this data member:
     //

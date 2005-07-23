@@ -84,6 +84,7 @@
 				PreprocessorDefinitions="_CONSOLE;_DEBUG;WIN32;_WINDOWS"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
+				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/SCMPrint.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"

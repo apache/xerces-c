@@ -95,6 +95,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME"
 				RuntimeLibrary="3"
+				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XercesLib.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
@@ -475,7 +476,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
+copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -484,7 +486,8 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
+copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -493,7 +496,8 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
+copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -502,7 +506,8 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
+copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -1193,10 +1198,10 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 				RelativePath="..\..\..\..\..\src\xercesc\framework\ValidationContext.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMLSInput.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMLSInput.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4InputSource.cpp">
@@ -1677,10 +1682,10 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\parsers\DOMLSParserImpl.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\parsers\DOMLSParserImpl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp">
@@ -2315,9 +2320,6 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMAttr.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMBuilder.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMCDATASection.hpp">
 			</File>
 			<File
@@ -2381,10 +2383,31 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMImplementationSource.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMInputSource.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLocator.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLocator.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSException.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSInput.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSOutput.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSParser.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSParserFilter.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSSerializer.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSSerializerFilter.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMNamedNodeMap.hpp">
@@ -2427,12 +2450,6 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMUserDataHandler.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMWriter.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathEvaluator.hpp">
@@ -2582,6 +2599,12 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMNamedNodeMapImpl.cpp">
 				</File>
 				<File
@@ -2670,12 +2693,6 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)"
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp">

@@ -205,12 +205,12 @@ void Normalizer::serializeNode(const DOMNode * const node) {
     XMLCh tempStr[100];
     XMLString::transcode("LS", tempStr, 99);
     DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
-    DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
-    theSerializer->setFeature(X("format-pretty-print"), true);
+    DOMLSSerializer   *theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
+    theSerializer->getDomConfig()->setParameter(X("format-pretty-print"), true);
     XMLFormatTarget *myFormTarget;
     myFormTarget = new StdOutFormatTarget();
 
-    theSerializer->writeNode(myFormTarget, *node);
+    theSerializer->write(node,myFormTarget);
 }
 
 int main(int argc, char **argv) {
@@ -373,7 +373,7 @@ int main(int argc, char **argv) {
     DOMConfigurationImpl *cImpl = new ((DOMDocumentImpl*)doc) DOMConfigurationImpl();
     ((DOMDocumentImpl*)doc)->setDOMConfiguration(cImpl);
     cImpl->setErrorHandler(normalizer);
-    cImpl->setParameter(X("namespaces"), (void*)tmpTrue);
+    cImpl->setParameter(X("namespaces"), true);
 
     DOMElement *level1Node = doc->createElement(X("level1Node"));
     docFirstElement->appendChild(level1Node);
@@ -396,7 +396,7 @@ int main(int argc, char **argv) {
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
 
-    cImpl->setParameter(X("comments"), (void*)tmpFalse);
+    cImpl->setParameter(X("comments"), false);
     docFirstElement->appendChild(comment);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
@@ -408,7 +408,7 @@ int main(int argc, char **argv) {
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
 
-    cImpl->setParameter(X("cdata-sections"), (void*)tmpFalse);
+    cImpl->setParameter(X("cdata-sections"), false);
     docFirstElement->appendChild(cData);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);

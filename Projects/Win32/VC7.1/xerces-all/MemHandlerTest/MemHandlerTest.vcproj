@@ -86,6 +86,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
+				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/MemHandlerTest.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"

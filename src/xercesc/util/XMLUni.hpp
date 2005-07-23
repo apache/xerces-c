@@ -229,7 +229,7 @@ public :
     static const XMLCh fgXercesIgnoreAnnotations[];
     static const XMLCh fgXercesDisableDefaultEntityResolution[];
     static const XMLCh fgXercesSkipDTDValidation[];
-
+    static const XMLCh fgXercesEntityResolver[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
@@ -237,23 +237,36 @@ public :
     static const XMLCh fgSAX2CoreNameSpacePrefixes[];
 
     // Introduced in DOM Level 3
-    // DOMBuilder features
+    // DOMLSParser features
     static const XMLCh fgDOMCanonicalForm[];
     static const XMLCh fgDOMCDATASections[];
     static const XMLCh fgDOMComments[];
     static const XMLCh fgDOMCharsetOverridesXMLEncoding[];
+    static const XMLCh fgDOMCheckCharacterNormalization[];
     static const XMLCh fgDOMDatatypeNormalization[];
+    static const XMLCh fgDOMDisallowDoctype[];
+    static const XMLCh fgDOMElementContentWhitespace[];
+    static const XMLCh fgDOMErrorHandler[];
     static const XMLCh fgDOMEntities[];
+    static const XMLCh fgDOMIgnoreUnknownCharacterDenormalization[];
     static const XMLCh fgDOMInfoset[];
     static const XMLCh fgDOMNamespaces[];
     static const XMLCh fgDOMNamespaceDeclarations[];
+    static const XMLCh fgDOMNormalizeCharacters[];
+    static const XMLCh fgDOMResourceResolver[];
+    static const XMLCh fgDOMSchemaLocation[];
+    static const XMLCh fgDOMSchemaType[];
+    static const XMLCh fgDOMSplitCDATASections[];
     static const XMLCh fgDOMSupportedMediatypesOnly[];
+    static const XMLCh fgDOMValidate[];
     static const XMLCh fgDOMValidateIfSchema[];
-    static const XMLCh fgDOMValidation[];
-    static const XMLCh fgDOMWhitespaceInElementContent[];
+    static const XMLCh fgDOMWellFormed[];
+
+    static const XMLCh fgDOMXMLSchemaType[];
+    static const XMLCh fgDOMDTDType[];
 
     // Introduced in DOM Level 3
-    // DOMWriter feature
+    // DOMLSSerializer feature
     static const XMLCh fgDOMWRTCanonicalForm[];
     static const XMLCh fgDOMWRTDiscardDefaultContent[];
     static const XMLCh fgDOMWRTEntities[];

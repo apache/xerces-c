@@ -180,7 +180,7 @@ libcurlna_la_OBJECTS = $(am_libcurlna_la_OBJECTS)
 @XERCES_USE_NETACCESSOR_CURL_TRUE@am_libcurlna_la_rpath =
 libdom_la_LIBADD =
 am__objects_3 = xercesc/dom/DOMException.lo \
-	xercesc/dom/DOMRangeException.lo \
+	xercesc/dom/DOMLSException.lo xercesc/dom/DOMRangeException.lo \
 	xercesc/dom/DOMXPathException.lo
 am_libdom_la_OBJECTS = $(am__objects_3)
 libdom_la_OBJECTS = $(am_libdom_la_OBJECTS)
@@ -220,7 +220,7 @@ am__objects_4 = xercesc/dom/impl/DOMAttrImpl.lo \
 	xercesc/dom/impl/DOMTextImpl.lo \
 	xercesc/dom/impl/DOMTreeWalkerImpl.lo \
 	xercesc/dom/impl/DOMTypeInfoImpl.lo \
-	xercesc/dom/impl/DOMWriterImpl.lo \
+	xercesc/dom/impl/DOMLSSerializerImpl.lo \
 	xercesc/dom/impl/XSDElementNSImpl.lo
 am_libdomimpl_la_OBJECTS = $(am__objects_4)
 libdomimpl_la_OBJECTS = $(am_libdomimpl_la_OBJECTS)
@@ -257,7 +257,7 @@ am__objects_5 = xercesc/framework/BinOutputStream.lo \
 	xercesc/framework/StdInInputSource.lo \
 	xercesc/framework/StdOutFormatTarget.lo \
 	xercesc/framework/URLInputSource.lo \
-	xercesc/framework/Wrapper4DOMInputSource.lo \
+	xercesc/framework/Wrapper4DOMLSInput.lo \
 	xercesc/framework/Wrapper4InputSource.lo \
 	xercesc/framework/XMLAttDef.lo \
 	xercesc/framework/XMLAttDefList.lo \
@@ -357,7 +357,7 @@ libnothreadmmgr_la_OBJECTS = $(am_libnothreadmmgr_la_OBJECTS)
 @XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am_libnothreadmmgr_la_rpath =
 libparsers_la_LIBADD =
 am__objects_14 = xercesc/parsers/AbstractDOMParser.lo \
-	xercesc/parsers/DOMBuilderImpl.lo \
+	xercesc/parsers/DOMLSParserImpl.lo \
 	xercesc/parsers/SAX2XMLFilterImpl.lo \
 	xercesc/parsers/SAX2XMLReaderImpl.lo \
 	xercesc/parsers/SAXParser.lo \
@@ -1106,7 +1106,6 @@ libvalidators_la_SOURCES = ${validators_sources}
 dom_headers = \
 	xercesc/dom/DOM.hpp \
 	xercesc/dom/DOMAttr.hpp \
-	xercesc/dom/DOMBuilder.hpp \
 	xercesc/dom/DOMCDATASection.hpp \
 	xercesc/dom/DOMCharacterData.hpp \
 	xercesc/dom/DOMComment.hpp \
@@ -1127,8 +1126,14 @@ dom_headers = \
 	xercesc/dom/DOMImplementationLS.hpp \
 	xercesc/dom/DOMImplementationRegistry.hpp \
 	xercesc/dom/DOMImplementationSource.hpp \
-	xercesc/dom/DOMInputSource.hpp \
 	xercesc/dom/DOMLocator.hpp \
+	xercesc/dom/DOMLSException.hpp \
+	xercesc/dom/DOMLSInput.hpp \
+	xercesc/dom/DOMLSOutput.hpp \
+	xercesc/dom/DOMLSParser.hpp \
+	xercesc/dom/DOMLSParserFilter.hpp \
+	xercesc/dom/DOMLSSerializer.hpp \
+	xercesc/dom/DOMLSSerializerFilter.hpp \
 	xercesc/dom/DOMNamedNodeMap.hpp \
 	xercesc/dom/DOMNode.hpp \
 	xercesc/dom/DOMNodeFilter.hpp \
@@ -1143,8 +1148,6 @@ dom_headers = \
 	xercesc/dom/DOMTreeWalker.hpp \
 	xercesc/dom/DOMTypeInfo.hpp \
 	xercesc/dom/DOMUserDataHandler.hpp \
-	xercesc/dom/DOMWriter.hpp \
-	xercesc/dom/DOMWriterFilter.hpp \
 	xercesc/dom/DOMXPathEvaluator.hpp \
 	xercesc/dom/DOMXPathException.hpp \
 	xercesc/dom/DOMXPathExpression.hpp \
@@ -1155,6 +1158,7 @@ dom_headers = \
 
 dom_sources = \
 	xercesc/dom/DOMException.cpp \
+	xercesc/dom/DOMLSException.cpp \
 	xercesc/dom/DOMRangeException.cpp \
 	xercesc/dom/DOMXPathException.cpp
 
@@ -1196,7 +1200,7 @@ domimpl_headers = \
 	xercesc/dom/impl/DOMTextImpl.hpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.hpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.hpp \
-	xercesc/dom/impl/DOMWriterImpl.hpp \
+	xercesc/dom/impl/DOMLSSerializerImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
 
 domimpl_sources = \
@@ -1235,7 +1239,7 @@ domimpl_sources = \
 	xercesc/dom/impl/DOMTextImpl.cpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.cpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.cpp \
-	xercesc/dom/impl/DOMWriterImpl.cpp \
+	xercesc/dom/impl/DOMLSSerializerImpl.cpp \
 	xercesc/dom/impl/XSDElementNSImpl.cpp
 
 framework_headers = \
@@ -1277,7 +1281,7 @@ framework_headers = \
 	xercesc/framework/StdOutFormatTarget.hpp \
 	xercesc/framework/URLInputSource.hpp \
 	xercesc/framework/ValidationContext.hpp \
-	xercesc/framework/Wrapper4DOMInputSource.hpp \
+	xercesc/framework/Wrapper4DOMLSInput.hpp \
 	xercesc/framework/Wrapper4InputSource.hpp \
 	xercesc/framework/XMLAttDef.hpp \
 	xercesc/framework/XMLAttDefList.hpp \
@@ -1336,7 +1340,7 @@ framework_sources = \
 	xercesc/framework/StdInInputSource.cpp \
 	xercesc/framework/StdOutFormatTarget.cpp \
 	xercesc/framework/URLInputSource.cpp \
-	xercesc/framework/Wrapper4DOMInputSource.cpp \
+	xercesc/framework/Wrapper4DOMLSInput.cpp \
 	xercesc/framework/Wrapper4InputSource.cpp \
 	xercesc/framework/XMLAttDef.cpp \
 	xercesc/framework/XMLAttDefList.cpp \
@@ -1412,7 +1416,7 @@ internal_sources = \
 
 parsers_headers = \
 	xercesc/parsers/AbstractDOMParser.hpp \
-	xercesc/parsers/DOMBuilderImpl.hpp \
+	xercesc/parsers/DOMLSParserImpl.hpp \
 	xercesc/parsers/SAX2XMLFilterImpl.hpp \
 	xercesc/parsers/SAX2XMLReaderImpl.hpp \
 	xercesc/parsers/SAXParser.hpp \
@@ -1420,7 +1424,7 @@ parsers_headers = \
 
 parsers_sources = \
 	xercesc/parsers/AbstractDOMParser.cpp \
-	xercesc/parsers/DOMBuilderImpl.cpp \
+	xercesc/parsers/DOMLSParserImpl.cpp \
 	xercesc/parsers/SAX2XMLFilterImpl.cpp \
 	xercesc/parsers/SAX2XMLReaderImpl.cpp \
 	xercesc/parsers/SAXParser.cpp \
@@ -2103,6 +2107,8 @@ xercesc/dom/$(DEPDIR)/$(am__dirstamp):
 	@: > xercesc/dom/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/DOMException.lo: xercesc/dom/$(am__dirstamp) \
 	xercesc/dom/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/DOMLSException.lo: xercesc/dom/$(am__dirstamp) \
+	xercesc/dom/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/DOMRangeException.lo: xercesc/dom/$(am__dirstamp) \
 	xercesc/dom/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/DOMXPathException.lo: xercesc/dom/$(am__dirstamp) \
@@ -2199,7 +2205,8 @@ xercesc/dom/impl/DOMTreeWalkerImpl.lo:  \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/DOMTypeInfoImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
-xercesc/dom/impl/DOMWriterImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
+xercesc/dom/impl/DOMLSSerializerImpl.lo:  \
+	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/XSDElementNSImpl.lo:  \
 	xercesc/dom/impl/$(am__dirstamp) \
@@ -2314,7 +2321,7 @@ xercesc/framework/StdOutFormatTarget.lo:  \
 xercesc/framework/URLInputSource.lo:  \
 	xercesc/framework/$(am__dirstamp) \
 	xercesc/framework/$(DEPDIR)/$(am__dirstamp)
-xercesc/framework/Wrapper4DOMInputSource.lo:  \
+xercesc/framework/Wrapper4DOMLSInput.lo:  \
 	xercesc/framework/$(am__dirstamp) \
 	xercesc/framework/$(DEPDIR)/$(am__dirstamp)
 xercesc/framework/Wrapper4InputSource.lo:  \
@@ -2502,7 +2509,7 @@ xercesc/parsers/$(DEPDIR)/$(am__dirstamp):
 	@: > xercesc/parsers/$(DEPDIR)/$(am__dirstamp)
 xercesc/parsers/AbstractDOMParser.lo: xercesc/parsers/$(am__dirstamp) \
 	xercesc/parsers/$(DEPDIR)/$(am__dirstamp)
-xercesc/parsers/DOMBuilderImpl.lo: xercesc/parsers/$(am__dirstamp) \
+xercesc/parsers/DOMLSParserImpl.lo: xercesc/parsers/$(am__dirstamp) \
 	xercesc/parsers/$(DEPDIR)/$(am__dirstamp)
 xercesc/parsers/SAX2XMLFilterImpl.lo: xercesc/parsers/$(am__dirstamp) \
 	xercesc/parsers/$(DEPDIR)/$(am__dirstamp)
@@ -3102,6 +3109,8 @@ mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f xercesc/dom/DOMException.$(OBJEXT)
 	-rm -f xercesc/dom/DOMException.lo
+	-rm -f xercesc/dom/DOMLSException.$(OBJEXT)
+	-rm -f xercesc/dom/DOMLSException.lo
 	-rm -f xercesc/dom/DOMRangeException.$(OBJEXT)
 	-rm -f xercesc/dom/DOMRangeException.lo
 	-rm -f xercesc/dom/DOMXPathException.$(OBJEXT)
@@ -3144,6 +3153,8 @@ mostlyclean-compile:
 	-rm -f xercesc/dom/impl/DOMImplementationImpl.lo
 	-rm -f xercesc/dom/impl/DOMImplementationRegistry.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMImplementationRegistry.lo
+	-rm -f xercesc/dom/impl/DOMLSSerializerImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMLSSerializerImpl.lo
 	-rm -f xercesc/dom/impl/DOMLocatorImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMLocatorImpl.lo
 	-rm -f xercesc/dom/impl/DOMNamedNodeMapImpl.$(OBJEXT)
@@ -3176,8 +3187,6 @@ mostlyclean-compile:
 	-rm -f xercesc/dom/impl/DOMTreeWalkerImpl.lo
 	-rm -f xercesc/dom/impl/DOMTypeInfoImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMTypeInfoImpl.lo
-	-rm -f xercesc/dom/impl/DOMWriterImpl.$(OBJEXT)
-	-rm -f xercesc/dom/impl/DOMWriterImpl.lo
 	-rm -f xercesc/dom/impl/XSDElementNSImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/XSDElementNSImpl.lo
 	-rm -f xercesc/framework/BinOutputStream.$(OBJEXT)
@@ -3196,8 +3205,8 @@ mostlyclean-compile:
 	-rm -f xercesc/framework/StdOutFormatTarget.lo
 	-rm -f xercesc/framework/URLInputSource.$(OBJEXT)
 	-rm -f xercesc/framework/URLInputSource.lo
-	-rm -f xercesc/framework/Wrapper4DOMInputSource.$(OBJEXT)
-	-rm -f xercesc/framework/Wrapper4DOMInputSource.lo
+	-rm -f xercesc/framework/Wrapper4DOMLSInput.$(OBJEXT)
+	-rm -f xercesc/framework/Wrapper4DOMLSInput.lo
 	-rm -f xercesc/framework/Wrapper4InputSource.$(OBJEXT)
 	-rm -f xercesc/framework/Wrapper4InputSource.lo
 	-rm -f xercesc/framework/XMLAttDef.$(OBJEXT)
@@ -3328,8 +3337,8 @@ mostlyclean-compile:
 	-rm -f xercesc/internal/XTemplateSerializer.lo
 	-rm -f xercesc/parsers/AbstractDOMParser.$(OBJEXT)
 	-rm -f xercesc/parsers/AbstractDOMParser.lo
-	-rm -f xercesc/parsers/DOMBuilderImpl.$(OBJEXT)
-	-rm -f xercesc/parsers/DOMBuilderImpl.lo
+	-rm -f xercesc/parsers/DOMLSParserImpl.$(OBJEXT)
+	-rm -f xercesc/parsers/DOMLSParserImpl.lo
 	-rm -f xercesc/parsers/SAX2XMLFilterImpl.$(OBJEXT)
 	-rm -f xercesc/parsers/SAX2XMLFilterImpl.lo
 	-rm -f xercesc/parsers/SAX2XMLReaderImpl.$(OBJEXT)
@@ -3725,6 +3734,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/$(DEPDIR)/DOMException.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/$(DEPDIR)/DOMLSException.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/$(DEPDIR)/DOMRangeException.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/$(DEPDIR)/DOMXPathException.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMAttrImpl.Plo@am__quote@
@@ -3746,6 +3756,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMErrorImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationRegistry.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLSSerializerImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLocatorImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMNamedNodeMapImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMNodeIDMap.Plo@am__quote@
@@ -3762,7 +3773,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTextImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTreeWalkerImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTypeInfoImpl.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMWriterImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/XSDElementNSImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/BinOutputStream.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/LocalFileFormatTarget.Plo@am__quote@
@@ -3772,7 +3782,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/StdInInputSource.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/StdOutFormatTarget.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/URLInputSource.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/Wrapper4DOMInputSource.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/Wrapper4DOMLSInput.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/Wrapper4InputSource.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/XMLAttDef.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/XMLAttDefList.Plo@am__quote@
@@ -3838,7 +3848,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/internal/$(DEPDIR)/XSerializeEngine.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/internal/$(DEPDIR)/XTemplateSerializer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/parsers/$(DEPDIR)/AbstractDOMParser.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@xercesc/parsers/$(DEPDIR)/DOMBuilderImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/parsers/$(DEPDIR)/DOMLSParserImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/parsers/$(DEPDIR)/SAX2XMLFilterImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/parsers/$(DEPDIR)/SAX2XMLReaderImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/parsers/$(DEPDIR)/SAXParser.Plo@am__quote@

@@ -20,7 +20,7 @@
 
 // ---------------------------------------------------------------------------
 //  This sample program invokes the XercesDOMParser to build a DOM tree for
-//  the specified input file. It then invokes DOMWriter::writeNode() to
+//  the specified input file. It then invokes DOMLSSerializer::write() to
 //  serialize the resultant DOM tree back to XML stream.
 //
 //  Note:
@@ -30,7 +30,7 @@
 //		   in the case any error occurs during the serialization.
 //
 //  Application needs to provide its own implementation of
-//		   DOMWriterFilter (in this sample, the DOMPrintFilter),
+//		   DOMLSSerializerFilter (in this sample, the DOMPrintFilter),
 //		   if it would like to filter out certain part of the DOM
 //		   representation, but must be aware that thus may render the
 //		   resultant XML stream invalid.
@@ -70,7 +70,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMWriter.hpp>
+#include <xercesc/dom/DOMLSSerializer.hpp>
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
@@ -129,7 +129,7 @@ static bool                     gSchemaFullChecking    = false;
 static bool                     gDoCreate              = false;
 
 static char*                    goutputfile            = 0;
-// options for DOMWriter's features
+// options for DOMLSSerializer's features
 static XMLCh*                   gOutputEncoding        = 0;
 
 static bool                     gSplitCdataSections    = true;
@@ -155,7 +155,7 @@ void usage()
     XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    DOMPrint [options] <XML file>\n\n"
             "This program invokes the DOM parser, and builds the DOM tree.\n"
-            "It then asks the DOMWriter to serialize the DOM tree.\n"
+            "It then asks the DOMLSSerializer to serialize the DOM tree.\n"
             "Options:\n"
             "    -e          create entity reference nodes. Default is no expansion.\n"
             "    -v=xxx      Validation scheme [always | never | auto*].\n"
@@ -430,10 +430,10 @@ int main(int argC, char* argV[])
 
         try
         {
-            // get a serializer, an instance of DOMWriter
+            // get a serializer, an instance of DOMLSSerializer
             XMLCh tempStr[3] = {chLatin_L, chLatin_S, chNull};
             DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
-            DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+            DOMLSSerializer   *theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
 
             // set user specified output encoding
             theSerializer->setEncoding(gOutputEncoding);
@@ -441,10 +441,10 @@ int main(int argC, char* argV[])
             // plug in user's own filter
             if (gUseFilter)
             {
-                // even we say to show attribute, but the DOMWriter
+                // even we say to show attribute, but the DOMLSSerializer
                 // will not show attribute nodes to the filter as
-                // the specs explicitly says that DOMWriter shall
-                // NOT show attributes to DOMWriterFilter.
+                // the specs explicitly says that DOMLSSerializer shall
+                // NOT show attributes to DOMLSSerializerFilter.
                 //
                 // so DOMNodeFilter::SHOW_ATTRIBUTE has no effect.
                 // same DOMNodeFilter::SHOW_DOCUMENT_TYPE, no effect.
@@ -457,20 +457,21 @@ int main(int argC, char* argV[])
 
             // plug in user's own error handler
             DOMErrorHandler *myErrorHandler = new DOMPrintErrorHandler();
-            theSerializer->setErrorHandler(myErrorHandler);
+            DOMConfiguration* serializerConfig=theSerializer->getDomConfig();
+            serializerConfig->setParameter(XMLUni::fgDOMErrorHandler, myErrorHandler);
 
             // set feature if the serializer supports the feature/mode
-            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections))
-                theSerializer->setFeature(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections);
+            if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections))
+                serializerConfig->setParameter(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections);
 
-            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent))
-                theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent);
+            if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent))
+                serializerConfig->setParameter(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent);
 
-            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint))
-                theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint);
+            if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint))
+                serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint);
 
-            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTBOM, gWriteBOM))
-                theSerializer->setFeature(XMLUni::fgDOMWRTBOM, gWriteBOM);
+            if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTBOM, gWriteBOM))
+                serializerConfig->setParameter(XMLUni::fgDOMWRTBOM, gWriteBOM);
 
             //
             // Plug in a format target to receive the resultant
@@ -489,9 +490,9 @@ int main(int argC, char* argV[])
             DOMNode                     *doc = parser->getDocument();
 
             //
-            // do the serialization through DOMWriter::writeNode();
+            // do the serialization through DOMLSSerializer::write();
             //
-            theSerializer->writeNode(myFormTarget, *doc);
+            theSerializer->write(doc, myFormTarget);
 
             delete theSerializer;
 

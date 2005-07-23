@@ -55,8 +55,7 @@
 #include <xercesc/dom/DOMTreeWalker.hpp>
 
 // Introduced in DOM Level 3
-// Experimental - subject to change
-#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMLSParser.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/dom/DOMEntityResolver.hpp>
 #include <xercesc/dom/DOMError.hpp>
@@ -64,12 +63,12 @@
 #include <xercesc/dom/DOMImplementationLS.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMImplementationSource.hpp>
-#include <xercesc/dom/DOMInputSource.hpp>
+#include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
 #include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
-#include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/dom/DOMWriterFilter.hpp>
+#include <xercesc/dom/DOMLSSerializer.hpp>
+#include <xercesc/dom/DOMLSSerializerFilter.hpp>
 
 #include <xercesc/dom/DOMXPathEvaluator.hpp>
 #include <xercesc/dom/DOMXPathNSResolver.hpp>

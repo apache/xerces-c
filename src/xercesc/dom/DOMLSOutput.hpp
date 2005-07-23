@@ -1,5 +1,5 @@
-#ifndef DOMInputSource_HEADER_GUARD_
-#define DOMInputSource_HEADER_GUARD_
+#ifndef DOMLSInput_HEADER_GUARD_
+#define DOMLSInput_HEADER_GUARD_
 
 /*
  * Copyright 2002,2004 The Apache Software Foundation.
@@ -42,21 +42,21 @@ class BinInputStream;
   * to the parser: as the argument to the parse method, or as the return value
   * of the DOMEntityResolver.resolveEntity method.</p>
   *
-  * <p>The DOMBuilder will use the DOMInputSource object to determine how to
+  * <p>The DOMBuilder will use the DOMLSOutput object to determine how to
   * read XML input. If there is a character stream available, the parser will
   * read that stream directly; if not, the parser will use a byte stream, if
   * available; if neither a character stream nor a byte stream is available,
   * the parser will attempt to open a URI connection to the resource identified
   * by the system identifier.</p>
   *
-  * <p>A DOMInputSource object belongs to the application: the parser shall
+  * <p>A DOMLSOutput object belongs to the application: the parser shall
   * never modify it in any way (it may modify a copy if necessary).</p>
   *
   * @see DOMBuilder#parse
   * @see DOMEntityResolver#resolveEntity
   * @since DOM Level 3
   */
-class CDOM_EXPORT DOMInputSource
+class CDOM_EXPORT DOMLSOutput
 {
 protected:
     // -----------------------------------------------------------------------
@@ -64,7 +64,7 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMInputSource() {};
+    DOMLSOutput() {};
     //@}
 
 private:
@@ -73,8 +73,8 @@ private:
     // -----------------------------------------------------------------------
     /** @name Unimplemented constructors and operators */
     //@{
-    DOMInputSource(const DOMInputSource &);
-    DOMInputSource & operator = (const DOMInputSource &);
+    DOMLSOutput(const DOMLSOutput &);
+    DOMLSOutput & operator = (const DOMLSOutput &);
     //@}
 
 public:
@@ -87,11 +87,11 @@ public:
      * Destructor
      *
      */
-    virtual ~DOMInputSource() {};
+    virtual ~DOMLSOutput() {};
     //@}
 
     // -----------------------------------------------------------------------
-    //  Virtual DOMInputSource interface
+    //  Virtual DOMLSOutput interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
@@ -264,7 +264,7 @@ public:
     virtual bool getIssueFatalErrorIfNotFound() const = 0;
 
     /**
-     * Called to indicate that this DOMInputSource is no longer in use
+     * Called to indicate that this DOMLSOutput is no longer in use
      * and that the implementation may relinquish any resources associated with it.
      *
      * Access to a released object will lead to unexpected result.

@@ -18,12 +18,13 @@
  * $Id$
  */
 
-#include "DOMWriterImpl.hpp"
+#include "DOMLSSerializerImpl.hpp"
 #include "DOMErrorImpl.hpp"
 #include "DOMLocatorImpl.hpp"
 #include "DOMImplementationImpl.hpp"
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/TranscodingException.hpp>
@@ -264,7 +265,7 @@ static int  lastWhiteSpaceInTextNode = 0;
 // REVISIT: use throwing exception to abort serialization is an interesting
 // thing here, since the serializer is a recusive function, we
 // can't use return, obviously. However we may have multiple try/catch
-// along its way going back to writeNode(). So far we don't come up with a
+// along its way going back to write(). So far we don't come up with a
 // "short-cut" to go "directly" back.
 //
 #define  TRY_CATCH_THROW(action, forceToRethrow)                     \
@@ -282,7 +283,7 @@ catch(TranscodingException const &e)                                 \
         throw e;                                                       \
 }
 
-DOMWriterImpl::~DOMWriterImpl()
+DOMLSSerializerImpl::~DOMLSSerializerImpl()
 {
     fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
     fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
@@ -290,7 +291,7 @@ DOMWriterImpl::~DOMWriterImpl()
     // we don't own/adopt error handler and filter
 }
 
-DOMWriterImpl::DOMWriterImpl(MemoryManager* const manager)
+DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 :fFeatures(0)
 ,fEncoding(0)
 ,fNewLine(0)
@@ -323,15 +324,32 @@ DOMWriterImpl::DOMWriterImpl(MemoryManager* const manager)
 
 }
 
-bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
-                                  , bool               state) const
+bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
+                                        , const void*        value) const
+{
+    if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
+        return true;
+    return false;
+}
+
+bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
+                                        , bool               state) const
 {
     int featureId = INVALID_FEATURE_ID;
     return checkFeature(featName, false, featureId) ? canSetFeature(featureId, state) : false;
 }
 
-void DOMWriterImpl::setFeature(const XMLCh* const featName
-                             , bool               state)
+void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
+                                     , const void*        value)
+{
+    if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
+        fErrorHandler = (DOMErrorHandler*)value;
+    else
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
+}
+
+void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
+                                     , bool               state)
 {
     int featureId = INVALID_FEATURE_ID;
     checkFeature(featName, true, featureId);
@@ -372,56 +390,56 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
 
     if ((featureId == FORMAT_PRETTY_PRINT_ID) && state)
         setFeature(CANONICAL_FORM_ID, false);
-
-    return;
 }
 
-bool DOMWriterImpl::getFeature(const XMLCh* const featName) const
+const void* DOMLSSerializerImpl::getParameter(const XMLCh* const featName) const
 {
-    int featureId = INVALID_FEATURE_ID;
-    checkFeature(featName, true, featureId);
-    return getFeature(featureId);
+    if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
+    {
+        return (void*)fErrorHandler;
+    }
+    else
+    {
+        int featureId = INVALID_FEATURE_ID;
+        checkFeature(featName, true, featureId);
+        return (void*)getFeature(featureId);
+    }
+}
+
+const RefVectorOf<const XMLCh*>* DOMLSSerializerImpl::getParameterNames() const
+{
+    return 0;
 }
 
 // we don't check the validity of the encoding set
-void DOMWriterImpl::setEncoding(const XMLCh* const encoding)
+void DOMLSSerializerImpl::setEncoding(const XMLCh* const encoding)
 {
     fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
     fEncoding = XMLString::replicate(encoding, fMemoryManager);
 }
 
-const XMLCh* DOMWriterImpl::getEncoding() const
+const XMLCh* DOMLSSerializerImpl::getEncoding() const
 {
     return fEncoding;
 }
 
-void DOMWriterImpl::setNewLine(const XMLCh* const newLine)
+void DOMLSSerializerImpl::setNewLine(const XMLCh* const newLine)
 {
     fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
     fNewLine = XMLString::replicate(newLine, fMemoryManager);
 }
 
-const XMLCh* DOMWriterImpl::getNewLine() const
+const XMLCh* DOMLSSerializerImpl::getNewLine() const
 {
     return fNewLine;
 }
 
-void DOMWriterImpl::setErrorHandler(DOMErrorHandler *errorHandler)
-{
-    fErrorHandler = errorHandler;
-}
-
-DOMErrorHandler* DOMWriterImpl::getErrorHandler() const
-{
-    return fErrorHandler;
-}
-
-void DOMWriterImpl::setFilter(DOMWriterFilter *filter)
+void DOMLSSerializerImpl::setFilter(DOMLSSerializerFilter *filter)
 {
     fFilter = filter;
 }
 
-DOMWriterFilter* DOMWriterImpl::getFilter() const
+DOMLSSerializerFilter* DOMLSSerializerImpl::getFilter() const
 {
     return fFilter;
 }
@@ -429,11 +447,11 @@ DOMWriterFilter* DOMWriterImpl::getFilter() const
 //
 //
 //
-bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
-                            , const DOMNode         &nodeToWrite)
+bool DOMLSSerializerImpl::write(const DOMNode*         nodeToWrite,
+                                XMLFormatTarget* const destination)
 {
     //init session vars
-    initSession(&nodeToWrite);
+    initSession(nodeToWrite);
 
     try
     {
@@ -446,14 +464,14 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     }
     catch (const TranscodingException& e)
     {
-        reportError(&nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, e.getMessage());
+        reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, e.getMessage());
         return false;
     }
 
     try
     {
         Janitor<XMLFormatter> janName(fFormatter);
-        processNode(&nodeToWrite);
+        processNode(nodeToWrite);
         destination->flush();
     }
 
@@ -502,11 +520,17 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     return ((fErrorCount == 0)? true : false);
 }
 
+bool DOMLSSerializerImpl::writeToURI(const DOMNode* nodeToWrite, const XMLCh* uri)
+{
+    LocalFileFormatTarget target(uri);
+    return write(nodeToWrite, &target);
+}
+
 //
 // We don't throw DOMSTRING_SIZE_ERR since we are no longer
 // using DOMString.
 //
-XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
+XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
 {
     MemBufFormatTarget  destination(1023, fMemoryManager);
     bool retVal;
@@ -517,7 +541,7 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
 
     try
     {
-        retVal = writeNode(&destination, nodeToWrite);
+        retVal = write(nodeToWrite, &destination);
     }
     catch(const OutOfMemoryException&)
     {
@@ -537,7 +561,7 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
     return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), fMemoryManager) : 0);
 }
 
-void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
+void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
 {
 
 /**
@@ -648,7 +672,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 //  a document node and it will do the whole thing.
 // ---------------------------------------------------------------------------
 
-void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
+void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int level)
 {
 
     // Get the name and value out for convenience
@@ -1296,13 +1320,13 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
 }
 
-bool DOMWriterImpl::customNodeSerialize(const DOMNode* const, int) {
+bool DOMLSSerializerImpl::customNodeSerialize(const DOMNode* const, int) {
     return false;
 }
 
 //
 //
-DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node) const
+DOMNodeFilter::FilterAction DOMLSSerializerImpl::checkFilter(const DOMNode* const node) const
 {
     if (!fFilter ||
         ((fFilter->getWhatToShow() & (1 << (node->getNodeType() - 1))) == 0))
@@ -1317,7 +1341,7 @@ DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node
 }
 
 
-bool DOMWriterImpl::checkFeature(const XMLCh* const featName
+bool DOMLSSerializerImpl::checkFeature(const XMLCh* const featName
                                , bool               toThrow
                                , int&               featureId) const
 {
@@ -1366,7 +1390,7 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     return true;
 }
 
-bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
+bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
                               , DOMError::ErrorSeverity errorType
                               , const XMLCh*   const    errorMsg)
 {
@@ -1385,7 +1409,7 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
     return toContinueProcess;
 }
 
-bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
+bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
                               , DOMError::ErrorSeverity errorType
                               , XMLDOMMsg::Codes        toEmit)
 {
@@ -1415,7 +1439,7 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
 //
 //
 //
-void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
+void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
                                    , const DOMNode* const nodeToWrite
                                    , int level)
 {
@@ -1484,7 +1508,7 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
 //
 //
 //
-void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
+void DOMLSSerializerImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
                                               , const DOMNode* const nodeToWrite
                                               , int level)
 {
@@ -1581,18 +1605,18 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
     }
 }
 
-void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
+void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite)
 {
     processNode(nodeToWrite, 0);
 }
 
-bool DOMWriterImpl::canSetFeature(const int featureId
+bool DOMLSSerializerImpl::canSetFeature(const int featureId
                                        , bool      val) const
 {
     return featuresSupported[2*featureId + (val? 0: 1)];
 }
 
-void DOMWriterImpl::printNewLine()
+void DOMLSSerializerImpl::printNewLine()
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
     {
@@ -1601,7 +1625,7 @@ void DOMWriterImpl::printNewLine()
     }
 }
 
-void DOMWriterImpl::printIndent(int level) const
+void DOMLSSerializerImpl::printIndent(int level) const
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
     {
@@ -1619,13 +1643,13 @@ void DOMWriterImpl::printIndent(int level) const
     }
 }
 
-void DOMWriterImpl::release()
+void DOMLSSerializerImpl::release()
 {
-    DOMWriterImpl* writer = (DOMWriterImpl*) this;
+    DOMLSSerializerImpl* writer = (DOMLSSerializerImpl*) this;
     delete writer;
 }
 
-void DOMWriterImpl::processBOM()
+void DOMLSSerializerImpl::processBOM()
 {
     // if the feature is not set, don't output bom
     if (!getFeature(BYTE_ORDER_MARK_ID))

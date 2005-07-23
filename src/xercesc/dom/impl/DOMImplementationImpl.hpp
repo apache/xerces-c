@@ -76,13 +76,13 @@ public:
     // DOMImplementationLS Virtual interface
     // ------------------------------------------------------------
     // Introduced in DOM Level 3
-    // Experimental - subject to change
-    virtual DOMBuilder*         createDOMBuilder(const short           mode,
-                                                 const XMLCh* const    schemaType,
-                                                 MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager,
-                                                 XMLGrammarPool* const gramPool = 0);
-    virtual DOMWriter*          createDOMWriter(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    virtual DOMInputSource*     createDOMInputSource();
+    virtual DOMLSParser* createLSParser(const unsigned short   mode,
+                                        const XMLCh* const     schemaType,
+                                        MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager,
+                                        XMLGrammarPool*  const gramPool = 0);
+    virtual DOMLSSerializer* createLSSerializer(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    virtual DOMLSInput* createLSInput();
+    virtual DOMLSOutput* createLSOutput();
 
     // ------------------------------------------------------------
     // DOMImplementationSource Virtual interface

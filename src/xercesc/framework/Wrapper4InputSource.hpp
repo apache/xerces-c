@@ -22,7 +22,7 @@
 #ifndef WRAPPER4INPUTSOURCE_HPP
 #define WRAPPER4INPUTSOURCE_HPP
 
-#include <xercesc/dom/DOMInputSource.hpp>
+#include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -31,9 +31,9 @@ class InputSource;
 
 
 /**
-  * Wrap a SAX InputSource object to a DOM InputSource.
+  * Wrap a SAX InputSource object to a DOMLSInput.
   */
-class XMLPARSER_EXPORT Wrapper4InputSource: public DOMInputSource
+class XMLPARSER_EXPORT Wrapper4InputSource: public DOMLSInput
 {
 public:
     /** @name Constructors and Destructor */
@@ -66,8 +66,6 @@ public:
     /** @name Virtual input source interface */
     //@{
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
     * Makes the byte stream for this input source.
     *
     * <p>The function will call the makeStream of the wrapped input source.
@@ -75,7 +73,7 @@ public:
     *
     * @see BinInputStream
     */
-    BinInputStream* makeStream() const;
+    BinInputStream* getByteStream() const;
 
     //@}
 

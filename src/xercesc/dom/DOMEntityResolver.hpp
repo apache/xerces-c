@@ -27,7 +27,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class DOMInputSource;
+class DOMLSInput;
 
 /**
   * DOMEntityResolver provides a way for applications to redirect references
@@ -47,7 +47,7 @@ class DOMInputSource;
   * URNs.</p>
   *
   * @see DOMBuilder#setEntityResolver
-  * @see DOMInputSource#DOMInputSource
+  * @see DOMLSInput#DOMLSInput
   * @since DOM Level 3
   */
 class CDOM_EXPORT DOMEntityResolver
@@ -87,12 +87,12 @@ public:
     // -----------------------------------------------------------------------
     //  Virtual DOMEntityResolver interface
     // -----------------------------------------------------------------------
-    /** @name Functions introduced in DOM Level 2 */
+    /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
      * Allow the application to resolve external entities.
      *
-     * <p>The DOMBuilder will call this method before opening any external
+     * <p>The DOMLSParser will call this method before opening any external
      * entity except the top-level document entity (including the
      * external DTD subset, external entities referenced within the
      * DTD, and external entities referenced within the document
@@ -109,10 +109,8 @@ public:
      * <p>If the system identifier is a URL, the DOMBuilder parser must
      * resolve it fully before reporting it to the application.</p>
      *
-     * <p> The returned DOMInputSource is owned by the DOMBuilder which is
+     * <p> The returned DOMLSInput is owned by the DOMBuilder which is
      *     responsible to clean up the memory.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param publicId The public identifier of the external entity
      *        being referenced, or null if none was supplied.
@@ -120,19 +118,21 @@ public:
      *        being referenced.
      * @param baseURI The absolute base URI of the resource being parsed, or
      *        <code>null</code> if there is no base URI.
-     * @return A DOMInputSource object describing the new input source,
+     * @return A DOMLSInput object describing the new input source,
      *         or <code>null</code> to request that the parser open a regular
      *         URI connection to the system identifier.
-     *         The returned DOMInputSource is owned by the DOMBuilder which is
+     *         The returned DOMLSInput is owned by the DOMBuilder which is
      *         responsible to clean up the memory.
      * @exception DOMSystemException Any DOMSystemException exception, possibly
      *            wrapping another exception.
-     * @see DOMInputSource#DOMInputSource
+     * @see DOMLSInput#DOMLSInput
      * @since DOM Level 3
      */
-    virtual DOMInputSource* resolveEntity
+    virtual DOMLSInput* resolveEntity
     (
-        const   XMLCh* const    publicId
+        const   XMLCh* const    resourceType
+        , const XMLCh* const    namespaceUri
+        , const XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const XMLCh* const    baseURI
     ) = 0;

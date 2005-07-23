@@ -102,7 +102,7 @@ void Wrapper4InputSource::setSystemId(const XMLCh* const systemId)
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Stream methods
 // ---------------------------------------------------------------------------
-BinInputStream* Wrapper4InputSource::makeStream() const
+BinInputStream* Wrapper4InputSource::getByteStream() const
 {
     return fInputSource->makeStream();
 }

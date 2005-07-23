@@ -777,10 +777,10 @@ void ThreadParser::domPrint()
             XMLCh tempStr[100];
             XMLString::transcode("LS", tempStr, 99);
             DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
-            DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+            DOMLSSerializer   *theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
             XMLFormatTarget   *myFormTarget  = new StdOutFormatTarget();
             DOMNode           *doc           = fXercesDOMParser->getDocument();
-            theSerializer->writeNode(myFormTarget, *doc);
+            theSerializer->write(doc,myFormTarget);
             delete theSerializer;
         }
         catch (...)

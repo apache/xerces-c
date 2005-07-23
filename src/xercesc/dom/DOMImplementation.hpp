@@ -23,6 +23,7 @@
 
 #include <xercesc/dom/DOMImplementationLS.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMLSException.hpp>
 #include <xercesc/dom/DOMRangeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -226,13 +227,13 @@ public:
     /**
      * Non-standard extension
      *
-     *  Load the default error text message for DOMException.
-      * @param msgToLoad The DOM ExceptionCode id to be processed
-      * @param toFill    The buffer that will hold the output on return. The
-      *         size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars  The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @return <code>true</code> if the message is successfully loaded
+     * Load the default error text message for DOMException.
+     * @param msgToLoad The DOM ExceptionCode id to be processed
+     * @param toFill    The buffer that will hold the output on return. The
+     *         size of this buffer should at least be 'maxChars + 1'.
+     * @param maxChars  The maximum number of output characters that can be
+     *         accepted. If the result will not fit, it is an error.
+     * @return <code>true</code> if the message is successfully loaded
      */
     static bool loadDOMExceptionMsg
     (
@@ -244,13 +245,31 @@ public:
     /**
      * Non-standard extension
      *
-     *  Load the default error text message for DOMRangeException.
-      * @param msgToLoad The DOM RangeExceptionCode id to be processed
-      * @param toFill    The buffer that will hold the output on return. The
-      *         size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars  The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @return <code>true</code> if the message is successfully loaded
+     * Load the default error text message for DOMLSException.
+     * @param msgToLoad The DOM LSExceptionCode id to be processed
+     * @param toFill    The buffer that will hold the output on return. The
+     *         size of this buffer should at least be 'maxChars + 1'.
+     * @param maxChars  The maximum number of output characters that can be
+     *         accepted. If the result will not fit, it is an error.
+     * @return <code>true</code> if the message is successfully loaded
+     */
+    static bool loadDOMExceptionMsg
+    (
+        const   DOMLSException::LSExceptionCode   msgToLoad
+        ,       XMLCh* const                    toFill
+        , const unsigned int                    maxChars
+    );
+
+    /**
+     * Non-standard extension
+     *
+     * Load the default error text message for DOMRangeException.
+     * @param msgToLoad The DOM RangeExceptionCode id to be processed
+     * @param toFill    The buffer that will hold the output on return. The
+     *         size of this buffer should at least be 'maxChars + 1'.
+     * @param maxChars  The maximum number of output characters that can be
+     *         accepted. If the result will not fit, it is an error.
+     * @return <code>true</code> if the message is successfully loaded
      */
     static bool loadDOMExceptionMsg
     (

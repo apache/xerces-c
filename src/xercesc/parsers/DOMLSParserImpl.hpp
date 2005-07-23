@@ -24,7 +24,9 @@
 
 
 #include <xercesc/parsers/AbstractDOMParser.hpp>
-#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMLSParser.hpp>
+#include <xercesc/dom/DOMLSInput.hpp>
+#include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/util/XercesDefs.hpp>
 
 
@@ -36,12 +38,13 @@ class XMLResourceIdentifier;
  /**
   * Introduced in DOM Level 3
   *
-  * DOMBuilderImpl provides an implementation of a DOMBuilder interface.
-  * A DOMBuilder instance is obtained from the DOMImplementationLS interface
-  * by invoking its createDOMBuilder method.
+  * DOMLSParserImpl provides an implementation of a DOMLSParser interface.
+  * A DOMLSParser instance is obtained from the DOMImplementationLS interface
+  * by invoking its createDOMLSParser method.
   */
-class PARSERS_EXPORT DOMBuilderImpl : public AbstractDOMParser,
-                                      public DOMBuilder
+class PARSERS_EXPORT DOMLSParserImpl : public AbstractDOMParser,
+                                       public DOMLSParser,
+                                       public DOMConfiguration
 {
 public :
     // -----------------------------------------------------------------------
@@ -50,7 +53,7 @@ public :
 
     /** @name Constructors and Destructor */
     //@{
-    /** Construct a DOMBuilderImpl, with an optional validator
+    /** Construct a DOMLSParserImpl, with an optional validator
       *
       * Constructor with an instance of validator class to use for
       * validation. If you don't provide a validator, a default one will
@@ -63,7 +66,7 @@ public :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       */
-    DOMBuilderImpl
+    DOMLSParserImpl
     (
           XMLValidator* const   valToAdopt = 0
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
@@ -73,12 +76,12 @@ public :
     /**
       * Destructor
       */
-    virtual ~DOMBuilderImpl();
+    virtual ~DOMLSParserImpl();
 
     //@}
 
     // -----------------------------------------------------------------------
-    //  Implementation of DOMBuilder interface
+    //  Implementation of DOMLSParser interface
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -88,97 +91,24 @@ public :
     //@{
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Get a pointer to the error handler
-      *
-      * This method returns the installed error handler. If no handler
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return The pointer to the installed error handler object.
+      * @see DOMLSParser#getDomConfig
       */
-    DOMErrorHandler* getErrorHandler();
+    virtual DOMConfiguration* getDomConfig();
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Get a const pointer to the error handler
-      *
-      * This method returns the installed error handler.  If no handler
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return A const pointer to the installed error handler object.
+      * @see DOMLSParser#getFilter
       */
-    const DOMErrorHandler* getErrorHandler() const;
+    virtual const DOMLSParserFilter* getFilter() const;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Get a pointer to the entity resolver
-      *
-      * This method returns the installed entity resolver.  If no resolver
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return The pointer to the installed entity resolver object.
+      * @see DOMLSParser#getAsync
       */
-    DOMEntityResolver* getEntityResolver();
+    virtual bool getAsync() const;
 
     /**
-      * Get a pointer to the entity resolver
-      *
-      * This method returns the installed entity resolver.  If no resolver
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return The pointer to the installed entity resolver object.
+      * @see DOMLSParser#getBusy
       */
-    XMLEntityResolver* getXMLEntityResolver();
- 
-    /**
-      * Get a const pointer to the entity resolver
-      *
-      * This method returns the installed entity resolver. If no resolver
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return A const pointer to the installed entity resolver object.
-      */
-    const XMLEntityResolver* getXMLEntityResolver() const;
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Get a const pointer to the entity resolver
-      *
-      * This method returns the installed entity resolver. If no resolver
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return A const pointer to the installed entity resolver object.
-      */
-    const DOMEntityResolver* getEntityResolver() const;
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Get a pointer to the application filter
-      *
-      * This method returns the installed application filter. If no filter
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return The pointer to the installed application filter.
-      */
-    DOMBuilderFilter* getFilter();
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Get a const pointer to the application filter
-      *
-      * This method returns the installed application filter. If no filter
-      * has been installed, then it will be a zero pointer.
-      *
-      * @return A const pointer to the installed application filter
-      */
-    const DOMBuilderFilter* getFilter() const;
-
+    virtual bool getBusy() const;
     //@}
 
 
@@ -188,149 +118,10 @@ public :
 
     /** @name Setter methods */
     //@{
-
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Set the error handler
-      *
-      * This method allows applications to install their own error handler
-      * to trap error and warning messages.
-      *
-      * <i>Any previously set handler is merely dropped, since the parser
-      * does not own them.</i>
-      *
-      * @param handler  A const pointer to the user supplied error
-      *                 handler.
-      *
-      * @see #getErrorHandler
+      * @see DOMLSParser#setFilter
       */
-    void setErrorHandler(DOMErrorHandler* const handler);
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Set the entity resolver
-      *
-      * This method allows applications to install their own entity
-      * resolver. By installing an entity resolver, the applications
-      * can trap and potentially redirect references to external
-      * entities.
-      *
-      * <i>Any previously set entity resolver is merely dropped, since the parser
-      * does not own them.  If both setEntityResolver and setXMLEntityResolver
-      * are called, then the last one is used.</i>
-      *
-      * @param handler  A const pointer to the user supplied entity
-      *                 resolver.
-      *
-      * @see #getEntityResolver
-      */
-    void setEntityResolver(DOMEntityResolver* const handler);
-
-    /**
-      * Set the entity resolver
-      *
-      * This method allows applications to install their own entity
-      * resolver. By installing an entity resolver, the applications
-      * can trap and potentially redirect references to external
-      * entities.
-      *
-      * <i>Any previously set entity resolver is merely dropped, since the parser
-      * does not own them.  If both setEntityResolver and setXMLEntityResolver
-      * are called, then the last one is used.</i>
-      *
-      * @param handler  A const pointer to the user supplied entity
-      *                 resolver.
-      *
-      * @see #getXMLEntityResolver
-      */
-    void setXMLEntityResolver(XMLEntityResolver* const handler);
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Set the application filter
-      *
-      * When the application provides a filter, the parser will call out to
-      * the filter at the completion of the construction of each Element node.
-      * The filter implementation can choose to remove the element from the
-      * document being constructed (unless the element is the document element)
-      * or to terminate the parse early. If the document is being validated
-      * when it's loaded the validation happens before the filter is called.
-      *
-      * <i>Any previously set filter is merely dropped, since the parser
-      * does not own them.</i>
-      *
-      * @param filter  A const pointer to the user supplied application
-      *                filter.
-      *
-      * @see #getFilter
-      */
-    void setFilter(DOMBuilderFilter* const filter);
-
-    //@}
-
-
-    // -----------------------------------------------------------------------
-    //  Feature methods
-    // -----------------------------------------------------------------------
-    /** @name Feature methods */
-    //@{
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Set the state of a feature
-      *
-      * It is possible for a DOMBuilder to recognize a feature name but to be
-      * unable to set its value.
-      *
-      * @param name  The feature name.
-      * @param state The requested state of the feature (true or false).
-      * @exception DOMException
-      *     NOT_SUPPORTED_ERR: Raised when the DOMBuilder recognizes the
-      *     feature name but cannot set the requested value.
-      *     <br>NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
-      *     the feature name.
-      *
-      * @see #getFeature
-      * @see #canSetFeature
-      */
-    void setFeature(const XMLCh* const name, const bool state);
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Look up the value of a feature.
-      *
-      * @param name The feature name.
-      * @return The current state of the feature (true or false)
-      * @exception DOMException
-      *     NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
-      *     the feature name.
-      *
-      * @see #setFeature
-      * @see #canSetFeature
-      */
-    bool getFeature(const XMLCh* const name) const;
-
-    /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Query whether setting a feature to a specific value is supported.
-      *
-      * @param name  The feature name.
-      * @param state The requested state of the feature (true or false).
-      * @return <code>true</code> if the feature could be successfully set
-      *     to the specified value, or <code>false</code> if the feature
-      *     is not recognized or the requested value is not supported. The
-      *     value of the feature itself is not changed.
-      *
-      * @see #getFeature
-      * @see #setFeature
-      */
-    bool canSetFeature(const XMLCh* const name, const bool state) const;
+    virtual void setFilter(DOMLSParserFilter* const filter);
 
     //@}
 
@@ -340,114 +131,38 @@ public :
     /** @name Parsing methods */
     //@{
 
+    // -----------------------------------------------------------------------
+    //  Parsing methods
+    // -----------------------------------------------------------------------
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Parse via an input source object
-      *
-      * This method invokes the parsing process on the XML file specified
-      * by the DOMInputSource parameter. This API is borrowed from the
-      * SAX Parser interface.
-      *
-      * @param source A const reference to the DOMInputSource object which
-      *               points to the XML file to be parsed.
-      * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
-      *         and populated Document is returned. If the DOMBuilder is
-      *         asynchronous then <code>null</code> is returned since the
-      *         document object is not yet parsed when this method returns.
-      * @exception SAXException Any SAX exception, possibly
-      *            wrapping another exception.
-      * @exception XMLException An exception from the parser or client
-      *            handler code.
-      * @exception DOMException A DOM exception as per DOM spec.
-      *
-      * @see DOMInputSource#DOMInputSource
-      * @see #setEntityResolver
-      * @see #setErrorHandler
+      * @see DOMLSParser#parse
       */
-    DOMDocument* parse(const DOMInputSource& source);
+    virtual DOMDocument* parse(const DOMLSInput& source);
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Parse via a file path or URL
-      *
-      * This method invokes the parsing process on the XML file specified by
-      * the Unicode string parameter 'systemId'.
-      *
-      * @param systemId A const XMLCh pointer to the Unicode string which
-      *                 contains the path to the XML file to be parsed.
-      * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
-      *         and populated Document is returned. If the DOMBuilder is
-      *         asynchronous then <code>null</code> is returned since the
-      *         document object is not yet parsed when this method returns.
-      * @exception SAXException Any SAX exception, possibly
-      *            wrapping another exception.
-      * @exception XMLException An exception from the parser or client
-      *            handler code.
-      * @exception DOM_DOMException A DOM exception as per DOM spec.
-      *
-      * @see #parse(DOMInputSource,...)
+      * @see DOMLSParser#parseURI
       */
-    DOMDocument* parseURI(const XMLCh* const systemId);
+    virtual DOMDocument* parseURI(const XMLCh* const uri);
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Parse via a file path or URL (in the local code page)
-      *
-      * This method invokes the parsing process on the XML file specified by
-      * the native char* string parameter 'systemId'.
-      *
-      * @param systemId A const char pointer to a native string which
-      *                 contains the path to the XML file to be parsed.
-      * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
-      *         and populated Document is returned. If the DOMBuilder is
-      *         asynchronous then <code>null</code> is returned since the
-      *         document object is not yet parsed when this method returns.
-      * @exception SAXException Any SAX exception, possibly
-      *            wrapping another exception.
-      * @exception XMLException An exception from the parser or client
-      *            handler code.
-      * @exception DOM_DOMException A DOM exception as per DOM spec.
-      *
-      * @see #parse(DOMInputSource,...)
+      * @see DOMLSParser#parseURI
       */
-    DOMDocument* parseURI(const char* const systemId);
+    virtual DOMDocument* parseURI(const char* const uri);
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * Parse via an input source object
-      *
-      * This method invokes the parsing process on the XML file specified
-      * by the DOMInputSource parameter, and inserts the content into an
-      * existing document at the position specified with the contextNode
-      * and action arguments. When parsing the input stream the context node
-      * is used for resolving unbound namespace prefixes.
-      *
-      * @param source A const reference to the DOMInputSource object which
-      *               points to the XML file to be parsed.
-      * @param contextNode The node that is used as the context for the data
-      *                    that is being parsed. This node must be a Document
-      *                    node, a DocumentFragment node, or a node of a type
-      *                    that is allowed as a child of an element, e.g. it
-      *                    can not be an attribute node.
-      * @param action This parameter describes which action should be taken
-      *               between the new set of node being inserted and the
-      *               existing children of the context node.
-      * @exception DOMException
-      *     NOT_SUPPORTED_ERR: Raised when the DOMBuilder doesn't support
-      *     this method.
-      *     <br>NO_MODIFICATION_ALLOWED_ERR: Raised if the context node is
-      *     readonly.
+      * @see DOMLSParser#parseWithContext
       */
     virtual void parseWithContext
     (
-        const   DOMInputSource& source
-        ,       DOMNode* const contextNode
-        , const short action
+        const   DOMLSInput&     source
+        ,       DOMNode*        contextNode
+        , const unsigned short  action
     );
+
+    /**
+      * @see DOMLSParser#abort
+      */
+    virtual void abort();
 
 
     // -----------------------------------------------------------------------
@@ -457,53 +172,7 @@ public :
     //@{
 
     /**
-      * Query the current value of a property in a DOMBuilder.
-      *
-      * The builder owns the returned pointer.  The memory allocated for
-      * the returned pointer will be destroyed when the builder is deleted.
-      *
-      * To ensure assessiblity of the returned information after the builder
-      * is deleted, callers need to copy and store the returned information
-      * somewhere else; otherwise you may get unexpected result.  Since the returned
-      * pointer is a generic void pointer, see
-      * http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties to learn
-      * exactly what type of property value each property returns for replication.
-      *
-      * @param name The unique identifier (URI) of the property being set.
-      * @return     The current value of the property.  The pointer spans the same
-      *             life-time as the parser.  A null pointer is returned if nothing
-      *             was specified externally.
-      * @exception DOMException
-      *     <br>NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
-      *     the requested property.
-      */
-    virtual void* getProperty(const XMLCh* const name) const;
-
-    /**
-      * Set the value of any property in a DOMBuilder.
-      * See http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties for
-      * the list of supported properties.
-      *
-      * It takes a void pointer as the property value.  Application is required to initialize this void
-      * pointer to a correct type.  See http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties
-      * to learn exactly what type of property value each property expects for processing.
-      * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
-      * If the same property is set more than once, the last one takes effect.
-      *
-      * @param name The unique identifier (URI) of the property being set.
-      * @param value The requested value for the property.
-      *            See http://xml.apache.org/xerces-c/program-dom.html#DOMBuilderProperties to learn
-      *            exactly what type of property value each property expects for processing.
-      *            Passing a void pointer that was initialized with a wrong type will lead
-      *            to unexpected result.
-      * @exception DOMException
-      *     <br>NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
-      *     the requested property.
-      */
-    virtual void setProperty(const XMLCh* const name, void* value);
-
-    /**
-     * Called to indicate that this DOMBuilder is no longer in use
+     * Called to indicate that this DOMLSParser is no longer in use
      * and that the implementation may relinquish any resources associated with it.
      *
      */
@@ -539,13 +208,11 @@ public :
       * object.
       *
       * This method invokes the preparsing process on a schema grammar XML
-      * file specified by the DOMInputSource parameter. If the 'toCache' flag
+      * file specified by the DOMLSInput parameter. If the 'toCache' flag
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
-      * @param source A const reference to the DOMInputSource object which
+      * @param source A const reference to the DOMLSInput object which
       *               points to the schema grammar file to be preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
@@ -559,9 +226,9 @@ public :
       *            handler code.
       * @exception DOMException A DOM exception as per DOM spec.
       *
-      * @see DOMInputSource#DOMInputSource
+      * @see DOMLSInput#DOMLSInput
       */
-    virtual Grammar* loadGrammar(const DOMInputSource& source,
+    virtual Grammar* loadGrammar(const DOMLSInput& source,
                              const short grammarType,
                              const bool toCache = false);
 
@@ -572,8 +239,6 @@ public :
       * file specified by the file path parameter. If the 'toCache' flag
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
-      *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML grammar file to be
@@ -601,8 +266,6 @@ public :
       * file specified by the file path parameter. If the 'toCache' flag
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
-      *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const char pointer to a native string which contains
       *                 the path to the XML grammar file to be preparsed.
@@ -658,6 +321,73 @@ public :
       */
     virtual unsigned int getSrcOffset() const;
 
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Implementation of the DOMConfiguration interface.
+    // -----------------------------------------------------------------------
+    /** @name Implementation of the DOMConfiguration interface. */
+    //@{
+    /** 
+     * Set the value of a parameter. 
+     *
+     * @param name The name of the parameter to set.
+     * @param value The new value or null if the user wishes to unset the 
+     * parameter. While the type of the value parameter is defined as 
+     * <code>DOMUserData</code>, the object type must match the type defined
+     * by the definition of the parameter. For example, if the parameter is 
+     * "error-handler", the value must be of type <code>DOMErrorHandler</code>
+     *
+     * @exception DOMException (NOT_SUPPORTED_ERR) Raised when the 
+     * parameter name is recognized but the requested value cannot be set.
+     * @exception DOMException (NOT_FOUND_ERR) Raised when the 
+     * parameter name is not recognized.
+     *
+     * @since DOM level 3
+     **/
+    virtual void setParameter(const XMLCh* name, const void* value);
+    virtual void setParameter(const XMLCh* name, bool value);
+
+    /** 
+     * Return the value of a parameter if known. 
+     *
+     * @param name The name of the parameter.
+     * @return The current object associated with the specified parameter or 
+     * null if no object has been associated or if the parameter is not 
+     * supported.
+     *
+     * @exception DOMException (NOT_FOUND_ERR) Raised when the i
+     * boolean parameter 
+     * name is not recognized.
+     *
+     * @since DOM level 3
+     **/    
+    virtual const void* getParameter(const XMLCh* name) const;
+
+    /** 
+     * Check if setting a parameter to a specific value is supported. 
+     *
+     * @param name The name of the parameter to check.
+     * @param value An object. if null, the returned value is true.
+     * @return true if the parameter could be successfully set to the specified 
+     * value, or false if the parameter is not recognized or the requested value 
+     * is not supported. This does not change the current value of the parameter 
+     * itself.
+     *
+     * @since DOM level 3
+     **/
+    virtual bool canSetParameter(const XMLCh* name, const void* value) const;
+    virtual bool canSetParameter(const XMLCh* name, bool value) const;
+
+    /**
+     * The list of the parameters supported by this DOMConfiguration object and 
+     * for which at least one value can be set by the application. 
+     * Note that this list can also contain parameter names defined outside this specification.
+     *
+     * @return The list of parameters that can be used with setParameter/getParameter
+     * @since DOM level 3
+     **/
+    virtual const RefVectorOf<const XMLCh*>* getParameterNames() const;
     //@}
 
     // -----------------------------------------------------------------------
@@ -785,7 +515,7 @@ public :
       *                 or <code>null</code> if there is no base URI.
       * @return The value returned by the user installed resolveEntity
       *         method or NULL otherwise to indicate no processing was done.
-      *         The returned InputSource is owned by the DOMBuilder which is
+      *         The returned InputSource is owned by the DOMLSParser which is
       *         responsible to clean up the memory.
       * @see DOMEntityResolver
       * @see XMLEntityHandler
@@ -844,9 +574,19 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
+    //  fAutoValidation
+    //      Whether validation will be enabled in case a schema reference is found
+    //
+    //  fValidation
+    //      Whether validation will be enabled (if fAutoValidation has been set, 
+    //      setting it is a no-op)
+    //
     //  fEntityResolver
     //      The installed DOM entity resolver, if any. Null if none.
     //
+    //  fXMLEntityResolver
+    //      The installed Xerces entity resolver, if any. Null if none.
+    // 
     //  fErrorHandler
     //      The installed DOM error handler, if any. Null if none.
     //
@@ -866,83 +606,59 @@ private :
     DOMEntityResolver*          fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
     DOMErrorHandler*            fErrorHandler;
-    DOMBuilderFilter*           fFilter;
+    DOMLSParserFilter*          fFilter;
     bool                        fCharsetOverridesXMLEncoding;
     bool                        fUserAdoptsDocument;
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    DOMBuilderImpl(const DOMBuilderImpl &);
-    DOMBuilderImpl & operator = (const DOMBuilderImpl &);
+    DOMLSParserImpl(const DOMLSParserImpl &);
+    DOMLSParserImpl & operator = (const DOMLSParserImpl &);
 };
 
 
 
 // ---------------------------------------------------------------------------
-//  DOMBuilderImpl: Handlers for the XMLEntityHandler interface
+//  DOMLSParserImpl: Handlers for the XMLEntityHandler interface
 // ---------------------------------------------------------------------------
-inline void DOMBuilderImpl::endInputSource(const InputSource&)
+inline void DOMLSParserImpl::endInputSource(const InputSource&)
 {
     // The DOM entity resolver doesn't handle this
 }
 
-inline bool DOMBuilderImpl::expandSystemId(const XMLCh* const, XMLBuffer&)
+inline bool DOMLSParserImpl::expandSystemId(const XMLCh* const, XMLBuffer&)
 {
     // The DOM entity resolver doesn't handle this
     return false;
 }
 
-inline void DOMBuilderImpl::resetEntities()
+inline void DOMLSParserImpl::resetEntities()
 {
     // Nothing to do on this one
 }
 
-inline void DOMBuilderImpl::startInputSource(const InputSource&)
+inline void DOMLSParserImpl::startInputSource(const InputSource&)
 {
     // The DOM entity resolver doesn't handle this
 }
 
 
 // ---------------------------------------------------------------------------
-//  DOMBuilderImpl: Getter methods
+//  DOMLSParserImpl: Getter methods
 // ---------------------------------------------------------------------------
-inline DOMErrorHandler* DOMBuilderImpl::getErrorHandler()
+inline DOMConfiguration* DOMLSParserImpl::getDomConfig()
 {
-    return fErrorHandler;
+    return this;
 }
 
-inline const DOMErrorHandler* DOMBuilderImpl::getErrorHandler() const
+inline bool DOMLSParserImpl::getAsync() const
 {
-    return fErrorHandler;
+    // We are a synchronous parser
+    return false;
 }
 
-inline DOMEntityResolver* DOMBuilderImpl::getEntityResolver()
-{
-    return fEntityResolver;
-}
-
-inline const DOMEntityResolver* DOMBuilderImpl::getEntityResolver() const
-{
-    return fEntityResolver;
-}
-
-inline XMLEntityResolver* DOMBuilderImpl::getXMLEntityResolver()
-{
-    return fXMLEntityResolver;
-}
-
-inline const XMLEntityResolver* DOMBuilderImpl::getXMLEntityResolver() const
-{
-    return fXMLEntityResolver;
-}
-
-inline DOMBuilderFilter* DOMBuilderImpl::getFilter()
-{
-    return fFilter;
-}
-
-inline const DOMBuilderFilter* DOMBuilderImpl::getFilter() const
+inline const DOMLSParserFilter* DOMLSParserImpl::getFilter() const
 {
     return fFilter;
 }

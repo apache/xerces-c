@@ -21,7 +21,7 @@
 #include "DOMImplementationImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
-#include "DOMWriterImpl.hpp"
+#include "DOMLSSerializerImpl.hpp"
 
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -34,16 +34,13 @@
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
-#include <xercesc/parsers/DOMBuilderImpl.hpp>
+#include <xercesc/parsers/DOMLSParserImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
 // ------------------------------------------------------------
-//
-//  Static constants.  These are lazily initialized on first usage.
-//                     (Static constructors can not be safely used because
-//                      of order of initialization dependencies.)
+//  Static constants
 // ------------------------------------------------------------
 static const XMLCh  g1_0[] =     // Points to "1.0"
         {chDigit_1, chPeriod, chDigit_0, chNull};
@@ -130,8 +127,8 @@ void XMLInitializer::initializeMsgLoader4DOM()
 //  Singleton DOMImplementationImpl
 // -----------------------------------------------------------------------
 static DOMImplementationImpl    *gDomimp = 0;   // Points to the singleton instance
-                                            //  of DOMImplementation that is returnedreturned
-                                            //  by any call to getImplementation().
+                                                //  of DOMImplementation that is returnedreturned
+                                                //  by any call to getImplementation().
 static XMLRegisterCleanup implementationCleanup;
 
 static void reinitImplementation()
@@ -266,6 +263,19 @@ bool DOMImplementation::loadDOMExceptionMsg
 
 bool DOMImplementation::loadDOMExceptionMsg
 (
+    const   DOMLSException::LSExceptionCode  msgToLoad
+    ,       XMLCh* const                     toFill
+    , const unsigned int                     maxChars
+)
+{
+    // load the text, the msgToLoad+XMLDOMMsgs::DOMLSEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
+    // TODO
+//    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMLSEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
+    return false;
+}
+
+bool DOMImplementation::loadDOMExceptionMsg
+(
     const   DOMRangeException::RangeExceptionCode  msgToLoad
     ,       XMLCh* const                           toFill
     , const unsigned int                           maxChars
@@ -279,30 +289,37 @@ bool DOMImplementation::loadDOMExceptionMsg
 // DOMImplementationLS Virtual interface
 // ------------------------------------------------------------
 //Introduced in DOM Level 3
-DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short           mode,
-                                                    const XMLCh* const,
+DOMLSParser* DOMImplementationImpl::createLSParser( const unsigned short   mode,
+                                                    const XMLCh* const     schemaType,
                                                     MemoryManager* const  manager,
                                                     XMLGrammarPool* const gramPool)
 {
     if (mode == DOMImplementationLS::MODE_ASYNCHRONOUS)
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, manager);
 
-    return new (manager) DOMBuilderImpl(0, manager, gramPool);
+    // TODO: schemaType
+    return new (manager) DOMLSParserImpl(0, manager, gramPool);
 }
 
 
-DOMWriter* DOMImplementationImpl::createDOMWriter(MemoryManager* const manager)
+DOMLSSerializer* DOMImplementationImpl::createLSSerializer(MemoryManager* const manager)
 {
-    return new (manager) DOMWriterImpl(manager);
+    return new (manager) DOMLSSerializerImpl(manager);
 }
 
-DOMInputSource* DOMImplementationImpl::createDOMInputSource()
+DOMLSInput* DOMImplementationImpl::createLSInput()
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
     return 0;
 }
 
+DOMLSOutput* DOMImplementationImpl::createLSOutput()
+{
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+
+    return 0;
+}
 
 // ------------------------------------------------------------
 // DOMImplementationSource Virtual interface

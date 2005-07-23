@@ -97,6 +97,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				TreatWChar_tAsBuiltInType="FALSE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\Debug\obj/xerces-com.pch"

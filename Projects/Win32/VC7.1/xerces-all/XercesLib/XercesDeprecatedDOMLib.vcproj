@@ -93,6 +93,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;XERCES_BUILDING_DEPRECATED_LIBRARY"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="TRUE"
+				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XercesDeprecatedDOMLib.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"

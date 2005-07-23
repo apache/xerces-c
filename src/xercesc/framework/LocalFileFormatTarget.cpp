@@ -114,7 +114,7 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
 void LocalFileFormatTarget::flushBuffer()
 {
     // Exception thrown in writeBufferToFile, if any, will be propagated to
-    // the XMLFormatter and then to the DOMWriter, which may notify
+    // the XMLFormatter and then to the DOMLSSerializer, which may notify
     // application through DOMErrorHandler, if any.
     XMLPlatformUtils::writeBufferToFile(fSource, (long) fIndex, fDataBuf, fMemoryManager);
     fIndex = 0;

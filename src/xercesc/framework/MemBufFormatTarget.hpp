@@ -27,7 +27,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 /*
  * The MemBufFormatTarget is a derivative from XMLFormatTarget, which user code
- * may plug into DOMWriter to retrieve the serialized XML stream (from DOM Tree)
+ * may plug into DOMLSSerializer to retrieve the serialized XML stream (from DOM Tree)
  * in a memory buffer.
  *
  * The MemBufFormatTarget is initalized to have a memory buffer of 1023 upon

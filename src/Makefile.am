@@ -254,7 +254,6 @@ endif
 dom_headers	= \
 	xercesc/dom/DOM.hpp \
 	xercesc/dom/DOMAttr.hpp \
-	xercesc/dom/DOMBuilder.hpp \
 	xercesc/dom/DOMCDATASection.hpp \
 	xercesc/dom/DOMCharacterData.hpp \
 	xercesc/dom/DOMComment.hpp \
@@ -275,8 +274,14 @@ dom_headers	= \
 	xercesc/dom/DOMImplementationLS.hpp \
 	xercesc/dom/DOMImplementationRegistry.hpp \
 	xercesc/dom/DOMImplementationSource.hpp \
-	xercesc/dom/DOMInputSource.hpp \
 	xercesc/dom/DOMLocator.hpp \
+	xercesc/dom/DOMLSException.hpp \
+	xercesc/dom/DOMLSInput.hpp \
+	xercesc/dom/DOMLSOutput.hpp \
+	xercesc/dom/DOMLSParser.hpp \
+	xercesc/dom/DOMLSParserFilter.hpp \
+	xercesc/dom/DOMLSSerializer.hpp \
+	xercesc/dom/DOMLSSerializerFilter.hpp \
 	xercesc/dom/DOMNamedNodeMap.hpp \
 	xercesc/dom/DOMNode.hpp \
 	xercesc/dom/DOMNodeFilter.hpp \
@@ -291,8 +296,6 @@ dom_headers	= \
 	xercesc/dom/DOMTreeWalker.hpp \
 	xercesc/dom/DOMTypeInfo.hpp \
 	xercesc/dom/DOMUserDataHandler.hpp \
-	xercesc/dom/DOMWriter.hpp \
-	xercesc/dom/DOMWriterFilter.hpp \
 	xercesc/dom/DOMXPathEvaluator.hpp \
 	xercesc/dom/DOMXPathException.hpp \
 	xercesc/dom/DOMXPathExpression.hpp \
@@ -303,6 +306,7 @@ dom_headers	= \
 								
 dom_sources	= \
 	xercesc/dom/DOMException.cpp \
+	xercesc/dom/DOMLSException.cpp \
 	xercesc/dom/DOMRangeException.cpp \
 	xercesc/dom/DOMXPathException.cpp
 
@@ -345,7 +349,7 @@ domimpl_headers	= \
 	xercesc/dom/impl/DOMTextImpl.hpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.hpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.hpp \
-	xercesc/dom/impl/DOMWriterImpl.hpp \
+	xercesc/dom/impl/DOMLSSerializerImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
 							  
 domimpl_sources	= \
@@ -384,7 +388,7 @@ domimpl_sources	= \
 	xercesc/dom/impl/DOMTextImpl.cpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.cpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.cpp \
-	xercesc/dom/impl/DOMWriterImpl.cpp \
+	xercesc/dom/impl/DOMLSSerializerImpl.cpp \
 	xercesc/dom/impl/XSDElementNSImpl.cpp
 
 
@@ -427,7 +431,7 @@ framework_headers = \
 	xercesc/framework/StdOutFormatTarget.hpp \
 	xercesc/framework/URLInputSource.hpp \
 	xercesc/framework/ValidationContext.hpp \
-	xercesc/framework/Wrapper4DOMInputSource.hpp \
+	xercesc/framework/Wrapper4DOMLSInput.hpp \
 	xercesc/framework/Wrapper4InputSource.hpp \
 	xercesc/framework/XMLAttDef.hpp \
 	xercesc/framework/XMLAttDefList.hpp \
@@ -486,7 +490,7 @@ framework_sources = \
 	xercesc/framework/StdInInputSource.cpp \
 	xercesc/framework/StdOutFormatTarget.cpp \
 	xercesc/framework/URLInputSource.cpp \
-	xercesc/framework/Wrapper4DOMInputSource.cpp \
+	xercesc/framework/Wrapper4DOMLSInput.cpp \
 	xercesc/framework/Wrapper4InputSource.cpp \
 	xercesc/framework/XMLAttDef.cpp \
 	xercesc/framework/XMLAttDefList.cpp \
@@ -564,7 +568,7 @@ internal_sources = \
 
 parsers_headers = \
 	xercesc/parsers/AbstractDOMParser.hpp \
-	xercesc/parsers/DOMBuilderImpl.hpp \
+	xercesc/parsers/DOMLSParserImpl.hpp \
 	xercesc/parsers/SAX2XMLFilterImpl.hpp \
 	xercesc/parsers/SAX2XMLReaderImpl.hpp \
 	xercesc/parsers/SAXParser.hpp \
@@ -572,7 +576,7 @@ parsers_headers = \
 	
 parsers_sources = \
 	xercesc/parsers/AbstractDOMParser.cpp \
-	xercesc/parsers/DOMBuilderImpl.cpp \
+	xercesc/parsers/DOMLSParserImpl.cpp \
 	xercesc/parsers/SAX2XMLFilterImpl.cpp \
 	xercesc/parsers/SAX2XMLReaderImpl.cpp \
 	xercesc/parsers/SAXParser.cpp \

@@ -84,6 +84,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS"
 				RuntimeLibrary="3"
+				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/DOMCount.pch"
 				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
 				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"

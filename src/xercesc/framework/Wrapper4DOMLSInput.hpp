@@ -26,13 +26,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class DOMInputSource;
+class DOMLSInput;
 
 
 /**
-  * Wrap a DOMInputSource object to a SAX InputSource.
+  * Wrap a DOMLSInput object to a SAX InputSource.
   */
-class XMLPARSER_EXPORT Wrapper4DOMInputSource: public InputSource
+class XMLPARSER_EXPORT Wrapper4DOMLSInput: public InputSource
 {
 public:
     /** @name Constructors and Destructor */
@@ -41,18 +41,18 @@ public:
   /**
     * Constructor
     *
-    * Wrap a DOMInputSource and pretend it to be a SAX InputSource.
-    * By default, the wrapper will adopt the DOMInputSource that is wrapped.
+    * Wrap a DOMLSInput and pretend it to be a SAX InputSource.
+    * By default, the wrapper will adopt the DOMLSInput that is wrapped.
     *
-    * @param  inputSource  The DOMInputSource to be wrapped
+    * @param  inputSource  The DOMLSInput to be wrapped
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
-    *                      DOMInputSource. Default is true.
+    *                      DOMLSInput. Default is true.
     * @param  manager      Pointer to the memory manager to be used to
     *                      allocate objects.
     */
-    Wrapper4DOMInputSource
+    Wrapper4DOMLSInput
     (
-        DOMInputSource* const inputSource
+        DOMLSInput* const inputSource
         , const bool adoptFlag = true
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -61,7 +61,7 @@ public:
     * Destructor
     *
     */
-    virtual ~Wrapper4DOMInputSource();
+    virtual ~Wrapper4DOMLSInput();
     //@}
 
 
@@ -69,7 +69,6 @@ public:
     /** @name Virtual input source interface */
     //@{
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Makes the byte stream for this input source.
     *
@@ -86,7 +85,6 @@ public:
     /** @name Getter methods */
     //@{
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * An input source can be set to force the parser to assume a particular
     * encoding for the data that input source reprsents, via the setEncoding()
@@ -101,7 +99,6 @@ public:
 
 
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Get the public identifier for this input source. Delegated to the
     * wrapped input source object.
@@ -113,7 +110,6 @@ public:
 
 
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Get the system identifier for this input source. Delegated to the
     * wrapped input source object.
@@ -125,8 +121,7 @@ public:
     */
     const XMLCh* getSystemId() const;
 
- /**
-    * <p><b>"Experimental - subject to change"</b></p>
+  /**
     *
     * Get the flag that indicates if the parser should issue fatal error if
     * this input source is not found. Delegated to the wrapped input source
@@ -147,7 +142,6 @@ public:
     //@{
 
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Set the encoding which will be required for use with the XML text read
     * via a stream opened by this input source. This will update the wrapped
@@ -164,7 +158,6 @@ public:
 
 
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Set the public identifier for this input source. This will update the
     * wrapped input source object.
@@ -180,7 +173,6 @@ public:
     void setPublicId(const XMLCh* const publicId);
 
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Set the system identifier for this input source. This will update the
     * wrapped input source object.
@@ -199,7 +191,6 @@ public:
     void setSystemId(const XMLCh* const systemId);
 
   /**
-    * <p><b>"Experimental - subject to change"</b></p>
     *
     * Indicates if the parser should issue fatal error if this input source
     * is not found.  If set to false, the parser issue warning message instead.
@@ -219,14 +210,14 @@ private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    Wrapper4DOMInputSource(const Wrapper4DOMInputSource&);
-    Wrapper4DOMInputSource& operator=(const Wrapper4DOMInputSource&);
+    Wrapper4DOMLSInput(const Wrapper4DOMLSInput&);
+    Wrapper4DOMLSInput& operator=(const Wrapper4DOMLSInput&);
 
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
     bool            fAdoptInputSource;
-    DOMInputSource* fInputSource;
+    DOMLSInput* fInputSource;
 };
 
 XERCES_CPP_NAMESPACE_END

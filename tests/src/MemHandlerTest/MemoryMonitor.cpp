@@ -67,7 +67,7 @@ static void usage()
 {
     XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    MemHandlerTest [options] <XML file | List file>\n\n"
-            "This program invokes the XercesDOMParser, DOMBuilder, SAXParser ,\n"
+            "This program invokes the XercesDOMParser, DOMLSParser, SAXParser ,\n"
             "and the SAX2XMLReader, and ensures that MemoryManagers set on these\n"
             "domBuilders are called to delete just as many bytes as they allocate.\n"
             "This is done for each XML file, and each file is processed\n"
@@ -85,11 +85,11 @@ static void usage()
          << XERCES_STD_QUALIFIER endl;
 }
 
-class DOMBuilderHandler : public DOMErrorHandler 
+class DOMLSParserHandler : public DOMErrorHandler 
 {
 public:
-    DOMBuilderHandler() {};
-    ~DOMBuilderHandler() {};
+    DOMLSParserHandler() {};
+    ~DOMLSParserHandler() {};
     bool handleError(const DOMError &error) 
     {
         char *message = 0;
@@ -255,9 +255,9 @@ int main (int argC,  char *argV[])
     MemoryMonitor *domBuilderMemMonitor = new MemoryMonitor();
     static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
     DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);
-    DOMBuilder        *domBuilder = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0, domBuilderMemMonitor);
-    DOMBuilderHandler domBuilderHandler;
-    domBuilder->setErrorHandler(&domBuilderHandler);
+    DOMLSParser       *domBuilder = ((DOMImplementationLS*)impl)->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0, domBuilderMemMonitor);
+    DOMLSParserHandler domBuilderHandler;
+    domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &domBuilderHandler);
 
     // Instantiate the SAX2 domBuilder with its memory manager.
     MemoryMonitor *sax2MemMonitor = new MemoryMonitor();
@@ -276,24 +276,24 @@ int main (int argC,  char *argV[])
     saxParser->setErrorHandler(&saxErrorHandler);
 
     // set features 
-    domBuilder->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
+    domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, doNamespaces);
     sax2parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
     depDOMParser->setDoNamespaces(doNamespaces);
     saxParser->setDoNamespaces(doNamespaces);
 
-    domBuilder->setFeature(XMLUni::fgXercesSchema, doSchema);
+    domBuilder->getDomConfig()->setParameter(XMLUni::fgXercesSchema, doSchema);
     sax2parser->setFeature(XMLUni::fgXercesSchema, doSchema);
     depDOMParser->setDoSchema(doSchema);
     saxParser->setDoSchema(doSchema);
 
-    domBuilder->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+    domBuilder->getDomConfig()->setParameter(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     sax2parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     depDOMParser->setValidationSchemaFullChecking(schemaFullChecking);
     saxParser->setValidationSchemaFullChecking(schemaFullChecking);
 
     if (domBuilderValScheme == AbstractDOMParser::Val_Auto)
     {
-        domBuilder->setFeature(XMLUni::fgDOMValidateIfSchema, true);
+        domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMValidateIfSchema, true);
         sax2parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
         sax2parser->setFeature(XMLUni::fgXercesDynamic, true);
         depDOMParser->setValidationScheme(DOMParser::Val_Auto);
@@ -301,14 +301,14 @@ int main (int argC,  char *argV[])
     }
     else if (domBuilderValScheme == AbstractDOMParser::Val_Never)
     {
-        domBuilder->setFeature(XMLUni::fgDOMValidation, false);
+        domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMValidate, false);
         sax2parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
         depDOMParser->setValidationScheme(DOMParser::Val_Never);
         saxParser->setValidationScheme(SAXParser::Val_Never);
     }
     else if (domBuilderValScheme == AbstractDOMParser::Val_Always)
     {
-        domBuilder->setFeature(XMLUni::fgDOMValidation, true);
+        domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMValidate, true);
         sax2parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
         sax2parser->setFeature(XMLUni::fgXercesDynamic, false);
         depDOMParser->setValidationScheme(DOMParser::Val_Always);
@@ -316,7 +316,7 @@ int main (int argC,  char *argV[])
     }
 
     // enable datatype normalization - default is off
-    domBuilder->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
+    domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
 
     XERCES_STD_QUALIFIER ifstream fin;
     bool more = true;

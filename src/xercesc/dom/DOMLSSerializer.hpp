@@ -1,5 +1,5 @@
-#ifndef DOMWriter_HEADER_GUARD_
-#define DOMWriter_HEADER_GUARD_
+#ifndef DOMLSSerializer_HEADER_GUARD_
+#define DOMLSSerializer_HEADER_GUARD_
 
 /*
  * Copyright 2002,2004 The Apache Software Foundation.
@@ -23,11 +23,11 @@
 
 /**
  *
- * DOMWriter provides an API for serializing (writing) a DOM document out in
+ * DOMLSSerializer provides an API for serializing (writing) a DOM document out in
  * an XML document. The XML data is written to an output stream, the type of
  * which depends on the specific language bindings in use. During
  * serialization of XML data, namespace fixup is done when possible.
- * <p> <code>DOMWriter</code> accepts any node type for serialization. For
+ * <p> <code>DOMLSSerializer</code> accepts any node type for serialization. For
  * nodes of type <code>Document</code> or <code>Entity</code>, well formed
  * XML will be created if possible. The serialized output for these node
  * types is either as a Document or an External Entity, respectively, and is
@@ -40,7 +40,7 @@
  * follows Documents are written including an XML declaration and a DTD
  * subset, if one exists in the DOM. Writing a document node serializes the
  * entire document.  Entity nodes, when written directly by
- * <code>writeNode</code> defined in the <code>DOMWriter</code> interface,
+ * <code>write</code> defined in the <code>DOMLSSerializer</code> interface,
  * output the entity expansion but no namespace fixup is done. The resulting
  * output will be valid as an external entity.  Entity References nodes are
  * serializes as an entity reference of the form
@@ -77,7 +77,7 @@
  * as an error. An example would be serializing the element
  * &lt;LaCa�ada/&gt; with the encoding="us-ascii".
  * <p> When requested by setting the <code>normalize-characters</code> feature
- * on <code>DOMWriter</code>, all data to be serialized, both markup and
+ * on <code>DOMLSSerializer</code>, all data to be serialized, both markup and
  * character data, is W3C Text normalized according to the rules defined in
  * . The W3C Text normalization process affects only the data as it is being
  * written; it does not alter the DOM's view of the document after
@@ -108,17 +108,17 @@
  * description about warning about unbound entity refs. Entity refs are
  * always serialized as &amp;foo;, also mention this in the load part of
  * this spec.
- * <p> When serializing a document the DOMWriter checks to see if the document
+ * <p> When serializing a document the DOMLSSerializer checks to see if the document
  * element in the document is a DOM Level 1 element or a DOM Level 2 (or
  * higher) element (this check is done by looking at the localName of the
  * root element). If the root element is a DOM Level 1 element then the
- * DOMWriter will issue an error if a DOM Level 2 (or higher) element is
+ * DOMLSSerializer will issue an error if a DOM Level 2 (or higher) element is
  * found while serializing. Likewise if the document element is a DOM Level
- * 2 (or higher) element and the DOMWriter sees a DOM Level 1 element an
+ * 2 (or higher) element and the DOMLSSerializer sees a DOM Level 1 element an
  * error is issued. Mixing DOM Level 1 elements with DOM Level 2 (or higher)
  * is not supported.
- * <p> <code>DOMWriter</code>s have a number of named features that can be
- * queried or set. The name of <code>DOMWriter</code> features must be valid
+ * <p> <code>DOMLSSerializer</code>s have a number of named features that can be
+ * queried or set. The name of <code>DOMLSSerializer</code> features must be valid
  * XML names. Implementation specific features (extensions) should choose an
  * implementation dependent prefix to avoid name collisions.
  * <p>Here is a list of properties that must be recognized by all
@@ -242,20 +242,21 @@
 
 
 #include <xercesc/dom/DOMNode.hpp>
-#include <xercesc/dom/DOMWriterFilter.hpp>
+#include <xercesc/dom/DOMLSSerializerFilter.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/framework/XMLFormatter.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class CDOM_EXPORT DOMWriter {
+class CDOM_EXPORT DOMLSSerializer {
 protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMWriter() {};
+    DOMLSSerializer() {};
     //@}
 private:        
     // -----------------------------------------------------------------------
@@ -263,8 +264,8 @@ private:
     // -----------------------------------------------------------------------
     /** @name Unimplemented constructors and operators */
     //@{
-    DOMWriter(const DOMWriter &);
-    DOMWriter & operator = (const DOMWriter &);
+    DOMLSSerializer(const DOMLSSerializer &);
+    DOMLSSerializer & operator = (const DOMLSSerializer &);
     //@}
 
 
@@ -278,11 +279,11 @@ public:
      * Destructor
      *
      */
-    virtual ~DOMWriter() {};
+    virtual ~DOMLSSerializer() {};
     //@}
 
     // -----------------------------------------------------------------------
-    //  Virtual DOMWriter interface
+    //  Virtual DOMLSSerializer interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
@@ -290,61 +291,80 @@ public:
     //  Feature methods
     // -----------------------------------------------------------------------
     /**
-     * Query whether setting a feature to a specific value is supported.
-     * <br>The feature name has the same form as a DOM hasFeature string.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param featName The feature name, which is a DOM has-feature style string.
-     * @param state The requested state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @return <code>true</code> if the feature could be successfully set to
-     *   the specified value, or <code>false</code> if the feature is not
-     *   recognized or the requested value is not supported. The value of
-     *   the feature itself is not changed.
-     * @since DOM Level 3
-     */
-    virtual bool           canSetFeature(const XMLCh* const featName
-                                       , bool               state) const = 0;
-    /**
-     * Set the state of a feature.
-     * <br>The feature name has the same form as a DOM hasFeature string.
-     * <br>It is possible for a <code>DOMWriter</code> to recognize a feature
-     * name but to be unable to set its value.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param featName The feature name.
-     * @param state The requested state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @exception DOMException
-     *   Raise a NOT_SUPPORTED_ERR exception when the <code>DOMWriter</code>
-     *   recognizes the feature name but cannot set the requested value.
-     *   <br>Raise a NOT_FOUND_ERR When the <code>DOMWriter</code> does not
-     *   recognize the feature name.
-     * @see   getFeature
-     * @since DOM Level 3
-     */
-    virtual void            setFeature(const XMLCh* const featName
-                                     , bool               state) = 0;
-
-    /**
-     * Look up the value of a feature.
-     * <br>The feature name has the same form as a DOM hasFeature string
-     * @param featName The feature name, which is a string with DOM has-feature
-     *   syntax.
-     * @return The current state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @exception DOMException
-     *   Raise a NOT_FOUND_ERR When the <code>DOMWriter</code> does not
-     *   recognize the feature name.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @see   setFeature
-     * @since DOM Level 3
-     */
-    virtual bool               getFeature(const XMLCh* const featName) const = 0;
+      * The DOMConfiguration object used by the LSSerializer when serializing a DOM node.
+      *
+      * In addition to the parameters recognized in on the <code>DOMConfiguration</code>
+      * interface defined in [DOM Level 3 Core], the <code>DOMConfiguration</code> objects 
+      * for <code>DOMLSSerializer</code> add or modify the following parameters: 
+      *
+      * "canonical-form"
+      *     true [optional]
+      *         Writes the document according to the rules specified in [Canonical XML]. In addition to 
+      *         the behavior described in "canonical-form" [DOM Level 3 Core], setting this parameter to 
+      *         true will set the parameters "format-pretty-print", "discard-default-content", and 
+      *         "xml-declaration", to false. Setting one of those parameters to true will set this 
+      *         parameter to false. Serializing an XML 1.1 document when "canonical-form" is true will 
+      *         generate a fatal error.
+      *     false [required] (default)
+      *         Do not canonicalize the output.
+      *
+      * "discard-default-content"
+      *     true [required] (default)
+      *         Use the DOMAttr::getSpecified attribute to decide what attributes should be discarded. 
+      *         Note that some implementations might use whatever information available to the implementation 
+      *         (i.e. XML schema, DTD, the DOMAttr::getSpecified attribute, and so on) to determine what 
+      *         attributes and content to discard if this parameter is set to true.
+      *     false [required]
+      *         Keep all attributes and all content.
+      *
+      * "format-pretty-print"
+      *     true [optional]
+      *         Formatting the output by adding whitespace to produce a pretty-printed, indented, 
+      *         human-readable form. The exact form of the transformations is not specified by this specification. 
+      *         Pretty-printing changes the content of the document and may affect the validity of the document, 
+      *         validating implementations should preserve validity.
+      *     false [required] (default)
+      *         Don't pretty-print the result.
+      *
+      * "ignore-unknown-character-denormalizations"
+      *     true [required] (default)
+      *         If, while verifying full normalization when [XML 1.1] is supported, a character is encountered 
+      *         for which the normalization properties cannot be determined, then raise a "unknown-character-denormalization" 
+      *         warning (instead of raising an error, if this parameter is not set) and ignore any possible 
+      *         denormalizations caused by these characters.
+      *     false [optional]
+      *         Report a fatal error if a character is encountered for which the processor cannot determine the 
+      *         normalization properties.
+      *
+      * "normalize-characters"
+      *     This parameter is equivalent to the one defined by <code>DOMConfiguration</code> in [DOM Level 3 Core]. 
+      *     Unlike in the Core, the default value for this parameter is true. While DOM implementations are not 
+      *     required to support fully normalizing the characters in the document according to appendix E of [XML 1.1], 
+      *     this parameter must be activated by default if supported.
+      *
+      * "xml-declaration"
+      *     true [required] (default)
+      *         If a DOMDocument, DOMElement, or DOMEntity node is serialized, the XML declaration, or text declaration, 
+      *         should be included. The version (DOMDocument::xmlVersion if the document is a Level 3 document and the 
+      *         version is non-null, otherwise use the value "1.0"), and the output encoding (see DOMLSSerializer::write 
+      *         for details on how to find the output encoding) are specified in the serialized XML declaration.
+      *     false [required]
+      *         Do not serialize the XML and text declarations. Report a "xml-declaration-needed" warning if this will 
+      *         cause problems (i.e. the serialized data is of an XML version other than [XML 1.0], or an encoding would 
+      *         be needed to be able to re-parse the serialized data).
+      *
+      * "error-handler"
+      *     Contains a DOMErrorHandler object. If an error is encountered in the document, the implementation will call back 
+      *     the DOMErrorHandler registered using this parameter. The implementation may provide a default DOMErrorHandler 
+      *     object. When called, DOMError::relatedData will contain the closest node to where the error occurred. 
+      *     If the implementation is unable to determine the node where the error occurs, DOMError::relatedData will contain 
+      *     the DOMDocument node. Mutations to the document from within an error handler will result in implementation 
+      *     dependent behavior.
+      *
+      * @return The pointer to the configuration object.
+      * @since DOM Level 3
+      */
+    virtual DOMConfiguration* getDomConfig() = 0;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -389,8 +409,6 @@ public:
      * </dl>
      * <br>The default value for this attribute is <code>null</code>.
      *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param newLine      The end-of-line sequence of characters to be used.
      * @see   getNewLine
      * @since DOM Level 3
@@ -398,33 +416,16 @@ public:
     virtual void          setNewLine(const XMLCh* const newLine) = 0;
 
     /**
-     * The error handler that will receive error notifications during
-     * serialization. The node where the error occured is passed to this
-     * error handler, any modification to nodes from within an error
-     * callback should be avoided since this will result in undefined,
-     * implementation dependent behavior.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param errorHandler The error handler to be used.
-     * @see   getErrorHandler
-     * @since DOM Level 3
-     */
-    virtual void         setErrorHandler(DOMErrorHandler *errorHandler) = 0;
-
-    /**
      * When the application provides a filter, the serializer will call out
      * to the filter before serializing each Node. Attribute nodes are never
      * passed to the filter. The filter implementation can choose to remove
      * the node from the stream or to terminate the serialization early.
      *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param filter       The writer filter to be used.
      * @see   getFilter
      * @since DOM Level 3
      */
-    virtual void         setFilter(DOMWriterFilter *filter) = 0;
+    virtual void         setFilter(DOMLSSerializerFilter *filter) = 0;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -453,45 +454,29 @@ public:
      virtual const XMLCh*       getNewLine() const = 0;
 
     /**
-     * Return the error handler that will receive error notifications during
-     * serialization.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return             The error handler to be used.
-     * @see   setErrorHandler
-     * @since DOM Level 3
-     */
-     virtual DOMErrorHandler*   getErrorHandler() const = 0;
-
-    /**
      * Return the WriterFilter used.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
      *
      * @return             The writer filter used.
      * @see   setFilter
      * @since DOM Level 3
      */
-     virtual DOMWriterFilter*   getFilter() const = 0;
+     virtual DOMLSSerializerFilter*   getFilter() const = 0;
 
     // -----------------------------------------------------------------------
     //  Write methods
     // -----------------------------------------------------------------------
     /**
      * Write out the specified node as described above in the description of
-     * <code>DOMWriter</code>. Writing a Document or Entity node produces a
+     * <code>DOMLSSerializer</code>. Writing a Document or Entity node produces a
      * serialized form that is well formed XML. Writing other node types
      * produces a fragment of text in a form that is not fully defined by
      * this document, but that should be useful to a human for debugging or
      * diagnostic purposes.
      *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param destination The destination for the data to be written.
      * @param nodeToWrite The <code>Document</code> or <code>Entity</code> node to
      *   be written. For other node types, something sensible should be
      *   written, but the exact serialized form is not specified.
+     * @param destination The destination for the data to be written.
      * @return  Returns <code>true</code> if <code>node</code> was
      *   successfully serialized and <code>false</code> in case a failure
      *   occured and the failure wasn't canceled by the error handler.
@@ -501,28 +486,49 @@ public:
      *   underlying system exception.
      * @since DOM Level 3
      */
-    virtual bool       writeNode(XMLFormatTarget* const destination
-                               , const DOMNode         &nodeToWrite) = 0;
+    virtual bool       write(const DOMNode*         nodeToWrite,
+                             XMLFormatTarget* const destination) = 0;
 
     /**
+     * Write out the specified node as described above in the description of
+     * <code>DOMLSSerializer</code>. Writing a Document or Entity node produces a
+     * serialized form that is well formed XML. Writing other node types
+     * produces a fragment of text in a form that is not fully defined by
+     * this document, but that should be useful to a human for debugging or
+     * diagnostic purposes.
+     *
+     * @param nodeToWrite The <code>Document</code> or <code>Entity</code> node to
+     *   be written. For other node types, something sensible should be
+     *   written, but the exact serialized form is not specified.
+     * @param uri The destination for the data to be written.
+     * @return  Returns <code>true</code> if <code>node</code> was
+     *   successfully serialized and <code>false</code> in case a failure
+     *   occured and the failure wasn't canceled by the error handler.
+     * @exception DOMSystemException
+     *   This exception will be raised in response to any sort of IO or system
+     *   error that occurs while writing to the destination. It may wrap an
+     *   underlying system exception.
+     * @since DOM Level 3
+     */
+    virtual bool       writeToURI(const DOMNode*    nodeToWrite, 
+                                  const XMLCh*      uri) = 0;
+    /**
      * Serialize the specified node as described above in the description of
-     * <code>DOMWriter</code>. The result of serializing the node is
+     * <code>DOMLSSerializer</code>. The result of serializing the node is
      * returned as a string. Writing a Document or Entity node produces a
      * serialized form that is well formed XML. Writing other node types
      * produces a fragment of text in a form that is not fully defined by
      * this document, but that should be useful to a human for debugging or
      * diagnostic purposes.
      *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param nodeToWrite  The node to be written.
      * @return  Returns the serialized data, or <code>null</code> in case a
      *   failure occured and the failure wasn't canceled by the error
      *   handler.   The returned string is always in UTF-16.
-     *   The encoding information available in DOMWriter is ignored in writeToString().
+     *   The encoding information available in DOMLSSerializer is ignored in writeToString().
      * @since DOM Level 3
      */
-    virtual XMLCh*     writeToString(const DOMNode &nodeToWrite) = 0;
+    virtual XMLCh*     writeToString(const DOMNode* nodeToWrite) = 0;
 
     //@}
 

@@ -26,11 +26,11 @@
 #ifndef DOMPrintFilter_HEADER_GUARD_
 #define DOMPrintFilter_HEADER_GUARD_
 
-#include <xercesc/dom/DOMWriterFilter.hpp>
+#include <xercesc/dom/DOMLSSerializerFilter.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
-class DOMPrintFilter : public DOMWriterFilter {
+class DOMPrintFilter : public DOMLSSerializerFilter {
 public:
 
     /** @name Constructors */
@@ -46,8 +46,6 @@ public:
     //@{
 
 	virtual unsigned long getWhatToShow() const {return fWhatToShow;};
-
-	virtual void          setWhatToShow(unsigned long toShow) {fWhatToShow = toShow;};
 
 private:
 	// unimplemented copy ctor and assignement operator
