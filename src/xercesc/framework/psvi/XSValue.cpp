@@ -1098,8 +1098,12 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content
             coreDate.parseTime(); 
             return coreDate.getTimeCanonicalRepresentation(manager);
             break;
-        case XSValue::dt_duration:
         case XSValue::dt_date:
+            // we need this parsing
+            coreDate.parseDate(); 
+            return coreDate.getDateCanonicalRepresentation(manager);
+            break;
+        case XSValue::dt_duration:        
         case XSValue::dt_gYearMonth:
         case XSValue::dt_gYear:
         case XSValue::dt_gMonthDay:
@@ -1445,29 +1449,41 @@ XSValue::getActValDateTimes(const XMLCh*         const input_content
             break;
         case XSValue::dt_date:
             coreDate.parseDate();
+            coreDate.fValue[XMLDateTime::Hour] = 0;
+            coreDate.fValue[XMLDateTime::Minute] = 0;
             break;
         case XSValue::dt_gYearMonth:
             coreDate.parseYearMonth();
             coreDate.fValue[XMLDateTime::Day] = 0;
+            coreDate.fValue[XMLDateTime::Hour] = 0;
+            coreDate.fValue[XMLDateTime::Minute] = 0;
             break;
         case XSValue::dt_gYear:
             coreDate.parseYear();            
             coreDate.fValue[XMLDateTime::Month] = 0;
             coreDate.fValue[XMLDateTime::Day] = 0;
+            coreDate.fValue[XMLDateTime::Hour] = 0;
+            coreDate.fValue[XMLDateTime::Minute] = 0;
             break;
         case XSValue::dt_gMonthDay:
             coreDate.parseMonthDay();
-            coreDate.fValue[XMLDateTime::CentYear] = 0;            
+            coreDate.fValue[XMLDateTime::CentYear] = 0;
+            coreDate.fValue[XMLDateTime::Hour] = 0;
+            coreDate.fValue[XMLDateTime::Minute] = 0;            
             break;
         case XSValue::dt_gDay:
             coreDate.parseDay();
             coreDate.fValue[XMLDateTime::CentYear] = 0;
-            coreDate.fValue[XMLDateTime::Month] = 0;            
+            coreDate.fValue[XMLDateTime::Month] = 0;      
+            coreDate.fValue[XMLDateTime::Hour] = 0;
+            coreDate.fValue[XMLDateTime::Minute] = 0;           
             break;
         case XSValue::dt_gMonth:
             coreDate.parseMonth();
             coreDate.fValue[XMLDateTime::CentYear] = 0;            
             coreDate.fValue[XMLDateTime::Day] = 0;
+            coreDate.fValue[XMLDateTime::Hour] = 0;
+            coreDate.fValue[XMLDateTime::Minute] = 0;
             break;
         default:
             return 0;
