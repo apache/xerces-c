@@ -1012,6 +1012,8 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     }
     if (fCurReader->isWhitespace(*(srcPtr-1)))
         fTrailing = true;
+    else
+        fTrailing = false;
 }
 
 
