@@ -100,6 +100,8 @@ public:
 
     XMLCh*                getTimeCanonicalRepresentation(MemoryManager* const memMgr)     const;
 
+    XMLCh*                getDateCanonicalRepresentation(MemoryManager* const memMgr)     const;
+
     // -----------------------------------------------------------------------
     // parsers
     // -----------------------------------------------------------------------
@@ -228,9 +230,9 @@ private:
 
     void                  normalize();
 
-    void                  fillString(XMLCh*& ptr, valueIndex ind, int expLen) const;
+    void                  fillString(XMLCh*& ptr, int value, int expLen) const;
 
-    int                   fillYearString(XMLCh*& ptr, valueIndex ind) const;
+    int                   fillYearString(XMLCh*& ptr, int value) const;
 
     void                  searchMiliSeconds(XMLCh*& miliStartPtr, XMLCh*& miliEndPtr) const;
 

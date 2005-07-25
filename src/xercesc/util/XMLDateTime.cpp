@@ -229,6 +229,10 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
     int temp = DATETIMES[index][Month] + fDuration->fValue[Month];
     fNewDate->fValue[Month] = modulo(temp, 1, 13);
     int carry = fQuotient(temp, 1, 13);
+    if (fNewDate->fValue[Month] < 0) {
+        fNewDate->fValue[Month]+= 12;
+        carry--;
+    }
 
     //add years (may be modified additionaly below)
     fNewDate->fValue[CentYear] = DATETIMES[index][CentYear] + fDuration->fValue[CentYear] + carry;
@@ -237,17 +241,29 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
     temp = DATETIMES[index][Second] + fDuration->fValue[Second];
     carry = fQuotient (temp, 60);
     fNewDate->fValue[Second] =  mod(temp, 60, carry);
-		
+    if (fNewDate->fValue[Second] < 0) {
+        fNewDate->fValue[Second]+= 60;
+        carry--;
+    }
+    
     //add minutes
     temp = DATETIMES[index][Minute] + fDuration->fValue[Minute] + carry;
     carry = fQuotient(temp, 60);
     fNewDate->fValue[Minute] = mod(temp, 60, carry);
+    if (fNewDate->fValue[Minute] < 0) {
+        fNewDate->fValue[Minute]+= 60;
+        carry--;
+    }
 
     //add hours
     temp = DATETIMES[index][Hour] + fDuration->fValue[Hour] + carry;
     carry = fQuotient(temp, 24);
     fNewDate->fValue[Hour] = mod(temp, 24, carry);
-		
+    if (fNewDate->fValue[Hour] < 0) {
+        fNewDate->fValue[Hour]+= 24;
+        carry--;
+    }
+    
     fNewDate->fValue[Day] = DATETIMES[index][Day] + fDuration->fValue[Day] + carry;
 
     while ( true )
@@ -270,7 +286,12 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
 
         temp = fNewDate->fValue[Month] + carry;
         fNewDate->fValue[Month] = modulo(temp, 1, 13);
-        fNewDate->fValue[CentYear] += fQuotient(temp, 1, 13);
+        if (fNewDate->fValue[Month] < 0) {
+            fNewDate->fValue[Month]+= 12;
+            carry--;
+        }
+        else
+            fNewDate->fValue[CentYear] += fQuotient(temp, 1, 13);
     }
 
     //fNewDate->fValue[utc] = UTC_STD_CHAR;
@@ -1176,16 +1197,26 @@ void XMLDateTime::normalize()
         return;
 
     int negate = (fValue[utc] == UTC_POS)? -1: 1;
+    int temp;
+    int carry;
 
     // add mins
-    int temp = fValue[Minute] + negate * fTimeZone[mm];
-    int carry = fQuotient(temp, 60);
+    temp = fValue[Minute] + negate * fTimeZone[mm];
+    carry = fQuotient(temp, 60);
     fValue[Minute] = mod(temp, 60, carry);
-
+    if (temp < 0) {
+        fValue[Minute] = temp + 60;
+        carry--;
+    }
+   
     //add hours
     temp = fValue[Hour] + negate * fTimeZone[hh] + carry;
     carry = fQuotient(temp, 24);
     fValue[Hour] = mod(temp, 24, carry);
+    if (temp < 0) {
+        fValue[Hour] = temp + 24;
+        carry--;
+    }
 
     fValue[Day] += carry;
 
@@ -1209,6 +1240,10 @@ void XMLDateTime::normalize()
 
         temp = fValue[Month] + carry;
         fValue[Month] = modulo(temp, 1, 13);
+        if (fValue[Month] <=0) {
+            fValue[Month]+= 12;
+            fValue[CentYear]--;
+        }
         fValue[CentYear] += fQuotient(temp, 1, 13);
     }
 
@@ -1447,15 +1482,16 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
     XMLCh *miliStartPtr, *miliEndPtr;
     searchMiliSeconds(miliStartPtr, miliEndPtr);
     int miliSecondsLen = miliEndPtr - miliStartPtr;
+    int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
 
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    XMLCh* retBuf = (XMLCh*) toUse->allocate( (21 + miliSecondsLen + 2) * sizeof(XMLCh));
+    XMLCh* retBuf = (XMLCh*) toUse->allocate( (21 + miliSecondsLen + utcSize + 1) * sizeof(XMLCh));
     XMLCh* retPtr = retBuf;
 
     // (-?) cc+yy-mm-dd'T'hh:mm:ss'Z'    ('.'s+)?
     //      2+  8       1      8   1
     //
-    int additionalLen = fillYearString(retPtr, CentYear);
+    int additionalLen = fillYearString(retPtr, fValue[CentYear]);
     if(additionalLen != 0)
     {
         // very bad luck; have to resize the buffer...
@@ -1466,21 +1502,21 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
         retBuf = tmpBuf;
     }
     *retPtr++ = DATE_SEPARATOR;
-    fillString(retPtr, Month, 2);
+    fillString(retPtr, fValue[Month], 2);
     *retPtr++ = DATE_SEPARATOR;
-    fillString(retPtr, Day, 2);
+    fillString(retPtr, fValue[Day], 2);
     *retPtr++ = DATETIME_SEPARATOR;
 
-    fillString(retPtr, Hour, 2);
+    fillString(retPtr, fValue[Hour], 2);
     if (fValue[Hour] == 24)
     {
         *(retPtr - 2) = chDigit_0;
         *(retPtr - 1) = chDigit_0;
     }
     *retPtr++ = TIME_SEPARATOR;
-    fillString(retPtr, Minute, 2);
+    fillString(retPtr, fValue[Minute], 2);
     *retPtr++ = TIME_SEPARATOR;
-    fillString(retPtr, Second, 2);
+    fillString(retPtr, fValue[Second], 2);
 
     if (miliSecondsLen)
     {
@@ -1489,11 +1525,162 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
         retPtr += miliSecondsLen;
     }
 
-    *retPtr++ = UTC_STD_CHAR;
+    if (utcSize)
+        *retPtr++ = UTC_STD_CHAR;
     *retPtr = chNull;
 
     return retBuf;
 }
+
+/***
+ * E2-41
+ *
+ *  3.2.9.2 Canonical representation
+ * 
+ * Given a member of the date value space, the date 
+ * portion of the canonical representation (the entire 
+ * representation for nontimezoned values, and all but
+ * the timezone representation for timezoned values) 
+ * is always the date portion of the dateTime canonical
+ * representation of the interval midpoint (the 
+ * dateTime representation, truncated on the right
+ * to eliminate 'T' and all following characters). 
+ * For timezoned values, append the canonical 
+ * representation of the recoverable timezone. 
+ *
+ ***/
+XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) const
+{    
+    /*
+     * Case Date               Actual Value    Canonical Value
+     *    1 yyyy-mm-dd         yyyy-mm-dd          yyyy-mm-dd
+     *    2 yyyy-mm-ddZ        yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
+     *    3 yyyy-mm-dd+00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
+     *    4 yyyy-mm-dd+00:01   YYYY-MM-DCT23:59Z   yyyy-mm-dd+00:01              
+     *    5 yyyy-mm-dd+12:00   YYYY-MM-DCT12:00Z   yyyy-mm-dd+12:00    
+     *    6 yyyy-mm-dd+12:01   YYYY-MM-DCT11:59Z   YYYY-MM-DC-11:59 
+     *    7 yyyy-mm-dd+14:00   YYYY-MM-DCT10:00Z   YYYY-MM-DC-10:00 
+     *    8 yyyy-mm-dd-00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
+     *    9 yyyy-mm-dd-00:01   yyyy-mm-ddT00:01Z   yyyy-mm-dd-00:01 
+     *   11 yyyy-mm-dd-11:59   yyyy-mm-ddT11:59Z   YYYY-MM-DD-11:59
+     *   10 yyyy-mm-dd-12:00   yyyy-mm-ddT12:00Z   YYYY-MM-DD+12:00      
+     *   12 yyyy-mm-dd-14:00   yyyy-mm-ddT14:00Z   YYYY-MM-DD+10:00
+     */
+    int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
+    // YYYY-MM-DD  + chNull 
+    // 1234567890  + 1
+    int memLength = 10 + 1 + utcSize;
+
+    if (fTimeZone[hh] != 0 || fTimeZone[mm] != 0) {
+        // YYYY-MM-DD+HH:MM  (utcSize will be 1 so drop that)
+        // 1234567890123456
+        memLength += 5; // 6 - 1 for utcSize
+    }
+
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    XMLCh* retBuf = (XMLCh*) toUse->allocate( (memLength) * sizeof(XMLCh));
+    XMLCh* retPtr = retBuf;
+
+    if (fValue[Hour] < 12) {
+        
+        int additionalLen = fillYearString(retPtr, fValue[CentYear]);
+        if (additionalLen != 0) {
+            // very bad luck; have to resize the buffer...
+            XMLCh *tmpBuf = (XMLCh*) toUse->allocate( (additionalLen + memLength ) * sizeof(XMLCh));
+            XMLString::moveChars(tmpBuf, retBuf, 4+additionalLen);
+            retPtr = tmpBuf+(retPtr-retBuf);
+            toUse->deallocate(retBuf);
+            retBuf = tmpBuf;
+        }
+        *retPtr++ = DATE_SEPARATOR;
+        fillString(retPtr, fValue[Month], 2);
+        *retPtr++ = DATE_SEPARATOR;
+        fillString(retPtr, fValue[Day], 2);        
+
+        if (utcSize) {
+            if (fTimeZone[hh] != 0 || fTimeZone[mm] != 0) {
+                *retPtr++ = UTC_NEG_CHAR;               
+                fillString(retPtr, fValue[Hour], 2);
+                *retPtr++ = TIME_SEPARATOR;
+                fillString(retPtr, fValue[Minute], 2);
+            }
+            else {
+                *retPtr++ = UTC_STD_CHAR;
+            }
+        }
+        *retPtr = chNull;    
+    }
+    else {
+        /*
+         * Need to reconvert things to get a recoverable time zone between
+         * +12:00 and -11:59
+         */
+        int carry;
+        int minute;
+        int hour;
+        int day;
+        int month;
+        int year;
+        if (fValue[Minute] == 0) {
+            minute = 0;
+            carry = 0;
+        }
+        else {
+            minute = 60 - fValue[Minute];
+            carry = 1;
+        }
+        hour  = 24 - fValue[Hour] - carry;
+        day   = fValue[Day] + 1;
+        month = fValue[Month];
+        year  = fValue[CentYear];
+
+        while (1) {
+            int temp = maxDayInMonthFor(year, month);
+            if (day < 1) {
+                day += maxDayInMonthFor(year, month - 1);
+                carry = -1;
+            }
+            else if (day > temp) {
+                day -= temp;
+                carry = 1;
+            }
+            else {
+                break;
+            }
+
+            temp = month + carry;
+            month = modulo(temp, 1, 13);
+            if (month <= 0) {
+                month+= 12;
+                year--;
+            }
+            else
+                year += fQuotient(temp, 1, 13);         
+        }
+
+        int additionalLen = fillYearString(retPtr, year);
+        if (additionalLen != 0) {
+            // very bad luck; have to resize the buffer...
+            XMLCh *tmpBuf = (XMLCh*) toUse->allocate( (additionalLen + memLength ) * sizeof(XMLCh));
+            XMLString::moveChars(tmpBuf, retBuf, 4+additionalLen);
+            retPtr = tmpBuf+(retPtr-retBuf);
+            toUse->deallocate(retBuf);
+            retBuf = tmpBuf;
+        }
+        *retPtr++ = DATE_SEPARATOR;
+        fillString(retPtr, month, 2);
+        *retPtr++ = DATE_SEPARATOR;
+        fillString(retPtr, day, 2);        
+       
+        *retPtr++ = UTC_POS_CHAR;               
+        fillString(retPtr, hour, 2);
+        *retPtr++ = TIME_SEPARATOR;
+        fillString(retPtr, minute, 2);                                
+        *retPtr = chNull;
+    }      
+    return retBuf;
+}
+
 
 /***
  * 3.2.8 time
@@ -1509,25 +1696,26 @@ XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) 
     XMLCh *miliStartPtr, *miliEndPtr;
     searchMiliSeconds(miliStartPtr, miliEndPtr);
     int miliSecondsLen = miliEndPtr - miliStartPtr;
-
+    int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
+    
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
-    XMLCh* retBuf = (XMLCh*) toUse->allocate( (10 + miliSecondsLen + 2) * sizeof(XMLCh));
+    XMLCh* retBuf = (XMLCh*) toUse->allocate( (10 + miliSecondsLen + utcSize + 1) * sizeof(XMLCh));
     XMLCh* retPtr = retBuf;
 
     // 'hh:mm:ss'Z'    ('.'s+)?
     //      8    1
     //
 
-    fillString(retPtr, Hour, 2);
+    fillString(retPtr, fValue[Hour], 2);
     if (fValue[Hour] == 24)
     {
         *(retPtr - 2) = chDigit_0;
         *(retPtr - 1) = chDigit_0;
     }
     *retPtr++ = TIME_SEPARATOR;
-    fillString(retPtr, Minute, 2);
+    fillString(retPtr, fValue[Minute], 2);
     *retPtr++ = TIME_SEPARATOR;
-    fillString(retPtr, Second, 2);
+    fillString(retPtr, fValue[Second], 2);
 
     if (miliSecondsLen)
     {
@@ -1536,17 +1724,18 @@ XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) 
         retPtr += miliSecondsLen;
     }
 
-    *retPtr++ = UTC_STD_CHAR;
+    if (utcSize)
+        *retPtr++ = UTC_STD_CHAR;
     *retPtr = chNull;
 
     return retBuf;
 }
 
-void XMLDateTime::fillString(XMLCh*& ptr, valueIndex ind, int expLen) const
+void XMLDateTime::fillString(XMLCh*& ptr, int value, int expLen) const
 {
     XMLCh strBuffer[16];
     assert(expLen < 16);
-    XMLString::binToText(fValue[ind], strBuffer, expLen, 10, fMemoryManager);
+    XMLString::binToText(value, strBuffer, expLen, 10, fMemoryManager);
     int   actualLen = XMLString::stringLen(strBuffer);
     int   i;
     //append leading zeros
@@ -1562,11 +1751,11 @@ void XMLDateTime::fillString(XMLCh*& ptr, valueIndex ind, int expLen) const
 
 }
 
-int XMLDateTime::fillYearString(XMLCh*& ptr, valueIndex ind) const
+int XMLDateTime::fillYearString(XMLCh*& ptr, int value) const
 {
     XMLCh strBuffer[16];
     // let's hope we get no years of 15 digits...
-    XMLString::binToText(fValue[ind], strBuffer, 15, 10, fMemoryManager);
+    XMLString::binToText(value, strBuffer, 15, 10, fMemoryManager);
     int   actualLen = XMLString::stringLen(strBuffer);
     // don't forget that years can be negative...
     int negativeYear = 0;
