@@ -351,7 +351,7 @@ Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
 XSModel *GrammarResolver::getXSModel()
 {
     XSModel* xsModel;
-    if (fCacheGrammar)
+    if (fCacheGrammar || fUseCachedGrammar)
     {
         // We know if the grammarpool changed thru caching, orphaning and erasing
         // but NOT by other mechanisms such as lockPool() or unlockPool() so it
