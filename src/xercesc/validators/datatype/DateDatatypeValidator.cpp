@@ -87,6 +87,39 @@ void DateDatatypeValidator::parse(XMLDateTime* const pDate)
     pDate->parseDate();
 }
 
+const XMLCh* DateDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                              ,      MemoryManager* const memMgr
+                                                              ,      bool                 toValidate) const
+{
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+
+    if (toValidate)
+    {
+        DateDatatypeValidator* temp = (DateDatatypeValidator*) this;
+
+        try
+        {
+            temp->checkContent(rawData, 0, false, toUse);   
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+    
+    try
+    {
+        XMLDateTime aDateTime(rawData, toUse);
+        aDateTime.parseDate();
+        return aDateTime.getDateCanonicalRepresentation(toUse);
+    }
+    catch (...)
+    {
+        return 0;
+    }
+
+}
+
 /***
  * Support for Serialization/De-serialization
  ***/
