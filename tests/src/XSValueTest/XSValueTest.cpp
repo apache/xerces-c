@@ -3657,8 +3657,8 @@ void test_dt_duration()
     bool  toValidate = true;
 
     const char v_1[]="   P1Y1M1DT1H1M1S   \n";
-    const char v_2[]="P1Y1M1DT23H59M59S";
-    const char v_3[]="P1Y1M1DT23H";
+    const char v_2[]="P1Y1M31DT23H119M120S";
+    const char v_3[]="P-1Y1M1DT23H";
 
     const char iv_1[]="P-1Y2M3DT10H30M";
     const char iv_2[]="P1Y1M1DT1H1M1X";
@@ -3677,16 +3677,16 @@ void test_dt_duration()
 
     act_v_ran_v_2.fValue.f_datetime.f_year    = 1;
     act_v_ran_v_2.fValue.f_datetime.f_month   = 1;
-    act_v_ran_v_2.fValue.f_datetime.f_day     = 1;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 31;
     act_v_ran_v_2.fValue.f_datetime.f_hour    = 23;
-    act_v_ran_v_2.fValue.f_datetime.f_min     = 59;
-    act_v_ran_v_2.fValue.f_datetime.f_second  = 59;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 119;
+    act_v_ran_v_2.fValue.f_datetime.f_second  = 120;
     act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
 
-    act_v_ran_v_3.fValue.f_datetime.f_year    = 1;
-    act_v_ran_v_3.fValue.f_datetime.f_month   = 1;
-    act_v_ran_v_3.fValue.f_datetime.f_day     = 1;
-    act_v_ran_v_3.fValue.f_datetime.f_hour    = 23;
+    act_v_ran_v_3.fValue.f_datetime.f_year    = -1;
+    act_v_ran_v_3.fValue.f_datetime.f_month   = -1;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = -1;
+    act_v_ran_v_3.fValue.f_datetime.f_hour    = -23;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
     act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
@@ -3792,8 +3792,8 @@ void test_dt_date()
     bool  toValidate = true;
 
     const char v_1[]="   1991-05-31   \n";
-    const char v_2[]="9999-06-30";
-    const char v_3[]="99991-07-31";
+    const char v_2[]="9999-06-30Z";
+    const char v_3[]="99991-07-31+14:00";
 
     const char iv_1[]="2000-12-32";
     const char iv_2[]="2001-02-29";
@@ -3803,6 +3803,39 @@ void test_dt_date()
     XSValue::XSValue_Data act_v_ran_v_2;  
     XSValue::XSValue_Data act_v_ran_v_3;  
      
+    const char v_1_canrep[]="1991-05-31";
+    const char v_2_canrep[]="9999-06-30Z";
+    const char v_3_canrep[]="99991-07-30-10:00";
+
+    /*
+     * Case Date               Actual Value    Canonical Value
+     *    1 yyyy-mm-dd         yyyy-mm-dd          yyyy-mm-dd
+     *    2 yyyy-mm-ddZ        yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
+     *    3 yyyy-mm-dd+00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
+     *    4 yyyy-mm-dd+00:01   YYYY-MM-DCT23:59Z   yyyy-mm-dd+00:01              
+     *    5 yyyy-mm-dd+12:00   YYYY-MM-DCT12:00Z   yyyy-mm-dd+12:00    
+     *    6 yyyy-mm-dd+12:01   YYYY-MM-DCT11:59Z   YYYY-MM-DC-11:59 
+     *    7 yyyy-mm-dd+14:00   YYYY-MM-DCT10:00Z   YYYY-MM-DC-10:00 
+     *    8 yyyy-mm-dd-00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
+     *    9 yyyy-mm-dd-00:01   yyyy-mm-ddT00:01Z   yyyy-mm-dd-00:01 
+     *   11 yyyy-mm-dd-11:59   yyyy-mm-ddT11:59Z   YYYY-MM-DD-11:59
+     *   10 yyyy-mm-dd-12:00   yyyy-mm-ddT12:00Z   YYYY-MM-DD+12:00      
+     *   12 yyyy-mm-dd-14:00   yyyy-mm-ddT14:00Z   YYYY-MM-DD+10:00
+     */
+
+    const char c_1[] = " 1993-05-31  ";       const char r_1[] = "1993-05-31";    
+    const char c_2[] = " 1993-05-31Z  ";      const char r_2[] = "1993-05-31Z";
+    const char c_3[] = " 1993-05-31+00:00 ";  const char r_3[] = "1993-05-31Z";
+    const char c_4[] = " 1993-05-31+00:01 ";  const char r_4[] = "1993-05-31+00:01";
+    const char c_5[] = " 1993-05-31+12:00 ";  const char r_5[] = "1993-05-31+12:00";
+    const char c_6[] = " 1994-01-01+12:01 ";  const char r_6[] = "1993-12-31-11:59";
+    const char c_7[] = " 1994-01-01+14:00 ";  const char r_7[] = "1993-12-31-10:00";
+    const char c_8[] = " 1993-06-01-00:00 ";  const char r_8[] = "1993-06-01Z";
+    const char c_9[] = " 1993-06-01-00:01 ";  const char r_9[] = "1993-06-01-00:01";
+    const char c_a[] = " 1993-06-01-11:59 ";  const char r_a[] = "1993-06-01-11:59";
+    const char c_b[] = " 1993-05-31-12:00 ";  const char r_b[] = "1993-06-01+12:00";
+    const char c_c[] = " 1993-05-31-14:00 ";  const char r_c[] = "1993-06-01+10:00";
+
     act_v_ran_v_1.fValue.f_datetime.f_year    = 1991;
     act_v_ran_v_1.fValue.f_datetime.f_month   = 05;
     act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
@@ -3821,7 +3854,7 @@ void test_dt_date()
 
     act_v_ran_v_3.fValue.f_datetime.f_year    = 99991;
     act_v_ran_v_3.fValue.f_datetime.f_month   = 07;
-    act_v_ran_v_3.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_3.fValue.f_datetime.f_day     = 30;
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
@@ -3907,17 +3940,27 @@ void test_dt_date()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_TRUE, v_1_canrep, DONT_CARE);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, v_2_canrep, DONT_CARE);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);       
+
+        CANREP_TEST(c_1,  dt, toValidate, EXP_RET_CANREP_TRUE, r_1, DONT_CARE);    
+        CANREP_TEST(c_2,  dt, toValidate, EXP_RET_CANREP_TRUE, r_2, DONT_CARE);    
+        CANREP_TEST(c_3,  dt, toValidate, EXP_RET_CANREP_TRUE, r_3, DONT_CARE);    
+        CANREP_TEST(c_4,  dt, toValidate, EXP_RET_CANREP_TRUE, r_4, DONT_CARE);    
+        CANREP_TEST(c_5,  dt, toValidate, EXP_RET_CANREP_TRUE, r_5, DONT_CARE);    
+        CANREP_TEST(c_6,  dt, toValidate, EXP_RET_CANREP_TRUE, r_6, DONT_CARE);    
+        CANREP_TEST(c_7,  dt, toValidate, EXP_RET_CANREP_TRUE, r_7, DONT_CARE);    
+        CANREP_TEST(c_8,  dt, toValidate, EXP_RET_CANREP_TRUE, r_8, DONT_CARE);    
+        CANREP_TEST(c_9,  dt, toValidate, EXP_RET_CANREP_TRUE, r_9, DONT_CARE);    
+        CANREP_TEST(c_a,  dt, toValidate, EXP_RET_CANREP_TRUE, r_a, DONT_CARE);    
+        CANREP_TEST(c_b,  dt, toValidate, EXP_RET_CANREP_TRUE, r_b, DONT_CARE);    
+        CANREP_TEST(c_c,  dt, toValidate, EXP_RET_CANREP_TRUE, r_c, DONT_CARE);   
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
-            (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
 
     }
 
@@ -3929,8 +3972,8 @@ void test_dt_gYearMonth()
     bool  toValidate = true;
 
     const char v_1[]="   20000-02   \n";
-    const char v_2[]="0200-11";
-    const char v_3[]="2000-02";
+    const char v_2[]="0200-11+14:00";
+    const char v_3[]="2000-02-14:00";
 
     const char iv_1[]="0000-12";
     const char iv_2[]="+2000-11";
@@ -4064,8 +4107,8 @@ void test_dt_gYear()
     const XSValue::DataType dt = XSValue::dt_gYear; 
     bool  toValidate = true;
 
-    const char v_1[]="   0001  \n";
-    const char v_2[]="9999";
+    const char v_1[]="   0001-14:00  \n";
+    const char v_2[]="9999+14:00";
     const char v_3[]="-1999";
 
     const char iv_1[]="0000";
@@ -4201,8 +4244,8 @@ void test_dt_gMonthDay()
     const XSValue::DataType dt = XSValue::dt_gMonthDay; 
     bool  toValidate = true;
 
-    const char v_1[]="   --01-31   \n";
-    const char v_2[]="--03-31";
+    const char v_1[]="   --01-31+00:01   \n";
+    const char v_2[]="--03-31-00:01";
     const char v_3[]="--04-01";
 
     const char iv_1[]="--14-31";
@@ -4215,7 +4258,7 @@ void test_dt_gMonthDay()
 
     act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
     act_v_ran_v_1.fValue.f_datetime.f_month   = 1;
-    act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 30;
     act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
@@ -4337,8 +4380,8 @@ void test_dt_gDay()
     const XSValue::DataType dt = XSValue::dt_gDay; 
     bool  toValidate = true;
 
-    const char v_1[]="   ---31   \n";
-    const char v_2[]="---01";
+    const char v_1[]="   ---31+01:30   \n";
+    const char v_2[]="---01-01:30";
     const char v_3[]="---28";
 
     const char iv_1[]="---+31";
@@ -4351,7 +4394,7 @@ void test_dt_gDay()
 
     act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
     act_v_ran_v_1.fValue.f_datetime.f_month   = 0;
-    act_v_ran_v_1.fValue.f_datetime.f_day     = 31;
+    act_v_ran_v_1.fValue.f_datetime.f_day     = 30;
     act_v_ran_v_1.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_1.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_1.fValue.f_datetime.f_second  = 0;
@@ -4474,8 +4517,8 @@ void test_dt_gMonth()
     const XSValue::DataType dt = XSValue::dt_gMonth; 
     bool  toValidate = true;
 
-    const char v_1[]="   --02   \n";
-    const char v_2[]="--10";
+    const char v_1[]="   --02+10:10   \n";
+    const char v_2[]="--10-12:12";
     const char v_3[]="--12";
 
     const char iv_1[]="--+11";
@@ -4612,7 +4655,7 @@ void test_dt_dateTime()
     bool  toValidate = true;
 
     const char v_1[]="   2000-12-31T23:59:59.00389  \n";
-    const char v_2[]="2000-10-01T11:10:20+06:00";
+    const char v_2[]="2000-10-01T11:10:20+13:30";
     const char v_3[]="2000-10-01T11:10:20-06:00";
 
     const char iv_1[]="0000-12-31T23:59:59";
@@ -4625,8 +4668,8 @@ void test_dt_dateTime()
     XSValue::XSValue_Data act_v_ran_v_2;
     XSValue::XSValue_Data act_v_ran_v_3;
 
-    const char v_1_canrep[]="2000-12-31T23:59:59.00389Z";
-    const char v_2_canrep[]="2000-10-01T05:10:20Z";
+    const char v_1_canrep[]="2000-12-31T23:59:59.00389";
+    const char v_2_canrep[]="2000-09-30T21:40:20Z";
     const char v_3_canrep[]="2000-10-01T17:10:20Z";
 
     act_v_ran_v_1.fValue.f_datetime.f_year    = 2000;
@@ -4638,10 +4681,10 @@ void test_dt_dateTime()
     act_v_ran_v_1.fValue.f_datetime.f_milisec = 0.00389;
 
     act_v_ran_v_2.fValue.f_datetime.f_year    = 2000;
-    act_v_ran_v_2.fValue.f_datetime.f_month   = 10;
-    act_v_ran_v_2.fValue.f_datetime.f_day     = 1;
-    act_v_ran_v_2.fValue.f_datetime.f_hour    = 5;
-    act_v_ran_v_2.fValue.f_datetime.f_min     = 10;
+    act_v_ran_v_2.fValue.f_datetime.f_month   = 9;
+    act_v_ran_v_2.fValue.f_datetime.f_day     = 30;
+    act_v_ran_v_2.fValue.f_datetime.f_hour    = 21;
+    act_v_ran_v_2.fValue.f_datetime.f_min     = 40;
     act_v_ran_v_2.fValue.f_datetime.f_second  = 20;
     act_v_ran_v_2.fValue.f_datetime.f_milisec = 0;
 
@@ -4777,9 +4820,9 @@ void test_dt_time()
     const XSValue::DataType dt = XSValue::dt_time; 
     bool  toValidate = true;
 
-    const char v_1[]="   23:59:59.38900   \n";
+    const char v_1[]="   23:59:59.38900Z   \n";
     const char v_2[]="24:00:00";
-    const char v_3[]="23:59:59";
+    const char v_3[]="23:59:59+00:01";
 
     const char iv_1[]="55:59:59";
     const char iv_2[]="03:99:59";
@@ -4792,8 +4835,8 @@ void test_dt_time()
     XSValue::XSValue_Data act_v_ran_v_3;
 
     const char v_1_canrep[]="23:59:59.389Z";
-    const char v_2_canrep[]="00:00:00Z";
-    const char v_3_canrep[]="23:59:59Z";
+    const char v_2_canrep[]="00:00:00";
+    const char v_3_canrep[]="23:58:59Z";
 
     act_v_ran_v_1.fValue.f_datetime.f_year    = 0;
     act_v_ran_v_1.fValue.f_datetime.f_month   = 0;
@@ -4815,7 +4858,7 @@ void test_dt_time()
     act_v_ran_v_3.fValue.f_datetime.f_month   = 0;
     act_v_ran_v_3.fValue.f_datetime.f_day     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 23;
-    act_v_ran_v_3.fValue.f_datetime.f_min     = 59;
+    act_v_ran_v_3.fValue.f_datetime.f_min     = 58;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 59;
     act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 /***
