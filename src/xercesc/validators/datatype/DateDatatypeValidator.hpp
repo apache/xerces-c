@@ -63,6 +63,12 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
+    virtual const XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = 0
+                        ,       bool                 toValidate = false
+                        ) const;
     /***
      * Support for Serialization/De-serialization
      ***/
