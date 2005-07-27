@@ -36,6 +36,7 @@
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
 #include    <xercesc/util/PanicHandler.hpp>
+#include    <xercesc/util/OutOfMemoryException.hpp>
 
 #include    <stdio.h>
 #include    <stdlib.h>
@@ -377,11 +378,25 @@ void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 // -----------------------------------------------------------------------
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
+    XMLMsgLoader* retVal;
+    try
+    {
 #if defined(XML_USE_INMEMORY_MSGLOADER)
-    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #else
-    return 0;
+        #error You must provide a message loader
+        return 0;
 #endif
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch(...)
+    {
+         panic(PanicHandler::Panic_CantLoadMsgDomain);
+    }
+    return retVal;
 }
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
