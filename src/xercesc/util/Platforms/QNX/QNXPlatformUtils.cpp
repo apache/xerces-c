@@ -39,6 +39,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 
 //
@@ -377,11 +378,24 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
+    XMLMsgLoader* retVal;
+    try
+    {
 #if defined (XML_USE_ICU_MESSAGELOADER)
-    return new (fgMemoryManager) ICUMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #else
-    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #endif
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch(...)
+    {
+         panic(PanicHandler::Panic_CantLoadMsgDomain);
+    }
+    return retVal;
 }
 
 
