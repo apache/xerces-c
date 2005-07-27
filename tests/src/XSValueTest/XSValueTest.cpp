@@ -1502,13 +1502,13 @@ void test_dt_nonPositiveInteger()
  *
  * The canonical representation for nonPositiveInteger is defined by prohibiting certain options from the 
  * Lexical representation (3.3.14.1). Specifically, 
- * 1. the negative sign ("-") is required with the token "0" and 
+ * 1. the sign must be omitted for token "0" and
  * 2. leading zeroes are prohibited.
  *
  ***/
 
     const char data_rawstr_1[]="   0    \n";
-    const char data_canrep_1[]="-0";
+    const char data_canrep_1[]="0";
     const char data_rawstr_2[]="-00012345";
     const char data_canrep_2[]="-12345";
    
