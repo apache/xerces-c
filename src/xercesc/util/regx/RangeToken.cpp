@@ -27,6 +27,12 @@
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 
+#if defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
+#include <unicode/uchar.h>
+#else
+#include <xercesc/util/XMLUniDefs.hpp>
+#endif
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -66,15 +72,55 @@ RangeToken::~RangeToken() {
 // ---------------------------------------------------------------------------
 RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) {
 
-    // REVIST
-    // We will not build a token with case insenstive ranges
-    // For now we will return a copy of ourselves.
     if (fCaseIToken == 0 && tokFactory) {
 
         bool isNRange = (getTokenType() == T_NRANGE) ? true : false;
         RangeToken* lwrToken = tokFactory->createRange(isNRange);
 
+        for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
+            for (XMLInt32 ch = fRanges[i];  ch <= fRanges[i + 1];  ++ch) {
+#if defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
+                const XMLInt32  upperCh = u_toupper(ch);
+
+                if (upperCh != ch)
+                {
+                    lwrToken->addRange(upperCh, upperCh);
+                }
+
+                const XMLInt32  lowerCh = u_tolower(ch);
+
+                if (lowerCh != ch)
+                {
+                    lwrToken->addRange(lowerCh, lowerCh);
+                }
+
+                const XMLInt32  titleCh = u_totitle(ch);
+
+                if (titleCh != ch && titleCh != upperCh)
+                {
+                    lwrToken->addRange(titleCh, titleCh);
+                }
+#else
+                if (ch >= chLatin_A && ch <= chLatin_Z)
+                {
+                    ch += chLatin_a - chLatin_A;
+
+                    lwrToken->addRange(ch, ch);
+                }
+                else if (ch >= chLatin_a && ch <= chLatin_z)
+                {
+                    ch -= chLatin_a - chLatin_A;
+
+                    lwrToken->addRange(ch, ch);
+                }
+#endif
+            }
+        }
+
         lwrToken->mergeRanges(this);
+        lwrToken->compactRanges();
+        lwrToken->createMap();
+
         fCaseIToken = lwrToken;
     }
 
@@ -259,6 +305,7 @@ void RangeToken::mergeRanges(const Token *const tok) {
         }
 
         fElemCount = rangeTok->fElemCount;
+        fSorted = true;
         return;
     }
 

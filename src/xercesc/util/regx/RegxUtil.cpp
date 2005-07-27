@@ -31,10 +31,9 @@ XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch,
 
 	XMLCh* pszStr = (XMLCh*) manager->allocate(3 *  sizeof(XMLCh));//new XMLCh[3];
 
-	ch -= 0x10000;
-	pszStr[0] = XMLCh((ch >> 10) + 0xD800);
-	pszStr[1] = XMLCh((ch & 0x03FF) + 0xDC00);
-	pszStr[2] = chNull;
+    decomposeToSurrogates(ch, pszStr[0], pszStr[1]);
+
+    pszStr[2] = chNull;
 
 	return pszStr;
 }

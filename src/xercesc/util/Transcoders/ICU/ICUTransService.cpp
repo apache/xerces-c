@@ -161,7 +161,7 @@ ICUTransService::~ICUTransService()
      * if we clean up here, users' code may crash
      *
     #if (U_ICU_VERSION_MAJOR_NUM >= 2)
-        // release all lasily allocated data
+        // release all lazily allocated data
         u_cleanup();
     #endif
     */
@@ -174,29 +174,37 @@ ICUTransService::~ICUTransService()
 int ICUTransService::compareIString(const   XMLCh* const    comp1
                                     , const XMLCh* const    comp2)
 {
-    const XMLCh* psz1 = comp1;
-    const XMLCh* psz2 = comp2;
+    size_t  i = 0;
+    size_t  j = 0;
 
-    unsigned int curCount = 0;
-    while (true)
+    for(;;)
     {
-        //
-        //  If an inequality, then return the difference. Note that the XMLCh
-        //  might be bigger physically than UChar, but it won't hold anything
-        //  larger than 0xFFFF, so our cast here will work for both possible
-        //  sizes of XMLCh.
-        //
-        if (u_toupper(UChar(*psz1)) != u_toupper(UChar(*psz2)))
-            return int(*psz1) - int(*psz2);
+        UChar32 ch1;
+        UChar32 ch2;
 
-        // If either has ended, then they both ended, so equal
-        if (!*psz1 || !*psz2)
+        U16_NEXT_UNSAFE(comp1, i, ch1);
+        U16_NEXT_UNSAFE(comp2, j, ch2);
+
+        const UChar32   folded1 =
+            u_foldCase(ch1, U_FOLD_CASE_DEFAULT);
+
+        const UChar32   folded2 =
+            u_foldCase(ch2, U_FOLD_CASE_DEFAULT);
+
+        if (folded1 !=
+            folded2)
+        {
+            return folded1 - folded2;
+        }
+        else if (ch1 == 0)
+        {
+            // If ch1 is 0, the ch2 must also be
+            // 0.  Otherwise, the previous if
+            // would have failed.
             break;
-
-        // Move upwards for the next round
-        psz1++;
-        psz2++;
+        }
     }
+
     return 0;
 }
 
@@ -205,38 +213,49 @@ int ICUTransService::compareNIString(const  XMLCh* const    comp1
                                     , const XMLCh* const    comp2
                                     , const unsigned int    maxChars)
 {
-    const XMLCh* psz1 = comp1;
-    const XMLCh* psz2 = comp2;
-
-    unsigned int curCount = 0;
-    while (true)
+    if (maxChars > 0)
     {
-        //
-        //  If an inequality, then return the difference. Note that the XMLCh
-        //  might be bigger physically than UChar, but it won't hold anything
-        //  larger than 0xFFFF, so our cast here will work for both possible
-        //  sizes of XMLCh.
-        //
-        if (u_toupper(UChar(*psz1)) != u_toupper(UChar(*psz2)))
-            return int(*psz1) - int(*psz2);
+        // Note that this function has somewhat broken semantics, as it's
+        // possible for two strings of different lengths to compare as equal
+        // in a case-insensitive manner, since one character could be
+        // represented as a surrogate pair.
+        size_t  i = 0;
+        size_t  j = 0;
 
-        // If either ended, then both ended, so equal
-        if (!*psz1 || !*psz2)
-            break;
+        for(;;)
+        {
+            UChar32 ch1;
+            UChar32 ch2;
 
-        // Move upwards to next chars
-        psz1++;
-        psz2++;
+            U16_NEXT_UNSAFE(comp1, i, ch1);
+            U16_NEXT_UNSAFE(comp2, j, ch2);
 
-        //
-        //  Bump the count of chars done. If it equals the count then we
-        //  are equal for the requested count, so break out and return
-        //  equal.
-        //
-        curCount++;
-        if (maxChars == curCount)
-            break;
+            const UChar32   folded1 =
+                u_foldCase(ch1, U_FOLD_CASE_DEFAULT);
+
+            const UChar32   folded2 =
+                u_foldCase(ch2, U_FOLD_CASE_DEFAULT);
+
+            if (folded1 != folded2)
+            {
+                return folded1 - folded2;
+            }
+            else if (i == maxChars)
+            {
+                // If we're at the end of both strings, return 0.
+                // Otherwise, we've run out of characters in the
+                // left string, so return -1.
+                return j == maxChars ? 0 : -1;
+            }
+            else if (j == maxChars)
+            {
+                // We've run out of characters in the right string,
+                // but not the left, so return 1.
+                return 1;
+            }
+        }
     }
+
     return 0;
 }
 
@@ -289,24 +308,59 @@ bool ICUTransService::supportsSrcOfs() const
 }
 
 
+template <class FunctionType>
+static void
+doCaseConvert(
+            XMLCh*          convertString,
+            FunctionType    caseFunction)
+{
+    // Note the semantics of this function are broken, since it's
+    // possible that changing the case of a string could increase
+    // its length, but there's no way to handle such a situation.
+    const unsigned int  len =
+            XMLString::stringLen(convertString);
+
+    size_t  readPos = 0;
+    size_t  writePos = 0;
+
+    while(readPos < len)
+    {
+        UChar32     original;
+
+        // Get the next Unicode code point.
+        U16_NEXT_UNSAFE(convertString, readPos, original);
+
+        // Convert the code point
+        const UChar32   converted = caseFunction(original);
+
+        // OK, now here's where it gets ugly.
+        if (!U_IS_BMP(converted) && U_IS_BMP(original) &&
+            readPos - writePos == 1)
+        {
+            // We do not have room to convert the
+            // character without overwriting the next
+            // character, so we will just stop.
+            break;
+        }
+        else
+        {
+            U16_APPEND_UNSAFE(convertString, writePos, converted);
+        }
+    }
+
+    convertString[writePos] = 0;
+}
+
+
+
 void ICUTransService::upperCase(XMLCh* const toUpperCase) const
 {
-    XMLCh* outPtr = toUpperCase;
-    while (*outPtr)
-    {
-        *outPtr = XMLCh(u_toupper(UChar(*outPtr)));
-        outPtr++;
-    }
+    doCaseConvert(toUpperCase, u_toupper);
 }
 
 void ICUTransService::lowerCase(XMLCh* const toLowerCase) const
 {
-    XMLCh* outPtr = toLowerCase;
-    while (*outPtr)
-    {
-        *outPtr = XMLCh(u_tolower(UChar(*outPtr)));
-        outPtr++;
-    }
+    doCaseConvert(toLowerCase, u_tolower);
 }
 
 

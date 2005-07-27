@@ -1175,6 +1175,15 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 
     tok->sortRanges();
     tok->compactRanges();
+
+    // If the case-insensitive option is enabled, we need to
+    // have the new RangeToken instance build its internal
+    // case-insensitive RangeToken.
+    if (RegularExpression::isSet(fOptions, RegularExpression::IGNORE_CASE))
+    {
+        tok->getCaseInsensitiveToken(fTokenFactory);
+    }
+
     setParseContext(S_NORMAL);
     processNext();
 

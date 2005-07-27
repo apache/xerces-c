@@ -23,7 +23,6 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/regx/RegxUtil.hpp>
 #include <xercesc/util/regx/Match.hpp>
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
@@ -36,6 +35,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -66,6 +66,55 @@ localCleanup()
 }
 
 static XMLRegisterCleanup WordRangeCleanup;
+
+
+
+bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
+                                                 const XMLInt32 ch2)
+{
+    if (ch1 >= 0x10000)
+    {
+        XMLCh string1[2];
+        XMLCh string2[2];
+
+        RegxUtil::decomposeToSurrogates(ch1, string1[0], string1[1]);
+
+        if (ch2 >= 0x10000)
+        {
+            RegxUtil::decomposeToSurrogates(ch2, string2[0], string2[1]);
+        }
+        else
+        {
+            // XMLString::compareNIString is broken, because it assume the
+            // two strings must be of the same length.  Note that two strings
+            // of different length could compare as equal, because there is no
+            // guarantee that a Unicode code point that is encoded in UTF-16 as
+            // a surrogate pair does not have a case mapping to a code point
+            // that is not in the surrogate range.  Just to be safe, we pad the
+            // shorter string with a space, which cannot hvae a case mapping.
+            string2[0] = (XMLCh)ch2;
+            string2[1] = chSpace;
+        }
+
+        return (0==XMLString::compareNIString(string1, string2, 2));
+    }
+    else if (ch2 >= 0x10000)
+    {
+        const XMLCh string1[2] = { (XMLCh)ch1, chSpace };
+        XMLCh string2[2];
+
+        RegxUtil::decomposeToSurrogates(ch2, string2[0], string2[1]);
+
+        return (0==XMLString::compareNIString(string1, string2, 2));
+    }
+    else
+    {
+        const XMLCh  char1 = (XMLCh)ch1;
+        const XMLCh  char2 = (XMLCh)ch2;
+
+        return (0==XMLString::compareNIString(&char1, &char2, 1));
+    }
+  }
 
 
 
@@ -540,11 +589,6 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 
 				if (!range->match(ch)) {
 
-					if (!ignoreCase)
-						continue;
-
-					// Perform case insensitive match
-					// REVISIT
 					continue;
 				}
 
@@ -1098,21 +1142,10 @@ bool RegularExpression::matchRange(Context* const context, const Op* const op,
 	bool match = false;
 
 	if (ignoreCase) {
-
-		//REVISIT we should match ignoring case, but for now
-		//we will do a normal match
-		//tok = tok->getCaseInsensitiveToken();
-		//if (!token->match(strCh)) {
-
-		//	if (strCh > 0x10000)
-		//		return -1;
-			// Do case insensitive matching - uppercase match
-			// or lowercase match
-		//}
-		match = tok->match(strCh);
+		tok = tok->getCaseInsensitiveToken(fTokenFactory);
 	}
-	else
-		match = tok->match(strCh);
+
+    match = tok->match(strCh);
 
 	if (!match)
 		return false;
@@ -1498,7 +1531,12 @@ void RegularExpression::prepare() {
 		}
 
         rangeTok->createMap();
-	}
+
+    	if (isSet(fOptions, IGNORE_CASE))
+        {
+            rangeTok->getCaseInsensitiveToken(fTokenFactory);
+        }
+    }
 
 	if (fOperations != 0 && fOperations->getNextOp() == 0 &&
 		(fOperations->getOpType() == Op::O_STRING ||
