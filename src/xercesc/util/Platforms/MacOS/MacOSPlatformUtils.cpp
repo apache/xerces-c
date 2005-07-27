@@ -57,6 +57,7 @@
 #include <xercesc/util/Platforms/MacOS/MacCarbonFile.hpp>
 #include <xercesc/util/Platforms/MacOS/MacPosixFile.hpp>
 #include <xercesc/util/PanicHandler.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 #if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
    #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
@@ -608,12 +609,25 @@ XMLPlatformUtils::makeNetAccessor()
 XMLMsgLoader*
 XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
+    XMLMsgLoader* retVal;
+    try
+    {
 #if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
-    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #else
-    #error You must provide a message loader
-    return 0;
+        #error You must provide a message loader
+        return 0;
 #endif
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch(...)
+    {
+         panic(PanicHandler::Panic_CantLoadMsgDomain);
+    }
+    return retVal;
 }
 
 
