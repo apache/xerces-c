@@ -33,6 +33,7 @@
 #include <xercesc/util/regx/ModifierToken.hpp>
 #include <xercesc/util/regx/ConditionToken.hpp>
 #include <xercesc/util/regx/OpFactory.hpp>
+#include <xercesc/util/regx/RegxUtil.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -147,6 +148,8 @@ public:
     static void
     staticCleanup();
 
+    static bool isSet(const int options, const int flag);
+
 private:
     // -----------------------------------------------------------------------
     //  Private data types
@@ -195,7 +198,6 @@ private:
     // -----------------------------------------------------------------------
     void prepare();
     int parseOptions(const XMLCh* const options);
-    bool isSet(const int options, const int flag);
     unsigned short getWordType(const XMLCh* const target, const int begin,
                                const int end, const int offset);
     unsigned short getCharType(const XMLCh ch);
@@ -604,14 +606,6 @@ private:
 
       return ret;
   }
-
-  inline bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
-                                                 const XMLInt32 ch2)
-  {
-
-      return (0==XMLString::compareNIString((const XMLCh*)&ch1,(const XMLCh*)&ch2, 1));
-  }
-
 
 XERCES_CPP_NAMESPACE_END
 

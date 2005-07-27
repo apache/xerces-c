@@ -44,6 +44,8 @@ public:
 	static bool isWordChar(const XMLCh);
 	static bool isLowSurrogate(const XMLCh ch);
 	static bool isHighSurrogate(const XMLCh ch);
+	static void decomposeToSurrogates(XMLInt32 ch, XMLCh& high, XMLCh& low);
+
 	static XMLCh* decomposeToSurrogates(XMLInt32 ch,
                                         MemoryManager* const manager);
 	static XMLCh* stripExtendedComment(const XMLCh* const expression,
@@ -76,6 +78,13 @@ inline bool RegxUtil::isLowSurrogate(const XMLCh ch) {
 inline bool RegxUtil::isHighSurrogate(const XMLCh ch) {
 
 	return (ch & 0xFC00) == 0xD800;
+}
+
+inline void RegxUtil::decomposeToSurrogates(XMLInt32 ch, XMLCh& high, XMLCh& low) {
+
+    ch -= 0x10000;
+	high = XMLCh((ch >> 10) + 0xD800);
+	low = XMLCh((ch & 0x03FF) + 0xDC00);
 }
 
 inline bool RegxUtil::isWordChar(const XMLCh ch) {
