@@ -34,7 +34,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawData
                                                ,       MemoryManager* const memMgr
-                                               ,       bool                 isNonPositiveInteger)
+                                               ,       bool           /*      isNonPositiveInteger */)
 {
     try 
     {
@@ -46,17 +46,8 @@ XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawD
 
         if (sign == 0)
         {
-            if (isNonPositiveInteger)
-            {
-                retBuf[0] = chDash;
-                retBuf[1] = chDigit_0;
-                retBuf[2] = chNull;
-            }
-            else
-            {
-                retBuf[0] = chDigit_0;
-                retBuf[1] = chNull;
-            }
+           retBuf[0] = chDigit_0;
+           retBuf[1] = chNull;           
         }
         else if (sign == -1)
         {
