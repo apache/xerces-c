@@ -31,6 +31,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/PanicHandler.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 #include <windows.h>
 #include <stdio.h>
@@ -769,15 +770,29 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
+    XMLMsgLoader* retVal;
+    try
+    {
 #if defined (XML_USE_INMEM_MESSAGELOADER)
-    return new (fgMemoryManager) InMemMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) InMemMsgLoader(msgDomain);
 #elif defined (XML_USE_WIN32_MSGLOADER)
-    return new (fgMemoryManager) Win32MsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) Win32MsgLoader(msgDomain);
 #elif defined (XML_USE_ICU_MESSAGELOADER)
-    return new (fgMemoryManager) ICUMsgLoader(msgDomain);
+        retVal = new (fgMemoryManager) ICUMsgLoader(msgDomain);
 #else
-    #error You must provide a message loader
+        #error You must provide a message loader
+        return 0;
 #endif
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch(...)
+    {
+        panic(PanicHandler::Panic_CantLoadMsgDomain);
+    }
+    return retVal;
 }
 
 
