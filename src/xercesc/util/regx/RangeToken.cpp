@@ -27,10 +27,10 @@
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 
-#if !defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
-#include <xercesc/util/XMLUniDefs.hpp>
-#else
+#if defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
 #include <unicode/uchar.h>
+#else
+#include <xercesc/util/XMLUniDefs.hpp>
 #endif
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -79,20 +79,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
 
         for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
             for (XMLInt32 ch = fRanges[i];  ch <= fRanges[i + 1];  ++ch) {
-#if !defined(XML_USE_ICU_TRANSCODER)
-                if (ch >= chLatin_A && ch <= chLatin_Z)
-                {
-                    ch += chLatin_a - chLatin_A;
-
-                    lwrToken->addRange(ch, ch);
-                }
-                else if (ch >= chLatin_a && ch <= chLatin_z)
-                {
-                    ch -= chLatin_a - chLatin_A;
-
-                    lwrToken->addRange(ch, ch);
-                }
-#else
+#if defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
                 const XMLInt32  upperCh = u_toupper(ch);
 
                 if (upperCh != ch)
@@ -112,6 +99,19 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
                 if (titleCh != ch && titleCh != upperCh)
                 {
                     lwrToken->addRange(titleCh, titleCh);
+                }
+#else
+                if (ch >= chLatin_A && ch <= chLatin_Z)
+                {
+                    ch += chLatin_a - chLatin_A;
+
+                    lwrToken->addRange(ch, ch);
+                }
+                else if (ch >= chLatin_a && ch <= chLatin_z)
+                {
+                    ch -= chLatin_a - chLatin_A;
+
+                    lwrToken->addRange(ch, ch);
                 }
 #endif
             }
