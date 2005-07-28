@@ -229,7 +229,7 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
     int temp = DATETIMES[index][Month] + fDuration->fValue[Month];
     fNewDate->fValue[Month] = modulo(temp, 1, 13);
     int carry = fQuotient(temp, 1, 13);
-    if (fNewDate->fValue[Month] < 0) {
+    if (fNewDate->fValue[Month] <= 0) {
         fNewDate->fValue[Month]+= 12;
         carry--;
     }
@@ -286,12 +286,11 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
 
         temp = fNewDate->fValue[Month] + carry;
         fNewDate->fValue[Month] = modulo(temp, 1, 13);
-        if (fNewDate->fValue[Month] < 0) {
+        if (fNewDate->fValue[Month] <= 0) {
             fNewDate->fValue[Month]+= 12;
-            carry--;
+            fNewDate->fValue[CentYear]--;
         }
-        else
-            fNewDate->fValue[CentYear] += fQuotient(temp, 1, 13);
+        fNewDate->fValue[CentYear] += fQuotient(temp, 1, 13);
     }
 
     //fNewDate->fValue[utc] = UTC_STD_CHAR;
@@ -1199,13 +1198,27 @@ void XMLDateTime::normalize()
     int negate = (fValue[utc] == UTC_POS)? -1: 1;
     int temp;
     int carry;
+    
+
+    // we normalize a duration so could have 200M...
+    //update months (may be modified additionaly below)
+    temp = fValue[Month];
+    fValue[Month] = modulo(temp, 1, 13);
+    carry = fQuotient(temp, 1, 13);
+    if (fValue[Month] <= 0) {
+        fValue[Month]+= 12;
+        carry--;
+    }
+
+    //add years (may be modified additionaly below)
+    fValue[CentYear] += carry;
 
     // add mins
     temp = fValue[Minute] + negate * fTimeZone[mm];
     carry = fQuotient(temp, 60);
     fValue[Minute] = mod(temp, 60, carry);
-    if (temp < 0) {
-        fValue[Minute] = temp + 60;
+    if (fValue[Minute] < 0) {
+        fValue[Minute] += 60;
         carry--;
     }
    
@@ -1213,12 +1226,12 @@ void XMLDateTime::normalize()
     temp = fValue[Hour] + negate * fTimeZone[hh] + carry;
     carry = fQuotient(temp, 24);
     fValue[Hour] = mod(temp, 24, carry);
-    if (temp < 0) {
-        fValue[Hour] = temp + 24;
+    if (fValue[Hour] < 0) {
+        fValue[Hour] += 24;
         carry--;
     }
 
-    fValue[Day] += carry;
+    fValue[Day] += carry;   
 
     while (1)
     {
@@ -1654,8 +1667,7 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
                 month+= 12;
                 year--;
             }
-            else
-                year += fQuotient(temp, 1, 13);         
+            year += fQuotient(temp, 1, 13);         
         }
 
         int additionalLen = fillYearString(retPtr, year);
