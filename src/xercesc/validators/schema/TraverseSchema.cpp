@@ -8764,7 +8764,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
                                              , ValueVectorOf<DOMNode*>* nonXSAttList)
 {      
     const XMLCh* prefix = elem->getPrefix();
-    ValueVectorOf<unsigned int>* listOfURIs = new (fMemoryManager) ValueVectorOf<unsigned int>(16, fMemoryManager);
+    ValueHashTableOf<unsigned int>* listOfURIs = new (fMemoryManager) ValueHashTableOf<unsigned int>(29, fMemoryManager);
     bool sawXMLNS = false;
 
     fBuffer.reset();
@@ -8792,76 +8792,43 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     }
 
     // next is the namespaces on the elem
-    DOMNamedNodeMap* eltAttrs = elem->getAttributes();
-    int              attrCount = eltAttrs->getLength();
-    int j;
-    for (j = 0; j < attrCount; j++) 
-    {
-        DOMNode*     attribute = eltAttrs->item(j);
-        const XMLCh* attName = attribute->getNodeName();
+    DOMElement* currentElem = (DOMElement*) elem;
+    DOMNamedNodeMap* eltAttrs;
+    int              attrCount;
+    do {    
+        eltAttrs = currentElem->getAttributes();
+        attrCount = eltAttrs->getLength();        
+        for (int j = 0; j < attrCount; j++) 
+        {
+            DOMNode*     attribute = eltAttrs->item(j);
+            const XMLCh* attName = attribute->getNodeName();
         
-        if (XMLString::startsWith(attName, XMLUni::fgXMLNSColonString))
-        {
-            fBuffer.append(chSpace);
-            fBuffer.append(attName);
-            fBuffer.append(chEqual);
-            fBuffer.append(chDoubleQuote);
-            processAttValue(attribute->getNodeValue(), fBuffer);
-            fBuffer.append(chDoubleQuote);
-
-            int offsetIndex = XMLString::indexOf(attName, chColon); 
-            int prefixId = fNamespaceScope->getNamespaceForPrefix(attName + offsetIndex + 1, fSchemaInfo->getNamespaceScopeLevel());
-            if (prefixId)
-                listOfURIs->addElement(prefixId);
-        }
-        else if (XMLString::equals(attName, XMLUni::fgXMLNSString))
-        {
-            fBuffer.append(chSpace);
-            fBuffer.append(attName);
-            fBuffer.append(chEqual);
-            fBuffer.append(chDoubleQuote);
-            processAttValue(attribute->getNodeValue(), fBuffer);
-            fBuffer.append(chDoubleQuote);
-            sawXMLNS = true;
-        }
-    }
-
-    // next is the namespaces on the fSchemaRoot
-    eltAttrs = fSchemaInfo->getRoot()->getAttributes();
-    attrCount = eltAttrs->getLength();
-
-    for (j = 0; j < attrCount; j++) 
-    {
-        DOMNode*     attribute = eltAttrs->item(j);
-        if (!attribute) {
-            break;
-        }
-        const XMLCh* attName = attribute->getNodeName();
-        
-        if (XMLString::startsWith(attName, XMLUni::fgXMLNSColonString))
-        {
-            int offsetIndex = XMLString::indexOf(attName, chColon); 
-            int prefixId = fNamespaceScope->getNamespaceForPrefix(attName + offsetIndex + 1, fSchemaInfo->getNamespaceScopeLevel());
-            
-            if (!listOfURIs->containsElement(prefixId)) {
+            if (XMLString::startsWith(attName, XMLUni::fgXMLNSColonString))
+            {
+                if (!listOfURIs->containsKey((void*) attName)) {
+                    listOfURIs->put((void*) attName, 0);   
+                    fBuffer.append(chSpace);
+                    fBuffer.append(attName);
+                    fBuffer.append(chEqual);
+                    fBuffer.append(chDoubleQuote);
+                    processAttValue(attribute->getNodeValue(), fBuffer);
+                    fBuffer.append(chDoubleQuote);
+                }                                            
+            }
+            else if (!sawXMLNS && XMLString::equals(attName, XMLUni::fgXMLNSString))
+            {
                 fBuffer.append(chSpace);
                 fBuffer.append(attName);
                 fBuffer.append(chEqual);
                 fBuffer.append(chDoubleQuote);
                 processAttValue(attribute->getNodeValue(), fBuffer);
-                fBuffer.append(chDoubleQuote);                
+                fBuffer.append(chDoubleQuote);
+                sawXMLNS = true;
             }
-        }
-        else if (!sawXMLNS && XMLString::equals(attName, XMLUni::fgXMLNSString))
-        {
-            fBuffer.append(chSpace);
-            fBuffer.append(attName);
-            fBuffer.append(chEqual);
-            fBuffer.append(chDoubleQuote);
-            processAttValue(attribute->getNodeValue(), fBuffer);
-            fBuffer.append(chDoubleQuote);            
-        }
+        }       
+        currentElem = (DOMElement*) currentElem->getParentNode();               
     }
+    while (currentElem != fSchemaInfo->getRoot()->getParentNode());
     delete listOfURIs;
 
     fBuffer.append(chCloseAngle);
