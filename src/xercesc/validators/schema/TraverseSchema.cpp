@@ -4785,7 +4785,7 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
         fBuffer.append(chComma);
         fBuffer.append(localPartStr);
 
-        if ((uriStr && *uriStr) && !XMLString::equals(uriStr, fTargetNSURIString)) {
+        if ((uriStr) && !XMLString::equals(uriStr, fTargetNSURIString)) {
 
             Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
 
@@ -5138,7 +5138,7 @@ TraverseSchema::checkTypeFromAnotherSchema(const DOMElement* const elem,
 
     if (!XMLString::equals(typeURI, fTargetNSURIString)
         && !XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-        && (typeURI && *typeURI)) {
+        ) {
         return typeURI;
     }
 
@@ -5158,7 +5158,7 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
     SchemaInfo*          saveInfo = fSchemaInfo;
     int                  saveScope = fCurrentScope;
 
-    if (otherSchemaURI != 0) {
+    if (otherSchemaURI && *otherSchemaURI) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
