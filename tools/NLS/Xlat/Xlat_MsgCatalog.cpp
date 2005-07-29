@@ -166,7 +166,7 @@ void MsgCatFormatter::startOutput(  const   XMLCh* const    locale
     fwprintf(fOutFl, L"$quote \"\n");
 
 
-    XMLString::release(&tmpBuf);
+    delete tmpBuf;
     tmpBuf = new XMLCh[bufSize + 1];
     tmpBuf[0] = 0;
     tmpXMLStr = XMLString::transcode("XMLMsgCat_Ids.hpp");
@@ -197,5 +197,5 @@ void MsgCatFormatter::startOutput(  const   XMLCh* const    locale
 
     // Reset the sequence id
     fSeqId = 1;
-    XMLString::release(&tmpBuf);
+    delete tmpBuf;
 }

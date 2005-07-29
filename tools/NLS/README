@@ -34,7 +34,7 @@ Here are the steps:
            #endif    // APSTUDIO_INVOKED
         and the line which reads: 
            #endif    // English (U.S.) resources
-        in src\xercesc\util\Platforms\Win32\version.rc
+        in src\xercesc\util\MsgLoaders\Win32\version.rc
         What you replace should begin with:
          // ----------------------------------------------------------------
          //  This file was generated from the XML error message source.
