@@ -376,9 +376,12 @@ int main (int argC, char** argV) {
     int toReturn = (Xlat_main(argC,newArgV));
     for (i=0; i<argC; i++) 
     {
-        delete [] newArgV[i];
+        XMLString::release(&newArgV[i]);
     }
     delete [] newArgV;
+
+    XMLPlatformUtils::Terminate();
+
     return toReturn;
 }
 
@@ -435,7 +438,7 @@ int Xlat_main(int argC, XMLCh** argV)
             {
                 parseError(toCatch);
             }
-            XMLString::release(&tmpFileBuf);
+            delete tmpFileBuf;
 
             //
             //  Use the output format parm to create the correct kind of output
@@ -600,7 +603,7 @@ int Xlat_main(int argC, XMLCh** argV)
                     XMLString::release(&errNameSpace);
                     throw ErrReturn_OutFileOpenFailed;
                 }
-                XMLString::release(&tmpFileBuf);                
+                delete tmpFileBuf;
 
                 //
                 //  Write out the opening of the class they are nested within, and
@@ -859,7 +862,6 @@ int Xlat_main(int argC, XMLCh** argV)
 
     // And call the termination method
     release_Globals();
-    XMLPlatformUtils::Terminate();
 
     // Went ok, so return success
     return ErrReturn_Success;
