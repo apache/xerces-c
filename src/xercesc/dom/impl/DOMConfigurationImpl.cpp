@@ -26,9 +26,27 @@ XERCES_CPP_NAMESPACE_BEGIN
 const unsigned short DOMConfigurationImpl::fDEFAULT_VALUES = 0x2596;
 
 DOMConfigurationImpl::DOMConfigurationImpl(MemoryManager* const manager): featureValues(fDEFAULT_VALUES),
-                                              fErrorHandler(0), fSchemaType(0), fSchemaLocation(0)
-, fMemoryManager(manager)
- {
+                                              fErrorHandler(0), fSchemaType(0), fSchemaLocation(0),
+                                              fSupportedParameters(0), fMemoryManager(manager)
+{
+    fSupportedParameters=new RefVectorOf<XMLCh>(17, false, manager);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMErrorHandler);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaType);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaLocation);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCanonicalForm);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCDATASections);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMComments);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMDatatypeNormalization);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTDiscardDefaultContent);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMEntities);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMInfoset);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaces);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaceDeclarations);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNormalizeCharacters);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSplitCDATASections);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidate);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidateIfSchema);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMElementContentWhitespace);
 }
 
 DOMConfigurationImpl::~DOMConfigurationImpl() {
@@ -201,9 +219,9 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, bool booleanValue)
     return false;
 }
 
-const RefVectorOf<const XMLCh*>* DOMConfigurationImpl::getParameterNames() const
+const RefVectorOf<XMLCh>* DOMConfigurationImpl::getParameterNames() const
 {
-    return 0;
+    return fSupportedParameters;
 }
 
 // -------------------------------------------

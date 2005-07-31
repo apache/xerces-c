@@ -95,7 +95,7 @@ public:
     virtual bool canSetParameter(const XMLCh* name, const void* value) const;
     virtual bool canSetParameter(const XMLCh* name, bool value) const;
 
-    virtual const RefVectorOf<const XMLCh*>* getParameterNames() const;
+    virtual const RefVectorOf<XMLCh>* getParameterNames() const;
 
     // ---------------------------------------------------------------------------
     // Impl specific methods
@@ -134,6 +134,9 @@ private:
     
     // the schema location
     const XMLCh* fSchemaLocation;
+
+    // the list of supported parameters
+    RefVectorOf<XMLCh>* fSupportedParameters;
 
     MemoryManager* fMemoryManager;
 };

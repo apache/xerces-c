@@ -480,6 +480,7 @@ en_US {
 		"Could not determine base pathname of the file " ,
 		"The base path had too few levels to weave in relative part " ,
 		"Parse may not be called while parsing " ,
+		"Parsing has been aborted by the user " ,
 		"A DOCTYPE was seen but the installed validator does not understand DTDs " ,
 		"Could not open DTD file '{0}' " ,
 		"Could not open external entity '{0}' " ,

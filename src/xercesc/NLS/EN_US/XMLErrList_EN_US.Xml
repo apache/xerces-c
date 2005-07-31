@@ -479,6 +479,7 @@
             <Message Id="File_CouldNotGetBasePathName" Text="Could not determine base pathname of the file"/>
             <Message Id="File_BasePathUnderflow" Text="The base path had too few levels to weave in relative part"/>
             <Message Id="Gen_ParseInProgress" Text="Parse may not be called while parsing"/>
+            <Message Id="Gen_ParsingAborted" Text="Parsing has been aborted by the user"/>
             <Message Id="Gen_NoDTDValidator" Text="A DOCTYPE was seen but the installed validator does not understand DTDs"/>
             <Message Id="Gen_CouldNotOpenDTD" Text="Could not open DTD file '{0}'"/>
             <Message Id="Gen_CouldNotOpenExtEntity" Text="Could not open external entity '{0}'"/>

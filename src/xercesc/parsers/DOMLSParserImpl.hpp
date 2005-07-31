@@ -28,7 +28,7 @@
 #include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/util/XercesDefs.hpp>
-
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -59,12 +59,13 @@ public :
       * validation. If you don't provide a validator, a default one will
       * be created for you in the scanner.
       *
+      * @param valToAdopt Pointer to the validator instance to use. The
+      *                   parser is responsible for freeing the memory.
+      * @param manager    The memory manager to be used for memory allocations
       * @param gramPool   Pointer to the grammar pool instance from 
       *                   external application.
       *                   The parser does NOT own it.
       *
-      * @param valToAdopt Pointer to the validator instance to use. The
-      *                   parser is responsible for freeing the memory.
       */
     DOMLSParserImpl
     (
@@ -387,7 +388,7 @@ public :
      * @return The list of parameters that can be used with setParameter/getParameter
      * @since DOM level 3
      **/
-    virtual const RefVectorOf<const XMLCh*>* getParameterNames() const;
+    virtual const RefVectorOf<XMLCh>* getParameterNames() const;
     //@}
 
     // -----------------------------------------------------------------------
@@ -564,6 +565,42 @@ public :
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Implementation of the XMLDocumentHandler interface.
+    // -----------------------------------------------------------------------
+    virtual void docCharacters
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    length
+        , const bool            cdataSection
+    );
+    virtual void docComment
+    (
+        const   XMLCh* const    comment
+    );
+    virtual void docPI
+    (
+        const   XMLCh* const    target
+        , const XMLCh* const    data
+    );
+    virtual void endElement
+    (
+        const   XMLElementDecl& elemDecl
+        , const unsigned int    urlId
+        , const bool            isRoot
+        , const XMLCh* const    elemPrefix
+    );
+    virtual void startElement
+    (
+        const   XMLElementDecl&         elemDecl
+        , const unsigned int            urlId
+        , const XMLCh* const            elemPrefix
+        , const RefVectorOf<XMLAttr>&   attrList
+        , const unsigned int            attrCount
+        , const bool                    isEmpty
+        , const bool                    isRoot
+    );
+
 
 private :
     // -----------------------------------------------------------------------
@@ -600,6 +637,10 @@ private :
     //      The DOMDocument ownership has been transferred to application
     //      If set to true, the parser does not own the document anymore
     //      and thus will not release its memory.
+    //
+    //  fSupportedParameters
+    //      A list of the parameters that can be set, including the ones
+    //      specific of Xerces
     //-----------------------------------------------------------------------
     bool                        fAutoValidation;
     bool                        fValidation;
@@ -609,6 +650,7 @@ private :
     DOMLSParserFilter*          fFilter;
     bool                        fCharsetOverridesXMLEncoding;
     bool                        fUserAdoptsDocument;
+    RefVectorOf<XMLCh>*         fSupportedParameters;
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators

@@ -588,6 +588,8 @@ public:
       * Abort the loading of the document that is currently being loaded by the <code>DOMLSParser</code>. 
       * If the <code>DOMLSParser</code> is currently not busy, a call to this method does nothing. 
       *
+      * Note: invoking this method will remove the installed <code>DOMLSParserFilter</code> filter
+      *
       * @since DOM Level 3
       */
     virtual void abort() = 0;

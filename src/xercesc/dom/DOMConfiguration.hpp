@@ -428,7 +428,7 @@ public:
      * @return The list of parameters that can be used with setParameter/getParameter
      * @since DOM level 3
      **/
-    virtual const RefVectorOf<const XMLCh*>* getParameterNames() const = 0;
+    virtual const RefVectorOf<XMLCh>* getParameterNames() const = 0;
 
     // -----------------------------------------------------------------------
     //  All constructors are hidden, just the destructor is available

@@ -85,7 +85,7 @@ public:
     virtual const void* getParameter(const XMLCh* name) const;
     virtual bool canSetParameter(const XMLCh* name, const void* value) const;
     virtual bool canSetParameter(const XMLCh* name, bool value) const;
-    virtual const RefVectorOf<const XMLCh*>* getParameterNames() const;
+    virtual const RefVectorOf<XMLCh>* getParameterNames() const;
     //@}
 
 private:
@@ -163,6 +163,10 @@ protected:
     //  fDocumentVersion
     //      The XML Version of the document to be serialized.
     // 
+    //  fSupportedParameters
+    //      A list of the parameters that can be set, including the ones
+    //      specific of Xerces
+    //
     //  fEncodingUsed (session var)
     //      the actual encoding used in write(),
     //      it does not own any data(memory).
@@ -192,6 +196,7 @@ protected:
     DOMErrorHandler              *fErrorHandler;
     DOMLSSerializerFilter        *fFilter;
     const XMLCh                  *fDocumentVersion;
+    RefVectorOf<XMLCh>           *fSupportedParameters;
 
     //session vars
     const XMLCh                  *fEncodingUsed;

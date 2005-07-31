@@ -298,6 +298,7 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 ,fErrorHandler(0)
 ,fFilter(0)
 ,fDocumentVersion(XMLUni::fgVersion1_0)
+,fSupportedParameters(0)
 ,fEncodingUsed(0)
 ,fNewLineUsed(0)
 ,fFormatter(0)
@@ -320,8 +321,20 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
     setFeature(VALIDATION_ID,                    false);
     setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
     setFeature(BYTE_ORDER_MARK_ID,               false);
-    setFeature(XML_DECLARATION,                 true );
+    setFeature(XML_DECLARATION,                  true );
 
+    fSupportedParameters=new RefVectorOf<XMLCh>(11, false, manager);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMErrorHandler);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTCanonicalForm);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTDiscardDefaultContent);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTEntities);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTFormatPrettyPrint);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTNormalizeCharacters);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTSplitCdataSections);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTValidation);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTWhitespaceInElementContent);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTBOM);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMXMLDeclaration);
 }
 
 bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
@@ -406,9 +419,9 @@ const void* DOMLSSerializerImpl::getParameter(const XMLCh* const featName) const
     }
 }
 
-const RefVectorOf<const XMLCh*>* DOMLSSerializerImpl::getParameterNames() const
+const RefVectorOf<XMLCh>* DOMLSSerializerImpl::getParameterNames() const
 {
-    return 0;
+    return fSupportedParameters;
 }
 
 // we don't check the validity of the encoding set
@@ -550,7 +563,7 @@ XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
     catch (...)
     {
         //
-        // there is a possibility that memeory allocation
+        // there is a possibility that memory allocation
         // exception thrown in XMLBuffer class
         //
         fEncoding = tempEncoding;

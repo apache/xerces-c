@@ -32,6 +32,8 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/dom/DOMEntityResolver.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/dom/DOMLSParserFilter.hpp>
+#include <xercesc/dom/DOMNodeFilter.hpp>
 #include <xercesc/dom/impl/DOMErrorImpl.hpp>
 #include <xercesc/dom/impl/DOMLocatorImpl.hpp>
 #include <xercesc/dom/impl/DOMConfigurationImpl.hpp>
@@ -45,10 +47,24 @@
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
+#include <xercesc/util/RuntimeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
+// ---------------------------------------------------------------------------
+//  A filter used to abort processing
+// ---------------------------------------------------------------------------
+class __AbortFilter : public DOMLSParserFilter
+{
+public:
+    __AbortFilter() {}
+    virtual short acceptNode(DOMNode* node)      { return FILTER_INTERRUPT; }
+    virtual short startElement(DOMElement* node) { return FILTER_INTERRUPT; }
+    virtual unsigned long getWhatToShow() const  { return DOMNodeFilter::SHOW_ALL; }
+};
+
+static __AbortFilter g_AbortFilter;
 
 // ---------------------------------------------------------------------------
 //  DOMLSParserImpl: Constructors and Destructor
@@ -66,9 +82,59 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
 , fFilter(0)
 , fCharsetOverridesXMLEncoding(true)
 , fUserAdoptsDocument(false)
+, fSupportedParameters(0)
 {
     // dom spec has different default from scanner's default, so set explicitly
     getScanner()->setNormalizeData(false);
+
+    fSupportedParameters=new RefVectorOf<XMLCh>(47, false, manager);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMResourceResolver);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMErrorHandler);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesEntityResolver);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchemaExternalSchemaLocation);
+	fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation);
+	fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSecurityManager);
+	fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesScannerName);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesParserUseDocumentFromImplementation);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCharsetOverridesXMLEncoding);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMDisallowDoctype);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMIgnoreUnknownCharacterDenormalization);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaces);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSupportedMediatypesOnly);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidate);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidateIfSchema);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWellFormed);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCanonicalForm);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCDATASections);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCheckCharacterNormalization);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMComments);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMDatatypeNormalization);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMElementContentWhitespace);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMEntities);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaceDeclarations);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNormalizeCharacters);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaLocation);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaType);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSplitCDATASections);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMInfoset);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchema);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchemaFullChecking);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesUserAdoptsDOMDocument);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesLoadExternalDTD);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesContinueAfterFatalError);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesValidationErrorAsFatal);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesCacheGrammarFromParse);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesUseCachedGrammarInParse);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesCalculateSrcOfs);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesStandardUriConformant);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesDOMHasPSVIInfo);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesGenerateSyntheticAnnotations);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesValidateAnnotations);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesIdentityConstraintChecking);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesIgnoreCachedDTD);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesIgnoreAnnotations);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesDisableDefaultEntityResolution);
+    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSkipDTDValidation);
 }
 
 
@@ -142,11 +208,11 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, const void* value)
 	{
 		setSecurityManager((SecurityManager*)value);
 	}
-    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName))
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0)
     {
         AbstractDOMParser::useScanner((const XMLCh*) value);
     }
-    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation))
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0)
     {
         useImplementation((const XMLCh*) value);
     }
@@ -536,21 +602,69 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
 
 bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* value) const
 {
-    if((XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0)
-      )
-        return true;
+    if (XMLString::compareIStringASCII(name, XMLUni::fgDOMResourceResolver) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMErrorHandler) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesEntityResolver) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0) 
+      return true;
     
     return false;
 }
 
 bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
 {
+    if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMValidate) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMWellFormed) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMCheckCharacterNormalization) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMComments) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMDatatypeNormalization) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMElementContentWhitespace) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMEntities) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMNormalizeCharacters) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMSplitCDATASections) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+ 
+      return true;
+    
     return false;
 }
 
-const RefVectorOf<const XMLCh*>* DOMLSParserImpl::getParameterNames() const
+const RefVectorOf<XMLCh>* DOMLSParserImpl::getParameterNames() const
 {
-    return 0;
+    return fSupportedParameters;
 }
 
 // ---------------------------------------------------------------------------
@@ -573,6 +687,10 @@ void DOMLSParserImpl::resetDocumentPool()
 // ---------------------------------------------------------------------------
 DOMDocument* DOMLSParserImpl::parse(const DOMLSInput& source)
 {
+    // remove the abort filter, if present
+    if(fFilter==&g_AbortFilter)
+        fFilter=0;
+
     Wrapper4DOMLSInput isWrapper((DOMLSInput*) &source, false, getMemoryManager());
 
     AbstractDOMParser::parse(isWrapper);
@@ -584,6 +702,10 @@ DOMDocument* DOMLSParserImpl::parse(const DOMLSInput& source)
 
 DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
 {
+    // remove the abort filter, if present
+    if(fFilter==&g_AbortFilter)
+        fFilter=0;
+
     AbstractDOMParser::parse(systemId);
     if (fUserAdoptsDocument)
         return adoptDocument();
@@ -593,6 +715,10 @@ DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
 
 DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
 {
+    // remove the abort filter, if present
+    if(fFilter==&g_AbortFilter)
+        fFilter=0;
+
     AbstractDOMParser::parse(systemId);
     if (fUserAdoptsDocument)
         return adoptDocument();
@@ -609,7 +735,7 @@ void DOMLSParserImpl::parseWithContext(const DOMLSInput&,
 
 void DOMLSParserImpl::abort()
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
+    fFilter=&g_AbortFilter;
 }
 
 // ---------------------------------------------------------------------------
@@ -835,6 +961,136 @@ const XMLCh* DOMLSParserImpl::getURIText(unsigned int uriId) const
 unsigned int DOMLSParserImpl::getSrcOffset() const
 {
     return getScanner()->getSrcOffset();
+}
+
+void DOMLSParserImpl::docCharacters(const XMLCh* const    chars
+                                  , const unsigned int    length
+                                  , const bool            cdataSection)
+{
+    AbstractDOMParser::docCharacters(chars, length, cdataSection);
+    if(fFilter)
+    {
+        long whatToShow=fFilter->getWhatToShow();
+        if(cdataSection && (whatToShow & DOMNodeFilter::SHOW_CDATA_SECTION) ||
+           !cdataSection && (whatToShow & DOMNodeFilter::SHOW_TEXT))
+        {
+            short action=fFilter->acceptNode(fCurrentNode);
+            switch(action)
+            {
+            case DOMLSParserFilter::FILTER_ACCEPT:      break;
+            case DOMLSParserFilter::FILTER_REJECT:      
+            case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
+                                                        break;
+            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            }
+        }
+    }
+}
+
+void DOMLSParserImpl::docComment(const XMLCh* const  comment)
+{
+    AbstractDOMParser::docComment(comment);
+    if(fFilter)
+    {
+        long whatToShow=fFilter->getWhatToShow();
+        if(whatToShow & DOMNodeFilter::SHOW_COMMENT)
+        {
+            short action=fFilter->acceptNode(fCurrentNode);
+            switch(action)
+            {
+            case DOMLSParserFilter::FILTER_ACCEPT:      break;
+            case DOMLSParserFilter::FILTER_REJECT:      
+            case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
+                                                        break;
+            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            }
+        }
+    }
+}
+
+void DOMLSParserImpl::docPI(const XMLCh* const    target
+                          , const XMLCh* const    data)
+{
+    AbstractDOMParser::docPI(target, data);
+    if(fFilter)
+    {
+        long whatToShow=fFilter->getWhatToShow();
+        if(whatToShow & DOMNodeFilter::SHOW_PROCESSING_INSTRUCTION)
+        {
+            short action=fFilter->acceptNode(fCurrentNode);
+            switch(action)
+            {
+            case DOMLSParserFilter::FILTER_ACCEPT:      break;
+            case DOMLSParserFilter::FILTER_REJECT:      
+            case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
+                                                        break;
+            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            }
+        }
+    }
+}
+
+void DOMLSParserImpl::endElement(const XMLElementDecl& elemDecl
+                               , const unsigned int    urlId
+                               , const bool            isRoot
+                               , const XMLCh* const    elemPrefix)
+{
+    DOMNode* origParent=fCurrentParent;
+    DOMNode* origNode=fCurrentNode;
+    AbstractDOMParser::endElement(elemDecl, urlId, isRoot, elemPrefix);
+    if(fFilter)
+    {
+        long whatToShow=fFilter->getWhatToShow();
+        if(whatToShow & DOMNodeFilter::SHOW_ELEMENT)
+        {
+            short action=fFilter->acceptNode(origNode);
+            switch(action)
+            {
+            case DOMLSParserFilter::FILTER_ACCEPT:      break;
+            case DOMLSParserFilter::FILTER_REJECT:      origParent->removeChild(origNode);
+                                                        break;
+            case DOMLSParserFilter::FILTER_SKIP:        {
+                                                            DOMNode* child=origNode->getFirstChild();
+                                                            while(child)
+                                                            {
+                                                                DOMNode* next=child->getNextSibling();
+                                                                origParent->appendChild(child);
+                                                                child=next;
+                                                            }
+                                                            origParent->removeChild(origNode);
+                                                        }
+                                                        break;
+            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            }
+        }
+    }
+}
+
+void DOMLSParserImpl::startElement(const XMLElementDecl&         elemDecl
+                                 , const unsigned int            urlId
+                                 , const XMLCh* const            elemPrefix
+                                 , const RefVectorOf<XMLAttr>&   attrList
+                                 , const unsigned int            attrCount
+                                 , const bool                    isEmpty
+                                 , const bool                    isRoot)
+{
+    AbstractDOMParser::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, false, isRoot);
+    if(fFilter)
+    {
+        short action=fFilter->startElement((DOMElement*)fCurrentNode);
+        switch(action)
+        {
+        case DOMLSParserFilter::FILTER_ACCEPT:      break;
+        case DOMLSParserFilter::FILTER_REJECT:      // TODO: reject also the children
+        case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent=fCurrentNode->getParentNode();
+                                                    fCurrentParent->removeChild(fCurrentNode);
+                                                    fCurrentNode=fCurrentParent;
+                                                    break;
+        case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+        }
+    }
+    if(isEmpty)
+        endElement(elemDecl, urlId, isRoot, elemPrefix);
 }
 
 XERCES_CPP_NAMESPACE_END
