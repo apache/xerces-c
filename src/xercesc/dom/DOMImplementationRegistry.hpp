@@ -30,6 +30,7 @@
   * point.
   *
   * @see DOMImplementation
+  * @see DOMImplementationList
   * @see DOMImplementationSource
   * @since DOM Level 3
   */
@@ -41,6 +42,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMImplementation;
 class DOMImplementationSource;
+class DOMImplementationList;
 
 class CDOM_EXPORT DOMImplementationRegistry
 {
@@ -54,8 +56,6 @@ public:
      * Return the first registered implementation that has the desired features,
      * or null if none is found.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param features A string that specifies which features are required.
      *                 This is a space separated list in which each feature is
      *                 specified by its name optionally followed by a space
@@ -68,9 +68,21 @@ public:
     static DOMImplementation* getDOMImplementation(const XMLCh* features);
 
     /**
-     * Register an implementation.
+     * Return the list of registered implementation that have the desired features.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * @param features A string that specifies which features are required.
+     *                 This is a space separated list in which each feature is
+     *                 specified by its name optionally followed by a space
+     *                 and a version number.
+     *                 This is something like: "XML 1.0 Traversal 2.0"
+     * @return A DOMImplementationList object that contains the DOMImplementation
+     *         that have the desired features
+     * @since DOM Level 3
+     */
+    static DOMImplementationList* getDOMImplementationList(const XMLCh* features);
+
+    /**
+     * Register an implementation.
      *
      * @param source   A DOMImplementation Source object to be added to the registry.
      *                 The registry does NOT adopt the source object.  Users still own it.

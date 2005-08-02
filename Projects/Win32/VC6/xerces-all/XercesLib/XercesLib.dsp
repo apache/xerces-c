@@ -2832,6 +2832,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationimpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp
 # End Source File
 # Begin Source File
@@ -3057,6 +3065,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementation.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementationList.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementationLS.hpp
 # End Source File
 # Begin Source File
@@ -3082,6 +3094,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSInput.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSOutput.hpp
 # End Source File
 # Begin Source File
 

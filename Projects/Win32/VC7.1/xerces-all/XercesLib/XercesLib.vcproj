@@ -2374,6 +2374,9 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMImplementation.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMImplementationList.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMImplementationLS.hpp">
 			</File>
 			<File
@@ -2587,7 +2590,13 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.cpp">
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationimpl.hpp">
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp">

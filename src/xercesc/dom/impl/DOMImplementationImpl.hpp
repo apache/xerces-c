@@ -88,6 +88,7 @@ public:
     // DOMImplementationSource Virtual interface
     // ------------------------------------------------------------
     virtual DOMImplementation* getDOMImplementation(const XMLCh* features) const;
+    virtual DOMImplementationList* getDOMImplementationList(const XMLCh* features) const;
 
 };
 

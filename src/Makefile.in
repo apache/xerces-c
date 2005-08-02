@@ -203,6 +203,7 @@ am__objects_4 = xercesc/dom/impl/DOMAttrImpl.lo \
 	xercesc/dom/impl/DOMEntityReferenceImpl.lo \
 	xercesc/dom/impl/DOMErrorImpl.lo \
 	xercesc/dom/impl/DOMImplementationImpl.lo \
+	xercesc/dom/impl/DOMImplementationListImpl.lo \
 	xercesc/dom/impl/DOMImplementationRegistry.lo \
 	xercesc/dom/impl/DOMLocatorImpl.lo \
 	xercesc/dom/impl/DOMNamedNodeMapImpl.lo \
@@ -1123,6 +1124,7 @@ dom_headers = \
 	xercesc/dom/DOMErrorHandler.hpp \
 	xercesc/dom/DOMException.hpp \
 	xercesc/dom/DOMImplementation.hpp \
+	xercesc/dom/DOMImplementationList.hpp \
 	xercesc/dom/DOMImplementationLS.hpp \
 	xercesc/dom/DOMImplementationRegistry.hpp \
 	xercesc/dom/DOMImplementationSource.hpp \
@@ -1184,6 +1186,7 @@ domimpl_headers = \
 	xercesc/dom/impl/DOMEntityReferenceImpl.hpp \
 	xercesc/dom/impl/DOMErrorImpl.hpp \
 	xercesc/dom/impl/DOMImplementationImpl.hpp \
+	xercesc/dom/impl/DOMImplementationListImpl.hpp \
 	xercesc/dom/impl/DOMLocatorImpl.hpp \
 	xercesc/dom/impl/DOMNamedNodeMapImpl.hpp \
 	xercesc/dom/impl/DOMNodeIDMap.hpp \
@@ -1222,6 +1225,7 @@ domimpl_sources = \
 	xercesc/dom/impl/DOMEntityReferenceImpl.cpp \
 	xercesc/dom/impl/DOMErrorImpl.cpp \
 	xercesc/dom/impl/DOMImplementationImpl.cpp \
+	xercesc/dom/impl/DOMImplementationListImpl.cpp \
 	xercesc/dom/impl/DOMImplementationRegistry.cpp \
 	xercesc/dom/impl/DOMLocatorImpl.cpp \
 	xercesc/dom/impl/DOMNamedNodeMapImpl.cpp \
@@ -2164,6 +2168,9 @@ xercesc/dom/impl/DOMEntityReferenceImpl.lo:  \
 xercesc/dom/impl/DOMErrorImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/DOMImplementationImpl.lo:  \
+	xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMImplementationListImpl.lo:  \
 	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/DOMImplementationRegistry.lo:  \
@@ -3151,6 +3158,8 @@ mostlyclean-compile:
 	-rm -f xercesc/dom/impl/DOMErrorImpl.lo
 	-rm -f xercesc/dom/impl/DOMImplementationImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMImplementationImpl.lo
+	-rm -f xercesc/dom/impl/DOMImplementationListImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMImplementationListImpl.lo
 	-rm -f xercesc/dom/impl/DOMImplementationRegistry.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMImplementationRegistry.lo
 	-rm -f xercesc/dom/impl/DOMLSSerializerImpl.$(OBJEXT)
@@ -3755,6 +3764,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMEntityReferenceImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMErrorImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationListImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationRegistry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLSSerializerImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLocatorImpl.Plo@am__quote@

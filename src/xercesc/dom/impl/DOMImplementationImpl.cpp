@@ -22,6 +22,7 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMLSSerializerImpl.hpp"
+#include "DOMImplementationListImpl.hpp"
 
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -351,6 +352,14 @@ DOMImplementation* DOMImplementationImpl::getDOMImplementation(const XMLCh* feat
     return impl;
 }
 
+DOMImplementationList* DOMImplementationImpl::getDOMImplementationList(const XMLCh* features) const
+{
+    DOMImplementationListImpl* list = new DOMImplementationListImpl;
+    DOMImplementation* myImpl=getDOMImplementation(features);
+    if(myImpl)
+        list->add(myImpl);
+    return list;
+}
 
 XERCES_CPP_NAMESPACE_END
 

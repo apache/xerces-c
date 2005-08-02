@@ -26,6 +26,7 @@
 #include <xercesc/dom/DOMImplementationSource.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include "DOMImplementationImpl.hpp"
+#include "DOMImplementationListImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -137,6 +138,32 @@ DOMImplementation *DOMImplementationRegistry::getDOMImplementation(const XMLCh* 
     }
 
     return 0;
+}
+
+DOMImplementationList* DOMImplementationRegistry::getDOMImplementationList(const XMLCh* features) {
+
+    DOMImplementationListImpl* list = new DOMImplementationListImpl;
+
+    XMLMutexLock lock(&getDOMImplSrcVectorMutex());
+
+    unsigned int len = getDOMImplSrcVector()->size();
+
+    // Put our defined source there
+    if (len == 0)
+        getDOMImplSrcVector()->addElement((DOMImplementationSource*)DOMImplementationImpl::getDOMImplementationImpl());
+
+    len = getDOMImplSrcVector()->size();
+
+    for (unsigned int i = len; i > 0; i--) {
+        DOMImplementationSource* source = getDOMImplSrcVector()->elementAt(i-1);
+        DOMImplementationList* oneList = source->getDOMImplementationList(features);
+        XMLSize_t oneListLen=oneList->getLength();
+        for(XMLSize_t j=0; j<oneListLen; j++)
+            list->add(oneList->item(j));
+        oneList->release();
+    }
+
+    return list;
 }
 
 void DOMImplementationRegistry::addSource (DOMImplementationSource* source) {

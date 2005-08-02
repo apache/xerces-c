@@ -23,11 +23,10 @@
 
 /**
   * This interface permits a DOM implementer to supply one or more
-  * implementations, based upon requested features. Each implemented
+  * implementations, based upon requested features and versions. Each implemented
   * <code>DOMImplementationSource</code> object is listed in the
   * binding-specific list of available sources so that its
   * <code>DOMImplementation</code> objects are made available.
-  * <p>See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409'>Document Object Model (DOM) Level 3 Core Specification</a>.
   *
   * @since DOM Level 3
   */
@@ -37,6 +36,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class DOMImplementation;
+class DOMImplementationList;
 
 class CDOM_EXPORT DOMImplementationSource
 {
@@ -79,9 +79,7 @@ public:
     /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
-     * A method to request a DOM implementation.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * A method to request the first DOM implementation that supports the specified features.
      *
      * @param features A string that specifies which features are required.
      *   This is a space separated list in which each feature is specified
@@ -92,6 +90,18 @@ public:
      * @since DOM Level 3
      */
     virtual DOMImplementation* getDOMImplementation(const XMLCh* features) const = 0;
+
+    /**
+     * A method to request a list of DOM implementations that support the specified features and versions,
+     *
+     * @param features A string that specifies which features are required.
+     *   This is a space separated list in which each feature is specified
+     *   by its name optionally followed by a space and a version number.
+     *   This is something like: "XML 1.0 Traversal 2.0"
+     * @return A list of DOM implementations that support the desired features
+     * @since DOM Level 3
+     */
+    virtual DOMImplementationList* getDOMImplementationList(const XMLCh* features) const = 0;
     //@}
 
 };

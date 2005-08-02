@@ -286,6 +286,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XSDLocator.obj \
     $(TARGETPATH)\obj\DOMRangeException.obj \
     $(TARGETPATH)\obj\DOMImplementationImpl.obj \
+    $(TARGETPATH)\obj\DOMImplementationListImpl.obj \
     $(TARGETPATH)\obj\DOMImplementationRegistry.obj \
     $(TARGETPATH)\obj\DOMLSParserImpl.obj \
     $(TARGETPATH)\obj\DOMLSSerializerImpl.obj \

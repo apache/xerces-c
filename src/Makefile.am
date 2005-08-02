@@ -271,6 +271,7 @@ dom_headers	= \
 	xercesc/dom/DOMErrorHandler.hpp \
 	xercesc/dom/DOMException.hpp \
 	xercesc/dom/DOMImplementation.hpp \
+	xercesc/dom/DOMImplementationList.hpp \
 	xercesc/dom/DOMImplementationLS.hpp \
 	xercesc/dom/DOMImplementationRegistry.hpp \
 	xercesc/dom/DOMImplementationSource.hpp \
@@ -333,6 +334,7 @@ domimpl_headers	= \
 	xercesc/dom/impl/DOMEntityReferenceImpl.hpp \
 	xercesc/dom/impl/DOMErrorImpl.hpp \
 	xercesc/dom/impl/DOMImplementationImpl.hpp \
+	xercesc/dom/impl/DOMImplementationListImpl.hpp \
 	xercesc/dom/impl/DOMLocatorImpl.hpp \
 	xercesc/dom/impl/DOMNamedNodeMapImpl.hpp \
 	xercesc/dom/impl/DOMNodeIDMap.hpp \
@@ -371,6 +373,7 @@ domimpl_sources	= \
 	xercesc/dom/impl/DOMEntityReferenceImpl.cpp \
 	xercesc/dom/impl/DOMErrorImpl.cpp \
 	xercesc/dom/impl/DOMImplementationImpl.cpp \
+	xercesc/dom/impl/DOMImplementationListImpl.cpp \
 	xercesc/dom/impl/DOMImplementationRegistry.cpp \
 	xercesc/dom/impl/DOMLocatorImpl.cpp \
 	xercesc/dom/impl/DOMNamedNodeMapImpl.cpp \
