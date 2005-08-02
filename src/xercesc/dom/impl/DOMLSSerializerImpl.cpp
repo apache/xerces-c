@@ -394,14 +394,17 @@ void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
         setFeature(featureId, state);
 
     //
-    // canonical-form and format-pretty-print can not be both set to true
-    // meaning set canonical-form true will automatically set
-    // format-pretty-print to false and vise versa.
+    // setting "canonical-form" to true will set the parameters "format-pretty-print", 
+    // "discard-default-content", and "xml-declaration", to false
     //
     if ((featureId == CANONICAL_FORM_ID) && state)
+    {
         setFeature(FORMAT_PRETTY_PRINT_ID, false);
-
-    if ((featureId == FORMAT_PRETTY_PRINT_ID) && state)
+        setFeature(DISCARD_DEFAULT_CONTENT_ID, false);
+        setFeature(XML_DECLARATION, false);
+    }
+    // Setting one of those parameters to true will set "canonical-form" to false.
+    if ((featureId == FORMAT_PRETTY_PRINT_ID || featureId == DISCARD_DEFAULT_CONTENT_ID || featureId == XML_DECLARATION) && state)
         setFeature(CANONICAL_FORM_ID, false);
 }
 
@@ -552,6 +555,8 @@ XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
     XMLCh* tempEncoding = fEncoding;
     fEncoding = (XMLCh*) XMLUni::fgUTF16EncodingString;
 
+    bool bBOMFlag=getFeature(BYTE_ORDER_MARK_ID);
+    setFeature(BYTE_ORDER_MARK_ID, false);
     try
     {
         retVal = write(nodeToWrite, &destination);
@@ -567,10 +572,12 @@ XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
         // exception thrown in XMLBuffer class
         //
         fEncoding = tempEncoding;
+        setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
         return 0;
     }
 
     fEncoding = tempEncoding;
+    setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
     return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), fMemoryManager) : 0);
 }
 
@@ -998,13 +1005,16 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                             }
                         }
                     }
-                    *fFormatter  << XMLFormatter::NoEscapes
-                                 << chSpace << attribute->getNodeName()
-                                 << chEqual << chDoubleQuote
-                                 << XMLFormatter::AttrEscapes
-                                 << attribute->getNodeValue()
-                                 << XMLFormatter::NoEscapes
-                                 << chDoubleQuote;
+                    if (XMLString::equals(ns, XMLUni::fgXMLNSURIName) || checkFilter(attribute) == DOMNodeFilter::FILTER_ACCEPT)
+                    {
+                        *fFormatter  << XMLFormatter::NoEscapes
+                                     << chSpace << attribute->getNodeName()
+                                     << chEqual << chDoubleQuote
+                                     << XMLFormatter::AttrEscapes
+                                     << attribute->getNodeValue()
+                                     << XMLFormatter::NoEscapes
+                                     << chDoubleQuote;
+                    }
                 } // end of for
             } // end of FILTER_ACCEPT
 
@@ -1514,8 +1524,6 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
             curPtr = nextPtr;
         }
     }
-
-    return;
 }
 
 //
@@ -1710,9 +1718,6 @@ void DOMLSSerializerImpl::processBOM()
 	    else
 			fFormatter->writeBOM(BOM_ucs4le, 4);
     }
-
-    return;
-
 }
 
 XERCES_CPP_NAMESPACE_END
