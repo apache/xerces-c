@@ -172,26 +172,31 @@ public:
      * with respect to "partial validity", this exception would be raised
      * and the operation would not be done.
      *
-     * The above is since DOM Level 2
+     * <p><code>TYPE_MISMATCH_ERR:</code>
+     * If the type of an object is incompatible with the expected type of 
+     * the parameter associated to the object, this exception would be raised.
+     *
+     * The above is since DOM Level 3
      * @since DOM Level 3
      */
     enum ExceptionCode {
-         INDEX_SIZE_ERR       = 1,
-         DOMSTRING_SIZE_ERR   = 2,
-         HIERARCHY_REQUEST_ERR = 3,
-         WRONG_DOCUMENT_ERR   = 4,
-         INVALID_CHARACTER_ERR = 5,
-         NO_DATA_ALLOWED_ERR  = 6,
-         NO_MODIFICATION_ALLOWED_ERR = 7,
-         NOT_FOUND_ERR        = 8,
-         NOT_SUPPORTED_ERR    = 9,
-         INUSE_ATTRIBUTE_ERR  = 10,
-         INVALID_STATE_ERR    = 11,
-         SYNTAX_ERR     = 12,
-         INVALID_MODIFICATION_ERR    = 13,
-         NAMESPACE_ERR     = 14,
-         INVALID_ACCESS_ERR   = 15,
-         VALIDATION_ERR       = 16
+         INDEX_SIZE_ERR                 = 1,
+         DOMSTRING_SIZE_ERR             = 2,
+         HIERARCHY_REQUEST_ERR          = 3,
+         WRONG_DOCUMENT_ERR             = 4,
+         INVALID_CHARACTER_ERR          = 5,
+         NO_DATA_ALLOWED_ERR            = 6,
+         NO_MODIFICATION_ALLOWED_ERR    = 7,
+         NOT_FOUND_ERR                  = 8,
+         NOT_SUPPORTED_ERR              = 9,
+         INUSE_ATTRIBUTE_ERR            = 10,
+         INVALID_STATE_ERR              = 11,
+         SYNTAX_ERR                     = 12,
+         INVALID_MODIFICATION_ERR       = 13,
+         NAMESPACE_ERR                  = 14,
+         INVALID_ACCESS_ERR             = 15,
+         VALIDATION_ERR                 = 16,
+         TYPE_MISMATCH_ERR              = 17
         };
     //@}
 
