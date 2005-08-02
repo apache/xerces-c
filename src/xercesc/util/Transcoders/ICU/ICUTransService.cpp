@@ -124,11 +124,13 @@ static XMLCh* convertToXMLCh( const UChar* const toConvert,
 // ---------------------------------------------------------------------------
 ICUTransService::ICUTransService()
 {
+#if (U_ICU_VERSION_MAJOR_NUM > 2 || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >= 6))
     UErrorCode errorCode=U_ZERO_ERROR;
     u_init(&errorCode);
     if(U_FAILURE(errorCode)) {
         XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
     }    
+#endif
 
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
 #if (U_ICU_VERSION_MAJOR_NUM < 2)
