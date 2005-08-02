@@ -32,17 +32,17 @@
 
 
 #define DOMTYPEINFOTEST(info, type, uri, line) \
-    tmp = XMLString::equals(info->getName(), type) && XMLString::equals(info->getNamespace(), uri);\
+    tmp = XMLString::equals(info->getTypeName(), type) && XMLString::equals(info->getTypeNamespace(), uri);\
     if(!tmp) { \
       XERCES_STD_QUALIFIER cerr << "DOMTypeInfo test failed at line, " << line << "\nExpected values : typename '" << XMLString::transcode((XMLCh*)type) << "', uri '" << XMLString::transcode((XMLCh*)uri); \
       XERCES_STD_QUALIFIER cerr << "'\nActual values   : typename '"; \
-      if(info->getName())   \
-        XERCES_STD_QUALIFIER cerr << XMLString::transcode(info->getName());  \
+      if(info->getTypeName())   \
+        XERCES_STD_QUALIFIER cerr << XMLString::transcode(info->getTypeName());  \
       else \
         XERCES_STD_QUALIFIER cerr << "(null)"; \
       XERCES_STD_QUALIFIER cerr << "', uri '"; \
-      if(info->getNamespace())   \
-        XERCES_STD_QUALIFIER cerr << XMLString::transcode(info->getNamespace()); \
+      if(info->getTypeNamespace())   \
+        XERCES_STD_QUALIFIER cerr << XMLString::transcode(info->getTypeNamespace()); \
       else \
         XERCES_STD_QUALIFIER cerr << "(null)"; \
       XERCES_STD_QUALIFIER cerr << "'\n" << XERCES_STD_QUALIFIER endl; \
@@ -720,7 +720,7 @@ bool TypeInfo::testInvaild() {
 
 
 bool TypeInfo::compareDOMTypeInfo(const DOMTypeInfo *info, const XMLCh* type, const XMLCh* uri) {
-    return XMLString::equals(info->getName(), type) && XMLString::equals(info->getNamespace(), uri);
+    return XMLString::equals(info->getTypeName(), type) && XMLString::equals(info->getTypeNamespace(), uri);
 }
 
 

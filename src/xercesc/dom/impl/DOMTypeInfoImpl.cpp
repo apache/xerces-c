@@ -49,7 +49,7 @@ DOMTypeInfoImpl::DOMTypeInfoImpl(const XMLCh* namespaceUri/*=0*/, const XMLCh* n
     //  - [schema specified]=false
 }
 
-const XMLCh* DOMTypeInfoImpl::getName() const {
+const XMLCh* DOMTypeInfoImpl::getTypeName() const {
     // if it's a DTD, return the data that was stored
     if(!getNumericProperty(PSVI_Schema_Specified))
         return fTypeName;
@@ -61,7 +61,7 @@ const XMLCh* DOMTypeInfoImpl::getName() const {
     return fTypeName;
 }
 
-const XMLCh* DOMTypeInfoImpl::getNamespace() const {
+const XMLCh* DOMTypeInfoImpl::getTypeNamespace() const {
     // if it's a DTD, return the data that was stored
     if(!getNumericProperty(PSVI_Schema_Specified))
         return fTypeNamespace;
@@ -71,6 +71,17 @@ const XMLCh* DOMTypeInfoImpl::getNamespace() const {
     if(fMemberTypeName)     // we check on the name, as the URI can be NULL
         return fMemberTypeNamespace;
     return fTypeNamespace;
+}
+
+bool DOMTypeInfoImpl::isDerivedFrom(const XMLCh* typeNamespaceArg, const XMLCh* typeNameArg, unsigned long derivationMethod) const
+{
+    // if it's a DTD, return false
+    if(!getNumericProperty(PSVI_Schema_Specified))
+        return false;
+    if(XMLString::equals(typeNamespaceArg, getTypeNamespace()) && XMLString::equals(typeNameArg, getTypeName()))
+        return true;
+    // TODO: need a pointer to the Grammar object
+    return false;
 }
 
 const XMLCh* DOMTypeInfoImpl::getStringProperty(PSVIProperty prop) const {

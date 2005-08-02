@@ -59,82 +59,26 @@ public:
     static DOMTypeInfoImpl  g_DtdValidatedNOTATIONAttribute;
     static DOMTypeInfoImpl  g_DtdValidatedENUMERATIONAttribute;
 
-    //@{
     // -----------------------------------------------------------------------
-    //  Getter methods
+    //  DOMTypeInfo interface
     // -----------------------------------------------------------------------
-    /**
-     * Returns The name of a type declared for the associated <code>DOMElement</code> 
-     * or <code>DOMAttr</code>, or null if undeclared.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return The name of a type declared for the associated <code>DOMElement</code> 
-     * or <code>DOMAttribute</code>, or null if undeclared.
-     * @since DOM level 3
-     */
-    virtual const XMLCh* getName() const;
+    virtual const XMLCh* getTypeName() const;
+    virtual const XMLCh* getTypeNamespace() const;
+    virtual bool isDerivedFrom(const XMLCh* typeNamespaceArg, const XMLCh* typeNameArg, unsigned long derivationMethod) const;
 
-    /**
-     * The namespace of the type declared for the associated <code>DOMElement</code> 
-     * or <code>DOMAttr</code> or null if the <code>DOMElement</code> does not have 
-     * declaration or if no namespace information is available.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return The namespace of the type declared for the associated <code>DOMElement</code> 
-     * or <code>DOMAttr</code> or null if the <code>DOMElement</code> does not have 
-     * declaration or if no namespace information is available.
-     * @since DOM level 3
-     */
-    virtual const XMLCh* getNamespace() const;
-
-    /**
-     * Returns the string value of the specified PSVI property associated to a 
-     * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return the string value of the specified PSVI property associated to a 
-     * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
-     */
+    // -----------------------------------------------------------------------
+    //  DOMPSVITypeInfo interface
+    // -----------------------------------------------------------------------
     virtual const XMLCh* getStringProperty(PSVIProperty prop) const;
-
-    /**
-     * Returns the numeric value of the specified PSVI property associated to a 
-     * <code>DOMElement</code> or <code>DOMAttr</code>, or 0 if not available.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return the numeric value of the specified PSVI property associated to a 
-     * <code>DOMElement</code> or <code>DOMAttr</code>, or 0 if not available.
-     */
     virtual int getNumericProperty(PSVIProperty prop) const;
-    //@}
 
-    //@{
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-
-    /**
-     * Set the value for a string PSVI property.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     */
     virtual void setStringProperty(PSVIProperty prop, const XMLCh* value);
-
-    /**
-     * Set the value for a numeric PSVI property.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     */
     virtual void setNumericProperty(PSVIProperty prop, int value);
-    //@}
   
-  private:
+private:
     int             fBitFields;
     const XMLCh*    fTypeName;
     const XMLCh*    fTypeNamespace;
