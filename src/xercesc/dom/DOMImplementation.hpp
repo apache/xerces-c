@@ -182,24 +182,21 @@ public:
     /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
-     * This method makes available a <code>DOMImplementation</code>'s
-     * specialized interface (see ).
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * This method returns a specialized object which implements the specialized APIs 
+     * of the specified feature and version, as specified in DOM Features.
+     * This method also allow the implementation to provide specialized objects which 
+     * do not support the <code>DOMImplementation</code> interface.
      *
      * @param feature The name of the feature requested (case-insensitive).
-     * @return Returns an alternate <code>DOMImplementation</code> which
-     *   implements the specialized APIs of the specified feature, if any,
-     *   or <code>null</code> if there is no alternate
-     *   <code>DOMImplementation</code> object which implements interfaces
-     *   associated with that feature. Any alternate
-     *   <code>DOMImplementation</code> returned by this method must
-     *   delegate to the primary core <code>DOMImplementation</code> and not
-     *   return results inconsistent with the primary
-     *   <code>DOMImplementation</code>
+     *        Note that any plus sign "+" prepended to the name of the feature will 
+     *        be ignored since it is not significant in the context of this method.
+     * @param version This is the version number of the feature to test.
+     * @return Returns an object which implements the specialized APIs of the specified 
+     *         feature and version, if any, or null if there is no object which implements 
+     *         interfaces associated with that feature. 
      * @since DOM Level 3
      */
-    virtual DOMImplementation* getInterface(const XMLCh* feature) = 0;
+    virtual void* getFeature(const XMLCh* feature, const XMLCh* version) = 0;
 
     //@}
 

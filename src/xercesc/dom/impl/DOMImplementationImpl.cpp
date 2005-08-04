@@ -178,6 +178,10 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
     if (!feature)
         return false;
 
+    // ignore the + modifier
+    if(*feature==chPlus)
+        feature++;
+
     bool anyVersion = (version == 0 || !*version);
     bool version1_0 = XMLString::equals(version, g1_0);
     bool version2_0 = XMLString::equals(version, g2_0);
@@ -230,9 +234,7 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 
 
 //Introduced in DOM Level 3
-DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh*){
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-
+void* DOMImplementationImpl::getFeature(const XMLCh*, const XMLCh*){
     return 0;
 }
 

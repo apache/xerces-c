@@ -67,7 +67,7 @@ public:
                                                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // DOM Level 3
-    virtual DOMImplementation*  getInterface(const XMLCh* feature);
+    virtual void* getFeature(const XMLCh* feature, const XMLCh* version);
 
     // Non-standard extension
     virtual DOMDocument*        createDocument(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
