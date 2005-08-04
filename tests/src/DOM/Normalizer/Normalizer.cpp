@@ -370,10 +370,9 @@ int main(int argc, char **argv) {
     //check error conditions
     XERCES_STD_QUALIFIER cout << "error conditions" << XERCES_STD_QUALIFIER endl;
 
-    DOMConfigurationImpl *cImpl = new ((DOMDocumentImpl*)doc) DOMConfigurationImpl();
-    ((DOMDocumentImpl*)doc)->setDOMConfiguration(cImpl);
-    cImpl->setErrorHandler(normalizer);
-    cImpl->setParameter(X("namespaces"), true);
+    DOMConfiguration *conf = doc->getDOMConfig();
+    conf->setParameter(XMLUni::fgDOMErrorHandler, normalizer);
+    conf->setParameter(XMLUni::fgDOMNamespaces, true);
 
     DOMElement *level1Node = doc->createElement(X("level1Node"));
     docFirstElement->appendChild(level1Node);
@@ -396,7 +395,7 @@ int main(int argc, char **argv) {
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
 
-    cImpl->setParameter(X("comments"), false);
+    conf->setParameter(XMLUni::fgDOMComments, false);
     docFirstElement->appendChild(comment);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
@@ -408,7 +407,7 @@ int main(int argc, char **argv) {
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
 
-    cImpl->setParameter(X("cdata-sections"), false);
+    conf->setParameter(XMLUni::fgDOMCDATASections, false);
     docFirstElement->appendChild(cData);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);

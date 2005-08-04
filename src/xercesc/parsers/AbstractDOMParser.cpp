@@ -888,7 +888,7 @@ void AbstractDOMParser::startDocument()
     // set DOM error checking off
     fDocument->setErrorChecking(false);
     fDocument->setDocumentURI(fScanner->getLocator()->getSystemId());
-    fDocument->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
+    fDocument->setInputEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
 }
 
 
@@ -1148,11 +1148,10 @@ void AbstractDOMParser::XMLDecl(const   XMLCh* const version
                                 , const XMLCh* const standalone
                                 , const XMLCh* const actualEncStr)
 {
-    fDocument->setStandalone(XMLString::equals(XMLUni::fgYesString, standalone));
-
-    fDocument->setVersion(version);
-    fDocument->setEncoding(encoding);
-    fDocument->setActualEncoding(actualEncStr);
+    fDocument->setXmlStandalone(XMLString::equals(XMLUni::fgYesString, standalone));
+    fDocument->setXmlVersion(version);
+    fDocument->setXmlEncoding(encoding);
+    fDocument->setInputEncoding(actualEncStr);
 }
 
 // ---------------------------------------------------------------------------

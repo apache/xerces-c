@@ -585,14 +585,15 @@ void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
 {
 
 /**
- * The encoding to use when writing is determined as follows:
- *     If the encoding attribute has been set, that value will be used.
- *     If the encoding attribute is null or empty,
- *            but the item to be written, or
- *            the owner document specified encoding (ie. the "actualEncoding"
- *            from the document) that value will be used.
- *     If neither of the above provides an encoding name, a default encoding of
- *            "UTF-8" will be used.
+ * When writing to a LSOutput, the encoding is found by looking at the encoding information 
+ * that is reachable through the LSOutput and the item to be written (or its owner document) in this order:
+ *
+ *  1. LSOutput.encoding,
+ *  2. Document.inputEncoding,
+ *  3. Document.xmlEncoding.
+ *
+ * If no encoding is reachable through the above properties, a default encoding of "UTF-8" will be used. 
+ * If the specified encoding is not supported an "unsupported-encoding" fatal error is raised.
  */
     fEncodingUsed = gUTF8;
 
@@ -606,7 +607,7 @@ void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
                             (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
         if (docu)
         {
-            const XMLCh* tmpEncoding = docu->getEncoding();
+            const XMLCh* tmpEncoding = docu->getInputEncoding();
 
             if ( tmpEncoding && *tmpEncoding)
             {
@@ -614,7 +615,7 @@ void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
             }
             else
             {
-                tmpEncoding = docu->getActualEncoding();
+                tmpEncoding = docu->getXmlEncoding();
 
                 if ( tmpEncoding && *tmpEncoding)
                 {
@@ -650,7 +651,7 @@ void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
                               (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
     if (docu)
     {
-        fDocumentVersion = docu->getVersion();
+        fDocumentVersion = docu->getXmlVersion();
     }
 
     fErrorCount = 0;
@@ -793,13 +794,11 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             //
 
             if (getFeature(XML_DECLARATION)) {
-                const XMLCh* versionNo = (docu->getVersion()) ? docu->getVersion() : gXMLDecl_ver10;
-                *fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
-
-                // use the encoding resolved in initSession()
+                // use the version and encoding resolved in initSession()
+                *fFormatter << gXMLDecl_VersionInfo << fDocumentVersion << gXMLDecl_separator;
                 *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
 
-                const XMLCh* st = (docu->getStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
+                const XMLCh* st = (docu->getXmlStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
                 *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
                 
                 *fFormatter << gXMLDecl_endtag;

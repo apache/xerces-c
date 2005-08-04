@@ -516,100 +516,62 @@ public:
     //@{
 
     /**
-     * An attribute specifying the actual encoding of this document. This is
-     * <code>null</code> otherwise.
-     * <br> This attribute represents the property [character encoding scheme]
-     * defined in.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * An attribute specifying the encoding used for this document at the time of the parsing. 
+     * This is <code>null</code> when it is not known, such as when the DOMDocument was created in memory.
      *
      * @since DOM Level 3
      */
-    virtual const XMLCh*           getActualEncoding() const = 0;
+    virtual const XMLCh*           getInputEncoding() const = 0;
 
     /**
-     * An attribute specifying the actual encoding of this document. This is
-     * <code>null</code> otherwise.
-     * <br> This attribute represents the property [character encoding scheme]
-     * defined in .
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * An attribute specifying, as part of the XML declaration, the encoding of this document. 
+     * This is <code>null</code> when unspecified or when it is not known, such as when the 
+     * DOMDocument was created in memory.
      *
      * @since DOM Level 3
      */
-    virtual void                   setActualEncoding(const XMLCh* actualEncoding) = 0;
+    virtual const XMLCh*           getXmlEncoding() const = 0;
 
     /**
-     * An attribute specifying, as part of the XML declaration, the encoding
-     * of this document. This is <code>null</code> when unspecified.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * An attribute specifying, as part of the XML declaration, whether this document is standalone. 
+     * This is <code>false</code> when unspecified.
      *
      * @since DOM Level 3
      */
-    virtual const XMLCh*           getEncoding() const = 0;
-
-    /**
-     * An attribute specifying, as part of the XML declaration, the encoding
-     * of this document. This is <code>null</code> when unspecified.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @since DOM Level 3
-     */
-    virtual void                   setEncoding(const XMLCh* encoding) = 0;
+    virtual bool                   getXmlStandalone() const = 0;
 
     /**
      * An attribute specifying, as part of the XML declaration, whether this
      * document is standalone.
      * <br> This attribute represents the property [standalone] defined in .
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
-    virtual bool                   getStandalone() const = 0;
-
-    /**
-     * An attribute specifying, as part of the XML declaration, whether this
-     * document is standalone.
-     * <br> This attribute represents the property [standalone] defined in .
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @since DOM Level 3
-     */
-    virtual void                   setStandalone(bool standalone) = 0;
+    virtual void                   setXmlStandalone(bool standalone) = 0;
 
     /**
      * An attribute specifying, as part of the XML declaration, the version
      * number of this document. This is <code>null</code> when unspecified.
      * <br> This attribute represents the property [version] defined in .
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
-    virtual const XMLCh*           getVersion() const = 0;
+    virtual const XMLCh*           getXmlVersion() const = 0;
 
     /**
      * An attribute specifying, as part of the XML declaration, the version
      * number of this document. This is <code>null</code> when unspecified.
      * <br> This attribute represents the property [version] defined in .
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
-    virtual void                   setVersion(const XMLCh* version) = 0;
+    virtual void                   setXmlVersion(const XMLCh* version) = 0;
 
     /**
      * The location of the document or <code>null</code> if undefined.
      * <br>Beware that when the <code>DOMDocument</code> supports the feature
      * "HTML" , the href attribute of the HTML BASE element takes precedence
      * over this attribute.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @since DOM Level 3
      */
@@ -619,8 +581,6 @@ public:
      * <br>Beware that when the <code>DOMDocument</code> supports the feature
      * "HTML" , the href attribute of the HTML BASE element takes precedence
      * over this attribute.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @since DOM Level 3
      */
@@ -634,8 +594,6 @@ public:
      * behavior is undefined. This attribute is <code>true</code> by
      * defaults.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
     virtual bool                   getStrictErrorChecking() const = 0;
@@ -646,8 +604,6 @@ public:
      * and not raise any <code>DOMException</code>. In case of error, the
      * behavior is undefined. This attribute is <code>true</code> by
      * defaults.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @since DOM Level 3
      */
@@ -675,11 +631,9 @@ public:
      * by modifying the existing node or creating a new one as described
      * above, it is put back.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param n The node to rename.
      * @param namespaceURI The new namespaceURI.
-     * @param name The new qualified name.
+     * @param qualifiedName The new qualified name.
      * @return The renamed node. This is either the specified node or the new
      *   node that was created to replace the specified node.
      * @exception DOMException
@@ -699,7 +653,7 @@ public:
      *   different from "http://www.w3.org/2000/xmlns/".
      * @since DOM Level 3
      */
-    virtual DOMNode* renameNode(DOMNode* n, const XMLCh* namespaceURI, const XMLCh* name) = 0;
+    virtual DOMNode* renameNode(DOMNode* n, const XMLCh* namespaceURI, const XMLCh* qualifiedName) = 0;
 
 
     /**
@@ -708,8 +662,6 @@ public:
      * parent it is first removed from its parent child list. This
      * effectively allows moving a subtree from one document to another. The
      * following list describes the specifics for each type of node.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * <dl>
      * <dt>
@@ -771,8 +723,6 @@ public:
      * depends on the features being set. See <code>DOMConfiguration</code> for 
      * details.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * <br>Noticeably this method normalizes <code>DOMText</code> nodes, makes
      * the document "namespace wellformed", according to the algorithm
      * described below in pseudo code, by adding missing namespace
@@ -793,7 +743,7 @@ public:
 
 
     /**
-     * The configuration used when Document.normalizeDocument is invoked.
+     * The configuration used when DOMDocument::normalizeDocument is invoked.
      * 
      * @return The <code>DOMConfiguration</code> from this <code>DOMDocument</code>
      *
@@ -804,10 +754,9 @@ public:
      * The feature to normalize namespaces is implemented. This feature is called 
      * "namespaces" and is incorectly documented in the current WD.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
      * @since DOM Level 3
      */
-    virtual DOMConfiguration*      getDOMConfiguration() const = 0;
+    virtual DOMConfiguration*      getDOMConfig() const = 0;
 
     //@}
 

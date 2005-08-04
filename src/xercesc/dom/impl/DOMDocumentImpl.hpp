@@ -216,23 +216,22 @@ public:
     virtual DOMElement*          getElementById(const XMLCh *elementId) const;
 
     //Introduced in DOM Level 3
-    virtual const XMLCh*         getActualEncoding() const;
-    virtual void                 setActualEncoding(const XMLCh* actualEncoding);
-    virtual const XMLCh*         getEncoding() const;
-    virtual void                 setEncoding(const XMLCh* encoding);
-    virtual bool                 getStandalone() const;
-    virtual void                 setStandalone(bool standalone);
-    virtual const XMLCh*         getVersion() const;
-    virtual void                 setVersion(const XMLCh* version);
+    virtual const XMLCh*         getInputEncoding() const;
+    virtual const XMLCh*         getXmlEncoding() const;
+    virtual bool                 getXmlStandalone() const;
+    virtual void                 setXmlStandalone(bool standalone);
+    virtual const XMLCh*         getXmlVersion() const;
+    virtual void                 setXmlVersion(const XMLCh* version);
     virtual const XMLCh*         getDocumentURI() const;
     virtual void                 setDocumentURI(const XMLCh* documentURI);
     virtual bool                 getStrictErrorChecking() const;
     virtual void                 setStrictErrorChecking(bool strictErrorChecking);
     virtual DOMNode*             adoptNode(DOMNode* source);
     virtual void                 normalizeDocument();
-    virtual DOMConfiguration*    getDOMConfiguration() const;
-    virtual void                 setDOMConfiguration(DOMConfiguration *config);
+    virtual DOMConfiguration*    getDOMConfig() const;
 
+    void                         setInputEncoding(const XMLCh* actualEncoding);
+    void                         setXmlEncoding(const XMLCh* encoding);
     // helper functions to prevent storing userdata pointers on every node.
     void*                        setUserData(DOMNodeImpl* n,
                                             const XMLCh* key,
@@ -298,10 +297,10 @@ private:
     //  data
     // -----------------------------------------------------------------------
     // New data introduced in DOM Level 3
-    const XMLCh*          fActualEncoding;
-    const XMLCh*          fEncoding;
-    bool                  fStandalone;
-    const XMLCh*          fVersion;
+    const XMLCh*          fInputEncoding;
+    const XMLCh*          fXmlEncoding;
+    bool                  fXmlStandalone;
+    const XMLCh*          fXmlVersion;
     const XMLCh*          fDocumentURI;
     DOMConfiguration*     fDOMConfiguration;
     

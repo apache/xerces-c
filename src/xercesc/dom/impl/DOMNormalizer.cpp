@@ -143,8 +143,8 @@ DOMNormalizer::~DOMNormalizer() {
 void DOMNormalizer::normalizeDocument(DOMDocumentImpl *doc) {
  
     fDocument = doc;
-    fConfiguration = (DOMConfigurationImpl*)doc->getDOMConfiguration();
-    DOMConfigurationImpl *dci = (DOMConfigurationImpl*)fDocument->getDOMConfiguration();
+    fConfiguration = (DOMConfigurationImpl*)doc->getDOMConfig();
+    DOMConfigurationImpl *dci = (DOMConfigurationImpl*)fDocument->getDOMConfig();
     if(dci)
         fErrorHandler = dci->getErrorHandler();            
     else 

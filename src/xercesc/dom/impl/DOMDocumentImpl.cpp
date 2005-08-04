@@ -63,10 +63,10 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
     : fNode(this),
       fParent(this),
       fNodeIDMap(0),
-      fActualEncoding(0),
-      fEncoding(0),
-      fStandalone(false),
-      fVersion(0),
+      fInputEncoding(0),
+      fXmlEncoding(0),
+      fXmlStandalone(false),
+      fXmlVersion(0),
       fDocumentURI(0),
       fDOMConfiguration(0),
       fUserDataTableKeys(17, manager),
@@ -99,10 +99,10 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
     : fNode(this),
       fParent(this),
       fNodeIDMap(0),
-      fActualEncoding(0),
-      fEncoding(0),
-      fStandalone(false),
-      fVersion(0),
+      fInputEncoding(0),
+      fXmlEncoding(0),
+      fXmlStandalone(false),
+      fXmlVersion(0),
       fDocumentURI(0),
       fDOMConfiguration(0),
       fUserDataTableKeys(17, manager),
@@ -201,11 +201,11 @@ DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
 
     // Note:  the cloned document node goes on the same heap we live in.
     DOMDocumentImpl *newdoc = new (fMemoryManager) DOMDocumentImpl(fMemoryManager);
-    if(fEncoding && *fEncoding)
-        newdoc->setEncoding(fEncoding);
-    if(fVersion && *fVersion)
-        newdoc->setVersion(fVersion);
-    newdoc->setStandalone(fStandalone);
+    if(fXmlEncoding && *fXmlEncoding)
+        newdoc->setXmlEncoding(fXmlEncoding);
+    if(fXmlVersion && *fXmlVersion)
+        newdoc->setXmlVersion(fXmlVersion);
+    newdoc->setXmlStandalone(fXmlStandalone);
 
     // then the children by _importing_ them
     if (deep)
@@ -463,6 +463,7 @@ DOMNodeList *DOMDocumentImpl::getElementsByTagName(const XMLCh *tagname) const
 
 
 DOMImplementation   *DOMDocumentImpl::getImplementation() const {
+    // REVISIT: we should return the implementation that created us
     return DOMImplementation::getImplementation();
 }
 
@@ -525,7 +526,7 @@ DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
 
 bool DOMDocumentImpl::isXMLName(const XMLCh *s)
 {
-    if (XMLString::equals(fVersion, XMLUni::fgVersion1_1))
+    if (XMLString::equals(fXmlVersion, XMLUni::fgVersion1_1))
         return XMLChar1_1::isValidName(s, XMLString::stringLen(s));
     else
         return XMLChar1_0::isValidName(s, XMLString::stringLen(s));
@@ -911,41 +912,41 @@ DOMNodeList *DOMDocumentImpl::getDeepNodeList(const DOMNode *rootNode,     //DOM
 
 
 //Introduced in DOM Level 3
-const XMLCh* DOMDocumentImpl::getActualEncoding() const {
-    return fActualEncoding;
+const XMLCh* DOMDocumentImpl::getInputEncoding() const {
+    return fInputEncoding;
 }
 
-void DOMDocumentImpl::setActualEncoding(const XMLCh* actualEncoding){
-    fActualEncoding = cloneString(actualEncoding);
+void DOMDocumentImpl::setInputEncoding(const XMLCh* actualEncoding){
+    fInputEncoding = cloneString(actualEncoding);
 }
 
-const XMLCh* DOMDocumentImpl::getEncoding() const {
-    return fEncoding;
+const XMLCh* DOMDocumentImpl::getXmlEncoding() const {
+    return fXmlEncoding;
 }
 
-void DOMDocumentImpl::setEncoding(const XMLCh* encoding){
-    fEncoding = cloneString(encoding);
+void DOMDocumentImpl::setXmlEncoding(const XMLCh* encoding){
+    fXmlEncoding = cloneString(encoding);
 }
 
-bool DOMDocumentImpl::getStandalone() const{
-    return fStandalone;
+bool DOMDocumentImpl::getXmlStandalone() const{
+    return fXmlStandalone;
 }
 
-void DOMDocumentImpl::setStandalone(bool standalone){
-    fStandalone = standalone;
+void DOMDocumentImpl::setXmlStandalone(bool standalone){
+    fXmlStandalone = standalone;
 }
 
-const XMLCh* DOMDocumentImpl::getVersion() const {
-    return fVersion;
+const XMLCh* DOMDocumentImpl::getXmlVersion() const {
+    return fXmlVersion;
 }
 
-void DOMDocumentImpl::setVersion(const XMLCh* version){
+void DOMDocumentImpl::setXmlVersion(const XMLCh* version){
     if ((version && *version) &&
         !XMLString::equals(version, XMLUni::fgVersion1_0) &&
         !XMLString::equals(version, XMLUni::fgVersion1_1))
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 
-    fVersion = cloneString(version);
+    fXmlVersion = cloneString(version);
 }
 
 const XMLCh* DOMDocumentImpl::getDocumentURI() const
@@ -984,15 +985,11 @@ void DOMDocumentImpl::normalizeDocument() {
     fNormalizer->normalizeDocument(this);
 }
 
-DOMConfiguration* DOMDocumentImpl::getDOMConfiguration() const {
+DOMConfiguration* DOMDocumentImpl::getDOMConfig() const {
     if(!fDOMConfiguration)
         ((DOMDocumentImpl*)this)->fDOMConfiguration = new ((DOMDocumentImpl*)this) DOMConfigurationImpl(fMemoryManager);
 
     return fDOMConfiguration;
-}
-
-void DOMDocumentImpl::setDOMConfiguration(DOMConfiguration *config) {
-    fDOMConfiguration = config;
 }
 
 DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool cloningDoc)
