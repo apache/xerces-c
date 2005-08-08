@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 <!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
 
-<book title="&XercesCName; Documentation" copyright="1999-2004 The Apache Software Foundation">
+<book title="&XercesCName; Documentation" copyright="1999-2005 The Apache Software Foundation">
 
   &home;
 
@@ -25,6 +25,7 @@
   <separator/>
 
      <document id="index"       label="Readme"             source="readme.xml"/>
+     <document id="charter"     label="Charter"             source="charter.xml"/>
      <document id="releases"    label="Release Info"     source="releases.xml"/>
      <hidden id="releases_archive"                   source="releases_archive.xml"/>
      &releases_plan;
@@ -92,7 +93,8 @@
 
   <separator/>
 
-   &cvs_repository;
-   &mail_archive;
+   &source_repository;
+   &mail_archive_user;
+   &mail_archive_devel;
 
 </book>
