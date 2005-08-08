@@ -58,6 +58,10 @@ class PSVIHandler;
   * @deprecated This interface has been replaced by the SAX2
   *             interface, which includes Namespace support.
   *             See SAX2XMLReader for more information.
+  *
+  * Note - XMLDocumentHandler calls, when used with SAXParser, will not provide correct namespace information. This is becaue the SAX parser does not support namespace aware processing.
+  *
+  *
   */
 
 class PARSERS_EXPORT SAXParser :
@@ -912,6 +916,8 @@ public :
       * <p>The methods in the advanced callback interface represent
       * Xerces-C extensions. There is no specification for this interface.</p>
       *
+      * Note - XMLDocumentHandler calls, when used with SAXParser, will not provide correct namespace information. This is becaue the SAX parser does not support namespace aware processing.
+      *
       * @param toInstall A pointer to the users advanced callback handler.
       *
       * @see #removeAdvDocHandler
@@ -924,6 +930,8 @@ public :
       * callbacks are not invoked by the scanner.
       * @param toRemove A pointer to the advanced callback handler which
       *                 should be removed.
+      *
+      * Note - XMLDocumentHandler calls, when used with SAXParser, will not provide correct namespace information. This is becaue the SAX parser does not support namespace aware processing.
       *
       * @see #installAdvDocHandler
       */
