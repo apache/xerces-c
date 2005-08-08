@@ -33,6 +33,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/Base64.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -337,6 +338,36 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         itoa(portNumber, fBuffer+i, 10);
     }
     strcat(fBuffer, "\r\n");
+
+    const XMLCh* username = urlSource.getUser();
+    const XMLCh* password = urlSource.getPassword();
+    if (username && password)
+    {
+        XMLBuffer userPass(256, fMemoryManager);
+        userPass.append(username);
+        userPass.append(chColon);
+        userPass.append(password);
+        char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
+        ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
+
+        unsigned int len;
+        XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
+ 
+        if (encodedData)
+        {
+            // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
+            XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
+            ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
+            XMLByte* cursor=authData;
+            for(unsigned int i=0;i<len;i++)
+                if(encodedData[i]!=chLF)
+                    *cursor++=encodedData[i];
+            *cursor++=0;
+            strcat(fBuffer, "Authorization: Basic ");
+            strcat(fBuffer, (char*)authData);
+            strcat(fBuffer, "\r\n");
+        }
+    }
 
     if(httpInfo!=0 && httpInfo->fHeaders!=0)
         strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
