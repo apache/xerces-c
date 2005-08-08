@@ -41,6 +41,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/Base64.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -103,6 +104,12 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     const char COLON[] =
     {
         chColon, chNull
+    };
+
+    const char AUTHORIZATION[] =
+    {
+        chLatin_A, chLatin_u, chLatin_t, chLatin_h, chLatin_o, chLatin_r, chLatin_i, chLatin_z, chLatin_a, chLatin_t, 
+        chLatin_i, chLatin_o, chLatin_n, chColon, chSpace, chLatin_B, chLatin_a, chLatin_s, chLatin_i, chLatin_c, chSpace, chNull
     };
 
     const char resp200 [] =
@@ -288,6 +295,36 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         strcat(fBuffer,portAsASCII);
     }
     strcat(fBuffer, CRLF);
+
+    const XMLCh* username = urlSource.getUser();
+    const XMLCh* password = urlSource.getPassword();
+    if (username && password)
+    {
+        XMLBuffer userPass(256, fMemoryManager);
+        userPass.append(username);
+        userPass.append(chColon);
+        userPass.append(password);
+        char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
+        ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
+
+        unsigned int len;
+        XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
+ 
+        if (encodedData)
+        {
+            // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
+            XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
+            ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
+            XMLByte* cursor=authData;
+            for(unsigned int i=0;i<len;i++)
+                if(encodedData[i]!=chLF)
+                    *cursor++=encodedData[i];
+            *cursor++=0;
+            strcat(fBuffer, AUTHORIZATION);
+            strcat(fBuffer, (char*)authData);
+            strcat(fBuffer, CRLF);
+        }
+    }
 
     if(httpInfo!=0 && httpInfo->fHeaders!=0)
         strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
