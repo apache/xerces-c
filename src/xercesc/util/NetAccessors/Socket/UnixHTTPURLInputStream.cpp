@@ -45,6 +45,38 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class SocketJanitor
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    SocketJanitor(int* toDelete) : fData(toDelete) {}
+    ~SocketJanitor() { reset(); }
+
+    int* get() const { return fData; }
+    int* release() { int* p = fData; fData = 0; return p; }
+
+    void reset(int* p = 0) { if(fData) close(*fData); fData=p; }
+    bool isDataNull() { return (fData == 0); }
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SocketJanitor();
+    SocketJanitor(const SocketJanitor&);
+    SocketJanitor& operator=(const SocketJanitor&);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fData
+    //      This is the pointer to the socket that must be closed when 
+    //      this object is destroyed.
+    // -----------------------------------------------------------------------
+    int*  fData;
+};
 
 UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
       : fSocket(0)
@@ -248,6 +280,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
     }
+    SocketJanitor janSock(&s);
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
     {
@@ -407,7 +440,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
     }
 
-    fSocket = s;
+    fSocket = *janSock.release();
 
 }
 

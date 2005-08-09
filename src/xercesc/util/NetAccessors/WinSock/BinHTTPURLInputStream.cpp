@@ -37,6 +37,39 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class SocketJanitor
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    SocketJanitor(SOCKET* toDelete) : fData(toDelete) {}
+    ~SocketJanitor() { reset(); }
+
+    SOCKET* get() const { return fData; }
+    SOCKET* release() {	SOCKET* p = fData; fData = 0; return p; }
+
+    void reset(SOCKET* p = 0) { if(fData) closesocket(*fData); fData=p; }
+    bool isDataNull() { return (fData == 0); }
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SocketJanitor();
+    SocketJanitor(const SocketJanitor&);
+    SocketJanitor& operator=(const SocketJanitor&);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fData
+    //      This is the pointer to the socket that must be closed when 
+    //      this object is destroyed.
+    // -----------------------------------------------------------------------
+    SOCKET*  fData;
+};
+
 typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYNAME)(const char* name);
 typedef unsigned long(WSAAPI * LPFN_INET_ADDR)(const char* cp);
 typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYADDR)(const char* addr, int len, int type);
@@ -285,6 +318,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
     }
+    SocketJanitor janSock(&s);
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
     {
@@ -469,7 +503,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
     }
 
-    fSocketHandle = (unsigned int) s;
+    fSocketHandle = (unsigned int) *janSock.release();
 }
 
 
