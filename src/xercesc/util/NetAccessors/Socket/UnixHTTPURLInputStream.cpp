@@ -57,7 +57,7 @@ public:
     int* get() const { return fData; }
     int* release() { int* p = fData; fData = 0; return p; }
 
-    void reset(int* p = 0) { if(fData) closesocket(*fData); fData=p; }
+    void reset(int* p = 0) { if(fData) close(*fData); fData=p; }
     bool isDataNull() { return (fData == 0); }
 
 private :
