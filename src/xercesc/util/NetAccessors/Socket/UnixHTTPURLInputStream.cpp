@@ -309,7 +309,8 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
 
         unsigned int len;
         XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
- 
+        ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
+
         if (encodedData)
         {
             // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
