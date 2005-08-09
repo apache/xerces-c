@@ -352,6 +352,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
 
         unsigned int len;
         XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
+        ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
  
         if (encodedData)
         {
