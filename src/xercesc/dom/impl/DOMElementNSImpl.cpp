@@ -90,18 +90,22 @@ const XMLCh* DOMElementNSImpl::getBaseURI() const
         if (attrNode) {
             const XMLCh* uri =  attrNode->getNodeValue();
             if (uri && *uri) {// attribute value is always empty string
-                try {
-                    XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                    XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                    uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
-                }
-                catch(const OutOfMemoryException&)
+                // if there is a base URI for the parent node, use it to resolve relative URI
+                if(baseURI)
                 {
-                    throw;
-                }
-                catch (...){
-                    // REVISIT: what should happen in this case?
-                    return 0;
+                    try {
+                        XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
+                        XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
+                        uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
+                    }
+                    catch(const OutOfMemoryException&)
+                    {
+                        throw;
+                    }
+                    catch (...){
+                        // REVISIT: what should happen in this case?
+                        return 0;
+                    }
                 }
                 return uri;
             }
