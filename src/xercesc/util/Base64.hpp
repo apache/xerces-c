@@ -84,7 +84,11 @@ public :
      * @param inputData Base64 data in XMLByte stream.
      * @param decodedLength Length of decoded XMLByte stream.
      * @param memMgr client provided memory manager
-     * @param conform conformance specified
+     * @param conform conformance specified: if the input data conforms to the
+     *                RFC 2045 it is allowed to have any number of whitespace
+     *                characters inside; if it conforms to the XMLSchema specs,
+     *                it is allowed to have at most one whitespace character
+     *                between the quartets
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLByte**)
@@ -109,7 +113,11 @@ public :
      * @param inputData Base64 data in XMLCh stream.
      * @param decodedLength Length of decoded XMLCh stream
      * @param memMgr client provided memory manager
-     * @param conform conformance specified
+     * @param conform conformance specified: if the input data conforms to the
+     *                RFC 2045 it is allowed to have any number of whitespace
+     *                characters inside; if it conforms to the XMLSchema specs,
+     *                it is allowed to have at most one whitespace character
+     *                between the quartets
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLCh**)
@@ -136,7 +144,11 @@ public :
      * @param inputData Base64 data in XMLCh stream.
      * @param decodedLength Length of decoded XMLByte stream.
      * @param memMgr client provided memory manager
-     * @param conform conformance specified
+     * @param conform conformance specified: if the input data conforms to the
+     *                RFC 2045 it is allowed to have any number of whitespace
+     *                characters inside; if it conforms to the XMLSchema specs,
+     *                it is allowed to have at most one whitespace character
+     *                between the quartets
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLByte**)
