@@ -327,6 +327,7 @@ int main(int argC, char* argV[])
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.
     //
     delete parser;
+    delete advancedHandler;
     delete handler;
     delete psviFormatter;
     delete errorFormatter;

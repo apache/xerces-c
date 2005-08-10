@@ -1930,10 +1930,9 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         writeClose(gActualValue);
         decIndent();
         writeString(gCommentEnd);
-    }
-
-    delete obj;
-
+   
+    	delete obj;
+ 	}    	
 }
 
 void PSVIAdvancedHandler::XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr)
