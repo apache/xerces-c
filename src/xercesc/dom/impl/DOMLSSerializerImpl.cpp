@@ -288,6 +288,7 @@ DOMLSSerializerImpl::~DOMLSSerializerImpl()
     fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
     fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
     delete fNamespaceStack;
+    delete fSupportedParameters;
     // we don't own/adopt error handler and filter
 }
 

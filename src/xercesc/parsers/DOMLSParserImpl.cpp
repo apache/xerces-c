@@ -140,6 +140,7 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
 
 DOMLSParserImpl::~DOMLSParserImpl()
 {
+    delete fSupportedParameters;
 }
 
 

@@ -50,6 +50,7 @@ DOMConfigurationImpl::DOMConfigurationImpl(MemoryManager* const manager): featur
 }
 
 DOMConfigurationImpl::~DOMConfigurationImpl() {
+    delete fSupportedParameters;
 }
                                         
 void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
