@@ -3658,7 +3658,7 @@ void test_dt_duration()
 
     const char v_1[]="   P1Y1M1DT1H1M1S   \n";
     const char v_2[]="P1Y1M31DT23H119M120S";
-    const char v_3[]="P-1Y1M1DT23H";
+    const char v_3[]="-P1Y1M1DT23H";
 
     const char iv_1[]="P-1Y2M3DT10H30M";
     const char iv_2[]="P1Y1M1DT1H1M1X";
