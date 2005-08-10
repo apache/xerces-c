@@ -514,17 +514,8 @@ bool DOMLSSerializerImpl::write(const DOMNode*         nodeToWrite,
     {
         throw;
     }
-    //
-    // DOMSystemException
-    // This exception will be raised in response to any sort of IO or system
-    // error that occurs while writing to the destination. It may wrap an
-    // underlying system exception.
-    //
-    //catch (RuntimeException const &)
     catch (...)
     {
-        // REVISIT generate a DOMSystemException wrapping the underlying
-        //         exception.
         destination->flush();
         throw;
     }
