@@ -125,8 +125,6 @@ public:
      *         URI connection to the system identifier.
      *         The returned DOMInputSource is owned by the DOMBuilder which is
      *         responsible to clean up the memory.
-     * @exception DOMSystemException Any DOMSystemException exception, possibly
-     *            wrapping another exception.
      * @see DOMInputSource#DOMInputSource
      * @since DOM Level 3
      */
