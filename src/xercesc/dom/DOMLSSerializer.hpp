@@ -480,10 +480,6 @@ public:
      * @return  Returns <code>true</code> if <code>node</code> was
      *   successfully serialized and <code>false</code> in case a failure
      *   occured and the failure wasn't canceled by the error handler.
-     * @exception DOMSystemException
-     *   This exception will be raised in response to any sort of IO or system
-     *   error that occurs while writing to the destination. It may wrap an
-     *   underlying system exception.
      * @since DOM Level 3
      */
     virtual bool       write(const DOMNode*         nodeToWrite,
@@ -504,10 +500,6 @@ public:
      * @return  Returns <code>true</code> if <code>node</code> was
      *   successfully serialized and <code>false</code> in case a failure
      *   occured and the failure wasn't canceled by the error handler.
-     * @exception DOMSystemException
-     *   This exception will be raised in response to any sort of IO or system
-     *   error that occurs while writing to the destination. It may wrap an
-     *   underlying system exception.
      * @since DOM Level 3
      */
     virtual bool       writeToURI(const DOMNode*    nodeToWrite, 

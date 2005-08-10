@@ -123,8 +123,6 @@ public:
      *         URI connection to the system identifier.
      *         The returned DOMLSInput is owned by the DOMBuilder which is
      *         responsible to clean up the memory.
-     * @exception DOMSystemException Any DOMSystemException exception, possibly
-     *            wrapping another exception.
      * @see DOMLSInput#DOMLSInput
      * @since DOM Level 3
      */
