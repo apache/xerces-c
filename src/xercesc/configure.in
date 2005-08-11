@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script
 AC_INIT(util/XercesDefs.hpp)
 dnl AC_CONFIG_HEADER(common/icucfg.h)
 
-dnl AM_INIT_AUTOMAKE(xerces-c,2.6.0)
+dnl AM_INIT_AUTOMAKE(xerces-c,2.7.0)
 dnl Checks for programs
 AC_PROG_CC
 AC_PROG_CXX
