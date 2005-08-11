@@ -52,9 +52,9 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 #if defined(_WIN32) || defined(WIN32)
-extern "C" void U_IMPORT *XercesMessages2_6_dat;
+extern "C" void U_IMPORT *XercesMessages2_7_dat;
 #else
-extern "C" void U_IMPORT *XercesMessages2_6_0_dat;
+extern "C" void U_IMPORT *XercesMessages2_7_0_dat;
 #endif
 
 /* 
@@ -76,9 +76,9 @@ static void setAppData()
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
 #if defined(_WIN32) || defined(WIN32)
-        udata_setAppData("XercesMessages2_6", &XercesMessages2_6_dat, &err);
+        udata_setAppData("XercesMessages2_7", &XercesMessages2_7_dat, &err);
 #else
-        udata_setAppData("XercesMessages2_6_0", &XercesMessages2_6_0_dat, &err);
+        udata_setAppData("XercesMessages2_7_0", &XercesMessages2_7_0_dat, &err);
 #endif        
         if (U_SUCCESS(err))
         {
@@ -167,9 +167,9 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 	Open the locale-specific resource bundle
     ***/
 #if defined(_WIN32) || defined(WIN32)
-    strcat(locationBuf, "XercesMessages2_6");
+    strcat(locationBuf, "XercesMessages2_7");
 #else
-    strcat(locationBuf, "XercesMessages2_6_0");
+    strcat(locationBuf, "XercesMessages2_7_0");
 #endif
     UErrorCode err = U_ZERO_ERROR;
     uloc_setDefault("en_US", &err);   // in case user-specified locale unavailable
@@ -183,17 +183,17 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         ***/
 
 #if defined(_WIN32) || defined(WIN32)
-        if (strcmp(locationBuf, "XercesMessages2_6") !=0 )
+        if (strcmp(locationBuf, "XercesMessages2_7") !=0 )
 #else
-        if (strcmp(locationBuf, "XercesMessages2_6_0") !=0 )
+        if (strcmp(locationBuf, "XercesMessages2_7_0") !=0 )
 #endif        
         {    	     	   
             setAppData();        	
             err = U_ZERO_ERROR;
 #if defined(_WIN32) || defined(WIN32)            
-            fLocaleBundle = ures_open("XercesMessages2_6", XMLMsgLoader::getLocale(), &err);
+            fLocaleBundle = ures_open("XercesMessages2_7", XMLMsgLoader::getLocale(), &err);
 #else
-            fLocaleBundle = ures_open("XercesMessages2_6_0", XMLMsgLoader::getLocale(), &err);
+            fLocaleBundle = ures_open("XercesMessages2_7_0", XMLMsgLoader::getLocale(), &err);
 #endif            
             if (!U_SUCCESS(err) || fLocaleBundle == NULL)
             {
