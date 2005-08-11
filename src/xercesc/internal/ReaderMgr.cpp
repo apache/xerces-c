@@ -494,7 +494,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         LastExtEntityInfo lastInfo;
         getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId, lastInfo.systemId);
+                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId, lastInfo.systemId,
+                            this);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
@@ -643,7 +644,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
     if (fEntityHandler)
     {
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId, baseURI);
+                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId, baseURI,
+                            this);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 

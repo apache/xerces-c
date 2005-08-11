@@ -586,6 +586,9 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
+    fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
+                        ((XSDElementNSImpl*) elem)->getLineNo(),
+                        ((XSDElementNSImpl*) elem)->getColumnNo());
     InputSource* srcToFill = resolveSchemaLocation(schemaLocation,
             XMLResourceIdentifier::SchemaInclude);
     Janitor<InputSource> janSrc(srcToFill);
@@ -779,6 +782,9 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
+    fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
+                        ((XSDElementNSImpl*) elem)->getLineNo(),
+                        ((XSDElementNSImpl*) elem)->getColumnNo());
     InputSource* srcToFill = resolveSchemaLocation(schemaLocation,
             XMLResourceIdentifier::SchemaImport, nameSpace);
 
@@ -6628,7 +6634,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
 
     if (fEntityHandler){
         XMLResourceIdentifier resourceIdentifier(resourceIdentitiferType,
-                            normalizedURI, nameSpace, 0, fSchemaInfo->getCurrentSchemaURL());
+                            normalizedURI, nameSpace, 0, fSchemaInfo->getCurrentSchemaURL(), fLocator);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
@@ -7863,6 +7869,9 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
+    fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
+                        ((XSDElementNSImpl*) redefineElem)->getLineNo(),
+                        ((XSDElementNSImpl*) redefineElem)->getColumnNo());
     InputSource*         srcToFill = resolveSchemaLocation(schemaLocation,
                                         XMLResourceIdentifier::SchemaRedefine);
     Janitor<InputSource> janSrc(srcToFill);

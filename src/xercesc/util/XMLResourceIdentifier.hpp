@@ -23,6 +23,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class Locator;
+
 /**
   * <p>This class is used along with XMLEntityResolver to resolve entities.
   * Instead of passing publicId and systemId on the resolveEntity call, 
@@ -93,7 +95,7 @@ class XMLUTIL_EXPORT XMLResourceIdentifier
 {
 public:
 
-    /** @name Public Contants */
+    /** @name Public Constants */
     //@{
     enum ResourceIdentifierType {
         SchemaGrammar = 0,
@@ -113,7 +115,8 @@ public:
                             , const XMLCh* const  systemId
                             , const XMLCh* const  nameSpace = 0
                             , const XMLCh* const  publicId = 0
-                            , const XMLCh* const  baseURI = 0);
+                            , const XMLCh* const  baseURI = 0
+                            , const Locator*      locator = 0);
 
     /** Destructor */
     ~XMLResourceIdentifier()
@@ -133,7 +136,7 @@ public:
     const XMLCh* getSchemaLocation()    const;
     const XMLCh* getBaseURI()           const;
     const XMLCh* getNameSpace()         const;
-
+    const Locator* getLocator()         const;
     //@}
 
 private :
@@ -143,7 +146,7 @@ private :
     const XMLCh*                    fSystemId;
     const XMLCh*                    fBaseURI;
     const XMLCh*                    fNameSpace;
-
+    const Locator*                  fLocator;
 
     /* Unimplemented constructors and operators */
 
@@ -185,16 +188,23 @@ inline const XMLCh* XMLResourceIdentifier::getNameSpace() const
     return fNameSpace;
 }
 
+inline const Locator* XMLResourceIdentifier::getLocator() const
+{
+    return fLocator;
+}
+
 inline XMLResourceIdentifier::XMLResourceIdentifier(const ResourceIdentifierType resourceIdentifierType
                             , const XMLCh* const  systemId
                             , const XMLCh* const  nameSpace
                             , const XMLCh* const  publicId
-                            , const XMLCh* const  baseURI )
+                            , const XMLCh* const  baseURI
+                            , const Locator*      locator )
     : fResourceIdentifierType(resourceIdentifierType)
     , fPublicId(publicId)
     , fSystemId(systemId)
     , fBaseURI(baseURI)     
     , fNameSpace(nameSpace)
+    , fLocator(locator)
 {
 }
 
