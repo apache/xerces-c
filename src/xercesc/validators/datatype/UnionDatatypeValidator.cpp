@@ -41,7 +41,6 @@ UnionDatatypeValidator::UnionDatatypeValidator(MemoryManager* const manager)
 ,fMemberTypesInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
-,fValidatedDatatype(0)
 
 {}
 
@@ -59,7 +58,6 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fMemberTypesInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
-,fValidatedDatatype(0)
 {
     if ( !memberTypeValidators )
     {
@@ -87,7 +85,6 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fMemberTypesInherited(memberTypesInherited)
 ,fEnumeration(0)
 ,fMemberTypeValidators(memberTypeValidators)
-,fValidatedDatatype(0)
 {
     //
     // baseValidator another UnionDTV from which,
@@ -260,8 +257,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
                 memTypeValid = true;
                 
                 //set the validator of the type actually used to validate the content
-                DatatypeValidator *dtv = fMemberTypeValidators->elementAt(i);
-                fValidatedDatatype = dtv;
+                DatatypeValidator *dtv = fMemberTypeValidators->elementAt(i);                
                 // context will be null during schema construction
                 if(context)
                     context->setValidatingMemberType(dtv);
@@ -447,9 +443,6 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::storeObject(fEnumeration, serEng);
         XTemplateSerializer::storeObject(fMemberTypeValidators, serEng);
-
-        DatatypeValidator::storeDV(serEng, fValidatedDatatype);
-
     }
     else
     {
@@ -462,9 +455,6 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::loadObject(&fEnumeration, 8, true, serEng);
         XTemplateSerializer::loadObject(&fMemberTypeValidators, 4, false, serEng);
-
-        fValidatedDatatype = DatatypeValidator::loadDV(serEng);
-
     }
 }
 

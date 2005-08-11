@@ -171,41 +171,6 @@ public:
 
     RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
 
-
-    /**
-     * Returns the type name that was actually used to validate the last time validate was called
-     * note - this does not mean that it fully validated sucessfully
-     * @deprecated
-     **/
-    const XMLCh* getMemberTypeName() const;
-
-    /**
-     * Returns the type uri that was actually used to validate the last time validate was called
-     * note - this does not mean that it fully validated sucessfully
-     * @deprecated
-     **/
-    const XMLCh* getMemberTypeUri() const;
-
-    /**
-     * Returns true if the type that was actually used to validate the last time validate was called 
-     * is anonymous
-     * @deprecated
-     */
-    bool getMemberTypeAnonymous() const;
-
-
-    /**
-     * Returns the member DatatypeValidator used to validate the content the last time validate 
-     * was called
-     * @deprecated
-     */
-    const DatatypeValidator* getMemberTypeValidator() const;
-
-    /**
-     * Called inbetween uses of this validator to reset PSVI information
-     */
-    void reset();
-
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -239,16 +204,12 @@ private:
     //  fMemberTypeValidators
     //      we own it (or not, depending on the state of fMemberTypesInherited).
     //
-    //  fValidatedDatatype
-    //      the dataTypeValidator  that was actually used to validate the last time validate was called
-    //
     // -----------------------------------------------------------------------
 
      bool                             fEnumerationInherited;
      bool                             fMemberTypesInherited;
      RefArrayVectorOf<XMLCh>*         fEnumeration;
-     RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;
-     DatatypeValidator*               fValidatedDatatype;
+     RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;   
 };
 
 inline DatatypeValidator* UnionDatatypeValidator::newInstance
@@ -343,36 +304,6 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
         }
     }
     return false;
-}
-
-inline const XMLCh* UnionDatatypeValidator::getMemberTypeName() const {
-    if(fValidatedDatatype) {
-        return fValidatedDatatype->getTypeLocalName();
-    }
-    return 0;
-}
-
-inline const XMLCh* UnionDatatypeValidator::getMemberTypeUri() const 
-{
-    if(fValidatedDatatype) {
-        return fValidatedDatatype->getTypeUri();
-    }
-    return 0;
-}
-
-inline bool UnionDatatypeValidator::getMemberTypeAnonymous() const {
-    if(fValidatedDatatype) {
-        return fValidatedDatatype->getAnonymous();
-    }
-    return 0;
-}
-
-inline const DatatypeValidator* UnionDatatypeValidator::getMemberTypeValidator() const {
-    return fValidatedDatatype;
-}
-
-inline void UnionDatatypeValidator::reset() {
-    fValidatedDatatype = 0;
 }
 
 XERCES_CPP_NAMESPACE_END
