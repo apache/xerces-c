@@ -209,15 +209,15 @@ esac
 if test $debug = "off"; then
     echo "Debug is OFF"
     if test $platform = "os400"; then
-    debugflag="-O";
+       debugflag="-O -DNDEBUG";
     elif test $platform = "irix"; then
-       debugflag="-w -O2";
+       debugflag="-w -O2 -DNDEBUG";
     elif test $platform = "aix"; then
-       debugflag="-w -O2";
+       debugflag="-w -O2 -DNDEBUG";
    	elif test $platform = "os390"; then
-       debugflag="";       
+       debugflag="-DNDEBUG";       
     else
-    debugflag="-w -O";
+       debugflag="-w -O -DNDEBUG";
     fi
 else
     echo "Debug is ON"
