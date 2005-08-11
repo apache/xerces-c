@@ -213,17 +213,29 @@ should
 be updated on its website.
 
 </p><p>
-5.5 Every 12 months, or at the request a recof the
+5.5 Every 12 months, or at the request of the Board, the PMC will provide 
+a recommendation to the Apache Board for the position of Chairperson 
+of the PMC. 
 </p><p>
-5.6 This rwithin the PMC.  The election will be performed using a simple
+5.6 This recommendation will be made on the basis of an election held 
+within the PMC.  The election will be performed using a simple
 majority vote of PMC members.
-
 </p><p>
-5.7 Upon agreeperiodtime, said
+5.7 Upon agreement by the Apache Board, the recommended Chairperson will, 
+if they are not already, be appointed an officer of the corporation. 
+See http://www.apache.org/foundation/bylaws.html for more information.
+</p><p>
+5.8 In the unlikely event that a member of the PMC becomes disruptive to
+the process, ceases to make codebase contributions for an extended 
+period, or ceases to take part in PMC votes for an extended period of
+time, said member may be removed by unanimous vote of remaining PMC 
+members.
 </p><p>
 5.9 The PMC is responsible for maintaining and updating this
-charter. Development must fchange to charter. Changes muof the PMC.
-
+charter. Development must follow the process outlined below, so any
+change to the development process necessitates a change to the
+charter. Changes must be approved by a two-thirds majority of all members 
+of the PMC.
 </p>
 </s2>
 
@@ -275,7 +287,7 @@ containing the patch:
 </p><p>
 a) Name and employer 
 </p><p>
-b) Are you the author of the code being conributed? 
+b) Are you the author of the code being contributed? 
 </p><p>
 c) Do you have the right to grant the copyright and patent 
    licenses for the contribution that are set forth in the ASF v.2.0 
