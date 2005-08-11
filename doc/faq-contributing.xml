@@ -163,6 +163,13 @@
       the source file StringPool.cpp.</li>
       
       <li>In general, code should be documented with comments.  Use JavaDoc tags to describe methods.</li>
+      
+      <li>The naming convention for ENUMS should be choosen to be unique and descriptive
+      (i.e. INVALID or UNKNOWN) to avoid colliding with predefined macros in other
+      products.  The current style of using ALL CAP enums should be phased out with
+      Mixed Case instead, except for names specified in standards (for example, TEXT_NODE
+      should not be converted to mixed case for standards compliance).</li>           
+      
       </ol>           
     </a>
     </faq>
