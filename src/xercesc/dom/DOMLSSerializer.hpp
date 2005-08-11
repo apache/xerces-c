@@ -88,7 +88,7 @@
  * inconsistencies are found, the serialized form of the document will be
  * altered to remove them. The algorithm used for doing the namespace fixup
  * while seralizing a document is a combination of the algorithms used for
- * lookupNamespaceURI and lookupNamespacePrefix . previous paragraph to be
+ * lookupNamespaceURI and lookupPrefix. previous paragraph to be
  * defined closer here.
  * <p>Any changes made affect only the namespace prefixes and declarations
  * appearing in the serialized data. The DOM's view of the document is not

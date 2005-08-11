@@ -118,14 +118,14 @@ public:
     bool              isSameNode(const DOMNode* other) const;
     bool              isEqualNode(const DOMNode* arg) const;
     const XMLCh*      getBaseURI() const ;
-    short             compareTreePosition(const DOMNode* other) const;
+    short             compareDocumentPosition(const DOMNode* other) const;
     const XMLCh*      getTextContent() const ;
     const XMLCh*      getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const;
     void              setTextContent(const XMLCh* textContent) ;
-    const XMLCh*      lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const ;
+    const XMLCh*      lookupPrefix(const XMLCh* namespaceURI) const ;
     bool              isDefaultNamespace(const XMLCh* namespaceURI) const ;
     const XMLCh*      lookupNamespaceURI(const XMLCh* prefix) const  ;
-    DOMNode*          getInterface(const XMLCh* feature) ;
+    void*             getFeature(const XMLCh* feature, const XMLCh* version);
 
 
     // Helper functions for DOM Level 3
@@ -133,8 +133,9 @@ public:
     void              callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
                                            const DOMNode* src,
                                            const DOMNode* dst) const;
-    //reverses the bit pattern given by compareTreePosition
+    //reverses the bit pattern given by compareDocumentPosition
     short             reverseTreeOrderBitPattern(short pattern) const;
+    const DOMNode*    getTreeParentNode(const DOMNode* node) const;
 
 
     //Utility, not part of DOM Level 2 API
@@ -149,9 +150,9 @@ public:
 
 public: // should really be protected - ALH
 
-      DOMNode* getElementAncestor (const DOMNode* currentNode) const;
-      const XMLCh* lookupNamespacePrefix(const XMLCh* const namespaceURI, bool useDefaultx, DOMElement *el) const ;
-     void setOwnerDocument(DOMDocument *doc);
+    DOMNode* getElementAncestor (const DOMNode* currentNode) const;
+    const XMLCh* lookupPrefix(const XMLCh* const namespaceURI, DOMElement *el) const ;
+    void setOwnerDocument(DOMDocument *doc);
 
     /*
      * Flags setters and getters
@@ -315,14 +316,14 @@ public: // should really be protected - ALH
     virtual       bool             isSameNode(const DOMNode* other) const;\
     virtual       bool             isEqualNode(const DOMNode* arg) const;\
     virtual const XMLCh*           getBaseURI() const ;\
-    virtual short                  compareTreePosition(const DOMNode* other) const ;\
+    virtual short                  compareDocumentPosition(const DOMNode* other) const ;\
     virtual const XMLCh*           getTextContent() const ;\
             const XMLCh*           getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const;\
     virtual void                   setTextContent(const XMLCh* textContent) ;\
-    virtual const XMLCh*           lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  ;\
+    virtual const XMLCh*           lookupPrefix(const XMLCh* namespaceURI) const  ;\
     virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) const;\
     virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) const  ;\
-    virtual       DOMNode*         getInterface(const XMLCh* feature) ;\
+    virtual       void*            getFeature(const XMLCh* feature, const XMLCh* version) ;\
     virtual       void             release()
 
 
@@ -362,13 +363,13 @@ public: // should really be protected - ALH
                                                                          {return fNode.setUserData(key, data, handler); };
            void*            xxx::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
            const XMLCh*     xxx::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            xxx::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
+           short            xxx::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); };
            const XMLCh*     xxx::getTextContent() const                  {return fNode.getTextContent(); };
            void             xxx::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     xxx::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           const XMLCh*     xxx::lookupPrefix(const XMLCh* namespaceURI) const {return fNode.lookupPrefix(namespaceURI); };
            bool             xxx::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
            const XMLCh*     xxx::lookupNamespaceURI(const XMLCh* prefix) const {return fNode.lookupNamespaceURI(prefix); };
-           DOMNode*         xxx::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+           void*            xxx::getFeature(const XMLCh* feature, const XMLCh* version) {return fNode.getFeature(feature, version); };
 
 
 */

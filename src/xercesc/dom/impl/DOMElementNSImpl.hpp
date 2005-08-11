@@ -54,7 +54,7 @@ public:
     DOMElementNSImpl(const DOMElementNSImpl &other, bool deep=false);
 
     virtual DOMNode * cloneNode(bool deep) const;
-    virtual DOMNode * getInterface(const XMLCh* feature);
+    virtual void* getFeature(const XMLCh* feature, const XMLCh* version);
 
     //Introduced in DOM Level 2
     virtual const XMLCh *getNamespaceURI() const;

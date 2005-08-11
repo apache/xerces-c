@@ -254,6 +254,9 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
         if (el)
             el->setAttributeNode(this);
 
+        // and fire user data NODE_RENAMED event
+        castToNodeImpl(this)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, this);
+
         return this;
     }
     else {
@@ -272,12 +275,12 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
             child = getFirstChild();
         }
 
-        // and fire user data NODE_RENAMED event
-        castToNodeImpl(newAttr)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, newAttr);
-
         // reattach attr to element
         if (el)
             el->setAttributeNodeNS(newAttr);
+
+        // and fire user data NODE_RENAMED event
+        castToNodeImpl(newAttr)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, newAttr);
 
         return newAttr;
     }
@@ -298,11 +301,11 @@ void DOMAttrImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo)
 }
 
 
-DOMNode * DOMAttrImpl::getInterface(const XMLCh* feature)
+void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version)
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
-        return (DOMNode*)(DOMPSVITypeInfo*)fSchemaType;
-    return fNode.getInterface(feature); 
+        return (DOMPSVITypeInfo*)fSchemaType;
+    return fNode.getFeature(feature, version); 
 }
 
            DOMNode*         DOMAttrImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); }
@@ -334,10 +337,10 @@ DOMNode * DOMAttrImpl::getInterface(const XMLCh* feature)
                                                                                  {return fNode.setUserData(key, data, handler); }
            void*            DOMAttrImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
            const XMLCh*     DOMAttrImpl::getBaseURI() const                      {return fNode.getBaseURI(); }
-           short            DOMAttrImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           short            DOMAttrImpl::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); }
            const XMLCh*     DOMAttrImpl::getTextContent() const                  {return fNode.getTextContent(); }
            void             DOMAttrImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
-           const XMLCh*     DOMAttrImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           const XMLCh*     DOMAttrImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMAttrImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMAttrImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
 

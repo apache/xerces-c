@@ -166,13 +166,13 @@ const XMLCh* DOMNotationImpl::getBaseURI() const
            void*            DOMNotationImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); }
            void*            DOMNotationImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
-           short            DOMNotationImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           short            DOMNotationImpl::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); }
            const XMLCh*     DOMNotationImpl::getTextContent() const                  {return fNode.getTextContent(); }
            void             DOMNotationImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
-           const XMLCh*     DOMNotationImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           const XMLCh*     DOMNotationImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMNotationImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMNotationImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           DOMNode*         DOMNotationImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
+           void*            DOMNotationImpl::getFeature(const XMLCh* feature, const XMLCh* version) {return fNode.getFeature(feature, version); }
 
 
 XERCES_CPP_NAMESPACE_END

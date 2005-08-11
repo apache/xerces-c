@@ -442,8 +442,7 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg) const
     return true;
 }
 
-const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI,
-                                                bool useDefault) const {
+const XMLCh* DOMNodeImpl::lookupPrefix(const XMLCh* namespaceURI) const {
     // REVISIT: When Namespaces 1.1 comes out this may not be true
     // Prefix can't be bound to null namespace
     if (namespaceURI == 0) {
@@ -456,10 +455,10 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI,
 
     switch (type) {
     case DOMNode::ELEMENT_NODE: {
-        return lookupNamespacePrefix(namespaceURI, useDefault, (DOMElement*)thisNode);
+        return lookupPrefix(namespaceURI, (DOMElement*)thisNode);
     }
     case DOMNode::DOCUMENT_NODE:{
-        return ((DOMDocument*)thisNode)->getDocumentElement()->lookupNamespacePrefix(namespaceURI, useDefault);
+        return ((DOMDocument*)thisNode)->getDocumentElement()->lookupPrefix(namespaceURI);
     }
 
     case DOMNode::ENTITY_NODE :
@@ -470,14 +469,14 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI,
         return 0;
     case DOMNode::ATTRIBUTE_NODE:{
         if (fOwnerNode->getNodeType() == DOMNode::ELEMENT_NODE) {
-            return fOwnerNode->lookupNamespacePrefix(namespaceURI, useDefault);
+            return fOwnerNode->lookupPrefix(namespaceURI);
         }
         return 0;
     }
     default:{
         DOMNode *ancestor = getElementAncestor(thisNode);
         if (ancestor != 0) {
-            return ancestor->lookupNamespacePrefix(namespaceURI, useDefault);
+            return ancestor->lookupPrefix(namespaceURI);
         }
         return 0;
     }
@@ -487,18 +486,18 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI,
 
 DOMNode* DOMNodeImpl::getElementAncestor (const DOMNode* currentNode) const {
     DOMNode* parent = currentNode->getParentNode();
-    if (parent != 0) {
+    while(parent != 0) {
         short type = parent->getNodeType();
         if (type == DOMNode::ELEMENT_NODE) {
             return parent;
         }
-        return getElementAncestor(parent);
+        parent=parent->getParentNode();
     }
     return 0;
 }
 
 
-const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI, bool useDefault, DOMElement *el) const {
+const XMLCh* DOMNodeImpl::lookupPrefix(const XMLCh* const namespaceURI, DOMElement *originalElement) const {
     DOMNode *thisNode = castToNode(this);
 
     const XMLCh* ns = thisNode->getNamespaceURI();
@@ -506,12 +505,10 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI,
     //          could be both?
     const XMLCh* prefix = thisNode->getPrefix();
 
-    if (ns != 0 && XMLString::equals(ns,namespaceURI)) {
-        if (useDefault || prefix != 0) {
-            const XMLCh* foundNamespace =  el->lookupNamespaceURI(prefix);
-            if (foundNamespace != 0 && XMLString::equals(foundNamespace, namespaceURI)) {
-                return prefix;
-            }
+    if (ns != 0 && XMLString::equals(ns,namespaceURI) && prefix != 0) {
+        const XMLCh* foundNamespace =  originalElement->lookupNamespaceURI(prefix);
+        if (foundNamespace != 0 && XMLString::equals(foundNamespace, namespaceURI)) {
+            return prefix;
         }
     }
     if (thisNode->hasAttributes()) {
@@ -529,11 +526,10 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI,
 
                 if (ns != 0 && XMLString::equals(ns, XMLUni::fgXMLNSURIName)) {
                     // DOM Level 2 nodes
-                    if ((useDefault && XMLString::equals(attr->getNodeName(), XMLUni::fgXMLNSString)) ||
-                        (attrPrefix != 0 && XMLString::equals(attrPrefix, XMLUni::fgXMLNSString)) &&
+                    if ((attrPrefix != 0 && XMLString::equals(attrPrefix, XMLUni::fgXMLNSString)) &&
                         XMLString::equals(value, namespaceURI)) {
                         const XMLCh* localname= attr->getLocalName();
-                        const XMLCh* foundNamespace = el->lookupNamespaceURI(localname);
+                        const XMLCh* foundNamespace = originalElement->lookupNamespaceURI(localname);
                         if (foundNamespace != 0 && XMLString::equals(foundNamespace, namespaceURI)) {
                             return localname;
                         }
@@ -544,7 +540,7 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI,
     }
     DOMNode *ancestor = getElementAncestor(thisNode);
     if (ancestor != 0) {
-        return castToNodeImpl(ancestor)->lookupNamespacePrefix(namespaceURI, useDefault, el);
+        return castToNodeImpl(ancestor)->lookupPrefix(namespaceURI, originalElement);
     }
     return 0;
 }
@@ -634,224 +630,174 @@ const XMLCh*     DOMNodeImpl::getBaseURI() const{
         return 0;
 }
 
-short            DOMNodeImpl::compareTreePosition(const DOMNode* other) const {
-    // Questions of clarification for this method - to be answered by the
-    // DOM WG.   Current assumptions listed - LM
-    //
-    // 1. How do ENTITY nodes compare?
-    //    Current assumption: TREE_POSITION_DISCONNECTED, as ENTITY nodes
-    //    aren't really 'in the tree'
-    //
-    // 2. How do NOTATION nodes compare?
-    //    Current assumption: TREE_POSITION_DISCONNECTED, as NOTATION nodes
-    //    aren't really 'in the tree'
-    //
-    // 3. Are TREE_POSITION_ANCESTOR and TREE_POSITION_DESCENDANT
-    //    only relevant for nodes that are "part of the document tree"?
-    //     <outer>
-    //         <inner  myattr="true"/>
-    //     </outer>
-    //    Is the element node "outer" considered an ancestor of "myattr"?
-    //    Current assumption: No.
-    //
-    // 4. How do children of ATTRIBUTE nodes compare (with eachother, or
-    //    with children of other attribute nodes with the same element)
-    //    Current assumption: Children of ATTRIBUTE nodes are treated as if
-    //    they are the attribute node itself, unless the 2 nodes
-    //    are both children of the same attribute.
-    //
-    // 5. How does an ENTITY_REFERENCE node compare with it's children?
-    //    Given the DOM, it should precede its children as an ancestor.
-    //    Given "document order",  does it represent the same position?
-    //    Current assumption: An ENTITY_REFERENCE node is an ancestor of its
-    //    children.
-    //
-    // 6. How do children of a DocumentFragment compare?
-    //    Current assumption: If both nodes are part of the same document
-    //    fragment, there are compared as if they were part of a document.
+const DOMNode*   DOMNodeImpl::getTreeParentNode(const DOMNode* node) const {
+    const DOMNode* parent=node->getParentNode();
+    if(parent)
+        return parent;
+    short nodeType=node->getNodeType();
+    switch(nodeType)
+    {
+    case DOMNode::ATTRIBUTE_NODE: return ((const DOMAttr*)node)->getOwnerElement();
+    case DOMNode::NOTATION_NODE:
+    case DOMNode::ENTITY_NODE:    return node->getOwnerDocument()->getDoctype();
+    }
+    return 0;
+}
 
-
-
+short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) const {
     DOMNode* thisNode = castToNode(this);
 
-    // If the nodes are the same...
+    // If the two nodes being compared are the same node, then no flags are set on the return.
     if (thisNode == other)
-        return (DOMNode::TREE_POSITION_SAME_NODE | DOMNode::TREE_POSITION_EQUIVALENT);
-
-    // If either node is of type ENTITY or NOTATION, compare as disconnected
-    short thisType = thisNode->getNodeType();
-    short otherType = other->getNodeType();
-
-    // If either node is of type ENTITY or NOTATION, compare as disconnected
-    if (thisType == DOMNode::ENTITY_NODE ||
-            thisType == DOMNode::NOTATION_NODE ||
-            otherType == DOMNode::ENTITY_NODE ||
-            otherType == DOMNode::NOTATION_NODE ) {
-        return DOMNode::TREE_POSITION_DISCONNECTED;
-    }
+        return 0;
 
     //if this is a custom node, we don't really know what to do, just return
-    //user should provide its own compareTreePosition logic, and shouldn't reach here
-    if(thisType > 12) {
+    //user should provide its own compareDocumentPosition logic, and shouldn't reach here
+    if(thisNode->getNodeType() > 12) {
         return 0;
     }
 
     //if it is a custom node we must ask it for the order
-    if(otherType > 12) {
-        return reverseTreeOrderBitPattern(other->compareTreePosition(castToNode(this)));
+    if(other->getNodeType() > 12) {
+        return reverseTreeOrderBitPattern(other->compareDocumentPosition(thisNode));
     }
 
-    // Find the ancestor of each node, and the distance each node is from
-    // its ancestor.
-    // During this traversal, look for ancestor/descendent relationships
-    // between the 2 nodes in question.
-    // We do this now, so that we get this info correct for attribute nodes
-    // and their children.
+    // Otherwise, the order of two nodes is determined by looking for common containers -- 
+    // containers which contain both. A node directly contains any child nodes. 
+    // A node also directly contains any other nodes attached to it such as attributes 
+    // contained in an element or entities and notations contained in a document type. 
+    // Nodes contained in contained nodes are also contained, but less-directly as 
+    // the number of intervening containers increases.
 
-    const DOMNode *node;
-    const DOMNode *thisAncestor = castToNode(this);
-    const DOMNode *otherAncestor = other;
-    int thisDepth=0;
-    int otherDepth=0;
-    for (node = castToNode(this); node != 0; node = node->getParentNode()) {
-        thisDepth +=1;
-        if (node == other)
-            // The other node is an ancestor of this one.
-            return (DOMNode::TREE_POSITION_ANCESTOR | DOMNode::TREE_POSITION_PRECEDING);
-        thisAncestor = node;
+    // If one of the nodes being compared contains the other node, then the container precedes 
+    // the contained node, and reversely the contained node follows the container. For example, 
+    // when comparing an element against its own attribute or child, the element node precedes 
+    // its attribute node and its child node, which both follow it.
+
+    const DOMNode* tmpNode;
+    const DOMNode* myRoot = castToNode(this);
+    int myDepth=0;
+    while((tmpNode=getTreeParentNode(myRoot))!=0)
+    {
+        myRoot=tmpNode;
+        if(myRoot==other)
+            return DOMNode::DOCUMENT_POSITION_CONTAINS | DOMNode::DOCUMENT_POSITION_PRECEDING;
+        myDepth++;
     }
 
-    for (node=other; node != 0; node = node->getParentNode()) {
-        otherDepth +=1;
-        if (node == castToNode(this))
-            // The other node is a descendent of the reference node.
-            return (DOMNode::TREE_POSITION_DESCENDANT | DOMNode::TREE_POSITION_FOLLOWING);
-        otherAncestor = node;
+    const DOMNode* hisRoot = other;
+    int hisDepth=0;
+    while((tmpNode=getTreeParentNode(hisRoot))!=0)
+    {
+        hisRoot=tmpNode;
+        if(hisRoot==thisNode)
+            return DOMNode::DOCUMENT_POSITION_CONTAINED_BY | DOMNode::DOCUMENT_POSITION_FOLLOWING;
+        hisDepth++;
     }
 
+    // If there is no common container node, then the order is based upon order between the 
+    // root container of each node that is in no container. In this case, the result is 
+    // disconnected and implementation-specific. This result is stable as long as these 
+    // outer-most containing nodes remain in memory and are not inserted into some other 
+    // containing node. This would be the case when the nodes belong to different documents 
+    // or fragments, and cloning the document or inserting a fragment might change the order.
 
-    const DOMNode *otherNode = other;
+    if(myRoot!=hisRoot)
+        return DOMNode::DOCUMENT_POSITION_DISCONNECTED | DOMNode::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC |
+              (myRoot<hisRoot?DOMNode::DOCUMENT_POSITION_PRECEDING:DOMNode::DOCUMENT_POSITION_FOLLOWING);
 
-    short thisAncestorType = thisAncestor->getNodeType();
-    short otherAncestorType = otherAncestor->getNodeType();
+    // If neither of the previous cases apply, then there exists a most-direct container common 
+    // to both nodes being compared. In this case, the order is determined based upon the two 
+    // determining nodes directly contained in this most-direct common container that either 
+    // are or contain the corresponding nodes being compared.
 
-    // if the ancestor is an attribute, get owning element.
-    // we are now interested in the owner to determine position.
-
-    if (thisAncestorType == DOMNode::ATTRIBUTE_NODE)  {
-        thisNode = ((DOMAttrImpl *)thisAncestor)->getOwnerElement();
-    }
-    if (otherAncestorType == DOMNode::ATTRIBUTE_NODE) {
-        otherNode = ((DOMAttrImpl *)otherAncestor)->getOwnerElement();
-    }
-
-    // Before proceeding, we should check if both ancestor nodes turned
-    // out to be attributes for the same element
-    if (thisAncestorType == DOMNode::ATTRIBUTE_NODE &&
-            otherAncestorType == DOMNode::ATTRIBUTE_NODE &&
-            thisNode==otherNode)
-        return DOMNode::TREE_POSITION_EQUIVALENT;
-
-    // Now, find the ancestor of the owning element, if the original
-    // ancestor was an attribute
-
-    if (thisAncestorType == DOMNode::ATTRIBUTE_NODE) {
-        thisDepth=0;
-        for (node=thisNode; node != 0; node = node->getParentNode()) {
-            thisDepth +=1;
-            if (node == otherNode)
-                // The other node is an ancestor of the owning element
-                return DOMNode::TREE_POSITION_PRECEDING;
-            thisAncestor = node;
-        }
-        for (node=otherNode; node != 0; node = node->getParentNode()) {
-            if (node == thisNode)
-                // The other node is an ancestor of the owning element
-                return DOMNode::TREE_POSITION_FOLLOWING;
-        }
-    }
-
-    // Now, find the ancestor of the owning element, if the original
-    // ancestor was an attribute
-    if (otherAncestorType == DOMNode::ATTRIBUTE_NODE) {
-        otherDepth=0;
-        for (node=otherNode; node != 0; node = node->getParentNode()) {
-            otherDepth +=1;
-            if (node == thisNode)
-                // The other node is a descendent of the reference
-                // node's element
-                return DOMNode::TREE_POSITION_FOLLOWING;
-            otherAncestor = node;
-        }
-        for (node=thisNode; node != 0; node = node->getParentNode()) {
-            if (node == otherNode)
-                // The other node is an ancestor of the owning element
-                return DOMNode::TREE_POSITION_PRECEDING;
-        }
-    }
-
-    // thisAncestor and otherAncestor must be the same at this point,
-    // otherwise, we are not in the same tree or document fragment
-    if (thisAncestor != otherAncestor)
-        return DOMNode::TREE_POSITION_DISCONNECTED;
-
-    // Determine which node is of the greatest depth.
-    if (thisDepth > otherDepth) {
-        for (int i= 0 ; i < thisDepth - otherDepth; i++)
-            thisNode = thisNode->getParentNode();
+    // if the two depths are different, go to the same one
+    myRoot = castToNode(this);
+    hisRoot = other;
+    if (myDepth > hisDepth) {
+        for (int i= 0 ; i < myDepth - hisDepth; i++)
+            myRoot = getTreeParentNode(myRoot);
     }
     else {
-        for (int i = 0; i < otherDepth - thisDepth; i++)
-            otherNode = otherNode->getParentNode();
+        for (int i = 0; i < hisDepth - myDepth; i++)
+            hisRoot = getTreeParentNode(hisRoot);
     }
 
-    // We now have nodes at the same depth in the tree.  Find a common
-    // ancestor.
-    DOMNode *thisNodeP, *otherNodeP;
-    for (thisNodeP = thisNode->getParentNode(),
-                 otherNodeP = otherNode->getParentNode();
-             thisNodeP != otherNodeP;) {
-        thisNode = thisNodeP;
-        otherNode = otherNodeP;
-        thisNodeP = thisNodeP->getParentNode();
-        otherNodeP = otherNodeP->getParentNode();
+    // We now have nodes at the same depth in the tree.  Find a common ancestor.
+    const DOMNode *myNodeP, *hisNodeP;
+    while(myRoot!=hisRoot) 
+    {
+        myNodeP = myRoot;
+        hisNodeP = hisRoot;
+        myRoot = getTreeParentNode(myRoot);
+        hisRoot = getTreeParentNode(hisRoot);
     }
 
-    // See whether thisNode or otherNode is the leftmost
-    for (DOMNode *current = thisNodeP->getFirstChild();
-             current != 0;
-             current = current->getNextSibling()) {
-        if (current == otherNode) {
-            return DOMNode::TREE_POSITION_PRECEDING;
+    short myNodeType=myNodeP->getNodeType();
+    short hisNodeType=hisNodeP->getNodeType();
+    bool bMyNodeIsChild=(myNodeType!=DOMNode::ATTRIBUTE_NODE && myNodeType!=DOMNode::ENTITY_NODE && myNodeType!=DOMNode::NOTATION_NODE);
+    bool bHisNodeIsChild=(hisNodeType!=DOMNode::ATTRIBUTE_NODE && hisNodeType!=DOMNode::ENTITY_NODE && hisNodeType!=DOMNode::NOTATION_NODE);
+
+    // If these two determining nodes are both child nodes, then the natural DOM order of these 
+    // determining nodes within the containing node is returned as the order of the corresponding nodes. 
+    // This would be the case, for example, when comparing two child elements of the same element.
+    if(bMyNodeIsChild && bHisNodeIsChild)
+    {
+        while(myNodeP != 0)
+        {
+            myNodeP = myNodeP->getNextSibling();
+            if(myNodeP == hisNodeP)
+                return DOMNode::DOCUMENT_POSITION_FOLLOWING;
         }
-        else if (current == thisNode) {
-            return DOMNode::TREE_POSITION_FOLLOWING;
-        }
+        return DOMNode::DOCUMENT_POSITION_PRECEDING;
+    }
+
+    // If one of the two determining nodes is a child node and the other is not, then the corresponding 
+    // node of the child node follows the corresponding node of the non-child node. This would be the case, 
+    // for example, when comparing an attribute of an element with a child element of the same element.
+    else if(!bMyNodeIsChild && bHisNodeIsChild)
+        return DOMNode::DOCUMENT_POSITION_FOLLOWING;
+    else if(bMyNodeIsChild && !bHisNodeIsChild)
+        return DOMNode::DOCUMENT_POSITION_PRECEDING;
+
+    else
+    {
+        // If neither of the two determining node is a child node and one determining node has a greater value 
+        // of nodeType than the other, then the corresponding node precedes the other. This would be the case, 
+        // for example, when comparing an entity of a document type against a notation of the same document type.
+        if(myNodeType!=hisNodeType)
+            return (myNodeType<hisNodeType)?DOMNode::DOCUMENT_POSITION_FOLLOWING:DOMNode::DOCUMENT_POSITION_PRECEDING;
+
+        // If neither of the two determining node is a child node and nodeType is the same for both determining 
+        // nodes, then an implementation-dependent order between the determining nodes is returned. This order 
+        // is stable as long as no nodes of the same nodeType are inserted into or removed from the direct container. 
+        // This would be the case, for example, when comparing two attributes of the same element, and inserting 
+        // or removing additional attributes might change the order between existing attributes.
+        return DOMNode::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC | ((myNodeP<hisNodeP)?DOMNode::DOCUMENT_POSITION_FOLLOWING:DOMNode::DOCUMENT_POSITION_PRECEDING);
     }
     // REVISIT:  shouldn't get here.   Should probably throw an
     // exception
     return 0;
-
 }
 
 short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
 
-    if(pattern & DOMNode::TREE_POSITION_PRECEDING) {
-        pattern &= !DOMNode::TREE_POSITION_PRECEDING;
-        pattern |= DOMNode::TREE_POSITION_FOLLOWING;
+    if(pattern & DOMNode::DOCUMENT_POSITION_PRECEDING) {
+        pattern &= !DOMNode::DOCUMENT_POSITION_PRECEDING;
+        pattern |= DOMNode::DOCUMENT_POSITION_FOLLOWING;
     }
-    else if(pattern & DOMNode::TREE_POSITION_FOLLOWING) {
-        pattern &= !DOMNode::TREE_POSITION_FOLLOWING;
-        pattern |= DOMNode::TREE_POSITION_PRECEDING;
+    else if(pattern & DOMNode::DOCUMENT_POSITION_FOLLOWING) {
+        pattern &= !DOMNode::DOCUMENT_POSITION_FOLLOWING;
+        pattern |= DOMNode::DOCUMENT_POSITION_PRECEDING;
     }
 
-    if(pattern & DOMNode::TREE_POSITION_ANCESTOR) {
-        pattern &= !DOMNode::TREE_POSITION_ANCESTOR;
-        pattern |= DOMNode::TREE_POSITION_DESCENDANT;
+    if(pattern & DOMNode::DOCUMENT_POSITION_CONTAINED_BY) {
+        pattern &= !DOMNode::DOCUMENT_POSITION_CONTAINED_BY;
+        pattern |= DOMNode::DOCUMENT_POSITION_CONTAINS;
     }
-    else if(pattern & DOMNode::TREE_POSITION_DESCENDANT) {
-        pattern &= !DOMNode::TREE_POSITION_DESCENDANT;
-        pattern |= DOMNode::TREE_POSITION_ANCESTOR;
+    else if(pattern & DOMNode::DOCUMENT_POSITION_CONTAINS) {
+        pattern &= !DOMNode::DOCUMENT_POSITION_CONTAINS;
+        pattern |= DOMNode::DOCUMENT_POSITION_CONTAINED_BY;
     }
 
     return pattern;
@@ -1102,7 +1048,7 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
     }
 }
 
-DOMNode*         DOMNodeImpl::getInterface(const XMLCh*)      {
+void* DOMNodeImpl::getFeature(const XMLCh*, const XMLCh*)      {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }

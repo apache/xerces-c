@@ -538,13 +538,13 @@ const XMLCh* DOMElementImpl::getBaseURI() const
            void*            DOMElementImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                     {return fNode.setUserData(key, data, handler); }
            void*            DOMElementImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
-           short            DOMElementImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           short            DOMElementImpl::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); }
            const XMLCh*     DOMElementImpl::getTextContent() const                  {return fNode.getTextContent(); }
            void             DOMElementImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
-           const XMLCh*     DOMElementImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           const XMLCh*     DOMElementImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMElementImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMElementImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           DOMNode*         DOMElementImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
+           void*            DOMElementImpl::getFeature(const XMLCh* feature, const XMLCh* version) {return fNode.getFeature(feature, version); }
 
 
 
@@ -600,6 +600,9 @@ DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
     if (!namespaceURI || !*namespaceURI) {
         fName = doc->getPooledString(name);
         fAttributes->reconcileDefaultAttributes(getDefaultAttributes());
+
+        // and fire user data NODE_RENAMED event
+        castToNodeImpl(this)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, this);
 
         return this;
     }

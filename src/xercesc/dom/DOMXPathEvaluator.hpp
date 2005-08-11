@@ -29,7 +29,7 @@ class DOMNode;
  * The evaluation of XPath expressions is provided by <code>DOMXPathEvaluator</code>. 
  * In a DOM implementation which supports the XPath 3.0 feature, the <code>DOMXPathEvaluator</code>
  * interface will be implemented on the same object which implements the Document interface permitting
- * it to be obtained by casting or by using the DOM Level 3 getInterface method. In this case the
+ * it to be obtained by casting or by using the DOM Level 3 getFeature method. In this case the
  * implementation obtained from the Document supports the XPath DOM module and is compatible 
  * with the XPath 1.0 specification.
  * Evaluation of expressions with specialized extension functions or variables may not

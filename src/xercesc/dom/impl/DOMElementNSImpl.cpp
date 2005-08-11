@@ -22,6 +22,7 @@
 #include "DOMElementNSImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMTypeInfoImpl.hpp"
+#include "DOMCasts.hpp"
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
@@ -90,18 +91,22 @@ const XMLCh* DOMElementNSImpl::getBaseURI() const
         if (attrNode) {
             const XMLCh* uri =  attrNode->getNodeValue();
             if (uri && *uri) {// attribute value is always empty string
-                try {
-                    XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                    XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                    uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
-                }
-                catch(const OutOfMemoryException&)
+                // if there is a base URI for the parent node, use it to resolve relative URI
+                if(baseURI)
                 {
-                    throw;
-                }
-                catch (...){
-                    // REVISIT: what should happen in this case?
-                    return 0;
+                    try {
+                        XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
+                        XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
+                        uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
+                    }
+                    catch(const OutOfMemoryException&)
+                    {
+                        throw;
+                    }
+                    catch (...){
+                        // REVISIT: what should happen in this case?
+                        return 0;
+                    }
                 }
                 return uri;
             }
@@ -188,6 +193,9 @@ DOMNode* DOMElementNSImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 {
     setName(namespaceURI, name);
     fAttributes->reconcileDefaultAttributes(getDefaultAttributes());
+    // and fire user data NODE_RENAMED event
+    castToNodeImpl(this)->callUserDataHandlers(DOMUserDataHandler::NODE_RENAMED, this, this);
+
     return this;
 }
 
@@ -250,11 +258,11 @@ void DOMElementNSImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo)
     fSchemaType = typeInfo;
 }
 
-DOMNode * DOMElementNSImpl::getInterface(const XMLCh* feature)
+void* DOMElementNSImpl::getFeature(const XMLCh* feature, const XMLCh* version)
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
-        return (DOMNode*)(DOMPSVITypeInfo*)fSchemaType;
-    return DOMElementImpl::getInterface(feature);
+        return (DOMPSVITypeInfo*)fSchemaType;
+    return DOMElementImpl::getFeature(feature, version);
 }
 
 XERCES_CPP_NAMESPACE_END

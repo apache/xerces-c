@@ -755,13 +755,13 @@ int             DOMDocumentImpl::changes() const{
            void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); }
            void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
-           short            DOMDocumentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           short            DOMDocumentImpl::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); }
            const XMLCh*     DOMDocumentImpl::getTextContent() const                  {return fNode.getTextContent(); }
            void             DOMDocumentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
-           const XMLCh*     DOMDocumentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           const XMLCh*     DOMDocumentImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMDocumentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           DOMNode*         DOMDocumentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
+           void*            DOMDocumentImpl::getFeature(const XMLCh* feature, const XMLCh* version) {return fNode.getFeature(feature, version); }
 
 
 
@@ -972,8 +972,35 @@ void DOMDocumentImpl::setStrictErrorChecking(bool strictErrorChecking) {
     setErrorChecking(strictErrorChecking);
 }
 
-DOMNode* DOMDocumentImpl::adoptNode(DOMNode*) {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
+DOMNode* DOMDocumentImpl::adoptNode(DOMNode* sourceNode) {
+    if(sourceNode->getOwnerDocument()!=this)
+    {
+        // cannot take ownership of a node created by another document, as it comes from its memory pool
+        // and would be delete when the original document is deleted
+        return 0;
+    }
+    // if the adopted node is already part of this document (i.e. the source and target document are the same), 
+    // this method still has the effect of removing the source node from the child list of its parent, if any
+    switch(sourceNode->getNodeType())
+    {
+    case DOCUMENT_NODE:
+    case DOCUMENT_TYPE_NODE:
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
+    case ATTRIBUTE_NODE:    
+        {
+            DOMAttr* sourceAttr=(DOMAttr*)sourceNode;
+            DOMElement* sourceAttrElem=sourceAttr->getOwnerElement();
+            if(sourceAttrElem)
+                sourceAttrElem->removeAttributeNode(sourceAttr);
+            break;
+        }
+    default:
+        {
+            DOMNode* sourceNodeParent=sourceNode->getParentNode();
+            if(sourceNodeParent)
+                sourceNodeParent->removeChild(sourceNode);
+        }
+    }
     return 0;
 }
 
@@ -1050,8 +1077,9 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
         {
             DOMEntityReferenceImpl* newentityRef = (DOMEntityReferenceImpl*)createEntityReference(source->getNodeName());
             newnode=newentityRef;
-            errorChecking = false;
-            newentityRef->setReadOnly(false, true); //allow deep import temporarily
+            // Only the EntityReference itself is copied, even if a deep import is requested, since the source and 
+            // destination documents might have defined the entity differently. 
+            deep = false;
         }
         break;
     case DOMNode::ENTITY_NODE :
@@ -1080,7 +1108,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
                 throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 
             DOMDocumentType *srcdoctype = (DOMDocumentType *)source;
-            DOMDocumentType *newdoctype = (DOMDocumentType *)
+            DOMDocumentTypeImpl *newdoctype = (DOMDocumentTypeImpl *)
                 createDocumentType(srcdoctype->getNodeName(),
                 srcdoctype->getPublicId(),
                 srcdoctype->getSystemId());
@@ -1101,17 +1129,17 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             }
             const XMLCh* intSubset=srcdoctype->getInternalSubset();
             if(intSubset != 0) {
-                ((DOMDocumentTypeImpl *)newdoctype)->setInternalSubset(intSubset);
+                newdoctype->setInternalSubset(intSubset);
             }
 
             // detect if the DTD being copied is our own implementation, and use the provided methods
             try
             {
-                DOMDocumentTypeImpl* docTypeImpl=(DOMDocumentTypeImpl*)(srcdoctype->getInterface(XMLUni::fgXercescInterfaceDOMDocumentTypeImpl));
+                DOMDocumentTypeImpl* docTypeImpl=(DOMDocumentTypeImpl*)(srcdoctype->getFeature(XMLUni::fgXercescInterfaceDOMDocumentTypeImpl, XMLUni::fgZeroLenString));
                 if(docTypeImpl)
                 {
                     smap = docTypeImpl->getElements();
-                    tmap = ((DOMDocumentTypeImpl *)newdoctype)->getElements();
+                    tmap = newdoctype->getElements();
                     if (smap != 0) {
                         for(XMLSize_t i = 0; i < smap->getLength(); i++) {
                             tmap->setNamedItem(importNode(smap->item(i), true, true));
@@ -1134,7 +1162,6 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             DOMNotationImpl *newnotation = (DOMNotationImpl *)createNotation(source->getNodeName());
             newnotation->setPublicId(srcnotation->getPublicId());
             newnotation->setSystemId(srcnotation->getSystemId());
-            // Kids carry additional value
             newnode=newnotation;
             // No name, no value
             break;
@@ -1154,8 +1181,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             newnode->appendChild(importNode(srckid, true, false));
         }
 
-    if (newnode->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE
-        || newnode->getNodeType() == DOMNode::ENTITY_NODE) {
+    if (newnode->getNodeType() == DOMNode::ENTITY_NODE) {
         castToNodeImpl(newnode)->setReadOnly(true, true);
         errorChecking = oldErrorCheckingFlag;
     }
@@ -1265,19 +1291,15 @@ void DOMDocumentImpl::transferUserData(DOMNodeImpl* n1, DOMNodeImpl* n2)
 DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, const XMLCh* name)
 {
     if (n->getOwnerDocument() != this)
-        if (n->getNodeType() == DOCUMENT_NODE)
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
-        else
-            throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, getMemoryManager());
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, getMemoryManager());
 
     switch (n->getNodeType()) {
         case ELEMENT_NODE:
             return ((DOMElementImpl*)n)->rename(namespaceURI, name);
         case ATTRIBUTE_NODE:
             return ((DOMAttrImpl*)n)->rename(namespaceURI, name);
-        default:
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 
     return 0;
 }

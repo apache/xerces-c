@@ -433,10 +433,10 @@ void DOMDocumentTypeImpl::release()
                                                                                          {return fNode.setUserData(key, data, handler); }
            void*            DOMDocumentTypeImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
            const XMLCh*     DOMDocumentTypeImpl::getBaseURI() const                      {return fNode.getBaseURI(); }
-           short            DOMDocumentTypeImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           short            DOMDocumentTypeImpl::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); }
            const XMLCh*     DOMDocumentTypeImpl::getTextContent() const                  {return fNode.getTextContent(); }
            void             DOMDocumentTypeImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
-           const XMLCh*     DOMDocumentTypeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           const XMLCh*     DOMDocumentTypeImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMDocumentTypeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMDocumentTypeImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
 
@@ -533,11 +533,11 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
     return fParent.isEqualNode(arg);
 }
 
-DOMNode * DOMDocumentTypeImpl::getInterface(const XMLCh* feature)
+void* DOMDocumentTypeImpl::getFeature(const XMLCh* feature, const XMLCh* version)
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl))
-        return (DOMNode*)(DOMDocumentTypeImpl*)this;
-    return fNode.getInterface(feature);
+        return (DOMDocumentTypeImpl*)this;
+    return fNode.getFeature(feature,version);
 }
 
 XERCES_CPP_NAMESPACE_END

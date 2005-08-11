@@ -156,13 +156,13 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
                                                                                     {return fNode.setUserData(key, data, handler); }
            void*            DOMCommentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
            const XMLCh*     DOMCommentImpl::getBaseURI() const                      {return fNode.getBaseURI(); }
-           short            DOMCommentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           short            DOMCommentImpl::compareDocumentPosition(const DOMNode* other) const {return fNode.compareDocumentPosition(other); }
            const XMLCh*     DOMCommentImpl::getTextContent() const                  {return fNode.getTextContent(); }
            void             DOMCommentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
-           const XMLCh*     DOMCommentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           const XMLCh*     DOMCommentImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMCommentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMCommentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           DOMNode*         DOMCommentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
+           void*            DOMCommentImpl::getFeature(const XMLCh* feature, const XMLCh* version)  {return fNode.getFeature(feature, version); }
 
 
 
