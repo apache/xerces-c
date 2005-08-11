@@ -268,19 +268,19 @@ if test $debug = "off"; then
     if test ${SYSOVR}o = "o"; then
       if test $platform = "os400"; then
          echo "NATIVE OS400 BUILD"
-         debugflag="";
+         debugflag="-DNDEBUG";
       elif test $platform = "irix"; then
-         debugflag="-w -O2";
+         debugflag="-w -O2 -DNDEBUG";
       elif test $platform = "aix"; then
-         debugflag="-w -O2";
+         debugflag="-w -O2 -DNDEBUG";
       elif test $platform = "os390"; then
-         debugflag="";         
+         debugflag="-DNDEBUG";         
       else
-         debugflag="-w -O";
+         debugflag="-w -O -DNDEBUG";
       fi
     else
       echo "OVERRIDE FOR OS400 ON AIX"
-      debugflag="";
+      debugflag="-DNDEBUG";
     fi
 else
     echo "Debug is ON"
