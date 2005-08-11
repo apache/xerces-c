@@ -73,17 +73,6 @@ public :
     // -----------------------------------------------------------------------
     unsigned int getElemId() const;
 
-    /**
-     * @deprecated
-    **/
-    virtual const XMLCh* getDOMTypeInfoName() const;
-
-    /**
-     * @deprecated
-    **/
-    virtual const XMLCh* getDOMTypeInfoUri() const;
-
-
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -135,16 +124,6 @@ inline const XMLCh* DTDAttDef::getFullName() const
 inline unsigned int DTDAttDef::getElemId() const
 {
     return fElemId;
-}
-
-inline const XMLCh* DTDAttDef::getDOMTypeInfoName() const 
-{
-    return getAttTypeString(getType(), getMemoryManager());
-}
-
-inline const XMLCh* DTDAttDef::getDOMTypeInfoUri() const 
-{
-    return 0;
 }
 
 // ---------------------------------------------------------------------------

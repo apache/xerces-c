@@ -123,16 +123,6 @@ public :
     DTDAttDef* getAttDef(const XMLCh* const attName);
     ModelTypes getModelType() const;
 
-    /**
-     * @deprecated
-    **/
-    const XMLCh* getDOMTypeInfoName() const;
-
-    /**
-     * @deprecated
-    **/
-    const XMLCh* getDOMTypeInfoUri() const;
-
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -251,14 +241,6 @@ inline const XMLCh* DTDElementDecl::getKey() const
 inline DTDElementDecl::ModelTypes DTDElementDecl::getModelType() const
 {
     return fModelType;
-}
-
-inline const XMLCh* DTDElementDecl::getDOMTypeInfoName() const {
-    return 0;
-}
-
-inline const XMLCh* DTDElementDecl::getDOMTypeInfoUri() const {
-    return 0;
 }
 
 // ---------------------------------------------------------------------------
