@@ -27,7 +27,6 @@
 #include <xercesc/validators/schema/ComplexTypeInfo.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
-#include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/schema/PSVIDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -131,106 +130,6 @@ public :
     virtual bool isGlobalDecl() const;
     SchemaElementDecl* getSubstitutionGroupElem() const;
 
-
-    // ----------------------------------------------------------------------
-    // Partial implementation of PSVI
-    // The values these methods return are only accurate until the cleanUp method
-    // is called (in the end tag part of the scanner you are using)
-    // note that some of this information has dependancies. For example,
-    // if something is not valid then the information returned by the other 
-    // calls may be meaningless
-    // See http://www.w3.org/TR/xmlschema-1/ for detailed information
-    // ----------------------------------------------------------------------
-
-
-    /**
-     * The appropriate case among the following:
-     * 1 If it was strictly assessed, then the appropriate case among the following:
-     * 1.1 If all of the following are true
-     *    1.1.1
-     *    1.1.1.1 clause 1.1 of Schema-Validity Assessment (Element) (3.3.4) applied and the item was valid as defined by Element Locally Valid (Element) (3.3.4);
-     *    1.1.1.2 clause 1.2 of Schema-Validity Assessment (Element) (3.3.4) applied and the item was valid as defined by Element Locally Valid (Type) (3.3.4).
-     *    1.1.2 Neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validity] is invalid.
-     *    1.1.3 Neither its [children] nor its [attributes] contains an information item (element or attribute respectively) with a context-determined declaration of mustFind whose [validity] is unknown.
-     * , then valid;
-     *    1.2 otherwise invalid.
-     *    2 otherwise notKnown.
-     * @deprecated; not thread-safe
-     */
-    PSVIDefs::Validity getValidity() const;
-
-
-    /**
-     * The appropriate case among the following:
-     * 1 If it was strictly assessed and neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validation attempted] is not full, then full;
-     * 2 If it was not strictly assessed and neither its [children] nor its [attributes] contains an information item (element or attribute respectively) whose [validation attempted] is not none, then none;
-     *3 otherwise partial.
-     * @deprecated; not thread-safe
-     */
-    PSVIDefs::Validation getValidationAttempted() const;
-
-
-    /**
-     * @return the complexity. simple or complex, depending on the type definition.
-     * @deprecated; not thread-safe
-     */
-    PSVIDefs::Complexity getTypeType() const;
-
-    /**
-     * The target namespace of the type definition.
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    const XMLCh* getTypeUri() const;
-
-    /**
-     * The {name} of the type definition, if it is not absent. 
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    const XMLCh* getTypeName() const;
-
-    /**
-     * true if the {name} of the type definition is absent, otherwise false.
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    bool getTypeAnonymous() const;
-
-    /**
-     * If this method returns true and validity is VALID then the next three 
-     * produce accurate results
-     * @return true if the element is validated using a union type
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    bool isTypeDefinitionUnion() const;
-
-    /**
-     * The {target namespace} of the actual member type definition.
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    const XMLCh* getMemberTypeUri() const;
-
-    /**
-     * @return true if the {name} of the actual member type definition is absent, otherwise false.
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    bool getMemberTypeAnonymous() const;
-
-    /**
-     * @return the {name} of the actual member type definition, if it is not absent. 
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    const XMLCh* getMemberTypeName() const;
-
-
-    /**
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    virtual const XMLCh* getDOMTypeInfoUri() const;
-    /**
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    virtual const XMLCh* getDOMTypeInfoName() const;
-
-
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -246,41 +145,9 @@ public :
     void setBlockSet(const int blockSet);
     void setMiscFlags(const int flags);
     void setDefaultValue(const XMLCh* const value);
-    void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);
-    /**
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    void setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo);
-    /**
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    void setXsiSimpleTypeInfo(const DatatypeValidator* const dtv);
+    void setComplexTypeInfo(ComplexTypeInfo* const typeInfo);	
     void setAttWildCard(SchemaAttDef* const attWildCard);
-    void setSubstitutionGroupElem(SchemaElementDecl* const elemDecl);
-    /**
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    void setValidity(PSVIDefs::Validity valid);
-    /**
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    void setValidationAttempted(PSVIDefs::Validation validation);
-    
-    /**
-     * called when element content of this element was validated
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    void updateValidityFromElement(const XMLElementDecl *decl, Grammar::GrammarType eleGrammar);
-    
-    //called when attribute content of this element was validated    
-    // @deprecated; should not be needed in a thread-safe implementation
-    void updateValidityFromAttribute(const SchemaAttDef *def);
-
-    /**
-     * cleans up inbetween uses of the SchemaElementDecl. Resets xsiType, Validity etc.
-     * @deprecated; not thread-safe (will not work with xsi:type and shared grammars)
-     */
-    void reset();
+    void setSubstitutionGroupElem(SchemaElementDecl* const elemDecl);  
 
     // -----------------------------------------------------------------------
     //  IC methods
@@ -336,16 +203,8 @@ private :
     //      The list of attributes that are faulted in for this element
     //      when ComplexTypeInfo does not exist.  We want to keep track
     //      of these faulted in attributes to avoid duplicate redundant
-    //      error.
-    //
-    //  fXsiComplexTypeInfo
-    //      Temporary store the xsi:type ComplexType here for validation
-    //      If it presents, then it takes precedence than its own fComplexTypeInfo.
-    //
-    //  fXsiSimpleTypeInfo
-    //      Temporary store the xsi:type SimpleType here for validation
-    //      If it present then the information from it will be returned rather than fDatatypeValidator
-    //
+    //      error.      
+    //    	
     //  fIdentityConstraints
     //      Store information about an element identity constraints.
     //
@@ -354,29 +213,12 @@ private :
     //      'anyType'.
     //
     //  fSubstitutionGroupElem
-    //      The substitution group element declaration.
-    //
-    //  fValidity
-    //      After this attr has been validated this is its validity
-    //
-    //  fValidation
-    //      The type of validation that happened to this attr
-    //
-    //  fSeenValidation
-    //      set to true when a piece of content of this element is validated 
-    //
-    //  fSeenNoValidation
-    //      set to true when a piece of content of this element is laxly or skip validated
-    //
-    //  fHadContent
-    //      true when this element actually had content.
+    //      The substitution group element declaration.   
     // -----------------------------------------------------------------------
 
     // -----------------------------------------------------------------------
     ModelTypes                         fModelType;
     PSVIDefs::PSVIScope                fPSVIScope;
-    PSVIDefs::Validity                 fValidity;
-    PSVIDefs::Validation               fValidation;
 
     int                                fEnclosingScope;
     int                                fFinalSet;
@@ -384,17 +226,11 @@ private :
     int                                fMiscFlags;    
     XMLCh*                             fDefaultValue;
     ComplexTypeInfo*                   fComplexTypeInfo;
-    RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
-    ComplexTypeInfo*                   fXsiComplexTypeInfo;
-    const DatatypeValidator*           fXsiSimpleTypeInfo;
+    RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;        	
     RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
     SchemaAttDef*                      fAttWildCard;
     SchemaElementDecl*                 fSubstitutionGroupElem;
-    DatatypeValidator*                 fDatatypeValidator;
-
-    bool                               fSeenValidation;
-    bool                               fSeenNoValidation;
-    bool                               fHadContent;
+    DatatypeValidator*                 fDatatypeValidator; 
 };
 
 // ---------------------------------------------------------------------------
@@ -458,7 +294,6 @@ inline PSVIDefs::PSVIScope SchemaElementDecl::getPSVIScope() const
 
 inline DatatypeValidator* SchemaElementDecl::getDatatypeValidator() const
 {
-
     return fDatatypeValidator;
 }
 
@@ -489,17 +324,14 @@ inline XMLCh* SchemaElementDecl::getDefaultValue() const
 
 inline ComplexTypeInfo* SchemaElementDecl::getComplexTypeInfo() const
 {
-
     return fComplexTypeInfo;
 }
 
 inline const SchemaAttDef* SchemaElementDecl::getAttWildCard() const {
-
     return fAttWildCard;
 }
 
 inline SchemaAttDef* SchemaElementDecl::getAttWildCard() {
-
     return fAttWildCard;
 }
 
@@ -512,164 +344,6 @@ inline SchemaElementDecl*
 SchemaElementDecl::getSubstitutionGroupElem() const {
 
     return fSubstitutionGroupElem;
-}
-
-inline const XMLCh* SchemaElementDecl::getTypeName() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if (fXsiComplexTypeInfo)
-        return fXsiComplexTypeInfo->getTypeLocalName();
-    else if (fComplexTypeInfo) 
-        return fComplexTypeInfo->getTypeLocalName();
-    else if(fXsiSimpleTypeInfo)
-        return fXsiSimpleTypeInfo->getTypeLocalName();
-    else if(fDatatypeValidator)
-        return fDatatypeValidator->getTypeLocalName();
-
-    //its anyType if we have not done validation on it or none of the above exist
-    return SchemaSymbols::fgATTVAL_ANYTYPE;
-}
-
-inline PSVIDefs::Complexity SchemaElementDecl::getTypeType() const {
-    if(getModelType() == Simple) {
-        return PSVIDefs::SIMPLE;
-    }
-    else {
-        return PSVIDefs::COMPLEX;
-    }
-}
-
-
-inline const XMLCh* SchemaElementDecl::getTypeUri() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if (fXsiComplexTypeInfo)
-        return fXsiComplexTypeInfo->getTypeUri();
-    else if (fComplexTypeInfo)
-        return fComplexTypeInfo->getTypeUri();
-    else if(fXsiSimpleTypeInfo)
-        return fXsiSimpleTypeInfo->getTypeUri();
-    else if(fDatatypeValidator)
-        return fDatatypeValidator->getTypeUri();
-
-    //its anyType if we have not done validation on it or none of the above exist
-    return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
-}
-
-inline const XMLCh* SchemaElementDecl::getMemberTypeName() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeName();
-    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeName();
-    return 0;
-}
-
-inline const XMLCh* SchemaElementDecl::getMemberTypeUri() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeUri();
-    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeUri();
-
-    return 0;
-}
-
-inline bool SchemaElementDecl::getMemberTypeAnonymous() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeAnonymous();
-    else if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeAnonymous();
-    return false;
-}
-
-inline bool SchemaElementDecl::isTypeDefinitionUnion() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-   if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union ||
-      fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-       return true;
-    return false;
-}
-
-inline PSVIDefs::Validity SchemaElementDecl::getValidity() const {
-    return fValidity;
-}
-
-inline PSVIDefs::Validation SchemaElementDecl::getValidationAttempted() const {
-    if(!fHadContent)
-        return fValidation;
-
-    if(!fSeenNoValidation && fSeenValidation)
-        return PSVIDefs::FULL;
-    else if(fSeenNoValidation && !fSeenValidation)
-        return PSVIDefs::NONE;
-    else
-        return PSVIDefs::PARTIAL;
-}
-
-inline bool SchemaElementDecl::getTypeAnonymous() const {
-    
-    //REVISIT - since xsi type have to be accessed through names 
-    //presumeably they cannot be anonymous
-    
-    if (fXsiComplexTypeInfo) {
-        return fXsiComplexTypeInfo->getAnonymous();
-    }
-    else if (fComplexTypeInfo) {
-        return fComplexTypeInfo->getAnonymous();
-    }
-    else if(fXsiSimpleTypeInfo) {
-        return fXsiSimpleTypeInfo->getAnonymous();
-    }
-    else if(fDatatypeValidator){
-        return fDatatypeValidator->getAnonymous();
-    }
-
-    return false;
-}
-
-inline const XMLCh* SchemaElementDecl::getDOMTypeInfoName() const {
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if(fValidity != PSVIDefs::VALID) {
-        if(getTypeType() == PSVIDefs::SIMPLE)
-            return SchemaSymbols::fgDT_ANYSIMPLETYPE;
-        else
-            return SchemaSymbols::fgATTVAL_ANYTYPE;
-    }
-
-    if(getTypeAnonymous() || getMemberTypeAnonymous())
-        return 0;
-    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeName();
-    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeName();
-    return getTypeName();
-}
-
-inline const XMLCh* SchemaElementDecl::getDOMTypeInfoUri() const {
-
-    // removing fXsi* references would break DOMTypeInfo implementation completely;
-    // will have to wait for now
-    if(fValidity != PSVIDefs::VALID)
-        return SchemaSymbols::fgURI_SCHEMAFORSCHEMA;
-
-    if(getTypeAnonymous() || getMemberTypeAnonymous())
-        return 0;
-
-    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fDatatypeValidator)->getMemberTypeUri();
-
-    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
-        return ((UnionDatatypeValidator*)fXsiSimpleTypeInfo)->getMemberTypeUri();
-
-
-    return getTypeUri();
 }
 
 // ---------------------------------------------------------------------------
@@ -735,18 +409,6 @@ SchemaElementDecl::setComplexTypeInfo(ComplexTypeInfo* const typeInfo)
 }
 
 inline void
-SchemaElementDecl::setXsiComplexTypeInfo(ComplexTypeInfo* const typeInfo)
-{
-    fXsiComplexTypeInfo = typeInfo;
-}
-
-inline void
-SchemaElementDecl::setXsiSimpleTypeInfo(const DatatypeValidator* const dtv)
-{
-    fXsiSimpleTypeInfo = dtv;
-}
-
-inline void
 SchemaElementDecl::setAttWildCard(SchemaAttDef* const attWildCard) {
 
     if (fAttWildCard)
@@ -759,70 +421,6 @@ inline void
 SchemaElementDecl::setSubstitutionGroupElem(SchemaElementDecl* const elemDecl) {
 
     fSubstitutionGroupElem = elemDecl;
-}
-
-inline void SchemaElementDecl::setValidity(PSVIDefs::Validity valid) {
-    fValidity = valid;
-}
-
-inline void SchemaElementDecl::setValidationAttempted(PSVIDefs::Validation validation) {
-    fValidation = validation;
-}
-
-inline void SchemaElementDecl::updateValidityFromAttribute(const SchemaAttDef *def) {
-
-    PSVIDefs::Validation curValAttemted = def->getValidationAttempted();
-    PSVIDefs::Validity curVal = def->getValidity();
-        
-    if(curValAttemted == PSVIDefs::NONE || curValAttemted == PSVIDefs::PARTIAL) {
-        fSeenNoValidation = true;
-        fValidity = PSVIDefs::UNKNOWN;
-    }
-    else {
-        fSeenValidation = true;
-    }
-        
-    if(curVal == PSVIDefs::INVALID)
-        fValidity = PSVIDefs::INVALID;
-
-    fHadContent = true;
-}
-
-inline void SchemaElementDecl::updateValidityFromElement(const XMLElementDecl *decl, Grammar::GrammarType eleGrammar) {
-
-    if (eleGrammar == Grammar::SchemaGrammarType) {                    
-        PSVIDefs::Validation curValAttemted = ((SchemaElementDecl *)decl)->getValidationAttempted();
-        PSVIDefs::Validity curVal = ((SchemaElementDecl *)decl)->getValidity();
-        
-        if(curValAttemted == PSVIDefs::NONE || curValAttemted == PSVIDefs::PARTIAL) {
-            fSeenNoValidation = true;
-            fValidity = PSVIDefs::UNKNOWN;
-        }
-        else {
-            fSeenValidation = true;
-        }
-        
-        if(curVal == PSVIDefs::INVALID)
-            fValidity = PSVIDefs::INVALID;
-    }
-
-    fHadContent = true;
-
-}
-
-inline void SchemaElementDecl::reset() {
-    if(fXsiSimpleTypeInfo && fXsiSimpleTypeInfo->getType() == DatatypeValidator::Union)
-        ((UnionDatatypeValidator *)fXsiSimpleTypeInfo)->reset();
-    if(fDatatypeValidator && fDatatypeValidator->getType() == DatatypeValidator::Union)
-        ((UnionDatatypeValidator *)fDatatypeValidator)->reset();
-
-    setXsiSimpleTypeInfo(0);
-    setXsiComplexTypeInfo(0);
-    fValidity = PSVIDefs::UNKNOWN;
-    fValidation = PSVIDefs::NONE;    
-    fSeenValidation = false;
-    fSeenNoValidation = false;
-    fHadContent = false;
 }
 
 // ---------------------------------------------------------------------------

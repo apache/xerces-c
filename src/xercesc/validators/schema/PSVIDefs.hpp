@@ -22,23 +22,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 class VALIDATORS_EXPORT PSVIDefs
 {
 public:
-    enum Validity {
-        UNKNOWN = 1,
-        INVALID = 2,
-        VALID   = 3
-    };
-    
-    enum Validation {
-        NONE    = 1,
-        PARTIAL = 2,
-        FULL    = 3
-    };
-
-    enum Complexity {
-        SIMPLE  = 1,
-        COMPLEX = 2
-    };
-
     enum PSVIScope
     {
         SCP_ABSENT    // declared in group/attribute group

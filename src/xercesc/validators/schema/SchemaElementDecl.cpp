@@ -40,24 +40,17 @@ SchemaElementDecl::SchemaElementDecl(MemoryManager* const manager) :
     XMLElementDecl(manager)
     , fModelType(Any)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
     , fEnclosingScope(Grammar::TOP_LEVEL_SCOPE)
     , fFinalSet(0)
     , fBlockSet(0)    
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
-    , fAttDefs(0)
-    , fXsiComplexTypeInfo(0)
-    , fXsiSimpleTypeInfo(0)    
+    , fAttDefs(0)        
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
-    , fDatatypeValidator(0)
-    , fSeenValidation(false)
-    , fSeenNoValidation(false)
-    , fHadContent(false)
+    , fDatatypeValidator(0)    
 {
 }
 
@@ -70,24 +63,17 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     XMLElementDecl(manager)
     , fModelType(type)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
     , fEnclosingScope(enclosingScope)
     , fFinalSet(0)
     , fBlockSet(0)    
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
-    , fAttDefs(0)
-    , fXsiComplexTypeInfo(0)
-    , fXsiSimpleTypeInfo(0)    
+    , fAttDefs(0)          
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
     , fDatatypeValidator(0)
-    , fSeenValidation(false)
-    , fSeenNoValidation(false)
-    , fHadContent(false)
 {
     setElementName(prefix, localPart, uriId);
 }
@@ -99,24 +85,17 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     XMLElementDecl(manager)
     , fModelType(type)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
     , fEnclosingScope(enclosingScope)
     , fFinalSet(0)
     , fBlockSet(0)    
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
-    , fAttDefs(0)
-    , fXsiComplexTypeInfo(0)
-    , fXsiSimpleTypeInfo(0)    
+    , fAttDefs(0)        
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
     , fDatatypeValidator(0)
-    , fSeenValidation(false)
-    , fSeenNoValidation(false)
-    , fHadContent(false)
 {
     setElementName(elementName);
 }
@@ -300,9 +279,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<(int)fModelType;
-        serEng<<(int)fPSVIScope;
-        serEng<<(int)fValidity;
-        serEng<<(int)fValidation;
+        serEng<<(int)fPSVIScope;        
 
         serEng<<fEnclosingScope;
         serEng<<fFinalSet;
@@ -317,12 +294,8 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
          * Serialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
 
-        XTemplateSerializer::storeObject(fAttDefs, serEng);
-
-        serEng<<fXsiComplexTypeInfo;
-
-        DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fXsiSimpleTypeInfo);
-
+        XTemplateSerializer::storeObject(fAttDefs, serEng);        
+        
         /***
          * Serialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
          ***/
@@ -330,12 +303,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
 
         serEng<<fAttWildCard;
         serEng<<fSubstitutionGroupElem;
-        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
-
-        serEng<<fSeenValidation;
-        serEng<<fSeenNoValidation;
-        serEng<<fHadContent;
-            
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);                
     }
     else
     {
@@ -343,11 +311,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         serEng>>i;
         fModelType = (ModelTypes)i;
         serEng>>i;
-        fPSVIScope = (PSVIDefs::PSVIScope)i;
-        serEng>>i;
-        fValidity = (PSVIDefs::Validity)i;
-        serEng>> i;
-        fValidation = (PSVIDefs::Validation)i;
+        fPSVIScope = (PSVIDefs::PSVIScope)i;   
 
         serEng>>fEnclosingScope;
         serEng>>fFinalSet;
@@ -361,11 +325,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         /***
          * DeSerialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
-        XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);
-
-        serEng>>fXsiComplexTypeInfo;
-
-        fXsiSimpleTypeInfo = DatatypeValidator::loadDV(serEng);
+        XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);                
 
         /***
          * DeSerialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
@@ -375,13 +335,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         serEng>>fAttWildCard;
         serEng>>fSubstitutionGroupElem;
         fDatatypeValidator = DatatypeValidator::loadDV(serEng);
-
-        serEng>>fSeenValidation;
-        serEng>>fSeenNoValidation;
-        serEng>>fHadContent;
-
     }
-
 }
 
 XMLElementDecl::objectType  SchemaElementDecl::getObjectType() const

@@ -43,13 +43,9 @@ const XMLCh* SchemaAttDef::getFullName() const
 SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
     XMLAttDef(XMLAttDef::CData, XMLAttDef::Implied, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)    
     , fAttName(0)
-    , fDatatypeValidator(0)
-    , fAnyDatatypeValidator(0)
-    , fMemberTypeValidator(0)
+    , fDatatypeValidator(0)    
     , fNamespaceList(0)
     , fBaseAttDecl(0)
 {
@@ -62,13 +58,9 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
                           , const XMLAttDef::DefAttTypes defType
                           , MemoryManager* const         manager) :
     XMLAttDef(type, defType, manager)
-    , fElemId(XMLElementDecl::fgInvalidElemId)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
+    , fElemId(XMLElementDecl::fgInvalidElemId)  
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)
-    , fAnyDatatypeValidator(0)
-    , fMemberTypeValidator(0)    
+    , fDatatypeValidator(0)      
     , fNamespaceList(0)
     , fBaseAttDecl(0)
 {
@@ -85,13 +77,9 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
                           , MemoryManager* const         manager) :
 
     XMLAttDef(attValue, type, defType, enumValues, manager)
-    , fElemId(XMLElementDecl::fgInvalidElemId)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
+    , fElemId(XMLElementDecl::fgInvalidElemId) 
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)
-    , fAnyDatatypeValidator(0)
-    , fMemberTypeValidator(0)
+    , fDatatypeValidator(0)        
     , fNamespaceList(0)
     , fBaseAttDecl(0)
 {
@@ -104,13 +92,9 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
               other->getDefaultType(), other->getEnumeration(),
               other->getMemoryManager())
     , fElemId(XMLElementDecl::fgInvalidElemId)
-    , fValidity(other->fValidity)
-    , fValidation(other->fValidation)
     , fPSVIScope(other->fPSVIScope)
     , fAttName(0)
-    , fDatatypeValidator(other->fDatatypeValidator)
-    , fAnyDatatypeValidator(other->fAnyDatatypeValidator)
-    , fMemberTypeValidator(other->fMemberTypeValidator)
+    , fDatatypeValidator(other->fDatatypeValidator)       
     , fNamespaceList(0)
     , fBaseAttDecl(other->fBaseAttDecl)
 {
@@ -155,15 +139,11 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fElemId;
-        serEng<<(int)fValidity;
-        serEng<<(int)fValidation;
         serEng<<(int)fPSVIScope;
 
         serEng<<fAttName;
 
-        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
-        DatatypeValidator::storeDV(serEng, fAnyDatatypeValidator);
-        DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fMemberTypeValidator);
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);                
 
         /***
          * Serialize ValueVectorOf<unsigned int>
@@ -176,21 +156,13 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
     {
 
         serEng>>fElemId;
-        int i;
-        serEng>>i;
-        fValidity = (PSVIDefs::Validity)i;
-
-        serEng>>i;
-        fValidation = (PSVIDefs::Validation)i;
-        
+        int i;        
         serEng>>i;
         fPSVIScope = (PSVIDefs::PSVIScope)i;
 
         serEng>>fAttName;
 
-        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);
-        fAnyDatatypeValidator = DatatypeValidator::loadDV(serEng);
-        fMemberTypeValidator  = DatatypeValidator::loadDV(serEng);
+        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);               
 
         /***
          * Deserialize ValueVectorOf<unsigned int>
