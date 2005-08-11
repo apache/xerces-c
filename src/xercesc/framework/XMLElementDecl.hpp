@@ -347,20 +347,6 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
       */
     unsigned int getId() const;
 
-
-    /**
-     * @return the uri part of DOM Level 3 TypeInfo
-     * @deprecated
-     */
-    virtual const XMLCh* getDOMTypeInfoUri() const = 0;
-
-    /**
-     * @return the name part of DOM Level 3 TypeInfo
-     * @deprecated
-     */
-    virtual const XMLCh* getDOMTypeInfoName() const = 0;
-
-
     /** Indicate whether this element type has been declared yet
       *
       * This method returns a boolean that indicates whether this element

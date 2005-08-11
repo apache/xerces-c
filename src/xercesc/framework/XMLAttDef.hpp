@@ -300,19 +300,6 @@ public:
       */
     MemoryManager* getMemoryManager() const;
 
-
-    /**
-     * @return the uri part of DOM Level 3 TypeInfo
-     * @deprecated
-     */
-    virtual const XMLCh* getDOMTypeInfoUri() const = 0;
-
-    /**
-     * @return the name part of DOM Level 3 TypeInfo
-     * @deprecated
-     */
-    virtual const XMLCh* getDOMTypeInfoName() const = 0;
-
     //@}
 
 
