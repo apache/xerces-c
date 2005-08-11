@@ -58,13 +58,13 @@ InputPath=\Xerces\xml-xerces\c\Build\Win32\xml4com\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_6D.dll "$(TargetDir)" \
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_6D.dll "$(TargetDir)" \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_7D.dll "$(TargetDir)" \
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_7D.dll "$(TargetDir)" \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	
 
-"$(TargetDir)\xerces-c_2_6D.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_2_7D.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -100,13 +100,13 @@ InputPath=\Xerces\xml-xerces\c\Build\Win32\xml4com\ReleaseMinDependency\xerces-c
 SOURCE="$(InputPath)"
 
 BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll $(TargetDir) \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_7.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_7.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	
 
-"$(TargetDir)\xerces-c_2_6.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_2_7.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"

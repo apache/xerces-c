@@ -48,10 +48,10 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_6");
-    print (" -o \$HOME/xerces-c2_6-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_7");
+    print (" -o \$HOME/xerces-c2_7-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src2_6");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src2_7");
     print (" -o\\xerces-c2_5-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
@@ -295,8 +295,8 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
             system("type buildlog.txt");
             # to follow 2 digits convention
-            psystem("ren XercesMessages2_6_0.DLL XercesMessages2_6.DLL");
-            psystem("ren XercesMessages2_6_0.lib XercesMessages2_6.lib");            
+            psystem("ren XercesMessages2_7_0.DLL XercesMessages2_7.DLL");
+            psystem("ren XercesMessages2_7_0.lib XercesMessages2_7.lib");            
         }
 
         #
@@ -824,21 +824,21 @@ if ( ($platform =~ m/AIX/i)      ||
             print ("\n\nCopying ICU message bundles ...\n");        	
             psystem("cp -f $XERCESCROOT/msg/XercesMessages*.res $targetdir/msg");
            
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages26.0.so .");
-            psystem("find . -name 'libXercesMessages26.0.so' -exec ln -s {} libXercesMessages26.so \\;");
-            psystem("find . -name 'libXercesMessages26.so'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages27.0.so .");
+            psystem("find . -name 'libXercesMessages27.0.so' -exec ln -s {} libXercesMessages27.so \\;");
+            psystem("find . -name 'libXercesMessages27.so'   -exec ln -s {} libXercesMessages.so \\;");
                     
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.26.0 .");
-            psystem("find . -name 'libXercesMessages.so.26.0' -exec ln -s {} libXercesMessages.so.26 \\;");
-            psystem("find . -name 'libXercesMessages.so.26'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.27.0 .");
+            psystem("find . -name 'libXercesMessages.so.27.0' -exec ln -s {} libXercesMessages.so.27 \\;");
+            psystem("find . -name 'libXercesMessages.so.27'   -exec ln -s {} libXercesMessages.so \\;");
             
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.26.0 .");
-            psystem("find . -name 'libXercesMessages.sl.26.0' -exec ln -s {} libXercesMessages.sl.26 \\;");
-            psystem("find . -name 'libXercesMessages.sl.26'   -exec ln -s {} libXercesMessages.sl \\;");            
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.27.0 .");
+            psystem("find . -name 'libXercesMessages.sl.27.0' -exec ln -s {} libXercesMessages.sl.27 \\;");
+            psystem("find . -name 'libXercesMessages.sl.27'   -exec ln -s {} libXercesMessages.sl \\;");            
 
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages26.0.a .");
-            psystem("find . -name 'libXercesMessages26.0.a'   -exec ln -s {} libXercesMessages26.a \\;");
-            psystem("find . -name 'libXercesMessages26.a'     -exec ln -s {} libXercesMessages.a \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages27.0.a .");
+            psystem("find . -name 'libXercesMessages27.0.a'   -exec ln -s {} libXercesMessages27.a \\;");
+            psystem("find . -name 'libXercesMessages27.a'     -exec ln -s {} libXercesMessages.a \\;");
                                
         }        	
 
@@ -857,59 +857,59 @@ if ( ($platform =~ m/AIX/i)      ||
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.26.0 .");
-        psystem("ln -s libxerces-c.so.26.0 libxerces-c.so.26 ");
-        psystem("ln -s libxerces-c.so.26   libxerces-c.so    ");     
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.27.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.27.0 .");
+        psystem("ln -s libxerces-c.so.27.0 libxerces-c.so.27 ");
+        psystem("ln -s libxerces-c.so.27   libxerces-c.so    ");     
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom.so.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.so.26.0 .");
-        psystem("ln -s libxerces-depdom.so.26.0 libxerces-depdom.so.26 ");
-        psystem("ln -s libxerces-depdom.so.26   libxerces-depdom.so    ");        
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom.so.27.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.so.27.0 .");
+        psystem("ln -s libxerces-depdom.so.27.0 libxerces-depdom.so.27 ");
+        psystem("ln -s libxerces-depdom.so.27   libxerces-depdom.so    ");        
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.26.0 .");
-        psystem("ln -s libxerces-c.sl.26.0 libxerces-c.sl.26 ");
-        psystem("ln -s libxerces-c.sl.26   libxerces-c.sl    ");               
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.27.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.27.0 .");
+        psystem("ln -s libxerces-c.sl.27.0 libxerces-c.sl.27 ");
+        psystem("ln -s libxerces-c.sl.27   libxerces-c.sl    ");               
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom.sl.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.sl.26.0 .");
-        psystem("ln -s libxerces-depdom.sl.26.0 libxerces-depdom.sl.26 ");
-        psystem("ln -s libxerces-depdom.sl.26   libxerces-depdom.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom.sl.27.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.sl.27.0 .");
+        psystem("ln -s libxerces-depdom.sl.27.0 libxerces-depdom.sl.27 ");
+        psystem("ln -s libxerces-depdom.sl.27   libxerces-depdom.sl    ");
     }
                 
-    if ((-e "$XERCESCROOT/lib/libxerces-c26.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c26.0.so .");
-        psystem("ln -s libxerces-c26.0.so libxerces-c26.so  ");
-        psystem("ln -s libxerces-c26.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c27.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c27.0.so .");
+        psystem("ln -s libxerces-c27.0.so libxerces-c27.so  ");
+        psystem("ln -s libxerces-c27.so   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom26.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom26.0.so .");
-        psystem("ln -s libxerces-depdom26.0.so libxerces-depdom26.so  ");
-        psystem("ln -s libxerces-depdom26.so   libxerces-depdom.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom27.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom27.0.so .");
+        psystem("ln -s libxerces-depdom27.0.so libxerces-depdom27.so  ");
+        psystem("ln -s libxerces-depdom27.so   libxerces-depdom.so    ");
     }
     
-    if ((-e "$XERCESCROOT/lib/libxerces-c26.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c26.0.a . ");
-        psystem("ln -s libxerces-c26.0.a  libxerces-c26.a ");
-        psystem("ln -s libxerces-c26.a    libxerces-c.a ");         
+    if ((-e "$XERCESCROOT/lib/libxerces-c27.0.a" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c27.0.a . ");
+        psystem("ln -s libxerces-c27.0.a  libxerces-c27.a ");
+        psystem("ln -s libxerces-c27.a    libxerces-c.a ");         
     }
         
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom26.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom26.0.a . ");
-        psystem("ln -s libxerces-depdom26.0.a  libxerces-depdom26.a ");
-        psystem("ln -s libxerces-depdom26.a    libxerces-depdom.a ");         
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom27.0.a" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom27.0.a . ");
+        psystem("ln -s libxerces-depdom27.0.a  libxerces-depdom27.a ");
+        psystem("ln -s libxerces-depdom27.a    libxerces-depdom.a ");         
     }        
     
     # Mac OS X
-    if ((-e "$XERCESCROOT/lib/libxerces-c.26.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.26.0.dylib .");
-        psystem("ln -s libxerces-c.26.0.dylib libxerces-c.26.dylib ");
-        psystem("ln -s libxerces-c.26.dylib   libxerces-c.dylib    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.27.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.27.0.dylib .");
+        psystem("ln -s libxerces-c.27.0.dylib libxerces-c.27.dylib ");
+        psystem("ln -s libxerces-c.27.dylib   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files
@@ -1141,7 +1141,7 @@ sub copyICUOnUNIX() {
 
         #
         # copy icudata dll
-        # For ICU 2.6:
+        # For ICU 3.2:
         # on AIX,              it is called libicudata32.0.a
         # on Solaris/Linux,    it is called libicudata.so.32.0
         # on HP,               it is called libicudata.sl.32.0
@@ -1214,7 +1214,7 @@ sub change_windows_project_for_ICU() {
        
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_7.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1263,7 +1263,7 @@ sub change_windows_makefile_for_ICU() {
 
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_7.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1310,7 +1310,7 @@ sub change_windows_project_for_ICU_VC7() {
         
         if ($MsgLoader)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages2_6.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages2_7.lib $1/;
         }        
         elsif ($Transcoder)
         {

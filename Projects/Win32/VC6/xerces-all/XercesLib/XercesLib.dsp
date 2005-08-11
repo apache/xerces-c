@@ -54,7 +54,7 @@ RSC=rc.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.6.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_7.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.7.0
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -71,7 +71,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FR /FD /c
+# ADD CPP /G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# SUBTRACT CPP /Fr
 # ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -79,7 +80,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_6D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.6.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_7D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.7.0
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
@@ -105,9 +106,9 @@ LINK32=link.exe
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_4_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.4.0
+# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_4_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.7.0
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_6D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.6.0 /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_7D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.7.0 /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
@@ -132,9 +133,9 @@ LINK32=link.exe
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_4_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.4.0
+# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_4_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.7.0
 # SUBTRACT BASE LINK32 /pdb:none /incremental:yes
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_6.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.6.0 /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_7.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.7.0 /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -154,6 +155,10 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\Compilers\VCPPDefs.hpp
 # End Source File
 # Begin Source File
 
@@ -402,6 +407,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\regx\TokenInc.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\UniCharTable.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\UnicodeRangeFactory.cpp
 # End Source File
 # Begin Source File
@@ -448,6 +457,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Base64.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\Base64.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -515,6 +529,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
@@ -567,7 +586,17 @@ SOURCE=..\..\..\..\..\src\xercesc\util\IOException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\KeyRefPair.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -587,11 +616,21 @@ SOURCE=..\..\..\..\..\src\xercesc\util\KVStringPair.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\LogicalPath.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -607,6 +646,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NullPointerException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NumberFormatException.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\OutOfMemoryException.hpp
 # End Source File
 # Begin Source File
@@ -616,6 +659,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\ParseException.hpp
 # End Source File
 # Begin Source File
 
@@ -635,7 +682,17 @@ SOURCE=..\..\..\..\..\src\xercesc\util\QName.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -643,7 +700,17 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -651,11 +718,26 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -668,6 +750,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RuntimeException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\SchemaDateTimeException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\SecurityManager.hpp
 # End Source File
 # Begin Source File
 
@@ -688,6 +774,15 @@ SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\TranscodingException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\TransENameMap.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\TransENameMap.hpp
 # End Source File
 # Begin Source File
 
@@ -715,11 +810,26 @@ SOURCE=..\..\..\..\..\src\xercesc\util\ValueArrayOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -864,6 +974,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLHolder.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -1147,6 +1262,11 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamedMap.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -2559,7 +2679,15 @@ SOURCE=..\..\..\..\..\src\xercesc\sax2\ContentHandler.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\sax2\DeclHandler.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\sax2\LexicalHandler.hpp
 # End Source File
 # Begin Source File
 
@@ -2659,6 +2787,11 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListPool.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -2887,6 +3020,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.hpp
 # End Group
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMAttr.hpp
 # End Source File
 # Begin Source File
@@ -3080,6 +3217,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\StDOMNode.hpp
 # End Source File
 # End Group
 # Begin Source File

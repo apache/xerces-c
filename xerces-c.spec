@@ -1,4 +1,4 @@
-%define tarversion 2_6_0
+%define tarversion 2_7_0
 
 # threads
 # values: pthreads, none
@@ -6,7 +6,7 @@
 
 Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
-Version:	2.6.0
+Version:	2.7.0
 Release:	3
 URL:		http://xml.apache.org/xerces-c/
 Source0:    %{name}-src_%{tarversion}.tar.gz
@@ -67,7 +67,7 @@ make
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT/src/xercesc
 make PREFIX=$RPM_BUILD_ROOT%{prefix} install
-ln -sf %{prefix}/lib/libxerces-c.so.26 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
+ln -sf %{prefix}/lib/libxerces-c.so.27 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
 mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
 #we don't want obj directory
 install `find $XERCESCROOT/bin -type f -maxdepth 1` $RPM_BUILD_ROOT%{prefix}/bin
