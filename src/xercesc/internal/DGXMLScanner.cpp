@@ -2384,7 +2384,8 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), 0, pubId, lastInfo.systemId);
+                            expSysId.getRawBuffer(), 0, pubId, lastInfo.systemId,
+                            &fReaderMgr);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);       
     }
     else
