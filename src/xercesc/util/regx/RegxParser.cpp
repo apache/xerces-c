@@ -35,9 +35,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Static member data initialization
 // ---------------------------------------------------------------------------
-const unsigned short RegxParser::S_NORMAL		= 0;
-const unsigned short RegxParser::S_INBRACKETS	= 1;
-const unsigned short RegxParser::S_INXBRACKETS	= 2;
+const unsigned short RegxParser::Regex_S_NORMAL		= 0;
+const unsigned short RegxParser::Regex_S_INBRACKETS	= 1;
+const unsigned short RegxParser::Regex_S_INXBRACKETS	= 2;
 
 // ---------------------------------------------------------------------------
 //  RegxParser::ReferencePostion: Constructors and Destructor
@@ -59,7 +59,7 @@ RegxParser::RegxParser(MemoryManager* const manager)
      fOptions(0),
      fOffset(0),
      fNoGroups(1),
-     fParseContext(S_NORMAL),
+     fParseContext(Regex_S_NORMAL),
      fStringLen(0),
      fState(0),
      fCharData(0),
@@ -90,7 +90,7 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
 	fOffset = 0;
 	fNoGroups = 1;
 	fHasBackReferences = false;
-	setParseContext(S_NORMAL);
+	setParseContext(Regex_S_NORMAL);
 	if (fString)
         fMemoryManager->deallocate(fString);//delete [] fString;
 	fString = XMLString::replicate(regxStr, fMemoryManager);
@@ -143,7 +143,7 @@ void RegxParser::processNext() {
 	XMLCh ch = fString[fOffset++];
 	fCharData = ch;
 
-    if (fParseContext == S_INBRACKETS) {
+    if (fParseContext == Regex_S_INBRACKETS) {
 
 		switch (ch) {
         case chBackSlash:
@@ -1011,7 +1011,7 @@ XMLInt32 RegxParser::processCInCharacterClass(RangeToken* const,
 
 RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 
-    setParseContext(S_INBRACKETS);
+    setParseContext(Regex_S_INBRACKETS);
 	processNext();
 
     RangeToken* base = 0;
@@ -1184,7 +1184,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
         tok->getCaseInsensitiveToken(fTokenFactory);
     }
 
-    setParseContext(S_NORMAL);
+    setParseContext(Regex_S_NORMAL);
     processNext();
 
     return tok;
