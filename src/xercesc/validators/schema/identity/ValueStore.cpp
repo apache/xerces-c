@@ -148,7 +148,7 @@ void ValueStore::endValueScope() {
 
     if (fValuesCount == 0) {
 
-        if (fIdentityConstraint->getType() == IdentityConstraint::KEY && fDoReportError) {
+        if (fIdentityConstraint->getType() == IdentityConstraint::ICType_KEY && fDoReportError) {
             fScanner->getValidator()->emitError(XMLValid::IC_AbsentKeyValue,
                 fIdentityConstraint->getElementName());
         }
@@ -160,19 +160,19 @@ void ValueStore::endValueScope() {
     if ((fValuesCount != fIdentityConstraint->getFieldCount()) && fDoReportError) {
 
         switch (fIdentityConstraint->getType()) {
-        case IdentityConstraint::UNIQUE:
+        case IdentityConstraint::ICType_UNIQUE:
             {
 				fScanner->getValidator()->emitError(XMLValid::IC_UniqueNotEnoughValues,
                     fIdentityConstraint->getElementName());
                 break;
             }
-        case IdentityConstraint::KEY:
+        case IdentityConstraint::ICType_KEY:
             {
 				fScanner->getValidator()->emitError(XMLValid::IC_KeyNotEnoughValues,
                     fIdentityConstraint->getElementName(), fIdentityConstraint->getIdentityConstraintName());
                 break;
             }
-        case IdentityConstraint::KEYREF:
+        case IdentityConstraint::ICType_KEYREF:
             {
 				fScanner->getValidator()->emitError(XMLValid::IC_KeyRefNotEnoughValues,
                     fIdentityConstraint->getElementName(), fIdentityConstraint->getIdentityConstraintName());
@@ -270,7 +270,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 // ---------------------------------------------------------------------------
 void ValueStore::endDcocumentFragment(ValueStoreCache* const valueStoreCache) {
 
-    if (fIdentityConstraint->getType() == IdentityConstraint::KEYREF) {
+    if (fIdentityConstraint->getType() == IdentityConstraint::ICType_KEYREF) {
 
         // verify references
         // get the key store corresponding (if it exists):
@@ -306,7 +306,7 @@ void ValueStore::endDcocumentFragment(ValueStoreCache* const valueStoreCache) {
 // ---------------------------------------------------------------------------
 void ValueStore::reportNilError(IdentityConstraint* const ic) {
 
-    if (fDoReportError && ic->getType() == IdentityConstraint::KEY) {
+    if (fDoReportError && ic->getType() == IdentityConstraint::ICType_KEY) {
         fScanner->getValidator()->emitError(XMLValid::IC_KeyMatchesNillable,
                                             ic->getElementName());
     }
@@ -317,13 +317,13 @@ void ValueStore::duplicateValue() {
     if (fDoReportError) {
 
         switch (fIdentityConstraint->getType()) {
-        case IdentityConstraint::UNIQUE:
+        case IdentityConstraint::ICType_UNIQUE:
             {
                 fScanner->getValidator()->emitError(XMLValid::IC_DuplicateUnique,
                     fIdentityConstraint->getElementName());
                 break;
             }
-        case IdentityConstraint::KEY:
+        case IdentityConstraint::ICType_KEY:
             {
                 fScanner->getValidator()->emitError(XMLValid::IC_DuplicateKey,
                     fIdentityConstraint->getElementName());

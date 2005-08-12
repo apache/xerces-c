@@ -46,12 +46,12 @@ public:
     // -----------------------------------------------------------------------
     //  Constants
     // -----------------------------------------------------------------------
-    enum {
-        QNAME = 1,
-        WILDCARD = 2,
-        NODE = 3,
-        NAMESPACE= 4,
-        UNKNOWN
+    enum NodeType {
+        NodeType_QNAME = 1,
+        NodeType_WILDCARD = 2,
+        NodeType_NODE = 3,
+        NodeType_NAMESPACE= 4,
+        NodeType_UNKNOWN
     };
 
     // -----------------------------------------------------------------------
@@ -103,12 +103,12 @@ public:
     // -----------------------------------------------------------------------
     //  Constants
     // -----------------------------------------------------------------------
-    enum { // Axis type
-        CHILD = 1,
-        ATTRIBUTE = 2,
-        SELF = 3,
-        DESCENDANT = 4,
-        UNKNOWN
+    enum AxisType { // Axis type
+        AxisType_CHILD = 1,
+        AxisType_ATTRIBUTE = 2,
+        AxisType_SELF = 3,
+        AxisType_DESCENDANT = 4,
+        AxisType_UNKNOWN
     };
 
     // -----------------------------------------------------------------------

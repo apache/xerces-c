@@ -184,7 +184,7 @@ void IdentityConstraint::storeIC(XSerializeEngine&         serEng
     }
     else
     {
-        serEng<<(int) UNKNOWN;
+        serEng<<(int) ICType_UNKNOWN;
     }
 
 }
@@ -197,19 +197,19 @@ IdentityConstraint* IdentityConstraint::loadIC(XSerializeEngine& serEng)
 
     switch((ICType)type)
     {
-    case UNIQUE: 
+    case ICType_UNIQUE: 
         IC_Unique* ic_unique;
         serEng>>ic_unique;
         return ic_unique;      
-    case KEY:
+    case ICType_KEY:
         IC_Key* ic_key;
         serEng>>ic_key;
         return ic_key;
-    case KEYREF: 
+    case ICType_KEYREF: 
         IC_KeyRef* ic_keyref;
         serEng>>ic_keyref;
         return ic_keyref;
-    case UNKNOWN:
+    case ICType_UNKNOWN:
         return 0;
     default: //we treat this same as UnKnown
         return 0;

@@ -160,7 +160,7 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
 
 void ValueStoreCache::transplant(IdentityConstraint* const ic, const int initialDepth) {
 
-    if (ic->getType() == IdentityConstraint::KEYREF) {
+    if (ic->getType() == IdentityConstraint::ICType_KEYREF) {
         return;
     }
 

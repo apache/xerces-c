@@ -73,7 +73,7 @@ private:
 // ---------------------------------------------------------------------------
 inline short IC_KeyRef::getType() const {
 
-    return IdentityConstraint::KEYREF;
+    return IdentityConstraint::ICType_KEYREF;
 }
 
 inline IdentityConstraint* IC_KeyRef::getKey() const {

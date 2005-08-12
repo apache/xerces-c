@@ -70,7 +70,7 @@ private:
 // ---------------------------------------------------------------------------
 inline short IC_Unique::getType() const {
 
-    return IdentityConstraint::UNIQUE;
+    return IdentityConstraint::ICType_UNIQUE;
 }
 
 XERCES_CPP_NAMESPACE_END

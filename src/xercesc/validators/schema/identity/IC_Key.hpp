@@ -66,7 +66,7 @@ private:
 // ---------------------------------------------------------------------------
 inline short IC_Key::getType() const {
 
-    return IdentityConstraint::KEY;
+    return IdentityConstraint::ICType_KEY;
 }
 
 XERCES_CPP_NAMESPACE_END

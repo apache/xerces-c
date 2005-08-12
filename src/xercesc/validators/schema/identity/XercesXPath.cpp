@@ -64,7 +64,7 @@ XercesNodeTest::XercesNodeTest(const short aType,
 }
 
 XercesNodeTest::XercesNodeTest(const QName* const qName)
-    : fType(QNAME)
+    : fType(NodeType_QNAME)
     , fName(new (qName->getMemoryManager()) QName(*qName))
 {
 }
@@ -72,7 +72,7 @@ XercesNodeTest::XercesNodeTest(const QName* const qName)
 XercesNodeTest::XercesNodeTest(const XMLCh* const prefix,
                                const unsigned int uriId,
                                MemoryManager* const manager)
-    : fType(NAMESPACE)
+    : fType(NodeType_NAMESPACE)
     , fName(new (manager) QName(manager))
 {
     fName->setURI(uriId);
@@ -109,7 +109,7 @@ void XercesNodeTest::serialize(XSerializeEngine& serEng)
 }
 
 XercesNodeTest::XercesNodeTest(MemoryManager* const)
-:fType(UNKNOWN)
+:fType(NodeType_UNKNOWN)
 ,fName(0)
 {
 }
@@ -184,8 +184,8 @@ bool XercesStep::operator==(const XercesStep& other) const {
     if (fAxisType != other.fAxisType)
         return false;
 
-    if (fAxisType == XercesStep::CHILD ||
-        fAxisType == XercesStep::ATTRIBUTE) {
+    if (fAxisType == XercesStep::AxisType_CHILD ||
+        fAxisType == XercesStep::AxisType_ATTRIBUTE) {
         return (*fNodeTest == *(other.fNodeTest));
     }
 
@@ -221,7 +221,7 @@ void XercesStep::serialize(XSerializeEngine& serEng)
 }
 
 XercesStep::XercesStep(MemoryManager* const)
-:fAxisType(UNKNOWN)
+:fAxisType(AxisType_UNKNOWN)
 ,fNodeTest(0)
 {
 }
@@ -371,7 +371,7 @@ void XercesXPath::checkForSelectedAttributes() {
         unsigned int stepSize = locPath->getStepSize();
 
         if (stepSize) {
-            if (locPath->getStep(stepSize - 1)->getAxisType() == XercesStep::ATTRIBUTE) {
+            if (locPath->getStep(stepSize - 1)->getAxisType() == XercesStep::AxisType_ATTRIBUTE) {
                 ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoAttrSelector, fMemoryManager);
             }
 		}
@@ -450,8 +450,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
                     {
-                        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD, fMemoryManager);
-                        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
+                        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NodeType_WILDCARD, fMemoryManager);
+                        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
                     }
@@ -480,7 +480,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                             // build step
                             XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri, fMemoryManager);
-                            XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
+                            XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_ATTRIBUTE, nodeTest);
                             stepsVector->addElement(step);
                             break;
                         }
@@ -492,7 +492,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                         // build step
                         XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(&aQName);
-                        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::ATTRIBUTE, nodeTest);
+                        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_ATTRIBUTE, nodeTest);
                         stepsVector->addElement(step);
                         break;
                     }
@@ -520,8 +520,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
             }
         case XercesXPath::EXPRTOKEN_NAMETEST_ANY:
             {
-                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::WILDCARD, fMemoryManager);
-                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NodeType_WILDCARD, fMemoryManager);
+                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
                 break;
@@ -552,7 +552,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                     // build step
                     XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(prefix, uri, fMemoryManager);
-                    XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
+                    XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_CHILD, nodeTest);
                     stepsVector->addElement(step);
                     break;
                 }
@@ -563,7 +563,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
                 // build step
                 XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(&aQName);
-                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::CHILD, nodeTest);
+                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_CHILD, nodeTest);
                 stepsVector->addElement(step);
                 firstTokenOfLocationPath = false;
                 break;
@@ -571,8 +571,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         case XercesXPath::EXPRTOKEN_PERIOD:
             {
                 // build step
-                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE, fMemoryManager);
-                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::SELF, nodeTest);
+                XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NodeType_NODE, fMemoryManager);
+                XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_SELF, nodeTest);
                 stepsVector->addElement(step);
 
                 if (firstTokenOfLocationPath && i+1 < tokenCount) {
@@ -594,8 +594,8 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                             }
                         }
                         // build step
-                        nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NODE, fMemoryManager);
-                        step = new (fMemoryManager) XercesStep(XercesStep::DESCENDANT, nodeTest);
+                        nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NodeType_NODE, fMemoryManager);
+                        step = new (fMemoryManager) XercesStep(XercesStep::AxisType_DESCENDANT, nodeTest);
                         stepsVector->addElement(step);
                     }
                 }

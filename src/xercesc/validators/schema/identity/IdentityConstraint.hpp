@@ -48,10 +48,10 @@ public:
     //  Constants
     // -----------------------------------------------------------------------
     enum ICType {
-        UNIQUE = 0,
-        KEY = 1,
-        KEYREF = 2,
-        UNKNOWN
+        ICType_UNIQUE = 0,
+        ICType_KEY = 1,
+        ICType_KEYREF = 2,
+        ICType_UNKNOWN
     };
 
     // -----------------------------------------------------------------------

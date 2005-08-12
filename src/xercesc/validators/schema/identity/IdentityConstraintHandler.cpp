@@ -102,7 +102,7 @@ void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const
             XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
             IdentityConstraint* ic = matcher->getIdentityConstraint();
 
-            if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
+            if (ic  && (ic->getType() != IdentityConstraint::ICType_KEYREF))
                 fValueStoreCache->transplant(ic, matcher->getInitialDepth());
         }
 
@@ -112,7 +112,7 @@ void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const
             XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
             IdentityConstraint* ic = matcher->getIdentityConstraint();
 
-            if (ic && (ic->getType() == IdentityConstraint::KEYREF)) 
+            if (ic && (ic->getType() == IdentityConstraint::ICType_KEYREF)) 
             {
                 ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
 
