@@ -29,6 +29,7 @@
 #include    <xercesc/util/RuntimeException.hpp>
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/XMLString.hpp>
+#include    <xercesc/util/XMLHolder.hpp>
 #include    <xercesc/util/PanicHandler.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
@@ -728,7 +729,7 @@ public:
 
     ~RecursiveMutex() {
 			if (pthread_mutex_destroy(&mutex))
-			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, manager);
+			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, fManager);
                       }
 
      void lock()      {
