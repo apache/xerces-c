@@ -171,7 +171,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
         int stepSize = locPath->getStepSize();
 
         while (fCurrentStep[i] < stepSize &&
-               locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::SELF) {
+               locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::AxisType_SELF) {
             fCurrentStep[i]++;
         }
 
@@ -188,7 +188,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
         int descendantStep = fCurrentStep[i];
 
         while (fCurrentStep[i] < stepSize &&
-               locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::DESCENDANT) {
+               locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::AxisType_DESCENDANT) {
             fCurrentStep[i]++;
         }
 
@@ -201,12 +201,12 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         // match child::... step, if haven't consumed any self::node()
         if ((fCurrentStep[i] == startStep || fCurrentStep[i] > descendantStep) &&
-            locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::CHILD) {
+            locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::AxisType_CHILD) {
 
             XercesStep* step = locPath->getStep(fCurrentStep[i]);
             XercesNodeTest* nodeTest = step->getNodeTest();
 
-            if (nodeTest->getType() == XercesNodeTest::QNAME) {
+            if (nodeTest->getType() == XercesNodeTest::NodeType_QNAME) {
 
                 QName elemQName(elemPrefix, elemDecl.getElementName()->getLocalPart(), urlId, fMemoryManager);
 
@@ -242,7 +242,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         // match attribute::... step
         if (fCurrentStep[i] < stepSize &&
-            locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::ATTRIBUTE) {
+            locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::AxisType_ATTRIBUTE) {
 
             if (attrCount) {
 
@@ -252,7 +252,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
                     const XMLAttr* curDef = attrList.elementAt(attrIndex);
 
-                    if (nodeTest->getType() != XercesNodeTest::QNAME ||
+                    if (nodeTest->getType() != XercesNodeTest::NodeType_QNAME ||
                         (*(nodeTest->getName()) == *(curDef->getAttName()))) {
 
                         fCurrentStep[i]++;
