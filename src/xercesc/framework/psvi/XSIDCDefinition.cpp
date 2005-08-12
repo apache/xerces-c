@@ -91,11 +91,11 @@ XSNamespaceItem *XSIDCDefinition::getNamespaceItem()
 XSIDCDefinition::IC_CATEGORY XSIDCDefinition::getCategory() const
 {
     switch(fIdentityConstraint->getType()) {
-        case IdentityConstraint::UNIQUE:
+        case IdentityConstraint::ICType_UNIQUE:
             return IC_UNIQUE;
-        case IdentityConstraint::KEY:
+        case IdentityConstraint::ICType_KEY:
             return IC_KEY;
-        case IdentityConstraint::KEYREF:
+        case IdentityConstraint::ICType_KEYREF:
             return IC_KEYREF;
         default:
             // REVISIT:
