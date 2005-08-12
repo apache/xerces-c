@@ -625,7 +625,7 @@ XSIDCDefinition* XSObjectFactory::addOrFind(IdentityConstraint* const ic,
             }
         }
 
-        if (ic->getType() == IdentityConstraint::KEYREF)
+        if (ic->getType() == IdentityConstraint::ICType_KEYREF)
             keyIC = addOrFind(((IC_KeyRef*) ic)->getKey(), xsModel);
 
         xsObj= new (fMemoryManager) XSIDCDefinition
