@@ -427,13 +427,6 @@ gmake </source>
 				<li>The DOMPrint project illustrates one such usage of the Xerces.framework.
 				</li>
 			</ul>
-
-			<p>Projects for Apple's Project Builder environment, which is no longer supported
-			under Mac OS X 10.3, are provided but may be out of date. You may need to add or
-			delete files from the project in order to support changes in &XercesCName;. Please feel
-			free to submit patches against these projects If you care about the Project Builder
-			projects, and want to keep them up to date.
-			</p>
 			
 		</s3>
 		
@@ -453,14 +446,14 @@ gmake </source>
 				</li>
 			</ul>
 		
-<source>setenv XERCESCROOT "&lt;xerces-c-directory&gt;"
+<source>export XERCESCROOT="&lt;xerces-c-directory&gt;"
 cd src/xercesc
-./runConfigure -p macosx -n native
+./runConfigure -p macosx -n native -t native
 make</source>
 			
 			<ul>
 				<li>Similar instructions apply to build the samples and tests, though the
-				<code>-n</code> flag is not used in these cases:
+				<code>-n</code> and <code>-t</code> flags are not used in these cases:
 				</li>
 			</ul>
 		
