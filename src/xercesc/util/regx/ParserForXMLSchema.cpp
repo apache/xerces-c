@@ -120,8 +120,11 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
 
     int type;
     bool firstLoop = true;
+    bool wasDecoded;
 
     while ( (type = getState()) != REGX_T_EOF) {
+
+        wasDecoded = false;
 
         // single range | from-to-range | subtraction
         if (type == REGX_T_CHAR && getCharData() == chCloseSquare && !firstLoop) {
@@ -175,6 +178,9 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
                     end = true;
                 }
                 break;
+            case chDash:
+                wasDecoded = true;
+                // fall thru to default.
             default:
                 ch = decodeEscaped();
             }
@@ -200,19 +206,16 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
 
         if (!end) {
 
-            // handle '-' when appearing at the beginning of a positive character group
-            if (firstLoop && !isNRange && type == REGX_T_CHAR && ch == chDash)
-            {
-                tok->addRange(chDash, chDash);
-                firstLoop=false;
-                continue;
-            }
-
             if (type == REGX_T_CHAR
                 && (ch == chOpenSquare
                     || ch == chCloseSquare
-                    || ch == chDash)) {
+                    || (ch == chDash && getCharData() == chCloseSquare && firstLoop))) {
+                // if regex = [-] then invalid...
                 // '[', ']', '-' not allowed and should be esacaped
+                XMLCh chStr[] = { ch, chNull };
+                ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_CC6, chStr, chStr, getMemoryManager());
+            }
+            if (ch == chDash && getCharData() == chDash && getState() != REGX_T_BACKSOLIDUS && !wasDecoded) {
                 XMLCh chStr[] = { ch, chNull };
                 ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_CC6, chStr, chStr, getMemoryManager());
             }
@@ -226,13 +229,11 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
                 if ((type = getState()) == REGX_T_EOF)
                     ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, getMemoryManager());
 
-                // handle '-' when appearing at the end of a positive character group
-                if (!isNRange && type == REGX_T_CHAR && getCharData() == chCloseSquare) {
+                if (type == REGX_T_CHAR && getCharData() == chCloseSquare) {
                     tok->addRange(ch, ch);
                     tok->addRange(chDash, chDash);
                 }
-                else if((type == REGX_T_CHAR && getCharData() == chCloseSquare)
-                        || type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
+                else if (type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
 
                     static const XMLCh dashStr[] = { chDash, chNull};
                     ThrowXMLwithMemMgr2(ParseException, XMLExcepts::Parser_CC6, dashStr, dashStr, getMemoryManager());
