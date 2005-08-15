@@ -229,7 +229,7 @@ XMLPlatformUtils::openFileToWrite(const char* const fileName
     if (!gFileSystemCompatible)
         ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
-    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile(manager));
 
     return (file->open(fileName, true)) ? file.release() : NULL;
 }
@@ -243,7 +243,7 @@ XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
     if (!gFileSystemCompatible)
         ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
-    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
+    Janitor<XMLMacAbstractFile> file(XMLMakeMacFile(manager));
 
     return (file->open(fileName, true)) ? file.release() : NULL;
 }
