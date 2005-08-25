@@ -427,15 +427,13 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	int index = 0;
 	bool foundScheme = false;
 
-	// Check for scheme, which must be before `/', '?' or '#'. 
-	// Also handle names with DOS drive letters ('D:'), 
-	// so 1-character schemes are not allowed.
+	// Check for scheme, which must be before `/', '?' or '#'. 	
         int colonIdx = XMLString::indexOf(trimmedUriSpec, chColon);
         int slashIdx = XMLString::indexOf(trimmedUriSpec, chForwardSlash);
         int queryIdx = XMLString::indexOf(trimmedUriSpec, chQuestion);
         int fragmentIdx = XMLString::indexOf(trimmedUriSpec, chPound);
 
-        if ((colonIdx < 2) ||
+        if ((colonIdx == 0) ||
             (colonIdx > slashIdx && slashIdx != -1) ||
             (colonIdx > queryIdx && queryIdx != -1) ||
             (colonIdx > fragmentIdx && fragmentIdx != -1))
@@ -2048,15 +2046,13 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
     int index = 0;
     bool foundScheme = false;
 
-    // Check for scheme, which must be before `/', '?' or '#'. 
-    // Also handle names with DOS drive letters ('D:'), 
-    // so 1-character schemes are not allowed.
+    // Check for scheme, which must be before `/', '?' or '#'.     
     int colonIdx = XMLString::indexOf(trimmedUriSpec, chColon);
     int slashIdx = XMLString::indexOf(trimmedUriSpec, chForwardSlash);
     int queryIdx = XMLString::indexOf(trimmedUriSpec, chQuestion);
     int fragmentIdx = XMLString::indexOf(trimmedUriSpec, chPound);
 
-    if ((colonIdx < 2) ||
+    if ((colonIdx == 0) ||
         (colonIdx > slashIdx && slashIdx != -1) ||
         (colonIdx > queryIdx && queryIdx != -1) ||
         (colonIdx > fragmentIdx && fragmentIdx != -1))
@@ -2150,15 +2146,13 @@ bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr)
     int index = 0;
     bool foundScheme = false;
 
-    // Check for scheme, which must be before `/', '?' or '#'. 
-    // Also handle names with DOS drive letters ('D:'), 
-    // so 1-character schemes are not allowed.
+    // Check for scheme, which must be before `/', '?' or '#'.     
     int colonIdx = XMLString::indexOf(trimmedUriSpec, chColon);
     int slashIdx = XMLString::indexOf(trimmedUriSpec, chForwardSlash);
     int queryIdx = XMLString::indexOf(trimmedUriSpec, chQuestion);
     int fragmentIdx = XMLString::indexOf(trimmedUriSpec, chPound);
 
-    if ((colonIdx < 2) ||
+    if ((colonIdx == 0) ||
         (colonIdx > slashIdx && slashIdx != -1) ||
         (colonIdx > queryIdx && queryIdx != -1) ||
         (colonIdx > fragmentIdx && fragmentIdx != -1))
