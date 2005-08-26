@@ -41,6 +41,19 @@
     </tr>
 
 
+<tr><td>2005-05-19</td><td>David Cargill</td><td>390 update: use ICU table which is present with the uniconv390</td></tr>
+<tr><td>2005-05-19</td><td>David Cargill</td><td>Update table used for patterns to the Unicode 4.0.1 level.</td></tr>
+<tr><td>2005-05-18</td><td>David Cargill</td><td>For time schema datatypes, ensure milisecond only contains 0-9</td></tr>
+<tr><td>2005-05-18</td><td>Jay Hansen</td><td>OS400 updates </td></tr>
+<tr><td>2005-05-08</td><td>James Berry</td><td>Modify runConfigure to accept the names of C++ compilers that it doesn't recognize</td></tr>
+<tr><td>2005-05-06</td><td>David Bertoni</td><td>Change for loop control variable for compilers that don't enforce for scope.</td></tr>
+<tr><td>2005-05-05</td><td>David Cargill</td><td>Update XSValue to handle float and double the same way the main library does</td></tr>
+<tr><td>2005-05-05</td><td>Mike Pawlowski</td><td>Update HP 64 bit options</td></tr>
+<tr><td>2005-05-04</td><td>David Bertoni</td><td>Fix for Jira issue XERCESC-1416</td></tr>
+<tr><td>2005-05-04</td><td>David Bertoni</td><td>Fix for Jira issue XERCESC-1391</td></tr>
+<tr><td>2005-04-29</td><td>David Bertoni</td><td>Patch for Jira issue XERCESC-1407</td></tr>
+<tr><td>2005-04-29</td><td>David Bertoni</td><td>Patch for Jira issue XERCESC-1390</td></tr>
+<tr><td>2005-04-28</td><td>Alberto Massari</td><td>Move implementation of setDocument to the cpp file, where DOMDocumentImpl is a known class (jira 968)</td></tr>
 <tr><td>2005-04-27</td><td>David Cargill </td><td>Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.</td></tr>
 <tr><td>2005-04-26</td><td>David Cargill </td><td>Fix for xercesc-1413: invalid operator equal template signature</td></tr>
 <tr><td>2005-04-26</td><td>David Cargill </td><td>Schema updates to match spec</td></tr>
@@ -51,7 +64,7 @@
 <tr><td>2005-04-22</td><td>David Bertoni </td><td>Patch for Jira issue XERCESC-1410</td></tr>
 <tr><td>2005-04-21</td><td>David Cargill </td><td>Add support for ucs-2</td></tr>
 <tr><td>2005-04-14</td><td>David Bertoni</td><td>Fix Jira 1406. Added include</td></tr>
-<tr><td>2005-04-12</td><td>Alberto Massari</td><td>Fix compiler errors on IRIX (jira# 1405)</td></tr>
+<tr><td>2005-04-12</td><td>Alberto Massari</td><td>Fix compiler errors on IRIX (jira 1405)</td></tr>
 <tr><td>2005-04-07</td><td>Khaled Noaman </td><td>Update chars table with an NCName char mask instead of an XML letter mask</td></tr>
 <tr><td>2005-04-07</td><td>Alberto Massari </td><td>appendChild now throws an exception when a NULL pointer is given (jira# 1401) </td></tr>
 <tr><td>2005-04-05</td><td>David Cargill</td><td>Update XSValue to handle leading and trailing whitespace</td></tr>
