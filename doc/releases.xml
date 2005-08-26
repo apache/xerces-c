@@ -23,7 +23,7 @@
 
 <s2 title="Releases Archive">
 
-    <p> For release information about &XercesCName; 2.5.0 or earlier,
+    <p> For release information about &XercesCName; 2.6.0 or earlier,
         please refer to <jump href="releases_archive.html">Releases Archive</jump>.
     </p>
 </s2>
@@ -41,175 +41,170 @@
     </tr>
 
 
-<tr><td>2004-09-29</td><td>Khaled Noaman </td><td>Bug 1209 </td></tr>
-<tr><td>2004-09-29</td><td>David Cargill </td><td>Mark SAXParser as deprecated. </td></tr>
-<tr><td>2004-09-29</td><td>David Cargill </td><td>jira1217 </td></tr>
-<tr><td>2004-09-29</td><td>Dan Rosen </td><td> jira1207 </td></tr>
-<tr><td>2004-09-28</td><td>Khaled Noaman, Anthony O'Dowd </td><td>  Performance: improve src offset calculation. </td></tr>
-<tr><td>2004-09-28</td><td>PeiYong Zhang </td><td>   Optimized duplicated attributes checking for large number of attributes</td></tr>
-<tr><td>2004-09-28</td><td>Alberto Massari </td><td>BCC 511 updates </td></tr>  
-<tr><td>2004-09-27</td><td>David Cargill </td><td>Update sample to use an error handler and only generate xsmodel when a schema document has been loaded successfully. </td></tr>
-<tr><td>2004-09-27</td><td>David Cargill </td><td>  Update documentation to describe new features </td></tr>
-<tr><td>2004-09-27</td><td>Khaled Noaman, David Cargill </td><td>Validate annotations </td></tr>  
-<tr><td>2004-09-27</td><td>Khaled  Noaman</td><td>  Reset datatype validator </td></tr>
-<tr><td>2004-09-27</td><td>David Cargill </td><td>XERCESC-1277 </td></tr>
-<tr><td>2004-09-26</td><td>Khaled Noaman </td><td>[Bug 1197] </td></tr>  
-<tr><td>2004-09-25</td><td>Gareth Reakes, Adam Heinz </td><td>  Fix to 1264. All refererences to public headers now use the include files.</td></tr>
-<tr><td>2004-09-25</td><td>James Littlejohn </td><td>  Fix documentation generation problem.  </td></tr>
-<tr><td>2004-09-23</td><td>Alberto Massari </td><td>jira1259 </td></tr>  
-<tr><td>2004-09-22</td><td>David Cargill </td><td>Add support for generating synthetic XSAnnotations.   </td></tr> 
-<tr><td>2004-09-22</td><td>David Cargill </td><td>   Fix memory leak in PSVIWriter sample.</td></tr>  
-<tr><td>2004-09-22</td><td>John Hibbert </td><td>  Bug fixes </td></tr>
-<tr><td>2004-09-22</td><td>David Cargill </td><td>  Remove unused variable and data member. </td></tr>  
-<tr><td>2004-09-22</td><td>Alberto Massari </td><td>  Reorder initialization of variables in constructor </td></tr>
-<tr><td>2004-09-21</td><td>PeiYong Zhang </td><td>Do not build/ship debug version lib on Windows </td></tr>
-<tr><td>2004-09-21</td><td>PeiYong Zhang </td><td>Change lib name on Windows from 2_5_0 to 2_5 </td></tr>
-<tr><td>2004-09-21</td><td>David Cargill </td><td>  Documentation Updates. </td></tr>
-<tr><td>2004-09-21</td><td>PeiYong Zhang</td><td>   Handle partial PSVIElement</td></tr>
-<tr><td>2004-09-20</td><td>James Berry </td><td>Mac updates </td></tr>
-<tr><td>2004-09-20</td><td>Alberto Massari </td><td>Added a setCreateSchemaInfo method to the DOM parsers, to store PSVI informations in element and attribute nodes </td></tr>
-<tr><td>2004-09-20</td><td>Alberto Massari </td><td>  Mark some methods as deprecated </td></tr>
-<tr><td>2004-09-16</td><td>Alberto Massari </td><td>Remove XercesMessages_en_US.hpp from the Win32 projects (they use the WinRC MsgLoader)</td></tr>
-<tr><td>2004-09-16</td><td>PeiYong Zhang </td><td>provide default implementation for CreateDocumentType </td></tr>
-<tr><td>2004-09-16</td><td>Alberto Massari </td><td>  Don't include icudata.lib to the Windows projects: ICU 3.0 has renamed and it's no more needed since ICU 2.0   </td></tr>
-<tr><td>2004-09-16</td><td>Alberto Massari </td><td>  Updated error message for UPA to also state the complex type that is failing the test   </td></tr>
-<tr><td>2004-09-14</td><td>Alberto Massari, Ron Romero </td><td> jira 855) </td></tr>
-<tr><td>2004-09-14</td><td>Alberto Massari</td><td>jira1248 </td></tr>
-<tr><td>2004-09-14</td><td>Alberto Massari </td><td>jira1261 </td></tr>
-<tr><td>2004-09-13</td><td>PeiYong Zhang  </td><td>   new method: getActualValue()</td></tr>
-<tr><td>2004-09-10</td><td> David Bertoni</td><td>Performance improvement fix to more efficiently findattdef. </td></tr>
-<tr><td>2004-09-10</td><td>David Bertoni </td><td>Return bool as described in the interface for cacheGrammar instead of throwing an exception.   </td></tr>
-<tr><td>2004-09-09</td><td>David Cargill, Steve Dulin </td><td>0S/390 build updates</td></tr>
-<tr><td>2004-09-08</td><td>PeiYong Zhang  </td><td>   Apache License Version 2.0</td></tr>
-<tr><td>2004-09-04</td><td>David Cargill </td><td>  XercesC-1269 Fix: Remove extra comma. </td></tr>
-<tr><td>2004-09-02</td><td>David Cargill </td><td>  Fix API Doc warning message</td></tr>
-<tr><td>2004-09-02</td><td>David Cargill, Patrick Townsend and Jay Hansen </td><td>  OS400 Build updates </td></tr>
-<tr><td>2004-09-02</td><td> David Cargill </td><td>   Specify bmaxdata for AIX samples and tests.</td></tr>
-<tr><td>2004-09-02</td><td>David Cargill </td><td> Add OutOfMemoryException block to samples and tests.</td></tr>
-<tr><td>2004-08-31</td><td>David Cargill </td><td>Thread safety change for getTypeLocalName and getTypeUri </td></tr>
-<tr><td>2004-08-30</td><td>Alberto Massari </td><td>Reduce memory footprint of DOMNode::setUserData</td></tr>
-<tr><td>2004-08-30</td><td>Alberto Massari </td><td>Don't allocate a DOMTypeInfo object if there is no type info to store </td></tr>
-<tr><td>2004-08-30</td><td>Alberto Massari </td><td>Added transferElement API </td></tr>
-<tr><td>2004-08-27</td><td>Alberto Massari </td><td>getXSModel fix </td></tr>
-<tr><td>2004-08-20</td><td>David Cargill</td><td>Jira bug XERCESC-1257 </td></tr>
-<tr><td>2004-08-19</td><td>PeiYong Zhang </td><td>Add XSValue test </td></tr>
-<tr><td>2004-08-11</td><td>Andrew Fang </td><td>Fixing Xerces-C crash when creating a MixedContentModel </td></tr>
-<tr><td>2004-08-11</td><td>PeiYong Zhang </td><td>Externalised validation, actual/canonical value production for Schema built-in data types </td></tr>
-<tr><td>2004-07-27</td><td>PeiYong Zhang </td><td>build on aix xlC_r v6 with v5 comptiable name mangling scheme </td></tr>
-<tr><td>2004-07-26</td><td>Alberto Massari </td><td>reset() was not resetting the stack of types (jira1245) </td></tr>
-<tr><td>2004-07-23</td><td>Anders Hybertz</td><td>calcRequiredSize assumed all the characters were of the same size (jira1142)</td></tr>
-<tr><td>2004-07-23</td><td>Alberto Massari </td><td>jira1179 </td></tr>
-<tr><td>2004-07-23</td><td>Alberto Massari </td><td>jira1206 </td></tr>
-<tr><td>2004-07-23</td><td>Alberto Massari </td><td> A global mutex was not cleaned up </td></tr>
-<tr><td>2004-07-23</td><td>Alberto Massari </td><td>jira 862</td></tr>
-<tr><td>2004-07-22</td><td>Bob Buck </td><td>jira1186 </td></tr>
-<tr><td>2004-07-22</td><td>Khaled  Noaman</td><td>Use file static instance instead of local static instance </td></tr>
-<tr><td>2004-07-22</td><td>Khaled  Noaman</td><td>Eliminate the need to create a temporary content model when performing UPA checking</td></tr>
-<tr><td>2004-07-21</td><td>PeiYong Zhang </td><td>use the supplied memory manager</td></tr>
-<tr><td>2004-07-16</td><td>Alberto Massari </td><td>Enable libWWW on Solaris </td></tr>
-<tr><td>2004-07-13</td><td>Joanne Bogart</td><td>Fixed bugzilla bug 23100.</td></tr>
-<tr><td>2004-07-12</td><td>PeiYong Zhang </td><td>Increment patnIndex only when a match is found </td></tr>
-<tr><td>2004-07-12</td><td>David Bertoni </td><td>IGXMLScanner::fErrorStack not cleared if an exception is thrown </td></tr>
-<tr><td>2004-07-09</td><td>PeiYong Zhang </td><td>Build on HP-Itanium, aCC A.05.52</td></tr>
-<tr><td>2004-07-09</td><td>Syam Gadde </td><td>jira957 </td></tr>
-<tr><td>2004-07-08</td><td>Alberto Massari </td><td>jira1236 </td></tr>
-<tr><td>2004-07-08</td><td>Alberto Massari </td><td> Force the destruction of an XMLBuffer before terminating Xerces</td></tr>
-<tr><td>2004-07-08</td><td>David Cargill, Khaled Noaman, Steve Dulin </td><td>ThreadTest updates </td></tr>
-<tr><td>2004-07-07</td><td>PeiYong Zhang </td><td>Upgrade to ICU3.0</td></tr>
-<tr><td>2004-07-07</td><td>Alberto Massari </td><td>Fix for jira1170</td></tr>
-<tr><td>2004-07-07</td><td>Ray Logel </td><td>Fir for jira1136</td></tr>
-<tr><td>2004-07-06</td><td>Alberto Massari </td><td>Fix for jira1226 </td></tr>
-<tr><td>2004-07-06</td><td>Alberto Massari </td><td>Fix for jira1238 </td></tr>
-<tr><td>2004-07-06</td><td>Alberto Massari </td><td>Fix for jira1210 </td></tr>
-<tr><td>2004-07-06</td><td>David Cargill </td><td>Rename VALUE_CONSTRAINT enumeration names </td></tr>
-<tr><td>2004-06-28</td><td>David Cargill</td><td>Initialize memory manager to default.</td></tr>
-<tr><td>2004-06-24</td><td>PeiYong Zhang </td><td>Schema-Errata </td></tr>
-<tr><td>2004-06-23</td><td>Neil Graham </td><td>fix for compilation under gcc 3.5</td></tr>
-<tr><td>2004-06-22</td><td>Alberto Massari </td><td>Fix for jira1181 </td></tr>
-<tr><td>2004-06-21</td><td>Neil Graham </td><td>don't switch grammars unnecessarily </td></tr>
-<tr><td>2004-06-21</td><td>Alberto Massari </td><td>Fixed memory leak (jira1228)</td></tr>
-<tr><td>2004-06-15</td><td>David Bertoni </td><td>Memory Leakage Fixed </td></tr>
-<tr><td>2004-06-15</td><td>Steve Dulin </td><td>make sure tables are properly aligned</td></tr>
-<tr><td>2004-06-15</td><td>Neil Graham </td><td>supported C++ namespaces doc update </td></tr>
-<tr><td>2004-06-14</td><td>PeiYong Zhang </td><td>Consolidated End Of Line Handling</td></tr>
-<tr><td>2004-06-09</td><td>John Snelson</td><td>Fixed null pointer bug</td></tr>
-<tr><td>2004-06-02</td><td>Neil Graham </td><td>Fix bug where scanners would accept malformed tags and perf improvements </td></tr>
-<tr><td>2004-06-01</td><td>David Cargill </td><td>Fix memory leak.</td></tr>
-<tr><td>2004-05-31</td><td>PeiYong Zhang </td><td>XML 1.1 </td></tr>
-<tr><td>2004-05-27</td><td>Neil Graham </td><td>Performance fix: clearing the undeclared attribute maps on start tags</td></tr>
-<tr><td>2004-05-25</td><td>PeiYong Zhang </td><td>normalizeURI() added</td></tr>
-<tr><td>2004-05-25</td><td>PeiYong Zhang </td><td>XMLString::removeChar added </td></tr>
-<tr><td>2004-05-21</td><td>David Bertoni </td><td>[jira1216]  GrammarResolver never clears internal cache of Grammar instances</td></tr>
-<tr><td>2004-05-19</td><td>PeiYong Zhang </td><td>MingGW updates </td></tr>
-<tr><td>2004-05-14</td><td>PeiYong Zhang </td><td>UTF-8 new error message </td></tr>
-<tr><td>2004-05-11</td><td>Alberto Massari </td><td>The net accessor input source now can be used to get data using PUT or POST </td></tr>
-<tr><td>2004-05-10</td><td>Alberto Massari </td><td>Performance: push a new map on the namespace stack only when an element has a xmlns attribute</td></tr>
-<tr><td>2004-05-05</td><td>Alberto Massari </td><td> Enable libWWW on Linux </td></tr>
-<tr><td>2004-05-05</td><td>Alberto Massari </td><td>Added error message for the HTTP NetAccessor</td></tr>
-<tr><td>2004-05-05</td><td>Alberto Massari </td><td>xlat doesn't compile on Windows </td></tr>
-<tr><td>2004-05-04</td><td>David Cargill </td><td>Enable IDs to work on all kinds of schema components</td></tr>
-<tr><td>2004-05-03</td><td>David Bertoni </td><td>To resolveGrammar correctly</td></tr>
-<tr><td>2004-04-22</td><td>Steve Dulin </td><td>not all 390 processors support the new transcoding instructions </td></tr>
-<tr><td>2004-04-22</td><td>David Cargill </td><td>Misc fix to update fCount in the correct place.</td></tr>
-<tr><td>2004-04-22</td><td>David Cargill </td><td>Schema bug with group redefined </td></tr>
-<tr><td>2004-04-22</td><td>David Cargill </td><td>Misc doc updates</td></tr>
-<tr><td>2004-04-20</td><td>PeiYong Zhang </td><td> xlat generate code for private default constructor</td></tr>
-<tr><td>2004-04-20</td><td>PeiYong Zhang </td><td>XML1.0 3rd Edition Updates </td></tr>
-<tr><td>2004-04-19</td><td>Shin'ya MORINO</td><td>Add "UTF16" as a synonym for UTF-16 (bug #XERCESC-1198) </td></tr>
-<tr><td>2004-04-16</td><td>David Cargill </td><td>Doc updates for Jira </td></tr>
-<tr><td>2004-04-15</td><td>James Berry </td><td>Various MAC fixes </td></tr>
-<tr><td>2004-04-14</td><td>David Cargill </td><td>Various PSVI Fixes </td></tr>
-<tr><td>2004-04-13</td><td>PeiYong Zhang </td><td>Identity Constraints </td></tr>
-<tr><td>2004-04-12</td><td>David Cargill </td><td>Doc updates </td></tr>
-<tr><td>2004-04-07</td><td>PeiYong Zhang </td><td>Add createDocumentType </td></tr>
-<tr><td>2004-04-07</td><td>PeiYong Zhang </td><td>Grammar caching of DTD internal subsets </td></tr>
-<tr><td>2004-04-06</td><td>Steve Dulin </td><td>fix for file resolution problems on OS/390 </td></tr>
-<tr><td>2004-04-06</td><td>Alberto Massari </td><td>DTDs included from XML Schema were not opened using the entity resolver specified by the user (bug# 27008)</td></tr>
-<tr><td>2004-04-05</td><td>PeiYong Zhang </td><td>make comparison case insensitive, typo in error message corrected.</td></tr>
-<tr><td>2004-04-02</td><td>PeiYong Zhang </td><td>Annotation reporting improvements </td></tr>
-<tr><td>2004-04-02</td><td>Berin Lautenbach </td><td>item() was could only return items found in the first non-empty bucket</td></tr>
-<tr><td>2004-04-01</td><td>PeiYong Zhang </td><td>Add Messages to DOMExceptions </td></tr>
-<tr><td>2004-03-30</td><td>PeiYong Zhang </td><td>packageBinaries.pl improvements </td></tr>
-<tr><td>2004-03-24</td><td>Alberto Massari </td><td>importNode bug fix </td></tr>
-<tr><td>2004-03-19</td><td>PeiYong Zhang </td><td>Serialization Changes </td></tr>
-<tr><td>2004-03-17</td><td>PeiYong Zhang </td><td>Deprecated DOM </td></tr>
-<tr><td>2004-03-17</td><td>Alberto Massari </td><td>Inside attribute values, new lines must be escaped (bug#20858)</td></tr>
-<tr><td>2004-03-15</td><td>Alberto Massari </td><td>Added support for MinGW (bug#23176)</td></tr>
-<tr><td>2004-03-10</td><td>Alberto Massari</td><td>Fix documentation for binToText (bug# 9207) </td></tr>
-<tr><td>2004-03-09</td><td>PeiYong Zhang </td><td>Serialization changes </td></tr>
-<tr><td>2004-03-05</td><td>Alberto Massari </td><td>DOMNamedNodeMap Performance Improvements </td></tr>
-<tr><td>2004-03-05</td><td>Michael Boos </td><td>PSVI Fixes</td></tr>
-<tr><td>2004-03-05</td><td>Alberto Massari </td><td>The maps inside the DTD are declared of the right type, removing the need for casts</td></tr>
-<tr><td>2004-03-05</td><td>Alberto Massari </td><td> Removed unnecessary inclusion of implementation headers </td></tr>
-<tr><td>2004-03-03</td><td>Alberto Massari </td><td>DOMNodeVector is used only to store attributes; save memory </td></tr>
-<tr><td>2004-03-03</td><td>Alberto Massari </td><td>WFXMLScanner was throwing an index out of bound exception  </td></tr>
-<tr><td>2004-03-03</td><td>Alberto Massari </td><td>[bug# 7051] The "hash" argument clashes with STL hash </td></tr>
-<tr><td>2004-03-02</td><td>PeiYong Zhang </td><td>save/load TypeUri/TypeLocalName more accurately</td></tr>
-<tr><td>2004-03-02</td><td>PeiYong Zhang </td><td>eliminate leakage </td></tr>
-<tr><td>2004-03-02</td><td>Alberto Massari </td><td> Check for errors when saving a document to a file (bug# 2594) </td></tr>
-<tr><td>2004-03-02</td><td>Steve Dulin </td><td>OS/390 transcoder update </td></tr>
-<tr><td>2004-03-02</td><td>Alberto Massari </td><td>Added test for bug# 26919 </td></tr>
-<tr><td>2004-03-02</td><td>Alberto Massari </td><td>If insertBefore(A,A) is invoked, a crash would occur (bug# 26919) </td></tr>
-<tr><td>2004-03-02</td><td>Alberto Massari </td><td>When cloning a DOMDocument, clone also the encoding, version and standalone info (bug#13056) </td></tr>
-<tr><td>2004-03-01</td><td>PeiYong Zhang </td><td>Instantiate XSerializeEngine with GrammarPool</td></tr>
-<tr><td>2004-03-01</td><td>Khaled  Noaman</td><td>Fix for UPA checking </td></tr>
-<tr><td>2004-03-01</td><td>PeiYong Zhang</td><td>new getter: getHashModulus </td></tr>
-<tr><td>2004-02-28</td><td>James Berry</td><td>Revise the Mac OS Transcoder to use the Mac Text Encoding Converter</td></tr>
-<tr><td>2004-02-28</td><td>James Berry</td><td>Update Mac OS Projects for newly added files</td></tr>
-<tr><td>2004-02-27</td><td>Alberto Massari</td><td>Fixed memory leaks</td></tr>
-<tr><td>2004-02-26</td><td>Alberto Massari</td><td>Fix for bug# 27263 (extra = in registration script</td></tr>
-<tr><td>2004-02-25</td><td>Alberto Massari</td><td>The COM wrapper doesn't use the deprecated DOM anymore</td></tr>
-<tr><td>2004-02-25</td><td>Alberto Massari</td><td>Fixed typo in documentation</td></tr>
-<tr><td>2004-02-25</td><td>PeiYong Zhang</td><td>Bug#27209: Xerces 2.5.0 does not build with option -t IconvGNU because of syntax errors!</td></tr>
-<tr><td>2004-02-24</td><td>PeiYong Zhang</td><td>XercesDeprecatedDOMLib</td></tr>
-<tr><td>2004-02-20</td><td>David Bertoni</td><td>Bug#27046</td></tr>
-<tr><td>2004-02-18</td><td>PeiYong Zhang</td><td>Doxyfile update to 2.5.0</td></tr>
-<tr><td>2004-02-17</td><td>Abe Backus, Neil Graham</td><td>fix for bug 25035: cygwin support</td></tr>
-<tr><td>2004-02-17</td><td>Neil Graham</td><td>fix potential memory leak</td></tr>
- 
-       
- 
-                       
+<tr><td>2005-04-27</td><td>David Cargill </td><td>Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.</td></tr>
+<tr><td>2005-04-26</td><td>David Cargill </td><td>Fix for xercesc-1413: invalid operator equal template signature</td></tr>
+<tr><td>2005-04-26</td><td>David Cargill </td><td>Schema updates to match spec</td></tr>
+<tr><td>2005-04-26</td><td>David Cargill </td><td>Prefix mapping update to handle schema correctly.</td></tr>
+<tr><td>2005-04-24</td><td>David Cargill </td><td>Remove collaboration graph from apiDocs </td></tr>
+<tr><td>2005-04-22</td><td>David Bertoni </td><td> Patch for Jira issue XERCESC-1411 </td></tr>
+<tr><td>2005-04-22</td><td>David Cargill </td><td>Use isspace instead of isSpace as data is char not xmlch</td></tr>
+<tr><td>2005-04-22</td><td>David Bertoni </td><td>Patch for Jira issue XERCESC-1410</td></tr>
+<tr><td>2005-04-21</td><td>David Cargill </td><td>Add support for ucs-2</td></tr>
+<tr><td>2005-04-14</td><td>David Bertoni</td><td>Fix Jira 1406. Added include</td></tr>
+<tr><td>2005-04-12</td><td>Alberto Massari</td><td>Fix compiler errors on IRIX (jira# 1405)</td></tr>
+<tr><td>2005-04-07</td><td>Khaled Noaman </td><td>Update chars table with an NCName char mask instead of an XML letter mask</td></tr>
+<tr><td>2005-04-07</td><td>Alberto Massari </td><td>appendChild now throws an exception when a NULL pointer is given (jira# 1401) </td></tr>
+<tr><td>2005-04-05</td><td>David Cargill</td><td>Update XSValue to handle leading and trailing whitespace</td></tr>
+<tr><td>2005-04-05</td><td>David Cargill </td><td>Change platform mutex code to do a panic </td></tr>
+<tr><td>2005-04-05</td><td>Khaled Noaman </td><td>Performance: do not make a copy of the expression to match</td></tr>
+<tr><td>2005-04-05</td><td>David Cargill </td><td>Implement version of lowercase that only check a to z</td></tr>
+<tr><td>2005-04-05</td><td>David Cargill</td><td>Update Redirect sample to use newer entity resolver callback </td></tr>
+<tr><td>2005-04-05</td><td>David Cargill</td><td>Implement support for disabling default entity resolution </td></tr>
+<tr><td>2005-04-05</td><td>Khaled Noaman </td><td> skip DTD validation feature </td></tr>
+<tr><td>2005-04-05</td><td>David Bertoni</td><td> Fix thread safety issues</td></tr>
+<tr><td>2005-04-05</td><td>Axel Weib </td><td>Fix for jira 1397. *Much* nicer make output</td></tr>
+<tr><td>2005-04-05</td><td>Gareth Reakes </td><td>Fix for Jira 1396. make distclean now removes all files</td></tr>
+<tr><td>2005-04-04</td><td>David Cargill </td><td>Fix a problem where illegal qualified names were not reported as errors</td></tr>
+<tr><td>2005-04-04</td><td>David Cargill </td><td>Fix memory leak when deserializing grammars </td></tr>
+<tr><td>2005-04-04</td><td>David Cargill </td><td>Add support for not creating xsannotations when deserializing a grammar </td></tr>
+<tr><td>2005-04-01</td><td>David Bertoni </td><td>Fix for Jira issue XERCESC-1389: memory manager </td></tr>
+<tr><td>2005-04-01</td><td>Alberto Massari </td><td>In case of a mixed-case standalone value, the flag was always set to false</td></tr>
+<tr><td>2005-03-31</td><td>Alberto Massari</td><td>Don't invoke the resolver when an empty xs:import is found</td></tr>
+<tr><td>2005-03-30</td><td>David Cargill </td><td>Allow XSAnnotation generation to be controlled by a feature </td></tr>
+<tr><td>2005-03-29</td><td>David Cargill </td><td>Begin work on adding some new features by checking in the feature handling support</td></tr>
+<tr><td>2005-03-25</td><td>Alberto Massari </td><td>On Windows, export the class from the DLL </td></tr>
+<tr><td>2005-03-22</td><td>Christian Will </td><td>Perf patches for Xercesc-1369 and 1370</td></tr>
+<tr><td>2005-03-20</td><td>David Cargill </td><td>Implement versions of uppercase and compareIstring that only check a to z</td></tr>
+<tr><td>2005-03-20</td><td>David Cargill </td><td>Add FLOAT(IEEE) to list of 390 compiler options so XSValueTest will compile </td></tr>
+<tr><td>2005-03-20</td><td>Christian Will </td><td>[jira 1381] Memory leak in GrammarResolver </td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari </td><td>Aligned method declaration (jira# 1386)</td></tr>
+<tr><td>2005-03-17</td><td>Gareth Reake </td><td>Updated doc to refect real behaviour with adoptBuffer</td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari</td><td>Remove variable declaration from 'if' statement (jira# 1379)</td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari </td><td>Fully qualify enum (jira# 1383)</td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari </td><td>Aligned method declaration (jira# 1384)</td></tr>
+<tr><td>2005-03-16</td><td>Matthew Hall </td><td>Fix possible overflow problem </td></tr>
+<tr><td>2005-03-14</td><td>Gareth Reakes </td><td> Fix for Jira 1376: wrong memory manager</td></tr>
+<tr><td>2005-03-14</td><td>Gareth Reakes</td><td>Fix to Jira 1375. Removed space char between #! and /.</td></tr>
+<tr><td>2005-03-11</td><td>Christian Will </td><td>XERCESC-1345: Reset fDTDElemeNonDeclPool in scanreset </td></tr>
+<tr><td>2005-03-11</td><td>David Earlam </td><td>XERCESC-1363: Increase size of BaseRefVectorOf based on size of data not by 32 </td></tr>
+<tr><td>2005-03-09</td><td>Alberto Massari </td><td>Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation </td></tr>
+<tr><td>2005-03-08</td><td>Alberto Massari </td><td>Redeclare a namespace binding if the prefix is already bound to a different namespace (jira# 1371)  </td></tr>
+<tr><td>2005-03-08</td><td>Christian Will </td><td>Improve performances of XMLString::tokenizeString (jira# 1363)</td></tr>
+<tr><td>2005-03-07</td><td>Khaled Noaman </td><td>Eliminate lazy creation of attribute lists</td></tr>
+<tr><td>2005-03-04</td><td>Markus Scherer </td><td>Initialize ICU to avoid multithreading problems</td></tr>
+<tr><td>2005-03-04</td><td>Alberto Massari </td><td>The URL fragments were leaked (jira# 1362)</td></tr>
+<tr><td>2005-03-03</td><td>Steve Dulin </td><td>Update samples to use XERCESCOUT instead of XERCESCROOT </td></tr>
+<tr><td>2005-03-03</td><td>Alberto Massari </td><td>Removing makefile project, as BCB6 users should use the .bpr project (jira# 1347)</td></tr>
+<tr><td>2005-03-03</td><td>David Bertoni </td><td>Removed superfluous const qualifiers</td></tr>
+<tr><td>2005-02-25</td><td>David Cargill </td><td>Attempt to fix compiler errors</td></tr>
+<tr><td>2005-02-25</td><td>David Bertoni </td><td> Performance improvements </td></tr>
+<tr><td>2005-02-25</td><td>Alberto Massari </td><td>Fixing spelling errors </td></tr>
+<tr><td>2005-02-25</td><td>Scott Cantor </td><td>Fix for compile under gcc 4</td></tr>
+<tr><td>2005-02-25</td><td>David Bertoni </td><td>Fix thread safety issues. Jira #30380. Thanks to David Bertoni</td></tr>
+<tr><td>2005-02-23</td><td>Mike Boos </td><td>Various PSVI fixes  </td></tr>
+<tr><td>2005-02-23</td><td>Steve Dulin</td><td>Allow ICU to be used for transcoding and casing </td></tr>
+<tr><td>2005-02-23</td><td>David Cargill </td><td>Copy performance change made to XMLUTF8Transcoder.cpp to the 390 version</td></tr>
+<tr><td>2005-02-21</td><td>James Berry </td><td>Bugfix: XERCESC-1074; get rid of warnings  </td></tr>
+<tr><td>2005-02-21</td><td>David Cargill </td><td>Doc updates, including xercesc-1352 </td></tr>
+<tr><td>2005-02-21</td><td>Christian Will</td><td>Performance fixes </td></tr>
+<tr><td>2005-02-21</td><td>Alberto Massari </td><td>Updated makefile (bug# 1346)</td></tr>
+<tr><td>2005-02-19</td><td>David Cargill </td><td>Update error message from regular expressions </td></tr>
+<tr><td>2005-02-19</td><td>David Bertoni </td><td>Prefix mapping fix </td></tr>
+<tr><td>2005-02-19</td><td>David Cargill  </td><td>Store key for recreating table instead of using enclosingscope</td></tr>
+<tr><td>2005-02-18</td><td>James Berry</td><td>Update release plan with tenative 3.0 list</td></tr>
+<tr><td>2005-02-14</td><td>James Berry</td><td>Fix spelling of fgMacLCPEncodingName</td></tr>
+<tr><td>2005-02-11</td><td>James Berry </td><td>Remove from project obsolete files XObjectComparator and XTemplateComparator. </td></tr>
+<tr><td>2005-02-11</td><td>Chris Cates</td><td>Explicitly create a unicode collator for Mac</td></tr>
+<tr><td>2005-02-07</td><td>Alberto Massari </td><td>AStatic builds had incomplete MIDL command lines </td></tr>
+<tr><td>2005-02-02</td><td>Alberto Massari </td><td>Enable building of tests and samples under Interix (jira# 1330)</td></tr>
+<tr><td>2005-02-02</td><td>Alberto Massari </td><td>Mark global variables for this module as static (jira# 1331)</td></tr>
+<tr><td>2005-02-02</td><td>Alberto Massari </td><td>Added rehashing capabilities </td></tr>
+<tr><td>2005-01-26</td><td>Alberto Massari</td><td>If the option /Zc:wchar_t is specified, map XMLCh to wchar_t (jira# 413) </td></tr>
+<tr><td>2005-01-26</td><td>Alberto Massari</td><td>XMemory updates</td></tr>
+<tr><td>2005-01-20</td><td>David Cargill </td><td>Xercesc-1326: Documentation update for getTextContext.</td></tr>
+<tr><td>2005-01-20</td><td>David Cargill </td><td>Xercesc-1328: Fix spelling of XMLUni::fgXercesUseCachedGrammarInParse (missing an a in parse)</td></tr>
+<tr><td>2005-01-18</td><td>Steve Dulin</td><td>Delete memory for parser and grammarpool</td></tr>
+<tr><td>2005-01-14</td><td>Alberto Massari</td><td>When entity reference creation was on, the document created by the parser was leaked (jira# 490)  </td></tr>
+<tr><td>2005-01-13</td><td>Alberto Massari </td><td>Support for UnixWare 7.1.1 (jira# 1148)</td></tr>
+<tr><td>2005-01-12</td><td>David Cargill </td><td>Fix for xercesc-1219</td></tr>
+<tr><td>2005-01-12</td><td>David Cargill</td><td>Remove warning messages.</td></tr>
+<tr><td>2005-01-08</td><td>Alberto Massari </td><td> Fixes to compile with Visual Studio 2005 (jira# 1253)</td></tr>
+<tr><td>2005-01-08</td><td>David Cargill </td><td>Fix for Xercesc-1283: incorrect case for xmluni predefined constant in doc</td></tr>
+<tr><td>2005-01-07</td><td>David Cargill </td><td>Fix for Xercesc-1314: clarify what is xercescroot.</td></tr>
+<tr><td>2005-01-07</td><td>Alberto Massari </td><td>Updated Borland makefile</td></tr>
+<tr><td>2005-01-07</td><td>Alberto Massari </td><td>scanReset() should always clear the maps used to detect duplicate attributes</td></tr>
+<tr><td>2005-01-06</td><td>Alberto Massari </td><td>Removed warnings</td></tr>
+<tr><td>2005-01-06</td><td>Alberto Massari </td><td> When emitting a "duplicate attribute" error, we were using an unitialized pointer variable</td></tr>
+<tr><td>2005-01-06</td><td>David Cargill </td><td>Update SAX2Print sample project files to add new files recently added to sample </td></tr>
+<tr><td>2005-01-05</td><td>Alberto Massari </td><td>Add icpc to the list of C++ compilers (jira# 1311) </td></tr>
+<tr><td>2005-01-03</td><td>James Berry </td><td>Add support for use of ICU with Mac OS X version</td></tr>
+<tr><td>2005-01-03</td><td>Alberto Massari </td><td>maps used to detect duplicate attributes are now cleaned </td></tr>
+<tr><td>2005-01-03</td><td>Alberto Massari </td><td>Fixed name of include file [jira#1321]</td></tr>
+<tr><td>2004-12-30</td><td>Alberto Massari</td><td>Notify advanced handlers of the whitespace before and after the root document element (jira# 729)</td></tr>
+<tr><td>2004-12-30</td><td>Alberto Massari</td><td>Delete the user data informations only after invoking all the NODE_DELETED handlers (jira# 620)</td></tr>
+<tr><td>2004-12-30</td><td>Alberto Massari</td><td>Added API to remove all entries having the same primary key</td></tr>
+<tr><td>2004-12-29</td><td>Alberto Massari</td><td>The second call to ucnv_fromUChars was causing the buffer not to be terminated (jira#1300)</td></tr>
+<tr><td>2004-12-28</td><td>James Berry</td><td>Add support for use of sockets netaccessor on Mac OS X.</td></tr>
+<tr><td>2004-12-28</td><td>James Berry</td><td>Fix syntax error caught by GCC 4</td></tr>
+<tr><td>2004-12-28</td><td>Alberto Massari</td><td>DOMDocument::cloneNode can clone the element definitions (bug# 647)</td></tr>
+<tr><td>2004-12-28</td><td>Alberto Massari</td><td>Store fAxisType as an integer, not as a XMLCh (bug# 1177)</td></tr>
+<tr><td>2004-12-24</td><td>Alberto Massari</td><td>Add support for SAX2 filters (jira# 1133)</td></tr>
+<tr><td>2004-12-23</td><td>David Cargill</td><td>XSValue Updates</td></tr>
+<tr><td>2004-12-23</td><td>Alberto Massari</td><td>Use correct prefix on end tag</td></tr>
+<tr><td>2004-12-21</td><td>David Cargill</td><td>Attempt to fix various apidoc problems</td></tr>
+<tr><td>2004-12-20</td><td>David Cargill</td><td>Add assert to avoid memory violation</td></tr>                  
+<tr><td>2004-12-13</td><td>Christian Will</td><td>Performance improvement</td></tr>       
+<tr><td>2004-12-12</td><td>Alberto Massari</td><td>Take into account the fExpandEntityReferences setting [jira# 1303]</td></tr>  
+<tr><td>2004-12-10</td><td>David Cargill</td><td>Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.</td></tr>  
+<tr><td>2004-12-09</td><td>Khaled Noman</td><td> DOM L3: pass schema normalized value only when datatype-normalization feature is enabled.</td></tr>  
+<tr><td>2004-12-09</td><td>Alberto Massari</td><td>Fxi for jira392</td></tr>  
+<tr><td>2004-12-07</td><td>Khaled Noman</td><td>An option to ignore a cached DTD grammar</td></tr> 
+<tr><td>2004-12-07</td><td>Alberto Massari</td><td>Fixed memory leak in operator= [jira# 1307]</td></tr>       
+<tr><td>2004-12-06</td><td>Alberto Massari</td><td>Take into account the fExpandEntityReferences setting [jira# 1303]</td></tr>  
+<tr><td>2004-12-06</td><td>David Cargill</td><td>Clean-up error text for a message that said unsupported</td></tr>  
+<tr><td>2004-12-05</td><td>Alberto Massari</td><td>Added XMLString::release(void**, MemoryManager*) [jira# 1301]</td></tr>  
+<tr><td>2004-12-05</td><td>Alberto Massari</td><td>entity resolver behaviour </td></tr>  
+<tr><td>2004-12-01</td><td>Alberto Massari</td><td>Avoid throwing an exception when orphaning a cached grammar that has not been used yet</td></tr> 
+<tr><td>2004-12-01</td><td>David Cargill</td><td>Update two error messages: add missing parameter, remove extra parameter</td></tr>       
+<tr><td>2004-12-01</td><td>Stephen Dulin</td><td>Update ccsid.h for new release of icu</td></tr>  
+<tr><td>2004-12-01</td><td>David Cargill</td><td>Fix for bug xercesc-1304</td></tr>  
+<tr><td>2004-11-29</td><td>David Cargill</td><td>Update MS VC7.1 build options</td></tr>  
+<tr><td>2004-11-29</td><td>David Cargill</td><td>Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.</td></tr>  
+<tr><td>2004-11-25</td><td>Khaled Noaman</td><td>Fix for synthetic annotation generation on 'extension' element of simpleContent</td></tr> 
+<tr><td>2004-11-25</td><td>Khaled Noaman</td><td>Fix problem with an All content model with minOccurs of 0.</td></tr>  
+<tr><td>2004-11-24</td><td>Dave Bertoni</td><td>Fix to correctly report the boundaries of an external subset</td></tr>       
+<tr><td>2004-11-18</td><td>Christian Will</td><td>Memory improvement to utility classes</td></tr>       
+<tr><td>2004-11-18</td><td>David Cargill</td><td>Changes for linker problems with linux build using xlc.</td></tr>       
+<tr><td>2004-11-17</td><td>Christian Will</td><td>Performance improvement to utility classes.</td></tr>       
+<tr><td>2004-11-15</td><td>Alberto Massari</td><td>Add build target for VC7.1 to create a static library</td></tr>       
+<tr><td>2004-11-14</td><td>PeiYong Zhang</td><td>XSValue updates</td></tr>       
+<tr><td>2004-11-13</td><td>David Cargill</td><td>Fix for validate annotations.</td></tr>       
+<tr><td>2004-11-12</td><td>Khaled Noaman</td><td>Fix multi threading problem.</td></tr>       
+<tr><td>2004-11-10</td><td>PeiYong Zhang</td><td>To build ICU3.2 and on Linux/xlC_r</td></tr>       
+<tr><td>2004-11-09</td><td>PeiYong Zhang</td><td>Storer_NewerThan_Loader</td></tr>       
+<tr><td>2004-11-08</td><td>PeiYong Zhang</td><td>MSVC 7.1</td></tr>       
+<tr><td>2004-11-08</td><td>Alberto Massari</td><td>Fix for jira#1298: NetBSD uses r+ to open files for reading</td></tr>   
+<tr><td>2004-11-07</td><td>PeiYong Zhang</td><td>read/write Storer level</td></tr>       
+<tr><td>2004-11-05</td><td>PeiYong Zhang</td><td>Msg build versioning</td></tr>       
+<tr><td>2004-11-02</td><td>PeiYong Zhang</td><td>[Jira#1294] Compiler Warnings on IRIX with MIPSpro compiler ver 7.4</td></tr>       
+<tr><td>2004-11-02</td><td>PeiYong Zhang</td><td>Handling OutOfMemory exception</td></tr>       
+<tr><td>2004-10-28</td><td>David Cargill</td><td>Add missing parameter to three error messages.</td></tr>       
+<tr><td>2004-10-28</td><td>PeiYong Zhang</td><td>Data member reshuffle and store/load</td></tr>   
+<tr><td>2004-10-27</td><td>PeiYong Zhang</td><td>Optimized alignment for various data types</td></tr>       
+<tr><td>2004-10-27</td><td>James Berry</td><td>MacOS build updates</td></tr>       
+<tr><td>2004-10-26</td><td>PeiYong Zhang</td><td>Maintain consistent order among multiple store/load session to allow comparison</td></tr>       
+<tr><td>2004-10-26</td><td>Gareth Reakes</td><td>Fixed version number</td></tr>       
+<tr><td>2004-10-20</td><td>Khaled Noaman</td><td>Allow option of initializing static data in XMLPlatformUtils::Initialize</td></tr>       
+<tr><td>2004-10-19</td><td>PeiYong Zhang</td><td>XercesC2_6_0 updates: build debuged libary on Windows/VC6</td></tr>       
+<tr><td>2004-10-19</td><td>PeiYong Zhang</td><td>[Jira#1287] new deprecated DOM libraries not included in .spec file for Linux</td></tr>   
+<tr><td>2004-10-19</td><td>Khaled Noaman</td><td>Performance improvement</td></tr>       
+<tr><td>2004-10-15</td><td>David Cargill</td><td>Fix for jira bug 1234.  Infinite loop in XSComplexTypeDefinition::derviedFromType.</td></tr>       
+<tr><td>2004-10-13</td><td>PeiYong Zhang</td><td>using ValueHashTableOf to reduce footprint</td></tr>       
+<tr><td>2004-10-13</td><td>David Cargill</td><td>Fix for jira bug 1282: empty exception message being generated</td></tr>       
+<tr><td>2004-10-13</td><td>David Cargill</td><td>Serialization fix, fPVSIScope not serialized.</td></tr>   
+<tr><td>2004-10-12</td><td>PeiYong Zhang</td><td>Change attribute number threshold to 100</td></tr>       
+<tr><td>2004-10-04</td><td>PeiYong Zhang</td><td>Support to build ICU3.0 on Solaris2.8 64-bit</td></tr>
+<tr><td>2004-10-04</td><td>Alberto Massari</td><td>Fix for Jira 866</td></tr>                       
 </table>
 </s2>
 
