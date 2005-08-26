@@ -444,7 +444,7 @@ endif
 #=============== IRIX SPECIFIC OPTIONS ============================
 ifeq (${PLATFORM}, IRIX)
 PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \
-                           -D${PLATFORM} -D_REENTRANT \
+                           -D${PLATFORM} -D_REENTRANT -no_auto_include \
                            -I/usr/local/include
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
