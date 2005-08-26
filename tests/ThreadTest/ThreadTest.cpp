@@ -88,7 +88,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 }
 
 
-#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined (OS390) || defined(MACOSX) || defined(FREEBSD) || defined(__CYGWIN__) || defined(__QNXNTO__) || defined(INTERIX)
+#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined (OS390) || defined(MACOSX) || defined(FREEBSD) || defined(__CYGWIN__) || defined(__QNXNTO__) || defined(INTERIX) || defined(IRIX)
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
