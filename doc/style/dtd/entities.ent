@@ -124,11 +124,11 @@ purpose of your reporting of the bug.
 <table>
 <tr><th><em>Operating System</em></th><th><em>Compiler</em></th></tr>
 <tr><th><em>32-bit binary</em></th><td></td></tr>
-<tr><td>Windows NT</td><td>MS Visual C++ 6.0 SP3</td></tr>
+<tr><td>Windows 2000</td><td>MS Visual C++ 6.0 SP3</td></tr>
 <tr><td>AIX 5.1</td><td>xlC_r 6.0.0</td></tr>
 <tr><td>Solaris 2.8</td><td>Forte C++ Version 6 Update 2</td></tr>
 <tr><td>HP-UX 11i</td><td>aCC A.03.52 with pthreads</td></tr>
-<tr><td>Redhat Linux 8.0 (IA32)</td><td>gcc 3.2</td></tr>
+<tr><td>RHEL 4.0 (IA32)</td><td>gcc 3.4.3</td></tr>
 
 <tr><th><em>64-bit binary</em></th><td></td></tr>
 <tr><td>AIX 5.1</td><td>xlC_r 6.0.0</td></tr>
