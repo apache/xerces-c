@@ -366,6 +366,9 @@ if test $bitsToBuild = 64; then
            aix)
               bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
               bitstobuildLink=" -q64 -qwarn64 " ;;
+           irix)
+              bitstobuildDefines=" $bitstobuildDefines -64 "
+              bitstobuildLink=" -64 " ;;              
            hp-11)
                if test $cppcompiler; then
                    case $cppcompiler in
