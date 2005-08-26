@@ -52,7 +52,7 @@ ifeq (${PLATFORM}, IRIX)
 	EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
   else
 	CMP= -c ${CXXFLAGS}
-	CC= CC -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -D_REENTRANT -I/usr/local/include
+	CC= CC -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -D_REENTRANT -I/usr/local/include -no_auto_include
 	LINK =  CC -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=
 	EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
