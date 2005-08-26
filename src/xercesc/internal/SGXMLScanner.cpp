@@ -2182,7 +2182,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  boolean flag that lets us quickly below know which we are dealing
         //  with.
         const bool isNSAttr = (uriId == fXMLNSNamespaceId)
-                              || (uriId == fXMLNamespaceId)
+                              
                               || XMLString::equals(suffPtr, XMLUni::fgXMLNSString)
                               || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI);
 
