@@ -19,6 +19,7 @@
  */
 
 #include "DOMImplementationListImpl.hpp"
+#include <xercesc/dom/DOMImplementation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
