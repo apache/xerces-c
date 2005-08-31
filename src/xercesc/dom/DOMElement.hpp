@@ -388,75 +388,78 @@ public:
     //@{
 
     /**
-     * Declares the <code>DOMAttr</code> specified by name to be of type ID. If the
-     * value of the specified <code>DOMAttr</code> is unique then this element node
-     * can later be retrieved using getElementById on Document. Note, however,
-     * that this simply affects this node and does not change any grammar that
-     * may be in use.
+     * If the parameter isId is <code>true</code>, this method declares the specified 
+     * attribute to be a user-determined ID attribute. 
+     * This affects the value of <code>DOMAttr::isId</code> and the behavior of 
+     * <code>DOMDocument::getElementById</code>, but does not change any schema that 
+     * may be in use, in particular this does not affect the <code>DOMAttr::getSchemaTypeInfo</code>
+     * of the specified DOMAttr node. Use the value <code>false</code> for the parameter isId 
+     * to undeclare an attribute for being a user-determined ID attribute.
      * To specify an <code>DOMAttr</code> by local name and namespace URI, use the
      * setIdAttributeNS method.
+     *
      * @param name The name of the <code>DOMAttr</code>.
+     * @param isId Whether the attribute is of type ID.
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *    <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code>
      * of this element.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
-    virtual void setIdAttribute(const XMLCh* name) = 0;
+    virtual void setIdAttribute(const XMLCh* name, bool isId) = 0;
 
 
     /**
-     * Declares the <code>DOMAttr</code> specified by local name and namespace
-     * URI to be of type ID. If the value of the specified <code>DOMAttr</code>
-     * is unique then this <code>DOMElement</code> node can later be retrieved
-     * using getElementById on <code>DOMDocument</code>. Note, however, that
-     * this simply affects this node and does not change any grammar that may
-     * be in use.
+     * If the parameter isId is <code>true</code>, this method declares the specified 
+     * attribute to be a user-determined ID attribute. 
+     * This affects the value of <code>DOMAttr::isId</code> and the behavior of 
+     * <code>DOMDocument::getElementById</code>, but does not change any schema that 
+     * may be in use, in particular this does not affect the <code>DOMAttr::getSchemaTypeInfo</code>
+     * of the specified DOMAttr node. Use the value <code>false</code> for the parameter isId 
+     * to undeclare an attribute for being a user-determined ID attribute.
+     *
      * @param namespaceURI The namespace URI of the <code>DOMAttr</code>.
      * @param localName The local name of the <code>DOMAttr</code>.
+     * @param isId Whether the attribute is of type ID.
      * @exception  DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *   <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
-    virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName) = 0;
+    virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName, bool isId) = 0;
 
 
 
     /**
-     * Declares the <code>DOMAttr</code> specified by node to be of type ID.
-     * If the value of the specified <code>DOMAttr</code> is unique then this
-     * <code>DOMElement</code> node can later be retrieved using getElementById
-     * on <code>DOMDocument</code>. Note, however, that this simply affects this
-     * node and does not change any grammar that may be in use.
+     * If the parameter isId is <code>true</code>, this method declares the specified 
+     * attribute to be a user-determined ID attribute. 
+     * This affects the value of <code>DOMAttr::isId</code> and the behavior of 
+     * <code>DOMDocument::getElementById</code>, but does not change any schema that 
+     * may be in use, in particular this does not affect the <code>DOMAttr::getSchemaTypeInfo</code>
+     * of the specified DOMAttr node. Use the value <code>false</code> for the parameter isId 
+     * to undeclare an attribute for being a user-determined ID attribute.
+     *
      * @param idAttr The <code>DOMAttr</code> node.
+     * @param isId Whether the attribute is of type ID.
      * @exception  DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *   <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @since DOM Level 3
      */
-    virtual void setIdAttributeNode(const DOMAttr *idAttr) = 0;
+    virtual void setIdAttributeNode(const DOMAttr *idAttr, bool isId) = 0;
 
 
 
     /**
      * Returns the type information associated with this element.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @return the <code>DOMTypeInfo</code> associated with this element
      * @since DOM level 3
      */
-    virtual const DOMTypeInfo* getTypeInfo() const = 0;
+    virtual const DOMTypeInfo* getSchemaTypeInfo() const = 0;
 
     //@}
 

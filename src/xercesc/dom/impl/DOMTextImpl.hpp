@@ -55,7 +55,7 @@ public:
     virtual                ~DOMTextImpl();
     virtual DOMText*        splitText(XMLSize_t offset);
     // DOM Level 3
-    virtual bool            getIsWhitespaceInElementContent() const;
+    virtual bool            getIsElementContentWhitespace() const;
     virtual const XMLCh*    getWholeText();
     virtual DOMText*        replaceWholeText(const XMLCh* content);
 

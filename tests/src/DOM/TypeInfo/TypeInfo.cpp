@@ -159,159 +159,158 @@ bool TypeInfo::testInBuiltTypesOnAttributes(bool DTDPresent) {
     bool passed = true;
     DOMElement *testEle = findElement(X("attrTest"));
 
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("attrTestType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("attrTestType"), X(""), __LINE__);
 
     DOMAttr *testAttr;
 
     testAttr = testEle->getAttributeNodeNS(0, X("anySimpleType"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("string"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("boolean"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_BOOLEAN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_BOOLEAN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("decimal"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_DECIMAL, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_DECIMAL, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("float"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_FLOAT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_FLOAT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("double"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_DOUBLE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_DOUBLE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("duration"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_DURATION, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_DURATION, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("dateTime"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_DATETIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_DATETIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("time"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_TIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_TIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("date"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_DATE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_DATE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("gYearMonth"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_YEARMONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_YEARMONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("gYear"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_YEAR, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_YEAR, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("gMonthDay"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_MONTHDAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_MONTHDAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("gDay"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_DAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_DAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("gMonth"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_MONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_MONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("hexBinary"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_HEXBINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_HEXBINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("base64Binary"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_BASE64BINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_BASE64BINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("anyURI"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("QName"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_QNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
-
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_QNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("normalizedString"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_NORMALIZEDSTRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_NORMALIZEDSTRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("token"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_TOKEN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_TOKEN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("language"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_LANGUAGE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_LANGUAGE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("NMTOKEN"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgNmTokenString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgNmTokenString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("NMTOKENS"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgNmTokensString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgNmTokensString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("Name"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_NAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_NAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("NCName"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_NCNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_NCNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("ID"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("IDREF"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("IDREFS"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgIDRefsString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgIDRefsString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
 
     if(DTDPresent) {
         testAttr = testEle->getAttributeNodeNS(0, X("ENTITY"));
-        DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+        DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
         testAttr = testEle->getAttributeNodeNS(0, X("ENTITIES"));
-        DOMTYPEINFOTEST(testAttr->getTypeInfo(), XMLUni::fgEntitiesString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+        DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), XMLUni::fgEntitiesString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
     }
 
     testAttr = testEle->getAttributeNodeNS(0, X("integer"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("nonPositiveInteger"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_NONPOSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_NONPOSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("negativeInteger"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_NEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_NEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("long"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_LONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_LONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("int"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_INT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("short"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_SHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_SHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("byte"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_BYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_BYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("nonNegativeInteger"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_NONNEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_NONNEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("unsignedLong"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ULONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_ULONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("unsignedInt"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_UINT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_UINT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("unsignedShort"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_USHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_USHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("unsignedByte"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_UBYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_UBYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("positiveInteger"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_POSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_POSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     //couple of defaulted ones
     testAttr = testEle->getAttributeNodeNS(0, X("defaultString"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(0, X("defaultInt"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     //ns attr
     testAttr = testEle->getAttributeNodeNS(X("http://www.w3.org/2000/xmlns/"), X("prefix"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.w3.org/2001/XMLSchema-instance"), X("noNamespaceSchemaLocation"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     return passed;
 }
@@ -326,120 +325,120 @@ bool TypeInfo::testInBuiltTypesOnElements() {
     DOMElement *testEle = findElement(X("eleTest"));
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_BOOLEAN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_BOOLEAN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_DECIMAL, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_DECIMAL, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_FLOAT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_FLOAT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_DOUBLE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_DOUBLE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_DURATION, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_DURATION, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_DATETIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_DATETIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_TIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_TIME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_DATE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_DATE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_YEARMONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_YEARMONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_YEAR, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_YEAR, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_MONTHDAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_MONTHDAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_DAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_DAY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_MONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_MONTH, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_HEXBINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_HEXBINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_BASE64BINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_BASE64BINARY, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_ANYURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_QNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_QNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_NORMALIZEDSTRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_NORMALIZEDSTRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_TOKEN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_TOKEN, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_LANGUAGE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_LANGUAGE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), XMLUni::fgNmTokenString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), XMLUni::fgNmTokenString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), XMLUni::fgNmTokensString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), XMLUni::fgNmTokensString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_NAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_NAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_NCNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_NCNAME, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_NONPOSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_NONPOSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_NEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_NEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_LONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_LONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_INT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_INT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_SHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_SHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_BYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_BYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_NONNEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_NONNEGATIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_ULONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_ULONG, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_UINT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_UINT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_USHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_USHORT, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_UBYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_UBYTE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_POSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_POSITIVEINTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     return passed;
 }
@@ -454,16 +453,16 @@ bool TypeInfo::testSimpleDerived() {
         ->getNextSibling()->getNextSibling()->getNextSibling();
 
     DOMAttr *testAtt = testEle->getAttributeNodeNS(0, X("decimalDerived"));
-    DOMTYPEINFOTEST(testAtt->getTypeInfo(), X("decimalDerivedType"), X(""),  __LINE__);
+    DOMTYPEINFOTEST(testAtt->getSchemaTypeInfo(), X("decimalDerivedType"), X(""),  __LINE__);
 
     testAtt = testEle->getAttributeNodeNS(0, X("stringDerived"));
-    DOMTYPEINFOTEST(testAtt->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAtt->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     return passed;
 }
@@ -475,10 +474,10 @@ bool TypeInfo::testComplexTypes() {
 
     //element complexTest
     DOMElement *testEle = findElement(X("complexTest"));
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("complexTestType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("complexTestType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("complexDerTestType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("complexDerTestType"), X(""), __LINE__);
     return passed;
 }
 
@@ -493,40 +492,40 @@ bool TypeInfo::testUnions() {
     DOMElement *testEle = findElement(X("unionTest"));
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
-
-    testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
-    testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+
+    testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     return passed;
 
@@ -541,19 +540,19 @@ bool TypeInfo::testAnonymous() {
 
     //element anonymousTest
     DOMElement *testEle = findElement(X("anonymousTest"));
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonC1"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("__AnonC1"), X(""), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("partNum"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("__AnonS7"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("__AnonS7"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonS2"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("__AnonS2"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonS4"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("__AnonS4"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("__AnonS6"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("__AnonS6"), X(""), __LINE__);
 
     return passed;
 }
@@ -568,22 +567,22 @@ bool TypeInfo::testXsiTypes() {
     DOMElement *testEle = findElement(X("xsiTypeTest"));
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("base"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("base"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("level1"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("level1"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("level2"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("level2"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("baseComplex"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("baseComplex"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("level1Complex"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("level1Complex"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("level2Complex"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("level2Complex"), X(""), __LINE__);
 
     return passed;
 }
@@ -601,19 +600,19 @@ bool TypeInfo::testAnys() {
     DOMElement *back = testEle;
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.w3.org/1999/xhtml"), X("attr2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), 0, 0, __LINE__);
 
 
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("anyTestPartialType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("anyTestPartialType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
 
     //element anyTest
@@ -621,46 +620,46 @@ bool TypeInfo::testAnys() {
     back = testEle;
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr1"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr3"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr4"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("anyTestType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("anyTestType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     //anyTestAttr1
     testEle = (DOMElement *)back->getNextSibling()->getNextSibling();
     back = testEle;
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr5"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     //anyTestAttr2
     testEle = (DOMElement *)back->getNextSibling()->getNextSibling();
     back = testEle;
 
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr5"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     //anyTestMissing
     testEle = (DOMElement *)back->getNextSibling()->getNextSibling();
     back = testEle;
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("anyTestType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("anyTestType"), X(""), __LINE__);
     return passed;
 }
 
@@ -673,47 +672,47 @@ bool TypeInfo::testInvaild() {
     DOMAttr *testAttr;
 
 
-    DOMTYPEINFOTEST(((DOMElement *)docEle)->getTypeInfo(), X("rootType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(((DOMElement *)docEle)->getSchemaTypeInfo(), X("rootType"), X(""), __LINE__);
 
     //element invalidTest
     DOMElement *testEle = findElement(X("invalidTest"));
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("simple"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("invalid"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("baseComplex"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("baseComplex"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     // this is a "number" of type "base" but it has a xsi:type="stringDerivedType"
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("baseComplex"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("baseComplex"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("uType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("uType"), X(""), __LINE__);
     //an undeclared element does not have anon value. Test this here
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     DOMElement *testEle2 = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle2->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testEle2->getSchemaTypeInfo(), 0, 0, __LINE__);
     
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("attrOnlyType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("attrOnlyType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("attrOnlyType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("attrOnlyType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("prohibitedAttrType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("prohibitedAttrType"), X(""), __LINE__);
 
     return passed;
 }
@@ -730,49 +729,49 @@ bool TypeInfo::testDTD() {
     DOMElement *testEle = doc->getDocumentElement();
     DOMAttr *testAttr;
 
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X(""), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X(""), X(""), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("cdata"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("CDATA"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("CDATA"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("enum"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("ENUMERATION"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("ENUMERATION"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("id"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("ID"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("ID"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("idRef"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("IDREF"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("IDREF"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("idRefs"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("IDREFS"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("IDREFS"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("nmToken"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("NMTOKEN"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("NMTOKEN"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("nmTokenDefault"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("NMTOKEN"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("NMTOKEN"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("nmTokenDefault2"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("NMTOKEN"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("NMTOKEN"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("nmTokens"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("NMTOKENS"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("NMTOKENS"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("entity"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("ENTITY"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("ENTITY"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("entities"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("ENTITIES"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("ENTITIES"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("notation"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("NOTATION"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("NOTATION"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("noDecl"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("CDATA"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("CDATA"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     testAttr = testEle->getAttributeNode(X("xmlns:foo"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("CDATA"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), X("CDATA"), X("http://www.w3.org/TR/REC-xml"), __LINE__);
 
     return passed;
 
@@ -784,22 +783,22 @@ bool TypeInfo::combinedTest() {
     DOMAttr *testAttr;
 
     DOMElement *testEle = doc->getDocumentElement();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("rootType"), X(""), __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), X("rootType"), X(""), __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("attBoth"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("attSchema"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testAttr = testEle->getAttributeNodeNS(X(""), X("attDTD"));
-    DOMTYPEINFOTEST(testAttr->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testAttr->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), 0, 0, __LINE__);
+    DOMTYPEINFOTEST(testEle->getSchemaTypeInfo(), 0, 0, __LINE__);
 
     return passed;
 }

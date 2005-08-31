@@ -664,7 +664,7 @@ void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localNam
         typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default, fDocument->getPooledString(elementInfo->getSchemaDefault()));
         typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Normalized_Value, fDocument->getPooledString(elementInfo->getSchemaNormalizedValue()));
         typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified, true);
-        ((DOMElementNSImpl*)fCurrentParent)->setTypeInfo(typeInfo);
+        ((DOMElementNSImpl*)fCurrentParent)->setSchemaTypeInfo(typeInfo);
     }
     if(fPSVIHandler)
         fPSVIHandler->handleElementPSVI(localName, uri, elementInfo);
@@ -721,7 +721,7 @@ void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            loca
                 typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default, fDocument->getPooledString(attrInfo->getSchemaDefault()));
                 typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Normalized_Value, fDocument->getPooledString(attrInfo->getSchemaNormalizedValue()));
                 typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified, true);
-                ((DOMAttrImpl*)pAttrNode)->setTypeInfo(typeInfo);
+                ((DOMAttrImpl*)pAttrNode)->setSchemaTypeInfo(typeInfo);
             }
         }
     }
@@ -995,17 +995,17 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
         {
             switch(oneAttrib->getType())
             {
-            case XMLAttDef::CData:          attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedCDATAAttribute); break;
-            case XMLAttDef::ID:             attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDAttribute); break;
-            case XMLAttDef::IDRef:          attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFAttribute); break;
-            case XMLAttDef::IDRefs:         attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFSAttribute); break;
-            case XMLAttDef::Entity:         attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITYAttribute); break;
-            case XMLAttDef::Entities:       attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITIESAttribute); break;
-            case XMLAttDef::NmToken:        attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENAttribute); break;
-            case XMLAttDef::NmTokens:       attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENSAttribute); break;
-            case XMLAttDef::Notation:       attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNOTATIONAttribute); break;
-            case XMLAttDef::Enumeration:    attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENUMERATIONAttribute); break;
-            default:                        attr->setTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
+            case XMLAttDef::CData:          attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedCDATAAttribute); break;
+            case XMLAttDef::ID:             attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDAttribute); break;
+            case XMLAttDef::IDRef:          attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFAttribute); break;
+            case XMLAttDef::IDRefs:         attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFSAttribute); break;
+            case XMLAttDef::Entity:         attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITYAttribute); break;
+            case XMLAttDef::Entities:       attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITIESAttribute); break;
+            case XMLAttDef::NmToken:        attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENAttribute); break;
+            case XMLAttDef::NmTokens:       attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENSAttribute); break;
+            case XMLAttDef::Notation:       attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNOTATIONAttribute); break;
+            case XMLAttDef::Enumeration:    attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENUMERATIONAttribute); break;
+            default:                        attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
             }
         }
     }
@@ -1073,17 +1073,17 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                 {
                     switch(attr->getType())
                     {
-                    case XMLAttDef::CData:          insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedCDATAAttribute); break;
-                    case XMLAttDef::ID:             insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDAttribute); break;
-                    case XMLAttDef::IDRef:          insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFAttribute); break;
-                    case XMLAttDef::IDRefs:         insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFSAttribute); break;
-                    case XMLAttDef::Entity:         insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITYAttribute); break;
-                    case XMLAttDef::Entities:       insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITIESAttribute); break;
-                    case XMLAttDef::NmToken:        insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENAttribute); break;
-                    case XMLAttDef::NmTokens:       insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENSAttribute); break;
-                    case XMLAttDef::Notation:       insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNOTATIONAttribute); break;
-                    case XMLAttDef::Enumeration:    insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENUMERATIONAttribute); break;
-                    default:                        insertAttr->setTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
+                    case XMLAttDef::CData:          insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedCDATAAttribute); break;
+                    case XMLAttDef::ID:             insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDAttribute); break;
+                    case XMLAttDef::IDRef:          insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFAttribute); break;
+                    case XMLAttDef::IDRefs:         insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedIDREFSAttribute); break;
+                    case XMLAttDef::Entity:         insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITYAttribute); break;
+                    case XMLAttDef::Entities:       insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENTITIESAttribute); break;
+                    case XMLAttDef::NmToken:        insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENAttribute); break;
+                    case XMLAttDef::NmTokens:       insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNMTOKENSAttribute); break;
+                    case XMLAttDef::Notation:       insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedNOTATIONAttribute); break;
+                    case XMLAttDef::Enumeration:    insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdValidatedENUMERATIONAttribute); break;
+                    default:                        insertAttr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
                     }
                 }
             }

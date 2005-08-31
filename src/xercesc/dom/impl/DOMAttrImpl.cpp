@@ -286,7 +286,7 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
     }
 }
 
-const DOMTypeInfo *DOMAttrImpl::getTypeInfo() const
+const DOMTypeInfo *DOMAttrImpl::getSchemaTypeInfo() const
 {
     if(!fSchemaType)
         return &DOMTypeInfoImpl::g_DtdNotValidatedAttribute;
@@ -295,7 +295,7 @@ const DOMTypeInfo *DOMAttrImpl::getTypeInfo() const
 }
 
 
-void DOMAttrImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo) 
+void DOMAttrImpl::setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo) 
 {
     fSchemaType = typeInfo;
 }

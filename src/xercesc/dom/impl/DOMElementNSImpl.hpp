@@ -65,14 +65,14 @@ public:
 
     //Introduced in DOM Level 3
     virtual const XMLCh *getBaseURI() const;
-    virtual const DOMTypeInfo * getTypeInfo() const;
+    virtual const DOMTypeInfo * getSchemaTypeInfo() const;
 
    // helper function for DOM Level 3 renameNode
    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
    void setName(const XMLCh* namespaceURI, const XMLCh* name);
 
     //helper function for DOM Level 3 TypeInfo
-    virtual void setTypeInfo(const DOMTypeInfoImpl* typeInfo);
+    virtual void setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo);
 
 private:
     // -----------------------------------------------------------------------

@@ -63,23 +63,21 @@ public:
     DOMNODE_FUNCTIONS;
 
     virtual const XMLCh *       getName() const;
-    virtual bool getSpecified() const;
-    virtual const XMLCh * getValue() const;
-    virtual void setSpecified(bool arg);
-    virtual void setValue(const XMLCh * value);
-    virtual bool isId() const;
+    virtual bool                getSpecified() const;
+    virtual const XMLCh *       getValue() const;
+    virtual void                setSpecified(bool arg);
+    virtual void                setValue(const XMLCh * value);
+    virtual DOMElement *        getOwnerElement() const;
+    virtual bool                isId() const;
+    virtual const DOMTypeInfo*  getSchemaTypeInfo() const;
 
-    //Introduced in DOM Level 2
-    DOMElement *getOwnerElement() const;
     void setOwnerElement(DOMElement *ownerElem);    //internal use only
 
     // helper function for DOM Level 3 renameNode
     virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
 
-    virtual const DOMTypeInfo* getTypeInfo() const;
-
     //helper function for DOM Level 3 TypeInfo
-    virtual void setTypeInfo(const DOMTypeInfoImpl* typeInfo);
+    virtual void setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo);
 
    // helper method that sets this attr to an idnode and places it into the document map
    virtual void addAttrToIDNodeMap();

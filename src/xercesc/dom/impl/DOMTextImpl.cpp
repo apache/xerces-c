@@ -125,7 +125,7 @@ void DOMTextImpl::setIgnorableWhitespace(bool ignorable)
 }
 
 
-bool DOMTextImpl::getIsWhitespaceInElementContent() const
+bool DOMTextImpl::getIsElementContentWhitespace() const
 {
     return isIgnorableWhitespace();
 }

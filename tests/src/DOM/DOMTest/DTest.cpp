@@ -1430,9 +1430,16 @@ bool DOMTest::testAttr(DOMDocument* document)
         OK = false;
     }
 
-    testElementNode->setIdAttributeNode(idAtt);
+    testElementNode->setIdAttributeNode(idAtt,true);
 
     if(!idAtt->isId()) {
+        fprintf(stderr, "isID failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->setIdAttributeNode(idAtt,false);
+
+    if(idAtt->isId()) {
         fprintf(stderr, "isID failed in line %i\n", __LINE__);
         OK = false;
     }
@@ -3265,16 +3272,16 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMAttr *idAtt = document->createAttributeNS(tempStr4, tempStr5);
 
     //tests for node not being on testElementNode
-    EXCEPTIONSTEST(testElementNode->setIdAttribute(tempStr4), DOMException::NOT_FOUND_ERR, OK,  1000);
-    EXCEPTIONSTEST(testElementNode->setIdAttributeNS(tempStr4, tempStr5), DOMException::NOT_FOUND_ERR, OK,  1001);
-    EXCEPTIONSTEST(testElementNode->setIdAttributeNode(idAtt), DOMException::NOT_FOUND_ERR, OK,  1002);
+    EXCEPTIONSTEST(testElementNode->setIdAttribute(tempStr4, true), DOMException::NOT_FOUND_ERR, OK,  1000);
+    EXCEPTIONSTEST(testElementNode->setIdAttributeNS(tempStr4, tempStr5, true), DOMException::NOT_FOUND_ERR, OK,  1001);
+    EXCEPTIONSTEST(testElementNode->setIdAttributeNode(idAtt, true), DOMException::NOT_FOUND_ERR, OK,  1002);
 
     //should test NO_MODIFICATION_ALLOWED_ERR but dont know how to without direct access to DOMAttrImpl.
 
     idAtt = document->createAttributeNS(tempStr4, tempStr5);
     idAtt->setValue(tempStr3);
     testElementNode->setAttributeNode(idAtt);
-    testElementNode->setIdAttributeNode(idAtt);
+    testElementNode->setIdAttributeNode(idAtt, true);
 
     if(!idAtt->isId()) {
         fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
@@ -3288,6 +3295,20 @@ bool DOMTest::testElement(DOMDocument* document)
         OK = false;
     }
 
+    testElementNode->setIdAttributeNode(idAtt, false);
+
+    if(idAtt->isId()) {
+        fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    idEle = document->getElementById(tempStr3);
+
+    if(idEle) {
+        fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
     testElementNode->removeAttributeNode(idAtt);
 
 
@@ -3295,7 +3316,7 @@ bool DOMTest::testElement(DOMDocument* document)
     idAtt = document->createAttributeNS(tempStr4, tempStr5);
     idAtt->setValue(tempStr3);
     testElementNode->setAttributeNode(idAtt);
-    testElementNode->setIdAttributeNS(tempStr4, tempStr5);
+    testElementNode->setIdAttributeNS(tempStr4, tempStr5, true);
 
     if(!idAtt->isId()) {
         fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
@@ -3305,6 +3326,20 @@ bool DOMTest::testElement(DOMDocument* document)
     idEle = document->getElementById(tempStr3);
 
     if(!idEle || !idEle->isSameNode(testElementNode)) {
+        fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->setIdAttributeNS(tempStr4, tempStr5, false);
+
+    if(idAtt->isId()) {
+        fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    idEle = document->getElementById(tempStr3);
+
+    if(idEle) {
         fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
         OK = false;
     }
@@ -3317,7 +3352,7 @@ bool DOMTest::testElement(DOMDocument* document)
     idAtt = document->createAttribute(tempStr5);
     idAtt->setValue(tempStr3);
     testElementNode->setAttributeNode(idAtt);
-    testElementNode->setIdAttribute(tempStr5);
+    testElementNode->setIdAttribute(tempStr5, true);
 
     if(!idAtt->isId()) {
         fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
@@ -3327,6 +3362,20 @@ bool DOMTest::testElement(DOMDocument* document)
     idEle = document->getElementById(tempStr3);
 
     if(!idEle || !idEle->isSameNode(testElementNode)) {
+        fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->setIdAttribute(tempStr5, false);
+
+    if(idAtt->isId()) {
+        fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    idEle = document->getElementById(tempStr3);
+
+    if(idEle) {
         fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
         OK = false;
     }

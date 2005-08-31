@@ -98,10 +98,10 @@ public:
                                              const XMLCh *localName) const;
 
     //Introduced in DOM level 3
-    virtual void setIdAttribute(const XMLCh* name);
-    virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName);
-    virtual void setIdAttributeNode(const DOMAttr *idAttr);
-    virtual const DOMTypeInfo * getTypeInfo() const;
+    virtual void setIdAttribute(const XMLCh* name, bool isId);
+    virtual void setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName, bool isId);
+    virtual void setIdAttributeNode(const DOMAttr *idAttr, bool isId);
+    virtual const DOMTypeInfo * getSchemaTypeInfo() const;
 
     // for handling of default attribute
     virtual DOMAttr*          setDefaultAttributeNode(DOMAttr *newAttr);

@@ -928,7 +928,7 @@ void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 			sendElementValue(PSVIUni::fgPrefix, attr->getPrefix());
 			sendElementValue(PSVIUni::fgNormalizedValue, attr->getValue());
 			sendElementValue(PSVIUni::fgSpecified, translateBool(attr->getSpecified()));
-			sendElementValue(PSVIUni::fgAttributeType, attr->getTypeInfo()->getTypeName());
+			sendElementValue(PSVIUni::fgAttributeType, attr->getSchemaTypeInfo()->getTypeName());
 			sendElementEmpty(PSVIUni::fgReferences);
 			sendUnindentedElement(PSVIUni::fgAttribute);
 		}
@@ -951,7 +951,7 @@ void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 			sendElementValue(PSVIUni::fgPrefix, attr->getPrefix());
 			sendElementValue(PSVIUni::fgNormalizedValue, attr->getValue());
 			sendElementValue(PSVIUni::fgSpecified, translateBool(attr->getSpecified()));
-			sendElementValue(PSVIUni::fgAttributeType, attr->getTypeInfo()->getTypeName());
+			sendElementValue(PSVIUni::fgAttributeType, attr->getSchemaTypeInfo()->getTypeName());
 			sendElementEmpty(PSVIUni::fgReferences);
 			sendUnindentedElement(PSVIUni::fgAttribute);
 		}

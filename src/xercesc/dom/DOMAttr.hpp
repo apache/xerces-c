@@ -149,9 +149,7 @@ public:
     /**
      * Returns whether this attribute is known to be of type ID or not. 
      * When it is and its value is unique, the ownerElement of this attribute 
-     * can be retrieved using getElementById on Document.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * can be retrieved using getElementById on DOMDocument.
      *
      * @return <code>bool</code> stating if this <code>DOMAttr</code> is an ID
      * @since DOM level 3
@@ -162,12 +160,10 @@ public:
     /**
      * Returns the type information associated with this attribute.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @return the <code>DOMTypeInfo</code> associated with this attribute
      * @since DOM level 3
      */
-    virtual const DOMTypeInfo * getTypeInfo() const = 0;
+    virtual const DOMTypeInfo * getSchemaTypeInfo() const = 0;
 
     //@}
 

@@ -246,14 +246,14 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
 }
 
-const DOMTypeInfo *DOMElementNSImpl::getTypeInfo() const
+const DOMTypeInfo *DOMElementNSImpl::getSchemaTypeInfo() const
 {
     if(!fSchemaType) 
         return &DOMTypeInfoImpl::g_DtdValidatedElement;
     return fSchemaType;
 }
 
-void DOMElementNSImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo) 
+void DOMElementNSImpl::setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo) 
 {
     fSchemaType = typeInfo;
 }

@@ -228,7 +228,7 @@ void DOMElementImpl::setAttribute(const XMLCh *nam, const XMLCh *val)
     newAttr->setNodeValue(val);
 }
 
-void DOMElementImpl::setIdAttribute(const XMLCh* name)
+void DOMElementImpl::setIdAttribute(const XMLCh* name, bool isId)
 {
     if (fNode.isReadOnly())
         throw DOMException(
@@ -239,10 +239,13 @@ void DOMElementImpl::setIdAttribute(const XMLCh* name)
     if (!attr) 
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
-    ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+    if(isId)
+        ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+    else
+        ((DOMAttrImpl *)attr)->removeAttrFromIDNodeMap();
 }
 
-void DOMElementImpl::setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName) {
+void DOMElementImpl::setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* localName, bool isId) {
 
     if (fNode.isReadOnly())
         throw DOMException(
@@ -253,12 +256,14 @@ void DOMElementImpl::setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* lo
     if (!attr) 
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
-    ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
-
+    if(isId)
+        ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+    else
+        ((DOMAttrImpl *)attr)->removeAttrFromIDNodeMap();
 }
 
 
-void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr) {
+void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr, bool isId) {
 
     if (fNode.isReadOnly())
         throw DOMException(
@@ -274,7 +279,10 @@ void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr) {
     if(!attr) 
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
-    ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+    if(isId)
+        ((DOMAttrImpl *)attr)->addAttrToIDNodeMap();
+    else
+        ((DOMAttrImpl *)attr)->removeAttrFromIDNodeMap();
 }
 
 
@@ -644,7 +652,7 @@ DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
     }
 }
 
-const DOMTypeInfo *DOMElementImpl::getTypeInfo() const
+const DOMTypeInfo *DOMElementImpl::getSchemaTypeInfo() const
 {
     return &DOMTypeInfoImpl::g_DtdValidatedElement;
 }
