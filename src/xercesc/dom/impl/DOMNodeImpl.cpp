@@ -435,10 +435,6 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg) const
         return false;
     }
 
-    if (!XMLString::equals(thisNode->getBaseURI(), arg->getBaseURI())) {
-        return false;
-    }
-
     return true;
 }
 
@@ -1049,7 +1045,6 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
 }
 
 void* DOMNodeImpl::getFeature(const XMLCh*, const XMLCh*)      {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
     return 0;
 }
 
