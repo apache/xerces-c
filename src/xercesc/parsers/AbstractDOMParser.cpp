@@ -1113,7 +1113,7 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
     DOMNamedNodeMap *entities = fDocumentType->getEntities();
     DOMEntityImpl* entity = (DOMEntityImpl*)entities->getNamedItem(entName);
     if (entity)
-        entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
+        entity->setInputEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
     fCurrentEntity = entity;
 
 
@@ -1652,8 +1652,8 @@ void AbstractDOMParser::TextDecl
 )
 {
     if (fCurrentEntity) {
-        fCurrentEntity->setVersion(versionStr);
-        fCurrentEntity->setEncoding(encodingStr);
+        fCurrentEntity->setXmlVersion(versionStr);
+        fCurrentEntity->setXmlEncoding(encodingStr);
     }
 }
 

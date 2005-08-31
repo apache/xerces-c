@@ -52,9 +52,9 @@ private:
     DOMEntityReference*	fRefEntity;
 
     // New data introduced in DOM Level 3
-    const XMLCh*          fActualEncoding;
-    const XMLCh*          fEncoding;
-    const XMLCh*          fVersion;
+    const XMLCh*          fInputEncoding;
+    const XMLCh*          fXmlEncoding;
+    const XMLCh*          fXmlVersion;
     const XMLCh*          fBaseURI;
     bool                  fEntityRefNodeCloned;
     // private helper function
@@ -79,18 +79,18 @@ public:
     virtual void            setSystemId(const XMLCh *arg);
 
     //DOM Level 2 additions. Non standard functions
-    virtual void		setEntityRef(DOMEntityReference *);
+    virtual void		    setEntityRef(DOMEntityReference *);
     virtual DOMEntityReference*	getEntityRef() const;
 
     //Introduced in DOM Level 3
-    virtual const XMLCh*           getActualEncoding() const;
-    virtual void                   setActualEncoding(const XMLCh* actualEncoding);
-    virtual const XMLCh*           getEncoding() const;
-    virtual void                   setEncoding(const XMLCh* encoding);
-    virtual const XMLCh*           getVersion() const;
-    virtual void                   setVersion(const XMLCh* version);
-    virtual void                   setBaseURI(const XMLCh *arg);
+    virtual const XMLCh*    getInputEncoding() const;
+    virtual const XMLCh*    getXmlEncoding() const;
+    virtual const XMLCh*    getXmlVersion() const;
+    virtual void            setBaseURI(const XMLCh *arg);
 
+    void                    setInputEncoding(const XMLCh* actualEncoding);
+    void                    setXmlEncoding(const XMLCh* encoding);
+    void                    setXmlVersion(const XMLCh* version);
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators

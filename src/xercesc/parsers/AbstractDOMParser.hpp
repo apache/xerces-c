@@ -40,6 +40,7 @@ class XMLScanner;
 class XMLValidator;
 class DOMDocumentImpl;
 class DOMDocumentTypeImpl;
+class DOMEntityImpl;
 class DOMElement;
 class GrammarResolver;
 class XMLGrammarPool;
@@ -1740,7 +1741,7 @@ protected:
     XMLCh*                        fImplementationFeatures;
     DOMNode*                      fCurrentParent;
     DOMNode*                      fCurrentNode;
-    DOMEntity*                    fCurrentEntity;
+    DOMEntityImpl*                fCurrentEntity;
     DOMDocumentImpl*              fDocument;
     ValueStackOf<DOMNode*>*       fNodeStack;
     DOMDocumentTypeImpl*          fDocumentType;

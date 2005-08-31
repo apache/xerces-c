@@ -33,9 +33,9 @@ DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
      fSystemId(0),
      fNotationName(0),
      fRefEntity(0),
-     fActualEncoding(0),
-     fEncoding(0),
-     fVersion(0),     
+     fInputEncoding(0),
+     fXmlEncoding(0),
+     fXmlVersion(0),     
      fBaseURI(0),
      fEntityRefNodeCloned(false)
 {   
@@ -53,9 +53,9 @@ DOMEntityImpl::DOMEntityImpl(const DOMEntityImpl &other, bool deep)
       fSystemId(other.fSystemId),
       fNotationName(other.fNotationName),
       fRefEntity(other.fRefEntity),
-      fActualEncoding(other.fActualEncoding),
-      fEncoding(other.fEncoding),
-      fVersion(other.fVersion),
+      fInputEncoding(other.fInputEncoding),
+      fXmlEncoding(other.fXmlEncoding),
+      fXmlVersion(other.fXmlVersion),
       fBaseURI(other.fBaseURI),
       fEntityRefNodeCloned(false)
 {    
@@ -264,31 +264,31 @@ void DOMEntityImpl::release()
 
 
 //Introduced in DOM Level 3
-const XMLCh* DOMEntityImpl::getActualEncoding() const {
-    return fActualEncoding;
+const XMLCh* DOMEntityImpl::getInputEncoding() const {
+    return fInputEncoding;
 }
 
-void DOMEntityImpl::setActualEncoding(const XMLCh* actualEncoding){
+void DOMEntityImpl::setInputEncoding(const XMLCh* actualEncoding){
     DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
-    fActualEncoding = doc->cloneString(actualEncoding);
+    fInputEncoding = doc->cloneString(actualEncoding);
 }
 
-const XMLCh* DOMEntityImpl::getEncoding() const {
-    return fEncoding;
+const XMLCh* DOMEntityImpl::getXmlEncoding() const {
+    return fXmlEncoding;
 }
 
-void DOMEntityImpl::setEncoding(const XMLCh* encoding){
+void DOMEntityImpl::setXmlEncoding(const XMLCh* encoding){
     DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
-    fEncoding = doc->cloneString(encoding);
+    fXmlEncoding = doc->cloneString(encoding);
 }
 
-const XMLCh* DOMEntityImpl::getVersion() const {
-    return fVersion;
+const XMLCh* DOMEntityImpl::getXmlVersion() const {
+    return fXmlVersion;
 }
 
-void DOMEntityImpl::setVersion(const XMLCh* version){
+void DOMEntityImpl::setXmlVersion(const XMLCh* version){
     DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
-    fVersion = doc->cloneString(version);
+    fXmlVersion = doc->cloneString(version);
 }
 
 XERCES_CPP_NAMESPACE_END
