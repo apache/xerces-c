@@ -992,6 +992,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* sourceNode) {
             DOMElement* sourceAttrElem=sourceAttr->getOwnerElement();
             if(sourceAttrElem)
                 sourceAttrElem->removeAttributeNode(sourceAttr);
+            fNode.callUserDataHandlers(DOMUserDataHandler::NODE_ADOPTED, sourceNode, sourceNode);
             break;
         }
     default:
@@ -999,6 +1000,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* sourceNode) {
             DOMNode* sourceNodeParent=sourceNode->getParentNode();
             if(sourceNodeParent)
                 sourceNodeParent->removeChild(sourceNode);
+            fNode.callUserDataHandlers(DOMUserDataHandler::NODE_ADOPTED, sourceNode, sourceNode);
         }
     }
     return 0;

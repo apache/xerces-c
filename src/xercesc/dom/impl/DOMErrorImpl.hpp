@@ -63,98 +63,22 @@ public:
 
     //@}
 
-    /** @name Get function */
-    //@{
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the severity of the error
-    */
+    // DOMError interface
     virtual short getSeverity() const;
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the message describing the error that occured.
-    */
     virtual const XMLCh* getMessage() const;
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the location of the error
-    */
     virtual DOMLocator* getLocation() const;
-
-    /**
-     * The related platform dependent exception if any.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @see   setRelatedException
-     * @since DOM Level 3
-     */
     virtual void* getRelatedException() const;
-
     virtual const XMLCh* getType() const;
-
     virtual void* getRelatedData() const;
 
-    //@}
-
-
-   /** @name Set function */
-    //@{
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the severity of the error
-    *
-    * @param severity the type of the error to set
-    */
-    virtual void setSeverity(const short severity);
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the error message
-    *
-    * @param message the error message to set.
-    */
-    virtual void setMessage(const XMLCh* const message);
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the location of the error
-    *
-    * @param location the location of the error to set.
-    */
-    virtual void setLocation(DOMLocator* const location);
-
-   /**
-    * @param value <code>true</code> if DOMLocator is owned and should be
-    *              deleted, <code>false</code> otherwise.
-    */
+    // Setters
+    void setSeverity(const short severity);
+    void setMessage(const XMLCh* const message);
+    void setLocation(DOMLocator* const location);
     void setAdoptLocation(const bool value);
-
-    /**
-     * The related platform dependent exception if any.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param exc the related exception to set.
-     * @see   getRelatedException
-     * @since DOM Level 3
-     */
-    virtual void setRelatedException(void* exc) const;
-
-    virtual void setType(const XMLCh* type);
-
-    virtual void setRelatedData(void* relatedData);
-
+    void setRelatedException(void* exc) const;
+    void setType(const XMLCh* type);
+    void setRelatedData(void* relatedData);
 
 private :
     /* Unimplemented constructors and operators */

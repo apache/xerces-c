@@ -1412,9 +1412,15 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 
     if (fErrorHandler)
     {
-        DOMLocatorImpl  locator(0, 0, (DOMNode* const) errorNode, 0, 0);
+        DOMLocatorImpl  locator(-1, -1, (DOMNode* const) errorNode, 0);
         DOMErrorImpl    domError(errorType , errorMsg, &locator);
-        toContinueProcess = fErrorHandler->handleError(domError);
+        try
+        {
+            toContinueProcess = fErrorHandler->handleError(domError);
+        }
+        catch(...)
+        {
+        }
     }
 
     if (errorType != DOMError::DOM_SEVERITY_WARNING)
@@ -1436,9 +1442,15 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 
     if (fErrorHandler)
     {
-        DOMLocatorImpl  locator(0, 0, (DOMNode* const) errorNode, 0, 0);
+        DOMLocatorImpl  locator(-1, -1, (DOMNode* const) errorNode, 0);
         DOMErrorImpl    domError(errorType , errText, &locator);
-        toContinueProcess = fErrorHandler->handleError(domError);
+        try
+        {
+            toContinueProcess = fErrorHandler->handleError(domError);
+        }
+        catch(...)
+        {
+        }
     }
 
     if (errorType != DOMError::DOM_SEVERITY_WARNING)

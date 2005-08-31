@@ -33,8 +33,6 @@ XERCES_CPP_NAMESPACE_BEGIN
  * the application to implement various behaviors regarding the data it
  * associates to the DOM nodes. This interface defines that handler.
  *
- * <p><b>"Experimental - subject to change"</b></p>
- *
  * <p>See also the <a href='http://www.w3.org/2001/07/WD-DOM-Level-3-Core-20010726'>Document Object Model (DOM) Level 3 Core Specification</a>.
  * @since DOM Level 3
  */
@@ -91,7 +89,8 @@ public:
      * <p><code>NODE_RENAMED</code>
      * The node is renamed.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * <p><code>NODE_ADOPTED</code>
+     * The node is adopted.
      *
      * @since DOM Level 3
      */
@@ -99,7 +98,8 @@ public:
         NODE_CLONED               = 1,
         NODE_IMPORTED             = 2,
         NODE_DELETED              = 3,
-        NODE_RENAMED              = 4
+        NODE_RENAMED              = 4,
+        NODE_ADOPTED              = 5
     };
     //@}
 
@@ -113,14 +113,14 @@ public:
      * This method is called whenever the node for which this handler is
      * registered is imported or cloned.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param operation Specifies the type of operation that is being
      *   performed on the node.
      * @param key Specifies the key for which this handler is being called.
      * @param data Specifies the data for which this handler is being called.
-     * @param src Specifies the node being cloned, imported, or renamed.
-     * @param dst Specifies the node newly created.
+     * @param src Specifies the node being cloned, adopted, imported, or renamed.
+     *            This is <code>null</code> when the node is being deleted.
+     * @param dst Specifies the node newly created if any, or <code>null</code>.
+     *
      * @since DOM Level 3
      */
     virtual void handle(DOMOperationType operation,

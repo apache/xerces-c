@@ -761,10 +761,20 @@ void DOMLSParserImpl::error( const   unsigned int                code
             severity = DOMError::DOM_SEVERITY_FATAL_ERROR;
 
         DOMLocatorImpl location((int)lineNum, (int) colNum, getCurrentNode(), systemId);
+        if(getScanner()->getCalculateSrcOfs())
+            location.setByteOffset(getScanner()->getSrcOffset());
         DOMErrorImpl domError(severity, errorText, &location);
 
         // if user return false, we should stop the process, so throw an error
-        if (!fErrorHandler->handleError(domError) && !getScanner()->getInException())
+        bool toContinueProcess = true;
+        try
+        {
+            toContinueProcess = fErrorHandler->handleError(domError);
+        }
+        catch(...)
+        {
+        }
+        if (!toContinueProcess && !getScanner()->getInException())
             throw (XMLErrs::Codes) code;
     }
 }

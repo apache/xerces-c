@@ -29,8 +29,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOMLocatorImpl::DOMLocatorImpl() :
 fLineNum(-1)
 , fColumnNum(-1)
-, fOffset(-1)
-, fErrorNode(0)
+, fByteOffset(-1)
+, fUtf16Offset(-1)
+, fRelatedNode(0)
 , fURI(0)
 {
 }
@@ -40,11 +41,13 @@ DOMLocatorImpl::DOMLocatorImpl(const XMLSSize_t lineNum,
                                const XMLSSize_t columnNum,
                                DOMNode* const errorNode,
                                const XMLCh* const uri,
-                               const XMLSSize_t offset) :
+                               const XMLSSize_t byteOffset,
+                               const XMLSSize_t utf16Offset) :
 fLineNum(lineNum)
 , fColumnNum(columnNum)
-, fOffset(offset)
-, fErrorNode(errorNode)
+, fByteOffset(byteOffset)
+, fUtf16Offset(utf16Offset)
+, fRelatedNode(errorNode)
 , fURI(uri)
 {
 }

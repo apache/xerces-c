@@ -84,8 +84,7 @@ public:
     //@{
     /**
      * This method is called on the error handler when an error occures.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
+     * If an exception is thrown from this method, it is considered to be equivalent of returning <code>true</code>.
      *
      * @param domError The error object that describes the error, this object
      *                 may be reused by the DOM implementation across multiple

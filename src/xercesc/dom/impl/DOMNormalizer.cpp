@@ -544,7 +544,15 @@ void DOMNormalizer::error(const XMLErrs::Codes code, const DOMNode *node) const
         }
 
         DOMErrorImpl domError(code, 0, errText, (void*)node);
-        if (!fErrorHandler->handleError(domError))
+        bool toContinueProcess = true;
+        try
+        {
+            toContinueProcess = fErrorHandler->handleError(domError);
+        }
+        catch(...)
+        {
+        }
+        if (!toContinueProcess)
             throw (XMLErrs::Codes) code;
     }
 }
