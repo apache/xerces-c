@@ -118,7 +118,7 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 }
 
 
-bool DOMCDATASectionImpl::getIsWhitespaceInElementContent() const
+bool DOMCDATASectionImpl::getIsElementContentWhitespace() const
 {
     return isIgnorableWhitespace();
 }
