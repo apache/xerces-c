@@ -413,6 +413,7 @@ sub package_sources {
 
    pchdir( $xercescroot );
    psystem( 'find . -depth -type "d" -name "CVS" -exec rm -fr {} ' . $find_delim );
+   psystem( 'find . -depth -type "d" -name ".svn" -exec rm -fr {} ' . $find_delim );
    psystem( 'rm -rf .' . $fs . 'samples' . $fs . 'Projects' . $fs . 'OS2' );
    psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'OS2' );
    psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'BCB4' );
