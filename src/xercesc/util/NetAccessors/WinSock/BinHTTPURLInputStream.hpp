@@ -98,6 +98,8 @@ private :
 	inline static int recv(unsigned int s,char* buf,int len,int flags);
 	inline static int shutdown(unsigned int s,int how);
 	inline static int closesocket(unsigned int socket);
+
+    friend class SocketJanitor;
 };
 
 
