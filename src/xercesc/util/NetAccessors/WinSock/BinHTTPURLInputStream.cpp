@@ -49,7 +49,7 @@ public:
     SOCKET* get() const { return fData; }
     SOCKET* release() {	SOCKET* p = fData; fData = 0; return p; }
 
-    void reset(SOCKET* p = 0) { if(fData) closesocket(*fData); fData=p; }
+    void reset(SOCKET* p = 0) { if(fData) BinHTTPURLInputStream::closesocket(*fData); fData=p; }
     bool isDataNull() { return (fData == 0); }
 
 private :
