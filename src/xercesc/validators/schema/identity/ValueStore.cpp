@@ -268,7 +268,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 // ---------------------------------------------------------------------------
 //  ValueStore: Docuement handling methods
 // ---------------------------------------------------------------------------
-void ValueStore::endDcocumentFragment(ValueStoreCache* const valueStoreCache) {
+void ValueStore::endDocumentFragment(ValueStoreCache* const valueStoreCache) {
 
     if (fIdentityConstraint->getType() == IdentityConstraint::ICType_KEYREF) {
 

@@ -117,7 +117,7 @@ void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const
                 ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
 
                 if (values) { // nothing to do if nothing matched!
-                    values->endDcocumentFragment(fValueStoreCache);
+                    values->endDocumentFragment(fValueStoreCache);
                 }
             }
         }

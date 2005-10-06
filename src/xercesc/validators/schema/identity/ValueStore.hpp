@@ -82,7 +82,7 @@ public:
     // -----------------------------------------------------------------------
     //  Document handling methods
     // -----------------------------------------------------------------------
-    void endDcocumentFragment(ValueStoreCache* const valueStoreCache);
+    void endDocumentFragment(ValueStoreCache* const valueStoreCache);
 
     // -----------------------------------------------------------------------
     //  Error reporting methods
