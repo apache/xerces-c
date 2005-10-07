@@ -47,14 +47,16 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  Resource Data Reference.  
  * 
  *  The data is packaged as a dll (or .so or whatever, depending on the platform) that exports a data symbol.
- *  The application (thic *.cpp) references that symbol here, and will pass the data address to ICU, which 
+ *  The application (this *.cpp) references that symbol here, and will pass the data address to ICU, which 
  *  will then  be able to fetch resources from the data.
  */
 
 #if defined(_WIN32) || defined(WIN32)
 extern "C" void U_IMPORT *XercesMessages2_6_dat;
+#define BUNDLE_NAME "XercesMessages2_6"
 #else
 extern "C" void U_IMPORT *XercesMessages2_6_0_dat;
+#define BUNDLE_NAME "XercesMessages2_6_0"
 #endif
 
 /* 
@@ -75,11 +77,7 @@ static void setAppData()
     {
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
-#if defined(_WIN32) || defined(WIN32)
-        udata_setAppData("XercesMessages2_6", &XercesMessages2_6_dat, &err);
-#else
-        udata_setAppData("XercesMessages2_6_0", &XercesMessages2_6_0_dat, &err);
-#endif        
+        udata_setAppData(BUNDLE_NAME, &XercesMessages2_6_dat, &err);
         if (U_SUCCESS(err))
         {
     	    setAppDataOK = true;
@@ -120,7 +118,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
             XMLPlatformUtils::Initialize(), which provides user-specified
             location where the message loader shall retrieve error messages.
 
-         2. envrionment var: XERCESC_NLS_HOME
+         2. environment var: XERCESC_NLS_HOME
 
          3. path $XERCESCROOT/msg
     ***/
@@ -166,11 +164,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     /***
 	Open the locale-specific resource bundle
     ***/
-#if defined(_WIN32) || defined(WIN32)
-    strcat(locationBuf, "XercesMessages2_6");
-#else
-    strcat(locationBuf, "XercesMessages2_6_0");
-#endif
+    strcat(locationBuf, BUNDLE_NAME);
     UErrorCode err = U_ZERO_ERROR;
     uloc_setDefault("en_US", &err);   // in case user-specified locale unavailable
     err = U_ZERO_ERROR;
@@ -182,19 +176,11 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     	   try the dll
         ***/
 
-#if defined(_WIN32) || defined(WIN32)
-        if (strcmp(locationBuf, "XercesMessages2_6") !=0 )
-#else
-        if (strcmp(locationBuf, "XercesMessages2_6_0") !=0 )
-#endif        
+        if (strcmp(locationBuf, BUNDLE_NAME) !=0 )
         {    	     	   
             setAppData();        	
             err = U_ZERO_ERROR;
-#if defined(_WIN32) || defined(WIN32)            
-            fLocaleBundle = ures_open("XercesMessages2_6", XMLMsgLoader::getLocale(), &err);
-#else
-            fLocaleBundle = ures_open("XercesMessages2_6_0", XMLMsgLoader::getLocale(), &err);
-#endif            
+            fLocaleBundle = ures_open(BUNDLE_NAME, XMLMsgLoader::getLocale(), &err);
             if (!U_SUCCESS(err) || fLocaleBundle == NULL)
             {
                  XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
