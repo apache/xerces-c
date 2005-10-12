@@ -24,6 +24,7 @@
 #include <xercesc/validators/datatype/QNameDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/internal/ValidationContextImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -123,6 +124,23 @@ void QNameDatatypeValidator::checkContent( const XMLCh*             const conten
         return;
 
     checkValueSpace(content, manager);
+
+    if (context) {
+        int colonPos = XMLString::indexOf(content, chColon);
+        if (colonPos > 0) {
+            XMLCh* prefix = XMLString::replicate(content, manager);
+            ArrayJanitor<XMLCh>  jan(prefix, manager);
+            normalizeContent(prefix, manager);
+            prefix[colonPos] = chNull;
+                     
+            if (context->isPrefixUnknown(prefix)) {
+                ThrowXMLwithMemMgr1(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_QName_Invalid
+                    , content
+                    , manager);             
+            }                                  
+        }
+    }
 
     if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
