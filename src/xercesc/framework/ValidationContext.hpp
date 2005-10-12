@@ -31,6 +31,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XMLRefInfo;
 class DTDEntityDecl;
 class DatatypeValidator;
+class ElemStack;
 
 class XMLPARSER_EXPORT ValidationContext : public XMemory
 {
@@ -86,6 +87,12 @@ public :
     virtual DatatypeValidator * getValidatingMemberType() const = 0 ;
     virtual void setValidatingMemberType(DatatypeValidator * validatingMemberType) = 0 ;
 
+    /**
+      * QName datatype handling
+      * Create default implementations for source code compatibility
+      */
+    virtual bool isPrefixUnknown(XMLCh* prefix) { return true; };
+    virtual void setElemStack(ElemStack* elemStack) {};
     //@}
 
    
