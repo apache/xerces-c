@@ -72,7 +72,7 @@ public:
     void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attrs);
     void characters(const XMLCh* const chars, const unsigned int length);
     void ignorableWhitespace(const XMLCh* const chars, const unsigned int length);
-    void resetDocument();
+    void startDocument();
 
 
     // -----------------------------------------------------------------------

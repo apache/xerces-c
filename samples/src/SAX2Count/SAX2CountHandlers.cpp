@@ -69,7 +69,7 @@ void SAX2CountHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
     fSpaceCount += length;
 }
 
-void SAX2CountHandlers::resetDocument()
+void SAX2CountHandlers::startDocument()
 {
     fAttrCount = 0;
     fCharacterCount = 0;
