@@ -4527,11 +4527,12 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         const XMLCh* name = child->getLocalName();
 
         if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
-            fSchemaGrammar->addAnnotation(
-                traverseAnnotationDecl(
-                    child, fSchemaInfo->getNonXSAttList(), true)
-            );
-            sawAnnotation = true;
+            XSAnnotation* annot = traverseAnnotationDecl(
+                    child, fSchemaInfo->getNonXSAttList(), true);
+            if (annot) {
+                fSchemaGrammar->addAnnotation(annot);
+                sawAnnotation = true;
+            }
         }
         else if (XMLString::equals(name, SchemaSymbols::fgELT_INCLUDE)) {
             traverseInclude(child);
@@ -4563,11 +4564,12 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
         }
 
         if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
-            fSchemaGrammar->addAnnotation(
-                traverseAnnotationDecl(
-                    child, fSchemaInfo->getNonXSAttList(), true)
-            );
-            sawAnnotation = true;
+            XSAnnotation* annot = traverseAnnotationDecl(
+                    child, fSchemaInfo->getNonXSAttList(), true);
+            if (annot) {
+                fSchemaGrammar->addAnnotation(annot);
+                sawAnnotation = true;
+            }
         }
         else if (XMLString::equals(name, SchemaSymbols::fgELT_SIMPLETYPE)) {
 
@@ -8744,23 +8746,37 @@ void TraverseSchema::processAttValue(const XMLCh* const attVal,
     XMLCh nextCh = *srcVal;
     while (nextCh)
     {
-        if (nextCh == chDoubleQuote)
-        {
-            aBuf.append(chAmpersand);
-            aBuf.append(XMLUni::fgQuot);
-            aBuf.append(chSemiColon);
-        }
-        else if (nextCh == chCloseAngle)
-        {
-            aBuf.append(chAmpersand);
-            aBuf.append(XMLUni::fgGT);
-            aBuf.append(chSemiColon);
-        }
-        else if (nextCh == chAmpersand)
-        {
-            aBuf.append(chAmpersand);
-            aBuf.append(XMLUni::fgAmp);
-            aBuf.append(chSemiColon);
+        if (nextCh <= chOpenAngle) {
+            switch (nextCh) {
+            case chDoubleQuote:        
+                aBuf.append(chAmpersand);
+                aBuf.append(XMLUni::fgQuot);
+                aBuf.append(chSemiColon);
+                break;        
+            case chSingleQuote:        
+               aBuf.append(chAmpersand);
+               aBuf.append(XMLUni::fgApos);
+               aBuf.append(chSemiColon);
+               break;        
+            case chCloseAngle:        
+               aBuf.append(chAmpersand);
+               aBuf.append(XMLUni::fgGT);
+               aBuf.append(chSemiColon);
+               break;
+            case chOpenAngle:                    
+               aBuf.append(chAmpersand);
+               aBuf.append(XMLUni::fgLT);
+               aBuf.append(chSemiColon);
+               break;
+            case chAmpersand:        
+               aBuf.append(chAmpersand);
+               aBuf.append(XMLUni::fgAmp);
+               aBuf.append(chSemiColon);
+               break;
+            default:
+               aBuf.append(nextCh);
+               break;
+            } // end switch
         }
         else
             aBuf.append(nextCh);
