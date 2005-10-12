@@ -431,7 +431,7 @@ WindowsFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const mana
     //  If it starts with a double slash, then it cannot be relative since
     //  it's a remote file.
     //
-    if (isBackSlash(toCheck[0]) && isBackSlash(toCheck[1]))
+    if (isBackSlash(toCheck[0]))
         return false;
 
     // Else assume its a relative path
