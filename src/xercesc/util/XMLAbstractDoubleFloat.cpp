@@ -105,9 +105,29 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
         // work.
         static const unsigned int  maxStackSize = 100;
 
-        const unsigned int  lenTempStrValue =
-            XMLString::stringLen(tmpStrValue);
+        unsigned int  lenTempStrValue = 0;
 
+        
+        // Need to check that the string only contains valid schema characters
+        // since the call to strtod may allow other values.  For example, AIX
+        // allows "infinity" and "+INF"
+        XMLCh curChar;
+        while (curChar = tmpStrValue[lenTempStrValue]) {            
+            if (!(curChar >= chDigit_0 ||
+                  curChar <= chDigit_9 ||
+                  curChar == chPeriod  ||
+                  curChar == chDash    ||
+                  curChar == chPlus    ||
+                  curChar == chLatin_E ||
+                  curChar == chLatin_e)) {
+                ThrowXMLwithMemMgr(
+                    NumberFormatException,
+                    XMLExcepts::XMLNUM_Inv_chars,
+                    getMemoryManager());
+            }            
+            lenTempStrValue++;
+        }
+       
         if (lenTempStrValue < maxStackSize)
         {
             char    buffer[maxStackSize + 1];
