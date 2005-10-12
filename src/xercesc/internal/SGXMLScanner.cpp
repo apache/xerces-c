@@ -854,7 +854,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
 
     // Make sure that its the end of the element that we expect
     const XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
-    const ElemStack::StackElem* topElem = fElemStack.popTop(); 
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
     if (!fReaderMgr.skippedString(elemName))
     {
         emitError
@@ -863,11 +863,9 @@ void SGXMLScanner::scanEndTag(bool& gotData)
             , elemName
         );
         fReaderMgr.skipPastChar(chCloseAngle);
+        fElemStack.popTop(); 
         return;
     }
-
-    // See if it was the root element, to avoid multiple calls below
-    const bool isRoot = fElemStack.isEmpty();
 
     fPSVIElemContext.fErrorOccurred = fErrorStack->pop();
 
@@ -981,6 +979,13 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         }
 
     }
+
+    // QName dv needed topElem to resolve URIs on the checkContent 
+    fElemStack.popTop(); 
+
+    // See if it was the root element, to avoid multiple calls below
+    const bool isRoot = fElemStack.isEmpty();
+
     if (fPSVIHandler)
     {
         endElementPSVI

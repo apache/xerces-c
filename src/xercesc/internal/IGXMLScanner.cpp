@@ -956,11 +956,11 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     if(fGrammarType == Grammar::SchemaGrammarType)
     {
         elemName = fElemStack.getCurrentSchemaElemName();
-        topElem = fElemStack.popTop();         
+        topElem = fElemStack.topElement();         
     }
     else
     {
-        topElem = fElemStack.popTop();         
+        topElem = fElemStack.topElement();         
         elemName = topElem->fThisElement->getFullName();
     }
     if (!fReaderMgr.skippedString(elemName))
@@ -971,11 +971,9 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             , elemName
         );
         fReaderMgr.skipPastChar(chCloseAngle);
+        fElemStack.popTop();
         return;
-    }
-
-    // See if it was the root element, to avoid multiple calls below
-    const bool isRoot = fElemStack.isEmpty();
+    }   
 
     // Make sure we are back on the same reader as where we started
     if (topElem->fReaderNum != fReaderMgr.getCurrentReaderNum())
@@ -1075,7 +1073,6 @@ void IGXMLScanner::scanEndTag(bool& gotData)
                , topElem->fThisElement->getFullName()
                );
        }
-       
         int res = fValidator->checkContent
         (
             topElem->fThisElement
@@ -1118,7 +1115,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
         }
 
 
-        if (fGrammarType == Grammar::SchemaGrammarType) {
+        if (fGrammarType == Grammar::SchemaGrammarType) {          
             if (((SchemaValidator*) fValidator)->getErrorOccurred())
                 fPSVIElemContext.fErrorOccurred = true;
             else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
@@ -1143,6 +1140,12 @@ void IGXMLScanner::scanEndTag(bool& gotData)
 
         }
     }
+
+    // QName dv needed topElem to resolve URIs on the checkContent 
+    fElemStack.popTop(); 
+    
+    // See if it was the root element, to avoid multiple calls below
+    const bool isRoot = fElemStack.isEmpty();
 
     if (fGrammarType == Grammar::SchemaGrammarType)
     {

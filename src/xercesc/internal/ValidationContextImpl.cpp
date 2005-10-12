@@ -26,12 +26,14 @@
 #include <xercesc/framework/XMLRefInfo.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/internal/ElemStack.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Constructor and Destructor
 // ---------------------------------------------------------------------------
+
 ValidationContextImpl::~ValidationContextImpl()
 {
     if (fIdRefList)
@@ -44,6 +46,7 @@ ValidationContextImpl::ValidationContextImpl(MemoryManager* const manager)
 ,fEntityDeclPool(0)
 ,fToCheckIdRefList(true)
 ,fValidatingMemberType(0)
+,fElemStack(0)
 {
     fIdRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(109, fMemoryManager);
 }
@@ -172,6 +175,19 @@ void ValidationContextImpl::checkEntity(const XMLCh * const content) const
         );
     }
 
+}
+
+/* QName 
+ */
+bool ValidationContextImpl::isPrefixUnknown(XMLCh* prefix) {     
+    bool unknown = false;
+    if (XMLString::equals(prefix, XMLUni::fgXMLNSString)) {
+        return true;                
+    }            
+    else if (!XMLString::equals(prefix, XMLUni::fgXMLString)) {
+        unsigned int uriId = fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);                
+    }                
+    return unknown;
 }
 
 XERCES_CPP_NAMESPACE_END
