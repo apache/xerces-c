@@ -750,6 +750,7 @@ void XMLScanner::commonInit()
     //  Create the id ref list. This is used to enforce XML 1.0 ID ref
     //  semantics, i.e. all id refs must refer to elements that exist
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
+    fValidationContext->setElemStack(&fElemStack);
 
     //  Create the GrammarResolver
     //fGrammarResolver = new GrammarResolver();

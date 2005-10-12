@@ -24,6 +24,7 @@
 #include <xercesc/framework/ValidationContext.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+class ElemStack;
 
 class XMLPARSER_EXPORT ValidationContextImpl : public ValidationContext
 {
@@ -83,6 +84,13 @@ public :
     virtual DatatypeValidator * getValidatingMemberType() const;
     virtual void setValidatingMemberType(DatatypeValidator * validatingMemberType) ;
 
+    /**
+      * QName datatype handling
+      * Create default implementations for source code compatibility
+      */
+    virtual bool isPrefixUnknown(XMLCh* prefix);
+    virtual void setElemStack(ElemStack* elemStack);
+
     //@}
   
 private:
@@ -113,12 +121,15 @@ private:
     //      own this object, and the value of getValidatingMemberType
     //      will not be accurate unless the type of the most recently-validated
     //      element/attribute is in fact a union datatype.
+    //  fElemStack
+    //      Need access to elemstack to look up URI's that are inscope.
     // -----------------------------------------------------------------------
 
     RefHashTableOf<XMLRefInfo>*         fIdRefList;
     const NameIdPool<DTDEntityDecl>*    fEntityDeclPool;
     bool                                fToCheckIdRefList;
-    DatatypeValidator *                 fValidatingMemberType;
+    DatatypeValidator *                 fValidatingMemberType;    
+    ElemStack*      fElemStack;
 
 };
 
@@ -132,6 +143,10 @@ inline DatatypeValidator * ValidationContextImpl::getValidatingMemberType() cons
 inline void ValidationContextImpl::setValidatingMemberType(DatatypeValidator * validatingMemberType) 
 {
     fValidatingMemberType = validatingMemberType;
+}
+
+inline void ValidationContextImpl::setElemStack(ElemStack* elemStack) {
+    fElemStack = elemStack;
 }
 
 XERCES_CPP_NAMESPACE_END
