@@ -91,8 +91,8 @@ public :
       * QName datatype handling
       * Create default implementations for source code compatibility
       */
-    virtual bool isPrefixUnknown(XMLCh* prefix) { return true; };
-    virtual void setElemStack(ElemStack* elemStack) {};
+    virtual bool isPrefixUnknown(XMLCh* /* prefix */) { return true; };
+    virtual void setElemStack(ElemStack* /* elemStack */) {};
     //@}
 
    
