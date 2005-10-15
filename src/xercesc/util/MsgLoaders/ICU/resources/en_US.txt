@@ -312,6 +312,7 @@ en_US {
 		"Element qname beginning with '{0}' invalid " ,
 		"Attribute qname beginning with '{0}' invalid " ,
 		"Entity qname for reference beginning '{0}' invalid " ,
+		"Already seen doctype " ,
 		"F_ End " ,
 		} 
 
@@ -838,6 +839,7 @@ en_US {
 		"Grammar Pool is NOT empty " ,
 		"String Pool is NOT empty " ,
 		"Storer Level '{0}' is newer than Loader Level'{1}'  " ,
+		"Value '{0}' is not valid QName because the prefix is not defined " ,
 		"F_ End " ,
 		} 
 
