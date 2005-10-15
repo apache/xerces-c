@@ -135,7 +135,7 @@ void QNameDatatypeValidator::checkContent( const XMLCh*             const conten
                      
             if (context->isPrefixUnknown(prefix)) {
                 ThrowXMLwithMemMgr1(InvalidDatatypeValueException
-                    , XMLExcepts::VALUE_QName_Invalid
+                    , XMLExcepts::VALUE_QName_Invalid2
                     , content
                     , manager);             
             }                                  
