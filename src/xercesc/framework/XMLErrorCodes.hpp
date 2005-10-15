@@ -325,7 +325,8 @@ public :
       , InvalidElementName                 = 308
       , InvalidAttrName                    = 309
       , InvalidEntityRefName               = 310
-      , F_HighBounds                       = 311
+      , DuplicateDocTypeDecl               = 311
+      , F_HighBounds                       = 312
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)
