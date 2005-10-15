@@ -305,6 +305,7 @@ $set 1
 308  Element qname beginning with '{0}' invalid
 309  Attribute qname beginning with '{0}' invalid
 310  Entity qname for reference beginning '{0}' invalid
+311  Already seen doctype
 
 
 $set 2
@@ -821,6 +822,7 @@ $set 3
 399  Grammar Pool is NOT empty
 400  String Pool is NOT empty
 401  Storer Level '{0}' is newer than Loader Level'{1}' 
+402  Value '{0}' is not valid QName because the prefix is not defined
 
 
 $set 4
