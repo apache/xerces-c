@@ -1226,6 +1226,7 @@ void XMLScanner::scanPI()
 //  the opening < of the root element.
 void XMLScanner::scanProlog()
 {
+    bool sawDocTypeDecl = false;
     // Get a buffer for whitespace processing
     XMLBufBid bbCData(&fBufMgr);
 
@@ -1267,7 +1268,11 @@ void XMLScanner::scanProlog()
                 }
                  else if (fReaderMgr.skippedString(XMLUni::fgDocTypeString))
                 {
+                    if (sawDocTypeDecl) {
+                        emitError(XMLErrs::DuplicateDocTypeDecl);
+                    }
                     scanDocTypeDecl();
+                    sawDocTypeDecl = true;
 
                     // if reusing grammar, this has been validated already in first scan
                     // skip for performance
