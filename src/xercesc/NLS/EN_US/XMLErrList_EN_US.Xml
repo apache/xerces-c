@@ -317,6 +317,7 @@
 			<Message Id="InvalidElementName" Text="Element qname beginning with '{0}' invalid"/>
 			<Message Id="InvalidAttrName" Text="Attribute qname beginning with '{0}' invalid"/>
 			<Message Id="InvalidEntityRefName" Text="Entity qname for reference beginning '{0}' invalid"/>
+			<Message Id="DuplicateDocTypeDecl" Text="Already seen doctype"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
@@ -837,6 +838,7 @@
             <Message Id="XSer_GrammarPool_NotEmpty"      Text="Grammar Pool is NOT empty"/>            
             <Message Id="XSer_StringPool_NotEmpty"       Text="String Pool is NOT empty"/>
             <Message Id="XSer_Storer_NewerThan_Loader"   Text="Storer Level '{0}' is newer than Loader Level'{1}' "/>
+			<Message Id="VALUE_QName_Invalid2"           Text="Value '{0}' is not valid QName because the prefix is not defined"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">
