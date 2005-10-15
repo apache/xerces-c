@@ -415,9 +415,10 @@ public :
       , XSer_GrammarPool_NotEmpty          = 399
       , XSer_StringPool_NotEmpty           = 400
       , XSer_Storer_NewerThan_Loader       = 401
-      , F_HighBounds                       = 402
-      , E_LowBounds                        = 403
-      , E_HighBounds                       = 404
+      , VALUE_QName_Invalid2               = 402
+      , F_HighBounds                       = 403
+      , E_LowBounds                        = 404
+      , E_HighBounds                       = 405
     };
 
 
