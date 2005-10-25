@@ -424,8 +424,6 @@ void DOMDocumentTypeImpl::release()
            DOMNode*         DOMDocumentTypeImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); }
            DOMNode*         DOMDocumentTypeImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
                                                                                          {return fParent.replaceChild (newChild, oldChild); }
-           bool             DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                         {return fNode.isSupported (feature, version); }
            void             DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); }
            bool             DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); }
            bool             DOMDocumentTypeImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); }
@@ -531,6 +529,14 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
     }
 
     return fParent.isEqualNode(arg);
+}
+
+bool DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+{
+    // check for 'DOMDocumentTypeImpl'
+    if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl))
+        return true;
+    return fNode.isSupported (feature, version);
 }
 
 void* DOMDocumentTypeImpl::getFeature(const XMLCh* feature, const XMLCh* version)
