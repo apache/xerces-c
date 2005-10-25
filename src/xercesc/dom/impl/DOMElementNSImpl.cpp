@@ -254,6 +254,14 @@ void DOMElementNSImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo)
     fSchemaType = typeInfo;
 }
 
+bool DOMElementNSImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+{
+    // check for '+DOMPSVITypeInfo'
+    if(feature && *feature=='+' && XMLString::equals(feature+1, XMLUni::fgXercescInterfacePSVITypeInfo))
+        return true;
+    return fNode.isSupported (feature, version);
+}
+
 DOMNode * DOMElementNSImpl::getInterface(const XMLCh* feature)
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))

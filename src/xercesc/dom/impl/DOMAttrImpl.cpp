@@ -297,6 +297,13 @@ void DOMAttrImpl::setTypeInfo(const DOMTypeInfoImpl* typeInfo)
     fSchemaType = typeInfo;
 }
 
+bool DOMAttrImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
+{
+    // check for '+DOMPSVITypeInfo'
+    if(feature && *feature=='+' && XMLString::equals(feature+1, XMLUni::fgXercescInterfacePSVITypeInfo))
+        return true;
+    return fNode.isSupported (feature, version);
+}
 
 DOMNode * DOMAttrImpl::getInterface(const XMLCh* feature)
 {
@@ -324,8 +331,6 @@ DOMNode * DOMAttrImpl::getInterface(const XMLCh* feature)
            DOMNode*         DOMAttrImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); }
            DOMNode*         DOMAttrImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
                                                                                  {return fParent.replaceChild (newChild, oldChild); }
-           bool             DOMAttrImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                 {return fNode.isSupported (feature, version); }
            void             DOMAttrImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); }
            bool             DOMAttrImpl::hasAttributes() const                   {return fNode.hasAttributes(); }
            bool             DOMAttrImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); }

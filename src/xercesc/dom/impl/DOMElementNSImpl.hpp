@@ -54,6 +54,7 @@ public:
     DOMElementNSImpl(const DOMElementNSImpl &other, bool deep=false);
 
     virtual DOMNode * cloneNode(bool deep) const;
+    virtual bool isSupported(const XMLCh *feature, const XMLCh *version) const;
     virtual DOMNode * getInterface(const XMLCh* feature);
 
     //Introduced in DOM Level 2
