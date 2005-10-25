@@ -15,6 +15,7 @@
  */
 
 #include "DOMConfigurationImpl.hpp"
+#include "DOMStringListImpl.hpp"
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -29,24 +30,24 @@ DOMConfigurationImpl::DOMConfigurationImpl(MemoryManager* const manager): featur
                                               fErrorHandler(0), fSchemaType(0), fSchemaLocation(0),
                                               fSupportedParameters(0), fMemoryManager(manager)
 {
-    fSupportedParameters=new RefVectorOf<XMLCh>(17, false, manager);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMErrorHandler);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaType);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaLocation);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCanonicalForm);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCDATASections);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMComments);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMDatatypeNormalization);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTDiscardDefaultContent);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMEntities);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMInfoset);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaces);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaceDeclarations);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNormalizeCharacters);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSplitCDATASections);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidate);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidateIfSchema);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMElementContentWhitespace);
+    fSupportedParameters=new (fMemoryManager) DOMStringListImpl(17, fMemoryManager);
+    fSupportedParameters->add(XMLUni::fgDOMErrorHandler);
+    fSupportedParameters->add(XMLUni::fgDOMSchemaType);
+    fSupportedParameters->add(XMLUni::fgDOMSchemaLocation);
+    fSupportedParameters->add(XMLUni::fgDOMCanonicalForm);
+    fSupportedParameters->add(XMLUni::fgDOMCDATASections);
+    fSupportedParameters->add(XMLUni::fgDOMComments);
+    fSupportedParameters->add(XMLUni::fgDOMDatatypeNormalization);
+    fSupportedParameters->add(XMLUni::fgDOMWRTDiscardDefaultContent);
+    fSupportedParameters->add(XMLUni::fgDOMEntities);
+    fSupportedParameters->add(XMLUni::fgDOMInfoset);
+    fSupportedParameters->add(XMLUni::fgDOMNamespaces);
+    fSupportedParameters->add(XMLUni::fgDOMNamespaceDeclarations);
+    fSupportedParameters->add(XMLUni::fgDOMNormalizeCharacters);
+    fSupportedParameters->add(XMLUni::fgDOMSplitCDATASections);
+    fSupportedParameters->add(XMLUni::fgDOMValidate);
+    fSupportedParameters->add(XMLUni::fgDOMValidateIfSchema);
+    fSupportedParameters->add(XMLUni::fgDOMElementContentWhitespace);
 }
 
 DOMConfigurationImpl::~DOMConfigurationImpl() {
@@ -220,7 +221,7 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, bool booleanValue)
     return false;
 }
 
-const RefVectorOf<XMLCh>* DOMConfigurationImpl::getParameterNames() const
+const DOMStringList* DOMConfigurationImpl::getParameterNames() const
 {
     return fSupportedParameters;
 }

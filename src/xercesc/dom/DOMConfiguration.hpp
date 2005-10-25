@@ -23,6 +23,7 @@
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/dom/DOMStringList.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -428,7 +429,7 @@ public:
      * @return The list of parameters that can be used with setParameter/getParameter
      * @since DOM level 3
      **/
-    virtual const RefVectorOf<XMLCh>* getParameterNames() const = 0;
+    virtual const DOMStringList* getParameterNames() const = 0;
 
     // -----------------------------------------------------------------------
     //  All constructors are hidden, just the destructor is available

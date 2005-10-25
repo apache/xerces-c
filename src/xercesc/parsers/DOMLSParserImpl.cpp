@@ -37,6 +37,7 @@
 #include <xercesc/dom/impl/DOMErrorImpl.hpp>
 #include <xercesc/dom/impl/DOMLocatorImpl.hpp>
 #include <xercesc/dom/impl/DOMConfigurationImpl.hpp>
+#include <xercesc/dom/impl/DOMStringListImpl.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
@@ -87,54 +88,54 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
     // dom spec has different default from scanner's default, so set explicitly
     getScanner()->setNormalizeData(false);
 
-    fSupportedParameters=new RefVectorOf<XMLCh>(47, false, manager);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMResourceResolver);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMErrorHandler);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesEntityResolver);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchemaExternalSchemaLocation);
-	fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation);
-	fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSecurityManager);
-	fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesScannerName);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesParserUseDocumentFromImplementation);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCharsetOverridesXMLEncoding);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMDisallowDoctype);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMIgnoreUnknownCharacterDenormalization);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaces);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSupportedMediatypesOnly);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidate);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMValidateIfSchema);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWellFormed);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCanonicalForm);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCDATASections);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMCheckCharacterNormalization);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMComments);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMDatatypeNormalization);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMElementContentWhitespace);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMEntities);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNamespaceDeclarations);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMNormalizeCharacters);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaLocation);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSchemaType);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMSplitCDATASections);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMInfoset);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchema);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSchemaFullChecking);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesUserAdoptsDOMDocument);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesLoadExternalDTD);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesContinueAfterFatalError);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesValidationErrorAsFatal);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesCacheGrammarFromParse);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesUseCachedGrammarInParse);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesCalculateSrcOfs);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesStandardUriConformant);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesDOMHasPSVIInfo);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesGenerateSyntheticAnnotations);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesValidateAnnotations);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesIdentityConstraintChecking);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesIgnoreCachedDTD);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesIgnoreAnnotations);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesDisableDefaultEntityResolution);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgXercesSkipDTDValidation);
+    fSupportedParameters=new (fMemoryManager) DOMStringListImpl(47, manager);
+    fSupportedParameters->add(XMLUni::fgDOMResourceResolver);
+    fSupportedParameters->add(XMLUni::fgDOMErrorHandler);
+    fSupportedParameters->add(XMLUni::fgXercesEntityResolver);
+    fSupportedParameters->add(XMLUni::fgXercesSchemaExternalSchemaLocation);
+	fSupportedParameters->add(XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation);
+	fSupportedParameters->add(XMLUni::fgXercesSecurityManager);
+	fSupportedParameters->add(XMLUni::fgXercesScannerName);
+    fSupportedParameters->add(XMLUni::fgXercesParserUseDocumentFromImplementation);
+    fSupportedParameters->add(XMLUni::fgDOMCharsetOverridesXMLEncoding);
+    fSupportedParameters->add(XMLUni::fgDOMDisallowDoctype);
+    fSupportedParameters->add(XMLUni::fgDOMIgnoreUnknownCharacterDenormalization);
+    fSupportedParameters->add(XMLUni::fgDOMNamespaces);
+    fSupportedParameters->add(XMLUni::fgDOMSupportedMediatypesOnly);
+    fSupportedParameters->add(XMLUni::fgDOMValidate);
+    fSupportedParameters->add(XMLUni::fgDOMValidateIfSchema);
+    fSupportedParameters->add(XMLUni::fgDOMWellFormed);
+    fSupportedParameters->add(XMLUni::fgDOMCanonicalForm);
+    fSupportedParameters->add(XMLUni::fgDOMCDATASections);
+    fSupportedParameters->add(XMLUni::fgDOMCheckCharacterNormalization);
+    fSupportedParameters->add(XMLUni::fgDOMComments);
+    fSupportedParameters->add(XMLUni::fgDOMDatatypeNormalization);
+    fSupportedParameters->add(XMLUni::fgDOMElementContentWhitespace);
+    fSupportedParameters->add(XMLUni::fgDOMEntities);
+    fSupportedParameters->add(XMLUni::fgDOMNamespaceDeclarations);
+    fSupportedParameters->add(XMLUni::fgDOMNormalizeCharacters);
+    fSupportedParameters->add(XMLUni::fgDOMSchemaLocation);
+    fSupportedParameters->add(XMLUni::fgDOMSchemaType);
+    fSupportedParameters->add(XMLUni::fgDOMSplitCDATASections);
+    fSupportedParameters->add(XMLUni::fgDOMInfoset);
+    fSupportedParameters->add(XMLUni::fgXercesSchema);
+    fSupportedParameters->add(XMLUni::fgXercesSchemaFullChecking);
+    fSupportedParameters->add(XMLUni::fgXercesUserAdoptsDOMDocument);
+    fSupportedParameters->add(XMLUni::fgXercesLoadExternalDTD);
+    fSupportedParameters->add(XMLUni::fgXercesContinueAfterFatalError);
+    fSupportedParameters->add(XMLUni::fgXercesValidationErrorAsFatal);
+    fSupportedParameters->add(XMLUni::fgXercesCacheGrammarFromParse);
+    fSupportedParameters->add(XMLUni::fgXercesUseCachedGrammarInParse);
+    fSupportedParameters->add(XMLUni::fgXercesCalculateSrcOfs);
+    fSupportedParameters->add(XMLUni::fgXercesStandardUriConformant);
+    fSupportedParameters->add(XMLUni::fgXercesDOMHasPSVIInfo);
+    fSupportedParameters->add(XMLUni::fgXercesGenerateSyntheticAnnotations);
+    fSupportedParameters->add(XMLUni::fgXercesValidateAnnotations);
+    fSupportedParameters->add(XMLUni::fgXercesIdentityConstraintChecking);
+    fSupportedParameters->add(XMLUni::fgXercesIgnoreCachedDTD);
+    fSupportedParameters->add(XMLUni::fgXercesIgnoreAnnotations);
+    fSupportedParameters->add(XMLUni::fgXercesDisableDefaultEntityResolution);
+    fSupportedParameters->add(XMLUni::fgXercesSkipDTDValidation);
 }
 
 
@@ -663,7 +664,7 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
     return false;
 }
 
-const RefVectorOf<XMLCh>* DOMLSParserImpl::getParameterNames() const
+const DOMStringList* DOMLSParserImpl::getParameterNames() const
 {
     return fSupportedParameters;
 }

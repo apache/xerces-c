@@ -153,7 +153,7 @@ LINK32=link.exe
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.msvc.hpp
 # End Source File
 # End Group
 # Begin Group "MsgLoaders"
@@ -397,6 +397,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\regx\TokenInc.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\UniCharTable.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\UnicodeRangeFactory.cpp
 # End Source File
 # Begin Source File
@@ -482,6 +486,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Base64.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.hpp
 # End Source File
 # Begin Source File
@@ -546,6 +555,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
@@ -594,7 +608,17 @@ SOURCE=..\..\..\..\..\src\xercesc\util\IOException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\KeyRefPair.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -622,6 +646,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.hpp
 # End Source File
 # Begin Source File
@@ -634,6 +663,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NullPointerException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NumberFormatException.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\OutOfMemoryException.hpp
 # End Source File
 # Begin Source File
@@ -643,6 +676,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\ParseException.hpp
 # End Source File
 # Begin Source File
 
@@ -662,7 +699,17 @@ SOURCE=..\..\..\..\..\src\xercesc\util\QName.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -670,7 +717,17 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -678,11 +735,26 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -695,6 +767,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\RuntimeException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\SchemaDateTimeException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\SecurityManager.hpp
 # End Source File
 # Begin Source File
 
@@ -715,6 +791,15 @@ SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\TranscodingException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\TransENameMap.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\TransENameMap.hpp
 # End Source File
 # Begin Source File
 
@@ -742,11 +827,26 @@ SOURCE=..\..\..\..\..\src\xercesc\util\ValueArrayOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueVectorOf.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -869,6 +969,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLASCIITranscoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLAtomicOpMgr.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigDecimal.cpp
 # End Source File
 # Begin Source File
@@ -953,6 +1057,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLExceptMsgs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLFileMgr.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.cpp
 # End Source File
 # Begin Source File
@@ -998,6 +1106,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLMutexMgr.hpp
 # End Source File
 # Begin Source File
 
@@ -1241,6 +1353,11 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamedMap.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -2653,7 +2770,15 @@ SOURCE=..\..\..\..\..\src\xercesc\sax2\ContentHandler.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\sax2\DeclHandler.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\sax2\LexicalHandler.hpp
 # End Source File
 # Begin Source File
 
@@ -2753,6 +2878,11 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListPool.c
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
@@ -2948,6 +3078,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp
 # End Source File
 # Begin Source File
@@ -2987,6 +3125,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.hpp
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM.hpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMAttr.hpp
@@ -3161,6 +3303,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMRangeException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMStringList.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMText.hpp
 # End Source File
 # Begin Source File
@@ -3202,6 +3348,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\StDOMNode.hpp
 # End Source File
 # End Group
 # End Target

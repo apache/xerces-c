@@ -22,6 +22,7 @@
 #include "DOMErrorImpl.hpp"
 #include "DOMLocatorImpl.hpp"
 #include "DOMImplementationImpl.hpp"
+#include "DOMStringListImpl.hpp"
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
@@ -324,18 +325,18 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
     setFeature(BYTE_ORDER_MARK_ID,               false);
     setFeature(XML_DECLARATION,                  true );
 
-    fSupportedParameters=new RefVectorOf<XMLCh>(11, false, manager);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMErrorHandler);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTCanonicalForm);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTDiscardDefaultContent);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTEntities);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTFormatPrettyPrint);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTNormalizeCharacters);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTSplitCdataSections);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTValidation);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTWhitespaceInElementContent);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMWRTBOM);
-    fSupportedParameters->addElement((XMLCh*)XMLUni::fgDOMXMLDeclaration);
+    fSupportedParameters=new (fMemoryManager) DOMStringListImpl(11, fMemoryManager);
+    fSupportedParameters->add(XMLUni::fgDOMErrorHandler);
+    fSupportedParameters->add(XMLUni::fgDOMWRTCanonicalForm);
+    fSupportedParameters->add(XMLUni::fgDOMWRTDiscardDefaultContent);
+    fSupportedParameters->add(XMLUni::fgDOMWRTEntities);
+    fSupportedParameters->add(XMLUni::fgDOMWRTFormatPrettyPrint);
+    fSupportedParameters->add(XMLUni::fgDOMWRTNormalizeCharacters);
+    fSupportedParameters->add(XMLUni::fgDOMWRTSplitCdataSections);
+    fSupportedParameters->add(XMLUni::fgDOMWRTValidation);
+    fSupportedParameters->add(XMLUni::fgDOMWRTWhitespaceInElementContent);
+    fSupportedParameters->add(XMLUni::fgDOMWRTBOM);
+    fSupportedParameters->add(XMLUni::fgDOMXMLDeclaration);
 }
 
 bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
@@ -423,7 +424,7 @@ const void* DOMLSSerializerImpl::getParameter(const XMLCh* const featName) const
     }
 }
 
-const RefVectorOf<XMLCh>* DOMLSSerializerImpl::getParameterNames() const
+const DOMStringList* DOMLSSerializerImpl::getParameterNames() const
 {
     return fSupportedParameters;
 }

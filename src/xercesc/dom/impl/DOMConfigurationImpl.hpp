@@ -38,6 +38,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMDocumentImpl;
+class DOMStringListImpl;
 
 class CDOM_EXPORT DOMConfigurationImpl : public DOMConfiguration
 {
@@ -95,7 +96,7 @@ public:
     virtual bool canSetParameter(const XMLCh* name, const void* value) const;
     virtual bool canSetParameter(const XMLCh* name, bool value) const;
 
-    virtual const RefVectorOf<XMLCh>* getParameterNames() const;
+    virtual const DOMStringList* getParameterNames() const;
 
     // ---------------------------------------------------------------------------
     // Impl specific methods
@@ -136,7 +137,7 @@ private:
     const XMLCh* fSchemaLocation;
 
     // the list of supported parameters
-    RefVectorOf<XMLCh>* fSupportedParameters;
+    DOMStringListImpl* fSupportedParameters;
 
     MemoryManager* fMemoryManager;
 };

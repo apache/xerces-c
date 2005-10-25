@@ -2443,6 +2443,9 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMRangeException.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMStringList.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMText.hpp">
 			</File>
 			<File
@@ -2678,6 +2681,12 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp">

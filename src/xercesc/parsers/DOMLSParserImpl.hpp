@@ -34,6 +34,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLEntityResolver;
 class XMLResourceIdentifier;
+class DOMStringListImpl;
 
  /**
   * Introduced in DOM Level 3
@@ -388,7 +389,7 @@ public :
      * @return The list of parameters that can be used with setParameter/getParameter
      * @since DOM level 3
      **/
-    virtual const RefVectorOf<XMLCh>* getParameterNames() const;
+    virtual const DOMStringList* getParameterNames() const;
     //@}
 
     // -----------------------------------------------------------------------
@@ -650,7 +651,7 @@ private :
     DOMLSParserFilter*          fFilter;
     bool                        fCharsetOverridesXMLEncoding;
     bool                        fUserAdoptsDocument;
-    RefVectorOf<XMLCh>*         fSupportedParameters;
+    DOMStringListImpl*          fSupportedParameters;
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators

@@ -30,6 +30,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class DOMStringListImpl;
 
 class CDOM_EXPORT DOMLSSerializerImpl : public XMemory,
                                         public DOMLSSerializer,
@@ -85,7 +86,7 @@ public:
     virtual const void* getParameter(const XMLCh* name) const;
     virtual bool canSetParameter(const XMLCh* name, const void* value) const;
     virtual bool canSetParameter(const XMLCh* name, bool value) const;
-    virtual const RefVectorOf<XMLCh>* getParameterNames() const;
+    virtual const DOMStringList* getParameterNames() const;
     //@}
 
 private:
@@ -196,7 +197,7 @@ protected:
     DOMErrorHandler              *fErrorHandler;
     DOMLSSerializerFilter        *fFilter;
     const XMLCh                  *fDocumentVersion;
-    RefVectorOf<XMLCh>           *fSupportedParameters;
+    DOMStringListImpl            *fSupportedParameters;
 
     //session vars
     const XMLCh                  *fEncodingUsed;

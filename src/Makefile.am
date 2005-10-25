@@ -293,6 +293,7 @@ dom_headers	= \
 	xercesc/dom/DOMPSVITypeInfo.hpp \
 	xercesc/dom/DOMRange.hpp \
 	xercesc/dom/DOMRangeException.hpp \
+	xercesc/dom/DOMStringList.hpp \
 	xercesc/dom/DOMText.hpp \
 	xercesc/dom/DOMTreeWalker.hpp \
 	xercesc/dom/DOMTypeInfo.hpp \
@@ -347,6 +348,7 @@ domimpl_headers	= \
 	xercesc/dom/impl/DOMParentNode.hpp \
 	xercesc/dom/impl/DOMProcessingInstructionImpl.hpp \
 	xercesc/dom/impl/DOMRangeImpl.hpp \
+	xercesc/dom/impl/DOMStringListImpl.hpp \
 	xercesc/dom/impl/DOMStringPool.hpp \
 	xercesc/dom/impl/DOMTextImpl.hpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.hpp \
@@ -387,6 +389,7 @@ domimpl_sources	= \
 	xercesc/dom/impl/DOMParentNode.cpp \
 	xercesc/dom/impl/DOMProcessingInstructionImpl.cpp \
 	xercesc/dom/impl/DOMRangeImpl.cpp \
+	xercesc/dom/impl/DOMStringListImpl.cpp \
 	xercesc/dom/impl/DOMStringPool.cpp \
 	xercesc/dom/impl/DOMTextImpl.cpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.cpp \

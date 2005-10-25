@@ -217,6 +217,7 @@ am__objects_4 = xercesc/dom/impl/DOMAttrImpl.lo \
 	xercesc/dom/impl/DOMParentNode.lo \
 	xercesc/dom/impl/DOMProcessingInstructionImpl.lo \
 	xercesc/dom/impl/DOMRangeImpl.lo \
+	xercesc/dom/impl/DOMStringListImpl.lo \
 	xercesc/dom/impl/DOMStringPool.lo \
 	xercesc/dom/impl/DOMTextImpl.lo \
 	xercesc/dom/impl/DOMTreeWalkerImpl.lo \
@@ -1146,6 +1147,7 @@ dom_headers = \
 	xercesc/dom/DOMPSVITypeInfo.hpp \
 	xercesc/dom/DOMRange.hpp \
 	xercesc/dom/DOMRangeException.hpp \
+	xercesc/dom/DOMStringList.hpp \
 	xercesc/dom/DOMText.hpp \
 	xercesc/dom/DOMTreeWalker.hpp \
 	xercesc/dom/DOMTypeInfo.hpp \
@@ -1199,6 +1201,7 @@ domimpl_headers = \
 	xercesc/dom/impl/DOMParentNode.hpp \
 	xercesc/dom/impl/DOMProcessingInstructionImpl.hpp \
 	xercesc/dom/impl/DOMRangeImpl.hpp \
+	xercesc/dom/impl/DOMStringListImpl.hpp \
 	xercesc/dom/impl/DOMStringPool.hpp \
 	xercesc/dom/impl/DOMTextImpl.hpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.hpp \
@@ -1239,6 +1242,7 @@ domimpl_sources = \
 	xercesc/dom/impl/DOMParentNode.cpp \
 	xercesc/dom/impl/DOMProcessingInstructionImpl.cpp \
 	xercesc/dom/impl/DOMRangeImpl.cpp \
+	xercesc/dom/impl/DOMStringListImpl.cpp \
 	xercesc/dom/impl/DOMStringPool.cpp \
 	xercesc/dom/impl/DOMTextImpl.cpp \
 	xercesc/dom/impl/DOMTreeWalkerImpl.cpp \
@@ -2202,6 +2206,9 @@ xercesc/dom/impl/DOMProcessingInstructionImpl.lo:  \
 	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/DOMRangeImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMStringListImpl.lo:  \
+	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/DOMStringPool.lo: xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
@@ -3188,6 +3195,8 @@ mostlyclean-compile:
 	-rm -f xercesc/dom/impl/DOMProcessingInstructionImpl.lo
 	-rm -f xercesc/dom/impl/DOMRangeImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMRangeImpl.lo
+	-rm -f xercesc/dom/impl/DOMStringListImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMStringListImpl.lo
 	-rm -f xercesc/dom/impl/DOMStringPool.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMStringPool.lo
 	-rm -f xercesc/dom/impl/DOMTextImpl.$(OBJEXT)
@@ -3779,6 +3788,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMParentNode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMProcessingInstructionImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMRangeImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMStringListImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMStringPool.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTextImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTreeWalkerImpl.Plo@am__quote@
