@@ -533,9 +533,13 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
 
 bool DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
 {
-    // check for 'DOMDocumentTypeImpl'
-    if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl))
-        return true;
+    // check for 'DOMDocumentTypeImpl' or '+DOMDocumentTypeImpl'
+    if(feature && *feature)
+    {
+        if((*feature==chPlus && XMLString::equals(feature+1, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl)) ||
+           XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl))
+            return true;
+    }
     return fNode.isSupported (feature, version);
 }
 
