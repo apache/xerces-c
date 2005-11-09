@@ -170,7 +170,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease/Xerces-c_static_2.lib"/>
+				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease/xerces-c_static_2.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -220,7 +220,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug/Xerces-c_static_2D.lib"/>
+				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug/xerces-c_static_2D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
