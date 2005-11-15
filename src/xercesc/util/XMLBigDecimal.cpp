@@ -231,10 +231,18 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
     {
         sign = -1;
         startPtr++;
+        if (startPtr == endPtr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+        }
     }
     else if (*startPtr == chPlus)
     {
-        startPtr++;
+        startPtr++;         
+        if (startPtr == endPtr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+        }
     }
 
     // Strip leading zeros
@@ -321,10 +329,18 @@ void  XMLBigDecimal::parseDecimal(const XMLCh*         const toParse
     if (*startPtr == chDash)
     {
         startPtr++;
+        if (startPtr == endPtr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+        }
     }
     else if (*startPtr == chPlus)
     {
         startPtr++;
+        if (startPtr == endPtr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+        }
     }
 
     // Strip leading zeros

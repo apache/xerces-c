@@ -135,12 +135,21 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
     {
         signValue = -1;
         startPtr++;
+        if (startPtr == endPtr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+        }
     }
     else if (*startPtr == chPlus)
     {
         // skip the '+'
         startPtr++;
+        if (startPtr == endPtr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, manager);
+        }
     }
+
 
     // Scan past any leading zero.
     while (*startPtr == chDigit_0)
