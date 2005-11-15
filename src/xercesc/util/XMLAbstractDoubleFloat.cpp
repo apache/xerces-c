@@ -376,10 +376,18 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 	{
 		minusSeen = true;
 		srcStr++;
+        if (!*srcStr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
+        }
 	}
 	else if (*srcStr == chPlus)
 	{
 		srcStr++;
+        if (!*srcStr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
+        }
 	}
 
 	// scan the string
