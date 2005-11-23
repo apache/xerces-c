@@ -114,7 +114,7 @@ QName* ContentLeafNameTypeVector::getLeafNameAt(const unsigned int pos) const
     return fLeafNames[pos];
 }
 
-const ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
+ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
        (const unsigned int pos) const
 {
     if (pos >= fLeafCount)
@@ -123,7 +123,7 @@ const ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
 	return fLeafTypes[pos];
 }
 
-const unsigned int ContentLeafNameTypeVector::getLeafCount() const
+unsigned int ContentLeafNameTypeVector::getLeafCount() const
 {
 	return fLeafCount;
 }

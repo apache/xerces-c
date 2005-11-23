@@ -59,8 +59,8 @@ public :
     // -----------------------------------------------------------------------
     QName* getLeafNameAt(const unsigned int pos) const;
 
-    const ContentSpecNode::NodeTypes getLeafTypeAt(const unsigned int pos) const;
-    const unsigned int getLeafCount() const;
+    ContentSpecNode::NodeTypes getLeafTypeAt(const unsigned int pos) const;
+    unsigned int getLeafCount() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
