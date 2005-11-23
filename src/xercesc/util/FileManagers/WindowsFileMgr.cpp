@@ -178,7 +178,7 @@ WindowsFileMgr::open(const XMLCh* fileName, bool toWrite, MemoryManager* const m
 
 
 FileHandle
-WindowsFileMgr::open(const char* path, bool toWrite, MemoryManager* const manager)
+WindowsFileMgr::open(const char* path, bool toWrite, MemoryManager* const /*manager*/)
 {
     FileHandle retVal = ::CreateFileA
     (
@@ -312,19 +312,14 @@ WindowsFileMgr::write(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, 
 
     const XMLByte* tmpFlush = buffer;
 
-    while (true)
+    while (byteCount > 0)
     {
-        unsigned long  bytesWritten = 0;
+        unsigned long bytesWritten = 0;
         if (!::WriteFile(f, tmpFlush, byteCount, &bytesWritten, 0))
             ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 
-        if (bytesWritten < byteCount) //incomplete write
-        {
-            tmpFlush+=bytesWritten;
-            byteCount-=bytesWritten;
-        }
-        else
-            return;
+        tmpFlush+=bytesWritten;
+        byteCount-=bytesWritten;
     }
 }
 
@@ -406,7 +401,7 @@ WindowsFileMgr::getCurrentDirectory(MemoryManager* const manager)
 
 
 bool
-WindowsFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const manager)
+WindowsFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const /*manager*/)
 {
     // Check for pathological case of empty path
     if (!toCheck || !toCheck[0])

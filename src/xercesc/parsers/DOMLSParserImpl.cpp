@@ -60,9 +60,9 @@ class __AbortFilter : public DOMLSParserFilter
 {
 public:
     __AbortFilter() {}
-    virtual short acceptNode(DOMNode* node)      { return FILTER_INTERRUPT; }
-    virtual short startElement(DOMElement* node) { return FILTER_INTERRUPT; }
-    virtual unsigned long getWhatToShow() const  { return DOMNodeFilter::SHOW_ALL; }
+    virtual short acceptNode(DOMNode* /*node*/)      { return FILTER_INTERRUPT; }
+    virtual short startElement(DOMElement* /*node*/) { return FILTER_INTERRUPT; }
+    virtual unsigned long getWhatToShow() const      { return DOMNodeFilter::SHOW_ALL; }
 };
 
 static __AbortFilter g_AbortFilter;
@@ -602,7 +602,7 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
 }
 
-bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* value) const
+bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* /*value*/) const
 {
     if (XMLString::compareIStringASCII(name, XMLUni::fgDOMResourceResolver) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMErrorHandler) == 0 ||
@@ -617,7 +617,7 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* value) cons
     return false;
 }
 
-bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
+bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool /*value*/) const
 {
     if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||

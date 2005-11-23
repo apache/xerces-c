@@ -134,7 +134,7 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
 // Query Methods
 // -----------------------------------------
 
-bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value) const {
+bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* /*value*/) const {
 
     /**
      * canSetParameter(name, value) returns false in two conditions:
