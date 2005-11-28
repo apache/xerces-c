@@ -802,11 +802,11 @@ xmlstream& operator<<(xmlstream& target, const DOMNode* toWrite)
             //  is running, and plug that in for the encoding name.
             //
             XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document=(XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument*)toWrite;
-            target << XMLStrL("<?xml version=\"") << document->getVersion() << XMLStrL("\"");
-            const XMLCh* str = document->getEncoding();
+            target << XMLStrL("<?xml version=\"") << document->getXmlVersion() << XMLStrL("\"");
+            const XMLCh* str = document->getXmlEncoding();
             if (str != 0)
                 target << XMLStrL(" encoding=\"") << str << XMLStrL("\"");
-            if(document->getStandalone())
+            if(document->getXmlStandalone())
                 target << XMLStrL(" standalone=\"yes\"");
             target << XMLStrL("?>");
 
