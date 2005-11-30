@@ -90,7 +90,7 @@ XSElementDeclaration::~XSElementDeclaration()
 // ---------------------------------------------------------------------------
 //  XSElementDeclaration: XSObject virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSElementDeclaration::getName() 
+const XMLCh *XSElementDeclaration::getName() const
 {
     return fSchemaElementDecl->getElementName()->getLocalPart();
 }
