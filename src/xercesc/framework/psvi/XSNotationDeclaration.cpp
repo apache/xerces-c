@@ -48,7 +48,7 @@ XSNotationDeclaration::~XSNotationDeclaration()
 // ---------------------------------------------------------------------------
 //  XSNotationDeclaration: XSModel virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSNotationDeclaration::getName()
+const XMLCh *XSNotationDeclaration::getName() const
 {
     return fXMLNotationDecl->getName();
 }

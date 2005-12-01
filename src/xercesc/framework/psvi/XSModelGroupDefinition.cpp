@@ -50,7 +50,7 @@ XSModelGroupDefinition::~XSModelGroupDefinition()
 // ---------------------------------------------------------------------------
 //  XSModelGroupDefinition: XSModel virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSModelGroupDefinition::getName() 
+const XMLCh *XSModelGroupDefinition::getName() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fGroupInfo->getNameId());
 }

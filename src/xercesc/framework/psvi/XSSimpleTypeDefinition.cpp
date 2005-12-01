@@ -169,7 +169,7 @@ bool XSSimpleTypeDefinition::getNumeric() const
 // ---------------------------------------------------------------------------
 //  XSSimpleTypeDefinition: virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSSimpleTypeDefinition::getName() 
+const XMLCh *XSSimpleTypeDefinition::getName() const
 {
     return fDatatypeValidator->getTypeLocalName();
 }

@@ -152,7 +152,7 @@ XSAnnotationList *XSComplexTypeDefinition::getAnnotations()
 // ---------------------------------------------------------------------------
 //  XSComplexTypeDefinition: virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSComplexTypeDefinition::getName() 
+const XMLCh *XSComplexTypeDefinition::getName() const
 {
     return fComplexTypeInfo->getTypeLocalName();
 }

@@ -54,7 +54,7 @@ XSAttributeGroupDefinition::~XSAttributeGroupDefinition()
 }
 
 // XSObject methods
-const XMLCh *XSAttributeGroupDefinition::getName() 
+const XMLCh *XSAttributeGroupDefinition::getName() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fXercesAttGroupInfo->getNameId());        
 }

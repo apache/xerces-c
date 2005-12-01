@@ -47,7 +47,7 @@ XSObject::~XSObject()
 // ---------------------------------------------------------------------------
 //  XSObject: Virtual interface methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSObject::getName() 
+const XMLCh *XSObject::getName() const
 {
     return 0;
 }

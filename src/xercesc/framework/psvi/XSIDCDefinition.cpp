@@ -70,7 +70,7 @@ XSIDCDefinition::~XSIDCDefinition()
 // ---------------------------------------------------------------------------
 //  XSIDCDefinition: XSObject virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSIDCDefinition::getName() 
+const XMLCh *XSIDCDefinition::getName() const
 {
     return fIdentityConstraint->getIdentityConstraintName();
 }

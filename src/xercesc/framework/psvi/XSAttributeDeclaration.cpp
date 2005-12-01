@@ -15,7 +15,7 @@
  */
 
 /*
- * $Id $
+ * $Id$
  */
 
 #include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
@@ -55,7 +55,7 @@ XSAttributeDeclaration::~XSAttributeDeclaration()
 // ---------------------------------------------------------------------------
 //  XSAttributeDeclaration: XSObject virtual methods
 // ---------------------------------------------------------------------------
-const XMLCh *XSAttributeDeclaration::getName() 
+const XMLCh *XSAttributeDeclaration::getName() const
 {
     return fAttDef->getAttName()->getLocalPart();
 }

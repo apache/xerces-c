@@ -86,7 +86,7 @@ public:
      * The name of type <code>NCName</code> of this declaration as defined in 
      * XML Namespaces.
      */
-    virtual const XMLCh* getName() = 0;
+    virtual const XMLCh* getName() const = 0;
 
     /**
      *  The [target namespace] of this object, or <code>null</code> if it is 
