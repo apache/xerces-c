@@ -39,7 +39,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -s <source_directory>\n");
     print ("    -o <target_directory>\n");
     print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7, VC7.1, ecl or icl)\n");
-    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7 or VC7.1)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7, VC7.1 or VC8)\n");
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
@@ -48,10 +48,10 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_6");
-    print (" -o \$HOME/xerces-c2_6-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src3_0");
+    print (" -o \$HOME/xerces-c3_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src2_6");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src3_0");
     print (" -o\\xerces-c2_5-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
@@ -161,6 +161,12 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         $VCBuildDir     = "VC7"; 
         $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }
+    elsif ($opt_x =~ m/VC8/i ) 
+    {
+        $DevStudioVer   = "8.0";
+        $VCBuildDir     = "VC8"; 
+        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
+    }
     elsif ($opt_x =~ m/ecl/i || $opt_x =~ m/icl/i )
     {
         $DevStudioVer   = "6.1";
@@ -171,7 +177,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     else
     {
         print ("Error: Invalid compilers used \n");
-        print ("-x <C++ compiler name> VC6, VC7, VC7.1, ecl and icl \n");        
+        print ("-x <C++ compiler name> VC6, VC7, VC7.1, VC8, ecl and icl \n");        
         exit(1);            	    	
     }
 
@@ -218,9 +224,11 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         if ($DevStudioVer eq "6.0") { 
             changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
         } elsif ($DevStudioVer eq "7.0") {
-            changeWindowsProjectForFileOnlyNA_VC7("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj");
+            changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj");
         } elsif ($DevStudioVer eq "7.1") {
-            changeWindowsProjectForFileOnlyNA_VC7("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj");
+            changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj");
+        } elsif ($DevStudioVer eq "8.0") {
+            changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj");
         }        
         #else: for now we do not build FO with ecl
     }
@@ -272,6 +280,16 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
 
 				psystem("devenv.com allinone.sln /rebuild debug /out buildlog_debug.txt");                
                 psystem("type buildlog_debug.txt");                
+            } elsif ($DevStudioVer eq "8.0") {
+            	# ICU only has allinone.sln for VC7.0
+            	# So the build with ICU on VC8.0 may fail until the VC8.0 version is available            	
+                pchdir ("$ICUROOT/source/allinone");
+                
+                psystem("devenv.com allinone.sln /rebuild Release /out buildlog_release.txt");
+                psystem("type buildlog_release.txt");
+
+				psystem("devenv.com allinone.sln /rebuild debug /out buildlog_debug.txt");                
+                psystem("type buildlog_debug.txt");                
             } else { #"6.1"
                 pchdir ("$ICUROOT/source/allinone/all");            	
  	  #ship release dlls only
@@ -295,8 +313,8 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
             system("type buildlog.txt");
             # to follow 2 digits convention
-            psystem("ren XercesMessages2_6_0.DLL XercesMessages2_6.DLL");
-            psystem("ren XercesMessages2_6_0.lib XercesMessages2_6.lib");            
+            psystem("ren XercesMessages3_0_0.DLL XercesMessages3_0.DLL");
+            psystem("ren XercesMessages3_0_0.lib XercesMessages3_0.lib");            
         }
 
         #
@@ -305,9 +323,11 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         if ($DevStudioVer eq "6.0") {
             change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $Transcoder , $MsgLoader);
         } elsif ($DevStudioVer eq "7.0") {
-            change_windows_project_for_ICU_VC7("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
+            change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
         } elsif ($DevStudioVer eq "7.1") {
-            change_windows_project_for_ICU_VC7("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);            
+            change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
+        } elsif ($DevStudioVer eq "8.0") {
+            change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
         } else { # "6.1"
             change_windows_makefile_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak", $Transcoder, $MsgLoader);
         }
@@ -351,6 +371,10 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
         psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");
     } elsif ($DevStudioVer eq "7.1") {
+        psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
+        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
+        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");        
+    } elsif ($DevStudioVer eq "8.0") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
         psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
         psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");        
@@ -824,21 +848,21 @@ if ( ($platform =~ m/AIX/i)      ||
             print ("\n\nCopying ICU message bundles ...\n");        	
             psystem("cp -f $XERCESCROOT/msg/XercesMessages*.res $targetdir/msg");
            
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages26.0.so .");
-            psystem("find . -name 'libXercesMessages26.0.so' -exec ln -s {} libXercesMessages26.so \\;");
-            psystem("find . -name 'libXercesMessages26.so'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages30.0.so .");
+            psystem("find . -name 'libXercesMessages30.0.so' -exec ln -s {} libXercesMessages30.so \\;");
+            psystem("find . -name 'libXercesMessages30.so'   -exec ln -s {} libXercesMessages.so \\;");
                     
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.26.0 .");
-            psystem("find . -name 'libXercesMessages.so.26.0' -exec ln -s {} libXercesMessages.so.26 \\;");
-            psystem("find . -name 'libXercesMessages.so.26'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.30.0 .");
+            psystem("find . -name 'libXercesMessages.so.30.0' -exec ln -s {} libXercesMessages.so.30 \\;");
+            psystem("find . -name 'libXercesMessages.so.30'   -exec ln -s {} libXercesMessages.so \\;");
             
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.26.0 .");
-            psystem("find . -name 'libXercesMessages.sl.26.0' -exec ln -s {} libXercesMessages.sl.26 \\;");
-            psystem("find . -name 'libXercesMessages.sl.26'   -exec ln -s {} libXercesMessages.sl \\;");            
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.30.0 .");
+            psystem("find . -name 'libXercesMessages.sl.30.0' -exec ln -s {} libXercesMessages.sl.30 \\;");
+            psystem("find . -name 'libXercesMessages.sl.30'   -exec ln -s {} libXercesMessages.sl \\;");            
 
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages26.0.a .");
-            psystem("find . -name 'libXercesMessages26.0.a'   -exec ln -s {} libXercesMessages26.a \\;");
-            psystem("find . -name 'libXercesMessages26.a'     -exec ln -s {} libXercesMessages.a \\;");
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages30.0.a .");
+            psystem("find . -name 'libXercesMessages30.0.a'   -exec ln -s {} libXercesMessages30.a \\;");
+            psystem("find . -name 'libXercesMessages30.a'     -exec ln -s {} libXercesMessages.a \\;");
                                
         }        	
 
@@ -857,59 +881,59 @@ if ( ($platform =~ m/AIX/i)      ||
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.26.0 .");
-        psystem("ln -s libxerces-c.so.26.0 libxerces-c.so.26 ");
-        psystem("ln -s libxerces-c.so.26   libxerces-c.so    ");     
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.30.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.30.0 .");
+        psystem("ln -s libxerces-c.so.30.0 libxerces-c.so.30 ");
+        psystem("ln -s libxerces-c.so.30   libxerces-c.so    ");     
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom.so.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.so.26.0 .");
-        psystem("ln -s libxerces-depdom.so.26.0 libxerces-depdom.so.26 ");
-        psystem("ln -s libxerces-depdom.so.26   libxerces-depdom.so    ");        
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom.so.30.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.so.30.0 .");
+        psystem("ln -s libxerces-depdom.so.30.0 libxerces-depdom.so.30 ");
+        psystem("ln -s libxerces-depdom.so.30   libxerces-depdom.so    ");        
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.26.0 .");
-        psystem("ln -s libxerces-c.sl.26.0 libxerces-c.sl.26 ");
-        psystem("ln -s libxerces-c.sl.26   libxerces-c.sl    ");               
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.30.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.30.0 .");
+        psystem("ln -s libxerces-c.sl.30.0 libxerces-c.sl.30 ");
+        psystem("ln -s libxerces-c.sl.30   libxerces-c.sl    ");               
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom.sl.26.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.sl.26.0 .");
-        psystem("ln -s libxerces-depdom.sl.26.0 libxerces-depdom.sl.26 ");
-        psystem("ln -s libxerces-depdom.sl.26   libxerces-depdom.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom.sl.30.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.sl.30.0 .");
+        psystem("ln -s libxerces-depdom.sl.30.0 libxerces-depdom.sl.30 ");
+        psystem("ln -s libxerces-depdom.sl.30   libxerces-depdom.sl    ");
     }
                 
-    if ((-e "$XERCESCROOT/lib/libxerces-c26.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c26.0.so .");
-        psystem("ln -s libxerces-c26.0.so libxerces-c26.so  ");
-        psystem("ln -s libxerces-c26.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c30.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c30.0.so .");
+        psystem("ln -s libxerces-c30.0.so libxerces-c30.so  ");
+        psystem("ln -s libxerces-c30.so   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom26.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom26.0.so .");
-        psystem("ln -s libxerces-depdom26.0.so libxerces-depdom26.so  ");
-        psystem("ln -s libxerces-depdom26.so   libxerces-depdom.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom30.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom30.0.so .");
+        psystem("ln -s libxerces-depdom30.0.so libxerces-depdom30.so  ");
+        psystem("ln -s libxerces-depdom30.so   libxerces-depdom.so    ");
     }
     
-    if ((-e "$XERCESCROOT/lib/libxerces-c26.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c26.0.a . ");
-        psystem("ln -s libxerces-c26.0.a  libxerces-c26.a ");
-        psystem("ln -s libxerces-c26.a    libxerces-c.a ");         
+    if ((-e "$XERCESCROOT/lib/libxerces-c30.0.a" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c30.0.a . ");
+        psystem("ln -s libxerces-c30.0.a  libxerces-c30.a ");
+        psystem("ln -s libxerces-c30.a    libxerces-c.a ");         
     }
         
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom26.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom26.0.a . ");
-        psystem("ln -s libxerces-depdom26.0.a  libxerces-depdom26.a ");
-        psystem("ln -s libxerces-depdom26.a    libxerces-depdom.a ");         
+    if ((-e "$XERCESCROOT/lib/libxerces-depdom30.0.a" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom30.0.a . ");
+        psystem("ln -s libxerces-depdom30.0.a  libxerces-depdom30.a ");
+        psystem("ln -s libxerces-depdom30.a    libxerces-depdom.a ");         
     }        
     
     # Mac OS X
-    if ((-e "$XERCESCROOT/lib/libxerces-c.26.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.26.0.dylib .");
-        psystem("ln -s libxerces-c.26.0.dylib libxerces-c.26.dylib ");
-        psystem("ln -s libxerces-c.26.dylib   libxerces-c.dylib    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.30.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.30.0.dylib .");
+        psystem("ln -s libxerces-c.30.0.dylib libxerces-c.30.dylib ");
+        psystem("ln -s libxerces-c.30.dylib   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files
@@ -1208,13 +1232,13 @@ sub change_windows_project_for_ICU() {
             $icuuc = "icuuc";
             }
 
-        $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
-        $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];
-        $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];       
+        $line =~ s[/D "XERCES_BUILDING_LIBRARY"][/I "$ICUROOT\\include" /D "XERCES_BUILDING_LIBRARY"];
+        $line =~ s[Debug/xerces-c_3D.lib"][Debug/xerces-c_3D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];
+        $line =~ s[Release/xerces-c_3.lib"][Release/xerces-c_3.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources"];       
        
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages3_0.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1223,14 +1247,14 @@ sub change_windows_project_for_ICU() {
         
         if ($Transcoder)
         {
-            $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+            $line =~ s/XERCES_USE_TRANSCODER_WINDOWS/XERCES_USE_TRANSCODER_ICU/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
         }
 
         if ($MsgLoader)
         {
-            $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
+            $line =~ s/XERCES_USE_WIN32_MSGLOADER/XERCES_USE_MSGLOADER_ICU/g;
             $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.cpp/MsgLoaders\\ICU\\ICUMsgLoader.cpp/g;
             $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.hpp/MsgLoaders\\ICU\\ICUMsgLoader.hpp/g;
         }
@@ -1258,12 +1282,12 @@ sub change_windows_makefile_for_ICU() {
             $icuuc = "icuuc";
         }
 
-        $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
+        $line =~ s[/D "XERCES_BUILDING_LIBRARY"][/I "$ICUROOT\\include" /D "XERCES_BUILDING_LIBRARY"];
         $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /libpath:"$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources" /machine:IA64];
 
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_6.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages3_0.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1271,14 +1295,14 @@ sub change_windows_makefile_for_ICU() {
         }
             
         if ($Transcoder) {
-            $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+            $line =~ s/XERCES_USE_TRANSCODER_WINDOWS/XERCES_USE_TRANSCODER_ICU/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService/Transcoders\\ICU\\ICUTransService/g;
             $line =~ s/Win32TransService/ICUTransService/g;
         }
 
         if ($MsgLoader)
         {
-            $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
+            $line =~ s/XERCES_USE_WIN32_MSGLOADER/XERCES_USE_MSGLOADER_ICU/g;
             $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader/MsgLoaders\\ICU\\ICUMsgLoader/g;
             $line =~ s/Win32MsgLoader/ICUMsgLoader/g;
         }
@@ -1290,7 +1314,7 @@ sub change_windows_makefile_for_ICU() {
     unlink ($thefiledotbak);
 }
 
-sub change_windows_project_for_ICU_VC7() {
+sub change_windows_project_for_ICU_VC7_or_VC8() {
     my ($thefile, $Transcoder, $MsgLoader) = @_;
     print "\nConverting Windows Xerces library project ($thefile) for ICU usage...";
     my $thefiledotbak = $thefile . ".bak";
@@ -1310,7 +1334,7 @@ sub change_windows_project_for_ICU_VC7() {
         
         if ($MsgLoader)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages2_6.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages3_0.lib $1/;
         }        
         elsif ($Transcoder)
         {
@@ -1318,14 +1342,14 @@ sub change_windows_project_for_ICU_VC7() {
         }
 
         if ($Transcoder) {
-            $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+            $line =~ s/XERCES_USE_TRANSCODER_WINDOWS/XERCES_USE_TRANSCODER_ICU/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
         }
 
         if ($MsgLoader)
         {
-            $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
+            $line =~ s/XERCES_USE_WIN32_MSGLOADER/XERCES_USE_MSGLOADER_ICU/g;
             $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader/MsgLoaders\\ICU\\ICUMsgLoader/g;
             $line =~ s/Win32MsgLoader/ICUMsgLoader/g;
         }
@@ -1380,7 +1404,7 @@ sub changeWindowsProjectForFileOnlyNA() {
 
         # From the remaining lines, remove any references to the #defines and
         # the WinSock library.
-        $aline =~ s/\/D \"XML_USE_NETACCESSOR_WINSOCK\" //g;  # "
+        $aline =~ s/\/D \"XERCES_USE_NETACCESSOR_WINSOCK\" //g;  # "
         if ($aline =~ /( )+ws2_32.lib( )*\"/) { # end of line
           $aline =~ s/( )+ws2_32.lib( )*\"/\"/g;
         } else { # beginning or middle of line
@@ -1394,7 +1418,7 @@ sub changeWindowsProjectForFileOnlyNA() {
     unlink ($thefiledotbak);
 }
 
-sub changeWindowsProjectForFileOnlyNA_VC7() {
+sub changeWindowsProjectForFileOnlyNA_VC7_or_VC8() {
     my ($thefile) = @_;
     print "\nConfiguring Xerces library project ($thefile) for FileOnly NetAccessor...\n";
     my $thefiledotbak = $thefile . ".bak";
@@ -1424,10 +1448,10 @@ sub changeWindowsProjectForFileOnlyNA_VC7() {
 
         # From the remaining lines, remove any references to the #defines and
         # the WinSock library.
-        if ($aline =~ /\;XML_USE_NETACCESSOR_WINSOCK/) { # end or middle of line
-          $aline =~ s/\;XML_USE_NETACCESSOR_WINSOCK//g;
+        if ($aline =~ /\;XERCES_USE_NETACCESSOR_WINSOCK/) { # end or middle of line
+          $aline =~ s/\;XERCES_USE_NETACCESSOR_WINSOCK//g;
         } else { # beginning of line
-          $aline =~ s/\XML_USE_NETACCESSOR_WINSOCK\;*//g;
+          $aline =~ s/\XERCES_USE_NETACCESSOR_WINSOCK\;*//g;
         }
 
         if ($aline =~ /\s+ws2_32\.lib\s*\"/) { # end of line
