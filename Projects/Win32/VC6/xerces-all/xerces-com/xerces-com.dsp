@@ -38,8 +38,8 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "..\..\..\..\..\Build\Win32\xml4com\Debug"
-# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\xml4com\Debug"
+# PROP Output_Dir "..\..\..\..\..\Build\Win32\VC6\Debug"
+# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\VC6\Debug\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /GZ /c
@@ -49,26 +49,17 @@ RSC=rc.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2D.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_3D.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # Begin Custom Build - Performing registration
-OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
-TargetDir=\Xerces\Xerces-C\Build\Win32\xml4com\Debug
-TargetPath=\Xerces\Xerces-C\Build\Win32\xml4com\Debug\xerces-com.dll
-InputPath=\Xerces\Xerces-C\Build\Win32\xml4com\Debug\xerces-com.dll
+OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
+TargetPath=\Xerces\Xerces-C\Build\Win32\VC6\Debug\xerces-com.dll
+InputPath=\Xerces\Xerces-C\Build\Win32\VC6\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
-BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_6D.dll "$(TargetDir)" \
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_2_6D.dll "$(TargetDir)" \
-	regsvr32 /s /c "$(TargetPath)" \
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
-	
-
-"$(TargetDir)\xerces-c_2_6D.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
+	regsvr32 /s /c "$(TargetPath)" 
+	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
+	
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
@@ -80,8 +71,8 @@ BuildCmds= \
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency"
-# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency"
+# PROP Output_Dir "..\..\..\..\..\Build\Win32\VC6\Release"
+# PROP Intermediate_Dir "..\..\..\..\..\Build\Win32\VC6\Release\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
@@ -91,26 +82,17 @@ BuildCmds= \
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2.lib /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_3.lib /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
-OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency
-TargetDir=\Xerces\Xerces-C\Build\Win32\xml4com\ReleaseMinDependency
-TargetPath=\Xerces\Xerces-C\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
-InputPath=\Xerces\Xerces-C\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.dll
+OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
+TargetPath=\Xerces\Xerces-C\Build\Win32\VC6\Release\xerces-com.dll
+InputPath=\Xerces\Xerces-C\Build\Win32\VC6\Release\xerces-com.dll
 SOURCE="$(InputPath)"
 
-BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_6.dll $(TargetDir) \
-	regsvr32 /s /c "$(TargetPath)" \
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
-	
-
-"$(TargetDir)\xerces-c_2_6.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
+	regsvr32 /s /c "$(TargetPath)" 
+	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
+	
 # End Custom Build
 
 !ENDIF 

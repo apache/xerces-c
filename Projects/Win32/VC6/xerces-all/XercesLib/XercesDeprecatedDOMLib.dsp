@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /FD /c
+# ADD CPP /GB /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "NDEBUG" /mktyplib203 /o "NUL" /win32
@@ -54,8 +54,8 @@ RSC=rc.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-depdom_2_6.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-depdom_2.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# SUBTRACT LINK32 /pdb:none /incremental:yes
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3.lib /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-depdom_3_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-depdom_3.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win32 Debug"
 
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /G6 /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /FD /c
+# ADD CPP /GB /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /FD /c
 # SUBTRACT CPP /Fr /YX
 # ADD BASE MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /D "_DEBUG" /mktyplib203 /o "NUL" /win32
@@ -80,7 +80,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-depdom_2_6D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-depdom_2D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3D.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-depdom_3_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-depdom_3D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win64 Debug"
@@ -108,7 +108,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 /machine:IX86
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-depdom_2_6D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-depdom_2D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3D.lib /base:"0x12000000" /subsystem:windows /dll /debug /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-depdom_3_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-depdom_3D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win64 Release"
@@ -135,7 +135,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 /machine:IX86
 # SUBTRACT BASE LINK32 /pdb:none /incremental:yes
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-depdom_2_6.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-depdom_2.lib" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /machine:IX86 /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-depdom_3_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-depdom_3.lib" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 

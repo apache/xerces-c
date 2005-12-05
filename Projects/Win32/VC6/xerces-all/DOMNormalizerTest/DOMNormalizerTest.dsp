@@ -51,7 +51,7 @@ RSC=rc.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_3.lib /version:1.0 /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "DOMNormalizerTest - Win32 Debug"
 
@@ -74,7 +74,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_3D.lib /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 
 !ELSEIF  "$(CFG)" == "DOMNormalizerTest - Win64 Debug"
 
@@ -98,7 +98,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib xerces-c_3D.lib /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "DOMNormalizerTest - Win64 Release"
@@ -123,7 +123,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /machine:IX86 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /machine:IX86 /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib xerces-c_3.lib /version:1.0 /subsystem:console /incremental:yes /machine:IX86 /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 

@@ -554,6 +554,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name XSValueTest
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name xml4com
+    End Project Dependency
 }}}
 
 ###############################################################################
