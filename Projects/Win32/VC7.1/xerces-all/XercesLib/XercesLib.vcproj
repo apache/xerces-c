@@ -24,15 +24,16 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
@@ -42,19 +43,19 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib advapi32.lib "
-				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll"
+				OutputFile="$(OutDir)\xerces-c_3_0.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
+				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.fullpdb"
-				StripPrivateSymbols=".\..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.pdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_0.fullpdb"
+				StripPrivateSymbols="$(OutDir)\xerces-c_3_0.pdb"
 				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/xerces-c_2_6.map"
+				MapFileName="$(IntDir)\xerces-c_3_0.map"
 				SubSystem="2"
 				OptimizeReferences="2"
 				SetChecksum="TRUE"
 				BaseAddress="0x12000000"
-				ImportLibrary="..\..\..\..\..\Build\Win32\VC7.1\Release/xerces-c_2.lib"/>
+				ImportLibrary="$(OutDir)\xerces-c_3.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -92,14 +93,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME"
 				RuntimeLibrary="3"
 				TreatWChar_tAsBuiltInType="FALSE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
@@ -109,15 +111,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib advapi32.lib "
-				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2_6D.dll"
+				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug"
+				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2_6D.pdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_0D.pdb"
 				SubSystem="2"
 				SetChecksum="TRUE"
 				BaseAddress="0x12000000"
-				ImportLibrary="..\..\..\..\..\Build\Win32\VC7.1\Debug/xerces-c_2D.lib"/>
+				ImportLibrary="$(OutDir)\xerces-c_3D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
@@ -156,21 +158,22 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease/xerces-c_static_2.lib"/>
+				OutputFile="$(OutDir)\xerces-c_static_3.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -206,13 +209,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/XercesLib.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
@@ -220,7 +224,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug/xerces-c_static_2D.lib"/>
+				OutputFile="$(OutDir)\xerces-c_static_3D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
@@ -725,13 +729,6 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.hpp">
 			</File>
-			<Filter
-				Name="Win32"
-				Filter=".cpp,.hpp">
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp">
-				</File>
-			</Filter>
 			<Filter
 				Name="MsgLoaders"
 				Filter=".cpp,.hpp">

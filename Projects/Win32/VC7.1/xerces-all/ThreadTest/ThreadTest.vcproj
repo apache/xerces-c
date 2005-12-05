@@ -21,16 +21,16 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				OptimizeForProcessor="2"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/ThreadTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj/"
+				PrecompiledHeaderFile="$(IntDir)\ThreadTest.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\ThreadTest_vc71.pdb"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -38,11 +38,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/ThreadTest.exe"
+				AdditionalDependencies="xerces-c_3.lib"
+				OutputFile="$(OutDir)\ThreadTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Release/ThreadTest.pdb"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ProgramDatabaseFile="$(OutDir)\ThreadTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -78,16 +78,16 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				OptimizeForProcessor="2"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				TreatWChar_tAsBuiltInType="FALSE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/ThreadTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj/"
+				PrecompiledHeaderFile="$(IntDir)\ThreadTest.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\ThreadTest_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -96,12 +96,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/ThreadTest.exe"
+				AdditionalDependencies="xerces-c_3D.lib"
+				OutputFile="$(OutDir)\ThreadTest.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug"
+				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/ThreadTest.pdb"
+				ProgramDatabaseFile="$(OutDir)\ThreadTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -137,16 +137,16 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				OptimizeForProcessor="2"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/ThreadTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj/"
+				PrecompiledHeaderFile="$(IntDir)\ThreadTest.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\ThreadTest_vc71.pdb"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -154,11 +154,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_static_2.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease/ThreadTest.exe"
+				AdditionalDependencies="xerces-c_static_3.lib"
+				OutputFile="$(OutDir)\ThreadTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease/ThreadTest.pdb"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ProgramDatabaseFile="$(OutDir)\ThreadTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -194,15 +194,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				OptimizeForProcessor="2"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/ThreadTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj/"
+				PrecompiledHeaderFile="$(IntDir)\ThreadTest.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\ThreadTest_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -211,12 +211,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_static_2D.lib"
-				OutputFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug/ThreadTest.exe"
+				AdditionalDependencies="xerces-c_static_3D.lib"
+				OutputFile="$(OutDir)\ThreadTest.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
+				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug/ThreadTest.pdb"
+				ProgramDatabaseFile="$(OutDir)\ThreadTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"

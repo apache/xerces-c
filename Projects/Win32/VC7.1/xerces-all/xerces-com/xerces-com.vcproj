@@ -14,8 +14,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\Release"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\Release\obj"
+			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			UseOfATL="1"
@@ -25,6 +25,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
 				StringPooling="TRUE"
@@ -32,35 +33,33 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\Release\obj/xerces-com.pch"
-				AssemblerListingLocation="..\..\..\..\..\Build\Win32\xml4com\Release\obj/"
-				ObjectFile="..\..\..\..\..\Build\Win32\xml4com\Release\obj/"
-				ProgramDataBaseFileName="..\..\..\..\..\Build\Win32\xml4com\Release/"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc71.pdb"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll $(TargetDir)
-copy ..\..\..\..\..\Build\Win32\VC7.1\Release\xerces-c_2_6.dll &quot;$(TargetDir)&quot;
-regsvr32 /s /c &quot;$(TargetPath)&quot;
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
-				Outputs="$(TargetDir)xerces-c_2_6.dll;$(OutDir)\regsvr32.trg"/>
+				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\xml4com\Release/xerces-com.dll"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Release;..\..\..\..\..\Build\Win32\xml4com\Release"
+				AdditionalLibraryDirectories="$(OutDir)"
 				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
-				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\Release/xerces-com.pdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
 				SubSystem="2"
-				ImportLibrary="..\..\..\..\..\Build\Win32\xml4com\Release/xerces-com.lib"/>
+				ImportLibrary="$(OutDir)\xerces-com.lib"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\Release/xerces-com.tlb"/>
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xerces-com.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -84,8 +83,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\Debug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\Debug\obj"
+			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -93,6 +92,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
 				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
@@ -100,37 +100,35 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				TreatWChar_tAsBuiltInType="FALSE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\Debug\obj/xerces-com.pch"
-				AssemblerListingLocation="..\..\..\..\..\Build\Win32\xml4com\Debug\obj/"
-				ObjectFile="..\..\..\..\..\Build\Win32\xml4com\Debug\obj/"
-				ProgramDataBaseFileName="..\..\..\..\..\Build\Win32\xml4com\Debug/"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7.1\Debug\xerces-c_2_6D.dll &quot;$(TargetDir)&quot;
-copy ..\..\..\..\..\Build\Win32\VC7.1\Debug\xerces-c_2_6D.dll &quot;$(TargetDir)&quot;
-regsvr32 /s /c &quot;$(TargetPath)&quot;
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
-				Outputs="$(TargetDir)xerces-c_2_6D.dll;$(OutDir)\regsvr32.trg"/>
+				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_2D.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\xml4com\Debug/xerces-com.dll"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3D.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\Debug;..\..\..\..\..\Build\Win32\xml4com\Debug"
+				AdditionalLibraryDirectories="$(OutDir)"
 				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\Debug/xerces-com.pdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
 				SubSystem="2"
-				ImportLibrary="..\..\..\..\..\Build\Win32\xml4com\Debug/xerces-com.lib"/>
+				ImportLibrary="$(OutDir)\xerces-com.lib"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\Debug/xerces-com.tlb"/>
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xerces-com.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -154,8 +152,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 		</Configuration>
 		<Configuration
 			Name="Static Release|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticRelease"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj"
+			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
+			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			UseOfATL="1"
@@ -165,6 +163,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;XERCES_STATIC_LIBRARY"
 				StringPooling="TRUE"
@@ -172,10 +171,10 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj/xerces-com.pch"
-				AssemblerListingLocation="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj/"
-				ObjectFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj/"
-				ProgramDataBaseFileName="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc71.pdb"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -184,21 +183,21 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
-				Outputs="$(TargetDir)xerces-c_2_6.dll;$(OutDir)\regsvr32.trg"/>
+				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_2.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.dll"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_3.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease;..\..\..\..\..\Build\Win32\xml4com\StaticRelease"
+				AdditionalLibraryDirectories="$(OutDir)"
 				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
-				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.pdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
 				SubSystem="2"
-				ImportLibrary="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.lib"/>
+				ImportLibrary="$(OutDir)\xerces-com.lib"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.tlb"/>
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xerces-com.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -222,8 +221,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 		</Configuration>
 		<Configuration
 			Name="Static Debug|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticDebug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj"
+			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
+			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -231,16 +230,17 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				OptimizeForProcessor="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
 				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;XERCES_STATIC_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj/xerces-com.pch"
-				AssemblerListingLocation="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj/"
-				ObjectFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj/"
-				ProgramDataBaseFileName="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc71.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -250,22 +250,22 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
-				Outputs="$(TargetDir)xerces-c_2_6D.dll;$(OutDir)\regsvr32.trg"/>
+				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_2D.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.dll"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_3D.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug;..\..\..\..\..\Build\Win32\xml4com\StaticDebug"
+				AdditionalLibraryDirectories="$(OutDir)"
 				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.pdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
 				SubSystem="2"
-				ImportLibrary="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.lib"/>
+				ImportLibrary="$(OutDir)\xerces-com.lib"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.tlb"/>
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xerces-com.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
