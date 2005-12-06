@@ -185,7 +185,7 @@ bool ValidationContextImpl::isPrefixUnknown(XMLCh* prefix) {
         return true;                
     }            
     else if (!XMLString::equals(prefix, XMLUni::fgXMLString)) {
-        unsigned int uriId = fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);                
+        fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);                
     }                
     return unknown;
 }

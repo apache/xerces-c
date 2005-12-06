@@ -8,13 +8,14 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXPrintHandlers.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value="..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib"/>
     <LIBRARIES value=""/>
     <SPARELIBS value=""/>
     <PACKAGES value="vcl.bpi vclx.bpi vcljpg.bpi"/>
-    <PATHCPP value=".;..\..\..\..\..\samples\SAXPrint"/>
+    <PATHCPP value=".;..\..\..\..\..\samples\src\SAXPrint"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -24,25 +25,37 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="_NO_VCL;_VIS_NOLIB;_RTLDLL"/>
     <MAINSOURCE value="SAXPrint.cpp"/>
-    <INCLUDEPATH value="..\..\..\..\..\samples\SAXPrint;..\..\..\..\..\src;$(BCB)\include"/>
-    <LIBPATH value="..\..\..\..\..\samples\SAXPrint;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\..\..\samples\SAXPrint;..\..\..\..\..\samples\src\SAXPrint;..\..\..\..\..\src;$(BCB)\include"/>
+    <LIBPATH value="..\..\..\..\..\samples\src\SAXPrint;..\..\..\..\..\samples\SAXPrint;$(BCB)\lib"/>
     <WARNINGS value=""/>
     <WARNOPTSTR value=""/>
+    <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-src_suffix cpp -boa"/>
+    <IDLCFLAGS value="-I..\..\..\..\..\samples\SAXPrint -I..\..\..\..\..\samples\src\SAXPrint 
+      -I..\..\..\..\..\src -I$(BCB)\include -src_suffix cpp -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
-      -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -v -JPHN -M"/>
+      -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -$A8 -v -JPHN -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zd"/>
     <LFLAGS value="-I..\..\..\..\..\Build\Win32\BCB6\obj -D&quot;&quot; -ap -Tpe -x -Gn -v"/>
+    <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
     <ALLOBJ value="c0x32.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
     <ALLLIB value="$(LIBFILES) import32.lib cw32mti.lib"/>
+    <OTHERFILES value=""/>
   </LINKER>
+  <FILELIST>
+      <FILE FILENAME="SAXPrint.cpp" FORMNAME="" UNITNAME="SAXPrint" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib" FORMNAME="" UNITNAME="XercesLib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\samples\src\SAXPrint\SAXPrintHandlers.cpp" FORMNAME="" UNITNAME="SAXPrintHandlers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
   <IDEOPTIONS>
 [Version Info]
 IncludeVerInfo=0
@@ -72,8 +85,9 @@ ProductVersion=1.0.0.0
 Comments=
 
 [HistoryLists\hlIncludePath]
-Count=1
-Item0=..\..\..\..\..\samples\SAXPrint;..\..\..\..\..\src;$(BCB)\include
+Count=2
+Item0=..\..\..\..\..\samples\src\SAXPrint;..\..\..\..\..\src;$(BCB)\include
+Item1=..\..\..\..\..\samples\SAXPrint;..\..\..\..\..\src;$(BCB)\include
 
 [HistoryLists\hlLibraryPath]
 Count=1
@@ -88,8 +102,9 @@ Count=1
 Item0=..\..\..\..\..\Build\Win32\BCB6\obj
 
 [HistoryLists\hlFinalOutputDir]
-Count=1
-Item0=..\..\..\..\..\Build\Win32\BCB6[Debugging]
+Count=2
+Item0=..\..\..\..\..\Build\Win32\BCB6\
+Item1=..\..\..\..\..\Build\Win32\BCB6[Debugging]
 
 [Debugging]
 DebugSourceDirs=
@@ -111,9 +126,9 @@ ShowInfoMsgs=0
 LinkDebugVcl=1
 LinkCGLIB=0
 
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
   </IDEOPTIONS>
 </PROJECT>

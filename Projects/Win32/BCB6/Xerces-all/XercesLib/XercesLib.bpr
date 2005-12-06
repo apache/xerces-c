@@ -5,11 +5,13 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="..\..\..\..\..\Build\Win32\BCB6\XercesLib.dll"/>
     <OBJFILES value="..\..\..\..\..\Build\Win32\BCB6\obj\Xerceslib.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\Win32PlatformUtils.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\WindowsAtomicOpMgr.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\WindowsFileMgr.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\InMemMsgLoader.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\Win32TransService.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\WindowsMutexMgr.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinHTTPURLInputStream.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\WinSockNetAccessor.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\Win32TransService.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\ASCIIRangeFactory.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\BlockRangeFactory.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\BMPattern.obj 
@@ -53,6 +55,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\PlatformUtils.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\QName.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\StringPool.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\SynchronizedStringPool.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\TransService.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMemory.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XML256TableTranscoder.obj 
@@ -68,9 +71,12 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLEBCDICTranscoder.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLFloat.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1140Transcoder.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLInitializer.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLMsgLoader.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLNumber.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLString.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLStringTokenizer.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUCSTranscoder.obj 
@@ -80,7 +86,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUTF16Transcoder.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUTF8Transcoder.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLWin1252Transcoder.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\SynchronizedStringPool.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinOutputStream.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\LocalFileFormatTarget.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\LocalFileInputSource.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\MemBufFormatTarget.obj 
@@ -88,7 +94,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\StdInInputSource.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\StdOutFormatTarget.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\URLInputSource.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\Wrapper4DOMInputSource.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\Wrapper4DOMLSInput.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\Wrapper4InputSource.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLAttDef.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLAttr.obj 
@@ -106,13 +112,17 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLGrammarDescription.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLSchemaDescription.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDTDDescription.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileOutputStream.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DGXMLScanner.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerArrayImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SGXMLScanner.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\ValidationContextImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttributesImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\VecAttrListImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\WFXMLScanner.obj 
@@ -120,18 +130,17 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLReader.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScannerResolver.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerArrayImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateSerializer.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XProtoType.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAXMLScanner.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSerializeEngine.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateComparator.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XObjectComparator.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateSerializer.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParseException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractDOMParser.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMBuilderImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSParserImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLReaderImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLFilterImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParser.obj 
@@ -178,6 +187,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\StringDatatypeValidator.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\TimeDatatypeValidator.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\UnionDatatypeValidator.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\YearDatatypeValidator.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\YearMonthDatatypeValidator.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DTDAttDef.obj 
@@ -196,6 +206,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Selector.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Unique.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraint.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\ValueStore.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\ValueStoreCache.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XercesXPath.obj 
@@ -241,8 +252,10 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMEntityReferenceImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMErrorImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationListImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationRegistry.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLocatorImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSSerializerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNamedNodeMapImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeIDMap.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeImpl.obj 
@@ -254,11 +267,11 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMParentNode.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMProcessingInstructionImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMStringListImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMStringPool.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTextImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeWalkerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTypeInfoImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMWriterImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSDElementNSImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\AttrImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\AttrMapImpl.obj 
@@ -320,11 +333,11 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDeclImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttribute.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIAttributeList.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIElement.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIItem.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ValidationContextImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSAnnotation.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeDeclaration.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSAttributeGroupDefinition.obj 
@@ -343,19 +356,9 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSParticle.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSSimpleTypeDefinition.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSTypeDefinition.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\BinFileOutputStream.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\BinOutputStream.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSValue.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAXMLScanner.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj"/>
-    <RESFILES value="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj"/>
+    <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
@@ -364,27 +367,48 @@
     <LIBRARIES value=""/>
     <SPARELIBS value="rtl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi"/>
-    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\Platforms\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi"/>
+    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi;"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="XML_PLATFORM_NEW_BLOCK_ALIGNMENT=4;PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_INMEM_MESSAGELOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG;PROJ_DEPRECATED_DOM"/>
+    <USERDEFINES value="_DEBUG;PLATFORM_WIN32;XERCES_BUILDING_LIBRARY;XERCES_PATH_DELIMITER_BACKSLASH=1;XERCES_USE_FILEMGR_WINDOWS=1;XERCES_USE_MUTEXMGR_WINDOWS=1;XERCES_USE_ATOMICOPMGR_WINDOWS=1;XERCES_USE_NETACCESSOR_WINSOCK=1;XERCES_USE_TRANSCODER_WINDOWS=1;XERCES_USE_MSGLOADER_INMEMORY=1;HAVE_LIMITS_H=1;HAVE_FTIME=1;HAVE_SYS_TIMEB_H=1;HAVE_STRICMP=1;HAVE_STRNICMP=1"/>
     <SYSDEFINES value="NO_STRICT;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="Xerceslib.cpp"/>
-    <INCLUDEPATH value="..\..\..\..\..\src;$(BCB)\include"/>
-    <LIBPATH value="..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src;$(BCB)\include"/>
+    <LIBPATH value="..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par -w-8027 -w-8026"/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I..\..\..\..\..\src -I$(BCB)\include -src_suffix cpp -DPLATFORM_WIN32 
-      -D_CRTDBG_MAP_ALLOC -DPROJ_XMLPARSER -DPROJ_XMLUTIL -DPROJ_PARSERS 
-      -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS -DXML_SINGLEDLL 
-      -DXML_USE_WIN32_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER 
-      -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -DPROJ_DEPRECATED_DOM -boa"/>
+    <IDLCFLAGS value="-I..\..\..\..\..\src\xercesc\framework\psvi 
+      -I..\..\..\..\..\src\xercesc\dom 
+      -I..\..\..\..\..\src\xercesc\dom\deprecated 
+      -I..\..\..\..\..\src\xercesc\dom\impl -I..\..\..\..\..\src\xercesc\sax2 
+      -I..\..\..\..\..\src\xercesc\validators\schema 
+      -I..\..\..\..\..\src\xercesc\validators\schema\identity 
+      -I..\..\..\..\..\src\xercesc\validators\DTD 
+      -I..\..\..\..\..\src\xercesc\validators\datatype 
+      -I..\..\..\..\..\src\xercesc\validators\common 
+      -I..\..\..\..\..\src\xercesc\parsers -I..\..\..\..\..\src\xercesc\sax 
+      -I..\..\..\..\..\src\xercesc\internal 
+      -I..\..\..\..\..\src\xercesc\framework -I..\..\..\..\..\src\xercesc\util 
+      -I..\..\..\..\..\src\xercesc\util\regx 
+      -I..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock 
+      -I..\..\..\..\..\src\xercesc\util\Transcoders\Win32 
+      -I..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory 
+      -I..\..\..\..\..\src\xercesc\util\AtomicOpManagers 
+      -I..\..\..\..\..\src\xercesc\util\FileManagers 
+      -I..\..\..\..\..\src\xercesc\util\MutexManagers -I..\..\..\..\..\src 
+      -I$(BCB)\include -src_suffix cpp -D_DEBUG -DPLATFORM_WIN32 
+      -DXERCES_BUILDING_LIBRARY -DXERCES_PATH_DELIMITER_BACKSLASH=1 
+      -DXERCES_USE_FILEMGR_WINDOWS=1 -DXERCES_USE_MUTEXMGR_WINDOWS=1 
+      -DXERCES_USE_ATOMICOPMGR_WINDOWS=1 -DXERCES_USE_NETACCESSOR_WINSOCK=1 
+      -DXERCES_USE_TRANSCODER_WINDOWS=1 -DXERCES_USE_MSGLOADER_INMEMORY=1 
+      -DHAVE_LIMITS_H=1 -DHAVE_FTIME=1 -DHAVE_SYS_TIMEB_H=1 -DHAVE_STRICMP=1 
+      -DHAVE_STRNICMP=1 -boa"/>
     <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b -k -y -v -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
       -N0..\..\..\..\..\Build\Win32\BCB6\obj -$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
@@ -401,13 +425,13 @@
   </LINKER>
   <FILELIST>
       <FILE FILENAME="Xerceslib.cpp" FORMNAME="" UNITNAME="Xerceslib" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h" FORMNAME="" UNITNAME="resource" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc" FORMNAME="" UNITNAME="Version" CONTAINERID="RC" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32PlatformUtils.cpp" FORMNAME="" UNITNAME="Win32PlatformUtils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\AtomicOpManagers\WindowsAtomicOpMgr.cpp" FORMNAME="" UNITNAME="WindowsAtomicOpMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\FileManagers\WindowsFileMgr.cpp" FORMNAME="" UNITNAME="WindowsFileMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\InMemMsgLoader.cpp" FORMNAME="" UNITNAME="InMemMsgLoader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp" FORMNAME="" UNITNAME="Win32TransService" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\MutexManagers\WindowsMutexMgr.cpp" FORMNAME="" UNITNAME="WindowsMutexMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp" FORMNAME="" UNITNAME="BinHTTPURLInputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp" FORMNAME="" UNITNAME="WinSockNetAccessor" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp" FORMNAME="" UNITNAME="Win32TransService" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\ASCIIRangeFactory.cpp" FORMNAME="" UNITNAME="ASCIIRangeFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\BlockRangeFactory.cpp" FORMNAME="" UNITNAME="BlockRangeFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\BMPattern.cpp" FORMNAME="" UNITNAME="BMPattern" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -451,6 +475,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\PlatformUtils.cpp" FORMNAME="" UNITNAME="PlatformUtils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\QName.cpp" FORMNAME="" UNITNAME="QName" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\StringPool.cpp" FORMNAME="" UNITNAME="StringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp" FORMNAME="" UNITNAME="SynchronizedStringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\TransService.cpp" FORMNAME="" UNITNAME="TransService" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMemory.cpp" FORMNAME="" UNITNAME="XMemory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.cpp" FORMNAME="" UNITNAME="XML256TableTranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -466,9 +491,12 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLEBCDICTranscoder.cpp" FORMNAME="" UNITNAME="XMLEBCDICTranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLException.cpp" FORMNAME="" UNITNAME="XMLException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLFloat.cpp" FORMNAME="" UNITNAME="XMLFloat" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1047Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1140Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLInitializer.cpp" FORMNAME="" UNITNAME="XMLInitializer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLMsgLoader.cpp" FORMNAME="" UNITNAME="XMLMsgLoader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLNumber.cpp" FORMNAME="" UNITNAME="XMLNumber" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp" FORMNAME="" UNITNAME="XMLRegisterCleanup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLString.cpp" FORMNAME="" UNITNAME="XMLString" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLStringTokenizer.cpp" FORMNAME="" UNITNAME="XMLStringTokenizer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUCSTranscoder.cpp" FORMNAME="" UNITNAME="XMLUCSTranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -478,7 +506,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUTF16Transcoder.cpp" FORMNAME="" UNITNAME="XMLUTF16Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUTF8Transcoder.cpp" FORMNAME="" UNITNAME="XMLUTF8Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.cpp" FORMNAME="" UNITNAME="XMLWin1252Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp" FORMNAME="" UNITNAME="SynchronizedStringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp" FORMNAME="" UNITNAME="BinOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp" FORMNAME="" UNITNAME="LocalFileFormatTarget" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.cpp" FORMNAME="" UNITNAME="LocalFileInputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\MemBufFormatTarget.cpp" FORMNAME="" UNITNAME="MemBufFormatTarget" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -486,7 +514,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\StdInInputSource.cpp" FORMNAME="" UNITNAME="StdInInputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\StdOutFormatTarget.cpp" FORMNAME="" UNITNAME="StdOutFormatTarget" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\URLInputSource.cpp" FORMNAME="" UNITNAME="URLInputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp" FORMNAME="" UNITNAME="Wrapper4DOMInputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMLSInput.cpp" FORMNAME="" UNITNAME="Wrapper4DOMLSInput" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\Wrapper4InputSource.cpp" FORMNAME="" UNITNAME="Wrapper4InputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLAttDef.cpp" FORMNAME="" UNITNAME="XMLAttDef" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLAttr.cpp" FORMNAME="" UNITNAME="XMLAttr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -504,13 +532,17 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.cpp" FORMNAME="" UNITNAME="XMLGrammarDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.cpp" FORMNAME="" UNITNAME="XMLSchemaDescription.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLDTDDescription.cpp" FORMNAME="" UNITNAME="XMLDTDDescription.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp" FORMNAME="" UNITNAME="BinFileOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.cpp" FORMNAME="" UNITNAME="BinMemOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\DGXMLScanner.cpp" FORMNAME="" UNITNAME="DGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ElemStack.cpp" FORMNAME="" UNITNAME="ElemStack" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp" FORMNAME="" UNITNAME="IGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp" FORMNAME="" UNITNAME="IGXMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp" FORMNAME="" UNITNAME="MemoryManagerArrayImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp" FORMNAME="" UNITNAME="MemoryManagerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp" FORMNAME="" UNITNAME="ReaderMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp" FORMNAME="" UNITNAME="SGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.cpp" FORMNAME="" UNITNAME="ValidationContextImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp" FORMNAME="" UNITNAME="VecAttributesImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp" FORMNAME="" UNITNAME="VecAttrListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp" FORMNAME="" UNITNAME="WFXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -518,18 +550,17 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLReader.cpp" FORMNAME="" UNITNAME="XMLReader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp" FORMNAME="" UNITNAME="XMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp" FORMNAME="" UNITNAME="XMLScannerResolver" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp" FORMNAME="" UNITNAME="MemoryManagerArrayImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp" FORMNAME="" UNITNAME="XTemplateSerializer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp" FORMNAME="" UNITNAME="XProtoType.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp" FORMNAME="" UNITNAME="XSAXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp" FORMNAME="" UNITNAME="XSObjectFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp" FORMNAME="" UNITNAME="XSerializeEngine.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp" FORMNAME="" UNITNAME="XTemplateComparator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp" FORMNAME="" UNITNAME="XObjectComparator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp" FORMNAME="" UNITNAME="XTemplateSerializer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\Dummy.cpp" FORMNAME="" UNITNAME="Dummy" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\InputSource.cpp" FORMNAME="" UNITNAME="InputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\SAXException.cpp" FORMNAME="" UNITNAME="SAXException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\SAXParseException.cpp" FORMNAME="" UNITNAME="SAXParseException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.cpp" FORMNAME="" UNITNAME="AbstractDOMParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp" FORMNAME="" UNITNAME="DOMBuilderImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\DOMLSParserImpl.cpp" FORMNAME="" UNITNAME="DOMLSParserImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp" FORMNAME="" UNITNAME="SAX2XMLReaderImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\SAX2XMLFilterImpl.cpp" FORMNAME="" UNITNAME="SAX2XMLFilterImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\parsers\SAXParser.cpp" FORMNAME="" UNITNAME="SAXParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -576,6 +607,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\StringDatatypeValidator.cpp" FORMNAME="" UNITNAME="StringDatatypeValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\TimeDatatypeValidator.cpp" FORMNAME="" UNITNAME="TimeDatatypeValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\UnionDatatypeValidator.cpp" FORMNAME="" UNITNAME="UnionDatatypeValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp" FORMNAME="" UNITNAME="XMLCanRepGroup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\YearDatatypeValidator.cpp" FORMNAME="" UNITNAME="YearDatatypeValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\YearMonthDatatypeValidator.cpp" FORMNAME="" UNITNAME="YearMonthDatatypeValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\DTD\DTDAttDef.cpp" FORMNAME="" UNITNAME="DTDAttDef" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -594,6 +626,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Selector.cpp" FORMNAME="" UNITNAME="IC_Selector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Unique.cpp" FORMNAME="" UNITNAME="IC_Unique" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraint.cpp" FORMNAME="" UNITNAME="IdentityConstraint" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp" FORMNAME="" UNITNAME="IdentityConstraintHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStore.cpp" FORMNAME="" UNITNAME="ValueStore" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStoreCache.cpp" FORMNAME="" UNITNAME="ValueStoreCache" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\XercesXPath.cpp" FORMNAME="" UNITNAME="XercesXPath" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -639,8 +672,10 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMEntityReferenceImpl.cpp" FORMNAME="" UNITNAME="DOMEntityReferenceImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMErrorImpl.cpp" FORMNAME="" UNITNAME="DOMErrorImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.cpp" FORMNAME="" UNITNAME="DOMImplementationImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.cpp" FORMNAME="" UNITNAME="DOMImplementationListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp" FORMNAME="" UNITNAME="DOMImplementationRegistry" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.cpp" FORMNAME="" UNITNAME="DOMLocatorImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.cpp" FORMNAME="" UNITNAME="DOMLSSerializerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNamedNodeMapImpl.cpp" FORMNAME="" UNITNAME="DOMNamedNodeMapImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNodeIDMap.cpp" FORMNAME="" UNITNAME="DOMNodeIDMap" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMNodeImpl.cpp" FORMNAME="" UNITNAME="DOMNodeImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -652,11 +687,11 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMParentNode.cpp" FORMNAME="" UNITNAME="DOMParentNode" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMProcessingInstructionImpl.cpp" FORMNAME="" UNITNAME="DOMProcessingInstructionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.cpp" FORMNAME="" UNITNAME="DOMRangeImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.cpp" FORMNAME="" UNITNAME="DOMStringListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp" FORMNAME="" UNITNAME="DOMStringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTextImpl.cpp" FORMNAME="" UNITNAME="DOMTextImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.cpp" FORMNAME="" UNITNAME="DOMTreeWalkerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp" FORMNAME="" UNITNAME="DOMTypeInfoImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp" FORMNAME="" UNITNAME="DOMWriterImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp" FORMNAME="" UNITNAME="XSDElementNSImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\AttrImpl.cpp" FORMNAME="" UNITNAME="AttrImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\AttrMapImpl.cpp" FORMNAME="" UNITNAME="AttrMapImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -718,11 +753,11 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.cpp" FORMNAME="" UNITNAME="XMLDeclImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMException.cpp" FORMNAME="" UNITNAME="DOMException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMRangeException.cpp" FORMNAME="" UNITNAME="DOMRangeException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp" FORMNAME="" UNITNAME="DOMXPathException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.cpp" FORMNAME="" UNITNAME="PSVIAttribute" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.cpp" FORMNAME="" UNITNAME="PSVIAttributeList" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.cpp" FORMNAME="" UNITNAME="PSVIElement" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.cpp" FORMNAME="" UNITNAME="PSVIItem" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.cpp" FORMNAME="" UNITNAME="ValidationContextImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.cpp" FORMNAME="" UNITNAME="XSAnnotation" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.cpp" FORMNAME="" UNITNAME="XSAttributeDeclaration" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.cpp" FORMNAME="" UNITNAME="XSAttributeGroupDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -741,18 +776,8 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.cpp" FORMNAME="" UNITNAME="XSParticle" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.cpp" FORMNAME="" UNITNAME="XSSimpleTypeDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp" FORMNAME="" UNITNAME="XSTypeDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp" FORMNAME="" UNITNAME="XSWildcard" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp" FORMNAME="" UNITNAME="BinFileOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp" FORMNAME="" UNITNAME="BinOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp" FORMNAME="" UNITNAME="DOMXPathException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp" FORMNAME="" UNITNAME="XSObjectFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1047Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp" FORMNAME="" UNITNAME="XMLCanRepGroup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.cpp" FORMNAME="" UNITNAME="BinMemOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSValue.cpp" FORMNAME="" UNITNAME="XSValue" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp" FORMNAME="" UNITNAME="XSAXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp" FORMNAME="" UNITNAME="XMLRegisterCleanup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp" FORMNAME="" UNITNAME="IdentityConstraintHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp" FORMNAME="" UNITNAME="XSWildcard" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -761,7 +786,7 @@
 [Version Info]
 IncludeVerInfo=0
 AutoIncBuild=0
-MajorVer=1
+MajorVer=3
 MinorVer=0
 Release=0
 Build=0
@@ -773,46 +798,26 @@ DLL=0
 Locale=1033
 CodePage=1252
 
-[Version Info Keys]
-CompanyName=
-FileDescription=
-FileVersion=1.0.0.0
-InternalName=
-LegalCopyright=
-LegalTrademarks=
-OriginalFilename=
-ProductName=
-ProductVersion=1.0.0.0
-Comments=
-
 [HistoryLists\hlIncludePath]
-Count=1
-Item0=..\..\..\..\..\src;$(BCB)\include
+Count=0
 
 [HistoryLists\hlLibraryPath]
-Count=1
-Item0=..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib
+Count=0
 
 [HistoryLists\hlDebugSourcePath]
-Count=1
-Item0=$(BCB)\source\vcl
+Count=0
 
 [HistoryLists\hlConditionals]
-Count=2
-Item0=PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG
-Item1=PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER;XML_USE_NETACCESSOR_WINSOCK
+Count=0
 
 [HistoryLists\hlIntOutputDir]
-Count=1
-Item0=..\..\..\..\..\Build\Win32\BCB6\obj
+Count=0
 
 [HistoryLists\hlFinalOutputDir]
-Count=1
-Item0=..\..\..\..\..\Build\Win32\BCB6\
+Count=0
 
 [HistoryLists\hIBPIOutputDir]
-Count=1
-Item0=..\..\..\..\..\Build\Win32\BCB6
+Count=0
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
@@ -834,10 +839,10 @@ ShowInfoMsgs=1
 LinkDebugVcl=0
 LinkCGLIB=0
 
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
 
 [Linker]
 LibPrefix=

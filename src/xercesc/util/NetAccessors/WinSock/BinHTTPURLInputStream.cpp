@@ -420,7 +420,6 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     }
 
     if(httpInfo!=0 && httpInfo->fPayload!=0) {
-        int  aLent = 0;
         if ((aLent = send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
         {
             // Call WSAGetLastError() to get the error number.

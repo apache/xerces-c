@@ -24,17 +24,18 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="_NO_VCL;_VIS_NOLIB;_RTLDLL"/>
     <MAINSOURCE value="EncodingTest.cpp"/>
-    <INCLUDEPATH value="..\..\..\..\..\tests\EncodingTest;..\..\..\..\..\src;$(BCB)\include"/>
+    <INCLUDEPATH value="..\..\..\..\..\tests\src\EncodingTest;..\..\..\..\..\src;$(BCB)\include"/>
     <LIBPATH value="$(BCB)\lib"/>
     <WARNINGS value=""/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-src_suffix cpp -boa"/>
+    <IDLCFLAGS value="-I..\..\..\..\..\tests\src\EncodingTest -I..\..\..\..\..\src 
+      -I$(BCB)\include -src_suffix cpp -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
-      -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -v -JPHN -M"/>
+      -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -$A8 -v -JPHN -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zd"/>
     <LFLAGS value="-I..\..\..\..\..\Build\Win32\BCB6\obj -D&quot;&quot; -ap -Tpe -x -Gn -v"/>
@@ -82,8 +83,9 @@ ProductVersion=1.0.0.0
 Comments=
 
 [HistoryLists\hlIncludePath]
-Count=1
-Item0=..\..\..\..\..\tests\EncodingTest;..\..\..\..\..\src;$(BCB)\include
+Count=2
+Item0=..\..\..\..\..\tests\src\EncodingTest;..\..\..\..\..\src;$(BCB)\include
+Item1=..\..\..\..\..\tests\EncodingTest;..\..\..\..\..\src;$(BCB)\include
 
 [HistoryLists\hlLibraryPath]
 Count=2
@@ -99,8 +101,9 @@ Count=1
 Item0=..\..\..\..\..\Build\Win32\BCB6\obj
 
 [HistoryLists\hlFinalOutputDir]
-Count=1
-Item0=..\..\..\..\..\Build\Win32\BCB6[Debugging]
+Count=2
+Item0=..\..\..\..\..\Build\Win32\BCB6\
+Item1=..\..\..\..\..\Build\Win32\BCB6[Debugging]
 
 [Debugging]
 DebugSourceDirs=
@@ -122,9 +125,9 @@ ShowInfoMsgs=0
 LinkDebugVcl=1
 LinkCGLIB=0
 
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
   </IDEOPTIONS>
 </PROJECT>

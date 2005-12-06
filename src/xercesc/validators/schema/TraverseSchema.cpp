@@ -5354,7 +5354,7 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
                 // fBuffer is reused by traverseComplexTypeDecl, so we have to store its current value
                 XMLBuffer buffCopy(fBuffer.getLen()+1, fMemoryManager);
                 buffCopy.set(fBuffer.getRawBuffer());
-                int typeIndex = traverseComplexTypeDecl(typeNode);
+                traverseComplexTypeDecl(typeNode);
                 typeInfo =  fComplexTypeRegistry->get(buffCopy.getRawBuffer());
             }
         }

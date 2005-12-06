@@ -5,17 +5,18 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="..\..\..\..\..\Build\Win32\BCB6\SAX2Print.exe"/>
     <OBJFILES value="..\..\..\..\..\Build\Win32\BCB6\obj\SAX2Print.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2PrintHandlers.obj
-	  ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2FilterHandlers.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2PrintHandlers.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2FilterHandlers.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value="..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib"/>
     <LIBRARIES value=""/>
     <SPARELIBS value=""/>
     <PACKAGES value="vcl.bpi vclx.bpi vcljpg.bpi"/>
-    <PATHCPP value=".;..\..\..\..\..\samples\SAX2Print"/>
+    <PATHCPP value=".;..\..\..\..\..\samples\src\SAX2Print;..\..\..\..\..\samples\src\SAX2Print"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -25,25 +26,38 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="_NO_VCL;_VIS_NOLIB;_RTLDLL"/>
     <MAINSOURCE value="SAX2Print.cpp"/>
-    <INCLUDEPATH value="..\..\..\..\..\samples\SAX2Print;..\..\..\..\..\src;$(BCB)\include"/>
-    <LIBPATH value="..\..\..\..\..\samples\SAX2Print;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\..\..\samples\SAX2Print;..\..\..\..\..\samples\src\SAX2Print;..\..\..\..\..\src;$(BCB)\include"/>
+    <LIBPATH value="..\..\..\..\..\samples\src\SAX2Print;..\..\..\..\..\samples\SAX2Print;$(BCB)\lib"/>
     <WARNINGS value=""/>
     <WARNOPTSTR value=""/>
+    <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-src_suffix cpp -boa"/>
+    <IDLCFLAGS value="-I..\..\..\..\..\samples\SAX2Print -I..\..\..\..\..\samples\src\SAX2Print 
+      -I..\..\..\..\..\src -I$(BCB)\include -src_suffix cpp -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
-      -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -v -JPHN -M"/>
+      -N0..\..\..\..\..\Build\Win32\BCB6\obj -$YD -$W -$O- -$A8 -v -JPHN -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zd"/>
     <LFLAGS value="-I..\..\..\..\..\Build\Win32\BCB6\obj -D&quot;&quot; -ap -Tpe -x -Gn -v"/>
+    <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
     <ALLOBJ value="c0x32.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
     <ALLLIB value="$(LIBFILES) import32.lib cw32mti.lib"/>
+    <OTHERFILES value=""/>
   </LINKER>
+  <FILELIST>
+      <FILE FILENAME="SAX2Print.cpp" FORMNAME="" UNITNAME="SAX2Print" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\Build\Win32\BCB6\XercesLib.lib" FORMNAME="" UNITNAME="XercesLib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\samples\src\SAX2Print\SAX2PrintHandlers.cpp" FORMNAME="" UNITNAME="SAX2PrintHandlers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\samples\src\SAX2Print\SAX2FilterHandlers.cpp" FORMNAME="" UNITNAME="SAX2FilterHandlers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
   <IDEOPTIONS>
 [Version Info]
 IncludeVerInfo=0
@@ -73,8 +87,9 @@ ProductVersion=1.0.0.0
 Comments=
 
 [HistoryLists\hlIncludePath]
-Count=1
-Item0=..\..\..\..\..\samples\SAX2Print;..\..\..\..\..\src;$(BCB)\include
+Count=2
+Item0=..\..\..\..\..\samples\src\SAX2Print;..\..\..\..\..\src;$(BCB)\include
+Item1=..\..\..\..\..\samples\SAX2Print;..\..\..\..\..\src;$(BCB)\include
 
 [HistoryLists\hlLibraryPath]
 Count=2
@@ -90,9 +105,10 @@ Count=1
 Item0=..\..\..\..\..\Build\Win32\BCB6\obj
 
 [HistoryLists\hlFinalOutputDir]
-Count=2
-Item0=..\..\..\..\..\Build\Win32\BCB6Item1=..\..\..\..\..\Build\Win32\BCB6[Debugging]
-Item1=
+Count=3
+Item0=..\..\..\..\..\Build\Win32\BCB6\
+Item1=..\..\..\..\..\Build\Win32\BCB6Item1=..\..\..\..\..\Build\Win32\BCB6[Debugging]
+Item2=
 
 [Debugging]
 DebugSourceDirs=
@@ -114,9 +130,9 @@ ShowInfoMsgs=0
 LinkDebugVcl=1
 LinkCGLIB=0
 
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
   </IDEOPTIONS>
 </PROJECT>
