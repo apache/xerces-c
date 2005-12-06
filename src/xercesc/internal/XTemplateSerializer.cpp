@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
 
 
 // ---------------------------------------------------------------------------
@@ -48,9 +45,9 @@ public:
     KeySet
     (
       const XMLCh* const         strKey
-    , const int                  intKey1 = 0
-    , const int                  intKey2 = 0
-    ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    , const int                  intKey1
+    , const int                  intKey2
+    ,       MemoryManager* const manager
     );
 
     ~KeySet();
@@ -103,9 +100,9 @@ void KeySet::getKeys(const XMLCh*& strKey, int& intKey1, int& intKey2) const
 
 void KeySet::print() const
 {
-    char* tmpStr = XMLString::transcode(fStrKey);
+    char* tmpStr = XMLString::transcode(fStrKey, fMemoryManager);
     printf("tmpStr=<%s>, intKey1=<%d>, intKey2=<%d>\n", tmpStr, fIntKey1, fIntKey2);
-    XMLString::release(&tmpStr);
+    XMLString::release(&tmpStr, fMemoryManager);
 }
 
 static int compareKeySet(const void* keyl, const void* keyr)
@@ -145,7 +142,7 @@ private :
     SortArray
     (
           const unsigned int         size
-        ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        ,       MemoryManager* const manager
     );
 
 	~SortArray();
@@ -221,30 +218,30 @@ void  SortArray::dump() const
         fElemList[i]->print();
 }
 
-#define GET_NEXT_KEYSET()                              \
+#define GET_NEXT_KEYSET()                            \
     const KeySet* keySet  = sortArray.elementAt(i);  \
     const XMLCh*  strKey  = 0;                       \
     int           intKey1 = 0;                       \
     int           intKey2 = 0;                       \
     keySet->getKeys(strKey, intKey1, intKey2);
 
-#define SORT_KEYSET_ONEKEY()                                     \
-   SortArray sortArray(itemNumber);                              \
+#define SORT_KEYSET_ONEKEY(MM)                                   \
+   SortArray sortArray(itemNumber, MM);                          \
    while (e.hasMoreElements())                                   \
    {                                                             \
-       KeySet* keySet = new KeySet((XMLCh*) e.nextElementKey()); \
+       KeySet* keySet = new (MM) KeySet((XMLCh*) e.nextElementKey(), 0, 0, MM); \
        sortArray.addElement(keySet);                             \
    }                                                             \
    sortArray.sort();
 
-#define SORT_KEYSET_TWOKEYS()                                    \
-   SortArray sortArray(itemNumber);                              \
+#define SORT_KEYSET_TWOKEYS(MM)                                  \
+   SortArray sortArray(itemNumber, MM);                          \
    while (e.hasMoreElements())                                   \
    {                                                             \
        XMLCh*     strKey;                                        \
        int        intKey;                                        \
        e.nextElementKey((void*&)strKey, intKey);                 \
-       KeySet* keySet = new KeySet(strKey, intKey);              \
+       KeySet* keySet = new (MM) KeySet(strKey, intKey, 0, MM);  \
        sortArray.addElement(keySet);                             \
    }                                                             \
    sortArray.sort();
@@ -963,7 +960,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1041,7 +1038,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1126,7 +1123,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1206,7 +1203,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1286,7 +1283,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1392,7 +1389,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1473,7 +1470,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1561,7 +1558,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1675,7 +1672,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_ONEKEY()
+        SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -1763,8 +1760,8 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
 
         //to sort the key
         //though keyId is not supposed to be involved in compare
-        //we merely use the kepPair to encap both the string key and keyid
-        SortArray sortArray(itemNumber);
+        //we merely use the KeySet to encap both the string key and keyid
+        SortArray sortArray(itemNumber, objToStore->getMemoryManager());
         while (e.hasMoreElements())
         {
             void* key = e.nextElementKey();
@@ -1772,7 +1769,8 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
 
             if (keyId)
             {
-                KeySet* keySet = new KeySet((XMLCh*)key, keyId);
+                KeySet* keySet =
+                    new (objToStore->getMemoryManager()) KeySet((XMLCh*)key, keyId, 0, objToStore->getMemoryManager());
                 sortArray.addElement(keySet);
             }
 
@@ -1905,7 +1903,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
 
 #ifdef _DEBUG
         //to sort the key
-        SORT_KEYSET_TWOKEYS()
+        SORT_KEYSET_TWOKEYS(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
@@ -2001,7 +1999,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
 #ifdef _DEBUG
 
         //to sort the key
-        SORT_KEYSET_TWOKEYS()
+        SORT_KEYSET_TWOKEYS(serEng.getMemoryManager())
 
         //to store the data
         for (int i=0; i < itemNumber; i++)
