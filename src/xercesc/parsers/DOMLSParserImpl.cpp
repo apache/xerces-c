@@ -187,6 +187,14 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, const void* value)
             getScanner()->setErrorReporter(0);
         }
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0) 
+    {
+        // TODO
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0) 
+    {
+        // TODO
+    }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesEntityResolver) == 0) 
     {
         fXMLEntityResolver = (XMLEntityResolver*)value;
@@ -308,14 +316,6 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
             throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNormalizeCharacters) == 0) 
-    {
-        // TODO
-    }
-    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0) 
-    {
-        // TODO
-    }
-    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0) 
     {
         // TODO
     }
@@ -613,33 +613,23 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* /*value*/) 
         XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0) 
       return true;
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0)
+      return false;
     
     return false;
 }
 
-bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool /*value*/) const
+bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
 {
     if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMValidate) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMWellFormed) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMCheckCharacterNormalization) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMComments) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMDatatypeNormalization) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMElementContentWhitespace) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMEntities) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMNormalizeCharacters) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMSplitCDATASections) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0 ||
@@ -658,8 +648,21 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool /*value*/) const
         XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
- 
       return true;
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMCheckCharacterNormalization) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMNormalizeCharacters) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMSplitCDATASections) == 0)
+      return false;
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0)
+      return value?false:true;
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMWellFormed) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
+            XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0)
+      return value?true:false;
     
     return false;
 }
