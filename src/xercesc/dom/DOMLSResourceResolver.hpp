@@ -30,14 +30,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMLSInput;
 
 /**
-  * DOMEntityResolver provides a way for applications to redirect references
+  * DOMLSResourceResolver provides a way for applications to redirect references
   * to external entities.
   *
   * <p>Applications needing to implement customized handling for external
   * entities must implement this interface and register their implementation
-  * by setting the entityResolver attribute of the DOMBuilder.</p>
+  * by setting the entityResolver attribute of the DOMLSParser.</p>
   *
-  * <p>The DOMBuilder will then allow the application to intercept any
+  * <p>The DOMLSParser will then allow the application to intercept any
   * external entities (including the external DTD subset and external parameter
   * entities) before including them.</p>
   *
@@ -46,11 +46,11 @@ class DOMLSInput;
   * databases or other specialized input sources, or for applications that use
   * URNs.</p>
   *
-  * @see DOMBuilder#setEntityResolver
+  * @see DOMLSParser#getDomConfig
   * @see DOMLSInput#DOMLSInput
   * @since DOM Level 3
   */
-class CDOM_EXPORT DOMEntityResolver
+class CDOM_EXPORT DOMLSResourceResolver
 {
 protected:
     // -----------------------------------------------------------------------
@@ -58,7 +58,7 @@ protected:
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
     //@{    
-    DOMEntityResolver() {};
+    DOMLSResourceResolver() {};
     //@}
 
 private:
@@ -67,8 +67,8 @@ private:
     // -----------------------------------------------------------------------
     /** @name Unimplemented constructors and operators */
     //@{
-    DOMEntityResolver(const DOMEntityResolver &);
-    DOMEntityResolver & operator = (const DOMEntityResolver &);
+    DOMLSResourceResolver(const DOMLSResourceResolver &);
+    DOMLSResourceResolver & operator = (const DOMLSResourceResolver &);
     //@}
 
 public:
@@ -81,52 +81,54 @@ public:
      * Destructor
      *
      */
-    virtual ~DOMEntityResolver() {};
+    virtual ~DOMLSResourceResolver() {};
     //@}
 
     // -----------------------------------------------------------------------
-    //  Virtual DOMEntityResolver interface
+    //  Virtual DOMLSResourceResolver interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
-     * Allow the application to resolve external entities.
+     * Allow the application to resolve external resources.
      *
-     * <p>The DOMLSParser will call this method before opening any external
-     * entity except the top-level document entity (including the
-     * external DTD subset, external entities referenced within the
-     * DTD, and external entities referenced within the document
-     * element): the application may request that the DOMBuilder resolve
-     * the entity itself, that it use an alternative URI, or that it
-     * use an entirely different input source.</p>
+     * The <code>DOMLSParser</code> will call this method before opening any external resource, 
+     * including the external DTD subset, external entities referenced within the DTD, and 
+     * external entities referenced within the document element (however, the top-level 
+     * document entity is not passed to this method). The application may then request that 
+     * the <code>DOMLSParser</code> resolve the external resource itself, that it use an 
+     * alternative URI, or that it use an entirely different input source.
      *
-     * <p>Application writers can use this method to redirect external
-     * system identifiers to secure and/or local URIs, to look up
-     * public identifiers in a catalogue, or to read an entity from a
-     * database or other input source (including, for example, a dialog
-     * box).</p>
+     * Application writers can use this method to redirect external system identifiers to 
+     * secure and/or local URI, to look up public identifiers in a catalogue, or to read 
+     * an entity from a database or other input source (including, for example, a dialog box).
      *
-     * <p>If the system identifier is a URL, the DOMBuilder parser must
-     * resolve it fully before reporting it to the application.</p>
+     * The returned DOMLSInput is owned by the DOMLSParser which is
+     * responsible to clean up the memory.
      *
-     * <p> The returned DOMLSInput is owned by the DOMBuilder which is
-     *     responsible to clean up the memory.
-     *
-     * @param publicId The public identifier of the external entity
-     *        being referenced, or null if none was supplied.
-     * @param systemId The system identifier of the external entity
-     *        being referenced.
-     * @param baseURI The absolute base URI of the resource being parsed, or
-     *        <code>null</code> if there is no base URI.
+     * @param resourceType The type of the resource being resolved. For XML [XML 1.0] resources 
+     *                     (i.e. entities), applications must use the value "http://www.w3.org/TR/REC-xml". 
+     *                     For XML Schema [XML Schema Part 1], applications must use the value 
+     *                     "http://www.w3.org/2001/XMLSchema". Other types of resources are outside 
+     *                     the scope of this specification and therefore should recommend an absolute 
+     *                     URI in order to use this method.
+     * @param namespaceUri The namespace of the resource being resolved, e.g. the target namespace 
+     *                     of the XML Schema [XML Schema Part 1] when resolving XML Schema resources.
+     * @param publicId     The public identifier of the external entity being referenced, or <code>null</code> 
+     *                     if no public identifier was supplied or if the resource is not an entity.
+     * @param systemId     The system identifier, a URI reference [IETF RFC 2396], of the external 
+     *                     resource being referenced, or <code>null</code> if no system identifier was supplied.
+     * @param baseURI      The absolute base URI of the resource being parsed, or <code>null</code> if 
+     *                     there is no base URI.
      * @return A DOMLSInput object describing the new input source,
      *         or <code>null</code> to request that the parser open a regular
-     *         URI connection to the system identifier.
-     *         The returned DOMLSInput is owned by the DOMBuilder which is
+     *         URI connection to the resource.
+     *         The returned DOMLSInput is owned by the DOMLSParser which is
      *         responsible to clean up the memory.
      * @see DOMLSInput#DOMLSInput
      * @since DOM Level 3
      */
-    virtual DOMLSInput* resolveEntity
+    virtual DOMLSInput* resolveResource
     (
         const   XMLCh* const    resourceType
         , const XMLCh* const    namespaceUri

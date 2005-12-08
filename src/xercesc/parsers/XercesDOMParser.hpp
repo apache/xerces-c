@@ -489,7 +489,7 @@ public :
       *         method or NULL otherwise to indicate no processing was done.
       *         The returned InputSource is owned by the parser which is
       *         responsible to clean up the memory.
-      * @see DOMEntityResolver
+      * @see DOMLSResourceResolver
       * @see XMLEntityHandler
       */
     virtual InputSource* resolveEntity

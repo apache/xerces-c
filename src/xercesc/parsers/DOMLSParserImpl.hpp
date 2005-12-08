@@ -35,6 +35,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XMLEntityResolver;
 class XMLResourceIdentifier;
 class DOMStringListImpl;
+class DOMLSResourceResolver;
 
  /**
   * Introduced in DOM Level 3
@@ -519,7 +520,7 @@ public :
       *         method or NULL otherwise to indicate no processing was done.
       *         The returned InputSource is owned by the DOMLSParser which is
       *         responsible to clean up the memory.
-      * @see DOMEntityResolver
+      * @see DOMLSResourceResolver
       * @see XMLEntityHandler
       */
     virtual InputSource* resolveEntity
@@ -645,7 +646,7 @@ private :
     //-----------------------------------------------------------------------
     bool                        fAutoValidation;
     bool                        fValidation;
-    DOMEntityResolver*          fEntityResolver;
+    DOMLSResourceResolver*      fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
     DOMErrorHandler*            fErrorHandler;
     DOMLSParserFilter*          fFilter;

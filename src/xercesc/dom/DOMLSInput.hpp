@@ -40,7 +40,7 @@ class BinInputStream;
   *
   * <p>There are two places that the application will deliver this input source
   * to the parser: as the argument to the parse method, or as the return value
-  * of the DOMEntityResolver.resolveEntity method.</p>
+  * of the DOMLSResourceResolver.resolveResource method.</p>
   *
   * <p>The DOMBuilder will use the DOMLSInput object to determine how to
   * read XML input. If there is a character stream available, the parser will
@@ -53,7 +53,7 @@ class BinInputStream;
   * never modify it in any way (it may modify a copy if necessary).</p>
   *
   * @see DOMBuilder#parse
-  * @see DOMEntityResolver#resolveEntity
+  * @see DOMLSResourceResolver#resolveResource
   * @since DOM Level 3
   */
 class CDOM_EXPORT DOMLSInput

@@ -30,7 +30,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/parsers/DOMLSParserImpl.hpp>
 #include <xercesc/util/IOException.hpp>
-#include <xercesc/dom/DOMEntityResolver.hpp>
+#include <xercesc/dom/DOMLSResourceResolver.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMLSParserFilter.hpp>
 #include <xercesc/dom/DOMNodeFilter.hpp>
@@ -168,7 +168,7 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, const void* value)
 {
     if (XMLString::compareIStringASCII(name, XMLUni::fgDOMResourceResolver) == 0) 
     {
-        fEntityResolver = (DOMEntityResolver*)value;
+        fEntityResolver = (DOMLSResourceResolver*)value;
         if (fEntityResolver) {
             getScanner()->setEntityHandler(this);
             fXMLEntityResolver = 0;
@@ -802,7 +802,7 @@ DOMLSParserImpl::resolveEntity(const XMLCh* const publicId,
     //
     if (fEntityResolver) {
 
-        DOMLSInput* is = fEntityResolver->resolveEntity(0, 0, publicId, systemId, baseURI);
+        DOMLSInput* is = fEntityResolver->resolveResource(0, 0, publicId, systemId, baseURI);
 
         if (is)
             return new (getMemoryManager()) Wrapper4DOMLSInput(is, true, getMemoryManager());
@@ -819,11 +819,11 @@ DOMLSParserImpl::resolveEntity( XMLResourceIdentifier* resourceIdentifier )
     //  return a null pointer to cause the default resolution.
     //
     if (fEntityResolver) {
-        DOMLSInput* is = fEntityResolver->resolveEntity(resourceIdentifier->getResourceIdentifierType()==XMLResourceIdentifier::ExternalEntity?XMLUni::fgDOMDTDType:XMLUni::fgDOMXMLSchemaType,
-                                                        resourceIdentifier->getNameSpace(),
-                                                        resourceIdentifier->getPublicId(),
-                                                        resourceIdentifier->getSystemId(), 
-                                                        resourceIdentifier->getBaseURI());
+        DOMLSInput* is = fEntityResolver->resolveResource(resourceIdentifier->getResourceIdentifierType()==XMLResourceIdentifier::ExternalEntity?XMLUni::fgDOMDTDType:XMLUni::fgDOMXMLSchemaType,
+                                                          resourceIdentifier->getNameSpace(),
+                                                          resourceIdentifier->getPublicId(),
+                                                          resourceIdentifier->getSystemId(), 
+                                                          resourceIdentifier->getBaseURI());
         if (is)
             return new (getMemoryManager()) Wrapper4DOMLSInput(is, true, getMemoryManager());    
     }

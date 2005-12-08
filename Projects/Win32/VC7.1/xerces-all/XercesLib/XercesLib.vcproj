@@ -2353,9 +2353,6 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMEntityReference.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMEntityResolver.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMError.hpp">
 			</File>
 			<File
@@ -2402,6 +2399,9 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSParserFilter.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSResourceResolver.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMLSSerializer.hpp">

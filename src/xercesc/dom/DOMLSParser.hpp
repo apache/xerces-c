@@ -30,7 +30,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class DOMErrorHandler;
-class DOMEntityResolver;
 class DOMLSInput;
 class DOMLSParserFilter;
 class DOMNode;

@@ -266,7 +266,6 @@ dom_headers	= \
 	xercesc/dom/DOMElement.hpp \
 	xercesc/dom/DOMEntity.hpp \
 	xercesc/dom/DOMEntityReference.hpp \
-	xercesc/dom/DOMEntityResolver.hpp \
 	xercesc/dom/DOMError.hpp \
 	xercesc/dom/DOMErrorHandler.hpp \
 	xercesc/dom/DOMException.hpp \
@@ -281,6 +280,7 @@ dom_headers	= \
 	xercesc/dom/DOMLSOutput.hpp \
 	xercesc/dom/DOMLSParser.hpp \
 	xercesc/dom/DOMLSParserFilter.hpp \
+	xercesc/dom/DOMLSResourceResolver.hpp \
 	xercesc/dom/DOMLSSerializer.hpp \
 	xercesc/dom/DOMLSSerializerFilter.hpp \
 	xercesc/dom/DOMNamedNodeMap.hpp \

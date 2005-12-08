@@ -57,7 +57,7 @@
 // Introduced in DOM Level 3
 #include <xercesc/dom/DOMLSParser.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
-#include <xercesc/dom/DOMEntityResolver.hpp>
+#include <xercesc/dom/DOMLSResourceResolver.hpp>
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMImplementationLS.hpp>

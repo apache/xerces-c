@@ -31,29 +31,11 @@ class BinInputStream;
 
 
 /**
-  * This interface represents a single input source for an XML entity.
+  * This interface represents an output destination for data.
   *
-  * <p>This interface allows an application to encapsulate information about
-  * an input source in a single object, which may include a public identifier,
-  * a system identifier, a byte stream (possibly with a specified encoding),
-  * and/or a character stream.</p>
+  * Xerces currently doesn't use <code>DOMLSOutput</code> objects
   *
-  * <p>There are two places that the application will deliver this input source
-  * to the parser: as the argument to the parse method, or as the return value
-  * of the DOMEntityResolver.resolveEntity method.</p>
-  *
-  * <p>The DOMBuilder will use the DOMLSOutput object to determine how to
-  * read XML input. If there is a character stream available, the parser will
-  * read that stream directly; if not, the parser will use a byte stream, if
-  * available; if neither a character stream nor a byte stream is available,
-  * the parser will attempt to open a URI connection to the resource identified
-  * by the system identifier.</p>
-  *
-  * <p>A DOMLSOutput object belongs to the application: the parser shall
-  * never modify it in any way (it may modify a copy if necessary).</p>
-  *
-  * @see DOMBuilder#parse
-  * @see DOMEntityResolver#resolveEntity
+  * @see XMLFormatTarget
   * @since DOM Level 3
   */
 class CDOM_EXPORT DOMLSOutput
@@ -112,19 +94,6 @@ public:
      */
     virtual const XMLCh* getEncoding() const = 0;
 
-
-    /**
-     * Get the public identifier for this input source.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return The public identifier, or null if none was supplied.
-     * @see #setPublicId
-     * @since DOM Level 3
-     */
-    virtual const XMLCh* getPublicId() const = 0;
-
-
     /**
      * Get the system identifier for this input source.
      *
@@ -137,20 +106,6 @@ public:
      * @since DOM Level 3
      */
     virtual const XMLCh* getSystemId() const = 0;
-
-
-    /**
-     * Get the base URI to be used for resolving relative URIs to absolute
-     * URIs. If the baseURI is itself a relative URI, the behavior is
-     * implementation dependent.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return The base URI.
-     * @see #setBaseURI
-     * @since DOM Level 3
-     */
-    virtual const XMLCh* getBaseURI() const = 0;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -171,21 +126,6 @@ public:
      */
     virtual void setEncoding(const XMLCh* const encodingStr) = 0;
 
-
-    /**
-     * Set the public identifier for this input source.
-     *
-     * <p>The public identifier is always optional: if the application writer
-     * includes one, it will be provided as part of the location information.</p>
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param publicId The public identifier as a string.
-     * @see #getPublicId
-     * @since DOM Level 3
-     */
-    virtual void setPublicId(const XMLCh* const publicId) = 0;
-
     /**
      * Set the system identifier for this input source.
      *
@@ -202,19 +142,6 @@ public:
      * @since DOM Level 3
      */
     virtual void setSystemId(const XMLCh* const systemId) = 0;
-
-    /**
-     * Set the base URI to be used for resolving relative URIs to absolute
-     * URIs. If the baseURI is itself a relative URI, the behavior is
-     * implementation dependent.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param baseURI The base URI.
-     * @see #getBaseURI
-     * @since DOM Level 3
-     */
-    virtual void setBaseURI(const XMLCh* const baseURI) = 0;
     //@}
 
     // -----------------------------------------------------------------------
@@ -236,32 +163,6 @@ public:
      * @see BinInputStream
      */
     virtual BinInputStream* makeStream() const = 0;
-
-    /**
-     * Indicates if the parser should issue fatal error if this input source
-     * is not found.  If set to false, the parser issue warning message instead.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param  flag True if the parser should issue fatal error if this input source is not found.
-     *               If set to false, the parser issue warning message instead.  (Default: true)
-     *
-     * @see #getIssueFatalErrorIfNotFound
-     */
-    virtual void setIssueFatalErrorIfNotFound(const bool flag) = 0;
-
-
-    /**
-     * Get the flag that indicates if the parser should issue fatal error if this input source
-     * is not found.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return True if the parser should issue fatal error if this input source is not found.
-     *         False if the parser issue warning message instead.
-     * @see #setIssueFatalErrorIfNotFound
-     */
-    virtual bool getIssueFatalErrorIfNotFound() const = 0;
 
     /**
      * Called to indicate that this DOMLSOutput is no longer in use
