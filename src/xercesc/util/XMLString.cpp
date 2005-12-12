@@ -1808,17 +1808,16 @@ void XMLString::removeChar(const XMLCh*     const srcString
                          , const XMLCh&           toRemove
                          ,       XMLBuffer&       dstBuffer)
 {
+    if(!srcString) return;
     const XMLCh* pszSrc = srcString;
     XMLCh c;
 
     dstBuffer.reset();
 
-    while ((c=*pszSrc)!=0) 
+    while ((c=*pszSrc++)!=0) 
     {
         if (c != toRemove) 
             dstBuffer.append(c);
-
-        ++pszSrc;
     }
 }
 
