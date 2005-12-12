@@ -1813,11 +1813,12 @@ void XMLString::removeChar(const XMLCh*     const srcString
 
     dstBuffer.reset();
 
-    while ((c=*pszSrc++)!=0) 
+    while ((c=*xbpszSrc)!=0) 
     {
         if (c != toRemove) 
             dstBuffer.append(c);
 
+        ++xbpszSrc;
     }
 }
 
