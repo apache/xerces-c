@@ -49,6 +49,44 @@ DOMTypeInfoImpl::DOMTypeInfoImpl(const XMLCh* namespaceUri/*=0*/, const XMLCh* n
     //  - [schema specified]=false
 }
 
+DOMTypeInfoImpl::DOMTypeInfoImpl(DOMDocumentImpl* ownerDoc, const DOMPSVITypeInfo* sourcePSVI)
+: fBitFields(0),
+  fTypeName(0), 
+  fTypeNamespace(0),
+  fMemberTypeName(0),
+  fMemberTypeNamespace(0),
+  fDefaultValue(0),
+  fNormalizedValue(0)
+{
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Validity, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Validity));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Nil, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Nil));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Anonymous, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Anonymous));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified, 
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified));
+
+    setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name,
+        ownerDoc->getPooledString(sourcePSVI->getStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name)));
+    setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace,
+        ownerDoc->getPooledString(sourcePSVI->getStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace)));
+    setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name,
+        ownerDoc->getPooledString(sourcePSVI->getStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name)));
+    setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace,
+        ownerDoc->getPooledString(sourcePSVI->getStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace)));
+    setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default,
+        ownerDoc->getPooledString(sourcePSVI->getStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default)));
+    setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Normalized_Value,
+        ownerDoc->getPooledString(sourcePSVI->getStringProperty(DOMPSVITypeInfo::PSVI_Schema_Normalized_Value)));
+}
+
 const XMLCh* DOMTypeInfoImpl::getTypeName() const {
     // if it's a DTD, return the data that was stored
     if(!getNumericProperty(PSVI_Schema_Specified))
