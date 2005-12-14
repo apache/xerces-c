@@ -40,6 +40,7 @@
 #include "DOMNodeIteratorImpl.hpp"
 #include "DOMNodeIDMap.hpp"
 #include "DOMRangeImpl.hpp"
+#include "DOMTypeInfoImpl.hpp"
 
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLChar.hpp>
@@ -1008,9 +1009,24 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
             if (source->getLocalName() == 0)
                 newelement = createElement(source->getNodeName());
             else
-                newelement = createElementNS(source->getNamespaceURI(),
-
-            source->getNodeName());
+            {
+                DOMElementNSImpl* nsElem = (DOMElementNSImpl*)createElementNS(source->getNamespaceURI(), source->getNodeName());
+                DOMTypeInfoImpl* clonedTypeInfo=NULL;
+                // if the source has type informations, copy them
+                DOMPSVITypeInfo* sourcePSVI=(DOMPSVITypeInfo*)source->getInterface(XMLUni::fgXercescInterfacePSVITypeInfo);
+                if(sourcePSVI && sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified))
+                    clonedTypeInfo=new (this) DOMTypeInfoImpl(this, sourcePSVI);
+                else
+                {
+                    const DOMTypeInfo * typeInfo=((DOMElement*)source)->getTypeInfo();
+                    // copy it only if it has valid data
+                    if(typeInfo && typeInfo->getName()!=NULL)
+                        clonedTypeInfo=new (this) DOMTypeInfoImpl(typeInfo->getNamespace(), typeInfo->getName());
+                }
+                if(clonedTypeInfo)
+                    nsElem->setTypeInfo(clonedTypeInfo);
+                newelement=nsElem;
+            }
             DOMNamedNodeMap *srcattr=source->getAttributes();
             if(srcattr!=0)
                 for(XMLSize_t i=0;i<srcattr->getLength();++i)
@@ -1037,11 +1053,28 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
         }
         break;
     case DOMNode::ATTRIBUTE_NODE :
-        if (source->getLocalName() == 0)
-            newnode = createAttribute(source->getNodeName());
-        else
-            newnode = createAttributeNS(source->getNamespaceURI(),
-            source->getNodeName());
+        {
+            DOMAttrImpl* newattr=NULL;
+            if (source->getLocalName() == 0)
+                newattr = (DOMAttrImpl*)createAttribute(source->getNodeName());
+            else
+                newattr = (DOMAttrImpl*)createAttributeNS(source->getNamespaceURI(), source->getNodeName());
+            DOMTypeInfoImpl* clonedTypeInfo=NULL;
+            // if the source has type informations, copy them
+            DOMPSVITypeInfo* sourcePSVI=(DOMPSVITypeInfo*)source->getInterface(XMLUni::fgXercescInterfacePSVITypeInfo);
+            if(sourcePSVI && sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Schema_Specified))
+                clonedTypeInfo=new (this) DOMTypeInfoImpl(this, sourcePSVI);
+            else
+            {
+                const DOMTypeInfo * typeInfo=((DOMElement*)source)->getTypeInfo();
+                // copy it only if it has valid data
+                if(typeInfo && typeInfo->getName()!=NULL)
+                    clonedTypeInfo=new (this) DOMTypeInfoImpl(typeInfo->getNamespace(), typeInfo->getName());
+            }
+            if(clonedTypeInfo)
+                newattr->setTypeInfo(clonedTypeInfo);
+            newnode=newattr;
+        }
         deep = true;
         // Kids carry value
 

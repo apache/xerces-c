@@ -45,6 +45,7 @@ public:
     //  Constructor
     //-----------------------------------------------------------------------------------
     DOMTypeInfoImpl(const XMLCh* namespaceUri=0, const XMLCh* name=0);
+    DOMTypeInfoImpl(DOMDocumentImpl* ownerDoc, const DOMPSVITypeInfo* sourcePSVI);
 
     static DOMTypeInfoImpl  g_DtdValidatedElement;
     static DOMTypeInfoImpl  g_DtdNotValidatedAttribute;
