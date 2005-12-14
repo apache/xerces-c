@@ -543,7 +543,7 @@ bool DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version
     return fNode.isSupported (feature, version);
 }
 
-void* DOMDocumentTypeImpl::getFeature(const XMLCh* feature, const XMLCh* version)
+void* DOMDocumentTypeImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentTypeImpl))
         return (DOMDocumentTypeImpl*)this;

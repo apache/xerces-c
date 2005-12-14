@@ -196,7 +196,7 @@ public:
      *         interfaces associated with that feature. 
      * @since DOM Level 3
      */
-    virtual void* getFeature(const XMLCh* feature, const XMLCh* version) = 0;
+    virtual void* getFeature(const XMLCh* feature, const XMLCh* version) const = 0;
 
     //@}
 

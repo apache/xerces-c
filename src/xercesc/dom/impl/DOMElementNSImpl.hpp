@@ -55,7 +55,7 @@ public:
 
     virtual DOMNode * cloneNode(bool deep) const;
     virtual bool isSupported(const XMLCh *feature, const XMLCh *version) const;
-    virtual void* getFeature(const XMLCh* feature, const XMLCh* version);
+    virtual void* getFeature(const XMLCh* feature, const XMLCh* version) const;
 
     //Introduced in DOM Level 2
     virtual const XMLCh *getNamespaceURI() const;

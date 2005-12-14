@@ -234,7 +234,7 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 
 
 //Introduced in DOM Level 3
-void* DOMImplementationImpl::getFeature(const XMLCh*, const XMLCh*){
+void* DOMImplementationImpl::getFeature(const XMLCh*, const XMLCh*) const {
     return 0;
 }
 

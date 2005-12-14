@@ -266,7 +266,7 @@ bool DOMElementNSImpl::isSupported(const XMLCh *feature, const XMLCh *version) c
     return fNode.isSupported (feature, version);
 }
 
-void* DOMElementNSImpl::getFeature(const XMLCh* feature, const XMLCh* version)
+void* DOMElementNSImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
         return (DOMPSVITypeInfo*)fSchemaType;

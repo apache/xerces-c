@@ -1044,7 +1044,7 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
     }
 }
 
-void* DOMNodeImpl::getFeature(const XMLCh*, const XMLCh*)      {
+void* DOMNodeImpl::getFeature(const XMLCh*, const XMLCh*) const {
     return 0;
 }
 

@@ -125,7 +125,7 @@ public:
     const XMLCh*      lookupPrefix(const XMLCh* namespaceURI) const ;
     bool              isDefaultNamespace(const XMLCh* namespaceURI) const ;
     const XMLCh*      lookupNamespaceURI(const XMLCh* prefix) const  ;
-    void*             getFeature(const XMLCh* feature, const XMLCh* version);
+    void*             getFeature(const XMLCh* feature, const XMLCh* version) const;
 
 
     // Helper functions for DOM Level 3
@@ -323,7 +323,7 @@ public: // should really be protected - ALH
     virtual const XMLCh*           lookupPrefix(const XMLCh* namespaceURI) const  ;\
     virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) const;\
     virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) const  ;\
-    virtual       void*            getFeature(const XMLCh* feature, const XMLCh* version) ;\
+    virtual       void*            getFeature(const XMLCh* feature, const XMLCh* version) const ;\
     virtual       void             release()
 
 
@@ -369,7 +369,7 @@ public: // should really be protected - ALH
            const XMLCh*     xxx::lookupPrefix(const XMLCh* namespaceURI) const {return fNode.lookupPrefix(namespaceURI); };
            bool             xxx::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
            const XMLCh*     xxx::lookupNamespaceURI(const XMLCh* prefix) const {return fNode.lookupNamespaceURI(prefix); };
-           void*            xxx::getFeature(const XMLCh* feature, const XMLCh* version) {return fNode.getFeature(feature, version); };
+           void*            xxx::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); };
 
 
 */

@@ -308,7 +308,7 @@ bool DOMAttrImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
     return fNode.isSupported (feature, version);
 }
 
-void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version)
+void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
         return (DOMPSVITypeInfo*)fSchemaType;

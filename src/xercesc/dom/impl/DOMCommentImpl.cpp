@@ -162,7 +162,7 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
            const XMLCh*     DOMCommentImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMCommentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMCommentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
-           void*            DOMCommentImpl::getFeature(const XMLCh* feature, const XMLCh* version)  {return fNode.getFeature(feature, version); }
+           void*            DOMCommentImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
 
 
 
