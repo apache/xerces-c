@@ -628,7 +628,7 @@ void XMLPlatformUtils::platformInit()
 {
 }
 
-void* XMLPlatformUtils::makeMutex()
+void* XMLPlatformUtils::makeMutex(MemoryManager*)
 {
         return 0;
 }
