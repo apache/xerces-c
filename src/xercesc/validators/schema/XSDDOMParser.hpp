@@ -259,13 +259,6 @@ public :
     // -----------------------------------------------------------------------
     //  XMLEntityHandler interface
     // -----------------------------------------------------------------------
-    virtual InputSource* resolveEntity
-    (
-        const   XMLCh* const    publicId
-        , const XMLCh* const    systemId
-        , const XMLCh* const    baseURI = 0
-    );
-
     virtual InputSource* resolveEntity(XMLResourceIdentifier* resourceIdentifier);
 
 protected :

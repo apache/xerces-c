@@ -594,20 +594,6 @@ void DOMParser::resetErrors()
 // ---------------------------------------------------------------------------
 //  DOMParser: Implementation of XMLEntityHandler interface
 // ---------------------------------------------------------------------------
-InputSource*
-DOMParser::resolveEntity(const XMLCh* const publicId,
-                         const XMLCh* const systemId,
-                         const XMLCh* const /*baseURI*/)
-{
-    //
-    //  Just map it to the SAX entity resolver. If there is not one installed,
-    //  return a null pointer to cause the default resolution.
-    //
-    if (fEntityResolver)
-        return fEntityResolver->resolveEntity(publicId, systemId);
-    return 0;
-}
-
 InputSource* DOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier) 
 {
     //

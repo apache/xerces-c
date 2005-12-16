@@ -1125,17 +1125,6 @@ void SAX2XMLReaderImpl::resetEntities()
     // Nothing to do for this one
 }
 
-
-InputSource* SAX2XMLReaderImpl::resolveEntity(   const   XMLCh* const    publicId
-                                               , const   XMLCh* const    systemId
-                                               , const   XMLCh* const)
-{
-    // Just map to the SAX entity resolver handler
-    if (fEntityResolver)
-        return fEntityResolver->resolveEntity(publicId, systemId);
-    return 0;
-}
-
 InputSource* SAX2XMLReaderImpl::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
 {
     //

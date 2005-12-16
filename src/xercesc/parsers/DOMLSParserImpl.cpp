@@ -792,26 +792,6 @@ void DOMLSParserImpl::resetErrors()
 //  DOMLSParserImpl: Implementation of XMLEntityHandler interface
 // ---------------------------------------------------------------------------
 InputSource*
-DOMLSParserImpl::resolveEntity(const XMLCh* const publicId,
-                              const XMLCh* const systemId,
-                              const XMLCh* const baseURI)
-{
-    //
-    //  Just map it to the SAX entity resolver. If there is not one installed,
-    //  return a null pointer to cause the default resolution.
-    //
-    if (fEntityResolver) {
-
-        DOMLSInput* is = fEntityResolver->resolveResource(0, 0, publicId, systemId, baseURI);
-
-        if (is)
-            return new (getMemoryManager()) Wrapper4DOMLSInput(is, true, getMemoryManager());
-    }
-
-    return 0;
-}
-
-InputSource*
 DOMLSParserImpl::resolveEntity( XMLResourceIdentifier* resourceIdentifier )
 {
     //

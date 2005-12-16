@@ -99,33 +99,6 @@ public:
 
     /**
       * This method allows the entity handler to provide customized
-      * application specific entity resolution. This method is defined
-      * by SAX 1.0 API.
-      *
-      * <i>Only one resolveEntity method will be used.  If both setEntityResolver and 
-      * setXMLEntityResolver are called, then the last one is used.</i>
-      *
-      * @param publicId A const pointer to a Unicode string representing the
-      *                 public id of the entity just parsed.
-      * @param systemId A const pointer to a Unicode string representing the
-      *                 system id of the entity just parsed.
-      * @param baseURI  A const pointer to a Unicode string representing the
-      *                 base URI of the entity just parsed,
-      *                 or <code>null</code> if there is no base URI.
-      * @return The value returned by the SAX resolveEntity method or
-      *         NULL otherwise to indicate no processing was done.
-      *         The returned InputSource is owned by the parser which is
-      *         responsible to clean up the memory.
-      */
-    virtual InputSource* resolveEntity
-    (
-        const   XMLCh* const    publicId
-        , const XMLCh* const    systemId
-        , const XMLCh* const    baseURI = 0
-    ) = 0;
-
-    /**
-      * This method allows the entity handler to provide customized
       * application specific entity resolution. 
       *
       * <i>Only one resolveEntity method will be used.  If both setEntityResolver and 

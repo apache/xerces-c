@@ -504,36 +504,6 @@ public :
       *
       * This method allows a user installed entity handler to further
       * process any pointers to external entities. The applications can
-      * implement 'redirection' via this callback. This method is also
-      * borrowed from the SAX specification.
-      *
-      * @deprecated This method is no longer called (the other resolveEntity one is).
-      *
-      * @param publicId A const pointer to a Unicode string representing the
-      *                 public id of the entity just parsed.
-      * @param systemId A const pointer to a Unicode string representing the
-      *                 system id of the entity just parsed.
-      * @param baseURI  A const pointer to a Unicode string representing the
-      *                 base URI of the entity just parsed,
-      *                 or <code>null</code> if there is no base URI.
-      * @return The value returned by the user installed resolveEntity
-      *         method or NULL otherwise to indicate no processing was done.
-      *         The returned InputSource is owned by the DOMLSParser which is
-      *         responsible to clean up the memory.
-      * @see DOMLSResourceResolver
-      * @see XMLEntityHandler
-      */
-    virtual InputSource* resolveEntity
-    (
-        const   XMLCh* const    publicId
-        , const XMLCh* const    systemId
-        , const XMLCh* const    baseURI = 0
-    );
-
-    /** Resolve a public/system id
-      *
-      * This method allows a user installed entity handler to further
-      * process any pointers to external entities. The applications can
       * implement 'redirection' via this callback.  
       *
       * @param resourceIdentifier An object containing the type of

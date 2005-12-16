@@ -509,16 +509,6 @@ void XSDDOMParser::error(const   unsigned int                code
                                   systemId, publicId, lineNum, colNum);
 }
 
-InputSource* XSDDOMParser::resolveEntity(const XMLCh* const publicId,
-                                         const XMLCh* const systemId,
-                                         const XMLCh* const baseURI)
-{
-    if (fUserEntityHandler)
-        return fUserEntityHandler->resolveEntity(publicId, systemId, baseURI);
-
-    return 0;
-}
-
 InputSource*
 XSDDOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
 {
