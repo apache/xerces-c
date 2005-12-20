@@ -1484,6 +1484,9 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 inline bool XMLString::equals(   const XMLCh* const    str1
                                , const XMLCh* const    str2)
 {
+    if(str1==str2)
+        return true;
+
     const XMLCh* psz1 = str1;
     const XMLCh* psz2 = str2;
 
@@ -1510,6 +1513,9 @@ inline bool XMLString::equals(   const XMLCh* const    str1
 inline bool XMLString::equals(   const char* const    str1
                                , const char* const    str2)
 {
+    if(str1==str2)
+        return true;
+
     const char* psz1 = str1;
     const char* psz2 = str2;
 
