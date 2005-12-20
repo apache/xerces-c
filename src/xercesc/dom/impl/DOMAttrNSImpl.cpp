@@ -56,7 +56,7 @@ DOMAttrImpl(other, deep)
 
 DOMNode * DOMAttrNSImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ATTR_NS_OBJECT) DOMAttrNSImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ATTR_NS_OBJECT) DOMAttrNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -144,7 +144,7 @@ void DOMAttrNSImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
-        doc->release(this, DOMDocumentImpl::ATTR_NS_OBJECT);
+        doc->release(this, DOMMemoryManager::ATTR_NS_OBJECT);
     }
     else {
         // shouldn't reach here

@@ -281,6 +281,7 @@ public :
     // Private interface names
     static const XMLCh fgXercescInterfacePSVITypeInfo[];
     static const XMLCh fgXercescInterfaceDOMDocumentTypeImpl[];
+    static const XMLCh fgXercescInterfaceDOMMemoryManager[];
 
     // Locale
     static const char  fgXercescDefaultLocale[];

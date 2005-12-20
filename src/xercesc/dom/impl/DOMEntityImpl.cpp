@@ -71,7 +71,7 @@ DOMEntityImpl::~DOMEntityImpl() {
 
 DOMNode *DOMEntityImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ENTITY_OBJECT) DOMEntityImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ENTITY_OBJECT) DOMEntityImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -217,7 +217,7 @@ void DOMEntityImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
-        doc->release(this, DOMDocumentImpl::ENTITY_OBJECT);
+        doc->release(this, DOMMemoryManager::ENTITY_OBJECT);
     }
     else {
         // shouldn't reach here

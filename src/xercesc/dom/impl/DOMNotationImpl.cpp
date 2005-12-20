@@ -51,7 +51,7 @@ DOMNotationImpl::~DOMNotationImpl()
 
 DOMNode *DOMNotationImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::NOTATION_OBJECT) DOMNotationImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::NOTATION_OBJECT) DOMNotationImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -113,7 +113,7 @@ void DOMNotationImpl::release()
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
-        doc->release(this, DOMDocumentImpl::NOTATION_OBJECT);
+        doc->release(this, DOMMemoryManager::NOTATION_OBJECT);
     }
     else {
         // shouldn't reach here

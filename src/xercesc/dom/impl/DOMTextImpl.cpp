@@ -59,7 +59,7 @@ DOMTextImpl::~DOMTextImpl()
 
 DOMNode *DOMTextImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::TEXT_OBJECT) DOMTextImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::TEXT_OBJECT) DOMTextImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -150,7 +150,7 @@ void DOMTextImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fCharacterData.releaseBuffer();
-        doc->release(this, DOMDocumentImpl::TEXT_OBJECT);
+        doc->release(this, DOMMemoryManager::TEXT_OBJECT);
     }
     else {
         // shouldn't reach here

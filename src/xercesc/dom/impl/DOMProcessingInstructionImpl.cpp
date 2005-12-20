@@ -60,7 +60,7 @@ DOMProcessingInstructionImpl::~DOMProcessingInstructionImpl()
 
 DOMNode *DOMProcessingInstructionImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -102,7 +102,7 @@ void DOMProcessingInstructionImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fCharacterData.releaseBuffer();
-        doc->release(this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT);
+        doc->release(this, DOMMemoryManager::PROCESSING_INSTRUCTION_OBJECT);
     }
     else {
         // shouldn't reach here

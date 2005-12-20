@@ -283,6 +283,7 @@ dom_headers	= \
 	xercesc/dom/DOMLSResourceResolver.hpp \
 	xercesc/dom/DOMLSSerializer.hpp \
 	xercesc/dom/DOMLSSerializerFilter.hpp \
+	xercesc/dom/DOMMemoryManager.hpp \
 	xercesc/dom/DOMNamedNodeMap.hpp \
 	xercesc/dom/DOMNode.hpp \
 	xercesc/dom/DOMNodeFilter.hpp \

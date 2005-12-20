@@ -1634,6 +1634,13 @@ const XMLCh XMLUni::fgXercescInterfaceDOMDocumentTypeImpl[] =
     chLatin_e, chLatin_I, chLatin_m, chLatin_p, chLatin_l, chNull
 };
 
+const XMLCh XMLUni::fgXercescInterfaceDOMMemoryManager[] =
+{
+    chLatin_D, chLatin_O, chLatin_M, chLatin_M, chLatin_e, chLatin_m, chLatin_o,
+    chLatin_r, chLatin_y, chLatin_M, chLatin_a, chLatin_n, chLatin_a, chLatin_g, 
+    chLatin_e, chLatin_r, chNull
+};
+
 // en_US
 const char XMLUni::fgXercescDefaultLocale[] = "en_US";
 

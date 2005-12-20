@@ -54,7 +54,7 @@ DOMCDATASectionImpl::~DOMCDATASectionImpl()
 
 DOMNode  *DOMCDATASectionImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (this->getOwnerDocument(), DOMDocumentImpl::CDATA_SECTION_OBJECT) DOMCDATASectionImpl(*this, deep);
+    DOMNode* newNode = new (this->getOwnerDocument(), DOMMemoryManager::CDATA_SECTION_OBJECT) DOMCDATASectionImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -145,7 +145,7 @@ void DOMCDATASectionImpl::release()
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
         fCharacterData.releaseBuffer();
-        doc->release(this, DOMDocumentImpl::CDATA_SECTION_OBJECT);
+        doc->release(this, DOMMemoryManager::CDATA_SECTION_OBJECT);
     }
     else {
         // shouldn't reach here

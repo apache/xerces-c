@@ -215,9 +215,9 @@ DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
 {
     DOMNode* newNode = 0;
     if (castToNodeImpl(this)->getOwnerDocument())
-        newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
+        newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMMemoryManager::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
     else
-        newNode = new (&gDocTypeDocument(), DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
+        newNode = new (&gDocTypeDocument(), DOMMemoryManager::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
 
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
@@ -389,7 +389,7 @@ void DOMDocumentTypeImpl::release()
             DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
             if (doc) {
                 fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
-                doc->release(this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT);
+                doc->release(this, DOMMemoryManager::DOCUMENT_TYPE_OBJECT);
             }
             else {
                 // shouldn't reach here

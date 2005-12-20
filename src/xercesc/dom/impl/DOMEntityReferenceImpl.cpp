@@ -109,7 +109,7 @@ DOMEntityReferenceImpl::~DOMEntityReferenceImpl()
 
 DOMNode *DOMEntityReferenceImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -162,7 +162,7 @@ void DOMEntityReferenceImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
-        doc->release(this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT);
+        doc->release(this, DOMMemoryManager::ENTITY_REFERENCE_OBJECT);
     }
     else {
         // shouldn't reach here

@@ -50,7 +50,7 @@ DOMDocumentFragmentImpl::~DOMDocumentFragmentImpl()
 
 DOMNode *DOMDocumentFragmentImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT) DOMDocumentFragmentImpl(*this, deep);
+    DOMNode* newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMMemoryManager::DOCUMENT_FRAGMENT_OBJECT) DOMDocumentFragmentImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -84,7 +84,7 @@ void DOMDocumentFragmentImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
-        doc->release(this, DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT);
+        doc->release(this, DOMMemoryManager::DOCUMENT_FRAGMENT_OBJECT);
     }
     else {
         // shouldn't reach here

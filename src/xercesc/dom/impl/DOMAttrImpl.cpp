@@ -226,7 +226,7 @@ void DOMAttrImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
-        doc->release(this, DOMDocumentImpl::ATTR_OBJECT);
+        doc->release(this, DOMMemoryManager::ATTR_OBJECT);
     }
     else {
         // shouldn't reach here

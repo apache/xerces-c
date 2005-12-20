@@ -54,7 +54,7 @@ DOMCommentImpl::~DOMCommentImpl() {
 
 DOMNode * DOMCommentImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::COMMENT_OBJECT) DOMCommentImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::COMMENT_OBJECT) DOMCommentImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -79,7 +79,7 @@ void DOMCommentImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fCharacterData.releaseBuffer();
-        doc->release(this, DOMDocumentImpl::COMMENT_OBJECT);
+        doc->release(this, DOMMemoryManager::COMMENT_OBJECT);
     }
     else {
         // shouldn't reach here

@@ -37,6 +37,7 @@
 #include <xercesc/util/KeyRefPair.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
+#include <xercesc/dom/DOMMemoryManager.hpp>
 #include "DOMNodeImpl.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMDeepNodeListPool.hpp"
@@ -76,27 +77,8 @@ typedef RefVectorOf<DOMNodeIteratorImpl>     NodeIterators;
 typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
 typedef RefStackOf<DOMNode>               DOMNodePtr;
 
-class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMDocument {
+class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMMemoryManager, public DOMDocument {
 public:
-    // -----------------------------------------------------------------------
-    //  data types
-    // -----------------------------------------------------------------------
-    enum NodeObjectType {
-        ATTR_OBJECT                   = 0,
-        ATTR_NS_OBJECT                = 1,
-        CDATA_SECTION_OBJECT          = 2,
-        COMMENT_OBJECT                = 3,
-        DOCUMENT_FRAGMENT_OBJECT      = 4,
-        DOCUMENT_TYPE_OBJECT          = 5,
-        ELEMENT_OBJECT                = 6,
-        ELEMENT_NS_OBJECT             = 7,
-        ENTITY_OBJECT                 = 8,
-        ENTITY_REFERENCE_OBJECT       = 9,
-        NOTATION_OBJECT               = 10,
-        PROCESSING_INSTRUCTION_OBJECT = 11,
-        TEXT_OBJECT                   = 12
-    };
-
 
     // -----------------------------------------------------------------------
     //  data
@@ -115,10 +97,10 @@ public:
 
     void                         setDocumentType(DOMDocumentType *doctype);
 
-    // Add all functions that are pure virutal in DOMNODE
+    // Add all functions that are pure virtual in DOMNODE
     DOMNODE_FUNCTIONS;
 
-    // Add all functions that are pure virutal in DOMDocument
+    // Add all functions that are pure virtual in DOMDocument
     virtual DOMAttr*             createAttribute(const XMLCh *name);
     virtual DOMCDATASection*     createCDATASection(const XMLCh *data);
     virtual DOMComment*          createComment(const XMLCh *data);
@@ -164,6 +146,13 @@ public:
     // Extension to be called by the Parser
     DOMEntityReference*  createEntityReferenceByParser(const XMLCh * name);
 
+    // Add all functions that are pure virtual in DOMMemoryManager
+    virtual XMLSize_t getMemoryAllocationBlockSize() const;
+    virtual void setMemoryAllocationBlockSize(XMLSize_t size);
+    virtual void* allocate(XMLSize_t amount);
+    virtual void* allocate(XMLSize_t amount, DOMMemoryManager::NodeObjectType type);
+    virtual void release(DOMNode* object, DOMMemoryManager::NodeObjectType type);
+    virtual XMLCh* cloneString(const XMLCh *src);
 
     //
     // Functions to keep track of document mutations, so that node list chached
@@ -262,12 +251,8 @@ public:
     //                               a document, and is not recovered until the
     //                               document itself is deleted.
     //
-    void*                        allocate(size_t amount);
-    void*                        allocate(size_t amount, NodeObjectType type);
-    XMLCh*                       cloneString(const XMLCh *src);
     const XMLCh*                 getPooledString(const XMLCh *src);
     void                         deleteHeap();
-    void                         release(DOMNode* object, NodeObjectType type);
     void                         releaseDocNotifyUserData(DOMNode* object);
     void                         releaseBuffer(DOMBuffer* buffer);
     DOMBuffer*                   popBuffer();
@@ -326,7 +311,8 @@ private:
     //
     void*                 fCurrentBlock;
     char*                 fFreePtr;
-    XMLSize_t             fFreeBytesRemaining;
+    XMLSize_t             fFreeBytesRemaining,
+                          fHeapAllocSize;
 
     // To recycle the DOMNode pointer
     RefArrayOf<DOMNodePtr>* fRecycleNodePtr;
@@ -364,17 +350,27 @@ XERCES_CPP_NAMESPACE_END
 //                 the heap owned by a document.
 //
 // ---------------------------------------------------------------------------
-inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl::NodeObjectType type)
+inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType type)
 {
-    // revist.  Probably should be a checked cast.
-    void *p = ((XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *)doc)->allocate(amt, type);
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
+    if(!mgr)
+    {
+        assert(0);
+        return 0;
+    }
+    void *p = mgr->allocate(amt, type);
     return p;
 }
 
 inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
 {
-    // revist.  Probably should be a checked cast.
-    void *p = ((XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *)doc)->allocate(amt);
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
+    if(!mgr)
+    {
+        assert(0);
+        return 0;
+    }
+    void *p = mgr->allocate(amt);
     return p;
 }
 
@@ -388,7 +384,7 @@ inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDoc
 {
     return;
 }
-inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl::NodeObjectType /*type*/)
+inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType /*type*/)
 {
     return;
 }

@@ -58,7 +58,7 @@ DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
 }
 
 DOMNode * DOMElementNSImpl::cloneNode(bool deep) const {
-    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ELEMENT_NS_OBJECT) DOMElementNSImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ELEMENT_NS_OBJECT) DOMElementNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -181,7 +181,7 @@ void DOMElementNSImpl::release()
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
-        doc->release(this, DOMDocumentImpl::ELEMENT_NS_OBJECT);
+        doc->release(this, DOMMemoryManager::ELEMENT_NS_OBJECT);
     }
     else {
         // shouldn't reach here
