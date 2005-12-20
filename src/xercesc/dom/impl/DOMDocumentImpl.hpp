@@ -350,6 +350,12 @@ XERCES_CPP_NAMESPACE_END
 //                 the heap owned by a document.
 //
 // ---------------------------------------------------------------------------
+inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType type)
+{
+    void *p = doc->allocate(amt, type);
+    return p;
+}
+
 inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType type)
 {
     XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
@@ -380,11 +386,15 @@ inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumen
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
 #if _MSC_VER >= 1200 /* VC++ 6.0 */
-inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/)
+inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType /*type*/)
 {
     return;
 }
 inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType /*type*/)
+{
+    return;
+}
+inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/)
 {
     return;
 }

@@ -3260,6 +3260,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSSerializerFilter.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMMemoryManager.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNamedNodeMap.hpp
 # End Source File
 # Begin Source File
