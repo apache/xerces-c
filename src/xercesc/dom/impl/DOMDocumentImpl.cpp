@@ -1092,7 +1092,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
                 clonedTypeInfo=new (this) DOMTypeInfoImpl(this, sourcePSVI);
             else
             {
-                const DOMTypeInfo * typeInfo=((DOMElement*)source)->getSchemaTypeInfo();
+                const DOMTypeInfo * typeInfo=((DOMAttr*)source)->getSchemaTypeInfo();
                 // copy it only if it has valid data
                 if(typeInfo && typeInfo->getTypeName()!=NULL)
                     clonedTypeInfo=new (this) DOMTypeInfoImpl(typeInfo->getTypeNamespace(), typeInfo->getTypeName());
