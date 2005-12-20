@@ -30,7 +30,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //   this implementation is too stupid - needs a cache of some kind.
 //
 
-DOMNodeListImpl::DOMNodeListImpl(DOMNode *node)
+DOMNodeListImpl::DOMNodeListImpl(DOMParentNode *node)
 :   fNode(node)
 {
 }
@@ -45,7 +45,7 @@ DOMNodeListImpl:: ~DOMNodeListImpl()
 XMLSize_t DOMNodeListImpl::getLength() const{
     XMLSize_t count = 0;
     if (fNode) {
-        DOMNode *node = castToParentImpl(fNode)->fFirstChild;
+        DOMNode *node = fNode->fFirstChild;
         while(node != 0){
             ++count;
             node = castToChildImpl(node)->nextSibling;
@@ -59,7 +59,7 @@ XMLSize_t DOMNodeListImpl::getLength() const{
 
 DOMNode *DOMNodeListImpl::item(XMLSize_t index) const{
     if (fNode) {
-        DOMNode *node = castToParentImpl(fNode)->fFirstChild;
+        DOMNode *node = fNode->fFirstChild;
         for(XMLSize_t i=0; i<index && node!=0; ++i)
             node = castToChildImpl(node)->nextSibling;
         return node;

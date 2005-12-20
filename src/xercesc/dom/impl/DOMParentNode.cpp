@@ -23,7 +23,6 @@
 #include <xercesc/dom/DOMNode.hpp>
 
 #include "DOMDocumentImpl.hpp"
-#include "DOMNodeListImpl.hpp"
 #include "DOMRangeImpl.hpp"
 #include "DOMNodeIteratorImpl.hpp"
 #include "DOMParentNode.hpp"
@@ -32,14 +31,14 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMParentNode::DOMParentNode(DOMDocument *ownerDoc)
-    : fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(castToNode(this))
+    : fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(this)
 {    
 }
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
 DOMParentNode::DOMParentNode(const DOMParentNode &other)  :
-    fChildNodeList(castToNode(this))
+    fChildNodeList(this)
 {
     this->fOwnerDocument = other.fOwnerDocument;
 

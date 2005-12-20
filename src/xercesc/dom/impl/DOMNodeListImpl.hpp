@@ -45,13 +45,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
+class DOMParentNode;
 class DOMNode;
 
 class CDOM_EXPORT DOMNodeListImpl: public DOMNodeList
 {
 private:
-    DOMNode   *fNode;
+    DOMParentNode   *fNode;
 
     // Unused, and unimplemented constructors, operators, etc.
     DOMNodeListImpl();
@@ -59,7 +59,7 @@ private:
     DOMNodeListImpl & operator = (const DOMNodeListImpl & other);
 
 public:
-    DOMNodeListImpl(DOMNode *node);
+    DOMNodeListImpl(DOMParentNode *node);
     virtual             ~DOMNodeListImpl();
     virtual DOMNode *  item(XMLSize_t index) const;
     virtual XMLSize_t getLength() const;
