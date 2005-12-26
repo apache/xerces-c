@@ -207,6 +207,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     attWildCard = currType->getAttWildCard();
                 }
                 else if (!currDV) { // check explicitly-set wildcard
+                    attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, uriId);
                     attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
                 }
 
