@@ -40,6 +40,7 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -169,7 +170,8 @@ private:
     ValueVectorOf<int>*               fImportedNSList;
     ValueVectorOf<const DOMElement*>* fRecursingAnonTypes;
     ValueVectorOf<const XMLCh*>*      fRecursingTypeNames;
-    ValueVectorOf<DOMElement*>*       fTopLevelComponents[C_Count];
+    RefHashTableOf<DOMElement>*       fTopLevelComponents[C_Count];
+    DOMElement*                       fLastTopLevelComponent[C_Count];
     ValueVectorOf<DOMNode*>*          fNonXSAttList;
     ValidationContext*                fValidationContext;
     MemoryManager*                    fMemoryManager;
@@ -421,6 +423,7 @@ inline void SchemaInfo::clearTopLevelComponents() {
 
         delete fTopLevelComponents[i];
         fTopLevelComponents[i] = 0;
+        fLastTopLevelComponent[i] = 0;
     }
 }
 
