@@ -66,7 +66,10 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
 {
     fImportingInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(4, false, fMemoryManager);
     for (unsigned int i = 0; i < C_Count; i++)
+    {
         fTopLevelComponents[i] = 0;
+        fLastTopLevelComponent[i] = 0;
+    }
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
 }
@@ -100,6 +103,7 @@ SchemaInfo::~SchemaInfo()
 
         delete fTopLevelComponents[i];
         fTopLevelComponents[i] = 0;
+        fLastTopLevelComponent[i] = 0;
     }
 
     delete fNonXSAttList;
@@ -159,22 +163,19 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
     if (!child)
         return 0;
 
-    ValueVectorOf<DOMElement*>* compList = fTopLevelComponents[compCategory];
+    RefHashTableOf<DOMElement>* compList = fTopLevelComponents[compCategory];
 
     if (fTopLevelComponents[compCategory] == 0) {
 
-        compList= new (fMemoryManager) ValueVectorOf<DOMElement*>(16, fMemoryManager);
+        compList= new (fMemoryManager) RefHashTableOf<DOMElement>(17, false, fMemoryManager);
         fTopLevelComponents[compCategory] = compList;
     }
     else {
-        unsigned int listLen = compList->size();
+        DOMElement* cachedChild = compList->get(name);
+        if(cachedChild)
+            return cachedChild;
 
-        for (unsigned int i= 0; i < listLen; i++) {
-
-            child = compList->elementAt(i);
-            if (XMLString::equals(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
-                return child;
-        }
+        child = fLastTopLevelComponent[compCategory];
     }
 
     DOMElement* redefParent = (DOMElement*) child->getParentNode();
@@ -185,11 +186,13 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
 
     while (child != 0) {
 
+        fLastTopLevelComponent[compCategory]=child;
         if (XMLString::equals(child->getLocalName(), compName)) {
 
-            compList->addElement(child);
+            const XMLCh* cName=child->getAttribute(SchemaSymbols::fgATT_NAME);
+            compList->put((void*)cName, child);
 
-            if (XMLString::equals(child->getAttribute(SchemaSymbols::fgATT_NAME), name))
+            if (XMLString::equals(cName, name))
                 return child;
         }
         else if (XMLString::equals(child->getLocalName(),SchemaSymbols::fgELT_REDEFINE)
@@ -199,12 +202,14 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
 
             while (redefineChild != 0) {
 
+                fLastTopLevelComponent[compCategory]=redefineChild;
                 if ((!fFailedRedefineList || !fFailedRedefineList->containsElement(redefineChild))
                     && XMLString::equals(redefineChild->getLocalName(), compName)) {
 
-                    compList->addElement(redefineChild);
+                    const XMLCh* rName=redefineChild->getAttribute(SchemaSymbols::fgATT_NAME);
+                    compList->put((void*)rName, redefineChild);
 
-                    if (XMLString::equals(redefineChild->getAttribute(SchemaSymbols::fgATT_NAME), name))
+                    if (XMLString::equals(rName, name))
                         return redefineChild;
                 }
 
