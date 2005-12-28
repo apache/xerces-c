@@ -1082,6 +1082,8 @@ Attributes:
 	Type:			IDREFS
 	Default Type:	#IMPLIED
 	Base Datatype:		List
+Facets:		
+	minLength=1
 
 --------------------------------------------
 The tree just created contains: 4 elements.
