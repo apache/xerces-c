@@ -23,7 +23,7 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
-#include <cunhc.h>
+#include <cunhc.h>           
 #include "ccsid.h"
 #include "uniconv.h"
 
@@ -139,8 +139,14 @@ uniconv_t uniconv_open(const char *destenc, const char *srcenc) {
    tmpp->DDA_Buf_Len=DDA_NEEDED;
    // This flag tells the services to automatically refresh the handle if it
    // becomes invalid.
-   tmpp->Flag1|=CUNBCPRM_REFRESH_AT_INV_HANDLE_START;
-   tmpp->Flag1|=CUNBCPRM_SUB_ACTION_SUBSTITUTE;
+
+// Use next two lines of code on old z/OS levels where Flag1 is is char field
+// tmpp->Flag1|=CUNBCPRM_REFRESH_AT_INV_HANDLE_START;
+// tmpp->Flag1|=CUNBCPRM_SUB_ACTION_SUBSTITUTE;
+
+// Use next two lines of code on later z/OS levels where Flag1 is bit field
+   tmpp->Flag1.Inv_Handle = 1;
+   tmpp->Flag1.Sub_Action = 1;
 
    /* Determine which technique to use */
    if ( (srcis390) || (destis390) )
@@ -266,7 +272,12 @@ void * handle_area;
    tmpp->DDA_Buf_Len=CUNBAPRM_DDA_REQ;
    // This flag tells the services to automatically refresh the handle if it
    // becomes invalid.
-   tmpp->Flag1|=CUNBAPRM_REFRESH_AT_INV_HANDLE_START;
+
+// Use next line of code on old z/OS levels where Flag1 is char field
+// tmpp->Flag1|=CUNBAPRM_REFRESH_AT_INV_HANDLE_START;
+
+// Use next line of code on later z/OS levels where Flag1 is bit field
+   tmpp->Flag1.Inv_Handle = 1;
 
    unichar_t inchar = 0x61;
    unichar_t outchar;

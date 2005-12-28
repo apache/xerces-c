@@ -97,6 +97,7 @@ static int gForceTranscode;
 #define NO_FORCE 0
 #define MUST_USE_ICU  1
 #define MUST_USE_UNICONV  2
+#define MUST_USE_ICU_SRC_OFFS  3
 
 // ---------------------------------------------------------------------------
 //  Local functions
@@ -171,11 +172,14 @@ Uniconv390TransService::Uniconv390TransService()
       gForceTranscode = MUST_USE_ICU;
    else if ( !strcmp(myenviron,"USE_NATIVE") )
       gForceTranscode = MUST_USE_UNICONV;
+   else if ( !strcmp(myenviron,"USE_ICU_SRC_OFFS") )
+      gForceTranscode = MUST_USE_ICU_SRC_OFFS;
   DBGPRINTF3("FORCE PARM=%s %d\n",myenviron,gForceTranscode);
 
-// If we are forcing ICU to be used fro transcoding then we also should
+// If we are forcing ICU to be used for transcoding then we also should
 // force it to be used for case conversions.
-if (gForceTranscode == MUST_USE_ICU) {
+if ((gForceTranscode == MUST_USE_ICU) ||
+    (gForceTranscode == MUST_USE_ICU_SRC_OFFS)) {
    fCaseConverter = new uniconvcaseconverter;
    fCaseConverter->ftoupperhand=UNICONV_ERROR;
    fCaseConverter->ftolowerhand=UNICONV_ERROR;
@@ -363,7 +367,10 @@ bool Uniconv390TransService::isSpace(const XMLCh toCheck) const
 
 bool Uniconv390TransService::supportsSrcOfs() const
 {
-   return false;
+   if (gForceTranscode == MUST_USE_ICU_SRC_OFFS)
+      return true;
+    else
+      return false;
 }
 
 void Uniconv390TransService::upperCase(XMLCh* const toUpperCase) const
@@ -439,7 +446,8 @@ XMLLCPTranscoder* Uniconv390TransService::makeNewLCPTranscoder()
    XMLTransService::Codes resValue;
 DBGPRINTF2("makeNewLCPTranscoder() localencoding=%s \n",nl_langinfo(CODESET));
    // USS default code page is IBM-1047
-   if (gForceTranscode == MUST_USE_ICU) {
+   if ((gForceTranscode == MUST_USE_ICU) ||
+       (gForceTranscode == MUST_USE_ICU_SRC_OFFS)) {
       if (gViewTranscoder)
          printf("IXM1004I LCP - Using ICU - %s\n",nl_langinfo(CODESET));
       fLCPTranscoder = fICUService->makeNewLCPTranscoder();
@@ -477,7 +485,8 @@ char * localname = XMLString::transcode(encodingName, manager);
 ArrayJanitor<char> janText((char*)localname, manager);
 DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSize);
 
-   if (gForceTranscode == MUST_USE_ICU) {
+   if ((gForceTranscode == MUST_USE_ICU) ||
+       (gForceTranscode == MUST_USE_ICU_SRC_OFFS)) {
       if (gViewTranscoder)
          printf("IXM1001I XML - Using ICU - %s\n",localname);
       return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
