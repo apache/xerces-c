@@ -307,7 +307,7 @@ public :
     static const XMLCh fgUByteMaxInc[];
     static const XMLCh fgLangPattern[];
 
-    static const XMLCh fgBooleanValueSpace[][32];
+    static const XMLCh fgBooleanValueSpace[][8];
     static const unsigned int fgBooleanValueSpaceArraySize;
         
 private:

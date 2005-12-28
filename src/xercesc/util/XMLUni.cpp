@@ -1766,7 +1766,7 @@ const XMLCh XMLUni::fgLangPattern[] =
     chCloseCurly,  chCloseParen, chAsterisk, chNull
 };
 
-const XMLCh XMLUni::fgBooleanValueSpace[][32] =
+const XMLCh XMLUni::fgBooleanValueSpace[][8] =
 {
     { chLatin_f, chLatin_a, chLatin_l, chLatin_s, chLatin_e, chNull },
     { chLatin_t, chLatin_r, chLatin_u, chLatin_e, chNull },
