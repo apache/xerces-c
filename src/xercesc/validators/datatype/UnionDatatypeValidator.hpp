@@ -298,8 +298,8 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
         unsigned int memberSize = fMemberTypeValidators->size();
 
         for (unsigned int i=0; i < memberSize; i++) {
-
-            if (fMemberTypeValidators->elementAt(i)->getType() == DatatypeValidator::Union)
+            if ((fMemberTypeValidators->elementAt(i)->getType() == DatatypeValidator::Union) &&
+                (fMemberTypeValidators->elementAt(i) == toCheck))
                 return false;
             if (fMemberTypeValidators->elementAt(i)->isSubstitutableBy(toCheck)) {
                 return true;
