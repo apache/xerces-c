@@ -1774,7 +1774,7 @@ const XMLCh XMLUni::fgBooleanValueSpace[][32] =
     { chDigit_1, chNull }
 };
 
-const unsigned int XMLUni::fgBooleanValueSpaceArraySize = sizeof XMLUni::fgBooleanValueSpace / sizeof (XMLCh*);
+const unsigned int XMLUni::fgBooleanValueSpaceArraySize = sizeof XMLUni::fgBooleanValueSpace / sizeof (XMLUni::fgBooleanValueSpace[0]);
 
 XERCES_CPP_NAMESPACE_END
 
