@@ -34,7 +34,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  * internal class meant to be comsumed by XTemplateSerializer only
  * the size can not grow
  ***/
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
 
 class KeySet : public XMemory
 {
@@ -958,7 +958,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1036,7 +1036,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1121,7 +1121,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1201,7 +1201,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1281,7 +1281,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1387,7 +1387,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1468,7 +1468,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1556,7 +1556,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1670,7 +1670,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
@@ -1743,7 +1743,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
 
         RefHashTableOfEnumerator<XSAnnotation> e(objToStore, false, objToStore->getMemoryManager());
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //get the total item number
         int   itemNumber = 0;
         while (e.hasMoreElements())
@@ -1901,7 +1901,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
         //to sort the key
         SORT_KEYSET_TWOKEYS(serEng.getMemoryManager())
 
@@ -1996,7 +1996,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
         serEng<<itemNumber;
         e.Reset();
 
-#ifdef _DEBUG
+#ifdef XERCES_DEBUG_SORT_GRAMMAR
 
         //to sort the key
         SORT_KEYSET_TWOKEYS(serEng.getMemoryManager())
