@@ -39,7 +39,7 @@ const int   BLOCKNAMESIZE = 93;
 // only define Specials as FEFF..FEFF, missing Specials as FFF0..FFFD, add manually
 // only define private use as E000..F8FF,
 //    missing 2 private use (F0000..FFFFD and 100000..10FFFD), add manually
-const XMLCh fgBlockNames[][BLOCKNAMESIZE] =
+const XMLCh fgBlockNames[][50] =
 {
     { chLatin_I, chLatin_s, chLatin_B, chLatin_a, chLatin_s, chLatin_i, chLatin_c, chLatin_L, chLatin_a,
       chLatin_t, chLatin_i, chLatin_n,  chNull },

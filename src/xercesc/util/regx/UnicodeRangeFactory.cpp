@@ -42,7 +42,7 @@ const unsigned short CHAR_OTHER       = 34;
 const unsigned short CHAR_PUNCTUATION = 35;
 const unsigned short CHAR_SYMBOL      = 36;
 
-const XMLCh uniCategNames[][UNICATEGSIZE] =
+const XMLCh uniCategNames[][3] =
 {
     {chLatin_C, chLatin_n, chNull},
     {chLatin_L, chLatin_u, chNull},
