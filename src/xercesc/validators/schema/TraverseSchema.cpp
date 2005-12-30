@@ -1308,14 +1308,19 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_ComplexTypeGlobal
-                                      : GeneralAttributeCheck::E_ComplexTypeLocal;
-    fAttributeCheck.checkAttributes(elem, scope, this, topLevel, fNonXSAttList);
+    bool preProcessFlag = (typeInfo) ? typeInfo->getPreprocessed() : false;
+
+    if (!preProcessFlag) {
+        fAttributeCheck.checkAttributes(
+            elem, (topLevel) ? GeneralAttributeCheck::E_ComplexTypeGlobal
+                             : GeneralAttributeCheck::E_ComplexTypeLocal
+            , this, topLevel, fNonXSAttList
+        );
+    }
 
     // -----------------------------------------------------------------------
     // Create a new instance
     // -----------------------------------------------------------------------
-    bool preProcessFlag = (typeInfo) ? typeInfo->getPreprocessed() : false;
     unsigned int previousCircularCheckIndex = fCircularCheckIndex;
     int previousScope = fCurrentScope;
 
@@ -1356,7 +1361,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration and get next child
     // ------------------------------------------------------------------
-    DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true);    
+    DOMElement* child = checkContent(elem, XUtil::getFirstChildElement(elem), true, !preProcessFlag);
 
     if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
     {
@@ -3431,10 +3436,14 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(
-        contentDecl, GeneralAttributeCheck::E_SimpleContent
-        , this, false, fNonXSAttList
-    );
+    bool preProcessFlag = typeInfo->getPreprocessed();
+
+    if (!preProcessFlag) {
+        fAttributeCheck.checkAttributes(
+            contentDecl, GeneralAttributeCheck::E_SimpleContent
+            , this, false, fNonXSAttList
+        );
+    }
 
     // -----------------------------------------------------------------------
     // Set the content type to be simple, and initialize content spec handle
@@ -3444,7 +3453,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Process annotation if any
     // -----------------------------------------------------------------------
-    DOMElement* simpleContent = checkContent(contentDecl, XUtil::getFirstChildElement(contentDecl), false);
+    DOMElement* simpleContent = checkContent(contentDecl, XUtil::getFirstChildElement(contentDecl), false, !preProcessFlag);
     if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
     {
         fAnnotation = generateSyntheticAnnotation(contentDecl, fNonXSAttList);        
@@ -3467,31 +3476,33 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // The content should be either "restriction" or "extension"
     // -----------------------------------------------------------------------
-    const XMLCh* const contentName = simpleContent->getLocalName();
+    if (!preProcessFlag) {
+        const XMLCh* const contentName = simpleContent->getLocalName();
 
-    if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_RESTRICTION)) {
+        if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
-        fAttributeCheck.checkAttributes(
-            simpleContent, GeneralAttributeCheck::E_Restriction
-            , this, false, fNonXSAttList
-        );
-        typeInfo->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
-    }
-    else if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_EXTENSION)) {
+            fAttributeCheck.checkAttributes(
+                simpleContent, GeneralAttributeCheck::E_Restriction
+                , this, false, fNonXSAttList
+            );
+            typeInfo->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
+        }
+        else if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
-        fAttributeCheck.checkAttributes(
-            simpleContent, GeneralAttributeCheck::E_Extension
-            , this, false, fNonXSAttList
-        );
-        typeInfo->setDerivedBy(SchemaSymbols::XSD_EXTENSION);
-    }
-    else {
-        reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContent);
-        throw TraverseSchema::InvalidComplexTypeInfo;
+            fAttributeCheck.checkAttributes(
+                simpleContent, GeneralAttributeCheck::E_Extension
+                , this, false, fNonXSAttList
+            );
+            typeInfo->setDerivedBy(SchemaSymbols::XSD_EXTENSION);
+        }
+        else {
+            reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContent);
+            throw TraverseSchema::InvalidComplexTypeInfo;
+        }
     }
 
     //Skip over any annotations in the restriction or extension elements
-    DOMElement* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true);
+    DOMElement* content = checkContent(simpleContent, XUtil::getFirstChildElement(simpleContent), true, !preProcessFlag);
     if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
     {
         fAnnotation = generateSyntheticAnnotation(simpleContent, fNonXSAttList);        
@@ -3830,10 +3841,14 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Check attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck.checkAttributes(
-        contentDecl, GeneralAttributeCheck::E_ComplexContent
-        , this, false, fNonXSAttList
-    );
+    bool preProcessFlag = typeInfo->getPreprocessed();
+
+    if (!preProcessFlag) {
+        fAttributeCheck.checkAttributes(
+            contentDecl, GeneralAttributeCheck::E_ComplexContent
+            , this, false, fNonXSAttList
+        );
+    }
 
     // -----------------------------------------------------------------------
     // Determine whether the content is mixed, or element-only
@@ -3860,7 +3875,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     typeInfo->setDatatypeValidator(0);
     typeInfo->setBaseDatatypeValidator(0);
 
-    DOMElement* complexContent = checkContent(contentDecl,XUtil::getFirstChildElement(contentDecl),false);
+    DOMElement* complexContent = checkContent(contentDecl,XUtil::getFirstChildElement(contentDecl),false, !preProcessFlag);
     if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
     {
         fAnnotation = generateSyntheticAnnotation(contentDecl, fNonXSAttList);        
@@ -4735,11 +4750,11 @@ void TraverseSchema::preprocessChildren(const DOMElement* const root) {
     }
 }
 
-
-DOMElement* TraverseSchema::checkContent(const DOMElement* const rootElem,
-                                           DOMElement* const contentElem,
-                                           const bool isEmpty) {
-
+DOMElement* TraverseSchema::checkContent( const DOMElement* const rootElem
+                                        , DOMElement* const contentElem
+                                        , const bool isEmpty
+                                        , const bool processAnnot)
+{
     DOMElement* content = contentElem;
     const XMLCh* name = getElementAttValue(rootElem,SchemaSymbols::fgATT_NAME);
 
@@ -4755,7 +4770,9 @@ DOMElement* TraverseSchema::checkContent(const DOMElement* const rootElem,
 
     if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
 
-        fAnnotation = traverseAnnotationDecl(content, fNonXSAttList);
+        if (processAnnot) {
+            fAnnotation = traverseAnnotationDecl(content, fNonXSAttList);
+        }
         content = XUtil::getNextSiblingElement(content);
 
         if (!content) { // must be followed by content

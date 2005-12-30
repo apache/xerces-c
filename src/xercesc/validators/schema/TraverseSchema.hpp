@@ -252,6 +252,8 @@ private:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
       *   isEmpty: - true if (annotation?, smth_else), false if (annotation?)
+      *   processAnnot - default is true, false if reprocessing a complex type
+      *                  since we have already processed the annotation.
       *
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
@@ -259,7 +261,7 @@ private:
       */
     DOMElement* checkContent(const DOMElement* const rootElem,
                                DOMElement* const contentElem,
-                               const bool isEmpty);
+                               const bool isEmpty, bool processAnnot = true);
 
     /**
       * Parameters:
