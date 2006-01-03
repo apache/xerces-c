@@ -43,7 +43,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection {
 private:
     DOMNodeImpl           fNode;
-    DOMParentNode         fParent;
     DOMChildNode          fChild;
     DOMCharacterDataImpl  fCharacterData;
 
@@ -58,7 +57,7 @@ public:
     virtual DOMText*     splitText(XMLSize_t offset);
     // DOM Level 3
     virtual bool            getIsElementContentWhitespace() const;
-    virtual const XMLCh*    getWholeText();
+    virtual const XMLCh*    getWholeText() const;
     virtual DOMText*        replaceWholeText(const XMLCh* content);
 
     // non-standard extension

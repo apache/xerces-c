@@ -903,12 +903,12 @@ public:
         ((DOMDocumentImpl*)(ptr->getOwnerDocument()))
 
 #define GET_DIRECT_MM(ptr)           \
-        ptr ? ((DOMDocumentImpl*)ptr)->getMemoryManager() : XMLPlatformUtils::fgMemoryManager        
+        (ptr ? ((DOMDocumentImpl*)ptr)->getMemoryManager() : XMLPlatformUtils::fgMemoryManager)
 
 #define GET_INDIRECT_MM(ptr)                                                    \
-        !ptr ? XMLPlatformUtils::fgMemoryManager :                              \
+        (!ptr ? XMLPlatformUtils::fgMemoryManager :                              \
         GET_OWNER_DOCUMENT(ptr) ? GET_OWNER_DOCUMENT(ptr)->getMemoryManager() : \
-        XMLPlatformUtils::fgMemoryManager
+        XMLPlatformUtils::fgMemoryManager)
 
 /***
  * For DOMNode and its derivatives

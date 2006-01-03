@@ -104,6 +104,7 @@ bool testText(DOMDocument* document);
 bool treeCompare(DOMNode* node, DOMNode* node2);
 
 bool testBaseURI(XercesDOMParser* parser);
+bool testWholeText(XercesDOMParser* parser);
 
 };
 

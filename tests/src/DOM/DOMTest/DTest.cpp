@@ -34,6 +34,7 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \
     {                                                               \
@@ -932,8 +933,9 @@ int main(int argc, char **argv)
         parser->setCreateEntityReferenceNodes(true);
         OK = test.testBaseURI(parser);
 
+		OK = test.testWholeText(parser);
         delete parser;
-    };
+    }
 
     XMLPlatformUtils::Terminate();
 
@@ -4658,6 +4660,110 @@ bool DOMTest::testBaseURI(XercesDOMParser* parser) {
     return OK;
 }
 
+bool DOMTest::testWholeText(XercesDOMParser* parser) {
+	char* sXml="<?xml version='1.0'?>"
+				"<!DOCTYPE root["
+                "<!ENTITY ent1 'Dallas. &ent3; #5668'>"
+                "<!ENTITY ent2 '1900 Dallas Road<![CDATA[ (East) ]]>'>"
+                "<!ENTITY ent3 'California. &ent4; PO'>  "
+                "<!ENTITY ent4 'USA '>"
+                "<!ENTITY ent5 'The Content &ent6; never reached'>"
+                "<!ENTITY ent6 'ends here. <foo/>'>"
+                "]>"
+                "<root>&ent1; &ent2;"
+                  "<elem>Home </elem>"
+                  "<elem>Test: &ent5;</elem>"
+                "</root>";
+	MemBufInputSource is((XMLByte*)sXml, strlen(sXml), "bufId");
+	parser->parse(is);
+	DOMDocument* doc=parser->getDocument();
+	// pointing to "Dallas. "
+	DOMNode* t1=doc->getDocumentElement()->getFirstChild()->getFirstChild();
+	if(t1==NULL || t1->getNodeType()!=DOMNode::TEXT_NODE)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+	const XMLCh* s1=((DOMText*)t1)->getWholeText();
+    const XMLCh* refText=XMLString::transcode("Dallas. California. USA  PO #5668 1900 Dallas Road (East) ");
+	if(XMLString::compareString(s1,refText)!=0)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+
+    // pointing to " (East) " [CDATA]
+	DOMNode* t2=doc->getDocumentElement()->getFirstChild()->getNextSibling()->getNextSibling()->getFirstChild()->getNextSibling();
+	if(t2==NULL || t2->getNodeType()!=DOMNode::CDATA_SECTION_NODE)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+	const XMLCh* s2=((DOMText*)t2)->getWholeText();
+	if(XMLString::compareString(s2,refText)!=0)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+
+    // pointing to "Home "
+	DOMNode* t3=doc->getDocumentElement()->getFirstChild()->getNextSibling()->getNextSibling()->getNextSibling()->getFirstChild();
+	if(t3==NULL || t3->getNodeType()!=DOMNode::TEXT_NODE)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+	const XMLCh* s3=((DOMText*)t3)->getWholeText();
+    refText=XMLString::transcode("Home ");
+	if(XMLString::compareString(s3,refText)!=0)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+
+    // pointing to "The Content "
+	DOMNode* t4=doc->getDocumentElement()->getFirstChild()->getNextSibling()->getNextSibling()->getNextSibling()->getNextSibling()->getFirstChild()->getNextSibling()->getFirstChild();
+	if(t4==NULL || t4->getNodeType()!=DOMNode::TEXT_NODE)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+	const XMLCh* s4=((DOMText*)t4)->getWholeText();
+    refText=XMLString::transcode("Test: The Content ends here. ");
+	if(XMLString::compareString(s4,refText)!=0)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+
+    DOMNode* newt2=((DOMText*)t2)->replaceWholeText(s2);
+    DOMNode* newt3=((DOMText*)t3)->replaceWholeText(s3);
+    try
+    {
+        DOMNode* newt4=((DOMText*)t4)->replaceWholeText(s4);
+        // ent5 contains a <foo/> node, and cannot be removed
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+        return false;
+    }
+    catch(DOMException&)
+    {
+    }
+
+    DOMLSSerializer* writer=DOMImplementation::getImplementation()->createLSSerializer();
+    const XMLCh* xml=writer->writeToString(doc->getDocumentElement());
+
+    refText=XMLString::transcode("<root><![CDATA[Dallas. California. USA  PO #5668 1900 Dallas Road (East) ]]>"
+                                   "<elem>Home </elem>"
+                                   "<elem>Test: &ent5;</elem>"
+                                 "</root>");
+	if(XMLString::compareString(xml,refText)!=0)
+	{
+        fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
+		return false;
+	}
+    writer->release();
+    return true;
+}
 
 /**
  *

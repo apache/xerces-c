@@ -124,7 +124,7 @@ public:
      *
      * @since DOM Level 3
      */
-    virtual const XMLCh* getWholeText() = 0;
+    virtual const XMLCh* getWholeText() const = 0;
 
     /**
      * Substitutes the a specified text for the text of the current node and
