@@ -308,7 +308,11 @@ bool DOMAttrImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
 DOMNode * DOMAttrImpl::getInterface(const XMLCh* feature)
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
-        return (DOMNode*)(DOMPSVITypeInfo*)fSchemaType;
+    {
+        // go through a temp variable, as gcc 4.0.x computes the wrong offset if presented with two consecutive casts
+        const DOMPSVITypeInfo* pTmp=fSchemaType;
+        return (DOMNode*)pTmp;
+    }
     return fNode.getInterface(feature); 
 }
 

@@ -265,7 +265,11 @@ bool DOMElementNSImpl::isSupported(const XMLCh *feature, const XMLCh *version) c
 DOMNode * DOMElementNSImpl::getInterface(const XMLCh* feature)
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
-        return (DOMNode*)(DOMPSVITypeInfo*)fSchemaType;
+    {
+        // go through a temp variable, as gcc 4.0.x computes the wrong offset if presented with two consecutive casts
+        const DOMPSVITypeInfo* pTmp=fSchemaType;
+        return (DOMNode*)pTmp;
+    }
     return DOMElementImpl::getInterface(feature);
 }
 
