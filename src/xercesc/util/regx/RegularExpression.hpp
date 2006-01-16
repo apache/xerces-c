@@ -158,8 +158,10 @@ private:
     {
         public :
             Context(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+            Context(Context* src);
             ~Context();
 
+            Context& operator= (const Context& other);
             inline const XMLCh* getString() const { return fString; }
             void reset(const XMLCh* const string, const int stringLen,
                        const int start, const int limit, const int noClosures);
@@ -546,24 +548,6 @@ private:
       }
 
       return ret;
-  }
-
-  inline int RegularExpression::matchUnion(Context* const context,
-                                           const Op* const op, int offset,
-                                           const short direction)
-  {
-      unsigned int opSize = op->getSize();
-      int ret = -1;
-
-      for (unsigned int i=0; i < opSize; i++) {
-
-          ret = match(context, op->elementAt(i), offset, direction);
-
-          if (ret >= 0 && ret <= context->fLimit)
-              return ret;
-      }
-
-      return -1;
   }
 
   inline int RegularExpression::matchModifier(Context* const context,
