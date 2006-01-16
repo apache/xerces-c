@@ -135,6 +135,62 @@ RegularExpression::Context::Context(MemoryManager* const manager) :
 {
 }
 
+RegularExpression::Context::Context(Context* src) :
+	fAdoptMatch(false)
+    , fStart(src->fStart)
+	, fLimit(src->fLimit)
+	, fLength(src->fLength)
+	, fSize(src->fSize)
+    , fStringMaxLen(src->fStringMaxLen)
+	, fOffsets(0)
+	, fMatch(0)
+	, fString(src->fString)
+    , fMemoryManager(src->fMemoryManager)
+{
+	if(src->fOffsets)
+    {
+		fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
+	    for (int i = 0; i< fSize; i++)
+		    fOffsets[i] = src->fOffsets[i];
+    }
+    if(src->fMatch)
+    {
+        fMatch=new Match(*src->fMatch);
+        fAdoptMatch=true;
+    }
+}
+
+RegularExpression::Context& RegularExpression::Context::operator= (const RegularExpression::Context& other)
+{
+    fStart=other.fStart;
+	fLimit=other.fLimit;
+	fLength=other.fLength;
+	fSize=other.fSize;
+    fStringMaxLen=other.fStringMaxLen;
+	fString=other.fString;
+    if (fOffsets)
+        fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+    fOffsets=0;
+	if (fAdoptMatch)
+		delete fMatch;
+    fMatch=0;
+	fAdoptMatch=false;
+
+    fMemoryManager=other.fMemoryManager;
+	if(other.fOffsets)
+    {
+		fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
+	    for (int i = 0; i< fSize; i++)
+		    fOffsets[i] = other.fOffsets[i];
+    }
+    if(other.fMatch)
+    {
+        fMatch=new Match(*other.fMatch);
+        fAdoptMatch=true;
+    }
+    return *this;
+}
+
 RegularExpression::Context::~Context()
 {
     if (fOffsets)
@@ -1329,6 +1385,29 @@ int RegularExpression::matchCapture(Context* const context, const Op* const op,
 		context->fMatch->setEndPos(-index, save);
 	return ret;
 }
+
+int RegularExpression::matchUnion(Context* const context,
+                                   const Op* const op, int offset,
+                                   const short direction)
+{
+  unsigned int opSize = op->getSize();
+
+  Context bestResultContext;
+  int bestResult=-1;
+  for(unsigned int i=0; i < opSize; i++) {
+      Context tmpContext(context);
+      int ret = match(&tmpContext, op->elementAt(i), offset, direction);
+      if (ret >= 0 && ret <= context->fLimit && ret>bestResult)
+      {
+          bestResult=ret;
+          bestResultContext=tmpContext;
+      }
+  }
+  if(bestResult!=-1)
+      *context=bestResultContext;
+  return bestResult;
+}
+
 
 bool RegularExpression::matchCondition(Context* const context,
                                               const Op* const op, int offset,
