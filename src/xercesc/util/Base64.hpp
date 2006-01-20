@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
 #ifndef BASE64_HPP
 #define BASE64_HPP
 
@@ -215,8 +211,6 @@ private :
                          ,       Conformance             conform = Conf_RFC2045
                           );
 
-    static void init();
-
     static bool isData(const XMLByte& octet);
     static bool isPad(const XMLByte& octet);
 
@@ -259,8 +253,7 @@ private :
     static const XMLByte  base64Alphabet[];
     static const XMLByte  base64Padding;
 
-    static XMLByte  base64Inverse[];
-    static bool  isInitialized;
+    static const XMLByte  base64Inverse[];
 
     static const unsigned int  quadsPerLine;
 };

@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
 #ifndef HEXBIN_HPP
 #define HEXBIN_HPP
 
@@ -125,8 +121,6 @@ private :
     //  Helper methods
     // -----------------------------------------------------------------------
 
-    static void init();
-
     static bool isHex(const XMLCh& octect);
 
     // -----------------------------------------------------------------------
@@ -148,8 +142,7 @@ private :
     //     arrany holding valid hexNumber character.
     //
     // -----------------------------------------------------------------------
-    static bool       isInitialized;
-    static XMLByte    hexNumberTable[];
+    static const XMLByte    hexNumberTable[];
 };
 
 XERCES_CPP_NAMESPACE_END
