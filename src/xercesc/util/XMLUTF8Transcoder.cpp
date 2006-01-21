@@ -154,9 +154,9 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             do
             {
                 *outPtr++ = XMLCh(*srcPtr++);
-            } while (*srcPtr <= 127    &&
-                      srcPtr != srcEnd &&
-                      outPtr != outEnd );
+            } while ( srcPtr != srcEnd &&
+                      outPtr != outEnd &&
+                      *srcPtr <= 127 );
             memset(sizePtr,1,srcPtr - srcPtr_save);
             sizePtr += srcPtr - srcPtr_save;
             if (srcPtr == srcEnd || outPtr == outEnd)
