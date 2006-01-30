@@ -36,7 +36,6 @@
 #include <xercesc/framework/XMLDTDDescription.hpp>
 #include <xercesc/framework/psvi/PSVIHandler.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
-#include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
@@ -44,7 +43,6 @@
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 #include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
-#include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -2305,9 +2303,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         checkTopLevel = true;
                     }
                     else {
-                        fValidator->emitError(
-                            XMLValid::GrammarNotFound, getURIText(uriId)
-                        );
+                        if (!laxThisOne) {
+                            fValidator->emitError(
+                                XMLValid::GrammarNotFound, getURIText(uriId)
+                            );
+                        }
                         checkTopLevel = false;
                     }
                 }
@@ -2350,7 +2350,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                                 );
                             }
                         }
-                        else {
+                        else if (!laxThisOne) {
                             fValidator->emitError(
                                 XMLValid::GrammarNotFound,original_uriStr
                             );
