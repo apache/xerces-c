@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
- /*
-  * $Id$
-  */
-
-
 #if !defined(XSDERRORREPORTER_HPP)
 #define XSDERRORREPORTER_HPP
 
@@ -71,6 +66,8 @@ public:
                    const XMLCh* const text4 = 0,
                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
                    );
+    void emitError(const XMLException&  except,
+                   const Locator* const aLocator);
 
 private:
     // -----------------------------------------------------------------------

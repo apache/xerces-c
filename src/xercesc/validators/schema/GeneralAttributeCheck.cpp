@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id $
- */
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -432,7 +428,7 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
             dv->validate(attValue, fValidationContext, fMemoryManager);
         }
         catch(const XMLException& excep) {
-            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+            schema->reportSchemaError(elem, excep);
         }
         catch(const OutOfMemoryException&)
         {

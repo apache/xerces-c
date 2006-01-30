@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -1986,7 +1982,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                                          , fMemoryManager);
                     }
                     catch(const XMLException& excep) {
-                        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+                        reportSchemaError(elem, excep);
                     }
                     uriIndex = fURIStringPool->addOrFind(tokenElem);
                 }
@@ -2429,7 +2425,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                       , fMemoryManager);
         }
         catch (const XMLException& excep) {
-            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+            reportSchemaError(elem, excep);
         }
         catch(const OutOfMemoryException&)
         {
@@ -3007,7 +3003,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
                     qualifiedName, baseValidator, 0, 0, true, finalSet, true, fGrammarPoolMemoryManager);
             }
             catch (const XMLException& excep) {
-                reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+                reportSchemaError(contentElem, excep);
             }
             catch(const OutOfMemoryException&)
             {
@@ -3277,7 +3273,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
             newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, janFacets.release(), enums.release(), false, finalSet, true, fGrammarPoolMemoryManager);            
         }
         catch (const XMLException& excep) {
-            reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+            reportSchemaError(contentElem, excep);
         }
         catch(const OutOfMemoryException&)
         {
@@ -3411,7 +3407,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
         newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet, true, fGrammarPoolMemoryManager);
     }
     catch (const XMLException& excep) {
-        reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+        reportSchemaError(contentElem, excep);
     }
     catch(const OutOfMemoryException&)
     {
@@ -3783,7 +3779,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     typeInfo->setDatatypeValidator(simpleDV);
                 }
                 catch (const XMLException& excep) {
-                    reportSchemaError(simpleContent, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+                    reportSchemaError(simpleContent, excep);
                 }
                 catch(const OutOfMemoryException&)
                 {
@@ -4092,7 +4088,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
                                      , fMemoryManager);
                 }
                 catch(const XMLException& excep) {
-                    reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+                    reportSchemaError(elem, excep);
                 }
                 uriIndex = fURIStringPool->addOrFind(token);
             }
@@ -4426,7 +4422,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     }
     catch (const XPathException& e) {
 
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, e.getMessage());
+        reportSchemaError(elem, e);
         return false;
     }
 
@@ -4499,7 +4495,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             }
             catch (const XPathException& e) {
 
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, e.getMessage());
+                reportSchemaError(elem, e);
                 return false;
             }
 		}
@@ -5855,7 +5851,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                                           , fMemoryManager);
                         }
                         catch(const XMLException& excep) {
-                            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+                            reportSchemaError(elem, excep);
                         }
                         catch(const OutOfMemoryException&)
                         {
@@ -8468,6 +8464,16 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
     fXSDErrorReporter.emitError(errorCode, msgDomain, fLocator, text1, text2, text3, text4, fMemoryManager);
 }
 
+void TraverseSchema::reportSchemaError(const DOMElement* const elem,
+                                       const XMLException&     except)
+{
+    fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
+                        ((XSDElementNSImpl*) elem)->getLineNo(),
+                        ((XSDElementNSImpl*) elem)->getColumnNo());
+
+    fXSDErrorReporter.emitError(except, fLocator);
+}
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Init/CleanUp methods
 // ---------------------------------------------------------------------------
@@ -8663,7 +8669,7 @@ TraverseSchema::checkElemDeclValueConstraint(const DOMElement* const elem,
         }
         catch(const XMLException& excep)
         {
-            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+            reportSchemaError(elem, excep);
         }
         catch(const OutOfMemoryException&)
         {

@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -222,6 +217,23 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
 
     if (fErrorReporter)
         fErrorReporter->error(toEmit, msgDomain, errType, errText, aLocator->getSystemId(),
+                              aLocator->getPublicId(), aLocator->getLineNumber(),
+                              aLocator->getColumnNumber());
+
+    // Bail out if its fatal an we are to give up on the first fatal error
+    if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)
+        throw (XMLErrs::Codes) toEmit;
+}
+
+void XSDErrorReporter::emitError(const XMLException&  except,
+                                 const Locator* const aLocator)
+{
+    const XMLCh* const  errText = except.getMessage();
+    const unsigned int  toEmit = except.getCode();
+    XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
+
+    if (fErrorReporter)
+        fErrorReporter->error(toEmit, XMLUni::fgExceptDomain, errType, errText, aLocator->getSystemId(),
                               aLocator->getPublicId(), aLocator->getLineNumber(),
                               aLocator->getColumnNumber());
 

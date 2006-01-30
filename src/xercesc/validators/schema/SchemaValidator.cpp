@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id $
- */
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -909,7 +905,7 @@ void SchemaValidator::preContentValidation(bool,
                                                   baseGroup->getContentSpec(), baseGroup->getScope());
                     }
                     catch (const XMLException& excep) {
-                        fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curGroup.getLocator(), excep.getMessage(), 0, 0, 0, fMemoryManager);
+                        fSchemaErrorReporter.emitError(excep, curGroup.getLocator());
 					}
                 }
 
@@ -1093,7 +1089,7 @@ void SchemaValidator::checkParticleDerivation(SchemaGrammar* const currentGramma
                                       baseTypeInfo->getScopeDefined(), baseTypeInfo);
         }
         catch (const XMLException& excep) {
-            fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curTypeInfo->getLocator(), excep.getMessage(), 0, 0, 0, fMemoryManager);
+            fSchemaErrorReporter.emitError(excep, curTypeInfo->getLocator());
         }
     }
 }
