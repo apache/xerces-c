@@ -2303,9 +2303,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         checkTopLevel = true;
                     }
                     else {
-                        fValidator->emitError(
-                            XMLValid::GrammarNotFound, getURIText(uriId)
-                        );
+                        if (!laxThisOne) {
+                            fValidator->emitError(
+                                XMLValid::GrammarNotFound, getURIText(uriId)
+                            );
+                        }
                         checkTopLevel = false;
                     }
                 }
@@ -2348,7 +2350,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                                 );
                             }
                         }
-                        else {
+                        else if (!laxThisOne) {
                             fValidator->emitError(
                                 XMLValid::GrammarNotFound,original_uriStr
                             );
