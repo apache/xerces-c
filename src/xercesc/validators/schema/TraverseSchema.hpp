@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
 #if !defined(TRAVERSESCHEMA_HPP)
 #define TRAVERSESCHEMA_HPP
 
@@ -227,6 +223,8 @@ private:
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
                            const XMLCh* const text4 = 0);
+    void reportSchemaError(const DOMElement* const elem,
+                           const XMLException&     except);
 
     // -----------------------------------------------------------------------
     //  Private Helper methods
