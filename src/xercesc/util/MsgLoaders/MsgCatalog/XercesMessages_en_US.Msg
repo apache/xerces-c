@@ -110,8 +110,8 @@ $set 1
 111  Derivation by extension or restriction is forbidden by either the base type '{0}' or the schema
 112  The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)
 113  The {member type definitions} must all have {variety} of atomic or list
-114  The group:'0' must contain (all | choice | sequence)
-115  The attributeGroup:'0' must match (annotation?. ((attribute | attributeGroup)*, anyAttribute?))
+114  The group:'{0}' must contain (all | choice | sequence)
+115  The attributeGroup:'{0}' must match (annotation?. ((attribute | attributeGroup)*, anyAttribute?))
 116  The child of a model group definition must not specify either the minOccurs or maxOccurs attribute.
 117  The {0} -'{1}:{2}'- not found in the schema
 118  A group whose content is 'all' must only appear as the content type of a complex type definition.
