@@ -120,8 +120,8 @@
             <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbidden by either the base type '{0}' or the schema"/>
             <Message Id="AtomicItemType" Text="The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)"/>
             <Message Id="MemberTypeNoUnion" Text="The {member type definitions} must all have {variety} of atomic or list"/>
-            <Message Id="GroupContentError" Text="The group:'0' must contain (all | choice | sequence)"/>
-            <Message Id="AttGroupContentError" Text="The attributeGroup:'0' must match (annotation?. ((attribute | attributeGroup)*, anyAttribute?))"/>
+            <Message Id="GroupContentError" Text="The group:'{0}' must contain (all | choice | sequence)"/>
+            <Message Id="AttGroupContentError" Text="The attributeGroup:'{0}' must match (annotation?. ((attribute | attributeGroup)*, anyAttribute?))"/>
             <Message Id="MinMaxOnGroupChild" Text="The child of a model group definition must not specify either the minOccurs or maxOccurs attribute."/>
             <Message Id="DeclarationNotFound" Text="The {0} -'{1}:{2}'- not found in the schema"/>
             <Message Id="AllContentLimited" Text="A group whose content is 'all' must only appear as the content type of a complex type definition."/>
