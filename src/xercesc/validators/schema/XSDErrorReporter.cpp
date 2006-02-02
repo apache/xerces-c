@@ -230,7 +230,13 @@ void XSDErrorReporter::emitError(const XMLException&  except,
 {
     const XMLCh* const  errText = except.getMessage();
     const unsigned int  toEmit = except.getCode();
-    XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
+    //Before the code was modified to call this routine it used to use
+    //the XMLErrs::DisplayErrorMessage error message, which is just {'0'}
+    //and that error message has errType of Error.  So to be consistent
+    //with previous behaviour set the errType to be Error instead of
+    //getting the error type off of the exception.
+    //XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
+    XMLErrorReporter::ErrTypes errType = XMLErrorReporter::ErrType_Error;
 
     if (fErrorReporter)
         fErrorReporter->error(toEmit, XMLUni::fgExceptDomain, errType, errText, aLocator->getSystemId(),
@@ -238,8 +244,8 @@ void XSDErrorReporter::emitError(const XMLException&  except,
                               aLocator->getColumnNumber());
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)
-        throw (XMLErrs::Codes) toEmit;
+    //if (errType == XMLErrorReporter::ErrType_Fatal && fExitOnFirstFatal)
+    //    throw (XMLErrs::Codes) toEmit;
 }
 
 XERCES_CPP_NAMESPACE_END
