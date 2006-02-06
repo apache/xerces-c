@@ -2631,6 +2631,17 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             elemDecl->setPSVIScope(PSVIDefs::SCP_ABSENT);
         }
     }
+    else {
+        if (fAnnotation) {
+            XSAnnotation* xsAnnot = fSchemaGrammar->getAnnotation(elemDecl);
+            if (!xsAnnot) {
+                fSchemaGrammar->putAnnotation(elemDecl, janAnnot.release());
+            }
+            else {
+                xsAnnot->setNext(janAnnot.release());
+            }
+        }
+    }
 
     // Process children
     bool               anonymousType = false;
@@ -4806,7 +4817,7 @@ DOMElement* TraverseSchema::checkContent( const DOMElement* const rootElem
             if (!isEmpty) {
                 reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::ContentError, name);
             }
-
+            fAnnotation = janAnnot.release();
             return 0;
         }
 
