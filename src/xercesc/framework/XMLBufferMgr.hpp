@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
-
 #if !defined(XMLBUFFERMGR_HPP)
 #define XMLBUFFERMGR_HPP
 
@@ -60,6 +55,11 @@ public :
     XMLBuffer& bidOnBuffer();
     void releaseBuffer(XMLBuffer& toRelease);
 
+	// -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    unsigned int getBufferCount() const;
+    unsigned int getAvailableBufferCount() const;
 
 private :
     // -----------------------------------------------------------------------
@@ -82,6 +82,22 @@ private :
     MemoryManager*  fMemoryManager;
     XMLBuffer**     fBufList;
 };
+
+inline unsigned int XMLBufferMgr::getBufferCount() const
+{
+    return fBufCount;
+}
+
+inline unsigned int XMLBufferMgr::getAvailableBufferCount() const
+{
+    unsigned available = fBufCount;
+    for (unsigned int index = 0; index < fBufCount && fBufList[index]; index++)
+    {
+        if (fBufList[index]->getInUse())
+            --available;
+    }
+    return available;
+}
 
 
 /**
