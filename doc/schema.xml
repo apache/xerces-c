@@ -41,6 +41,9 @@
             in the parser.  Large values for <code>minOccurs</code> should be
             avoided, and <code>unbounded</code> should be used instead of
             a large value for <code>maxOccurs</code>.</li>
+            <li>The parser treats local elements in the same scope with the 
+            same name and namespace as one element declaration and does not 
+            differentiate between them.</li>
          </ul>
        </s2>
 
@@ -59,7 +62,8 @@
          <s3 title="out-of-bound float values">
          <p>                                              
                 For float data, the specs does not explicitly specify how to deal with 
-                out-of-bound data. Xerces converts these values as below 
+                out-of-bound data. Xerces converts these values as below (the values
+                depend on the system specific values of FLT_MAX and FLT_MIN):
          </p>
                <table>
                    <tr>
@@ -67,19 +71,19 @@
                        <td>Values converted</td>
                    </tr>
                    <tr>
-                       <td>less than -3.402823466e+38 </td>
+                       <td>less than -FLT_MAX (approx -3.402823466e+38) </td>
                        <td>-INF</td>
                    </tr>                
                    <tr>
-                       <td>greater than -1.175494351e-38 and less than -0 </td>
+                       <td>greater than -FLT_MIN (approx -1.175494351e-38) and less than -0 </td>
                        <td>-0</td>
                    </tr>                
                    <tr>
-                       <td>greater than +0 and less than +1.175494351e-38 </td>
+                       <td>greater than +0 and less than +FL_MIN (approx +1.175494351e-38) </td>
                        <td>+0</td>
                    </tr>                
                    <tr>
-                       <td>greater than +3.402823466e+38 </td>
+                       <td>greater than +FLT_MAX (approx 3.402823466e+38) </td>
                        <td>+INF</td>
                    </tr>                
                 </table>                   
@@ -93,7 +97,8 @@
 
          <s3 title="out-of-bound double values">
          <p>                                              
-                Similarly, Xerces converts double values as below 
+                Similarly, Xerces converts double values as below (the values
+                depend on the system specific values of DBL_MAX and DBL_MIN):
          </p>
                <table>
                    <tr>
@@ -101,19 +106,19 @@
                        <td>Values converted</td>
                    </tr>
                    <tr>
-                       <td>less than -1.7976931348623158e+308 </td>
+                       <td>less than -DBL_MAX (approx -1.7976931348623158e+308) </td>
                        <td>-INF</td>
                    </tr>                
                    <tr>
-                       <td>greater than -2.2250738585072014e-308 and less than -0 </td>
+                       <td>greater than -DBL_MIN (approx -2.2250738585072014e-308) and less than -0 </td>
                        <td>-0</td>
                    </tr>                
                    <tr>
-                       <td>greater than +0 and less than +2.2250738585072014e-308 </td>
+                       <td>greater than +0 and less than +DBL_MIN (approx +2.2250738585072014e-308) </td>
                        <td>+0</td>
                    </tr>                
                    <tr>
-                       <td>greater than +1.7976931348623158e+308 </td>
+                       <td>greater than +DBL_MAX (approx +1.7976931348623158e+308) </td>
                        <td>+INF</td>
                    </tr>                
                 </table>                                   
