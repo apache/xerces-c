@@ -260,6 +260,7 @@ void IGXMLScanner::scanDocument(const InputSource& src)
                 emitError
                 (
                     XMLErrs::XMLException_Warning
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -267,6 +268,7 @@ void IGXMLScanner::scanDocument(const InputSource& src)
                 emitError
                 (
                     XMLErrs::XMLException_Fatal
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -274,6 +276,7 @@ void IGXMLScanner::scanDocument(const InputSource& src)
                 emitError
                 (
                     XMLErrs::XMLException_Error
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -443,6 +446,7 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
                 emitError
                 (
                     XMLErrs::XMLException_Warning
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -450,6 +454,7 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
                 emitError
                 (
                     XMLErrs::XMLException_Fatal
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -457,6 +462,7 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
                 emitError
                 (
                     XMLErrs::XMLException_Error
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -2999,12 +3005,14 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
                 emitError
                 (
                     XMLErrs::DisplayErrorMessage
+                    , excToCatch.getCode()
                     , excToCatch.getMessage()
                 );
             else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
                 emitError
                 (
                     XMLErrs::XMLException_Fatal
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -3012,6 +3020,7 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
                 emitError
                 (
                     XMLErrs::XMLException_Error
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );

@@ -168,6 +168,15 @@ public :
         , const char* const         text3 = 0
         , const char* const         text4 = 0
     );
+    void emitError
+    (
+        const   XMLErrs::Codes    toEmit
+        , const XMLExcepts::Codes   originalErrorCode
+        , const XMLCh* const        text1 = 0
+        , const XMLCh* const        text2 = 0
+        , const XMLCh* const        text3 = 0
+        , const XMLCh* const        text4 = 0
+    );
 
     // -----------------------------------------------------------------------
     //  Implementation of XMLBufferFullHandler interface
