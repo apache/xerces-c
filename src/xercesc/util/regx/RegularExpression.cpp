@@ -753,7 +753,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
  	    }
 
       if (subEx){
-        subEx->addElement(lMatch);
+        subEx->addElement(context.fMatch);
         lMatch = new (fMemoryManager) Match(*(context.fMatch));
         adoptMatch = true;
         
