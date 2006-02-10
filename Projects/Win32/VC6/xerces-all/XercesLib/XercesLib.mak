@@ -344,7 +344,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -964,7 +964,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
-	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -1004,7 +1004,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/G6 /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -1624,7 +1624,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
-	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -2283,7 +2283,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
-	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -3059,6 +3059,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Base64.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.c
 SOURCE=..\..\..\..\..\src\xercesc\util\BinFileInputStream.cpp
 
 "$(INTDIR)\BinFileInputStream.obj" : $(SOURCE) "$(INTDIR)"
@@ -3095,6 +3096,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.c
 SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.cpp
 
 "$(INTDIR)\HashPtr.obj" : $(SOURCE) "$(INTDIR)"
@@ -3119,18 +3121,22 @@ SOURCE=..\..\..\..\..\src\xercesc\util\HexBin.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.c
+SOURCE=..\..\..\..\..\src\xercesc\util\KeyRefPair.c
 SOURCE=..\..\..\..\..\src\xercesc\util\KVStringPair.cpp
 
 "$(INTDIR)\KVStringPair.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\LogicalPath.c
 SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.cpp
 
 "$(INTDIR)\Mutexes.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.c
 SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.cpp
 
 "$(INTDIR)\PanicHandler.obj" : $(SOURCE) "$(INTDIR)"
@@ -3149,6 +3155,13 @@ SOURCE=..\..\..\..\..\src\xercesc\util\QName.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.c
 SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.cpp
 
 "$(INTDIR)\StringPool.obj" : $(SOURCE) "$(INTDIR)"
@@ -3161,12 +3174,16 @@ SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\TransENameMap.c
 SOURCE=..\..\..\..\..\src\xercesc\util\TransService.cpp
 
 "$(INTDIR)\TransService.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueVectorOf.c
 SOURCE=..\..\..\..\..\src\xercesc\util\XMemory.cpp
 
 "$(INTDIR)\XMemory.obj" : $(SOURCE) "$(INTDIR)"
@@ -3251,6 +3268,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLHolder.c
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp
 
 "$(INTDIR)\XMLIBM1047Transcoder.obj" : $(SOURCE) "$(INTDIR)"
@@ -3437,6 +3455,7 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamedMap.c
 SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.cpp
 
 "$(INTDIR)\XSNamespaceItem.obj" : $(SOURCE) "$(INTDIR)"
@@ -4427,6 +4446,7 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListPool.c
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentFragmentImpl.cpp
 
 "$(INTDIR)\DOMDocumentFragmentImpl.obj" : $(SOURCE) "$(INTDIR)"
@@ -4619,28 +4639,28 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C-2.7\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C-2.7\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C-2.7\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
 
 
 "$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C-2.7\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
 
 
 !ENDIF 

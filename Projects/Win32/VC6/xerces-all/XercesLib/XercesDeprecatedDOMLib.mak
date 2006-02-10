@@ -35,21 +35,10 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\xerces-depdom_2_7.dll"
 
-!ELSE 
 
-ALL : "XercesLib - Win32 Release" "$(OUTDIR)\xerces-depdom_2_7.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 ReleaseCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -220,8 +209,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
 "$(OUTDIR)\xerces-depdom_2_7.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -236,21 +224,10 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\xerces-depdom_2_7D.dll"
 
-!ELSE 
 
-ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\xerces-depdom_2_7D.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 DebugCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -423,8 +400,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
 "$(OUTDIR)\xerces-depdom_2_7D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -439,21 +415,10 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\xerces-depdom_2_7D.dll"
 
-!ELSE 
 
-ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\xerces-depdom_2_7D.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 DebugCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -626,8 +591,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
 "$(OUTDIR)\xerces-depdom_2_7D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -642,21 +606,10 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
-
 ALL : "$(OUTDIR)\xerces-depdom_2_7.dll"
 
-!ELSE 
 
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\xerces-depdom_2_7.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 ReleaseCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -828,8 +781,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
 "$(OUTDIR)\xerces-depdom_2_7.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -1196,56 +1148,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.cpp
 "$(INTDIR)\XMLDeclImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!IF  "$(CFG)" == "XercesDeprecatedDOMLib - Win32 Release"
-
-"XercesLib - Win32 Release" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Release" 
-   cd "."
-
-"XercesLib - Win32 ReleaseCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Release" RECURSE=1 CLEAN 
-   cd "."
-
-!ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win32 Debug"
-
-"XercesLib - Win32 Debug" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" 
-   cd "."
-
-"XercesLib - Win32 DebugCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" RECURSE=1 CLEAN 
-   cd "."
-
-!ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win64 Debug"
-
-"XercesLib - Win64 Debug" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Debug" 
-   cd "."
-
-"XercesLib - Win64 DebugCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Debug" RECURSE=1 CLEAN 
-   cd "."
-
-!ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win64 Release"
-
-"XercesLib - Win64 Release" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Release" 
-   cd "."
-
-"XercesLib - Win64 ReleaseCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Release" RECURSE=1 CLEAN 
-   cd "."
-
-!ENDIF 
 
 
 !ENDIF 
