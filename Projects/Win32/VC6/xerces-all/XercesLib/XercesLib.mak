@@ -35,7 +35,7 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_6.dll"
+ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_0.dll"
 
 
 CLEAN :
@@ -83,7 +83,6 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMAttrImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrMapImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrNSImpl.obj"
-	-@erase "$(INTDIR)\DOMBuilderImpl.obj"
 	-@erase "$(INTDIR)\DOMCDATASectionImpl.obj"
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
@@ -100,8 +99,12 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMErrorImpl.obj"
 	-@erase "$(INTDIR)\DOMException.obj"
 	-@erase "$(INTDIR)\DOMImplementationImpl.obj"
+	-@erase "$(INTDIR)\DOMImplementationListImpl.obj"
 	-@erase "$(INTDIR)\DOMImplementationRegistry.obj"
 	-@erase "$(INTDIR)\DOMLocatorImpl.obj"
+	-@erase "$(INTDIR)\DOMLSException.obj"
+	-@erase "$(INTDIR)\DOMLSParserImpl.obj"
+	-@erase "$(INTDIR)\DOMLSSerializerImpl.obj"
 	-@erase "$(INTDIR)\DOMNamedNodeMapImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeIDMap.obj"
 	-@erase "$(INTDIR)\DOMNodeImpl.obj"
@@ -114,11 +117,11 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMProcessingInstructionImpl.obj"
 	-@erase "$(INTDIR)\DOMRangeException.obj"
 	-@erase "$(INTDIR)\DOMRangeImpl.obj"
+	-@erase "$(INTDIR)\DOMStringListImpl.obj"
 	-@erase "$(INTDIR)\DOMStringPool.obj"
 	-@erase "$(INTDIR)\DOMTextImpl.obj"
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
-	-@erase "$(INTDIR)\DOMWriterImpl.obj"
 	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -141,7 +144,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
-	-@erase "$(INTDIR)\HeaderDummy.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -233,10 +235,12 @@ CLEAN :
 	-@erase "$(INTDIR)\Version.res"
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
-	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
+	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
+	-@erase "$(INTDIR)\WindowsFileMgr.obj"
+	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
-	-@erase "$(INTDIR)\Wrapper4DOMInputSource.obj"
+	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesDOMParser.obj"
@@ -332,10 +336,11 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\obj\xerces-c_2_6.map"
-	-@erase "$(OUTDIR)\xerces-c_2.exp"
-	-@erase "$(OUTDIR)\xerces-c_2.lib"
-	-@erase "$(OUTDIR)\xerces-c_2_6.dll"
+	-@erase "$(OUTDIR)\obj\xerces-c_3_0.map"
+	-@erase "$(OUTDIR)\xerces-c_3.exp"
+	-@erase "$(OUTDIR)\xerces-c_3.lib"
+	-@erase "$(OUTDIR)\xerces-c_3_0.dll"
+	-@erase "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -344,7 +349,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -385,9 +390,8 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-c_2_6.pdb" /map:"$(INTDIR)\xerces-c_2_6.map" /machine:I386 /out:"$(OUTDIR)\xerces-c_2_6.dll" /implib:"$(OUTDIR)\xerces-c_2.lib" /version:2.6.0 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-c_3_0.pdb" /map:"$(INTDIR)\xerces-c_3_0.map" /machine:I386 /out:"$(OUTDIR)\xerces-c_3_0.dll" /implib:"$(OUTDIR)\xerces-c_3.lib" 
 LINK32_OBJS= \
-	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
@@ -418,6 +422,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\UnionToken.obj" \
 	"$(INTDIR)\XMLRangeFactory.obj" \
 	"$(INTDIR)\XMLUniCharacter.obj" \
+	"$(INTDIR)\WindowsFileMgr.obj" \
+	"$(INTDIR)\WindowsMutexMgr.obj" \
+	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -427,7 +434,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\EncodingValidator.obj" \
 	"$(INTDIR)\HashPtr.obj" \
 	"$(INTDIR)\HashXMLCh.obj" \
-	"$(INTDIR)\HeaderDummy.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -498,7 +504,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StdInInputSource.obj" \
 	"$(INTDIR)\StdOutFormatTarget.obj" \
 	"$(INTDIR)\URLInputSource.obj" \
-	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
+	"$(INTDIR)\Wrapper4DOMLSInput.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
 	"$(INTDIR)\XMLAttDefList.obj" \
@@ -544,7 +550,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXException.obj" \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
-	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\DOMLSParserImpl.obj" \
 	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
@@ -656,8 +662,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMEntityReferenceImpl.obj" \
 	"$(INTDIR)\DOMErrorImpl.obj" \
 	"$(INTDIR)\DOMImplementationImpl.obj" \
+	"$(INTDIR)\DOMImplementationListImpl.obj" \
 	"$(INTDIR)\DOMImplementationRegistry.obj" \
 	"$(INTDIR)\DOMLocatorImpl.obj" \
+	"$(INTDIR)\DOMLSSerializerImpl.obj" \
 	"$(INTDIR)\DOMNamedNodeMapImpl.obj" \
 	"$(INTDIR)\DOMNodeIDMap.obj" \
 	"$(INTDIR)\DOMNodeImpl.obj" \
@@ -669,18 +677,19 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
 	"$(INTDIR)\DOMRangeImpl.obj" \
+	"$(INTDIR)\DOMStringListImpl.obj" \
 	"$(INTDIR)\DOMStringPool.obj" \
 	"$(INTDIR)\DOMTextImpl.obj" \
 	"$(INTDIR)\DOMTreeWalkerImpl.obj" \
 	"$(INTDIR)\DOMTypeInfoImpl.obj" \
-	"$(INTDIR)\DOMWriterImpl.obj" \
 	"$(INTDIR)\XSDElementNSImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
+	"$(INTDIR)\DOMLSException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_6.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -693,7 +702,7 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_6D.dll"
+ALL : "$(OUTDIR)\xerces-c_3_0D.dll"
 
 
 CLEAN :
@@ -741,7 +750,6 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMAttrImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrMapImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrNSImpl.obj"
-	-@erase "$(INTDIR)\DOMBuilderImpl.obj"
 	-@erase "$(INTDIR)\DOMCDATASectionImpl.obj"
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
@@ -758,8 +766,12 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMErrorImpl.obj"
 	-@erase "$(INTDIR)\DOMException.obj"
 	-@erase "$(INTDIR)\DOMImplementationImpl.obj"
+	-@erase "$(INTDIR)\DOMImplementationListImpl.obj"
 	-@erase "$(INTDIR)\DOMImplementationRegistry.obj"
 	-@erase "$(INTDIR)\DOMLocatorImpl.obj"
+	-@erase "$(INTDIR)\DOMLSException.obj"
+	-@erase "$(INTDIR)\DOMLSParserImpl.obj"
+	-@erase "$(INTDIR)\DOMLSSerializerImpl.obj"
 	-@erase "$(INTDIR)\DOMNamedNodeMapImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeIDMap.obj"
 	-@erase "$(INTDIR)\DOMNodeImpl.obj"
@@ -772,11 +784,11 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMProcessingInstructionImpl.obj"
 	-@erase "$(INTDIR)\DOMRangeException.obj"
 	-@erase "$(INTDIR)\DOMRangeImpl.obj"
+	-@erase "$(INTDIR)\DOMStringListImpl.obj"
 	-@erase "$(INTDIR)\DOMStringPool.obj"
 	-@erase "$(INTDIR)\DOMTextImpl.obj"
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
-	-@erase "$(INTDIR)\DOMWriterImpl.obj"
 	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -799,7 +811,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
-	-@erase "$(INTDIR)\HeaderDummy.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -892,10 +903,12 @@ CLEAN :
 	-@erase "$(INTDIR)\Version.res"
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
-	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
+	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
+	-@erase "$(INTDIR)\WindowsFileMgr.obj"
+	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
-	-@erase "$(INTDIR)\Wrapper4DOMInputSource.obj"
+	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesDOMParser.obj"
@@ -964,7 +977,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
-	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -991,11 +1004,11 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\xerces-c_2_6D.dll"
-	-@erase "$(OUTDIR)\xerces-c_2_6D.ilk"
-	-@erase "$(OUTDIR)\xerces-c_2_6D.pdb"
-	-@erase "$(OUTDIR)\xerces-c_2D.exp"
-	-@erase "$(OUTDIR)\xerces-c_2D.lib"
+	-@erase "$(OUTDIR)\xerces-c_3_0D.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_0D.ilk"
+	-@erase "$(OUTDIR)\xerces-c_3_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-c_3D.exp"
+	-@erase "$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1004,7 +1017,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -1045,9 +1058,8 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_6D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-c_2_6D.dll" /implib:"$(OUTDIR)\xerces-c_2D.lib" /pdbtype:sept /version:2.6.0 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_0D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-c_3_0D.dll" /implib:"$(OUTDIR)\xerces-c_3D.lib" /pdbtype:sept 
 LINK32_OBJS= \
-	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
@@ -1078,6 +1090,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\UnionToken.obj" \
 	"$(INTDIR)\XMLRangeFactory.obj" \
 	"$(INTDIR)\XMLUniCharacter.obj" \
+	"$(INTDIR)\WindowsFileMgr.obj" \
+	"$(INTDIR)\WindowsMutexMgr.obj" \
+	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -1087,7 +1102,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\EncodingValidator.obj" \
 	"$(INTDIR)\HashPtr.obj" \
 	"$(INTDIR)\HashXMLCh.obj" \
-	"$(INTDIR)\HeaderDummy.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -1158,7 +1172,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StdInInputSource.obj" \
 	"$(INTDIR)\StdOutFormatTarget.obj" \
 	"$(INTDIR)\URLInputSource.obj" \
-	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
+	"$(INTDIR)\Wrapper4DOMLSInput.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
 	"$(INTDIR)\XMLAttDefList.obj" \
@@ -1204,7 +1218,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXException.obj" \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
-	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\DOMLSParserImpl.obj" \
 	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
@@ -1316,8 +1330,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMEntityReferenceImpl.obj" \
 	"$(INTDIR)\DOMErrorImpl.obj" \
 	"$(INTDIR)\DOMImplementationImpl.obj" \
+	"$(INTDIR)\DOMImplementationListImpl.obj" \
 	"$(INTDIR)\DOMImplementationRegistry.obj" \
 	"$(INTDIR)\DOMLocatorImpl.obj" \
+	"$(INTDIR)\DOMLSSerializerImpl.obj" \
 	"$(INTDIR)\DOMNamedNodeMapImpl.obj" \
 	"$(INTDIR)\DOMNodeIDMap.obj" \
 	"$(INTDIR)\DOMNodeImpl.obj" \
@@ -1329,18 +1345,19 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
 	"$(INTDIR)\DOMRangeImpl.obj" \
+	"$(INTDIR)\DOMStringListImpl.obj" \
 	"$(INTDIR)\DOMStringPool.obj" \
 	"$(INTDIR)\DOMTextImpl.obj" \
 	"$(INTDIR)\DOMTreeWalkerImpl.obj" \
 	"$(INTDIR)\DOMTypeInfoImpl.obj" \
-	"$(INTDIR)\DOMWriterImpl.obj" \
 	"$(INTDIR)\XSDElementNSImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
+	"$(INTDIR)\DOMLSException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_6D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1353,7 +1370,7 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_6D.dll"
+ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_0D.dll"
 
 
 CLEAN :
@@ -1401,7 +1418,6 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMAttrImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrMapImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrNSImpl.obj"
-	-@erase "$(INTDIR)\DOMBuilderImpl.obj"
 	-@erase "$(INTDIR)\DOMCDATASectionImpl.obj"
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
@@ -1418,8 +1434,12 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMErrorImpl.obj"
 	-@erase "$(INTDIR)\DOMException.obj"
 	-@erase "$(INTDIR)\DOMImplementationImpl.obj"
+	-@erase "$(INTDIR)\DOMImplementationListImpl.obj"
 	-@erase "$(INTDIR)\DOMImplementationRegistry.obj"
 	-@erase "$(INTDIR)\DOMLocatorImpl.obj"
+	-@erase "$(INTDIR)\DOMLSException.obj"
+	-@erase "$(INTDIR)\DOMLSParserImpl.obj"
+	-@erase "$(INTDIR)\DOMLSSerializerImpl.obj"
 	-@erase "$(INTDIR)\DOMNamedNodeMapImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeIDMap.obj"
 	-@erase "$(INTDIR)\DOMNodeImpl.obj"
@@ -1432,11 +1452,11 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMProcessingInstructionImpl.obj"
 	-@erase "$(INTDIR)\DOMRangeException.obj"
 	-@erase "$(INTDIR)\DOMRangeImpl.obj"
+	-@erase "$(INTDIR)\DOMStringListImpl.obj"
 	-@erase "$(INTDIR)\DOMStringPool.obj"
 	-@erase "$(INTDIR)\DOMTextImpl.obj"
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
-	-@erase "$(INTDIR)\DOMWriterImpl.obj"
 	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -1459,7 +1479,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
-	-@erase "$(INTDIR)\HeaderDummy.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -1552,10 +1571,12 @@ CLEAN :
 	-@erase "$(INTDIR)\Version.res"
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
-	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
+	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
+	-@erase "$(INTDIR)\WindowsFileMgr.obj"
+	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
-	-@erase "$(INTDIR)\Wrapper4DOMInputSource.obj"
+	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesDOMParser.obj"
@@ -1624,7 +1645,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
-	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -1651,11 +1672,12 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\xerces-c_2_6D.dll"
-	-@erase "$(OUTDIR)\xerces-c_2_6D.ilk"
-	-@erase "$(OUTDIR)\xerces-c_2_6D.pdb"
-	-@erase "$(OUTDIR)\xerces-c_2D.exp"
-	-@erase "$(OUTDIR)\xerces-c_2D.lib"
+	-@erase "$(OUTDIR)\xerces-c_3_0D.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_0D.ilk"
+	-@erase "$(OUTDIR)\xerces-c_3_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-c_3D.exp"
+	-@erase "$(OUTDIR)\xerces-c_3D.lib"
+	-@erase "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -1664,7 +1686,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -1705,9 +1727,8 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_6D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-c_2_6D.dll" /implib:"$(OUTDIR)\xerces-c_2D.lib" /pdbtype:sept /version:2.6.0 /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_0D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-c_3_0D.dll" /implib:"$(OUTDIR)\xerces-c_3D.lib" /pdbtype:sept /machine:IA64 
 LINK32_OBJS= \
-	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
@@ -1738,6 +1759,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\UnionToken.obj" \
 	"$(INTDIR)\XMLRangeFactory.obj" \
 	"$(INTDIR)\XMLUniCharacter.obj" \
+	"$(INTDIR)\WindowsFileMgr.obj" \
+	"$(INTDIR)\WindowsMutexMgr.obj" \
+	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -1747,7 +1771,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\EncodingValidator.obj" \
 	"$(INTDIR)\HashPtr.obj" \
 	"$(INTDIR)\HashXMLCh.obj" \
-	"$(INTDIR)\HeaderDummy.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -1818,7 +1841,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StdInInputSource.obj" \
 	"$(INTDIR)\StdOutFormatTarget.obj" \
 	"$(INTDIR)\URLInputSource.obj" \
-	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
+	"$(INTDIR)\Wrapper4DOMLSInput.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
 	"$(INTDIR)\XMLAttDefList.obj" \
@@ -1864,7 +1887,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXException.obj" \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
-	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\DOMLSParserImpl.obj" \
 	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
@@ -1976,8 +1999,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMEntityReferenceImpl.obj" \
 	"$(INTDIR)\DOMErrorImpl.obj" \
 	"$(INTDIR)\DOMImplementationImpl.obj" \
+	"$(INTDIR)\DOMImplementationListImpl.obj" \
 	"$(INTDIR)\DOMImplementationRegistry.obj" \
 	"$(INTDIR)\DOMLocatorImpl.obj" \
+	"$(INTDIR)\DOMLSSerializerImpl.obj" \
 	"$(INTDIR)\DOMNamedNodeMapImpl.obj" \
 	"$(INTDIR)\DOMNodeIDMap.obj" \
 	"$(INTDIR)\DOMNodeImpl.obj" \
@@ -1989,18 +2014,19 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
 	"$(INTDIR)\DOMRangeImpl.obj" \
+	"$(INTDIR)\DOMStringListImpl.obj" \
 	"$(INTDIR)\DOMStringPool.obj" \
 	"$(INTDIR)\DOMTextImpl.obj" \
 	"$(INTDIR)\DOMTreeWalkerImpl.obj" \
 	"$(INTDIR)\DOMTypeInfoImpl.obj" \
-	"$(INTDIR)\DOMWriterImpl.obj" \
 	"$(INTDIR)\XSDElementNSImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
+	"$(INTDIR)\DOMLSException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_6D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -2013,7 +2039,7 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_2_6.dll"
+ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_0.dll"
 
 
 CLEAN :
@@ -2061,7 +2087,6 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMAttrImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrMapImpl.obj"
 	-@erase "$(INTDIR)\DOMAttrNSImpl.obj"
-	-@erase "$(INTDIR)\DOMBuilderImpl.obj"
 	-@erase "$(INTDIR)\DOMCDATASectionImpl.obj"
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
@@ -2078,8 +2103,12 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMErrorImpl.obj"
 	-@erase "$(INTDIR)\DOMException.obj"
 	-@erase "$(INTDIR)\DOMImplementationImpl.obj"
+	-@erase "$(INTDIR)\DOMImplementationListImpl.obj"
 	-@erase "$(INTDIR)\DOMImplementationRegistry.obj"
 	-@erase "$(INTDIR)\DOMLocatorImpl.obj"
+	-@erase "$(INTDIR)\DOMLSException.obj"
+	-@erase "$(INTDIR)\DOMLSParserImpl.obj"
+	-@erase "$(INTDIR)\DOMLSSerializerImpl.obj"
 	-@erase "$(INTDIR)\DOMNamedNodeMapImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeIDMap.obj"
 	-@erase "$(INTDIR)\DOMNodeImpl.obj"
@@ -2092,11 +2121,11 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMProcessingInstructionImpl.obj"
 	-@erase "$(INTDIR)\DOMRangeException.obj"
 	-@erase "$(INTDIR)\DOMRangeImpl.obj"
+	-@erase "$(INTDIR)\DOMStringListImpl.obj"
 	-@erase "$(INTDIR)\DOMStringPool.obj"
 	-@erase "$(INTDIR)\DOMTextImpl.obj"
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
-	-@erase "$(INTDIR)\DOMWriterImpl.obj"
 	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -2119,7 +2148,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GrammarResolver.obj"
 	-@erase "$(INTDIR)\HashPtr.obj"
 	-@erase "$(INTDIR)\HashXMLCh.obj"
-	-@erase "$(INTDIR)\HeaderDummy.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -2211,10 +2239,12 @@ CLEAN :
 	-@erase "$(INTDIR)\Version.res"
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
-	-@erase "$(INTDIR)\Win32PlatformUtils.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
+	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
+	-@erase "$(INTDIR)\WindowsFileMgr.obj"
+	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
-	-@erase "$(INTDIR)\Wrapper4DOMInputSource.obj"
+	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesDOMParser.obj"
@@ -2283,7 +2313,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
-	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -2310,11 +2340,12 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\obj\xerces-c_2_6.map"
-	-@erase "$(OUTDIR)\xerces-c_2.exp"
-	-@erase "$(OUTDIR)\xerces-c_2.lib"
-	-@erase "$(OUTDIR)\xerces-c_2_6.dll"
-	-@erase "$(OUTDIR)\xerces-c_2_6.ilk"
+	-@erase "$(OUTDIR)\obj\xerces-c_3_0.map"
+	-@erase "$(OUTDIR)\xerces-c_3.exp"
+	-@erase "$(OUTDIR)\xerces-c_3.lib"
+	-@erase "$(OUTDIR)\xerces-c_3_0.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_0.ilk"
+	-@erase "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -2323,7 +2354,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -2364,9 +2395,8 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_2_6.pdb" /map:"$(INTDIR)\xerces-c_2_6.map" /machine:IX86 /out:"$(OUTDIR)\xerces-c_2_6.dll" /implib:"$(OUTDIR)\xerces-c_2.lib" /version:2.6.0 /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_0.pdb" /map:"$(INTDIR)\xerces-c_3_0.map" /machine:IX86 /out:"$(OUTDIR)\xerces-c_3_0.dll" /implib:"$(OUTDIR)\xerces-c_3.lib" /machine:IA64 
 LINK32_OBJS= \
-	"$(INTDIR)\Win32PlatformUtils.obj" \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
@@ -2397,6 +2427,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\UnionToken.obj" \
 	"$(INTDIR)\XMLRangeFactory.obj" \
 	"$(INTDIR)\XMLUniCharacter.obj" \
+	"$(INTDIR)\WindowsFileMgr.obj" \
+	"$(INTDIR)\WindowsMutexMgr.obj" \
+	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -2406,7 +2439,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\EncodingValidator.obj" \
 	"$(INTDIR)\HashPtr.obj" \
 	"$(INTDIR)\HashXMLCh.obj" \
-	"$(INTDIR)\HeaderDummy.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -2477,7 +2509,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StdInInputSource.obj" \
 	"$(INTDIR)\StdOutFormatTarget.obj" \
 	"$(INTDIR)\URLInputSource.obj" \
-	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
+	"$(INTDIR)\Wrapper4DOMLSInput.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
 	"$(INTDIR)\XMLAttDefList.obj" \
@@ -2523,7 +2555,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\SAXException.obj" \
 	"$(INTDIR)\SAXParseException.obj" \
 	"$(INTDIR)\AbstractDOMParser.obj" \
-	"$(INTDIR)\DOMBuilderImpl.obj" \
+	"$(INTDIR)\DOMLSParserImpl.obj" \
 	"$(INTDIR)\SAX2XMLFilterImpl.obj" \
 	"$(INTDIR)\SAX2XMLReaderImpl.obj" \
 	"$(INTDIR)\SAXParser.obj" \
@@ -2635,8 +2667,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMEntityReferenceImpl.obj" \
 	"$(INTDIR)\DOMErrorImpl.obj" \
 	"$(INTDIR)\DOMImplementationImpl.obj" \
+	"$(INTDIR)\DOMImplementationListImpl.obj" \
 	"$(INTDIR)\DOMImplementationRegistry.obj" \
 	"$(INTDIR)\DOMLocatorImpl.obj" \
+	"$(INTDIR)\DOMLSSerializerImpl.obj" \
 	"$(INTDIR)\DOMNamedNodeMapImpl.obj" \
 	"$(INTDIR)\DOMNodeIDMap.obj" \
 	"$(INTDIR)\DOMNodeImpl.obj" \
@@ -2648,18 +2682,19 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMParentNode.obj" \
 	"$(INTDIR)\DOMProcessingInstructionImpl.obj" \
 	"$(INTDIR)\DOMRangeImpl.obj" \
+	"$(INTDIR)\DOMStringListImpl.obj" \
 	"$(INTDIR)\DOMStringPool.obj" \
 	"$(INTDIR)\DOMTextImpl.obj" \
 	"$(INTDIR)\DOMTreeWalkerImpl.obj" \
 	"$(INTDIR)\DOMTypeInfoImpl.obj" \
-	"$(INTDIR)\DOMWriterImpl.obj" \
 	"$(INTDIR)\XSDElementNSImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
+	"$(INTDIR)\DOMLSException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
 	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
-"$(OUTDIR)\xerces-c_2_6.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -2677,225 +2712,61 @@ LINK32_OBJS= \
 
 
 !IF "$(CFG)" == "XercesLib - Win32 Release" || "$(CFG)" == "XercesLib - Win32 Debug" || "$(CFG)" == "XercesLib - Win64 Debug" || "$(CFG)" == "XercesLib - Win64 Release"
-SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32PlatformUtils.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Version.rc
 
 !IF  "$(CFG)" == "XercesLib - Win32 Release"
 
-CPP_SWITCHES=/G6 /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-"$(INTDIR)\Win32PlatformUtils.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C\src\xercesc\util\MsgLoaders\Win32" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
 
-CPP_SWITCHES=/G6 /MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-"$(INTDIR)\Win32PlatformUtils.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C\src\xercesc\util\MsgLoaders\Win32" /d "_DEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
 
-CPP_SWITCHES=/MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-"$(INTDIR)\Win32PlatformUtils.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C\src\xercesc\util\MsgLoaders\Win32" /d "_DEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
 
-CPP_SWITCHES=/MD /Ze /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
-"$(INTDIR)\Win32PlatformUtils.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
+	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces\Xerces-C\src\xercesc\util\MsgLoaders\Win32" /d "NDEBUG" $(SOURCE)
 
 
 !ENDIF 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp
 
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
-CPP_SWITCHES=/G6 /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
 "$(INTDIR)\Win32MsgLoader.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-CPP_SWITCHES=/G6 /MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\Win32MsgLoader.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
-
-CPP_SWITCHES=/MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\Win32MsgLoader.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
-
-CPP_SWITCHES=/MD /Ze /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\Win32MsgLoader.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ENDIF 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp
 
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
-CPP_SWITCHES=/G6 /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
 "$(INTDIR)\Win32TransService.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-CPP_SWITCHES=/G6 /MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\Win32TransService.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
-
-CPP_SWITCHES=/MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\Win32TransService.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
-
-CPP_SWITCHES=/MD /Ze /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\Win32TransService.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ENDIF 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp
 
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
-CPP_SWITCHES=/G6 /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
 "$(INTDIR)\BinHTTPURLInputStream.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-CPP_SWITCHES=/G6 /MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\BinHTTPURLInputStream.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
-
-CPP_SWITCHES=/MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\BinHTTPURLInputStream.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
-
-CPP_SWITCHES=/MD /Ze /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\BinHTTPURLInputStream.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ENDIF 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp
 
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
-CPP_SWITCHES=/G6 /MD /Ze /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
 "$(INTDIR)\WinSockNetAccessor.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
+	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-CPP_SWITCHES=/G6 /MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\WinSockNetAccessor.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
-
-CPP_SWITCHES=/MDd /Ze /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\WinSockNetAccessor.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
-
-CPP_SWITCHES=/MD /Ze /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\WinSockNetAccessor.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ENDIF 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\ASCIIRangeFactory.cpp
 
@@ -3053,12 +2924,31 @@ SOURCE=..\..\..\..\..\src\xercesc\util\regx\XMLUniCharacter.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\FileManagers\WindowsFileMgr.cpp
+
+"$(INTDIR)\WindowsFileMgr.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\MutexManagers\WindowsMutexMgr.cpp
+
+"$(INTDIR)\WindowsMutexMgr.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\AtomicOpManagers\WindowsAtomicOpMgr.cpp
+
+"$(INTDIR)\WindowsAtomicOpMgr.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\util\Base64.cpp
 
 "$(INTDIR)\Base64.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\BaseRefVectorOf.c
 SOURCE=..\..\..\..\..\src\xercesc\util\BinFileInputStream.cpp
 
 "$(INTDIR)\BinFileInputStream.obj" : $(SOURCE) "$(INTDIR)"
@@ -3095,6 +2985,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.c
 SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.cpp
 
 "$(INTDIR)\HashPtr.obj" : $(SOURCE) "$(INTDIR)"
@@ -3107,18 +2998,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\util\HeaderDummy.cpp
-
-"$(INTDIR)\HeaderDummy.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\..\..\..\src\xercesc\util\HexBin.cpp
 
 "$(INTDIR)\HexBin.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.c
+SOURCE=..\..\..\..\..\src\xercesc\util\KeyRefPair.c
 SOURCE=..\..\..\..\..\src\xercesc\util\KVStringPair.cpp
 
 "$(INTDIR)\KVStringPair.obj" : $(SOURCE) "$(INTDIR)"
@@ -3131,6 +3018,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.c
 SOURCE=..\..\..\..\..\src\xercesc\util\PanicHandler.cpp
 
 "$(INTDIR)\PanicHandler.obj" : $(SOURCE) "$(INTDIR)"
@@ -3149,6 +3037,13 @@ SOURCE=..\..\..\..\..\src\xercesc\util\QName.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayVectorOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.c
 SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.cpp
 
 "$(INTDIR)\StringPool.obj" : $(SOURCE) "$(INTDIR)"
@@ -3161,11 +3056,79 @@ SOURCE=..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\util\TransENameMap.c
 SOURCE=..\..\..\..\..\src\xercesc\util\TransService.cpp
 
 "$(INTDIR)\TransService.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueVectorOf.c
+SOURCE=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+
+!IF  "$(CFG)" == "XercesLib - Win32 Release"
+
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+
+"..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)" $(USERDEP__XERCE)
+	<<tempfile.bat 
+	@echo off 
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+<< 
+	
+
+!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
+
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+
+"..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)" $(USERDEP__XERCE)
+	<<tempfile.bat 
+	@echo off 
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+<< 
+	
+
+!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
+
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+
+"..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)" $(USERDEP__XERCE)
+	<<tempfile.bat 
+	@echo off 
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+<< 
+	
+
+!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
+
+InputDir=\Xerces\Xerces-C\src\xercesc\util
+InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
+InputName=Xerces_autoconf_config
+USERDEP__XERCE="$(InputDir)\$(InputName).msvc.hpp"	
+
+"..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)" $(USERDEP__XERCE)
+	<<tempfile.bat 
+	@echo off 
+	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+<< 
+	
+
+!ENDIF 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\XMemory.cpp
 
@@ -3437,6 +3400,7 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamedMap.c
 SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.cpp
 
 "$(INTDIR)\XSNamespaceItem.obj" : $(SOURCE) "$(INTDIR)"
@@ -3533,9 +3497,9 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\URLInputSource.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\Wrapper4DOMLSInput.cpp
 
-"$(INTDIR)\Wrapper4DOMInputSource.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\Wrapper4DOMLSInput.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3809,9 +3773,9 @@ SOURCE=..\..\..\..\..\src\xercesc\parsers\AbstractDOMParser.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMBuilderImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMLSParserImpl.cpp
 
-"$(INTDIR)\DOMBuilderImpl.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\DOMLSParserImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4427,6 +4391,7 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListPool.c
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentFragmentImpl.cpp
 
 "$(INTDIR)\DOMDocumentFragmentImpl.obj" : $(SOURCE) "$(INTDIR)"
@@ -4481,6 +4446,12 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.cpp
+
+"$(INTDIR)\DOMImplementationListImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp
 
 "$(INTDIR)\DOMImplementationRegistry.obj" : $(SOURCE) "$(INTDIR)"
@@ -4490,6 +4461,12 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.cpp
 
 "$(INTDIR)\DOMLocatorImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.cpp
+
+"$(INTDIR)\DOMLSSerializerImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4559,6 +4536,12 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.cpp
+
+"$(INTDIR)\DOMStringListImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp
 
 "$(INTDIR)\DOMStringPool.obj" : $(SOURCE) "$(INTDIR)"
@@ -4583,12 +4566,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp
-
-"$(INTDIR)\DOMWriterImpl.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 
 "$(INTDIR)\XSDElementNSImpl.obj" : $(SOURCE) "$(INTDIR)"
@@ -4598,6 +4575,12 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.cpp
 
 "$(INTDIR)\DOMException.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLSException.cpp
+
+"$(INTDIR)\DOMLSException.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -4612,38 +4595,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp
 "$(INTDIR)\DOMXPathException.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
-
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
-
-"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-
-"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
-
-
-"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "_DEBUG" $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
-
-
-"$(INTDIR)\Version.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\Version.res" /i "\Xerces-Working\src\xercesc\util\Platforms\Win32" /d "NDEBUG" $(SOURCE)
-
-
-!ENDIF 
 
 
 !ENDIF 

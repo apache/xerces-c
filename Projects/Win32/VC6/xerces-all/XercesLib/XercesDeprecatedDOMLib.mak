@@ -35,21 +35,10 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+ALL : "$(OUTDIR)\xerces-depdom_3_0.dll"
 
-ALL : "$(OUTDIR)\xerces-depdom_2_6.dll"
 
-!ELSE 
-
-ALL : "XercesLib - Win32 Release" "$(OUTDIR)\xerces-depdom_2_6.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 ReleaseCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -109,10 +98,10 @@ CLEAN :
 	-@erase "$(INTDIR)\TreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\obj\xerces-depdom_2_6.map"
-	-@erase "$(OUTDIR)\xerces-depdom_2.exp"
-	-@erase "$(OUTDIR)\xerces-depdom_2.lib"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6.dll"
+	-@erase "$(OUTDIR)\obj\xerces-depdom_3_0.map"
+	-@erase "$(OUTDIR)\xerces-depdom_3.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_3.lib"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0.dll"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -121,7 +110,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_DEPRECATED_DOM" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -161,7 +150,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-depdom_2_6.pdb" /map:"$(INTDIR)\xerces-depdom_2_6.map" /machine:I386 /out:"$(OUTDIR)\xerces-depdom_2_6.dll" /implib:"$(OUTDIR)\xerces-depdom_2.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-depdom_3_0.pdb" /map:"$(INTDIR)\xerces-depdom_3_0.map" /machine:I386 /out:"$(OUTDIR)\xerces-depdom_3_0.dll" /implib:"$(OUTDIR)\xerces-depdom_3.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -220,10 +209,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
-"$(OUTDIR)\xerces-depdom_2_6.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -236,21 +224,10 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+ALL : "$(OUTDIR)\xerces-depdom_3_0D.dll"
 
-ALL : "$(OUTDIR)\xerces-depdom_2_6D.dll"
 
-!ELSE 
-
-ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\xerces-depdom_2_6D.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win32 DebugCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -311,11 +288,11 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6D.dll"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6D.ilk"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6D.pdb"
-	-@erase "$(OUTDIR)\xerces-depdom_2D.exp"
-	-@erase "$(OUTDIR)\xerces-depdom_2D.lib"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0D.dll"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0D.ilk"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-depdom_3D.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_3D.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -324,7 +301,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_DEPRECATED_DOM" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -364,7 +341,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_2_6D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-depdom_2_6D.dll" /implib:"$(OUTDIR)\xerces-depdom_2D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_3_0D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-depdom_3_0D.dll" /implib:"$(OUTDIR)\xerces-depdom_3D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -423,10 +400,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
-"$(OUTDIR)\xerces-depdom_2_6D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -439,21 +415,10 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+ALL : "$(OUTDIR)\xerces-depdom_3_0D.dll"
 
-ALL : "$(OUTDIR)\xerces-depdom_2_6D.dll"
 
-!ELSE 
-
-ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\xerces-depdom_2_6D.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 DebugCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -514,11 +479,11 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6D.dll"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6D.ilk"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6D.pdb"
-	-@erase "$(OUTDIR)\xerces-depdom_2D.exp"
-	-@erase "$(OUTDIR)\xerces-depdom_2D.lib"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0D.dll"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0D.ilk"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-depdom_3D.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_3D.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -527,7 +492,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_DEPRECATED_DOM" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -567,7 +532,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_2_6D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-depdom_2_6D.dll" /implib:"$(OUTDIR)\xerces-depdom_2D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_3_0D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-depdom_3_0D.dll" /implib:"$(OUTDIR)\xerces-depdom_3D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -626,10 +591,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
-"$(OUTDIR)\xerces-depdom_2_6D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -642,21 +606,10 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 # End Custom Macros
 
-!IF "$(RECURSE)" == "0" 
+ALL : "$(OUTDIR)\xerces-depdom_3_0.dll"
 
-ALL : "$(OUTDIR)\xerces-depdom_2_6.dll"
 
-!ELSE 
-
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\xerces-depdom_2_6.dll"
-
-!ENDIF 
-
-!IF "$(RECURSE)" == "1" 
-CLEAN :"XercesLib - Win64 ReleaseCLEAN" 
-!ELSE 
 CLEAN :
-!ENDIF 
 	-@erase "$(INTDIR)\AttrImpl.obj"
 	-@erase "$(INTDIR)\AttrMapImpl.obj"
 	-@erase "$(INTDIR)\AttrNSImpl.obj"
@@ -716,11 +669,11 @@ CLEAN :
 	-@erase "$(INTDIR)\TreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\obj\xerces-depdom_2_6.map"
-	-@erase "$(OUTDIR)\xerces-depdom_2.exp"
-	-@erase "$(OUTDIR)\xerces-depdom_2.lib"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6.dll"
-	-@erase "$(OUTDIR)\xerces-depdom_2_6.ilk"
+	-@erase "$(OUTDIR)\obj\xerces-depdom_3_0.map"
+	-@erase "$(OUTDIR)\xerces-depdom_3.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_3.lib"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0.dll"
+	-@erase "$(OUTDIR)\xerces-depdom_3_0.ilk"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -729,7 +682,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_DEPRECATED_DOM" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_BUILDING_DEPRECATED_LIBRARY" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -769,7 +722,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_2_6.pdb" /map:"$(INTDIR)\xerces-depdom_2_6.map" /machine:IX86 /out:"$(OUTDIR)\xerces-depdom_2_6.dll" /implib:"$(OUTDIR)\xerces-depdom_2.lib" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_3.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_3_0.pdb" /map:"$(INTDIR)\xerces-depdom_3_0.map" /machine:IX86 /out:"$(OUTDIR)\xerces-depdom_3_0.dll" /implib:"$(OUTDIR)\xerces-depdom_3.lib" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -828,10 +781,9 @@ LINK32_OBJS= \
 	"$(INTDIR)\RefCountedImpl.obj" \
 	"$(INTDIR)\TextImpl.obj" \
 	"$(INTDIR)\TreeWalkerImpl.obj" \
-	"$(INTDIR)\XMLDeclImpl.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(INTDIR)\XMLDeclImpl.obj"
 
-"$(OUTDIR)\xerces-depdom_2_6.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1196,56 +1148,6 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.cpp
 "$(INTDIR)\XMLDeclImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!IF  "$(CFG)" == "XercesDeprecatedDOMLib - Win32 Release"
-
-"XercesLib - Win32 Release" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Release" 
-   cd "."
-
-"XercesLib - Win32 ReleaseCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Release" RECURSE=1 CLEAN 
-   cd "."
-
-!ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win32 Debug"
-
-"XercesLib - Win32 Debug" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" 
-   cd "."
-
-"XercesLib - Win32 DebugCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win32 Debug" RECURSE=1 CLEAN 
-   cd "."
-
-!ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win64 Debug"
-
-"XercesLib - Win64 Debug" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Debug" 
-   cd "."
-
-"XercesLib - Win64 DebugCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Debug" RECURSE=1 CLEAN 
-   cd "."
-
-!ELSEIF  "$(CFG)" == "XercesDeprecatedDOMLib - Win64 Release"
-
-"XercesLib - Win64 Release" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Release" 
-   cd "."
-
-"XercesLib - Win64 ReleaseCLEAN" : 
-   cd "."
-   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\XercesLib.mak" CFG="XercesLib - Win64 Release" RECURSE=1 CLEAN 
-   cd "."
-
-!ENDIF 
 
 
 !ENDIF 
