@@ -74,13 +74,13 @@ static const XMLCh  gQuoteRef[] =
     chAmpersand, chLatin_q, chLatin_u, chLatin_o, chLatin_t, chSemiColon, chNull
 };
 
-static const unsigned int kEscapeCount = 6;
+static const unsigned int kEscapeCount = 7;
 static const XMLCh gEscapeChars[XMLFormatter::EscapeFlags_Count][kEscapeCount] =
 {
-        { chNull      , chNull       , chNull        , chNull       , chNull        , chNull }
-    ,   { chAmpersand , chCloseAngle , chDoubleQuote , chOpenAngle  , chSingleQuote , chNull }
-    ,   { chAmpersand , chOpenAngle  , chDoubleQuote , chLF         , chNull        , chNull }
-    ,   { chAmpersand , chOpenAngle  , chCloseAngle  , chNull       , chNull        , chNull }
+        { chNull      , chNull       , chNull        , chNull       , chNull        , chNull    , chNull }
+    ,   { chAmpersand , chCloseAngle , chDoubleQuote , chOpenAngle  , chSingleQuote , chNull    , chNull }
+    ,   { chAmpersand , chOpenAngle  , chDoubleQuote , chLF         , chCR          , chHTab    , chNull }
+    ,   { chAmpersand , chOpenAngle  , chCloseAngle  , chNull       , chNull        , chNull    , chNull }
 };
 
 // ---------------------------------------------------------------------------
