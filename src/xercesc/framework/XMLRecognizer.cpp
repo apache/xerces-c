@@ -205,42 +205,50 @@ XMLRecognizer::encodingForName(const XMLCh* const encName)
     //  !!NOTE: Note that we don't handle EBCDIC here because we don't handle
     //  that one ourselves. It is allowed to fall into 'other'.
     //
-   if (encName == XMLUni::fgXMLChEncodingString ||
+    if (encName == XMLUni::fgXMLChEncodingString ||
         !XMLString::compareString(encName, XMLUni::fgXMLChEncodingString))
-   {
+    {
         return XMLRecognizer::XERCES_XMLCH;
-   }
-   else if (!XMLString::compareString(encName, XMLUni::fgUTF8EncodingString)
-    ||  !XMLString::compareString(encName, XMLUni::fgUTF8EncodingString2))
+    }
+    else if (!XMLString::compareString(encName, XMLUni::fgUTF8EncodingString)
+         ||  !XMLString::compareString(encName, XMLUni::fgUTF8EncodingString2))
     {
         return XMLRecognizer::UTF_8;
     }
-     else if (!XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString)
-          ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString2)
-          ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString3)
-          ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString4))
+    else if (!XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString)
+         ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString2)
+         ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString3)
+         ||  !XMLString::compareString(encName, XMLUni::fgUSASCIIEncodingString4))
     {
         return XMLRecognizer::US_ASCII;
     }
-     else if (!XMLString::compareString(encName, XMLUni::fgUTF16LEncodingString)
-          ||  !XMLString::compareString(encName, XMLUni::fgUTF16LEncodingString2))
+    else if (!XMLString::compareString(encName, XMLUni::fgUTF16LEncodingString)
+         ||  !XMLString::compareString(encName, XMLUni::fgUTF16LEncodingString2))
     {
         return XMLRecognizer::UTF_16L;
     }
-     else if (!XMLString::compareString(encName, XMLUni::fgUTF16BEncodingString)
-          ||  !XMLString::compareString(encName, XMLUni::fgUTF16BEncodingString2))
+    else if (!XMLString::compareString(encName, XMLUni::fgUTF16BEncodingString)
+         ||  !XMLString::compareString(encName, XMLUni::fgUTF16BEncodingString2))
     {
         return XMLRecognizer::UTF_16B;
     }
-     else if (!XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString)
-          ||  !XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString2))
+    else if (!XMLString::compareString(encName, XMLUni::fgUTF16EncodingString))
+    {
+        return XMLPlatformUtils::fgXMLChBigEndian?XMLRecognizer::UTF_16B:XMLRecognizer::UTF_16L;
+    }
+    else if (!XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString)
+         ||  !XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString2))
     {
         return XMLRecognizer::UCS_4L;
     }
-     else if (!XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString)
-          ||  !XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString2))
+    else if (!XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString)
+         ||  !XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString2))
     {
         return XMLRecognizer::UCS_4B;
+    }
+    else if (!XMLString::compareString(encName, XMLUni::fgUCS4EncodingString))
+    {
+        return XMLPlatformUtils::fgXMLChBigEndian?XMLRecognizer::UCS_4B:XMLRecognizer::UCS_4L;
     }
 
     // Return 'other' since we don't recognizer it

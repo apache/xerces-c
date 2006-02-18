@@ -219,6 +219,49 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     //
     fEncoding = XMLRecognizer::encodingForName(fEncodingStr);
 
+    //  test the presence of the BOM and remove it from the source
+    switch(fEncoding)
+    {
+        case XMLRecognizer::UCS_4B :
+        case XMLRecognizer::UCS_4L :
+        {
+            if (fRawBytesAvail > 4 &&
+                ((fRawByteBuf[0] == 0x00) && (fRawByteBuf[1] == 0x00) && (fRawByteBuf[2] == 0xFE) && (fRawByteBuf[3] == 0xFF)) ||
+                ((fRawByteBuf[0] == 0xFF) && (fRawByteBuf[1] == 0xFE) && (fRawByteBuf[2] == 0x00) && (fRawByteBuf[3] == 0x00))  )
+            {
+                fRawBufIndex += 4;
+            }
+            break;
+        }
+        case XMLRecognizer::UTF_8 :
+        {
+            // Look at the raw buffer as short chars
+            const char* asChars = (const char*)fRawByteBuf;
+
+            if (fRawBytesAvail > XMLRecognizer::fgUTF8BOMLen &&
+                XMLString::compareNString(  asChars
+                                            , XMLRecognizer::fgUTF8BOM
+                                            , XMLRecognizer::fgUTF8BOMLen) == 0)
+            {
+                fRawBufIndex += XMLRecognizer::fgUTF8BOMLen;
+            }
+            break;
+        }
+        case XMLRecognizer::UTF_16B :
+        case XMLRecognizer::UTF_16L :
+        {
+            if (fRawBytesAvail < 2)
+                break;
+
+            const UTF16Ch* asUTF16 = (const UTF16Ch*)&fRawByteBuf[fRawBufIndex];
+            if ((*asUTF16 == chUnicodeMarker) || (*asUTF16 == chSwappedUnicodeMarker))
+            {
+                fRawBufIndex += sizeof(UTF16Ch);
+            }
+            break;
+        }
+    }
+
     // Check whether the fSwapped flag should be set or not
     checkForSwapped();
 
