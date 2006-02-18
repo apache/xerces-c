@@ -232,6 +232,14 @@ XMLRecognizer::encodingForName(const XMLCh* const encName)
     {
         return XMLRecognizer::UTF_16B;
     }
+    else if (!XMLString::compareString(encName, XMLUni::fgUTF16EncodingString))
+    {
+    #if defined(ENDIANMODE_LITTLE)
+        return XMLRecognizer::UTF_16L;
+    #elif defined(ENDIANMODE_BIG)
+		return XMLRecognizer::UTF_16B;
+    #endif
+    }
      else if (!XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString)
           ||  !XMLString::compareString(encName, XMLUni::fgUCS4LEncodingString2))
     {
@@ -241,6 +249,14 @@ XMLRecognizer::encodingForName(const XMLCh* const encName)
           ||  !XMLString::compareString(encName, XMLUni::fgUCS4BEncodingString2))
     {
         return XMLRecognizer::UCS_4B;
+    }
+    else if (!XMLString::compareString(encName, XMLUni::fgUCS4EncodingString))
+    {
+    #if defined(ENDIANMODE_LITTLE)
+        return XMLRecognizer::UCS_4L;
+    #elif defined(ENDIANMODE_BIG)
+		return XMLRecognizer::UCS_4B;
+    #endif
     }
 
     // Return 'other' since we don't recognizer it
