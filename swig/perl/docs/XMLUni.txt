@@ -1,0 +1,203 @@
+=================================
+Unicode Constants for XML::Xerces
+=================================
+
+Here are the list of the unicode constants defined in the
+XML::Xerces::XMLUni class, followed by their string representation
+
+last updated 2003-11-10
+--
+
+fgAnyString:                                       ANY
+fgAttListString:                                   ATTLIST
+fgCommentString:                                   <!--
+fgCDATAString:                                     CDATA
+fgDefaultString:                                   #DEFAULT
+fgDocTypeString:                                   <!DOCTYPE
+fgEBCDICEncodingString:                            EBCDIC
+fgElemString:                                      ELEMENT
+fgEmptyString:                                     EMPTY
+fgEncodingString:                                  encoding
+fgEntitString:                                     ENTIT
+fgEntityString:                                    ENTITY
+fgEntitiesString:                                  ENTITIES
+fgEnumerationString:                               ENUMERATION
+fgExceptDomain:                                    http://apache.org/xml/messages/XML4CErrors
+fgFixedString:                                     #FIXED
+fgIBM037EncodingString:                            EBCDIC-CP-US
+fgIBM037EncodingString2:                           IBM037
+fgIBM1140EncodingString:                           IBM1140
+fgIBM1140EncodingString2:                          IBM01140
+fgIBM1140EncodingString3:                          CCSID01140
+fgIBM1140EncodingString4:                          CP01140
+fgIESString:                                       IES
+fgIDString:                                        ID
+fgIDRefString:                                     IDREF
+fgIDRefsString:                                    IDREFS
+fgImpliedString:                                   #IMPLIED
+fgIgnoreString:                                    IGNORE
+fgIncludeString:                                   INCLUDE
+fgISO88591EncodingString:                          ISO8859-1
+fgISO88591EncodingString2:                         ISO-8859-1
+fgISO88591EncodingString3:                         ISO_8859-1
+fgISO88591EncodingString4:                         IBM-819
+fgISO88591EncodingString5:                         IBM819
+fgISO88591EncodingString6:                         LATIN1
+fgISO88591EncodingString7:                         LATIN-1
+fgISO88591EncodingString8:                         LATIN_1
+fgISO88591EncodingString9:                         CP819
+fgISO88591EncodingString10:                        CSISOLATIN1
+fgISO88591EncodingString11:                        ISO-IR-100
+fgISO88591EncodingString12:                        L1
+fgLocalHostString:                                 localhost
+fgNoString:                                        no
+fgNotationString:                                  NOTATION
+fgNDATAString:                                     NDATA
+fgNmTokenString:                                   NMTOKEN
+fgNmTokensString:                                  NMTOKENS
+fgPCDATAString:                                    #PCDATA
+fgPIString:                                        <?
+fgPubIDString:                                     PUBLIC
+fgRefString:                                       REF
+fgRequiredString:                                  #REQUIRED
+fgStandaloneString:                                standalone
+fgVersion1_0:                                      1.0
+fgVersion1_1:                                      1.1
+fgSysIDString:                                     SYSTEM
+fgUnknownURIName:                                  http://apache.org/xml/UknownNS
+fgUCS4EncodingString:                              UCS4
+fgUCS4EncodingString2:                             UCS-4
+fgUCS4EncodingString3:                             UCS_4
+fgUCS4BEncodingString:                             UCS-4 (BE)
+fgUCS4BEncodingString2:                            UCS-4BE
+fgUCS4LEncodingString:                             UCS-4 (LE)
+fgUCS4LEncodingString2:                            UCS-4LE
+fgUSASCIIEncodingString:                           US-ASCII
+fgUSASCIIEncodingString2:                          USASCII
+fgUSASCIIEncodingString3:                          ASCII
+fgUSASCIIEncodingString4:                          US_ASCII
+fgUTF8EncodingString:                              UTF-8
+fgUTF8EncodingString2:                             UTF8
+fgUTF16EncodingString:                             UTF-16
+fgUTF16EncodingString2:                            UCS2
+fgUTF16EncodingString3:                            IBM1200
+fgUTF16EncodingString4:                            IBM-1200
+fgUTF16EncodingString5:                            UTF16
+fgUTF16BEncodingString:                            UTF-16 (BE)
+fgUTF16BEncodingString2:                           UTF-16BE
+fgUTF16LEncodingString:                            UTF-16 (LE)
+fgUTF16LEncodingString2:                           UTF-16LE
+fgVersionString:                                   version
+fgValidityDomain:                                  http://apache.org/xml/messages/XMLValidity
+fgWin1252EncodingString:                           WINDOWS-1252
+fgXMLChEncodingString:                             XERCES-XMLCH
+fgXMLDOMMsgDomain:                                 http://apache.org/xml/messages/XMLDOMMsg
+fgXMLString:                                       xml
+fgXMLStringSpace:                                  xml 
+fgXMLStringHTab:                                   xml	
+fgXMLStringCR:                                     xml
+fgXMLStringLF:                                     xml
+
+fgXMLStringSpaceU:                                 XML 
+fgXMLStringHTabU:                                  XML	
+fgXMLStringCRU:                                    XML
+fgXMLStringLFU:                                    XML
+
+fgXMLDeclString:                                   <?xml
+fgXMLDeclStringSpace:                              <?xml 
+fgXMLDeclStringHTab:                               <?xml	
+fgXMLDeclStringLF:                                 <?xml
+
+fgXMLDeclStringCR:                                 <?xml
+fgXMLDeclStringSpaceU:                             <?XML 
+fgXMLDeclStringHTabU:                              <?XML	
+fgXMLDeclStringLFU:                                <?XML
+
+fgXMLDeclStringCRU:                                <?XML
+fgXMLNSString:                                     xmlns
+fgXMLNSColonString:                                xmlns:
+fgXMLNSURIName:                                    http://www.w3.org/2000/xmlns/
+fgXMLErrDomain:                                    http://apache.org/xml/messages/XMLErrors
+fgXMLURIName:                                      http://www.w3.org/XML/1998/namespace
+fgYesString:                                       yes
+fgZeroLenString:                                   
+fgDTDEntityString:                                 [dtd]
+fgAmp:                                             amp
+fgLT:                                              lt
+fgGT:                                              gt
+fgQuot:                                            quot
+fgApos:                                            apos
+fgWFXMLScanner:                                    WFXMLScanner
+fgIGXMLScanner:                                    IGXMLScanner
+fgSGXMLScanner:                                    SGXMLScanner
+fgDGXMLScanner:                                    DGXMLScanner
+fgArrayIndexOutOfBoundsException_Name:             ArrayIndexOutofBoundsException
+fgEmptyStackException_Name:                        EmptyStackException
+fgIllegalArgumentException_Name:                   IllegalArgumentException
+fgInvalidCastException_Name:                       InvalidCastException
+fgIOException_Name:                                IOException
+fgNoSuchElementException_Name:                     NoSuhhEleementException
+fgNullPointerException_Name:                       NullPointerException
+fgXMLPlatformUtilsException_Name:                  XMLPlatformException
+fgRuntimeException_Name:                           RuntimeException
+fgTranscodingException_Name:                       TranscodingException
+fgUnexpectedEOFException_Name:                     UnexpectedEOFException
+fgUnsupportedEncodingException_Name:               UnsupportedEncodingException
+fgUTFDataFormatException_Name:                     UTFDataFormatException
+fgNetAccessorException_Name:                       NetAccessorException
+fgMalformedURLException_Name:                      MalformedURLException
+fgNumberFormatException_Name:                      NumberFormatException
+fgParseException_Name:                             ParseException
+fgInvalidDatatypeFacetException_Name:              InvalidDatatypeFacetException
+fgInvalidDatatypeValueException_Name:              InvalidDatatypeValueException
+fgSchemaDateTimeException_Name:                    SchemaDateTimeException
+fgXPathException_Name:                             XPathException
+fgNegINFString:                                    -INF
+fgNegZeroString:                                   -0
+fgPosZeroString:                                   0
+fgPosINFString:                                    INF
+fgNaNString:                                       NaN
+fgEString:                                         E
+fgZeroString:                                      0
+fgNullString:                                      null
+fgXercesDynamic:                                   http://apache.org/xml/features/validation/dynamic
+fgXercesSchema:                                    http://apache.org/xml/features/validation/schema
+fgXercesSchemaFullChecking:                        http://apache.org/xml/features/validation/schema-full-checking
+fgXercesSchemaExternalSchemaLocation:              http://apache.org/xml/properties/schema/external-schemaLocation
+fgXercesSchemaExternalNoNameSpaceSchemaLocation:   http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation
+fgXercesSecurityManager:                           http://apache.org/xml/properties/security-manager
+fgXercesLoadExternalDTD:                           http://apache.org/xml/features/nonvalidating/load-external-dtd
+fgXercesContinueAfterFatalError:                   http://apache.org/xml/features/continue-after-fatal-error
+fgXercesValidationErrorAsFatal:                    http://apache.org/xml/features/validation-error-as-fatal
+fgXercesUserAdoptsDOMDocument:                     http://apache.org/xml/features/dom/user-adopts-DOMDocument
+fgXercesCacheGrammarFromParse:                     http://apache.org/xml/features/validation/cache-grammarFromParse
+fgXercesUseCachedGrammarInParse:                   http://apache.org/xml/features/validation/use-cachedGrammarInPrse
+fgXercesScannerName:                               http://apache.org/xml/properties/scannerName
+fgXercesCalculateSrcOfs:                           http://apache.org/xml/features/calculate-src-ofs
+fgXercesStandardUriConformant:                     http://apache.org/xml/features/standard-uri-conformant
+fgSAX2CoreValidation:                              http://xml.org/sax/features/validation
+fgSAX2CoreNameSpaces:                              http://xml.org/sax/features/namespaces
+fgSAX2CoreNameSpacePrefixes:                       http://xml.org/sax/features/namespace-prefixes
+fgDOMCanonicalForm:                                canonical-form
+fgDOMCDATASections:                                cdata-sections
+fgDOMComments:                                     comments
+fgDOMCharsetOverridesXMLEncoding:                  charset-overrides-xml-encoding
+fgDOMDatatypeNormalization:                        datatype-normalization
+fgDOMEntities:                                     entities
+fgDOMInfoset:                                      infoset
+fgDOMNamespaces:                                   namespaces
+fgDOMNamespaceDeclarations:                        namespace-declarations
+fgDOMSupportedMediatypesOnly:                      supported-mediatypes-only
+fgDOMValidateIfSchema:                             validate-if-schema
+fgDOMValidation:                                   validation
+fgDOMWhitespaceInElementContent:                   whitespace-in-element-content
+fgDOMWRTCanonicalForm:                             canonical-form
+fgDOMWRTDiscardDefaultContent:                     discard-defaullt-content
+fgDOMWRTEntities:                                  entities
+fgDOMWRTFormatPrettyPrint:                         format-pretty-print
+fgDOMWRTNormalizeCharacters:                       normalize-characters
+fgDOMWRTSplitCdataSections:                        split-cdata-sections
+fgDOMWRTValidation:                                validation
+fgDOMWRTWhitespaceInElementContent:                whitespace-in-element-content
+fgDOMWRTBOM:                                       http://apache.org/xml/features/dom/byte-order-mark
+fgXercescDefaultLocale:                            en_US

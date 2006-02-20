@@ -1,0 +1,49 @@
+
+- Linux 
+  * PPC-debian: 
+    - Xerces-C: compile from source
+    - Perl: 5.6.0, 5.6.1
+    - Gcc: 2.95.2, 2.95.3, 2.95.4
+  * x86-debian: 
+    - Xerces-C: source
+    - Perl: 5.6.0, 5.6.1
+    - Gcc: 2.95.2
+  * x86-redhat6.2: works jason
+    - Xerces-C: Apache x86 binary
+    - Perl: RedHat package (5.005_03)
+    - Gcc: RedHat package (2.91.66)
+  * x86-redhat7: 
+    - Xerces-C: compile from source
+    - Perl: RedHat Package (5.6.1)
+    - Gcc: RedHat Package (2.96-RH)
+  * alpha
+  * sparc
+- Windows
+  * 95
+  * 98
+  * NT
+  * 2000
+- BSD
+  * NetBSD
+    - package maintained by  (Emanuel Dreyfus <p99dreyf@criens.u-psud.fr>)
+  * FreeBSD
+  * OpenBSD
+- Solaris 
+  * 8: works cc and gcc (recompile perl and Xerces-C from source)
+  * 7: (may have to use -fPIC instead of -fpic)
+    - Xerces-C: 1.5.1 (compile from source)
+    - Perl: 5.004_01
+    - Gcc: 2.95(.2?)
+  * 5.6: works gcc
+  * 2.5.1
+    - Xerces-C: 1.5.1 (compile from source)
+    - Perl: 5.005_03
+    - Gcc: 2.95.2
+- HP-UX
+  * 11: not working yet
+  * 10: not working yet
+- AIX
+- Mac
+  * OS9
+  * OSX
+

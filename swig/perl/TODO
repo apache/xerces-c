@@ -1,0 +1,54 @@
+High Level issues:
+=================
+If you want to help in any of the following areas ... PLEASE jump in.
+
+
+Platforms:
+
+Get to work on other platforms (See INSTALL for details).
+
+Quality:
+
+* Complete test suite to test all APIs.
+* Performance analysys and improvements.
+
+Documentation:
+
+* Move all API docs into POD, so they are accessible via perldoc
+
+Samples:
+
+* More example applications
+
+
+Internals:
+==========
+Fri May 13 18:21:45 IST 2005
+* change the string typecheck to only do an SvOK()
+* does Xerces have any methods were a NULL XMLCh* value is needed? -
+  if so we have to enable a %typemap to support it
+* Xerces has some methods were a NULL pointer value is needed and some
+  methods were it segfaults -  we have to enable a %typemap to
+  differentiate between them
+* %ignore and %rename behave differently when used with default
+  arguments, ensure that the default args are included in the
+  directives or it won't get used for all of them.
+* make sure there are no memory leaks when exceptions are thrown -
+  'goto fail' must work
+
+Fri Oct 11 21:57:23 MDT 2002
+* the %typecheck for XMLCh* is too greedy, it should happen later
+  in the typecheck process
+
+Fri Jun  7 00:37:01 MDT 2002
+* make entity resolver to find all the xml files
+
+Sun Jun  2 11:38:11 MDT 2002
+* use %newobject and %typemape(newfree) for methods like removeNode()
+* look into using SWIG_RegisterMapping() instead of inheritance hack
+
+### *** emacs file mode definition ***
+### Local Variables: 
+### mode:filladapt
+### mode:text
+### End: 

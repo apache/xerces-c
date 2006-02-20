@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="Releases">
+	<s2 title="December 15, 1999">
+		<ul>
+			<li>First alphaWorks release</li>
+		</ul>
+	</s2>
+</s1>

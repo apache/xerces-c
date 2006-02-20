@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<utf>
+  <letter>
+    <range low="0x0041" high="0x005A"/>
+    <range low="0x0061" high="0x007A"/>
+    <range low="0x00C0" high="0x00D6"/>
+    <range low="0x00D8" high="0x00F6"/>
+    <range low="0x00F8" high="0x00FF"/>
+    <range low="0x0100" high="0x0131"/>
+    <range low="0x0134" high="0x013E"/>
+    <range low="0x0141" high="0x0148"/>
+    <range low="0x014A" high="0x017E"/>
+    <range low="0x0180" high="0x01C3"/>
+    <range low="0x01CD" high="0x01F0"/>
+    <range low="0x01F4" high="0x01F5"/>
+    <range low="0x01FA" high="0x0217"/>
+    <range low="0x0250" high="0x02A8"/>
+    <range low="0x02BB" high="0x02C1"/>
+    <single value="0x0386"/>
+    <range low="0x0388" high="0x038A"/>
+    <single value="0x038C"/>
+    <range low="0x038E" high="0x03A1"/>
+    <range low="0x03A3" high="0x03CE"/>
+    <range low="0x03D0" high="0x03D6"/>
+    <single value="0x03DA"/>
+    <single value="0x03DC"/>
+    <single value="0x03DE"/>
+    <single value="0x03E0"/>
+    <range low="0x03E2" high="0x03F3"/>
+    <range low="0x0401" high="0x040C"/>
+    <range low="0x040E" high="0x044F"/>
+    <range low="0x0451" high="0x045C"/>
+    <range low="0x045E" high="0x0481"/>
+    <range low="0x0490" high="0x04C4"/>
+    <range low="0x04C7" high="0x04C8"/>
+    <range low="0x04CB" high="0x04CC"/>
+    <range low="0x04D0" high="0x04EB"/>
+    <range low="0x04EE" high="0x04F5"/>
+    <range low="0x04F8" high="0x04F9"/>
+    <range low="0x0531" high="0x0556"/>
+    <single value="0x0559"/>
+    <range low="0x0561" high="0x0586"/>
+    <range low="0x05D0" high="0x05EA"/>
+    <range low="0x05F0" high="0x05F2"/>
+    <range low="0x0621" high="0x063A"/>
+    <range low="0x0641" high="0x064A"/>
+    <range low="0x0671" high="0x06B7"/>
+    <range low="0x06BA" high="0x06BE"/>
+    <range low="0x06C0" high="0x06CE"/>
+    <range low="0x06D0" high="0x06D3"/>
+    <single value="0x06D5"/>
+    <range low="0x06E5" high="0x06E6"/>
+    <range low="0x0905" high="0x0939"/>
+    <single value="0x093D"/>
+    <range low="0x0958" high="0x0961"/>
+    <range low="0x0985" high="0x098C"/>
+    <range low="0x098F" high="0x0990"/>
+    <range low="0x0993" high="0x09A8"/>
+    <range low="0x09AA" high="0x09B0"/>
+    <single value="0x09B2"/>
+    <range low="0x09B6" high="0x09B9"/>
+    <range low="0x09DC" high="0x09DD"/>
+    <range low="0x09DF" high="0x09E1"/>
+    <range low="0x09F0" high="0x09F1"/>
+    <range low="0x0A05" high="0x0A0A"/>
+    <range low="0x0A0F" high="0x0A10"/>
+    <range low="0x0A13" high="0x0A28"/>
+    <range low="0x0A2A" high="0x0A30"/>
+    <range low="0x0A32" high="0x0A33"/>
+    <range low="0x0A35" high="0x0A36"/>
+    <range low="0x0A38" high="0x0A39"/>
+    <range low="0x0A59" high="0x0A5C"/>
+    <single value="0x0A5E"/>
+    <range low="0x0A72" high="0x0A74"/>
+    <range low="0x0A85" high="0x0A8B"/>
+    <single value="0x0A8D"/>
+    <range low="0x0A8F" high="0x0A91"/>
+    <range low="0x0A93" high="0x0AA8"/>
+    <range low="0x0AAA" high="0x0AB0"/>
+    <range low="0x0AB2" high="0x0AB3"/>
+    <range low="0x0AB5" high="0x0AB9"/>
+    <single value="0x0ABD"/>
+    <single value="0x0AE0"/>
+    <range low="0x0B05" high="0x0B0C"/>
+    <range low="0x0B0F" high="0x0B10"/>
+    <range low="0x0B13" high="0x0B28"/>
+    <range low="0x0B2A" high="0x0B30"/>
+    <range low="0x0B32" high="0x0B33"/>
+    <range low="0x0B36" high="0x0B39"/>
+    <single value="0x0B3D"/>
+    <range low="0x0B5C" high="0x0B5D"/>
+    <range low="0x0B5F" high="0x0B61"/>
+    <range low="0x0B85" high="0x0B8A"/>
+    <range low="0x0B8E" high="0x0B90"/>
+    <range low="0x0B92" high="0x0B95"/>
+    <range low="0x0B99" high="0x0B9A"/>
+    <single value="0x0B9C"/>
+    <range low="0x0B9E" high="0x0B9F"/>
+    <range low="0x0BA3" high="0x0BA4"/>
+    <range low="0x0BA8" high="0x0BAA"/>
+    <range low="0x0BAE" high="0x0BB5"/>
+    <range low="0x0BB7" high="0x0BB9"/>
+    <range low="0x0C05" high="0x0C0C"/>
+    <range low="0x0C0E" high="0x0C10"/>
+    <range low="0x0C12" high="0x0C28"/>
+    <range low="0x0C2A" high="0x0C33"/>
+    <range low="0x0C35" high="0x0C39"/>
+    <range low="0x0C60" high="0x0C61"/>
+    <range low="0x0C85" high="0x0C8C"/>
+    <range low="0x0C8E" high="0x0C90"/>
+    <range low="0x0C92" high="0x0CA8"/>
+    <range low="0x0CAA" high="0x0CB3"/>
+    <range low="0x0CB5" high="0x0CB9"/>
+    <single value="0x0CDE"/>
+    <range low="0x0CE0" high="0x0CE1"/>
+    <range low="0x0D05" high="0x0D0C"/>
+    <range low="0x0D0E" high="0x0D10"/>
+    <range low="0x0D12" high="0x0D28"/>
+    <range low="0x0D2A" high="0x0D39"/>
+    <range low="0x0D60" high="0x0D61"/>
+    <range low="0x0E01" high="0x0E2E"/>
+    <single value="0x0E30"/>
+    <range low="0x0E32" high="0x0E33"/>
+    <range low="0x0E40" high="0x0E45"/>
+    <range low="0x0E81" high="0x0E82"/>
+    <single value="0x0E84"/>
+    <range low="0x0E87" high="0x0E88"/>
+    <single value="0x0E8A"/>
+    <single value="0x0E8D"/>
+    <range low="0x0E94" high="0x0E97"/>
+    <range low="0x0E99" high="0x0E9F"/>
+    <range low="0x0EA1" high="0x0EA3"/>
+    <single value="0x0EA5"/>
+    <single value="0x0EA7"/>
+    <range low="0x0EAA" high="0x0EAB"/>
+    <range low="0x0EAD" high="0x0EAE"/>
+    <single value="0x0EB0"/>
+    <range low="0x0EB2" high="0x0EB3"/>
+    <single value="0x0EBD"/>
+    <range low="0x0EC0" high="0x0EC4"/>
+    <range low="0x0F40" high="0x0F47"/>
+    <range low="0x0F49" high="0x0F69"/>
+    <range low="0x10A0" high="0x10C5"/>
+    <range low="0x10D0" high="0x10F6"/>
+    <single value="0x1100"/>
+    <range low="0x1102" high="0x1103"/>
+    <range low="0x1105" high="0x1107"/>
+    <single value="0x1109"/>
+    <range low="0x110B" high="0x110C"/>
+    <range low="0x110E" high="0x1112"/>
+    <single value="0x113C"/>
+    <single value="0x113E"/>
+    <single value="0x1140"/>
+    <single value="0x114C"/>
+    <single value="0x114E"/>
+    <single value="0x1150"/>
+    <range low="0x1154" high="0x1155"/>
+    <single value="0x1159"/>
+    <range low="0x115F" high="0x1161"/>
+    <single value="0x1163"/>
+    <single value="0x1165"/>
+    <single value="0x1167"/>
+    <single value="0x1169"/>
+    <range low="0x116D" high="0x116E"/>
+    <range low="0x1172" high="0x1173"/>
+    <single value="0x1175"/>
+    <single value="0x119E"/>
+    <single value="0x11A8"/>
+    <single value="0x11AB"/>
+    <range low="0x11AE" high="0x11AF"/>
+    <range low="0x11B7" high="0x11B8"/>
+    <single value="0x11BA"/>
+    <range low="0x11BC" high="0x11C2"/>
+    <single value="0x11EB"/>
+    <single value="0x11F0"/>
+    <single value="0x11F9"/>
+    <range low="0x1E00" high="0x1E9B"/>
+    <range low="0x1EA0" high="0x1EF9"/>
+    <range low="0x1F00" high="0x1F15"/>
+    <range low="0x1F18" high="0x1F1D"/>
+    <range low="0x1F20" high="0x1F45"/>
+    <range low="0x1F48" high="0x1F4D"/>
+    <range low="0x1F50" high="0x1F57"/>
+    <single value="0x1F59"/>
+    <single value="0x1F5B"/>
+    <single value="0x1F5D"/>
+    <range low="0x1F5F" high="0x1F7D"/>
+    <range low="0x1F80" high="0x1FB4"/>
+    <range low="0x1FB6" high="0x1FBC"/>
+    <single value="0x1FBE"/>
+    <range low="0x1FC2" high="0x1FC4"/>
+    <range low="0x1FC6" high="0x1FCC"/>
+    <range low="0x1FD0" high="0x1FD3"/>
+    <range low="0x1FD6" high="0x1FDB"/>
+    <range low="0x1FE0" high="0x1FEC"/>
+    <range low="0x1FF2" high="0x1FF4"/>
+    <range low="0x1FF6" high="0x1FFC"/>
+    <single value="0x2126"/>
+    <range low="0x212A" high="0x212B"/>
+    <single value="0x212E"/>
+    <range low="0x2180" high="0x2182"/>
+    <range low="0x3041" high="0x3094"/>
+    <range low="0x30A1" high="0x30FA"/>
+    <range low="0x3105" high="0x312C"/>
+    <range low="0xAC00" high="0xD7A3"/>
+  </letter>
+  <ideographic>
+    <range low="0x4E00" high="0x9FA5"/>
+    <single value="0x3007"/>
+    <range low="0x3021" high="0x3029"/>
+  </ideographic>
+  <combiningchar>
+    <range low="0x0300" high="0x0345"/>
+    <range low="0x0360" high="0x0361"/>
+    <range low="0x0483" high="0x0486"/>
+    <range low="0x0591" high="0x05A1"/>
+    <range low="0x05A3" high="0x05B9"/>
+    <range low="0x05BB" high="0x05BD"/>
+    <single value="0x05BF"/>
+    <range low="0x05C1" high="0x05C2"/>
+    <single value="0x05C4"/>
+    <range low="0x064B" high="0x0652"/>
+    <single value="0x0670"/>
+    <range low="0x06D6" high="0x06DC"/>
+    <range low="0x06DD" high="0x06DF"/>
+    <range low="0x06E0" high="0x06E4"/>
+    <range low="0x06E7" high="0x06E8"/>
+    <range low="0x06EA" high="0x06ED"/>
+    <range low="0x0901" high="0x0903"/>
+    <single value="0x093C"/>
+    <range low="0x093E" high="0x094C"/>
+    <single value="0x094D"/>
+    <range low="0x0951" high="0x0954"/>
+    <range low="0x0962" high="0x0963"/>
+    <range low="0x0981" high="0x0983"/>
+    <single value="0x09BC"/>
+    <single value="0x09BE"/>
+    <single value="0x09BF"/>
+    <range low="0x09C0" high="0x09C4"/>
+    <range low="0x09C7" high="0x09C8"/>
+    <range low="0x09CB" high="0x09CD"/>
+    <single value="0x09D7"/>
+    <range low="0x09E2" high="0x09E3"/>
+    <single value="0x0A02"/>
+    <single value="0x0A3C"/>
+    <single value="0x0A3E"/>
+    <single value="0x0A3F"/>
+    <range low="0x0A40" high="0x0A42"/>
+    <range low="0x0A47" high="0x0A48"/>
+    <range low="0x0A4B" high="0x0A4D"/>
+    <range low="0x0A70" high="0x0A71"/>
+    <range low="0x0A81" high="0x0A83"/>
+    <single value="0x0ABC"/>
+    <range low="0x0ABE" high="0x0AC5"/>
+    <range low="0x0AC7" high="0x0AC9"/>
+    <range low="0x0ACB" high="0x0ACD"/>
+    <range low="0x0B01" high="0x0B03"/>
+    <single value="0x0B3C"/>
+    <range low="0x0B3E" high="0x0B43"/>
+    <range low="0x0B47" high="0x0B48"/>
+    <range low="0x0B4B" high="0x0B4D"/>
+    <range low="0x0B56" high="0x0B57"/>
+    <range low="0x0B82" high="0x0B83"/>
+    <range low="0x0BBE" high="0x0BC2"/>
+    <range low="0x0BC6" high="0x0BC8"/>
+    <range low="0x0BCA" high="0x0BCD"/>
+    <single value="0x0BD7"/>
+    <range low="0x0C01" high="0x0C03"/>
+    <range low="0x0C3E" high="0x0C44"/>
+    <range low="0x0C46" high="0x0C48"/>
+    <range low="0x0C4A" high="0x0C4D"/>
+    <range low="0x0C55" high="0x0C56"/>
+    <range low="0x0C82" high="0x0C83"/>
+    <range low="0x0CBE" high="0x0CC4"/>
+    <range low="0x0CC6" high="0x0CC8"/>
+    <range low="0x0CCA" high="0x0CCD"/>
+    <range low="0x0CD5" high="0x0CD6"/>
+    <range low="0x0D02" high="0x0D03"/>
+    <range low="0x0D3E" high="0x0D43"/>
+    <range low="0x0D46" high="0x0D48"/>
+    <range low="0x0D4A" high="0x0D4D"/>
+    <single value="0x0D57"/>
+    <single value="0x0E31"/>
+    <range low="0x0E34" high="0x0E3A"/>
+    <range low="0x0E47" high="0x0E4E"/>
+    <single value="0x0EB1"/>
+    <range low="0x0EB4" high="0x0EB9"/>
+    <range low="0x0EBB" high="0x0EBC"/>
+    <range low="0x0EC8" high="0x0ECD"/>
+    <range low="0x0F18" high="0x0F19"/>
+    <single value="0x0F35"/>
+    <single value="0x0F37"/>
+    <single value="0x0F39"/>
+    <single value="0x0F3E"/>
+    <single value="0x0F3F"/>
+    <range low="0x0F71" high="0x0F84"/>
+    <range low="0x0F86" high="0x0F8B"/>
+    <range low="0x0F90" high="0x0F95"/>
+    <single value="0x0F97"/>
+    <range low="0x0F99" high="0x0FAD"/>
+    <range low="0x0FB1" high="0x0FB7"/>
+    <single value="0x0FB9"/>
+    <range low="0x20D0" high="0x20DC"/>
+    <single value="0x20E1"/>
+    <range low="0x302A" high="0x302F"/>
+    <single value="0x3099"/>
+    <single value="0x309A"/>
+  </combiningchar>
+  <digit>
+    <range low="0x0030" high="0x0039"/>
+    <range low="0x0660" high="0x0669"/>
+    <range low="0x06F0" high="0x06F9"/>
+    <range low="0x0966" high="0x096F"/>
+    <range low="0x09E6" high="0x09EF"/>
+    <range low="0x0A66" high="0x0A6F"/>
+    <range low="0x0AE6" high="0x0AEF"/>
+    <range low="0x0B66" high="0x0B6F"/>
+    <range low="0x0BE7" high="0x0BEF"/>
+    <range low="0x0C66" high="0x0C6F"/>
+    <range low="0x0CE6" high="0x0CEF"/>
+    <range low="0x0D66" high="0x0D6F"/>
+    <range low="0x0E50" high="0x0E59"/>
+    <range low="0x0ED0" high="0x0ED9"/>
+    <range low="0x0F20" high="0x0F29"/>
+  </digit>
+  <extender>
+    <single value="0x00B7"/>
+    <single value="0x02D0"/>
+    <single value="0x02D1"/>
+    <single value="0x0387"/>
+    <single value="0x0640"/>
+    <single value="0x0E46"/>
+    <single value="0x0EC6"/>
+    <single value="0x3005"/>
+    <range low="0x3031" high="0x3035"/>
+    <range low="0x309D" high="0x309E"/>
+    <range low="0x30FC" high="0x30FE"/>
+  </extender>
+</utf>

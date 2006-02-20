@@ -1,0 +1,13 @@
+<?xml encoding="US-ASCII"?>
+
+<!-- ENTITIES AS USED BY IBM XML4C -->
+<!ENTITY XercesPFullName     "Xerces Perl DOM">             <!-- fullproductname -->
+<!ENTITY XercesPName         "Xerces-Perl">                      <!-- productname -->
+<!ENTITY XercesPVersion      "1.0">                        <!-- versionnumber -->
+<!ENTITY XercesPZipFile      "xml4p1_0_0.zip">             <!-- zip file name -->
+<!ENTITY XercesPInstallDir   "/xmlapache/xerces/perl">     <!-- installdirname -->
+<!ENTITY XercesCName         "Xerces-C">                      <!-- Xerces C productname -->
+<!ENTITY XercesCVersion      "1.0.1">                        <!-- xml4c productname -->
+<!ENTITY XercesCWindowsLib   "xerces-c_1_0">               <!-- windowslibname -->
+<!ENTITY XercesCUnixLib      "libxerces-c1_0">             <!-- unixlibname -->
+<!ENTITY XercesPEmailAddress "xerces-dev@xml.apache.org">           <!-- emailaddress -->

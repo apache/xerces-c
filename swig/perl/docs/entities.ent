@@ -1,0 +1,7 @@
+<?xml encoding='US-ASCII'?>
+
+<!ENTITY XERCES_C_VERSION     "2.6.0">
+<!ENTITY XERCES_P_VERSION     "&XERCES_C_VERSION;-0">
+<!ENTITY XERCES_P_NAME        "XML::Xerces">
+<!ENTITY XERCES_P_LIST        "p-dev@xerces.apache.org">
+<!ENTITY XERCES_C_NAME        "Xerces-C">

@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
+
+<faqs title="Using &XercesPName;">
+
+<faq title="What application did you used to create the documentation?">
+
+<q>What application did you used to create the documentation?</q>
+
+<a>
+<p>We used an internal XML based application to create the
+documentation. The documentation files are all written in XML and the
+application, internally codenamed StyleBook, makes use of XSL to transform
+it into an HTML document.</p>
+
+<p>The API documentation was created using the Perl standard tool POD2HTML.</p>
+
+</a>
+
+</faq>
+
+<faq title="Can I use &XercesPName; in my product?">
+
+<q>Can I use &XercesPName; in my product?</q>
+<a>
+<p>Yes! Read the license agreement first and contact us at
+&lt;&XercesPEmailAddress;&gt; if you need assistance.</p>
+</a>
+</faq>
+</faqs>
+
