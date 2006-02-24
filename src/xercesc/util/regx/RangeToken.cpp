@@ -191,14 +191,42 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
             expand(2);
         }
 
-        if (fRanges[fElemCount-1] >= val1)
-            fSorted = false;
+        if(fSorted && fRanges[fElemCount-1] >= val1)
+        {
+            for (int i = 0; i < (int)fElemCount; i +=2) 
+            {
+                // check if this range is already part of this one
+                if (fRanges[i] <= val1 && fRanges[i+1] >= val2)
+                    break;
+                // or if the new one extends the old one
+                else if(fRanges[i]==val1 && fRanges[i+1] < val2)
+                {
+                    fRanges[i+1]=val2;
+                    break;
+                }
+                else if (fRanges[i] > val1 || 
+                          (fRanges[i]==val1 && fRanges[i+1] > val2)) 
+                {
+                    for(int j=fElemCount-1;j>=i;j--)
+                        fRanges[j+2]=fRanges[j];
+                    fRanges[i]   = val1;
+                    fRanges[i+1] = val2;
+                    fElemCount  += 2;
+                    break;
+                }
+            }            
+        }
+        else
+        {
+            if (fRanges[fElemCount-1] >= val1)
+                fSorted = false;
 
-        fRanges[fElemCount++] = val1;
-        fRanges[fElemCount++] = val2;
+            fRanges[fElemCount++] = val1;
+            fRanges[fElemCount++] = val2;
 
-        if (!fSorted) {
-            sortRanges();
+            if (!fSorted) {
+                sortRanges();
+            }
         }
     }
 }
