@@ -568,39 +568,6 @@ bool XMLReader::refreshCharBuffer()
     }
 
     //
-    //  If we are on our first block of chars and the encoding is one of the
-    //  UTF-16 formats, then check the first char for the BOM and skip over
-    //  it manually.
-    //
-    if (fCharsAvail)
-    {
-        if ((fCurLine == 1) && (fCurCol == 1))
-        {
-            if (((fEncoding == XMLRecognizer::UTF_16L)
-            ||   (fEncoding == XMLRecognizer::UTF_16B))
-            &&  !startInd)
-            {
-                if ((fCharBuf[startInd] == chUnicodeMarker)
-                ||  (fCharBuf[startInd] == chSwappedUnicodeMarker))
-                {
-                    fCharIndex++;
-                }
-            }
-            // If there's a utf-8 BOM  (0xEF 0xBB 0xBF), skip past it.
-            else {
-                const char* asChars = (const char*)fRawByteBuf;
-                if ((fRawBytesAvail > XMLRecognizer::fgUTF8BOMLen )&&
-                    (XMLString::compareNString(  asChars
-                    , XMLRecognizer::fgUTF8BOM
-                    , XMLRecognizer::fgUTF8BOMLen) == 0) && !startInd)
-                {
-                    fCharIndex += XMLRecognizer::fgUTF8BOMLen;
-                }
-            }
-        }
-    }
-
-    //
     //  If we get here with no more chars, then set the fNoMore flag which
     //  lets us optimize and know without checking that no more chars are
     //  available.
