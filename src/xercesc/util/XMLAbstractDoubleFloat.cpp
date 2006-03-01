@@ -113,13 +113,13 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
         // allows "infinity" and "+INF"
         XMLCh curChar;
         while (curChar = tmpStrValue[lenTempStrValue]) {            
-            if (!(curChar >= chDigit_0 ||
-                  curChar <= chDigit_9 ||
+            if (!((curChar >= chDigit_0 &&
+                   curChar <= chDigit_9) ||
                   curChar == chPeriod  ||
                   curChar == chDash    ||
                   curChar == chPlus    ||
                   curChar == chLatin_E ||
-                  curChar == chLatin_e)) {
+                  curChar == chLatin_e)) {                
                 ThrowXMLwithMemMgr(
                     NumberFormatException,
                     XMLExcepts::XMLNUM_Inv_chars,
