@@ -124,8 +124,6 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateSerializer.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XProtoType.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSerializeEngine.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XTemplateComparator.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XObjectComparator.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj 
@@ -348,13 +346,14 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinOutputStream.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSValue.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSAXMLScanner.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLInitializer.obj"/>
     <RESFILES value="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -522,8 +521,6 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateSerializer.cpp" FORMNAME="" UNITNAME="XTemplateSerializer.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp" FORMNAME="" UNITNAME="XProtoType.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp" FORMNAME="" UNITNAME="XSerializeEngine.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp" FORMNAME="" UNITNAME="XTemplateComparator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp" FORMNAME="" UNITNAME="XObjectComparator.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\Dummy.cpp" FORMNAME="" UNITNAME="Dummy" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\InputSource.cpp" FORMNAME="" UNITNAME="InputSource" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\sax\SAXException.cpp" FORMNAME="" UNITNAME="SAXException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -753,6 +750,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp" FORMNAME="" UNITNAME="XSAXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp" FORMNAME="" UNITNAME="XMLRegisterCleanup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp" FORMNAME="" UNITNAME="IdentityConstraintHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLInitializer.cpp" FORMNAME="" UNITNAME="XMLInitializer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
