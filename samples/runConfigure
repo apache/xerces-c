@@ -466,6 +466,7 @@ case $cppcompiler in
 
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
+      CXX="$cppcompiler"
       ;;
 esac
 
