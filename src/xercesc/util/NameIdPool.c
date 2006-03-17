@@ -118,6 +118,8 @@ NameIdPool<TElem>::containsKey(const XMLCh* const key) const
 
 template <class TElem> void NameIdPool<TElem>::removeAll()
 {
+    if (fIdCounter == 0) return;
+
     // Clean up the buckets first
     for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
     {

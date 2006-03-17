@@ -181,6 +181,8 @@ containsKey(const void* const key1, const int key2, const int key3) const
 
 template <class TVal> void RefHash3KeysIdPool<TVal>::removeAll()
 {
+    if (fIdCounter == 0) return;
+
     // Clean up the buckets first
     for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
