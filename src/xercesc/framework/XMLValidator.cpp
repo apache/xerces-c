@@ -270,6 +270,64 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
     }
 }
 
+void XMLValidator::emitError(const  XMLValid::Codes toEmit
+                            , const XMLExcepts::Codes   originalExceptCode
+                            , const XMLCh* const    text1
+                            , const XMLCh* const    text2
+                            , const XMLCh* const    text3
+                            , const XMLCh* const    text4)
+{
+    // Bump the error count if it is not a warning
+    if (XMLValid::errorType(toEmit) != XMLErrorReporter::ErrType_Warning)
+        fScanner->incrementErrorCount();
+
+    //	Call error reporter if we have one
+    if (fErrorReporter)
+    {
+        //
+        //  Load the message into alocal and replace any tokens found in
+        //  the text.
+        //
+        const unsigned int maxChars = 2047;
+        XMLCh errText[maxChars + 1];
+
+        // load the text
+		if (!getMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fScanner->getMemoryManager()))
+		{
+			// <TBD> Should probably load a default message here
+        }
+
+        //
+        //  Create a LastExtEntityInfo structure and get the reader manager
+        //  to fill it in for us. This will give us the information about
+        //  the last reader on the stack that was an external entity of some
+        //  sort (i.e. it will ignore internal entities.
+        //
+        ReaderMgr::LastExtEntityInfo lastInfo;
+        fReaderMgr->getLastExtEntityInfo(lastInfo);
+
+        fErrorReporter->error
+        (
+            originalExceptCode
+            , XMLUni::fgExceptDomain    //XMLUni::fgValidityDomain
+            , XMLValid::errorType(toEmit)
+            , errText
+            , lastInfo.systemId
+            , lastInfo.publicId
+            , lastInfo.lineNumber
+            , lastInfo.colNumber
+        );
+    }
+
+    // Bail out if its fatal an we are to give up on the first fatal error
+    if (((XMLValid::isError(toEmit) && fScanner->getValidationConstraintFatal())
+         || XMLValid::isFatal(toEmit))
+    &&  fScanner->getExitOnFirstFatal()
+    &&  !fScanner->getInException())
+    {
+        throw toEmit;
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  XMLValidator: Hidden Constructors
