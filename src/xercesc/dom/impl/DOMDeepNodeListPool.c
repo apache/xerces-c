@@ -187,6 +187,8 @@ bool DOMDeepNodeListPool<TVal>::containsKey( const void* const key1
 template <class TVal>
 void DOMDeepNodeListPool<TVal>::removeAll()
 {
+    if (fIdCounter == 0) return;
+
     // Clean up the buckets first
     for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
