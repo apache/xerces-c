@@ -8815,7 +8815,7 @@ void TraverseSchema::processAttValue(const XMLCh* const attVal,
     XMLCh nextCh = *srcVal;
     while (nextCh)
     {
-        if (nextCh <= chOpenAngle) {
+        if (nextCh <= chCloseAngle) {
             switch (nextCh) {
             case chDoubleQuote:        
                 aBuf.append(chAmpersand);
