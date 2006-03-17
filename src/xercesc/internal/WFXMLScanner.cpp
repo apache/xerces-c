@@ -198,6 +198,7 @@ void WFXMLScanner::scanDocument(const InputSource& src)
                 emitError
                 (
                     XMLErrs::XMLException_Warning
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -205,6 +206,7 @@ void WFXMLScanner::scanDocument(const InputSource& src)
                 emitError
                 (
                     XMLErrs::XMLException_Fatal
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -212,6 +214,7 @@ void WFXMLScanner::scanDocument(const InputSource& src)
                 emitError
                 (
                     XMLErrs::XMLException_Error
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -366,6 +369,7 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
                 emitError
                 (
                     XMLErrs::XMLException_Warning
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -373,6 +377,7 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
                 emitError
                 (
                     XMLErrs::XMLException_Fatal
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
@@ -380,6 +385,7 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
                 emitError
                 (
                     XMLErrs::XMLException_Error
+                    , excToCatch.getCode()
                     , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
