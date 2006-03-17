@@ -255,7 +255,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         }
                         catch (XMLException& idve)
                         {
-                            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+                            emitError (XMLValid::DatatypeError, idve.getCode(), idve.getType(), idve.getMessage());
                             fErrorOccurred = true;
                         }
                         catch(const OutOfMemoryException&) {
@@ -428,7 +428,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         }
         catch (XMLException& idve) {
             fErrorOccurred = true;
-            emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());       
+            emitError (XMLValid::DatatypeError, idve.getCode(), idve.getType(), idve.getMessage());       
         }
         catch(const OutOfMemoryException&)
         {
