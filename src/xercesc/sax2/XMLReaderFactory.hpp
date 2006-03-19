@@ -21,7 +21,7 @@
 #ifndef XMLREADERFACTORY_HPP
 #define XMLREADERFACTORY_HPP
 
-#include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
+#include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax/SAXException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -45,10 +45,9 @@ protected:                // really should be private, but that causes compiler 
 	~XMLReaderFactory() ;
 
 public:
-	static SAX2XMLReader * createXMLReader( 
-                                               MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-                                             , XMLGrammarPool* const gramPool = 0
-                                               ) ;
+	static SAX2XMLReader * createXMLReader(  MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+                                           , XMLGrammarPool* const gramPool = 0
+                                          ) ;
 	static SAX2XMLReader * createXMLReader(const XMLCh* className)  ;
 
 private:
@@ -58,13 +57,6 @@ private:
     XMLReaderFactory(const XMLReaderFactory&);
     XMLReaderFactory& operator=(const XMLReaderFactory&);
 };
-
-
-inline SAX2XMLReader * XMLReaderFactory::createXMLReader(MemoryManager* const  manager
-                                                       , XMLGrammarPool* const gramPool)
-{
-	return (SAX2XMLReader*)(new (manager) SAX2XMLReaderImpl(manager, gramPool));
-}
 
 inline SAX2XMLReader * XMLReaderFactory::createXMLReader(const XMLCh *)
 {	

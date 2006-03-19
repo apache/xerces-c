@@ -25,6 +25,7 @@
 #include <xercesc/sax2/ContentHandler.hpp>
 #include <xercesc/sax2/LexicalHandler.hpp>
 #include <xercesc/sax2/DeclHandler.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax/DTDHandler.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
@@ -40,6 +41,14 @@
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+
+SAX2XMLReader * XMLReaderFactory::createXMLReader(  MemoryManager* const  manager
+                                                  , XMLGrammarPool* const gramPool)
+{
+    SAX2XMLReaderImpl* pImpl=new (manager) SAX2XMLReaderImpl(manager, gramPool);
+	return pImpl;
+}
 
 
 const XMLCh gDTDEntityStr[] =
