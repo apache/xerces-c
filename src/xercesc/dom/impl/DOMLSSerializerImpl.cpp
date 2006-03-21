@@ -1002,9 +1002,24 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                         *fFormatter  << XMLFormatter::NoEscapes
                                      << chSpace << attribute->getNodeName()
                                      << chEqual << chDoubleQuote
-                                     << XMLFormatter::AttrEscapes
-                                     << attribute->getNodeValue()
-                                     << XMLFormatter::NoEscapes
+                                     << XMLFormatter::AttrEscapes;
+                        if (getFeature(ENTITIES_ID))
+                        {
+                            DOMNodeSPtr child = attribute->getFirstChild();
+                            while( child != 0)
+                            {
+                                if(child->getNodeType()==DOMNode::TEXT_NODE)
+                                    *fFormatter  << child->getNodeValue();
+                                else if(child->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
+                                    *fFormatter << XMLFormatter::NoEscapes 
+                                                << chAmpersand << child->getNodeName() << chSemiColon 
+                                                << XMLFormatter::AttrEscapes;
+                                child = child->getNextSibling();
+                            }
+                        }
+                        else
+                            *fFormatter  << attribute->getNodeValue();
+                        *fFormatter  << XMLFormatter::NoEscapes
                                      << chDoubleQuote;
                     }
                 } // end of for
@@ -1095,24 +1110,33 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             const XMLCh* localName = nodeToWrite->getLocalName();
 
             // check if this is a DOM Level 1 Node
-            if(localName == 0) {
+            if(localName == 0)
                 *fFormatter  << XMLFormatter::NoEscapes
-                             << nodeToWrite->getNodeName()
-                             << chEqual << chDoubleQuote
-                             << XMLFormatter::AttrEscapes
-                             << nodeToWrite->getNodeValue()
-                             << XMLFormatter::NoEscapes
-                             << chDoubleQuote;
-            } else {
+                             << nodeToWrite->getNodeName();
+            else
                 *fFormatter  << XMLFormatter::NoEscapes
                              << chOpenCurly << nodeToWrite->getNamespaceURI() 
-                             << chCloseCurly << localName
-                             << chEqual << chDoubleQuote
-                             << XMLFormatter::AttrEscapes
-                             << nodeToWrite->getNodeValue()
-                             << XMLFormatter::NoEscapes
-                             << chDoubleQuote;
+                             << chCloseCurly << localName;
+            *fFormatter  << chEqual << chDoubleQuote
+                         << XMLFormatter::AttrEscapes;
+            if (getFeature(ENTITIES_ID))
+            {
+                DOMNodeSPtr child = nodeToWrite->getFirstChild();
+                while( child != 0)
+                {
+                    if(child->getNodeType()==DOMNode::TEXT_NODE)
+                        *fFormatter  << child->getNodeValue();
+                    else if(child->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
+                        *fFormatter << XMLFormatter::NoEscapes 
+                                    << chAmpersand << child->getNodeName() << chSemiColon 
+                                    << XMLFormatter::AttrEscapes;
+                    child = child->getNextSibling();
+                }
             }
+            else
+                *fFormatter  << nodeValue;
+            *fFormatter  << XMLFormatter::NoEscapes
+                         << chDoubleQuote;
 
             break;
         }
