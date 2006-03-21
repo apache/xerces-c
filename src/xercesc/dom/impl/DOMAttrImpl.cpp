@@ -114,7 +114,7 @@ const XMLCh * DOMAttrImpl::getValue() const
     }
 
     //
-    // Complicated case whre attribute value is a DOM tree
+    // Complicated case where attribute value is a DOM tree
     //
     // According to the spec, the child nodes of the Attr node may be either
     // Text or EntityReference nodes.
@@ -125,7 +125,8 @@ const XMLCh * DOMAttrImpl::getValue() const
     //
 
     XMLBuffer buf(1023, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-    getTextValue(fParent.fFirstChild, buf);
+    for (node = fParent.fFirstChild; node != 0; node = castToChildImpl(node)->nextSibling)
+        getTextValue(node, buf);
 
     return (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(buf.getRawBuffer());
 }
