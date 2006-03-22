@@ -265,12 +265,12 @@ int main(int argC, char* argV[])
     }
     
     XMLGrammarPool *grammarPool;
-    SAX2XMLReaderImpl* parser;
+    SAX2XMLReader* parser;
     try
     {        
         grammarPool = new XMLGrammarPoolImpl(XMLPlatformUtils::fgMemoryManager);
 
-        parser = new SAX2XMLReaderImpl(XMLPlatformUtils::fgMemoryManager, grammarPool);
+        parser = XMLReaderFactory::createXMLReader(XMLPlatformUtils::fgMemoryManager, grammarPool);
         parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
         parser->setFeature(XMLUni::fgXercesSchema, true);
         parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
