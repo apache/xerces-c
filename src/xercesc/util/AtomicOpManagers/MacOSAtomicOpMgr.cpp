@@ -22,7 +22,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.hpp>
 
-#include <Carbon/Carbon.h>
+#include <CoreServices/CoreServices.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
