@@ -1030,7 +1030,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         if (toValidate && !validateNumerics(content, datatype, status, manager))
             return 0;
 
-        XMLCh* retVal;
+        XMLCh* retVal = 0;
 
         if (datatype == XSValue::dt_decimal)
         {
@@ -1044,11 +1044,45 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         }
         else if (datatype == XSValue::dt_float || datatype == XSValue::dt_double  )
         {
-            retVal = XMLAbstractDoubleFloat::getCanonicalRepresentation(content, manager);
-
-            if (!retVal)
+            // In XML4C, no float or double is treated as out of range
+            // it gets converted to INF, -INF or zero.
+            // The getCanonical method should treat double & float the
+            // same way as the rest of XML4C for consistentcy so need
+            // to getActualValue and see if it was converted.
+            XSValue* xsval = getActValNumerics(content, datatype, status, manager);
+            if (!xsval) {
                 status = st_FOCA0002;
+                return retVal;
+            }
 
+            DoubleFloatType enumVal;
+            if (datatype == XSValue::dt_float) {
+                enumVal = xsval->fData.fValue.f_floatType.f_floatEnum;
+            }
+            else {
+                enumVal = xsval->fData.fValue.f_doubleType.f_doubleEnum;
+            }
+            
+            switch(enumVal) {
+            case DoubleFloatType_NegINF:
+                retVal = XMLString::replicate(XMLUni::fgNegINFString, manager);        
+                break;
+            case DoubleFloatType_PosINF:
+                retVal = XMLString::replicate(XMLUni::fgPosINFString, manager);        
+                break;
+            case DoubleFloatType_NaN:
+                retVal = XMLString::replicate(XMLUni::fgNaNString, manager);        
+                break;
+            case DoubleFloatType_Zero:
+                retVal = XMLString::replicate(XMLUni::fgPosZeroString, manager);
+                break;
+            default: //DoubleFloatType_Normal         
+                retVal = XMLAbstractDoubleFloat::getCanonicalRepresentation(content, manager);
+
+                if (!retVal)
+                    status = st_FOCA0002;
+                break;
+            }
             return retVal;
         }  
         else 
