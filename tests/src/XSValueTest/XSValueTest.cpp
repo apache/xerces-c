@@ -954,10 +954,10 @@ void test_dt_float()
     XSValue::XSValue_Data lex_iv_ran_v_4; lex_iv_ran_v_4.fValue.f_float = (float)0.0;
     lex_iv_ran_v_4.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_Zero;
 
-    const char lex_v_ran_iv_1_canrep[]="3.402823466E39";
-    const char lex_v_ran_iv_2_canrep[]="-3.402823466E39";
-    const char lex_v_ran_iv_3_canrep[]="1.175494351E-39";
-    const char lex_v_ran_iv_4_canrep[]="-1.175494351E-39";
+    const char lex_v_ran_iv_1_canrep[]="INF";  // " 3.402823466E39"
+    const char lex_v_ran_iv_2_canrep[]="-INF"; // "-3.402823466E39";
+    const char lex_v_ran_iv_3_canrep[]="0";    // " 1.175494351E-39";
+    const char lex_v_ran_iv_4_canrep[]="0";    // "-1.175494351E-39";
 
     const char lex_iv_1[]="12x.e+10";
     const char lex_iv_2[]="12.e+1x";
@@ -1141,10 +1141,10 @@ void test_dt_double()
     const char lex_v_ran_iv_3[]="+2.2250738585072014e-329";
     const char lex_v_ran_iv_4[]="-2.2250738585072014e-329";
 
-    const char lex_v_ran_iv_1_canrep[]="1.7976931348623158E309";
-    const char lex_v_ran_iv_2_canrep[]="-1.7976931348623158E309";
-    const char lex_v_ran_iv_3_canrep[]="2.2250738585072014E-329";
-    const char lex_v_ran_iv_4_canrep[]="-2.2250738585072014E-329";
+    const char lex_v_ran_iv_1_canrep[]="INF";  // " 1.7976931348623158E309";
+    const char lex_v_ran_iv_2_canrep[]="-INF"; // "-1.7976931348623158E309";
+    const char lex_v_ran_iv_3_canrep[]="0";    // "2.2250738585072014E-329";
+    const char lex_v_ran_iv_4_canrep[]="0";    // "-2.2250738585072014E-329";
 
     XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_double = (double)0.0; 
     lex_iv_ran_v_1.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_PosINF;
