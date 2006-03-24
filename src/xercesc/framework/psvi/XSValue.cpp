@@ -1062,6 +1062,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             else {
                 enumVal = xsval->fData.fValue.f_doubleType.f_doubleEnum;
             }
+            delete xsval;
             
             switch(enumVal) {
             case DoubleFloatType_NegINF:
