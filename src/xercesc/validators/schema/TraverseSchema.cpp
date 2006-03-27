@@ -4404,6 +4404,12 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     unsigned int startIndex = 0;
     	
     while (startIndex < xpathLen) {
+        if(XMLChar1_0::isWhitespace(*(xpathExpr+startIndex)))
+        {
+            fBuffer.append(xpathExpr + startIndex, 1);
+            startIndex++;
+            continue;
+        }
 
         if (!XMLString::startsWith(xpathExpr + startIndex, fgForwardSlash)
             && !XMLString::startsWith(xpathExpr + startIndex, fgDot)) {
