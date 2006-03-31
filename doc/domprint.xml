@@ -21,7 +21,7 @@
 
     <s2 title="DOMPrint">
         <p>DOMPrint parses an XML file, constructs the DOM tree, and
-		   invokes DOMWriter::writeNode() to serialize the resultant 
+		   invokes DOMLSSerializer::write() to serialize the resultant 
 		   DOM tree back to XML stream.
 		</p>
 
@@ -29,7 +29,7 @@
 
           <p>The DOMPrint sample parses an XML file, using either a validating
 		  or non-validating DOM parser configuration, builds a DOM tree,
-		  and then invokes DOMWriter::writeNode() to serialize the
+		  and then invokes DOMLSSerializer::write() to serialize the
 		  resultant DOM tree. To run DOMPrint, enter the following:</p>
 <source>DOMPrint &lt;XML file&gt;</source>
           <p>The following parameters may be set from the command line </p>
@@ -38,7 +38,7 @@ Usage:
  DOMPrint [options] &lt;XML file&gt;
 
 This program invokes the DOM parser, and builds the DOM tree
-It then asks the DOMWriter to serialize the DOM tree.
+It then asks the DOMLSSerializer to serialize the DOM tree.
 
 Options:
     -e          create entity reference nodes. Default is no expansion.
@@ -124,7 +124,7 @@ DOMPrint -v=always personal.xml
 		</p>
 
         <p>Application needs to provide its own implementation of 
-		   DOMWriterFilter (in this sample, the DOMPrintFilter), 
+		   DOMLSSerializerFilter (in this sample, the DOMPrintFilter), 
 		   if it would like to filter out certain part of the DOM 
 		   representation, but must be aware that thus may render the 
 		   resultant XML stream invalid.

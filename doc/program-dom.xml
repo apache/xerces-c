@@ -100,7 +100,7 @@
 
          <s4 title="Objects created by DOMImplementation::createXXXX">
          <p>Users <em>must</em> call the release() function when finished using any objects that
-            were created by the DOMImplementation::createXXXX (e.g. DOMBuilder, DOMWriter, DOMDocument,
+            were created by the DOMImplementation::createXXXX (e.g. DOMLSParser, DOMLSSerializer, DOMLSInput, DOMLSOutput, DOMDocument,
             DOMDocumentType).</p>
 
          <p>Access to a released object will lead to unexpected behaviour.</p>
@@ -792,19 +792,19 @@
 
     </s2>
 
-    <anchor name="DOMBuilder"/>
-    <s2 title="DOMBuilder">
+    <anchor name="DOMLSParser"/>
+    <s2 title="DOMLSParser">
 
-        <anchor name="ConstructDOMBuilder"/>
-        <s3 title="Constructing a DOMBuilder">
-          <p>DOMBuilder is a new interface introduced by the
-            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-            W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
-            DOMBuilder provides the "Load" interface for parsing XML documents and building the
+        <anchor name="ConstructDOMLSParser"/>
+        <s3 title="Constructing a DOMLSParser">
+          <p>DOMLSParser is a new interface introduced by the
+            <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/">
+            W3C DOM Level 3.0 Load and Save Specification</jump>.
+            DOMLSParser provides the "Load" interface for parsing XML documents and building the
             corresponding DOM document tree from various input sources.
           </p>
-          <p>A DOMBuilder instance is obtained from the DOMImplementationLS interface by invoking
-            its createDOMBuilder method.  For example:
+          <p>A DOMLSParser instance is obtained from the DOMImplementationLS interface by invoking
+            its createLSParser method.  For example:
           </p>
     <source>
     #include &lt;xercesc/dom/DOM.hpp>
@@ -836,21 +836,21 @@
         XMLCh tempStr[100];
         XMLString::transcode("LS", tempStr, 99);
         DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
-        DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+        DOMLSParser* parser = ((DOMImplementationLS*)impl)->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
         // optionally you can set some features on this builder
-        if (parser->canSetFeature(XMLUni::fgDOMValidation, true))
-            parser->setFeature(XMLUni::fgDOMValidation, true);
-        if (parser->canSetFeature(XMLUni::fgDOMNamespaces, true))
-            parser->setFeature(XMLUni::fgDOMNamespaces, true);
-        if (parser->canSetFeature((XMLUni::fgDOMDatatypeNormalization, true))
-            parser->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
+        if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMValidation, true))
+            parser->getDomConfig()->setParameter(XMLUni::fgDOMValidation, true);
+        if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMNamespaces, true))
+            parser->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, true);
+        if (parser->getDomConfig()->canSetParameter((XMLUni::fgDOMDatatypeNormalization, true))
+            parser->getDomConfig()->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
 
 
         // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
         // and set it to the builder
         MyDOMErrorHandler* errHandler = new myDOMErrorHandler();
-        parser->setErrorHandler(errHandler);
+        parser->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, errHandler);
 
         char* xmlFile = "x1.xml";
         DOMDocument *doc = 0;
@@ -942,13 +942,13 @@
         </p>
         </s3>
 
-        <anchor name="DOMBuilderFeatures"/>
-        <s3 title="DOMBuilder Supported Features">
+        <anchor name="DOMLSParserFeatures"/>
+        <s3 title="DOMLSParser Supported Features">
 
-           <p>The behavior of the DOMBuilder is dependent on the values of the following features.
-           All of the features below can be set using the function <code>DOMBuilder::setFeature(cons XMLCh* const, const bool)</code>.
-           And can be queried using the function <code>bool DOMBuilder::getFeature(const XMLCh* const)</code>.
-           User can also call <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
+           <p>The behavior of the DOMLSParser is dependent on the values of the following features.
+           All of the features below can be set using the function <code>DOMLSParser::getDomConfig()->setParameter(cons XMLCh* , bool)</code>.
+           And can be queried using the function <code>bool DOMLSParser::getDomConfig()->getParameter(const XMLCh* const)</code>.
+           User can also call <code>DOMLSParser::getDomConfig()->canSetParameter(const XMLCh* , bool)</code>
            to query whether setting a feature to a specific value is supported
            </p>
 
@@ -1438,8 +1438,8 @@
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesUserAdoptsDOMDocument </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="apiDocs/classDOMBuilder.html">
-                DOMBuilder API Documentation</jump>, (DOMBuilder::parse and DOMBuilder::resetDocumentPool)
+                <jump href="apiDocs/classDOMLSParser.html">
+                DOMLSParser API Documentation</jump>, (DOMLSParser::parse and DOMLSParser::resetDocumentPool)
                 </td></tr>
             </table>
 
@@ -1449,18 +1449,18 @@
 
         </s3>
 
-        <anchor name="DOMBuilderProperties"/>
-        <s3 title="DOMBuilder Supported Properties">
+        <anchor name="DOMLSParserProperties"/>
+        <s3 title="DOMLSParser Supported Properties">
 
-           <p>The behavior of the DOMBuilder is dependent on the values of the following properties.
-           All of the properties below can be set using the function <code>DOMBuilder::setProperty(const XMLCh* const, void*)</code>.
+           <p>The behavior of the DOMLSParser is dependent on the values of the following properties.
+           All of the properties below can be set using the function <code>DOMLSParser::getDomConfig()->setParameter(const XMLCh* , const void*)</code>.
            It takes a void pointer as the property value.  Application is required to initialize this void
            pointer to a correct type.  Please check the column "Value Type" below
            to learn exactly what type of property value each property expects for processing.
            Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
            If the same property is set more than once, the last one takes effect.</p>
 
-           <p>Property values can be queried using the function <code>void* DOMBuilder::getFeature(const XMLCh* const)</code>.
+           <p>Property values can be queried using the function <code>void* DOMLSParser::getDomConfig()->getParameter(const XMLCh* )</code>.
             The parser owns the returned pointer, and the memory allocated for the returned pointer will
             be destroyed when the parser is released.  To ensure accessibility of the returned information after
             the parser is released, callers need to copy and store the returned information somewhere else.
@@ -1575,19 +1575,19 @@
 
     </s2>
 
-    <anchor name="DOMWriter"/>
-    <s2 title="DOMWriter">
+    <anchor name="DOMLSSerializer"/>
+    <s2 title="DOMLSSerializer">
 
-        <anchor name="ConstructDOMWriter"/>
-        <s3 title="Constructing a DOMWriter">
+        <anchor name="ConstructDOMLSSerializer"/>
+        <s3 title="Constructing a DOMLSSerializer">
           <p>DOMWriter is a new interface introduced by the
-            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-            W3C DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>.
-            DOMWriter provides the "Save" interface for serializing (writing) a DOM document into
+            <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/">
+            W3C DOM Level 3.0 Load and Save Specification</jump>.
+            DOMLSSerializer provides the "Save" interface for serializing (writing) a DOM document into
             XML data.   The XML data can be written to various type of output stream.
           </p>
-          <p>A DOMWriter instance is obtained from the DOMImplementationLS interface by invoking
-            its createDOMWriter method.  For example:
+          <p>A DOMLSSerializer instance is obtained from the DOMImplementationLS interface by invoking
+            its createLSSerializer method.  For example:
           </p>
     <source>
     #include &lt;xercesc/dom/DOM.hpp>
@@ -1606,32 +1606,34 @@
         XMLCh tempStr[100];
         XMLString::transcode("LS", tempStr, 99);
         DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
-        DOMWriter* theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+        DOMLSSerializer* theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
 
         // optionally you can set some features on this serializer
-        if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true))
-            theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, true);
+        if (theSerializer->getDomConfig()->canSetParameter(XMLUni::fgDOMWRTDiscardDefaultContent, true))
+            theSerializer->getDomConfig()->setParameter(XMLUni::fgDOMWRTDiscardDefaultContent, true);
 
-        if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true))
-             theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+        if (theSerializer->getDomConfig()->canSetParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true))
+             theSerializer->getDomConfig()->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
 
-        // optionally you can implement your DOMWriterFilter (e.g. MyDOMWriterFilter)
+        // optionally you can implement your DOMLSSerializerFilter (e.g. MyDOMLSSerializerFilter)
         // and set it to the serializer
-        DOMWriterFilter* myFilter = new myDOMWriterFilter();
+        DOMLSSerializer* myFilter = new myDOMLSSerializerFilter();
         theSerializer->setFilter(myFilter);
 
         // optionally you can implement your DOMErrorHandler (e.g. MyDOMErrorHandler)
         // and set it to the serializer
         DOMErrorHandler* errHandler = new myDOMErrorHandler();
-        theSerializer->setErrorHandler(myErrorHandler);
+        theSerializer->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, myErrorHandler);
 
         // StdOutFormatTarget prints the resultant XML stream
         // to stdout once it receives any thing from the serializer.
         XMLFormatTarget *myFormTarget = new StdOutFormatTarget();
+        DOMLSOutput* theOutput = ((DOMImplementationLS*)impl)->createLSOutput();
+        theOutput->setByteStream(myFormTarget);
 
         try {
-            // do the serialization through DOMWriter::writeNode();
-            theSerializer->writeNode(myFormTarget, *node);
+            // do the serialization through DOMLSSerializer::write();
+            theSerializer->write(node, theOutput);
         }
         catch (const XMLException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.getMessage());
@@ -1652,7 +1654,7 @@
             return -1;
         }
 
-
+        theOutput->release();
         theSerializer->release();
         delete myErrorHandler;
         delete myFilter;
@@ -1666,10 +1668,10 @@
           </p>
         </s3>
 
-        <anchor name="DOMWriterEntityRef"/>
-        <s3 title="How does DOMWriter handle built-in entity Reference in node value?">
+        <anchor name="DOMLSSerializerEntityRef"/>
+        <s3 title="How does DOMLSSerializer handle built-in entity Reference in node value?">
 
-          <p>Say for example you parse the following xml document using XercesDOMParser or DOMBuilder</p>
+          <p>Say for example you parse the following xml document using XercesDOMParser or DOMLSParser</p>
 <source>
 &lt;root>
 &lt;Test attr=" > ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ">&lt;/Test>
@@ -1689,19 +1691,19 @@
 &lt;/root>
 </source>
 
-           <p>and pass such DOMNode to DOMWriter for serialization.   From DOMWriter perspective, it
+           <p>and pass such DOMNode to DOMLSSerializer for serialization.   From DOMLSSerializer perspective, it
            does not know what the original string was.   All it sees is above DOMNode from the
-           parser.   But since the DOMWriter is supposed to generate something that is parsable if sent
-           back to the parser, it cannot print such string as is.    Thus the DOMWriter is doing some
+           parser.   But since the DOMLSSerializer is supposed to generate something that is parsable if sent
+           back to the parser, it cannot print such string as is.    Thus the DOMLSSerializer is doing some
            "touch up", just enough, to get the string parsable.</p>
 
            <p>So for example since the appearance of &lt; and &amp; in text value will lead to
-           not well-form XML error, the DOMWriter fixes them to &amp;lt; and &amp;amp;
-           respectively; while the >, ' and " in text value are ok to the parser, so DOMWriter does not
-           do anything to them.   Similarly the DOMWriter fixes some of the characters for the attribute value
+           not well-form XML error, the DOMLSSerializer fixes them to &amp;lt; and &amp;amp;
+           respectively; while the >, ' and " in text value are ok to the parser, so DOMLSSerializer does not
+           do anything to them.   Similarly the DOMLSSerializer fixes some of the characters for the attribute value
            but keep everything in CDATA.</p>
 
-           <p>So the string that is generated by DOMWriter will look like this</p>
+           <p>So the string that is generated by DOMLSSerializer will look like this</p>
 <source>
 &lt;root>
 &lt;Test attr=" > ' &amp;lt; > &amp;amp; &amp;quot; ' "/>
@@ -1768,13 +1770,13 @@
         </table>
         </s3>
 
-        <anchor name="DOMWriterFeatures"/>
-        <s3 title="DOMWriter Supported Features">
+        <anchor name="DOMLSSerializerFeatures"/>
+        <s3 title="DOMLSSerializer Supported Features">
 
-           <p>The behavior of the DOMWriter is dependent on the values of the following features.
-           All of the features below can be set using the function <code>DOMWriter::setFeature(cons XMLCh* const, bool)</code>.
-           And can be queried using the function <code>bool DOMWriter::getFeature(const XMLCh* const)</code>.
-           User can also call <code>DOMWriter::canSetFeature(const XMLCh* const, bool)</code>
+           <p>The behavior of the DOMLSSerializer is dependent on the values of the following features.
+           All of the features below can be set using the function <code>DOMLSSerializer::getDomConfig()->setParameter(cons XMLCh* , bool)</code>.
+           And can be queried using the function <code>bool DOMLSSerializer::getDomConfig()->getParameter(const XMLCh* const)</code>.
+           User can also call <code>DOMLSSerializer::getDomConfig()->canSetParameter(const XMLCh* , bool)</code>
            to query whether setting a feature to a specific value is supported
            </p>
 
@@ -1793,8 +1795,8 @@
                 default content won't be removed if an implementation does not have any information
                 available. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 

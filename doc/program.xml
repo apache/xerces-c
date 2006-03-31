@@ -78,18 +78,18 @@ int main(int argc, char* argv[])
           <li><jump href="program-dom.html#XercesDOMFeatures">Supported Features</jump></li>
           <li><jump href="program-dom.html#XercesDOMProperties">Supported Properties</jump></li>
       </ul>
-      <li><jump href="program-dom.html#DOMBuilder">DOMBuilder</jump></li>
+      <li><jump href="program-dom.html#DOMLSParser">DOMLSParser</jump></li>
       <ul>
-          <li><jump href="program-dom.html#ConstructDOMBuilder">Constructing a DOMBuilder</jump></li>
-          <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMInputSource and SAX InputSource?</jump></li>
-          <li><jump href="program-dom.html#DOMBuilderFeatures">Supported Features</jump></li>
-          <li><jump href="program-dom.html#DOMBuilderProperties">Supported Properties</jump></li>
+          <li><jump href="program-dom.html#ConstructDOMLSParser">Constructing a DOMLSParser</jump></li>
+          <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMLSInput and SAX InputSource?</jump></li>
+          <li><jump href="program-dom.html#DOMLSParserFeatures">Supported Features</jump></li>
+          <li><jump href="program-dom.html#DOMLSParserProperties">Supported Properties</jump></li>
       </ul>
-      <li><jump href="program-dom.html#DOMWriter">DOMWriter</jump></li>
+      <li><jump href="program-dom.html#DOMLSSerializer">DOMLSSerializer</jump></li>
       <ul>
-          <li><jump href="program-dom.html#ConstructDOMWriter">Constructing a DOMWriter</jump></li>
-          <li><jump href="program-dom.html#DOMWriterEntityRef">How does DOMWriter handle built-in entity Reference in node value?</jump></li>
-          <li><jump href="program-dom.html#DOMWriterFeatures">Supported Features</jump></li>
+          <li><jump href="program-dom.html#ConstructDOMLSSerializer">Constructing a DOMLSSerializer</jump></li>
+          <li><jump href="program-dom.html#DOMLSSerializerEntityRef">How does DOMLSSerializer handle built-in entity Reference in node value?</jump></li>
+          <li><jump href="program-dom.html#DOMLSSerializerFeatures">Supported Features</jump></li>
       </ul>
       <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
     </ul>

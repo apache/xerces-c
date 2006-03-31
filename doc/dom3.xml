@@ -18,66 +18,27 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="DOM Level 3 Support">
-<s2 title="Disclaimer">
-    <p>
-    The &XercesCName; &XercesCVersion; contains a partial implementation of the W3C Document Object Model
-    Level 3.  This implementation is experimental.  The DOM Level 3 specification is
-    still in working draft stage: you should not consider this implementation complete or correct.</p>
-    <p>The limitations of this implementation are detailed below.
-    Please, read this document before using &XercesCName; &XercesCVersion;.
-    </p>
-</s2>
 <s2 title="Introduction">
     <p>
-    The &XercesCName; &XercesCVersion; contains an experimental implementation of
-    a subset of the W3C DOM Level 3 as specified in </p>
+    The &XercesCName; &XercesCVersion; contains an implementation of the W3C DOM Level 3 as specified in </p>
     <ul>
       <li><jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
-          DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Working Draft 26 February 2003 and  </li>
+          DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Recommendation 07 April 2004</li> and  
       <li> <jump href="http://www.w3.org/TR/DOM-Level-3-LS/">
           Document Object Model (DOM) Level 3 Load and Save Specification</jump>,
-          Version 1.0 W3C Working Draft 26 February 2003 </li>
+          Version 1.0 W3C Recommendation 07 April 2004</li>
     </ul>
 </s2>
 
 <s2 title='Implementation of DOM Level 3 Core'>
-    <p>The following are implemented in &XercesCName; &XercesCVersion;.</p>
+    <p>The following are NOT implemented in &XercesCName; &XercesCVersion;.</p>
 <ul>
     <li>
-        <code>DOMImplementationRegistry</code>, <code>DOMImplementationSource</code>
+        <code>DOMError</code>: setRelatedException
     </li>
     <li>
-        <code>DOMException</code>: VALIDATION_ERR
+        <code>DOMImplementation</code>: createLSParser(MODE_ASYNCHRONOUS)
     </li>
-     <li>
-        <code>DOMDocument</code>: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone,
-        set/getDocumentURI, set/getStrictErrorChecking, renameNode, normalizeDocument
-    </li>
-    <li>
-        <code>DOMEntity</code>: set/getActualEncoding, set/getEncoding, set/getVersion
-    </li>
-    <li>
-        <code>DOMErrorHandler</code>, <code>DOMError</code>, <code>DOMLocator</code>
-    </li>
-    <li>
-        <code>DOMNode</code>: set/getUserData, isSameNode, isEqualNode, compareTreePosition, lookupNamespaceURI, lookupNamespacePrefix, isDefaultNamespace, baseURI
-    </li>
-    <li>
-        <code>DOMText</code>: getIsWhitespaceInElementContent
-    </li>
-    <li>
-        <code>DOMAttr</code>: isID, getTypeInfo
-    </li>
-    <li>
-        <code>DOMElement</code>: setIdAttributeNode, setIdAttributeNS, setIdAttribute, getTypeInfo
-    </li>
-    <li>
-        <code>DOMUserDataHandler</code>
-    </li>
-    <li>
-        <code>DOMConfiguration</code>
-    </li>    
-    
 </ul>
 </s2>
 
@@ -85,24 +46,12 @@
     <p>The following are implemented in &XercesCName; &XercesCVersion;.</p>
 <ul>
     <li>
-        <code>DOMImplementationLS</code>
-    </li>
-    <li>
-        <code>DOMBuilder</code>: does not provide implementation of parseWithContext() and <code>DOMBuilderFilter</code>.
-    </li>
-    <li>
-        <code>DOMEntityResolver</code>
-    </li>
-    <li>
-        <code>DOMInputSource</code>
-    </li>
-    <li>
-        <code>DOMWriter</code> and <code>DOMWriterFilter</code>
+        <code>DOMLSParser</code>: parseWithContext()</code>.
     </li>
 </ul>
 
 </s2>
-<s2 title='Implementation of DOM Level 3 Abstract Schemas'>
+<s2 title='Implementation of DOM Level 3 Validation'>
     <p>The entire section has not been implemented in &XercesCName; &XercesCVersion;.</p>
 </s2>
 

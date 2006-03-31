@@ -33,8 +33,12 @@
             all other samples is in:</p>
             <p>For MSVC Version 6:</p>
 <source>&XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\xerces-all.dsw</source>
-            <p>For MSVC Version 7 (Visual C++.Net):</p>
+            <p>For MSVC Version 7 (Visual C++ .NET 2002):</p>
 <source>&XercesCSrcInstallDir;\Projects\Win32\VC7\xerces-all\xerces-all.sln</source>
+            <p>For MSVC Version 7.1 (Visual C++ .NET 2003):</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC7.1\xerces-all\xerces-all.sln</source>
+            <p>For MSVC Version 8.0 (Visual C++ .NET 2005):</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC8\xerces-all\xerces-all.sln</source>
 
             <p>Once you are inside MSVC, you need to build the project marked
             <em>XercesLib</em>.</p>
@@ -42,6 +46,8 @@
             you need to pick up:</p>
 <source>(For MSVC V6) &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
 (For MSVC V7) &XercesCSrcInstallDir;\Projects\Win32\VC7\xerces-all\XercesLib\XercesLib.vcproj</source>
+(For MSVC V7.1) &XercesCSrcInstallDir;\Projects\Win32\VC7.1\xerces-all\XercesLib\XercesLib.vcproj</source>
+(For MSVC V8) &XercesCSrcInstallDir;\Projects\Win32\VC8\xerces-all\XercesLib\XercesLib.vcproj</source>
             <p>You must make sure that you are linking your application with
             the &XercesCWindowsLib;.lib library and also make sure that
             the associated DLL is somewhere in your path.</p>

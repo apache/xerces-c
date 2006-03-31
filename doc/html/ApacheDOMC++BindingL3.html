@@ -2563,8 +2563,8 @@ DOMDocument
 
 <td><font face="Courier New,Courier"><font size=-1>DOMDocumentType*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>createDocumentType(const XMLCh *qName,                                                const XMLCh* publicId,
-                                                const XMLCh* systemId
+<td><font face="Courier New,Courier"><font size=-1>createDocumentType(const XMLCh *qName,                                                const XMLCh*,  //publicId,
+                                                const XMLCh*   //systemId
                                                )
 </font></font></td>
 </tr>
@@ -3792,7 +3792,7 @@ DOMImplementationLS
 
 <td><font face="Courier New,Courier"><font size=-1>DOMLSInput*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>createLSInput() = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>createLSInput(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3802,7 +3802,7 @@ DOMImplementationLS
 
 <td><font face="Courier New,Courier"><font size=-1>DOMLSOutput*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>createLSOutput() = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>createLSOutput(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;</font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
 <td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
@@ -3852,7 +3852,7 @@ DOMLSInput
 
 <td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>getCharacterStream() const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>getStringData() const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3860,7 +3860,7 @@ DOMLSInput
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>BinInputStream*</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>InputSource*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getByteStream() const = 0;</font></font></td>
 </tr>
@@ -3912,7 +3912,7 @@ DOMLSInput
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>setCharacterStream(const XMLCh* data) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>setStringData(const XMLCh* data) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3922,7 +3922,7 @@ DOMLSInput
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>setByteStream(BinInputStream* stream) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>setByteStream(InputSource* stream) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3972,7 +3972,7 @@ DOMLSInput
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>setIssueFatalErrorIfNotFound(const bool flag) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>setIssueFatalErrorIfNotFound(bool flag) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4040,6 +4040,16 @@ DOMLSOutput
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
+<td><font face="Courier New,Courier"><font size=-1>XMLFormatTarget*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getByteStream() const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
 <td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getEncoding() const = 0;</font></font></td>
@@ -4062,6 +4072,16 @@ DOMLSOutput
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
+<td><font face="Courier New,Courier"><font size=-1>setByteStream(XMLFormatTarget* stream) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
 <td><font face="Courier New,Courier"><font size=-1>setEncoding(const XMLCh* const encodingStr) = 0;</font></font></td>
 </tr>
 
@@ -4073,16 +4093,6 @@ DOMLSOutput
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setSystemId(const XMLCh* const systemId) = 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>BinInputStream*</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>makeStream() const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4192,7 +4202,7 @@ DOMLSParser
 
 <td><font face="Courier New,Courier"><font size=-1>DOMDocument*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>parse(const DOMLSInput& source) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>parse(const DOMLSInput* source) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4252,7 +4262,7 @@ DOMLSParser
 
 <td><font face="Courier New,Courier"><font size=-1>Grammar*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>loadGrammar(const DOMLSInput& source,                                 const short grammarType,
+<td><font face="Courier New,Courier"><font size=-1>loadGrammar(const DOMLSInput* source,                                 const short grammarType,
                                  const bool toCache = false) = 0;
 </font></font></td>
 </tr>
@@ -4486,6 +4496,20 @@ DOMLSResourceResolver
 <td></td>
 
 </tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMLSInput*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>resolveResource(  const XMLCh* const    resourceType                                        , const XMLCh* const    namespaceUri
+                                        , const XMLCh* const    publicId
+                                        , const XMLCh* const    systemId
+                                        , const XMLCh* const    baseURI) = 0;
+</font></font></td>
+</tr>
 <tr ALIGN=LEFT VALIGN=TOP>
 <td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
 
@@ -4544,16 +4568,6 @@ DOMLSSerializer
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>setEncoding(const XMLCh* const encoding) = 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
-
 <td><font face="Courier New,Courier"><font size=-1>setNewLine(const XMLCh* const newLine) = 0;</font></font></td>
 </tr>
 
@@ -4565,16 +4579,6 @@ DOMLSSerializer
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setFilter(DOMLSSerializerFilter *filter) = 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>getEncoding() const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4604,7 +4608,7 @@ DOMLSSerializer
 
 <td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>write(const DOMNode*         nodeToWrite,                             XMLFormatTarget* const destination) = 0;
+<td><font face="Courier New,Courier"><font size=-1>write(const DOMNode*         nodeToWrite,                             DOMLSOutput* const destination) = 0;
 </font></font></td>
 </tr>
 
@@ -5299,7 +5303,7 @@ DOMXPathResult
 <tr ALIGN=LEFT VALIGN=TOP>
 <td ALIGN=CENTER><i><font color="#0086B2">
 <font size=-1>
-Copyright &copy; 1999-2005 The Apache Software Foundation. All Rights Reserved.
+Copyright &copy; 1999-2006 The Apache Software Foundation. All Rights Reserved.
 </font>
 </font>
 </i>

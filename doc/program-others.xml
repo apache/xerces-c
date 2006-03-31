@@ -891,15 +891,15 @@ parser->setFeature(XMLUni::fgXercesSchemaFullChecking, false);
             </p>
 
 <source>
-// Create a DOMBuilder parser
-DOMBuilder *parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+// Create a DOMLSParser parser
+DOMLSParser *parser = ((DOMImplementationLS*)impl)->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
 // Specify scanner name - This is optional as IGXMLScanner is the default
-parser->setProperty(XMLUni::fgXercesScannerName, (void *)XMLUni::fgIGXMLScanner);
+parser->getDomConfig()->setParameter(XMLUni::fgXercesScannerName, (void *)XMLUni::fgIGXMLScanner);
 
 // Specify other parser features, e.g.
-parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
-parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+parser->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, doNamespaces);
+parser->getDomConfig()->setParameter(XMLUni::fgXercesSchema, doSchema);
 </source>
 
         </s3>
