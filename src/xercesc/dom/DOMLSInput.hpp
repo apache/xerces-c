@@ -27,7 +27,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class BinInputStream;
+class InputSource;
 
 
 /**
@@ -99,16 +99,19 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     /**
-     * Makes the byte stream for this input source.
+     * String data to parse. If provided, this will always be treated as a sequence of 16-bit units (UTF-16 encoded characters). 
+     * It is not a requirement to have an XML declaration when using stringData. If an XML declaration is present, the value of 
+     * the encoding attribute will be ignored.
      *
-     * <p>The derived class must create and return a binary input stream of an
-     * appropriate type for its kind of data source. The returned stream must
-     * be dynamically allocated and becomes the parser's property.
-     * </p>
-     *
-     * @see BinInputStream
      */
-    virtual BinInputStream* getByteStream() const = 0;
+    virtual const XMLCh* getStringData() const = 0;
+
+    /**
+     * Returns the byte stream for this input source.
+     *
+     * @see InputSource
+     */
+    virtual InputSource* getByteStream() const = 0;
 
     /**
      * An input source can be set to force the parser to assume a particular
@@ -159,6 +162,20 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    /**
+     * Sets the UTF-16 string for this input source.
+     *
+     */
+    virtual void setStringData(const XMLCh* data) = 0;
+
+    /**
+     * Sets the byte stream for this input source.
+     *
+     * @see BinInputStream
+     */
+    virtual void setByteStream(InputSource* stream) = 0;
+
     /**
      * Set the encoding which will be required for use with the XML text read
      * via a stream opened by this input source.
@@ -228,7 +245,7 @@ public:
      *
      * @see #getIssueFatalErrorIfNotFound
      */
-    virtual void setIssueFatalErrorIfNotFound(const bool flag) = 0;
+    virtual void setIssueFatalErrorIfNotFound(bool flag) = 0;
 
 
     /**
@@ -247,7 +264,7 @@ public:
      *
      * Access to a released object will lead to unexpected result.
      */
-    virtual void              release() = 0;
+    virtual void release() = 0;
     //@}
 };
 

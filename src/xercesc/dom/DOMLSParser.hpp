@@ -451,7 +451,7 @@ public:
       * @see resetDocumentPool
       * @since DOM Level 3
       */
-    virtual DOMDocument* parse(const DOMLSInput& source) = 0;
+    virtual DOMDocument* parse(const DOMLSInput* source) = 0;
 
     /**
       * Parse an XML document from a location identified by a URI reference [IETF RFC 2396]. 
@@ -578,7 +578,7 @@ public:
       */
     virtual void parseWithContext
     (
-        const   DOMLSInput&     source
+        const   DOMLSInput*     source
         ,       DOMNode*        contextNode
         , const unsigned short  action
     ) = 0;
@@ -641,8 +641,6 @@ public:
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * @param source A const reference to the DOMLSInput object which
       *               points to the schema grammar file to be preparsed.
       * @param grammarType The grammar type (Schema or DTD).
@@ -659,7 +657,7 @@ public:
       *
       * @see DOMLSInput#DOMLSInput
       */
-    virtual Grammar* loadGrammar(const DOMLSInput& source,
+    virtual Grammar* loadGrammar(const DOMLSInput* source,
                                  const short grammarType,
                                  const bool toCache = false) = 0;
 
@@ -670,8 +668,6 @@ public:
       * file specified by the file path parameter. If the 'toCache' flag is
       * enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
-      *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML grammar file to be
@@ -699,8 +695,6 @@ public:
       * file specified by the file path parameter. If the 'toCache' flag is
       * enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
-      *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const char pointer to a native string which contains
       *                 the path to the XML grammar file to be preparsed.

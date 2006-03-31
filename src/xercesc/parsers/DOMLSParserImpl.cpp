@@ -156,9 +156,9 @@ bool DOMLSParserImpl::getBusy() const
 // ---------------------------------------------------------------------------
 //  DOMLSParserImpl: Setter methods
 // ---------------------------------------------------------------------------
-void DOMLSParserImpl::setFilter(DOMLSParserFilter* const)
+void DOMLSParserImpl::setFilter(DOMLSParserFilter* const filter)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
+    fFilter = filter;
 }
 
 // ---------------------------------------------------------------------------
@@ -690,13 +690,13 @@ void DOMLSParserImpl::resetDocumentPool()
 // ---------------------------------------------------------------------------
 //  DOMLSParserImpl: Parsing methods
 // ---------------------------------------------------------------------------
-DOMDocument* DOMLSParserImpl::parse(const DOMLSInput& source)
+DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
 {
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
 
-    Wrapper4DOMLSInput isWrapper((DOMLSInput*) &source, false, getMemoryManager());
+    Wrapper4DOMLSInput isWrapper((DOMLSInput*)source, fEntityResolver, false, getMemoryManager());
 
     AbstractDOMParser::parse(isWrapper);
     if (fUserAdoptsDocument)
@@ -731,7 +731,7 @@ DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
         return getDocument();
 }
 
-void DOMLSParserImpl::parseWithContext(const DOMLSInput&,
+void DOMLSParserImpl::parseWithContext(const DOMLSInput*,
                                       DOMNode* ,
                                       const unsigned short)
 {
@@ -805,7 +805,7 @@ DOMLSParserImpl::resolveEntity( XMLResourceIdentifier* resourceIdentifier )
                                                           resourceIdentifier->getSystemId(), 
                                                           resourceIdentifier->getBaseURI());
         if (is)
-            return new (getMemoryManager()) Wrapper4DOMLSInput(is, true, getMemoryManager());    
+            return new (getMemoryManager()) Wrapper4DOMLSInput(is, fEntityResolver, true, getMemoryManager());    
     }
     if (fXMLEntityResolver) {
         return(fXMLEntityResolver->resolveEntity(resourceIdentifier));    
@@ -887,7 +887,7 @@ Grammar* DOMLSParserImpl::loadGrammar(const XMLCh* const systemId,
     return grammar;
 }
 
-Grammar* DOMLSParserImpl::loadGrammar(const DOMLSInput& source,
+Grammar* DOMLSParserImpl::loadGrammar(const DOMLSInput* source,
                                      const short grammarType,
                                      const bool toCache)
 {
@@ -901,7 +901,7 @@ Grammar* DOMLSParserImpl::loadGrammar(const DOMLSInput& source,
 
     try
     {
-        Wrapper4DOMLSInput isWrapper((DOMLSInput*) &source, false, getMemoryManager());
+        Wrapper4DOMLSInput isWrapper((DOMLSInput*)source, fEntityResolver, false, getMemoryManager());
 
         setParseInProgress(true);
         if (grammarType == Grammar::DTDGrammarType) 

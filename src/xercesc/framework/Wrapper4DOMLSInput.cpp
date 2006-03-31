@@ -24,7 +24,12 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/Wrapper4DOMLSInput.hpp>
 #include <xercesc/dom/DOMLSInput.hpp>
+#include <xercesc/dom/DOMLSResourceResolver.hpp>
 #include <xercesc/util/NullPointerException.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/framework/URLInputSource.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -32,11 +37,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Wrapper4DOMLSInput: Constructor and Destructor
 // ---------------------------------------------------------------------------
 Wrapper4DOMLSInput::Wrapper4DOMLSInput(DOMLSInput* const inputSource,
-                                               const bool adoptFlag,
-                                               MemoryManager* const  manager) :
+                                       DOMLSResourceResolver* entityResolver,
+                                       const bool adoptFlag,
+                                       MemoryManager* const  manager) :
     InputSource(manager)
     , fAdoptInputSource(adoptFlag)
-    ,  fInputSource(inputSource)
+    , fForceXMLChEncoding(false)
+    , fInputSource(inputSource)
+    , fEntityResolver(entityResolver)
 {
     if (!inputSource)
         ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, getMemoryManager());
@@ -59,6 +67,8 @@ bool Wrapper4DOMLSInput::getIssueFatalErrorIfNotFound() const
 
 const XMLCh* Wrapper4DOMLSInput::getEncoding() const
 {
+    if(fForceXMLChEncoding)
+        return XMLUni::fgXMLChEncodingString;
     return fInputSource->getEncoding();
 }
 
@@ -105,7 +115,44 @@ void Wrapper4DOMLSInput::setSystemId(const XMLCh* const systemId)
 // ---------------------------------------------------------------------------
 BinInputStream* Wrapper4DOMLSInput::makeStream() const
 {
-    return fInputSource->getByteStream();
+    // The LSParser will use the LSInput object to determine how to read data. The LSParser will look at the different inputs specified in the 
+    // LSInput in the following order to know which one to read from, the first one that is not null and not an empty string will be used:
+    //   1. LSInput.characterStream
+    //   2. LSInput.byteStream
+    //   3. LSInput.stringData
+    //   4. LSInput.systemId
+    //   5. LSInput.publicId
+    InputSource* binStream=fInputSource->getByteStream();
+    if(binStream)
+        return binStream->makeStream();
+    const XMLCh* xmlString=fInputSource->getStringData();
+    if(xmlString)
+    {
+        MemBufInputSource is((const XMLByte*)xmlString, XMLString::stringLen(xmlString)*sizeof(XMLCh), "", false, getMemoryManager());
+        is.setCopyBufToStream(false);
+        return is.makeStream();
+    }
+    const XMLCh* szSystemId=fInputSource->getSystemId();
+    if(szSystemId)
+    {
+        XMLURL urlTmp(getMemoryManager());
+        if (urlTmp.setURL(szSystemId, fInputSource->getBaseURI(), urlTmp) && !urlTmp.isRelative())
+        {
+            URLInputSource src(urlTmp, getMemoryManager());
+            return src.makeStream();
+        }          
+        LocalFileInputSource src(szSystemId, getMemoryManager());
+        return src.makeStream();
+    }
+    const XMLCh* szPublicId=fInputSource->getPublicId();
+    if(szPublicId && fEntityResolver)
+    {
+        DOMLSInput* is = fEntityResolver->resolveResource(XMLUni::fgDOMDTDType, 0, szPublicId, 0, fInputSource->getBaseURI());
+        if (is)
+            return Wrapper4DOMLSInput(is, fEntityResolver, true, getMemoryManager()).makeStream();
+    }
+
+    return 0;
 }
 
 XERCES_CPP_NAMESPACE_END

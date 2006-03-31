@@ -22,6 +22,8 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMLSSerializerImpl.hpp"
+#include "DOMLSInputImpl.hpp"
+#include "DOMLSOutputImpl.hpp"
 #include "DOMImplementationListImpl.hpp"
 
 #include <xercesc/dom/DOMDocument.hpp>
@@ -310,18 +312,14 @@ DOMLSSerializer* DOMImplementationImpl::createLSSerializer(MemoryManager* const 
     return new (manager) DOMLSSerializerImpl(manager);
 }
 
-DOMLSInput* DOMImplementationImpl::createLSInput()
+DOMLSInput* DOMImplementationImpl::createLSInput(MemoryManager* const manager)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-
-    return 0;
+    return new (manager) DOMLSInputImpl(manager);
 }
 
-DOMLSOutput* DOMImplementationImpl::createLSOutput()
+DOMLSOutput* DOMImplementationImpl::createLSOutput(MemoryManager* const manager)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-
-    return 0;
+    return new (manager) DOMLSOutputImpl(manager);
 }
 
 // ------------------------------------------------------------

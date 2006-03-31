@@ -245,11 +245,13 @@
 #include <xercesc/dom/DOMLSSerializerFilter.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
-#include <xercesc/framework/XMLFormatter.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class CDOM_EXPORT DOMLSSerializer {
+class DOMLSOutput;
+
+class CDOM_EXPORT DOMLSSerializer 
+{
 protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
@@ -370,24 +372,6 @@ public:
     //  Setter methods
     // -----------------------------------------------------------------------
     /**
-     * The character encoding in which the output will be written.
-     * <br> The encoding to use when writing is determined as follows: If the
-     * encoding attribute has been set, that value will be used.If the
-     * encoding attribute is <code>null</code> or empty, but the item to be
-     * written includes an encoding declaration, that value will be used.If
-     * neither of the above provides an encoding name, a default encoding of
-     * "UTF-8" will be used.
-     * <br>The default value is <code>null</code>.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param encoding    The character encoding in which the output will be written.
-     * @see   getEncoding
-     * @since DOM Level 3
-     */
-    virtual void           setEncoding(const XMLCh* const encoding) = 0;
-
-    /**
      * The end-of-line sequence of characters to be used in the XML being
      * written out. The only permitted values are these:
      * <dl>
@@ -431,21 +415,8 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     /**
-     * Return the character encoding in which the output will be written.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return The character encoding used.
-     * @see   setEncoding
-     * @since DOM Level 3
-     */
-     virtual const XMLCh*       getEncoding() const = 0;
-
-    /**
      * Return the end-of-line sequence of characters to be used in the XML being
      * written out.
-     *
-     *  <p><b>"Experimental - subject to change"</b></p>
      *
      * @return             The end-of-line sequence of characters to be used.
      * @see   setNewLine
@@ -483,7 +454,7 @@ public:
      * @since DOM Level 3
      */
     virtual bool       write(const DOMNode*         nodeToWrite,
-                             XMLFormatTarget* const destination) = 0;
+                             DOMLSOutput* const destination) = 0;
 
     /**
      * Write out the specified node as described above in the description of

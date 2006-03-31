@@ -81,8 +81,8 @@ public:
                                         MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager,
                                         XMLGrammarPool*  const gramPool = 0);
     virtual DOMLSSerializer* createLSSerializer(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    virtual DOMLSInput* createLSInput();
-    virtual DOMLSOutput* createLSOutput();
+    virtual DOMLSInput* createLSInput(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    virtual DOMLSOutput* createLSOutput(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // ------------------------------------------------------------
     // DOMImplementationSource Virtual interface

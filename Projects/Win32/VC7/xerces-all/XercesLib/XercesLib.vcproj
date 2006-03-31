@@ -1924,6 +1924,12 @@
 					<File
 						RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraint.hpp">
 					</File>
+		            <File
+			            RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp">
+		            </File>
+		            <File
+			            RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.hpp">
+		            </File>
 					<File
 						RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStore.cpp">
 					</File>
@@ -2160,13 +2166,13 @@
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMAttrNSImpl.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMCasts.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMCDATASectionImpl.cpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMCDATASectionImpl.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMCasts.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMCharacterDataImpl.cpp">
@@ -2253,16 +2259,40 @@
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.cpp">
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp">
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.hpp">
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationimpl.hpp">
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationListImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationRegistry.cpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.cpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSInputImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSInputImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSOutputImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSOutputImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMNamedNodeMapImpl.cpp">
@@ -2331,6 +2361,12 @@
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMStringListImpl.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp">
 				</File>
 				<File
@@ -2355,12 +2391,6 @@
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp">
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.cpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMWriterImpl.hpp">
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp">
 				</File>
 				<File
@@ -2368,12 +2398,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp">
-		</File>
-		<File
-			RelativePath="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.hpp">
-		</File>
 		<File
 			RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Version.rc">
 			<FileConfiguration

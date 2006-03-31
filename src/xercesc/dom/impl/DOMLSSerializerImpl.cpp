@@ -19,6 +19,7 @@
  */
 
 #include "DOMLSSerializerImpl.hpp"
+#include "DOMLSOutputImpl.hpp"
 #include "DOMErrorImpl.hpp"
 #include "DOMLocatorImpl.hpp"
 #include "DOMImplementationImpl.hpp"
@@ -286,7 +287,6 @@ catch(TranscodingException const &e)                                 \
 
 DOMLSSerializerImpl::~DOMLSSerializerImpl()
 {
-    fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
     fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
     delete fNamespaceStack;
     delete fSupportedParameters;
@@ -295,7 +295,6 @@ DOMLSSerializerImpl::~DOMLSSerializerImpl()
 
 DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 :fFeatures(0)
-,fEncoding(0)
 ,fNewLine(0)
 ,fErrorHandler(0)
 ,fFilter(0)
@@ -429,18 +428,6 @@ const DOMStringList* DOMLSSerializerImpl::getParameterNames() const
     return fSupportedParameters;
 }
 
-// we don't check the validity of the encoding set
-void DOMLSSerializerImpl::setEncoding(const XMLCh* const encoding)
-{
-    fMemoryManager->deallocate(fEncoding);//delete [] fEncoding;
-    fEncoding = XMLString::replicate(encoding, fMemoryManager);
-}
-
-const XMLCh* DOMLSSerializerImpl::getEncoding() const
-{
-    return fEncoding;
-}
-
 void DOMLSSerializerImpl::setNewLine(const XMLCh* const newLine)
 {
     fMemoryManager->deallocate(fNewLine);//delete [] fNewLine;
@@ -465,158 +452,62 @@ DOMLSSerializerFilter* DOMLSSerializerImpl::getFilter() const
 //
 //
 //
-bool DOMLSSerializerImpl::write(const DOMNode*         nodeToWrite,
-                                XMLFormatTarget* const destination)
+bool DOMLSSerializerImpl::write(const DOMNode* nodeToWrite,
+                                DOMLSOutput* const destination)
 {
-    //init session vars
-    initSession(nodeToWrite);
-
-    try
+    XMLFormatTarget* pTarget=destination->getByteStream();
+    Janitor<XMLFormatTarget> janTarget(0);
+    if(!pTarget)
     {
-        fFormatter = new (fMemoryManager) XMLFormatter(fEncodingUsed
-                                     ,fDocumentVersion
-                                     ,destination
-                                     ,XMLFormatter::NoEscapes
-                                     ,XMLFormatter::UnRep_CharRef
-                                     ,fMemoryManager);
+        const XMLCh* szSystemId=destination->getSystemId();
+        if(!szSystemId)
+        {
+            //TODO: report error "missing target"
+            return false;
+        }
+        pTarget=new LocalFileFormatTarget(szSystemId, fMemoryManager);
+        janTarget.reset(pTarget);
     }
-    catch (const TranscodingException& e)
-    {
-        reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, e.getMessage());
-        return false;
-    }
-
-    try
-    {
-        Janitor<XMLFormatter> janName(fFormatter);
-        processNode(nodeToWrite);
-        destination->flush();
-    }
-
-    //
-    // The serialize engine (processNode) throws an exception to abort
-    // serialization if
-    //
-    //   . A fatal error occurs which renters the output ill-formed, or
-    //   . Instructed by the application's error handler
-    //
-    catch (const TranscodingException&)
-    {
-        destination->flush();
-        return false;
-    }
-
-    catch (const XMLDOMMsg::Codes)
-    {
-        destination->flush();
-        return false;
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...)
-    {
-        destination->flush();
-        throw;
-    }
-
-    //
-    // true if node was successfully serialized and
-    // false in case a failure occured and the
-    // failure wasn't canceled by the error handler.
-    //
-    return ((fErrorCount == 0)? true : false);
-}
-
-bool DOMLSSerializerImpl::writeToURI(const DOMNode* nodeToWrite, const XMLCh* uri)
-{
-    LocalFileFormatTarget target(uri);
-    return write(nodeToWrite, &target);
-}
-
-//
-// We don't throw DOMSTRING_SIZE_ERR since we are no longer
-// using DOMString.
-//
-XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
-{
-    MemBufFormatTarget  destination(1023, fMemoryManager);
-    bool retVal;
-
-    // XMLCh is unicode, assume fEncoding as UTF-16
-    XMLCh* tempEncoding = fEncoding;
-    fEncoding = (XMLCh*) XMLUni::fgUTF16EncodingString;
-
-    bool bBOMFlag=getFeature(BYTE_ORDER_MARK_ID);
-    setFeature(BYTE_ORDER_MARK_ID, false);
-    try
-    {
-        retVal = write(nodeToWrite, &destination);
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
-    catch (...)
-    {
-        //
-        // there is a possibility that memory allocation
-        // exception thrown in XMLBuffer class
-        //
-        fEncoding = tempEncoding;
-        setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
-        return 0;
-    }
-
-    fEncoding = tempEncoding;
-    setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
-    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), fMemoryManager) : 0);
-}
-
-void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
-{
-
-/**
- * When writing to a LSOutput, the encoding is found by looking at the encoding information 
- * that is reachable through the LSOutput and the item to be written (or its owner document) in this order:
- *
- *  1. LSOutput.encoding,
- *  2. Document.inputEncoding,
- *  3. Document.xmlEncoding.
- *
- * If no encoding is reachable through the above properties, a default encoding of "UTF-8" will be used. 
- * If the specified encoding is not supported an "unsupported-encoding" fatal error is raised.
- */
+    /**
+     * When writing to a LSOutput, the encoding is found by looking at the encoding information 
+     * that is reachable through the LSOutput and the item to be written (or its owner document) in this order:
+     *
+     *  1. LSOutput.encoding,
+     *  2. Document.inputEncoding,
+     *  3. Document.xmlEncoding.
+     *
+     * If no encoding is reachable through the above properties, a default encoding of "UTF-8" will be used. 
+     * If the specified encoding is not supported an "unsupported-encoding" fatal error is raised.
+     */
     fEncodingUsed = gUTF8;
 
-    if (fEncoding && *fEncoding)
+    const DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
+                              (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
+
+    const XMLCh* lsEncoding=destination->getEncoding();
+    if (lsEncoding && *lsEncoding)
     {
-        fEncodingUsed = fEncoding;
+        fEncodingUsed = lsEncoding;
     }
-    else
+    else if (docu)
     {
-        const DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
-                            (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
-        if (docu)
+        const XMLCh* tmpEncoding = docu->getInputEncoding();
+
+        if ( tmpEncoding && *tmpEncoding)
         {
-            const XMLCh* tmpEncoding = docu->getInputEncoding();
+            fEncodingUsed = tmpEncoding;
+        }
+        else
+        {
+            tmpEncoding = docu->getXmlEncoding();
 
             if ( tmpEncoding && *tmpEncoding)
             {
                 fEncodingUsed = tmpEncoding;
             }
-            else
-            {
-                tmpEncoding = docu->getXmlEncoding();
-
-                if ( tmpEncoding && *tmpEncoding)
-                {
-                    fEncodingUsed = tmpEncoding;
-                }
-            }
         }
     }
+
 
     /**
      *  The end-of-line sequence of characters to be used in the XML being
@@ -640,14 +531,109 @@ void DOMLSSerializerImpl::initSession(const DOMNode* const nodeToWrite)
     /**
      *  get Document Version
      */
-    const DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
-                              (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
-    if (docu)
-    {
-        fDocumentVersion = docu->getXmlVersion();
-    }
+    fDocumentVersion = docu?docu->getXmlVersion():XMLUni::fgVersion1_0;
 
     fErrorCount = 0;
+
+    try
+    {
+        fFormatter = new (fMemoryManager) XMLFormatter( fEncodingUsed
+                                                       ,fDocumentVersion
+                                                       ,pTarget
+                                                       ,XMLFormatter::NoEscapes
+                                                       ,XMLFormatter::UnRep_CharRef
+                                                       ,fMemoryManager);
+    }
+    catch (const TranscodingException& e)
+    {
+        reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, e.getMessage());
+        return false;
+    }
+
+    try
+    {
+        Janitor<XMLFormatter> janName(fFormatter);
+        processNode(nodeToWrite);
+        pTarget->flush();
+    }
+
+    //
+    // The serialize engine (processNode) throws an exception to abort
+    // serialization if
+    //
+    //   . A fatal error occurs which renters the output ill-formed, or
+    //   . Instructed by the application's error handler
+    //
+    catch (const TranscodingException&)
+    {
+        pTarget->flush();
+        return false;
+    }
+
+    catch (const XMLDOMMsg::Codes)
+    {
+        pTarget->flush();
+        return false;
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch (...)
+    {
+        pTarget->flush();
+        throw;
+    }
+
+    //
+    // true if node was successfully serialized and
+    // false in case a failure occured and the
+    // failure wasn't canceled by the error handler.
+    //
+    return ((fErrorCount == 0)? true : false);
+}
+
+bool DOMLSSerializerImpl::writeToURI(const DOMNode* nodeToWrite, const XMLCh* uri)
+{
+    DOMLSOutputImpl output(fMemoryManager);
+    output.setSystemId(uri);
+    return write(nodeToWrite, &output);
+}
+
+//
+// We don't throw DOMSTRING_SIZE_ERR since we are no longer
+// using DOMString.
+//
+XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
+{
+    MemBufFormatTarget  destination(1023, fMemoryManager);
+    bool retVal;
+
+    bool bBOMFlag=getFeature(BYTE_ORDER_MARK_ID);
+    setFeature(BYTE_ORDER_MARK_ID, false);
+    try
+    {
+        DOMLSOutputImpl output(fMemoryManager);
+        output.setByteStream(&destination);
+        output.setEncoding(XMLUni::fgUTF16EncodingString);
+        retVal = write(nodeToWrite, &output);
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
+    catch (...)
+    {
+        //
+        // there is a possibility that memory allocation
+        // exception thrown in XMLBuffer class
+        //
+        setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
+        return 0;
+    }
+
+    setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
+    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), fMemoryManager) : 0);
 }
 
 //
@@ -787,7 +773,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             //
 
             if (getFeature(XML_DECLARATION)) {
-                // use the version and encoding resolved in initSession()
+                // use the version and encoding resolved 
                 *fFormatter << gXMLDecl_VersionInfo << fDocumentVersion << gXMLDecl_separator;
                 *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
 
@@ -1704,42 +1690,42 @@ void DOMLSSerializerImpl::processBOM()
     if (!getFeature(BYTE_ORDER_MARK_ID))
         return;
 
-    if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16LEncodingString)  == 0) ||
-        (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16LEncodingString2) == 0)  )
+    if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16LEncodingString)  == 0) ||
+        (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16LEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_utf16le, 2);
     }
-    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16BEncodingString)  == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16BEncodingString2) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16BEncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16BEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_utf16be, 2);
     }
-    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString)  == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString2) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString3) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString4) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString5) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString6) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUTF16EncodingString7) == 0)  ) 
+    else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString2) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString3) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString4) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString5) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString6) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString7) == 0)  ) 
     {
     	if (XMLPlatformUtils::fgXMLChBigEndian)
             fFormatter->writeBOM(BOM_utf16be, 2);
         else
             fFormatter->writeBOM(BOM_utf16le, 2);
     }
-    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4LEncodingString)  == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4LEncodingString2) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4LEncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4LEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_ucs4le, 4);
     }
-    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4BEncodingString)  == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4BEncodingString2) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4BEncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4BEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_ucs4be, 4);
     }
-    else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString)  == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString2) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString3) == 0)  )
+    else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString)  == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString2) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString3) == 0)  )
     {
 		if (XMLPlatformUtils::fgXMLChBigEndian)
 	        fFormatter->writeBOM(BOM_ucs4be, 4);

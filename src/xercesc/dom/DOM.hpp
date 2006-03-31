@@ -64,6 +64,7 @@
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMImplementationSource.hpp>
 #include <xercesc/dom/DOMLSInput.hpp>
+#include <xercesc/dom/DOMLSOutput.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
 #include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>

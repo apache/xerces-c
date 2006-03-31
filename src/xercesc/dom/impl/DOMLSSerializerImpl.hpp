@@ -27,6 +27,7 @@
 #include <xercesc/util/XMLDOMMsg.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -58,19 +59,16 @@ public:
 
     virtual DOMConfiguration*       getDomConfig();
 
-    virtual void                    setEncoding(const XMLCh* const encoding);
-    virtual const XMLCh*            getEncoding() const;
-
     virtual void                    setNewLine(const XMLCh* const newLine);
     virtual const XMLCh*            getNewLine() const;
 
     virtual void                    setFilter(DOMLSSerializerFilter *filter);
     virtual DOMLSSerializerFilter*  getFilter() const;
 
-    virtual bool                    write(const DOMNode*         nodeToWrite,
-                                          XMLFormatTarget* const destination);
-    virtual bool                    writeToURI(const DOMNode*    nodeToWrite, 
-                                               const XMLCh*      uri);
+    virtual bool                    write(const DOMNode*        nodeToWrite,
+                                          DOMLSOutput* const    destination);
+    virtual bool                    writeToURI(const DOMNode*   nodeToWrite, 
+                                               const XMLCh*     uri);
     /**
 	  *  The caller is responsible for the release of the returned string
 	  */
@@ -96,7 +94,6 @@ private:
     DOMLSSerializerImpl & operator = (const DOMLSSerializerImpl&);
 
     /** helper **/
-    void                          initSession(const DOMNode* const);
     void                          processNode(const DOMNode* const);
 
     void                          procCdataSection(const XMLCh*   const nodeValue
@@ -149,9 +146,6 @@ protected:
     //
     //  fFeatures
     //
-    //  fEncoding
-    //      own it
-    //
     //  fNewLine
     //      own it
     //
@@ -192,7 +186,6 @@ protected:
     // -----------------------------------------------------------------------
 
     int                           fFeatures;
-    XMLCh                        *fEncoding;
     XMLCh                        *fNewLine;
     DOMErrorHandler              *fErrorHandler;
     DOMLSSerializerFilter        *fFilter;

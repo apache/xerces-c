@@ -2608,6 +2608,18 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSInputImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSInputImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSOutputImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSOutputImpl.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMLSSerializerImpl.cpp">
 				</File>
 				<File

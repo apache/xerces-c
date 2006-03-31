@@ -259,7 +259,7 @@ int main (int argC,  char *argV[])
     DOMLSParserHandler domBuilderHandler;
     domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMErrorHandler, &domBuilderHandler);
 
-    // Instantiate the SAX2 domBuilder with its memory manager.
+    // Instantiate the SAX2 parser with its memory manager.
     MemoryMonitor *sax2MemMonitor = new MemoryMonitor();
     SAX2XMLReader *sax2parser = XMLReaderFactory::createXMLReader(sax2MemMonitor);
     SAXErrorHandler saxErrorHandler;

@@ -27,7 +27,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMLSInput;
-
+class DOMLSResourceResolver;
 
 /**
   * Wrap a DOMLSInput object to a SAX InputSource.
@@ -53,6 +53,7 @@ public:
     Wrapper4DOMLSInput
     (
         DOMLSInput* const inputSource
+        , DOMLSResourceResolver* entityResolver = 0
         , const bool adoptFlag = true
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -216,8 +217,10 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool            fAdoptInputSource;
-    DOMLSInput* fInputSource;
+    bool                    fAdoptInputSource,
+                            fForceXMLChEncoding;
+    DOMLSInput*             fInputSource;
+    DOMLSResourceResolver*  fEntityResolver;
 };
 
 XERCES_CPP_NAMESPACE_END

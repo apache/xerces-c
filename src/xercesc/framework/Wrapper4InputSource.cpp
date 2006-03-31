@@ -75,7 +75,7 @@ const XMLCh* Wrapper4InputSource::getPublicId() const
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Setter methods
 // ---------------------------------------------------------------------------
-void Wrapper4InputSource::setIssueFatalErrorIfNotFound(const bool flag)
+void Wrapper4InputSource::setIssueFatalErrorIfNotFound(bool flag)
 {
     fInputSource->setIssueFatalErrorIfNotFound(flag);
 }
@@ -102,9 +102,9 @@ void Wrapper4InputSource::setSystemId(const XMLCh* const systemId)
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Stream methods
 // ---------------------------------------------------------------------------
-BinInputStream* Wrapper4InputSource::getByteStream() const
+InputSource* Wrapper4InputSource::getByteStream() const
 {
-    return fInputSource->makeStream();
+    return fInputSource;
 }
 
 // ---------------------------------------------------------------------------

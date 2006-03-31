@@ -206,11 +206,16 @@ void Normalizer::serializeNode(const DOMNode * const node) {
     XMLString::transcode("LS", tempStr, 99);
     DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
     DOMLSSerializer   *theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
+    DOMLSOutput       *theOutput     = ((DOMImplementationLS*)impl)->createLSOutput();
     theSerializer->getDomConfig()->setParameter(X("format-pretty-print"), true);
     XMLFormatTarget *myFormTarget;
     myFormTarget = new StdOutFormatTarget();
 
-    theSerializer->write(node,myFormTarget);
+    theOutput->setByteStream(myFormTarget);
+    theSerializer->write(node,theOutput);
+    delete myFormTarget;
+    theSerializer->release();
+    theOutput->release();
 }
 
 int main(int argc, char **argv) {

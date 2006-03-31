@@ -140,7 +140,7 @@ public :
     /**
       * @see DOMLSParser#parse
       */
-    virtual DOMDocument* parse(const DOMLSInput& source);
+    virtual DOMDocument* parse(const DOMLSInput* source);
 
     /**
       * @see DOMLSParser#parseURI
@@ -157,7 +157,7 @@ public :
       */
     virtual void parseWithContext
     (
-        const   DOMLSInput&     source
+        const   DOMLSInput*     source
         ,       DOMNode*        contextNode
         , const unsigned short  action
     );
@@ -231,7 +231,7 @@ public :
       *
       * @see DOMLSInput#DOMLSInput
       */
-    virtual Grammar* loadGrammar(const DOMLSInput& source,
+    virtual Grammar* loadGrammar(const DOMLSInput* source,
                              const short grammarType,
                              const bool toCache = false);
 

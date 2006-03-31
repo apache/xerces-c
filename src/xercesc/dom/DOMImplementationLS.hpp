@@ -163,7 +163,7 @@ public:
      * @see DOMLSInput
      * @since DOM Level 3
      */
-    virtual DOMLSInput* createLSInput() = 0;
+    virtual DOMLSInput* createLSInput(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     /**
      * Create a new "empty" LSOutput.
@@ -173,7 +173,7 @@ public:
      * @see LSOutput
      * @since DOM Level 3
      */
-    virtual DOMLSOutput* createLSOutput() = 0;
+    virtual DOMLSOutput* createLSOutput(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
     //@}
 };
 

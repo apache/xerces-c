@@ -355,6 +355,8 @@ domimpl_headers	= \
 	xercesc/dom/impl/DOMTreeWalkerImpl.hpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.hpp \
 	xercesc/dom/impl/DOMLSSerializerImpl.hpp \
+	xercesc/dom/impl/DOMLSInputImpl.hpp \
+	xercesc/dom/impl/DOMLSOutputImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
 							  
 domimpl_sources	= \
@@ -396,6 +398,8 @@ domimpl_sources	= \
 	xercesc/dom/impl/DOMTreeWalkerImpl.cpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.cpp \
 	xercesc/dom/impl/DOMLSSerializerImpl.cpp \
+	xercesc/dom/impl/DOMLSInputImpl.cpp \
+	xercesc/dom/impl/DOMLSOutputImpl.cpp \
 	xercesc/dom/impl/XSDElementNSImpl.cpp
 
 

@@ -291,6 +291,8 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\DOMStringListImpl.obj \
     $(TARGETPATH)\obj\DOMLSParserImpl.obj \
     $(TARGETPATH)\obj\DOMLSSerializerImpl.obj \
+    $(TARGETPATH)\obj\DOMLSInputImpl.obj \
+    $(TARGETPATH)\obj\DOMLSOutputImpl.obj \
     $(TARGETPATH)\obj\DOMLSException.obj \
     $(TARGETPATH)\obj\Wrapper4InputSource.obj \
     $(TARGETPATH)\obj\Wrapper4DOMLSInput.obj \

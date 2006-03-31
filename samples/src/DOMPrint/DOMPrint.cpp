@@ -68,9 +68,6 @@
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMLSSerializer.hpp>
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
@@ -434,9 +431,10 @@ int main(int argC, char* argV[])
             XMLCh tempStr[3] = {chLatin_L, chLatin_S, chNull};
             DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMLSSerializer   *theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
+            DOMLSOutput       *theOutputDesc = ((DOMImplementationLS*)impl)->createLSOutput();
 
             // set user specified output encoding
-            theSerializer->setEncoding(gOutputEncoding);
+            theOutputDesc->setEncoding(gOutputEncoding);
 
             // plug in user's own filter
             if (gUseFilter)
@@ -482,9 +480,10 @@ int main(int argC, char* argV[])
             //
             XMLFormatTarget *myFormTarget;
             if (goutputfile)
-                myFormTarget = new LocalFileFormatTarget(goutputfile);
+                myFormTarget=new LocalFileFormatTarget(goutputfile);
             else
-                myFormTarget = new StdOutFormatTarget();
+                myFormTarget=new StdOutFormatTarget();
+            theOutputDesc->setByteStream(myFormTarget);
 
             // get the DOM representation
             DOMNode                     *doc = parser->getDocument();
@@ -492,9 +491,10 @@ int main(int argC, char* argV[])
             //
             // do the serialization through DOMLSSerializer::write();
             //
-            theSerializer->write(doc, myFormTarget);
+            theSerializer->write(doc, theOutputDesc);
 
-            delete theSerializer;
+            theOutputDesc->release();
+            theSerializer->release();
 
             //
             // Filter, formatTarget and error handler

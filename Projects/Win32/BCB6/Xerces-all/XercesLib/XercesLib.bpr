@@ -255,6 +255,8 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationListImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationRegistry.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLocatorImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSInputImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSOutputImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSSerializerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNamedNodeMapImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeIDMap.obj 

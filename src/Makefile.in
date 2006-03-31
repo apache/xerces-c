@@ -223,6 +223,8 @@ am__objects_4 = xercesc/dom/impl/DOMAttrImpl.lo \
 	xercesc/dom/impl/DOMTreeWalkerImpl.lo \
 	xercesc/dom/impl/DOMTypeInfoImpl.lo \
 	xercesc/dom/impl/DOMLSSerializerImpl.lo \
+	xercesc/dom/impl/DOMLSInputImpl.lo \
+	xercesc/dom/impl/DOMLSOutputImpl.lo \
 	xercesc/dom/impl/XSDElementNSImpl.lo
 am_libdomimpl_la_OBJECTS = $(am__objects_4)
 libdomimpl_la_OBJECTS = $(am_libdomimpl_la_OBJECTS)
@@ -1208,6 +1210,8 @@ domimpl_headers = \
 	xercesc/dom/impl/DOMTreeWalkerImpl.hpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.hpp \
 	xercesc/dom/impl/DOMLSSerializerImpl.hpp \
+	xercesc/dom/impl/DOMLSInputImpl.hpp \
+	xercesc/dom/impl/DOMLSOutputImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
 
 domimpl_sources = \
@@ -1249,6 +1253,8 @@ domimpl_sources = \
 	xercesc/dom/impl/DOMTreeWalkerImpl.cpp \
 	xercesc/dom/impl/DOMTypeInfoImpl.cpp \
 	xercesc/dom/impl/DOMLSSerializerImpl.cpp \
+	xercesc/dom/impl/DOMLSInputImpl.cpp \
+	xercesc/dom/impl/DOMLSOutputImpl.cpp \
 	xercesc/dom/impl/XSDElementNSImpl.cpp
 
 framework_headers = \
@@ -2223,6 +2229,10 @@ xercesc/dom/impl/DOMTypeInfoImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
 xercesc/dom/impl/DOMLSSerializerImpl.lo:  \
 	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMLSInputImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMLSOutputImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/XSDElementNSImpl.lo:  \
 	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
@@ -3170,6 +3180,10 @@ mostlyclean-compile:
 	-rm -f xercesc/dom/impl/DOMImplementationListImpl.lo
 	-rm -f xercesc/dom/impl/DOMImplementationRegistry.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMImplementationRegistry.lo
+	-rm -f xercesc/dom/impl/DOMLSInputImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMLSInputImpl.lo
+	-rm -f xercesc/dom/impl/DOMLSOutputImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMLSOutputImpl.lo
 	-rm -f xercesc/dom/impl/DOMLSSerializerImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMLSSerializerImpl.lo
 	-rm -f xercesc/dom/impl/DOMLocatorImpl.$(OBJEXT)
@@ -3776,6 +3790,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationListImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMImplementationRegistry.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLSInputImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLSOutputImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLSSerializerImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMLocatorImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMNamedNodeMapImpl.Plo@am__quote@

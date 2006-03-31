@@ -128,14 +128,11 @@ public:
      * @see DOMLSInput#DOMLSInput
      * @since DOM Level 3
      */
-    virtual DOMLSInput* resolveResource
-    (
-        const   XMLCh* const    resourceType
-        , const XMLCh* const    namespaceUri
-        , const XMLCh* const    publicId
-        , const XMLCh* const    systemId
-        , const XMLCh* const    baseURI
-    ) = 0;
+    virtual DOMLSInput* resolveResource(  const XMLCh* const    resourceType
+                                        , const XMLCh* const    namespaceUri
+                                        , const XMLCh* const    publicId
+                                        , const XMLCh* const    systemId
+                                        , const XMLCh* const    baseURI) = 0;
 
     //@}
 
