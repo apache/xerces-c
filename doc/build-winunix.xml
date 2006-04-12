@@ -45,8 +45,8 @@
             <p>If you want to include the &XercesCName; project separately,
             you need to pick up:</p>
 <source>(For MSVC V6) &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
-(For MSVC V7) &XercesCSrcInstallDir;\Projects\Win32\VC7\xerces-all\XercesLib\XercesLib.vcproj</source>
-(For MSVC V7.1) &XercesCSrcInstallDir;\Projects\Win32\VC7.1\xerces-all\XercesLib\XercesLib.vcproj</source>
+(For MSVC V7) &XercesCSrcInstallDir;\Projects\Win32\VC7\xerces-all\XercesLib\XercesLib.vcproj
+(For MSVC V7.1) &XercesCSrcInstallDir;\Projects\Win32\VC7.1\xerces-all\XercesLib\XercesLib.vcproj
 (For MSVC V8) &XercesCSrcInstallDir;\Projects\Win32\VC8\xerces-all\XercesLib\XercesLib.vcproj</source>
             <p>You must make sure that you are linking your application with
             the &XercesCWindowsLib;.lib library and also make sure that

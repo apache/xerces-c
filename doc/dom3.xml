@@ -23,7 +23,7 @@
     The &XercesCName; &XercesCVersion; contains an implementation of the W3C DOM Level 3 as specified in </p>
     <ul>
       <li><jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
-          DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Recommendation 07 April 2004</li> and  
+          DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Recommendation 07 April 2004 and</li>
       <li> <jump href="http://www.w3.org/TR/DOM-Level-3-LS/">
           Document Object Model (DOM) Level 3 Load and Save Specification</jump>,
           Version 1.0 W3C Recommendation 07 April 2004</li>
@@ -46,7 +46,7 @@
     <p>The following are implemented in &XercesCName; &XercesCVersion;.</p>
 <ul>
     <li>
-        <code>DOMLSParser</code>: parseWithContext()</code>.
+        <code>DOMLSParser</code>: parseWithContext().
     </li>
 </ul>
 

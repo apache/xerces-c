@@ -2,20 +2,20 @@
 
 <!ENTITY XercesCFullName      "Xerces C++ Parser">            <!-- fullproductname -->
 <!ENTITY XercesCName          "Xerces-C++">                   <!-- productname -->
-<!ENTITY XercesCVersion       "2.6.0">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion       "3.0.0">                        <!-- versionnumber -->
 <!ENTITY XercesCVersion152    "1.5.2">                        <!-- versionnumber -->
 <!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
-<!ENTITY XercesCInstallDir    "xerces-c2_6_0">                <!-- installdirname -->
-<!ENTITY XercesCSrcInstallDir "xerces-c-src2_6_0">            <!-- sourcedirectory -->
-<!ENTITY XercesCWindowsLib    "xerces-c_2">                   <!-- windowslibname -->
-<!ENTITY XercesCWindowsDLL    "xerces-c_2_6_0">               <!-- windowsDLLname -->
-<!ENTITY XercesCUnixSoName    "26.0">                         <!-- unixlibname -->
-<!ENTITY XercesCUnixVersion   "26">                           <!-- unixlibname -->
+<!ENTITY XercesCInstallDir    "xerces-c3_0_0">                <!-- installdirname -->
+<!ENTITY XercesCSrcInstallDir "xerces-c-src3_0_0">            <!-- sourcedirectory -->
+<!ENTITY XercesCWindowsLib    "xerces-c_3">                   <!-- windowslibname -->
+<!ENTITY XercesCWindowsDLL    "xerces-c_3_0_0">               <!-- windowsDLLname -->
+<!ENTITY XercesCUnixSoName    "30.0">                         <!-- unixlibname -->
+<!ENTITY XercesCUnixVersion   "30">                           <!-- unixlibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
-<!ENTITY XercesCNSVersion     "xercesc_2_6">                  <!-- C++ namespace name with Version -->
-<!ENTITY XercesCDevelEmailAddress  "xerces-c-dev@xerces.apache.org "> <!-- emailaddress -->
-<!ENTITY XercesCUserEmailAddress  "xerces-c-users@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCNSVersion     "xercesc_3_0">                  <!-- C++ namespace name with Version -->
+<!ENTITY XercesCDevelEmailAddress  "c-dev@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCUserEmailAddress  "c-users@xerces.apache.org "> <!-- emailaddress -->
 <!ENTITY JiraURL  "http&colon;//issues.apache.org/jira/browse/XERCESC "> <!-- url -->
 <!ENTITY XercesDistDir        "xml.apache.org/xerces-c/download.cgi"> <!-- download directory -->
 
