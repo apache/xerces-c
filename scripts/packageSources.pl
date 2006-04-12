@@ -422,8 +422,8 @@ sub package_sources {
    psystem( 'find . -type f -exec chmod 644 {} ' . $find_delim );
    psystem( 'find . -type d -exec chmod 755 {} ' . $find_delim );
    psystem( 'find . -name "con*" -exec chmod 755 {} ' . $find_delim );
-   psystem( 'find . -name "run*" -exec chmod 755 {} ' . $find_delim );
    psystem( 'find . -name "install*" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "pretty-make" -exec chmod 755 {} ' . $find_delim );
 
    print "\nREMOVING EXPORT CLAUSES\n\n";
 

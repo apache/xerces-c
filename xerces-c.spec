@@ -1,13 +1,9 @@
-%define tarversion 2_6_0
-
-# threads
-# values: pthreads, none
-%define threads pthreads
+%define tarversion 3_0_0
 
 Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
-Version:	2.6.0
-Release:	3
+Version:	3.0.0
+Release:	1
 URL:		http://xml.apache.org/xerces-c/
 Source0:    %{name}-src_%{tarversion}.tar.gz
 Copyright:	Apache
@@ -56,21 +52,18 @@ manipulating, and validating XML documents.
 
 %build
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
-cd $XERCESCROOT/src/xercesc
-./runConfigure -plinux -cgcc -xg++ -minmem -nsocket -tnative -r%{threads} -P%{prefix}
-make
-cd $XERCESCROOT/samples
-./runConfigure -plinux -cgcc -xg++
+cd $XERCESCROOT
+./configure --prefix=%{prefix}
 make
 
 %install
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
-cd $XERCESCROOT/src/xercesc
-make PREFIX=$RPM_BUILD_ROOT%{prefix} install
-ln -sf %{prefix}/lib/libxerces-c.so.26 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
+cd $XERCESCROOT
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+ln -sf %{prefix}/%{_lib}/libxerces-3.0.so $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
 mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
 #we don't want obj directory
-install `find $XERCESCROOT/bin -type f -maxdepth 1` $RPM_BUILD_ROOT%{prefix}/bin
+install `find $XERCESCROOT/samples -maxdepth 1 -type f -perm 755` $RPM_BUILD_ROOT%{prefix}/bin
 mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}
 cp -a $XERCESCROOT/samples $RPM_BUILD_ROOT%{prefix}/share/%{name}
 
@@ -84,8 +77,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(755,root,root)
 %{prefix}/bin/*
-%{prefix}/lib/libxerces-c.so*
-%{prefix}/lib/libxerces-depdom.so* 
+%{prefix}/%{_lib}/libxerces*.so
+#%{prefix}/%{_lib}/libxerces-depdom.so* 
 
 %files devel
 %defattr(-,root,root)
@@ -97,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE NOTICE STATUS credits.txt Readme.html doc/
 
 %changelog
+* Wed Apr 12 2006 Alberto Massari <amassari@apache.org>
+- updated for new Xerces-C 3.0 filename and directory format
+
 * Fri Jun  6 2003 Tuan Hoang <tqhoang@bigfoot.com>
 - updated for new Xerces-C filename and directory format
 - fixed date format in changelog section
