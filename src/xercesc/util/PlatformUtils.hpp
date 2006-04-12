@@ -538,7 +538,7 @@ public :
       *
       * @param manager The MemoryManager to use to allocate objects
       */
-	static XMLMutexMgr* makeMutexMgr(MemoryManager* const memmgr);
+	static XMLMutexMgr* makeMutexMgr(MemoryManager* const manager);
 
     /** Closes a mutex handle
       *
@@ -546,6 +546,7 @@ public :
       * the actual content of the passed mutex handle is.
       *
       * @param mtxHandle The mutex handle that you want to close
+      * @param manager The MemoryManager used to allocate the object
       */
     static void closeMutex(void* const mtxHandle, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
@@ -610,7 +611,7 @@ public :
       *
       * @param manager The MemoryManager to use to allocate objects
       */
-	static XMLAtomicOpMgr* makeAtomicOpMgr(MemoryManager* const memmgr);
+	static XMLAtomicOpMgr* makeAtomicOpMgr(MemoryManager* const manager);
 
 
     /** Conditionally updates or returns a single word variable atomically

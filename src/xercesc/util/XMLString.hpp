@@ -1124,6 +1124,7 @@ public:
       * You can call XMLString::release to release this returned buffer.
       *
       * @param toTranscode The string to be transcoded      
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the transcoded string
       * @see   XMLString::release(XMLCh**, MemoryManager*)
       */
@@ -1163,6 +1164,7 @@ public:
       * You can call XMLString::release to release this returned buffer.
       *
       * @param toTranscode The string to be transcoded     
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the transcoded string
       * @see   XMLString::release(char**, MemoryManager*)
       */

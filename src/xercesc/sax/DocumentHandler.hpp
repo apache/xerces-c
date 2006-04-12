@@ -253,7 +253,7 @@ public:
     * <p>If the element name has a namespace prefix, the prefix will
     * still be attached.  Note that the attribute list provided will
     * contain only attributes with explicit values (specified or
-    * defaulted): #IMPLIED attributes will be omitted.</p>
+    * defaulted): \#IMPLIED attributes will be omitted.</p>
     *
     * @param name The element type name.
     * @param attrs The attributes attached to the element, if any.

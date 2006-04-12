@@ -38,7 +38,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   * helper class provides a convenient constructor for doing so).
   *
   * An AttributeList includes only attributes that have been
-  * specified or defaulted: #IMPLIED attributes will not be included.
+  * specified or defaulted: \#IMPLIED attributes will not be included.
   *
   * There are two ways for the SAX application to obtain information
   * from the AttributeList.  First, it can iterate through the entire
@@ -114,7 +114,7 @@ public:
     *
     * The names must be unique: the SAX parser shall not include the
     * same attribute twice.  Attributes without values (those declared
-    * #IMPLIED without a value specified in the start tag) will be
+    * \#IMPLIED without a value specified in the start tag) will be
     * omitted from the list.
     *
     * If the attribute name has a namespace prefix, the prefix
@@ -146,7 +146,7 @@ public:
     * @return The attribute type as a string, or
     *         null if the index is out of range.
     * @see #getLength
-    * @see #getType(String)
+    * @see #getType
     */
     virtual const XMLCh* getType(const unsigned int index) const = 0;
 
@@ -161,8 +161,7 @@ public:
     * @return The attribute value as a string, or
     *         null if the index is out of range.
     * @see #getLength
-    * @see #getValue(XMLCh*)
-    * @see #getValue(char *)
+    * @see #getValue
     */
     virtual const XMLCh* getValue(const unsigned int index) const = 0;
 
@@ -178,7 +177,7 @@ public:
     * @param name The name of the attribute.
     * @return The attribute type as a string, or null if no
     *         such attribute exists.
-    * @see #getType(int)
+    * @see #getType
     */
     virtual const XMLCh* getType(const XMLCh* const name) const = 0;
 
@@ -194,8 +193,7 @@ public:
     * @param name The name of the attribute in the list.
     * @return The attribute value as a string, or null if
     *         no such attribute exists.
-    * @see #getValue(int)
-    * @see #getValue(char *)
+    * @see #getValue
     */
     virtual const XMLCh* getValue(const XMLCh* const name) const = 0;
 
@@ -211,8 +209,7 @@ public:
     * @param name The name of the attribute in the list.
     * @return The attribute value as a string, or null if
     *         no such attribute exists.
-    * @see #getValue(int)
-    * @see #getValue(XMLCh*)
+    * @see #getValue
     */
     virtual const XMLCh* getValue(const char* const name) const = 0;
     //@}

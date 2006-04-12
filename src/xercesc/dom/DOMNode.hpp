@@ -66,25 +66,25 @@ class DOMUserDataHandler;
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMCDATASection</td>
- * <td valign='top' rowspan='1' colspan='1'>&quot;#cdata-section&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;\#cdata-section&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>content of the CDATA Section</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMComment</td>
- * <td valign='top' rowspan='1' colspan='1'>&quot;#comment&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;\#comment&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>content of the comment</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMDocument</td>
- * <td valign='top' rowspan='1' colspan='1'>&quot;#document&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;\#document&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMDocumentFragment</td>
- * <td valign='top' rowspan='1' colspan='1'>&quot;#document-fragment&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;\#document-fragment&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
@@ -126,7 +126,7 @@ class DOMUserDataHandler;
  * </tr>
  * <tr>
  * <td valign='top' rowspan='1' colspan='1'>DOMText</td>
- * <td valign='top' rowspan='1' colspan='1'>&quot;#text&quot;</td>
+ * <td valign='top' rowspan='1' colspan='1'>&quot;\#text&quot;</td>
  * <td valign='top' rowspan='1' colspan='1'>content of the text node</td>
  * <td valign='top' rowspan='1' colspan='1'>null</td>
  * </tr>
@@ -774,7 +774,7 @@ public:
      *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
      *   fit in a <code>DOMString</code> variable on the implementation
      *   platform.     
-     * @see #setTextContext
+     * @see #setTextContent
      * @since DOM Level 3
      */
     virtual const XMLCh*      getTextContent() const = 0;
@@ -787,7 +787,7 @@ public:
      *
      * @exception DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.     
-     * @see #getTextContext
+     * @see #getTextContent
      * @since DOM Level 3
      */
     virtual void              setTextContent(const XMLCh* textContent) = 0;
@@ -833,6 +833,7 @@ public:
      * This method makes available a <code>DOMNode</code>'s specialized interface
      *
      * @param feature The name of the feature requested (case-insensitive).
+     * @param version The version of the feature requested.
      * @return Returns an alternate <code>DOMNode</code> which implements the
      *   specialized APIs of the specified feature, if any, or
      *   <code>null</code> if there is no alternate <code>DOMNode</code> which

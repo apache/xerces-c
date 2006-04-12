@@ -52,7 +52,19 @@ public:
       *    Val_Always: The parser will always report validation errors.
       *    Val_Auto:   The parser will report validation errors only if a grammar is specified.
       *
-      * @see #setValidationScheme
+      * The schemes map to these feature values:
+      *    Val_Never:
+      *        parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
+      *
+      *    Val_Always:
+      *        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+      *        parser->setFeature(XMLUni::fgXercesDynamic, false);
+      *
+      *    Val_Auto:
+      *        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+      *        parser->setFeature(XMLUni::fgXercesDynamic, true);
+      *
+      * @see #setFeature
       */
     enum ValSchemes
     {
@@ -155,7 +167,7 @@ public:
     * handler immediately.
     *
     * @param handler The document handler.
-    * @see DocumentHandler#DocumentHandler
+    * @see ContentHandler#ContentHandler
     * @see HandlerBase#HandlerBase
     */
     virtual void setContentHandler(ContentHandler* const handler) = 0;
@@ -286,7 +298,7 @@ public:
     * @see InputSource#InputSource
     * @see #setEntityResolver
     * @see #setDTDHandler
-    * @see #setDocumentHandler
+    * @see #setContentHandler
     * @see #setErrorHandler
     */
     virtual void parse
@@ -311,7 +323,7 @@ public:
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
     *            handler code.
-    * @see #parse(InputSource)
+    * @see #parse(const InputSource&)
     */
     virtual void parse
     (
@@ -335,7 +347,7 @@ public:
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
     *            handler code.
-    * @see #parse(InputSource)
+    * @see #parse(const InputSource&)
     */
     virtual void parse
     (
@@ -456,7 +468,7 @@ public:
       *         set validation constraint errors as fatal, false
       *         otherwise.
       *
-      * @see #setValidationContraintFatal
+      * @see #setValidationConstraintFatal
       * @see #getFeature
       */
     virtual bool getValidationConstraintFatal() const = 0;

@@ -121,7 +121,6 @@ public:
      * Get the URI where the error occured, or <code>null</code> if there is no
      * URI available.
      *
-     * @see #setURI
      * @since DOM Level 3
      */
     virtual const XMLCh* getURI() const = 0;

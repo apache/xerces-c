@@ -401,8 +401,8 @@ public:
      * @param name The name of the <code>DOMAttr</code>.
      * @param isId Whether the attribute is of type ID.
      * @exception DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-     *    <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code>
+     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.<br>
+     *    NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code>
      * of this element.
      *
      * @since DOM Level 3
@@ -423,8 +423,8 @@ public:
      * @param localName The local name of the <code>DOMAttr</code>.
      * @param isId Whether the attribute is of type ID.
      * @exception  DOMException
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-     *   <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.<br>
+     *   NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
      *
      * @since DOM Level 3
      */
@@ -444,8 +444,8 @@ public:
      * @param idAttr The <code>DOMAttr</code> node.
      * @param isId Whether the attribute is of type ID.
      * @exception  DOMException
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-     *   <br />NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.<br>
+     *   NOT_FOUND_ERR: Raised if the specified node is not an <code>DOMAttr</code> of this element.
      *
      * @since DOM Level 3
      */

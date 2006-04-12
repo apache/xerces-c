@@ -50,8 +50,8 @@ class InputSource;
   * identifier "http://www.myhost.com/today":</p>
   *
   *<code>
-  *#include <xercesc/sax/EntityResolver.hpp><br>
-  *#include <xercesc/sax/InputSource.hpp><br>
+  *\#include <xercesc/sax/EntityResolver.hpp><br>
+  *\#include <xercesc/sax/InputSource.hpp><br>
   *<br>
   *class MyResolver : public EntityResolver {<br>
   *  public:<br>&nbsp;

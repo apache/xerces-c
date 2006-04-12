@@ -198,7 +198,7 @@ public:
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
     *            handler code.
-    * @see #parse(InputSource)
+    * @see #parse(const InputSource&)
     */
     virtual void parse
     (
@@ -222,7 +222,7 @@ public:
     *            wrapping another exception.
     * @exception XMLException An exception from the parser or client
     *            handler code.
-    * @see #parse(InputSource)
+    * @see #parse(const InputSource&)
     */
     virtual void parse
     (

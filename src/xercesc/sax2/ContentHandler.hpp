@@ -247,9 +247,9 @@ public:
     *
     * <p>Note that the attribute list provided will
     * contain only attributes with explicit values (specified or
-    * defaulted): #IMPLIED attributes will be omitted.</p>
+    * defaulted): \#IMPLIED attributes will be omitted.</p>
     *
-    * @param uri The URI of the asscioated namespace for this element
+    * @param uri The URI of the associated namespace for this element
 	* @param localname The local part of the element name
 	* @param qname The QName of this element
     * @param attrs The attributes attached to the element, if any.

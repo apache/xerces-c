@@ -242,10 +242,12 @@ public:
       *
       * "http://apache.org/xml/properties/scannerName"
       *     A string holding the type of scanner used while parsing. The valid names are:
+      *      <ul>
       *       <li>IGXMLScanner: the default one, capable of both XMLSchema and DTD validation</li>
       *       <li>SGXMLScanner: a scanner that can only perform XMLSchema validation</li>
       *       <li>DGXMLScanner: a scanner that can only perform DTD validation</li>
       *       <li>WFXMLScanner: a scanner that cannot perform any type validation, only well-formedness</li>
+      *      </ul>
       *
       * "http://apache.org/xml/properties/parser-use-DOMDocument-from-Implementation"
       *     A string holding the capabilities of the DOM implementation to be used to create the DOMDocument
@@ -510,7 +512,7 @@ public:
     virtual DOMDocument* parseURI(const char* const uri) = 0;
 
     /**
-      * Parse an XML fragment from a resource identified by a <code>DOMLSInput<code> 
+      * Parse an XML fragment from a resource identified by a <code>DOMLSInput</code> 
       * and insert the content into an existing document at the position specified 
       * with the context and action arguments. When parsing the input stream, the 
       * context node (or its parent, depending on where the result will be inserted) 
@@ -546,7 +548,7 @@ public:
       *               (internal subset), entity declaration(s), notation declaration(s), 
       *               or XML or text declaration(s).
       * @param contextNode The node that is used as the context for the data that is being 
-      *                    parsed. This node must be a <code>DOMDocument<code> node, a 
+      *                    parsed. This node must be a <code>DOMDocument</code> node, a 
       *                    <code>DOMDocumentFragment</code> node, or a node of a type that 
       *                    is allowed as a child of an <code>DOMElement</code> node, e.g. 
       *                    it cannot be an <code>DOMAttribute</code> node.

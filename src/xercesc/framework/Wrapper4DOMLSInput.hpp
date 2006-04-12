@@ -45,6 +45,7 @@ public:
     * By default, the wrapper will adopt the DOMLSInput that is wrapped.
     *
     * @param  inputSource  The DOMLSInput to be wrapped
+    * @param  entityResolver  The DOMLSResourceResolver to be used when resolving publicID entries
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
     *                      DOMLSInput. Default is true.
     * @param  manager      Pointer to the memory manager to be used to

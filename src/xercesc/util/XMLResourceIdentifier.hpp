@@ -64,8 +64,8 @@ class Locator;
   * identifier "http://www.myhost.com/today":</p>
   *
   *<code>
-  * #include <xercesc/util/XMLEntityResolver.hpp><br>
-  * #include <xercesc/sax/InputSource.hpp><br>
+  * \#include <xercesc/util/XMLEntityResolver.hpp><br>
+  * \#include <xercesc/sax/InputSource.hpp><br>
   *<br>
   *&nbsp;class MyResolver : public XMLEntityResolver {<br>
   *&nbsp;&nbsp;public:<br>

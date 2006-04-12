@@ -207,7 +207,7 @@ public:
       *
       * This method returns the 'default type' of the attribute. Default
       * type in this case refers to the XML concept of a default type for
-      * an attribute, i.e. #FIXED, #IMPLIED, etc...
+      * an attribute, i.e. \#FIXED, \#IMPLIED, etc...
       *
       * @return The default type enum for this attribute type.
       */

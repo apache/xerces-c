@@ -171,7 +171,7 @@ public:
       * @param  length      The number of characters to read from the array.
       * @param  cdataSection Indicates that this data is inside a CDATA
       *                     section.
-      * @see #characters
+      * @see #docCharacters
       */
     virtual void ignorableWhitespace
     (
@@ -278,9 +278,9 @@ public:
       */
     virtual void elementTypeInfo
     (
-        const   XMLCh* const /* typeName */
-        , const XMLCh* const /* typeURI */
-    ) { /* non pure virtual to permit backward compatibility of implementations.  */  };
+        const   XMLCh* const typeName
+        , const XMLCh* const typeURI
+    );
     //@}
 
 
@@ -301,6 +301,11 @@ private:
     XMLDocumentHandler(const XMLDocumentHandler&);
     XMLDocumentHandler& operator=(const XMLDocumentHandler&);
 };
+
+inline void XMLDocumentHandler::elementTypeInfo(const XMLCh* const /*typeName*/, const XMLCh* const /*typeURI*/)
+{
+ /* non pure virtual to permit backward compatibility of implementations.  */  
+}
 
 XERCES_CPP_NAMESPACE_END
 

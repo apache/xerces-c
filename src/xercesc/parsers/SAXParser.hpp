@@ -300,7 +300,7 @@ public :
       *         set validation constraint errors as fatal, false
       *         otherwise.
       *
-      * @see #setValidationContraintFatal
+      * @see #setValidationConstraintFatal
       */
     bool getValidationConstraintFatal() const;
 
@@ -359,7 +359,7 @@ public :
       *         specified externally.  A null pointer is returned if nothing
       *         was specified externally.
       *
-      * @see #setSecurityManager(const SecurityManager* const)
+      * @see #setSecurityManager(SecurityManager* const)
       */
     SecurityManager* getSecurityManager() const;
 
@@ -881,7 +881,7 @@ public :
       *
       * @param newValue The state to set
       *
-      * @see #entityResolver
+      * @see #EntityResolver
       */
     void setDisableDefaultEntityResolution(const bool newValue);
 

@@ -38,7 +38,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   * helper class provides a convenient constructor for doing so).
   *
   * An Attributes includes only attributes that have been
-  * specified or defaulted: #IMPLIED attributes will not be included.
+  * specified or defaulted: \#IMPLIED attributes will not be included.
   *
   * There are two ways for the SAX application to obtain information
   * from the Attributes.  First, it can iterate through the entire
@@ -116,7 +116,7 @@ public:
     *
     * The QNames must be unique: the SAX parser shall not include the
     * same attribute twice.  Attributes without values (those declared
-    * #IMPLIED without a value specified in the start tag) will be
+    * \#IMPLIED without a value specified in the start tag) will be
     * omitted from the list.
     *
     * @param index The index of the attribute in the list (starting at 0).
@@ -131,7 +131,7 @@ public:
     *
     * The QNames must be unique: the SAX parser shall not include the
     * same attribute twice.  Attributes without values (those declared
-    * #IMPLIED without a value specified in the start tag) will be
+    * \#IMPLIED without a value specified in the start tag) will be
     * omitted from the list.
     *
     * @param index The index of the attribute in the list (starting at 0).
@@ -146,7 +146,7 @@ public:
     *
     * The QNames must be unique: the SAX parser shall not include the
     * same attribute twice.  Attributes without values (those declared
-    * #IMPLIED without a value specified in the start tag) will be
+    * \#IMPLIED without a value specified in the start tag) will be
     * omitted from the list.
     *
     * @param index The index of the attribute in the list (starting at 0).
@@ -175,7 +175,7 @@ public:
     * @return The attribute type as a string, or
     *         null if the index is out of range.
     * @see #getLength
-    * @see #getType(String)
+    * @see #getType
     */
     virtual const XMLCh* getType(const unsigned int index) const = 0;
 
@@ -190,7 +190,7 @@ public:
     * @return The attribute value as a string, or
     *         null if the index is out of range.
     * @see #getLength
-    * @see #getValue(XMLCh*)
+    * @see #getValue
     */
     virtual const XMLCh* getValue(const unsigned int index) const = 0;
 
