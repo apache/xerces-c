@@ -9,6 +9,15 @@
 /* define if bool is a built-in type */
 #undef HAVE_BOOL
 
+/* Define to 1 if you have the `catclose' function. */
+#undef HAVE_CATCLOSE
+
+/* Define to 1 if you have the `catgets' function. */
+#undef HAVE_CATGETS
+
+/* Define to 1 if you have the `catopen' function. */
+#undef HAVE_CATOPEN
+
 /* Define to 1 if you have the `clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
@@ -318,6 +327,12 @@
 
 /* Define to use the Windows file mgr */
 #undef XERCES_USE_FILEMGR_WINDOWS
+
+/* Define to use the iconv-based MsgLoader */
+#undef XERCES_USE_MSGLOADER_ICONV
+
+/* Define to use the ICU-based MsgLoader */
+#undef XERCES_USE_MSGLOADER_ICU
 
 /* Define to use the InMemory MsgLoader */
 #undef XERCES_USE_MSGLOADER_INMEMORY
