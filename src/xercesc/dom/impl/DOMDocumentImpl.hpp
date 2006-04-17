@@ -359,24 +359,18 @@ inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumen
 inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType type)
 {
     XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
-    if(!mgr)
-    {
-        assert(0);
-        return 0;
-    }
-    void *p = mgr->allocate(amt, type);
+    void* p=0;
+    if(mgr)
+        p = mgr->allocate(amt, type);
     return p;
 }
 
 inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
 {
     XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
-    if(!mgr)
-    {
-        assert(0);
-        return 0;
-    }
-    void *p = mgr->allocate(amt);
+    void* p=0;
+    if(mgr)
+        p = mgr->allocate(amt);
     return p;
 }
 
