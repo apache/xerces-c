@@ -30,7 +30,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 /***
  *   The PlatformUtils::initialize() would set fLocale
- *   to either a user-privded string or 0
+ *   to either a user-provided string or 0
  *
  ***/
 char* XMLMsgLoader::fLocale = 0;
@@ -49,11 +49,11 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
     /***
      * Release the current setting's memory, if any
      ***/
-	if (fLocale)
-	{
+    if (fLocale)
+    {
         XMLPlatformUtils::fgMemoryManager->deallocate(fLocale);//delete [] fLocale;
-		fLocale = 0;
-	}
+        fLocale = 0;
+    }
 
     /***
      *  
@@ -62,32 +62,23 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
      *           refer to phttp://oss.software.ibm.com/icu/userguide/locale.html
      *           for details.
      */
-	if (localeToAdopt && strlen(localeToAdopt) == 2)
-	{
-/*
-		size_t lettersWritten, bytesConsumed;
-		XMLCh localBuffer[3];
-        if (XMLString::transcode(localeToAdopt, localBuffer, 2, lettersWritten, bytesConsumed)
-		    && lettersWritten == 2)
-		{
-			fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-			memcpy(fLanguage, localBuffer, 3 * sizeof(XMLCh));
-		}
-*/
-		XMLCh *transcoded = XMLString::transcode(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-		if (transcoded[0] && transcoded[1] && !transcoded[2])
-		{
-			fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-			memcpy(fLanguage, transcoded, 3 * sizeof(XMLCh));
-			XMLPlatformUtils::fgMemoryManager->deallocate(transcoded);
-		}
+    if (localeToAdopt && (strlen(localeToAdopt) == 2 || (strlen(localeToAdopt) > 3 && localeToAdopt[2]=='_')))
+    {
+        XMLCh *transcoded = XMLString::transcode(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
+        if (transcoded[0] && transcoded[1] && (!transcoded[2] || transcoded[2]==chUnderscore))
+        {
+            fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
+            memcpy(fLanguage, transcoded, 2 * sizeof(XMLCh));
+            fLanguage[2]=0;
+            XMLPlatformUtils::fgMemoryManager->deallocate(transcoded);
+        }
     }
 
 }
 
 const char* XMLMsgLoader::getLocale()
 {
-	return fLocale;
+    return fLocale;
 }
 
 /***
