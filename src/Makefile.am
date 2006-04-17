@@ -162,10 +162,24 @@ endif
 # MsgLoaders, conditionally built based on settings from configure
 #
 if XERCES_USE_MSGLOADER_INMEMORY
-src_libraries +=					libinmemory.la
-libinmemory_ladir =					${includedir}
-nobase_libinmemory_la_HEADERS =		${inmemory_headers}
-libinmemory_la_SOURCES =			${inmemory_sources}
+src_libraries +=					libmsginmemory.la
+libmsginmemory_ladir =					${includedir}
+nobase_libmsginmemory_la_HEADERS =			${msginmemory_headers}
+libmsginmemory_la_SOURCES =				${msginmemory_sources}
+endif
+
+if XERCES_USE_MSGLOADER_ICU
+src_libraries +=					libmsgicu.la
+libmsgicu_ladir =					${includedir}
+nobase_libmsgicu_la_HEADERS =				${msgicu_headers}
+libmsgicu_la_SOURCES =					${msgicu_sources}
+endif
+
+if XERCES_USE_MSGLOADER_ICONV
+src_libraries +=					libmsgiconv.la
+libmsgiconv_ladir =					${includedir}
+nobase_libmsgiconv_la_HEADERS =				${msgiconv_headers}
+libmsgiconv_la_SOURCES =				${msgiconv_sources}
 endif
 
 #
@@ -1091,12 +1105,12 @@ sockets_sources = \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp
 	
 libwww_headers = \
-	xercesc/util/NetAccessors/LibWWW/LibWWWNetAccessor.hpp \
-	xercesc/util/NetAccessors/LibWWW/BinURLInputStream.hpp
+	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp \
+	xercesc/util/NetAccessors/libWWW/BinURLInputStream.hpp
 	
 libwww_sources = \
-	xercesc/util/NetAccessors/LibWWW/LibWWWNetAccessor.cpp \
-	xercesc/util/NetAccessors/LibWWW/BinURLInputStream.cpp
+	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.cpp \
+	xercesc/util/NetAccessors/libWWW/BinURLInputStream.cpp
 	
 cfurl_headers = \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp \
@@ -1114,12 +1128,26 @@ winsock_sources = \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.cpp \
 	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
 
-inmemory_headers = \
+
+msginmemory_headers = \
 	xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp \
 	xercesc/util/MsgLoaders/InMemory/XercesMessages_en_US.hpp
 	
-inmemory_sources = \
+msginmemory_sources = \
 	xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.cpp
+
+msgicu_headers = \
+	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp
+	
+msgicu_sources = \
+	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp
+
+msgiconv_headers = \
+	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp \
+	xercesc/util/MsgLoaders/MsgCatalog/XMLMsgCat_Ids.hpp
+	
+msgiconv_sources = \
+	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.cpp
 
 
 posixfmgr_headers = \
