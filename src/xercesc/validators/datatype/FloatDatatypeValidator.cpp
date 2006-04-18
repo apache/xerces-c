@@ -184,17 +184,6 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
     // we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
-        // lazy construction
-        if (getRegex() ==0) {
-            try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
-            }
-            catch (XMLException &e)
-            {
-                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), fMemoryManager);
-            }
-        }
-
         if (getRegex()->matches(content, manager) ==false)
         {
             ThrowXMLwithMemMgr2(InvalidDatatypeValueException
@@ -210,31 +199,24 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
     if (asBase)
         return;
 
-    try {
-        XMLFloat theValue(content, manager);
-        XMLFloat *theData = &theValue;
+    XMLFloat theValue(content, manager);
+    XMLFloat *theData = &theValue;
 
-        if (getEnumeration() != 0)
+    if (getEnumeration() != 0)
+    {
+        int i=0;
+        int enumLength = getEnumeration()->size();
+        for ( ; i < enumLength; i++)
         {
-            int i=0;
-            int enumLength = getEnumeration()->size();
-            for ( ; i < enumLength; i++)
-            {
-                if (compareValues(theData, (XMLFloat*) getEnumeration()->elementAt(i))==0)
-                    break;
-            }
-
-            if (i == enumLength)
-                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
+            if (compareValues(theData, (XMLFloat*) getEnumeration()->elementAt(i))==0)
+                break;
         }
 
-        boundsCheck(theData, manager);
-    }
-    catch (XMLException &e)
-    {
-       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage(), manager);
+        if (i == enumLength)
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
     }
 
+    boundsCheck(theData, manager);
 }
 
 /***

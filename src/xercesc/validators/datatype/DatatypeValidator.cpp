@@ -285,7 +285,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *
          ***/
         XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
-        serEng.readString(fPattern);
+        serEng.readString(fPattern);       
 
         /***
          *   Recreate through setTypeName()
@@ -323,7 +323,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         /***
          * don't serialize fRegex
          ***/
-        fRegex = 0;
+        fRegex = new (fMemoryManager) RegularExpression(fPattern, SchemaSymbols::fgRegEx_XOption, fMemoryManager);
 
     }
 
