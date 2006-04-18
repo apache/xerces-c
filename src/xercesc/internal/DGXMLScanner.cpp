@@ -1372,6 +1372,17 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
 
                 // NOTE: duplicate attribute check will be done, when we map
                 //       namespaces to all attributes
+                if (attDef) {
+                    unsigned int *curCountPtr = fAttDefRegistry->get(attDef);
+                    if (!curCountPtr) {
+                        curCountPtr = getNewUIntPtr();
+                        *curCountPtr = fElemCount;
+                        fAttDefRegistry->put(attDef, curCountPtr);
+                   }
+                    else if (*curCountPtr < fElemCount) {
+                        *curCountPtr = fElemCount;
+                    }
+                }
             }
             else {
                 curAtt->set(
