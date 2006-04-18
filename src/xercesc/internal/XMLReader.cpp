@@ -1233,87 +1233,85 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     XMLCh* inputEncoding = XMLString::replicate(newEncoding, fMemoryManager);
     XMLString::upperCaseASCII(inputEncoding);
 
+    XMLRecognizer::Encodings newBaseEncoding;
     //
-    //  Try to map the string to one of our standard encodings. If its not
-    //  one of them, then it has to be one of the non-intrinsic encodings,
-    //  in which case we have to delete our intrinsic encoder and create a
-    //  new one.
+    //  Check for non-endian specific UTF-16 or UCS-4. If so, and if we
+    //  are already in one of the endian versions of those encodings,
+    //  then just keep it and go on. Otherwise, its not valid.
     //
-    XMLRecognizer::Encodings newBaseEncoding = XMLRecognizer::encodingForName
-    (
-        inputEncoding
-    );
+    if (!XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString)
+    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString2)
+    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString3)
+    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
+    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5)
+    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString6)
+    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString7))
+    {
+        fMemoryManager->deallocate(inputEncoding);
 
-    //
-    //  If it does not come back as one of the auto-sensed encodings, then we
-    //  have to possibly replace it and at least check a few things.
-    //
-    if (newBaseEncoding == XMLRecognizer::OtherEncoding)
+        if ((fEncoding != XMLRecognizer::UTF_16L)
+        &&  (fEncoding != XMLRecognizer::UTF_16B))
+        {
+            return false;
+        }
+
+        // Override with the original endian specific encoding
+        newBaseEncoding = fEncoding;
+
+        if (fEncoding == XMLRecognizer::UTF_16L) {
+            fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString, fMemoryManager);
+        }
+        else {
+            fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString, fMemoryManager);
+        }
+    }
+    else if (!XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString)
+         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
+         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3))
+    {
+        fMemoryManager->deallocate(inputEncoding);
+
+        if ((fEncoding != XMLRecognizer::UCS_4L)
+        &&  (fEncoding != XMLRecognizer::UCS_4B))
+        {
+            return false;
+        }
+
+        // Override with the original endian specific encoding
+        newBaseEncoding = fEncoding;
+
+        if (fEncoding == XMLRecognizer::UCS_4L) {
+
+            fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString, fMemoryManager);
+        }
+        else {
+
+            fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString, fMemoryManager);
+        }
+    }
+     else
     {
         //
-        //  Check for non-endian specific UTF-16 or UCS-4. If so, and if we
-        //  are already in one of the endian versions of those encodings,
-        //  then just keep it and go on. Otherwise, its not valid.
+        //  Try to map the string to one of our standard encodings. If its not
+        //  one of them, then it has to be one of the non-intrinsic encodings,
+        //  in which case we have to delete our intrinsic encoder and create a
+        //  new one.
         //
-        if (!XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString2)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString3)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString6)
-        ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString7))
-        {
-            fMemoryManager->deallocate(inputEncoding);
+        newBaseEncoding = XMLRecognizer::encodingForName(inputEncoding);
 
-            if ((fEncoding != XMLRecognizer::UTF_16L)
-            &&  (fEncoding != XMLRecognizer::UTF_16B))
-            {
-                return false;
-            }
-
-            // Override with the original endian specific encoding
-            newBaseEncoding = fEncoding;
-
-            if (fEncoding == XMLRecognizer::UTF_16L) {
-                fMemoryManager->deallocate(fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString, fMemoryManager);
-            }
-            else {
-                fMemoryManager->deallocate(fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString, fMemoryManager);
-            }
-        }
-        else if (!XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString)
-             ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
-             ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3))
-        {
-            fMemoryManager->deallocate(inputEncoding);
-
-            if ((fEncoding != XMLRecognizer::UCS_4L)
-            &&  (fEncoding != XMLRecognizer::UCS_4B))
-            {
-                return false;
-            }
-
-            // Override with the original endian specific encoding
-            newBaseEncoding = fEncoding;
-
-            if (fEncoding == XMLRecognizer::UCS_4L) {
-
-                fMemoryManager->deallocate(fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString, fMemoryManager);
-            }
-            else {
-
-                fMemoryManager->deallocate(fEncodingStr);
-                fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString, fMemoryManager);
-            }
-        }
-         else
+        //
+        //  If it does not come back as one of the auto-sensed encodings, then we
+        //  have to possibly replace it and at least check a few things.
+        //
+        if (newBaseEncoding == XMLRecognizer::OtherEncoding)
         {
             //
-            // None of those special cases, so just replicate the new name
-            // and use it directly to create the transcoder
+            // We already know it's none of those non-endian special cases, 
+            // so just replicate the new name and use it directly to create the transcoder
             //
             fMemoryManager->deallocate(fEncodingStr);
             fEncodingStr = inputEncoding;
@@ -1327,12 +1325,12 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
                 , fMemoryManager
             );
         }
-    }
-     else
-    {
-        // Store the new encoding string since it is just an intrinsic
-        fMemoryManager->deallocate(fEncodingStr);
-        fEncodingStr = inputEncoding;
+        else
+        {
+            // Store the new encoding string since it is just an intrinsic
+            fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = inputEncoding;
+        }
     }
 
     if (!fTranscoder) {
