@@ -59,13 +59,13 @@ make
 %install
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT
-make prefix=$RPM_BUILD_ROOT%{prefix} install
-ln -sf %{prefix}/%{_lib}/libxerces-3.0.so $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
-mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
-#we don't want obj directory
-install `find $XERCESCROOT/samples -maxdepth 1 -type f -perm 755` $RPM_BUILD_ROOT%{prefix}/bin
-mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}
-cp -a $XERCESCROOT/samples $RPM_BUILD_ROOT%{prefix}/share/%{name}
+make prefix=$RPM_BUILD_ROOT%{prefix} libdir=$RPM_BUILD_ROOT%{prefix}/%{_lib} install
+ln -sf %{prefix}/%{_lib}/libxerces-3.0.so $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.so
+mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
+cp -a $XERCESCROOT/samples/src $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
+cp -a $XERCESCROOT/samples/data $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
+rm -rf `find $RPM_BUILD_ROOT%{prefix}/share/%{name} -name ".*"`
+rm -f `find $RPM_BUILD_ROOT%{prefix}/share/%{name} -name "*.o"`
 
 %clean
 rm -rf $RPM_BUILD_ROOT
