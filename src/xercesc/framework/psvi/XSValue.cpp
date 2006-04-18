@@ -436,7 +436,7 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
 
     switch (inGroup[datatype]) {
     case XSValue::dg_numerics:
-        return getActValNumerics(content, datatype,  status, manager);
+        return getActValNumerics(content, datatype,  status, toValidate, manager);
         break;
     case XSValue::dg_datetimes:
         return getActValDateTimes(content, datatype,  status, manager);
@@ -1049,7 +1049,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             // The getCanonical method should treat double & float the
             // same way as the rest of XML4C for consistentcy so need
             // to getActualValue and see if it was converted.
-            XSValue* xsval = getActValNumerics(content, datatype, status, manager);
+            XSValue* xsval = getActValNumerics(content, datatype, status, false, manager);
             if (!xsval) {
                 status = st_FOCA0002;
                 return retVal;
@@ -1270,7 +1270,8 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
 XSValue*
 XSValue::getActValNumerics(const XMLCh*         const content    
                          ,       DataType             datatype
-                         ,       Status&              status                         
+                         ,       Status&              status    
+                         ,       bool                 toValidate
                          ,       MemoryManager* const manager)
 {
 
@@ -1279,6 +1280,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
         switch (datatype) {
         case XSValue::dt_decimal:
         {
+            if (toValidate) {
+                XMLBigDecimal::parseDecimal(content, manager);
+            }
             //Prepare the double value
             XMLDouble  data(content, manager);
             if (data.isDataConverted())
