@@ -25,7 +25,7 @@ $|=1;   # Force a flush after every print
 #
 # Setup global variables
 #
-&Getopt('sopcxmntrb');
+&Getopt('sopcxmntb');
 my $XERCESCROOT    = $opt_s;
 my $targetdir      = $opt_o;
 my $ICUROOT        = $ENV{'ICUROOT'};
@@ -43,7 +43,6 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
-    print ("    -r <thread option> can be 'pthread' \(default\)or 'dce' (only used on HP-11)\n");
     print ("    -b <bitsToBuild> (accepts '64', '32')\n");
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
@@ -52,7 +51,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print (" -o \$HOME/xerces-c3_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
     print ("    perl packageBinaries.pl -s \\xerces-c-src3_0");
-    print (" -o\\xerces-c2_5-win32 [-n fileonly] [-t icu]\n\n");
+    print (" -o\\xerces-c3_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -780,14 +779,24 @@ if ( ($platform =~ m/AIX/i)      ||
     # Build::Make Xerces-C libraries, samples and tests
     #        
     print("\n\nBuild the xerces-c library ...\n");
-    pchdir ("$XERCESCROOT/src/xercesc");
-    psystem ("chmod +x run* con* install-sh");
-               
-    if (length($opt_r) > 0) {
-        psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r -b$opt_b");
-    } else {
-        psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -b$opt_b");
-    }
+    pchdir ("$XERCESCROOT");
+    psystem ("chmod +x configure config/install-sh config/pretty-make");
+
+    $cfg_icu = "";
+    $cfg_m = "";
+    if ($opt_m eq "inmem") {$cfg_m = "--enable-msgloader-inmemory"; }
+    if ($opt_m eq "icu") {$cfg_m = "--enable-msgloader-icu"; $cfg_icu="--with-icu=$ICUROOT"; }
+    if ($opt_m eq "iconv") {$cfg_m = "--enable-msgloader-iconv"; }
+
+    $cfg_n = "";
+    if ($opt_n eq "fileonly") {$cfg_n = "--disable-netaccessor-socket --disable-netaccessor-curl --disable-netaccessor-libwww --disable-netaccessor-cfurl"; }
+    if ($opt_n eq "socket") {$cfg_n = "--enable-netaccessor-socket"; }
+
+    $cfg_t = "";
+    if ($opt_t eq "icu") {$cfg_t = "--enable-transcoder-icu"; $cfg_icu="--with-icu=$ICUROOT"; }
+    if ($opt_t eq "native") {$cfg_t = "--disable-transcoder-icu"; }
+
+    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags ./configure $cfg_icu $cfg_m $cfg_n $cfg_t");
 
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
     psystem ("$MAKE");
@@ -802,21 +811,9 @@ if ( ($platform =~ m/AIX/i)      ||
         # copied the message library to $XERCESCROOT/lib, we need copy over here.
     }# $ICUIsPresent
 
-    # build the samples
-    print("\n\nBuild the samples ...\n");
-    pchdir ("$XERCESCROOT/samples");
-    psystem ("chmod +x run* con* install-sh");
-    psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
-    psystem ("$MAKE clean");     # May want to comment this line out to speed up
-    psystem ("$MAKE");
-
     # build the tests
     print("\n\nBuild the tests ...\n");
-    pchdir ("$XERCESCROOT/tests");
-    psystem ("chmod +x run* con* install-sh");
-    psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
-    psystem ("$MAKE clean");     # May want to comment this line out to speed up
-    psystem ("$MAKE");
+    psystem ("$MAKE check");
 
     pchdir ($targetdir);
 
@@ -872,68 +869,48 @@ if ( ($platform =~ m/AIX/i)      ||
     # Population::Xerces-c
     # 
         
-    print ("\n\nCopying binary outputs ...\n");
-    psystem("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
-    psystem("rm -rf $targetdir/bin/obj");
-
     # Populate the library output directory
     print ("\n\nCopying library outputs ...\n");
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.30.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.30.0 .");
-        psystem("ln -s libxerces-c.so.30.0 libxerces-c.so.30 ");
-        psystem("ln -s libxerces-c.so.30   libxerces-c.so    ");     
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.so" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.so .");
+        psystem("ln -s libxerces-3.0.so libxerces-3.so ");
+        psystem("ln -s libxerces-3.so   libxerces.so    ");     
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom.so.30.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.so.30.0 .");
-        psystem("ln -s libxerces-depdom.so.30.0 libxerces-depdom.so.30 ");
-        psystem("ln -s libxerces-depdom.so.30   libxerces-depdom.so    ");        
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-depdom-3.0.so" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-depdom-3.0.so .");
+        psystem("ln -s libxerces-depdom-3.0.so libxerces-depdom-3.so ");
+        psystem("ln -s libxerces-depdom-3.so   libxerces-depdom.so    ");        
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.30.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.30.0 .");
-        psystem("ln -s libxerces-c.sl.30.0 libxerces-c.sl.30 ");
-        psystem("ln -s libxerces-c.sl.30   libxerces-c.sl    ");               
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.sl" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.sl .");
+        psystem("ln -s libxerces-3.0.sl libxerces-3.sl ");
+        psystem("ln -s libxerces-3.sl   libxerces.sl    ");               
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom.sl.30.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom.sl.30.0 .");
-        psystem("ln -s libxerces-depdom.sl.30.0 libxerces-depdom.sl.30 ");
-        psystem("ln -s libxerces-depdom.sl.30   libxerces-depdom.sl    ");
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-depdom-3.0.sl" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-depdom-3.0.sl .");
+        psystem("ln -s libxerces-depdom-3.0.sl libxerces-depdom-3.sl ");
+        psystem("ln -s libxerces-depdom-3.sl   libxerces-depdom.sl    ");
     }
                 
-    if ((-e "$XERCESCROOT/lib/libxerces-c30.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c30.0.so .");
-        psystem("ln -s libxerces-c30.0.so libxerces-c30.so  ");
-        psystem("ln -s libxerces-c30.so   libxerces-c.so    ");
-    }
-
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom30.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom30.0.so .");
-        psystem("ln -s libxerces-depdom30.0.so libxerces-depdom30.so  ");
-        psystem("ln -s libxerces-depdom30.so   libxerces-depdom.so    ");
-    }
-    
-    if ((-e "$XERCESCROOT/lib/libxerces-c30.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c30.0.a . ");
-        psystem("ln -s libxerces-c30.0.a  libxerces-c30.a ");
-        psystem("ln -s libxerces-c30.a    libxerces-c.a ");         
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces.a" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces.a . ");
     }
         
-    if ((-e "$XERCESCROOT/lib/libxerces-depdom30.0.a" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-depdom30.0.a . ");
-        psystem("ln -s libxerces-depdom30.0.a  libxerces-depdom30.a ");
-        psystem("ln -s libxerces-depdom30.a    libxerces-depdom.a ");         
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-depdom.a" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-depdom.a . ");
     }        
     
     # Mac OS X
-    if ((-e "$XERCESCROOT/lib/libxerces-c.30.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.30.0.dylib .");
-        psystem("ln -s libxerces-c.30.0.dylib libxerces-c.30.dylib ");
-        psystem("ln -s libxerces-c.30.dylib   libxerces-c.dylib    ");
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.dylib .");
+        psystem("ln -s libxerces-3.0.dylib libxerces-3.dylib ");
+        psystem("ln -s libxerces-3.dylib   libxerces.dylib    ");
     }
 
     # Populate the Message Catalog Files
@@ -946,15 +923,13 @@ if ( ($platform =~ m/AIX/i)      ||
 
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
-    psystem("cp -Rf $XERCESCROOT/src/xercesc/config.status $targetdir/etc");
-    psystem("cp -Rf $XERCESCROOT/obj/*.map $targetdir/etc");
+    psystem("cp -Rf $XERCESCROOT/config.status $targetdir/etc");
 
     # Populate the samples directory
     populateSamples();
     
     # UNIX specifics
-    foreach $iii ('config.guess', 'config.h.in', 'config.sub', 'configure', 'configure.in',
-                  'install-sh', 'runConfigure', 'Makefile.in', 'Makefile.incl', 'Makefile') {
+    foreach $iii ('Makefile.in', 'Makefile.am', 'Makefile') {
         psystem("cp -f $XERCESCROOT/samples/$iii $targetdir/samples");
     }
 
@@ -962,11 +937,9 @@ if ( ($platform =~ m/AIX/i)      ||
     populateMisc();
    
     # Change the directory permissions
-    psystem ("chmod 644 `find $targetdir -type f`");
+    psystem ("find $targetdir -type f -exec chmod 644 {} \\;");
+    psystem ("find $targetdir -type d -exec chmod 755 {} \\;");
     psystem ("chmod 755 $targetdir/bin/* $targetdir/lib/*");
-    psystem ("chmod +x $targetdir/samples/runConfigure $targetdir/samples/configure $targetdir/samples/install-sh");
-    psystem ("chmod +x $targetdir/samples/config.sub $targetdir/samples/config.guess $targetdir/samples/config.status");
-    psystem ("chmod 755 `find $targetdir -type d`");
 
     # Now package it all up using tar
     print ("\n\nTARing up all files ...\n");
@@ -1025,33 +998,30 @@ sub populateInclude() {
     print ("\n\nCopying headers files ...\n");
 
     @headerDirectories =
-     qw'sax
-        sax2
+     qw'dom
+        dom/deprecated
         framework
         framework/psvi        
-        dom
-        dom/deprecated
         internal
         parsers
+        sax
+        sax2
         util
-        util/Compilers
+        util/AtomicOpManagers
         util/MsgLoaders
         util/MsgLoaders/ICU
         util/MsgLoaders/InMemory
         util/MsgLoaders/MsgCatalog
         util/MsgLoaders/Win32
-        util/Platforms
-        util/Platforms/AIX
-        util/Platforms/HPUX
-        util/Platforms/BeOS
-        util/Platforms/Linux
-        util/Platforms/MacOS
-        util/Platforms/OS2
-        util/Platforms/OS390
-        util/Platforms/PTX
-        util/Platforms/Solaris
-        util/Platforms/Tandem
-        util/Platforms/Win32
+        util/FileManagers
+        util/MutexManagers
+        util/NetAccessors
+        util/NetAccessors/Curl
+        util/NetAccessors/libWWW
+        util/NetAccessors/MacOSURLAccess
+        util/NetAccessors/MacOSURLAccessCF
+        util/NetAccessors/Socket
+        util/NetAccessors/WinSock
         util/regx
         util/Transcoders
         util/Transcoders/ICU
@@ -1099,37 +1069,16 @@ sub populateSamples() {
 
     print ("\n\nCopying sample files ...\n");    
     
-    psystem("cp -Rf $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
-    psystem("rm -f $targetdir/samples/SAXCount/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/SAX2Count/* $targetdir/samples/SAX2Count");
-    psystem("rm -f $targetdir/samples/SAX2Count/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
-    psystem("rm -f $targetdir/samples/SAXPrint/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
-    psystem("rm -f $targetdir/samples/SAX2Print/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
-    psystem("rm -f $targetdir/samples/DOMCount/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
-    psystem("rm -f $targetdir/samples/DOMPrint/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/Redirect/* $targetdir/samples/Redirect");
-    psystem("rm -f $targetdir/samples/Redirect/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
-    psystem("rm -f $targetdir/samples/MemParse/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
-    psystem("rm -f $targetdir/samples/PParse/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
-    psystem("rm -f $targetdir/samples/StdInParse/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
-    psystem("rm -f $targetdir/samples/EnumVal/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/SEnumVal/* $targetdir/samples/SEnumVal");
-    psystem("rm -f $targetdir/samples/SEnumVal/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
-    psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/PSVIWriter/* $targetdir/samples/PSVIWriter");
-    psystem("rm -f $targetdir/samples/PSVIWriter/Makefile");
-    psystem("cp -Rf $XERCESCROOT/samples/SCMPrint/* $targetdir/samples/SCMPrint");
-    psystem("rm -f $targetdir/samples/SCMPrint/Makefile");
-        
+    psystem("cp $XERCESCROOT/samples/.libs/* $targetdir/bin");
+
+    foreach $iii ('SAXCount', 'SAX2Count', 'SAXPrint', 'SAX2Print', 'DOMCount',
+                  'DOMPrint', 'Redirect', 'MemParse', 'PParse', 'StdInParse', 
+                  'EnumVal', 'SEnumVal', 'CreateDOMDocument', 'PSVIWriter', 'SCMPrint') 
+    {
+        psystem("cp -Rf $XERCESCROOT/samples/src/$iii/* $targetdir/samples/$iii");
+        psystem("rm -f $targetdir/samples/$iii/*.o");
+    }
+
     psystem("cp -Rf $XERCESCROOT/samples/data/* $targetdir/samples/data");	
            
 }
