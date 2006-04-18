@@ -45,9 +45,7 @@ public :
     //  the exact encoding, just the rough family that would let us scan
     //  the XML/TextDecl to find the encoding string.
     //
-    //  The 'L's and 'B's stand for little or big endian. We conditionally
-    //  create versions that will automatically map to the local UTF-16 and
-    //  UCS-4 endian modes.
+    //  The 'L's and 'B's stand for little or big endian. 
     //
     //  OtherEncoding means that its some transcoder based encoding, i.e. not
     //  one of the ones that we do internally. Its a special case and should
@@ -71,14 +69,6 @@ public :
         , Encodings_Max = XERCES_XMLCH
 
         , OtherEncoding = 999
-
-        #if defined(ENDIANMODE_BIG)
-        , Def_UTF16     = UTF_16B
-        , Def_UCS4      = UCS_4B
-        #else
-        , Def_UTF16     = UTF_16L
-        , Def_UCS4      = UCS_4L
-        #endif
     };
 
 
