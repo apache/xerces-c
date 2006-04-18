@@ -667,9 +667,12 @@ inline void DatatypeValidator::setFixed(int fixed)
 
 inline void DatatypeValidator::setPattern(const XMLCh* pattern)
 {
-    if (fPattern)
+    if (fPattern) {
         fMemoryManager->deallocate(fPattern);//delete [] fPattern;
+        delete fRegex;
+    }
     fPattern = XMLString::replicate(pattern, fMemoryManager);
+    fRegex = new (fMemoryManager) RegularExpression(fPattern, SchemaSymbols::fgRegEx_XOption, fMemoryManager);
 }
 
 inline void DatatypeValidator::setRegex(RegularExpression* const regex)

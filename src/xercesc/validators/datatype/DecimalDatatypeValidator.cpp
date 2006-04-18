@@ -398,18 +398,6 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
     // we check pattern first
     if ( (thisFacetsDefined & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
-        // lazy construction
-        if (getRegex() ==0) {
-            try {
-                // REVISIT: cargillmem fMemoryManager vs manager
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));                
-            }
-            catch (XMLException &e)
-            {
-                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), manager);
-            }
-        }
-
         if (getRegex()->matches(content, manager) ==false)
         {
             ThrowXMLwithMemMgr2(InvalidDatatypeValueException
@@ -424,90 +412,78 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
     // all other facet were inherited by the derived type
     if (asBase)
         return;
-    XMLCh *errorMsg = 0;
-    try {
-        XMLBigDecimal  compareDataValue(content, manager);
-        XMLBigDecimal* compareData = &compareDataValue;        
+
+    XMLBigDecimal  compareDataValue(content, manager);
+    XMLBigDecimal* compareData = &compareDataValue;        
         
-        if (getEnumeration())
+    if (getEnumeration())
+    {
+        int i=0;
+        int enumLength = getEnumeration()->size();
+        for ( ; i < enumLength; i++)
         {
-            int i=0;
-            int enumLength = getEnumeration()->size();
-            for ( ; i < enumLength; i++)
-            {
-                if (compareValues(compareData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
-                    break;
-            }
-
-            if (i == enumLength)
-                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
+            if (compareValues(compareData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
+                break;
         }
 
-        boundsCheck(compareData, manager);
+        if (i == enumLength)
+            ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
+    }
 
-        if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
-        {
-            if ( compareData->getScale() > fFractionDigits )
-            {                
-                XMLCh value1[BUF_LEN+1];
-                XMLCh value2[BUF_LEN+1];
-                XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
-                XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10, manager);
-                ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
-                                 , XMLExcepts::VALUE_exceed_fractDigit
-                                 , compareData->getRawData()
-                                 , value1
-                                 , value2
-                                 , manager);
-            }
-        }
+    boundsCheck(compareData, manager);
 
-        if ( (thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
-        {
-            if ( compareData->getTotalDigit() > fTotalDigits )
-            {                
-                XMLCh value1[BUF_LEN+1];
-                XMLCh value2[BUF_LEN+1];
-                XMLString::binToText(compareData->getTotalDigit(), value1, BUF_LEN, 10, manager);
-                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
-                ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
-                                 , XMLExcepts::VALUE_exceed_totalDigit
-                                 , compareData->getRawData()
-                                 , value1
-                                 , value2
-                                 , manager);
-            }
-
-            /***
-             E2-44 totalDigits
-
-             ... by restricting it to numbers that are expressible as i � 10^-n
-             where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
-            ***/
-
-            if ( compareData->getScale() > fTotalDigits )  
-            {                
-                XMLCh value1[BUF_LEN+1];
-                XMLCh value2[BUF_LEN+1];
-                XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
-                XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
-                ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
-                                 , XMLExcepts::VALUE_exceed_totalDigit
-                                 , compareData->getRawData()
-                                 , value1
-                                 , value2
-                                 , manager);
-            }        
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
+    {
+        if ( compareData->getScale() > fFractionDigits )
+        {                
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
+            XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
+            XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
+                              , XMLExcepts::VALUE_exceed_fractDigit
+                              , compareData->getRawData()
+                              , value1
+                              , value2
+                              , manager);
         }
     }
-    catch (XMLException &e)
+
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
     {
-       errorMsg = XMLString::replicate(e.getMessage(), manager);
-    }
-    if(errorMsg)
-    {
-       ArrayJanitor<XMLCh> jan(errorMsg, manager);
-       ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, errorMsg, manager);
+        if ( compareData->getTotalDigit() > fTotalDigits )
+        {                
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
+            XMLString::binToText(compareData->getTotalDigit(), value1, BUF_LEN, 10, manager);
+            XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
+                              , XMLExcepts::VALUE_exceed_totalDigit
+                              , compareData->getRawData()
+                              , value1
+                              , value2
+                              , manager);
+        }
+
+        /***
+         E2-44 totalDigits
+         ... by restricting it to numbers that are expressible as i � 10^-n
+         where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
+         ***/
+
+        if ( compareData->getScale() > fTotalDigits )  
+        {                
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
+            XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
+            XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
+            ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
+                              , XMLExcepts::VALUE_exceed_totalDigit
+                              , compareData->getRawData()
+                              , value1
+                              , value2
+                              , manager);
+        }        
     }
 }
 

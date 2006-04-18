@@ -281,18 +281,6 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
     // 1) and 2). we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
-        // lazy construction
-        if (getRegex() == 0)
-        {
-            try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));            	
-            }
-            catch (XMLException &e)
-            {
-                ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage(), manager);
-            }
-        }
-
         if (getRegex()->matches(content, manager) == false)
         {
             ThrowXMLwithMemMgr2(InvalidDatatypeValueException
