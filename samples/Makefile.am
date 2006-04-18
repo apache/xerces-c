@@ -18,61 +18,61 @@
 # $Id$
 #
 
-noinst_PROGRAMS =					${sampleprogs}
+bin_PROGRAMS =						${sampleprogs}
 
-LDADD =								../obj/libxerces.la
+LDADD =							../obj/libxerces.la
 AM_CPPFLAGS =						-I${top_srcdir}/src
 
 sampleprogs =
 
 sampleprogs +=						CreateDOMDocument
-CreateDOMDocument_SOURCES =			src/CreateDOMDocument/CreateDOMDocument.cpp
+CreateDOMDocument_SOURCES =				src/CreateDOMDocument/CreateDOMDocument.cpp
 
 sampleprogs +=						DOMCount
 DOMCount_SOURCES =					src/DOMCount/DOMCount.cpp
 
 sampleprogs +=						DOMPrint
 DOMPrint_SOURCES =					src/DOMPrint/DOMPrint.cpp \
-									src/DOMPrint/DOMPrintErrorHandler.cpp \
-									src/DOMPrint/DOMPrintFilter.cpp \
-									src/DOMPrint/DOMTreeErrorReporter.cpp
+							src/DOMPrint/DOMPrintErrorHandler.cpp \
+							src/DOMPrint/DOMPrintFilter.cpp \
+							src/DOMPrint/DOMTreeErrorReporter.cpp
 
 sampleprogs +=						EnumVal
 EnumVal_SOURCES =					src/EnumVal/EnumVal.cpp
 
 sampleprogs +=						MemParse
 MemParse_SOURCES =					src/MemParse/MemParse.cpp \
-									src/MemParse/MemParseHandlers.cpp
+							src/MemParse/MemParseHandlers.cpp
 
 sampleprogs +=						PParse
 PParse_SOURCES =					src/PParse/PParse.cpp \
-									src/PParse/PParseHandlers.cpp
+							src/PParse/PParseHandlers.cpp
 
 sampleprogs +=						PSVIWriter
-PSVIWriter_SOURCES =				src/PSVIWriter/PSVIUni.cpp \
-									src/PSVIWriter/PSVIWriter.cpp \
-									src/PSVIWriter/PSVIWriterHandlers.cpp
+PSVIWriter_SOURCES =					src/PSVIWriter/PSVIUni.cpp \
+							src/PSVIWriter/PSVIWriter.cpp \
+							src/PSVIWriter/PSVIWriterHandlers.cpp
 
 sampleprogs +=						Redirect
 Redirect_SOURCES =					src/Redirect/Redirect.cpp \
-									src/Redirect/RedirectHandlers.cpp
+							src/Redirect/RedirectHandlers.cpp
 
 sampleprogs +=						SAX2Count
 SAX2Count_SOURCES =					src/SAX2Count/SAX2Count.cpp \
-									src/SAX2Count/SAX2CountHandlers.cpp
+							src/SAX2Count/SAX2CountHandlers.cpp
 
 sampleprogs +=						SAX2Print
 SAX2Print_SOURCES =					src/SAX2Print/SAX2FilterHandlers.cpp \
-									src/SAX2Print/SAX2Print.cpp \
-									src/SAX2Print/SAX2PrintHandlers.cpp
+							src/SAX2Print/SAX2Print.cpp \
+							src/SAX2Print/SAX2PrintHandlers.cpp
 
 sampleprogs +=						SAXCount
 SAXCount_SOURCES =					src/SAXCount/SAXCount.cpp \
-									src/SAXCount/SAXCountHandlers.cpp
+							src/SAXCount/SAXCountHandlers.cpp
 
 sampleprogs +=						SAXPrint
 SAXPrint_SOURCES =					src/SAXPrint/SAXPrint.cpp \
-									src/SAXPrint/SAXPrintHandlers.cpp
+							src/SAXPrint/SAXPrintHandlers.cpp
 
 sampleprogs +=						SCMPrint
 SCMPrint_SOURCES =					src/SCMPrint/SCMPrint.cpp
@@ -81,8 +81,8 @@ sampleprogs +=						SEnumVal
 SEnumVal_SOURCES =					src/SEnumVal/SEnumVal.cpp
 
 sampleprogs +=						StdInParse
-StdInParse_SOURCES =				src/StdInParse/StdInParse.cpp \
-									src/StdInParse/StdInParseHandlers.cpp
+StdInParse_SOURCES =					src/StdInParse/StdInParse.cpp \
+							src/StdInParse/StdInParseHandlers.cpp
 									
 									
 #
