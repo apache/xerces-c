@@ -358,7 +358,8 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status              
+              ,       Status&               status   
+              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
