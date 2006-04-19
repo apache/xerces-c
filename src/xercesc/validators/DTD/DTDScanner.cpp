@@ -1752,15 +1752,30 @@ void DTDScanner::scanEntityDecl()
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
     else
         fReaderMgr->skipPastSpaces();
-    const bool isPEDecl = fReaderMgr->skippedChar(chPercent);
+    bool isPEDecl = fReaderMgr->skippedChar(chPercent);
 
     //
-    //  If a PE decl, then eat the percent and check for spaces or a
-    //  PE ref on the other side of it. At least spaces are required.
+    //  If a PE decl, then check if it is followed by a space; if it is so, 
+    //  eat the percent and check for spaces or a PE ref on the other side of it. 
+    //  Otherwise, it has to be an entity reference for a general entity.
     //
     if (isPEDecl)
     {
-        if (!checkForPERef(false, true))
+        if(!fReaderMgr->getCurrentReader()->isWhitespace(fReaderMgr->peekNextChar()))
+        {
+            isPEDecl=false;
+            while (true)
+            {
+               if (!expandPERef(false, false, true, false))
+                  fScanner->emitError(XMLErrs::ExpectedEntityRefName);
+               // And skip any more spaces in the expanded value
+               if (fReaderMgr->skippedSpace())
+                  fReaderMgr->skipPastSpaces();
+               if (!fReaderMgr->skippedChar(chPercent))
+                  break;
+            }
+        }
+        else if (!checkForPERef(false, true))
             fScanner->emitError(XMLErrs::ExpectedWhitespace);
     }
 
