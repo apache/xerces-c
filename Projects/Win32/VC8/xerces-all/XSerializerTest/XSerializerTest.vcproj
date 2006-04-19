@@ -16,7 +16,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\Release"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\XSerializerTest"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -102,7 +102,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\Debug"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\XSerializerTest"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -131,7 +131,7 @@
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_CONSOLE;WIN32;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				TreatWChar_tAsBuiltInType="false"
+				TreatWChar_tAsBuiltInType="true"
 				PrecompiledHeaderFile="$(IntDir)\XSerializerTest.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -190,7 +190,7 @@
 		<Configuration
 			Name="Static Release|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\StaticRelease"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\XSerializerTest"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -276,7 +276,7 @@
 		<Configuration
 			Name="Static Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\StaticDebug"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\XSerializerTest"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"

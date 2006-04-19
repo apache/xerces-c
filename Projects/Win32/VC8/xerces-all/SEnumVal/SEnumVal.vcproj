@@ -16,7 +16,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\Release"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\SEnumVal"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -51,7 +51,7 @@
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\SEnumVal_vc80"
-				BrowseInformation="1"
+				BrowseInformation="0"
 				WarningLevel="3"
 				CompileAs="0"
 			/>
@@ -104,7 +104,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\Debug"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\SEnumVal"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -133,7 +133,7 @@
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="true"
-				TreatWChar_tAsBuiltInType="false"
+				TreatWChar_tAsBuiltInType="true"
 				PrecompiledHeaderFile="$(IntDir)\SEnumVal.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -192,7 +192,7 @@
 		<Configuration
 			Name="Static Release|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\StaticRelease"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\SEnumVal"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -227,7 +227,7 @@
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\SEnumVal_vc80"
-				BrowseInformation="1"
+				BrowseInformation="0"
 				WarningLevel="3"
 				CompileAs="0"
 			/>
@@ -280,7 +280,7 @@
 		<Configuration
 			Name="Static Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\StaticDebug"
-			IntermediateDirectory="$(OutDir)\obj"
+			IntermediateDirectory="$(OutDir)\obj\SEnumVal"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
