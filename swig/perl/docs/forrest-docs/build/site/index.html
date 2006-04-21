@@ -1,0 +1,719 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta content="Apache Forrest" name="Generator">
+<meta name="Forrest-version" content="0.7">
+<meta name="Forrest-skin-name" content="pelt">
+<title>Welcome to XML::Xerces</title>
+<link type="text/css" href="skin/basic.css" rel="stylesheet">
+<link media="screen" type="text/css" href="skin/screen.css" rel="stylesheet">
+<link media="print" type="text/css" href="skin/print.css" rel="stylesheet">
+<link type="text/css" href="skin/profile.css" rel="stylesheet">
+<script src="skin/getBlank.js" language="javascript" type="text/javascript"></script><script src="skin/getMenu.js" language="javascript" type="text/javascript"></script><script src="skin/fontsize.js" language="javascript" type="text/javascript"></script>
+<link rel="shortcut icon" href="">
+</head>
+<body onload="init()">
+<script type="text/javascript">ndeSetTextSize();</script>
+<div id="top">
+<div class="breadtrail">
+<a href="http://www.apache.org/">apache</a> &gt; <a href="http://xerces.apache.org/">xerces</a> &gt; <a href="http://xerces.apache.org/">xerces-p</a><script src="skin/breadcrumbs.js" language="JavaScript" type="text/javascript"></script>
+</div>
+<div class="header">
+<div class="projectlogoA1">
+<a href="http://xerces.apache.org/"><img class="logoImage" alt="XML::Xerces" src="images/project.png" title="Perl Bindings for Xerces-C"></a>
+</div>
+<div class="searchbox">
+<form action="http://www.google.com/search" method="get" class="roundtopsmall">
+<input value="xerces.apache.org" name="sitesearch" type="hidden"><input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google">&nbsp; 
+                    <input attr="value" name="Search" value="Search" type="submit">
+</form>
+</div>
+<ul id="tabs">
+<li class="current">
+<a class="base-selected" href="index.html">Home</a>
+</li>
+<li>
+<a class="base-not-selected" href="samples/index.html">Samples</a>
+</li>
+</ul>
+</div>
+</div>
+<div id="main">
+<div id="publishedStrip">
+<div id="level2tabs"></div>
+<script type="text/javascript"><!--
+document.write("<text>Last Published:</text> " + document.lastModified);
+//  --></script>
+</div>
+<div class="breadtrail">
+             
+             &nbsp;
+           </div>
+<div id="menu">
+<div onclick="SwitchMenu('menu_selected_1.1', 'skin/')" id="menu_selected_1.1Title" class="menutitle" style="background-image: url('skin/images/chapter_open.gif');">About</div>
+<div id="menu_selected_1.1" class="selectedmenuitemgroup" style="display: block;">
+<div class="menupage">
+<div class="menupagetitle">Index</div>
+</div>
+<div class="menuitem">
+<a href="download.html" title="How to obtain the code">Downloading</a>
+</div>
+</div>
+<div onclick="SwitchMenu('menu_1.2', 'skin/')" id="menu_1.2Title" class="menutitle">Samples</div>
+<div id="menu_1.2" class="menuitemgroup">
+<div class="menuitem">
+<a href="samples/index.html" title="Sample Applications">Index</a>
+</div>
+<div class="menuitem">
+<a href="samples/domcount.html">DOMCount</a>
+</div>
+<div class="menuitem">
+<a href="samples/domcreate.html">DOMCreate</a>
+</div>
+<div class="menuitem">
+<a href="samples/domprint.html">DOMPrint</a>
+</div>
+<div class="menuitem">
+<a href="samples/dom2hash.html">DOM2Hash</a>
+</div>
+<div class="menuitem">
+<a href="samples/saxcount.html">SAXCount</a>
+</div>
+<div class="menuitem">
+<a href="samples/sax2count.html">SAX2Count</a>
+</div>
+<div class="menuitem">
+<a href="samples/enumval.html">EnumVal</a>
+</div>
+<div class="menuitem">
+<a href="samples/senumval.html">SEnumVal</a>
+</div>
+<div class="menuitem">
+<a href="samples/validator.html">Validator</a>
+</div>
+<div class="menuitem">
+<a href="samples/validator-dom.html">DOM Validator</a>
+</div>
+</div>
+<div id="credit">
+<hr>
+<a href="http://forrest.apache.org/"><img border="0" title="Built with Apache Forrest" alt="Built with Apache Forrest - logo" src="images/built-with-forrest-button.png" style="width: 88px;height: 31px;"></a>
+</div>
+<div id="roundbottom">
+<img style="display: none" class="corner" height="15" width="15" alt="" src="skin/images/rc-b-l-15-1body-2menu-3menu.png"></div>
+<div id="credit2"></div>
+</div>
+<div id="content">
+<div title="Portable Document Format" class="pdflink">
+<a class="dida" href="index.pdf"><img alt="PDF -icon" src="skin/images/pdfdoc.gif" class="skin"><br>
+        PDF</a>
+</div>
+<h1>Welcome to XML::Xerces</h1>
+<div id="minitoc-area">
+<ul class="minitoc">
+<li>
+<a href="#Xerces+Perl%3A+The+Perl+API+to+the+Apache+Xerces+XML+parser">Xerces Perl: The Perl API to the Apache Xerces XML parser</a>
+<ul class="minitoc">
+<li>
+<a href="#Current+Release%3A+XML%3A%3AXerces+2.7.0-0">Current Release: XML::Xerces 2.7.0-0</a>
+</li>
+<li>
+<a href="#Support">Support</a>
+</li>
+<li>
+<a href="#Available+Platforms">Available Platforms</a>
+</li>
+<li>
+<a href="#Build+Requirements">Build Requirements</a>
+<ul class="minitoc">
+<li>
+<a href="#ANSI+C%2B%2B+compiler">ANSI C++ compiler</a>
+</li>
+<li>
+<a href="#Perl5">Perl5</a>
+</li>
+<li>
+<a href="#The+Apache+Xerces+C%2B%2B+XML+Parser">The Apache Xerces C++ XML Parser</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#Prepare+for+the+build">Prepare for the build</a>
+<ul class="minitoc">
+<li>
+<a href="#Download+XML%3A%3AXerces">Download XML::Xerces</a>
+</li>
+<li>
+<a href="#Verify+the+archive">Verify the archive</a>
+</li>
+<li>
+<a href="#Unpack+the+archive">Unpack the archive</a>
+</li>
+<li>
+<a href="#Getting+Xerces-C">Getting Xerces-C</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#Build+XML%3A%3AXerces">Build XML::Xerces</a>
+</li>
+<li>
+<a href="#Using+XML%3A%3AXerces">Using XML::Xerces</a>
+</li>
+<li>
+<a href="#perl-api">Special Perl API Features</a>
+<ul class="minitoc">
+<li>
+<a href="#string">String I/O</a>
+</li>
+<li>
+<a href="#list">List I/O</a>
+</li>
+<li>
+<a href="#hash">Hash I/O</a>
+</li>
+<li>
+<a href="#list-hash-io">Combined List/Hash classes (XMLAttDefList)</a>
+</li>
+<li>
+<a href="#void-pointer">Void* handling</a>
+</li>
+<li>
+<a href="#serialize">Serialize API</a>
+</li>
+<li>
+<a href="#handlers">Implementing {Document,Content,Error}Handlers from Perl</a>
+</li>
+<li>
+<a href="#exceptions">Handling exceptions ({XML,DOM,SAX}Exception's)</a>
+</li>
+<li>
+<a href="#unicode-constants">XML::Xerces::XMLUni unicode constants</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#Sample+Code">Sample Code</a>
+</li>
+<li>
+<a href="#Development+Tools">Development Tools</a>
+<ul class="minitoc">
+<li>
+<a href="#SWIG">SWIG</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#Acknowledgements">Acknowledgements</a>
+</li>
+</ul>
+</li>
+</ul>
+</div> 
+
+<a name="N1000D"></a><a name="Xerces+Perl%3A+The+Perl+API+to+the+Apache+Xerces+XML+parser"></a>
+<h2 class="boxed">Xerces Perl: The Perl API to the Apache Xerces XML parser</h2>
+<div class="section">
+<a name="N10013"></a><a name="Current+Release%3A+XML%3A%3AXerces+2.7.0-0"></a>
+<h3 class="boxed">Current Release: XML::Xerces 2.7.0-0</h3>
+<p> 
+XML::Xerces is the Perl API to the Apache project's Xerces XML
+parser. It is implemented using the Xerces C++ API, and it provides
+access to <em>most</em> of the C++ API from Perl.
+    </p>
+<p> 
+Because it is based on Xerces-C, XML::Xerces provides a
+validating XML parser that makes it easy to give your application the
+ability to read and write XML data. Classes are provided for parsing,
+generating, manipulating, and validating XML documents. XML::Xerces 
+is faithful to the XML 1.0 recommendation and associated standards
+(DOM levels 1, 2, and 3, SAX 1 and 2, Namespaces, and W3C XML
+Schema). The parser provides high performance, modularity, and
+scalability, and provides full support for Unicode.
+    </p>
+<p>
+XML::Xerces implements the vast majority of the Xerces-C API (if
+you notice any discrepancies please mail the <a href="mailto:p-dev.at.xerces.apache.org">
+list</a>). The exception is some functions in the C++ API which
+either have better Perl counterparts (such as file I/O) or which
+manipulate internal C++ information that has no role in the Perl
+module.
+    </p>
+<p> 
+The majority of the API is created automatically using 
+<a href="http://www.swig.org/">Simplified Wrapper Interface
+Generator (SWIG)</a>.  However, care has been taken to make most
+method invocations natural to perl programmers, so a number of rough
+C++ edges have been smoothed over (See the <a href="#perl-api">Special Perl API Features</a> section).
+    </p>
+<a name="N10035"></a><a name="Support"></a>
+<h3 class="boxed">Support</h3>
+<p>The online users mailing list is the place for any
+    questions. It is at: p-dev@xerces.apache.org</p>
+<a name="N1003F"></a><a name="Available+Platforms"></a>
+<h3 class="boxed">Available Platforms</h3>
+<p>
+The code has been tested on the following platforms: 
+    </p>
+<ul>
+      
+<li>Linux</li>
+      
+<li>Cygwin</li>
+      
+<li>Windows</li>
+      
+<li>Mac OS X</li>
+      
+<li>BSD</li>
+      
+<li>Solaris </li>
+      
+<li>AIX </li>
+      
+<li>Tru64 </li>
+    
+</ul>
+<a name="N10064"></a><a name="Build+Requirements"></a>
+<h3 class="boxed">Build Requirements</h3>
+<a name="N1006A"></a><a name="ANSI+C%2B%2B+compiler"></a>
+<h4>ANSI C++ compiler</h4>
+<p>Builds are known to work with the GNU C compiler, and other platform
+      specific compilers (such as VC++ on Windows and Forte on
+      Solaris). Contributions in this area are always welcome :-). 
+      </p>
+<a name="N10074"></a><a name="Perl5"></a>
+<h4>Perl5</h4>
+<div class="frame note">
+<div class="label">Note</div>
+<div class="content">Required version: 5.6.0</div>
+</div>
+<p>XML::Xerces now supports Unicode. Since Unicode support wasn't
+      added to Perl until 5.6.0, you will need to upgrade in order to use this
+      and future versions of XML::Xerces. Upgrading to at least to the
+      latest stable release, 5.6.1, is recommended.
+      </p>
+<p>If you plan on using Unicode, I <em>strongly</em> recommend upgrading
+      to Perl-5.8.x, the latest stable version. There have been significant
+      improvements to Perl's Unicode support. 
+      </p>
+<a name="N10087"></a><a name="The+Apache+Xerces+C%2B%2B+XML+Parser"></a>
+<h4>The Apache Xerces C++ XML Parser</h4>
+<div class="frame note">
+<div class="label">Note</div>
+<div class="content">Required version: 2.7.0</div>
+</div>
+<p>(which can be downloaded from <a href="http://www.apache.org/dist/xml/xerces-c/">
+      the apache archive</a>) You'll need both the library and header files,
+      and to set up any environment variables that will direct the
+      XML::Xerces build to the directories where these reside. 
+      </p>
+<a name="N10099"></a><a name="Prepare+for+the+build"></a>
+<h3 class="boxed">Prepare for the build</h3>
+<a name="N1009F"></a><a name="Download+XML%3A%3AXerces"></a>
+<h4>Download XML::Xerces</h4>
+<p>Download the release and it's digital signature, from<a href="http://xml.apache.org/dist/xerces-p/stable">
+      the apache Xerces-C archive</a>.
+      </p>
+<a name="N100AD"></a><a name="Verify+the+archive"></a>
+<h4>Verify the archive</h4>
+<p>Optionally verify the release using the supplied digital signature (see
+      <a href="http://xml.apache.org/xerces-p/download.html">the apache
+      Xerces-Perl archive</a> for details) 
+      </p>
+<a name="N100BB"></a><a name="Unpack+the+archive"></a>
+<h4>Unpack the archive</h4>
+<p>Unpack the archive in a directory of your choice. Example
+      (for UNIX):
+      </p>
+<ul>
+	
+<li>
+<span class="codefrag">tar zxvf XML-Xerces-2.7.0-0.tar.gz</span>
+</li>
+	
+<li>
+<span class="codefrag">cd XML-Xerces-2.7.0-0</span>
+</li>
+      
+</ul>
+<a name="N100D0"></a><a name="Getting+Xerces-C"></a>
+<h4>Getting Xerces-C</h4>
+<p>If the Xerces-C library and header files are installed on your	system
+      directly, e.g. via an rpm or deb package, proceed to the directions for
+      building XML::Xerces.
+      </p>
+<p>Otherwise, you must download Xerces-C from www.apache.org. If
+      there is a binary available for your architecture, you may use it,
+      otherwise you must build it from source. If you wish to make
+      Xerces-C available to other applications, you may install it
+      however it is not necessary to do so in order to build XML::Xerces.
+      To build XML::Xerces from an uninstalled Xerces-C set the
+      XERCESCROOT environment variable the top-level directory of the source
+      directory (i.e. the same value it needs to be to build Xerces-C):
+      </p>
+<pre class="code">
+	export XERCESCROOT=/home/jasons/xerces-2.7.0/
+      </pre>
+<p>OPTIONAL: If you choose to install Xerces-C on your system, you
+      need to set the XERCES_INCLUDE and XERCES_LIB environment variables:
+      </p>
+<pre class="code">
+	export XERCES_INCLUDE=/usr/include/xerces
+	export XERCES_LIB=/usr/lib
+      </pre>
+<a name="N100E9"></a><a name="Build+XML%3A%3AXerces"></a>
+<h3 class="boxed">Build XML::Xerces</h3>
+<ol>
+      
+<li>Go to the XML-Xerces-2.7.0-0 directory.</li>
+      
+<li>Build XML::Xerces as you would any perl package that you
+	might get from CPAN:</li> 
+      
+<li>
+<ul>
+	
+<li>
+<span class="codefrag">perl Makefile.PL</span>
+</li>
+	
+<li>
+<span class="codefrag">make</span>
+</li>	
+	
+<li>
+<span class="codefrag">make test</span>
+</li>	
+	
+<li>
+<span class="codefrag">make install</span>
+</li>	
+      
+</ul>
+</li>
+    
+</ol>
+<a name="N1010D"></a><a name="Using+XML%3A%3AXerces"></a>
+<h3 class="boxed">Using XML::Xerces</h3>
+<p>XML::Xerces implements the vast majority of the Xerces-C API (if you
+    notice any discrepancies please mail the list). Documentation for this API
+    are sadly not available in POD format, but the Xerces-C html documentation
+    is available <a href="http://xml.apache.org/xerces-c/apiDocs/index.html">online</a>.
+    </p>
+<p>For more information, see the examples in the samples/ directory.
+    and the test scripts located in the t/ directory.
+    </p>
+<a name="N1011E"></a><a name="perl-api"></a>
+<h3 class="boxed">Special Perl API Features</h3>
+<p>Even though XML::Xerces is based on the C++ API, it has been modified
+    in a few ways to make it more accessible to typical Perl usage, primarily in
+    the handling: 
+    </p>
+<ul>
+      
+<li>
+<a href="#string">String I/O</a> (Perl strings versus XMLch arrays)</li>
+      
+<li>
+<a href="#list">List I/O</a> (Perl lists versus DOM_NodeList's)</li>
+      
+<li>
+<a href="#hash">Hash I/O</a> (Perl hashes versus DOM_NamedNodeMap's)</li>
+      
+<li>
+<a href="#list-hash-io">Combined List/Hash classes</a>
+</li>
+      
+<li>
+<a href="#void-pointer">void* handling</a>
+</li>
+      
+<li>
+<a href="#serialize">DOM Serialization API</a>
+</li>
+      
+<li>
+<a href="#handlers">Implementing Perl handlers for C++ event callbacks</a>
+</li>
+      
+<li>
+<a href="#exceptions">handling C++ exceptions</a>
+</li>
+      
+<li>
+<a href="#unicode-constants">XML::Xerces::XMLUni unicode constants</a>
+</li>
+    
+</ul>
+<a name="N1015A"></a><a name="string"></a>
+<h4>String I/O</h4>
+<p>The native data type for Xerces-C is the XMLCh* which is a
+      UTF16 encoded string and in Perl strings are encoded in
+      UTF8. All conversion back and forth between Perl and Xerces-C is
+      handled automatically by XML::Xerces. 
+      </p>
+<p>In fact a lot of effort is made to convert Perl variables
+	  into strings before passing them to Xerces-C. So any method
+	  that accepts an XMLCh* in Xerces-C will accept any non-undef
+	  value using Perl's built-in stringification mechanism.
+      </p>
+<a name="N10167"></a><a name="list"></a>
+<h4>List I/O</h4>
+<p>Any function that in the C++ API returns a <span class="codefrag">DOMNodeList</span>
+      (e.g. <span class="codefrag">getChildNodes()</span> and <span class="codefrag">getElementsByTagName()</span>
+      for example) will return different types if they are called in a list
+      context or a scalar context. In a scalar context, these functions return a
+      reference to a <span class="codefrag">XML::Xerces::DOMNodeList</span>, just like in C++
+      API. However, in a list context they will return a Perl list of
+      <span class="codefrag">XML::Xerces::DOM_Node</span> references. For example:
+      </p>
+<pre class="code">
+      	# returns a reference to a XML::Xerces::DOMNodeList
+      	my $node_list_ref = $doc-&gt;getElementsByTagName('foo');
+      
+      	# returns a list of XML::Xerces::DOMNode's
+      	my @node_list = $doc-&gt;getElementsByTagName('foo');
+      </pre>
+<a name="N10184"></a><a name="hash"></a>
+<h4>Hash I/O</h4>
+<p>Any function that in the C++ API returns a
+      <span class="codefrag">DOMNamedNodeMap</span> (<span class="codefrag">getEntities()</span> and
+      <span class="codefrag">getAttributes()</span> for example) will return different types if
+      they are called in a list context or a scalar context. In a scalar
+      context, these functions return a reference to a
+      <span class="codefrag">XML::Xerces::DOMNamedNodeMap</span>, just like in C++ API. However,
+      in a list context they will return a Perl hash. For example:
+      </p>
+<pre class="code">
+      	# returns a reference to a XML::Xerces::DOMNamedNodeMap
+      	my $attr_map_ref = $element_node-&gt;getAttributes();
+      
+      	# returns a hash of the attributes
+      	my %attrs = $element_node-&gt;getAttributes();
+      </pre>
+<a name="N1019E"></a><a name="list-hash-io"></a>
+<h4>Combined List/Hash classes (XMLAttDefList)</h4>
+<p>Any function that in the C++ API returns a XMLAttDefList
+      (getAttDefList() for SchemaElementDecl and DTDElementDecl), will
+      always return an instance of XML::Xerces::XMLAttDefList. However,
+      there are two Perl specific API methods that can be invoked on the
+      object: to_list() and to_hash().
+      </p>
+<pre class="code">
+      	# get the XML::Xerces::XMLAttDefList. 
+        my $attr_list = $element_decl-&gt;getAttDefList();
+
+	# return a list of XML::Xerces::XMLAttDef instances
+      	my @list = $attr_list-&gt;to_list();
+      
+      	# returns a hash of the attributes, where the keys are the
+      	# result of calling getFullName() on the attributes, and the
+      	# values are the XML::Xerces::XMLAttDef instances.
+      	my %attrs = $attr_list-&gt;to_hash();
+      </pre>
+<a name="N101AC"></a><a name="void-pointer"></a>
+<h4>Void* handling</h4>
+<p>Any function in the C++ API that accepts a void*, for example
+      setProperty() in DOMBuilder and SAX2XMLReader, must be handled
+      specially. Currently, all void* methods convert their arguments
+      to a string before passing them to Xerces-C. In the future, when
+      other data types are needed, this functionality will be
+      expanded. If you locate a case in which you need this support,
+      please alert the development team (<a href="mailto:p-dev.at.xerces.apache.org">p-dev@xerces.apache.org</a>).</p>
+<a name="N101BA"></a><a name="serialize"></a>
+<h4>Serialize API</h4>
+<p>The DOMWriter class is used for serializing DOM hierarchies. See
+      t/DOMWriter.t or <a href="domprint.html"> samples/DOMPrint.pl</a>
+      for details.
+      </p>
+<p>For less complex usage, just use the serialize() method defined for all
+      DOMNode subclasses. 
+      </p>
+<a name="N101CB"></a><a name="handlers"></a>
+<h4>Implementing {Document,Content,Error}Handlers from Perl</h4>
+<p>Thanks to suggestions from Duncan Cameron, XML::Xerces now has a
+      handler API that matches the currently used semantics of other Perl XML
+      API's. There are three classes available for application writers:
+      </p>
+<ul>
+	
+<li>PerlErrorHandler    (SAX 1/2 and DOM 1)</li>
+	
+<li>PerlDocumentHandler (SAX 1)</li>
+	
+<li>PerlContentHandler  (SAX 2)</li>
+      
+</ul>
+<p>Using these classes is as simple as creating a perl subclass of the
+      needed class, and redefining any needed methods. For example, to override
+      the default fatal_error() method of the PerlErrorHandler class we can
+      include this piece of code within our application: 
+      </p>
+<pre class="code">
+        package MyErrorHandler;
+        @ISA = qw(XML::Xerces::PerlErrorHandler);
+        sub fatal_error {die "Oops, I got an error\n";}
+        
+        package main;
+        my $dom = new XML::Xerces::DOMParser;
+        $dom-&gt;setErrorHandler(MyErrorHandler-&gt;new());
+	</pre>
+<a name="N101E8"></a><a name="exceptions"></a>
+<h4>Handling exceptions ({XML,DOM,SAX}Exception's)</h4>
+<p>Some errors occur outside parsing and are not caught by the parser's
+      ErrorHandler. XML::Xerces provides a way for catching these errors
+      using the PerlExceptionHandler class. Usually the following code
+      is enough for catching exceptions:
+      </p>
+<pre class="code">
+       eval{$parser-&gt;parser($my_file)};
+       XML::Xerces::error($@) if $@;
+	</pre>
+<p>Wrap any code that might throw an exception inside an eval{...} and
+      call XML::Xerces::error() passing $@, if $@ is set.
+      </p>
+<p>There are a default methods that prints out an error message and calls
+      die(), but if more is needed, see the files t/XMLException.t,
+      t/SAXException.t, and t/DOMException.t for details on how to roll your own
+      handler. 
+      </p>
+<a name="N101FC"></a><a name="unicode-constants"></a>
+<h4>XML::Xerces::XMLUni unicode constants</h4>
+<p>XML::Xerces uses many constant values for setting of features, and
+      properties, such as for XML::Xerces::SAX2XMLReader::setFeature(). You can
+      hard code the strings or integers into your programs but this will make
+      them vulnerable to an API change. Instead, use the constants defined in
+      the XML::Xerces::XMLUni class. If the API changes, the constants will be
+      updated to reflect that change. See the file docs/UMLUni.txt for a
+      complete listing of the constant names and their values.
+      </p>
+<a name="N10207"></a><a name="Sample+Code"></a>
+<h3 class="boxed">Sample Code</h3>
+<p>XML::Xerces comes with a number of sample applications:
+    </p>
+<ul>
+      
+<li>
+<a href="samples/saxcount.html">SAXCount.pl</a>: Uses the SAX  interface to
+      output a count of the number of elements in an XML document</li> 
+      
+<li>
+<a href="samples/sax2count.html">SAX2Count.pl</a>: Uses the SAX2  interface
+      to output a count of the number of elements in an XML document</li> 
+      
+<li>
+<a href="samples/domcount.html">DOMCount.pl</a>: Uses the DOM  interface to
+      output a count of the number of elements in an XML document</li> 
+      
+<li>
+<a href="samples/domprint.html">DOMPrint.pl</a>: Uses the DOM  interface to
+      output a pretty-printed version of an XML file to STDOUT </li> 
+      
+<li>
+<a href="samples/domcreate.html">DOMCreate.pl</a>: Creates a simple XML
+      document using the DOM interface and writes it to STDOUT</li> 
+      
+<li>
+<a href="samples/dom2hash.html">DOM2hash.pl</a>: Uses the DOM interface to
+      convert the file to a simple hash of lists representation</li>  
+      
+<li>
+<a href="samples/enumval.html">EnumVal.pl</a>: Parses and input XML document
+      and outputs the DTD information to STDOUT</li>
+      
+<li>
+<a href="samples/senumval.html">SEnumVal.pl</a>: Parses and input XML document
+      and outputs the XML Schema information to STDOUT</li>
+    
+</ul>
+<a name="N10244"></a><a name="Development+Tools"></a>
+<h3 class="boxed">Development Tools</h3>
+<div class="frame note">
+<div class="label">Note</div>
+<div class="content">These are only for internal XML::Xerces development. If
+    your intention is solely to use XML::Xerces to write XML
+    applications in Perl, you will <em>NOT</em> need these
+    tools.</div>
+</div>
+<a name="N10250"></a><a name="SWIG"></a>
+<h4>SWIG</h4>
+<p>
+
+<a href="http://www.swig.org/">
+Simplified Wrapper Interface Generator (SWIG)</a> is an open source
+tool by David Beazley of the University of Chicago for automatically
+generating Perl wrappers for C and C++ libraries (i.e. *.a or *.so for
+UNIX, *.dll for Windoes).  You can get the source from <a href="http://www.swig.org/">
+the SWIG home page</a> and then build it for your platform.
+      </p>
+<p>
+You will only need this if the include Xerces.C and XML::Xerces
+files do not work for your perl distribution. The pre-generated files
+have been created by SWIG 1.3 and work under Perl-5.6 or later.
+      </p>
+<p>
+This port will only work with SWIG 1.3.28 or later.
+      </p>
+<p>
+If your planning to use SWIG, you can set the environment variable
+SWIG to the full path to the SWIG executable before running <span class="codefrag">perl
+Makefile.pl</span>. For example:
+      </p>
+<pre class="code">
+          export SWIG=/usr/local/bin/swig
+      </pre>
+<p>
+This is only necessary if it isn't in your path or you have more than
+one version installed.
+      </p>
+<a name="N10276"></a><a name="Acknowledgements"></a>
+<h3 class="boxed">Acknowledgements</h3>
+<p>The Xerces development team would like to provide special
+    acknowledgment to the following companies for their gracious
+    financial support:</p>
+<div class="frame note">
+<div class="label">BBC: XML-Xerces-2.7</div>
+<div class="content">
+    The <a href="http://www.bbc.co.uk/">British Broadcasting
+    Corporation</a> provided support for the XML-Xerces-2.7 release
+    that has enabled patching a number of SAX-related Unicode bugs.
+      </div>
+</div>
+<div class="frame note">
+<div class="label">Cluster Technology: XML-Xerces-2.6</div>
+<div class="content">
+    
+<a href="http://clustertech.com/">Cluster Technology
+    Limited</a> provided support for the XML-Xerces-2.6 release and
+    for invaluable testing to help eliminate the major memory leaks
+    that existed prior to the 2.6 release.
+      </div>
+</div>
+</div>
+
+  
+</div>
+<div class="clearboth">&nbsp;</div>
+</div>
+<div id="footer">
+<div class="lastmodified">
+<script type="text/javascript"><!--
+document.write("<text>Last Published:</text> " + document.lastModified);
+//  --></script>
+</div>
+<div class="copyright">
+        Copyright &copy;
+         2005 <a href="http://www.apache.org/licenses/">The Apache Software Foundation.</a>
+</div>
+<div id="logos">
+<a href="http://validator.w3.org/check/referer"><img style="height: 31px; width: 88px;" title="Valid HTML 4.01!" alt="Valid HTML 4.01!" src="skin/images/valid-html401.png" class="logoImage"></a><a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="height: 31px; width: 88px;" title="Valid CSS!" alt="Valid CSS!" src="skin/images/vcss.png" class="logoImage"></a>
+</div>
+<div id="feedback">
+    Send feedback about the website to:
+  <a id="feedbackto" href="mailto:webmaster@xerces.apache.org?subject=Feedback%C2%A0index.html">webmaster@xerces.apache.org</a>
+</div>
+</div>
+</body>
+</html>

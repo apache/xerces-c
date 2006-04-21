@@ -1,0 +1,144 @@
+<!--
+  Copyright 2001-2005 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- Note: To understand how this template is used, see the documentation
+  at http://forrest.apache.org/howto/howto-asf-mirror.html
+-->
+<html>
+  <head>
+    <title>Obtain the Apache Forrest distribution</title>
+  </head>
+  <body>
+<h1><a name="how" />How to download</h1>
+<p class="note">
+Please realise that Forrest is still pre-1.0 release version.
+It is certainly usable for those who are prepared to move with it.
+See more notes about <a href="index.html#status">status</a>.
+</p>
+<p>Use the links below to download a distribution of Apache Forrest from
+one of our mirrors. It is good practice to 
+<a href="[location]#verify">verify the integrity</a>
+of the distribution files.</p>
+
+<p>Apache Forrest is distributed as a <code>zip</code> archive (for Windows) and
+as a <code>tar.gz</code> archive (for UNIX). The contents are the same,
+the only difference is the line-endings of all text files.
+</p>
+<p>The distribution contains all of the source code, documentation,
+and resources, together with the pre-built ready-to-run forrest binary.
+</p>
+
+<h1><a name="closest" />Current official release (closest mirror site selected automatically)</h1>
+
+<p>You are currently using <b>[preferred]</b>. If you encounter a
+problem with this mirror, then please select another.  If all
+mirrors are failing, there are backup mirrors at the end of the list.
+See <a href="http://www.apache.org/mirrors/">status</a> of mirrors.
+</p>
+
+<form action="[location]" method="get" id="SelectMirror">
+Other mirrors: <select name="Preferred">
+<!--[if-any http] [for http]-->
+<option value="[http]">[http]</option>
+<!--[end] [end]-->
+<!--[if-any ftp] [for ftp]-->
+<option value="[ftp]">[ftp]</option>
+<!--[end] [end]-->
+<!--[if-any backup] [for backup]-->
+<option value="[backup]">[backup] (backup)</option>
+<!--[end] [end]-->
+</select>
+<input type="submit" value="Change" />     
+</form>
+
+<p>The current release is Apache Forrest 0.7 (see the
+<a href="[preferred]/forrest/RELEASE-NOTES-0.7.txt">release notes</a>).</p>
+
+<ul>
+<li>For UNIX operating systems: 
+<a href="[preferred]/forrest/apache-forrest-0.7.tar.gz">apache-forrest-0.7.tar.gz</a>
+[<a href="http://www.apache.org/dist/forrest/apache-forrest-0.7.tar.gz.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/forrest/apache-forrest-0.7.tar.gz.md5">MD5</a>]</li>
+
+<li>For Windows operating systems: 
+<a href="[preferred]/forrest/apache-forrest-0.7.zip">apache-forrest-0.7.zip</a>
+[<a href="http://www.apache.org/dist/forrest/apache-forrest-0.7.zip.asc">PGP</a>]
+[<a href="http://www.apache.org/dist/forrest/apache-forrest-0.7.zip.md5">MD5</a>]</li>
+</ul>
+
+<h1><a name="svn" />Snapshots of current development and head SVN repository</h1>
+
+<p>If you want to use the latest Apache Forrest features, the source code is under
+version control with Subversion (read how to
+<a href="site:documentation/developers/build">obtain</a> your working copy). There are
+also compressed source 
+<a href="http://svn.apache.org/snapshots/forrest/">snapshots</a> that are
+packed every 6 hours.
+</p>
+
+<h1><a name="archive" />Archive of old releases</h1>
+
+<p>Older releases are available in the <a
+href="http://archive.apache.org/dist/forrest/">archive</a>.  Those
+releases are only provided as historical artefacts. We strongly
+recommend to not use those releases, but upgrade to the most recent release.
+</p>
+
+<h1><a name="verify" />Verify releases</h1>
+
+<p>It is essential that you verify the integrity of the downloaded
+files using the PGP and MD5 signatures.  MD5 verification ensures the
+file was not corrupted during the download process.  PGP verification
+ensures that the file came from a certain person.</p>
+
+<p>The PGP signatures can be verified using
+<a href="http://www.pgpi.org/">PGP</a> or
+<a href="http://www.gnupg.org/">GPG</a>.
+First download the Apache Forrest
+<a href="http://svn.apache.org/repos/asf/forrest/trunk/KEYS">KEYS</a>
+as well as the <code>asc</code> signature file for the particular
+distribution. It is important that you get these files from the ultimate
+trusted source - the main ASF distribution site, rather than from a mirror.
+Then verify the signatures using ...</p>
+
+<pre>
+% pgpk -a KEYS
+% pgpv apache-forrest-X.Y.tar.gz.asc
+
+<em>or</em>
+
+% pgp -ka KEYS
+% pgp apache-forrest-X.Y.tar.gz.asc
+
+<em>or</em>
+
+% gpg --import KEYS
+% gpg --verify apache-forrest-X.Y.tar.gz.asc
+</pre>
+
+<p>To verify the MD5 signature on the files, you need to use a program
+called <code>md5</code> or <code>md5sum</code>, which is
+included in many unix distributions.  It is also available as part of
+<a href="http://www.gnu.org/software/textutils/textutils.html">GNU
+Textutils</a>.  Windows users can get binary md5 programs from <a
+href="http://www.fourmilab.ch/md5/">here</a>, <a
+href="http://www.pc-tools.net/win32/freeware/console/">here</a>, or
+<a href="http://www.slavasoft.com/fsum/">here</a>.</p>
+
+<p>We strongly recommend you verify your downloads with both PGP and MD5.</p>
+
+</body>
+</html>

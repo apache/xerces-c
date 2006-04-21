@@ -1,0 +1,77 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd"
+[
+<!ENTITY % PROJECT-ENTITIES PUBLIC
+   "-//Xerces-P//Xerces-P ENTITIES V1.0//EN//XML"
+   "project-entities.ent">
+%PROJECT-ENTITIES;
+]>
+<document> 
+  <header> 
+    <title>&PROJECT_NAME; Sample: Validator</title> 
+  </header> 
+  <body> 
+
+
+<section>
+<title>Sample: Validator</title>
+
+    <section>
+<title>Validator</title>
+        <p>Validator is a simple application that parses an XML input file and reports validation errors to STDERR in the same format as onsgmls so that it can be used for example in Emacs locating the errors in the source file. </p>
+
+        <section>
+<title>Running Validator</title>
+
+          <p>The Validator sample parses an XML file and prints any errors to STDERR. To run Validator, enter the following </p>
+<source>perl validator.pl &lt;XML File&gt;</source>
+          <p>The following parameters may be set from the command line </p>
+<source>
+Usage:
+    perl validator.pl [options]
+
+This program invokes the SAX Parser, and then prints any errors to
+STDERR using SAX API.
+
+  required flags:
+    --file=file_name  : the XML file to parse
+
+  optional parameters:
+    --namespace       : enable namespace checking
+    --schema          : parse a W3C XML Schema file (forces --namespace)
+    --full_schema     : do full schema checking (forces --namespace and --schema)
+    --help            : print this message
+
+</source>
+
+          <p>Here is a sample output from Validator</p>
+<source>cd samples
+perl validator.pl --file=personal-invalid.xml
+validator.pl:[/home/jasons/work/xml-xerces/samples/personal-invalid.xml]:19:8:E:Unknown element 'fool'
+validator.pl:[/home/jasons/work/xml-xerces/samples/personal-invalid.xml]:19:12:E:Attribute 'id' is not declared for element 'fool'
+validator.pl:[/home/jasons/work/xml-xerces/samples/personal-invalid.xml]:43:13:E:Element 'fool' is not valid for content model: '(person)+'
+validator.pl:[/home/jasons/work/xml-xerces/samples/personal-invalid.xml]:43:13:E:ID attribute 'two.worker' was referenced but never declared
+
+</source>
+        </section>
+
+    </section>
+</section>
+</body>
+</document>

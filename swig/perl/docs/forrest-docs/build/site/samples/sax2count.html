@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta content="Apache Forrest" name="Generator">
+<meta name="Forrest-version" content="0.7">
+<meta name="Forrest-skin-name" content="pelt">
+<title>XML::Xerces Sample: SAX2Count</title>
+<link type="text/css" href="../skin/basic.css" rel="stylesheet">
+<link media="screen" type="text/css" href="../skin/screen.css" rel="stylesheet">
+<link media="print" type="text/css" href="../skin/print.css" rel="stylesheet">
+<link type="text/css" href="../skin/profile.css" rel="stylesheet">
+<script src="../skin/getBlank.js" language="javascript" type="text/javascript"></script><script src="../skin/getMenu.js" language="javascript" type="text/javascript"></script><script src="../skin/fontsize.js" language="javascript" type="text/javascript"></script>
+<link rel="shortcut icon" href="../">
+</head>
+<body onload="init()">
+<script type="text/javascript">ndeSetTextSize();</script>
+<div id="top">
+<div class="breadtrail">
+<a href="http://www.apache.org/">apache</a> &gt; <a href="http://xerces.apache.org/">xerces</a> &gt; <a href="http://xerces.apache.org/">xerces-p</a><script src="../skin/breadcrumbs.js" language="JavaScript" type="text/javascript"></script>
+</div>
+<div class="header">
+<div class="projectlogoA1">
+<a href="http://xerces.apache.org/"><img class="logoImage" alt="XML::Xerces" src="../images/project.png" title="Perl Bindings for Xerces-C"></a>
+</div>
+<div class="searchbox">
+<form action="http://www.google.com/search" method="get" class="roundtopsmall">
+<input value="xerces.apache.org" name="sitesearch" type="hidden"><input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google">&nbsp; 
+                    <input attr="value" name="Search" value="Search" type="submit">
+</form>
+</div>
+<ul id="tabs">
+<li>
+<a class="base-not-selected" href="../index.html">Home</a>
+</li>
+<li class="current">
+<a class="base-selected" href="../samples/index.html">Samples</a>
+</li>
+</ul>
+</div>
+</div>
+<div id="main">
+<div id="publishedStrip">
+<div id="level2tabs"></div>
+<script type="text/javascript"><!--
+document.write("<text>Last Published:</text> " + document.lastModified);
+//  --></script>
+</div>
+<div class="breadtrail">
+             
+             &nbsp;
+           </div>
+<div id="menu">
+<div onclick="SwitchMenu('menu_selected_1.1', '../skin/')" id="menu_selected_1.1Title" class="menutitle" style="background-image: url('../skin/images/chapter_open.gif');">Samples</div>
+<div id="menu_selected_1.1" class="selectedmenuitemgroup" style="display: block;">
+<div class="menuitem">
+<a href="../samples/index.html" title="Sample Applications">Index</a>
+</div>
+<div class="menuitem">
+<a href="../samples/domcount.html">DOMCount</a>
+</div>
+<div class="menuitem">
+<a href="../samples/domcreate.html">DOMCreate</a>
+</div>
+<div class="menuitem">
+<a href="../samples/domprint.html">DOMPrint</a>
+</div>
+<div class="menuitem">
+<a href="../samples/dom2hash.html">DOM2Hash</a>
+</div>
+<div class="menuitem">
+<a href="../samples/saxcount.html">SAXCount</a>
+</div>
+<div class="menupage">
+<div class="menupagetitle">SAX2Count</div>
+</div>
+<div class="menuitem">
+<a href="../samples/enumval.html">EnumVal</a>
+</div>
+<div class="menuitem">
+<a href="../samples/senumval.html">SEnumVal</a>
+</div>
+<div class="menuitem">
+<a href="../samples/validator.html">Validator</a>
+</div>
+<div class="menuitem">
+<a href="../samples/validator-dom.html">DOM Validator</a>
+</div>
+</div>
+<div id="credit"></div>
+<div id="roundbottom">
+<img style="display: none" class="corner" height="15" width="15" alt="" src="../skin/images/rc-b-l-15-1body-2menu-3menu.png"></div>
+<div id="credit2"></div>
+</div>
+<div id="content">
+<div title="Portable Document Format" class="pdflink">
+<a class="dida" href="sax2count.pdf"><img alt="PDF -icon" src="../skin/images/pdfdoc.gif" class="skin"><br>
+        PDF</a>
+</div>
+<h1>XML::Xerces Sample: SAX2Count</h1>
+<div id="minitoc-area">
+<ul class="minitoc">
+<li>
+<a href="#Sample%3A+SAX2Count">Sample: SAX2Count</a>
+<ul class="minitoc">
+<li>
+<a href="#SAX2Count">SAX2Count</a>
+<ul class="minitoc">
+<li>
+<a href="#Running+SAX2Count">Running SAX2Count</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div> 
+
+
+
+<a name="N1000D"></a><a name="Sample%3A+SAX2Count"></a>
+<h2 class="boxed">Sample: SAX2Count</h2>
+<div class="section">
+<a name="N10013"></a><a name="SAX2Count"></a>
+<h3 class="boxed">SAX2Count</h3>
+<p>SAX2Count is the simplest application that counts the elements and characters of
+        a given XML file using the (event based) SAX2 API.</p>
+<a name="N1001C"></a><a name="Running+SAX2Count"></a>
+<h4>Running SAX2Count</h4>
+<p>The SAX2Count sample parses an XML file and prints out a count of the number of
+          elements in the file. To run SAX2Count, enter the following </p>
+<pre class="code">perl SAX2Count.pl &lt;XML File&gt;</pre>
+<p>The following parameters may be set from the command line </p>
+<pre class="code">
+Usage:
+    perl SAX2Count.pl [options] &lt;XML file | List file&gt;
+
+This program invokes the SAX2XMLReader, and then prints the
+number of elements, attributes, spaces and characters found
+in each XML file, using SAX2 API.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Ensable schema processing. Defaults to off.
+
+    -h          Show this help.
+
+  * = Default if not provided explicitly.
+</pre>
+<p>
+<em>-v=always</em> will force validation<br>
+             
+<em>-v=never</em> will not use any validation<br>
+             
+<em>-v=auto</em> will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
+<p>Here is a sample output from SAX2Count</p>
+<pre class="code">cd samples
+perl SAX2Count.pl -v=always personal.xml
+personal.xml: 60 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</pre>
+<p>Running SAX2Count with the validating parser gives a different result because
+          ignorable white-space is counted separately from regular characters.</p>
+<pre class="code">perl SAX2Count.pl -v=never personal.xml
+personal.xml: 10 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</pre>
+<p>Note that the sum of spaces and characters in both versions is the same.</p>
+<div class="frame note">
+<div class="label">Note</div>
+<div class="content">The time reported by the program may be different depending on your
+          machine processor.</div>
+</div>
+</div>
+
+</div>
+<div class="clearboth">&nbsp;</div>
+</div>
+<div id="footer">
+<div class="lastmodified">
+<script type="text/javascript"><!--
+document.write("<text>Last Published:</text> " + document.lastModified);
+//  --></script>
+</div>
+<div class="copyright">
+        Copyright &copy;
+         2005 <a href="http://www.apache.org/licenses/">The Apache Software Foundation.</a>
+</div>
+<div id="feedback">
+    Send feedback about the website to:
+  <a id="feedbackto" href="mailto:webmaster@xerces.apache.org?subject=Feedback%C2%A0samples/sax2count.html">webmaster@xerces.apache.org</a>
+</div>
+</div>
+</body>
+</html>

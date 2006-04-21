@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2002-2004 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://cocoon.apache.org/ 
+
+See http://forrest.apache.org/docs/linking.html for more info
+-->
+
+<site label="Xerces-P" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+   <!-- Note: No matter what you configure here, Forrest will always try to load
+       index.html when you request http://yourHost/.
+       'How can I use a start-up-page other than index.html?' in the FAQs has more 
+       information tells you how to change that. 
+   -->
+  <about label="About">
+    <index label="Index" href="index.html" description="Welcome to Xerces-P"/>
+<!--
+    <download label="Download" href="mirrors.cgi"/>
+    <download_html href="mirrors.html"/>
+ -->
+    <downloading label="Downloading" href="download.html" description="How to obtain the code"/>
+  </about>
+
+  <samples label="Samples" tab="samples" href="samples/">
+    <index label="Index" href="index.html" description="Sample Applications"/>
+    <domcount label="DOMCount" href="domcount.html" description=""/>
+    <domcount label="DOMCreate" href="domcreate.html" description=""/>
+    <domcount label="DOMPrint" href="domprint.html" description=""/>
+    <domcount label="DOM2Hash" href="dom2hash.html" description=""/>
+    <domcount label="SAXCount" href="saxcount.html" description=""/>
+    <domcount label="SAX2Count" href="sax2count.html" description=""/>
+    <domcount label="EnumVal" href="enumval.html" description=""/>
+    <domcount label="SEnumVal" href="senumval.html" description=""/>
+    <domcount label="Validator" href="validator.html" description=""/>
+    <domcount label="DOM Validator" href="validator-dom.html" description=""/>
+  </samples>
+
+  <external-refs>
+    <forrest href="http://forrest.apache.org/">
+      <linking href="docs/linking.html"/>
+      <validation href="docs/validation.html"/>
+      <webapp href="docs/your-project.html#webapp"/>
+      <dtd-docs href="docs/dtd-docs.html"/>
+    </forrest>
+    <cocoon href="http://cocoon.apache.org/"/>
+    <xml.apache.org href="http://xml.apache.org/"/>
+  </external-refs>
+
+</site>

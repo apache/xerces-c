@@ -1,0 +1,17 @@
+<?xml encoding='US-ASCII'?>
+
+<!ENTITY XERCES_C_VERSION     "2.7.0">
+<!ENTITY XERCES_P_VERSION     "&XERCES_C_VERSION;-0">
+<!ENTITY XERCES_P_NAME        "XML::Xerces">
+<!ENTITY XERCES_C_NAME        "Xerces-C">
+<!ENTITY XERCES_DOMAIN        "xerces.apache.org">
+<!ENTITY XERCES_P_LIST        "p-dev@&XERCES_DOMAIN;">
+
+<!ENTITY PROJECT_NAME         "&XERCES_P_NAME;">
+<!ENTITY PROJECT_LIST         "&XERCES_P_LIST;">
+<!ENTITY PROJECT_DESC         "Perl Bindings for &XERCES_C_NAME;">
+<!ENTITY PROJECT_URL          "http://&XERCES_DOMAIN;/">
+
+<!ENTITY GROUP_NAME           "Xerces">
+<!ENTITY GROUP_DESC           "Apache Xerces XML Parser">
+<!ENTITY GROUP_URL            "http://&XERCES_DOMAIN;/">

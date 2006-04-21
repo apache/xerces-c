@@ -1,0 +1,14 @@
+;; Object content/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "content/"
+  :tables (list 
+   (semanticdb-table "test1.html"
+    :major-mode 'html-mode
+    :tags 'nil
+    :file "test1.html"
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre3"
+  :semanticdb-version "2.0pre3"
+  )

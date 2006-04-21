@@ -1,0 +1,106 @@
+<?xml version="1.0" standalone="no"?>
+
+<!--
+  Copyright 2002-2004 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd"
+[
+<!ENTITY % PROJECT-ENTITIES PUBLIC
+   "-//Xerces-P//Xerces-P ENTITIES V1.0//EN//XML"
+   "project-entities.ent">
+%PROJECT-ENTITIES;
+]>
+
+<document> 
+  <header> 
+    <title>Downloading &PROJECT_NAME;</title> 
+  </header> 
+  <body> 
+
+<section>
+<title>Downloading &PROJECT_NAME;</title>
+  <section>
+<title>Getting the source code</title>
+    <p> The most current stable source code for &PROJECT_NAME; can be
+    downloaded from <a
+    href="http://www.apache.org/dist/xml/xerces-p/"> here </a>
+    </p>
+    <p> Previous releases are available from the <a
+    href="http://archive.apache.org/dist/xml/xerces-p/"> archives </a>
+    </p>
+  </section>
+
+  <section>
+<title>Verifying the release</title>
+    <p> The current &PROJECT_NAME; maintainer, Jason E. Stewart
+      (<a
+      href="mailto:jasons@apache.org">jasons@apache.org</a>), signs
+      every release with his <a
+      href="http://www.gnupg.org/">GnuPG</a> public key. This is to
+      help you ensure that you are installing only officially
+      sanctioned code, from the official maintainer. By downloading
+      the source code and signature from one location (<a
+      href="http://www.apache.org/info/20010519-hack.html">possibly
+      open to attack</a>) and the public key from an official key
+      server, you greatly reduce the chance of installing software
+      that is dangerous to you.
+    </p>
+
+    <section>
+<title>Getting the Public key</title>
+      <p> You can use any keyserver you wish, such as <a
+      href="http://www.keyserver.net/">www.keyserver.net</a>, and
+      search for <em>jasons@apache.org</em> or you can get the
+      key<a
+      href="http://dtype.org:11371/pks/lookup?search=jasons%40apache.org&amp;op=index">
+      here </a>.
+      </p>
+    </section>
+    <section>
+<title>Using PGP to verify the code</title>
+      <ol>
+	<li>Add the key to your keyring: <code>
+pgpk -a key_file
+</code></li>
+	<li>Verify the source code file <code>
+pgpv XML-Xerces-X.Y.Z XML-Xerces-X.Y.Z.asc
+</code></li>
+	<li>If you receive any other response than: <em>Good
+	    signature</em>, something went wrong, so don't trust the
+	    file.
+	</li>
+      </ol>
+    </section>
+    <section>
+<title>Using GnuPG to verify the code</title>
+      <ol>
+	<li>Import the key to your keyring: <code>
+gpg --import key_file
+</code></li>
+	<li>Verify the source code file <code>
+gpg&nbsp;--verify&nbsp;XML-Xerces-X.Y.Z&nbsp;XML-Xerces-X.Y.Z.asc
+</code></li>
+	<li>If you receive any other response than: <em>gpg: Good
+	signature</em>, something went wrong, so don't trust the
+	file. 
+	</li>
+      </ol>
+    </section>
+  </section>
+</section>
+</body>
+</document>

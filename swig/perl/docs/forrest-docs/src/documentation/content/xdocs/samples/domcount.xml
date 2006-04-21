@@ -1,0 +1,84 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd"
+[
+<!ENTITY % PROJECT-ENTITIES PUBLIC
+   "-//Xerces-P//Xerces-P ENTITIES V1.0//EN//XML"
+   "project-entities.ent">
+%PROJECT-ENTITIES;
+]>
+<document> 
+  <header> 
+    <title>&PROJECT_NAME; Sample: DOMCount</title> 
+  </header> 
+  <body> 
+
+
+<section>
+<title>Sample: DOMCount</title>
+
+    <section>
+<title>DOMCount</title>
+        <p>DOMCount uses the provided DOM API to parse an XML file,
+		constructs the DOM tree and walks through the tree counting
+		the elements (using just one API call).</p>
+
+        <section>
+<title>Running DOMCount</title>
+
+          <p>The DOMCount sample parses an XML file and prints out a count of the number of
+          elements in the file. To run DOMCount, enter the following </p>
+<source>perl DOMCount.pl &lt;XML file&gt;</source>
+          <p>The following parameters may be set from the command line </p>
+<source>
+Usage:
+    perl DOMCount.pl [options] &lt;XML file | List file&gt;
+
+This program invokes the DOM parser, builds the DOM tree,
+and then prints the number of elements found in each XML file.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+<!--
+    -f          Enable full schema constraint checking. Defaults to off.
+    -locale=ll_CC specify the locale, default: en_US 
+    -p          Print out names of elements and attributes encountered.
+-->
+    -h          Show this help.
+
+  * = Default if not provided explicitly.
+</source>
+          <p><em>-v=always</em> will force validation<br/>
+             <em>-v=never</em>  will not use any validation<br/>
+             <em>-v=auto</em>   will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
+          <p>Here is a sample output from DOMCount</p>
+<source>cd samples/data
+perl DOMCount.pl -v=always personal.xml
+personal.xml: 20 ms (37 elems)</source>
+
+          <note>The time reported by the system may be different, depending on your
+          processor type.</note>
+        </section>
+    </section>
+</section>
+</body>
+</document>
