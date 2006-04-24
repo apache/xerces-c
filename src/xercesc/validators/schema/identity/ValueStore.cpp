@@ -223,10 +223,10 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
         return (XMLString::equals(val1, val2));
     }
 
-    unsigned int val1Len = XMLString::stringLen(val1);
-    unsigned int val2Len = XMLString::stringLen(val2);
+    bool val1IsEmpty = (val1==0 || *val1==0);
+    bool val2IsEmpty = (val2==0 || *val2==0);
 
-    if (!val1Len && !val2Len) {
+    if (val1IsEmpty && val2IsEmpty) {
 
         if (dv1 == dv2) {
             return true;
@@ -235,7 +235,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
         return false;
     }
 
-    if (!val1Len || !val2Len) {
+    if (val1IsEmpty || val2IsEmpty) {
         return false;
     }
 
