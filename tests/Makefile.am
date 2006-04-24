@@ -40,13 +40,13 @@ Normalizer_EXTRA =					src/DOM/Normalizer/expectedOutput
 testprogs +=						RangeTest
 RangeTest_SOURCES = 				src/DOM/RangeTest/RangeTest.cpp
 
-testprogs +=						Traversal
-Traversal_SOURCES = 				src/DOM/Traversal/Traversal.cpp
+testprogs +=						DOMTraversalTest
+DOMTraversalTest_SOURCES = 				src/DOM/Traversal/Traversal.cpp
 
-testprogs +=						TypeInfo
-TypeInfo_SOURCES =	 				src/DOM/TypeInfo/TypeInfo.cpp \
+testprogs +=						DOMTypeInfoTest
+DOMTypeInfoTest_SOURCES =	 				src/DOM/TypeInfo/TypeInfo.cpp \
 									src/DOM/TypeInfo/TypeInfo.hpp
-TypeInfo_EXTRA =					src/DOM/TypeInfo/data/combined.dtd \
+DOMTypeInfoTest_EXTRA =					src/DOM/TypeInfo/data/combined.dtd \
 									src/DOM/TypeInfo/data/combined.xml \
 									src/DOM/TypeInfo/data/combined.xsd \
 									src/DOM/TypeInfo/data/SecondSchema.xsd \
@@ -64,13 +64,12 @@ testprogs +=						InitTermTest
 InitTermTest_SOURCES = 				src/InitTermTest/InitTermTest.cpp \
 									src/InitTermTest/InitTermTest.hpp
 
-# This tests the deprecated dom, which we don't build at the moment
-#testprogs +=						MemHandlerTest
-#MemHandlerTest_SOURCES = 			src/MemHandlerTest/MemoryMonitor.cpp \
-#									src/MemHandlerTest/MemoryMonitor.hpp \
-#									src/MemHandlerTest/SimpleHashPtr.cpp \
-#									src/MemHandlerTest/SimpleHashPtr.hpp \
-#									src/MemHandlerTest/SimpleValueHashTableOf.hpp
+testprogs +=						MemHandlerTest
+MemHandlerTest_SOURCES = 			src/MemHandlerTest/MemoryMonitor.cpp \
+									src/MemHandlerTest/MemoryMonitor.hpp \
+									src/MemHandlerTest/SimpleHashPtr.cpp \
+									src/MemHandlerTest/SimpleHashPtr.hpp \
+									src/MemHandlerTest/SimpleValueHashTableOf.hpp
 
 testprogs +=						NetAccessorTest
 NetAccessorTest_SOURCES = 			src/NetAccessorTest/NetAccessorTest.cpp
