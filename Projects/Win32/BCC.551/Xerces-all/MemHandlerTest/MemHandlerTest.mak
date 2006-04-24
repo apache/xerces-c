@@ -5,12 +5,7 @@ BCB = $(MAKEDIR)\..
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\MemHandlerTest.exe
-!if $d(WITHDEPRDOM)
-DEPRDOM_OBJFILES = $(TARGETPATH)\obj\MemoryMonitor.obj $(TARGETPATH)\obj\SimpleHashPtr.obj
-!else
-NO_DEPRDOM_PRODUCEMAIN=NEVER_COMPILE
-!endif
-OBJFILES = $(DEPRDOM_OBJFILES) $(TARGETPATH)\obj\MemHandlerTest.obj
+OBJFILES = $(TARGETPATH)\obj\MemoryMonitor.obj $(TARGETPATH)\obj\SimpleHashPtr.obj $(TARGETPATH)\obj\MemHandlerTest.obj
 RESFILES = 
 MAINSOURCE = MemHandlerTest.cpp
 RESDEPEN = $(RESFILES)
@@ -25,7 +20,7 @@ PATHCPP = .;..\..\..\..\..\tests\src\MemHandlerTest
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
-USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT;WIN32_LEAN_AND_MEAN;$(NO_DEPRDOM_PRODUCEMAIN)
+USERDEFINES = _DEBUG;XERCES_NO_CONFIGURE_SUPPORT;WIN32_LEAN_AND_MEAN;
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
 INCLUDEPATH = ..\..\..\..\..\tests\src\MemHandlerTest;..\..\..\..\..\src
 LIBPATH = 

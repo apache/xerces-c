@@ -33,7 +33,6 @@
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/dom/deprecated/DOMParser.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include "SimpleValueHashTableOf.hpp"
 

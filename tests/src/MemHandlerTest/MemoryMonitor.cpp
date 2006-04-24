@@ -265,11 +265,6 @@ int main (int argC,  char *argV[])
     SAXErrorHandler saxErrorHandler;
     sax2parser->setErrorHandler(&saxErrorHandler);
 
-    // Instantiate the deprecated DOM parser with its memory manager.
-    MemoryMonitor *depDOMMemMonitor = new MemoryMonitor();
-    DOMParser *depDOMParser = new (depDOMMemMonitor)DOMParser(0, depDOMMemMonitor);
-    depDOMParser->setErrorHandler(&saxErrorHandler);
-
     // Instantiate the SAX 1 parser with its memory manager.
     MemoryMonitor *sax1MemMonitor = new MemoryMonitor();
     SAXParser *saxParser = new (sax1MemMonitor) SAXParser(0, sax1MemMonitor);
@@ -278,17 +273,14 @@ int main (int argC,  char *argV[])
     // set features 
     domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, doNamespaces);
     sax2parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
-    depDOMParser->setDoNamespaces(doNamespaces);
     saxParser->setDoNamespaces(doNamespaces);
 
     domBuilder->getDomConfig()->setParameter(XMLUni::fgXercesSchema, doSchema);
     sax2parser->setFeature(XMLUni::fgXercesSchema, doSchema);
-    depDOMParser->setDoSchema(doSchema);
     saxParser->setDoSchema(doSchema);
 
     domBuilder->getDomConfig()->setParameter(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     sax2parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
-    depDOMParser->setValidationSchemaFullChecking(schemaFullChecking);
     saxParser->setValidationSchemaFullChecking(schemaFullChecking);
 
     if (domBuilderValScheme == AbstractDOMParser::Val_Auto)
@@ -296,14 +288,12 @@ int main (int argC,  char *argV[])
         domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMValidateIfSchema, true);
         sax2parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
         sax2parser->setFeature(XMLUni::fgXercesDynamic, true);
-        depDOMParser->setValidationScheme(DOMParser::Val_Auto);
         saxParser->setValidationScheme(SAXParser::Val_Auto);
     }
     else if (domBuilderValScheme == AbstractDOMParser::Val_Never)
     {
         domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMValidate, false);
         sax2parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
-        depDOMParser->setValidationScheme(DOMParser::Val_Never);
         saxParser->setValidationScheme(SAXParser::Val_Never);
     }
     else if (domBuilderValScheme == AbstractDOMParser::Val_Always)
@@ -311,7 +301,6 @@ int main (int argC,  char *argV[])
         domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMValidate, true);
         sax2parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
         sax2parser->setFeature(XMLUni::fgXercesDynamic, false);
-        depDOMParser->setValidationScheme(DOMParser::Val_Always);
         saxParser->setValidationScheme(SAXParser::Val_Always);
     }
 
@@ -367,7 +356,6 @@ int main (int argC,  char *argV[])
 
                 doc = domBuilder->parseURI(xmlFile);
                 sax2parser->parse(xmlFile);
-                depDOMParser->parse(xmlFile);
                 saxParser->parse(xmlFile);
             }
             catch (const OutOfMemoryException&)
@@ -414,16 +402,13 @@ int main (int argC,  char *argV[])
     //
     domBuilder->release();
     delete sax2parser;
-    delete depDOMParser;
     delete saxParser;
 
     XERCES_STD_QUALIFIER cout << "At destruction, domBuilderMemMonitor has " << domBuilderMemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
     XERCES_STD_QUALIFIER cout << "At destruction, sax2MemMonitor has " << sax2MemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "At destruction, depDOMMemMonitor has " << depDOMMemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
     XERCES_STD_QUALIFIER cout << "At destruction, sax1MemMonitor has " << sax1MemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
     delete domBuilderMemMonitor;
     delete sax2MemMonitor;
-    delete depDOMMemMonitor;
     delete sax1MemMonitor;
 
     XMLPlatformUtils::Terminate();

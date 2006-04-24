@@ -1097,27 +1097,6 @@ DOMTraversalTest
 Test Run Successfully
 
 Usage:
-    DeprecatedDOMCount [options] <XML file | List file>
-
-This program invokes the DOM parser, builds the DOM tree,
-and then prints the number of elements found in each XML file.
-
-Options:
-    -l          Indicate the input file is a List File that has a list of xml files.
-                Default to off (Input file is an XML file).
-    -v=xxx      Validation scheme [always | never | auto*].
-    -n          Enable namespace processing. Defaults to off.
-    -s          Enable schema processing. Defaults to off.
-    -f          Enable full schema constraint checking. Defaults to off.
-    -?          Show this help.
-
-  * = Default if not provided explicitly.
-
-personal.xml:{timing removed}(37 elems).
-personal.xml:{timing removed}(37 elems).
-personal-schema.xml:{timing removed}(37 elems).
-
-Usage:
     XSerializerTest [options] <XML file | List file>
 
 This program invokes the SAX2XMLReader, and then prints the
@@ -1219,12 +1198,10 @@ Options:
 
 At destruction, domBuilderMemMonitor has 0 bytes.
 At destruction, sax2MemMonitor has 0 bytes.
-At destruction, depDOMMemMonitor has 0 bytes.
 At destruction, sax1MemMonitor has 0 bytes.
 At destruction, staticMemMonitor has 0 bytes.
 At destruction, domBuilderMemMonitor has 0 bytes.
 At destruction, sax2MemMonitor has 0 bytes.
-At destruction, depDOMMemMonitor has 0 bytes.
 At destruction, sax1MemMonitor has 0 bytes.
 At destruction, staticMemMonitor has 0 bytes.
 Test Run Successfully

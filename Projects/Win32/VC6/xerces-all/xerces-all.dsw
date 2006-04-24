@@ -123,24 +123,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "DeprecatedDOMCount"=".\DeprecatedDOMCount\DeprecatedDOMCount.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XercesDeprecatedDOMLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "EncodingTest"=".\EncodingTest\EncodingTest.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -196,9 +178,6 @@ Package=<4>
 {{{
     Begin Project Dependency
     Project_Dep_Name XercesLib
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XercesDeprecatedDOMLib
     End Project Dependency
 }}}
 
@@ -429,21 +408,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XercesDeprecatedDOMLib"=".\XercesLib\XercesDeprecatedDOMLib.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "XercesLib"=".\XercesLib\XercesLib.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -534,9 +498,6 @@ Package=<4>
     Project_Dep_Name DOMTraversalTest
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name DeprecatedDOMCount
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name DOMTypeInfoTest
     End Project Dependency
     Begin Project Dependency
@@ -547,9 +508,6 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name SCMPrint
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XercesDeprecatedDOMLib
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XSValueTest

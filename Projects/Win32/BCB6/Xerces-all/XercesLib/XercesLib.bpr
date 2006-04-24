@@ -275,64 +275,6 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeWalkerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTypeInfoImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSDElementNSImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\AttrImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\AttrMapImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\AttrNSImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\CDATASectionImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\CharacterDataImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ChildNode.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\CommentImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DeepNodeListImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DocumentFragmentImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DocumentImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DocumentTypeImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Attr.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_CDATASection.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_CharacterData.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Comment.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Document.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_DocumentFragment.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_DocumentType.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_DOMException.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_DOMImplementation.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Element.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Entity.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_EntityReference.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_NamedNodeMap.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Node.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_NodeFilter.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_NodeIterator.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_NodeList.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Notation.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_ProcessingInstruction.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Range.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_RangeException.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_Text.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_TreeWalker.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_XMLDecl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DomMemDebug.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMParser.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMString.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DStringPool.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ElementDefinitionImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ElementImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ElementNSImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\EntityImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\EntityReferenceImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NamedNodeMapImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NodeIDMap.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NodeImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NodeIteratorImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NodeListImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NodeVector.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\NotationImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ParentNode.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ProcessingInstructionImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\RangeImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\RefCountedImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\TextImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\TreeWalkerImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDeclImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj 
@@ -369,7 +311,7 @@
     <LIBRARIES value=""/>
     <SPARELIBS value="rtl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi"/>
-    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi;"/>
+    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi;"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -379,15 +321,14 @@
     <USERDEFINES value="_DEBUG;PLATFORM_WIN32;XERCES_BUILDING_LIBRARY;XERCES_PATH_DELIMITER_BACKSLASH=1;XERCES_USE_FILEMGR_WINDOWS=1;XERCES_USE_MUTEXMGR_WINDOWS=1;XERCES_USE_ATOMICOPMGR_WINDOWS=1;XERCES_USE_NETACCESSOR_WINSOCK=1;XERCES_USE_TRANSCODER_WINDOWS=1;XERCES_USE_MSGLOADER_INMEMORY=1;HAVE_LIMITS_H=1;HAVE_FTIME=1;HAVE_SYS_TIMEB_H=1;HAVE_STRICMP=1;HAVE_STRNICMP=1"/>
     <SYSDEFINES value="NO_STRICT;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="Xerceslib.cpp"/>
-    <INCLUDEPATH value="..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src;$(BCB)\include"/>
-    <LIBPATH value="..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\deprecated;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src;$(BCB)\include"/>
+    <LIBPATH value="..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par -w-8027 -w-8026"/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
     <IDLCFLAGS value="-I..\..\..\..\..\src\xercesc\framework\psvi 
       -I..\..\..\..\..\src\xercesc\dom 
-      -I..\..\..\..\..\src\xercesc\dom\deprecated 
       -I..\..\..\..\..\src\xercesc\dom\impl -I..\..\..\..\..\src\xercesc\sax2 
       -I..\..\..\..\..\src\xercesc\validators\schema 
       -I..\..\..\..\..\src\xercesc\validators\schema\identity 
@@ -695,64 +636,6 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.cpp" FORMNAME="" UNITNAME="DOMTreeWalkerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.cpp" FORMNAME="" UNITNAME="DOMTypeInfoImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp" FORMNAME="" UNITNAME="XSDElementNSImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\AttrImpl.cpp" FORMNAME="" UNITNAME="AttrImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\AttrMapImpl.cpp" FORMNAME="" UNITNAME="AttrMapImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\AttrNSImpl.cpp" FORMNAME="" UNITNAME="AttrNSImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\CDATASectionImpl.cpp" FORMNAME="" UNITNAME="CDATASectionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\CharacterDataImpl.cpp" FORMNAME="" UNITNAME="CharacterDataImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\ChildNode.cpp" FORMNAME="" UNITNAME="ChildNode" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\CommentImpl.cpp" FORMNAME="" UNITNAME="CommentImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DeepNodeListImpl.cpp" FORMNAME="" UNITNAME="DeepNodeListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DocumentFragmentImpl.cpp" FORMNAME="" UNITNAME="DocumentFragmentImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DocumentImpl.cpp" FORMNAME="" UNITNAME="DocumentImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DocumentTypeImpl.cpp" FORMNAME="" UNITNAME="DocumentTypeImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Attr.cpp" FORMNAME="" UNITNAME="DOM_Attr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_CDATASection.cpp" FORMNAME="" UNITNAME="DOM_CDATASection" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_CharacterData.cpp" FORMNAME="" UNITNAME="DOM_CharacterData" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Comment.cpp" FORMNAME="" UNITNAME="DOM_Comment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Document.cpp" FORMNAME="" UNITNAME="DOM_Document" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DocumentFragment.cpp" FORMNAME="" UNITNAME="DOM_DocumentFragment" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DocumentType.cpp" FORMNAME="" UNITNAME="DOM_DocumentType" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DOMException.cpp" FORMNAME="" UNITNAME="DOM_DOMException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DOMImplementation.cpp" FORMNAME="" UNITNAME="DOM_DOMImplementation" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Element.cpp" FORMNAME="" UNITNAME="DOM_Element" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Entity.cpp" FORMNAME="" UNITNAME="DOM_Entity" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_EntityReference.cpp" FORMNAME="" UNITNAME="DOM_EntityReference" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NamedNodeMap.cpp" FORMNAME="" UNITNAME="DOM_NamedNodeMap" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Node.cpp" FORMNAME="" UNITNAME="DOM_Node" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeFilter.cpp" FORMNAME="" UNITNAME="DOM_NodeFilter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeIterator.cpp" FORMNAME="" UNITNAME="DOM_NodeIterator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeList.cpp" FORMNAME="" UNITNAME="DOM_NodeList" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Notation.cpp" FORMNAME="" UNITNAME="DOM_Notation" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_ProcessingInstruction.cpp" FORMNAME="" UNITNAME="DOM_ProcessingInstruction" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Range.cpp" FORMNAME="" UNITNAME="DOM_Range" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_RangeException.cpp" FORMNAME="" UNITNAME="DOM_RangeException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Text.cpp" FORMNAME="" UNITNAME="DOM_Text" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_TreeWalker.cpp" FORMNAME="" UNITNAME="DOM_TreeWalker" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOM_XMLDecl.cpp" FORMNAME="" UNITNAME="DOM_XMLDecl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DomMemDebug.cpp" FORMNAME="" UNITNAME="DomMemDebug" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOMParser.cpp" FORMNAME="" UNITNAME="DOMParser" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DOMString.cpp" FORMNAME="" UNITNAME="DOMString" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\DStringPool.cpp" FORMNAME="" UNITNAME="DStringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\ElementDefinitionImpl.cpp" FORMNAME="" UNITNAME="ElementDefinitionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\ElementImpl.cpp" FORMNAME="" UNITNAME="ElementImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\ElementNSImpl.cpp" FORMNAME="" UNITNAME="ElementNSImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\EntityImpl.cpp" FORMNAME="" UNITNAME="EntityImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\EntityReferenceImpl.cpp" FORMNAME="" UNITNAME="EntityReferenceImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NamedNodeMapImpl.cpp" FORMNAME="" UNITNAME="NamedNodeMapImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NodeIDMap.cpp" FORMNAME="" UNITNAME="NodeIDMap" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NodeImpl.cpp" FORMNAME="" UNITNAME="NodeImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NodeIteratorImpl.cpp" FORMNAME="" UNITNAME="NodeIteratorImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NodeListImpl.cpp" FORMNAME="" UNITNAME="NodeListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NodeVector.cpp" FORMNAME="" UNITNAME="NodeVector" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\NotationImpl.cpp" FORMNAME="" UNITNAME="NotationImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\ParentNode.cpp" FORMNAME="" UNITNAME="ParentNode" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\ProcessingInstructionImpl.cpp" FORMNAME="" UNITNAME="ProcessingInstructionImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\RangeImpl.cpp" FORMNAME="" UNITNAME="RangeImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\RefCountedImpl.cpp" FORMNAME="" UNITNAME="RefCountedImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\TextImpl.cpp" FORMNAME="" UNITNAME="TextImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\TreeWalkerImpl.cpp" FORMNAME="" UNITNAME="TreeWalkerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.cpp" FORMNAME="" UNITNAME="XMLDeclImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMException.cpp" FORMNAME="" UNITNAME="DOMException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMRangeException.cpp" FORMNAME="" UNITNAME="DOMRangeException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp" FORMNAME="" UNITNAME="DOMXPathException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

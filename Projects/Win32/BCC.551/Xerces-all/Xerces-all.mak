@@ -17,7 +17,7 @@ MAKEN = $(ROOT)\bin\$(MAKE) -$(MAKEFLAGS) -f
 PROJECTNAMES = XercesLib DOMCount DOMPrint SAXCount SAXPrint SAX2Count SAX2Print \
   DOMTest DOMMemTest DOMRangeTest DOMTraversal EncodingTest InitTermTest \
   ThreadTest MemHandlerTest XSerializerTest PSVIWriter SCMPrint MemParse Redirect \
-  StdInParse PParse EnumVal SEnumVal CreateDOMDocument XSValueTest DeprecatedDOMCount \
+  StdInParse PParse EnumVal SEnumVal CreateDOMDocument XSValueTest \
   DOMTypeInfoTest
 
 !include ..\..\..\..\version.incl
@@ -31,7 +31,7 @@ clearall:
 XercesLib: XercesLib\XercesLib.mak
   cd $<
   copy ..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.borland.hpp ..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM) -DWITHASM=$(WITHASM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHASM=$(WITHASM)
   cd ..
 
 DOMPrint: DOMPrint\DOMPrint.mak
@@ -101,71 +101,66 @@ ThreadTest: ThreadTest\ThreadTest.mak
 
 MemHandlerTest: MemHandlerTest\MemHandlerTest.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 XSerializerTest: XSerializerTest\XSerializerTest.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 PSVIWriter: PSVIWriter\PSVIWriter.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 SCMPrint: SCMPrint\SCMPrint.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 MemParse: MemParse\MemParse.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 Redirect: Redirect\Redirect.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 StdInParse: StdInParse\StdInParse.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 PParse: PParse\PParse.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 EnumVal: EnumVal\EnumVal.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 SEnumVal: SEnumVal\SEnumVal.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 CreateDOMDocument: CreateDOMDocument\CreateDOMDocument.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 XSValueTest: XSValueTest\XSValueTest.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
-  cd ..
-
-DeprecatedDOMCount: DeprecatedDOMCount\DeprecatedDOMCount.mak
-  cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 
 DOMTypeInfoTest: DOMTypeInfoTest\DOMTypeInfoTest.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
 

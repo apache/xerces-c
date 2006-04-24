@@ -136,12 +136,6 @@ system ("RangeTest");
 print  ("DOMTraversalTest\n");
 system ("DOMTraversalTest");
 
-#  Run DeprecatedDOMCount
-system ("DeprecatedDOMCount");
-system ("DeprecatedDOMCount -v=never personal.xml");
-system ("DeprecatedDOMCount personal.xml");
-system ("DeprecatedDOMCount -n -s personal-schema.xml");
-
 #  Run XSerializerTest
 system ("XSerializerTest");
 system ("XSerializerTest -v=never  personal.xml");
