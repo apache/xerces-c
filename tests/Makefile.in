@@ -33,7 +33,7 @@
 #
 # $Id$
 #
-SOURCES = $(DOMMemTest_SOURCES) $(DOMTest_SOURCES) $(EncodingTest_SOURCES) $(InitTermTest_SOURCES) $(NetAccessorTest_SOURCES) $(Normalizer_SOURCES) $(RangeTest_SOURCES) $(ThreadTest_SOURCES) $(Traversal_SOURCES) $(TypeInfo_SOURCES) $(XSValueTest_SOURCES) $(XSerializerTest_SOURCES)
+SOURCES = $(DOMMemTest_SOURCES) $(DOMTest_SOURCES) $(DOMTraversalTest_SOURCES) $(DOMTypeInfoTest_SOURCES) $(EncodingTest_SOURCES) $(InitTermTest_SOURCES) $(MemHandlerTest_SOURCES) $(NetAccessorTest_SOURCES) $(Normalizer_SOURCES) $(RangeTest_SOURCES) $(ThreadTest_SOURCES) $(XSValueTest_SOURCES) $(XSerializerTest_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -89,10 +89,12 @@ CONFIG_HEADER = $(top_builddir)/config.h \
 	$(top_builddir)/src/xercesc/util/Xerces_autoconf_config.hpp
 CONFIG_CLEAN_FILES =
 am__EXEEXT_1 = DOMTest$(EXEEXT) DOMMemTest$(EXEEXT) \
-	Normalizer$(EXEEXT) RangeTest$(EXEEXT) Traversal$(EXEEXT) \
-	TypeInfo$(EXEEXT) EncodingTest$(EXEEXT) InitTermTest$(EXEEXT) \
-	NetAccessorTest$(EXEEXT) ThreadTest$(EXEEXT) \
-	XSerializerTest$(EXEEXT) XSValueTest$(EXEEXT)
+	Normalizer$(EXEEXT) RangeTest$(EXEEXT) \
+	DOMTraversalTest$(EXEEXT) DOMTypeInfoTest$(EXEEXT) \
+	EncodingTest$(EXEEXT) InitTermTest$(EXEEXT) \
+	MemHandlerTest$(EXEEXT) NetAccessorTest$(EXEEXT) \
+	ThreadTest$(EXEEXT) XSerializerTest$(EXEEXT) \
+	XSValueTest$(EXEEXT)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_DOMMemTest_OBJECTS = src/DOM/DOMMemTest/DOMMemTest.$(OBJEXT)
 DOMMemTest_OBJECTS = $(am_DOMMemTest_OBJECTS)
@@ -102,6 +104,14 @@ am_DOMTest_OBJECTS = src/DOM/DOMTest/DTest.$(OBJEXT)
 DOMTest_OBJECTS = $(am_DOMTest_OBJECTS)
 DOMTest_LDADD = $(LDADD)
 DOMTest_DEPENDENCIES = ../obj/libxerces.la
+am_DOMTraversalTest_OBJECTS = src/DOM/Traversal/Traversal.$(OBJEXT)
+DOMTraversalTest_OBJECTS = $(am_DOMTraversalTest_OBJECTS)
+DOMTraversalTest_LDADD = $(LDADD)
+DOMTraversalTest_DEPENDENCIES = ../obj/libxerces.la
+am_DOMTypeInfoTest_OBJECTS = src/DOM/TypeInfo/TypeInfo.$(OBJEXT)
+DOMTypeInfoTest_OBJECTS = $(am_DOMTypeInfoTest_OBJECTS)
+DOMTypeInfoTest_LDADD = $(LDADD)
+DOMTypeInfoTest_DEPENDENCIES = ../obj/libxerces.la
 am_EncodingTest_OBJECTS = src/EncodingTest/EncodingTest.$(OBJEXT)
 EncodingTest_OBJECTS = $(am_EncodingTest_OBJECTS)
 EncodingTest_LDADD = $(LDADD)
@@ -110,6 +120,12 @@ am_InitTermTest_OBJECTS = src/InitTermTest/InitTermTest.$(OBJEXT)
 InitTermTest_OBJECTS = $(am_InitTermTest_OBJECTS)
 InitTermTest_LDADD = $(LDADD)
 InitTermTest_DEPENDENCIES = ../obj/libxerces.la
+am_MemHandlerTest_OBJECTS =  \
+	src/MemHandlerTest/MemoryMonitor.$(OBJEXT) \
+	src/MemHandlerTest/SimpleHashPtr.$(OBJEXT)
+MemHandlerTest_OBJECTS = $(am_MemHandlerTest_OBJECTS)
+MemHandlerTest_LDADD = $(LDADD)
+MemHandlerTest_DEPENDENCIES = ../obj/libxerces.la
 am_NetAccessorTest_OBJECTS =  \
 	src/NetAccessorTest/NetAccessorTest.$(OBJEXT)
 NetAccessorTest_OBJECTS = $(am_NetAccessorTest_OBJECTS)
@@ -127,14 +143,6 @@ am_ThreadTest_OBJECTS = src/ThreadTest/ThreadTest.$(OBJEXT)
 ThreadTest_OBJECTS = $(am_ThreadTest_OBJECTS)
 ThreadTest_LDADD = $(LDADD)
 ThreadTest_DEPENDENCIES = ../obj/libxerces.la
-am_Traversal_OBJECTS = src/DOM/Traversal/Traversal.$(OBJEXT)
-Traversal_OBJECTS = $(am_Traversal_OBJECTS)
-Traversal_LDADD = $(LDADD)
-Traversal_DEPENDENCIES = ../obj/libxerces.la
-am_TypeInfo_OBJECTS = src/DOM/TypeInfo/TypeInfo.$(OBJEXT)
-TypeInfo_OBJECTS = $(am_TypeInfo_OBJECTS)
-TypeInfo_LDADD = $(LDADD)
-TypeInfo_DEPENDENCIES = ../obj/libxerces.la
 am_XSValueTest_OBJECTS = src/XSValueTest/XSValueTest.$(OBJEXT)
 XSValueTest_OBJECTS = $(am_XSValueTest_OBJECTS)
 XSValueTest_LDADD = $(LDADD)
@@ -160,17 +168,19 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(DOMMemTest_SOURCES) $(DOMTest_SOURCES) \
+	$(DOMTraversalTest_SOURCES) $(DOMTypeInfoTest_SOURCES) \
 	$(EncodingTest_SOURCES) $(InitTermTest_SOURCES) \
-	$(NetAccessorTest_SOURCES) $(Normalizer_SOURCES) \
-	$(RangeTest_SOURCES) $(ThreadTest_SOURCES) \
-	$(Traversal_SOURCES) $(TypeInfo_SOURCES) \
-	$(XSValueTest_SOURCES) $(XSerializerTest_SOURCES)
+	$(MemHandlerTest_SOURCES) $(NetAccessorTest_SOURCES) \
+	$(Normalizer_SOURCES) $(RangeTest_SOURCES) \
+	$(ThreadTest_SOURCES) $(XSValueTest_SOURCES) \
+	$(XSerializerTest_SOURCES)
 DIST_SOURCES = $(DOMMemTest_SOURCES) $(DOMTest_SOURCES) \
+	$(DOMTraversalTest_SOURCES) $(DOMTypeInfoTest_SOURCES) \
 	$(EncodingTest_SOURCES) $(InitTermTest_SOURCES) \
-	$(NetAccessorTest_SOURCES) $(Normalizer_SOURCES) \
-	$(RangeTest_SOURCES) $(ThreadTest_SOURCES) \
-	$(Traversal_SOURCES) $(TypeInfo_SOURCES) \
-	$(XSValueTest_SOURCES) $(XSerializerTest_SOURCES)
+	$(MemHandlerTest_SOURCES) $(NetAccessorTest_SOURCES) \
+	$(Normalizer_SOURCES) $(RangeTest_SOURCES) \
+	$(ThreadTest_SOURCES) $(XSValueTest_SOURCES) \
+	$(XSerializerTest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -333,14 +343,6 @@ target_alias = @target_alias@
 LDADD = ../obj/libxerces.la
 AM_CPPFLAGS = -I${top_srcdir}/src
 
-# This tests the deprecated dom, which we don't build at the moment
-#testprogs +=						MemHandlerTest
-#MemHandlerTest_SOURCES = 			src/MemHandlerTest/MemoryMonitor.cpp \
-#									src/MemHandlerTest/MemoryMonitor.hpp \
-#									src/MemHandlerTest/SimpleHashPtr.cpp \
-#									src/MemHandlerTest/SimpleHashPtr.hpp \
-#									src/MemHandlerTest/SimpleValueHashTableOf.hpp
-
 # Doesn't compile under gcc4 for some reason
 # dcargill says this is obsolete and we can delete it.
 #testprogs +=						ParserTest
@@ -368,9 +370,9 @@ AM_CPPFLAGS = -I${top_srcdir}/src
 #									src/UtilTests/CoreTests.hpp
 
 # Fails to compile under gcc4 (values too long for long type)
-testprogs = DOMTest DOMMemTest Normalizer RangeTest Traversal TypeInfo \
-	EncodingTest InitTermTest NetAccessorTest ThreadTest \
-	XSerializerTest XSValueTest
+testprogs = DOMTest DOMMemTest Normalizer RangeTest DOMTraversalTest \
+	DOMTypeInfoTest EncodingTest InitTermTest MemHandlerTest \
+	NetAccessorTest ThreadTest XSerializerTest XSValueTest
 DOMTest_SOURCES = src/DOM/DOMTest/DTest.cpp \
 									src/DOM/DOMTest/DTest.h
 
@@ -380,11 +382,11 @@ Normalizer_SOURCES = src/DOM/Normalizer/Normalizer.cpp \
 
 Normalizer_EXTRA = src/DOM/Normalizer/expectedOutput
 RangeTest_SOURCES = src/DOM/RangeTest/RangeTest.cpp
-Traversal_SOURCES = src/DOM/Traversal/Traversal.cpp
-TypeInfo_SOURCES = src/DOM/TypeInfo/TypeInfo.cpp \
+DOMTraversalTest_SOURCES = src/DOM/Traversal/Traversal.cpp
+DOMTypeInfoTest_SOURCES = src/DOM/TypeInfo/TypeInfo.cpp \
 									src/DOM/TypeInfo/TypeInfo.hpp
 
-TypeInfo_EXTRA = src/DOM/TypeInfo/data/combined.dtd \
+DOMTypeInfoTest_EXTRA = src/DOM/TypeInfo/data/combined.dtd \
 									src/DOM/TypeInfo/data/combined.xml \
 									src/DOM/TypeInfo/data/combined.xsd \
 									src/DOM/TypeInfo/data/SecondSchema.xsd \
@@ -398,6 +400,12 @@ TypeInfo_EXTRA = src/DOM/TypeInfo/data/combined.dtd \
 EncodingTest_SOURCES = src/EncodingTest/EncodingTest.cpp
 InitTermTest_SOURCES = src/InitTermTest/InitTermTest.cpp \
 									src/InitTermTest/InitTermTest.hpp
+
+MemHandlerTest_SOURCES = src/MemHandlerTest/MemoryMonitor.cpp \
+									src/MemHandlerTest/MemoryMonitor.hpp \
+									src/MemHandlerTest/SimpleHashPtr.cpp \
+									src/MemHandlerTest/SimpleHashPtr.hpp \
+									src/MemHandlerTest/SimpleValueHashTableOf.hpp
 
 NetAccessorTest_SOURCES = src/NetAccessorTest/NetAccessorTest.cpp
 ThreadTest_SOURCES = src/ThreadTest/ThreadTest.cpp
@@ -483,6 +491,29 @@ src/DOM/DOMTest/DTest.$(OBJEXT): src/DOM/DOMTest/$(am__dirstamp) \
 DOMTest$(EXEEXT): $(DOMTest_OBJECTS) $(DOMTest_DEPENDENCIES) 
 	@rm -f DOMTest$(EXEEXT)
 	$(CXXLINK) $(DOMTest_LDFLAGS) $(DOMTest_OBJECTS) $(DOMTest_LDADD) $(LIBS)
+src/DOM/Traversal/$(am__dirstamp):
+	@$(mkdir_p) src/DOM/Traversal
+	@: > src/DOM/Traversal/$(am__dirstamp)
+src/DOM/Traversal/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) src/DOM/Traversal/$(DEPDIR)
+	@: > src/DOM/Traversal/$(DEPDIR)/$(am__dirstamp)
+src/DOM/Traversal/Traversal.$(OBJEXT):  \
+	src/DOM/Traversal/$(am__dirstamp) \
+	src/DOM/Traversal/$(DEPDIR)/$(am__dirstamp)
+DOMTraversalTest$(EXEEXT): $(DOMTraversalTest_OBJECTS) $(DOMTraversalTest_DEPENDENCIES) 
+	@rm -f DOMTraversalTest$(EXEEXT)
+	$(CXXLINK) $(DOMTraversalTest_LDFLAGS) $(DOMTraversalTest_OBJECTS) $(DOMTraversalTest_LDADD) $(LIBS)
+src/DOM/TypeInfo/$(am__dirstamp):
+	@$(mkdir_p) src/DOM/TypeInfo
+	@: > src/DOM/TypeInfo/$(am__dirstamp)
+src/DOM/TypeInfo/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) src/DOM/TypeInfo/$(DEPDIR)
+	@: > src/DOM/TypeInfo/$(DEPDIR)/$(am__dirstamp)
+src/DOM/TypeInfo/TypeInfo.$(OBJEXT): src/DOM/TypeInfo/$(am__dirstamp) \
+	src/DOM/TypeInfo/$(DEPDIR)/$(am__dirstamp)
+DOMTypeInfoTest$(EXEEXT): $(DOMTypeInfoTest_OBJECTS) $(DOMTypeInfoTest_DEPENDENCIES) 
+	@rm -f DOMTypeInfoTest$(EXEEXT)
+	$(CXXLINK) $(DOMTypeInfoTest_LDFLAGS) $(DOMTypeInfoTest_OBJECTS) $(DOMTypeInfoTest_LDADD) $(LIBS)
 src/EncodingTest/$(am__dirstamp):
 	@$(mkdir_p) src/EncodingTest
 	@: > src/EncodingTest/$(am__dirstamp)
@@ -507,6 +538,21 @@ src/InitTermTest/InitTermTest.$(OBJEXT):  \
 InitTermTest$(EXEEXT): $(InitTermTest_OBJECTS) $(InitTermTest_DEPENDENCIES) 
 	@rm -f InitTermTest$(EXEEXT)
 	$(CXXLINK) $(InitTermTest_LDFLAGS) $(InitTermTest_OBJECTS) $(InitTermTest_LDADD) $(LIBS)
+src/MemHandlerTest/$(am__dirstamp):
+	@$(mkdir_p) src/MemHandlerTest
+	@: > src/MemHandlerTest/$(am__dirstamp)
+src/MemHandlerTest/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) src/MemHandlerTest/$(DEPDIR)
+	@: > src/MemHandlerTest/$(DEPDIR)/$(am__dirstamp)
+src/MemHandlerTest/MemoryMonitor.$(OBJEXT):  \
+	src/MemHandlerTest/$(am__dirstamp) \
+	src/MemHandlerTest/$(DEPDIR)/$(am__dirstamp)
+src/MemHandlerTest/SimpleHashPtr.$(OBJEXT):  \
+	src/MemHandlerTest/$(am__dirstamp) \
+	src/MemHandlerTest/$(DEPDIR)/$(am__dirstamp)
+MemHandlerTest$(EXEEXT): $(MemHandlerTest_OBJECTS) $(MemHandlerTest_DEPENDENCIES) 
+	@rm -f MemHandlerTest$(EXEEXT)
+	$(CXXLINK) $(MemHandlerTest_LDFLAGS) $(MemHandlerTest_OBJECTS) $(MemHandlerTest_LDADD) $(LIBS)
 src/NetAccessorTest/$(am__dirstamp):
 	@$(mkdir_p) src/NetAccessorTest
 	@: > src/NetAccessorTest/$(am__dirstamp)
@@ -554,29 +600,6 @@ src/ThreadTest/ThreadTest.$(OBJEXT): src/ThreadTest/$(am__dirstamp) \
 ThreadTest$(EXEEXT): $(ThreadTest_OBJECTS) $(ThreadTest_DEPENDENCIES) 
 	@rm -f ThreadTest$(EXEEXT)
 	$(CXXLINK) $(ThreadTest_LDFLAGS) $(ThreadTest_OBJECTS) $(ThreadTest_LDADD) $(LIBS)
-src/DOM/Traversal/$(am__dirstamp):
-	@$(mkdir_p) src/DOM/Traversal
-	@: > src/DOM/Traversal/$(am__dirstamp)
-src/DOM/Traversal/$(DEPDIR)/$(am__dirstamp):
-	@$(mkdir_p) src/DOM/Traversal/$(DEPDIR)
-	@: > src/DOM/Traversal/$(DEPDIR)/$(am__dirstamp)
-src/DOM/Traversal/Traversal.$(OBJEXT):  \
-	src/DOM/Traversal/$(am__dirstamp) \
-	src/DOM/Traversal/$(DEPDIR)/$(am__dirstamp)
-Traversal$(EXEEXT): $(Traversal_OBJECTS) $(Traversal_DEPENDENCIES) 
-	@rm -f Traversal$(EXEEXT)
-	$(CXXLINK) $(Traversal_LDFLAGS) $(Traversal_OBJECTS) $(Traversal_LDADD) $(LIBS)
-src/DOM/TypeInfo/$(am__dirstamp):
-	@$(mkdir_p) src/DOM/TypeInfo
-	@: > src/DOM/TypeInfo/$(am__dirstamp)
-src/DOM/TypeInfo/$(DEPDIR)/$(am__dirstamp):
-	@$(mkdir_p) src/DOM/TypeInfo/$(DEPDIR)
-	@: > src/DOM/TypeInfo/$(DEPDIR)/$(am__dirstamp)
-src/DOM/TypeInfo/TypeInfo.$(OBJEXT): src/DOM/TypeInfo/$(am__dirstamp) \
-	src/DOM/TypeInfo/$(DEPDIR)/$(am__dirstamp)
-TypeInfo$(EXEEXT): $(TypeInfo_OBJECTS) $(TypeInfo_DEPENDENCIES) 
-	@rm -f TypeInfo$(EXEEXT)
-	$(CXXLINK) $(TypeInfo_LDFLAGS) $(TypeInfo_OBJECTS) $(TypeInfo_LDADD) $(LIBS)
 src/XSValueTest/$(am__dirstamp):
 	@$(mkdir_p) src/XSValueTest
 	@: > src/XSValueTest/$(am__dirstamp)
@@ -615,6 +638,8 @@ mostlyclean-compile:
 	-rm -f src/DOM/TypeInfo/TypeInfo.$(OBJEXT)
 	-rm -f src/EncodingTest/EncodingTest.$(OBJEXT)
 	-rm -f src/InitTermTest/InitTermTest.$(OBJEXT)
+	-rm -f src/MemHandlerTest/MemoryMonitor.$(OBJEXT)
+	-rm -f src/MemHandlerTest/SimpleHashPtr.$(OBJEXT)
 	-rm -f src/NetAccessorTest/NetAccessorTest.$(OBJEXT)
 	-rm -f src/ThreadTest/ThreadTest.$(OBJEXT)
 	-rm -f src/XSValueTest/XSValueTest.$(OBJEXT)
@@ -632,6 +657,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/DOM/TypeInfo/$(DEPDIR)/TypeInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/EncodingTest/$(DEPDIR)/EncodingTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/InitTermTest/$(DEPDIR)/InitTermTest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/MemHandlerTest/$(DEPDIR)/MemoryMonitor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/MemHandlerTest/$(DEPDIR)/SimpleHashPtr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/NetAccessorTest/$(DEPDIR)/NetAccessorTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/ThreadTest/$(DEPDIR)/ThreadTest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/XSValueTest/$(DEPDIR)/XSValueTest.Po@am__quote@
@@ -788,6 +815,8 @@ distclean-generic:
 	-rm -f src/EncodingTest/$(am__dirstamp)
 	-rm -f src/InitTermTest/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/InitTermTest/$(am__dirstamp)
+	-rm -f src/MemHandlerTest/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/MemHandlerTest/$(am__dirstamp)
 	-rm -f src/NetAccessorTest/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/NetAccessorTest/$(am__dirstamp)
 	-rm -f src/ThreadTest/$(DEPDIR)/$(am__dirstamp)
@@ -806,7 +835,7 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf src/DOM/DOMMemTest/$(DEPDIR) src/DOM/DOMTest/$(DEPDIR) src/DOM/Normalizer/$(DEPDIR) src/DOM/RangeTest/$(DEPDIR) src/DOM/Traversal/$(DEPDIR) src/DOM/TypeInfo/$(DEPDIR) src/EncodingTest/$(DEPDIR) src/InitTermTest/$(DEPDIR) src/NetAccessorTest/$(DEPDIR) src/ThreadTest/$(DEPDIR) src/XSValueTest/$(DEPDIR) src/XSerializerTest/$(DEPDIR)
+	-rm -rf src/DOM/DOMMemTest/$(DEPDIR) src/DOM/DOMTest/$(DEPDIR) src/DOM/Normalizer/$(DEPDIR) src/DOM/RangeTest/$(DEPDIR) src/DOM/Traversal/$(DEPDIR) src/DOM/TypeInfo/$(DEPDIR) src/EncodingTest/$(DEPDIR) src/InitTermTest/$(DEPDIR) src/MemHandlerTest/$(DEPDIR) src/NetAccessorTest/$(DEPDIR) src/ThreadTest/$(DEPDIR) src/XSValueTest/$(DEPDIR) src/XSerializerTest/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -832,7 +861,7 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf src/DOM/DOMMemTest/$(DEPDIR) src/DOM/DOMTest/$(DEPDIR) src/DOM/Normalizer/$(DEPDIR) src/DOM/RangeTest/$(DEPDIR) src/DOM/Traversal/$(DEPDIR) src/DOM/TypeInfo/$(DEPDIR) src/EncodingTest/$(DEPDIR) src/InitTermTest/$(DEPDIR) src/NetAccessorTest/$(DEPDIR) src/ThreadTest/$(DEPDIR) src/XSValueTest/$(DEPDIR) src/XSerializerTest/$(DEPDIR)
+	-rm -rf src/DOM/DOMMemTest/$(DEPDIR) src/DOM/DOMTest/$(DEPDIR) src/DOM/Normalizer/$(DEPDIR) src/DOM/RangeTest/$(DEPDIR) src/DOM/Traversal/$(DEPDIR) src/DOM/TypeInfo/$(DEPDIR) src/EncodingTest/$(DEPDIR) src/InitTermTest/$(DEPDIR) src/MemHandlerTest/$(DEPDIR) src/NetAccessorTest/$(DEPDIR) src/ThreadTest/$(DEPDIR) src/XSValueTest/$(DEPDIR) src/XSerializerTest/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
