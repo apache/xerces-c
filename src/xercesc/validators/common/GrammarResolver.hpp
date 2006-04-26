@@ -72,6 +72,13 @@ public:
                                             const XMLCh* const typeName);
 
     /**
+     * Retrieve the DatatypeValidatorFactory used for built-in schema types
+     *
+     * @return the DatatypeValidator associated with namespace for XMLSchema
+     */
+    DatatypeValidatorFactory* getBuiltinDatatypeValidatorFactory();
+
+    /**
      * Retrieve the grammar that is associated with the specified namespace key
      *
      * @param  gramDesc   grammar description for the grammar
@@ -251,6 +258,11 @@ inline MemoryManager* GrammarResolver::getGrammarPoolMemoryManager() const
 inline ValueVectorOf<SchemaGrammar*>* GrammarResolver::getGrammarsToAddToXSModel()
 {
     return fGrammarsToAddToXSModel;
+}
+
+inline DatatypeValidatorFactory* GrammarResolver::getBuiltinDatatypeValidatorFactory()
+{
+    return fDataTypeReg;
 }
 
 XERCES_CPP_NAMESPACE_END
