@@ -52,12 +52,13 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 #if defined(_WIN32) || defined(WIN32)
-extern "C" void U_IMPORT *XercesMessages2_6_dat;
-#define BUNDLE_NAME "XercesMessages2_6"
+#define ENTRY_POINT XercesMessages3_0_dat
+#define BUNDLE_NAME "XercesMessages3_0"
 #else
-extern "C" void U_IMPORT *XercesMessages2_6_0_dat;
-#define BUNDLE_NAME "XercesMessages2_6_0"
+#define ENTRY_POINT XercesMessages3_0_0_dat
+#define BUNDLE_NAME "XercesMessages3_0_0"
 #endif
+extern "C" void U_IMPORT *ENTRY_POINT;
 
 /* 
  *  Tell ICU where our resource data is located in memory. The data lives in the XercesMessages dll, and we just
@@ -77,7 +78,7 @@ static void setAppData()
     {
         setAppDataDone = true;
         UErrorCode err = U_ZERO_ERROR;
-        udata_setAppData(BUNDLE_NAME, &XercesMessages2_6_dat, &err);
+        udata_setAppData(BUNDLE_NAME, &ENTRY_POINT, &err);
         if (U_SUCCESS(err))
         {
     	    setAppDataOK = true;
