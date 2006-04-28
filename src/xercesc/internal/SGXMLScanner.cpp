@@ -3451,23 +3451,29 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
         XMLBufBid bbXsi(&fBufMgr);
         XMLBuffer& fXsiType = bbXsi.getBuffer();
 
-        QName attName(fMemoryManager);
-
         for (index = 0; index < attCount; index++)
         {
             // each attribute has the prefix:suffix="value"
             const KVStringPair* curPair = fRawAttrList->elementAt(index);
             const XMLCh* rawPtr = curPair->getKey();
+            const XMLCh* prefPtr;
 
-            attName.setName(rawPtr, fEmptyNamespaceId);
-            const XMLCh* prefPtr = attName.getPrefix();
+            int   colonInd = fRawAttrColonList[index];
+
+            if (colonInd != -1) {
+                fURIBuf.set(rawPtr, colonInd);
+                prefPtr = fURIBuf.getRawBuffer();
+            }
+            else {
+                prefPtr = XMLUni::fgZeroLenString;
+            }            
 
             // if schema URI has been seen, scan for the schema location and uri
             // and resolve the schema grammar; or scan for schema type
             if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
 
                 const XMLCh* valuePtr = curPair->getValue();
-                const XMLCh* suffPtr = attName.getLocalPart();
+                const XMLCh*  suffPtr = &rawPtr[colonInd + 1];
 
                 if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
                     parseSchemaLocation(valuePtr);
