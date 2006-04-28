@@ -118,9 +118,9 @@ $(RESTARGET): $(RESFILES)
 	mv $(PKGTARGET) $(RESTARGET)
 	mv $(RESTARGET) ${FQ_RESLIB_REAL_NAME}
 	@echo symlink ${FQ_RESLIB_SO_NAME}
-	ln -s ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
+	ln -fs ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
 	@echo symlink ${FQ_RESLIB_LINK_NAME}
-	ln -s ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}
+	ln -fs ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}
 	
 res-install: $(RESTARGET)
 	$(PKGDATA) --name $(PKGNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST) --install $(shell icu-config --libdir)
