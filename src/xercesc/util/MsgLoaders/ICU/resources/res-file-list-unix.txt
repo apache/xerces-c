@@ -1,1 +1,1 @@
-XercesMessages2_6_0_en_US.res
+XercesMessages3_0_0_en_US.res
