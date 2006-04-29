@@ -692,7 +692,7 @@ en_US {
 		"Value '{0}' is not whitespace replaced  " ,
 		"Value '{0}' is not a whitespace collapsed  " ,
 		"Value '{0}' is not valid NCName  " ,
-		"Value '{0}' is not valid Name  " ,
+		"Value '{0}' is not valid '{1}'  " ,
 		"ID '{0}' is not unique  " ,
 		"Value '{0}' is not valid ENTITY  " ,
 		"Value '{0}' is not valid QName  " ,
