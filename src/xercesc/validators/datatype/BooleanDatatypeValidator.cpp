@@ -118,7 +118,11 @@ void BooleanDatatypeValidator::checkContent( const XMLCh*             const cont
     }
 
     if (i == XMLUni::fgBooleanValueSpaceArraySize)
-        ThrowXMLwithMemMgr(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType, manager);
+        ThrowXMLwithMemMgr2(InvalidDatatypeValueException
+                           , XMLExcepts::VALUE_Invalid_Name
+                           , content
+                           , SchemaSymbols::fgDT_BOOLEAN
+                           , manager);
         //Not valid boolean type
 
 }
