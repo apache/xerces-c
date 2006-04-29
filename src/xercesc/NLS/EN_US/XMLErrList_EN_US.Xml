@@ -691,7 +691,7 @@
             <Message Id="VALUE_WS_replaced" Text="Value '{0}' is not whitespace replaced "/>
             <Message Id="VALUE_WS_collapsed" Text="Value '{0}' is not a whitespace collapsed "/>
             <Message Id="VALUE_Invalid_NCName" Text="Value '{0}' is not valid NCName "/>
-            <Message Id="VALUE_Invalid_Name" Text="Value '{0}' is not valid Name "/>
+            <Message Id="VALUE_Invalid_Name" Text="Value '{0}' is not valid '{1}' "/>
             <Message Id="VALUE_ID_Not_Unique" Text="ID '{0}' is not unique "/>
             <Message Id="VALUE_ENTITY_Invalid" Text="Value '{0}' is not valid ENTITY "/>
             <Message Id="VALUE_QName_Invalid" Text="Value '{0}' is not valid QName "/>
