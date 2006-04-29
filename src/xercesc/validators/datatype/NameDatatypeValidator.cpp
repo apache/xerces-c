@@ -99,9 +99,10 @@ void NameDatatypeValidator::checkValueSpace(const XMLCh* const content
     //
     if ( !XMLString::isValidName(content))
     {
-        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
+        ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Invalid_Name
                 , content
+                , SchemaSymbols::fgDT_NAME
                 , manager);
     }
 
