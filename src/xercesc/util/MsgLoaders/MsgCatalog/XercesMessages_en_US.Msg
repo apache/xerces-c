@@ -674,7 +674,7 @@ $set 3
 251  Value '{0}' is not whitespace replaced 
 252  Value '{0}' is not a whitespace collapsed 
 253  Value '{0}' is not valid NCName 
-254  Value '{0}' is not valid Name 
+254  Value '{0}' is not valid '{1}' 
 255  ID '{0}' is not unique 
 256  Value '{0}' is not valid ENTITY 
 257  Value '{0}' is not valid QName 
