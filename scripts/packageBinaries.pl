@@ -357,26 +357,21 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     if ($DevStudioVer eq "6.0") {
         if ($PlatformName eq "Win64") { # /USEENV
             psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Release\" /USEENV /REBUILD /OUT buildlog_release.txt");
-            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_debug.txt");
-            psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_depdom_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /USEENV /REBUILD /OUT buildlog_debug.txt");            
         }
         else {
             psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Release\" /REBUILD /OUT buildlog_release.txt");
-            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");
-            psystem("msdev xerces-all.dsw /MAKE \"XercesDeprecatedDOMLib - $PlatformName Debug\" /REBUILD /OUT buildlog_depdom_debug.txt");
+            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");            
         }	
     } elsif ($DevStudioVer eq "7.0") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
-        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
-        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");
+        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");                
     } elsif ($DevStudioVer eq "7.1") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
-        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
-        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");        
+        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");               
     } elsif ($DevStudioVer eq "8.0") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
-        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");        
-        psystem("devenv /rebuild debug /out buildlog_depdom_debug.txt /project XercesDeprecatedDOMLib xerces-all.sln");        
+        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");                
     } else { # "6.1"
         psystem( "nmake -f all.mak \"CFG=all - $PlatformName Release\" CPP=$opt_x.exe >buildlog_release.txt 2>&1");
     }
@@ -998,8 +993,7 @@ sub populateInclude() {
     print ("\n\nCopying headers files ...\n");
 
     @headerDirectories =
-     qw'dom
-        dom/deprecated
+     qw'dom        
         framework
         framework/psvi        
         internal
@@ -1059,10 +1053,7 @@ sub populateInclude() {
     #
     #  Remove internal implementation headers from the DOM include directory.
     #
-    psystem ("rm -rf $targetdir/include/xercesc/dom/impl");
-    psystem ("rm -f  $targetdir/include/xercesc/dom/deprecated/*Impl.hpp");
-    psystem ("rm -f  $targetdir/include/xercesc/dom/deprecated/DS*.hpp");
-     
+    psystem ("rm -rf $targetdir/include/xercesc/dom/impl");    
 }
     	
 sub populateSamples() {
