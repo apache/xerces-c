@@ -377,9 +377,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     }
 
     system("type buildlog_release.txt");
-    system("type buildlog_debug.txt");
-    system("type buildlog_depdom_debug.txt");
-
+    system("type buildlog_debug.txt");    
 
 #
 # Population Begin
