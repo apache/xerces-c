@@ -1059,6 +1059,7 @@ sub populateSamples() {
     print ("\n\nCopying sample files ...\n");    
     
     psystem("cp $XERCESCROOT/samples/.libs/* $targetdir/bin");
+    psystem("cp $XERCESCROOT/tests/.libs/* $targetdir/bin");
 
     foreach $iii ('SAXCount', 'SAX2Count', 'SAXPrint', 'SAX2Print', 'DOMCount',
                   'DOMPrint', 'Redirect', 'MemParse', 'PParse', 'StdInParse', 
