@@ -67,7 +67,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
 
     fNamespacePrefix(false)
     , fAutoValidation(false)
-    , fValidation(true)
+    , fValidation(false)
     , fParseInProgress(false)
     , fHasExternalSubset(false)
     , fElemDepth(0)

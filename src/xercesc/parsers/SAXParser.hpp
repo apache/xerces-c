@@ -569,7 +569,7 @@ public :
       * <br>  Val_Auto   - turn on validation if any internal/external
       *                  DTD subset have been seen
       *
-      * <p>The parser's default state is: Val_Auto.</p>
+      * <p>The parser's default state is: Val_Never.</p>
       *
       * @param newScheme The new validation scheme to use.
       *

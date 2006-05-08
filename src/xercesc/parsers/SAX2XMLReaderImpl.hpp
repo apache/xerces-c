@@ -270,7 +270,7 @@ public :
     * Supported features in SAX2 for xerces-c are:
     * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Features for detail description).
     *
-    * <br>http://xml.org/sax/features/validation (default: true)
+    * <br>http://xml.org/sax/features/validation (default: false)
     * <br>http://xml.org/sax/features/namespaces (default: true)
     * <br>http://xml.org/sax/features/namespace-prefixes (default: false)
     * <br>http://apache.org/xml/features/validation/dynamic (default: false)
