@@ -309,7 +309,7 @@
         }
 
         XercesDOMParser* parser = new XercesDOMParser();
-        parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
+        parser->setValidationScheme(XercesDOMParser::Val_Always);    
         parser->setDoNamespaces(true);    // optional
 
         ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
@@ -437,7 +437,7 @@
                 <tr><th><em>Val_Auto:</em></th><td> The parser will report validation errors only if a grammar is specified.</td></tr>
                 <tr><th><em>Val_Always:</em></th><td> The parser will always report validation errors. </td></tr>
                 <tr><th><em>Val_Never:</em></th><td> Do not report validation errors. </td></tr>
-                <tr><th><em>default:</em></th><td> Val_Auto </td></tr>
+                <tr><th><em>default:</em></th><td> Val_Never </td></tr>
                 <tr><th><em>note:</em></th><td> If set to Val_Always, the document must
                 specify a grammar.  If this feature is set to Val_Never and document specifies a grammar,
                 that grammar might be parsed but no validation of the document contents will be

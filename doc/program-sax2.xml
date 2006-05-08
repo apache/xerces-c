@@ -138,7 +138,7 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
         char* xmlFile = "x1.xml";
         SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);   // optional
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);   
         parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);   // optional
 
         DefaultHandler* defaultHandler = new DefaultHandler();
@@ -217,7 +217,7 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th colspan="2"><em>http://xml.org/sax/features/validation</em></th></tr>
                 <tr><th><em>true:</em></th><td> Report all validation errors. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
-                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgSAX2CoreValidation </td></tr>
                 <tr><th><em>note:</em></th><td> If this feature is set to true, the document must
                 specify a grammar.  If this feature is set to false and document specifies a grammar,
