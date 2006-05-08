@@ -1,0 +1,81 @@
+# Copyright (c) 2001-2002 IBM, Inc. and others
+#
+# File
+#    icu/source/samples/ufortune/resources/Makefile
+#
+# Two ICU tools are run from this makefile:
+#    genrb    compiles a resource source file (.txt) into
+#             a binary .res file.
+#    pkgdata  combines all of the .res files into a single
+#             shared library that can then be linked with the
+#             main application.
+#
+#             pkgdata will recursively generate and run yet
+#             another makefile, which in turn runs two more
+#             icu tools.  gencmn combines the individual .res
+#             files, and genccode emits the data as C source
+#             code that can then be built into a .so
+#
+
+top_srcdir = @top_srcdir@
+ICU_PREFIX = @ICU_PREFIX@
+SHREXT = @SHREXT@
+
+include ../../../../../../version.incl
+
+GENRB=$(ICU_PREFIX)/bin/genrb
+GENRBOPT=--package-name $(PKGNAME)
+PKGDATA=$(ICU_PREFIX)/bin/pkgdata
+PKGDATAOPTS=-v -d .
+RMV=rm -rf
+
+# No conventional target - this dir is resources only.
+TARGET=
+CLEANFILES += *.mak *.[co] *.lst *.a *.$(SO) $(RESFILES) *.ao README*resources.txt
+
+# Resource shortname
+PKGNAME=XercesMessages$(VER)
+
+# DLL and static modes are identical here
+RESLDFLAGS= -L$(RESDIR) -l$(PKGNAME)
+RESCPPFLAGS=
+
+# target file for resource bundle - this must be set, or 'make all' won't
+# build any resources.
+RESTARGET=$(top_srcdir)/obj/.libs/lib$(PKGNAME)$(SHREXT)
+PKGTARGET=lib$(PKGNAME)$(SHREXT)
+
+# Resource files.  Add new ones for additional locales here.
+# keep in sync with the file RESLIST
+RESFILES=$(PKGNAME)_en_US.res
+
+# list of resource bundles  - keep in sync with RESFILES
+RESLIST=res-file-list-unix.txt
+
+# list of targets that aren't actually created
+.PHONY: check report 
+
+all: $(RESTARGET) $(TARGET)  
+
+$(TARGET): $(OBJECTS)
+	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@ $(XTRALIBS)
+
+$(RESTARGET): $(RESFILES)
+	@echo building $(RESTARGET)
+	$(PKGDATA) --name $(PKGNAME) --mode dll $(PKGDATAOPTS) $(RESLIST)
+	mkdir -p $(top_srcdir)/obj/.libs
+	mv $(PKGTARGET) $(RESTARGET)
+	
+# clean out files
+distclean clean: $(CLEAN_SUBDIR)
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+	-rm $(OBJECTS) $(TARGET) $(RESTARGET) $(RESFILES)
+
+## resources
+$(PKGNAME)_%.res: %.txt
+	@echo "generating $@"
+	$(GENRB) $(GENRBOPT) $^
+
+# for installing the library
+install: res-install
+

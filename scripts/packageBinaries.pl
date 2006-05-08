@@ -793,6 +793,9 @@ if ( ($platform =~ m/AIX/i)      ||
 
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
     psystem ("$MAKE");
+    # build the tests
+    print("\n\nBuild the tests ...\n");
+    psystem ("$MAKE check");
                 
     #                
     #   Move ICU libs into lib dir, so samples will link.  This matches the structure of
@@ -803,10 +806,6 @@ if ( ($platform =~ m/AIX/i)      ||
         # src/xercesc/util/MsgLoader/ICU/resources/Makefile has built and 
         # copied the message library to $XERCESCROOT/lib, we need copy over here.
     }# $ICUIsPresent
-
-    # build the tests
-    print("\n\nBuild the tests ...\n");
-    psystem ("$MAKE check");
 
     pchdir ($targetdir);
 
@@ -832,29 +831,23 @@ if ( ($platform =~ m/AIX/i)      ||
     if ($ICUIsPresent) {
         # ICU
         copyICUOnUNIX("$targetdir/lib");
-                     
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
             print ("\n\nCopying ICU message bundles ...\n");        	
-            psystem("cp -f $XERCESCROOT/msg/XercesMessages*.res $targetdir/msg");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
            
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages30.0.so .");
-            psystem("find . -name 'libXercesMessages30.0.so' -exec ln -s {} libXercesMessages30.so \\;");
-            psystem("find . -name 'libXercesMessages30.so'   -exec ln -s {} libXercesMessages.so \\;");
+            psystem("cp -f $XERCESCROOT/obj/.libs/libXercesMessages3_0_0.so .");
+            psystem("find . -name 'libXercesMessages3_0_0.so' -exec ln -s {} libXercesMessages3_0.so \\;");
+            psystem("find . -name 'libXercesMessages3_0.so'   -exec ln -s {} libXercesMessages.so \\;");
                     
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.so.30.0 .");
-            psystem("find . -name 'libXercesMessages.so.30.0' -exec ln -s {} libXercesMessages.so.30 \\;");
-            psystem("find . -name 'libXercesMessages.so.30'   -exec ln -s {} libXercesMessages.so \\;");
-            
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages.sl.30.0 .");
-            psystem("find . -name 'libXercesMessages.sl.30.0' -exec ln -s {} libXercesMessages.sl.30 \\;");
-            psystem("find . -name 'libXercesMessages.sl.30'   -exec ln -s {} libXercesMessages.sl \\;");            
+            psystem("cp -f $XERCESCROOT/obj/.libs/libXercesMessages3_0_0.sl .");
+            psystem("find . -name 'libXercesMessages3_0_0.sl' -exec ln -s {} libXercesMessages3_0.sl \\;");
+            psystem("find . -name 'libXercesMessages3_0.sl'   -exec ln -s {} libXercesMessages.sl \\;");
 
-            psystem("cp -f $XERCESCROOT/lib/libXercesMessages30.0.a .");
-            psystem("find . -name 'libXercesMessages30.0.a'   -exec ln -s {} libXercesMessages30.a \\;");
-            psystem("find . -name 'libXercesMessages30.a'     -exec ln -s {} libXercesMessages.a \\;");
-                               
-        }        	
+            psystem("cp -f $XERCESCROOT/obj/.libs/libXercesMessages3_0_0.a .");
+            psystem("find . -name 'libXercesMessages3_0_0.a'   -exec ln -s {} libXercesMessages3_0.a \\;");
+            psystem("find . -name 'libXercesMessages3_0.a'     -exec ln -s {} libXercesMessages.a \\;");
+        }
 
     }
   
@@ -873,32 +866,16 @@ if ( ($platform =~ m/AIX/i)      ||
         psystem("ln -s libxerces-3.so   libxerces.so    ");     
     }
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-depdom-3.0.so" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-depdom-3.0.so .");
-        psystem("ln -s libxerces-depdom-3.0.so libxerces-depdom-3.so ");
-        psystem("ln -s libxerces-depdom-3.so   libxerces-depdom.so    ");        
-    }
-
     if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.sl" )) {
         psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.sl .");
         psystem("ln -s libxerces-3.0.sl libxerces-3.sl ");
         psystem("ln -s libxerces-3.sl   libxerces.sl    ");               
     }
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-depdom-3.0.sl" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-depdom-3.0.sl .");
-        psystem("ln -s libxerces-depdom-3.0.sl libxerces-depdom-3.sl ");
-        psystem("ln -s libxerces-depdom-3.sl   libxerces-depdom.sl    ");
-    }
-                
     if ((-e "$XERCESCROOT/obj/.libs/libxerces.a" )) {
         psystem("cp -f $XERCESCROOT/obj/.libs/libxerces.a . ");
     }
         
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-depdom.a" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-depdom.a . ");
-    }        
-    
     # Mac OS X
     if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.dylib" )) {
         psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.dylib .");
@@ -933,6 +910,9 @@ if ( ($platform =~ m/AIX/i)      ||
     psystem ("find $targetdir -type f -exec chmod 644 {} \\;");
     psystem ("find $targetdir -type d -exec chmod 755 {} \\;");
     psystem ("chmod 755 $targetdir/bin/* $targetdir/lib/*");
+
+    # Remove .svn folders
+    psystem ("find $targetdir -type d -name .svn -exec rm -rf {} \\;");
 
     # Now package it all up using tar
     print ("\n\nTARing up all files ...\n");
@@ -1105,51 +1085,51 @@ sub copyICUOnUNIX() {
         #
         # copy icudata dll
         # For ICU 2.6:
-        # on AIX,              it is called libicudata32.0.a
-        # on Solaris/Linux,    it is called libicudata.so.32.0
-        # on HP,               it is called libicudata.sl.32.0
+        # on AIX,              it is called libicudata34.1.a
+        # on Solaris/Linux,    it is called libicudata.so.34.1
+        # on HP,               it is called libicudata.sl.34.1
         #
         psystem("rm -f libicudata*");
-        psystem("cp -f $ICUROOT/lib/libicudata32.0.so .");
-        psystem("cp -f $ICUROOT/lib/libicudata32.0.a .");        
-        psystem("cp -f $ICUROOT/lib/libicudata.so.32.0 .");
-        psystem("cp -f $ICUROOT/lib/libicudata.sl.32.0 .");
+        psystem("cp -f $ICUROOT/lib/libicudata34.1.so .");
+        psystem("cp -f $ICUROOT/lib/libicudata34.1.a .");        
+        psystem("cp -f $ICUROOT/lib/libicudata.so.34.1 .");
+        psystem("cp -f $ICUROOT/lib/libicudata.sl.34.1 .");
         
-        psystem("find . -name 'libicudata32.0.so' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata32.0.so' -exec ln -s {} libicudata32.so \\;");
+        psystem("find . -name 'libicudata34.1.so' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata34.1.so' -exec ln -s {} libicudata34.so \\;");
 
-        psystem("find . -name 'libicudata32.0.a'  -exec ln -s {} libicudata.a \\;");
-        psystem("find . -name 'libicudata32.0.a'  -exec ln -s {} libicudata32.a \\;");
+        psystem("find . -name 'libicudata34.1.a'  -exec ln -s {} libicudata.a \\;");
+        psystem("find . -name 'libicudata34.1.a'  -exec ln -s {} libicudata34.a \\;");
         
-        psystem("find . -name 'libicudata.so.32.0' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata.so.32.0' -exec ln -s {} libicudata.so.32 \\;");
+        psystem("find . -name 'libicudata.so.34.1' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata.so.34.1' -exec ln -s {} libicudata.so.34 \\;");
 
-        psystem("find . -name 'libicudata.sl.32.0' -exec ln -s {} libicudata.sl \\;");
-        psystem("find . -name 'libicudata.sl.32.0' -exec ln -s {} libicudata.sl.32 \\;");
+        psystem("find . -name 'libicudata.sl.34.1' -exec ln -s {} libicudata.sl \\;");
+        psystem("find . -name 'libicudata.sl.34.1' -exec ln -s {} libicudata.sl.34 \\;");
 
         #
         # copy icuuc dll
-        # on AIX,              it is called libicuuc32.0.a
-        # on Solaris/Linux,    it is called libicuuc.so.32.0
-        # on HP,               it is called libicuuc.sl.32.0
+        # on AIX,              it is called libicuuc34.1.a
+        # on Solaris/Linux,    it is called libicuuc.so.34.1
+        # on HP,               it is called libicuuc.sl.34.1
         #
         psystem("rm -f libicuuc*");
-        psystem("cp -f $ICUROOT/lib/libicuuc32.0.so .");
-        psystem("cp -f $ICUROOT/lib/libicuuc32.0.a  .");        
-        psystem("cp -f $ICUROOT/lib/libicuuc.so.32.0  .");
-        psystem("cp -f $ICUROOT/lib/libicuuc.sl.32.0  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc34.1.so .");
+        psystem("cp -f $ICUROOT/lib/libicuuc34.1.a  .");        
+        psystem("cp -f $ICUROOT/lib/libicuuc.so.34.1  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.sl.34.1  .");
         
-        psystem("find . -name 'libicuuc32.0.so' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc32.0.so' -exec ln -s {} libicuuc32.so \\;");
+        psystem("find . -name 'libicuuc34.1.so' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc34.1.so' -exec ln -s {} libicuuc34.so \\;");
         
-        psystem("find . -name 'libicuuc32.0.a'  -exec ln -s {} libicuuc.a \\;");
-        psystem("find . -name 'libicuuc32.0.a'  -exec ln -s {} libicuuc32.a \\;");
+        psystem("find . -name 'libicuuc34.1.a'  -exec ln -s {} libicuuc.a \\;");
+        psystem("find . -name 'libicuuc34.1.a'  -exec ln -s {} libicuuc34.a \\;");
                 
-        psystem("find . -name 'libicuuc.so.32.0' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc.so.32.0' -exec ln -s {} libicuuc.so.32 \\;");
+        psystem("find . -name 'libicuuc.so.34.1' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.34.1' -exec ln -s {} libicuuc.so.34 \\;");
 
-        psystem("find . -name 'libicuuc.sl.32.0' -exec ln -s {} libicuuc.sl \\;");
-        psystem("find . -name 'libicuuc.sl.32.0' -exec ln -s {} libicuuc.sl.32 \\;");
+        psystem("find . -name 'libicuuc.sl.34.1' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.34.1' -exec ln -s {} libicuuc.sl.34 \\;");
                
 }
 

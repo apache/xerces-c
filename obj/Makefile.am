@@ -18,6 +18,8 @@
 # $Id$
 #
 
+include ../version.incl
+
 src	=						${top_srcdir}/src
 lib	=						${top_srcdir}/lib
 
@@ -27,3 +29,8 @@ nodist_EXTRA_libxerces_la_SOURCES = dummyfile-to-force-cpp-linking.cpp
 
 libxerces_la_LIBADD = 		${src}/libsrc.la ${lib}/libcompat.la
 libxerces_la_LDFLAGS =		-release ${PACKAGE_VERSION}
+
+if XERCES_USE_MSGLOADER_ICU
+libxerces_la_LDFLAGS +=		-L${top_srcdir}/obj/.libs -lXercesMessages$(VER)
+endif
+

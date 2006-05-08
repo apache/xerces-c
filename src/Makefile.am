@@ -19,6 +19,7 @@
 #
 
 DEFS += -DXERCES_BUILDING_LIBRARY
+SUBDIRS = 
 
 #
 # Specify the convenience libraries for various xerces components
@@ -173,6 +174,8 @@ src_libraries +=					libmsgicu.la
 libmsgicu_ladir =					${includedir}
 nobase_libmsgicu_la_HEADERS =				${msgicu_headers}
 libmsgicu_la_SOURCES =					${msgicu_sources}
+
+SUBDIRS 						+= xercesc/util/MsgLoaders/ICU/resources
 endif
 
 if XERCES_USE_MSGLOADER_ICONV
@@ -1218,7 +1221,6 @@ macplatform_sources = \
 	xercesc/util/Platforms/MacOS/MacCarbonFile.cpp \
 	xercesc/util/Platforms/MacOS/MacOSPlatformUtils.cpp \
 	xercesc/util/Platforms/MacOS/MacPosixFile.cpp
-
 
 #
 # Override generated rules to provide prettier make rules

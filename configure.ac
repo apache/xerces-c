@@ -29,7 +29,7 @@ AC_CONFIG_LIBOBJ_DIR([xercesc/compat])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile obj/Makefile tests/Makefile samples/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile obj/Makefile tests/Makefile samples/Makefile])
 
 # Check the target system
 AC_CANONICAL_HOST
@@ -97,6 +97,7 @@ AC_CHECK_FUNCS([clock_gettime ftime getcwd gethostbyaddr gethostbyname gettimeof
 				towupper towlower iswspace \
 				])
 				
+AC_SUBST([SHREXT], [$shrext_cmds])
 
 #
 # Orchestrate the replacement of missing functions
