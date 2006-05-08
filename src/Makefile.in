@@ -82,28 +82,29 @@ host_triplet = @host@
 #
 @XERCES_USE_MSGLOADER_INMEMORY_TRUE@am__append_10 = libmsginmemory.la
 @XERCES_USE_MSGLOADER_ICU_TRUE@am__append_11 = libmsgicu.la
-@XERCES_USE_MSGLOADER_ICONV_TRUE@am__append_12 = libmsgiconv.la
+@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_12 = xercesc/util/MsgLoaders/ICU/resources
+@XERCES_USE_MSGLOADER_ICONV_TRUE@am__append_13 = libmsgiconv.la
 
 #
 # AtomicOp Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__append_13 = libnothreadaomgr.la
-@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__append_14 = libposixaomgr.la
-@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__append_15 = libmacosaomgr.la
-@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__append_16 = libwinaomgr.la
+@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__append_14 = libnothreadaomgr.la
+@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__append_15 = libposixaomgr.la
+@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__append_16 = libmacosaomgr.la
+@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__append_17 = libwinaomgr.la
 
 #
 # Mutex Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__append_17 = libnothreadmmgr.la
-@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__append_18 = libposixmmgr.la
-@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__append_19 = libwinmmgr.la
+@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__append_18 = libnothreadmmgr.la
+@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__append_19 = libposixmmgr.la
+@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__append_20 = libwinmmgr.la
 
 #
 # File Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_FILEMGR_POSIX_TRUE@am__append_20 = libposixfmgr.la
-@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__append_21 = libwinfmgr.la
+@XERCES_USE_FILEMGR_POSIX_TRUE@am__append_21 = libposixfmgr.la
+@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__append_22 = libwinfmgr.la
 subdir = src
 DIST_COMMON = $(am__nobase_libcfurlna_la_HEADERS_DIST) \
 	$(am__nobase_libcurlna_la_HEADERS_DIST) \
@@ -732,6 +733,12 @@ DIST_SOURCES = $(am__libcfurlna_la_SOURCES_DIST) \
 	$(am__libwinsockna_la_SOURCES_DIST) \
 	$(am__libwintrans_la_SOURCES_DIST) \
 	$(am__libwwwna_la_SOURCES_DIST)
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-exec-recursive install-info-recursive \
+	install-recursive installcheck-recursive installdirs-recursive \
+	pdf-recursive ps-recursive uninstall-info-recursive \
+	uninstall-recursive
 am__nobase_libcfurlna_la_HEADERS_DIST = xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.hpp
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -867,6 +874,7 @@ HEADERS = $(nobase_libcfurlna_la_HEADERS) \
 	$(nobase_libwintrans_la_HEADERS) $(nobase_libwwwna_la_HEADERS)
 ETAGS = etags
 CTAGS = ctags
+DIST_SUBDIRS = xercesc/util/MsgLoaders/ICU/resources
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
@@ -931,6 +939,7 @@ PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHREXT = @SHREXT@
 STRIP = @STRIP@
 VERSION = @VERSION@
 XERCES_PRETTY_MAKE_FALSE = @XERCES_PRETTY_MAKE_FALSE@
@@ -1024,6 +1033,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+SUBDIRS = $(am__append_12)
 
 #
 # Specify the convenience libraries for various xerces components
@@ -1049,10 +1059,10 @@ src_libraries = libutil.la libdom.la libdomimpl.la libframework.la \
 	$(am__append_3) $(am__append_4) $(am__append_5) \
 	$(am__append_6) $(am__append_7) $(am__append_8) \
 	$(am__append_9) $(am__append_10) $(am__append_11) \
-	$(am__append_12) $(am__append_13) $(am__append_14) \
-	$(am__append_15) $(am__append_16) $(am__append_17) \
-	$(am__append_18) $(am__append_19) $(am__append_20) \
-	$(am__append_21)
+	$(am__append_13) $(am__append_14) $(am__append_15) \
+	$(am__append_16) $(am__append_17) $(am__append_18) \
+	$(am__append_19) $(am__append_20) $(am__append_21) \
+	$(am__append_22)
 libutil_ladir = ${includedir}
 nobase_libutil_la_HEADERS = ${util_headers}
 libutil_la_SOURCES = ${util_sources}
@@ -2107,7 +2117,7 @@ LTCXXCOMPILE = ${PRETTY_COMPILE}  \
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 
-all: all-am
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .cpp .lo .o .obj
@@ -4842,6 +4852,77 @@ uninstall-nobase_libwwwna_laHEADERS:
 	  rm -f "$(DESTDIR)$(libwwwna_ladir)/$$f"; \
 	done
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+ctags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+	done
+
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -4852,10 +4933,23 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      tags="$$tags $$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
@@ -4868,7 +4962,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    $$tags $$unique; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -4918,22 +5012,38 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d "$(distdir)/$$subdir" \
+	    || $(mkdir_p) "$(distdir)/$$subdir" \
+	    || exit 1; \
+	    distdir=`$(am__cd) $(distdir) && pwd`; \
+	    top_distdir=`$(am__cd) $(top_distdir) && pwd`; \
+	    (cd $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$top_distdir" \
+	        distdir="$$distdir/$$subdir" \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
+	done
 check-am: all-am
-check: check-am
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libcfurlna_ladir)" "$(DESTDIR)$(libcurlna_ladir)" "$(DESTDIR)$(libdom_ladir)" "$(DESTDIR)$(libdomimpl_ladir)" "$(DESTDIR)$(libframework_ladir)" "$(DESTDIR)$(libiconvtc_ladir)" "$(DESTDIR)$(libicutc_ladir)" "$(DESTDIR)$(libinternal_ladir)" "$(DESTDIR)$(libmacosaomgr_ladir)" "$(DESTDIR)$(libmacosunicodeconverter_ladir)" "$(DESTDIR)$(libmsgiconv_ladir)" "$(DESTDIR)$(libmsgicu_ladir)" "$(DESTDIR)$(libmsginmemory_ladir)" "$(DESTDIR)$(libnothreadaomgr_ladir)" "$(DESTDIR)$(libnothreadmmgr_ladir)" "$(DESTDIR)$(libparsers_ladir)" "$(DESTDIR)$(libposixaomgr_ladir)" "$(DESTDIR)$(libposixfmgr_ladir)" "$(DESTDIR)$(libposixmmgr_ladir)" "$(DESTDIR)$(libsax2_ladir)" "$(DESTDIR)$(libsax_ladir)" "$(DESTDIR)$(libsocketsna_ladir)" "$(DESTDIR)$(libutil_ladir)" "$(DESTDIR)$(libvalidators_ladir)" "$(DESTDIR)$(libwinaomgr_ladir)" "$(DESTDIR)$(libwinfmgr_ladir)" "$(DESTDIR)$(libwinmmgr_ladir)" "$(DESTDIR)$(libwinsockna_ladir)" "$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
@@ -5009,24 +5119,24 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
-info: info-am
+info: info-recursive
 
 info-am:
 
@@ -5063,27 +5173,27 @@ install-data-am: install-nobase_libcfurlna_laHEADERS \
 
 install-exec-am:
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-man:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
@@ -5118,12 +5228,16 @@ uninstall-am: uninstall-info-am uninstall-nobase_libcfurlna_laHEADERS \
 	uninstall-nobase_libwintrans_laHEADERS \
 	uninstall-nobase_libwwwna_laHEADERS
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLTLIBRARIES ctags distclean \
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am \
+	clean clean-generic clean-libtool clean-noinstLTLIBRARIES \
+	clean-recursive ctags ctags-recursive distclean \
 	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-exec \
-	install-exec-am install-info install-info-am install-man \
+	distclean-recursive distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-exec install-exec-am install-info \
+	install-info-am install-man \
 	install-nobase_libcfurlna_laHEADERS \
 	install-nobase_libcurlna_laHEADERS \
 	install-nobase_libdom_laHEADERS \
@@ -5154,10 +5268,11 @@ uninstall-am: uninstall-info-am uninstall-nobase_libcfurlna_laHEADERS \
 	install-nobase_libwinsockna_laHEADERS \
 	install-nobase_libwintrans_laHEADERS \
 	install-nobase_libwwwna_laHEADERS install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-info-am \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic maintainer-clean-recursive \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool mostlyclean-recursive pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am uninstall-info-am \
 	uninstall-nobase_libcfurlna_laHEADERS \
 	uninstall-nobase_libcurlna_laHEADERS \
 	uninstall-nobase_libdom_laHEADERS \

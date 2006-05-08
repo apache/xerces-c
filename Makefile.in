@@ -38,6 +38,7 @@ host_triplet = @host@
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/configure \
+	$(top_srcdir)/src/xercesc/util/MsgLoaders/ICU/resources/Makefile.in \
 	$(top_srcdir)/src/xercesc/util/Xerces_autoconf_config.hpp.in \
 	config/compile config/config.guess config/config.sub \
 	config/depcomp config/install-sh config/ltmain.sh \
@@ -72,7 +73,8 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = config.h \
 	$(top_builddir)/src/xercesc/util/Xerces_autoconf_config.hpp
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES =  \
+	src/xercesc/util/MsgLoaders/ICU/resources/Makefile
 SOURCES =
 DIST_SOURCES =
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
@@ -158,6 +160,7 @@ PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHREXT = @SHREXT@
 STRIP = @STRIP@
 VERSION = @VERSION@
 XERCES_PRETTY_MAKE_FALSE = @XERCES_PRETTY_MAKE_FALSE@
@@ -317,6 +320,8 @@ src/xercesc/util/stamp-h2: $(top_srcdir)/src/xercesc/util/Xerces_autoconf_config
 
 distclean-hdr:
 	-rm -f config.h stamp-h1 src/xercesc/util/Xerces_autoconf_config.hpp src/xercesc/util/stamp-h2
+src/xercesc/util/MsgLoaders/ICU/resources/Makefile: $(top_builddir)/config.status $(top_srcdir)/src/xercesc/util/MsgLoaders/ICU/resources/Makefile.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -463,7 +468,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/m4 $(distdir)/src/xercesc/util
+	$(mkdir_p) $(distdir)/config $(distdir)/m4 $(distdir)/src/xercesc/util $(distdir)/src/xercesc/util/MsgLoaders/ICU/resources
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

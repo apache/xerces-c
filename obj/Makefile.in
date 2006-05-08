@@ -58,8 +58,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+DIST_COMMON = $(srcdir)/../version.incl $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
+@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_1 = -L${top_srcdir}/obj/.libs -lXercesMessages$(VER)
 subdir = obj
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acx_pthread.m4 \
 	$(top_srcdir)/m4/cxx_have_bool.m4 \
@@ -179,6 +181,7 @@ PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHREXT = @SHREXT@
 STRIP = @STRIP@
 VERSION = @VERSION@
 XERCES_PRETTY_MAKE_FALSE = @XERCES_PRETTY_MAKE_FALSE@
@@ -272,18 +275,41 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+
+#
+# Copyright 1999-2004 The Apache Software Foundation.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#
+#
+# $Id$
+#
+VER = 3_0_0
+VER_DOTTED = 3.0
+WIN_MSG_VER = 3_0
 src = ${top_srcdir}/src
 lib = ${top_srcdir}/lib
 lib_LTLIBRARIES = libxerces.la
 libxerces_la_SOURCES = 
 nodist_EXTRA_libxerces_la_SOURCES = dummyfile-to-force-cpp-linking.cpp
 libxerces_la_LIBADD = ${src}/libsrc.la ${lib}/libcompat.la
-libxerces_la_LDFLAGS = -release ${PACKAGE_VERSION}
+libxerces_la_LDFLAGS = -release ${PACKAGE_VERSION} $(am__append_1)
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .cpp .lo .o .obj
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/../version.incl $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -433,6 +459,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
+	$(mkdir_p) $(distdir)/..
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
