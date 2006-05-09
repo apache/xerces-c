@@ -531,7 +531,7 @@ bool DOMLSSerializerImpl::write(const DOMNode* nodeToWrite,
     /**
      *  get Document Version
      */
-    fDocumentVersion = docu?docu->getXmlVersion():XMLUni::fgVersion1_0;
+    fDocumentVersion = (docu && docu->getXmlVersion() && *(docu->getXmlVersion()))?docu->getXmlVersion():XMLUni::fgVersion1_0;
 
     fErrorCount = 0;
 
