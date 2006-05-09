@@ -50,6 +50,8 @@
   }
 }
 
+}
+
 /*
  * Enable conversion of void* => XMLCh* in setProperty()
  *
