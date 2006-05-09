@@ -9,7 +9,7 @@ END {ok(0) unless $loaded;}
 use Carp;
 # use blib;
 use XML::Xerces qw(error);
-use Test::More tests => 23;
+use Test::More tests => 26;
 use Config;
 
 use lib 't';

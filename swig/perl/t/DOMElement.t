@@ -9,7 +9,7 @@ END {ok(0) unless $loaded;}
 use Carp;
 use blib;
 use XML::Xerces;
-use Test::More tests => 20;
+use Test::More tests => 23;
 
 use lib 't';
 use TestUtils qw($DOM $PERSONAL_FILE_NAME);
@@ -125,16 +125,16 @@ ok($@,
   "setAttributeNS - undef uri fails");
 
 $document = <<XML;
-<root>
-<a>
-<t:a/>
+<root xmlns="http://example.com/test">
+<a xmlns="http://example.org/">
+<t:a xmlns:t="http://example.org/"/>
 </a>
 </root>
 XML
 
 $DOM->parse(XML::Xerces::MemBufInputSource->new($document));
 
-my $doc = $DOM->getDocument();
+$doc = $DOM->getDocument();
 ok($doc->getElementsByTagName('a')->getLength == 1);
 ok($doc->getElementsByTagNameNS('http://example.org/', 'a')->getLength == 2);
 ok($doc->getElementsByTagNameNS('http://example.com/test', 'root')->getLength == 1);

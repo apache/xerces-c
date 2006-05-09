@@ -137,7 +137,8 @@ LINE:    4
 COLUMN:  11
 MESSAGE: Unknown element 'personnel'
 EOE
-  ok($expected_error eq $error);
+  ok($expected_error eq $error)
+    or diag("Expected error: [$expected_error]\nFound error: [$error]\n");
 }
 
 # test redefining the handler
@@ -168,6 +169,7 @@ LINE:    4
 COLUMN:  11
 MESSAGE: Unknown element 'personnel'
 EOE
-  ok($expected_error eq $error);
+  ok($expected_error eq $error)
+    or diag("Expected error: [$expected_error]\nFound error: [$error]\n");
 }
 

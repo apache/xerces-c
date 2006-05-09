@@ -66,12 +66,15 @@ $root->appendChild(CreatePerson(
 	'susanhar@us.ibm.com'
 ));
 
-my $writer = $impl->createDOMWriter();
-if ($writer->canSetFeature('format-pretty-print',1)) {
-  $writer->setFeature('format-pretty-print',1);
+my $writer = $impl->createLSSerializer();
+my $config = $writer->getDomConfig();
+if ($config->canSetParameter('format-pretty-print',1)) {
+  $config->setParameter('format-pretty-print',1);
 }
-my $target = XML::Xerces::StdOutFormatTarget->new();
-$writer->writeNode($target,$doc);
+my $outStream = XML::Xerces::StdOutFormatTarget->new();
+my $target = $impl->createLSOutput();
+$target->setByteStream($outStream);
+$writer->write($doc,$target);
 exit(0);
 
 

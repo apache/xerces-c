@@ -138,12 +138,15 @@ XML::Xerces::error($@) if ($@);
 
 my $doc = $parser->getDocument();
 my $impl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
-my $writer = $impl->createDOMWriter();
-if ($writer->canSetFeature($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1)) {
-  $writer->setFeature($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1);
+my $writer = $impl->createLSSerializer();
+my $config = $writer->getDomConfig();
+if ($config->canSetParameter($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1)) {
+  $config->setParameter($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1);
 }
-my $target = XML::Xerces::StdOutFormatTarget->new();
-$writer->writeNode($target,$doc);
+my $outStream = XML::Xerces::StdOutFormatTarget->new();
+my $target = $impl->createLSOutput();
+$target->setByteStream($outStream);
+$writer->write($doc,$target);
 
 END {
   # NOTICE: We must now explicitly call XMLPlatformUtils::Terminate()

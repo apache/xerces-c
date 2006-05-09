@@ -111,30 +111,33 @@
 %ignore MemBufInputSource(const XMLByte* const, const unsigned int, const XMLCh* const, 
                           const bool, MemoryManager *const);
 %ignore Wrapper4InputSource(InputSource* const);
-%ignore Wrapper4InputSource(InputSource* const, const bool adoptFlag
+%ignore Wrapper4InputSource(InputSource* const, const bool 
         , MemoryManager* const);
-%ignore Wrapper4DOMInputSource(
-        DOMInputSource* const inputSource
-        , const bool
+%ignore Wrapper4DOMLSInput(
+        DOMLSInput* const
+	, DOMLSResourceResolver*
+        , const bool 
         , MemoryManager* const);
-%ignore Wrapper4DOMInputSource(
-        DOMInputSource* const inputSource);
+%ignore Wrapper4DOMLSInput(
+        DOMLSInput* const
+	, DOMLSResourceResolver*);
 
 // These are odd cases. We want access to skip the method with the
 // memory manager argument, but we want access to the optional argument
 // *after* the memory manager. So we just ignore the method that doesn't 
 // include the memory manager - since our typemap defaults that argument
 // they are redundant
-%ignore createDOMLSParser(short const,const XMLCh* const);
+%ignore createLSParser(short const,const XMLCh* const);
 %ignore SAXParser(XMLValidator*   const);
 %ignore createXMLReader();
+%ignore createXMLReader(const XMLCh*);
 
 /*
  * ignore the constructors which set the MemoryManager
  */
 %ignore createDocument(const XMLCh *,const XMLCh *,DOMDocumentType *,MemoryManager *const);
 %ignore createDocument(MemoryManager *const);
-%ignore createDOMWriter(MemoryManager *const);
+%ignore createLSSerializer(MemoryManager *const);
 %ignore XMLFormatter(
         const   XMLCh* const           
         , const XMLCh* const           
@@ -151,7 +154,7 @@
 %ignore LocalFileFormatTarget(const XMLCh* const, MemoryManager* const);
 %ignore LocalFileFormatTarget(const char* const, 
             MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
-%ignore MemBufFormatTarget(int, MemoryManager* const);    
+%ignore MemBufFormatTarget(int, MemoryManager* const);
 %ignore XercesDOMParser(XMLValidator* const, MemoryManager* const);
 %ignore URLInputSource(const XMLURL&, MemoryManager *const);
 %ignore URLInputSource(const XMLCh* const, MemoryManager *const);

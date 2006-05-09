@@ -4418,6 +4418,41 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::DOMConfiguration ##############
+
+package XML::Xerces::DOMConfiguration;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*setParameter = *XML::Xercesc::DOMConfiguration_setParameter;
+*getParameter = *XML::Xercesc::DOMConfiguration_getParameter;
+*canSetParameter = *XML::Xercesc::DOMConfiguration_canSetParameter;
+*getParameterNames = *XML::Xercesc::DOMConfiguration_getParameterNames;
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMConfiguration($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::DOMImplementationLS ##############
 
 package XML::Xerces::DOMImplementationLS;
@@ -4773,11 +4808,14 @@ sub DESTROY {
     }
 }
 
+*getStringData = *XML::Xercesc::DOMLSInput_getStringData;
 *getByteStream = *XML::Xercesc::DOMLSInput_getByteStream;
 *getEncoding = *XML::Xercesc::DOMLSInput_getEncoding;
 *getPublicId = *XML::Xercesc::DOMLSInput_getPublicId;
 *getSystemId = *XML::Xercesc::DOMLSInput_getSystemId;
 *getBaseURI = *XML::Xercesc::DOMLSInput_getBaseURI;
+*setStringData = *XML::Xercesc::DOMLSInput_setStringData;
+*setByteStream = *XML::Xercesc::DOMLSInput_setByteStream;
 *setEncoding = *XML::Xercesc::DOMLSInput_setEncoding;
 *setPublicId = *XML::Xercesc::DOMLSInput_setPublicId;
 *setSystemId = *XML::Xercesc::DOMLSInput_setSystemId;
@@ -4827,12 +4865,15 @@ sub DESTROY {
     }
 }
 
+*getStringData = *XML::Xercesc::Wrapper4InputSource_getStringData;
 *getByteStream = *XML::Xercesc::Wrapper4InputSource_getByteStream;
 *getEncoding = *XML::Xercesc::Wrapper4InputSource_getEncoding;
 *getPublicId = *XML::Xercesc::Wrapper4InputSource_getPublicId;
 *getSystemId = *XML::Xercesc::Wrapper4InputSource_getSystemId;
 *getBaseURI = *XML::Xercesc::Wrapper4InputSource_getBaseURI;
 *getIssueFatalErrorIfNotFound = *XML::Xercesc::Wrapper4InputSource_getIssueFatalErrorIfNotFound;
+*setStringData = *XML::Xercesc::Wrapper4InputSource_setStringData;
+*setByteStream = *XML::Xercesc::Wrapper4InputSource_setByteStream;
 *setEncoding = *XML::Xercesc::Wrapper4InputSource_setEncoding;
 *setPublicId = *XML::Xercesc::Wrapper4InputSource_setPublicId;
 *setSystemId = *XML::Xercesc::Wrapper4InputSource_setSystemId;
@@ -4937,6 +4978,44 @@ sub DESTROY {
 *getURIText = *XML::Xercesc::DOMLSParser_getURIText;
 *resetCachedGrammarPool = *XML::Xercesc::DOMLSParser_resetCachedGrammarPool;
 *getSrcOffset = *XML::Xercesc::DOMLSParser_getSrcOffset;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMLSOutput ##############
+
+package XML::Xerces::DOMLSOutput;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMLSOutput($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getByteStream = *XML::Xercesc::DOMLSOutput_getByteStream;
+*getEncoding = *XML::Xercesc::DOMLSOutput_getEncoding;
+*getSystemId = *XML::Xercesc::DOMLSOutput_getSystemId;
+*setByteStream = *XML::Xercesc::DOMLSOutput_setByteStream;
+*setEncoding = *XML::Xercesc::DOMLSOutput_setEncoding;
+*setSystemId = *XML::Xercesc::DOMLSOutput_setSystemId;
+*release = *XML::Xercesc::DOMLSOutput_release;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -5088,10 +5167,8 @@ sub DESTROY {
 }
 
 *getDomConfig = *XML::Xercesc::DOMLSSerializer_getDomConfig;
-*setEncoding = *XML::Xercesc::DOMLSSerializer_setEncoding;
 *setNewLine = *XML::Xercesc::DOMLSSerializer_setNewLine;
 *setFilter = *XML::Xercesc::DOMLSSerializer_setFilter;
-*getEncoding = *XML::Xercesc::DOMLSSerializer_getEncoding;
 *getNewLine = *XML::Xercesc::DOMLSSerializer_getNewLine;
 *write = *XML::Xercesc::DOMLSSerializer_write;
 *writeToURI = *XML::Xercesc::DOMLSSerializer_writeToURI;

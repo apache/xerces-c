@@ -26,8 +26,8 @@ ok($XML::Xerces::XMLUni::fgPCDATAString eq '#PCDATA');
 ok($XML::Xerces::XMLUni::fgPubIDString eq 'PUBLIC');
 
 my $impl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
-my $writer = $impl->createDOMWriter();
-eval{$writer->setFeature($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1)};
+my $writer = $impl->createLSSerializer();
+eval{$writer->getDomConfig()->setParameter($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1)};
 ok(!$@,
    "Xerces method arguments now handle magic stringify")
   or diag(XML::Xerces::error($@));

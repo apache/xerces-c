@@ -18,7 +18,7 @@
  * Scripting languages are not going to change the default memory manager
  *   so we always default this argument
  */
-// %typemap(default,numinputs=0) XERCES_CPP_NAMESPACE::MemoryManager* const  manager "$1 = XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;"
+%typemap(default) XERCES_CPP_NAMESPACE::MemoryManager* const  manager "$1 = XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;"
 
 /*
  *  MemBufInputSource::MemBufInputSource()
@@ -45,7 +45,7 @@
 %extend XERCES_CPP_NAMESPACE::SAX2XMLReader {
 %typemap(check) (const XMLCh* const name, void* value) {
   if (XMLString::compareIStringASCII($1, XMLUni::fgXercesSecurityManager) == 0) {
-    makeSAXNotSupportedException(SAXNotSupportedException("Setting security manageer not supported"));
+    makeSAXNotSupportedException(SAXNotSupportedException("Setting security manager not supported"));
     goto fail;
   }
 }

@@ -53,4 +53,3 @@ SAXEXCEPTION(XERCES_CPP_NAMESPACE::SAX2XMLReader::getProperty)
 
 %include "xercesc/sax2/SAX2XMLReader.hpp"
 %include "xercesc/sax2/XMLReaderFactory.hpp"
-

@@ -65,7 +65,6 @@
 %include "xercesc/dom/DOMNodeList.hpp"
 %include "xercesc/dom/DOMNamedNodeMap.hpp"
 %include "xercesc/dom/DOMDocumentFragment.hpp"
-%include "xercesc/dom/DOMDocumentType.hpp"
 %include "xercesc/dom/DOMEntityReference.hpp"
 %include "xercesc/dom/DOMNotation.hpp"
 %include "xercesc/dom/DOMProcessingInstruction.hpp"
@@ -83,6 +82,7 @@
 /*
  * Introduced in DOM Level 3
  */
+%include "xercesc/dom/DOMConfiguration.hpp"
 %include "xercesc/dom/DOMImplementationLS.hpp"
 %include "xercesc/dom/DOMImplementation.hpp"
 %include "xercesc/dom/DOMImplementationSource.hpp"
@@ -102,6 +102,7 @@
 %include "xercesc/dom/DOMLSParser.hpp"
 
 // DOMWriter
+%include "xercesc/dom/DOMLSOutput.hpp"
 %import "xercesc/framework/XMLFormatter.hpp"
 %include "xercesc/framework/StdOutFormatTarget.hpp"
 %include "xercesc/framework/LocalFileFormatTarget.hpp"
