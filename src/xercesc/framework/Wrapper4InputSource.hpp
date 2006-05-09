@@ -66,10 +66,10 @@ public:
     /** @name Virtual input source interface */
     //@{
   /**
-    * This wrapper doesn't support character streams
+    * This wrapper doesn't support string data
     *
     */
-    virtual const XMLCh* getCharacterStream() const;
+    virtual const XMLCh* getStringData() const;
 
   /**
     * Makes the byte stream for this input source.
@@ -147,6 +147,17 @@ public:
     // -----------------------------------------------------------------------
     /** @name Setter methods */
     //@{
+  /**
+    * This wrapper only exposes the given InputSource, no setting allowed
+    *
+    */
+    virtual void setStringData(const XMLCh* data);
+
+  /**
+    * This wrapper only exposes the given InputSource, no setting allowed
+    *
+    */
+    virtual void setByteStream(InputSource* stream);
 
   /**
     * Set the encoding which will be required for use with the XML text read
@@ -254,7 +265,7 @@ inline const XMLCh* Wrapper4InputSource::getBaseURI() const
     return 0; // REVISIT - should we return an empty string?
 }
 
-inline const XMLCh* Wrapper4InputSource::getCharacterStream() const
+inline const XMLCh* Wrapper4InputSource::getStringData() const
 {
     return 0;
 }
@@ -263,6 +274,14 @@ inline const XMLCh* Wrapper4InputSource::getCharacterStream() const
 //  Wrapper4InputSource: Setter methods
 // ---------------------------------------------------------------------------
 inline void Wrapper4InputSource::setBaseURI(const XMLCh* const)
+{
+}
+
+inline void Wrapper4InputSource::setStringData(const XMLCh*)
+{
+}
+
+inline void Wrapper4InputSource::setByteStream(InputSource*)
 {
 }
 
