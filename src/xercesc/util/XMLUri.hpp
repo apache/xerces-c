@@ -291,12 +291,14 @@ public:
      * Determine whether a given string is a valid URI
      */
     static bool isValidURI( const XMLUri* const baseURI
-                          , const XMLCh* const uriStr);
+                          , const XMLCh* const uriStr
+                          , bool bAllowSpaces=false);
     /**
      * Determine whether a given string is a valid URI
      */
     static bool isValidURI( bool haveBaseURI
-                          , const XMLCh* const uriStr);
+                          , const XMLCh* const uriStr
+                          , bool bAllowSpaces=false);
 
 
     static void normalizeURI(const XMLCh*     const systemURI,
@@ -552,7 +554,7 @@ private:
     static bool processAuthority(const XMLCh* const uriStr, const int authLen);
     static bool isWellFormedAddress(const XMLCh* const addr, const int addrLen);
     static bool processPath(const XMLCh* const pathStr, const int pathStrLen,
-                            const bool isSchemePresent);
+                            const bool isSchemePresent, const bool bAllowSpaces=false);
 
     // -----------------------------------------------------------------------
     //  Data members

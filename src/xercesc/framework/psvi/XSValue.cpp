@@ -756,7 +756,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             }            
             break;
         case XSValue::dt_anyURI:
-            if (XMLUri::isValidURI(true, content) == false) {
+            if (XMLUri::isValidURI(true, content, true) == false) {
                 isValid = false;
             }        
             break;

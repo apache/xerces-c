@@ -76,7 +76,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
         //
         if (XMLString::stringLen(content))
         {          
-              if (!XMLUri::isValidURI(true, content))
+              if (!XMLUri::isValidURI(true, content, true))
                 ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_URI_Malformed
                     , content

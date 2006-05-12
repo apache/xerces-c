@@ -2017,7 +2017,8 @@ void XMLUri::buildFullText()
 
 // NOTE: no check for NULL value of uriStr (caller responsiblilty)
 bool XMLUri::isValidURI(const XMLUri* const baseURI
-                       , const XMLCh* const uriStr)
+                       , const XMLCh* const uriStr
+                       , bool bAllowSpaces/*=false*/)
 {
     // get a trimmed version of uriStr
     // uriStr will NO LONGER be used in this function.
@@ -2108,7 +2109,7 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
     // we need to check if index has exceed the lenght or not
     if (index < trimmedUriSpecLen)
     {
-	    if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme))
+	    if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme, bAllowSpaces))
             return false;
     }
 
@@ -2118,7 +2119,7 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
 // NOTE: no check for NULL value of uriStr (caller responsiblilty)
 // NOTE: this routine is the same as above, but it uses a flag to
 //       indicate the existance of a baseURI rather than an XMLuri.
-bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr)
+bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr, bool bAllowSpaces/*=false*/)
 {
     // get a trimmed version of uriStr
     // uriStr will NO LONGER be used in this function.
@@ -2208,7 +2209,7 @@ bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr)
     // we need to check if index has exceed the length or not
     if (index < trimmedUriSpecLen)
     {
-        if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme))
+        if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme, bAllowSpaces))
             return false;
     }
 
@@ -2417,7 +2418,8 @@ bool XMLUri::processAuthority( const XMLCh* const authSpec
 
 bool XMLUri::processPath(const XMLCh* const pathStr,
                          const int pathStrLen,
-                         const bool isSchemePresent)
+                         const bool isSchemePresent,
+                         const bool bAllowSpaces/*=false*/)
 {
     if (pathStrLen != 0)
     {
@@ -2441,7 +2443,8 @@ bool XMLUri::processPath(const XMLCh* const pathStr,
                     !XMLString::isHex(pathStr[index+2]))
                         return false;
             }
-            else if (!isUnreservedCharacter(testChar) &&
+            else if ((testChar==chSpace && !bAllowSpaces) &&
+                     !isUnreservedCharacter(testChar) &&
                      ((isOpaque && !isPathCharacter(testChar)) ||
                       (!isOpaque && !isReservedCharacter(testChar))))
             {
@@ -2473,7 +2476,8 @@ bool XMLUri::processPath(const XMLCh* const pathStr,
                         !XMLString::isHex(pathStr[index+2]))
                         return false;
                 }
-                else if (!isReservedOrUnreservedCharacter(testChar))                    
+                else if ((testChar==chSpace && !bAllowSpaces) &&
+                         !isReservedOrUnreservedCharacter(testChar))                    
                 {
                     return false;
                 }
