@@ -120,6 +120,9 @@
 #if XERCES_USE_TRANSCODER_ICU
 #	include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
 #endif
+#if XERCES_USE_TRANSCODER_GNUICONV
+#	include <xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.hpp>
+#endif
 #if XERCES_USE_TRANSCODER_ICONV
 #	include <xercesc/util/Transcoders/Iconv/IconvTransService.hpp>
 #endif
@@ -473,6 +476,8 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 	
 	#if defined   (XERCES_USE_TRANSCODER_ICU)
 		tc = new ICUTransService;
+	#elif defined (XERCES_USE_TRANSCODER_GNUICONV)
+		tc = new IconvGNUTransService;
 	#elif defined (XERCES_USE_TRANSCODER_ICONV)
 		tc = new IconvTransService;
 	#elif defined (XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER)

@@ -138,6 +138,13 @@ libicutc_la_SOURCES =				${icu_sources}
 libicutc_la_CXXFLAGS =				${AM_CXXFLAGS} -I${ICU_PREFIX}/include
 endif
 
+if XERCES_USE_TRANSCODER_GNUICONV
+src_libraries +=					libgnuiconvtc.la
+libgnuiconvtc_ladir =					${includedir}
+nobase_libgnuiconvtc_la_HEADERS =		${gnuiconv_headers}
+libgnuiconvtc_la_SOURCES =				${gnuiconv_sources}
+endif
+
 if XERCES_USE_TRANSCODER_ICONV
 src_libraries +=					libiconvtc.la
 libiconvtc_ladir =					${includedir}
@@ -1071,6 +1078,12 @@ icu_headers = \
 
 icu_sources = \
 	xercesc/util/Transcoders/ICU/ICUTransService.cpp
+
+gnuiconv_headers = \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.hpp
+
+gnuiconv_sources = \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp
 
 iconv_headers = \
 	xercesc/util/Transcoders/Iconv/IconvTransService.hpp

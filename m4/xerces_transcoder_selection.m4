@@ -21,6 +21,25 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	
 	tc_list=
 	
+	# Check for GNU iconv support
+	no_GNUiconv=false
+	AC_CHECK_HEADERS([iconv.h wchar.h string.h stdlib.h stdio.h ctype.h locale.h errno.h endian.h], [], [no_GNUiconv=true])
+	AC_CHECK_FUNCS([iconv_open iconv_close iconv], [], [no_GNUiconv=true])
+	AC_MSG_CHECKING([whether we can support the GNU iconv Transcoder])
+	list_add=
+	AS_IF([! $no_GNUiconv], [
+		AC_ARG_ENABLE([transcoder-gnuiconv],
+			AS_HELP_STRING([--enable-transcoder-gnuiconv],
+				[Enable GNU iconv-based transcoder support]),
+			[AS_IF([test x"$enableval" = xyes],
+				[list_add=GNUICONV])],
+			[list_add=gnuiconv])
+	])
+	AS_IF([test x"$list_add" != x],
+		[tc_list="$tc_list -$list_add-"; AC_MSG_RESULT(yes)],
+		[AC_MSG_RESULT(no)]
+	)
+
 	# Check for iconv support
 	no_iconv=false
 	AC_CHECK_HEADERS([wchar.h], [], [no_iconv=true])
@@ -124,6 +143,12 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 			break
 			;;
 
+		*-gnuiconv-*)
+			transcoder=gnuiconv
+			AC_DEFINE([XERCES_USE_TRANSCODER_GNUICONV], 1, [Define to use the GNU iconv transcoder])
+			break
+			;;
+
 		*-iconv-*)
 			transcoder=iconv
 			AC_DEFINE([XERCES_USE_TRANSCODER_ICONV], 1, [Define to use the iconv transcoder])
@@ -151,10 +176,11 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	
 	# Define the auto-make conditionals which determine what actually gets compiled
 	# Note that these macros can't be executed conditionally, which is why they're here, not above.
-	AM_CONDITIONAL([XERCES_USE_TRANSCODER_ICU],						[test x"$transcoder" = xicu])
+	AM_CONDITIONAL([XERCES_USE_TRANSCODER_ICU],			[test x"$transcoder" = xicu])
 	AM_CONDITIONAL([XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER],	[test x"$transcoder" = xmacosunicodeconverter])
-	AM_CONDITIONAL([XERCES_USE_TRANSCODER_ICONV],					[test x"$transcoder" = xiconv])
-	AM_CONDITIONAL([XERCES_USE_TRANSCODER_WINDOWS],					[test x"$transcoder" = xwindows])
+	AM_CONDITIONAL([XERCES_USE_TRANSCODER_GNUICONV],		[test x"$transcoder" = xgnuiconv])
+	AM_CONDITIONAL([XERCES_USE_TRANSCODER_ICONV],			[test x"$transcoder" = xiconv])
+	AM_CONDITIONAL([XERCES_USE_TRANSCODER_WINDOWS],			[test x"$transcoder" = xwindows])
 
 	]
 )
