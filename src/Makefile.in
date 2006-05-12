@@ -35,7 +35,7 @@
 #
 
 
-SOURCES = $(libcfurlna_la_SOURCES) $(libcurlna_la_SOURCES) $(libdom_la_SOURCES) $(libdomimpl_la_SOURCES) $(libframework_la_SOURCES) $(libiconvtc_la_SOURCES) $(libicutc_la_SOURCES) $(libinternal_la_SOURCES) $(libmacosaomgr_la_SOURCES) $(libmacosunicodeconverter_la_SOURCES) $(libmsgiconv_la_SOURCES) $(libmsgicu_la_SOURCES) $(libmsginmemory_la_SOURCES) $(libnothreadaomgr_la_SOURCES) $(libnothreadmmgr_la_SOURCES) $(libparsers_la_SOURCES) $(libposixaomgr_la_SOURCES) $(libposixfmgr_la_SOURCES) $(libposixmmgr_la_SOURCES) $(libsax_la_SOURCES) $(libsax2_la_SOURCES) $(libsocketsna_la_SOURCES) $(libsrc_la_SOURCES) $(libutil_la_SOURCES) $(libvalidators_la_SOURCES) $(libwinaomgr_la_SOURCES) $(libwinfmgr_la_SOURCES) $(libwinmmgr_la_SOURCES) $(libwinsockna_la_SOURCES) $(libwintrans_la_SOURCES) $(libwwwna_la_SOURCES)
+SOURCES = $(libcfurlna_la_SOURCES) $(libcurlna_la_SOURCES) $(libdom_la_SOURCES) $(libdomimpl_la_SOURCES) $(libframework_la_SOURCES) $(libgnuiconvtc_la_SOURCES) $(libiconvtc_la_SOURCES) $(libicutc_la_SOURCES) $(libinternal_la_SOURCES) $(libmacosaomgr_la_SOURCES) $(libmacosunicodeconverter_la_SOURCES) $(libmsgiconv_la_SOURCES) $(libmsgicu_la_SOURCES) $(libmsginmemory_la_SOURCES) $(libnothreadaomgr_la_SOURCES) $(libnothreadmmgr_la_SOURCES) $(libparsers_la_SOURCES) $(libposixaomgr_la_SOURCES) $(libposixfmgr_la_SOURCES) $(libposixmmgr_la_SOURCES) $(libsax_la_SOURCES) $(libsax2_la_SOURCES) $(libsocketsna_la_SOURCES) $(libsrc_la_SOURCES) $(libutil_la_SOURCES) $(libvalidators_la_SOURCES) $(libwinaomgr_la_SOURCES) $(libwinfmgr_la_SOURCES) $(libwinmmgr_la_SOURCES) $(libwinsockna_la_SOURCES) $(libwintrans_la_SOURCES) $(libwwwna_la_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -73,41 +73,43 @@ host_triplet = @host@
 # Transcoders, conditionally built based on settings from configure
 #
 @XERCES_USE_TRANSCODER_ICU_TRUE@am__append_6 = libicutc.la
-@XERCES_USE_TRANSCODER_ICONV_TRUE@am__append_7 = libiconvtc.la
-@XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am__append_8 = libmacosunicodeconverter.la
-@XERCES_USE_TRANSCODER_WINDOWS_TRUE@am__append_9 = libwintrans.la
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@am__append_7 = libgnuiconvtc.la
+@XERCES_USE_TRANSCODER_ICONV_TRUE@am__append_8 = libiconvtc.la
+@XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am__append_9 = libmacosunicodeconverter.la
+@XERCES_USE_TRANSCODER_WINDOWS_TRUE@am__append_10 = libwintrans.la
 
 #
 # MsgLoaders, conditionally built based on settings from configure
 #
-@XERCES_USE_MSGLOADER_INMEMORY_TRUE@am__append_10 = libmsginmemory.la
-@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_11 = libmsgicu.la
-@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_12 = xercesc/util/MsgLoaders/ICU/resources
-@XERCES_USE_MSGLOADER_ICONV_TRUE@am__append_13 = libmsgiconv.la
+@XERCES_USE_MSGLOADER_INMEMORY_TRUE@am__append_11 = libmsginmemory.la
+@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_12 = libmsgicu.la
+@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_13 = xercesc/util/MsgLoaders/ICU/resources
+@XERCES_USE_MSGLOADER_ICONV_TRUE@am__append_14 = libmsgiconv.la
 
 #
 # AtomicOp Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__append_14 = libnothreadaomgr.la
-@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__append_15 = libposixaomgr.la
-@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__append_16 = libmacosaomgr.la
-@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__append_17 = libwinaomgr.la
+@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__append_15 = libnothreadaomgr.la
+@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__append_16 = libposixaomgr.la
+@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__append_17 = libmacosaomgr.la
+@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__append_18 = libwinaomgr.la
 
 #
 # Mutex Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__append_18 = libnothreadmmgr.la
-@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__append_19 = libposixmmgr.la
-@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__append_20 = libwinmmgr.la
+@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__append_19 = libnothreadmmgr.la
+@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__append_20 = libposixmmgr.la
+@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__append_21 = libwinmmgr.la
 
 #
 # File Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_FILEMGR_POSIX_TRUE@am__append_21 = libposixfmgr.la
-@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__append_22 = libwinfmgr.la
+@XERCES_USE_FILEMGR_POSIX_TRUE@am__append_22 = libposixfmgr.la
+@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__append_23 = libwinfmgr.la
 subdir = src
 DIST_COMMON = $(am__nobase_libcfurlna_la_HEADERS_DIST) \
 	$(am__nobase_libcurlna_la_HEADERS_DIST) \
+	$(am__nobase_libgnuiconvtc_la_HEADERS_DIST) \
 	$(am__nobase_libiconvtc_la_HEADERS_DIST) \
 	$(am__nobase_libicutc_la_HEADERS_DIST) \
 	$(am__nobase_libmacosaomgr_la_HEADERS_DIST) \
@@ -285,25 +287,34 @@ am__objects_5 = xercesc/framework/BinOutputStream.lo \
 	xercesc/framework/XMLValidator.lo
 am_libframework_la_OBJECTS = $(am__objects_5)
 libframework_la_OBJECTS = $(am_libframework_la_OBJECTS)
+libgnuiconvtc_la_LIBADD =
+am__libgnuiconvtc_la_SOURCES_DIST =  \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp
+am__objects_6 =  \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.lo
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@am_libgnuiconvtc_la_OBJECTS =  \
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@	$(am__objects_6)
+libgnuiconvtc_la_OBJECTS = $(am_libgnuiconvtc_la_OBJECTS)
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@am_libgnuiconvtc_la_rpath =
 libiconvtc_la_LIBADD =
 am__libiconvtc_la_SOURCES_DIST =  \
 	xercesc/util/Transcoders/Iconv/IconvTransService.cpp
-am__objects_6 = xercesc/util/Transcoders/Iconv/IconvTransService.lo
+am__objects_7 = xercesc/util/Transcoders/Iconv/IconvTransService.lo
 @XERCES_USE_TRANSCODER_ICONV_TRUE@am_libiconvtc_la_OBJECTS =  \
-@XERCES_USE_TRANSCODER_ICONV_TRUE@	$(am__objects_6)
+@XERCES_USE_TRANSCODER_ICONV_TRUE@	$(am__objects_7)
 libiconvtc_la_OBJECTS = $(am_libiconvtc_la_OBJECTS)
 @XERCES_USE_TRANSCODER_ICONV_TRUE@am_libiconvtc_la_rpath =
 libicutc_la_LIBADD =
 am__libicutc_la_SOURCES_DIST =  \
 	xercesc/util/Transcoders/ICU/ICUTransService.cpp
-am__objects_7 =  \
+am__objects_8 =  \
 	xercesc/util/Transcoders/ICU/libicutc_la-ICUTransService.lo
 @XERCES_USE_TRANSCODER_ICU_TRUE@am_libicutc_la_OBJECTS =  \
-@XERCES_USE_TRANSCODER_ICU_TRUE@	$(am__objects_7)
+@XERCES_USE_TRANSCODER_ICU_TRUE@	$(am__objects_8)
 libicutc_la_OBJECTS = $(am_libicutc_la_OBJECTS)
 @XERCES_USE_TRANSCODER_ICU_TRUE@am_libicutc_la_rpath =
 libinternal_la_LIBADD =
-am__objects_8 = xercesc/internal/BinFileOutputStream.lo \
+am__objects_9 = xercesc/internal/BinFileOutputStream.lo \
 	xercesc/internal/BinMemOutputStream.lo \
 	xercesc/internal/DGXMLScanner.lo xercesc/internal/ElemStack.lo \
 	xercesc/internal/IGXMLScanner.lo \
@@ -323,115 +334,115 @@ am__objects_8 = xercesc/internal/BinFileOutputStream.lo \
 	xercesc/internal/XSerializeEngine.lo \
 	xercesc/internal/XSObjectFactory.lo \
 	xercesc/internal/XTemplateSerializer.lo
-am_libinternal_la_OBJECTS = $(am__objects_8)
+am_libinternal_la_OBJECTS = $(am__objects_9)
 libinternal_la_OBJECTS = $(am_libinternal_la_OBJECTS)
 libmacosaomgr_la_LIBADD =
 am__libmacosaomgr_la_SOURCES_DIST =  \
 	xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.cpp
-am__objects_9 = xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.lo
+am__objects_10 = xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.lo
 @XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am_libmacosaomgr_la_OBJECTS =  \
-@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@	$(am__objects_9)
+@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@	$(am__objects_10)
 libmacosaomgr_la_OBJECTS = $(am_libmacosaomgr_la_OBJECTS)
 @XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am_libmacosaomgr_la_rpath =
 libmacosunicodeconverter_la_LIBADD =
 am__libmacosunicodeconverter_la_SOURCES_DIST = xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.cpp
-am__objects_10 = xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.lo
-@XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am_libmacosunicodeconverter_la_OBJECTS = $(am__objects_10)
+am__objects_11 = xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.lo
+@XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am_libmacosunicodeconverter_la_OBJECTS = $(am__objects_11)
 libmacosunicodeconverter_la_OBJECTS =  \
 	$(am_libmacosunicodeconverter_la_OBJECTS)
 @XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am_libmacosunicodeconverter_la_rpath =
 libmsgiconv_la_LIBADD =
 am__libmsgiconv_la_SOURCES_DIST =  \
 	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.cpp
-am__objects_11 =  \
+am__objects_12 =  \
 	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.lo
 @XERCES_USE_MSGLOADER_ICONV_TRUE@am_libmsgiconv_la_OBJECTS =  \
-@XERCES_USE_MSGLOADER_ICONV_TRUE@	$(am__objects_11)
+@XERCES_USE_MSGLOADER_ICONV_TRUE@	$(am__objects_12)
 libmsgiconv_la_OBJECTS = $(am_libmsgiconv_la_OBJECTS)
 @XERCES_USE_MSGLOADER_ICONV_TRUE@am_libmsgiconv_la_rpath =
 libmsgicu_la_LIBADD =
 am__libmsgicu_la_SOURCES_DIST =  \
 	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp
-am__objects_12 = xercesc/util/MsgLoaders/ICU/ICUMsgLoader.lo
+am__objects_13 = xercesc/util/MsgLoaders/ICU/ICUMsgLoader.lo
 @XERCES_USE_MSGLOADER_ICU_TRUE@am_libmsgicu_la_OBJECTS =  \
-@XERCES_USE_MSGLOADER_ICU_TRUE@	$(am__objects_12)
+@XERCES_USE_MSGLOADER_ICU_TRUE@	$(am__objects_13)
 libmsgicu_la_OBJECTS = $(am_libmsgicu_la_OBJECTS)
 @XERCES_USE_MSGLOADER_ICU_TRUE@am_libmsgicu_la_rpath =
 libmsginmemory_la_LIBADD =
 am__libmsginmemory_la_SOURCES_DIST =  \
 	xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.cpp
-am__objects_13 = xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.lo
+am__objects_14 = xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.lo
 @XERCES_USE_MSGLOADER_INMEMORY_TRUE@am_libmsginmemory_la_OBJECTS =  \
-@XERCES_USE_MSGLOADER_INMEMORY_TRUE@	$(am__objects_13)
+@XERCES_USE_MSGLOADER_INMEMORY_TRUE@	$(am__objects_14)
 libmsginmemory_la_OBJECTS = $(am_libmsginmemory_la_OBJECTS)
 @XERCES_USE_MSGLOADER_INMEMORY_TRUE@am_libmsginmemory_la_rpath =
 libnothreadaomgr_la_LIBADD =
 am__libnothreadaomgr_la_SOURCES_DIST =  \
 	xercesc/util/AtomicOpManagers/NoThreadAtomicOpMgr.cpp
-am__objects_14 = xercesc/util/AtomicOpManagers/NoThreadAtomicOpMgr.lo
+am__objects_15 = xercesc/util/AtomicOpManagers/NoThreadAtomicOpMgr.lo
 @XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am_libnothreadaomgr_la_OBJECTS =  \
-@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@	$(am__objects_14)
+@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@	$(am__objects_15)
 libnothreadaomgr_la_OBJECTS = $(am_libnothreadaomgr_la_OBJECTS)
 @XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am_libnothreadaomgr_la_rpath =
 libnothreadmmgr_la_LIBADD =
 am__libnothreadmmgr_la_SOURCES_DIST =  \
 	xercesc/util/MutexManagers/NoThreadMutexMgr.cpp
-am__objects_15 = xercesc/util/MutexManagers/NoThreadMutexMgr.lo
+am__objects_16 = xercesc/util/MutexManagers/NoThreadMutexMgr.lo
 @XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am_libnothreadmmgr_la_OBJECTS =  \
-@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@	$(am__objects_15)
+@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@	$(am__objects_16)
 libnothreadmmgr_la_OBJECTS = $(am_libnothreadmmgr_la_OBJECTS)
 @XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am_libnothreadmmgr_la_rpath =
 libparsers_la_LIBADD =
-am__objects_16 = xercesc/parsers/AbstractDOMParser.lo \
+am__objects_17 = xercesc/parsers/AbstractDOMParser.lo \
 	xercesc/parsers/DOMLSParserImpl.lo \
 	xercesc/parsers/SAX2XMLFilterImpl.lo \
 	xercesc/parsers/SAX2XMLReaderImpl.lo \
 	xercesc/parsers/SAXParser.lo \
 	xercesc/parsers/XercesDOMParser.lo
-am_libparsers_la_OBJECTS = $(am__objects_16)
+am_libparsers_la_OBJECTS = $(am__objects_17)
 libparsers_la_OBJECTS = $(am_libparsers_la_OBJECTS)
 libposixaomgr_la_LIBADD =
 am__libposixaomgr_la_SOURCES_DIST =  \
 	xercesc/util/AtomicOpManagers/PosixAtomicOpMgr.cpp
-am__objects_17 = xercesc/util/AtomicOpManagers/PosixAtomicOpMgr.lo
+am__objects_18 = xercesc/util/AtomicOpManagers/PosixAtomicOpMgr.lo
 @XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am_libposixaomgr_la_OBJECTS =  \
-@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@	$(am__objects_17)
+@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@	$(am__objects_18)
 libposixaomgr_la_OBJECTS = $(am_libposixaomgr_la_OBJECTS)
 @XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am_libposixaomgr_la_rpath =
 libposixfmgr_la_LIBADD =
 am__libposixfmgr_la_SOURCES_DIST =  \
 	xercesc/util/FileManagers/PosixFileMgr.cpp
-am__objects_18 = xercesc/util/FileManagers/PosixFileMgr.lo
+am__objects_19 = xercesc/util/FileManagers/PosixFileMgr.lo
 @XERCES_USE_FILEMGR_POSIX_TRUE@am_libposixfmgr_la_OBJECTS =  \
-@XERCES_USE_FILEMGR_POSIX_TRUE@	$(am__objects_18)
+@XERCES_USE_FILEMGR_POSIX_TRUE@	$(am__objects_19)
 libposixfmgr_la_OBJECTS = $(am_libposixfmgr_la_OBJECTS)
 @XERCES_USE_FILEMGR_POSIX_TRUE@am_libposixfmgr_la_rpath =
 libposixmmgr_la_LIBADD =
 am__libposixmmgr_la_SOURCES_DIST =  \
 	xercesc/util/MutexManagers/PosixMutexMgr.cpp
-am__objects_19 = xercesc/util/MutexManagers/PosixMutexMgr.lo
+am__objects_20 = xercesc/util/MutexManagers/PosixMutexMgr.lo
 @XERCES_USE_MUTEXMGR_POSIX_TRUE@am_libposixmmgr_la_OBJECTS =  \
-@XERCES_USE_MUTEXMGR_POSIX_TRUE@	$(am__objects_19)
+@XERCES_USE_MUTEXMGR_POSIX_TRUE@	$(am__objects_20)
 libposixmmgr_la_OBJECTS = $(am_libposixmmgr_la_OBJECTS)
 @XERCES_USE_MUTEXMGR_POSIX_TRUE@am_libposixmmgr_la_rpath =
 libsax_la_LIBADD =
-am__objects_20 = xercesc/sax/Dummy.lo xercesc/sax/InputSource.lo \
+am__objects_21 = xercesc/sax/Dummy.lo xercesc/sax/InputSource.lo \
 	xercesc/sax/SAXException.lo xercesc/sax/SAXParseException.lo
-am_libsax_la_OBJECTS = $(am__objects_20)
+am_libsax_la_OBJECTS = $(am__objects_21)
 libsax_la_OBJECTS = $(am_libsax_la_OBJECTS)
 libsax2_la_LIBADD =
-am__objects_21 = xercesc/sax2/sax2Dummy.lo
-am_libsax2_la_OBJECTS = $(am__objects_21)
+am__objects_22 = xercesc/sax2/sax2Dummy.lo
+am_libsax2_la_OBJECTS = $(am__objects_22)
 libsax2_la_OBJECTS = $(am_libsax2_la_OBJECTS)
 libsocketsna_la_LIBADD =
 am__libsocketsna_la_SOURCES_DIST =  \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.cpp \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp
-am__objects_22 =  \
+am__objects_23 =  \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.lo \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.lo
 @XERCES_USE_NETACCESSOR_SOCKET_TRUE@am_libsocketsna_la_OBJECTS =  \
-@XERCES_USE_NETACCESSOR_SOCKET_TRUE@	$(am__objects_22)
+@XERCES_USE_NETACCESSOR_SOCKET_TRUE@	$(am__objects_23)
 libsocketsna_la_OBJECTS = $(am_libsocketsna_la_OBJECTS)
 @XERCES_USE_NETACCESSOR_SOCKET_TRUE@am_libsocketsna_la_rpath =
 @XERCES_USE_NETACCESSOR_CURL_TRUE@am__DEPENDENCIES_1 = libcurlna.la
@@ -442,29 +453,31 @@ libsocketsna_la_OBJECTS = $(am_libsocketsna_la_OBJECTS)
 @XERCES_USE_NETACCESSOR_WINSOCK_TRUE@am__DEPENDENCIES_5 =  \
 @XERCES_USE_NETACCESSOR_WINSOCK_TRUE@	libwinsockna.la
 @XERCES_USE_TRANSCODER_ICU_TRUE@am__DEPENDENCIES_6 = libicutc.la
-@XERCES_USE_TRANSCODER_ICONV_TRUE@am__DEPENDENCIES_7 = libiconvtc.la
-@XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am__DEPENDENCIES_8 = libmacosunicodeconverter.la
-@XERCES_USE_TRANSCODER_WINDOWS_TRUE@am__DEPENDENCIES_9 =  \
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@am__DEPENDENCIES_7 =  \
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@	libgnuiconvtc.la
+@XERCES_USE_TRANSCODER_ICONV_TRUE@am__DEPENDENCIES_8 = libiconvtc.la
+@XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER_TRUE@am__DEPENDENCIES_9 = libmacosunicodeconverter.la
+@XERCES_USE_TRANSCODER_WINDOWS_TRUE@am__DEPENDENCIES_10 =  \
 @XERCES_USE_TRANSCODER_WINDOWS_TRUE@	libwintrans.la
-@XERCES_USE_MSGLOADER_INMEMORY_TRUE@am__DEPENDENCIES_10 =  \
+@XERCES_USE_MSGLOADER_INMEMORY_TRUE@am__DEPENDENCIES_11 =  \
 @XERCES_USE_MSGLOADER_INMEMORY_TRUE@	libmsginmemory.la
-@XERCES_USE_MSGLOADER_ICU_TRUE@am__DEPENDENCIES_11 = libmsgicu.la
-@XERCES_USE_MSGLOADER_ICONV_TRUE@am__DEPENDENCIES_12 = libmsgiconv.la
-@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__DEPENDENCIES_13 =  \
+@XERCES_USE_MSGLOADER_ICU_TRUE@am__DEPENDENCIES_12 = libmsgicu.la
+@XERCES_USE_MSGLOADER_ICONV_TRUE@am__DEPENDENCIES_13 = libmsgiconv.la
+@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__DEPENDENCIES_14 =  \
 @XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@	libnothreadaomgr.la
-@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__DEPENDENCIES_14 =  \
+@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__DEPENDENCIES_15 =  \
 @XERCES_USE_ATOMICOPMGR_POSIX_TRUE@	libposixaomgr.la
-@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__DEPENDENCIES_15 =  \
+@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__DEPENDENCIES_16 =  \
 @XERCES_USE_ATOMICOPMGR_MACOS_TRUE@	libmacosaomgr.la
-@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__DEPENDENCIES_16 =  \
+@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__DEPENDENCIES_17 =  \
 @XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@	libwinaomgr.la
-@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__DEPENDENCIES_17 =  \
+@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__DEPENDENCIES_18 =  \
 @XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@	libnothreadmmgr.la
-@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__DEPENDENCIES_18 = libposixmmgr.la
-@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__DEPENDENCIES_19 = libwinmmgr.la
-@XERCES_USE_FILEMGR_POSIX_TRUE@am__DEPENDENCIES_20 = libposixfmgr.la
-@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__DEPENDENCIES_21 = libwinfmgr.la
-am__DEPENDENCIES_22 = libutil.la libdom.la libdomimpl.la \
+@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__DEPENDENCIES_19 = libposixmmgr.la
+@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__DEPENDENCIES_20 = libwinmmgr.la
+@XERCES_USE_FILEMGR_POSIX_TRUE@am__DEPENDENCIES_21 = libposixfmgr.la
+@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__DEPENDENCIES_22 = libwinfmgr.la
+am__DEPENDENCIES_23 = libutil.la libdom.la libdomimpl.la \
 	libframework.la libinternal.la libparsers.la libsax.la \
 	libsax2.la libvalidators.la $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3) \
@@ -476,12 +489,13 @@ am__DEPENDENCIES_22 = libutil.la libdom.la libdomimpl.la \
 	$(am__DEPENDENCIES_14) $(am__DEPENDENCIES_15) \
 	$(am__DEPENDENCIES_16) $(am__DEPENDENCIES_17) \
 	$(am__DEPENDENCIES_18) $(am__DEPENDENCIES_19) \
-	$(am__DEPENDENCIES_20) $(am__DEPENDENCIES_21)
-libsrc_la_DEPENDENCIES = $(am__DEPENDENCIES_22)
+	$(am__DEPENDENCIES_20) $(am__DEPENDENCIES_21) \
+	$(am__DEPENDENCIES_22)
+libsrc_la_DEPENDENCIES = $(am__DEPENDENCIES_23)
 am_libsrc_la_OBJECTS =
 libsrc_la_OBJECTS = $(am_libsrc_la_OBJECTS)
 libutil_la_LIBADD =
-am__objects_23 = xercesc/util/Base64.lo \
+am__objects_24 = xercesc/util/Base64.lo \
 	xercesc/util/BinFileInputStream.lo \
 	xercesc/util/BinInputStream.lo \
 	xercesc/util/BinMemInputStream.lo xercesc/util/BitSet.lo \
@@ -533,10 +547,10 @@ am__objects_23 = xercesc/util/Base64.lo \
 	xercesc/util/XMLUTF16Transcoder.lo \
 	xercesc/util/XMLUTF8Transcoder.lo \
 	xercesc/util/XMLWin1252Transcoder.lo
-am_libutil_la_OBJECTS = $(am__objects_23)
+am_libutil_la_OBJECTS = $(am__objects_24)
 libutil_la_OBJECTS = $(am_libutil_la_OBJECTS)
 libvalidators_la_LIBADD =
-am__objects_24 = xercesc/validators/common/AllContentModel.lo \
+am__objects_25 = xercesc/validators/common/AllContentModel.lo \
 	xercesc/validators/common/CMAny.lo \
 	xercesc/validators/common/CMBinaryOp.lo \
 	xercesc/validators/common/CMUnaryOp.lo \
@@ -624,59 +638,59 @@ am__objects_24 = xercesc/validators/common/AllContentModel.lo \
 	xercesc/validators/schema/XSDErrorReporter.lo \
 	xercesc/validators/schema/XSDLocator.lo \
 	xercesc/validators/schema/XUtil.lo
-am_libvalidators_la_OBJECTS = $(am__objects_24)
+am_libvalidators_la_OBJECTS = $(am__objects_25)
 libvalidators_la_OBJECTS = $(am_libvalidators_la_OBJECTS)
 libwinaomgr_la_LIBADD =
 am__libwinaomgr_la_SOURCES_DIST =  \
 	xercesc/util/AtomicOpManagers/WindowsAtomicOpMgr.cpp
-am__objects_25 = xercesc/util/AtomicOpManagers/WindowsAtomicOpMgr.lo
+am__objects_26 = xercesc/util/AtomicOpManagers/WindowsAtomicOpMgr.lo
 @XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am_libwinaomgr_la_OBJECTS =  \
-@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@	$(am__objects_25)
+@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@	$(am__objects_26)
 libwinaomgr_la_OBJECTS = $(am_libwinaomgr_la_OBJECTS)
 @XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am_libwinaomgr_la_rpath =
 libwinfmgr_la_LIBADD =
 am__libwinfmgr_la_SOURCES_DIST =  \
 	xercesc/util/FileManagers/WindowsFileMgr.cpp
-am__objects_26 = xercesc/util/FileManagers/WindowsFileMgr.lo
+am__objects_27 = xercesc/util/FileManagers/WindowsFileMgr.lo
 @XERCES_USE_FILEMGR_WINDOWS_TRUE@am_libwinfmgr_la_OBJECTS =  \
-@XERCES_USE_FILEMGR_WINDOWS_TRUE@	$(am__objects_26)
+@XERCES_USE_FILEMGR_WINDOWS_TRUE@	$(am__objects_27)
 libwinfmgr_la_OBJECTS = $(am_libwinfmgr_la_OBJECTS)
 @XERCES_USE_FILEMGR_WINDOWS_TRUE@am_libwinfmgr_la_rpath =
 libwinmmgr_la_LIBADD =
 am__libwinmmgr_la_SOURCES_DIST =  \
 	xercesc/util/MutexManagers/WindowsMutexMgr.cpp
-am__objects_27 = xercesc/util/MutexManagers/WindowsMutexMgr.lo
+am__objects_28 = xercesc/util/MutexManagers/WindowsMutexMgr.lo
 @XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am_libwinmmgr_la_OBJECTS =  \
-@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@	$(am__objects_27)
+@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@	$(am__objects_28)
 libwinmmgr_la_OBJECTS = $(am_libwinmmgr_la_OBJECTS)
 @XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am_libwinmmgr_la_rpath =
 libwinsockna_la_LIBADD =
 am__libwinsockna_la_SOURCES_DIST =  \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.cpp \
 	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
-am__objects_28 =  \
+am__objects_29 =  \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.lo \
 	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.lo
 @XERCES_USE_NETACCESSOR_WINSOCK_TRUE@am_libwinsockna_la_OBJECTS =  \
-@XERCES_USE_NETACCESSOR_WINSOCK_TRUE@	$(am__objects_28)
+@XERCES_USE_NETACCESSOR_WINSOCK_TRUE@	$(am__objects_29)
 libwinsockna_la_OBJECTS = $(am_libwinsockna_la_OBJECTS)
 @XERCES_USE_NETACCESSOR_WINSOCK_TRUE@am_libwinsockna_la_rpath =
 libwintrans_la_LIBADD =
 am__libwintrans_la_SOURCES_DIST =  \
 	xercesc/util/Transcoders/Win32/Win32TransService.cpp
-am__objects_29 = xercesc/util/Transcoders/Win32/Win32TransService.lo
+am__objects_30 = xercesc/util/Transcoders/Win32/Win32TransService.lo
 @XERCES_USE_TRANSCODER_WINDOWS_TRUE@am_libwintrans_la_OBJECTS =  \
-@XERCES_USE_TRANSCODER_WINDOWS_TRUE@	$(am__objects_29)
+@XERCES_USE_TRANSCODER_WINDOWS_TRUE@	$(am__objects_30)
 libwintrans_la_OBJECTS = $(am_libwintrans_la_OBJECTS)
 @XERCES_USE_TRANSCODER_WINDOWS_TRUE@am_libwintrans_la_rpath =
 libwwwna_la_LIBADD =
 am__libwwwna_la_SOURCES_DIST =  \
 	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.cpp \
 	xercesc/util/NetAccessors/libWWW/BinURLInputStream.cpp
-am__objects_30 = xercesc/util/NetAccessors/libWWW/libwwwna_la-LibWWWNetAccessor.lo \
+am__objects_31 = xercesc/util/NetAccessors/libWWW/libwwwna_la-LibWWWNetAccessor.lo \
 	xercesc/util/NetAccessors/libWWW/libwwwna_la-BinURLInputStream.lo
 @XERCES_USE_NETACCESSOR_LIBWWW_TRUE@am_libwwwna_la_OBJECTS =  \
-@XERCES_USE_NETACCESSOR_LIBWWW_TRUE@	$(am__objects_30)
+@XERCES_USE_NETACCESSOR_LIBWWW_TRUE@	$(am__objects_31)
 libwwwna_la_OBJECTS = $(am_libwwwna_la_OBJECTS)
 @XERCES_USE_NETACCESSOR_LIBWWW_TRUE@am_libwwwna_la_rpath =
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/src/xercesc/util
@@ -695,9 +709,9 @@ LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libcfurlna_la_SOURCES) $(libcurlna_la_SOURCES) \
 	$(libdom_la_SOURCES) $(libdomimpl_la_SOURCES) \
-	$(libframework_la_SOURCES) $(libiconvtc_la_SOURCES) \
-	$(libicutc_la_SOURCES) $(libinternal_la_SOURCES) \
-	$(libmacosaomgr_la_SOURCES) \
+	$(libframework_la_SOURCES) $(libgnuiconvtc_la_SOURCES) \
+	$(libiconvtc_la_SOURCES) $(libicutc_la_SOURCES) \
+	$(libinternal_la_SOURCES) $(libmacosaomgr_la_SOURCES) \
 	$(libmacosunicodeconverter_la_SOURCES) \
 	$(libmsgiconv_la_SOURCES) $(libmsgicu_la_SOURCES) \
 	$(libmsginmemory_la_SOURCES) $(libnothreadaomgr_la_SOURCES) \
@@ -713,6 +727,7 @@ SOURCES = $(libcfurlna_la_SOURCES) $(libcurlna_la_SOURCES) \
 DIST_SOURCES = $(am__libcfurlna_la_SOURCES_DIST) \
 	$(am__libcurlna_la_SOURCES_DIST) $(libdom_la_SOURCES) \
 	$(libdomimpl_la_SOURCES) $(libframework_la_SOURCES) \
+	$(am__libgnuiconvtc_la_SOURCES_DIST) \
 	$(am__libiconvtc_la_SOURCES_DIST) \
 	$(am__libicutc_la_SOURCES_DIST) $(libinternal_la_SOURCES) \
 	$(am__libmacosaomgr_la_SOURCES_DIST) \
@@ -751,6 +766,7 @@ am__installdirs = "$(DESTDIR)$(libcfurlna_ladir)" \
 	"$(DESTDIR)$(libcurlna_ladir)" "$(DESTDIR)$(libdom_ladir)" \
 	"$(DESTDIR)$(libdomimpl_ladir)" \
 	"$(DESTDIR)$(libframework_ladir)" \
+	"$(DESTDIR)$(libgnuiconvtc_ladir)" \
 	"$(DESTDIR)$(libiconvtc_ladir)" "$(DESTDIR)$(libicutc_ladir)" \
 	"$(DESTDIR)$(libinternal_ladir)" \
 	"$(DESTDIR)$(libmacosaomgr_ladir)" \
@@ -780,6 +796,9 @@ nobase_libcurlna_laHEADERS_INSTALL = $(install_sh_DATA)
 nobase_libdom_laHEADERS_INSTALL = $(install_sh_DATA)
 nobase_libdomimpl_laHEADERS_INSTALL = $(install_sh_DATA)
 nobase_libframework_laHEADERS_INSTALL = $(install_sh_DATA)
+am__nobase_libgnuiconvtc_la_HEADERS_DIST =  \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.hpp
+nobase_libgnuiconvtc_laHEADERS_INSTALL = $(install_sh_DATA)
 am__nobase_libiconvtc_la_HEADERS_DIST =  \
 	xercesc/util/Transcoders/Iconv/IconvTransService.hpp
 nobase_libiconvtc_laHEADERS_INSTALL = $(install_sh_DATA)
@@ -851,6 +870,7 @@ HEADERS = $(nobase_libcfurlna_la_HEADERS) \
 	$(nobase_libcurlna_la_HEADERS) $(nobase_libdom_la_HEADERS) \
 	$(nobase_libdomimpl_la_HEADERS) \
 	$(nobase_libframework_la_HEADERS) \
+	$(nobase_libgnuiconvtc_la_HEADERS) \
 	$(nobase_libiconvtc_la_HEADERS) $(nobase_libicutc_la_HEADERS) \
 	$(nobase_libinternal_la_HEADERS) \
 	$(nobase_libmacosaomgr_la_HEADERS) \
@@ -978,6 +998,8 @@ XERCES_USE_NETACCESSOR_SOCKET_FALSE = @XERCES_USE_NETACCESSOR_SOCKET_FALSE@
 XERCES_USE_NETACCESSOR_SOCKET_TRUE = @XERCES_USE_NETACCESSOR_SOCKET_TRUE@
 XERCES_USE_NETACCESSOR_WINSOCK_FALSE = @XERCES_USE_NETACCESSOR_WINSOCK_FALSE@
 XERCES_USE_NETACCESSOR_WINSOCK_TRUE = @XERCES_USE_NETACCESSOR_WINSOCK_TRUE@
+XERCES_USE_TRANSCODER_GNUICONV_FALSE = @XERCES_USE_TRANSCODER_GNUICONV_FALSE@
+XERCES_USE_TRANSCODER_GNUICONV_TRUE = @XERCES_USE_TRANSCODER_GNUICONV_TRUE@
 XERCES_USE_TRANSCODER_ICONV_FALSE = @XERCES_USE_TRANSCODER_ICONV_FALSE@
 XERCES_USE_TRANSCODER_ICONV_TRUE = @XERCES_USE_TRANSCODER_ICONV_TRUE@
 XERCES_USE_TRANSCODER_ICU_FALSE = @XERCES_USE_TRANSCODER_ICU_FALSE@
@@ -1033,7 +1055,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = $(am__append_12)
+SUBDIRS = $(am__append_13)
 
 #
 # Specify the convenience libraries for various xerces components
@@ -1059,10 +1081,10 @@ src_libraries = libutil.la libdom.la libdomimpl.la libframework.la \
 	$(am__append_3) $(am__append_4) $(am__append_5) \
 	$(am__append_6) $(am__append_7) $(am__append_8) \
 	$(am__append_9) $(am__append_10) $(am__append_11) \
-	$(am__append_13) $(am__append_14) $(am__append_15) \
+	$(am__append_12) $(am__append_14) $(am__append_15) \
 	$(am__append_16) $(am__append_17) $(am__append_18) \
 	$(am__append_19) $(am__append_20) $(am__append_21) \
-	$(am__append_22)
+	$(am__append_22) $(am__append_23)
 libutil_ladir = ${includedir}
 nobase_libutil_la_HEADERS = ${util_headers}
 libutil_la_SOURCES = ${util_sources}
@@ -1111,6 +1133,9 @@ libvalidators_la_SOURCES = ${validators_sources}
 @XERCES_USE_TRANSCODER_ICU_TRUE@nobase_libicutc_la_HEADERS = ${icu_headers}
 @XERCES_USE_TRANSCODER_ICU_TRUE@libicutc_la_SOURCES = ${icu_sources}
 @XERCES_USE_TRANSCODER_ICU_TRUE@libicutc_la_CXXFLAGS = ${AM_CXXFLAGS} -I${ICU_PREFIX}/include
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@libgnuiconvtc_ladir = ${includedir}
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@nobase_libgnuiconvtc_la_HEADERS = ${gnuiconv_headers}
+@XERCES_USE_TRANSCODER_GNUICONV_TRUE@libgnuiconvtc_la_SOURCES = ${gnuiconv_sources}
 @XERCES_USE_TRANSCODER_ICONV_TRUE@libiconvtc_ladir = ${includedir}
 @XERCES_USE_TRANSCODER_ICONV_TRUE@nobase_libiconvtc_la_HEADERS = ${iconv_headers}
 @XERCES_USE_TRANSCODER_ICONV_TRUE@libiconvtc_la_SOURCES = ${iconv_sources}
@@ -1962,6 +1987,12 @@ icu_headers = \
 icu_sources = \
 	xercesc/util/Transcoders/ICU/ICUTransService.cpp
 
+gnuiconv_headers = \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.hpp
+
+gnuiconv_sources = \
+	xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.cpp
+
 iconv_headers = \
 	xercesc/util/Transcoders/Iconv/IconvTransService.hpp
 
@@ -2465,6 +2496,17 @@ xercesc/framework/XMLValidator.lo: xercesc/framework/$(am__dirstamp) \
 	xercesc/framework/$(DEPDIR)/$(am__dirstamp)
 libframework.la: $(libframework_la_OBJECTS) $(libframework_la_DEPENDENCIES) 
 	$(CXXLINK)  $(libframework_la_LDFLAGS) $(libframework_la_OBJECTS) $(libframework_la_LIBADD) $(LIBS)
+xercesc/util/Transcoders/IconvGNU/$(am__dirstamp):
+	@$(mkdir_p) xercesc/util/Transcoders/IconvGNU
+	@: > xercesc/util/Transcoders/IconvGNU/$(am__dirstamp)
+xercesc/util/Transcoders/IconvGNU/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) xercesc/util/Transcoders/IconvGNU/$(DEPDIR)
+	@: > xercesc/util/Transcoders/IconvGNU/$(DEPDIR)/$(am__dirstamp)
+xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.lo:  \
+	xercesc/util/Transcoders/IconvGNU/$(am__dirstamp) \
+	xercesc/util/Transcoders/IconvGNU/$(DEPDIR)/$(am__dirstamp)
+libgnuiconvtc.la: $(libgnuiconvtc_la_OBJECTS) $(libgnuiconvtc_la_DEPENDENCIES) 
+	$(CXXLINK) $(am_libgnuiconvtc_la_rpath) $(libgnuiconvtc_la_LDFLAGS) $(libgnuiconvtc_la_OBJECTS) $(libgnuiconvtc_la_LIBADD) $(LIBS)
 xercesc/util/Transcoders/Iconv/$(am__dirstamp):
 	@$(mkdir_p) xercesc/util/Transcoders/Iconv
 	@: > xercesc/util/Transcoders/Iconv/$(am__dirstamp)
@@ -3571,6 +3613,8 @@ mostlyclean-compile:
 	-rm -f xercesc/util/Transcoders/ICU/libicutc_la-ICUTransService.lo
 	-rm -f xercesc/util/Transcoders/Iconv/IconvTransService.$(OBJEXT)
 	-rm -f xercesc/util/Transcoders/Iconv/IconvTransService.lo
+	-rm -f xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.$(OBJEXT)
+	-rm -f xercesc/util/Transcoders/IconvGNU/IconvGNUTransService.lo
 	-rm -f xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.$(OBJEXT)
 	-rm -f xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.lo
 	-rm -f xercesc/util/Transcoders/Win32/Win32TransService.$(OBJEXT)
@@ -4066,6 +4110,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/NetAccessors/libWWW/$(DEPDIR)/libwwwna_la-LibWWWNetAccessor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/Transcoders/ICU/$(DEPDIR)/libicutc_la-ICUTransService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/Transcoders/Iconv/$(DEPDIR)/IconvTransService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/Transcoders/IconvGNU/$(DEPDIR)/IconvGNUTransService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR)/MacOSUnicodeConverter.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/Transcoders/Win32/$(DEPDIR)/Win32TransService.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/regx/$(DEPDIR)/ASCIIRangeFactory.Plo@am__quote@
@@ -4269,6 +4314,7 @@ clean-libtool:
 	-rm -rf xercesc/util/NetAccessors/libWWW/.libs xercesc/util/NetAccessors/libWWW/_libs
 	-rm -rf xercesc/util/Transcoders/ICU/.libs xercesc/util/Transcoders/ICU/_libs
 	-rm -rf xercesc/util/Transcoders/Iconv/.libs xercesc/util/Transcoders/Iconv/_libs
+	-rm -rf xercesc/util/Transcoders/IconvGNU/.libs xercesc/util/Transcoders/IconvGNU/_libs
 	-rm -rf xercesc/util/Transcoders/MacOSUnicodeConverter/.libs xercesc/util/Transcoders/MacOSUnicodeConverter/_libs
 	-rm -rf xercesc/util/Transcoders/Win32/.libs xercesc/util/Transcoders/Win32/_libs
 	-rm -rf xercesc/util/regx/.libs xercesc/util/regx/_libs
@@ -4375,6 +4421,25 @@ uninstall-nobase_libframework_laHEADERS:
 	  $(am__vpath_adj) \
 	  echo " rm -f '$(DESTDIR)$(libframework_ladir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(libframework_ladir)/$$f"; \
+	done
+install-nobase_libgnuiconvtc_laHEADERS: $(nobase_libgnuiconvtc_la_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(libgnuiconvtc_ladir)" || $(mkdir_p) "$(DESTDIR)$(libgnuiconvtc_ladir)"
+	@$(am__vpath_adj_setup) \
+	list='$(nobase_libgnuiconvtc_la_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  $(am__vpath_adj) \
+	  echo " $(nobase_libgnuiconvtc_laHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(libgnuiconvtc_ladir)/$$f'"; \
+	  $(nobase_libgnuiconvtc_laHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(libgnuiconvtc_ladir)/$$f"; \
+	done
+
+uninstall-nobase_libgnuiconvtc_laHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@$(am__vpath_adj_setup) \
+	list='$(nobase_libgnuiconvtc_la_HEADERS)'; for p in $$list; do \
+	  $(am__vpath_adj) \
+	  echo " rm -f '$(DESTDIR)$(libgnuiconvtc_ladir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(libgnuiconvtc_ladir)/$$f"; \
 	done
 install-nobase_libiconvtc_laHEADERS: $(nobase_libiconvtc_la_HEADERS)
 	@$(NORMAL_INSTALL)
@@ -4985,7 +5050,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/xercesc/dom $(distdir)/xercesc/dom/impl $(distdir)/xercesc/framework $(distdir)/xercesc/framework/psvi $(distdir)/xercesc/internal $(distdir)/xercesc/parsers $(distdir)/xercesc/sax $(distdir)/xercesc/sax2 $(distdir)/xercesc/util $(distdir)/xercesc/util/AtomicOpManagers $(distdir)/xercesc/util/FileManagers $(distdir)/xercesc/util/MsgLoaders/ICU $(distdir)/xercesc/util/MsgLoaders/InMemory $(distdir)/xercesc/util/MsgLoaders/MsgCatalog $(distdir)/xercesc/util/MutexManagers $(distdir)/xercesc/util/NetAccessors/Curl $(distdir)/xercesc/util/NetAccessors/MacOSURLAccessCF $(distdir)/xercesc/util/NetAccessors/Socket $(distdir)/xercesc/util/NetAccessors/WinSock $(distdir)/xercesc/util/NetAccessors/libWWW $(distdir)/xercesc/util/Transcoders/ICU $(distdir)/xercesc/util/Transcoders/Iconv $(distdir)/xercesc/util/Transcoders/MacOSUnicodeConverter $(distdir)/xercesc/util/Transcoders/Win32 $(distdir)/xercesc/util/regx $(distdir)/xercesc/validators/DTD $(distdir)/xercesc/validators/common $(distdir)/xercesc/validators/datatype $(distdir)/xercesc/validators/schema $(distdir)/xercesc/validators/schema/identity
+	$(mkdir_p) $(distdir)/xercesc/dom $(distdir)/xercesc/dom/impl $(distdir)/xercesc/framework $(distdir)/xercesc/framework/psvi $(distdir)/xercesc/internal $(distdir)/xercesc/parsers $(distdir)/xercesc/sax $(distdir)/xercesc/sax2 $(distdir)/xercesc/util $(distdir)/xercesc/util/AtomicOpManagers $(distdir)/xercesc/util/FileManagers $(distdir)/xercesc/util/MsgLoaders/ICU $(distdir)/xercesc/util/MsgLoaders/InMemory $(distdir)/xercesc/util/MsgLoaders/MsgCatalog $(distdir)/xercesc/util/MutexManagers $(distdir)/xercesc/util/NetAccessors/Curl $(distdir)/xercesc/util/NetAccessors/MacOSURLAccessCF $(distdir)/xercesc/util/NetAccessors/Socket $(distdir)/xercesc/util/NetAccessors/WinSock $(distdir)/xercesc/util/NetAccessors/libWWW $(distdir)/xercesc/util/Transcoders/ICU $(distdir)/xercesc/util/Transcoders/Iconv $(distdir)/xercesc/util/Transcoders/IconvGNU $(distdir)/xercesc/util/Transcoders/MacOSUnicodeConverter $(distdir)/xercesc/util/Transcoders/Win32 $(distdir)/xercesc/util/regx $(distdir)/xercesc/validators/DTD $(distdir)/xercesc/validators/common $(distdir)/xercesc/validators/datatype $(distdir)/xercesc/validators/schema $(distdir)/xercesc/validators/schema/identity
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -5032,7 +5097,7 @@ check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(libcfurlna_ladir)" "$(DESTDIR)$(libcurlna_ladir)" "$(DESTDIR)$(libdom_ladir)" "$(DESTDIR)$(libdomimpl_ladir)" "$(DESTDIR)$(libframework_ladir)" "$(DESTDIR)$(libiconvtc_ladir)" "$(DESTDIR)$(libicutc_ladir)" "$(DESTDIR)$(libinternal_ladir)" "$(DESTDIR)$(libmacosaomgr_ladir)" "$(DESTDIR)$(libmacosunicodeconverter_ladir)" "$(DESTDIR)$(libmsgiconv_ladir)" "$(DESTDIR)$(libmsgicu_ladir)" "$(DESTDIR)$(libmsginmemory_ladir)" "$(DESTDIR)$(libnothreadaomgr_ladir)" "$(DESTDIR)$(libnothreadmmgr_ladir)" "$(DESTDIR)$(libparsers_ladir)" "$(DESTDIR)$(libposixaomgr_ladir)" "$(DESTDIR)$(libposixfmgr_ladir)" "$(DESTDIR)$(libposixmmgr_ladir)" "$(DESTDIR)$(libsax2_ladir)" "$(DESTDIR)$(libsax_ladir)" "$(DESTDIR)$(libsocketsna_ladir)" "$(DESTDIR)$(libutil_ladir)" "$(DESTDIR)$(libvalidators_ladir)" "$(DESTDIR)$(libwinaomgr_ladir)" "$(DESTDIR)$(libwinfmgr_ladir)" "$(DESTDIR)$(libwinmmgr_ladir)" "$(DESTDIR)$(libwinsockna_ladir)" "$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)"; do \
+	for dir in "$(DESTDIR)$(libcfurlna_ladir)" "$(DESTDIR)$(libcurlna_ladir)" "$(DESTDIR)$(libdom_ladir)" "$(DESTDIR)$(libdomimpl_ladir)" "$(DESTDIR)$(libframework_ladir)" "$(DESTDIR)$(libgnuiconvtc_ladir)" "$(DESTDIR)$(libiconvtc_ladir)" "$(DESTDIR)$(libicutc_ladir)" "$(DESTDIR)$(libinternal_ladir)" "$(DESTDIR)$(libmacosaomgr_ladir)" "$(DESTDIR)$(libmacosunicodeconverter_ladir)" "$(DESTDIR)$(libmsgiconv_ladir)" "$(DESTDIR)$(libmsgicu_ladir)" "$(DESTDIR)$(libmsginmemory_ladir)" "$(DESTDIR)$(libnothreadaomgr_ladir)" "$(DESTDIR)$(libnothreadmmgr_ladir)" "$(DESTDIR)$(libparsers_ladir)" "$(DESTDIR)$(libposixaomgr_ladir)" "$(DESTDIR)$(libposixfmgr_ladir)" "$(DESTDIR)$(libposixmmgr_ladir)" "$(DESTDIR)$(libsax2_ladir)" "$(DESTDIR)$(libsax_ladir)" "$(DESTDIR)$(libsocketsna_ladir)" "$(DESTDIR)$(libutil_ladir)" "$(DESTDIR)$(libvalidators_ladir)" "$(DESTDIR)$(libwinaomgr_ladir)" "$(DESTDIR)$(libwinfmgr_ladir)" "$(DESTDIR)$(libwinmmgr_ladir)" "$(DESTDIR)$(libwinsockna_ladir)" "$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-recursive
@@ -5099,6 +5164,8 @@ distclean-generic:
 	-rm -f xercesc/util/Transcoders/ICU/$(am__dirstamp)
 	-rm -f xercesc/util/Transcoders/Iconv/$(DEPDIR)/$(am__dirstamp)
 	-rm -f xercesc/util/Transcoders/Iconv/$(am__dirstamp)
+	-rm -f xercesc/util/Transcoders/IconvGNU/$(DEPDIR)/$(am__dirstamp)
+	-rm -f xercesc/util/Transcoders/IconvGNU/$(am__dirstamp)
 	-rm -f xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR)/$(am__dirstamp)
 	-rm -f xercesc/util/Transcoders/MacOSUnicodeConverter/$(am__dirstamp)
 	-rm -f xercesc/util/Transcoders/Win32/$(DEPDIR)/$(am__dirstamp)
@@ -5125,7 +5192,7 @@ clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-recursive
-	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
+	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/IconvGNU/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -5145,6 +5212,7 @@ install-data-am: install-nobase_libcfurlna_laHEADERS \
 	install-nobase_libdom_laHEADERS \
 	install-nobase_libdomimpl_laHEADERS \
 	install-nobase_libframework_laHEADERS \
+	install-nobase_libgnuiconvtc_laHEADERS \
 	install-nobase_libiconvtc_laHEADERS \
 	install-nobase_libicutc_laHEADERS \
 	install-nobase_libinternal_laHEADERS \
@@ -5180,7 +5248,7 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
+	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/IconvGNU/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -5202,6 +5270,7 @@ uninstall-am: uninstall-info-am uninstall-nobase_libcfurlna_laHEADERS \
 	uninstall-nobase_libdom_laHEADERS \
 	uninstall-nobase_libdomimpl_laHEADERS \
 	uninstall-nobase_libframework_laHEADERS \
+	uninstall-nobase_libgnuiconvtc_laHEADERS \
 	uninstall-nobase_libiconvtc_laHEADERS \
 	uninstall-nobase_libicutc_laHEADERS \
 	uninstall-nobase_libinternal_laHEADERS \
@@ -5243,6 +5312,7 @@ uninstall-info: uninstall-info-recursive
 	install-nobase_libdom_laHEADERS \
 	install-nobase_libdomimpl_laHEADERS \
 	install-nobase_libframework_laHEADERS \
+	install-nobase_libgnuiconvtc_laHEADERS \
 	install-nobase_libiconvtc_laHEADERS \
 	install-nobase_libicutc_laHEADERS \
 	install-nobase_libinternal_laHEADERS \
@@ -5278,6 +5348,7 @@ uninstall-info: uninstall-info-recursive
 	uninstall-nobase_libdom_laHEADERS \
 	uninstall-nobase_libdomimpl_laHEADERS \
 	uninstall-nobase_libframework_laHEADERS \
+	uninstall-nobase_libgnuiconvtc_laHEADERS \
 	uninstall-nobase_libiconvtc_laHEADERS \
 	uninstall-nobase_libicutc_laHEADERS \
 	uninstall-nobase_libinternal_laHEADERS \
