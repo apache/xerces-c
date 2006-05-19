@@ -2443,8 +2443,12 @@ bool XMLUri::processPath(const XMLCh* const pathStr,
                     !XMLString::isHex(pathStr[index+2]))
                         return false;
             }
-            else if ((testChar==chSpace && !bAllowSpaces) &&
-                     !isUnreservedCharacter(testChar) &&
+            else if (testChar==chSpace)
+            {
+                if(!bAllowSpaces)
+                    return false;
+            }
+            else if (!isUnreservedCharacter(testChar) &&
                      ((isOpaque && !isPathCharacter(testChar)) ||
                       (!isOpaque && !isReservedCharacter(testChar))))
             {
@@ -2476,8 +2480,12 @@ bool XMLUri::processPath(const XMLCh* const pathStr,
                         !XMLString::isHex(pathStr[index+2]))
                         return false;
                 }
-                else if ((testChar==chSpace && !bAllowSpaces) &&
-                         !isReservedOrUnreservedCharacter(testChar))                    
+                else if (testChar==chSpace)
+                {
+                    if(!bAllowSpaces)
+                        return false;
+                }
+                else if (!isReservedOrUnreservedCharacter(testChar))                    
                 {
                     return false;
                 }
