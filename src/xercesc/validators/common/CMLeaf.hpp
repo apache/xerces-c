@@ -40,7 +40,7 @@ public :
     CMLeaf
     (
           QName* const         element
-        , const unsigned int   position = (~0)
+        , const unsigned int   position
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     CMLeaf
@@ -205,7 +205,7 @@ inline void CMLeaf::setPosition(const unsigned int newPosition)
 inline bool CMLeaf::isNullable() const
 {
     // Leaf nodes are never nullable unless its an epsilon node
-    return (fPosition == -1);
+    return (fPosition == epsilonNode);
 }
 
 
@@ -215,7 +215,7 @@ inline bool CMLeaf::isNullable() const
 inline void CMLeaf::calcFirstPos(CMStateSet& toSet) const
 {
     // If we are an epsilon node, then the first pos is an empty set
-    if (fPosition == -1)
+    if (isNullable())
     {
         toSet.zeroBits();
         return;
@@ -228,7 +228,7 @@ inline void CMLeaf::calcFirstPos(CMStateSet& toSet) const
 inline void CMLeaf::calcLastPos(CMStateSet& toSet) const
 {
     // If we are an epsilon node, then the last pos is an empty set
-    if (fPosition == -1)
+    if (isNullable())
     {
         toSet.zeroBits();
         return;

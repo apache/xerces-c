@@ -63,7 +63,7 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     bool                     getCheckElementConsistency() const;
-    int                      getScope() const;
+    unsigned int             getScope() const;
     unsigned int             elementCount() const;
     ContentSpecNode*         getContentSpec() const;
     SchemaElementDecl*       elementAt(const unsigned int index);
@@ -76,7 +76,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setScope(const int other);
+    void setScope(const unsigned int other);
     void setContentSpec(ContentSpecNode* const other);
     void addElement(SchemaElementDecl* const toAdd);
     void setLocator(XSDLocator* const aLocator);
@@ -100,7 +100,7 @@ private:
     //  Private data members
     // -----------------------------------------------------------------------
     bool                            fCheckElementConsistency;
-    int                             fScope;
+    unsigned int                    fScope;
     unsigned int                    fNameId;
     unsigned int                    fNamespaceId;
     ContentSpecNode*                fContentSpec;
@@ -112,7 +112,7 @@ private:
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Getter methods
 // ---------------------------------------------------------------------------
-inline int XercesGroupInfo::getScope() const {
+inline unsigned int XercesGroupInfo::getScope() const {
 
     return fScope;
 }
@@ -167,7 +167,7 @@ inline unsigned int XercesGroupInfo::getNamespaceId() const
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Setter methods
 // ---------------------------------------------------------------------------}
-inline void XercesGroupInfo::setScope(const int other) {
+inline void XercesGroupInfo::setScope(const unsigned int other) {
 
     fScope = other;
 }

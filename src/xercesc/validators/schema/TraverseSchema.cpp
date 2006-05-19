@@ -7183,7 +7183,7 @@ void TraverseSchema::processElements(const DOMElement* const elem,
             SchemaGrammar*     aGrammar = fSchemaGrammar;
             SchemaElementDecl* elemDecl = baseTypeInfo->elementAt(i);
             int elemURI = elemDecl->getURI();
-            int elemScope = elemDecl->getEnclosingScope();
+            unsigned int elemScope = elemDecl->getEnclosingScope();
 
             if (elemScope != Grammar::TOP_LEVEL_SCOPE) {
 
@@ -7228,7 +7228,7 @@ void TraverseSchema::processElements(const DOMElement* const elem,
     for (unsigned int i = 0; i < elemCount; i++) {
 
         SchemaElementDecl* elemDecl = fromGroup->elementAt(i);
-        int elemScope = elemDecl->getEnclosingScope();
+        unsigned int elemScope = elemDecl->getEnclosingScope();
 
         if (elemScope != Grammar::TOP_LEVEL_SCOPE)
         {
@@ -7276,7 +7276,7 @@ void TraverseSchema::copyGroupElements(const DOMElement* const elem,
 
         if (typeInfo) {
 
-            int elemScope = elemDecl->getEnclosingScope();
+            unsigned int elemScope = elemDecl->getEnclosingScope();
 
             if (elemScope != Grammar::TOP_LEVEL_SCOPE) {
 

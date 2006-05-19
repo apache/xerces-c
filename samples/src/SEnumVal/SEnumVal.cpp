@@ -398,8 +398,8 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
     case DatatypeValidator::String:         XERCES_STD_QUALIFIER cout << "string";      break;
     case DatatypeValidator::AnyURI:         XERCES_STD_QUALIFIER cout << "AnyURI";      break;
     case DatatypeValidator::QName:          XERCES_STD_QUALIFIER cout << "QName";       break;
-	case DatatypeValidator::Name:           XERCES_STD_QUALIFIER cout << "Name";        break;
-	case DatatypeValidator::NCName:         XERCES_STD_QUALIFIER cout << "NCName";      break;
+    case DatatypeValidator::Name:           XERCES_STD_QUALIFIER cout << "Name";        break;
+    case DatatypeValidator::NCName:         XERCES_STD_QUALIFIER cout << "NCName";      break;
     case DatatypeValidator::Boolean:        XERCES_STD_QUALIFIER cout << "Boolean";     break;
     case DatatypeValidator::Float:          XERCES_STD_QUALIFIER cout << "Float";       break;
     case DatatypeValidator::Double:         XERCES_STD_QUALIFIER cout << "Double";      break;
@@ -422,6 +422,7 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
     case DatatypeValidator::List:           XERCES_STD_QUALIFIER cout << "List";        break;
     case DatatypeValidator::Union:          XERCES_STD_QUALIFIER cout << "Union";       break;
     case DatatypeValidator::AnySimpleType:  XERCES_STD_QUALIFIER cout << "AnySimpleType"; break;
+    case DatatypeValidator::UnKnown:        XERCES_STD_QUALIFIER cout << "UNKNOWN";     break;
     }
 
     XERCES_STD_QUALIFIER cout << "\n";
@@ -475,23 +476,26 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
     XERCES_STD_QUALIFIER cout << "ContentType:\t";
     switch( cSpecNode->getType() )
     {
-        case ContentSpecNode::Leaf:             XERCES_STD_QUALIFIER cout << "Leaf";           break;
-        case ContentSpecNode::ZeroOrOne:        XERCES_STD_QUALIFIER cout << "ZeroOrOne";      break;
-        case ContentSpecNode::ZeroOrMore:       XERCES_STD_QUALIFIER cout << "ZeroOrMore";     break;
-        case ContentSpecNode::OneOrMore:        XERCES_STD_QUALIFIER cout << "OneOrMore";      break;
-        case ContentSpecNode::Choice:           XERCES_STD_QUALIFIER cout << "Choice";         break;
-        case ContentSpecNode::Sequence:         XERCES_STD_QUALIFIER cout << "Sequence";       break;
-		case ContentSpecNode::All:              XERCES_STD_QUALIFIER cout << "All";            break;
-        case ContentSpecNode::Any:              XERCES_STD_QUALIFIER cout << "Any";            break;
-        case ContentSpecNode::Any_Other:        XERCES_STD_QUALIFIER cout << "Any_Other";      break;
-        case ContentSpecNode::Any_NS:           XERCES_STD_QUALIFIER cout << "Any_NS";         break;
-        case ContentSpecNode::Any_Lax:          XERCES_STD_QUALIFIER cout << "Any_Lax";        break;
-        case ContentSpecNode::Any_Other_Lax:    XERCES_STD_QUALIFIER cout << "Any_Other_Lax";  break;
-        case ContentSpecNode::Any_NS_Lax:       XERCES_STD_QUALIFIER cout << "Any_NS_Lax";     break;
-        case ContentSpecNode::Any_Skip:         XERCES_STD_QUALIFIER cout << "Any_Skip";       break;
-        case ContentSpecNode::Any_Other_Skip:   XERCES_STD_QUALIFIER cout << "Any_Other_Skip"; break;
-        case ContentSpecNode::Any_NS_Skip:      XERCES_STD_QUALIFIER cout << "Any_NS_Skip";    break;
-        case ContentSpecNode::UnknownType:      XERCES_STD_QUALIFIER cout << "UnknownType";    break;
+        case ContentSpecNode::Leaf:                XERCES_STD_QUALIFIER cout << "Leaf";           break;
+        case ContentSpecNode::ZeroOrOne:           XERCES_STD_QUALIFIER cout << "ZeroOrOne";      break;
+        case ContentSpecNode::ZeroOrMore:          XERCES_STD_QUALIFIER cout << "ZeroOrMore";     break;
+        case ContentSpecNode::OneOrMore:           XERCES_STD_QUALIFIER cout << "OneOrMore";      break;
+        case ContentSpecNode::Choice:              XERCES_STD_QUALIFIER cout << "Choice";         break;
+        case ContentSpecNode::Sequence:            XERCES_STD_QUALIFIER cout << "Sequence";       break;
+        case ContentSpecNode::All:                 XERCES_STD_QUALIFIER cout << "All";            break;
+        case ContentSpecNode::Any:                 XERCES_STD_QUALIFIER cout << "Any";            break;
+        case ContentSpecNode::Any_Other:           XERCES_STD_QUALIFIER cout << "Any_Other";      break;
+        case ContentSpecNode::Any_NS:              XERCES_STD_QUALIFIER cout << "Any_NS";         break;
+        case ContentSpecNode::Any_Lax:             XERCES_STD_QUALIFIER cout << "Any_Lax";        break;
+        case ContentSpecNode::Any_Other_Lax:       XERCES_STD_QUALIFIER cout << "Any_Other_Lax";  break;
+        case ContentSpecNode::Any_NS_Lax:          XERCES_STD_QUALIFIER cout << "Any_NS_Lax";     break;
+        case ContentSpecNode::Any_Skip:            XERCES_STD_QUALIFIER cout << "Any_Skip";       break;
+        case ContentSpecNode::Any_Other_Skip:      XERCES_STD_QUALIFIER cout << "Any_Other_Skip"; break;
+        case ContentSpecNode::Any_NS_Skip:         XERCES_STD_QUALIFIER cout << "Any_NS_Skip";    break;
+        case ContentSpecNode::Any_NS_Choice:       XERCES_STD_QUALIFIER cout << "Any_NS_Choice";    break;
+        case ContentSpecNode::ModelGroupSequence:  XERCES_STD_QUALIFIER cout << "ModelGroupSequence";    break;
+        case ContentSpecNode::ModelGroupChoice:    XERCES_STD_QUALIFIER cout << "ModelGroupChoice";    break;
+        case ContentSpecNode::UnknownType:         XERCES_STD_QUALIFIER cout << "UnknownType";    break;
     }
     XERCES_STD_QUALIFIER cout << "\n";
 }

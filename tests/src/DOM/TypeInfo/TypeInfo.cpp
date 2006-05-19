@@ -30,6 +30,7 @@
 #include <iostream.h>
 #endif
 
+#define UNUSED(x) { if(x!=0); }
 
 #define DOMTYPEINFOTEST(info, type, uri, line) \
     tmp = XMLString::equals(info->getTypeName(), type) && XMLString::equals(info->getTypeNamespace(), uri);\
@@ -320,6 +321,7 @@ bool TypeInfo::testInBuiltTypesOnElements() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
 
     //the eleTest element.
     DOMElement *testEle = findElement(X("eleTest"));
@@ -447,6 +449,7 @@ bool TypeInfo::testSimpleDerived() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
 
     //element simpleDerTest
     DOMElement *testEle = (DOMElement *)docEle->getFirstChild()->getNextSibling()->getNextSibling()
@@ -471,6 +474,7 @@ bool TypeInfo::testComplexTypes() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
 
     //element complexTest
     DOMElement *testEle = findElement(X("complexTest"));
@@ -486,6 +490,7 @@ bool TypeInfo::testUnions() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
     DOMAttr *testAttr;
 
     //element unionTest
@@ -535,6 +540,7 @@ bool TypeInfo::testAnonymous() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
     DOMAttr *testAttr;
 
 
@@ -562,6 +568,7 @@ bool TypeInfo::testXsiTypes() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
 
     //element xsiTypeTest
     DOMElement *testEle = findElement(X("xsiTypeTest"));
@@ -593,6 +600,7 @@ bool TypeInfo::testAnys() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
     DOMAttr *testAttr;
 
     //element anyTestPartial
@@ -669,6 +677,7 @@ bool TypeInfo::testInvaild() {
 
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
     DOMAttr *testAttr;
 
 
@@ -780,6 +789,7 @@ bool TypeInfo::testDTD() {
 bool TypeInfo::combinedTest() {
     bool passed = true;
     DOMNode *docEle = doc->getDocumentElement();
+    UNUSED(docEle); // silence warning
     DOMAttr *testAttr;
 
     DOMElement *testEle = doc->getDocumentElement();
@@ -815,7 +825,7 @@ DOMElement* TypeInfo::findElement(const XMLCh *name) const {
     return (DOMElement *)toTest;
 }
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char **/*argv*/)
 {
     bool passed = true;
 

@@ -260,6 +260,15 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
             }
             break;
         }
+        case XMLRecognizer::EBCDIC:
+        case XMLRecognizer::US_ASCII:
+        case XMLRecognizer::XERCES_XMLCH:
+        case XMLRecognizer::OtherEncoding:
+        case XMLRecognizer::Encodings_Count:
+        {
+            // silence warning about enumeration not being used
+            break;
+        }
     }
 
     // Check whether the fSwapped flag should be set or not

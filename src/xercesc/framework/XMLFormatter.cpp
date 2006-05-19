@@ -505,8 +505,7 @@ XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr,
    unsigned int count = oCount; 
  
    while (count) { 
-      const unsigned srcChars  
-         = count > kTmpBufSize ? kTmpBufSize : count; 
+      const unsigned srcChars = (count > kTmpBufSize) ? (int)kTmpBufSize : count; 
  
       const unsigned int outBytes  
          = fXCoder->transcodeTo(srcPtr, srcChars,  

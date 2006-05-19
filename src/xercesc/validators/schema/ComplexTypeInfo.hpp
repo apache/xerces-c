@@ -71,7 +71,7 @@ public:
     int                      getDerivedBy() const;
     int                      getBlockSet() const;
     int                      getFinalSet() const;
-    int                      getScopeDefined() const;
+    unsigned int             getScopeDefined() const;
     unsigned int             getElementId() const;
     int                      getContentType() const;
     unsigned int             elementCount() const;
@@ -110,7 +110,7 @@ public:
     void setDerivedBy(const int derivedBy);
     void setBlockSet(const int blockSet);
     void setFinalSet(const int finalSet);
-    void setScopeDefined(const int scopeDefined);
+    void setScopeDefined(const unsigned int scopeDefined);
     void setElementId(const unsigned int elemId);
     void setTypeName(const XMLCh* const typeName);
     void setContentType(const int contentType);
@@ -202,7 +202,7 @@ private:
     int                                fDerivedBy;
     int                                fBlockSet;
     int                                fFinalSet;
-    int                                fScopeDefined;
+    unsigned int                       fScopeDefined;
     int                                fContentType;
 
     unsigned int                       fElementId;
@@ -267,7 +267,7 @@ inline int ComplexTypeInfo::getFinalSet() const {
     return fFinalSet;
 }
 
-inline int ComplexTypeInfo::getScopeDefined() const {
+inline unsigned int ComplexTypeInfo::getScopeDefined() const {
 
     return fScopeDefined;
 }
@@ -422,7 +422,7 @@ inline void ComplexTypeInfo::setFinalSet(const int finalSet) {
     fFinalSet = finalSet;
 }
 
-inline void ComplexTypeInfo::setScopeDefined(const int scopeDefined) {
+inline void ComplexTypeInfo::setScopeDefined(const unsigned int scopeDefined) {
 
     fScopeDefined = scopeDefined;
 }

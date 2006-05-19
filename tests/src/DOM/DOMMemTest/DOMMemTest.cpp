@@ -36,6 +36,8 @@ XERCES_CPP_NAMESPACE_USE
 
 bool errorOccurred = false;
 
+#define UNUSED(x) { if(x!=0); }
+
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
 void tassert(bool c, const char *file, int line)
@@ -138,22 +140,31 @@ void DOMBasicTests()
         DOMDocument* doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
         DOMElement*   el = doc->createElement(X("Doc02Element"));
+        UNUSED(el); // silence warning
 
         DOMDocumentFragment* frag = doc->createDocumentFragment ();
+        UNUSED(frag); // silence warning
 
         DOMText*  text = doc->createTextNode(X("Doc02TextNode"));
+        UNUSED(text); // silence warning
 
         DOMComment* comment = doc->createComment(X("Doc02Comment"));
+        UNUSED(comment); // silence warning
 
         DOMCDATASection*  cdataSec = doc->createCDATASection(X("Doc02CDataSection"));
+        UNUSED(cdataSec); // silence warning
 
         DOMDocumentType*  docType = doc->createDocumentType(X("Doc02DocumentType"));
+        UNUSED(docType); // silence warning
 
         DOMNotation* notation = doc->createNotation(X("Doc02Notation"));
+        UNUSED(notation); // silence warning
 
         DOMProcessingInstruction* pi = doc->createProcessingInstruction(X("Doc02PITarget"), X("Doc02PIData"));
+        UNUSED(pi); // silence warning
 
         DOMNodeList*    nodeList = doc->getElementsByTagName(X("*"));
+        UNUSED(nodeList); // silence warning
 
         doc->release();
     }
@@ -176,6 +187,7 @@ void DOMBasicTests()
         rootEl->appendChild(textNode);
 
         DOMNodeList*    nodeList = doc->getElementsByTagName(X("*"));
+        UNUSED(nodeList); // silence warning
         doc->release();
     };
 
@@ -283,6 +295,7 @@ void DOMBasicTests()
         attr01->setValue(X("Attr04Value1"));
 
         DOMNode* value = attr01->getFirstChild();
+        UNUSED(value); // silence warning
         doc->release();
     }
 
@@ -470,6 +483,7 @@ void DOMBasicTests()
          try
          {
              DOMElement* el = doc->createElement(X("!@@ bad element name"));
+             UNUSED(el); // silence warning
              TASSERT(false);  // Exception above should prevent us reaching here.
          }
          catch ( DOMException e)
@@ -851,6 +865,7 @@ void DOMNSTests()
         try
         {
             DOMDocument* doc2 = impl->createDocument(X("pubId"), X("foo:docName"), dt);
+            UNUSED(doc2); // silence warning
             TASSERT(false);  // should not reach here.
         }
         catch ( DOMException &e)
@@ -1020,6 +1035,7 @@ void DOMNSTests()
 
         DOMDocument* doc = impl->createDocument(X("http://document.namespace"), X("foo:docName"), dt);
         DOMElement* rootEl = doc->getDocumentElement();
+        UNUSED(rootEl); // silence warning
 
         //
         // CreateAttributeNS
@@ -1416,7 +1432,7 @@ void DOMReleaseTests()
     char tempchar[4000];
     for(i=0;i<20000;i++)
     {
-        sprintf(tempchar, "time is %i\n",XMLPlatformUtils::getCurrentMillis());
+        sprintf(tempchar, "time is %lu\n",XMLPlatformUtils::getCurrentMillis());
         int len = strlen(tempchar);
         for (int j = len; j < 4000-len; j++)
             tempchar[j] = 'a';
@@ -1426,7 +1442,7 @@ void DOMReleaseTests()
     DOMText*  text = cpXMLDocument->createTextNode(tempStr3);
     for(i=0;i<20000;i++)
     {
-        sprintf(tempchar, "time is %i\n",XMLPlatformUtils::getCurrentMillis());
+        sprintf(tempchar, "time is %lu\n",XMLPlatformUtils::getCurrentMillis());
         int len = strlen(tempchar);
         for (int j = len; j < 4000-len; j++)
             tempchar[j] = 'a';

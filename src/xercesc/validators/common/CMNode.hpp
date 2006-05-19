@@ -21,6 +21,8 @@
 #if !defined(CMNODE_HPP)
 #define CMNODE_HPP
 
+#include <limits.h>
+
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 
@@ -29,6 +31,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 class CMNode : public XMemory
 {
 public :
+    enum {
+    	// Special value to indicate a nullable node
+        epsilonNode = UINT_MAX - 1
+    };
+
     // -----------------------------------------------------------------------
     //  Constructors and Destructors
     // -----------------------------------------------------------------------

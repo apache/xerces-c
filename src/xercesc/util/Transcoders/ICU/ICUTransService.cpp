@@ -862,7 +862,7 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 }
 
 unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText
-                                                , MemoryManager* const manager)
+                                                , MemoryManager* const /*manager*/)
 {
     if (!srcText)
         return 0;

@@ -8112,6 +8112,66 @@ XS(_wrap_XMLUri_isValidURI__SWIG_0) {
   {
     XERCES_CPP_NAMESPACE::XMLUri *arg1 = (XERCES_CPP_NAMESPACE::XMLUri *) (XERCES_CPP_NAMESPACE::XMLUri *)0 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
+    bool arg3 ;
+    bool result;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    bool val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: XMLUri_isValidURI(baseURI,uriStr,bAllowSpaces);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "XMLUri_isValidURI" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::XMLUri const *const""'"); 
+    }
+    arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::XMLUri * >(argp1);
+    
+    if (ST(1) == &PL_sv_undef) {
+      SWIG_Perl_NullRef("perl-string",2,"XMLUri_isValidURI");
+      goto fail;
+    } else {
+      // we convert *everything* into a string that isn't undef
+      arg2 = Perl2XMLString(ST(1));
+    }
+    
+    ecode3 = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "XMLUri_isValidURI" "', argument " "3"" of type '" "bool""'");
+    } 
+    arg3 = static_cast< bool >(val3);
+    {
+      try 
+      {
+        result = (bool)XERCES_CPP_NAMESPACE::XMLUri::isValidURI((XERCES_CPP_NAMESPACE::XMLUri const *)arg1,(uint16_t const *)arg2,arg3);
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_From_bool  SWIG_PERL_CALL_ARGS_1(static_cast< bool >(result)); argvi++ ;
+    
+    
+    delete[] arg2;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    delete[] arg2;
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_XMLUri_isValidURI__SWIG_1) {
+  {
+    XERCES_CPP_NAMESPACE::XMLUri *arg1 = (XERCES_CPP_NAMESPACE::XMLUri *) (XERCES_CPP_NAMESPACE::XMLUri *)0 ;
+    XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
     bool result;
     void *argp1 = 0 ;
     int res1 = 0 ;
@@ -8158,7 +8218,67 @@ XS(_wrap_XMLUri_isValidURI__SWIG_0) {
 }
 
 
-XS(_wrap_XMLUri_isValidURI__SWIG_1) {
+XS(_wrap_XMLUri_isValidURI__SWIG_2) {
+  {
+    bool arg1 ;
+    XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
+    bool arg3 ;
+    bool result;
+    bool val1 ;
+    int ecode1 = 0 ;
+    bool val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: XMLUri_isValidURI(haveBaseURI,uriStr,bAllowSpaces);");
+    }
+    ecode1 = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "XMLUri_isValidURI" "', argument " "1"" of type '" "bool""'");
+    } 
+    arg1 = static_cast< bool >(val1);
+    
+    if (ST(1) == &PL_sv_undef) {
+      SWIG_Perl_NullRef("perl-string",2,"XMLUri_isValidURI");
+      goto fail;
+    } else {
+      // we convert *everything* into a string that isn't undef
+      arg2 = Perl2XMLString(ST(1));
+    }
+    
+    ecode3 = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "XMLUri_isValidURI" "', argument " "3"" of type '" "bool""'");
+    } 
+    arg3 = static_cast< bool >(val3);
+    {
+      try 
+      {
+        result = (bool)XERCES_CPP_NAMESPACE::XMLUri::isValidURI(arg1,(uint16_t const *)arg2,arg3);
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_From_bool  SWIG_PERL_CALL_ARGS_1(static_cast< bool >(result)); argvi++ ;
+    
+    
+    delete[] arg2;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    delete[] arg2;
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_XMLUri_isValidURI__SWIG_3) {
   {
     bool arg1 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
@@ -8275,12 +8395,97 @@ XS(_wrap_XMLUri_isValidURI) {
     }
   check_2:
     
+    if (items == 3) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          _v = SvOK(ST(1)) ? 1 : 0; 
+        }
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          int res = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 3;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_3:
+    
+    if (items == 3) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        {
+          int res = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_4;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          _v = SvOK(ST(1)) ? 1 : 0; 
+        }
+      }
+      if (!_v) goto check_4;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          int res = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(2), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_4;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 4;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_4:
+    
   dispatch:
     switch(_index) {
     case 1:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLUri_isValidURI__SWIG_0); return;
-    case 2:
       ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLUri_isValidURI__SWIG_1); return;
+    case 2:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLUri_isValidURI__SWIG_3); return;
+    case 3:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLUri_isValidURI__SWIG_0); return;
+    case 4:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLUri_isValidURI__SWIG_2); return;
     }
   }
   
@@ -22133,7 +22338,7 @@ XS(_wrap_SchemaElementDecl_getDatatypeValidator) {
 XS(_wrap_SchemaElementDecl_getEnclosingScope) {
   {
     XERCES_CPP_NAMESPACE::SchemaElementDecl *arg1 = (XERCES_CPP_NAMESPACE::SchemaElementDecl *) 0 ;
-    int result;
+    unsigned int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -22150,11 +22355,11 @@ XS(_wrap_SchemaElementDecl_getEnclosingScope) {
     {
       try 
       {
-        result = (int)((XERCES_CPP_NAMESPACE::SchemaElementDecl const *)arg1)->getEnclosingScope();
+        result = (unsigned int)((XERCES_CPP_NAMESPACE::SchemaElementDecl const *)arg1)->getEnclosingScope();
       } 
       CATCH_XML_EXCEPTION
     }
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(result)); argvi++ ;
+    ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1(static_cast< unsigned int >(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -22584,10 +22789,10 @@ XS(_wrap_SchemaElementDecl_setDatatypeValidator) {
 XS(_wrap_SchemaElementDecl_setEnclosingScope) {
   {
     XERCES_CPP_NAMESPACE::SchemaElementDecl *arg1 = (XERCES_CPP_NAMESPACE::SchemaElementDecl *) 0 ;
-    int arg2 ;
+    unsigned int arg2 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    int val2 ;
+    unsigned int val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -22600,11 +22805,11 @@ XS(_wrap_SchemaElementDecl_setEnclosingScope) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SchemaElementDecl_setEnclosingScope" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::SchemaElementDecl *""'"); 
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SchemaElementDecl * >(argp1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    ecode2 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SchemaElementDecl_setEnclosingScope" "', argument " "2"" of type '" "int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SchemaElementDecl_setEnclosingScope" "', argument " "2"" of type '" "unsigned int""'");
     } 
-    arg2 = static_cast< int >(val2);
+    arg2 = static_cast< unsigned int >(val2);
     {
       try 
       {

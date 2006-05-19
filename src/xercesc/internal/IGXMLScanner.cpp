@@ -2159,7 +2159,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     // save the contentleafname and currentscope before addlevel, for later use
     ContentLeafNameTypeVector* cv = 0;
     XMLContentModel* cm = 0;
-    int currentScope = Grammar::TOP_LEVEL_SCOPE;
+    unsigned int currentScope = Grammar::TOP_LEVEL_SCOPE;
     bool laxThisOne = false;
 
     if (!isRoot && fGrammarType == Grammar::SchemaGrammarType)

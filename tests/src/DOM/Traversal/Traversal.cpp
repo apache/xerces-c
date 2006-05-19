@@ -41,6 +41,8 @@ XERCES_CPP_NAMESPACE_USE
 
 bool errorOccurred = false;
 
+#define UNUSED(x) { if(x!=0); }
+
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
 void tassert(bool c, const char *file, int line)
@@ -247,6 +249,7 @@ int  main()
             // all node iterating test
 
             DOMNode*    node = doc->getFirstChild();
+            UNUSED(node); // silence warning
             unsigned long       whatToShow = DOMNodeFilter::SHOW_ALL;
             MyFilter* filter = new MyFilter(0);
 
@@ -304,6 +307,7 @@ int  main()
             //element node iterating test
 
             DOMNode*    node = doc->getFirstChild();
+            UNUSED(node); // silence warning
             unsigned long       whatToShow = DOMNodeFilter::SHOW_ELEMENT;
             MyFilter* filter = new MyFilter(DOMNode::ELEMENT_NODE);
 
@@ -348,6 +352,7 @@ int  main()
             // Text node iterating test
 
             DOMNode*    node = doc->getFirstChild();
+            UNUSED(node); // silence warning
             unsigned long       whatToShow = DOMNodeFilter::SHOW_TEXT;
             MyFilter* filter = new MyFilter(DOMNode::TEXT_NODE);
 
@@ -372,6 +377,7 @@ int  main()
             //CDataSection node itearating test
 
             DOMNode*    node = doc->getFirstChild();
+            UNUSED(node); // silence warning
             unsigned long       whatToShow = DOMNodeFilter::SHOW_CDATA_SECTION;
             MyFilter* filter = new MyFilter(DOMNode::CDATA_SECTION_NODE);
 
@@ -393,6 +399,7 @@ int  main()
             // PI nodes iterating test
 
             DOMNode*    node = doc->getFirstChild();
+            UNUSED(node); // silence warning
             unsigned long       whatToShow = DOMNodeFilter::SHOW_PROCESSING_INSTRUCTION;
             MyFilter* filter = new MyFilter(DOMNode::PROCESSING_INSTRUCTION_NODE);
 
@@ -413,6 +420,7 @@ int  main()
 
         {
             DOMNode*    node = doc->getFirstChild();
+            UNUSED(node); // silence warning
             unsigned long       whatToShow = DOMNodeFilter::SHOW_COMMENT;
             MyFilter* filter = new MyFilter(DOMNode::COMMENT_NODE);
 

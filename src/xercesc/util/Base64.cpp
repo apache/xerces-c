@@ -99,11 +99,6 @@ static void* getExternalMemory(  MemoryManager* const allocator
        : ::operator new(sizeToAllocate);
 }
 
-static void* getInternalMemory(unsigned int const   sizeToAllocate)
-{
-    return XMLPlatformUtils::fgMemoryManager->allocate(sizeToAllocate);
-}
-
 /***
  * internal memory is deallocated by janitorArray
  */ 

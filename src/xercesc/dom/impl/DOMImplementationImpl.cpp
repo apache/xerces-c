@@ -268,9 +268,9 @@ bool DOMImplementation::loadDOMExceptionMsg
 
 bool DOMImplementation::loadDOMExceptionMsg
 (
-    const   DOMLSException::LSExceptionCode  msgToLoad
-    ,       XMLCh* const                     toFill
-    , const unsigned int                     maxChars
+    const   DOMLSException::LSExceptionCode  /*msgToLoad*/
+    ,       XMLCh* const                     /*toFill*/
+    , const unsigned int                     /*maxChars*/
 )
 {
     // load the text, the msgToLoad+XMLDOMMsgs::DOMLSEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
@@ -295,7 +295,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 // ------------------------------------------------------------
 //Introduced in DOM Level 3
 DOMLSParser* DOMImplementationImpl::createLSParser( const unsigned short   mode,
-                                                    const XMLCh* const     schemaType,
+                                                    const XMLCh* const     /*schemaType*/,
                                                     MemoryManager* const  manager,
                                                     XMLGrammarPool* const gramPool)
 {

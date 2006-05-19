@@ -375,7 +375,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             , XMLContentModel::gEOCFakeId
             , fMemoryManager
         )
-        , ~0
+        , CMNode::epsilonNode
         , true
         , fMemoryManager
     );

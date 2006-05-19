@@ -32,9 +32,9 @@
 // ---------------------------------------------------------------------------
 XSerializerHandlers::XSerializerHandlers() :
 
-    fElementCount(0)
-    , fAttrCount(0)
+    fAttrCount(0)
     , fCharacterCount(0)
+    , fElementCount(0)
     , fSpaceCount(0)
     , fSawErrors(false)
 {
@@ -47,23 +47,23 @@ XSerializerHandlers::~XSerializerHandlers()
 // ---------------------------------------------------------------------------
 //  XSerializerHandlers: Implementation of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void XSerializerHandlers::startElement(const XMLCh* const uri
-                                   , const XMLCh* const localname
-                                   , const XMLCh* const qname
+void XSerializerHandlers::startElement(const XMLCh* const /*uri*/
+                                   , const XMLCh* const /*localname*/
+                                   , const XMLCh* const /*qname*/
                                    , const Attributes& attrs)
 {
     fElementCount++;
     fAttrCount += attrs.getLength();
 }
 
-void XSerializerHandlers::characters(  const   XMLCh* const    chars
-								    , const unsigned int    length)
+void XSerializerHandlers::characters(  const   XMLCh* const  /*chars*/
+                                     , const unsigned int    length)
 {
     fCharacterCount += length;
 }
 
-void XSerializerHandlers::ignorableWhitespace( const   XMLCh* const chars
-										    , const unsigned int length)
+void XSerializerHandlers::ignorableWhitespace( const   XMLCh* const /*chars*/
+                                             , const unsigned int length)
 {
     fSpaceCount += length;
 }

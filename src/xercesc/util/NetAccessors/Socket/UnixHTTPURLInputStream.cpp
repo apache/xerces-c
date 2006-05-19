@@ -253,12 +253,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     // Use the hostName in the local code page ....
     if ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL)
     {
-        unsigned long  numAddress = inet_addr(hostNameAsCharStar);
-        if (numAddress < 0)
-        {
-            ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
-        }
+        unsigned long numAddress = inet_addr(hostNameAsCharStar);
         if ((hostEntPtr =
                 gethostbyaddr((char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
@@ -470,11 +465,12 @@ unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
         // There was no data in the local buffer.
         // Read some from the socket, straight into our caller's buffer.
         //
-        len = read(fSocket, (void *) toFill, maxToRead);
-        if (len == -1)
+        int cbRead = read(fSocket, (void *) toFill, maxToRead);
+        if (cbRead == -1)
         {
             ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, fMemoryManager);
         }
+        len = cbRead;
     }
 
     fBytesProcessed += len;

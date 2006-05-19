@@ -87,7 +87,7 @@ void ThreadFuncs::Sleep(int millis)
 
 void ThreadFuncs::startThread(ThreadFunc func, void *param)
 {
-    unsigned long x;
+    int x;
 
     pthread_t tId;
     //thread_t tId;
@@ -251,6 +251,7 @@ ThreadInfo      *gThreadInfo;
 MemoryManager*  gpMemMgr = 0;
 XMLGrammarPool* gp = 0;
 
+#ifdef HELPER_ROUTINES
 // Routines which maybe helpful for debugging
 static void printString(const XMLCh *str)
 {
@@ -302,6 +303,7 @@ static void dump(void* generalAddress, int length) {
     }
     fflush(stderr);
 }
+#endif
 
 //------------------------------------------------------------------------------
 //
@@ -670,9 +672,9 @@ void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
 //                and any attribute names and values.
 //
 
-void ThreadParser::SAX2Handler::startElement(const XMLCh *const uri,
+void ThreadParser::SAX2Handler::startElement(const XMLCh *const /*uri*/,
                               const XMLCh *const localname,
-                              const XMLCh *const qname,
+                              const XMLCh *const /*qname*/,
                               const Attributes& attributes)
 {
     SAX2Instance->addToCheckSum(localname);

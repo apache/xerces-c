@@ -782,7 +782,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
         //                  | NameTest | NodeType | Operator | FunctionName
         //                  | AxisName | Literal | Number | VariableReference
         //
-        XMLByte chartype = (ch >= 0x80) ? CHARTYPE_NONASCII : fASCIICharMap[ch];
+        XMLByte chartype = (ch >= 0x80) ? (XMLByte)CHARTYPE_NONASCII : fASCIICharMap[ch];
 
         switch (chartype) {
         case CHARTYPE_OPEN_PAREN:       // '('

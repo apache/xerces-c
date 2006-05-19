@@ -54,16 +54,16 @@ PosixFileMgr::open(const XMLCh* path, bool toWrite, MemoryManager* const manager
 
 
 FileHandle
-PosixFileMgr::open(const char* path, bool toWrite, MemoryManager* const manager)
+PosixFileMgr::open(const char* path, bool toWrite, MemoryManager* const /*manager*/)
 {
-	const char* perms = (toWrite) ? "wb" : "rb";
+    const char* perms = (toWrite) ? "wb" : "rb";
     FileHandle result = (FileHandle)fopen(path , perms);
     return result;
 }
 
 
 FileHandle
-PosixFileMgr::openStdIn(MemoryManager* const manager)
+PosixFileMgr::openStdIn(MemoryManager* const /*manager*/)
 {
     return (FileHandle)fdopen(dup(0), "rb");
 }
@@ -211,7 +211,7 @@ PosixFileMgr::getCurrentDirectory(MemoryManager* const manager)
 
 
 bool
-PosixFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const manager)
+PosixFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const /*manager*/)
 {
     // Check for pathological case of empty path
     if (!toCheck || !toCheck[0])

@@ -286,7 +286,7 @@ InputSource* PSVIWriterHandlers::resolveEntity(XMLResourceIdentifier* resourceId
 	return 0;
 }
 
-InputSource* PSVIWriterHandlers::resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId) {
+InputSource* PSVIWriterHandlers::resolveEntity(const XMLCh* const, const XMLCh* const) {
     return 0;
 }
 
@@ -1791,7 +1791,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_integer:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_INTEGER);
-                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                sprintf( buffer,"%ld", obj->fData.fValue.f_long);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);
@@ -1800,7 +1800,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_nonPositiveInteger:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_NONPOSITIVEINTEGER);
-                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                sprintf( buffer,"%ld", obj->fData.fValue.f_long);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);
@@ -1809,7 +1809,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_negativeInteger:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_NEGATIVEINTEGER);
-                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                sprintf( buffer,"%ld", obj->fData.fValue.f_long);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);
@@ -1818,7 +1818,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_long:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_LONG);
-                sprintf( buffer,"%d", obj->fData.fValue.f_long);
+                sprintf( buffer,"%ld", obj->fData.fValue.f_long);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);
@@ -1854,7 +1854,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_nonNegativeInteger:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
-                sprintf( buffer,"%u", obj->fData.fValue.f_long);
+                sprintf( buffer,"%ld", obj->fData.fValue.f_long);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);
@@ -1863,7 +1863,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_unsignedLong:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_ULONG);
-                sprintf( buffer,"%u", obj->fData.fValue.f_ulong);
+                sprintf( buffer,"%lu", obj->fData.fValue.f_ulong);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);
@@ -1899,7 +1899,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         case XSValue::dt_positiveInteger:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_POSITIVEINTEGER);
-                sprintf( buffer,"%u", obj->fData.fValue.f_long);
+                sprintf( buffer,"%ld", obj->fData.fValue.f_long);
                 XMLCh *value = XMLString::transcode(buffer);
                 ArrayJanitor<XMLCh> jan(value);
                 writeValue(gDataValue, value);

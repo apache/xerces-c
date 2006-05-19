@@ -111,7 +111,7 @@ const XMLCh* DOMTypeInfoImpl::getTypeNamespace() const {
     return fTypeNamespace;
 }
 
-bool DOMTypeInfoImpl::isDerivedFrom(const XMLCh* typeNamespaceArg, const XMLCh* typeNameArg, unsigned long derivationMethod) const
+bool DOMTypeInfoImpl::isDerivedFrom(const XMLCh* typeNamespaceArg, const XMLCh* typeNameArg, unsigned long /*derivationMethod*/) const
 {
     // if it's a DTD, return false
     if(!getNumericProperty(PSVI_Schema_Specified))

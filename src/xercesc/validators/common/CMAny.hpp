@@ -77,7 +77,7 @@ private :
     //  XMLContentSpec.CONTENTSPECNODE_ANY,
     //  XMLContentSpec.CONTENTSPECNODE_ANY_OTHER.
     //
-	//  fPosition
+    //  fPosition
     //  Part of the algorithm to convert a regex directly to a DFA
     //  numbers each leaf sequentially. If its -1, that means its an
     //  epsilon node. Zero and greater are non-epsilon positions.

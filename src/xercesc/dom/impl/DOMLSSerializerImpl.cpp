@@ -339,7 +339,7 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 }
 
 bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
-                                        , const void*        value) const
+                                        , const void*        /*value*/) const
 {
     if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
         return true;

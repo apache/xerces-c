@@ -381,7 +381,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
 }
 
-void DTDValidator::preContentValidation(bool reuseGrammar,
+void DTDValidator::preContentValidation(bool /*reuseGrammar*/,
                                         bool validateDefAttr)
 {
     //

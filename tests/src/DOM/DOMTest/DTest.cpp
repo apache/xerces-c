@@ -36,6 +36,8 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
+#define UNUSED(x) { if(x!=0); }
+
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \
     {                                                               \
         try                                                         \
@@ -631,6 +633,7 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
 
 //***********Following are for errorTests
     DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
+    UNUSED(docDocFragment); // silence warning
 
     //name + "docTextNode3"
     XMLString::copyString(tempStr, name);
@@ -648,10 +651,13 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     XMLString::transcode("ourEntityNode", tempStr, 3999);
     DOMNode*   abc2 =  doc->getDoctype()->getEntities()->getNamedItem(tempStr);  // Get the DOMEntity* node
     DOMEntity* docEntity = (DOMEntity*) abc2;
+    UNUSED(docEntity); // silence warning
     DOMNode*   abc3 = doc->getFirstChild(); // Get the DOMDocumentType* node
     DOMDocumentType* docDocType = (DOMDocumentType*) abc3;
+    UNUSED(docDocType); // silence warning
     DOMNode*   abc4 = doc->getLastChild()->getLastChild()->getLastChild()->getFirstChild();
     DOMEntityReference* entityReferenceText = (DOMEntityReference*) abc4;
+    UNUSED(entityReferenceText); // silence warning
 
     //"entityReferenceText information"
     XMLString::transcode("entityReferenceText information", tempStr, 3999);
@@ -824,7 +830,7 @@ void DOMTest::findTestNodes(DOMNode* node) {
  *
  *
  */
-int main(int argc, char **argv)
+int main(int /*argc*/, char **/*argv*/)
  {
      bool OK = true;
 
@@ -844,9 +850,6 @@ int main(int argc, char **argv)
              return -1;
          }
 
-         long avgTime = 0;
-         long startTime = 0;//****************Time the whole thing for efficiency of DOM implementation
-
          // for (int i=0; i< 1000; i++)
          // {
          // AH Revisit  //  startTime = System.currentTimeMillis();
@@ -861,6 +864,7 @@ int main(int argc, char **argv)
 
          XMLString::transcode("ourEntityNode", tempStr, 3999);
          DOMEntity* docEntity = test.createEntity( d, tempStr);
+         UNUSED(docEntity); // silence warning
          //Build a branch for entityReference tests
          // DOMText* entityChildText = d.createTextNode("entityChildText information"); //
          // docEntity->appendChild(entityChildText);
@@ -960,7 +964,6 @@ bool DOMTest::testAttr(DOMDocument* document)
     DOMNode* node;
     DOMAttr* attributeNode;
     bool T = true;
-    bool F = false;
     bool OK = true;
 // For debugging*****   printf("\n          testAttr's outputs:\n\n");
 
@@ -1729,7 +1732,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     DOMTest tests;   // What is this for?  'tests' is never used.
 
 //!! Throws INDEX_SIZE_ERR ********************
-    EXCEPTIONSTEST(charData->deleteData(-1, 5), DOMException::INDEX_SIZE_ERR, OK, 101 );
+    EXCEPTIONSTEST(charData->deleteData((XMLSize_t)-1, 5), DOMException::INDEX_SIZE_ERR, OK, 101 );
     // Test 102 is not an error because the -1 parameter is an unsigned value, and counts
     //   that exceed the length of the string are allowed.
 //    EXCEPTIONSTEST(charData->deleteData(2, -1), DOMException::INDEX_SIZE_ERR, OK, 102 );
@@ -1746,7 +1749,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     EXCEPTIONSTEST(charData->replaceData(100, 5 ,tempStr), DOMException::INDEX_SIZE_ERR, OK, 107 );
   //  EXCEPTIONSTEST(charData->replaceData(2, -1, "Replacement stuff"), DOMException::INDEX_SIZE_ERR,  OK, 108 );
 
-    EXCEPTIONSTEST(charData->substringData(-1, 5), DOMException::INDEX_SIZE_ERR, OK, 109 );
+    EXCEPTIONSTEST(charData->substringData((XMLSize_t)-1, 5), DOMException::INDEX_SIZE_ERR, OK, 109 );
     EXCEPTIONSTEST(charData->substringData(100, 5), DOMException::INDEX_SIZE_ERR, OK, 110 );
  //   EXCEPTIONSTEST(charData->substringData(2, -1), DOMException::INDEX_SIZE_ERR, OK, 111 );
 
@@ -2714,7 +2717,6 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMElement* element, *element2;
     DOMNode* node, *node2;
 
-    const char* attributeCompare[] = {"AnotherFirstElementAttribute", "dFirstElement", "testAttribute"};
     const char* elementNames[] =  {"dFirstElement", "dTestBody", "dBodyLevel21","dBodyLevel31","dBodyLevel32",
                    "dBodyLevel22","dBodyLevel33","dBodyLevel34","dBodyLevel23","dBodyLevel24"};
     const char* textCompare[] = {"dBodyLevel31'sChildTextNode11",
@@ -4737,10 +4739,13 @@ bool DOMTest::testWholeText(XercesDOMParser* parser) {
 	}
 
     DOMNode* newt2=((DOMText*)t2)->replaceWholeText(s2);
+    UNUSED(newt2); //silence warning
     DOMNode* newt3=((DOMText*)t3)->replaceWholeText(s3);
+    UNUSED(newt3); //silence warning
     try
     {
         DOMNode* newt4=((DOMText*)t4)->replaceWholeText(s4);
+        UNUSED(newt4); //silence warning
         // ent5 contains a <foo/> node, and cannot be removed
         fprintf(stderr, "checking wholeText failed at line %i\n",  __LINE__);
         return false;

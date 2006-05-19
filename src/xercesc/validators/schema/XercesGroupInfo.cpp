@@ -34,7 +34,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XercesGroupInfo::XercesGroupInfo(MemoryManager* const manager)
     : fCheckElementConsistency(true)
-    , fScope(-1)
+    , fScope(Grammar::TOP_LEVEL_SCOPE)
     , fNameId(0)
     , fNamespaceId(0)
     , fContentSpec(0)
@@ -49,7 +49,7 @@ XercesGroupInfo::XercesGroupInfo(unsigned int groupNameId,
                                  unsigned int groupNamespaceId,
                                  MemoryManager* const manager)
     : fCheckElementConsistency(true)
-    , fScope(-1)
+    , fScope(Grammar::TOP_LEVEL_SCOPE)
     , fNameId(groupNameId)
     , fNamespaceId(groupNamespaceId)
     , fContentSpec(0)

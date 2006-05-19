@@ -121,7 +121,7 @@ public :
     ModelTypes getModelType() const;
     PSVIDefs::PSVIScope getPSVIScope() const;
     DatatypeValidator* getDatatypeValidator() const;
-    int getEnclosingScope() const;
+    unsigned int getEnclosingScope() const;
     int getFinalSet() const;
     int getBlockSet() const;
     int getMiscFlags() const;
@@ -140,7 +140,7 @@ public :
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setPSVIScope(const PSVIDefs::PSVIScope toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
-    void setEnclosingScope(const int enclosingScope);
+    void setEnclosingScope(const unsigned int enclosingScope);
     void setFinalSet(const int finalSet);
     void setBlockSet(const int blockSet);
     void setMiscFlags(const int flags);
@@ -220,7 +220,7 @@ private :
     ModelTypes                         fModelType;
     PSVIDefs::PSVIScope                fPSVIScope;
 
-    int                                fEnclosingScope;
+    unsigned int                       fEnclosingScope;
     int                                fFinalSet;
     int                                fBlockSet;
     int                                fMiscFlags;    
@@ -297,7 +297,7 @@ inline DatatypeValidator* SchemaElementDecl::getDatatypeValidator() const
     return fDatatypeValidator;
 }
 
-inline int SchemaElementDecl::getEnclosingScope() const
+inline unsigned int SchemaElementDecl::getEnclosingScope() const
 {
     return fEnclosingScope;
 }
@@ -373,7 +373,7 @@ inline void SchemaElementDecl::setDatatypeValidator(DatatypeValidator* newDataty
     fDatatypeValidator = newDatatypeValidator;
 }
 
-inline void SchemaElementDecl::setEnclosingScope(const int newEnclosingScope)
+inline void SchemaElementDecl::setEnclosingScope(const unsigned int newEnclosingScope)
 {
     fEnclosingScope = newEnclosingScope;
 }

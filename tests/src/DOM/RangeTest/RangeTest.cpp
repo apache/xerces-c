@@ -41,6 +41,8 @@ XERCES_CPP_NAMESPACE_USE
 
 bool errorOccurred = false;
 
+#define UNUSED(x) { if(x!=0); }
+
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
 void tassert(bool c, const char *file, int line)
@@ -60,13 +62,13 @@ void tassert(bool c, const char *file, int line)
     errorOccurred = true;                                           \
     }                                                               \
     catch (DOMRangeException &e) {                                  \
-    if (e.code != expected_exception) {                             \
+    if (e.code != (DOMRangeException::RangeExceptionCode)expected_exception) {                             \
         printf(" Wrong RangeException code: %d at line %d\n", e.code, __LINE__); \
         errorOccurred = true;                                       \
     }                                                               \
     }                                                               \
     catch (DOMException &e) {                                       \
-    if (e.code != expected_exception) {                             \
+    if (e.code != (DOMException::ExceptionCode)expected_exception) {                             \
         printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
         errorOccurred = true;                                       \
     }                                                               \
@@ -216,7 +218,7 @@ int  main()
             E12->appendChild(textNode2);
 
             DOMText*     E210 = doc->createTextNode(xInsertedText);
-
+            UNUSED(E210); // silence warning
             doc->release();
 
 
@@ -919,6 +921,7 @@ int  main()
             TASSERT(!XMLString::compareString(newrange->toString(),xabHellocd));
 
             DOMNode* n = newrange->cloneContents();
+            UNUSED(n); // silence warning
             DOMNodeList* nol = foo->getChildNodes();
 
             //removing moo

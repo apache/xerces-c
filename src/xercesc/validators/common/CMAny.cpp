@@ -43,9 +43,8 @@ CMAny::CMAny( const ContentSpecNode::NodeTypes type
     &&  (type & 0x0f) != ContentSpecNode::Any_Other
     &&  (type & 0x0f) != ContentSpecNode::Any_NS)
     {
-		ThrowXMLwithMemMgr1(RuntimeException,
-		          XMLExcepts::CM_NotValidSpecTypeForNode,
-				  "CMAny", manager);
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::CM_NotValidSpecTypeForNode,
+                            "CMAny", manager);
     }
 
 }
@@ -59,7 +58,7 @@ CMAny::~CMAny()
 // ---------------------------------------------------------------------------
 unsigned int CMAny::getURI() const
 {
-	return fURI;
+    return fURI;
 }
 
 unsigned int CMAny::getPosition() const
@@ -81,7 +80,7 @@ void CMAny::setPosition(const unsigned int newPosition)
 bool CMAny::isNullable() const
 {
     // Leaf nodes are never nullable unless its an epsilon node
-    return (fPosition == -1);
+    return (fPosition == epsilonNode);
 }
 
 // ---------------------------------------------------------------------------
@@ -90,25 +89,21 @@ bool CMAny::isNullable() const
 void CMAny::calcFirstPos(CMStateSet& toSet) const
 {
     // If we are an epsilon node, then the first pos is an empty set
-    if (fPosition == -1)
+    if (isNullable())
         toSet.zeroBits();
     else
     // Otherwise, its just the one bit of our position
         toSet.setBit(fPosition);
-
-	return;
 }
 
 void CMAny::calcLastPos(CMStateSet& toSet) const
 {
     // If we are an epsilon node, then the last pos is an empty set
-    if (fPosition == -1)
+    if (isNullable())
         toSet.zeroBits();
     // Otherwise, its just the one bit of our position
     else
         toSet.setBit(fPosition);
-
-	return;
 }
 
 XERCES_CPP_NAMESPACE_END

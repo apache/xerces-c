@@ -291,7 +291,7 @@ public:
     void endElement(const XMLElementDecl&, const unsigned int, const bool, const XMLCh* const) {}
     void endEntityReference(const   XMLEntityDecl&) {}
    
-    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length, const bool cdataSection) {}
+    void ignorableWhitespace(const XMLCh* const, const unsigned int, const bool) {}
 
     void resetDocument() {}
     void startDocument() {}

@@ -1133,9 +1133,9 @@ void XSerializeEngine::trace(char* funcName) const
     return;
 
     if (isStoring())
-        printf("\n funcName=<%s>, storing, count=<%d>, postion=<%d>\n", funcName, fBufCount, getBufCurAccumulated());
+        printf("\n funcName=<%s>, storing, count=<%lu>, postion=<%lu>\n", funcName, fBufCount, getBufCurAccumulated());
     else
-        printf("\n funcName=<%s>, loading, count=<%d>, postion=<%d>\n", funcName, fBufCount, getBufCurAccumulated());
+        printf("\n funcName=<%s>, loading, count=<%lu>, postion=<%lu>\n", funcName, fBufCount, getBufCurAccumulated());
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -38,6 +38,8 @@
 #include <xercesc/framework/psvi/XSValue.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
+static const char* null_string=0;
+
 static const bool  EXP_RET_VALID_TRUE  = true;
 static const bool  EXP_RET_VALUE_TRUE  = true;
 static const bool  EXP_RET_CANREP_TRUE = true;
@@ -274,7 +276,7 @@ static bool compareActualValue( const XSValue::DataType             datatype
         case XSValue::dt_long:            
             if (actValue.fValue.f_long == expValue.fValue.f_long)
                 return true;
-            printf("ACTVALUE_TEST Unexpected %s XSValue, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
+            printf("ACTVALUE_TEST Unexpected %s XSValue, got %ld expected %ld\n", StrX(getDataTypeString(datatype)).localForm(),
                     actValue.fValue.f_long, expValue.fValue.f_long);
             return false;
                                        
@@ -301,7 +303,7 @@ static bool compareActualValue( const XSValue::DataType             datatype
         case XSValue::dt_positiveInteger:
             if (actValue.fValue.f_ulong == expValue.fValue.f_ulong)
                 return true;
-            printf("ACTVALUE_TEST Unexpected %s XSValue, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
+            printf("ACTVALUE_TEST Unexpected %s XSValue, got %lu expected %lu\n", StrX(getDataTypeString(datatype)).localForm(),
                     actValue.fValue.f_ulong, expValue.fValue.f_ulong);
             return false;                    
         case XSValue::dt_unsignedInt:
@@ -755,8 +757,8 @@ void test_dt_decimal()
 
     const char lex_v_ran32_v_1[]="4294967295.999";
     const char lex_v_ran32_v_2[]="999.4294967295";
-    const char lex_v_ran32_iv_1[]="4294967296.999";
-    const char lex_v_ran32_iv_2[]="999.4294967296";
+//    const char lex_v_ran32_iv_1[]="4294967296.999";
+//    const char lex_v_ran32_iv_2[]="999.4294967296";
 
     const char lex_iv_1[]="12b34.456";
     const char lex_iv_2[]="1234.56.789";
@@ -909,8 +911,8 @@ void test_dt_decimal()
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1, DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,                XSValue::st_FOCA0002);
 
     }
 
@@ -1099,8 +1101,8 @@ void test_dt_float()
         CANREP_TEST(data_rawstr_5,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_5,    DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
         // lexical valid, range invalid (however XML4C ignores that)
         CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
@@ -1295,8 +1297,8 @@ void test_dt_double()
         CANREP_TEST(data_rawstr_5,    dt, toValidate, EXP_RET_CANREP_TRUE,  data_canrep_5,    DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  0,               XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1,         dt, toValidate, EXP_RET_CANREP_FALSE,  null_string,     XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,         dt, toValidate, EXP_RET_CANREP_FALSE,  null_string,     XSValue::st_FOCA0002);
 
         // lexical valid, range invalid (XML4C doesn't treat as invalid)
         CANREP_TEST(lex_v_ran_iv_1,    dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep,    DONT_CARE);
@@ -1463,8 +1465,8 @@ void test_dt_integer()
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
@@ -1609,8 +1611,8 @@ void test_dt_nonPositiveInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
@@ -1751,8 +1753,8 @@ void test_dt_negativeInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
@@ -1909,14 +1911,14 @@ void test_dt_long()
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran64_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
@@ -2059,14 +2061,14 @@ void test_dt_int()
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, null_string,          XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, null_string,          XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2213,14 +2215,14 @@ void test_dt_short()
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, null_string,          XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, null_string,          XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2367,14 +2369,14 @@ void test_dt_byte()
         CANREP_TEST(lex_v_ran_v_1, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep, DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep, DONT_CARE);
 
-        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, 0,                    XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1,      dt, toValidate, EXP_RET_CANREP_FALSE, null_string,          XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2,      dt, toValidate, EXP_RET_CANREP_FALSE, null_string,          XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2520,8 +2522,8 @@ void test_dt_nonNegativeInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
@@ -2680,14 +2682,14 @@ void test_dt_unsignedLong()
         CANREP_TEST(lex_v_ran64_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran64_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran64_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran64_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_1_canrep, DONT_CARE);
@@ -2830,14 +2832,14 @@ void test_dt_unsignedInt()
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -2980,14 +2982,14 @@ void test_dt_unsignedShort()
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -3130,14 +3132,14 @@ void test_dt_unsignedByte()
         CANREP_TEST(lex_v_ran_v_1,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_1_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran_v_2_canrep,  DONT_CARE);
 
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
     //validation on
-    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_1, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+    CANREP_TEST(lex_v_ran_iv_2, dt, true,  EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     //validation off
     CANREP_TEST(lex_v_ran_iv_1, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_1_canrep, DONT_CARE);
@@ -3282,8 +3284,8 @@ void test_dt_positiveInteger()
 
         CANREP_TEST(lex_v_ran64_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_v_2_canrep,  DONT_CARE);
         CANREP_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_CANREP_TRUE,  lex_v_ran64_iv_2_canrep, DONT_CARE);
-        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, 0,                XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2        , dt, toValidate, EXP_RET_CANREP_FALSE, null_string,      XSValue::st_FOCA0002);
 
     }
 
@@ -3402,7 +3404,7 @@ void test_dt_boolean()
         CANREP_TEST(lex_v_4,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_4_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,   XSValue::st_FOCA0002);
     }
 
 }
@@ -3519,8 +3521,8 @@ void test_dt_hexBinary()
         CANREP_TEST(lex_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_2_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,   XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,   XSValue::st_FOCA0002);
     }
 
 }
@@ -3645,8 +3647,8 @@ void test_dt_base64Binary()
         CANREP_TEST(lex_v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, lex_v_2_canrep, DONT_CARE);
 
         // lexical invalid
-        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
-        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0,             XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,   XSValue::st_FOCA0002);
+        CANREP_TEST(lex_iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,   XSValue::st_FOCA0002);
     }
 
 }
@@ -3770,16 +3772,16 @@ void test_dt_duration()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -3958,9 +3960,9 @@ void test_dt_date()
         CANREP_TEST(c_c,  dt, toValidate, EXP_RET_CANREP_TRUE, r_c, DONT_CARE);   
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
 
     }
 
@@ -4086,16 +4088,16 @@ void test_dt_gYearMonth()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4223,16 +4225,16 @@ void test_dt_gYear()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4359,16 +4361,16 @@ void test_dt_gMonthDay()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4496,16 +4498,16 @@ void test_dt_gDay()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4633,16 +4635,16 @@ void test_dt_gMonth()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4805,11 +4807,11 @@ void test_dt_dateTime()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_4, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
-        CANREP_TEST(iv_5, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_4, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FODT0003);
+        CANREP_TEST(iv_5, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FODT0003);
 
     }
 
@@ -4963,11 +4965,11 @@ void test_dt_time()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FOCA0002);
-        CANREP_TEST(iv_4, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
-        CANREP_TEST(iv_5, dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_FODT0003);
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
+        CANREP_TEST(iv_4, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FODT0003);
+        CANREP_TEST(iv_5, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FODT0003);
     }
 
 }
@@ -5050,7 +5052,7 @@ void test_dt_string()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
 
@@ -5159,16 +5161,16 @@ void test_dt_anyURI()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
     }
 
@@ -5275,16 +5277,16 @@ void test_dt_QName()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
     }
 
@@ -5373,7 +5375,7 @@ void test_dt_NOTATION()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
 
@@ -5478,14 +5480,14 @@ void test_dt_normalizedString()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5593,16 +5595,16 @@ void test_dt_token()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5709,16 +5711,16 @@ void test_dt_language()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5825,16 +5827,16 @@ void test_dt_NMTOKEN()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5942,16 +5944,16 @@ void test_dt_NMTOKENS()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -6059,16 +6061,16 @@ void test_dt_Name()
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -6174,16 +6176,16 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -6289,16 +6291,16 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
         toValidate = ( 0 == j) ? true : false;
 
         //  valid
-        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, XSValue::st_NoCanRep);
+        CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, 0, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }

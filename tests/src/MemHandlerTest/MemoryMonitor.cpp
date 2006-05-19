@@ -173,7 +173,6 @@ int main (int argC,  char *argV[])
     bool                       doSchema           = false;
     bool                       schemaFullChecking = false;
     bool                       doList = false;
-    bool                       errorOccurred = false;
     int                        numReps =1;
 
     int argInd;
