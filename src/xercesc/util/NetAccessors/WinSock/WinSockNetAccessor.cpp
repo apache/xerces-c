@@ -25,7 +25,6 @@
 
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp>
 #include <xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.hpp>

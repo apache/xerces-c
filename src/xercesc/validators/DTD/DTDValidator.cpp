@@ -381,8 +381,11 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
 }
 
-void DTDValidator::preContentValidation(bool /*reuseGrammar*/,
-                                        bool validateDefAttr)
+void DTDValidator::preContentValidation(bool
+#if defined(XERCES_DEBUG)
+										reuseGrammar
+#endif
+                                       ,bool validateDefAttr)
 {
     //
     //  Lets enumerate all of the elements in the element decl pool

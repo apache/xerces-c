@@ -218,7 +218,7 @@ void Normalizer::serializeNode(const DOMNode * const node) {
     theOutput->release();
 }
 
-int main(int /*argc*/, char **/*argv*/) {
+int main(int /*argc*/, char ** /*argv*/) {
 
     Normalizer *normalizer = new Normalizer();
 

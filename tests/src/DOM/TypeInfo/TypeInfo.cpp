@@ -30,7 +30,7 @@
 #include <iostream.h>
 #endif
 
-#define UNUSED(x) { if(x!=0); }
+#define UNUSED(x) { if(x!=0){} }
 
 #define DOMTYPEINFOTEST(info, type, uri, line) \
     tmp = XMLString::equals(info->getTypeName(), type) && XMLString::equals(info->getTypeNamespace(), uri);\
@@ -825,7 +825,7 @@ DOMElement* TypeInfo::findElement(const XMLCh *name) const {
     return (DOMElement *)toTest;
 }
 
-int main(int /*argc*/, char **/*argv*/)
+int main(int /*argc*/, char ** /*argv*/)
 {
     bool passed = true;
 

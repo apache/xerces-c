@@ -36,7 +36,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
-#define UNUSED(x) { if(x!=0); }
+#define UNUSED(x) { if(x!=0){} }
 
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \
     {                                                               \
@@ -830,7 +830,7 @@ void DOMTest::findTestNodes(DOMNode* node) {
  *
  *
  */
-int main(int /*argc*/, char **/*argv*/)
+int main(int /*argc*/, char ** /*argv*/)
  {
      bool OK = true;
 

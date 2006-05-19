@@ -36,7 +36,7 @@ XERCES_CPP_NAMESPACE_USE
 
 bool errorOccurred = false;
 
-#define UNUSED(x) { if(x!=0); }
+#define UNUSED(x) { if(x!=0){} }
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
