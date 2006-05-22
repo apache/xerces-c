@@ -720,7 +720,8 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
     }
 
     // We now have nodes at the same depth in the tree.  Find a common ancestor.
-    const DOMNode *myNodeP, *hisNodeP;
+    const DOMNode *myNodeP=myRoot;
+	const DOMNode *hisNodeP=hisRoot;
     while(myRoot!=hisRoot) 
     {
         myNodeP = myRoot;

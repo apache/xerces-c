@@ -1156,20 +1156,17 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content
             break;
         }
     }
-
-    catch (SchemaDateTimeException &e)
-    {
-        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
-        return 0;
-    }
     catch(const OutOfMemoryException&)
     {
         throw;
     }
+    catch (SchemaDateTimeException &e)
+    {
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+    }
     catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
-        return 0;
     }
     return 0;
 }
@@ -1453,7 +1450,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
     catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
-        return 0; 
     }
     return 0; 
 }
@@ -1542,20 +1538,19 @@ XSValue::getActValDateTimes(const XMLCh*         const input_content
         return retVal;
     }
 
-    catch (SchemaDateTimeException const &e)
-    {
-        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
-        return 0;
-    }
     catch(const OutOfMemoryException&)
     {
         throw;
     }
+    catch (SchemaDateTimeException const &e)
+    {
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+    }
     catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
-        return 0; 
     }
+    return 0; 
 
 }
 

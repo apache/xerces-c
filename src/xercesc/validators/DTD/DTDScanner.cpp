@@ -375,15 +375,10 @@ bool DTDScanner::getQuotedString(XMLBuffer& toFill)
     if (!fReaderMgr->skipIfQuote(quoteCh))
         return false;
 
-    while (true)
+	XMLCh nextCh;
+    // Get another char and see if it matches the starting quote char
+    while ((nextCh=fReaderMgr->getNextChar())!=quoteCh)
     {
-        // Get another char
-        const XMLCh nextCh = fReaderMgr->getNextChar();
-
-        // See if it matches the starting quote char
-        if (nextCh == quoteCh)
-            break;
-
         //
         //  We should never get either an end of file null char here. If we
         //  do, just fail. It will be handled more gracefully in the higher
@@ -1459,7 +1454,7 @@ void DTDScanner::scanComment()
             else
                 bbComment.append(nextCh);
         }
-         else if (curState == OneDash)
+        else if (curState == OneDash)
         {
             //
             //  If its another dash, then we change to the two dashes states.
@@ -1470,14 +1465,14 @@ void DTDScanner::scanComment()
             {
                 curState = TwoDashes;
             }
-             else
+            else
             {
                 bbComment.append(chDash);
                 bbComment.append(nextCh);
                 curState = InText;
             }
         }
-         else if (curState == TwoDashes)
+        else if (curState == TwoDashes)
         {
             // The next character must be the closing bracket
             if (nextCh != chCloseAngle)
@@ -2495,7 +2490,11 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
             {
                 const XMLCh nextCh = fReaderMgr->peekNextChar();
 
-                if (nextCh == chOpenAngle)
+                if (!nextCh)
+                {
+                    return; // nothing left
+                }
+                else if (nextCh == chOpenAngle)
                 {
                     // Get the reader we started this on
                     // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
@@ -2523,7 +2522,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                     }
 
                 }
-                 else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
+                else if (fReaderMgr->getCurrentReader()->isWhitespace(nextCh))
                 {
                     //
                     //  If we have a doc type handler, and advanced callbacks are
@@ -2542,7 +2541,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                             , bbSpace.getLen()
                         );
                     }
-                     else
+                    else
                     {
                         //
                         //  If we hit an end of entity in the middle of white
@@ -2552,7 +2551,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                         fReaderMgr->skipPastSpaces();
                     }
                 }
-                 else if (nextCh == chPercent)
+                else if (nextCh == chPercent)
                 {
                     //
                     //  Expand (and scan if external) the reference value. Tell
@@ -2562,7 +2561,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                     fReaderMgr->getNextChar();
                     expandPERef(true, false, false, true);
                 }
-                 else if (inIncludeSect && (nextCh == chCloseSquare))
+                else if (inIncludeSect && (nextCh == chCloseSquare))
                 {
                     //
                     //  Its the end of a conditional include section. So scan it and
@@ -2574,16 +2573,12 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                         fScanner->emitError(XMLErrs::ExpectedEndOfConditional);
                         fReaderMgr->skipPastChar(chCloseAngle);
                     }
-                     else if (!fReaderMgr->skippedChar(chCloseAngle))
+                    else if (!fReaderMgr->skippedChar(chCloseAngle))
                     {
                         fScanner->emitError(XMLErrs::ExpectedEndOfConditional);
                         fReaderMgr->skipPastChar(chCloseAngle);
                     }
                     return;
-                }
-                 else if (!nextCh)
-                {
-                    return; // nothing left
                 }
                 else
                 {
@@ -2616,7 +2611,6 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                 bAcceptDecl = false;
             }
         }
-
         catch(const EndOfEntityException& toCatch)
         {
             //
@@ -3730,18 +3724,13 @@ bool DTDScanner::scanSystemLiteral(XMLBuffer& toFill)
         return false;
     }
 
-    while (true)
+	XMLCh nextCh;
+    // Break out on terminating quote
+    while ((nextCh=fReaderMgr->getNextChar())!=quoteCh)
     {
-        const XMLCh nextCh = fReaderMgr->getNextChar();
-
         // Watch for EOF
         if (!nextCh)
             ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
-
-        // Break out on terminating quote
-        if (nextCh == quoteCh)
-            break;
-
         toFill.append(nextCh);
     }
     return true;

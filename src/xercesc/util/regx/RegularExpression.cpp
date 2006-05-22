@@ -986,10 +986,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 	const Op* tmpOp = operations;
 	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
 
-	while (true) {
-
-		if (tmpOp == 0)
-			break;
+	while (tmpOp != 0) {
 
 		if (offset > context->fLimit || offset < context->fStart)
 			return -1;

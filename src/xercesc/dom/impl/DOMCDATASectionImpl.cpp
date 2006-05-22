@@ -131,17 +131,17 @@ const XMLCh* DOMCDATASectionImpl::getWholeText() const
     pWalker->setCurrentNode((DOMNode*)this);
     // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in 
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
-    while(true)
+	DOMNode* prevNode;
+    while((prevNode=pWalker->previousNode())!=NULL)
     {
-        DOMNode* prevNode=pWalker->previousNode();
-        if(prevNode==NULL || prevNode->getNodeType()==ELEMENT_NODE || prevNode->getNodeType()==COMMENT_NODE || prevNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
+        if(prevNode->getNodeType()==ELEMENT_NODE || prevNode->getNodeType()==COMMENT_NODE || prevNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
             break;
     }
 	XMLBuffer buff(1023, GetDOMNodeMemoryManager);
-    while(true)
+	DOMNode* nextNode;
+    while((nextNode=pWalker->nextNode())!=NULL)
     {
-        DOMNode* nextNode=pWalker->nextNode();
-        if(nextNode==NULL || nextNode->getNodeType()==ELEMENT_NODE || nextNode->getNodeType()==COMMENT_NODE || nextNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
+        if(nextNode->getNodeType()==ELEMENT_NODE || nextNode->getNodeType()==COMMENT_NODE || nextNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
             break;
         if(nextNode->getNodeType()==TEXT_NODE || nextNode->getNodeType()==CDATA_SECTION_NODE)
     		buff.append(nextNode->getNodeValue());
@@ -160,19 +160,19 @@ DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh* newText)
     // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in 
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
     DOMNode* pFirstTextNode=this;
-    while(true)
+	DOMNode* prevNode;
+    while((prevNode=pWalker->previousNode())!=NULL)
     {
-        DOMNode* prevNode=pWalker->previousNode();
-        if(prevNode==NULL || prevNode->getNodeType()==ELEMENT_NODE || prevNode->getNodeType()==COMMENT_NODE || prevNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
+        if(prevNode->getNodeType()==ELEMENT_NODE || prevNode->getNodeType()==COMMENT_NODE || prevNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
             break;
         pFirstTextNode=prevNode;
     }
     // before doing any change we need to check if we are going to remove an entity reference that doesn't contain just text
     DOMNode* pCurrentNode=pWalker->getCurrentNode();
-    while(true)
+	DOMNode* nextNode;
+    while((nextNode=pWalker->nextNode())!=NULL)
     {
-        DOMNode* nextNode=pWalker->nextNode();
-        if(nextNode==NULL || nextNode->getNodeType()==ELEMENT_NODE || nextNode->getNodeType()==COMMENT_NODE || nextNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
+        if(nextNode->getNodeType()==ELEMENT_NODE || nextNode->getNodeType()==COMMENT_NODE || nextNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
             break;
         if(nextNode->getNodeType()==ENTITY_REFERENCE_NODE)
         {
@@ -206,10 +206,9 @@ DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh* newText)
     }
     // now delete all the following text nodes
     pWalker->setCurrentNode(pCurrentNode);
-    while(true)
+    while((nextNode=pWalker->nextNode())!=NULL)
     {
-        DOMNode* nextNode=pWalker->nextNode();
-        if(nextNode==NULL || nextNode->getNodeType()==ELEMENT_NODE || nextNode->getNodeType()==COMMENT_NODE || nextNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
+        if(nextNode->getNodeType()==ELEMENT_NODE || nextNode->getNodeType()==COMMENT_NODE || nextNode->getNodeType()==PROCESSING_INSTRUCTION_NODE)
             break;
         if(nextNode!=retVal)
         {

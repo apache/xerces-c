@@ -2032,15 +2032,10 @@ bool XMLScanner::getQuotedString(XMLBuffer& toFill)
     if (!fReaderMgr.skipIfQuote(quoteCh))
         return false;
 
-    while (true)
+	XMLCh nextCh;
+    // Get another char and see if it matches the starting quote char
+    while ((nextCh=fReaderMgr.getNextChar())!=quoteCh)
     {
-        // Get another char
-        const XMLCh nextCh = fReaderMgr.getNextChar();
-
-        // See if it matches the starting quote char
-        if (nextCh == quoteCh)
-            break;
-
         //  We should never get either an end of file null char here. If we
         //  do, just fail. It will be handled more gracefully in the higher
         //  level code that called us.

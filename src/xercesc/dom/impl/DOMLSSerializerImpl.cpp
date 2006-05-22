@@ -270,7 +270,7 @@ static int  lastWhiteSpaceInTextNode = 0;
 // along its way going back to write(). So far we don't come up with a
 // "short-cut" to go "directly" back.
 //
-#define  TRY_CATCH_THROW(action, forceToRethrow)                     \
+#define  TRY_CATCH_THROW(action)                                     \
 fFormatter->setUnRepFlags(XMLFormatter::UnRep_Fail);                 \
 try                                                                  \
 {                                                                    \
@@ -278,11 +278,8 @@ try                                                                  \
 }                                                                    \
 catch(TranscodingException const &e)                                 \
 {                                                                    \
-    if ( !reportError(nodeToWrite                                    \
-                    , DOMError::DOM_SEVERITY_FATAL_ERROR             \
-                    , e.getMessage())                       ||       \
-          forceToRethrow)                                            \
-        throw e;                                                       \
+    reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, e.getMessage());  \
+    throw e;                                                         \
 }
 
 DOMLSSerializerImpl::~DOMLSSerializerImpl()
@@ -752,7 +749,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     *fFormatter << chSpace << nodeValue;
                 }
                 *fFormatter << gEndPI;
-                ,true
             )
             break;
         }
@@ -846,7 +842,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 // The name has to be representable without any escapes
                     *fFormatter  << XMLFormatter::NoEscapes
                                  << chOpenAngle << nodeName;
-                    ,true
                 )
 
                 // Output any attributes on this element
@@ -1059,7 +1054,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     (
                          *fFormatter << XMLFormatter::NoEscapes << gEndElement
                                      << nodeName << chCloseAngle;
-                        ,true
                     )
 
                 }
@@ -1077,7 +1071,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     TRY_CATCH_THROW
                     (
                         *fFormatter << XMLFormatter::NoEscapes << chForwardSlash << chCloseAngle;
-                       , true
                     )
                 }
             }
@@ -1149,7 +1142,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 (
                     *fFormatter << XMLFormatter::NoEscapes << chAmpersand
                                 << nodeName << chSemiColon;
-                    , true
                 )
             }
             else
@@ -1170,7 +1162,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     TRY_CATCH_THROW
                    (
                         *fFormatter<<XMLFormatter::NoEscapes<<chAmpersand<<nodeName<<chSemiColon;
-                        , true
                     )
                 }
             }
@@ -1212,7 +1203,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 (
                     // transcoder throws exception for unrep chars
                     *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << nodeValue << gEndCDATA;
-                   , true
                 )
             }
 
@@ -1234,7 +1224,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartComment
                 << nodeValue << gEndComment;
-                , true
             )
             break;
         }
@@ -1292,8 +1281,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 }
 
                 *fFormatter << chCloseAngle;
-                , true
-
             ) // end of TRY_CATCH_THROW
 
             break;
@@ -1524,7 +1511,6 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << gEndCDATA;
-                , true
             )
         }
         else
@@ -1580,9 +1566,8 @@ void DOMLSSerializerImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeV
             printNewLine();
             printIndent(level);
             TRY_CATCH_THROW
-           (
+            (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA;
-                , true
             )
 
             // We got at least some chars that can be done normally
@@ -1597,7 +1582,6 @@ void DOMLSSerializerImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeV
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gEndCDATA;
-                , true
             )
 
             // Update the source pointer to our new spot

@@ -188,8 +188,8 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, bool booleanValue)
         case FEATURE_ELEMENT_CONTENT_WHITESPACE:  
             if(booleanValue) return true;       // required //
             else             return false;      // optional //
-        default: return false; // should never be here
     }
+	// should never be here
     return false;
 }
 

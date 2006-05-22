@@ -117,16 +117,13 @@ void ReaderMgr::getSpaces(XMLBuffer& toFill)
     // Reset the buffer before we start
     toFill.reset();
 
-    while (true)
+    //
+    //  Get all the spaces from the current reader. If it returns true,
+    //  it hit a non-space and we are done. Else we have to pop a reader
+    //  and keep going.
+    //
+    while (!fCurReader->getSpaces(toFill))
     {
-        //
-        //  Get all the spaces from the current reader. If it returns true,
-        //  it hit a non-space and we are done. Else we have to pop a reader
-        //  and keep going.
-        //
-        if (fCurReader->getSpaces(toFill))
-            break;
-
         // We wore that one out, so lets pop a reader and try again
         if (!popReader())
             break;
@@ -145,11 +142,8 @@ void ReaderMgr::getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck)
     //  up all of its data. Else it returned because something matched, and
     //  we are done.
     //
-    while (true)
+    while (!fCurReader->getUpToCharOrWS(toFill, toCheck))
     {
-        if (fCurReader->getUpToCharOrWS(toFill, toCheck))
-            break;
-
         // We ate that one up, lets try to pop another. If not, break out
         if (!popReader())
             break;
@@ -250,16 +244,13 @@ bool ReaderMgr::skipPastSpaces(bool inDecl)
 {
     bool skippedSomething = false;
     bool tmpFlag;
-    while (true)
+    //
+    //  Skip all the spaces in the current reader. If it returned because
+    //  it hit a non-space, break out. Else we have to pop another entity
+    //  and keep going.
+    //
+    while (!fCurReader->skipSpaces(tmpFlag, inDecl))
     {
-        //
-        //  Skip all the spaces in the current reader. If it returned because
-        //  it hit a non-space, break out. Else we have to pop another entity
-        //  and keep going.
-        //
-        if (fCurReader->skipSpaces(tmpFlag, inDecl))
-            break;
-
         if (tmpFlag)
             skippedSomething = true;
 
@@ -273,14 +264,9 @@ bool ReaderMgr::skipPastSpaces(bool inDecl)
 void ReaderMgr::skipQuotedString(const XMLCh quoteCh)
 {
     XMLCh nextCh;
-    while (true)
+    // If we get an end of file char, then return
+    while ((nextCh = getNextChar())!=0)
     {
-        nextCh = getNextChar();
-
-        // If we get an end of file char, then return
-        if (!nextCh)
-            break;
-
         // If we get the quote char, then break out
         if (nextCh == quoteCh)
             break;
@@ -291,13 +277,9 @@ void ReaderMgr::skipQuotedString(const XMLCh quoteCh)
 XMLCh ReaderMgr::skipUntilIn(const XMLCh* const listToSkip)
 {
     XMLCh nextCh;
-    while (true)
+    // If we get an end of file char, then return
+    while ((nextCh = peekNextChar())!=0)
     {
-        nextCh = peekNextChar();
-
-        if (!nextCh)
-            break;
-
         if (XMLString::indexOf(listToSkip, nextCh) != -1)
             break;
 
@@ -311,13 +293,9 @@ XMLCh ReaderMgr::skipUntilIn(const XMLCh* const listToSkip)
 XMLCh ReaderMgr::skipUntilInOrWS(const XMLCh* const listToSkip)
 {
     XMLCh nextCh;
-    while (true)
+    // If we get an end of file char, then return
+    while ((nextCh = peekNextChar())!=0)
     {
-        nextCh = peekNextChar();
-
-        if (!nextCh)
-            break;
-
         if (fCurReader->isWhitespace(nextCh))
             break;
 

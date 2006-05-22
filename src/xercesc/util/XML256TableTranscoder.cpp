@@ -120,7 +120,7 @@ XML256TableTranscoder::transcodeTo( const   XMLCh* const    srcData
         //  Get the next src char out to a temp, then do a binary search
         //  of the 'to' table for this entry.
         //
-        if ((nextOut = xlatOneTo(*srcPtr)))
+        if ((nextOut = xlatOneTo(*srcPtr))!=0)
         {
             *outPtr++ = nextOut;
             srcPtr++;

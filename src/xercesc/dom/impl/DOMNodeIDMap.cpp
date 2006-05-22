@@ -95,12 +95,8 @@ void DOMNodeIDMap::add(DOMAttr *attr)
 	//   the table is only filled by the parser from valid documents, which
 	//   can not have duplicates.  Behavior of invalid docs is not defined.
 	//
-    while (true)
+    while (fTable[currentHash]!=0 && fTable[currentHash]!=(DOMAttr *)-1)
 	{
-		DOMAttr *tableSlot = fTable[currentHash];
-		if (tableSlot == 0 ||
-			tableSlot == (DOMAttr *)-1)
-			break;
 		currentHash += initalHash;  // rehash
         if (currentHash >= fSize)
             currentHash = currentHash % fSize;
@@ -129,15 +125,9 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
 	//
 	// Loop looking for a slot pointing to an attr with this id.
     //
-    while (true)
+	DOMAttr *tableSlot;
+    while ((tableSlot= fTable[currentHash])!=0)
 	{
-		DOMAttr *tableSlot = fTable[currentHash];
-		if (tableSlot == 0)
-        {
-            // There is no matching entry in the table
-            return;
-        }
-
         if (tableSlot == attr)
         {
             //  Found the attribute.  Set the slot to -1 to indicate
@@ -152,7 +142,7 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
         if (currentHash >= fSize)
             currentHash = currentHash % fSize;
     }
-
+    // There is no matching entry in the table
 }
 
 
@@ -168,16 +158,9 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
 	//
 	// Loop looking for a slot pointing to an attr with this id.
     //
-    while (true)
+	DOMAttr *tableSlot;
+    while ((tableSlot= fTable[currentHash])!=0)
 	{
-		DOMAttr *tableSlot = fTable[currentHash];
-		if (tableSlot == 0)
-        {
-            // There is no matching entry in the table
-            return 0;
-        }
-
-
         if ((tableSlot != (DOMAttr *)-1) && XMLString::equals(tableSlot->getValue(), id))
             return tableSlot;
 
@@ -185,7 +168,8 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
         if (currentHash >= fSize)
             currentHash = currentHash % fSize;
     }
-    return 0;  // Never gets here, but keeps some compilers happy.
+    // There is no matching entry in the table
+    return 0;
 }
 
 

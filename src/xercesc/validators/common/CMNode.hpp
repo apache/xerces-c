@@ -132,7 +132,7 @@ inline CMNode::CMNode(const ContentSpecNode::NodeTypes type,
     , fType(type)
     , fFirstPos(0)
     , fLastPos(0)
-    , fMaxStates(~0)
+    , fMaxStates(UINT_MAX)
 {
 }
 

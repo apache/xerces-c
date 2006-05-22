@@ -251,12 +251,11 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
             if (size() == 1)
                 return FC_CONTINUE;
 
-			int ret2;
-			if (ret1 != FC_ANY) {
-			    ret2 = getChild(1)->analyzeFirstCharacter(rangeTok, options, tokFactory);
-			}
+			if (ret1 == FC_ANY)
+				return FC_ANY;
 
-			if (ret1 == FC_ANY || ret2 == FC_ANY)
+			int ret2 = getChild(1)->analyzeFirstCharacter(rangeTok, options, tokFactory);
+			if (ret2 == FC_ANY)
 				return FC_ANY;
 
 			if (ret1 == FC_CONTINUE || ret2 == FC_CONTINUE)

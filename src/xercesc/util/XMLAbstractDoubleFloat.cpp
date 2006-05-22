@@ -112,7 +112,7 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
         // since the call to strtod may allow other values.  For example, AIX
         // allows "infinity" and "+INF"
         XMLCh curChar;
-        while (curChar = tmpStrValue[lenTempStrValue]) {            
+        while ((curChar = tmpStrValue[lenTempStrValue])!=0) {
             if (!((curChar >= chDigit_0 &&
                    curChar <= chDigit_9) ||
                   curChar == chPeriod  ||
@@ -394,7 +394,7 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 	bool  dotSeen = false;
 	bool  isValidStr = true;
     XMLCh theChar;
-	while ((theChar=*srcStr++) && isValidStr)
+	while ((theChar=*srcStr++)!=0 && isValidStr)
 	{
 		if ( theChar != chPeriod && theChar != chDigit_0 )
 			isValidStr = false;           		// invalid char

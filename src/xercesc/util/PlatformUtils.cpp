@@ -436,7 +436,7 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
-    XMLMsgLoader* ms;
+    XMLMsgLoader* ms=0;
     
     try
     {
@@ -446,8 +446,10 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 		ms = new MsgCatalogLoader(msgDomain);
     #elif defined (XERCES_USE_WIN32_MSGLOADER)
 		ms = new Win32MsgLoader(msgDomain);
-	#else // XERCES_USE_MSGLOADER_INMEMORY
+	#elif defined (XERCES_USE_MSGLOADER_INMEMORY)
 		ms = new InMemMsgLoader(msgDomain);
+	#else
+		#error No MsgLoader configured for platform! You must configure it.
 	#endif
     }
     catch(const OutOfMemoryException&)

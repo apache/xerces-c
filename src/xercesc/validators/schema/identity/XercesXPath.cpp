@@ -757,11 +757,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
     XMLCh     ch;
     XMLBuffer dataBuffer(128, tokens->getMemoryManager());
 
-    while (true) {
-
-        if (currentOffset == endOffset) {
-            break;
-        }
+    while (currentOffset != endOffset) {
 
         ch = data[currentOffset];
 

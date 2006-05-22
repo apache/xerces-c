@@ -1128,14 +1128,16 @@ inline size_t XSerializeEngine::calBytesNeeded(size_t size) const
     return (alignAdjust(size) + size);
 }
 
-void XSerializeEngine::trace(char* funcName) const
+void XSerializeEngine::trace(char* /*funcName*/) const
 {
     return;
 
-    if (isStoring())
+/*
+   if (isStoring())
         printf("\n funcName=<%s>, storing, count=<%lu>, postion=<%lu>\n", funcName, fBufCount, getBufCurAccumulated());
     else
         printf("\n funcName=<%s>, loading, count=<%lu>, postion=<%lu>\n", funcName, fBufCount, getBufCurAccumulated());
+*/
 }
 
 XERCES_CPP_NAMESPACE_END
