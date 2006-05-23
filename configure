@@ -25031,7 +25031,7 @@ else
 		if test x"$with_icu" != x"no"; then
 			search_list="$with_icu /usr/local /usr"
 			for i in $search_list; do
-				if test -x $i/bin/genrb -a -r $i/include/unicode/ucnv.h; then
+				if test -r $i/include/unicode/ucnv.h; then
 					xerces_cv_icu_prefix=$i
 					break
 				fi
@@ -25934,7 +25934,7 @@ fi
 	echo "$as_me:$LINENO: checking whether we support the ICU MsgLoader" >&5
 echo $ECHO_N "checking whether we support the ICU MsgLoader... $ECHO_C" >&6
 	list_add=
-	if test x"$xerces_cv_icu_prefix" != x; then
+	if test x"$xerces_cv_icu_prefix" != x -a -x $xerces_cv_icu_prefix/bin/genrb; then
 
 		# Check whether --enable-msgloader-icu or --disable-msgloader-icu was given.
 if test "${enable_msgloader_icu+set}" = set; then
