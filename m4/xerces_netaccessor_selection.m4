@@ -116,7 +116,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	AC_MSG_CHECKING([for which NetAccessor to use (choices:$na_list)])
 	for i in 1 2; do
 		# Swap upper/lower case in string:
-		na_list=`echo $na_list | tr 'A-Za-z' 'a-zA-Z'`
+		na_list=`echo $na_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
 		
 		# Check for each netaccessor, in implicit rank order
 		case $na_list in

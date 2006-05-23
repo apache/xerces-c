@@ -88,7 +88,7 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	AC_MSG_CHECKING([for which MsgLoader to use (choices:$ml_list)])
 	for i in 1 2; do
 		# Swap upper/lower case in the ml_list
-		ml_list=`echo $ml_list | tr 'A-Za-z' 'a-zA-Z'`
+		ml_list=`echo $ml_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
 		
 		# Check for each msgloader, in implicit rank order
 		case $ml_list in

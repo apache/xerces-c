@@ -124,7 +124,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	AC_MSG_CHECKING([for which Transcoder to use (choices:$tc_list)])
 	for i in 1 2; do
 		# Swap upper/lower case in the tc_list
-		tc_list=`echo $tc_list | tr 'A-Za-z' 'a-zA-Z'`
+		tc_list=`echo $tc_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
 		
 		# Check for each transcoder, in implicit rank order
 		case $tc_list in
