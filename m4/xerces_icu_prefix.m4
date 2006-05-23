@@ -23,7 +23,7 @@ AC_DEFUN([XERCES_ICU_PREFIX],
 		if test x"$with_icu" != x"no"; then
 			search_list="$with_icu /usr/local /usr"
 			for i in $search_list; do			
-				if test -x $i/bin/genrb -a -r $i/include/unicode/ucnv.h; then
+				if test -r $i/include/unicode/ucnv.h; then
 					xerces_cv_icu_prefix=$i
 					break
 				fi
