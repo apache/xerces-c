@@ -186,7 +186,6 @@ void AbstractDOMParser::reset()
     fCurrentParent   = 0;
     fCurrentNode     = 0;
     fCurrentEntity   = 0;
-    fParseInProgress = false;
     fWithinElement   = false;
     fDocumentAdoptedByUser = false;
     fNodeStack->removeAllElements();
