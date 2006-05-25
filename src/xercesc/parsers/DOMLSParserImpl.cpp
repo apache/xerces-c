@@ -29,7 +29,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/parsers/DOMLSParserImpl.hpp>
-#include <xercesc/util/IOException.hpp>
 #include <xercesc/dom/DOMLSResourceResolver.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMLSParserFilter.hpp>
@@ -39,7 +38,7 @@
 #include <xercesc/dom/impl/DOMConfigurationImpl.hpp>
 #include <xercesc/dom/impl/DOMStringListImpl.hpp>
 #include <xercesc/dom/DOMException.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/dom/DOMLSException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/Wrapper4DOMLSInput.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
@@ -49,6 +48,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/XMLDOMMsg.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -150,7 +150,7 @@ DOMLSParserImpl::~DOMLSParserImpl()
 // ---------------------------------------------------------------------------
 bool DOMLSParserImpl::getBusy() const
 {
-    return fParseInProgress;
+    return getParseInProgress();
 }
 
 // ---------------------------------------------------------------------------
@@ -692,6 +692,9 @@ void DOMLSParserImpl::resetDocumentPool()
 // ---------------------------------------------------------------------------
 DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
 {
+    if (getParseInProgress())
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
+
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
@@ -707,6 +710,9 @@ DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
 
 DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
 {
+    if (getParseInProgress())
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
+
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
@@ -720,6 +726,9 @@ DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
 
 DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
 {
+    if (getParseInProgress())
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
+
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
@@ -735,6 +744,9 @@ void DOMLSParserImpl::parseWithContext(const DOMLSInput*,
                                       DOMNode* ,
                                       const unsigned short)
 {
+    if (getParseInProgress())
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
+
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 }
 
@@ -825,7 +837,7 @@ Grammar* DOMLSParserImpl::loadGrammar(const char* const systemId,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
 
     ResetParseType  resetParse(this, &DOMLSParserImpl::resetParse);
 
@@ -859,7 +871,7 @@ Grammar* DOMLSParserImpl::loadGrammar(const XMLCh* const systemId,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
 
     ResetParseType  resetParse(this, &DOMLSParserImpl::resetParse);
 
@@ -893,7 +905,7 @@ Grammar* DOMLSParserImpl::loadGrammar(const DOMLSInput* source,
 {
     // Avoid multiple entrance
     if (getParseInProgress())
-        ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
+        throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
 
     ResetParseType  resetParse(this, &DOMLSParserImpl::resetParse);
 
@@ -976,7 +988,7 @@ void DOMLSParserImpl::docCharacters(const XMLCh* const    chars
             case DOMLSParserFilter::FILTER_REJECT:      
             case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
                                                         break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
             }
         }
     }
@@ -997,7 +1009,7 @@ void DOMLSParserImpl::docComment(const XMLCh* const  comment)
             case DOMLSParserFilter::FILTER_REJECT:      
             case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
                                                         break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
             }
         }
     }
@@ -1019,7 +1031,7 @@ void DOMLSParserImpl::docPI(const XMLCh* const    target
             case DOMLSParserFilter::FILTER_REJECT:      
             case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
                                                         break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
             }
         }
     }
@@ -1055,7 +1067,7 @@ void DOMLSParserImpl::endElement(const XMLElementDecl& elemDecl
                                                             origParent->removeChild(origNode);
                                                         }
                                                         break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
             }
         }
     }
@@ -1081,7 +1093,7 @@ void DOMLSParserImpl::startElement(const XMLElementDecl&         elemDecl
                                                     fCurrentParent->removeChild(fCurrentNode);
                                                     fCurrentNode=fCurrentParent;
                                                     break;
-        case DOMLSParserFilter::FILTER_INTERRUPT:   ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Gen_ParsingAborted, fMemoryManager);
+        case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
         }
     }
     if(isEmpty)

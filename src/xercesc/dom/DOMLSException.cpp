@@ -18,62 +18,34 @@
  * $Id$
  */
 
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/framework/MemoryManager.hpp>
-
 #include "DOMLSException.hpp"
+#include <xercesc/util/XMLDOMMsg.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// ---------------------------------------------------------------------------
-//  Destructor and Constructor
-// ---------------------------------------------------------------------------
-DOMLSException::~DOMLSException()
-{
-    if (msg && fMsgOwned)
-        fMemoryManager->deallocate((void*)msg);
-}
-
 DOMLSException::DOMLSException()
-:code((LSExceptionCode) 0)
-,msg(0)
-,fMemoryManager(0)
-,fMsgOwned(false)
+: DOMException()
+, code((LSExceptionCode) 0)
 {      
 }
 
-DOMLSException::DOMLSException(    short                        exCode
-                                 , const XMLCh*                 message
+DOMLSException::DOMLSException(    LSExceptionCode              exCode
+                                 ,       short                  messageCode
                                  ,       MemoryManager* const   memoryManager)
-:code((LSExceptionCode) exCode)
-,msg(message)
-,fMemoryManager(memoryManager)
-,fMsgOwned(false)
+: DOMException(exCode, messageCode?messageCode:XMLDOMMsg::DOMLSEXCEPTION_ERRX+exCode-DOMLSException::PARSE_ERR+1, memoryManager)
+, code(exCode)
 {  
-    if (!message)
-    {
-        const unsigned int msgSize = 2047;
-        XMLCh errText[msgSize + 1];
-        fMsgOwned = true;
-
-        // load the text
-        msg = XMLString::replicate
-             ( 
-              DOMImplementation::loadDOMExceptionMsg(code, errText, msgSize) ? errText : XMLUni::fgDefErrMsg
-            , fMemoryManager
-             );
-
-    }
 }
 
 DOMLSException::DOMLSException(const DOMLSException &other)
-:code(other.code)
-,msg(0)
-,fMemoryManager(other.fMemoryManager)
-,fMsgOwned(other.fMsgOwned)
+: DOMException(other)
+, code(other.code)
 {
-    msg = other.fMsgOwned? XMLString::replicate(other.msg, other.fMemoryManager) : other.msg;
+}
+
+
+DOMLSException::~DOMLSException()
+{
 }
 
 XERCES_CPP_NAMESPACE_END

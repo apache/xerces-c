@@ -220,33 +220,6 @@ static const XMLCh  gNotation[] =
     chSpace,   chDoubleQuote, chNull
 };
 
-//Feature
-static const XMLCh  gFeature[] =
-{
-    chLatin_F, chLatin_e, chLatin_a, chLatin_t, chLatin_u, chLatin_r,
-    chLatin_e, chSpace,   chNull
-};
-
-// Can not be set to
-static const XMLCh  gCantSet[] =
-{
-    chSpace,   chLatin_C, chLatin_a, chLatin_n, chSpace, chLatin_n, chLatin_o,
-    chLatin_t, chSpace,   chLatin_b, chLatin_e, chSpace, chLatin_s,
-    chLatin_e, chLatin_t, chSpace,   chLatin_t, chLatin_o, chSpace, chNull
-};
-
-static const XMLCh  gTrue[] =
-{
-    chSingleQuote, chLatin_t, chLatin_r, chLatin_u, chLatin_e,
-    chSingleQuote, chLF,      chNull
-};
-
-static const XMLCh  gFalse[] =
-{
-    chSingleQuote, chLatin_f, chLatin_a, chLatin_l, chLatin_s,
-    chLatin_e,     chSingleQuote, chLF, chNull
-};
-
 static const XMLByte  BOM_utf16be[] = {(XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
 static const XMLByte  BOM_utf16le[] = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte) 0};
 static const XMLByte  BOM_ucs4be[]  = {(XMLByte)0x00, (XMLByte)0x00, (XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
@@ -366,30 +339,9 @@ void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
     checkFeature(featName, true, featureId);
 
     if (!canSetFeature(featureId, state))
-    {
-        XMLCh  tmpbuf[256];
-        unsigned int strLen = XMLString::stringLen(gFeature) +
-                              XMLString::stringLen(featName) +
-                              XMLString::stringLen(gCantSet) +
-                              XMLString::stringLen(gFalse);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
 
-        XMLString::copyString(tmpbuf, gFeature);
-        if (strLen < 256)
-        {
-            XMLString::catString(tmpbuf, featName);
-        }
-        else
-        {
-            // truncate the featurename to fit into the 256 buffer
-            XMLString::copyNString(tmpbuf+XMLString::stringLen(gFeature),
-                                   featName, 200);
-        }
-        XMLString::catString(tmpbuf, gCantSet);
-        XMLString::catString(tmpbuf, state? gTrue : gFalse);
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf, fMemoryManager);
-    }
-    else
-        setFeature(featureId, state);
+    setFeature(featureId, state);
 
     //
     // setting "canonical-form" to true will set the parameters "format-pretty-print", 
@@ -1394,7 +1346,7 @@ bool DOMLSSerializerImpl::checkFeature(const XMLCh* const featName
     if (featureId == INVALID_FEATURE_ID)
     {
         if (toThrow)
-            throw DOMException(DOMException::NOT_FOUND_ERR, featName, fMemoryManager);
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0, fMemoryManager);
 
         return false;
     }

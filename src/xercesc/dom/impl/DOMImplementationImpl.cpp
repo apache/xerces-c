@@ -268,15 +268,13 @@ bool DOMImplementation::loadDOMExceptionMsg
 
 bool DOMImplementation::loadDOMExceptionMsg
 (
-    const   DOMLSException::LSExceptionCode  /*msgToLoad*/
-    ,       XMLCh* const                     /*toFill*/
-    , const unsigned int                     /*maxChars*/
+    const   DOMLSException::LSExceptionCode  msgToLoad
+    ,       XMLCh* const                     toFill
+    , const unsigned int                     maxChars
 )
 {
     // load the text, the msgToLoad+XMLDOMMsgs::DOMLSEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
-    // TODO
-//    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMLSEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
-    return false;
+    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMLSEXCEPTION_ERRX+msgToLoad-DOMLSException::PARSE_ERR+1, toFill, maxChars);
 }
 
 bool DOMImplementation::loadDOMExceptionMsg

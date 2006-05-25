@@ -78,8 +78,8 @@ public:
       * @param memoryManager  The memory manager used to (de)allocate memory
       */
     DOMRangeException(
-                            RangeExceptionCode       code
-                    , const XMLCh*                   message
+                            RangeExceptionCode code
+                    ,       short              messageCode
                     ,       MemoryManager*     const memoryManager
                      );
 

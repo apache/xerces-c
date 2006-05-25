@@ -33,6 +33,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMLSException.hpp>
+#include <xercesc/dom/DOMLSParserFilter.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
@@ -939,6 +941,8 @@ int main(int /*argc*/, char ** /*argv*/)
 
 		OK = test.testWholeText(parser);
         delete parser;
+
+        OK = test.testLSExceptions();
     }
 
     XMLPlatformUtils::Terminate();
@@ -4767,6 +4771,92 @@ bool DOMTest::testWholeText(XercesDOMParser* parser) {
 		return false;
 	}
     writer->release();
+    return true;
+}
+
+class ParserAborter : public DOMLSParserFilter
+{
+public:
+    ParserAborter() {}
+
+    virtual short acceptNode(DOMNode* ) { return DOMLSParserFilter::FILTER_INTERRUPT; }
+    virtual short startElement(DOMElement* ) { return DOMLSParserFilter::FILTER_INTERRUPT; }
+    virtual unsigned long getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
+};
+
+class ParserNester : public DOMLSParserFilter
+{
+public:
+    ParserNester(DOMLSParser* parser, DOMLSInput* input) { m_parser=parser; m_input=input; }
+
+    virtual short acceptNode(DOMNode* ) { m_parser->parse(m_input); return DOMLSParserFilter::FILTER_ACCEPT;}
+    virtual short startElement(DOMElement* ) { return DOMLSParserFilter::FILTER_ACCEPT; }
+    virtual unsigned long getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
+
+    DOMLSParser* m_parser;
+    DOMLSInput* m_input;
+};
+
+bool DOMTest::testLSExceptions() {
+	char* sXml="<?xml version='1.0'?>"
+				"<!DOCTYPE root["
+                "<!ENTITY ent1 'Dallas. &ent3; #5668'>"
+                "<!ENTITY ent2 '1900 Dallas Road<![CDATA[ (East) ]]>'>"
+                "<!ENTITY ent3 'California. &ent4; PO'>  "
+                "<!ENTITY ent4 'USA '>"
+                "<!ENTITY ent5 'The Content &ent6; never reached'>"
+                "<!ENTITY ent6 'ends here. <foo/>'>"
+                "]>"
+                "<root>&ent1; &ent2;"
+                  "<elem>Home </elem>"
+                  "<elem>Test: &ent5;</elem>"
+                "</root>";
+	MemBufInputSource is((XMLByte*)sXml, strlen(sXml), "bufId");
+
+    static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
+    DOMImplementationLS *impl = (DOMImplementationLS*)DOMImplementationRegistry::getDOMImplementation(gLS);
+    DOMLSParser       *domBuilder = impl->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+    DOMLSInput        *input = impl->createLSInput();
+    XMLString::transcode(sXml, tempStr, 3999);
+    input->setStringData(tempStr);
+    try
+    {
+        ParserAborter aborter;
+        domBuilder->setFilter(&aborter);
+        DOMDocument* doc=domBuilder->parse(input);
+
+        fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+        return false;
+    }
+    catch(DOMLSException& e)
+    {
+        if(e.code!=DOMLSException::PARSE_ERR)
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            return false;
+        }
+    }
+
+    try
+    {
+        ParserNester nester(domBuilder, input);
+        domBuilder->setFilter(&nester);
+        DOMDocument* doc=domBuilder->parse(input);
+
+        fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+        return false;
+    }
+    catch(DOMException& e)
+    {
+        if(e.code!=DOMException::INVALID_STATE_ERR)
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            return false;
+        }
+    }
+    input->release();
+    domBuilder->release();
+
     return true;
 }
 

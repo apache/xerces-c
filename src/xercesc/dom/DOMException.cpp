@@ -19,8 +19,11 @@
  */
 
 #include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLMsgLoader.hpp>
+#include <xercesc/util/XMLDOMMsg.hpp>
+#include "impl/DOMImplementationImpl.hpp"
 
 #include "DOMException.hpp"
 
@@ -44,27 +47,23 @@ DOMException::DOMException()
 }
 
 DOMException::DOMException(      short                 exCode
-                         , const XMLCh*                message
+                         ,       short                 messageCode
                          ,       MemoryManager* const  memoryManager)
 :code((ExceptionCode) exCode)
-,msg(message)
 ,fMemoryManager(memoryManager)
-,fMsgOwned(false)
-{  
-    if (!message)
-    {
-        const unsigned int msgSize = 2047;
-        XMLCh errText[msgSize + 1];
-        fMsgOwned = true;
+,fMsgOwned(true)
+{
+    const unsigned int msgSize = 2047;
+    XMLCh errText[msgSize + 1];
 
-        // load the text
-        msg = XMLString::replicate
-             ( 
-              DOMImplementation::loadDOMExceptionMsg(code, errText, msgSize) ? errText : XMLUni::fgDefErrMsg
-            , fMemoryManager
-             );
-
-    }
+    // load the text
+    if(messageCode==0)
+        messageCode=XMLDOMMsg::DOMEXCEPTION_ERRX+exCode;
+    msg = XMLString::replicate
+         (
+          DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(messageCode, errText, msgSize) ? errText : XMLUni::fgDefErrMsg
+        , fMemoryManager
+         );
 }
 
 DOMException::DOMException(const DOMException &other)

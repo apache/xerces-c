@@ -19,6 +19,7 @@
  */
 
 #include "DOMRangeException.hpp"
+#include <xercesc/util/XMLDOMMsg.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -31,9 +32,9 @@ DOMRangeException::DOMRangeException()
 
 
 DOMRangeException::DOMRangeException(      RangeExceptionCode         exCode
-                                   , const XMLCh*                     message
+                                   ,       short                      messageCode
                                    ,       MemoryManager*      const  memoryManager)
-: DOMException(exCode, message, memoryManager)
+: DOMException(exCode, messageCode?messageCode:XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+exCode, memoryManager)
 , code(exCode)
 {
 }

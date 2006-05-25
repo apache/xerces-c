@@ -21,8 +21,7 @@
  * $Id$
  */
 
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/dom/DOMException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -42,51 +41,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class MemoryManager;
 
-class CDOM_EXPORT DOMLSException  {
-public:
-    // -----------------------------------------------------------------------
-    //  Constructors
-    // -----------------------------------------------------------------------
-    /** @name Constructors */
-    //@{
-    /**
-      * Default constructor for DOMLSException.
-      *
-      */
-    DOMLSException();
-
-    /**
-      * Constructor which takes an error code and a message.
-      *
-      * @param code           The error code which indicates the exception
-      * @param message        The string containing the error message
-      * @param memoryManager  The memory manager used to (de)allocate memory
-      */
-    DOMLSException(    short                        code
-                     , const XMLCh*                 message
-                     ,       MemoryManager* const   memoryManager);
-
-    /**
-      * Copy constructor.
-      *
-      * @param other The object to be copied.
-      */
-    DOMLSException(const DOMLSException &other);
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    //  Destructors
-    // -----------------------------------------------------------------------
-    /** @name Destructor. */
-    //@{
-	 /**
-	  * Destructor for DOMLSException.
-	  *
-	  */
-    virtual ~DOMLSException();
-    //@}
-
+class CDOM_EXPORT DOMLSException : public DOMException {
 public:
     // -----------------------------------------------------------------------
     //  Class Types
@@ -110,6 +65,49 @@ public:
          PARSE_ERR        = 81,
          SERIALIZE_ERR    = 82
         };
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Constructors
+    // -----------------------------------------------------------------------
+    /** @name Constructors */
+    //@{
+    /**
+      * Default constructor for DOMLSException.
+      *
+      */
+    DOMLSException();
+
+    /**
+      * Constructor which takes an error code and a message.
+      *
+      * @param code           The error code which indicates the exception
+      * @param message        The string containing the error message
+      * @param memoryManager  The memory manager used to (de)allocate memory
+      */
+    DOMLSException(    LSExceptionCode              code
+                     ,       short                  messageCode
+                     ,       MemoryManager* const   memoryManager);
+
+    /**
+      * Copy constructor.
+      *
+      * @param other The object to be copied.
+      */
+    DOMLSException(const DOMLSException &other);
+
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Destructors
+    // -----------------------------------------------------------------------
+    /** @name Destructor. */
+    //@{
+	 /**
+	  * Destructor for DOMLSException.
+	  *
+	  */
+    virtual ~DOMLSException();
     //@}
 
     // -----------------------------------------------------------------------
