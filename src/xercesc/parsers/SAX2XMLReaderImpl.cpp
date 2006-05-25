@@ -445,7 +445,6 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        fParseInProgress = false;
     }
     catch(const OutOfMemoryException&)
     {
