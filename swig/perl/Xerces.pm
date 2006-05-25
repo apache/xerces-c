@@ -1262,7 +1262,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *File_CouldNotGetBasePathName = *XML::Xercesc::XMLExcepts_File_CouldNotGetBasePathName;
 *File_BasePathUnderflow = *XML::Xercesc::XMLExcepts_File_BasePathUnderflow;
 *Gen_ParseInProgress = *XML::Xercesc::XMLExcepts_Gen_ParseInProgress;
-*Gen_ParsingAborted = *XML::Xercesc::XMLExcepts_Gen_ParsingAborted;
 *Gen_NoDTDValidator = *XML::Xercesc::XMLExcepts_Gen_NoDTDValidator;
 *Gen_CouldNotOpenDTD = *XML::Xercesc::XMLExcepts_Gen_CouldNotOpenDTD;
 *Gen_CouldNotOpenExtEntity = *XML::Xercesc::XMLExcepts_Gen_CouldNotOpenExtEntity;
@@ -3411,6 +3410,12 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_DOMException(@_);
+    bless $self, $pkg if defined($self);
+}
+
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
@@ -4347,6 +4352,12 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 %ITERATORS = ();
 *BAD_BOUNDARYPOINTS_ERR = *XML::Xercesc::DOMRangeException_BAD_BOUNDARYPOINTS_ERR;
 *INVALID_NODE_TYPE_ERR = *XML::Xercesc::DOMRangeException_INVALID_NODE_TYPE_ERR;
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_DOMRangeException(@_);
+    bless $self, $pkg if defined($self);
+}
+
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});

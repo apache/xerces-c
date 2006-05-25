@@ -2514,6 +2514,22 @@ SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
     }
 
 
+SWIGINTERN int
+SWIG_AsVal_short SWIG_PERL_DECL_ARGS_2(SV * obj, short *val)
+{
+  long v;
+  int res = SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < SHRT_MIN || v > SHRT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< short >(v);
+    }
+  }  
+  return res;
+}
+
+
 SWIGINTERNINLINE SV *
 SWIG_From_short  SWIG_PERL_DECL_ARGS_1(short value)
 {    
@@ -2554,22 +2570,6 @@ SWIG_AsVal_unsigned_SS_short SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned short *val
       return SWIG_OverflowError;
     } else {
       if (val) *val = static_cast< unsigned short >(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_short SWIG_PERL_DECL_ARGS_2(SV * obj, short *val)
-{
-  long v;
-  int res = SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < SHRT_MIN || v > SHRT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< short >(v);
     }
   }  
   return res;
@@ -29886,6 +29886,255 @@ XS(_wrap_MemBufInputSource_resetMemBufInputSource) {
 }
 
 
+XS(_wrap_new_DOMException__SWIG_0) {
+  {
+    short arg1 ;
+    short arg2 ;
+    XERCES_CPP_NAMESPACE::MemoryManager *arg3 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
+    XERCES_CPP_NAMESPACE::DOMException *result = 0 ;
+    short val1 ;
+    int ecode1 = 0 ;
+    short val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: new_DOMException(code,messageCode,memoryManager);");
+    }
+    ecode1 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DOMException" "', argument " "1"" of type '" "short""'");
+    } 
+    arg1 = static_cast< short >(val1);
+    ecode2 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DOMException" "', argument " "2"" of type '" "short""'");
+    } 
+    arg2 = static_cast< short >(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_DOMException" "', argument " "3"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
+    }
+    arg3 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp3);
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::DOMException *)new XERCES_CPP_NAMESPACE::DOMException(arg1,arg2,arg3);
+      } 
+      CATCH_DOM_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_DOMException__SWIG_1) {
+  {
+    short arg1 ;
+    short arg2 ;
+    XERCES_CPP_NAMESPACE::DOMException *result = 0 ;
+    short val1 ;
+    int ecode1 = 0 ;
+    short val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: new_DOMException(code,messageCode);");
+    }
+    ecode1 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DOMException" "', argument " "1"" of type '" "short""'");
+    } 
+    arg1 = static_cast< short >(val1);
+    ecode2 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DOMException" "', argument " "2"" of type '" "short""'");
+    } 
+    arg2 = static_cast< short >(val2);
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::DOMException *)new XERCES_CPP_NAMESPACE::DOMException(arg1,arg2);
+      } 
+      CATCH_DOM_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_DOMException__SWIG_2) {
+  {
+    short arg1 ;
+    XERCES_CPP_NAMESPACE::DOMException *result = 0 ;
+    short val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: new_DOMException(code);");
+    }
+    ecode1 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DOMException" "', argument " "1"" of type '" "short""'");
+    } 
+    arg1 = static_cast< short >(val1);
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::DOMException *)new XERCES_CPP_NAMESPACE::DOMException(arg1);
+      } 
+      CATCH_DOM_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_DOMException) {
+  dXSARGS;
+  
+  {
+    unsigned long _index = 0;
+    SWIG_TypeRank _rank = 0; 
+    if (items == 1) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        {
+          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_1;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 1;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_1:
+    
+    if (items == 2) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        {
+          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_2;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(1), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_2;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 2;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_2:
+    
+    if (items == 3) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        {
+          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(0), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        {
+          int res = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(1), NULL);
+          _v = SWIG_CheckState(res);
+        }
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 3;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_3:
+    
+  dispatch:
+    switch(_index) {
+    case 1:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_DOMException__SWIG_2); return;
+    case 2:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_DOMException__SWIG_1); return;
+    case 3:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_DOMException__SWIG_0); return;
+    }
+  }
+  
+  croak("No matching function for overloaded 'new_DOMException'");
+  XSRETURN(0);
+}
+
+
 XS(_wrap_delete_DOMException) {
   {
     XERCES_CPP_NAMESPACE::DOMException *arg1 = (XERCES_CPP_NAMESPACE::DOMException *) 0 ;
@@ -37030,6 +37279,60 @@ XS(_wrap_DOMRange_release) {
     
     XSRETURN(argvi);
   fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_DOMRangeException) {
+  {
+    XERCES_CPP_NAMESPACE::DOMRangeException::RangeExceptionCode arg1 ;
+    short arg2 ;
+    XERCES_CPP_NAMESPACE::MemoryManager *arg3 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
+    XERCES_CPP_NAMESPACE::DOMRangeException *result = 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    short val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: new_DOMRangeException(code,messageCode,memoryManager);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DOMRangeException" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::DOMRangeException::RangeExceptionCode""'");
+    } 
+    arg1 = static_cast< XERCES_CPP_NAMESPACE::DOMRangeException::RangeExceptionCode >(val1);
+    ecode2 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DOMRangeException" "', argument " "2"" of type '" "short""'");
+    } 
+    arg2 = static_cast< short >(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_DOMRangeException" "', argument " "3"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
+    }
+    arg3 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp3);
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::DOMRangeException *)new XERCES_CPP_NAMESPACE::DOMRangeException(arg1,arg2,arg3);
+      } 
+      CATCH_DOM_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMRangeException, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
     
     SWIG_croak_null();
   }
@@ -67407,6 +67710,7 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::MemBufInputSource_makeStream", _wrap_MemBufInputSource_makeStream},
 {"XML::Xercesc::MemBufInputSource_setCopyBufToStream", _wrap_MemBufInputSource_setCopyBufToStream},
 {"XML::Xercesc::MemBufInputSource_resetMemBufInputSource", _wrap_MemBufInputSource_resetMemBufInputSource},
+{"XML::Xercesc::new_DOMException", _wrap_new_DOMException},
 {"XML::Xercesc::delete_DOMException", _wrap_delete_DOMException},
 {"XML::Xercesc::DOMException_getMessage", _wrap_DOMException_getMessage},
 {"XML::Xercesc::DOMException_code_set", _wrap_DOMException_code_set},
@@ -67576,6 +67880,7 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::DOMRange_toString", _wrap_DOMRange_toString},
 {"XML::Xercesc::DOMRange_detach", _wrap_DOMRange_detach},
 {"XML::Xercesc::DOMRange_release", _wrap_DOMRange_release},
+{"XML::Xercesc::new_DOMRangeException", _wrap_new_DOMRangeException},
 {"XML::Xercesc::delete_DOMRangeException", _wrap_delete_DOMRangeException},
 {"XML::Xercesc::DOMRangeException_code_set", _wrap_DOMRangeException_code_set},
 {"XML::Xercesc::DOMRangeException_code_get", _wrap_DOMRangeException_code_get},
@@ -68614,11 +68919,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Gen_ParseInProgress", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Gen_ParseInProgress)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Gen_ParsingAborted", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Gen_ParsingAborted)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
