@@ -53,7 +53,7 @@ manipulating, and validating XML documents.
 %build
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT
-./configure --prefix=%{prefix}
+CXXFLAGS=-O2 ./configure --prefix=%{prefix}
 make
 
 %install
@@ -61,6 +61,7 @@ export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT
 make prefix=$RPM_BUILD_ROOT%{prefix} libdir=$RPM_BUILD_ROOT%{prefix}/%{_lib} install
 ln -sf %{prefix}/%{_lib}/libxerces-3.0.so $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.so
+rm -f $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces.la
 mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
 cp -a $XERCESCROOT/samples/src $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
 cp -a $XERCESCROOT/samples/data $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
@@ -78,6 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(755,root,root)
 %{prefix}/bin/*
 %{prefix}/%{_lib}/libxerces*.so
+%{prefix}/%{_lib}/libxerces*.a
 
 %files devel
 %defattr(-,root,root)
