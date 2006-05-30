@@ -694,8 +694,8 @@ startElement(   const   XMLElementDecl&         elemDecl
 
     if (fDocHandler)
     {
-        const XMLCh* const elemQName =
-            elemDecl.getFullName();
+        QName element(elemPrefix, elemDecl.getBaseName(), elemURLId, fMemoryManager);
+        const XMLCh* const elemQName = element.getRawName();
 
         if (getDoNamespaces())
         {
@@ -814,6 +814,9 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                             , const bool            isRoot
                             , const XMLCh* const    elemPrefix)
 {
+    QName element(elemPrefix, elemDecl.getBaseName(), uriId, fMemoryManager);
+    const XMLCh* const elemQName = element.getRawName();
+
     // Just map to the SAX document handler
     if (fDocHandler)
     {
@@ -825,7 +828,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
             (
                 fScanner->getURIText(uriId)
                 , elemDecl.getBaseName()
-                , elemDecl.getFullName()
+                , elemQName
             );
 
             unsigned int numPrefix = fPrefixCounts->pop();
@@ -837,9 +840,12 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
         }
         else
         {
-            fDocHandler->endElement(XMLUni::fgZeroLenString,
-            elemDecl.getBaseName(),
-            elemDecl.getFullName() );
+            fDocHandler->endElement
+            (
+                XMLUni::fgZeroLenString,
+                elemDecl.getBaseName(),
+                elemQName 
+            );
         }
     }
 
