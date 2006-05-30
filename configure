@@ -26091,15 +26091,21 @@ _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-"__SUNPRO_CC=" __SUNPRO_CC
+__SUNPRO_C
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "^__SUNPRO_CC=0x580" >/dev/null 2>&1; then
-  COMPILER="SUNPRO" echo "$as_me:$LINENO: result: yes" >&5
+  $EGREP "0x580" >/dev/null 2>&1; then
+
+	 COMPILER="SUNPRO"
+	 echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
+
 else
-  COMPILER="" echo "$as_me:$LINENO: result: no" >&5
+
+	 COMPILER=""
+	 echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
+
 
 fi
 rm -f conftest*

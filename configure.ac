@@ -134,9 +134,15 @@ AS_IF([test x$ac_cv_header_inttypes_h = xyes],
 	AC_DEFINE([XERCES_HAVE_INTTYPES_H],    1, [Define to 1 if we have inttypes.h]))
 
 AC_MSG_CHECKING([whether we are using SunPro 5.8 compiler])
-AC_EGREP_CPP([^__SUNPRO_CC=0x580], ["__SUNPRO_CC=" __SUNPRO_CC],
-	[COMPILER="SUNPRO" AC_MSG_RESULT([yes])],
-	[COMPILER="" AC_MSG_RESULT([no])]
+AC_EGREP_CPP([0x580], [__SUNPRO_C],
+	[
+	 COMPILER="SUNPRO"
+	 AC_MSG_RESULT([yes])
+	],
+	[
+	 COMPILER=""
+	 AC_MSG_RESULT([no])
+	]
 	)
 
 case $host in
