@@ -2534,11 +2534,6 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                     gotLeadingSurrogate = false;
                     continue;
                 }
-                else
-                {
-                    if (escaped && !fElemStack.isEmpty())
-                        fElemStack.setReferenceEscaped();
-                }
             }
             else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
             {
@@ -2904,6 +2899,11 @@ void DGXMLScanner::scanCharData(XMLBuffer& toUse)
                     {
                         gotLeadingSurrogate = false;
                         continue;
+                    }
+                    else
+                    {
+                        if (escaped && !fElemStack.isEmpty())
+                            fElemStack.setReferenceEscaped();
                     }
                 }
                 else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
