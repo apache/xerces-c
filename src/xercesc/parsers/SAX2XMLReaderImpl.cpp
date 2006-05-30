@@ -693,7 +693,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 
     if (fDocHandler)
     {
-        QName element(elemPrefix, elemDecl.getBaseName(), elemURLId, fMemoryManager);
+        QName element(elemPrefix?elemPrefix:XMLUni::fgZeroLenString, elemDecl.getBaseName(), elemURLId, fMemoryManager);
         const XMLCh* const elemQName = element.getRawName();
 
         if (getDoNamespaces())
@@ -813,7 +813,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                             , const bool            isRoot
                             , const XMLCh* const    elemPrefix)
 {
-    QName element(elemPrefix, elemDecl.getBaseName(), uriId, fMemoryManager);
+    QName element(elemPrefix?elemPrefix:XMLUni::fgZeroLenString, elemDecl.getBaseName(), uriId, fMemoryManager);
     const XMLCh* const elemQName = element.getRawName();
 
     // Just map to the SAX document handler
