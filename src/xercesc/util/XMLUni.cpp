@@ -1620,6 +1620,23 @@ const XMLCh XMLUni::fgDOMXMLDeclaration[] =
     chLatin_n, chNull 
 };
 
+//Xerces: http://apache.org/xml/features/pretty-print/space-first-level-elements
+const XMLCh XMLUni::fgDOMWRTXercesPrettyPrint[] = 
+{
+    chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash,
+    chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h,
+    chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
+    chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e,
+    chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s,
+    chForwardSlash, chLatin_p, chLatin_r, chLatin_e, chLatin_t, chLatin_t, 
+    chLatin_y, chDash, chLatin_p, chLatin_r, chLatin_i, chLatin_n, chLatin_t, 
+    chForwardSlash, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e, 
+    chDash, chLatin_f, chLatin_i, chLatin_r, chLatin_s, chLatin_t, chDash,
+    chLatin_l, chLatin_e, chLatin_v, chLatin_e, chLatin_l, chDash,
+    chLatin_e, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, 
+    chLatin_t, chLatin_s, chNull
+};
+
 const XMLCh XMLUni::fgXercescInterfacePSVITypeInfo[] =
 {
     chLatin_D, chLatin_O, chLatin_M, chLatin_P, chLatin_S, chLatin_V, chLatin_I,

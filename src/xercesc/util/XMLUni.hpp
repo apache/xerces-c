@@ -277,6 +277,7 @@ public :
     static const XMLCh fgDOMWRTWhitespaceInElementContent[];
     static const XMLCh fgDOMWRTBOM[];
     static const XMLCh fgDOMXMLDeclaration[];
+    static const XMLCh fgDOMWRTXercesPrettyPrint[];
 
     // Private interface names
     static const XMLCh fgXercescInterfacePSVITypeInfo[];

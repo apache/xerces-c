@@ -135,7 +135,7 @@ protected:
     void                          setURCharRef();
 
 
-    void printIndent(int level) const;
+    void printIndent(int level);
     //does the actual work for processNode while keeping track of the level
     void processNode(const DOMNode* const nodeToWrite, int level);
 
@@ -198,6 +198,8 @@ protected:
     XMLFormatter                 *fFormatter;
     int                           fErrorCount;
     int                           fCurrentLine;
+    bool                          fLineFeedInTextNodePrinted;
+    int                           fLastWhiteSpaceInTextNode;
 
     RefVectorOf< RefHashTableOf<XMLCh> >* fNamespaceStack;
     MemoryManager*               fMemoryManager;

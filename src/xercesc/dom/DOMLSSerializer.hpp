@@ -233,9 +233,30 @@
  * <dd>[required]
  * (default) Don't pretty-print the result. </dd>
  * </dl></dd>
+ * <dt><code>"http://apache.org/xml/features/dom/byte-order-mark"</code></dt>
+ * <dd>
+ * <dl>
+ * <dt><code>false</code></dt>
+ * <dd>[optional]
+ * (default) Setting this feature to true will output the correct BOM for the specified
+ * encoding. </dd>
+ * <dt><code>true</code></dt>
+ * <dd>[required]
+ * Don't generate a BOM. </dd>
+ * </dl></dd>
+ * <dt><code>"http://apache.org/xml/features/pretty-print/space-first-level-elements"</code></dt>
+ * <dd>
+ * <dl>
+ * <dt><code>true</code></dt>
+ * <dd>[optional]
+ * (default) Setting this feature to true will add an extra line feed between the elements
+ * that are children of the document root. </dd>
+ * <dt><code>false</code></dt>
+ * <dd>[required]
+ * Don't add the extra line feed. </dd>
+ * </dl></dd>
  * </dl>
- * <p>See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409'>Document Object Model (DOM) Level 3 Abstract Schemas and Load
- * and Save Specification</a>.
+ * <p>See also the <a href='http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407'>Document Object Model (DOM) Level 3 Load and Save Specification</a>.
  *
  * @since DOM Level 3
  */

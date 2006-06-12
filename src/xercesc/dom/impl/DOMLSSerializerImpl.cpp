@@ -55,7 +55,8 @@ static const int SPLIT_CDATA_SECTIONS_ID          = 0x5;
 static const int VALIDATION_ID                    = 0x6;
 static const int WHITESPACE_IN_ELEMENT_CONTENT_ID = 0x7;
 static const int BYTE_ORDER_MARK_ID               = 0x8;
-static const int XML_DECLARATION                 = 0x9;
+static const int XML_DECLARATION                  = 0x9;
+static const int FORMAT_PRETTY_PRINT_1ST_LEVEL_ID = 0xA;
 
 //    feature                      true                       false
 // ================================================================================
@@ -83,8 +84,9 @@ static const bool  featuresSupported[] = {
     true,  true,  // split-cdata-sections
     false, true,  // validation
     true,  false, // whitespace-in-element-content
-    true,  true,   // byte-order-mark
-    true,  true   // xml-declaration
+    true,  true,  // http://apache.org/xml/features/dom/byte-order-mark
+    true,  true,  // xml-declaration
+    true,  true   // http://apache.org/xml/features/pretty-print/space-first-level-elements
 };
 
 // default end-of-line sequence
@@ -225,9 +227,6 @@ static const XMLByte  BOM_utf16le[] = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte) 0
 static const XMLByte  BOM_ucs4be[]  = {(XMLByte)0x00, (XMLByte)0x00, (XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
 static const XMLByte  BOM_ucs4le[]  = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte)0x00, (XMLByte)0x00, (XMLByte) 0};
 
-static bool lineFeedInTextNodePrinted = false;
-static int  lastWhiteSpaceInTextNode = 0;
-
 //
 // Notification of the error though error handler
 //
@@ -275,6 +274,8 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 ,fFormatter(0)
 ,fErrorCount(0)
 ,fCurrentLine(0)
+,fLineFeedInTextNodePrinted(false)
+,fLastWhiteSpaceInTextNode(0)
 ,fNamespaceStack(0)
 ,fMemoryManager(manager)
 {
@@ -293,8 +294,9 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
     setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
     setFeature(BYTE_ORDER_MARK_ID,               false);
     setFeature(XML_DECLARATION,                  true );
+    setFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID, true );
 
-    fSupportedParameters=new (fMemoryManager) DOMStringListImpl(11, fMemoryManager);
+    fSupportedParameters=new (fMemoryManager) DOMStringListImpl(12, fMemoryManager);
     fSupportedParameters->add(XMLUni::fgDOMErrorHandler);
     fSupportedParameters->add(XMLUni::fgDOMWRTCanonicalForm);
     fSupportedParameters->add(XMLUni::fgDOMWRTDiscardDefaultContent);
@@ -306,6 +308,7 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
     fSupportedParameters->add(XMLUni::fgDOMWRTWhitespaceInElementContent);
     fSupportedParameters->add(XMLUni::fgDOMWRTBOM);
     fSupportedParameters->add(XMLUni::fgDOMXMLDeclaration);
+    fSupportedParameters->add(XMLUni::fgDOMWRTXercesPrettyPrint);
 }
 
 bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
@@ -350,6 +353,7 @@ void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
     if ((featureId == CANONICAL_FORM_ID) && state)
     {
         setFeature(FORMAT_PRETTY_PRINT_ID, false);
+        setFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID, false);
         setFeature(DISCARD_DEFAULT_CONTENT_ID, false);
         setFeature(XML_DECLARATION, false);
     }
@@ -483,6 +487,9 @@ bool DOMLSSerializerImpl::write(const DOMNode* nodeToWrite,
     fDocumentVersion = (docu && docu->getXmlVersion() && *(docu->getXmlVersion()))?docu->getXmlVersion():XMLUni::fgVersion1_0;
 
     fErrorCount = 0;
+
+    fLineFeedInTextNodePrinted = false;
+    fLastWhiteSpaceInTextNode = 0;
 
     try
     {
@@ -638,8 +645,8 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
 
             if (getFeature(FORMAT_PRETTY_PRINT_ID))
             {
-                lineFeedInTextNodePrinted = false;
-                lastWhiteSpaceInTextNode = 0;
+                fLineFeedInTextNodePrinted = false;
+                fLastWhiteSpaceInTextNode = 0;
 
                 if(XMLString::isAllWhiteSpace(nodeValue))
                 {
@@ -659,8 +666,8 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                         int pos = XMLString::lastIndexOf(nodeValue, chLF);
                         if (-1 != pos)
                         {
-                            lineFeedInTextNodePrinted = true;
-                            lastWhiteSpaceInTextNode = lent - pos;
+                            fLineFeedInTextNodePrinted = true;
+                            fLastWhiteSpaceInTextNode = lent - pos;
                         }
                         else
                         {
@@ -669,8 +676,8 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                             pos = XMLString::lastIndexOf(nodeValue, chCR);
                             if (-1 != pos)
                             {
-                                lineFeedInTextNodePrinted = true;
-                                lastWhiteSpaceInTextNode = lent - pos;
+                                fLineFeedInTextNodePrinted = true;
+                                fLastWhiteSpaceInTextNode = lent - pos;
                             }
                         }
                     }
@@ -687,7 +694,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-            if(level == 1)
+            if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
                 printNewLine();
 
             printNewLine();
@@ -763,16 +770,16 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if ( filterAction == DOMNodeFilter::FILTER_REJECT)
                 break;
 
-            if (!lineFeedInTextNodePrinted)
+            if (!fLineFeedInTextNodePrinted)
             {
-                if(level == 1)
+                if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
                     printNewLine();
 
                 printNewLine();
             }
             else
             {
-                lineFeedInTextNodePrinted = false;
+                fLineFeedInTextNodePrinted = false;
             }
 
             printIndent(level);
@@ -988,16 +995,16 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     //this node then print a new line and indent
                     if(nodeLine != fCurrentLine)
                     {
-                        if (!lineFeedInTextNodePrinted)
+                        if (!fLineFeedInTextNodePrinted)
                         {
                             printNewLine();
                         }
                         else
                         {
-                            lineFeedInTextNodePrinted = false;
+                            fLineFeedInTextNodePrinted = false;
                         }
 
-                        if(nodeLine != fCurrentLine && level == 0)
+                        if(nodeLine != fCurrentLine && level == 0 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
                             printNewLine();
 
                         printIndent(level);
@@ -1131,7 +1138,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-            if(level == 1)
+            if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
                 printNewLine();
 
             printNewLine();
@@ -1166,7 +1173,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-            if(level == 1)
+            if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
                 printNewLine();
 
             printNewLine();
@@ -1340,6 +1347,8 @@ bool DOMLSSerializerImpl::checkFeature(const XMLCh* const featName
         featureId = BYTE_ORDER_MARK_ID;
     else if (XMLString::equals(featName, XMLUni::fgDOMXMLDeclaration))
         featureId = XML_DECLARATION;
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTXercesPrettyPrint))
+        featureId = FORMAT_PRETTY_PRINT_1ST_LEVEL_ID;
 
 
     //feature name not resolvable
@@ -1596,15 +1605,15 @@ void DOMLSSerializerImpl::printNewLine()
     }
 }
 
-void DOMLSSerializerImpl::printIndent(int level) const
+void DOMLSSerializerImpl::printIndent(int level)
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
     {
-        if (lastWhiteSpaceInTextNode)
+        if (fLastWhiteSpaceInTextNode)
         {
-            level -= lastWhiteSpaceInTextNode/2; // two chSpaces equals one indent level
-            lastWhiteSpaceInTextNode = 0;
-            // if lastWhiteSpaceInTextNode/2 is greater than level, then
+            level -= fLastWhiteSpaceInTextNode/2; // two chSpaces equals one indent level
+            fLastWhiteSpaceInTextNode = 0;
+            // if fLastWhiteSpaceInTextNode/2 is greater than level, then
             // it means too many spaces have been written to the
             // output stream and we can no longer indent properly
         }
