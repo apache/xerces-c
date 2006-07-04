@@ -244,9 +244,9 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
     for ( ; *src; ++len)
     {
 #if HAVE_MBRLEN
-        int l=::mblen( src, MB_CUR_MAX );
-#else
         int l=::mbrlen( src, MB_CUR_MAX, &st );
+#else
+        int l=::mblen( src, MB_CUR_MAX );
 #endif
         if( l == TRANSCODING_ERROR ) 
             return 0;
