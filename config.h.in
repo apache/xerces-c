@@ -99,6 +99,12 @@
 /* Define to 1 if you have the `mblen' function. */
 #undef HAVE_MBLEN
 
+/* Define to 1 if you have the `mbrlen' function. */
+#undef HAVE_MBRLEN
+
+/* Define to 1 if you have the `mbsrtowcs' function. */
+#undef HAVE_MBSRTOWCS
+
 /* Define to 1 if you have the `mbstowcs' function. */
 #undef HAVE_MBSTOWCS
 
@@ -227,6 +233,9 @@
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
+
+/* Define to 1 if you have the `wcsrtombs' function. */
+#undef HAVE_WCSRTOMBS
 
 /* Define to 1 if you have the `wcstombs' function. */
 #undef HAVE_WCSTOMBS

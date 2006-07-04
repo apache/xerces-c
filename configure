@@ -23729,11 +23729,15 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
+
+
 for ac_func in clock_gettime ftime getcwd gethostbyaddr gethostbyname gettimeofday localeconv \
 				mblen memmove memset nl_langinfo pathconf realpath setlocale socket \
 				strcasecmp strncasecmp stricmp strnicmp strchr strdup \
 				strrchr strstr strtol strtoul \
 				towupper towlower iswspace \
+				mbrlen wcsrtombs mbsrtowcs \
 
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
