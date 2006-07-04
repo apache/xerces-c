@@ -95,6 +95,7 @@ AC_CHECK_FUNCS([clock_gettime ftime getcwd gethostbyaddr gethostbyname gettimeof
 				strcasecmp strncasecmp stricmp strnicmp strchr strdup \
 				strrchr strstr strtol strtoul \
 				towupper towlower iswspace \
+				mbrlen wcsrtombs mbsrtowcs \
 				])
 				
 AC_SUBST([SHREXT], [$shrext_cmds])

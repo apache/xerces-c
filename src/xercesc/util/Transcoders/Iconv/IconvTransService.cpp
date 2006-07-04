@@ -66,6 +66,10 @@ static const XMLCh  gMyServiceId[] =
     chLatin_I, chLatin_C, chLatin_o, chLatin_n, chLatin_v, chNull
 };
 
+// ---------------------------------------------------------------------------
+// the following is defined by 'man mbrtowc':
+// ---------------------------------------------------------------------------
+static const size_t TRANSCODING_ERROR = (size_t)(-1);
 
 // ---------------------------------------------------------------------------
 //  Local methods
@@ -231,14 +235,22 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
     if (!srcText)
         return 0;
 
-    unsigned int len=0;
-    unsigned int size=strlen(srcText);
-    for( unsigned int i = 0; i < size; ++len )
+    unsigned int len = 0;
+    const char *src = srcText;
+#if HAVE_MBRLEN
+    mbstate_t st;
+    memset(&st, 0, sizeof(st));
+#endif
+    for ( ; *src; ++len)
     {
-        unsigned int retVal=::mblen( &srcText[i], MB_CUR_MAX );
-        if( -1 == retVal ) 
+#if HAVE_MBRLEN
+        int l=::mblen( src, MB_CUR_MAX );
+#else
+        int l=::mbrlen( src, MB_CUR_MAX, &st );
+#endif
+        if( l == TRANSCODING_ERROR ) 
             return 0;
-        i += retVal;
+        src += l;
     }
     return len;
 }
@@ -388,13 +400,14 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
 }
 
 
-static void reallocString(char *&ref, size_t &size, MemoryManager* const manager, bool releaseOld)
+template <typename T>
+void reallocString(T *&ref, size_t &size, MemoryManager* const manager, bool releaseOld)
 {
-	char *tmp = (char*)manager->allocate(2 * size * sizeof(char));
-	memcpy(tmp, ref, size * sizeof(char));
-	if (releaseOld) manager->deallocate(ref);
-	ref = tmp;
-	size *= 2;
+    T *tmp = (T*)manager->allocate(2 * size * sizeof(T));
+    memcpy(tmp, ref, size * sizeof(T));
+    if (releaseOld) manager->deallocate(ref);
+    ref = tmp;
+    size *= 2;
 }
 
 
@@ -403,46 +416,74 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode,
 {
     if (!toTranscode)
         return 0;
+    size_t srcCursor = 0, dstCursor = 0;
+    size_t resultSize = gTempBuffArraySize;
+    char localBuffer[gTempBuffArraySize];
+    char* resultString = localBuffer;
+    
+#if HAVE_WCSRTOMBS
+    mbstate_t st;
+    memset(&st, 0, sizeof(st));
+    wchar_t srcBuffer[gTempBuffArraySize];
+    srcBuffer[gTempBuffArraySize - 1] = 0;
+    const wchar_t *src = 0;
 
-	size_t resultSize = gTempBuffArraySize;
-	size_t srcCursor = 0, dstCursor = 0;
-	char localBuffer[gTempBuffArraySize];
-	char* resultString = localBuffer;
+    while (toTranscode[srcCursor] || src)
+    {
+        if (src == 0) // copy a piece of the source string into a local
+                      // buffer, converted to wchar_t and NULL-terminated.
+                      // after that, src points to the beginning of the
+                      // local buffer and is used for the call to ::wcsrtombs
+        {
+            size_t i;
+            for (i=0; i<gTempBuffArraySize-1; ++i)
+            {
+                srcBuffer[i] = toTranscode[srcCursor];
+                if (srcBuffer[i] == '\0')
+                    break;
+                ++srcCursor;
+            }
+            src = srcBuffer;
+        }
 
-	while (toTranscode[srcCursor])
-	{
-		char mbBuf[MB_CUR_MAX];
-		int len = wctomb(mbBuf, toTranscode[srcCursor++]), j;
-		if (len < 0)
-		{
-			dstCursor = 0;
-			break;
-		}
-		if (dstCursor + len >= resultSize - 1)
-			reallocString(resultString, resultSize, manager, resultString != localBuffer);
-		for (j=0; j<len; ++j)
-			resultString[dstCursor++] = mbBuf[j];
-	}
+        size_t len = ::wcsrtombs(resultString + dstCursor, &src, resultSize - dstCursor, &st);
+        if (len == TRANSCODING_ERROR)
+        {
+            dstCursor = 0;
+            break;
+        }
+        dstCursor += len;
+        if (src != 0) // conversion not finished. This *always* means there
+                      // was not enough room in the destination buffer.
+        {
+            reallocString<char>(resultString, resultSize, manager, resultString != localBuffer);
+        }
+    }
+#else
+    while (toTranscode[srcCursor])
+    {
+        char mbBuf[16]; // MB_CUR_MAX is not defined as a constant on some platforms
+        int len = wctomb(mbBuf, toTranscode[srcCursor++]);
+        if (len < 0)
+        {
+            dstCursor = 0;
+            break;
+        }
+        if (dstCursor + len >= resultSize - 1)
+            reallocString<char>(resultString, resultSize, manager, resultString != localBuffer);
+        for (int j=0; j<len; ++j)
+            resultString[dstCursor++] = mbBuf[j];
+    }
+#endif
 
-	if (resultString == localBuffer)
-	{
-		resultString = (char*)manager->allocate((dstCursor + 1) * sizeof(char));
-		memcpy(resultString, localBuffer, dstCursor * sizeof(char));
-	}
+    if (resultString == localBuffer)
+    {
+        resultString = (char*)manager->allocate((dstCursor + 1) * sizeof(char));
+        memcpy(resultString, localBuffer, dstCursor * sizeof(char));
+    }
 
-	resultString[dstCursor] = '\0';
-	return resultString;
-}
-
-
-
-static void reallocXMLString(XMLCh *&ref, size_t &size, MemoryManager* const manager, bool releaseOld)
-{
-	XMLCh *tmp = (XMLCh*)manager->allocate(2 * size * sizeof(XMLCh));
-	memcpy(tmp, ref, size * sizeof(XMLCh));
-	if (releaseOld) manager->deallocate(ref);
-	ref = tmp;
-	size *= 2;
+    resultString[dstCursor] = '\0';
+    return resultString;
 }
 
 XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
@@ -450,35 +491,68 @@ XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
 {
     if (!toTranscode)
         return 0;
-	XMLCh localBuffer[gTempBuffArraySize];
-	XMLCh* resultString = localBuffer;
-	size_t resultSize = gTempBuffArraySize;
-	size_t srcCursor = 0, dstCursor = 0, srcLen = strlen(toTranscode);
+    size_t resultSize = gTempBuffArraySize;
+    size_t srcCursor = 0, dstCursor = 0;
 
-	for ( ;; )
-	{
-		wchar_t wcBuf[1];
-		int len = mbtowc(wcBuf, toTranscode + srcCursor, srcLen - srcCursor);
-		if (len <= 0)
-		{
-			if (len < 0)
-				dstCursor = 0;
-			break;
-		}
-		srcCursor += len;
-		if (dstCursor + 1 >= resultSize - 1)
-			reallocXMLString(resultString, resultSize, manager, resultString != localBuffer);
-		resultString[dstCursor++] = wcBuf[0];
-	}
+#if HAVE_MBSRTOWCS
+    wchar_t localBuffer[gTempBuffArraySize];
+    wchar_t *tmpString = localBuffer;
 
-	if (resultString == localBuffer)
-	{
-		resultString = (XMLCh*)manager->allocate((dstCursor + 1) * sizeof(XMLCh));
-		memcpy(resultString, localBuffer, dstCursor * sizeof(XMLCh));
-	}
+    mbstate_t st;
+    memset(&st, 0, sizeof(st));
+    const char *src = toTranscode;
 
-	resultString[dstCursor] = L'\0';
-	return resultString;
+    while(true)
+    {
+        size_t len = ::mbsrtowcs(tmpString + dstCursor, &src, resultSize - dstCursor, &st);
+        if (len == TRANSCODING_ERROR)
+        {
+            dstCursor = 0;
+            break;
+        }
+        dstCursor += len;
+        if (src == 0) // conversion finished
+            break;
+        if (dstCursor >= resultSize - 1)
+            reallocString<wchar_t>(tmpString, resultSize, manager, tmpString != localBuffer);
+    }
+    // make a final copy, converting from wchar_t to XMLCh:
+    XMLCh* resultString = (XMLCh*)manager->allocate((dstCursor + 1) * sizeof(XMLCh));
+    size_t i;
+    for (i=0; i<dstCursor; ++i)
+        resultString[i] = tmpString[i];
+    if (tmpString != localBuffer) // did we allocate something?
+        manager->deallocate(tmpString);
+#else
+    XMLCh localBuffer[gTempBuffArraySize];
+    XMLCh* resultString = localBuffer;
+    size_t srcLen = strlen(toTranscode);
+
+    while(true)
+    {
+        wchar_t wcBuf[1];
+        int len = mbtowc(wcBuf, toTranscode + srcCursor, srcLen - srcCursor);
+        if (len <= 0)
+        {
+            if (len < 0)
+                dstCursor = 0;
+            break;
+        }
+        srcCursor += len;
+        if (dstCursor + 1 >= resultSize - 1)
+            reallocString<XMLCh>(resultString, resultSize, manager, resultString != localBuffer);
+        resultString[dstCursor++] = wcBuf[0];
+    }
+
+    if (resultString == localBuffer)
+    {
+        resultString = (XMLCh*)manager->allocate((dstCursor + 1) * sizeof(XMLCh));
+        memcpy(resultString, localBuffer, dstCursor * sizeof(XMLCh));
+    }
+#endif
+
+    resultString[dstCursor] = L'\0';
+    return resultString;
 }
 
 
