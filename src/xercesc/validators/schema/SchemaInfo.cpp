@@ -65,11 +65,16 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fMemoryManager(manager)
 {
     fImportingInfoList = new (fMemoryManager) RefVectorOf<SchemaInfo>(4, false, fMemoryManager);
-    for (unsigned int i = 0; i < C_Count; i++)
-    {
-        fTopLevelComponents[i] = 0;
-        fLastTopLevelComponent[i] = 0;
-    }
+
+	memset(
+         fTopLevelComponents,
+         0,
+         sizeof(fTopLevelComponents[0]) * C_Count);    
+    memset(
+         fLastTopLevelComponent,
+         0,
+         sizeof(fLastTopLevelComponent[0]) * C_Count);    
+    
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
 }
@@ -83,34 +88,18 @@ SchemaInfo::~SchemaInfo()
     if (fAdoptInclude)
         delete fIncludeInfoList;
 
-    delete fImportingInfoList;
-
-    fImportedInfoList = fIncludeInfoList = fImportingInfoList = 0;
-
+    delete fImportingInfoList;  
     delete fImportedNSList;
-    fImportedNSList = 0;
-
     delete fFailedRedefineList;
-    fFailedRedefineList = 0;
-
     delete fRecursingAnonTypes;
-    fRecursingAnonTypes = 0;
-
-    delete fRecursingTypeNames;
-    fRecursingTypeNames = 0;
+    delete fRecursingTypeNames;   
 
     for (unsigned int i = 0; i < C_Count; i++) {
-
         delete fTopLevelComponents[i];
-        fTopLevelComponents[i] = 0;
-        fLastTopLevelComponent[i] = 0;
     }
 
-    delete fNonXSAttList;
-    fNonXSAttList = 0;
-
-    delete fValidationContext;
-    fValidationContext = 0;
+    delete fNonXSAttList;  
+    delete fValidationContext;    
 }
 
 // ---------------------------------------------------------------------------

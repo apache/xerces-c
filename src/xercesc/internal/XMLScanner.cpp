@@ -772,9 +772,9 @@ void XMLScanner::commonInit()
 
     // create initial, 64-element, fUIntPool
     fUIntPool = (unsigned int **)fMemoryManager->allocate(sizeof(unsigned int *) *fUIntPoolRowTotal);
+    memset(fUIntPool, 0, sizeof(unsigned int *) * fUIntPoolRowTotal);
     fUIntPool[0] = (unsigned int *)fMemoryManager->allocate(sizeof(unsigned int) << 6);
-    memset(fUIntPool[0], 0, sizeof(unsigned int) << 6);
-    fUIntPool[1] = 0;
+    memset(fUIntPool[0], 0, sizeof(unsigned int) << 6);    
 
     // Register self as handler for XMLBufferFull events on the CDATA buffer
     fCDataBuf.setFullHandler(this, fBufferSize);
@@ -794,11 +794,14 @@ void XMLScanner::cleanUp()
     fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
     fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
     // delete fUIntPool
-    for (unsigned int i=0; i<=fUIntPoolRow; i++)
-    {
-        fMemoryManager->deallocate(fUIntPool[i]);
+    if (fUIntPool)
+    {    
+        for (unsigned int i=0; i<=fUIntPoolRow; i++)
+        {
+            fMemoryManager->deallocate(fUIntPool[i]);
+        }
+        fMemoryManager->deallocate(fUIntPool);
     }
-    fMemoryManager->deallocate(fUIntPool);
 }
 
 void XMLScanner::initValidator(XMLValidator* theValidator) {

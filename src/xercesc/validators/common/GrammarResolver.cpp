@@ -44,6 +44,7 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
 ,fGrammarPool(gramPool)
 ,fXSModel(0)
 ,fGrammarPoolXSModel(0)
+,fGrammarsToAddToXSModel(0)
 {
     fGrammarBucket = new (manager) RefHashTableOf<Grammar>(29, true,  manager);
 

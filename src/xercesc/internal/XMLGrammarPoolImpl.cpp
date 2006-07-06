@@ -38,6 +38,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 void XMLGrammarPoolImpl::createXSModel()
 {
     delete fXSModel;
+    fXSModel = 0;
     fXSModel = new (getMemoryManager()) XSModel(this, getMemoryManager());
     fXSModelIsValid = true; 
 }

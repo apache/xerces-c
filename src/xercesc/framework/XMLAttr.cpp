@@ -157,6 +157,7 @@ void XMLAttr::setValue(const XMLCh* const newValue)
     if (!fValueBufSz || (newLen > fValueBufSz))
     {
         fMemoryManager->deallocate(fValue); //delete [] fValue;
+        fValue = 0;
         fValueBufSz = newLen + 8;
         fValue = (XMLCh*) fMemoryManager->allocate((fValueBufSz+1) * sizeof(XMLCh)); //new XMLCh[fValueBufSz + 1];
     }

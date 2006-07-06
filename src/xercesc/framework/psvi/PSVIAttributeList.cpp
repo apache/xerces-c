@@ -26,6 +26,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):  
         fMemoryManager(manager)
+        , fAttrList(0)
+        , fAttrNameList(0)
+        , fAttrNSList(0)
         , fAttrPos(0)
 {
     fAttrList= new (fMemoryManager) RefVectorOf<PSVIAttribute> (10, true, fMemoryManager);

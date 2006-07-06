@@ -86,6 +86,7 @@ inline const XMLCh* StringToken::getString() const {
 inline void StringToken::setString(const XMLCh* const literal) {
 
 	fMemoryManager->deallocate(fString);//delete [] fString;
+    fString = 0;
 	fString = XMLString::replicate(literal, fMemoryManager);
 }
 

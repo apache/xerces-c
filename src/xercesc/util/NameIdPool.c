@@ -73,8 +73,7 @@ NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
     (
         fHashModulus * sizeof(NameIdPoolBucketElem<TElem>*)
     ); //new NameIdPoolBucketElem<TElem>*[fHashModulus];
-    for (unsigned int index = 0; index < fHashModulus; index++)
-        fBucketList[index] = 0;
+    memset(fBucketList, 0, sizeof(fBucketList[0]) * fHashModulus);
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
