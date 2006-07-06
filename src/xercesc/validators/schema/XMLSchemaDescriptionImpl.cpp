@@ -111,9 +111,11 @@ void XMLSchemaDescriptionImpl::setContextType(ContextType type)
 
 void XMLSchemaDescriptionImpl::setTargetNamespace(const XMLCh* const newNamespace)
 {  
-    if (fNamespace)
+    if (fNamespace) {
         XMLGrammarDescription::getMemoryManager()->deallocate((void*)fNamespace);
-                                
+        fNamespace = 0;
+    }
+    
     fNamespace = XMLString::replicate(newNamespace, XMLGrammarDescription::getMemoryManager()); 
 }
 
@@ -124,18 +126,22 @@ void XMLSchemaDescriptionImpl::setLocationHints(const XMLCh* const hint)
 
 void XMLSchemaDescriptionImpl::setTriggeringComponent(QName* const trigComponent)
 { 
-    if ( fTriggeringComponent)
+    if ( fTriggeringComponent) {
         delete fTriggeringComponent;
-                                
+        fTriggeringComponent = 0;
+    }
+    
     fTriggeringComponent = new (trigComponent->getMemoryManager()) QName(*trigComponent); 
 
 }
 
 void XMLSchemaDescriptionImpl::setEnclosingElementName(QName* const encElement)
 { 
-    if (fEnclosingElementName)
+    if (fEnclosingElementName) {
         delete fEnclosingElementName;
-                                 
+        fEnclosingElementName = 0; 
+    }
+
     fEnclosingElementName = new (encElement->getMemoryManager()) QName(*encElement); 
 
 }

@@ -142,8 +142,7 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const unsigned i
     (
         fHashModulus * sizeof(RefHash3KeysTableBucketElem<TVal>*)
     ); //new RefHash3KeysTableBucketElem<TVal>*[fHashModulus];
-    for (unsigned int index = 0; index < fHashModulus; index++)
-        fBucketList[index] = 0;
+    memset(fBucketList, 0, sizeof(fBucketList[0]) * fHashModulus);
 }
 
 template <class TVal> RefHash3KeysIdPool<TVal>::~RefHash3KeysIdPool()

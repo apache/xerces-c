@@ -1260,10 +1260,12 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
 
         if (fEncoding == XMLRecognizer::UTF_16L) {
             fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = 0;
             fEncodingStr = XMLString::replicate(XMLUni::fgUTF16LEncodingString, fMemoryManager);
         }
         else {
             fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = 0;
             fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString, fMemoryManager);
         }
     }
@@ -1285,11 +1287,13 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         if (fEncoding == XMLRecognizer::UCS_4L) {
 
             fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = 0;
             fEncodingStr = XMLString::replicate(XMLUni::fgUCS4LEncodingString, fMemoryManager);
         }
         else {
 
             fMemoryManager->deallocate(fEncodingStr);
+            fEncodingStr = 0;
             fEncodingStr = XMLString::replicate(XMLUni::fgUCS4BEncodingString, fMemoryManager);
         }
     }

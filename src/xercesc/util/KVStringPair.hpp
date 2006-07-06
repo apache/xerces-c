@@ -178,6 +178,7 @@ inline void KVStringPair::setKey(  const XMLCh* const newKey
     if (newKeyLength >= fKeyAllocSize)
     {
         fMemoryManager->deallocate(fKey); //delete [] fKey;
+        fKey = 0;
         fKeyAllocSize = newKeyLength + 1;
         fKey = (XMLCh*) fMemoryManager->allocate(fKeyAllocSize * sizeof(XMLCh)); //new XMLCh[fKeyAllocSize];
     }
@@ -191,6 +192,7 @@ inline void KVStringPair::setValue(  const XMLCh* const newValue
     if (newValueLength >= fValueAllocSize)
     {
         fMemoryManager->deallocate(fValue); //delete [] fValue;
+        fValue = 0;
         fValueAllocSize = newValueLength + 1;
         fValue = (XMLCh*) fMemoryManager->allocate(fValueAllocSize * sizeof(XMLCh)); //new XMLCh[fValueAllocSize];
     }

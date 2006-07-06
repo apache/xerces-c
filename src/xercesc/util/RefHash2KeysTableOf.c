@@ -97,8 +97,7 @@ void RefHash2KeysTableOf<TVal>::initialize(const unsigned int modulus)
     (
         fHashModulus * sizeof(RefHash2KeysTableBucketElem<TVal>*)
     ); //new RefHash2KeysTableBucketElem<TVal>*[fHashModulus];
-    for (unsigned int index = 0; index < fHashModulus; index++)
-        fBucketList[index] = 0;
+    memset(fBucketList, 0, sizeof(fBucketList[0]) * fHashModulus);
 }
 
 template <class TVal> RefHash2KeysTableOf<TVal>::~RefHash2KeysTableOf()

@@ -180,6 +180,7 @@ const XMLCh* QName::getRawName() const
             {
                 fMemoryManager->deallocate(fRawName); //delete [] fRawName;
 
+                ((QName*)this)->fRawName = 0;
                 // We have to cast off the const'ness to do this
                 ((QName*)this)->fRawNameBufSz = neededLen;
                 ((QName*)this)->fRawName = (XMLCh*) fMemoryManager->allocate
@@ -234,7 +235,8 @@ XMLCh* QName::getRawName()
             if (!fRawName || (neededLen > fRawNameBufSz))
             {
                 fMemoryManager->deallocate(fRawName); //delete [] fRawName;
-
+                
+                fRawName = 0;
                 // We have to cast off the const'ness to do this
                 ((QName*)this)->fRawNameBufSz = neededLen;
                 ((QName*)this)->fRawName = (XMLCh*) fMemoryManager->allocate
@@ -292,6 +294,7 @@ void QName::setName(const XMLCh* const    rawName
         if (!fRawNameBufSz || (newLen > fRawNameBufSz))
         {
             fMemoryManager->deallocate(fRawName); //delete [] fRawName;
+            fRawName = 0;
             fRawNameBufSz = newLen + 8;
             fRawName = (XMLCh*) fMemoryManager->allocate
             (
@@ -325,6 +328,7 @@ void QName::setPrefix(const XMLCh* prefix)
     if (!fPrefixBufSz || (newLen > fPrefixBufSz))
     {
         fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
+        fPrefix = 0;
         fPrefixBufSz = newLen + 8;
         fPrefix = (XMLCh*) fMemoryManager->allocate
         (
@@ -339,6 +343,7 @@ void QName::setNPrefix(const XMLCh* prefix, const unsigned int newLen)
     if (!fPrefixBufSz || (newLen > fPrefixBufSz))
     {
         fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
+        fPrefix = 0;
         fPrefixBufSz = newLen + 8;
         fPrefix = (XMLCh*) fMemoryManager->allocate
         (
@@ -357,6 +362,7 @@ void QName::setLocalPart(const XMLCh* localPart)
     if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
     {
         fMemoryManager->deallocate(fLocalPart); //delete [] fLocalPart;
+        fLocalPart = 0;
         fLocalPartBufSz = newLen + 8;
         fLocalPart = (XMLCh*) fMemoryManager->allocate
         (
@@ -371,6 +377,7 @@ void QName::setNLocalPart(const XMLCh* localPart, const unsigned int newLen)
     if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
     {
         fMemoryManager->deallocate(fLocalPart); //delete [] fLocalPart;
+        fLocalPart = 0;
         fLocalPartBufSz = newLen + 8;
         fLocalPart = (XMLCh*) fMemoryManager->allocate
         (

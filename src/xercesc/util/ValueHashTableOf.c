@@ -73,8 +73,7 @@ template <class TVal> void ValueHashTableOf<TVal>::initialize(const unsigned int
     (
         fHashModulus * sizeof(ValueHashTableBucketElem<TVal>*)
     ); //new ValueHashTableBucketElem<TVal>*[fHashModulus];
-    for (unsigned int index = 0; index < fHashModulus; index++)
-        fBucketList[index] = 0;
+    memset(fBucketList, 0, sizeof(fBucketList[0]) * fHashModulus);
 }
 
 template <class TVal> ValueHashTableOf<TVal>::~ValueHashTableOf()

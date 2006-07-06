@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/*
+ * $Id$
+ */
+
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -584,7 +588,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
                         ((XSDElementNSImpl*) elem)->getLineNo(),
-                        ((XSDElementNSImpl*) elem)->getColumnNo());    
+                        ((XSDElementNSImpl*) elem)->getColumnNo());      
     InputSource* srcToFill = resolveSchemaLocation(schemaLocation,
             XMLResourceIdentifier::SchemaInclude);
     Janitor<InputSource> janSrc(srcToFill);
@@ -778,9 +782,9 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
-	fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
+    fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
                         ((XSDElementNSImpl*) elem)->getLineNo(),
-                        ((XSDElementNSImpl*) elem)->getColumnNo());    
+                        ((XSDElementNSImpl*) elem)->getColumnNo());     
     InputSource* srcToFill = resolveSchemaLocation(schemaLocation,
             XMLResourceIdentifier::SchemaImport, nameSpace);
 
@@ -1560,10 +1564,11 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     Janitor<ContentSpecNode> specNode(0);
     XercesGroupInfo* saveGroupInfo = fCurrentGroupInfo;
 
-    Janitor<XercesGroupInfo>    newGroupInfo(new (fGrammarPoolMemoryManager) XercesGroupInfo(
+    Janitor<XercesGroupInfo>    newGroupInfoJan(new (fGrammarPoolMemoryManager) XercesGroupInfo(
         fStringPool->addOrFind(name), fTargetNSURI, fGrammarPoolMemoryManager));    
     fCurrentGroupStack->addElement(nameIndex);
-    fCurrentGroupInfo = newGroupInfo.get();    
+    XercesGroupInfo* const newGroupInfo = newGroupInfoJan.get();
+    fCurrentGroupInfo = newGroupInfo;    
 
     fCurrentScope = fScopeCount++;
     fCurrentGroupInfo->setScope(fCurrentScope);
@@ -1614,19 +1619,20 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
     fCurrentGroupInfo->setContentSpec(specNode.release());
     fGroupRegistry->put((void*) fullName, fCurrentGroupInfo);
+    newGroupInfoJan.release();
     fCurrentGroupInfo = saveGroupInfo;
     fCurrentScope = saveScope;
 
     // Store Annotation
     if (!janAnnot.isDataNull()) {
-        fSchemaGrammar->putAnnotation(newGroupInfo.get(), janAnnot.release());        
+        fSchemaGrammar->putAnnotation(newGroupInfo, janAnnot.release());        
     }
 
     if (fFullConstraintChecking) {
 
         XSDLocator* aLocator = new (fGrammarPoolMemoryManager) XSDLocator();
 
-        newGroupInfo.get()->setLocator(aLocator);        
+        newGroupInfo->setLocator(aLocator);        
         aLocator->setValues(fStringPool->getValueForId(fStringPool->addOrFind(fSchemaInfo->getCurrentSchemaURL())),
                             0, ((XSDElementNSImpl*) elem)->getLineNo(),
                             ((XSDElementNSImpl*) elem)->getColumnNo());
@@ -1647,7 +1653,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
                 XercesGroupInfo* baseGroup = fGroupRegistry->get(fBuffer.getRawBuffer());
                 if (baseGroup)
                 {
-                    newGroupInfo.get()->setBaseGroup(baseGroup);                    
+                    newGroupInfo->setBaseGroup(baseGroup);                    
                 }
                 else
                 {
@@ -1659,7 +1665,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
                     if (groupElem != 0) {
                         baseGroup = traverseGroupDecl(groupElem);
-                        newGroupInfo.get()->setBaseGroup(baseGroup);                        
+                        newGroupInfo->setBaseGroup(baseGroup);                        
                         fSchemaInfo = saveInfo;
                     }
                     else
@@ -1672,7 +1678,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
         }
     }
 
-    return newGroupInfo.release();    
+    return newGroupInfo;    
 }
 
 
@@ -1787,10 +1793,10 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
 
         // Pop declaration
         fDeclStack->removeElementAt(fDeclStack->size() - 1);
-
-        // Restore old attGroupInfo
+       
+        fAttGroupRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), janAttGroupInfo.get());
+        // Restore old attGroupInfo   
         attGroupInfo = janAttGroupInfo.release();
-        fAttGroupRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), attGroupInfo);
         fCurrentAttGroupInfo = saveAttGroupInfo;
 
         // Check Attribute Derivation Restriction OK
@@ -1981,7 +1987,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                                          , fSchemaGrammar->getValidationContext()
                                          , fMemoryManager);
                     }
-                    catch(const XMLException& excep) {
+                    catch(const XMLException& excep) {                        
                         reportSchemaError(elem, excep);
                     }
                     uriIndex = fURIStringPool->addOrFind(tokenElem);
@@ -2022,7 +2028,8 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                     , fGrammarPoolMemoryManager
                 );
                 secondNode.release();
-                secondNode.reset(newNode);                
+                secondNode.reset(newNode); 
+                firstNode.release();
             }
         }
         firstNode.release();
@@ -6024,7 +6031,8 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                                            const bool isMixed,
                                            const bool isBaseAnyType) {
     
-    Janitor<ContentSpecNode>    specNode(0);
+    Janitor<ContentSpecNode>    specNodeJan(0);
+    ContentSpecNode* specNode = specNodeJan.get();
     const DOMElement* attrNode = 0;
     int                 typeDerivedBy = typeInfo->getDerivedBy();
     ComplexTypeInfo*    baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
@@ -6071,14 +6079,14 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
 
             if (grpInfo) {
 
-                specNode.reset(grpInfo->getContentSpec());
+                ContentSpecNode* const groupSpecNode = grpInfo->getContentSpec();
 
-                if (specNode.get()) {
+                if (groupSpecNode) {
 
-                    int contentContext = specNode.get()->hasAllContent() ? Group_Ref_With_All : Not_All_Context;
-                    ContentSpecNode* tempSpecNode = specNode.release();
-                    specNode.reset(new (fGrammarPoolMemoryManager) ContentSpecNode(*tempSpecNode));
-                    checkMinMax(specNode.get(), childElem, contentContext);
+                    int contentContext = groupSpecNode->hasAllContent() ? Group_Ref_With_All : Not_All_Context;
+                    specNodeJan.reset(new (fGrammarPoolMemoryManager) ContentSpecNode(*groupSpecNode));
+                    specNode = specNodeJan.get();
+                    checkMinMax(specNode, childElem, contentContext);
                 }
             }
 
@@ -6087,20 +6095,23 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
 
-            specNode.reset(traverseChoiceSequence(childElem, ContentSpecNode::Sequence));
-            checkMinMax(specNode.get(), childElem);
+            specNodeJan.reset(traverseChoiceSequence(childElem, ContentSpecNode::Sequence));
+            specNode = specNodeJan.get();
+            checkMinMax(specNode, childElem);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
 
-            specNode.reset(traverseChoiceSequence(childElem, ContentSpecNode::Choice));
-            checkMinMax(specNode.get(), childElem);
+            specNodeJan.reset(traverseChoiceSequence(childElem, ContentSpecNode::Choice));
+            specNode = specNodeJan.get();
+            checkMinMax(specNode, childElem);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_ALL)) {
 
-            specNode.reset(traverseAll(childElem));
-            checkMinMax(specNode.get(), childElem, All_Group);
+            specNodeJan.reset(traverseAll(childElem));
+            specNode = specNodeJan.get();
+            checkMinMax(specNode, childElem, All_Group);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (isAttrOrAttrGroup(childElem)) {
@@ -6113,8 +6124,9 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         }
     }
 
-    typeInfo->setContentSpec(specNode.get());
+    typeInfo->setContentSpec(specNode);
     typeInfo->setAdoptContentSpec(true);
+    specNodeJan.release();
 
     // -----------------------------------------------------------------------
     // Merge in information from base, if it exists
@@ -6141,17 +6153,19 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
 
             // Compose the final content model by concatenating the base and
             // the current in sequence
-            if (!specNode.get()) {
+            if (!specNode) {
 
                 if (baseSpecNode) {
-                    specNode.reset(new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode));
-                    typeInfo->setContentSpec(specNode.get());
+                    specNodeJan.reset(new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode));
+                    specNode = specNodeJan.get();
+                    typeInfo->setContentSpec(specNode);
                     typeInfo->setAdoptContentSpec(true);
+                    specNodeJan.release();
                 }
             }
             else if (baseSpecNode) {
 
-                if (specNode.get()->hasAllContent() || baseSpecNode->hasAllContent()) {
+                if (specNode->hasAllContent() || baseSpecNode->hasAllContent()) {
 
                     reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::NotAllContent);
                     throw TraverseSchema::InvalidComplexTypeInfo; // REVISIT - should we continue
@@ -6172,7 +6186,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                     (
                         ContentSpecNode::ModelGroupSequence
                         , new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode)
-                        , specNode.get()
+                        , specNode
                         , true
                         , true
                         , fGrammarPoolMemoryManager
@@ -6207,7 +6221,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         anySpecNode->setMinOccurs(0);
         anySpecNode->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
 
-        if (!specNode.get()) {
+        if (!specNode) {
             typeInfo->setContentSpec(anySpecNode);
             typeInfo->setDerivedBy(typeDerivedBy);
         }
@@ -6220,7 +6234,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                 (
                     ContentSpecNode::ModelGroupSequence
                     , anySpecNode
-                    , specNode.get()
+                    , specNode
                     , true
                     , true
                     , fGrammarPoolMemoryManager
@@ -6239,7 +6253,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
     }
     else if (isMixed) {
 
-        if (specNode.get() != 0) {
+        if (specNode != 0) {
             typeInfo->setContentType(SchemaElementDecl::Mixed_Complex);
         }
         else {
@@ -6285,8 +6299,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
     }
     else if (baseTypeInfo != 0 || isBaseAnyType) {
         processAttributes(ctElem, 0, typeInfo, isBaseAnyType);
-    }
-    specNode.release();
+    }   
 }
 
 
@@ -7936,7 +7949,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // ------------------------------------------------------------------
     fLocator->setValues(fSchemaInfo->getCurrentSchemaURL(), 0,
                         ((XSDElementNSImpl*) redefineElem)->getLineNo(),
-                        ((XSDElementNSImpl*) redefineElem)->getColumnNo());    
+                        ((XSDElementNSImpl*) redefineElem)->getColumnNo());      
     InputSource*         srcToFill = resolveSchemaLocation(schemaLocation,
                                         XMLResourceIdentifier::SchemaRedefine);
     Janitor<InputSource> janSrc(srcToFill);
@@ -8029,9 +8042,9 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
 
         traverseSchemaHeader(root);
         fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
-        redefSchemaInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
-        fPreprocessedNodes->put((void*) redefineElem, fSchemaInfo);
         newSchemaInfo.release();
+        redefSchemaInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
+        fPreprocessedNodes->put((void*) redefineElem, fSchemaInfo);        
     }
 
     return true;
@@ -8490,7 +8503,6 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
 
     fXSDErrorReporter.emitError(except, fLocator);
 }
-
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Init/CleanUp methods
 // ---------------------------------------------------------------------------
@@ -8511,6 +8523,7 @@ void TraverseSchema::init() {
     (
         ENUM_ELT_SIZE * sizeof(ValueVectorOf<unsigned int>*)
     );//new ValueVectorOf<unsigned int>*[ENUM_ELT_SIZE];
+    memset(fGlobalDeclarations, 0, ENUM_ELT_SIZE * sizeof(ValueVectorOf<unsigned int>*));
     for(unsigned int i=0; i < ENUM_ELT_SIZE; i++)
         fGlobalDeclarations[i] = new (fMemoryManager) ValueVectorOf<unsigned int>(8, fMemoryManager);
 
@@ -8534,10 +8547,12 @@ void TraverseSchema::cleanUp() {
     delete fCurrentTypeNameStack;
     delete fCurrentGroupStack;
 
-    for(unsigned int i=0; i < ENUM_ELT_SIZE; i++)
-        delete fGlobalDeclarations[i];
-
-    fMemoryManager->deallocate(fGlobalDeclarations);//delete [] fGlobalDeclarations;
+    if (fGlobalDeclarations)
+    {
+        for(unsigned int i=0; i < ENUM_ELT_SIZE; i++)
+            delete fGlobalDeclarations[i];
+        fMemoryManager->deallocate(fGlobalDeclarations);//delete [] fGlobalDeclarations;
+    }    
 
     delete fNonXSAttList;
     delete fNotationRegistry;
