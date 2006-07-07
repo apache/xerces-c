@@ -47,6 +47,13 @@
 #include    <mih/cmpswp.h>
 #include    "OS400PlatformUtils.hpp"
 #include    <xercesc/util/OutOfMemoryException.hpp>
+#include    <qlgusr.h>   // @1aa
+#include    <qusrjobi.h>  // @1aa
+#include    <qusec.h>  // @1aa
+#include    "utypes.h"  // @1aa
+#include    "iconv_util.hpp"  // @1aa
+#include    "iconv_cnv.hpp"  // @1aa
+#include    <qmhrtvm.h>   // @1aa
 
 #if defined (XML_USE_ICONV400_TRANSCODER)
     #include <xercesc/util/Transcoders/Iconv400/Iconv400TransService.hpp>
@@ -219,24 +226,125 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+static char JOBCCSID_CONVERTER_NAME[60] = "";  // @1aa
+static UConverter *jobCCSID_Converter = NULL;  // @1aa
+void get_jobCCSID_converter()   // @1aa
+{
+  Qwc_JOBI0400_t job_attr;                 /* Job attribute receive. @1aa */
+  Qus_EC_t       recv_error;               /* Error on receive?   @1aa  */
+  UErrorCode uerr = U_ZERO_ERROR;          /* Error structure for creating converter @1aa */
+
+  recv_error.Bytes_Provided = sizeof(recv_error);  // @1aa
+
+  QUSRJOBI(&job_attr,
+	   sizeof(job_attr),
+	   "JOBI0400",
+	   "*                         ",
+	   "                ",
+	   &recv_error);   // extract job ccsid (integer form) @1aa
+
+  if ( recv_error.Bytes_Available != 0 )  // @1aa
+  {  /* The 'QUSRJOBI' API failed for some reason.  */
+      strcpy(JOBCCSID_CONVERTER_NAME, "ibm037");  // use internal default @1aa  
+  }
+  else  // @1aa
+  {  /* Get the default job CCSID.   */
+      int JobCCSID = job_attr.Default_Coded_Char_Set_Id;   // @1aa
+      char jobCCSID_str[30];   // @1aa
+
+      sprintf(jobCCSID_str, "%05d", JobCCSID);  // @1aa
+      // convert job CCSID (integer format) to IANA text format.
+      int rc = QlgCvtTextDescToDesc(0,
+				    11,
+				    (char *)jobCCSID_str,
+				    strlen(jobCCSID_str),
+				    &JOBCCSID_CONVERTER_NAME[0],
+				    sizeof(JOBCCSID_CONVERTER_NAME),
+				    JobCCSID);  // @1aa
+      if (rc < 0)  // @1aa
+	  strcpy(JOBCCSID_CONVERTER_NAME, "ibm037"); // @1aa   
+
+  }
+
+  // create converter for job CCSID
+  jobCCSID_Converter = createConverter (JOBCCSID_CONVERTER_NAME, &uerr); // @1aa
+
+  if (U_FAILURE (uerr))  // @1aa
+  {
+      jobCCSID_Converter = NULL; // don't use jobCCSID_Converter @1aa  
+  }
+
+  return;    // @1aa
+}
+
+#include <qmhrtvm.h>
+#include <qusec.h>
+#include <errno.h> // for UErrorCode  @1aa 
+
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const FILENAME
                                       , MemoryManager* const manager)
-{   char errno_id[7];
-    const char* tmpFileName = XMLString::transcode(fileName, manager);
-    ArrayJanitor<char> janText((char*)tmpFileName, manager);
+{   char errno_id[7];  // @1aa
+    int numChars = (u_strlen(FILENAME)*2) + 2;  // @1aa @1bc add 2 bytes for null terminator 
+    char* saved_myTarget = new char[numChars];  // target for transcoding to job CCSID @1aa
+    char* myTarget = (char *) saved_myTarget;  // ucnv_fromUnicode can change myTarget pointer @1aa
+    memset(myTarget,'\0',numChars); // make sure storage is zeroed out to allow for
+                                    // automatic null terminator @1ba 
+    char* myTargetLimit = myTarget + (numChars - 1);    // @1aa
+    const UChar *mySource = (UChar *) FILENAME;
+
+    int mySourceChars = u_strlen(mySource);  // @1aa 
+    const UChar* mySourceLimit = (UChar *) mySource + u_strlen(mySource);    // @1aa
+
+    UErrorCode err = U_ZERO_ERROR;    /* Error structure for creating converter @1aa */
+
+    if (jobCCSID_Converter == NULL)  // should only need to create this converter once. @1aa
+    {
+	  get_jobCCSID_converter();   // @1aa
+    }
+ 
+    // need to do open with pathname/filename in job CCSID, not IBM037.  The other
+    // openFile( ) is dead code, so didn't bother with converting the pathname/fileName there.
+    // Alternative to using converter code is to use XLATEMB MI instruction.  @1aa
+    const char* TMPFILENAME;
+    if (jobCCSID_Converter != NULL) {
+       ucnv_fromUnicode (jobCCSID_Converter,
+			&myTarget,
+			myTargetLimit,
+			&mySource,
+			mySourceLimit,
+			NULL,
+			TRUE,
+			&err);  // @1aa
+
+       TMPFILENAME = saved_myTarget;  // @1aa
+       if (U_FAILURE (err)) {
+	   TMPFILENAME = XMLString::transcode(FILENAME);  // transcode to IBM037 as backup @1aa.
+       }
+ 
+    }
+    else {
+	TMPFILENAME = XMLString::transcode(FILENAME);  // transcode to IBM037 as backup @1aa.
+    }
+
+    //    ArrayJanitor<char> janText((char*)saved_myTarget);  @1dd
     errno = 0;
-    FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
+    FileHandle retVal = (FILE*)fopen( TMPFILENAME , "rb" );
 
     if (retVal == NULL)
     {
-     send_message((char*)tmpFileName,FILE_OPEN_PROBLEMS,'d');
-     convert_errno(errno_id,errno);
-     send_message(NULL,errno_id,'d');
-        return 0;
+	send_message((char*)TMPFILENAME,FILE_OPEN_PROBLEMS,'d');
+	convert_errno(errno_id,errno);
+	send_message(NULL,errno_id,'d');
+	delete [] saved_myTarget;  // @1aa
+	return 0;
     }
+    delete [] saved_myTarget;  // @1aa
+
     return retVal;
 }
 
+// If this version of openFile is ever called, need to convert the filename
+// to job CCSID similar to what's done in the other openFile method.  @1aa.
 FileHandle XMLPlatformUtils::openFile(const char* const fileName
                                       , MemoryManager* const manager)
 {   char errno_id[7];
