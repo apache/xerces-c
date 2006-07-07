@@ -46,7 +46,7 @@
             encodings, say in Shift-JIS, Big5 etc., then you cannot
             use Xerces-C. XML4C addresses this need. It combines Xerces-C
             and <jump
-            href="http://oss.software.ibm.com/icu/">
+            href="http://ibm.com/software/globalization/icu/">
             International Components for Unicode (ICU)</jump> and
             provides support for over 100 different encodings.
             XML4C also uses ICU Resource Bundle to load the messages.

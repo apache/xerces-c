@@ -34,7 +34,7 @@
 Usage:
     DOMCount [options] &lt;XML file | List file&gt;
 
-This program invokes the DOM parser, builds the DOM tree,
+This program invokes the DOMLSParser, builds the DOM tree,
 and then prints the number of elements found in each XML file.
 
 Options:

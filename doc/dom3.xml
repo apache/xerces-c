@@ -39,6 +39,9 @@
     <li>
         <code>DOMImplementation</code>: createLSParser(MODE_ASYNCHRONOUS)
     </li>
+    <li>
+        <code>DOMTypeInfo</code>: isDerivedFrom()
+    </li>
 </ul>
 </s2>
 
@@ -50,9 +53,6 @@
     </li>
 </ul>
 
-</s2>
-<s2 title='Implementation of DOM Level 3 Validation'>
-    <p>The entire section has not been implemented in &XercesCName; &XercesCVersion;.</p>
 </s2>
 
 </s1>

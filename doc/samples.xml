@@ -26,40 +26,6 @@
     the parser.  Sample XML data files are provided in the samples/data directory.</p>
     </s2>
 
-    <s2 title="Building the Samples">
-        <p>For general information related to building--including
-        platform-specific information--please refer to the 
-        <jump href="build.html">Build Page</jump>.  This
-        information covers a standard installation where one
-        has downloaded the entire Xerces-C binary distribution
-        to a place on the filesystem to which one has write
-        access.  Below, we cover what to do if Xerces-C has been
-        preinstalled on a system into a directory to which one
-        does not have write access, but compiling the samples is
-        desired.</p>
-        <p>
-            In this situation, just do the following:
-        </p>
-        <ol>
-            <li>Copy the entire contents of the
-            <code>samples</code> directory into a directory named
-            samples that you have write-access to;</li>
-            <li>Set the <code>XERCESCOUT</code> environment
-            variable to point to the directory that is the parent
-            of the newly-created <code>samples</code>
-            directory;</li>
-            <li>Proceed as normal to compile the samples (not
-            forgetting to set <code>XERCESCROOT</code> to point
-            to the place on the file system where Xerces-C&apos;s
-            include files etc. are to be found);</li> 
-        </ol>
-        <p>Once this is done, the compiled samples will be placed
-        in a directory named <code>bin</code>; this directory
-        will be located in the same directory as the
-        <code>samples</code> directory created in step 1
-        above.</p>
-    </s2>
-
     <s2 title="Running the Samples">
 
     <p>The sample applications are dependent on the &XercesCName; shared library

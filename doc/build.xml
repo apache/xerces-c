@@ -29,7 +29,7 @@
        <li><jump href="build-winunix.html#WinBorlandCC">Building &XercesCName; on Windows using Borland C++ Compiler</jump></li>
        <li><jump href="build-winunix.html#CygWin">Building &XercesCName; on Windows using Cygwin</jump></li>
        <li><jump href="build-winunix.html#UNIX">Building &XercesCName; on UNIX platforms</jump></li>
-       <li><jump href="build-winunix.html#UNIX_SingleThread">Building &XercesCName; as a single-threaded library on Unix platforms</jump></li>
+<!--       <li><jump href="build-winunix.html#UNIX_SingleThread">Building &XercesCName; as a single-threaded library on Unix platforms</jump></li> -->
     </ul>
   </s2>
 

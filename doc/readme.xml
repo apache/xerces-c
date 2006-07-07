@@ -77,16 +77,12 @@
                    XML Schema Part 1: Structure</jump>, W3C Recommendation 2 May 2001</li>
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">
                    XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>               
+               <li><jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407">
+            	   DOM Level 3.0 Core Specification</jump>, W3C Recommendation 7 April 2004</li>
+               <li><jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+            	   DOM Level 3.0 Load and Save Specification</jump>, W3C Recommendation 7 April 2004<br/>
+	               See <jump href="dom3.html">DOM Level 3 Support</jump> for detail.</li>
             </ul>
-            <li>Contains a partial implementation of the
-            <jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
-            DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Working Draft 26 February 2003 
-            and
-            <jump href="http://www.w3.org/TR/DOM-Level-3-LS/">
-            Document Object Model (DOM) Level 3 Load and Save Specification</jump>,
-            Version 1.0 W3C Working Draft 26 February 2003.
-            This implementation is experimental.
-            See <jump href="dom3.html">DOM Level 3 Support</jump> for detail.</li>
             <li>Source code, samples, and documentation is provided</li>
             <li>Programmatic generation and validation of XML</li>
             <li>Pluggable catalogs, validators and encodings</li>

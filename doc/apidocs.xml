@@ -35,12 +35,10 @@
                    DOM Level 2 Core Specification</jump>, a W3C Recommendation of November 13, 2000</li>
                <li><jump href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113/">
                    DOM Level 2 Traversal and Range Specification</jump>, a W3C Recommendation of November 13, 2000</li>
-               <li>Contains a partial implementation of the
-                   <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">
+               <li><jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/">
                    DOM Level 3.0 Core Specification</jump>, and
-                   <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                   DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
-                   (W3C Working Draft of 09 April 2002).  This implementation is experimental.
+                   <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/">
+                   DOM Level 3.0 Load and Save Specification</jump>, a W3C Recommendation of April 7, 2004
                    See <jump href="dom3.html">DOM Level 3 Support</jump> for details.</li>
                </ul>
 

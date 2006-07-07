@@ -29,7 +29,7 @@
       
       <p>If C++ Namespace is ENABLED, users' applications must
          namespace qualify all the &XercesCName; classes, data, and
-         variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER </code>
+         variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER</code>
          or add the <code>XERCES_CPP_NAMESPACE_USE</code> clause.
          Users also need to ensure all forward declarations are
          properly qualified or scoped.
@@ -55,21 +55,11 @@
          with the &XercesCName; &XercesCVersion; <code>&XercesCNamespace;::DOMDocument</code>
          and thus lead to the compilation errors.</p>
 
-      <p> Qualifier the use of DOMDocument in your application explicitly e.g.
+      <p> Qualifying the use of DOMDocument in your application explicitly e.g.
          <br/><br/><code>XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * fDoc;</code><br/><br/>
          will eliminate these compilation problems.
       </p>
 
-    </a>
-  </faq>
-
-  <faq title="Why can't the compiler find the include files?">
-
-    <q>Why can't the compiler find the include files?</q>
-
-    <a><p>A common cause for this problem is setting build environment
-       variable XERCESROOT instead of setting variable XERCESCROOT.
-       Note the C before ROOT.</p>
     </a>
   </faq>
 
@@ -80,20 +70,6 @@
     </a>
   </faq>
 
-
-  <faq title="Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?">
-
-    <q>Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?</q>
-
-    <a>
-       <p>Please make sure you configure with "-t IconvFBSD" to use FreeBSD specific native transcoder.
-       </p>
-
-       <p>Or you can use ICU transcoder (configure with -t icu) instead of the native transcoder.
-       </p>
-
-    </a>
-  </faq>
 
   <faq title="Building &XercesCName; with compiler GCC 2.7.x or 2.8.x gives problem, what's wrong?">
 
@@ -119,6 +95,8 @@
 
       <p>Please check the following:</p>
       <ol>
+        <li>Verify that you have specified the appropriate option and library path in the linker 
+		    command line</li>
         <li>If you're using the binary build of &XercesCName;, make sure that the OS and compiler are
             the same version as the ones used to build the binary &faq-build-faq-distrib1;.  Different OS and
             compiler versions might cause unresolved linking problems or compilation
@@ -201,11 +179,6 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
         need to put in two additional DLLs. In the Windows build these are <code>icuuc*.dll</code> and <code>icudt*.dll</code> which must be available from your PATH settings. On UNIX, these
         libraries are called <code>libicuuc*.so</code> and <code>libicudt*.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
 
-      <p>If the parser is built with icu message loader (as mentioned above), or message
-        catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-        the directory, $XERCESCROOT/msg, where the message files reside.
-      </p>
-
     </a>
   </faq>
 
@@ -280,9 +253,9 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
 
 <source>
 try {
-   XMLPlatformUtils::Initialize();
+   XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
 }
-catch (const XMLException&amp; toCatch) {
+catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
    // Do your failure processing here
 }</source>
 
@@ -350,23 +323,13 @@ catch (const XMLException&amp; toCatch) {
         <li>start debugging (so the debug menu appears)</li>
         <li>from the debug menu select "Exceptions"</li>
         <li>from the box that opens select "Microsoft C++ Exception" and set it
-          to "Stop if not handled" instead of "stop always".</li>
+          to "Stop if not handled" instead of "Stop always".</li>
       </ul>
 
       <p>You'll still land in the debugger if your program is terminating
         abnormally, but it will be at your problem, not from the internal &XercesCName;
         exceptions.</p>
 
-    </a>
-  </faq>
-
-  <faq title="Fatal Error: Cannot open include file: XXX: No such file or directory">
-    <q>"Fatal Error: Cannot open include file: XXX: No such file or directory"?</q>
-    <a>
-      <p>
-	      Due to the recent directory change, you may need to either update your
-		  project file, makefile, or your source/header file, for details,
-          please refer to <jump href="migrate.html#DirChange">Directory Change. </jump></p>
     </a>
   </faq>
 
@@ -377,10 +340,10 @@ catch (const XMLException&amp; toCatch) {
          you need to make sure that the message library &faq-build-faq-distrib3;
          is located in a directory which is on the library search path.
          Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to        
-         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable 
-         XERCESC_NLS_HOME, or at $XERCESCROOT/msg.
+         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment 
+		 variable XERCESC_NLS_HOME, or at $XERCESCROOT/msg.
       </p>
-      <p>If the parser is built with message catalog loader, you need to make sure that the message
+      <p>If the parser is built with iconv message catalog loader, you need to make sure that the message
          catalog file, XercesMessages_en_US.cat, is in the directory given at the call to XMLPlatformUtils::Initialize(),
          or is located in the directory pointed to by the environment variable XERCESC_NLS_HOME, or  
          at $XERCESCROOT/msg.
@@ -420,10 +383,10 @@ catch (const XMLException&amp; toCatch) {
         on your system. The application itself, written in Java, is
         part of Xerces.</p>
 
-     <p>To regenerate the documentation, go to directory <code>$XERCESCROOT</code>
+     <p>To regenerate the documentation, go to Xerces directory 
         and start <code>createDocs.sh</code> (for Unix) or
         <code>createdocs.bat</code> (for Windows). The result can be
-        found in directory <code>$XERCESCROOT/doc/html</code>.</p>
+        found in the subdirectory <code>doc/html</code>.</p>
 
      <p>
       To regenerate the API documentation, you need to have at least
@@ -440,12 +403,12 @@ catch (const XMLException&amp; toCatch) {
       include it.)</p>
 
       <p>If you do not have GraphViz, or do not want to use it, you
-      have to edit file <code>$XERCESCROOT/doc/Doxyfile</code> and change <code>HAVE_DOT =
+      have to edit file <code>doc/Doxyfile</code> and change <code>HAVE_DOT =
       YES</code> into <code>HAVE_DOT = NO</code>.</p>
 
       <p>To actually regenerate the API documentation, go to directory
-      <code>$XERCESCROOT/doc/</code> and start Doxygen. The result can be
-        found in directory <code>$XERCESCROOT/doc/html/apiDocs</code>.</p>
+      <code>doc/</code> and start Doxygen. The result can be
+        found in directory <code>doc/html/apiDocs</code>.</p>
     </a>
    </faq>
 

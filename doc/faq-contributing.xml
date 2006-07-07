@@ -31,7 +31,7 @@
     <ol>
         <li>Check out and build the most recent Xerces code.  For
             instructions on how to do this, see <jump
-            href="http://xml.apache.org/cvs.html">Apache XML Project CVS
+            href="http://xml.apache.org/svn.html">Apache XML Project Subversion
             Information</jump>.  If you do this, you can confirm that your
             bug still exists and has not been fixed since the last
             release.
@@ -46,8 +46,8 @@
         <li>
             Prepare a patch to fix Xerces code.  To do this, when you
             have applied your changes to a local copy of the most
-            recent xerces source code, do <code>cvs diff -u
-            file</code> for each file you&apos;ve changed.
+            recent xerces source code, do <code>svn diff file</code> 
+			for each file you&apos;ve changed.
             Keep in mind the coding guidelines for &XercesCName; as
             described below.
         </li>
@@ -57,7 +57,7 @@
             apply.
         </li>
         <li>
-            Submit a bug report on <jump href="http://nagoya.apache.org/jira">Jira</jump>,
+            Submit a bug report on <jump href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10510">Jira</jump>,
 	     	the Apache bug database.  Pick the product "Xerces-C++"
             (remembering to attach your patches and test code)
             or, if you think your patch might need some discussion,
@@ -188,18 +188,13 @@
         <ol> 
         <li>Update the release information in the following files:<br/>
       
-            <code>Projects/Win32/VC6/xerces-all/XercesLib/XercesDeprecatedDOMLib.dsp</code>
-    		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesDeprecatedDOMLib.mak</code>
     		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp</code>
     		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak</code>   
     		<code>Projects/Win32/VC6/xerces-all/xerces-com/xerces-com.dsp</code>
-    		<code>Projects/Win32/VC7.1/xerces-all/XercesLib/XercesDeprecatedDOMLib.vcproj</code>
     		<code>Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj</code>
     		<code>Projects/Win32/VC7.1/xerces-all/xerces-com/xerces-com.vcproj</code>
-    		<br/>
-    		<code>Projects/Win32/VC7/xerces-all/XercesLib/XercesDeprecatedDOMLib.vcproj</code>
-    		<code>Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj</code>
-    		<code>Projects/Win32/VC7/xerces-all/xerces-com/xerces-com.vcproj</code>
+    		<code>Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj</code>
+    		<code>Projects/Win32/VC8/xerces-all/xerces-com/xerces-com.vcproj</code>
     		<br/>
     		<code>Projects/MacOS/Xcode/XercesLib/Info-XercesLib.plist</code>    		
     		<code>scripts/packageBinaries.pl</code>

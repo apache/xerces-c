@@ -74,9 +74,9 @@
 
 <source>
 try {
-   XMLPlatformUtils::Initialize();
+   XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
 }
-catch (const XMLException&amp; toCatch) {
+catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
    // Do your failure processing here
 }</source>
 
@@ -203,13 +203,13 @@ catch (const XMLException&amp; toCatch) {
 <source>
 1: {
 2:    XMLPlatformUtils::Initialize();
-3:    DOMString c("hello");
+3:    XercesDOMParser parser;
 4:    XMLPlatformUtils::Terminate();
 5: }
 </source>
 
-      <p>The DOMString object "c" is destructed when going out of scope at line 5 before the closing
-         brace.  As a result, DOMString destructor is called at line 5 after
+      <p>The XercesDOMParser object "parser" is destructed when going out of scope at line 5 before the closing
+         brace.  As a result, XercesDOMParser destructor is called at line 5 after
          XMLPlatformUtils::Terminate() which is wrong.  Correct code should be:
       </p>
 
@@ -217,7 +217,7 @@ catch (const XMLException&amp; toCatch) {
 1: {
 2:    XMLPlatformUtils::Initialize();
 2a:    {
-3:           DOMString c("hello");
+3:           XercesDOMParser parser;
 3a:    }
 4:    XMLPlatformUtils::Terminate();
 5: }
@@ -320,11 +320,6 @@ void myParsingFunction()
         instances may be concurrently accessed from different threads, but any given
         document instance can only be accessed by one thread at a time.</p>
 
-      <p>DOMStrings allow multiple concurrent readers. All DOMString const
-        methods are thread safe, and can be concurrently entered by multiple threads.
-        Non-const DOMString methods, such as <code>appendData()</code>, are not thread safe and the application must guarantee that no other
-        methods (including const methods) are executed concurrently with them.</p>
-
       <p>The application also needs to guarantee that only one thread has entered either the
         method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
         one time.</p>
@@ -353,7 +348,7 @@ void myParsingFunction()
       </p>
 
       <p>If you are using XML4C where ICU is used, you may call ICU function u_cleanup() to clean up
-         ICU static data.  Please see <jump href="http://oss.software.ibm.com/icu/">ICU documentation</jump>
+         ICU static data. Please see <jump href="http://ibm.com/software/globalization/icu/">ICU documentation</jump>
          for details.
       </p>
     </a>
@@ -379,7 +374,7 @@ void myParsingFunction()
       </p>
 
       <p>If you are using XML4C where ICU is used, you may call ICU function u_cleanup() to clean up
-         ICU static data.  Please see <jump href="http://oss.software.ibm.com/icu/">ICU documentation</jump>
+         ICU static data.  Please see <jump href="http://ibm.com/software/globalization/icu/">ICU documentation</jump>
          for details.
       </p>
     </a>
@@ -443,7 +438,7 @@ void myParsingFunction()
     <q>Why does DOMNode::cloneNode() not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?</q>
     <a>
       <p>&XercesCName; supports the DOMNode::userData specified
-      in <jump href="http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/DOM3-Core.html#core-ID-3A0ED0A4">
+      in <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#ID-3A0ED0A4">
       the DOM level 3 Node interface</jump>.  As
       is made clear in the description of the behaviour of
       <code>cloneNode()</code>, userData that has been set on the
@@ -509,7 +504,9 @@ void myParsingFunction()
         platforms.</p>
 
       <p>To address the need to make remote connections to resources specified
-        using additional protocols, ftp for example, &XercesCName; provides the <code>NetAccessor</code> interface. The header file is <code>src/xercesc/util/XMLNetAccessor.hpp</code>. This interface allows you to plug in your own implementation of URL
+        using additional protocols, ftp for example, &XercesCName; provides the <code>NetAccessor</code> interface. 
+		The header file is <code>src/xercesc/util/XMLNetAccessor.hpp</code>. 
+		This interface allows you to plug in your own implementation of URL
         networking code into the &XercesCName; parser.</p>
 
     </a>
@@ -569,7 +566,7 @@ void myParsingFunction()
         parse input XML files in these above mentioned encodings.</p>
 
       <p>XML4C -- the version of Xerces-C available from IBM -- combines Xerces-C
-         and <jump href="http://oss.software.ibm.com/icu/">
+         and <jump href="http://ibm.com/software/globalization/icu/">
          International Components for Unicode (ICU)</jump> and
          extends the encoding support to over 100 different encodings that are allowed
          by ICU.  In particular, all the encodings registered with the

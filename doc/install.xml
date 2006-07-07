@@ -180,8 +180,7 @@ tar -xvzf &XercesCSrcInstallDir;.tar.gz
 			  executables may be available in a future release on the
 			  Cygwin platform.  In the meantime, they may be built from the
 			  source distribution by following the
-			  <jump href="build.html">Build Instructions</jump> for
-			  "Building samples".</p>
+			  <jump href="build.html">Build Instructions</jump>.</p>
       </s3>
    </s2>
 </s1>

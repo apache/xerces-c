@@ -25,10 +25,10 @@
         different encodings and/or locale specific message support. ICU stands for
         International Components for Unicode and is an open source distribution from
         IBM. You can get
-        <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
+        <jump href="http://ibm.com/software/globalization/icu">ICU libraries</jump> from
         <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
         or go to the ICU
-        <jump href="http://oss.software.ibm.com/icu/download/index.html">download page</jump>
+        <jump href="http://ibm.com/software/globalization/icu/downloads.jsp">download page</jump>
         directly.</p>
 
         <note><em>Important:</em> Please remember that <em>ICU and
@@ -42,7 +42,7 @@
         MSDEV GUI environment, and the other is to invoke the compiler from the
         command line.</p>
 
-        <p>Using, the GUI environment, requires one to edit the project files.
+        <p>Using the GUI environment requires one to edit the project files.
         Here, we will describe only the second option. It involves using the
         perl script '<code>packageBinaries.pl</code>'.</p>
 
@@ -69,7 +69,7 @@
         '<code>VCVARS32.BAT</code>' or a similar file. Then at the prompt
         enter:</p>
 
-<source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
+<source>
 set ICUROOT=x:\icu
 cd x:\&XercesCSrcInstallDir;\scripts
 </source>
@@ -94,11 +94,6 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         will build both ICU and &XercesCName;, and copy the files (relevant to the binary
         drop) to the target directory.</p>
 
-        <p>If the parser is built with icu message loader (as mentioned above), or message
-         catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-         the directory, $XERCESCROOT/msg, where the message files reside.
-        </p>
-
         <p>For a description of options available, you can enter:</p>
 <source>perl packageBinaries.pl</source>
         </s3>
@@ -111,21 +106,22 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         should be a new directory '<code>$HOME/icu</code>' which contains all the ICU
         source files.</p>
 
-        <p>Build the ICU according to the<jump href="http://oss.software.ibm.com/cvs/icu/~checkout~/icu/readme.html">
+        <p>Build the ICU according to the<jump href="http://dev.icu-project.org/cgi-bin/viewcvs.cgi/icu/readme.html?rev=release-3-4">
         ICU Build instruction in ICU Readme</jump>.   Then have its dll, <code>libicuuc*</code>
         and <code>libicudt*</code> available from your library search path.</p>
 
         <p>Then build the &XercesCName; with ICU.  This is similar to building a standalone
         &XercesCName; library as instructed in <jump href="build-winunix.html#UNIX">
         "Building &XercesCName; on UNIX platforms"</jump>; except that you have to specify
-        the transcoder option <code>'-t icu'</code> and/or the message loader option
-        <code>'-m icu'</code>.  For example:</p>
-<source>runConfigure -plinux -cgcc -xg++ -minmem -nsocket -ticu -rpthread</source>
+		the option <code>'--with-icu=$HOME/icu'</code> together with 
+        the transcoder option <code>'--enable-transcoder-icu'</code> and/or the message loader option
+        <code>'--enable-msgloader-icu'</code>.  For example:</p>
+<source>./configure --with-icu=$HOME/icu --enable-msgloader-inmemory --enable-netaccessor-socket --enable-transcoder-icu</source>
 
         <p>Or instead of building the ICU and &XercesCName; manually in two steps,
         you can use the bundled perl script '<code>packageBinaries.pl</code>' which
         will build both of them in one step.  For example:</p>
-<source>export XERCESCROOT=$HOME/&XercesCSrcInstallDir;
+<source>
 export ICUROOT=$HOME/icu
 cd $HOME/&XercesCSrcInstallDir;/scripts
 </source>
@@ -141,11 +137,6 @@ perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCIn
 <source>
 perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -m icu
 </source>
-
-        <p>If the parser is built with icu message loader (as mentioned above), or message
-         catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
-         the directory, $XERCESCROOT/msg, where the message files reside.
-        </p>
 
         </s3>
     </s2>
@@ -265,7 +256,7 @@ rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat
     <anchor name="PortInfo"/>
     <s2 title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
       <p>All platform dependent code in &XercesCProjectName; has been
-      isolated to a couple of files, which should ease the porting
+      isolated in a small number of folders, which should ease the porting
       effort.  Please refer to <jump href="program-others.html#PortingGuidelines">Porting
       Guidelines</jump> for further details.</p>
     </s2>
@@ -326,7 +317,7 @@ rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat
         solved this same problem before you, by checking the Apache XML
         mailing list archives at <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
         http://marc.theaimsgroup.com/?l=xerces-c-dev</jump> and the
-		<jump href="http://nagoya.apache.org/jira">Jira</jump>
+		<jump href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10510">Jira</jump>
 		Apache bug database.</p>
     </s2>
 
