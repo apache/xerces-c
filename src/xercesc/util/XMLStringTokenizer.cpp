@@ -47,7 +47,7 @@ XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
     : fOffset(0)
     , fStringLen(XMLString::stringLen(srcStr))
     , fString(XMLString::replicate(srcStr, manager))
-    , fDelimeters(XMLString::replicate(fgDelimeters, manager))
+    , fDelimeters(fgDelimeters)
     , fTokens(0)
     , fMemoryManager(manager)
 {
@@ -101,6 +101,18 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
 XMLStringTokenizer::~XMLStringTokenizer()
 {
 	cleanUp();
+}
+
+// ---------------------------------------------------------------------------
+//  XMLStringTokenizer: CleanUp methods
+// ---------------------------------------------------------------------------
+void XMLStringTokenizer::cleanUp() {
+
+	fMemoryManager->deallocate(fString);//delete [] fString;
+    if (fDelimeters != fgDelimeters) {
+        fMemoryManager->deallocate((void*)fDelimeters);//delete [] fDelimeters;
+    }
+    delete fTokens;
 }
 
 
