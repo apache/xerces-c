@@ -160,21 +160,10 @@ private:
     int                 fOffset;
     int                 fStringLen;
 	XMLCh*              fString;
-    XMLCh*              fDelimeters;
+    const XMLCh*        fDelimeters;
 	RefArrayVectorOf<XMLCh>* fTokens;
     MemoryManager*           fMemoryManager;
 };
-
-
-// ---------------------------------------------------------------------------
-//  XMLStringTokenizer: CleanUp methods
-// ---------------------------------------------------------------------------
-inline void XMLStringTokenizer::cleanUp() {
-
-	fMemoryManager->deallocate(fString);//delete [] fString;
-    fMemoryManager->deallocate(fDelimeters);//delete [] fDelimeters;
-    delete fTokens;
-}
 
 // ---------------------------------------------------------------------------
 //  XMLStringTokenizer: Helper methods
