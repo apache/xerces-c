@@ -634,10 +634,6 @@ XSValue::validateNumerics(const XMLCh*         const content
         } // end switch
         return true;  //both valid chars and within boundary
     }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
     catch (const NumberFormatException&)
     {
         //getActValue()/getCanonical() need to know the failure details
@@ -700,10 +696,6 @@ bool XSValue::validateDateTimes(const XMLCh*         const input_content
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
         return false;
     }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
     catch (const NumberFormatException&)
     {
         //getActValue()/getCanonical() need to know the failure details
@@ -721,9 +713,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 {
     bool isValid = true;
     
-    try
-    {
-        switch (datatype) { 
+    switch (datatype) { 
         case XSValue::dt_boolean:
             {
                 unsigned int i = 0;
@@ -999,13 +989,8 @@ bool XSValue::validateStrings(const XMLCh*         const content
             status = st_NotSupported;
             isValid = false;        
             break;
-        }
+    }
 
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
 
     if (isValid == false && status == st_Init) {
         status = st_FOCA0002;
@@ -1096,10 +1081,6 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             return retVal;
         }
     }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
     catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
@@ -1156,10 +1137,6 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content
             break;
         }
     }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
     catch (SchemaDateTimeException &e)
     {
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
@@ -1178,9 +1155,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                                ,       bool                 toValidate
                                ,       MemoryManager* const manager)
 {
-    try
-    {
-        switch (datatype) {        
+    switch (datatype) {        
         case XSValue::dt_boolean:
             {
             XMLCh* tmpStrValue = XMLString::replicate(content, manager);
@@ -1254,11 +1229,6 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
         default:
             return 0;
             break;
-        }
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
     }
 
     return 0;
@@ -1443,10 +1413,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
             break;        
         } // end switch
     }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
     catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
@@ -1537,11 +1503,6 @@ XSValue::getActValDateTimes(const XMLCh*         const input_content
 
         return retVal;
     }
-
-    catch(const OutOfMemoryException&)
-    {
-        throw;
-    }
     catch (SchemaDateTimeException const &e)
     {
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
@@ -1562,9 +1523,7 @@ XSValue::getActValStrings(const XMLCh*         const content
                         ,       bool                 toValidate
                         ,       MemoryManager* const manager)
 {
-    try
-    {
-        switch (datatype) { 
+    switch (datatype) { 
         case XSValue::dt_boolean: 
             {
             XMLCh* tmpStrValue = XMLString::replicate(content, manager);
@@ -1655,11 +1614,6 @@ XSValue::getActValStrings(const XMLCh*         const content
         default:
             return 0;
             break;
-        }
-    }
-    catch(const OutOfMemoryException&)
-    {
-        throw;
     }
 
     return 0; 
