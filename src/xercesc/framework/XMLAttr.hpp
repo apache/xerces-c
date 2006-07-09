@@ -216,18 +216,6 @@ public:
       */
     unsigned int getURIId() const;
 
-    /**
-     * @return the uri part of DOM Level 3 TypeInfo
-     * @deprecated
-     */
-    const XMLCh* getValidatingTypeURI() const;
-
-    /**
-     * @return the name part of DOM Level 3 TypeInfo
-     * @deprecated
-     */
-    const XMLCh* getValidatingTypeName() const;
-
     //@}
 
 
@@ -368,24 +356,6 @@ public:
       */
     void setURIId(const unsigned int uriId);
 
-    /**
-      * This method will update the datatype validator that was used
-      * to assess the validity of the value of this attribute.
-      * @param datatypeValidator        DatatypeValidator used to assess the validity
-      *             of this attribute's value
-      * @deprecated
-      */
-    void setDatatypeValidator(DatatypeValidator * datatypeValidator);
-
-    /**
-      * This method will define whether the attribute was
-      * validated by an XML Schema
-      * @param isSchema     true indicates that this attribute was validated
-      *         by an XML Schema; false indicates otherwise
-      * @deprecated
-      */
-    void setSchemaValidated(const bool isSchema);
-
     //@}
 
 
@@ -425,22 +395,13 @@ private :
     //
     //  fMemoryManager
     //      The memory manager used for dynamic memory allocation/deallocation
-    //  fDatatypeValidator
-    //      The validator used to validate the value of this attribute.
-    //      The attribute does not own this object, and it is only
-    //      used in the calculation of DOMTypeInfo information.
-    //  fIsSchemaValidated
-    //      whether this attribute was validated by an XML Schema
-    //
     // -----------------------------------------------------------------------
     bool                fSpecified;
     XMLAttDef::AttTypes fType;
     unsigned int        fValueBufSz;
     XMLCh*              fValue;
     QName*              fAttName;
-    MemoryManager*      fMemoryManager;
-    DatatypeValidator * fDatatypeValidator;
-    bool                fIsSchemaValidated;
+    MemoryManager*      fMemoryManager;   
 };
 
 // ---------------------------------------------------------------------------
@@ -490,34 +451,6 @@ inline unsigned int XMLAttr::getURIId() const
     return fAttName->getURI();
 }
 
-inline const XMLCh* XMLAttr::getValidatingTypeName() const
-{
-    if(fIsSchemaValidated)
-    {
-        if(!fDatatypeValidator || fDatatypeValidator->getAnonymous())
-            return 0; 
-        return fDatatypeValidator->getTypeLocalName();
-    }
-    else
-    {
-        return XMLAttDef::getAttTypeString(fType, fMemoryManager);
-    }
-}
-
-inline const XMLCh* XMLAttr::getValidatingTypeURI() const
-{
-    if(fIsSchemaValidated)
-    {
-        if(!fDatatypeValidator || fDatatypeValidator->getAnonymous())
-            return 0; 
-        return fDatatypeValidator->getTypeUri();
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 // ---------------------------------------------------------------------------
 //  XMLAttr: Setter methods
 // ---------------------------------------------------------------------------
@@ -535,10 +468,6 @@ inline void XMLAttr::set(const  unsigned int        uriId
 
     // And store the type
     fType = type;
-
-    // and set up info for DOM type info 
-    fIsSchemaValidated = isSchema;
-    fDatatypeValidator = datatypeValidator;
 }
 
 inline void XMLAttr::set(const  unsigned int        uriId
@@ -554,10 +483,6 @@ inline void XMLAttr::set(const  unsigned int        uriId
 
     // And store the type
     fType = type;
-
-    // and set up info for DOM type info 
-    fIsSchemaValidated = isSchema;
-    fDatatypeValidator = datatypeValidator;
 }
 
 inline void XMLAttr::setType(const XMLAttDef::AttTypes newValue)
@@ -568,16 +493,6 @@ inline void XMLAttr::setType(const XMLAttDef::AttTypes newValue)
 inline void XMLAttr::setSpecified(const bool newValue)
 {
     fSpecified = newValue;
-}
-
-inline void XMLAttr::setDatatypeValidator(DatatypeValidator *datatypeValidator)
-{
-    fDatatypeValidator = datatypeValidator;
-}
-
-inline void XMLAttr::setSchemaValidated(const bool isSchema)
-{
-    fIsSchemaValidated = isSchema;
 }
 
 XERCES_CPP_NAMESPACE_END

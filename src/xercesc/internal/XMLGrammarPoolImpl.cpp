@@ -203,18 +203,6 @@ XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* c
 	return new (getMemoryManager()) XMLSchemaDescriptionImpl(targetNamespace, getMemoryManager()); 
 }
 
-XSModel *XMLGrammarPoolImpl::getXSModel() 
-{
-    if (fLocked)
-        return fXSModel;
-
-    if (fXSModelIsValid)
-        return fXSModel;
-        
-    createXSModel();    
-    return fXSModel;
-}
-
 XSModel *XMLGrammarPoolImpl::getXSModel(bool& XSModelWasChanged)
 {
     XSModelWasChanged = false;

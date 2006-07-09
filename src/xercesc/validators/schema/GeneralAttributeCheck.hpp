@@ -190,9 +190,6 @@ public:
     //  Setter methods
     // -----------------------------------------------------------------------
 
-    //deprecated
-    void setIDRefList(RefHashTableOf<XMLRefInfo>* const refList);
-
     inline void setValidationContext(ValidationContext* const);
 
     // -----------------------------------------------------------------------
@@ -270,12 +267,6 @@ GeneralAttributeCheck::getFacetId(const XMLCh* const facetName, MemoryManager* c
 inline void GeneralAttributeCheck::setValidationContext(ValidationContext* const newValidationContext)
 {
     fValidationContext = newValidationContext;
-}
-
-inline void
-GeneralAttributeCheck::setIDRefList(RefHashTableOf<XMLRefInfo>* const refList) {
-
-    fValidationContext->setIdRefList(refList);
 }
 
 XERCES_CPP_NAMESPACE_END

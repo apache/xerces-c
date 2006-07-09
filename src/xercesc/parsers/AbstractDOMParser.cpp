@@ -827,11 +827,6 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
         fWithinElement = false;
 }
 
-void AbstractDOMParser::elementTypeInfo( const XMLCh * const  /*typeName*/
-                                       , const XMLCh * const  /*typeURI*/)
-{
-}
-
 
 void AbstractDOMParser::ignorableWhitespace(  const XMLCh* const    chars
                                             , const unsigned int    length
@@ -1161,30 +1156,7 @@ DOMElement* AbstractDOMParser::createElementNSNode(const XMLCh *namespaceURI,
 {
     return fDocument->createElementNS(namespaceURI, qualifiedName);
 }
-// ---------------------------------------------------------------------------
-//  AbstractDOMParser: Deprecated methods
-// ---------------------------------------------------------------------------
-bool AbstractDOMParser::getDoValidation() const
-{
-    //
-    //  We don't want to tie the public parser classes to the enum used
-    //  by the scanner, so we use a separate one and map.
-    //
-    //  DON'T mix the new and old methods!!
-    //
-    const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
-    if (scheme == XMLScanner::Val_Always)
-        return true;
-    return false;
-}
 
-void AbstractDOMParser::setDoValidation(const bool newState)
-{
-    fScanner->setDoValidation
-    (
-        newState ? XMLScanner::Val_Always : XMLScanner::Val_Never
-    );
-}
 
 //doctypehandler interfaces
 void AbstractDOMParser::attDef

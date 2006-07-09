@@ -87,19 +87,9 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual element decl interface
     // -----------------------------------------------------------------------
-    virtual XMLAttDef* findAttr
-    (
-        const   XMLCh* const    qName
-        , const unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const LookupOpts      options
-        ,       bool&           wasAdded
-    )   const;
     virtual XMLAttDefList& getAttDefList() const;
     virtual CharDataOpts getCharDataOpts() const;
-    virtual bool hasAttDefs() const;
-    virtual bool resetDefs();
+    virtual bool hasAttDefs() const;   
     virtual const ContentSpecNode* getContentSpec() const;
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);

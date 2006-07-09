@@ -234,22 +234,6 @@ public:
       */
     unsigned int getId() const;
 
-    /** Query whether the attribute was explicitly provided.
-      *
-      * When the scanner scans a start tag, it will ask the element decl
-      * object of the element type of that start tag to clear the 'provided'
-      * flag on all its attributes. As the scanner sees explicitly provided
-      * attributes, its turns on this flag to indicate that this attribute
-      * has been provided. In this way, the scanner can catch duplicated
-      * attributes and required attributes that aren't provided, and default
-      * in fixed/default valued attributes that are not explicitly provided.
-      *
-      * @return Returns a boolean value that indicates whether this attribute
-      *         was explicitly provided.
-      * @deprecated
-      */
-    bool getProvided() const;
-
     /** Get the type of this attribute
       *
       * Gets the type of this attribute. This type is represented by an enum
@@ -329,17 +313,6 @@ public:
       * @param  newId The new pool id to set.
       */
     void setId(const unsigned int newId);
-
-    /** Set or clear the 'provided' flag.
-      *
-      * This method will set or clear the 'provided' flag. This is called
-      * by the scanner as it is scanning a start tag and marking off the
-      * attributes that have been explicitly provided.
-      *
-      * @param  newValue The new provided state to set
-      * @deprecated
-      */
-    void setProvided(const bool newValue);
 
     /** Set the type of this attribute type.
       *
@@ -446,12 +419,6 @@ private :
     //      into the validator's attribute decl pool. It defaults to the
     //      special value XMLAttrDef::fgInvalidAttrId.
     //
-    //  fProvided
-    //      This field is really for use by the scanner. It is used to track
-    //      which of the attributes of an element were provided. Any marked
-    //      as not provided (after scanning the start tag) and having a
-    //      default type of Required, is in error.
-    //
     //  fType
     //      The type of attribute, which is one of the AttTypes values.
     //
@@ -469,8 +436,7 @@ private :
     // -----------------------------------------------------------------------
     DefAttTypes     fDefaultType;
     AttTypes        fType;
-    CreateReasons   fCreateReason;
-    bool            fProvided;
+    CreateReasons   fCreateReason;   
     bool            fExternalAttribute;
     unsigned int    fId;
     XMLCh*          fValue;
@@ -495,11 +461,6 @@ inline const XMLCh* XMLAttDef::getEnumeration() const
 inline unsigned int XMLAttDef::getId() const
 {
     return fId;
-}
-
-inline bool XMLAttDef::getProvided() const
-{
-    return fProvided;
 }
 
 inline XMLAttDef::AttTypes XMLAttDef::getType() const
@@ -546,11 +507,6 @@ inline void XMLAttDef::setEnumeration(const XMLCh* const newValue)
 inline void XMLAttDef::setId(const unsigned int newId)
 {
     fId = newId;
-}
-
-inline void XMLAttDef::setProvided(const bool newValue)
-{
-    fProvided = newValue;
 }
 
 inline void XMLAttDef::setType(const XMLAttDef::AttTypes newValue)

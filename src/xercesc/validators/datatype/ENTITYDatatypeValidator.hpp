@@ -107,17 +107,6 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-    /** @name Setter Functions */
-    //@{
-
-    //deprecated
-    inline void    setEntityDeclPool(NameIdPool<DTDEntityDecl>* const entityDeclPool);
-
-    //@}
-
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -144,13 +133,6 @@ private:
     ENTITYDatatypeValidator& operator = (const  ENTITYDatatypeValidator&);
 
 };
-
-// -----------------------------------------------------------------------
-// Setter methods
-// -----------------------------------------------------------------------
-inline void ENTITYDatatypeValidator::setEntityDeclPool(NameIdPool<DTDEntityDecl>* const )
-{
-}
 
 XERCES_CPP_NAMESPACE_END
 

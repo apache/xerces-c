@@ -231,9 +231,6 @@ void ComplexTypeInfo::setContentSpec(ContentSpecNode* const toAdopt) {
     }
 
     fContentSpec = toAdopt;
-
-    //reset Content Model
-    setContentModel(0);
 }
 
 void ComplexTypeInfo::setLocator(XSDLocator* const aLocator) {
@@ -277,55 +274,6 @@ ComplexTypeInfo::getFormattedContentModel() const
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Helper methods
 // ---------------------------------------------------------------------------
-XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const
-                                     , const unsigned int uriId
-                                     , const XMLCh* const baseName
-                                     , const XMLCh* const prefix
-                                     , const XMLElementDecl::LookupOpts   options
-                                     , bool&              wasAdded) const
-{
-    SchemaAttDef* retVal = fAttDefs->get(baseName, uriId);
-
-    // Fault it in if not found and ask to add it
-    if (!retVal && (options == XMLElementDecl::AddIfNotFound))
-    {
-        // And add a default attribute for this name
-        retVal = new (fMemoryManager) SchemaAttDef
-        (
-            prefix
-            , baseName
-            , uriId
-            , XMLAttDef::CData
-            , XMLAttDef::Implied
-            , fMemoryManager
-        );
-        retVal->setElemId(getElementId());
-        fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
-
-        // update fAttList
-        fAttList->addAttDef(retVal);
-        wasAdded = true;
-    }
-    else
-    {
-        wasAdded = false;
-    }
-    return retVal;
-}
-
-bool ComplexTypeInfo::resetDefs() {
-
-    //  Ok, run through them and clear the 'provided' flag on each of them.
-    //  This lets the scanner use them to track which has been provided and
-    //  which have not.
-    RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs, false, fMemoryManager);
-    while (enumDefs.hasMoreElements())
-        enumDefs.nextElement().setProvided(false);
-
-    return true;
-}
-
-
 void ComplexTypeInfo::checkUniqueParticleAttribution (SchemaGrammar*    const pGrammar,
                                                       GrammarResolver*  const pGrammarResolver,
                                                       XMLStringPool*    const pStringPool,

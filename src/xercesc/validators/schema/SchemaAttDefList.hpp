@@ -59,11 +59,6 @@ public :
     //  Implementation of the virtual interface
     // -----------------------------------------------------------------------
 
-    /** 
-     * @deprecated This method is not thread-safe.
-     */
-    virtual bool hasMoreElements() const;
-
     virtual bool isEmpty() const;
     virtual XMLAttDef* findAttDef
     (
@@ -97,16 +92,6 @@ public :
         const   unsigned long       uriID
         , const XMLCh* const        attLocalPart
     )   const;
-
-    /** 
-     * @deprecated This method is not thread-safe.
-     */
-    virtual XMLAttDef& nextElement();
-
-    /** 
-     * @deprecated This method is not thread-safe.
-     */
-    virtual void Reset();
 
     /**
      * return total number of attributes in this list

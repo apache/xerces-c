@@ -23,6 +23,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/NCNameDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -98,7 +99,7 @@ void NCNameDatatypeValidator::checkValueSpace(const XMLCh* const content
     //
     // 3.3.7 check must: "NCName"
     //
-    if ( !XMLString::isValidNCName(content))
+    if ( !XMLChar1_0::isValidNCName(content, XMLString::stringLen(content)) )
     {
         ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Invalid_NCName

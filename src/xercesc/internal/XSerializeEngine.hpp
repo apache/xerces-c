@@ -94,49 +94,7 @@ public:
       ***/
     XSerializeEngine(BinOutputStream*        outStream
                    , XMLGrammarPool* const   gramPool
-                   , unsigned long           bufSize = 8192 );
-
-
-    /***
-      *
-      *  Deprecated
-      *
-      *  Constructor for de-serialization(loading)
-      *
-      *  Application needs to make sure that the instance of
-      *  BinInputStream, persists beyond the life of this
-      *  SerializeEngine.
-      *
-      *  Param
-      *     inStream         input stream
-      *     manager          MemoryManager
-      *     bufSize          the size of the internal buffer
-      *
-      ***/
-    XSerializeEngine(BinInputStream*         inStream
-                   , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
-                   , unsigned long           bufSize = 8192 );
-
-    
-    /***
-      *
-      *  Deprecated
-      *
-      *  Constructor for serialization(storing)
-      *
-      *  Application needs to make sure that the instance of
-      *  BinOutputStream, persists beyond the life of this
-      *  SerializeEngine.
-      *
-      *  Param
-      *     outStream        output stream
-      *     manager          MemoryManager
-      *     bufSize          the size of the internal buffer
-      *
-      ***/
-    XSerializeEngine(BinOutputStream*        outStream
-                   , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
-                   , unsigned long           bufSize = 8192 );
+                   , unsigned long           bufSize = 8192 ); 
 
     /***
       *

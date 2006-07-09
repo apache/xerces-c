@@ -47,7 +47,7 @@ ValueStore::ValueStore(IdentityConstraint* const ic,
     , fScanner(scanner)
     , fMemoryManager(manager)
 {
-	fDoReportError = (scanner && scanner->getDoValidation());
+    fDoReportError = (scanner && (scanner->getValidationScheme() == XMLScanner::Val_Always));
 }
 
 
@@ -59,12 +59,6 @@ ValueStore::~ValueStore()
 // ---------------------------------------------------------------------------
 //  ValueStore: Helper methods
 // ---------------------------------------------------------------------------
-void ValueStore::addValue(IC_Field* const,
-                          DatatypeValidator* const,
-                          const XMLCh* const) {
-
-}
-
 void ValueStore::addValue(FieldActivator* const fieldActivator,
                           IC_Field* const field,
                           DatatypeValidator* const dv,

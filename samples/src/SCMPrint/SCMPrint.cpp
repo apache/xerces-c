@@ -333,8 +333,8 @@ int main(int argC, char* argV[])
         if (parsedOneSchemaOkay)
         {
             XERCES_STD_QUALIFIER cout << "********** Printing out information from Schema **********" << "\n\n";
-
-            XSModel *xsModel = grammarPool->getXSModel();
+            bool updatedXSModel;
+            XSModel *xsModel = grammarPool->getXSModel(updatedXSModel);
             if (xsModel)
             {    
                 StringList *namespaces = xsModel->getNamespaces();

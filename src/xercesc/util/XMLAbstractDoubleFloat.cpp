@@ -171,15 +171,6 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
 
 }
 
-//
-// 
-//
-XMLCh*  XMLAbstractDoubleFloat::toString() const
-{
-    // Return data using global operator new
-    return XMLString::replicate(fRawData);
-}
-
 XMLCh*  XMLAbstractDoubleFloat::getRawData() const
 {
     return fRawData;

@@ -38,9 +38,7 @@ XMLAttr::XMLAttr(MemoryManager* const manager) :
     , fValueBufSz(0)
     , fValue(0)
     , fAttName(0)
-    , fMemoryManager(manager)
-    , fDatatypeValidator(0)
-    , fIsSchemaValidated(false)
+    , fMemoryManager(manager)  
 {
     fAttName = new (fMemoryManager) QName(fMemoryManager);
 }
@@ -62,9 +60,7 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     , fValueBufSz(0)
     , fValue(0)
     , fAttName(0)
-    , fMemoryManager(manager)
-    , fDatatypeValidator(datatypeValidator)
-    , fIsSchemaValidated(isSchema)
+    , fMemoryManager(manager)   
 {
     CleanupType cleanup(this, &XMLAttr::cleanUp);
 
@@ -101,9 +97,7 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     , fValueBufSz(0)
     , fValue(0)
     , fAttName(0)
-    , fMemoryManager(manager)
-    , fDatatypeValidator(datatypeValidator)
-    , fIsSchemaValidated(isSchema)
+    , fMemoryManager(manager)  
 {
     CleanupType cleanup(this, &XMLAttr::cleanUp);
 

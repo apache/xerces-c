@@ -121,10 +121,6 @@ public:
     void setAttWildCard(SchemaAttDef* const toAdopt);
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
-    /**     
-     * @deprecated; not thread-safe (will not work with shared grammars)
-     */
-    void setContentModel(XMLContentModel* const newModelToAdopt);
     void setLocator(XSDLocator* const aLocator);
 
     /**
@@ -137,16 +133,6 @@ public:
     // -----------------------------------------------------------------------
     bool hasAttDefs() const;
     bool contains(const XMLCh* const attName);
-    XMLAttDef* findAttr
-    (
-        const   XMLCh* const    qName
-        , const unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const XMLElementDecl::LookupOpts      options
-        ,       bool&           wasAdded
-    )   const;
-    bool resetDefs();
     void checkUniqueParticleAttribution
     (
         SchemaGrammar*    const pGrammar
@@ -506,22 +492,6 @@ inline void ComplexTypeInfo::setAttWildCard(SchemaAttDef* const toAdopt) {
 
     fAttWildCard = toAdopt;
 }
-
-inline void
-ComplexTypeInfo::setContentModel(XMLContentModel* const newModelToAdopt)
-{
-    delete fContentModel;
-    fContentModel = newModelToAdopt;
-
-    // reset formattedModel
-    if (fFormattedModel)
-    {
-        fMemoryManager->deallocate(fFormattedModel);
-        fFormattedModel = 0;
-    }
-}
-
-
 
 inline void ComplexTypeInfo::setAnonymous() {
     fAnonymous = true;

@@ -282,52 +282,6 @@ XMLByte* Base64::decode(const XMLByte*       const  inputData
     return retStr;
 }
 
-XMLCh* Base64::decode(const XMLCh*         const   inputData
-                    ,       unsigned int*          decodedLen
-                    ,       MemoryManager* const   memMgr
-                    ,       Conformance            conform )
-{
-    if (!inputData)
-        return 0;
-
-    /***
-     *  Move input data to a XMLByte buffer
-     */
-    unsigned int srcLen = XMLString::stringLen(inputData);
-    XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
-    ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
-
-    for (unsigned int i = 0; i < srcLen; i++)
-        dataInByte[i] = (XMLByte)inputData[i];
-
-    dataInByte[srcLen] = 0;
-
-    /***
-     * Forward to the actual decoding method to do the decoding
-     */
-    *decodedLen = 0;
-    XMLByte *DecodedBuf = decode(dataInByte, decodedLen, memMgr, conform);
-
-    if (!DecodedBuf)
-        return 0;
-
-    /***
-     * Move decoded data to a XMLCh buffer to return
-     */
-    XMLCh *toRet = (XMLCh*) getExternalMemory(memMgr, (*decodedLen+1) * sizeof(XMLCh));
-               
-    for (unsigned int j = 0; j < *decodedLen; j++)
-        toRet[j] = (XMLCh)DecodedBuf[j];
-
-    toRet[*decodedLen] = 0;
-
-    /***
-     * Release the memory allocated in the actual decoding method
-     */ 
-    returnExternalMemory(memMgr, DecodedBuf);
-
-    return toRet;
-}
 
 XMLByte* Base64::decodeToXMLByte(const XMLCh*         const   inputData
                     ,       unsigned int*          decodedLen

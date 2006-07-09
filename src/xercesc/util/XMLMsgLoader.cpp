@@ -109,22 +109,4 @@ const char* XMLMsgLoader::getNLSHome()
     return fPath;
 }
 
-// ---------------------------------------------------------------------------
-//  Deprecated
-//
-//     These two methods are deprecated.
-//  
-//     The default implementations for these two methods are provided as is,
-//     any specific derivative may change this as and when necessary.
-//      
-// ---------------------------------------------------------------------------
-const XMLCh* XMLMsgLoader::getLanguageName() const
-{
-    return fLanguage;
-}
-
-void XMLMsgLoader::setLanguageName(XMLCh* const)
-{
-}
-
 XERCES_CPP_NAMESPACE_END

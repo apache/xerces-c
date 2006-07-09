@@ -25,6 +25,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/internal/ValidationContextImpl.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -70,7 +71,7 @@ void QNameDatatypeValidator::checkValueSpace(const XMLCh* const content
     //
     // check 3.2.18.c0 must: QName
     //
-    if ( !XMLString::isValidQName(content))
+    if ( !XMLChar1_0::isValidQName(content, XMLString::stringLen(content)) )
     {
         ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_QName_Invalid

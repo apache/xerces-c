@@ -54,11 +54,6 @@ DTDAttDefList::~DTDAttDefList()
 // ---------------------------------------------------------------------------
 //  DTDAttDefList: Implementation of the virtual interface
 // ---------------------------------------------------------------------------
-bool DTDAttDefList::hasMoreElements() const
-{
-    return fEnum->hasMoreElements();
-}
-
 
 bool DTDAttDefList::isEmpty() const
 {
@@ -97,18 +92,6 @@ DTDAttDefList::findAttDef(  const   XMLCh* const
 {
     // We don't use the URI, so we just look up the name
     return fList->get(attName);
-}
-
-
-XMLAttDef& DTDAttDefList::nextElement()
-{
-    return fEnum->nextElement();
-}
-
-
-void DTDAttDefList::Reset()
-{
-    fEnum->Reset();
 }
 
 /**

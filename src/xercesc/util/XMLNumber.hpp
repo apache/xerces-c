@@ -47,16 +47,6 @@ public:
     };
 
     virtual ~XMLNumber();
-
-    /**
-     *  Deprecated: please use getRawData
-     *
-     *  Return string representation of the decimal value.
-     *  A decimal point will be included as necessary,
-     *  the caller of this method is responsible for the
-     *  de-allocation of the memory.
-     */
-    virtual XMLCh*     toString() const = 0;
     
 	/**
 	 *  Return string representation of the decimal value.

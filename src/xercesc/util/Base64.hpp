@@ -95,38 +95,7 @@ public :
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
                           );
-
-    /**
-     * Decodes Base64 data into XMLCh
-     *
-     * NOTE: The returned buffer is dynamically allocated and is the
-     * responsibility of the caller to delete it when not longer needed.
-     * You can call XMLString::release to release this returned buffer.
-     *
-     * If a memory manager is provided, ask the memory manager to de-allocate
-     * the returned buffer.
-     *
-     * @param inputData Base64 data in XMLCh stream.
-     * @param decodedLength Length of decoded XMLCh stream
-     * @param memMgr client provided memory manager
-     * @param conform conformance specified: if the input data conforms to the
-     *                RFC 2045 it is allowed to have any number of whitespace
-     *                characters inside; if it conforms to the XMLSchema specs,
-     *                it is allowed to have at most one whitespace character
-     *                between the quartets
-     * @return Decoded binary data in XMLCh stream,
-     *      or NULL if input data can not be decoded.
-     * @see   XMLString::release(XMLCh**)
-     * @deprecated use decodeToXMLByte instead.
-     */
-
-    static XMLCh* decode(
-                         const XMLCh*          const    inputData
-                       ,       unsigned int*            decodedLength
-                       ,       MemoryManager*  const    memMgr = 0
-                       ,       Conformance              conform = Conf_RFC2045
-                        );
-   
+  
    /**
      * Decodes Base64 data into octets
      *

@@ -80,17 +80,7 @@ public:
     void        divide(const unsigned int byteToShift);
 
     int         getTotalDigit() const;
-
-    /**
-     *
-     *  Deprecated: please use getRawData
-     *
-     *  Return a copy of the fMagnitue.
-     *  A leading sign is ALWAYS in place and the caller of this method
-     *  is responsible for the de-allocation of the memory.
-     */
-    inline XMLCh*      toString() const;
-    
+   
     /**
      *  Return a copy of the fMagnitue.
      *  This is similar to toString, except the internal buffer is returned directly
@@ -177,15 +167,6 @@ inline void XMLBigInteger::setSign(int newSign)
 inline XMLCh*  XMLBigInteger::getRawData() const
 {
     return fRawData;
-}
-
-//
-// The caller needs to de-allocate the memory allocated by this function
-//
-inline XMLCh*  XMLBigInteger::toString() const
-{
-    // Return data using global operator new
-    return XMLString::replicate(fRawData, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

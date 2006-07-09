@@ -75,16 +75,6 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
         , JustFaultIn
     };
 
-    /**
-     * @deprecated Use of addIfNotFound couldl produce undefined 
-     * behaviour in multithreaded environments.
-     */
-    enum LookupOpts
-    {
-        AddIfNotFound
-        , FailIfNotFound
-    };
-
     enum CharDataOpts
     {
         NoCharData
@@ -129,46 +119,6 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
     /** @name Virual ElementDecl interface */
     //@{
 
-    /** Find an attribute by name or optionally fault it in.
-      *
-      * The derived class should look up the passed attribute in the list of
-      * of attributes for this element. If namespaces are enabled, then it
-      * should use the uriId/baseName pair, else it should use the qName. The
-      * options allow the caller to indicate whether the attribute should be
-      * defaulted in if not found. If it is defaulted in, then wasAdded should
-      * be set, else it should be cleared. If its not found and the caller does
-      * not want defaulting, then return a null pointer.
-      * Note that, in a multithreaded environment, it is dangerous for a 
-      * caller to invoke this method with options set to AddIfNotFound.
-      *
-      * @param  qName       This is the qName of the attribute, i.e. the actual
-      *                     lexical name found.
-      *
-      * @param  uriId       This is the id of the URI of the namespace to which
-      *                     this attribute mapped. Only valid if namespaces are
-      *                     enabled.
-      *
-      * @param  baseName    This is the base part of the name, i.e. after any
-      *                     prefix.
-      *
-      * @param  prefix      The prefix, if any, of this attribute's name. If
-      *                     this is empty, then uriID is meaningless as well.
-      *
-      * @param  options     Indicates the lookup options.
-      *
-      * @param  wasAdded    Should be set if the attribute is faulted in, else
-      *                     cleared.
-      */
-    virtual XMLAttDef* findAttr
-    (
-        const   XMLCh* const    qName
-        , const unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const LookupOpts      options
-        ,       bool&           wasAdded
-    )   const = 0;
-
     /** Get a list of attributes defined for this element.
       *
       * The derived class should return a reference to some member object which
@@ -198,15 +148,6 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
       * that allows the scanner to skip some work if no attributes exist.
       */
     virtual bool hasAttDefs() const = 0;
-
-    /** Reset the flags on the attribute definitions.
-      *
-      * This method is called by the scanner at the beginning of each scan
-      * of a start tag, asking this element decl to reset the 'declared' flag
-      * of each of its attribute defs. This allows the scanner to mark each
-      * one as declared yet or not.
-      */
-    virtual bool resetDefs() = 0;
 
     /** Get a pointer to the content spec node
       *

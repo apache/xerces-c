@@ -77,13 +77,6 @@ public:
                 ,        MemoryManager* const manager
                 );
 
-    /**
-     *
-     *  Deprecated: please use getRawData
-     *
-     */
-    virtual XMLCh*        toString() const;
-    
     virtual XMLCh*        getRawData() const;
 
     virtual const XMLCh*  getFormattedString() const;
@@ -205,15 +198,6 @@ inline MemoryManager* XMLBigDecimal::getMemoryManager() const
 inline XMLCh*  XMLBigDecimal::getIntVal() const
 {
     return fIntVal;
-}
-
-//
-// The caller needs to de-allocate the memory allocated by this function
-//
-inline XMLCh*  XMLBigDecimal::toString() const
-{
-    // Return data using global operator new
-    return XMLString::replicate(fRawData);
 }
 
 XERCES_CPP_NAMESPACE_END

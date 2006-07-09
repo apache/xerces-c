@@ -121,7 +121,7 @@ static DOMDocument* parseFile(char *fileName)
     ParseErrorHandler eh;
     if (!parser)
         parser = new XercesDOMParser;
-    parser->setDoValidation(false);
+    parser->setValidationScheme(AbstractDOMParser::Val_Never);
     parser->setErrorHandler(&eh);
     try
     {

@@ -72,13 +72,6 @@ public:
                   const XMLCh* const value);
     bool contains(const FieldValueMap* const other);
 
-    /**
-      * @deprecated
-      */
-    void addValue(IC_Field* const field, DatatypeValidator* const dv,
-                  const XMLCh* const value);
-
-
     // -----------------------------------------------------------------------
     //  Document handling methods
     // -----------------------------------------------------------------------

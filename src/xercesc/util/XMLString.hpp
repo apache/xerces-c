@@ -826,38 +826,11 @@ public:
                               ,       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
-      * Deprecated: please use XMLChar1_0::isValidNCName
-      *
-      * Checks whether an name is a valid NCName according to XML 1.0
-      * @param name The string to check its NCName validity
-      * @return Returns true if name is NCName valid, otherwise false
-      */
-    static bool isValidNCName(const XMLCh* const name);
-
-    /**
-      * Deprecated: please use XMLChar1_0::isValidName
-      *
-      * Checks whether an name is a valid Name according to XML 1.0
-      * @param name The string to check its Name validity
-      * @return Returns true if name is Name valid, otherwise false
-      */
-    static bool isValidName(const XMLCh* const name);
-
-    /**
       * Checks whether an name is a valid EncName.
       * @param name The string to check its EncName validity
       * @return Returns true if name is EncName valid, otherwise false
       */
     static bool isValidEncName(const XMLCh* const name);
-
-    /**
-      * Deprecated: please use XMLChar1_0::isValidQName
-      *
-      * Checks whether an name is a valid QName according to XML 1.0
-      * @param name The string to check its QName validity
-      * @return Returns true if name is QName valid, otherwise false
-      */
-    static bool isValidQName(const XMLCh* const name);
 
     /**
       * Checks whether a character is within [a-zA-Z].
@@ -887,15 +860,6 @@ public:
       * @return Returns true if within the range, otherwise false
       */
     static bool isHex(XMLCh const theChar);
-
-    /**
-      * Deprecated: please use XMLChar1_0::isAllWhiteSpace
-      *
-      * Checks whether aa string contains only whitespace according to XML 1.0
-      * @param toCheck the string to check
-      * @return Returns true if it is, otherwise false
-      */
-    static bool isAllWhiteSpace(const XMLCh* const toCheck);
 
     /** Find is the string appears in the enum list
       * @param toFind the string to be found

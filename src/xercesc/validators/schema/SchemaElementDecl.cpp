@@ -112,61 +112,6 @@ SchemaElementDecl::~SchemaElementDecl()
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: XMLElementDecl virtual interface implementation
 // ---------------------------------------------------------------------------
-XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
-                                     , const unsigned int    uriId
-                                     , const XMLCh* const    baseName
-                                     , const XMLCh* const    prefix
-                                     , const LookupOpts      options
-                                     , bool&           wasAdded) const
-{
-    if (fComplexTypeInfo) {
-        return fComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);
-    }
-    else {
-        if (options == XMLElementDecl::AddIfNotFound) {
-            SchemaAttDef* retVal = 0;
-
-            // If no att list exist yet, then create one
-            if (!fAttDefs) {
-                // Use a hash modulus of 29 and tell it owns its elements
-                ((SchemaElementDecl*)this)->fAttDefs =
-                    new (getMemoryManager()) RefHash2KeysTableOf<SchemaAttDef>(29, true, getMemoryManager());
-            }
-
-            retVal = fAttDefs->get(baseName, uriId);
-
-            // Fault it in if not found and ask to add it
-            if (!retVal)
-            {
-                // And add a default attribute for this name
-                retVal = new (getMemoryManager()) SchemaAttDef
-                (
-                    prefix
-                    , baseName
-                    , uriId
-                    , XMLAttDef::CData
-                    , XMLAttDef::Implied
-                    , getMemoryManager()
-                );
-                retVal->setElemId(getId());
-                fAttDefs->put((void*)retVal->getAttName()->getLocalPart(), uriId, retVal);
-
-                wasAdded = true;
-            }
-             else
-            {
-                wasAdded = false;
-            }
-            return retVal;
-        }
-        else {
-            wasAdded = false;
-            return 0;
-        }
-    }
-}
-
-
 XMLAttDefList& SchemaElementDecl::getAttDefList() const
 {
     if (!fComplexTypeInfo)
@@ -214,22 +159,6 @@ bool SchemaElementDecl::hasAttDefs() const
     // If the collection hasn't been faulted in, then no att defs
     return false;
 
-}
-
-
-bool SchemaElementDecl::resetDefs()
-{
-    if (fComplexTypeInfo) {
-        return fComplexTypeInfo->resetDefs();
-    }
-    else if (fAttDefs) {
-        //all the attdefs here are faulted-in, so just reset the fAttDefs
-        //but still return false to indicate there is no real att defs
-        // defined in this element
-        fAttDefs->removeAll();
-    }
-
-    return false;
 }
 
 const XMLCh*

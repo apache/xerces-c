@@ -146,9 +146,6 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     
-    // deprecated.  returns the ID of the root element; not
-    // useable in multithreaded environments!
-    unsigned int getRootElemId() const;
     const DTDEntityDecl* getEntityDecl(const XMLCh* const entName) const;
     DTDEntityDecl* getEntityDecl(const XMLCh* const entName);
     NameIdPool<DTDEntityDecl>* getEntityDeclPool();
@@ -160,9 +157,6 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-
-    // deprecated.  Not usable in multithreaded environments
-    void setRootElemId(unsigned int rootElemId);
 
     virtual void                    setGrammarDescription( XMLGrammarDescription*);
     virtual XMLGrammarDescription*  getGrammarDescription() const;
@@ -216,11 +210,6 @@ private:
     //      This is a pool of NotationDecl objects, which contains all of the
     //      notations declared in the DTD subsets.
     //
-    //  fRootElemId
-    //      The id of the root element that we found in the DOCTYPE statement.
-    //      Its initialized to ContentModel::fgInvalidElemId, so that its
-    //      invalid unless we have a DOCTYPE.
-    //
     //  fValidated
     //      Indicates if the content of the Grammar has been pre-validated
     //      or not. When using a cached grammar, no need for pre content
@@ -236,21 +225,11 @@ private:
     NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
     NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
     XMLDTDDescription*                fGramDesc;
-
-    unsigned int                      fRootElemId;
+    
     bool                              fValidated;
 
     friend class XMLInitializer;
 };
-
-
-// ---------------------------------------------------------------------------
-//  DTDGrammar: Getter methods
-// ---------------------------------------------------------------------------
-inline unsigned int DTDGrammar::getRootElemId() const
-{
-    return fRootElemId;
-}
 
 // ---------------------------------------------------------------------------
 //  DTDGrammar: Getter methods
@@ -308,10 +287,6 @@ inline const NameIdPool<DTDEntityDecl>* DTDGrammar::getEntityDeclPool() const
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
-inline void DTDGrammar::setRootElemId(unsigned int rootElemId) {
-    fRootElemId = rootElemId;
-}
-
 inline unsigned int DTDGrammar::putEntityDecl(DTDEntityDecl* const entityDecl)   const
 {
     return fEntityDeclPool->put(entityDecl);

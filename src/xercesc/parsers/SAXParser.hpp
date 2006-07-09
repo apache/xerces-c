@@ -1947,41 +1947,6 @@ public :
     );
     //@}
 
-
-    // -----------------------------------------------------------------------
-    //  Deprecated Methods
-    // -----------------------------------------------------------------------
-    /** @name Deprecated Methods */
-    //@{
-    /**
-      * This method returns the state of the parser's validation
-      * handling flag which controls whether validation checks
-      * are enforced or not.
-      *
-      * @return true, if the parser is currently configured to
-      *         do validation, false otherwise.
-      *
-      * @see #setDoValidation
-      */
-    bool getDoValidation() const;
-
-    /**
-      * This method allows users to enable or disable the parser's validation
-      * checks.
-      *
-      * <p>By default, the parser does not to any validation. The default
-      * value is false.</p>
-      *
-      * @param newState The value specifying whether the parser should
-      *                 do validity checks or not against the DTD in the
-      *                 input XML document.
-      *
-      * @see #getDoValidation
-      */
-    void setDoValidation(const bool newState);
-    //@}
-
-
 protected :
     // -----------------------------------------------------------------------
     //  Protected Methods

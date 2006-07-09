@@ -120,8 +120,7 @@ XMLAttDef::XMLAttDef( const XMLAttDef::AttTypes    type
 
     fDefaultType(defType)
     , fType(type)
-    , fCreateReason(XMLAttDef::NoReason)
-    , fProvided(false)
+    , fCreateReason(XMLAttDef::NoReason)    
     , fExternalAttribute(false)
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
@@ -140,8 +139,7 @@ XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
 
     fDefaultType(defType)
     , fType(type)
-    , fCreateReason(XMLAttDef::NoReason)
-    , fProvided(false)
+    , fCreateReason(XMLAttDef::NoReason)    
     , fExternalAttribute(false)
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
@@ -191,8 +189,7 @@ void XMLAttDef::serialize(XSerializeEngine& serEng)
     {
         serEng<<(int)fDefaultType;
         serEng<<(int)fType;
-        serEng<<(int)fCreateReason;
-        serEng<<fProvided;
+        serEng<<(int)fCreateReason;       
         serEng<<fExternalAttribute;
         serEng<<fId;
 
@@ -210,8 +207,7 @@ void XMLAttDef::serialize(XSerializeEngine& serEng)
 
         serEng>>i;
         fCreateReason = (CreateReasons)i;
-
-        serEng>>fProvided;
+       
         serEng>>fExternalAttribute;
         serEng>>fId;
 

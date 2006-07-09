@@ -87,9 +87,6 @@ public:
 
     //@}
 
-    //deprecated
-	inline void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
-
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -124,10 +121,6 @@ private:
     //
     // -----------------------------------------------------------------------
 };
-
-inline void IDDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* )
-{
-}
 
 XERCES_CPP_NAMESPACE_END
 

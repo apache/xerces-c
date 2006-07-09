@@ -616,7 +616,7 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
 
 
     // Examine localpart
-    if (!XMLString::isValidNCName(&name[colPos+1]))
+    if (!XMLChar1_0::isValidNCName(&name[colPos+1], nameLen - colPos -1))    
     {
         return false;
     }
@@ -645,25 +645,6 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
 
         return true;
     }
-}
-
-
-/**
-  * Deprecated: isValidNCName
-  *    Check first char, and then the rest of the name char.
-  *    But colon should be excluded
-  */
-bool XMLString::isValidNCName(const XMLCh* const name) {
-    return XMLChar1_0::isValidNCName(name, XMLString::stringLen(name));
-}
-
-/**
-  * Deprecated: isValidName
-  *    Check first char, and then the rest of the name char
-  *
-  */
-bool XMLString::isValidName(const XMLCh* const name) {
-    return XMLChar1_0::isValidName(name, XMLString::stringLen(name));
 }
 
 /**
@@ -699,15 +680,6 @@ bool XMLString::isValidEncName(const XMLCh* const name)
     return true;
 }
 
-/**
-  * Deprecated: isValidQName
-  *
-  */
-bool XMLString::isValidQName(const XMLCh* const name)
-{
-    return XMLChar1_0::isValidQName(name, XMLString::stringLen(name));
-}
-
 bool XMLString::isAlpha(XMLCh const theChar)
 {
     if ((( theChar >= chLatin_a ) && ( theChar <= chLatin_z )) ||
@@ -735,12 +707,6 @@ bool XMLString::isHex(XMLCh const theChar)
 	return (isDigit(theChar) ||
 			(theChar >= chLatin_a && theChar <= chLatin_f) ||
 			(theChar >= chLatin_A && theChar <= chLatin_F));
-}
-
-// Deprecated
-bool XMLString::isAllWhiteSpace(const XMLCh* const toCheck)
-{
-    return XMLChar1_0::isAllSpaces(toCheck, XMLString::stringLen(toCheck));
 }
 
 // ---------------------------------------------------------------------------

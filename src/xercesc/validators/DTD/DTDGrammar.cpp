@@ -81,8 +81,7 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     , fElemNonDeclPool(0)
     , fEntityDeclPool(0)
     , fNotationDeclPool(0)
-    , fGramDesc(0)
-    , fRootElemId(0)
+    , fGramDesc(0)   
     , fValidated(false)
 {
     //
@@ -300,8 +299,7 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
          * which has been created in ctor
          ***/
         fGramDesc->serialize(serEng);
-
-        serEng<<fRootElemId;
+     
         serEng<<fValidated;
     }
     else
@@ -323,8 +321,7 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
          * which has been created in ctor
          ***/
         fGramDesc->serialize(serEng);
-
-        serEng>>fRootElemId;
+       
         serEng>>fValidated;
     }
 

@@ -391,13 +391,6 @@ public :
     void incrementErrorCount(void);			// For use by XMLValidator
 
     // -----------------------------------------------------------------------
-    //  Deprecated methods as of 3.2.0. Use getValidationScheme() and
-    //  setValidationScheme() instead.
-    // -----------------------------------------------------------------------
-    bool getDoValidation() const;
-    void setDoValidation(const bool validate);
-
-    // -----------------------------------------------------------------------
     //  Document scanning methods
     //
     //  scanDocument() does the entire source document. scanFirst(),
@@ -1328,23 +1321,6 @@ inline void XMLScanner::setSkipDTDValidation(const bool newValue)
 inline void XMLScanner::incrementErrorCount()
 {
     ++fErrorCount;
-}
-
-// ---------------------------------------------------------------------------
-//  XMLScanner: Deprecated methods
-// ---------------------------------------------------------------------------
-inline bool XMLScanner::getDoValidation() const
-{
-    return fValidate;
-}
-
-inline void XMLScanner::setDoValidation(const bool validate)
-{
-    fValidate = validate;
-    if (fValidate)
-        fValScheme = Val_Always;
-    else
-        fValScheme = Val_Never;
 }
 
 inline void XMLScanner::resetValidationContext()

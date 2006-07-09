@@ -477,21 +477,6 @@ XMLDateTime& XMLDateTime::operator=(const XMLDateTime& rhs)
 // -----------------------------------------------------------------------
 
 //
-// We may simply return the handle to fBuffer, but
-// for the sake of consistency, we return a duplicated copy
-// and the caller is responsible for the release of the buffer
-// just like any other things in the XMLNumber family.
-//
-XMLCh*  XMLDateTime::toString() const
-{
-    assertBuffer();
-
-    // Return data using global operator new
-    XMLCh* retBuf = XMLString::replicate(fBuffer);
-    return retBuf;
-}
-
-//
 // We may simply return the handle to fBuffer
 //
 XMLCh*  XMLDateTime::getRawData() const
@@ -499,7 +484,6 @@ XMLCh*  XMLDateTime::getRawData() const
     assertBuffer();    
     return fBuffer;
 }
-
 
 const XMLCh*  XMLDateTime::getFormattedString() const
 {

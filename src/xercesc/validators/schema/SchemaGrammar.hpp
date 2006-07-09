@@ -173,9 +173,6 @@ public:
     NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
 
-    //deprecated
-    RefHashTableOf<XMLRefInfo>* getIDRefList() const;
-
     ValidationContext*          getValidationContext() const;
 
     // -----------------------------------------------------------------------
@@ -390,11 +387,6 @@ inline RefHash2KeysTableOf<ElemVector>*
 SchemaGrammar::getValidSubstitutionGroups() const {
 
     return fValidSubstitutionGroups;
-}
-
-inline RefHashTableOf<XMLRefInfo>* SchemaGrammar::getIDRefList() const {
-
-    return fValidationContext->getIdRefList();
 }
 
 inline ValidationContext* SchemaGrammar::getValidationContext() const {

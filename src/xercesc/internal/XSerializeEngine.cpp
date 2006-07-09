@@ -142,57 +142,6 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 
 }
 
-// ---------------------------------------------------------------------------
-// Deprecated Constructor 
-// ---------------------------------------------------------------------------
-XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
-                                 , MemoryManager* const    manager
-                                 , unsigned long           bufSize)
-:fStoreLoad(mode_Load)
-,fStorerLevel(0)
-,fGrammarPool(0)
-,fInputStream(inStream)
-,fOutputStream(0)
-,fBufCount(0)
-,fBufSize(bufSize)
-,fBufStart( (XMLByte*) manager->allocate(bufSize))
-,fBufEnd(0)
-,fBufCur(fBufStart)
-,fBufLoadMax(fBufStart)
-,fStorePool(0)
-,fLoadPool( new (manager) ValueVectorOf<void*>(29, manager, false))
-,fObjectCount(0)
-{
-    /*** 
-     *  initialize buffer from the inStream
-     ***/
-    fillBuffer();
-
-}
-
-XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
-                                 , MemoryManager* const    manager
-                                 , unsigned long           bufSize)
-:fStoreLoad(mode_Store)
-,fStorerLevel(0)
-,fGrammarPool(0)
-,fInputStream(0)
-,fOutputStream(outStream)
-,fBufCount(0)
-,fBufSize(bufSize)
-,fBufStart((XMLByte*) manager->allocate(bufSize))
-,fBufEnd(fBufStart+bufSize)
-,fBufCur(fBufStart)
-,fBufLoadMax(0)
-,fStorePool( new (manager) RefHashTableOf<XSerializedObjectId>(29, true, new (manager) HashPtr(), manager) )
-,fLoadPool(0)
-,fObjectCount(0)
-{
-    //initialize store pool
-    fStorePool->put(0, new (manager) XSerializedObjectId(fgNullObjectTag));
-
-}
-
 void XSerializeEngine::flush()
 {
     if (isStoring())

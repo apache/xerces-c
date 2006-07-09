@@ -811,10 +811,7 @@ void DGXMLScanner::scanDocTypeDecl()
     rootDecl->setExternalElemDeclaration(true);
     if(!fUseCachedGrammar) 
     {
-        // this will break getRootElemId on DTDGrammar when
-        // cached grammars are in use, but 
-        // why would one use this anyway???
-        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+        fGrammar->putElemDecl(rootDecl);
         rootDeclJanitor.release();
     } else 
     {
@@ -1165,11 +1162,6 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
         {
             //  If a DocType exists, then check if it matches the root name there.
             if (fRootElemName && !XMLString::equals(qnameRawBuf, fRootElemName))
-                fValidator->emitError(XMLValid::RootElemNotLikeDocType);
-
-            //  Some validators may also want to check the root, call the
-            //  XMLValidator::checkRootElement
-            if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
         }
     }

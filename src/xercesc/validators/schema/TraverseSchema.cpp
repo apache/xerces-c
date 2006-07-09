@@ -1159,7 +1159,7 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     if (nameEmpty) { // anonymous simpleType
         name = genAnonTypeName(fgAnonSNamePrefix);
     }
-    else if (!XMLString::isValidNCName(name)) {
+    else if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name)) ) {
 
         reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_SIMPLETYPE, name);
@@ -1291,7 +1291,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
         }
     }
 
-    if (!XMLString::isValidNCName(name)) {
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name)) ) {
 
         //REVISIT - Should we return or continue and save type with wrong name?
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
@@ -1530,7 +1530,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     }
 
     // name must be a valid NCName
-    if (!XMLString::isValidNCName(name)) {
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_GROUP, name);
         return 0;
@@ -1737,7 +1737,7 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     else
     {
         // name must be a valid NCName
-        if (!XMLString::isValidNCName(name)) {
+        if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                               SchemaSymbols::fgELT_ATTRIBUTEGROUP, name);
             return 0;
@@ -2280,7 +2280,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     }
 
     // processing 'name'
-    if (!XMLString::isValidNCName(name)
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))
         || XMLString::equals(name, XMLUni::fgXMLNSString)) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName, SchemaSymbols::fgELT_ATTRIBUTE, name);
@@ -2581,7 +2581,7 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     }
 
     // make sure that name is a valid NCName
-    if (!XMLString::isValidNCName(name))
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name)))
     {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain,
             XMLErrs::InvalidDeclarationName, SchemaSymbols::fgELT_ELEMENT, name);
@@ -4163,7 +4163,7 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
         return;
     }
 
-    if (!XMLString::isValidNCName(name)) {
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_KEY, name);
         return;
@@ -4226,7 +4226,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
         return;
     }
 
-    if (!XMLString::isValidNCName(name)) {
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_UNIQUE, name);
         return;
@@ -4292,7 +4292,7 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
         return;
     }
 
-    if (!XMLString::isValidNCName(name)) {
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_KEYREF, name);
         return;

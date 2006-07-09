@@ -76,13 +76,6 @@ public:
                           const XMLCh*         const rawData
                         ,       MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager
                         );
-
-    /**
-     *
-     *  Deprecated: please use getRawData
-     *
-     */
-    virtual XMLCh*        toString() const;
     
     virtual XMLCh*        getRawData() const;
 

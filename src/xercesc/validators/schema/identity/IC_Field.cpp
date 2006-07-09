@@ -95,12 +95,6 @@ bool IC_Field::operator!= (const IC_Field& other) const {
 // ---------------------------------------------------------------------------
 //  IC_Field: Factory methods
 // ---------------------------------------------------------------------------
-XPathMatcher* IC_Field::createMatcher(ValueStore* const,
-                                      MemoryManager* const) {
-
-    return 0;
-}
-
 XPathMatcher* IC_Field::createMatcher(FieldActivator* const fieldActivator,
                                       ValueStore* const valueStore,
                                       MemoryManager* const manager)

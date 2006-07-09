@@ -1551,18 +1551,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     //  If this is the first element and we are validating, check the root
     //  element.
-    if (isRoot)
-    {
-        if (fValidate)
-        {
-            //  Some validators may also want to check the root, call the
-            //  XMLValidator::checkRootElement
-            if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId())) {
-                fValidator->emitError(XMLValid::RootElemNotLikeDocType);
-            }
-        }
-    }
-    else if (parentValidation)
+    if (!isRoot && parentValidation)
     {
         //  If the element stack is not empty, then add this element as a
         //  child of the previous top element. If its empty, this is the root

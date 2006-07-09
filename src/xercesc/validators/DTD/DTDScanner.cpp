@@ -231,7 +231,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             fScanner->emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
         }
         else {
-            if (fScanner->getDoValidation())
+            if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
                 fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
         }
 
@@ -243,7 +243,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
     //  If we are a standalone document, then it has to have been declared
     //  in the internal subset. Keep going though.
     //
-    if (fScanner->getDoValidation() && fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
+    if (fScanner->getValidationScheme() == XMLScanner::Val_Always && fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
         fScanner->getValidator()->emitError(XMLValid::VC_IllegalRefInStandalone, bbName.getRawBuffer());
 
     //
@@ -542,7 +542,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
     scanDefaultDecl(*decl);
 
     // If validating, then do a couple of validation constraints
-    if (fScanner->getDoValidation())
+    if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
     {
         if (decl->getType() == XMLAttDef::ID)
         {
@@ -705,7 +705,7 @@ void DTDScanner::scanAttListDecl()
             //  make sure that we have not seen an id attribute yet. Set
             //  the flag to say that we've seen one now also.
             //
-            if (fScanner->getDoValidation())
+            if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
             {
                 if (attDef->getType() == XMLAttDef::ID)
                 {
@@ -1063,7 +1063,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         if (!curNode)
             return 0;
 
-        if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getDoValidation())
+        if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
             fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
     }
      else
@@ -1257,7 +1257,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         return 0;
                     }
 
-                    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getDoValidation())
+                    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
                         fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
                     // Else patch it in and make it the new current
@@ -1543,7 +1543,7 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
         //  If we are validating we have to check that there are no multiple
         //  uses of any child elements.
         //
-        if (fScanner->getDoValidation())
+        if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
         {
             if (((const MixedContentModel*)toFill.getContentModel())->hasDups())
                 fScanner->getValidator()->emitError(XMLValid::RepElemInMixed);
@@ -1565,7 +1565,7 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
     }
 
     // Make sure we are on the same reader as where we started
-    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getDoValidation())
+    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
         fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
     return status;
@@ -1656,7 +1656,7 @@ void DTDScanner::scanElementDecl()
     {
         if (decl->isDeclared())
         {
-            if (fScanner->getDoValidation())
+            if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
                 fScanner->getValidator()->emitError(XMLValid::ElementAlreadyExists, bbName.getRawBuffer());
 
             if (!fDumElemDecl)
@@ -1956,7 +1956,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
             fScanner->emitError(XMLErrs::EntityNotFound, bbName.getRawBuffer());
         }
         else {
-            if (fScanner->getDoValidation())
+            if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
                 fScanner->getValidator()->emitError(XMLValid::VC_EntityNotFound, bbName.getRawBuffer());
         }
 
@@ -2238,7 +2238,7 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill)
     //  then we propogated some entity out of the literal, so issue an
     //  error, but don't fail.
     //
-    if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+    if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getValidationScheme() == XMLScanner::Val_Always)
         fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
     return true;
@@ -2517,7 +2517,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                     if (fReaderMgr->getCurrentReaderNum() != orgReader){
                         if (wasInPE)
                             fScanner->emitError(XMLErrs::PEBetweenDecl);
-                        else if (fScanner->getDoValidation())
+                        else if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
                             fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
                     }
 
@@ -2949,7 +2949,7 @@ bool DTDScanner::scanInternalSubset()
             if (fReaderMgr->getCurrentReaderNum() != orgReader) {
                 if (wasInPE)
                     fScanner->emitError(XMLErrs::PEBetweenDecl);
-                else if (fScanner->getDoValidation())
+                else if (fScanner->getValidationScheme() == XMLScanner::Val_Always)
                     fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
             }
         }
@@ -3089,7 +3089,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 //  And see if we got back to the same level. If not, then its
                 //  a partial markup error.
                 //
-                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getValidationScheme() == XMLScanner::Val_Always)
                     fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
             }
@@ -3111,7 +3111,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 //  And see if we got back to the same level. If not, then its
                 //  a partial markup error.
                 //
-                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getValidationScheme() == XMLScanner::Val_Always)
                     fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
 
             }

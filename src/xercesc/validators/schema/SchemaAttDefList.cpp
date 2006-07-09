@@ -55,11 +55,6 @@ SchemaAttDefList::~SchemaAttDefList()
 // ---------------------------------------------------------------------------
 //  SchemaAttDefList: Implementation of the virtual interface
 // ---------------------------------------------------------------------------
-bool SchemaAttDefList::hasMoreElements() const
-{
-    return fEnum->hasMoreElements();
-}
-
 
 bool SchemaAttDefList::isEmpty() const
 {
@@ -110,18 +105,6 @@ SchemaAttDefList::findAttDef( const   XMLCh* const
    //need numeric URI id to locate the attribute, that's how it was stored
    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_InvalidId, getMemoryManager());
    return 0;
-}
-
-
-XMLAttDef& SchemaAttDefList::nextElement()
-{
-    return fEnum->nextElement();
-}
-
-
-void SchemaAttDefList::Reset()
-{
-    fEnum->Reset();
 }
 
 /**

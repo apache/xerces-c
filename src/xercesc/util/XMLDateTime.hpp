@@ -78,13 +78,6 @@ public:
     // -----------------------------------------------------------------------
     // Implementation of Abstract Interface
     // -----------------------------------------------------------------------
-
-    /**
-     *
-     *  Deprecated: please use getRawData
-     *
-     */
-    virtual XMLCh*        toString() const;
     
     virtual XMLCh*        getRawData() const;
 

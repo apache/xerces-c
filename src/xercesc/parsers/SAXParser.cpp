@@ -1226,33 +1226,6 @@ void SAXParser::startInputSource(const InputSource&)
 }
 
 
-
-// ---------------------------------------------------------------------------
-//  SAXParser: Deprecated methods
-// ---------------------------------------------------------------------------
-bool SAXParser::getDoValidation() const
-{
-    //
-    //  We don't want to tie the public parser classes to the enum used
-    //  by the scanner, so we use a separate one and map.
-    //
-    //  DON'T mix the new and old methods!!
-    //
-    const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
-    if (scheme == XMLScanner::Val_Always)
-        return true;
-    return false;
-}
-
-void SAXParser::setDoValidation(const bool newState)
-{
-    fScanner->setDoValidation
-    (
-        newState ? XMLScanner::Val_Always : XMLScanner::Val_Never
-    );
-}
-
-
 // ---------------------------------------------------------------------------
 //  SAXParser: Grammar preparsing methods
 // ---------------------------------------------------------------------------

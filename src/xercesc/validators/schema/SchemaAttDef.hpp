@@ -87,11 +87,6 @@ public :
     SchemaAttDef* getBaseAttDecl();
     PSVIDefs::PSVIScope getPSVIScope() const;
 
-    /*
-     * @deprecated
-     */
-    ComplexTypeInfo* getEnclosingCT() const;
-
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -180,11 +175,6 @@ inline DatatypeValidator* SchemaAttDef::getDatatypeValidator() const
 inline ValueVectorOf<unsigned int>*
 SchemaAttDef::getNamespaceList() const {
     return fNamespaceList;
-}
-
-inline ComplexTypeInfo* SchemaAttDef::getEnclosingCT() const
-{
-    return 0;
 }
 
 inline SchemaAttDef* SchemaAttDef::getBaseAttDecl()

@@ -319,21 +319,6 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
-    //  Deprecated XMLValidator interface
-    // -----------------------------------------------------------------------
-    /**
-      *
-      * DEPRECATED.
-      * For those validators that contrain the possible root elements of a
-      * document to only particular elements, they should use this call to
-      * validate that the passed root element id is a legal root element.
-      */
-    bool checkRootElement
-    (
-        const   unsigned int
-    ) { return true;};
-
-    // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
 	static void reinitMsgMutex();

@@ -23,6 +23,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/datatype/NameDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -97,7 +98,7 @@ void NameDatatypeValidator::checkValueSpace(const XMLCh* const content
     //
     // 3.3.6 check must: "Name"
     //
-    if ( !XMLString::isValidName(content))
+    if ( !XMLChar1_0::isValidName(content, XMLString::stringLen(content)) )
     {
         ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Invalid_Name

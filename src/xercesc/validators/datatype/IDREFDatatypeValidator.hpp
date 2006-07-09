@@ -88,9 +88,6 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    //deprecated
-    inline void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
-
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -127,13 +124,6 @@ private:
     // -----------------------------------------------------------------------
 
 };
-
-// -----------------------------------------------------------------------
-// Validation methods
-// -----------------------------------------------------------------------
-inline void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* )
-{
-}
 
 XERCES_CPP_NAMESPACE_END
 

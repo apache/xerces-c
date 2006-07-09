@@ -89,20 +89,9 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual element decl interface
     // -----------------------------------------------------------------------
-    virtual XMLAttDef* findAttr
-    (
-        const   XMLCh* const    qName
-        , const unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefix
-        , const LookupOpts      options
-        ,       bool&           wasAdded
-    )   const;
     virtual XMLAttDefList& getAttDefList() const;
     virtual CharDataOpts getCharDataOpts() const;
     virtual bool hasAttDefs() const;
-    // @deprecated; not thread-safe
-    virtual bool resetDefs();
     virtual const ContentSpecNode* getContentSpec() const;
     virtual ContentSpecNode* getContentSpec();
     virtual void setContentSpec(ContentSpecNode* toAdopt);
@@ -133,10 +122,6 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    /**
-     * @deprecated; not actually used
-     */    
-    void setElemId(unsigned int elemId);
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setPSVIScope(const PSVIDefs::PSVIScope toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
@@ -349,13 +334,6 @@ SchemaElementDecl::getSubstitutionGroupElem() const {
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Setter methods
 // ---------------------------------------------------------------------------
-inline void
-SchemaElementDecl::setElemId(unsigned int)
-{
-    //there is not getElemId so this is not needed. mark deprecated.
-    //fElemId = elemId;
-}
-
 inline void
 SchemaElementDecl::setModelType(const SchemaElementDecl::ModelTypes toSet)
 {
