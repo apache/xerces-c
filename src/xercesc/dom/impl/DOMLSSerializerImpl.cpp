@@ -36,6 +36,7 @@
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/dom/StDOMNode.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -648,7 +649,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 fLineFeedInTextNodePrinted = false;
                 fLastWhiteSpaceInTextNode = 0;
 
-                if(XMLString::isAllWhiteSpace(nodeValue))
+                if(XMLChar1_0::isAllSpaces(nodeValue, XMLString::stringLen(nodeValue)))
                 {
                     // skips whitespace-only text nodes unless whitespace-in-element is set.
                     if (!getFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID))
