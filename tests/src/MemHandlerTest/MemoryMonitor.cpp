@@ -33,6 +33,7 @@
 #include <assert.h>
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/dom/DOM.hpp>
 
 void* MemoryMonitor::allocate(size_t size)
 {
@@ -354,6 +355,18 @@ int main (int argC,  char *argV[])
                 domBuilder->resetDocumentPool();
 
                 doc = domBuilder->parseURI(xmlFile);
+                if(doc && doc->getDocumentElement())
+                {
+                    XERCES_CPP_NAMESPACE_QUALIFIER DOMNodeList *list=NULL;
+                    if(doNamespaces)
+                        list=doc->getElementsByTagNameNS(doc->getDocumentElement()->getNamespaceURI(), doc->getDocumentElement()->getLocalName());
+                    else
+                        list=doc->getElementsByTagName(doc->getDocumentElement()->getNodeName());
+                    if(list==NULL)
+                        XERCES_STD_QUALIFIER cout << "getElementsByTagName didn't return a valid DOMNodeList." << XERCES_STD_QUALIFIER endl;
+                    else if(list->item(0)!=doc->getDocumentElement())
+                        XERCES_STD_QUALIFIER cout << "getElementsByTagName didn't find the root element." << XERCES_STD_QUALIFIER endl;
+                }
                 sax2parser->parse(xmlFile);
                 saxParser->parse(xmlFile);
             }
