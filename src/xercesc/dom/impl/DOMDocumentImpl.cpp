@@ -1414,11 +1414,15 @@ void DOMDocumentImpl::releaseBuffer(DOMBuffer* buffer)
     fRecycleBufferPtr->push(buffer);
 }
 
-DOMBuffer* DOMDocumentImpl::popBuffer()
+DOMBuffer* DOMDocumentImpl::popBuffer(XMLSize_t nMinSize)
 {
     if (!fRecycleBufferPtr || fRecycleBufferPtr->empty())
         return 0;
 
+    for(unsigned int index=fRecycleBufferPtr->size()-1;index>0;index--)
+        if(fRecycleBufferPtr->elementAt(index)->getCapacity()>=nMinSize)
+            return fRecycleBufferPtr->popAt(index);
+    // if we didn't find a buffer big enough, get the last one
     return fRecycleBufferPtr->pop();
 }
 

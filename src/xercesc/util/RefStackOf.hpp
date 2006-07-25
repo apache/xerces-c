@@ -49,6 +49,7 @@ public :
     //  Element management methods
     // -----------------------------------------------------------------------
     const TElem* elementAt(const unsigned int index) const;
+    TElem* popAt(const unsigned int index);
     void push(TElem* const toPush);
     const TElem* peek() const;
     TElem* pop();

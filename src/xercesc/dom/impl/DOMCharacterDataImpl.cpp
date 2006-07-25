@@ -35,7 +35,7 @@ DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
 {
     fDoc = (DOMDocumentImpl*)doc;
 
-    fDataBuf = fDoc->popBuffer();
+    fDataBuf = fDoc->popBuffer(XMLString::stringLen(dat)+1);
     if (!fDataBuf)
         fDataBuf = new (fDoc) DOMBuffer(fDoc, dat);
     else
@@ -50,7 +50,7 @@ DOMCharacterDataImpl::DOMCharacterDataImpl(const DOMCharacterDataImpl &other)
 {
     fDoc = (DOMDocumentImpl*)other.fDoc;
 
-    fDataBuf = fDoc->popBuffer();
+    fDataBuf = fDoc->popBuffer(other.getLength()+1);
     if (!fDataBuf)
         fDataBuf = new (fDoc) DOMBuffer(fDoc, other.fDataBuf->getRawBuffer());
     else

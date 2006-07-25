@@ -255,7 +255,7 @@ public:
     void                         deleteHeap();
     void                         releaseDocNotifyUserData(DOMNode* object);
     void                         releaseBuffer(DOMBuffer* buffer);
-    DOMBuffer*                   popBuffer();
+    DOMBuffer*                   popBuffer(XMLSize_t nMinSize);
     MemoryManager*               getMemoryManager() const;
 
     // Factory methods for getting/creating node lists.

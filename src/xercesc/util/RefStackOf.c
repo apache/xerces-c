@@ -51,9 +51,18 @@ template <class TElem> RefStackOf<TElem>::~RefStackOf()
 template <class TElem> const TElem* RefStackOf<TElem>::
 elementAt(const unsigned int index) const
 {
-    if (index > fVector.size())
+    if (index >= fVector.size())
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Stack_BadIndex, fVector.getMemoryManager());
     return fVector.elementAt(index);
+}
+
+template <class TElem> TElem* RefStackOf<TElem>::popAt(const unsigned int index)
+{
+    if (index >= fVector.size())
+        ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Stack_BadIndex, fVector.getMemoryManager());
+
+    // Orphan off the element from the slot in the vector
+    return fVector.orphanElementAt(index);
 }
 
 template <class TElem> void RefStackOf<TElem>::push(TElem* const toPush)
