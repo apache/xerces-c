@@ -38,8 +38,8 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("  where options are:\n");
     print ("    -s <source_directory>\n");
     print ("    -o <target_directory>\n");
-    print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7, VC7.1, ecl or icl)\n");
-    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7, VC7.1 or VC8)\n");
+    print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7.1, ecl or icl)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7.1 or VC8)\n");
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
@@ -154,12 +154,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         $VCBuildDir     = "VC7.1"; 
         $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }    
-    elsif ($opt_x =~ m/VC7/i ) 
-    {
-        $DevStudioVer   = "7.0";
-        $VCBuildDir     = "VC7"; 
-        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
-    }
     elsif ($opt_x =~ m/VC8/i ) 
     {
         $DevStudioVer   = "8.0";
@@ -176,7 +170,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     else
     {
         print ("Error: Invalid compilers used \n");
-        print ("-x <C++ compiler name> VC6, VC7, VC7.1, VC8, ecl and icl \n");        
+        print ("-x <C++ compiler name> VC6, VC7.1, VC8, ecl and icl \n");        
         exit(1);            	    	
     }
 
@@ -222,8 +216,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     if ($opt_n =~ m/fileonly/i) {
         if ($DevStudioVer eq "6.0") { 
             changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
-        } elsif ($DevStudioVer eq "7.0") {
-            changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj");
         } elsif ($DevStudioVer eq "7.1") {
             changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj");
         } elsif ($DevStudioVer eq "8.0") {
@@ -260,14 +252,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
                     psystem("msdev allinone.dsw /MAKE \"all - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");            	
                 }
                 psystem("type buildlog_release.txt");
-                psystem("type buildlog_debug.txt");
-            } elsif ($DevStudioVer eq "7.0") {
-                pchdir ("$ICUROOT/source/allinone");
-
-                psystem("devenv /rebuild Release /out buildlog_release.txt /project all allinone.sln");
-                psystem("type buildlog_release.txt");
-
-                psystem("devenv /rebuild debug /out buildlog_debug.txt /project all allinone.sln");
                 psystem("type buildlog_debug.txt");
             } elsif ($DevStudioVer eq "7.1") {
             	# ICU only has allinone.sln for VC7.0
@@ -321,8 +305,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         #
         if ($DevStudioVer eq "6.0") {
             change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $Transcoder , $MsgLoader);
-        } elsif ($DevStudioVer eq "7.0") {
-            change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
         } elsif ($DevStudioVer eq "7.1") {
             change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
         } elsif ($DevStudioVer eq "8.0") {
@@ -345,7 +327,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     #
     #                             release                       debug 
     # ===========================================================================
-    #                  vc6      vc7     ecl        vc6       vc7      ecl
+    #                  vc6      vc7.1   ecl        vc6       vc7.1    ecl
     # ===========================================================================
     # xercesc          yes      yes     yes        yes       yes      no
     # depdom           yes      yes     yes        yes       yes      no
@@ -363,9 +345,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             psystem("msdev xerces-all.dsw /MAKE \"all - $PlatformName Release\" /REBUILD /OUT buildlog_release.txt");
             psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $PlatformName Debug\" /REBUILD /OUT buildlog_debug.txt");            
         }	
-    } elsif ($DevStudioVer eq "7.0") {
-        psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
-        psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");                
     } elsif ($DevStudioVer eq "7.1") {
         psystem("devenv /rebuild Release /out buildlog_release.txt /project all xerces-all.sln");
         psystem("devenv /rebuild debug /out buildlog_debug.txt /project XercesLib xerces-all.sln");               
