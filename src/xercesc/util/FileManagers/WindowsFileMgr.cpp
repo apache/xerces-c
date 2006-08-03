@@ -178,23 +178,11 @@ WindowsFileMgr::open(const XMLCh* fileName, bool toWrite, MemoryManager* const m
 
 
 FileHandle
-WindowsFileMgr::open(const char* path, bool toWrite, MemoryManager* const /*manager*/)
+WindowsFileMgr::open(const char* path, bool toWrite, MemoryManager* const manager)
 {
-    FileHandle retVal = ::CreateFileA
-    (
-        path
-        , toWrite?GENERIC_WRITE:GENERIC_READ
-        , FILE_SHARE_READ
-        , 0
-        , toWrite?OPEN_ALWAYS:OPEN_EXISTING
-        , toWrite?FILE_ATTRIBUTE_NORMAL:FILE_FLAG_SEQUENTIAL_SCAN
-        , 0
-    );
-
-    if (retVal == INVALID_HANDLE_VALUE)
-        return 0;
-
-    return retVal;
+    XMLCh* tmpFileName = XMLString::transcode(path, manager);
+    ArrayJanitor<XMLCh> janText(tmpFileName, manager);
+    return open(tmpFileName, toWrite, manager);
 }
 
 
