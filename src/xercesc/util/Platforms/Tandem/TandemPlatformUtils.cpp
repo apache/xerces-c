@@ -184,9 +184,10 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     //  in native format, and goes out as Unicode always
     //
     char* newSrc = XMLString::transcode(srcPath, fgMemoryManager);
+    ArrayJanitor<char> newSrcJanitor(newSrc, fgMemoryManager);
 
     // Use a local buffer that is big enough for the largest legal path
-     char* tmpPath = dirname((char*)newSrc);
+    char* tmpPath = dirname((char*)newSrc);
     if (!tmpPath)
     {
         throw XMLPlatformUtilsException("XMLPlatformUtils::resetFile - Could not get the base path name");
@@ -198,7 +199,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     );//new char [strlen(tmpPath) +1];
     ArrayJanitor<char> newJanitor(newXMLString, fgMemoryManager);
     strcpy(newXMLString, tmpPath);
-        strcat(newXMLString , "/");
+    strcat(newXMLString , "/");
     // Return a copy of the path, in Unicode format
     return XMLString::transcode(newXMLString, manager);
 }
