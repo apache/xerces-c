@@ -766,7 +766,7 @@ if ( ($platform =~ m/AIX/i)      ||
 
     $cfg_t = "";
     if ($opt_t eq "icu") {$cfg_t = "--enable-transcoder-icu"; $cfg_icu="--with-icu=$ICUROOT"; }
-    if ($opt_t eq "native") {$cfg_t = "--disable-transcoder-icu"; }
+    if ($opt_t eq "native") {$cfg_t = "--disable-transcoder-icu --enable-transcoder-iconv"; }
 
     psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags ./configure $cfg_icu $cfg_m $cfg_n $cfg_t");
 
