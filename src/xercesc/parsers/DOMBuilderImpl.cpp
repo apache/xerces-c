@@ -628,11 +628,6 @@ Grammar* DOMBuilderImpl::loadGrammar(const char* const systemId,
         if (grammarType == Grammar::DTDGrammarType) 
             getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
-
-        // Release DOM tree - DTD
-        DOMDocument* doc = adoptDocument();
-        if (doc)
-            doc->release();
     }
     catch(const OutOfMemoryException&)
     {
@@ -662,11 +657,6 @@ Grammar* DOMBuilderImpl::loadGrammar(const XMLCh* const systemId,
         if (grammarType == Grammar::DTDGrammarType) 
             getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(systemId, grammarType, toCache);
-
-        // Release DOM tree - DTD
-        DOMDocument* doc = adoptDocument();
-        if (doc)
-            doc->release();
     }
     catch(const OutOfMemoryException&)
     {
@@ -692,17 +682,11 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
 
     try
     {
-        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false, getMemoryManager());
-
         setParseInProgress(true);
         if (grammarType == Grammar::DTDGrammarType) 
             getScanner()->setDocTypeHandler(0);
+        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false, getMemoryManager());
         grammar = getScanner()->loadGrammar(isWrapper, grammarType, toCache);
-
-        // Release DOM tree - DTD
-        DOMDocument* doc = adoptDocument();
-        if (doc)
-            doc->release();
     }
     catch(const OutOfMemoryException&)
     {

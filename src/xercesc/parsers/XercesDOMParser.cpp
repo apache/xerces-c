@@ -332,9 +332,6 @@ Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
         if (grammarType == Grammar::DTDGrammarType) 
             getScanner()->setDocTypeHandler(0);
         grammar = getScanner()->loadGrammar(source, grammarType, toCache);
-        if (grammarType == Grammar::DTDGrammarType) 
-            getScanner()->setDocTypeHandler(this);
-        setParseInProgress(false);
     }
     catch(const OutOfMemoryException&)
     {
