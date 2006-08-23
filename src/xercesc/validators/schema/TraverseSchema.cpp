@@ -2426,6 +2426,18 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     if (attType == XMLAttDef::Simple && dv && valueToCheck) {
 
+        short wsFacet = dv->getWSFacet();
+        if((wsFacet == DatatypeValidator::REPLACE && !XMLString::isWSReplaced(valueToCheck)) ||
+           (wsFacet == DatatypeValidator::COLLAPSE && !XMLString::isWSCollapsed(valueToCheck)))
+        {
+            XMLCh* normalizedValue=XMLString::replicate(valueToCheck, fMemoryManager);
+            ArrayJanitor<XMLCh> tempURIName(normalizedValue, fMemoryManager);
+            if(wsFacet == DatatypeValidator::REPLACE)
+                XMLString::replaceWS(normalizedValue, fMemoryManager);
+            else if(wsFacet == DatatypeValidator::COLLAPSE)
+                XMLString::collapseWS(normalizedValue, fMemoryManager);
+            valueToCheck=fStringPool->getValueForId(fStringPool->addOrFind(normalizedValue));
+        }
         try {
             dv->validate(valueToCheck
                       , fSchemaGrammar->getValidationContext()
@@ -2441,6 +2453,14 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         catch(...) {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valueToCheck);
         }
+    }
+    else if((attType == XMLAttDef::NmTokens || attType==XMLAttDef::IDRefs || attType==XMLAttDef::Entities) &&
+            valueToCheck && !XMLString::isWSCollapsed(valueToCheck))
+    {
+        XMLCh* normalizedValue=XMLString::replicate(valueToCheck, fMemoryManager);
+        ArrayJanitor<XMLCh> tempURIName(normalizedValue, fMemoryManager);
+        XMLString::collapseWS(normalizedValue, fMemoryManager);
+        valueToCheck=fStringPool->getValueForId(fStringPool->addOrFind(normalizedValue));
     }
 
     if (ofTypeID && valueToCheck) {
