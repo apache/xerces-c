@@ -1914,6 +1914,7 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *fgDOMWRTWhitespaceInElementContent = *XML::Xercesc::XMLUni_fgDOMWRTWhitespaceInElementContent;
 *fgDOMWRTBOM = *XML::Xercesc::XMLUni_fgDOMWRTBOM;
 *fgDOMXMLDeclaration = *XML::Xercesc::XMLUni_fgDOMXMLDeclaration;
+*fgDOMWRTXercesPrettyPrint = *XML::Xercesc::XMLUni_fgDOMWRTXercesPrettyPrint;
 *fgXercescInterfacePSVITypeInfo = *XML::Xercesc::XMLUni_fgXercescInterfacePSVITypeInfo;
 *fgXercescInterfaceDOMDocumentTypeImpl = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMDocumentTypeImpl;
 *fgXercescInterfaceDOMMemoryManager = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMMemoryManager;
@@ -2028,8 +2029,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *InContentModel = *XML::Xercesc::XMLElementDecl_InContentModel;
 *AsRootElem = *XML::Xercesc::XMLElementDecl_AsRootElem;
 *JustFaultIn = *XML::Xercesc::XMLElementDecl_JustFaultIn;
-*AddIfNotFound = *XML::Xercesc::XMLElementDecl_AddIfNotFound;
-*FailIfNotFound = *XML::Xercesc::XMLElementDecl_FailIfNotFound;
 *NoCharData = *XML::Xercesc::XMLElementDecl_NoCharData;
 *SpacesOk = *XML::Xercesc::XMLElementDecl_SpacesOk;
 *AllCharData = *XML::Xercesc::XMLElementDecl_AllCharData;
@@ -2047,11 +2046,9 @@ sub DESTROY {
     }
 }
 
-*findAttr = *XML::Xercesc::XMLElementDecl_findAttr;
 *getAttDefList = *XML::Xercesc::XMLElementDecl_getAttDefList;
 *getCharDataOpts = *XML::Xercesc::XMLElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::XMLElementDecl_hasAttDefs;
-*resetDefs = *XML::Xercesc::XMLElementDecl_resetDefs;
 *getContentSpec = *XML::Xercesc::XMLElementDecl_getContentSpec;
 *setContentSpec = *XML::Xercesc::XMLElementDecl_setContentSpec;
 *getContentModel = *XML::Xercesc::XMLElementDecl_getContentModel;
@@ -2211,11 +2208,8 @@ sub DESTROY {
     }
 }
 
-*hasMoreElements = *XML::Xercesc::XMLAttDefList_hasMoreElements;
 *isEmpty = *XML::Xercesc::XMLAttDefList_isEmpty;
 *findAttDef = *XML::Xercesc::XMLAttDefList_findAttDef;
-*nextElement = *XML::Xercesc::XMLAttDefList_nextElement;
-*Reset = *XML::Xercesc::XMLAttDefList_Reset;
 *getAttDefCount = *XML::Xercesc::XMLAttDefList_getAttDefCount;
 *getAttDef = *XML::Xercesc::XMLAttDefList_getAttDef;
 *getMemoryManager = *XML::Xercesc::XMLAttDefList_getMemoryManager;
@@ -2291,7 +2285,6 @@ sub DESTROY {
 *getDefaultType = *XML::Xercesc::XMLAttDef_getDefaultType;
 *getEnumeration = *XML::Xercesc::XMLAttDef_getEnumeration;
 *getId = *XML::Xercesc::XMLAttDef_getId;
-*getProvided = *XML::Xercesc::XMLAttDef_getProvided;
 *getType = *XML::Xercesc::XMLAttDef_getType;
 *getValue = *XML::Xercesc::XMLAttDef_getValue;
 *getCreateReason = *XML::Xercesc::XMLAttDef_getCreateReason;
@@ -2299,7 +2292,6 @@ sub DESTROY {
 *getMemoryManager = *XML::Xercesc::XMLAttDef_getMemoryManager;
 *setDefaultType = *XML::Xercesc::XMLAttDef_setDefaultType;
 *setId = *XML::Xercesc::XMLAttDef_setId;
-*setProvided = *XML::Xercesc::XMLAttDef_setProvided;
 *setType = *XML::Xercesc::XMLAttDef_setType;
 *setValue = *XML::Xercesc::XMLAttDef_setValue;
 *setEnumeration = *XML::Xercesc::XMLAttDef_setEnumeration;
@@ -2548,11 +2540,9 @@ sub DESTROY {
     }
 }
 
-*findAttr = *XML::Xercesc::DTDElementDecl_findAttr;
 *getAttDefList = *XML::Xercesc::DTDElementDecl_getAttDefList;
 *getCharDataOpts = *XML::Xercesc::DTDElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::DTDElementDecl_hasAttDefs;
-*resetDefs = *XML::Xercesc::DTDElementDecl_resetDefs;
 *getContentSpec = *XML::Xercesc::DTDElementDecl_getContentSpec;
 *setContentSpec = *XML::Xercesc::DTDElementDecl_setContentSpec;
 *getContentModel = *XML::Xercesc::DTDElementDecl_getContentModel;
@@ -2714,11 +2704,8 @@ sub DESTROY {
     }
 }
 
-*hasMoreElements = *XML::Xercesc::DTDAttDefList_hasMoreElements;
 *isEmpty = *XML::Xercesc::DTDAttDefList_isEmpty;
 *findAttDef = *XML::Xercesc::DTDAttDefList_findAttDef;
-*nextElement = *XML::Xercesc::DTDAttDefList_nextElement;
-*Reset = *XML::Xercesc::DTDAttDefList_Reset;
 *getAttDefCount = *XML::Xercesc::DTDAttDefList_getAttDefCount;
 *getAttDef = *XML::Xercesc::DTDAttDefList_getAttDef;
 sub DISOWN {
@@ -2805,13 +2792,11 @@ sub DESTROY {
 *putNotationDecl = *XML::Xercesc::DTDGrammar_putNotationDecl;
 *setValidated = *XML::Xercesc::DTDGrammar_setValidated;
 *reset = *XML::Xercesc::DTDGrammar_reset;
-*getRootElemId = *XML::Xercesc::DTDGrammar_getRootElemId;
 *getEntityDecl = *XML::Xercesc::DTDGrammar_getEntityDecl;
 *getEntityDeclPool = *XML::Xercesc::DTDGrammar_getEntityDeclPool;
 *getElemEnumerator = *XML::Xercesc::DTDGrammar_getElemEnumerator;
 *getEntityEnumerator = *XML::Xercesc::DTDGrammar_getEntityEnumerator;
 *getNotationEnumerator = *XML::Xercesc::DTDGrammar_getNotationEnumerator;
-*setRootElemId = *XML::Xercesc::DTDGrammar_setRootElemId;
 *setGrammarDescription = *XML::Xercesc::DTDGrammar_setGrammarDescription;
 *getGrammarDescription = *XML::Xercesc::DTDGrammar_getGrammarDescription;
 *putEntityDecl = *XML::Xercesc::DTDGrammar_putEntityDecl;
@@ -2893,11 +2878,9 @@ sub DESTROY {
     }
 }
 
-*findAttr = *XML::Xercesc::SchemaElementDecl_findAttr;
 *getAttDefList = *XML::Xercesc::SchemaElementDecl_getAttDefList;
 *getCharDataOpts = *XML::Xercesc::SchemaElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::SchemaElementDecl_hasAttDefs;
-*resetDefs = *XML::Xercesc::SchemaElementDecl_resetDefs;
 *getContentSpec = *XML::Xercesc::SchemaElementDecl_getContentSpec;
 *setContentSpec = *XML::Xercesc::SchemaElementDecl_setContentSpec;
 *getContentModel = *XML::Xercesc::SchemaElementDecl_getContentModel;
@@ -2916,7 +2899,6 @@ sub DESTROY {
 *getComplexTypeInfo = *XML::Xercesc::SchemaElementDecl_getComplexTypeInfo;
 *isGlobalDecl = *XML::Xercesc::SchemaElementDecl_isGlobalDecl;
 *getSubstitutionGroupElem = *XML::Xercesc::SchemaElementDecl_getSubstitutionGroupElem;
-*setElemId = *XML::Xercesc::SchemaElementDecl_setElemId;
 *setModelType = *XML::Xercesc::SchemaElementDecl_setModelType;
 *setPSVIScope = *XML::Xercesc::SchemaElementDecl_setPSVIScope;
 *setDatatypeValidator = *XML::Xercesc::SchemaElementDecl_setDatatypeValidator;
@@ -3033,7 +3015,6 @@ sub DESTROY {
 *getDatatypeRegistry = *XML::Xercesc::SchemaGrammar_getDatatypeRegistry;
 *getNamespaceScope = *XML::Xercesc::SchemaGrammar_getNamespaceScope;
 *getValidSubstitutionGroups = *XML::Xercesc::SchemaGrammar_getValidSubstitutionGroups;
-*getIDRefList = *XML::Xercesc::SchemaGrammar_getIDRefList;
 *getValidationContext = *XML::Xercesc::SchemaGrammar_getValidationContext;
 *setTargetNamespace = *XML::Xercesc::SchemaGrammar_setTargetNamespace;
 *setAttributeDeclRegistry = *XML::Xercesc::SchemaGrammar_setAttributeDeclRegistry;
@@ -3132,12 +3113,9 @@ sub DESTROY {
     }
 }
 
-*hasMoreElements = *XML::Xercesc::SchemaAttDefList_hasMoreElements;
 *isEmpty = *XML::Xercesc::SchemaAttDefList_isEmpty;
 *findAttDef = *XML::Xercesc::SchemaAttDefList_findAttDef;
 *findAttDefLocalPart = *XML::Xercesc::SchemaAttDefList_findAttDefLocalPart;
-*nextElement = *XML::Xercesc::SchemaAttDefList_nextElement;
-*Reset = *XML::Xercesc::SchemaAttDefList_Reset;
 *getAttDefCount = *XML::Xercesc::SchemaAttDefList_getAttDefCount;
 *getAttDef = *XML::Xercesc::SchemaAttDefList_getAttDef;
 sub DISOWN {
@@ -3179,7 +3157,6 @@ sub DESTROY {
 *getNamespaceList = *XML::Xercesc::SchemaAttDef_getNamespaceList;
 *getBaseAttDecl = *XML::Xercesc::SchemaAttDef_getBaseAttDecl;
 *getPSVIScope = *XML::Xercesc::SchemaAttDef_getPSVIScope;
-*getEnclosingCT = *XML::Xercesc::SchemaAttDef_getEnclosingCT;
 *setElemId = *XML::Xercesc::SchemaAttDef_setElemId;
 *setAttName = *XML::Xercesc::SchemaAttDef_setAttName;
 *setDatatypeValidator = *XML::Xercesc::SchemaAttDef_setDatatypeValidator;
@@ -6037,9 +6014,6 @@ sub getDocument {
 *handleElementPSVI = *XML::Xercesc::AbstractDOMParser_handleElementPSVI;
 *handlePartialElementPSVI = *XML::Xercesc::AbstractDOMParser_handlePartialElementPSVI;
 *handleAttributesPSVI = *XML::Xercesc::AbstractDOMParser_handleAttributesPSVI;
-*elementTypeInfo = *XML::Xercesc::AbstractDOMParser_elementTypeInfo;
-*getExpandEntityReferences = *XML::Xercesc::AbstractDOMParser_getExpandEntityReferences;
-*setExpandEntityReferences = *XML::Xercesc::AbstractDOMParser_setExpandEntityReferences;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -6839,6 +6813,7 @@ package XML::Xerces;
 *XMLUni_fgDOMWRTWhitespaceInElementContent = *XML::Xercesc::XMLUni_fgDOMWRTWhitespaceInElementContent;
 *XMLUni_fgDOMWRTBOM = *XML::Xercesc::XMLUni_fgDOMWRTBOM;
 *XMLUni_fgDOMXMLDeclaration = *XML::Xercesc::XMLUni_fgDOMXMLDeclaration;
+*XMLUni_fgDOMWRTXercesPrettyPrint = *XML::Xercesc::XMLUni_fgDOMWRTXercesPrettyPrint;
 *XMLUni_fgXercescInterfacePSVITypeInfo = *XML::Xercesc::XMLUni_fgXercescInterfacePSVITypeInfo;
 *XMLUni_fgXercescInterfaceDOMDocumentTypeImpl = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMDocumentTypeImpl;
 *XMLUni_fgXercescInterfaceDOMMemoryManager = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMMemoryManager;
