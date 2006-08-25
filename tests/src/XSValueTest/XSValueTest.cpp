@@ -764,7 +764,7 @@ void test_dt_decimal()
     const char lex_iv_2[]="1234.56.789";
 
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_double = (double)1234.567;
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_1; act_v_ran64_v_1.fValue.f_double = (double)18446744073709551615.999;
     XSValue::XSValue_Data act_v_ran64_v_2; act_v_ran64_v_2.fValue.f_double = (double)999.18446744073709551615;
     //XSValue::XSValue_Data act_v_ran64_iv_1;="18446744073709551616.999";
@@ -856,7 +856,7 @@ void test_dt_decimal()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         //ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
@@ -1332,7 +1332,7 @@ void test_dt_integer()
     const char lex_v_ran32_iv_2[]="-2147483649";
 
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_long = (long)1234;
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_1; act_v_ran64_v_1.fValue.f_long = (long)+9223372036854775807;
     XSValue::XSValue_Data act_v_ran64_v_2; act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
@@ -1415,7 +1415,7 @@ void test_dt_integer()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
@@ -1487,7 +1487,7 @@ void test_dt_nonPositiveInteger()
     const char lex_v_ran32_iv_2[]="-2147483649";
 
     XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)-1234;
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
     XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
@@ -1567,7 +1567,7 @@ void test_dt_nonPositiveInteger()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
@@ -1633,7 +1633,7 @@ void test_dt_negativeInteger()
     const char lex_v_ran32_iv_2[]="-2147483649";
 
     XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)-1234;
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
     XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
@@ -1710,7 +1710,7 @@ void test_dt_negativeInteger()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
@@ -1777,7 +1777,7 @@ void test_dt_long()
     const char lex_v_ran32_iv_2[]="-2147483649";
 
     XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)1234;
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_1;   act_v_ran64_v_1.fValue.f_long = (long)+9223372036854775807;
     XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
@@ -1862,7 +1862,7 @@ void test_dt_long()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
@@ -2398,7 +2398,7 @@ void test_dt_nonNegativeInteger()
     const char lex_v_ran32_iv_2[]="4294967296";
 
     XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)+18446744073709551615;
 #endif
     XSValue::XSValue_Data act_v_ran32_v_2;  act_v_ran32_v_2.fValue.f_ulong = (unsigned long)4294967295;
@@ -2478,7 +2478,7 @@ void test_dt_nonNegativeInteger()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
@@ -2548,7 +2548,7 @@ void test_dt_unsignedLong()
     const char lex_v_ran32_iv_2[]="-1";
 
     XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_1;  act_v_ran64_v_1.fValue.f_ulong = (unsigned long)+18446744073709551615;
     XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)0;
 #endif
@@ -2633,7 +2633,7 @@ void test_dt_unsignedLong()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
@@ -3161,7 +3161,7 @@ void test_dt_positiveInteger()
     const char lex_v_ran32_iv_2[]="4294967296";
 
     XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)+18446744073709551615;
 #endif
     XSValue::XSValue_Data act_v_ran32_v_2;  act_v_ran32_v_2.fValue.f_ulong = (unsigned long)+4294967295;
@@ -3240,7 +3240,7 @@ void test_dt_positiveInteger()
 
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
-#if defined(XML_BITSTOBUILD_64)
+#if SIZEOF_LONG == 8
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_2);
 #else
