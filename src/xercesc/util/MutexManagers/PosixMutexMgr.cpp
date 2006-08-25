@@ -18,6 +18,9 @@
  * $Id$
  */
 
+// on some platforms, THREAD_MUTEX_RECURSIVE is defined only if _GNU_SOURCE is defined
+#define _GNU_SOURCE
+
 #include <pthread.h>
 
 #include <xercesc/util/MutexManagers/PosixMutexMgr.hpp>
