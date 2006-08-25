@@ -29,7 +29,11 @@
 #include    <xercesc/util/XMLNetAccessor.hpp>
 #include    <xercesc/util/BinInputStream.hpp>
 
+#if defined(XERCES_NEW_IOSTREAMS)
 #include	<iostream>
+#else
+#include	<iostream.h>
+#endif
 
 XERCES_CPP_NAMESPACE_USE
 
