@@ -23,7 +23,6 @@
 
 #include <xercesc/util/TransService.hpp>
 
-
 #include <iconv.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -40,10 +39,10 @@ public:
     // -----------------------------------------------------------------------
     IconvGNUWrapper
     (
-  iconv_t		cd_from,
-  iconv_t		cd_to,
-  size_t		uchsize,
-  unsigned int	ubo
+      iconv_t		cd_from,
+      iconv_t		cd_to,
+      size_t		uchsize,
+      unsigned int	ubo
     );
     virtual ~IconvGNUWrapper();
 
@@ -62,10 +61,9 @@ public:
     // Fill array of XMLCh characters with data, supplyed in the array
     // of "native unicode" characters.
     XMLCh*	mbsToXML (
-  const char*	mbs_str,
-  size_t		mbs_cnt,
-  XMLCh*		xml_str,
-  size_t		xml_cnt
+      const char*	mbs_str,
+      XMLCh*		xml_str,
+      size_t		cnt
     ) const;
 
 
@@ -73,28 +71,27 @@ public:
     // in the array of XMLCh characters.
     char*	xmlToMbs
     (
-  const XMLCh*	xml_str,
-  size_t		xml_cnt,
-  char*		mbs_str,
-  size_t		mbs_cnt
+      const XMLCh*	xml_str,
+      char*		mbs_str,
+      size_t		cnt
     ) const;
 
     // Wrapper aroung the iconv() for transcoding from the local charset
     size_t	iconvFrom
     (
-  const char	*fromPtr,
-  size_t		*fromLen,
-  char		**toPtr,
-  size_t		toLen
+      const char	*fromPtr,
+      size_t		*fromLen,
+      char		**toPtr,
+      size_t		toLen
     ) const;
 
     // Wrapper aroung the iconv() for transcoding to the local charset
     size_t	iconvTo
     (
-  const char	*fromPtr,
-  size_t		*fromLen,
-  char		**toPtr,
-  size_t		toLen
+      const char	*fromPtr,
+      size_t		*fromLen,
+      char		**toPtr,
+      size_t		toLen
     ) const;
 
     // Private data accessors
@@ -105,7 +102,7 @@ public:
 
 protected:
 
-    // Hiden defaull constructor
+    // Hidden default constructor
     IconvGNUWrapper();
 
     // Private data accessors
@@ -285,10 +282,10 @@ public :
 
     IconvGNULCPTranscoder
     (
-  iconv_t		from,
-  iconv_t		to,
-  size_t		uchsize,
-  unsigned int	ubo
+      iconv_t		from,
+      iconv_t		to,
+      size_t		uchsize,
+      unsigned int	ubo
     );
 
 protected:

@@ -24,7 +24,6 @@
 #include <ctype.h>
 
 #include <locale.h>
-#include <iconv.h>
 #include <errno.h>
 #include <endian.h>
 
@@ -33,6 +32,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/TranscodingException.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include "IconvGNUTransService.hpp"
 
 #if !defined(APP_NO_THREADS)
@@ -249,18 +249,16 @@ XMLCh    IconvGNUWrapper::toUpper (const XMLCh ch) const
     size_t    bLen = 2;
 
     ICONV_LOCK;
-    if (::iconv (fCDTo, &ptr, &len,
-         &pTmpArr, &bLen) == (size_t) -1)
-    return 0;
+    if (::iconv (fCDTo, &ptr, &len, &pTmpArr, &bLen) == (size_t) -1)
+        return 0;
     tmpArr[1] = toupper (*((unsigned char *)tmpArr));
     *tmpArr = tmpArr[1];
     len = 1;
     pTmpArr = wcbuf;
     bLen = fUChSize;
     ptr = tmpArr;
-    if (::iconv (fCDFrom, &ptr, &len,
-         &pTmpArr, &bLen) == (size_t) -1)
-    return 0;
+    if (::iconv (fCDFrom, &ptr, &len, &pTmpArr, &bLen) == (size_t) -1)
+        return 0;
     mbcToXMLCh (wcbuf, (XMLCh*) &ch);
     return ch;
 }
@@ -281,18 +279,16 @@ XMLCh    IconvGNUWrapper::toLower (const XMLCh ch) const
     size_t    bLen = 2;
 
     ICONV_LOCK;
-    if (::iconv (fCDTo, &ptr, &len,
-         &pTmpArr, &bLen) == (size_t) -1)
-    return 0;
+    if (::iconv (fCDTo, &ptr, &len, &pTmpArr, &bLen) == (size_t) -1)
+        return 0;
     tmpArr[1] = tolower (*((unsigned char*)tmpArr));
     *tmpArr = tmpArr[1];
     len = 1;
     pTmpArr = wcbuf;
     bLen = fUChSize;
     ptr = tmpArr;
-    if (::iconv (fCDFrom, &ptr, &len,
-         &pTmpArr, &bLen) == (size_t) -1)
-    return 0;
+    if (::iconv (fCDFrom, &ptr, &len, &pTmpArr, &bLen) == (size_t) -1)
+        return 0;
     mbcToXMLCh (wcbuf, (XMLCh*) &ch);
     return ch;
 }
@@ -301,16 +297,14 @@ XMLCh    IconvGNUWrapper::toLower (const XMLCh ch) const
 // of "native unicode" characters.
 XMLCh*    IconvGNUWrapper::mbsToXML
 (
-    const char*        mbs_str
-    ,      size_t    mbs_cnt
+    const char*      mbs_str
     ,      XMLCh*    xml_str
-    ,      size_t    xml_cnt
+    ,      size_t    cnt
 ) const
 {
-    if (mbs_str == NULL || mbs_cnt == 0 || xml_str == NULL || xml_cnt == 0)
+    if (mbs_str == NULL || xml_str == NULL || cnt == 0)
         return NULL;
-    size_t    cnt = (mbs_cnt < xml_cnt) ? mbs_cnt : xml_cnt;
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh)) {
             // null-transformation
             memcpy (xml_str, mbs_str, fUChSize * cnt);
@@ -341,17 +335,15 @@ XMLCh*    IconvGNUWrapper::mbsToXML
 // in the array of XMLCh characters.
 char*    IconvGNUWrapper::xmlToMbs
 (
-    const XMLCh*    xml_str
-    ,      size_t    xml_cnt
-    ,      char*        mbs_str
-    ,      size_t    mbs_cnt
+    const XMLCh*     xml_str
+    ,      char*     mbs_str
+    ,      size_t    cnt
 ) const
 {
-    if (mbs_str == NULL || mbs_cnt == 0 || xml_str == NULL || xml_cnt == 0)
+    if (mbs_str == NULL || xml_str == NULL || cnt == 0)
         return NULL;
-    size_t    cnt = (mbs_cnt < xml_cnt) ? mbs_cnt : xml_cnt;
     char    *toReturn = mbs_str;
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh)) {
             // null-transformation
             memcpy (mbs_str, xml_str, fUChSize * cnt);
@@ -584,6 +576,7 @@ IconvGNUTransService::makeNewXMLTranscoder
     IconvGNUTranscoder    *newTranscoder = NULL;
 
     char    *encLocal = XMLString::transcode(encodingName, manager);
+    ArrayJanitor<char> janBuf(encLocal, manager);
     iconv_t    cd_from, cd_to;
 
     {
@@ -591,16 +584,12 @@ IconvGNUTransService::makeNewXMLTranscoder
         cd_from = iconv_open (fUnicodeCP, encLocal);
         if (cd_from == (iconv_t)-1) {
             resValue = XMLTransService::SupportFilesNotFound;
-            if (encLocal)
-                manager->deallocate(encLocal);//delete [] encLocal;
             return NULL;
         }
         cd_to = iconv_open (encLocal, fUnicodeCP);
         if (cd_to == (iconv_t)-1) {
             resValue = XMLTransService::SupportFilesNotFound;
             iconv_close (cd_from);
-            if (encLocal)
-                manager->deallocate(encLocal);//delete [] encLocal;
             return NULL;
         }
         newTranscoder = new (manager) IconvGNUTranscoder (encodingName,
@@ -610,8 +599,6 @@ IconvGNUTransService::makeNewXMLTranscoder
     }
     if (newTranscoder)
         resValue = XMLTransService::Ok;
-    if (encLocal)
-        manager->deallocate(encLocal);//delete [] encLocal;
     return newTranscoder;
 }
 
@@ -683,19 +670,16 @@ IconvGNULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     char    tmpWBuff[gTempBuffArraySize];
     char    *wBuf = 0;
     char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, manager);
     size_t      len = wLent * uChSize();
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) manager->allocate
-            (
-                len * sizeof(char)
-            );//new char[len];
-            if (wBufPtr == NULL)
-            return 0;
+            wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, manager);
             wBuf = wBufPtr;
         } else
             wBuf = tmpWBuff;
-        xmlToMbs (srcText, wLent, wBuf, wLent);
+        xmlToMbs (srcText, wBuf, wLent);
     } else
         wBuf = (char *) srcText;
 
@@ -708,8 +692,6 @@ IconvGNULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
         const char    *ptr = srcEnd - len;
         size_t    rc = iconvTo(ptr, &len, &pTmpArr, gTempBuffArraySize);
         if (rc == (size_t) -1 && errno != E2BIG) {
-            if (wBufPtr)
-                manager->deallocate(wBufPtr);//delete [] wBufPtr;
             ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, manager);
             /* return 0; */
         }
@@ -718,8 +700,6 @@ IconvGNULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
         if (rc == 0 || len == 0)
             break;
     }
-    if (wBufPtr)
-        manager->deallocate(wBufPtr);//delete [] wBufPtr;
     return totalLen;
 }
 
@@ -731,54 +711,46 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode,
         return 0;
 
     char* retVal = 0;
-    if (*toTranscode) {
-        unsigned int  wLent = getWideCharLength(toTranscode);
-
-        // Calc needed size.
-        const size_t neededLen = calcRequiredSize (toTranscode, manager);
-        if (neededLen == 0)
-            return 0;
-        // allocate output buffer
-        retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char));//new char[neededLen + 1];
-        if (retVal == NULL)
-            return 0;
-        // prepare the original
-        char    tmpWBuff[gTempBuffArraySize];
-        char    *wideCharBuf = 0;
-        char    *wBufPtr = 0;
-        size_t  len = wLent * uChSize();
-
-        if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
-            if (len > gTempBuffArraySize) {
-                wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
-                if (wBufPtr == NULL)
-                    return 0;
-                wideCharBuf = wBufPtr;
-            } else
-                wideCharBuf = tmpWBuff;
-            xmlToMbs (toTranscode, wLent, wideCharBuf, wLent);
-        } else
-            wideCharBuf = (char *) toTranscode;
-
-        // perform conversion
-        wLent *= uChSize();
-        char    *ptr = retVal;
-        size_t    rc = iconvTo(wideCharBuf, (size_t *) &wLent, &ptr, neededLen);
-        if (rc == (size_t)-1) {
-            if (wBufPtr)
-            manager->deallocate(wBufPtr);//delete [] wBufPtr;
-            return 0;
-        }
-        if (wBufPtr)
-            manager->deallocate(wBufPtr);//delete [] wBufPtr;
-        retVal[neededLen] = 0;
-
-    } else {
+    if (!*toTranscode) {
         retVal = (char*) manager->allocate(sizeof(char));//new char[1];
-        if (retVal == NULL)
-            return 0;
         retVal[0] = 0;
+        return retVal;
     }
+
+    unsigned int  wLent = getWideCharLength(toTranscode);
+
+    // Calc needed size.
+    const size_t neededLen = calcRequiredSize (toTranscode, manager);
+    if (neededLen == 0)
+        return 0;
+    // allocate output buffer
+    retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char));//new char[neededLen + 1];
+    // prepare the original
+    char    tmpWBuff[gTempBuffArraySize];
+    char    *wideCharBuf = 0;
+    char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, manager);
+    size_t  len = wLent * uChSize();
+
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+        if (len > gTempBuffArraySize) {
+            wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, manager);
+            wideCharBuf = wBufPtr;
+        } else
+            wideCharBuf = tmpWBuff;
+        xmlToMbs (toTranscode, wideCharBuf, wLent);
+    } else
+        wideCharBuf = (char *) toTranscode;
+
+    // perform conversion
+    char    *ptr = retVal;
+    size_t    rc = iconvTo(wideCharBuf, (size_t *) &len, &ptr, neededLen);
+    if (rc == (size_t)-1) {
+        return 0;
+    }
+    retVal[neededLen] = 0;
+
     return retVal;
 }
 
@@ -806,20 +778,17 @@ bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
     char    tmpWBuff[gTempBuffArraySize];
     char    *wideCharBuf = 0;
     char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, manager);
     size_t  len = wLent * uChSize();
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) manager->allocate
-            (
-                len * sizeof(char)
-            );//new char[len];
-            if (wBufPtr == NULL)
-                return 0;
-        wideCharBuf = wBufPtr;
+            wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, manager);
+            wideCharBuf = wBufPtr;
         } else
             wideCharBuf = tmpWBuff;
-        xmlToMbs (toTranscode, wLent, wideCharBuf, wLent);
+        xmlToMbs (toTranscode, wideCharBuf, wLent);
     } else
         wideCharBuf = (char *) toTranscode;
 
@@ -827,12 +796,8 @@ bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
     char    *ptr = toFill;
     size_t    rc = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
     if (rc == (size_t)-1) {
-        if (wBufPtr)
-            manager->deallocate(wBufPtr);//delete [] wBufPtr;
         return false;
     }
-    if (wBufPtr)
-        manager->deallocate(wBufPtr);//delete [] wBufPtr;
 
     // Cap it off
     *ptr = 0;
@@ -847,53 +812,46 @@ XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode,
         return 0;
 
     XMLCh* retVal = 0;
-    if (*toTranscode) {
-        const unsigned int wLent = calcRequiredSize(toTranscode, manager);
-        if (wLent == 0) {
-            retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
-            retVal[0] = 0;
-            return retVal;
-        }
-
-        char    tmpWBuff[gTempBuffArraySize];
-        char    *wideCharBuf = 0;
-        char    *wBufPtr = 0;
-        size_t  len = wLent * uChSize();
-
-        retVal = (XMLCh*) manager->allocate((wLent + 1) * sizeof(XMLCh));//new XMLCh[wLent + 1];
-        if (retVal == NULL)
-            return NULL;
-        if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
-            if (len > gTempBuffArraySize) {
-                wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
-                if (wBufPtr == NULL)
-                    return 0;
-                wideCharBuf = wBufPtr;
-            } else
-                wideCharBuf = tmpWBuff;
-        } else
-            wideCharBuf = (char *) retVal;
-
-        size_t    flen = strlen(toTranscode);
-        char    *ptr = wideCharBuf;
-        size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
-        if (rc == (size_t) -1) {
-            if (wBufPtr)
-            manager->deallocate(wBufPtr);//delete [] wBufPtr;
-            return NULL;
-        }
-        if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
-            mbsToXML (wideCharBuf, wLent, retVal, wLent);
-        if (wBufPtr)
-            manager->deallocate(wBufPtr);//delete [] wBufPtr;
-        retVal[wLent] = 0x00;
-    }
-    else {
+    if (!*toTranscode) {
         retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
-        if (retVal == NULL )
-            return 0;
         retVal[0] = 0;
+        return retVal;
     }
+
+    const unsigned int wLent = calcRequiredSize(toTranscode, manager);
+    if (wLent == 0) {
+        retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
+        retVal[0] = 0;
+        return retVal;
+    }
+
+    char    tmpWBuff[gTempBuffArraySize];
+    char    *wideCharBuf = 0;
+    char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, manager);
+    size_t  len = wLent * uChSize();
+
+    retVal = (XMLCh*) manager->allocate((wLent + 1) * sizeof(XMLCh));//new XMLCh[wLent + 1];
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
+        if (len > gTempBuffArraySize) {
+            wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, manager);
+            wideCharBuf = wBufPtr;
+        } else
+            wideCharBuf = tmpWBuff;
+    } else
+        wideCharBuf = (char *) retVal;
+
+    size_t    flen = strlen(toTranscode);
+    char    *ptr = wideCharBuf;
+    size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
+    if (rc == (size_t) -1) {
+        return NULL;
+    }
+    if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
+        mbsToXML (wideCharBuf, retVal, wLent);
+    retVal[wLent] = 0x00;
+
     return retVal;
 }
 
@@ -923,16 +881,13 @@ bool IconvGNULCPTranscoder::transcode(const   char* const    toTranscode
     char    tmpWBuff[gTempBuffArraySize];
     char    *wideCharBuf = 0;
     char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, manager);
     size_t    len = wLent * uChSize();
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) manager->allocate
-            (
-                len * sizeof(char)
-            );//new char[len];
-            if (wBufPtr == NULL)
-                return 0;
+            wBufPtr = (char*) manager->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, manager);
             wideCharBuf = wBufPtr;
         } else
             wideCharBuf = tmpWBuff;
@@ -943,15 +898,11 @@ bool IconvGNULCPTranscoder::transcode(const   char* const    toTranscode
     char    *ptr = wideCharBuf;
     size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
     if (rc == (size_t)-1) {
-        if (wBufPtr)
-            manager->deallocate(wBufPtr);//delete [] wBufPtr;
         return false;
     }
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
-        mbsToXML (wideCharBuf, wLent, toFill, wLent);
-    if (wBufPtr)
-        manager->deallocate(wBufPtr);//delete [] wBufPtr;
+        mbsToXML (wideCharBuf, toFill, wLent);
 
     toFill[wLent] = 0x00;
     return true;
@@ -1025,21 +976,18 @@ unsigned int    IconvGNUTranscoder::transcodeFrom
     char    tmpWBuff[gTempBuffArraySize];
     char    *startTarget = 0;
     char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, getMemoryManager());
     size_t    len = maxChars * uChSize();
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) getMemoryManager()->allocate
-            (
-                len * sizeof(char)
-            );//new char[len];
-            if (wBufPtr == NULL)
-                return 0;
+            wBufPtr = (char*) getMemoryManager()->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, getMemoryManager());
             startTarget = wBufPtr;
         } else
             startTarget = tmpWBuff;
     } else
-    startTarget = (char *) toFill;
+        startTarget = (char *) toFill;
 
     // Do character-by-character transcoding
     char    *orgTarget = startTarget;
@@ -1051,8 +999,6 @@ unsigned int    IconvGNUTranscoder::transcodeFrom
         size_t    rc = iconvFrom(startSrc, &srcLen, &orgTarget, uChSize());
         if (rc == (size_t)-1) {
             if (errno != E2BIG || prevSrcLen == srcLen) {
-                if (wBufPtr)
-                    getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
                 ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
             }
         }
@@ -1063,9 +1009,7 @@ unsigned int    IconvGNUTranscoder::transcodeFrom
         toReturn++;
     }
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER)
-        mbsToXML (startTarget, toReturn, toFill, toReturn);
-    if (wBufPtr)
-        getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
+        mbsToXML (startTarget, toFill, toReturn);
     return toReturn;
 }
 
@@ -1082,20 +1026,17 @@ unsigned int    IconvGNUTranscoder::transcodeTo
     char    tmpWBuff[gTempBuffArraySize];
     char    *startSrc = tmpWBuff;
     char    *wBufPtr = 0;
+    ArrayJanitor<char>  janBuf(wBufPtr, getMemoryManager());
     size_t    len = srcCount * uChSize();
 
     if (uChSize() != sizeof(XMLCh) || UBO() != BYTE_ORDER) {
         if (len > gTempBuffArraySize) {
-            wBufPtr = (char*) getMemoryManager()->allocate
-            (
-                len * sizeof(char)
-            );//new char[len];
-            if (wBufPtr == NULL)
-                return 0;
+            wBufPtr = (char*) getMemoryManager()->allocate(len * sizeof(char));//new char[len];
+            janBuf.reset(wBufPtr, getMemoryManager());
             startSrc = wBufPtr;
         } else
             startSrc = tmpWBuff;
-        xmlToMbs (srcData, srcCount, startSrc, srcCount);
+        xmlToMbs (srcData, startSrc, srcCount);
     } else
         startSrc = (char *) srcData;
 
@@ -1103,13 +1044,9 @@ unsigned int    IconvGNUTranscoder::transcodeTo
     size_t    srcLen = len;
     size_t    rc = iconvTo (startSrc, &srcLen, &startTarget, maxBytes);
     if (rc == (size_t)-1 && errno != E2BIG) {
-        if (wBufPtr)
-            getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
         ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
     }
     charsEaten = srcCount - srcLen / uChSize();
-    if (wBufPtr)
-        getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
     return startTarget - (char *)toFill;
 }
 
@@ -1127,11 +1064,11 @@ bool        IconvGNUTranscoder::canTranscodeTo
     if (toCheck & 0xFFFF0000) {
         XMLCh    ch1 = (toCheck >> 10) + 0xD800;
         XMLCh    ch2 = toCheck & 0x3FF + 0xDC00;
-        xmlToMbs(&ch1, 1, srcBuf, 1);
-        xmlToMbs(&ch2, 1, srcBuf + uChSize(), 1);
+        xmlToMbs(&ch1, srcBuf, 1);
+        xmlToMbs(&ch2, srcBuf + uChSize(), 1);
         srcCount++;
     } else
-        xmlToMbs((const XMLCh*) &toCheck, 1, srcBuf, 1);
+        xmlToMbs((const XMLCh*) &toCheck, srcBuf, 1);
     size_t    len = srcCount * uChSize();
     char    tmpBuf[64];
     char*    pTmpBuf = tmpBuf;
