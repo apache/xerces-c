@@ -38,10 +38,7 @@
 #include "xercesc/util/QName.hpp"
 #include "xercesc/util/HexBin.hpp"
 #include "xercesc/util/Base64.hpp"
-#include "xercesc/parsers/AbstractDOMParser.hpp"
-#include "xercesc/parsers/XercesDOMParser.hpp"
 #include "xercesc/parsers/SAXParser.hpp"
-#include "xercesc/dom/DOM.hpp"
 #include "xercesc/framework/LocalFileInputSource.hpp"
 #include "xercesc/framework/MemBufInputSource.hpp"
 #include "xercesc/framework/StdInInputSource.hpp"
@@ -65,8 +62,6 @@
 #include "xercesc/framework/MemBufFormatTarget.hpp"
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
 #include "xercesc/framework/StdOutFormatTarget.hpp"
-#include "xercesc/framework/Wrapper4InputSource.hpp"
-#include "xercesc/framework/Wrapper4DOMLSInput.hpp"
 #include "xercesc/framework/psvi/PSVIHandler.hpp"
 
 // for resolving XMLExceptions
@@ -90,6 +85,18 @@
 #include "xercesc/validators/datatype/InvalidDatatypeFacetException.hpp"
 #include "xercesc/validators/datatype/InvalidDatatypeValueException.hpp"
 #include "xercesc/validators/schema/identity/XPathException.hpp"
+
+//
+// DOM stuff - wants to be moved to seperate module
+//
+#include "xercesc/dom/DOM.hpp"
+#include "xercesc/framework/Wrapper4InputSource.hpp"
+#include "xercesc/framework/Wrapper4DOMLSInput.hpp"
+#include "xercesc/parsers/AbstractDOMParser.hpp"
+#include "xercesc/parsers/XercesDOMParser.hpp"
+
+// need this for PerlNodeFilterCallbackHandler
+// #include "xercesc/dom/DOMNode.hpp"
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -224,12 +231,6 @@ makeXMLException(const XMLException& e){
 }
 
 void
-makeDOMException(const DOMException& e){
-    SV *error = ERRSV;
-    SWIG_MakePtr(error, (void *) new DOMException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_SHADOW|0);
-}
-
-void
 makeSAXNotRecognizedException(const SAXNotRecognizedException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new SAXNotRecognizedException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException, SWIG_SHADOW|0);
@@ -239,6 +240,12 @@ void
 makeSAXNotSupportedException(const SAXNotSupportedException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new SAXNotSupportedException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException, SWIG_SHADOW|0);
+}
+
+void
+makeDOMException(const DOMException& e){
+    SV *error = ERRSV;
+    SWIG_MakePtr(error, (void *) new DOMException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_SHADOW|0);
 }
 
 %}
