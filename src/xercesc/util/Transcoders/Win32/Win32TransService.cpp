@@ -449,13 +449,6 @@ const XMLCh* Win32TransService::getId() const
     return gMyServiceId;
 }
 
-
-bool Win32TransService::isSpace(const XMLCh toCheck) const
-{
-    return (iswspace(toCheck) != 0);
-}
-
-
 XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
 {
     // Just allocate a new LCP transcoder of our type

@@ -240,18 +240,6 @@ const XMLCh* Iconv390TransService::getId() const
     return gMyServiceId;
 }
 
-bool Iconv390TransService::isSpace(const XMLCh toCheck) const
-{
-   unsigned short chartype = XMLUniCharacter::getType(toCheck);
-   if ( (chartype == XMLUniCharacter::SPACE_SEPARATOR) ||
-        (chartype == XMLUniCharacter::LINE_SEPARATOR)   ||
-        (chartype == XMLUniCharacter::PARAGRAPH_SEPARATOR) )
-      return true;
-   else
-      return false;
-}
-
-
 XMLLCPTranscoder* Iconv390TransService::makeNewLCPTranscoder()
 {
     XMLTransService::Codes resValue;

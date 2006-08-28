@@ -267,25 +267,6 @@ const XMLCh* ICUTransService::getId() const
     return gMyServiceId;
 }
 
-
-bool ICUTransService::isSpace(const XMLCh toCheck) const
-{
-    //
-    //  <TBD>
-    //  For now, we short circuit some of the control chars because ICU
-    //  is not correctly reporting them as space. Later, when they change
-    //  this, we can get rid of this special case.
-    //
-    if ((toCheck == 0x09)
-    ||  (toCheck == 0x0A)
-    ||  (toCheck == 0x0D))
-    {
-        return true;
-    }
-    return (u_isspace(UChar(toCheck)) != 0);
-}
-
-
 XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
 {
     //

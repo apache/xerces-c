@@ -353,18 +353,6 @@ const XMLCh* Uniconv390TransService::getId() const
    return gMyServiceId;
 }
 
-bool Uniconv390TransService::isSpace(const XMLCh toCheck) const
-{
-	/* copied from ICU */
-    if ((toCheck == 0x09)
-    ||  (toCheck == 0x0A)
-    ||  (toCheck == 0x0D))
-    {
-        return true;
-    }
-    return (u_isspace(UChar(toCheck)) != 0);
-}
-
 bool Uniconv390TransService::supportsSrcOfs() const
 {
    if (gForceTranscode == MUST_USE_ICU_SRC_OFFS)

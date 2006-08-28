@@ -35,9 +35,6 @@
 #endif
 
 // Fill in for broken or missing wctype functions on some platforms
-#if !HAVE_ISWSPACE
-#	include <lib/iswspace.h>
-#endif
 #if !HAVE_TOWUPPER
 #	include <lib/towupper.h>
 #endif
@@ -162,13 +159,6 @@ const XMLCh* IconvTransService::getId() const
 {
     return gMyServiceId;
 }
-
-
-bool IconvTransService::isSpace(const XMLCh toCheck) const
-{
-    return (iswspace(toCheck) != 0);
-}
-
 
 XMLLCPTranscoder* IconvTransService::makeNewLCPTranscoder()
 {

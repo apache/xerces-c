@@ -53,8 +53,6 @@ public :
 
     virtual const XMLCh* getId() const;
 
-    virtual bool isSpace(const XMLCh toCheck) const;
-
     virtual XMLLCPTranscoder* makeNewLCPTranscoder();
 
     virtual bool supportsSrcOfs() const;

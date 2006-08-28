@@ -120,8 +120,6 @@ public :
 
     virtual const XMLCh* getId() const = 0;
 
-    virtual bool isSpace(const XMLCh toCheck) const = 0;
-
     virtual XMLLCPTranscoder* makeNewLCPTranscoder() = 0;
 
     virtual bool supportsSrcOfs() const = 0;
@@ -196,16 +194,6 @@ private :
     static void reinitMappingsRecognizer();
 
 };
-
-
-
-/**
-  * <code>DOMString</code> is the generic string class that stores all strings
-  * used in the DOM C++ API.
-  *
-  * Though this class supports most of the common string operations to manipulate
-  * strings, it is not meant to be a comphrehensive string class.
-  */
 
 /**
   *   <code>XMLTranscoder</code> is for transcoding non-local code

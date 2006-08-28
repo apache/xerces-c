@@ -167,25 +167,6 @@ const XMLCh* Iconv400TransService::getId() const
     return gMyServiceId;
 }
 
-bool Iconv400TransService::isSpace(const XMLCh toCheck) const
-{
-    //   The following are Unicode Space characters
-    //
-    if ((toCheck == 0x09)
-    ||  (toCheck == 0x0A)
-    ||  (toCheck == 0x0D)
-    ||  (toCheck == 0x20)
-    ||  (toCheck == 0xA0)
-    ||  ((toCheck >= 0x2000) && (toCheck <= 0x200B))
-    ||  (toCheck == 0x3000)
-    ||  (toCheck == 0xFEFF))
-    {
-        return true;
-    }
-    else return false;
-}
-
-
 XMLLCPTranscoder* Iconv400TransService::makeNewLCPTranscoder()
 {
     //

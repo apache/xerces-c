@@ -387,30 +387,6 @@ XMLCh    IconvFBSDCD::toLower (const XMLCh ch) const
     return ch;
 }
 
-// Check if passed characters belongs to the :space: class
-bool    IconvFBSDCD::isSpace(const XMLCh toCheck) const
-{
-    if (toCheck <= 0x7F)
-        return isspace(toCheck);
-
-    char    wcbuf[fUChSize * 2];
-    char    tmpArr[4];
-
-    xmlChToMbc (toCheck, wcbuf);
-    char*    ptr = wcbuf;
-    size_t    len = fUChSize;
-    char    *pTmpArr = tmpArr;
-    size_t    bLen = 2;
-
-    {
-        ICONV_LOCK;
-        if (::iconv (fCDTo, (const char**) &ptr, &len,
-                 &pTmpArr, &bLen) == (size_t) -1)
-            return 0;
-    }
-    return isspace(*tmpArr);
-}
-
 // Fill array of XMLCh characters with data, supplyed in the array
 // of "native unicode" characters.
 XMLCh*    IconvFBSDCD::mbsToXML
@@ -715,22 +691,6 @@ const XMLCh* IconvFBSDTransService::getId() const
 {
     return gMyServiceId;
 }
-
-
-bool IconvFBSDTransService::isSpace(const XMLCh toCheck) const
-{
-#ifndef XML_USE_LIBICONV
-    if (toCheck <= 0x7F)
-        return isspace(toCheck);
-    char buf[16];
-    wchar_t    wc = wchar_t(toCheck);
-    wcstombs( buf, &wc, 16 );
-    return (isspace(*buf) != 0);
-#else /* XML_USE_LIBICONV */
-    return IconvFBSDCD::isSpace(toCheck);
-#endif /* !XML_USE_LIBICONV */
-}
-
 
 XMLLCPTranscoder* IconvFBSDTransService::makeNewLCPTranscoder()
 {

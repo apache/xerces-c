@@ -42,37 +42,6 @@ static const XMLCh gMyServiceId[] =
     chLatin_C, chLatin_y, chLatin_g, chLatin_w, chLatin_i, chLatin_n, chNull
 };
 
-
-// Cygwin doesn't support iswspace(), so this table is used by
-// CygwinTransService::isSpace() based on a union of Unicode
-// Table 6-1 and the ANSI definition of whitespace, arranged
-// in order of likely occurrence.
-
-static const XMLCh gWhitespace[] =
-{
-    0x0020,
-    0x00a0,
-    0x0009,
-    0x000a,
-    0x000d,
-    0x000b,
-    0x000c,
-    0x3000,
-    0x2000,
-    0x2001,
-    0x2002,
-    0x2003,
-    0x2004,
-    0x2005,
-    0x2006,
-    0x2007,
-    0x2008,
-    0x2009,
-    0x200a,
-    0x200b,
-    0x202f
-};
-
 // Used by the kernel32 function LCMapStringW to uppercasify strings
 // appropriate to this locale.  Cygwin doesn't support _wcsupr().
 
@@ -566,21 +535,6 @@ const XMLCh* CygwinTransService::getId() const
 {
     return gMyServiceId;
 }
-
-
-bool CygwinTransService::isSpace(const XMLCh toCheck) const
-{
-    unsigned int theCount = 0;
-    while ( theCount < (sizeof(gWhitespace) / sizeof(XMLCh)) )
-    {
-        if ( toCheck == gWhitespace[theCount] )
-            return true;
-
-        ++theCount;
-    }
-    return false;
-}
-
 
 XMLLCPTranscoder* CygwinTransService::makeNewLCPTranscoder()
 {

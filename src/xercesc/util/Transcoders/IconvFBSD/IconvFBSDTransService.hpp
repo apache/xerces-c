@@ -62,9 +62,6 @@ public:
     // Return uppercase equivalent for XMLCh
     XMLCh 	toLower (const XMLCh ch) const;
 
-    // Check if passed characters belongs to the :space: class
-    virtual bool isSpace(const XMLCh toCheck) const;
-
     // Fill array of XMLCh characters with data, supplyed in the array
     // of "native unicode" characters.
     XMLCh*	mbsToXML (
@@ -183,8 +180,6 @@ public :
     );
 
     virtual const XMLCh* getId() const;
-
-    virtual bool isSpace(const XMLCh toCheck) const;
 
     virtual XMLLCPTranscoder* makeNewLCPTranscoder();
 

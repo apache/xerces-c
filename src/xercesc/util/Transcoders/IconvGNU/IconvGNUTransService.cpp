@@ -297,30 +297,6 @@ XMLCh    IconvGNUWrapper::toLower (const XMLCh ch) const
     return ch;
 }
 
-// Check if passed characters belongs to the :space: class
-bool    IconvGNUWrapper::isSpace(const XMLCh toCheck) const
-{
-    if (toCheck <= 0x7F)
-        return isspace(toCheck);
-
-    char    wcbuf[fUChSize * 2];
-    char    tmpArr[4];
-
-    xmlChToMbc (toCheck, wcbuf);
-    char*    ptr = wcbuf;
-    size_t    len = fUChSize;
-    char    *pTmpArr = tmpArr;
-    size_t    bLen = 2;
-
-    {
-        ICONV_LOCK;
-        if (::iconv (fCDTo, &ptr, &len,
-                 &pTmpArr, &bLen) == (size_t) -1)
-            return 0;
-    }
-    return isspace(*tmpArr);
-}
-
 // Fill array of XMLCh characters with data, supplyed in the array
 // of "native unicode" characters.
 XMLCh*    IconvGNUWrapper::mbsToXML
@@ -581,13 +557,6 @@ const XMLCh* IconvGNUTransService::getId() const
 {
     return gMyServiceId;
 }
-
-
-bool IconvGNUTransService::isSpace(const XMLCh toCheck) const
-{
-    return IconvGNUWrapper::isSpace(toCheck);
-}
-
 
 XMLLCPTranscoder* IconvGNUTransService::makeNewLCPTranscoder()
 {

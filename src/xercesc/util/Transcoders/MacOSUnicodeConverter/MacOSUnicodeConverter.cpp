@@ -260,25 +260,6 @@ const XMLCh* MacOSUnicodeConverter::getId() const
     return fgMyServiceId;
 }
 
-
-bool MacOSUnicodeConverter::isSpace(const XMLCh toCheck) const
-{
-#if TARGET_API_MAC_CARBON
-
-   //	Return true if the specified character is in the set.
-   CFCharacterSetRef wsSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
-   return CFCharacterSetIsCharacterMember(wsSet, toCheck);
-
-#elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
-
-	// Use this if there's a reasonable c library available.
-	// ProjectBuilder currently has no support for iswspace ;(
-    return (std::iswspace(toCheck) != 0);
-
-#endif
-}
-
-
 TextEncoding
 MacOSUnicodeConverter::discoverLCPEncoding()
 {
