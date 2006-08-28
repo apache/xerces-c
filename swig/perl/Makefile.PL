@@ -51,6 +51,12 @@ ERROR
 my $XERCESCROOT = abs_path('../..');
 my $XERCES_INCLUDE = "$XERCESCROOT/src";
 my $XERCES_LIB = "$XERCESCROOT/obj/.libs";
+unless (-d $XERCES_LIB) {
+  print STDERR "Building Xerces-C\n";
+  system("make -C $XERCESCROOT");
+  die "Error building Xerces-C\n$!"
+    if $?;
+}
 my $LIBS = '-lpthread';
 
 $INCLUDES = '-I. -IHandler';
@@ -219,14 +225,19 @@ if ($XERCES_DEVEL) {
   my @header_files;
   my @handler_headers;
   my @interface_files;
+  my @dom_interface_files;
+  my @non_dom_interface_files;
   chomp(@handler_headers = `$FIND $HANDLER_DIR -name "*.swig.hpp"`);
 
+  @OPTIMIZE = (OPTIMIZE => '-g');
   sub Xerces_postamble {
     chomp(my @import_files = `$FIND $HANDLER_DIR -name "*.i"`);
     push(@header_files,@handler_headers,@import_files);
 
     chomp(my @interface_files = `$FIND $INTERFACE_DIR -name "*.i"`);
     @interface_files = grep {$_ !~ /shadow\.i/} @interface_files;
+    @dom_interface_files = grep {$_ =~ /dom/} @interface_files;
+    @non_dom_interface_files = grep {$_ !~ /dom/} @interface_files;
     local $" = ' ';
     my $OS_DEF;
     my $CC_DEF;
@@ -258,15 +269,15 @@ Xerces-tmp.pm: $SCRIPTS_DIR/postModule.pl $INTERFACE_DIR/Perl/shadow.i
 	mv Xerces.pm Xerces-tmp.pm
 
 Xerces.pm: $SCRIPTS_DIR/postModule.pl Xerces-tmp.pm
-	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl
+	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=Xerces-tmp.pm --out=Xerces.pm
 
 Xerces.cpp: $SCRIPTS_DIR/postSource.pl Xerces-tmp.cpp
-	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postSource.pl
+	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postSource.pl --in=Xerces-tmp.cpp --out=Xerces.cpp
 
 Xerces-tmp.cpp: $INTERFACE_DIR/Xerces.i @interface_files @header_files  $INTERFACE_DIR/Perl/Xerces-extra.pm
 	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp $INTERFACE_DIR/Xerces.i
 	mv Xerces.pm Xerces-tmp.pm
-	perl  -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl
+	perl  -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=Xerces-tmp.pm --out=Xerces.pm
 	cp -f Xerces.pm blib/lib/XML/Xerces.pm
 
 $HANDLER_LIB:

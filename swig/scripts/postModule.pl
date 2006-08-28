@@ -1,16 +1,26 @@
 #!/usr/bin/perl -w
-
-use lib '.';
 use strict;
-use SWIG qw(remove_method skip_to_closing_brace fix_method);
+
 use File::Temp qw/tempfile/;
 use File::Copy;
+use Getopt::Long;
 
-my $INFILE = "Xerces-tmp.pm";
-my $OUTFILE = "Xerces.pm";
+my $USAGE = <<USAGE;
+USAGE: $0 --infile=name --outfile=name
+USAGE
 
-open(FILE, $INFILE)
-  or die "Couldn't open $INFILE for reading";
+my %OPTIONS;
+my $rc = GetOptions(\%OPTIONS,
+		    'infile=s',
+		    'outfile=s',
+		   );
+die $USAGE unless $rc;
+
+die $USAGE unless exists $OPTIONS{infile};
+die $USAGE unless exists $OPTIONS{outfile};
+
+open(FILE, $OPTIONS{infile})
+  or die "Couldn't open $OPTIONS{infile} for reading";
 
 my ($temp_fh, $temp_filename) = tempfile();
 
@@ -41,61 +51,14 @@ print $temp_fh $LICENSE;
 
 my $CURR_CLASS = '';
 while ($_ = <FILE>) {
-
-  if (/^package/) {
-    if (m/package\s+XML::Xerces::(\w+);/) {
-      ($CURR_CLASS) = $1;
-    }
-    print $temp_fh $_;
-    next;
-  }
-
-#   # for some reason (I don't want to figure out) SWIG puts a bunch of
-#   # methods directly in the XML::Xerces namespace that don't belong there
-#   # and are duplicated within their proper classes, so we delete them
-#   if (/FUNCTION WRAPPERS/) {
-#     while ($_ = <FILE>) {
-#       next unless /\#\#\#\#\#\#\#\#\#\#\#\#\#/;
-#       last;
-#     }
-#   }
-# 
-#   # we remove all the enums inherited through DOMNode
-#   next if /^\*[_A-Z]+_NODE =/ && !/DOMNode/;
-# 
-#   # now we set these aliases correctly
-#   s/\*XML::Xerces::/*XML::Xercesc::/;
-
-  #######################################################################
-  #
-  # MUNGE MODULE for XMLCh support
-  #
-  #    CHANGE "$args[0] = tied(%{$args[0]})"
-  #    TO     "$args[0] = tied(%{$args[0]}) || $args[0]"
-  #    then we wrap it in a defined $args[0] to remove the irritating warning
-#   if (m{\$args\[0\]\s+=\s+tied\(\%\{\$args\[0\]\}\)}) {
-#     print $temp_fh <<'EOT';
-#        if (defined $args[0]) {
-# 	 $args[0] = tied(%{$args[0]}) || $args[0];
-#        }
-# EOT
-#     next;
-#   }
-
-
-  #   CHANGE "return undef if (!defined($result))"
-  #   TO     "return $result unless ref($result) =~ m[XML::Xerces]"
-  # split on multiple lines to be readable, using s{}{}x
-#   s{
-#     return\s*undef\s*if\s*\(\!defined\(\$result\)\)
-#   }{return \$result unless UNIVERSAL::isa(\$result,'XML::Xerces')}x;
-
   print $temp_fh $_;
 }
 
 close(FILE);
 close($temp_fh);
 
-copy($temp_filename, $OUTFILE);
+copy($temp_filename, $OPTIONS{outfile});
 
 END {unlink($temp_filename)}
+
+exit(0);

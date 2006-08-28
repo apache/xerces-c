@@ -1,20 +1,30 @@
-#!/usr/bin/perl
-use lib '.';
-use SWIG qw(remove_method skip_to_closing_brace fix_method);
+#!/usr/bin/perl -w
+use strict;
+
 use File::Temp qw/tempfile/;
 use File::Copy;
+use Getopt::Long;
 
-use strict;
+my $USAGE = <<USAGE;
+USAGE: $0 --infile=name --outfile=name
+USAGE
+
+my %OPTIONS;
+my $rc = GetOptions(\%OPTIONS,
+		    'infile=s',
+		    'outfile=s',
+		   );
+die $USAGE unless $rc;
+
+die $USAGE unless exists $OPTIONS{infile};
+die $USAGE unless exists $OPTIONS{outfile};
 
 ###
 ### SWIG has now improved to the point that this file only installs the license
 ###
 
-my $INFILE = "Xerces-tmp.cpp";
-my $OUTFILE = "Xerces.cpp";
-
-open(FILE, $INFILE)
-  or die "Couldn't open $INFILE for reading";
+open(FILE, $OPTIONS{infile})
+  or die "Couldn't open $OPTIONS{infile} for reading";
 
 my ($temp_fh, $temp_filename) = tempfile();
 
@@ -43,15 +53,15 @@ LICENSE
 
 print $temp_fh $LICENSE;
 
-FILE: while(<FILE>) {
+while(<FILE>) {
   print $temp_fh $_;
 }
 
 close FILE;
 close $temp_fh;
 
-copy($temp_filename, $OUTFILE)
-  or die "Couldn't move $temp_filename to $OUTFILE: $!";
+copy($temp_filename, $OPTIONS{outfile})
+  or die "Couldn't move $temp_filename to $OPTIONS{outfile}: $!";
 
 END {unlink($temp_filename)}
 
