@@ -33,6 +33,8 @@
 
 %include "typemaps.i"
 
+%include "typemaps-dom.i"
+
 /*
  * Import the language specific macros
  */
@@ -40,6 +42,7 @@
 #ifdef SWIGPERL
 %include "Perl/callback.i"
 %include "Perl/shadow.i"
+%include "Perl/dom-shadow.i"
 #endif
 
 /*****************************/
@@ -64,7 +67,8 @@
  * The generic exception handler
  *    'goto fail' must be called - either explicitly, or via SWIG_croak()
  *    to ensure that any variable cleanup is done - to avoid memory leaks.
- *    By making these macros, it reduces the code size dramatically
+ *    By making these macros, it reduces the code *file* size dramatically
+ *    (but doesn't reduce the compiled file size at all...)
  */
 
 %{
@@ -139,6 +143,8 @@
  */
 
 %include "DOM.i"
+
+// %include "xercesc/dom/DOMNode.hpp"
 
 /*
  * SAX1
