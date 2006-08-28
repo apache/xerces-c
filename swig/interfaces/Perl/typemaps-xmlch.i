@@ -61,7 +61,18 @@
 %}
 
 // varout typemap (for global variables)
+// useful for XMLUni constants
 %typemap(varout) XMLCh[] %{
   sv_setsv((SV*)$result, XMLString2Perl($1));
 %}
 
+// fgBooleanValueSpace is an array of XMLCh*
+%typemap(varout) XMLCh[][8] %{
+    AV *myav = newAV();
+    for (int i=0;i<4;i++) {
+        av_push(myav, XMLString2Perl($1[i]));
+    }
+
+    SV* rv = newRV((SV*)myav);
+    sv_setsv((SV*)$result, rv);
+%}
