@@ -14,7 +14,7 @@
  # limitations under the License.
  #
 
-# This file was created automatically by SWIG 1.3.29.
+# This file was created automatically by SWIG 1.3.30.
 # Don't modify this file, modify the SWIG interface instead.
 package XML::Xerces;
 require Exporter;
@@ -658,6 +658,17 @@ sub to_hash {
 
 package XML::Xerces::DOMNodeList;
 # convert the NodeList to a perl list
+sub to_list {
+  my $self = shift;
+  my @list;
+  for (my $i=0;$i<$self->getLength();$i++) {
+    push(@list,$self->item($i));
+  }
+  return @list;
+}
+
+package XML::Xerces::DOMStringList;
+# convert the StringList to a perl list
 sub to_list {
   my $self = shift;
   my @list;
@@ -4086,6 +4097,315 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::DOMTypeInfo ##############
+
+package XML::Xerces::DOMTypeInfo;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMTypeInfo($self);
+        delete $OWNER{$self};
+    }
+}
+
+*DERIVATION_RESTRICTION = *XML::Xercesc::DOMTypeInfo_DERIVATION_RESTRICTION;
+*DERIVATION_EXTENSION = *XML::Xercesc::DOMTypeInfo_DERIVATION_EXTENSION;
+*DERIVATION_UNION = *XML::Xercesc::DOMTypeInfo_DERIVATION_UNION;
+*DERIVATION_LIST = *XML::Xercesc::DOMTypeInfo_DERIVATION_LIST;
+*getTypeName = *XML::Xercesc::DOMTypeInfo_getTypeName;
+*getTypeNamespace = *XML::Xercesc::DOMTypeInfo_getTypeNamespace;
+*isDerivedFrom = *XML::Xercesc::DOMTypeInfo_isDerivedFrom;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMPSVITypeInfo ##############
+
+package XML::Xerces::DOMPSVITypeInfo;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*PSVI_Validity = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Validity;
+*PSVI_Validitation_Attempted = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Validitation_Attempted;
+*PSVI_Type_Definition_Type = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Type_Definition_Type;
+*PSVI_Type_Definition_Name = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Type_Definition_Name;
+*PSVI_Type_Definition_Namespace = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Type_Definition_Namespace;
+*PSVI_Type_Definition_Anonymous = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Type_Definition_Anonymous;
+*PSVI_Nil = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Nil;
+*PSVI_Member_Type_Definition_Name = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Member_Type_Definition_Name;
+*PSVI_Member_Type_Definition_Namespace = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Member_Type_Definition_Namespace;
+*PSVI_Member_Type_Definition_Anonymous = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Member_Type_Definition_Anonymous;
+*PSVI_Schema_Default = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Schema_Default;
+*PSVI_Schema_Normalized_Value = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Schema_Normalized_Value;
+*PSVI_Schema_Specified = *XML::Xercesc::DOMPSVITypeInfo_PSVI_Schema_Specified;
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMPSVITypeInfo($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getStringProperty = *XML::Xercesc::DOMPSVITypeInfo_getStringProperty;
+*getNumericProperty = *XML::Xercesc::DOMPSVITypeInfo_getNumericProperty;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMXPathEvaluator ##############
+
+package XML::Xerces::DOMXPathEvaluator;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMXPathEvaluator($self);
+        delete $OWNER{$self};
+    }
+}
+
+*createExpression = *XML::Xercesc::DOMXPathEvaluator_createExpression;
+*createNSResolver = *XML::Xercesc::DOMXPathEvaluator_createNSResolver;
+*evaluate = *XML::Xercesc::DOMXPathEvaluator_evaluate;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMXPathException ##############
+
+package XML::Xerces::DOMXPathException;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_DOMXPathException(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMXPathException($self);
+        delete $OWNER{$self};
+    }
+}
+
+*INVALID_EXPRESSION_ERR = *XML::Xercesc::DOMXPathException_INVALID_EXPRESSION_ERR;
+*TYPE_ERR = *XML::Xercesc::DOMXPathException_TYPE_ERR;
+*swig_code_get = *XML::Xercesc::DOMXPathException_code_get;
+*swig_code_set = *XML::Xercesc::DOMXPathException_code_set;
+*swig_msg_get = *XML::Xercesc::DOMXPathException_msg_get;
+*swig_msg_set = *XML::Xercesc::DOMXPathException_msg_set;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMXPathExpression ##############
+
+package XML::Xerces::DOMXPathExpression;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMXPathExpression($self);
+        delete $OWNER{$self};
+    }
+}
+
+*evaluate = *XML::Xercesc::DOMXPathExpression_evaluate;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMXPathNamespace ##############
+
+package XML::Xerces::DOMXPathNamespace;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces::DOMNode XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*XPATH_NAMESPACE_NODE = *XML::Xercesc::DOMXPathNamespace_XPATH_NAMESPACE_NODE;
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMXPathNamespace($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getOwnerElement = *XML::Xercesc::DOMXPathNamespace_getOwnerElement;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMXPathNSResolver ##############
+
+package XML::Xerces::DOMXPathNSResolver;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMXPathNSResolver($self);
+        delete $OWNER{$self};
+    }
+}
+
+*lookupNamespaceURI = *XML::Xercesc::DOMXPathNSResolver_lookupNamespaceURI;
+*lookupPrefix = *XML::Xercesc::DOMXPathNSResolver_lookupPrefix;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMXPathResult ##############
+
+package XML::Xerces::DOMXPathResult;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMXPathResult($self);
+        delete $OWNER{$self};
+    }
+}
+
+*ANY_TYPE = *XML::Xercesc::DOMXPathResult_ANY_TYPE;
+*NUMBER_TYPE = *XML::Xercesc::DOMXPathResult_NUMBER_TYPE;
+*STRING_TYPE = *XML::Xercesc::DOMXPathResult_STRING_TYPE;
+*BOOLEAN_TYPE = *XML::Xercesc::DOMXPathResult_BOOLEAN_TYPE;
+*UNORDERED_NODE_ITERATOR_TYPE = *XML::Xercesc::DOMXPathResult_UNORDERED_NODE_ITERATOR_TYPE;
+*ORDERED_NODE_ITERATOR_TYPE = *XML::Xercesc::DOMXPathResult_ORDERED_NODE_ITERATOR_TYPE;
+*UNORDERED_NODE_SNAPSHOT_TYPE = *XML::Xercesc::DOMXPathResult_UNORDERED_NODE_SNAPSHOT_TYPE;
+*ORDERED_NODE_SNAPSHOT_TYPE = *XML::Xercesc::DOMXPathResult_ORDERED_NODE_SNAPSHOT_TYPE;
+*ANY_UNORDERED_NODE_TYPE = *XML::Xercesc::DOMXPathResult_ANY_UNORDERED_NODE_TYPE;
+*FIRST_ORDERED_NODE_TYPE = *XML::Xercesc::DOMXPathResult_FIRST_ORDERED_NODE_TYPE;
+*getBooleanValue = *XML::Xercesc::DOMXPathResult_getBooleanValue;
+*getInvalidIteratorState = *XML::Xercesc::DOMXPathResult_getInvalidIteratorState;
+*getNumberValue = *XML::Xercesc::DOMXPathResult_getNumberValue;
+*getResultType = *XML::Xercesc::DOMXPathResult_getResultType;
+*getSingleNodeValue = *XML::Xercesc::DOMXPathResult_getSingleNodeValue;
+*getSnapshotLength = *XML::Xercesc::DOMXPathResult_getSnapshotLength;
+*getStringValue = *XML::Xercesc::DOMXPathResult_getStringValue;
+*iterateNext = *XML::Xercesc::DOMXPathResult_iterateNext;
+*snapshotItem = *XML::Xercesc::DOMXPathResult_snapshotItem;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::DOMDocumentRange ##############
 
 package XML::Xerces::DOMDocumentRange;
@@ -4406,6 +4726,43 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::DOMUserDataHandler ##############
+
+package XML::Xerces::DOMUserDataHandler;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMUserDataHandler($self);
+        delete $OWNER{$self};
+    }
+}
+
+*NODE_CLONED = *XML::Xercesc::DOMUserDataHandler_NODE_CLONED;
+*NODE_IMPORTED = *XML::Xercesc::DOMUserDataHandler_NODE_IMPORTED;
+*NODE_DELETED = *XML::Xercesc::DOMUserDataHandler_NODE_DELETED;
+*NODE_RENAMED = *XML::Xercesc::DOMUserDataHandler_NODE_RENAMED;
+*NODE_ADOPTED = *XML::Xercesc::DOMUserDataHandler_NODE_ADOPTED;
+*handle = *XML::Xercesc::DOMUserDataHandler_handle;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::DOMConfiguration ##############
 
 package XML::Xerces::DOMConfiguration;
@@ -4413,7 +4770,19 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
-*setParameter = *XML::Xercesc::DOMConfiguration_setParameter;
+sub setParameter {
+  my ($self,$name,$value) = @_;
+
+  if ($name eq $XML::Xerces::XMLUni::fgDOMErrorHandler) {
+    $value = XML::Xerces::PerlErrorCallbackHandler->new($_[2]);
+    $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $value;
+  } elsif ($name eq $XML::Xerces::XMLUni::fgXercesEntityResolver) {
+    $value = XML::Xerces::PerlEntityResolverHandler->new($_[2]);
+    $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $value;
+  }
+  return XML::Xercesc::DOMConfiguration_setParameter($self,$name,$value);
+}
+
 *getParameter = *XML::Xercesc::DOMConfiguration_getParameter;
 *canSetParameter = *XML::Xercesc::DOMConfiguration_canSetParameter;
 *getParameterNames = *XML::Xercesc::DOMConfiguration_getParameterNames;
@@ -4428,6 +4797,41 @@ sub DESTROY {
     }
 }
 
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMStringList ##############
+
+package XML::Xerces::DOMStringList;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMStringList($self);
+        delete $OWNER{$self};
+    }
+}
+
+*item = *XML::Xercesc::DOMStringList_item;
+*getLength = *XML::Xercesc::DOMStringList_getLength;
+*contains = *XML::Xercesc::DOMStringList_contains;
+*release = *XML::Xercesc::DOMStringList_release;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -4523,6 +4927,40 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::DOMImplementationList ##############
+
+package XML::Xerces::DOMImplementationList;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMImplementationList($self);
+        delete $OWNER{$self};
+    }
+}
+
+*item = *XML::Xercesc::DOMImplementationList_item;
+*getLength = *XML::Xercesc::DOMImplementationList_getLength;
+*release = *XML::Xercesc::DOMImplementationList_release;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::DOMImplementationSource ##############
 
 package XML::Xerces::DOMImplementationSource;
@@ -4590,6 +5028,46 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::DOMError ##############
+
+package XML::Xerces::DOMError;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMError($self);
+        delete $OWNER{$self};
+    }
+}
+
+*DOM_SEVERITY_WARNING = *XML::Xercesc::DOMError_DOM_SEVERITY_WARNING;
+*DOM_SEVERITY_ERROR = *XML::Xercesc::DOMError_DOM_SEVERITY_ERROR;
+*DOM_SEVERITY_FATAL_ERROR = *XML::Xercesc::DOMError_DOM_SEVERITY_FATAL_ERROR;
+*getSeverity = *XML::Xercesc::DOMError_getSeverity;
+*getMessage = *XML::Xercesc::DOMError_getMessage;
+*getLocation = *XML::Xercesc::DOMError_getLocation;
+*getRelatedException = *XML::Xercesc::DOMError_getRelatedException;
+*getType = *XML::Xercesc::DOMError_getType;
+*getRelatedData = *XML::Xercesc::DOMError_getRelatedData;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::DOMErrorHandler ##############
 
 package XML::Xerces::DOMErrorHandler;
@@ -4626,7 +5104,7 @@ sub ACQUIRE {
 
 package XML::Xerces::DOMDocument;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::DOMDocumentRange XML::Xerces::DOMDocumentTraversal XML::Xerces::DOMNode XML::Xerces );
+@ISA = qw( XML::Xerces::DOMDocumentRange XML::Xerces::DOMXPathEvaluator XML::Xerces::DOMDocumentTraversal XML::Xerces::DOMNode XML::Xerces );
 %OWNER = ();
 sub DESTROY {
     return unless $_[0]->isa('HASH');
@@ -5123,6 +5601,50 @@ sub DESTROY {
 *getRawBuffer = *XML::Xercesc::MemBufFormatTarget_getRawBuffer;
 *getLen = *XML::Xercesc::MemBufFormatTarget_getLen;
 *reset = *XML::Xercesc::MemBufFormatTarget_reset;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::DOMLSException ##############
+
+package XML::Xerces::DOMLSException;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces::DOMException XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*PARSE_ERR = *XML::Xercesc::DOMLSException_PARSE_ERR;
+*SERIALIZE_ERR = *XML::Xercesc::DOMLSException_SERIALIZE_ERR;
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_DOMLSException(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMLSException($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getMessage = *XML::Xercesc::DOMLSException_getMessage;
+*swig_code_get = *XML::Xercesc::DOMLSException_code_get;
+*swig_code_set = *XML::Xercesc::DOMLSException_code_set;
+*swig_msg_get = *XML::Xercesc::DOMLSException_msg_get;
+*swig_msg_set = *XML::Xercesc::DOMLSException_msg_set;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -5872,56 +6394,6 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::Parser ##############
-
-package XML::Xerces::Parser;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_Parser($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub setEntityResolver {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
-
-  return XML::Xercesc::Parser_setEntityResolver($self,$callback);
-}
-
-*setDTDHandler = *XML::Xercesc::Parser_setDTDHandler;
-*setDocumentHandler = *XML::Xercesc::Parser_setDocumentHandler;
-sub setErrorHandler {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
-
-  return XML::Xercesc::Parser_setErrorHandler($self,$callback);
-}
-
-*parse = *XML::Xercesc::Parser_parse;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
 ############# Class : XML::Xerces::AbstractDOMParser ##############
 
 package XML::Xerces::AbstractDOMParser;
@@ -6086,6 +6558,56 @@ sub setEntityResolver {
 *resetErrors = *XML::Xercesc::XercesDOMParser_resetErrors;
 *loadGrammar = *XML::Xercesc::XercesDOMParser_loadGrammar;
 *resetCachedGrammarPool = *XML::Xercesc::XercesDOMParser_resetCachedGrammarPool;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::Parser ##############
+
+package XML::Xerces::Parser;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_Parser($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub setEntityResolver {
+  my ($self,$handler) = @_;
+  my $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
+  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
+
+  return XML::Xercesc::Parser_setEntityResolver($self,$callback);
+}
+
+*setDTDHandler = *XML::Xercesc::Parser_setDTDHandler;
+*setDocumentHandler = *XML::Xercesc::Parser_setDocumentHandler;
+sub setErrorHandler {
+  my ($self,$handler) = @_;
+  my $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
+  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
+
+  return XML::Xercesc::Parser_setErrorHandler($self,$callback);
+}
+
+*parse = *XML::Xercesc::Parser_parse;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
