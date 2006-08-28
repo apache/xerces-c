@@ -94,7 +94,7 @@ AC_CHECK_FUNCS([clock_gettime ftime getcwd gethostbyaddr gethostbyname gettimeof
 				mblen memmove memset nl_langinfo pathconf realpath setlocale socket \
 				strcasecmp strncasecmp stricmp strnicmp strchr strdup \
 				strrchr strstr strtol strtoul \
-				towupper towlower iswspace \
+				towupper towlower \
 				mbrlen wcsrtombs mbsrtowcs \
 				])
 				
@@ -103,7 +103,7 @@ AC_SUBST([SHREXT], [$shrext_cmds])
 #
 # Orchestrate the replacement of missing functions
 #
-AC_REPLACE_FUNCS([stricmp strnicmp iswspace towlower towupper])
+AC_REPLACE_FUNCS([stricmp strnicmp towlower towupper])
 
 
 ######################################################
