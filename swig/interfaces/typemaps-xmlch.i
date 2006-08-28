@@ -60,8 +60,3 @@
   ++argvi;
 %}
 
-// varout typemap (for global variables)
-%typemap(varout) XMLCh[] %{
-  sv_setsv((SV*)$result, XMLString2Perl($1));
-%}
-
