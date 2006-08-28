@@ -4,7 +4,7 @@
 
 ######################### We start with some black magic to print on failure.
 
-END {ok(0) unless $loaded;}
+END {fail() unless $loaded;}
 
 use Carp;
 use blib;
@@ -17,7 +17,7 @@ use vars qw($loaded);
 use strict;
 
 $loaded = 1;
-ok($loaded, "module loaded");
+pass("module loaded");
 
 ######################### End of black magic.
 
@@ -105,7 +105,7 @@ my ($element) = $doc->getElementsByTagName('element');
 
 # try to set an Attribute, 'foo', to 'foo'
 $element->setAttributeNS($uri,'foo','foo');
-ok($element->getAttributeNS($uri,'foo') eq 'foo',
+is($element->getAttributeNS($uri,'foo'), 'foo',
   "setAttributeNS - correct value")
   or diag("found attributes [" . $element->serialize() . "]");
 
@@ -124,6 +124,7 @@ eval{$element->setAttributeNS(undef,'foo','foo')};
 ok($@,
   "setAttributeNS - undef uri fails");
 
+$uri = 'http://example.org/';
 $document = <<XML;
 <root xmlns="http://example.com/test">
 <a xmlns="http://example.org/">
@@ -135,6 +136,12 @@ XML
 $DOM->parse(XML::Xerces::MemBufInputSource->new($document));
 
 $doc = $DOM->getDocument();
-ok($doc->getElementsByTagName('a')->getLength == 1);
-ok($doc->getElementsByTagNameNS('http://example.org/', 'a')->getLength == 2);
-ok($doc->getElementsByTagNameNS('http://example.com/test', 'root')->getLength == 1);
+is($doc->getElementsByTagName('a')->getLength(), 1,
+   'getElementsByTagName - no uri'
+  );
+is($doc->getElementsByTagNameNS($uri, 'a')->getLength(), 2,
+  'getElementsByTagNameNS - correct uri'
+  );
+is($doc->getElementsByTagNameNS($uri, 'root')->getLength(), 0,
+  'getElementsByTagNameNS - bad uri fails'
+  );
