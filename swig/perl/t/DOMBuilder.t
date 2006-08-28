@@ -2,25 +2,19 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMLSParser.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
-
-use Carp;
 # use blib;
-use XML::Xerces qw(error);
 use Test::More tests => 12;
-use Config;
+
+BEGIN{use_ok('XML::Xerces')};
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME);
-use vars qw($loaded $error);
+use vars qw($error);
 use strict;
 
-$loaded = 1;
-pass('module loaded');
-
-######################### End of black magic.
+######################### Begin Test
 
 my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <contributors>
