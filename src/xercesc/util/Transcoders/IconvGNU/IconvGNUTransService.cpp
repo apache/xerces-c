@@ -470,7 +470,7 @@ IconvGNUTransService::IconvGNUTransService()
         if (cd_to == (iconv_t)-1)
             continue;
         iconv_t    cd_from = iconv_open(eptr->fSchema, fLocalCP);
-        if (cd_to == (iconv_t)-1) {
+        if (cd_from == (iconv_t)-1) {
             iconv_close (cd_to);
             continue;
         }
@@ -491,7 +491,7 @@ IconvGNUTransService::IconvGNUTransService()
             if (cd_to == (iconv_t)-1)
                 continue;
             iconv_t    cd_from = iconv_open(eptr->fSchema, fLocalCP);
-            if (cd_to == (iconv_t)-1) {
+            if (cd_from == (iconv_t)-1) {
                 iconv_close (cd_to);
                 continue;
             }
