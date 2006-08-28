@@ -1,0 +1,1 @@
+%import "xercesc/framework/XMLFormatter.hpp"

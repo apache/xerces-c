@@ -1,0 +1,1 @@
+%include "xercesc/framework/Wrapper4InputSource.hpp"

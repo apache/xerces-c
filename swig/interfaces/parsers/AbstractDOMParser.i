@@ -1,0 +1,1 @@
+%include "xercesc/parsers/AbstractDOMParser.hpp"

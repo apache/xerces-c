@@ -2,9 +2,11 @@
 %include "xercesc/framework/XMLPScanToken.hpp"
 %include "xercesc/framework/psvi/PSVIHandler.hpp"
 
+// these want to be removed to a separate DOM module
+%include "parsers/AbstractDOMParser.i"
+%include "parsers/XercesDOMParser.i"
+
 %include "xercesc/sax/Parser.hpp"
-%include "xercesc/parsers/AbstractDOMParser.hpp"
-%include "xercesc/parsers/XercesDOMParser.hpp"
 %include "xercesc/parsers/SAXParser.hpp"
 
 /*
