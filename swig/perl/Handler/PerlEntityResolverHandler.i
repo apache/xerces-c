@@ -75,21 +75,11 @@ PerlEntityResolverHandler::resolveEntity (const XMLCh* const publicId,
     XPUSHs(callbackObj);
 
         // the next argument is the publicId
-
-	// this transcode has two problems 1) it will leak if not deleted
-	// and 2) why are we getting a char*, doesn't this screw up Unicode?
-    char *cptr1 = XMLString::transcode(publicId); 
-    SV *string1 = sv_newmortal();
-    sv_setpv(string1, (char *)cptr1);
+    SV *string1 = XMLString2Perl(publicId);
     XPUSHs(string1);
 
         // the next argument is the systemId
-
- 	// this transcode has two problems 1) it will leak if not deleted
-	// and 2) why are we getting a char*, doesn't this screw up Unicode?
-    char *cptr2 = XMLString::transcode(systemId);
-    SV *string2 = sv_newmortal();
-    sv_setpv(string2, (char *)cptr2);
+    SV *string2 = XMLString2Perl(systemId);
     XPUSHs(string2);
 
     PUTBACK;
@@ -118,12 +108,6 @@ PerlEntityResolverHandler::resolveEntity (const XMLCh* const publicId,
         croak("EntityResolver did not return an InputSource. Expected %s", SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource->name);
     }
     PUTBACK ;
-
-
-	// transcode mallocs this and leaves it up to us to free the memory
-    delete [] cptr1;
-    delete [] cptr2;
-
     FREETMPS;
     LEAVE;
     return source;
