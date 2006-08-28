@@ -19,7 +19,9 @@
  */
 
 // on some platforms, THREAD_MUTEX_RECURSIVE is defined only if _GNU_SOURCE is defined
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+ #define _GNU_SOURCE
+#endif
 
 #include <pthread.h>
 
