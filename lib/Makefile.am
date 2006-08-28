@@ -31,3 +31,35 @@ noinst_LTLIBRARIES =				libcompat.la
 #noinst_libcompat_la_HEADERS =		
 libcompat_la_SOURCES =				xerces_compat.c
 libcompat_la_LIBADD =				${LTLIBOBJS}
+
+#
+# Override generated rules to provide prettier make rules
+#
+# Warning: If Automake changes sufficiently, these rules may need to
+#          be regenerated from the (new) default output of Automake
+#
+if XERCES_PRETTY_MAKE
+
+.c.lo:
+@am__fastdepCXX_TRUE@	@depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`; \
+@am__fastdepCXX_TRUE@	if $(LTCOMPILE) -MT $@ -MD -MP -MF "$$depbase.Tpo" -c -o $@ $<; \
+@am__fastdepCXX_TRUE@	then mv -f "$$depbase.Tpo" "$$depbase.Plo"; else rm -f "$$depbase.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	@source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+PRETTY_MAKE=${top_srcdir}/config/pretty-make
+PRETTY_COMPILE=${PRETTY_MAKE} Compiling
+
+endif
+
+COMPILE = ${PRETTY_COMPILE} \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = ${PRETTY_COMPILE}  \
+	$(LIBTOOL) --quiet --tag=CC --mode=compile \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+
+
+
