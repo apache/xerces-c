@@ -42,7 +42,7 @@ class InputSource;
   * to the parser: as the argument to the parse method, or as the return value
   * of the DOMLSResourceResolver.resolveResource method.</p>
   *
-  * <p>The DOMBuilder will use the DOMLSInput object to determine how to
+  * <p>The DOMLSParser will use the DOMLSInput object to determine how to
   * read XML input. If there is a character stream available, the parser will
   * read that stream directly; if not, the parser will use a byte stream, if
   * available; if neither a character stream nor a byte stream is available,
@@ -52,7 +52,7 @@ class InputSource;
   * <p>A DOMLSInput object belongs to the application: the parser shall
   * never modify it in any way (it may modify a copy if necessary).</p>
   *
-  * @see DOMBuilder#parse
+  * @see DOMLSParser#parse
   * @see DOMLSResourceResolver#resolveResource
   * @since DOM Level 3
   */

@@ -39,7 +39,7 @@ class DOMError;
   * <p>The application that is using the DOM implementation is expected to
   * implement this interface.</p>
   *
-  * @see DOMBuilder#setErrorHandler
+  * @see DOMLSParser#getDomConfig
   * @since DOM Level 3
   */
 
