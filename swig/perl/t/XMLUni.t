@@ -1,33 +1,31 @@
 # Before `make install' is performed this script should be runnable
 # with `make test'. After `make install' it should work as `perl
 # XMLUni.t'
+#########################################
 
-######################### We start with some black magic to print on failure.
+# use blib;
+use Test::More tests => 5;
+BEGIN {use_ok("XML::Xerces")};
 
-END {ok(0) unless $loaded;}
-
-use Carp;
-
-use blib;
-use XML::Xerces;
-use Test::More tests => 4;
-
-use vars qw($loaded);
 use strict;
-
-$loaded = 1;
-ok($loaded, "module loaded");
-
-######################### End of black magic.
 
 # once the unicode constants were not being properly exported
 # these tests guard against that happening again
-ok($XML::Xerces::XMLUni::fgPCDATAString eq '#PCDATA');
-ok($XML::Xerces::XMLUni::fgPubIDString eq 'PUBLIC');
+is($XML::Xerces::XMLUni::fgPCDATAString, '#PCDATA', 'XMLUni constants exported');
+is($XML::Xerces::XMLUni::fgPubIDString, 'PUBLIC', 'XMLUni constants exported');
+
+eval {
+  my $parser = XML::Xerces::XMLReaderFactory::createXMLReader();
+  $parser->setFeature($XML::Xerces::XMLUni::fgSAX2CoreNameSpaces, 1)
+};
+ok(!$@,
+   "Xerces method arguments now handle magic stringify - SAX2")
+  or diag(XML::Xerces::error($@));
 
 my $impl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
 my $writer = $impl->createLSSerializer();
 eval{$writer->getDomConfig()->setParameter($XML::Xerces::XMLUni::fgDOMWRTFormatPrettyPrint,1)};
+
 ok(!$@,
-   "Xerces method arguments now handle magic stringify")
+   "Xerces method arguments now handle magic stringify - DOM")
   or diag(XML::Xerces::error($@));
