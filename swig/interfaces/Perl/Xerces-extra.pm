@@ -641,6 +641,17 @@ sub to_list {
   return @list;
 }
 
+package XML::Xerces::DOMStringList;
+# convert the StringList to a perl list
+sub to_list {
+  my $self = shift;
+  my @list;
+  for (my $i=0;$i<$self->getLength();$i++) {
+    push(@list,$self->item($i));
+  }
+  return @list;
+}
+
 package XML::Xerces::Attributes;
 sub to_hash {
   my $self = shift;
