@@ -61,11 +61,14 @@
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationList.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMImplementationSource.hpp>
 #include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/dom/DOMLSOutput.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMPSVITypeInfo.hpp>
+#include <xercesc/dom/DOMStringList.hpp>
 #include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
 #include <xercesc/dom/DOMLSSerializer.hpp>
