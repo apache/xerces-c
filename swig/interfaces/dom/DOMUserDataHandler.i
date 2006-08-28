@@ -1,0 +1,1 @@
+%include "xercesc/dom/DOMUserDataHandler.hpp"

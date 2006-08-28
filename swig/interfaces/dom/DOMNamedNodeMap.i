@@ -1,0 +1,1 @@
+%include "xercesc/dom/DOMNamedNodeMap.hpp"

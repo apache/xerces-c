@@ -22,7 +22,8 @@
  * the DOM classes gets a special exception handler
  *    'goto fail' must be called - either explicitly, or via SWIG_croak()
  *    to ensure that any variable cleanup is done - to avoid memory leaks.
- *    By making these macros, it reduces the code size dramatically
+ *    By making these macros, it reduces the code *file* size dramatically
+ *    (but doesn't reduce the compiled file size at all...)
  */
 %{
 #define CATCH_DOM_EXCEPTION         \
@@ -52,71 +53,76 @@
 }
 
 // Introduced in DOM Level 1
-%include "xercesc/dom/DOMException.hpp"
-%include "xercesc/dom/DOMNode.hpp"
-%include "xercesc/dom/DOMAttr.hpp"
-%include "xercesc/dom/DOMElement.hpp"
-%include "xercesc/dom/DOMEntity.hpp"
-%include "xercesc/dom/DOMDocumentType.hpp"
-%include "xercesc/dom/DOMCharacterData.hpp"
-%include "xercesc/dom/DOMComment.hpp"
-%include "xercesc/dom/DOMText.hpp"
-%include "xercesc/dom/DOMCDATASection.hpp"
-%include "xercesc/dom/DOMNodeList.hpp"
-%include "xercesc/dom/DOMNamedNodeMap.hpp"
-%include "xercesc/dom/DOMDocumentFragment.hpp"
-%include "xercesc/dom/DOMEntityReference.hpp"
-%include "xercesc/dom/DOMNotation.hpp"
-%include "xercesc/dom/DOMProcessingInstruction.hpp"
+%include "dom/DOMException.i"
+%include "dom/DOMNode.i"
+%include "dom/DOMAttr.i"
+%include "dom/DOMElement.i"
+%include "dom/DOMEntity.i"
+%include "dom/DOMDocumentType.i"
+%include "dom/DOMCharacterData.i"
+%include "dom/DOMComment.i"
+%include "dom/DOMText.i"
+%include "dom/DOMCDATASection.i"
+%include "dom/DOMNodeList.i"
+%include "dom/DOMNamedNodeMap.i"
+%include "dom/DOMDocumentFragment.i"
+%include "dom/DOMEntityReference.i"
+%include "dom/DOMNotation.i"
+%include "dom/DOMProcessingInstruction.i"
+
+// type info
+%include "dom/DOMTypeInfo.i"
+%include "dom/DOMPSVITypeInfo.i"
+
+// XPath
+%include "dom/DOMXPathEvaluator.i"
+%include "dom/DOMXPathException.i"
+%include "dom/DOMXPathExpression.i"
+%include "dom/DOMXPathNamespace.i"
+%include "dom/DOMXPathNSResolver.i"
+%include "dom/DOMXPathResult.i"
 
 // Introduced in DOM Level 2
-%include "xercesc/dom/DOMDocumentRange.hpp"
-%include "xercesc/dom/DOMDocumentTraversal.hpp"
-%include "xercesc/dom/DOMNodeIterator.hpp"
-%include "xercesc/dom/DOMNodeFilter.hpp"
-%include "xercesc/dom/DOMRange.hpp"
-%include "xercesc/dom/DOMRangeException.hpp"
-%include "xercesc/dom/DOMTreeWalker.hpp"
-%include "xercesc/dom/DOMDocumentTraversal.hpp"
+%include "dom/DOMDocumentRange.i"
+%include "dom/DOMDocumentTraversal.i"
+%include "dom/DOMNodeIterator.i"
+%include "dom/DOMNodeFilter.i"
+%include "dom/DOMRange.i"
+%include "dom/DOMRangeException.i"
+%include "dom/DOMTreeWalker.i"
 
 /*
  * Introduced in DOM Level 3
  */
-%include "xercesc/dom/DOMConfiguration.hpp"
-%include "xercesc/dom/DOMImplementationLS.hpp"
-%include "xercesc/dom/DOMImplementation.hpp"
-%include "xercesc/dom/DOMImplementationSource.hpp"
-%include "xercesc/dom/DOMImplementationRegistry.hpp"
+%include "dom/DOMUserDataHandler.i"
+%include "dom/DOMConfiguration.i"
+%include "dom/DOMStringList.i"
+%include "dom/DOMImplementationLS.i"
+%include "dom/DOMImplementation.i"
+%include "dom/DOMImplementationList.i"
+%include "dom/DOMImplementationSource.i"
+%include "dom/DOMImplementationRegistry.i"
 
-%include "xercesc/dom/DOMErrorHandler.hpp"
-%include "xercesc/dom/DOMDocument.hpp"
-%include "xercesc/dom/DOMLocator.hpp"
-
-%include "xercesc/dom/DOMLSResourceResolver.hpp"
+%include "dom/DOMError.i"
+%include "dom/DOMErrorHandler.i"
+%include "dom/DOMDocument.i"
+%include "dom/DOMLocator.i"
+%include "dom/DOMLSResourceResolver.i"
 
 // DOMLSParser
-%include "xercesc/dom/DOMLSInput.hpp"
-%include "xercesc/framework/Wrapper4InputSource.hpp"
-%include "xercesc/framework/Wrapper4DOMLSInput.hpp"
-%import  "xercesc/dom/DOMLSParserFilter.hpp"
-%include "xercesc/dom/DOMLSParser.hpp"
+%include "dom/DOMLSInput.i"
+%include "framework/Wrapper4InputSource.i"
+%include "framework/Wrapper4DOMLSInput.i"
+%import  "dom/DOMLSParserFilter.i"
+%include "dom/DOMLSParser.i"
 
 // DOMWriter
-%include "xercesc/dom/DOMLSOutput.hpp"
-%import "xercesc/framework/XMLFormatter.hpp"
-%include "xercesc/framework/StdOutFormatTarget.hpp"
-%include "xercesc/framework/LocalFileFormatTarget.hpp"
-%include "xercesc/framework/MemBufFormatTarget.hpp"
+%include "dom/DOMLSOutput.i"
+%include "framework/XMLFormatter.i"
+%include "framework/StdOutFormatTarget.i"
+%include "framework/LocalFileFormatTarget.i"
+%include "framework/MemBufFormatTarget.i"
 
-%include "xercesc/dom/DOMLSSerializer.hpp"
-%include "xercesc/dom/DOMLSSerializerFilter.hpp"
-
-%extend XERCES_CPP_NAMESPACE::DOMNode {
-   bool operator==(const DOMNode *other) {
-       return self->isSameNode(other);
-   }
-   bool operator!=(const DOMNode *other) {
-       return !self->isSameNode(other);
-   }
-};
-
+%include "dom/DOMLSException.i"
+%include "dom/DOMLSSerializer.i"
+%include "dom/DOMLSSerializerFilter.i"
