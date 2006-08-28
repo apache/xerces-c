@@ -4,7 +4,7 @@
 
 ######################### We start with some black magic to print on failure.
 
-END {ok(0) unless $loaded;}
+END {fail() unless $loaded;}
 
 use Carp;
 
@@ -19,7 +19,7 @@ use vars qw($loaded);
 use strict;
 
 $loaded = 1;
-ok($loaded, "module loaded");
+pass("module loaded");
 
 ######################### End of black magic.
 
@@ -28,68 +28,47 @@ my $parser = XML::Xerces::XMLReaderFactory::createXMLReader();
 isa_ok($parser,"XML::Xerces::SAX2XMLReader");
 
 my $feature = "http://xml.org/sax/features/foospaces";
-eval {
-  $parser->setFeature($feature, 0);
-};
-my $error = $@;
-my $skip = 0;
-unless (ok($error,"setFeature: $feature")) {
-  $skip = 1;
-}
+my $error;
 
-TODO: {
-  todo_skip "setFeature didn't raise an exception", 2, if $skip;
+SKIP: {
+  eval {$parser->setFeature($feature, 0)};
+  $error = $@;
+  ok($error,"setFeature: $feature");
+
+  skip "setFeature didn't raise an exception", 2, if not $error;
 
   isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
   ok($error->getMessage(),"message");
 }
 
-$skip = 0;
+SKSIP: {
+  eval {$parser->getFeature($feature)};
+  $error = $@;
+  ok($error,"getFeature: $feature");
 
-eval {
-  $parser->getFeature($feature);
-};
-$error = $@;
-unless (ok($error,"getFeature: $feature")){
-  $skip = 1;
-}
-
-TODO: {
-  todo_skip "setFeature didn't raise an exception", 2, if $skip;
+  skip "setFeature didn't raise an exception", 2, if not $error;
 
   isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
   ok($error->getMessage(),"message");
 }
 
-$skip = 0;
+SKIP: {
+  eval {$parser->getProperty($feature)};
+  $error = $@;
+  ok($error,"getProperty: $feature");
 
-eval {
-  $parser->getProperty($feature);
-};
-$error = $@;
-unless (ok($error,"getProperty: $feature")) {
-  $skip = 1;
-}
-
-TODO: {
-  todo_skip "setFeature didn't raise an exception", 2, if $skip;
+  skip "setFeature didn't raise an exception", 2, if not $@;
 
   isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
   ok($error->getMessage(),"message");
 }
 
-$skip = 0;
+SKIP: {
+  eval {$parser->setProperty($feature, $parser)};
+  $error = $@;
+  ok($@,"setProperty: $feature");
 
-eval {
-  $parser->setProperty($feature, $parser);
-};
-$error = $@;
-unless (ok($error,"setProperty: $feature")){
-  $skip = 1;
-}
-
-TODO: {
-  todo_skip "setFeature didn't raise an exception", 2, if $skip;
+  skip "setFeature didn't raise an exception", 2, if not $error;
 
   isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
   ok($error->getMessage(),"message");
@@ -114,17 +93,18 @@ sub ignorable_whitespace {
 
 package main;
 my $handler = MyHandler->new();
-$parser->setContentHandler($handler);
-eval {
-  $parser->parse(XML::Xerces::LocalFileInputSource->new($PERSONAL_FILE_NAME));
-};
-$error = $@;
-unless (ok($error,"setting a feature during parse")) {
-  $skip = 1;
-}
 
-TODO: {
-  todo_skip "modifying a feature during a parse didn't raise a not supported exception", 2, if $skip;
+# we must reset this - because $parser has been stringified by an earlier test
+$parser = XML::Xerces::XMLReaderFactory::createXMLReader();
+$parser->setContentHandler($handler);
+
+SKIP: {
+  eval {$parser->parse(XML::Xerces::LocalFileInputSource->new($PERSONAL_FILE_NAME))};
+  $error = $@;
+  ok($error,"setting a feature during parse");
+
+  skip "modifying a feature during a parse didn't raise a not supported exception", 2,
+    if not $error;
 
   isa_ok($error,'XML::Xerces::SAXNotSupportedException');
   ok($error->getMessage(),"message");

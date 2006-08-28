@@ -4,7 +4,7 @@
 
 ######################### We start with some black magic to print on failure.
 
-END {ok(0) unless $loaded;}
+END {fail() unless $loaded;}
 
 use Carp;
 
@@ -18,7 +18,7 @@ use subs qw(warning error fatal_error);
 use vars qw($error $loaded);
 
 $loaded = 1;
-ok($loaded, "module loaded");
+pass("module loaded");
 
 ######################### End of black magic.
 

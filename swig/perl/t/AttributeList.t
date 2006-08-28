@@ -4,7 +4,7 @@
 
 ######################### We start with some black magic to print on failure.
 
-END {ok(0) unless $loaded;}
+END {fail() unless $loaded;}
 
 use Carp;
 use blib;
@@ -18,7 +18,7 @@ use vars qw($loaded);
 use strict;
 
 $loaded = 1;
-ok($loaded, "module loaded");
+pass("module loaded");
 
 ######################### End of black magic.
 

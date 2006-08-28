@@ -4,7 +4,7 @@
 
 ######################### We start with some black magic to print on failure.
 
-END {ok(0) unless $loaded;}
+END {fail() unless $loaded;}
 
 use Carp;
 # use blib;
@@ -18,7 +18,7 @@ use vars qw($loaded);
 use strict;
 
 $loaded = 1;
-ok($loaded, "module loaded");
+pass("module loaded");
 
 ######################### End of black magic.
 
@@ -48,9 +48,8 @@ my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
 my $cmd = "$perl -Mblib $SAMPLE_DIR/DOMCreate.pl 2>/dev/null";
-# print STDERR "Running: $cmd\n";
+print STDERR "Running: $cmd\n";
 my $output = `$cmd`;
 
-ok($document eq $output, 'document eq output');
-diag("Found output\n[$output]")
-  if $document ne $output;
+is($document, $output,
+   'document eq output') or diag("Found output\n[$output]");
