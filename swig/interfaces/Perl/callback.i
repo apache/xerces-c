@@ -23,6 +23,7 @@
  * PerlCallbackHandler* - this is broken and useless
  */
 
+/*
 %typemap(out) XERCES_CPP_NAMESPACE::PerlCallbackHandler * = SWIGTYPE *DYNAMIC;
 
 DYNAMIC_CAST(SWIGTYPE_p_PerlCallbackHandler, PerlCallbackHandler_dynamic_cast);
@@ -58,3 +59,4 @@ PerlCallbackHandler_dynamic_cast(void **ptr) {
 }
 
 %}
+*/
