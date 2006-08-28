@@ -1,3 +1,10 @@
+//
+// These methods are defined in the API, but they are currently unimplemented
+//   and throw exceptions if called 
+//
+%ignore createXMLReader(const XMLCh *);
+
+
 // Operators we don't want to wrap
 %ignore operator =;
 %ignore operator new;
@@ -129,8 +136,9 @@
 // they are redundant
 %ignore createLSParser(short const,const XMLCh* const);
 %ignore SAXParser(XMLValidator*   const);
-%ignore createXMLReader();
-%ignore createXMLReader(const XMLCh*);
+
+// FIXME SWIG-1.3.30 broke this
+// %ignore createXMLReader();
 
 /*
  * ignore the constructors which set the MemoryManager
