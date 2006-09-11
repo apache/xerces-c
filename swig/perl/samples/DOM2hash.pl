@@ -15,6 +15,7 @@
  #
 
 use XML::Xerces qw(error);
+use XML::Xerces::DOM;
 use Getopt::Long;
 use Data::Dumper;
 use strict;

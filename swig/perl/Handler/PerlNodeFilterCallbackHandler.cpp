@@ -15,6 +15,7 @@
  */
 
 #include "PerlNodeFilterCallbackHandler.hpp"
+#include "xerces-swig-perl.hpp"
 
 PerlNodeFilterCallbackHandler::PerlNodeFilterCallbackHandler()
 {
@@ -22,31 +23,12 @@ PerlNodeFilterCallbackHandler::PerlNodeFilterCallbackHandler()
 }
 
 PerlNodeFilterCallbackHandler::~PerlNodeFilterCallbackHandler()
-{
-    if (callbackObj != NULL) {
-	SvREFCNT_dec(callbackObj);
-	callbackObj = NULL;
-    }
-}
+{}
 
 PerlNodeFilterCallbackHandler::PerlNodeFilterCallbackHandler(SV *obj)
 {
     set_callback_obj(obj);
 }
-
-// SV*
-// PerlNodeFilterCallbackHandler::set_callback_obj(SV* object) {
-//     SV *oldRef = &PL_sv_undef;	// default to 'undef'
-//     if (callbackObj != NULL) {
-// 	oldRef = callbackObj;
-// #if defined(PERL_VERSION) && PERL_VERSION >= 8
-// //	SvREFCNT_dec(oldRef);
-// #endif
-//     }
-//     SvREFCNT_inc(object);
-//     callbackObj = object;
-//     return oldRef;
-// }
 
 short
 PerlNodeFilterCallbackHandler::acceptNode (const DOMNode* node) const
@@ -56,6 +38,7 @@ PerlNodeFilterCallbackHandler::acceptNode (const DOMNode* node) const
 	return 0;
     }
     short accept = 0;
+    char *domNodeName = "XML::Xerces::DOMNode";
 
     dSP;
 
@@ -66,8 +49,10 @@ PerlNodeFilterCallbackHandler::acceptNode (const DOMNode* node) const
 	// first put the callback object on the stack
     XPUSHs(callbackObj);
 
-        // the only argument is the node
-    swig_type_info *ty = SWIG_TypeDynamicCast(SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNode, (void **) &node);
+    // the only argument is the node
+    // god bless John Lenz's new type system in SWIG 1.3.25!!!
+    swig_type_info *domNodeType = SWIG_TypeQuery(domNodeName);
+    swig_type_info *ty = SWIG_TypeDynamicCast(domNodeType, (void **) &node);
     SV* node_sv = sv_newmortal();
     SWIG_MakePtr(node_sv, (void *) node, ty,0);
     XPUSHs(node_sv);

@@ -2,26 +2,19 @@
 # with `make test'. After `make install' it should work as `perl
 # SAXException.t'
 
-######################### We start with some black magic to print on failure.
-
-END {fail() unless $loaded;}
-
-use Carp;
+######################### Begin module loading
 
 # use blib;
-use XML::Xerces;
 use Test::More tests => 17;
-use Config;
+BEGIN { use_ok("XML::Xerces") };
 
 use lib 't';
-use TestUtils qw($PERSONAL_FILE_NAME);
-use vars qw($loaded);
+# use TestUtils qw($PERSONAL_FILE_NAME);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
+my $PERSONAL_FILE_NAME = 'samples/personal.xml';
 
-######################### End of black magic.
+######################### Begin Test
 
 # test that we get an SAXNotRecognizedException
 my $parser = XML::Xerces::XMLReaderFactory::createXMLReader();
@@ -77,8 +70,7 @@ SKIP: {
 # test that modifying a feature during a parse raises a not supported exception
 package MyHandler;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(XML::Xerces::PerlContentHandler);
+use base qw(XML::Xerces::PerlContentHandler);
 
 sub start_element {
   my ($self,$name,$attrs) = @_;

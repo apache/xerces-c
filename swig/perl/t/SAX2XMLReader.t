@@ -2,25 +2,25 @@
 # with `make test'. After `make install' it should work as `perl
 # SAX2XMLReader.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
+# use blib;
+use Test::More tests => 26;
+BEGIN { use_ok("XML::Xerces") };
 
 use Carp;
-# use blib;
-use XML::Xerces qw(error);
-use Test::More tests => 26;
-use Config;
-
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME $SCHEMA_FILE_NAME $PERSONAL_SCHEMA_INVALID_FILE_NAME);
-use vars qw($loaded $error);
+use vars qw($error);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
+######################### Begin Test
 
-######################### End of black magic.
+  # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
+  #   when the module is loaded. Xerces.pm no longer does this.
+  #
+  #
+XML::Xerces::XMLPlatformUtils::Initialize();
 
 my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <contributors>
@@ -40,8 +40,7 @@ my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 package MyContentHandler;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(XML::Xerces::PerlContentHandler);
+use base qw(XML::Xerces::PerlContentHandler);
 
 sub start_element {
   my $self = shift;
@@ -93,15 +92,17 @@ ok((not $@),'setting dynamic=>yes')
 $CONTENT_HANDLER->reset_document();
 
 eval{$SAX->parse(XML::Xerces::MemBufInputSource->new($document, 'foo'))};
-ok((not $@),'membuf parse');
+ok((not $@),'membuf parse')
+  or diag(XML::Xerces::error($@));
 
 is($CONTENT_HANDLER->{elements}, 10,'elements');
 is($CONTENT_HANDLER->{chars}, 141,'chars');
 is($CONTENT_HANDLER->{ws}, 0,'ws');
 
 # test the overloaded parse version
-$SAX->parse($PERSONAL_FILE_NAME);
-pass('parse filename');
+eval{$SAX->parse($PERSONAL_FILE_NAME)};
+ok((not $@),'parse filename')
+  or diag(XML::Xerces::error($@));
 
 # reset the counts
 $CONTENT_HANDLER->reset_document();
@@ -161,8 +162,7 @@ $document = <<\END;
 END
 package MyErrorHandler;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(XML::Xerces::PerlErrorHandler);
+use base qw(XML::Xerces::PerlErrorHandler);
 sub warning {
   my $LINE = $_[1]->getLineNumber;
   my $COLUMN = $_[1]->getColumnNumber;
@@ -312,3 +312,11 @@ eval {$SAX->parse($is)};
 ok($@, "parse invalid doc with fgXercesSchemaExternalNoNameSpaceSchemaLocation set");
 like($@, qr/Unknown element 'contributors'/, 'invalid document error');
 
+
+END {
+  # NOTICE: We must now explicitly call XMLPlatformUtils::Terminate()
+  #   when the module is unloaded. Xerces.pm no longer does this for us
+  #
+  #
+  XML::Xerces::XMLPlatformUtils::Terminate();
+}

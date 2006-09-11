@@ -24,8 +24,9 @@
 }
 
 // XMLByte arrays are just unisgned char*'s
-%typemap(out) const XMLByte* getRawBuffer() {
-  %set_output(SWIG_FromCharPtr((char*)result));
+// force loading of FromCharPtr fragment - needed for DOM
+%typemap(out, noblock=1, fragment="SWIG_FromCharPtr") const XMLByte* getRawBuffer() {
+  %set_output(SWIG_FromCharPtr((char*)$1));
 }
 
 /*

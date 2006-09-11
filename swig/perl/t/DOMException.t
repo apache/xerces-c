@@ -2,32 +2,11 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMException.t'
 
-######################### We start with some black magic to print on failure.
-
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
-
-END {fail() unless $loaded;}
-
-use Carp;
 # use blib;
-use XML::Xerces;
 use Test::More tests => 19;
-use Config;
+BEGIN {use_ok("XML::Xerces::DOM")};
 
-use lib 't';
-use vars qw($loaded);
 use strict;
-
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
-
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
-
 
   # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
   #   when the module is loaded. Xerces.pm no longer does this.

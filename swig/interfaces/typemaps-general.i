@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+// this is new for Xerces-C-3.0
+%apply size_t { ssize_t };
+
 /*
  * Scripting languages are not going to change the default memory manager
  *   so we always default this argument
@@ -50,28 +53,6 @@
   }
 }
 }
-
-/*
- * Enable conversion of void* => XMLCh* in setProperty()
- *
- * The in typemap converts the void* to an XMLCh*
- *
- * The freearg typemap deletes the transcoded string
- *
- */
-%typemap(in) (void* value) {
-  // now check the value
-  if ($input == &PL_sv_undef) {
-    SWIG_Perl_NullRef("perl-string",$argnum,"$symname");
-    goto fail;
-  } else {
-    // we convert *everything* into a string that isn't undef
-    $1 = Perl2XMLString($input);
-  }
-}
-%typemap(freearg) void * %{
-  delete[] $1;
-%}
 
 /*
  * Dynamic Casts

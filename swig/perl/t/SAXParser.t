@@ -2,25 +2,17 @@
 # with `make test'. After `make install' it should work as `perl
 # SAXParser.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
-
-use Carp;
-use blib;
-use XML::Xerces;
+# use blib;
 use Test::More tests => 12;
-use Config;
+BEGIN { use_ok("XML::Xerces") };
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME);
-use vars qw($loaded $error);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <contributors>
@@ -40,12 +32,12 @@ my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 package MyDocumentHandler;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(XML::Xerces::PerlDocumentHandler);
+use base qw(XML::Xerces::PerlDocumentHandler);
 
 sub start_element {
-  my $self = shift;
+  my ($self, $name, @attrs) = @_;
   $self->{elements}++;
+  $self->{element}->{$name} = \@attrs;
 }
 sub characters {
   my ($self,$str,$len) = @_;
@@ -75,9 +67,9 @@ $SAX->setErrorHandler($ERROR_HANDLER);
 $DOCUMENT_HANDLER->reset_document();
 
 $SAX->parse(XML::Xerces::MemBufInputSource->new($document, 'foo'));
-ok($DOCUMENT_HANDLER->{elements} == 10,'elements');
-ok($DOCUMENT_HANDLER->{chars} == 141,'chars');
-ok($DOCUMENT_HANDLER->{ws} == 0,'ws');
+is($DOCUMENT_HANDLER->{elements}, 10,'elements');
+is($DOCUMENT_HANDLER->{chars}, 141,'chars');
+is($DOCUMENT_HANDLER->{ws}, 0,'ws');
 
 # test the overloaded parse version
 $SAX->parse($PERSONAL_FILE_NAME);

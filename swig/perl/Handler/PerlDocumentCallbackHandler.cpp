@@ -23,12 +23,7 @@ PerlDocumentCallbackHandler::PerlDocumentCallbackHandler()
 }
 
 PerlDocumentCallbackHandler::~PerlDocumentCallbackHandler()
-{
-    if (callbackObj != NULL) {
-	SvREFCNT_dec(callbackObj);
-	callbackObj = NULL;
-    }
-}
+{}
 
 PerlDocumentCallbackHandler::PerlDocumentCallbackHandler(SV *obj)
 {
@@ -64,7 +59,7 @@ PerlDocumentCallbackHandler::startElement(const XMLCh* const name,
     XPUSHs(callbackObj);
 
         // the next argument is the element name
-    SV *string = XMLString2Perl(name);
+    SV *string = UTF8_TRANSCODER->XMLString2Perl(name);
     XPUSHs(string);
 
         // next is the attribute list
@@ -96,7 +91,7 @@ PerlDocumentCallbackHandler::endElement(const XMLCh* const name)
     XPUSHs(callbackObj);
 
         // the next argument is the element name
-    SV *string = XMLString2Perl(name);
+    SV *string = UTF8_TRANSCODER->XMLString2Perl(name);
     XPUSHs(string);
 
     PUTBACK;
@@ -123,7 +118,7 @@ PerlDocumentCallbackHandler::characters(const XMLCh* const chars,
     XPUSHs(callbackObj);
 
         // the next argument is the char data
-    SV *string = XMLString2Perl(chars);
+    SV *string = UTF8_TRANSCODER->XMLString2Perl(chars);
     XPUSHs(string);
 
         // next is the length
@@ -152,7 +147,7 @@ PerlDocumentCallbackHandler::ignorableWhitespace(const XMLCh* const chars,
     XPUSHs(callbackObj);
 
         // the next argument is the element name
-    SV *string = XMLString2Perl(chars);
+    SV *string = UTF8_TRANSCODER->XMLString2Perl(chars);
     XPUSHs(string);
 
         // next is the length
@@ -250,11 +245,11 @@ PerlDocumentCallbackHandler::processingInstruction(const XMLCh* const target,
     XPUSHs(callbackObj);
 
         // the next argument is the target
-    SV *string1 = XMLString2Perl(target);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(target);
     XPUSHs(string1);
 
         // the next argument is the data
-    SV *string2 = XMLString2Perl(data);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(data);
     XPUSHs(string2);
 
     PUTBACK;

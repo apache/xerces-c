@@ -1,4 +1,7 @@
 %{
+
+#define SWIG_SetErrorf SWIG_Perl_SetErrorf
+
 static void
 SWIG_Perl_SetErrorf(const char *fmt, ...) {
   va_list args;

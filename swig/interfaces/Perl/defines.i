@@ -21,13 +21,6 @@
 
 %{
 
-#include "PerlCallbackHandler.hpp"
-#include "PerlErrorCallbackHandler.hpp"
-#include "PerlDocumentCallbackHandler.hpp"
-#include "PerlContentCallbackHandler.hpp"
-#include "PerlEntityResolverHandler.i"
-#include "PerlNodeFilterCallbackHandler.i"
-
 static void
 SWIG_Disown(SV *sv) {
   

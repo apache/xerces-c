@@ -2,24 +2,17 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMEntity.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
-
-use Carp;
 # use blib;
-use XML::Xerces;
 use Test::More tests => 4;
+BEGIN { use_ok("XML::Xerces::DOM") };
 
 use lib 't';
 use TestUtils qw($DOM);
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 my $document = <<'EOT';
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>

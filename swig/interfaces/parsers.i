@@ -3,8 +3,8 @@
 %include "xercesc/framework/psvi/PSVIHandler.hpp"
 
 // these want to be removed to a separate DOM module
-%include "parsers/AbstractDOMParser.i"
-%include "parsers/XercesDOMParser.i"
+// %include "parsers/AbstractDOMParser.i"
+// %include "parsers/XercesDOMParser.i"
 
 %include "xercesc/sax/Parser.hpp"
 %include "xercesc/parsers/SAXParser.hpp"

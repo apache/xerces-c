@@ -2,25 +2,18 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMCreate.t'
 
-######################### We start with some black magic to print on failure.
-
-END {fail() unless $loaded;}
+######################### Begin module loading
 
 use Carp;
 # use blib;
-use XML::Xerces;
-use Test::More tests => 2;
+use Test::More tests => 1;
 use Config;
 
 use lib 't';
 use TestUtils qw($SAMPLE_DIR);
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!DOCTYPE contributors SYSTEM "contributors.dtd">
@@ -48,7 +41,7 @@ my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
 my $cmd = "$perl -Mblib $SAMPLE_DIR/DOMCreate.pl 2>/dev/null";
-print STDERR "Running: $cmd\n";
+# print STDERR "Running: $cmd\n";
 my $output = `$cmd`;
 
 is($document, $output,

@@ -16,6 +16,7 @@
 
 #include "xercesc/sax/InputSource.hpp"
 #include "PerlEntityResolverHandler.hpp"
+#include "xerces-swig-perl.hpp"
 
 PerlEntityResolverHandler::PerlEntityResolverHandler()
 {
@@ -23,12 +24,7 @@ PerlEntityResolverHandler::PerlEntityResolverHandler()
 }
 
 PerlEntityResolverHandler::~PerlEntityResolverHandler()
-{
-    if (callbackObj != NULL) {
-	SvREFCNT_dec(callbackObj);
-	callbackObj = NULL;
-    }
-}
+{}
 
 PerlEntityResolverHandler::PerlEntityResolverHandler(SV *obj)
 {
@@ -41,20 +37,6 @@ PerlEntityResolverHandler::PerlEntityResolverHandler(SV *obj)
     set_callback_obj(obj);
 }
 
-// SV*
-// PerlEntityResolverHandler::set_callback_obj(SV* object) {
-//     SV *oldRef = &PL_sv_undef;	// default to 'undef'
-//     if (callbackObj != NULL) {
-// 	oldRef = callbackObj;
-// #if defined(PERL_VERSION) && PERL_VERSION >= 8
-// //	SvREFCNT_dec(oldRef);
-// #endif
-//     }
-//     SvREFCNT_inc(object);
-//     callbackObj = object;
-//     return oldRef;
-// }
-
 InputSource *
 PerlEntityResolverHandler::resolveEntity (const XMLCh* const publicId, 
 					  const XMLCh* const systemId)
@@ -66,6 +48,7 @@ PerlEntityResolverHandler::resolveEntity (const XMLCh* const publicId,
 
     dSP;
     InputSource *source;
+    char *isName = "XML::Xerces::InputSource";
 
     ENTER;
     SAVETMPS;
@@ -75,11 +58,11 @@ PerlEntityResolverHandler::resolveEntity (const XMLCh* const publicId,
     XPUSHs(callbackObj);
 
         // the next argument is the publicId
-    SV *string1 = XMLString2Perl(publicId);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(publicId);
     XPUSHs(string1);
 
         // the next argument is the systemId
-    SV *string2 = XMLString2Perl(systemId);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(systemId);
     XPUSHs(string2);
 
     PUTBACK;
@@ -99,13 +82,16 @@ PerlEntityResolverHandler::resolveEntity (const XMLCh* const publicId,
         source_sv = POPs;
     }
 
-    if (count == 1 && SvOK(source_sv) && !sv_derived_from(source_sv,"XML::Xerces::InputSource")) {
+    if (count == 1 
+	&& SvOK(source_sv)
+	&& !sv_derived_from(source_sv, isName)) {
 	croak("EntityResolver did not return an InputSource\n") ;
     }
 
-    if (SWIG_ConvertPtr(source_sv,(void **) &source, SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource,0) < 0) {
-
-        croak("EntityResolver did not return an InputSource. Expected %s", SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource->name);
+    // god bless John Lenz's new type system in SWIG 1.3.25!!!
+    swig_type_info *isType = SWIG_TypeQuery(isName);
+    if (SWIG_ConvertPtr(source_sv,(void **) &source, isType, 0) < 0) {
+        croak("EntityResolver did not return an InputSource. Expected %s", isName);
     }
     PUTBACK ;
     FREETMPS;

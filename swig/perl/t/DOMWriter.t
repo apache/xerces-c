@@ -2,24 +2,15 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMWriter.t'
 
-######################### We start with some black magic to print on failure.
-
-END {fail() unless $loaded;}
-
-use Carp;
+######################### Begin module loading
 
 # use blib;
-use XML::Xerces;
 use Test::More tests => 6;
-use Config;
+BEGIN { use_ok("XML::Xerces::DOM") };
 
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 # Create a couple of identical test documents
 my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="no" ?><contributors>

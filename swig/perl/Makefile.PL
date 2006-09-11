@@ -19,7 +19,11 @@ use Env qw(XERCES_CONFIG
 	   XERCES_DEVEL
 	   SWIG);
 use strict;
-use vars qw($INCLUDES $CXX $CFLAGS @LDFLAGS @OPTIMIZE);
+use vars qw($INCLUDES $CXX $CFLAGS @LDFLAGS @OPTIMIZE $LIBS
+	    $TRANSCODER_LIB $HANDLER_LIB
+	    $XERCESCROOT $SWIG_DIR $PERL_DIR $HANDLER_DIR $SCRIPTS_DIR $INTERFACE_DIR
+	    $SWIG_ARGS
+	   );
 use File::Basename;
 use Cwd qw(abs_path);
 
@@ -48,7 +52,7 @@ upgrade to 5.7.2.
 ERROR
 }
 
-my $XERCESCROOT = abs_path('../..');
+$XERCESCROOT = abs_path('../..');
 my $XERCES_INCLUDE = "$XERCESCROOT/src";
 my $XERCES_LIB = "$XERCESCROOT/obj/.libs";
 unless (-d $XERCES_LIB) {
@@ -57,9 +61,15 @@ unless (-d $XERCES_LIB) {
   die "Error building Xerces-C\n$!"
     if $?;
 }
-my $LIBS = '-lpthread';
+$SWIG_DIR = "$XERCESCROOT/swig";
+$PERL_DIR = "$SWIG_DIR/perl";
+$HANDLER_DIR = "$PERL_DIR/Handler";
+$INTERFACE_DIR = "$SWIG_DIR/interfaces";
+$SCRIPTS_DIR = "$SWIG_DIR/scripts";
 
-$INCLUDES = '-I. -IHandler';
+$LIBS = '-lpthread';
+
+$INCLUDES = "-I$PERL_DIR -I$PERL_DIR/Handler -I$PERL_DIR/Transcoder";
 
 print STDERR "Using XERCES_LIB = $XERCES_LIB\n";
 $LIBS .= " -L$XERCES_LIB ";
@@ -198,13 +208,17 @@ EOE
 
 print STDERR "Successfully located $libxerces_name!!\n";
 
-my $HANDLER_LIB = '$(INST_ARCHLIB)/auto/Handler/Handler$(LIB_EXT)';
+$HANDLER_LIB = '$(INST_ARCHLIB)/auto/Handler/Handler$(LIB_EXT)';
+$TRANSCODER_LIB = '$(INST_ARCHLIB)/auto/Transcoder/Transcoder$(LIB_EXT)';
 
 sub MY_postamble {
 qq[
 
 $HANDLER_LIB:
 	\$(MAKE) -C Handler static
+
+$TRANSCODER_LIB:
+	\$(MAKE) -C Transcoder static
 ];
 
 }
@@ -213,9 +227,6 @@ $HANDLER_LIB:
 my @MACRO;
 $CFLAGS .= '-D_REENTRANT';
 
-my $HANDLER_DIR = 'Handler';
-my $INTERFACE_DIR = '../interfaces';
-my $SCRIPTS_DIR = '../scripts';
 # we only consider using SWIG if we are a Xerces Developer
 if ($XERCES_DEVEL) {
   # replace this with the path to your Unix compatible find application
@@ -230,43 +241,31 @@ if ($XERCES_DEVEL) {
   chomp(@handler_headers = `$FIND $HANDLER_DIR -name "*.swig.hpp"`);
 
   @OPTIMIZE = (OPTIMIZE => '-g');
+  $SWIG_ARGS = qq[-Wall -DXERCES_VERSION="$XERCES_PERL_VERSION" \$(INC) -perl5 -c++ -shadow];
+
   sub Xerces_postamble {
     chomp(my @import_files = `$FIND $HANDLER_DIR -name "*.i"`);
     push(@header_files,@handler_headers,@import_files);
 
     chomp(my @interface_files = `$FIND $INTERFACE_DIR -name "*.i"`);
-    @interface_files = grep {$_ !~ /shadow\.i/} @interface_files;
-    @dom_interface_files = grep {$_ =~ /dom/} @interface_files;
-    @non_dom_interface_files = grep {$_ !~ /dom/} @interface_files;
+    @interface_files = grep {$_ !~ /shadow/} @interface_files;
+    @dom_interface_files = grep {$_ =~ /dom/i} @interface_files;
+    @non_dom_interface_files = grep {$_ !~ /dom/i} @interface_files;
     local $" = ' ';
-    my $OS_DEF;
-    my $CC_DEF;
-    if ($^O eq 'linux') {
-      $OS_DEF = '-DXML_LINUX';
-    } elsif($^O eq 'darwin') {
-      $OS_DEF = '-DXML_MACOSX';
-    } else {
-      die 'unsupported operating system';
-    }
-    if ($CXX =~ /g\+\+/) {
-      $CC_DEF = '-DXML_GCC';
-    } else {
-      die 'unsupported compiler';
-    }
-    my $SWIG_ARGS = qq[-Wall $OS_DEF $CC_DEF -DXERCES_VERSION="$XERCES_PERL_VERSION" \$(INC) -perl5 -c++ -shadow];
 
-    my $MAKE = '	\$(MAKE) -C Handler static';
+    my $MAKE_HANDLER    = '	\$(MAKE) -C Handler static';
+    my $MAKE_TRANSCODER = '	\$(MAKE) -C Transcoder static';
     if ($^O eq 'MSWin32') {
       # nmake doesn't not honor '-C'
-      $MAKE =  '	cd Handler && \$(MAKE) static';
+      $MAKE_HANDLER    =  '	cd Handler && \$(MAKE) static';
+      $MAKE_TRANSCODER =  '	cd Transcoder && \$(MAKE) static';
     }
 
     ### We no longer need to munge the C++ code thanks to SWIG improvements
     # perl postSource.pl Xerces.cpp
     my $retval = <<TERMINUS;
 Xerces-tmp.pm: $SCRIPTS_DIR/postModule.pl $INTERFACE_DIR/Perl/shadow.i
-	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp $INTERFACE_DIR/Xerces.i
-	mv Xerces.pm Xerces-tmp.pm
+	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp -pm Xerces-tmp.pm $INTERFACE_DIR/Xerces.i
 
 Xerces.pm: $SCRIPTS_DIR/postModule.pl Xerces-tmp.pm
 	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=Xerces-tmp.pm --out=Xerces.pm
@@ -274,19 +273,22 @@ Xerces.pm: $SCRIPTS_DIR/postModule.pl Xerces-tmp.pm
 Xerces.cpp: $SCRIPTS_DIR/postSource.pl Xerces-tmp.cpp
 	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postSource.pl --in=Xerces-tmp.cpp --out=Xerces.cpp
 
-Xerces-tmp.cpp: $INTERFACE_DIR/Xerces.i @interface_files @header_files  $INTERFACE_DIR/Perl/Xerces-extra.pm
-	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp $INTERFACE_DIR/Xerces.i
-	mv Xerces.pm Xerces-tmp.pm
+Xerces-tmp.cpp: $INTERFACE_DIR/Xerces.i @non_dom_interface_files @header_files  $INTERFACE_DIR/Perl/Xerces-extra.pm
+	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp -pm Xerces-tmp.pm $INTERFACE_DIR/Xerces.i
 	perl  -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=Xerces-tmp.pm --out=Xerces.pm
 	cp -f Xerces.pm blib/lib/XML/Xerces.pm
 
 $HANDLER_LIB:
-$MAKE
+$MAKE_HANDLER
+
+$TRANSCODER_LIB:
+$MAKE_TRANSCODER
 TERMINUS
     return $retval;
   }
 
   print STDERR "Welcome Xerces Developer!\n";
+
   # if we're to use SWIG, we need to know which version is available
   my $swig = $SWIG || 'swig';
   @MACRO = ('macro'       => {
@@ -306,15 +308,17 @@ my $OBJS = 'Xerces$(OBJ_EXT)';
 # see the hints/ directory for architecture specific stuff!
 WriteMakefile(
   'NAME'        => 'XML::Xerces',
-  'AUTHOR'      => 'The Xerces-P developers: p-dev@xerces.apache.org',
-  'ABSTRACT'    => 'Perl Interface for Xerces XML API',
+  'AUTHOR'      => q[The Xerces-P developers: p-dev 'at' xerces 'dot' apache 'dot' org],
+  'ABSTRACT'    => 'Perl Interface for Apache Xerces XML API',
   'CC'          => $CXX,
   'CCFLAGS'     => $CFLAGS,
   'PM'          => {
     'Xerces.pm' => '$(INST_LIB)/XML/Xerces.pm',
+ #   'DOM.pm' => '$(INST_LIB)/XML/Xerces/DOM.pm',
   },
   'INC'         => $INCLUDES,
-  'MYEXTLIB'    => $HANDLER_LIB,
+  'MYEXTLIB'    => "$HANDLER_LIB $TRANSCODER_LIB",
+#  'SKIP'      => [qw( pm_to_blib )],
   'LIBS'        => [$LIBS],
   'OBJECT'      => $OBJS,
   'VERSION'     => "$XERCES_PERL_VERSION",

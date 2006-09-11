@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-/**************/
-/*            */
-/*  TYPEMAPS  */
-/*            */
-/**************/
+/*
+ * Perl/includes.i - all #includes needed for Xerces.cpp
+ *
+ */ 
 
-%include typemaps-general.i
+%{
 
-#ifdef SWIGPERL
-%include "Perl/typemaps.i"
-%include "Perl/typemaps-xmlch.i"
-#endif
+#include "Transcoder.hpp"
+#include "XMLExceptionHandler.hpp"
 
-// this is new for Xerces-3
-%apply size_t { ssize_t };
+#include "PerlCallbackHandler.hpp"
+#include "PerlErrorCallbackHandler.hpp"
+#include "PerlDocumentCallbackHandler.hpp"
+#include "PerlContentCallbackHandler.hpp"
+#include "PerlEntityResolverHandler.hpp"
+
+%}

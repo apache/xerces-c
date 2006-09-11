@@ -1,26 +1,16 @@
 # Before `make install' is performed this script should be runnable
 # with `make test'. After `make install' it should work as `perl
-# DOMNode.t'
+# DOMTreeWalker.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
-
-END {fail() unless $loaded;}
-
-use Carp;
 # use blib;
-use XML::Xerces;
 use Test::More tests => 7;
-use Config;
+BEGIN { use_ok("XML::Xerces::DOM") };
 
-use lib 't';
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
+######################### Begin Test
 
 package MyNodeFilter;
 use strict;
@@ -32,12 +22,6 @@ sub acceptNode {
 }
 
 package main;
-
-######################### End of black magic.
-
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
 
 # Create a couple of identical test documents
 my $document = q[<?xml version="1.0" encoding="UTF-8"?>

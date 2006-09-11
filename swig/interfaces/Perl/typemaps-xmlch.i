@@ -46,7 +46,7 @@
     goto fail;
   } else {
     // we convert *everything* into a string that isn't undef
-    $1 = Perl2XMLString($input);
+    $1 = UTF8_TRANSCODER->Perl2XMLString($input);
   }
 %}
 
@@ -56,23 +56,46 @@
 
 // out typemap
 %typemap(out) XMLCh * %{
-  $result = XMLString2Perl($1);
+  $result = UTF8_TRANSCODER->XMLString2Perl($1);
   ++argvi;
 %}
 
 // varout typemap (for global variables)
 // useful for XMLUni constants
 %typemap(varout) XMLCh[] %{
-  sv_setsv((SV*)$result, XMLString2Perl($1));
+  sv_setsv((SV*)$result, UTF8_TRANSCODER->XMLString2Perl($1));
 %}
 
 // fgBooleanValueSpace is an array of XMLCh*
 %typemap(varout) XMLCh[][8] %{
     AV *myav = newAV();
     for (int i=0;i<4;i++) {
-        av_push(myav, XMLString2Perl($1[i]));
+        av_push(myav, UTF8_TRANSCODER->XMLString2Perl($1[i]));
     }
 
     SV* rv = newRV((SV*)myav);
     sv_setsv((SV*)$result, rv);
 %}
+
+/*
+ * Enable conversion of void* => XMLCh* in setProperty()
+ *
+ * The in typemap converts the void* to an XMLCh*
+ *
+ * The freearg typemap deletes the transcoded string
+ *
+ */
+%typemap(in) (void* value) {
+  // now check the value
+  if ($input == &PL_sv_undef) {
+    SWIG_Perl_NullRef("perl-string",$argnum,"$symname");
+    goto fail;
+  } else {
+    // we convert *everything* into a string that isn't undef
+    $1 = UTF8_TRANSCODER->Perl2XMLString($input);
+  }
+}
+%typemap(freearg) void * %{
+  delete[] $1;
+%}
+

@@ -2,38 +2,19 @@
 # with `make test'. After `make install' it should work as `perl
 # Attributes.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
-
-END {fail() unless $loaded;}
-
-use Carp;
-use blib;
-use XML::Xerces;
+# use blib;
 use Test::More tests => 19;
-use Config;
+BEGIN { use_ok("XML::Xerces") };
 
-use lib 't';
-use TestUtils qw($PERSONAL_FILE_NAME);
-use vars qw($i $loaded);
 use strict;
 
-$loaded = 1;
-$i = 1;
-pass("module loaded");
-
-######################### End of black magic.
-
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
+######################### Begin Test
 
 package MyContentHandler;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(XML::Xerces::PerlContentHandler);
+use base qw(XML::Xerces::PerlContentHandler);
 
 sub start_element {
   my ($self,$uri,$localname,$qname,$attrs) = @_;
@@ -193,8 +174,7 @@ $document = qq[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 package MyEntityResolver;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(XML::Xerces::PerlEntityResolver);
+use base qw(XML::Xerces::PerlEntityResolver);
 
 sub new {
   return bless {}, shift;

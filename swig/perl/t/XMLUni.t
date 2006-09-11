@@ -5,7 +5,7 @@
 
 # use blib;
 use Test::More tests => 5;
-BEGIN {use_ok("XML::Xerces")};
+BEGIN {use_ok("XML::Xerces::DOM")};
 
 use strict;
 

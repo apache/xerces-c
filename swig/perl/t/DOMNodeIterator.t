@@ -2,22 +2,14 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMNodeIterator.t'
 
-######################### We start with some black magic to print on failure.
-
-END {fail() unless $loaded;}
-
-use Carp;
+######################### Begin module loading
 
 use blib;
-use XML::Xerces;
 use Test::More tests => 7;
-use Config;
-
-use vars qw($loaded);
+BEGIN { use_ok("XML::Xerces::DOM") };
 use strict;
 
-$loaded = 1;
-pass("module loaded");
+######################### Begin Test
 
 package MyNodeFilter;
 use strict;
@@ -29,8 +21,6 @@ sub acceptNode {
 }
 
 package main;
-
-######################### End of black magic.
 
 # Create a couple of identical test documents
 my $document = q[<?xml version="1.0" encoding="UTF-8"?>

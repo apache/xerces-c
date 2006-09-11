@@ -17,13 +17,14 @@
 #ifndef __PERLCALLBACKHANDLER
 #define __PERLCALLBACKHANDLER
 
-#ifdef __cplusplus
+
 /* Needed on some windows machines---since MS plays funny
    games with the header files under C++ */
 #include <math.h>
 #include <stdlib.h>
+
 extern "C" {
-#endif
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -33,9 +34,7 @@ extern "C" {
 #undef malloc
 
 #include <string.h>
-#ifdef __cplusplus
 }
-#endif
 
 #if !defined(PERL_REVISION) || ((PERL_REVISION >= 5) && ((PERL_VERSION < 5) || ((PERL_VERSION == 5) && (PERL_SUBVERSION < 50))))
 #ifndef PL_sv_yes
@@ -56,9 +55,8 @@ extern "C" {
 #define PERLCALLBACKHANDLER_CONTENT_TYPE       3
 #define PERLCALLBACKHANDLER_DOCUMENT_TYPE      4
 
-#include "xercesc/util/TransService.hpp"
-#include "xercesc/util/XMLString.hpp"
 #include "xercesc/util/PlatformUtils.hpp"
+#include "Transcoder.hpp"
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -70,7 +68,8 @@ private:
 
 protected:
 
-    SV *callbackObj;
+  SV *callbackObj;
+  Transcoder* UTF8_TRANSCODER;
 
 public:
 
@@ -80,7 +79,6 @@ public:
     virtual int type() {return PERLCALLBACKHANDLER_BASE_TYPE;}
 
     SV* set_callback_obj(SV*);
-    SV* XMLString2Perl(const XMLCh*);
 };
 
 #endif /* __PERLCALLBACKHANDLER */

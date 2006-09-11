@@ -29,21 +29,43 @@
 %module "XML::Xerces"
 #endif
 
-%include "defines.i"
-
-%include "typemaps.i"
-
-%include "typemaps-dom.i"
+%include "includes.i"
 
 /*
- * Import the language specific macros
+ * Import the language specific macros - not namespace dependent
+ *   we place these first so that they can define any master
+ *   macros needed by the language-independent interface files
  */
 
 #ifdef SWIGPERL
-%include "Perl/callback.i"
 %include "Perl/shadow.i"
-%include "Perl/dom-shadow.i"
+// %include "Perl/dom-shadow.i"
+%include "Perl/defines.i"
+%include "Perl/errors.i"
+%include "Perl/includes.i"
+%include "Perl/typemaps.i"
+%include "Perl/typemaps-xmlch.i"
 #endif
+
+/*
+ * Start the XERCES_CPP_NAMESPACE
+ *    after this everything will be in Xerces namespace
+ */ 
+%include "defines.i"
+
+/*
+ * language dependent features that are namespace dependent
+ *   such as the transcoders
+ *
+ */
+#ifdef SWIGPERL
+// %include "Perl/transcode.i"
+#endif
+
+
+%include typemaps-general.i
+
+// %include "typemaps-dom.i"
 
 /*****************************/
 /*                           */
@@ -142,7 +164,7 @@
  * DOM
  */
 
-%include "DOM.i"
+// %include "DOM.i"
 
 // %include "xercesc/dom/DOMNode.hpp"
 
@@ -165,31 +187,31 @@
 %include "parsers.i"
 
 /* 
- * Callbacks - this needs to be at the very end
- *   so that SWIG can wrap the superclass methods properly
- */
-
-%include "callback.i"
-
-/* 
  * Include extra verbatim C code in the initialization function
  */
 %init {
     // we create the global transcoder for UTF-8 to UTF-16
-    XMLTransService::Codes failReason;
-    XMLPlatformUtils::Initialize(); // first we must create the transservice
-    UTF8_ENCODING = XMLString::transcode("UTF-8");
-    UTF8_TRANSCODER =
-      XMLPlatformUtils::fgTransService->makeNewTranscoderFor(UTF8_ENCODING,
-                                                             failReason,
-                                                             1024,
-							     XMLPlatformUtils::fgMemoryManager);
+    // must initialize the Xerces-C transcoding service
+    XMLPlatformUtils::Initialize();
+    UTF8_TRANSCODER = Transcoder::getInstance();
     if (! UTF8_TRANSCODER) {
 	croak("ERROR: XML::Xerces: INIT: Could not create UTF-8 transcoder");
+    }
+
+    XML_EXCEPTION_HANDLER = XMLExceptionHandler::getInstance();
+    if (! XML_EXCEPTION_HANDLER) {
+	croak("ERROR: XML::Xerces: INIT: Could not create XMLExceptionHandler");
     }
 }
 
 #ifdef SWIGPERL
+
+/* 
+ * Callbacks - this needs to be at the very end
+ *   so that SWIG can wrap the superclass methods properly
+ */
+
+%include "Perl/callback.i"
 
 /* 
  * Include extra verbatim Perl code

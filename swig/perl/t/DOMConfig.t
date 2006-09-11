@@ -7,7 +7,7 @@
 # use blib;
 use Test::More tests => 20;
 
-BEGIN{use_ok('XML::Xerces')};
+BEGIN{use_ok('XML::Xerces::DOM')};
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME);

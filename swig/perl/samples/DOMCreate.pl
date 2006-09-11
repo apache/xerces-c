@@ -25,7 +25,7 @@
 
 use strict;
 # use blib;
-use XML::Xerces;
+use XML::Xerces::DOM;
 
   # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
   #   when the module is loaded. Xerces.pm no longer does this.

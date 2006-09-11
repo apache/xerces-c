@@ -56,6 +56,7 @@ DOMLIST_METHOD(DOMDocument,getElementsByTagNameNS)
 DOMLIST_METHOD(DOMElement,getElementsByTagName)
 DOMLIST_METHOD(DOMElement,getElementsByTagNameNS)
 DOMLIST_METHOD(DOMNode,getChildNodes)
+DOMLIST_METHOD(DOMConfiguration,getParameterNames)
 
 // Define a macro to rewrite all methods that return a map of DOMNodes
 

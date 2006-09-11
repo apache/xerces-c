@@ -32,7 +32,7 @@ sub fatal_error {
 package main;
 use strict;
 # use blib;
-use XML::Xerces;
+use XML::Xerces::DOM;
 use IO::Handle;
 use Getopt::Long;
 

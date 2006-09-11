@@ -68,7 +68,7 @@
 
 use strict;
 # use blib;
-use XML::Xerces;
+use XML::Xerces::DOM;
 use Getopt::Long;
 use vars qw();
 

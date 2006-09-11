@@ -64,7 +64,7 @@
 ######################################################################
 
 use strict;
-use XML::Xerces;
+use XML::Xerces::DOM;
 use Getopt::Long;
 use Benchmark;
 use vars qw(%OPTIONS);

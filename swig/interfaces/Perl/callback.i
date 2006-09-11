@@ -19,6 +19,14 @@
  *
  */ 
 
+%include "PerlCallbackHandler.hpp"
+%include "PerlErrorCallbackHandler.hpp"
+%include "PerlEntityResolverHandler.hpp"
+%include "PerlDocumentCallbackHandler.hpp"
+%include "PerlContentCallbackHandler.hpp"
+
+// %include "PerlNodeFilterCallbackHandler.hpp"
+
 /*
  * PerlCallbackHandler* - this is broken and useless
  */

@@ -2,30 +2,23 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMImplementation.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail("module loaded") unless $loaded;}
-
-use Carp;
 # use blib;
 use Test::More tests => 6;
-use XML::Xerces;
+BEGIN { use_ok("XML::Xerces::DOM") };
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME $PERSONAL_NO_DOCTYPE $PERSONAL $DOM);
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
+######################### Begin Test
 
   # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
   #   when the module is loaded. Xerces.pm no longer does this.
   #
   #
 XML::Xerces::XMLPlatformUtils::Initialize();
-
-######################### End of black magic.
 
 my $domImpl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
 isa_ok($domImpl,"XML::Xerces::DOMImplementation");

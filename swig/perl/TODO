@@ -23,6 +23,14 @@ Samples:
 
 Internals:
 ==========
+Sat Sep 9 2006
+* move other code out of XML::Xerces into new modules:
+  - Handler
+  - SAX
+  - SAX2
+* why are is createXMLReader dispatcher not working - mail swig-dev
+* why are we wrapping DefaultHandler??
+
 Tue Aug 22 23:47:05 IST 2006
 * need tests for the new DOM additions:
 %include "dom/DOMLSException.i"
@@ -41,7 +49,6 @@ Tue Aug 22 23:47:05 IST 2006
 %include "xercesc/dom/DOMXPathNSResolver.hpp"
 %include "xercesc/dom/DOMXPathResult.hpp"
 %include "xercesc/dom/DOMUserDataHandler.hpp"
-%include "xercesc/dom/DOMConfiguration.hpp"
 %include "xercesc/dom/DOMStringList.hpp"
 %include "xercesc/dom/DOMImplementationList.hpp"
 %include "xercesc/dom/DOMImplementationSource.hpp"
@@ -49,7 +56,6 @@ Tue Aug 22 23:47:05 IST 2006
 %include "xercesc/dom/DOMError.hpp"
 
 Fri May 13 18:21:45 IST 2005
-* change the string typecheck to only do an SvOK()
 * does Xerces have any methods were a NULL XMLCh* value is needed? -
   if so we have to enable a %typemap to support it
 * Xerces has some methods were a NULL pointer value is needed and some
@@ -68,7 +74,6 @@ Fri Jun  7 00:37:01 MDT 2002
 
 Sun Jun  2 11:38:11 MDT 2002
 * use %newobject and %typemape(newfree) for methods like removeNode()
-* look into using SWIG_RegisterMapping() instead of inheritance hack
 
 ### *** emacs file mode definition ***
 ### Local Variables: 

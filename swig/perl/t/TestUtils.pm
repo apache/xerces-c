@@ -1,5 +1,5 @@
 package TestUtils;
-use XML::Xerces;
+use XML::Xerces::DOM;
 use strict;
 use vars qw($VERSION
 	    @ISA

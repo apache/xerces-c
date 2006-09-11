@@ -26,22 +26,9 @@ PerlContentCallbackHandler::~PerlContentCallbackHandler()
 {}
 
 PerlContentCallbackHandler::PerlContentCallbackHandler(SV *obj)
-  : PerlCallbackHandler(obj)
-{}
-
-// SV*
-// PerlContentCallbackHandler::set_callback_obj(SV* object) {
-//     SV *oldRef = &PL_sv_undef;	// default to 'undef'
-//     if (callbackObj != NULL) {
-// 	oldRef = callbackObj;
-// #if defined(PERL_VERSION) && PERL_VERSION >= 8
-// //	SvREFCNT_dec(oldRef);
-// #endif
-//     }
-//     SvREFCNT_inc(object);
-//     callbackObj = object;
-//     return oldRef;
-// }
+{
+  set_callback_obj(obj);
+}
 
 void
 PerlContentCallbackHandler::startElement(const   XMLCh* const    uri,
@@ -61,15 +48,15 @@ PerlContentCallbackHandler::startElement(const   XMLCh* const    uri,
     XPUSHs(callbackObj);
 
         // the next argument is the uri
-    SV *string1 = XMLString2Perl(uri);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(uri);
     XPUSHs(string1);
 
         // the next argument is the localname
-    SV *string2 = XMLString2Perl(localname);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(localname);
     XPUSHs(string2);
 
         // the next argument is the qname
-    SV *string3 = XMLString2Perl(qname);
+    SV *string3 = UTF8_TRANSCODER->XMLString2Perl(qname);
     XPUSHs(string3);
 
         // next is the attributes
@@ -102,15 +89,15 @@ PerlContentCallbackHandler::endElement(const   XMLCh* const    uri,
     XPUSHs(callbackObj);
 
         // the next argument is the uri
-    SV *string1 = XMLString2Perl(uri);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(uri);
     XPUSHs(string1);
 
         // the next argument is the localname
-    SV *string2 = XMLString2Perl(localname);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(localname);
     XPUSHs(string2);
 
         // the next argument is the qname
-    SV *string3 = XMLString2Perl(qname);
+    SV *string3 = UTF8_TRANSCODER->XMLString2Perl(qname);
     XPUSHs(string3);
 
     PUTBACK;
@@ -137,7 +124,7 @@ PerlContentCallbackHandler::characters(const XMLCh* const chars,
     XPUSHs(callbackObj);
 
         // the next argument is the char data
-    SV *string = XMLString2Perl(chars);
+    SV *string = UTF8_TRANSCODER->XMLString2Perl(chars);
     XPUSHs(string);
 
         // next is the length
@@ -166,7 +153,7 @@ PerlContentCallbackHandler::ignorableWhitespace(const XMLCh* const chars,
     XPUSHs(callbackObj);
 
         // the next argument is the char data
-    SV *string = XMLString2Perl(chars);
+    SV *string = UTF8_TRANSCODER->XMLString2Perl(chars);
     XPUSHs(string);
 
         // next is the length
@@ -264,11 +251,11 @@ PerlContentCallbackHandler::processingInstruction(const XMLCh* const target,
     XPUSHs(callbackObj);
 
         // the next argument is the target
-    SV *string1 = XMLString2Perl(target);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(target);
     XPUSHs(string1);
 
         // the next argument is the data
-    SV *string2 = XMLString2Perl(data);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(data);
     XPUSHs(string2);
 
     PUTBACK;
@@ -323,11 +310,11 @@ PerlContentCallbackHandler::startPrefixMapping (const XMLCh* const prefix,
     XPUSHs(callbackObj);
 
         // the next argument is the prefix
-    SV *string1 = XMLString2Perl(prefix);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(prefix);
     XPUSHs(string1);
 
         // the next argument is the uri
-    SV *string2 = XMLString2Perl(uri);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(uri);
     XPUSHs(string2);
 
     PUTBACK;
@@ -353,7 +340,7 @@ PerlContentCallbackHandler::endPrefixMapping (const XMLCh* const prefix)
     XPUSHs(callbackObj);
 
         // the next argument is the prefix
-    SV *string1 = XMLString2Perl(prefix);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(prefix);
     XPUSHs(string1);
 
     PUTBACK;
@@ -379,7 +366,7 @@ PerlContentCallbackHandler::skippedEntity (const XMLCh* const name)
     XPUSHs(callbackObj);
 
         // the next argument is the name
-    SV *string1 = XMLString2Perl(name);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(name);
     XPUSHs(string1);
 
     PUTBACK;

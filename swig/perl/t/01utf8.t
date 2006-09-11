@@ -1,13 +1,22 @@
+# Before `make install' is performed this script should be runnable
+# with `make test'. After `make install' it should work as `perl
+# UTF8.t'
+
+######################### Begin module loading
+
 # use blib;
-use XML::Xerces;
-use Cwd;
+
 use Test::More tests => 42;
 use vars qw($text);
 use utf8;
 use lib 't';
 use TestUtils qw($PERSONAL_NO_DOCTYPE);
 
-pass("loaded");
+BEGIN { use_ok("XML::Xerces") };
+
+use strict;
+
+######################### Begin Test
 
   # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
   #   when the module is loaded. Xerces.pm no longer does this.

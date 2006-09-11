@@ -2,29 +2,17 @@
 # with `make test'. After `make install' it should work as `perl
 # DOMDocument.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
-
-END {fail() unless $loaded;}
-
-use Carp;
-
-use blib;
+# use blib;
 use utf8;
-use XML::Xerces;
 use Test::More tests => 11;
-use Config;
+BEGIN{use_ok('XML::Xerces::DOM')};
 
 use lib 't';
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 # Create a couple of identical test documents
 my $document = q[<?xml version="1.0" encoding="UTF-8"?>
