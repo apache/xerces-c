@@ -344,14 +344,18 @@ Token* TokenFactory::getGraphemePattern() {
 }
 
 /*
-#if defined (XML_USE_ICU_TRANSCODER)
+#if HAVE_CONFIG_H
+#	include <config.h>
+#endif
+
+#if XERCES_USE_TRANSCODER_ICU
    #include <unicode/uchar.h>
 #endif
 
 #include <stdio.h>
 void TokenFactory::printUnicode() {
 
-#if defined (XML_USE_ICU_TRANSCODER)
+#if XERCES_USE_TRANSCODER_ICU
     //
     //  Write it out to a temp file to be read back into this source later.
     //

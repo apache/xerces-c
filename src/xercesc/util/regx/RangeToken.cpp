@@ -21,16 +21,20 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#if HAVE_CONFIG_H
+#	include <config.h>
+#endif
+
 #include <assert.h>
 
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 
-#if defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
-#include <unicode/uchar.h>
+#if XERCES_USE_TRANSCODER_ICU
+  #include <unicode/uchar.h>
 #else
-#include <xercesc/util/XMLUniDefs.hpp>
+  #include <xercesc/util/XMLUniDefs.hpp>
 #endif
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -79,7 +83,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
 
         for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
             for (XMLInt32 ch = fRanges[i];  ch <= fRanges[i + 1];  ++ch) {
-#if defined(XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
+#if XERCES_USE_TRANSCODER_ICU
                 const XMLInt32  upperCh = u_toupper(ch);
 
                 if (upperCh != ch)

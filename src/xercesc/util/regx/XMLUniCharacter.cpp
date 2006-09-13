@@ -22,9 +22,13 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#if HAVE_CONFIG_H
+#	include <config.h>
+#endif
+
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
 
-#if defined (XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
+#if XERCES_USE_TRANSCODER_ICU
    #include <unicode/uchar.h>
 #else
    #include <xercesc/util/regx/UniCharTable.hpp>
@@ -37,7 +41,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 unsigned short XMLUniCharacter::getType(const XMLCh ch) {
 
-#if defined (XML_USE_ICU_TRANSCODER) || defined (XML_USE_UNICONV390_TRANSCODER)
+#if XERCES_USE_TRANSCODER_ICU
 	return (unsigned short) u_charType(ch);
 #else
 	return (unsigned short) fgUniCharsTable[ch];
