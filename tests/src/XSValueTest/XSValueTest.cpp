@@ -26,6 +26,10 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
+#if HAVE_CONFIG_H
+#	include <config.h>
+#endif
+
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
 #else
