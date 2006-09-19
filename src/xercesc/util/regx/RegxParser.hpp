@@ -75,9 +75,8 @@ public:
 		REGX_T_XMLSCHEMA_CC_SUBTRACTION	= 24
 	};
 
-	static const unsigned short Regex_S_NORMAL;
-	static const unsigned short Regex_S_INBRACKETS;
-	static const unsigned short Regex_S_INXBRACKETS;
+	static const unsigned short regexParserStateNormal;
+	static const unsigned short regexParserStateInBrackets;
 
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor

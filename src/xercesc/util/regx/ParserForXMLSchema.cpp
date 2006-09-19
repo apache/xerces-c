@@ -99,7 +99,7 @@ Token* ParserForXMLSchema::processParen() {
 
 RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
 
-    setParseContext(Regex_S_INBRACKETS);
+    setParseContext(regexParserStateInBrackets);
     processNext();
 
     RangeToken* base = 0;
@@ -274,7 +274,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
 
     tok->sortRanges();
     tok->compactRanges();
-    setParseContext(Regex_S_NORMAL);
+    setParseContext(regexParserStateNormal);
     processNext();
 
     return tok;

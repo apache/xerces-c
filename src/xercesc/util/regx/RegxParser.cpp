@@ -35,9 +35,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Static member data initialization
 // ---------------------------------------------------------------------------
-const unsigned short RegxParser::Regex_S_NORMAL		= 0;
-const unsigned short RegxParser::Regex_S_INBRACKETS	= 1;
-const unsigned short RegxParser::Regex_S_INXBRACKETS	= 2;
+const unsigned short RegxParser::regexParserStateNormal		= 0;
+const unsigned short RegxParser::regexParserStateInBrackets	= 1;
 
 // ---------------------------------------------------------------------------
 //  RegxParser::ReferencePostion: Constructors and Destructor
@@ -59,7 +58,7 @@ RegxParser::RegxParser(MemoryManager* const manager)
      fOptions(0),
      fOffset(0),
      fNoGroups(1),
-     fParseContext(Regex_S_NORMAL),
+     fParseContext(regexParserStateNormal),
      fStringLen(0),
      fState(0),
      fCharData(0),
@@ -90,7 +89,7 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
 	fOffset = 0;
 	fNoGroups = 1;
 	fHasBackReferences = false;
-	setParseContext(Regex_S_NORMAL);
+	setParseContext(regexParserStateNormal);
 	if (fString)
         fMemoryManager->deallocate(fString);//delete [] fString;
 	fString = XMLString::replicate(regxStr, fMemoryManager);
@@ -143,7 +142,7 @@ void RegxParser::processNext() {
 	XMLCh ch = fString[fOffset++];
 	fCharData = ch;
 
-    if (fParseContext == Regex_S_INBRACKETS) {
+    if (fParseContext == regexParserStateInBrackets) {
 
 		switch (ch) {
         case chBackSlash:
@@ -1011,7 +1010,7 @@ XMLInt32 RegxParser::processCInCharacterClass(RangeToken* const,
 
 RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 
-    setParseContext(Regex_S_INBRACKETS);
+    setParseContext(regexParserStateInBrackets);
 	processNext();
 
     RangeToken* base = 0;
@@ -1184,7 +1183,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
         tok->getCaseInsensitiveToken(fTokenFactory);
     }
 
-    setParseContext(Regex_S_NORMAL);
+    setParseContext(regexParserStateNormal);
     processNext();
 
     return tok;
