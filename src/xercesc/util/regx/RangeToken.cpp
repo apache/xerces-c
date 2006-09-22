@@ -30,11 +30,16 @@
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 #if XERCES_USE_TRANSCODER_ICU
   #include <unicode/uchar.h>
-#else
-  #include <xercesc/util/XMLUniDefs.hpp>
+
+#if (U_ICU_VERSION_MAJOR_NUM >= 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4)
+  #include <unicode/uset.h>
+  #include <xercesc/util/XMLString.hpp>
+  #include <xercesc/util/Janitor.hpp>
+#endif
 #endif
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -81,6 +86,64 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
         bool isNRange = (getTokenType() == T_NRANGE) ? true : false;
         RangeToken* lwrToken = tokFactory->createRange(isNRange);
 
+#if XERCES_USE_TRANSCODER_ICU && ((U_ICU_VERSION_MAJOR_NUM >= 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4))
+        UChar* rangeStr=(UChar*)fMemoryManager->allocate(40*fElemCount*sizeof(UChar));
+        ArrayJanitor<UChar> janRange(rangeStr, fMemoryManager);
+        int c=0;
+        rangeStr[c++] = chOpenSquare;
+        for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
+            XMLCh buffer[10];
+            unsigned int len, j;
+
+            rangeStr[c++] = chBackSlash;
+            rangeStr[c++] = chLatin_U;
+            XMLString::binToText(fRanges[i], buffer, 10, 16, fMemoryManager);
+            len = XMLString::stringLen(buffer);
+            for(j=0;j<(8-len);j++)
+                rangeStr[c++] = chDigit_0;
+            XMLCh* p=buffer;
+            while(*p)
+                rangeStr[c++] = *p++;
+            if(fRanges[i+1]!=fRanges[i])
+            {
+                rangeStr[c++] = chDash;
+                rangeStr[c++] = chBackSlash;
+                rangeStr[c++] = chLatin_U;
+                XMLString::binToText(fRanges[i+1], buffer, 10, 16, fMemoryManager);
+                len = XMLString::stringLen(buffer);
+                for(j=0;j<(8-len);j++)
+                    rangeStr[c++] = chDigit_0;
+                p=buffer;
+                while(*p)
+                    rangeStr[c++] = *p++;
+            }
+        }
+        rangeStr[c++] = chCloseSquare;
+        rangeStr[c++] = chNull;
+        UErrorCode ec=U_ZERO_ERROR;
+        USet* range=uset_openPatternOptions(rangeStr, -1, USET_CASE_INSENSITIVE, &ec);
+        if(range)
+        {
+            ec = U_ZERO_ERROR;
+            uint32_t cbCount=uset_serialize(range, NULL, 0, &ec);
+            uint16_t* buffer=(uint16_t*)fMemoryManager->allocate(cbCount*sizeof(uint16_t));
+            ArrayJanitor<uint16_t> janSet(buffer, fMemoryManager);
+            ec = U_ZERO_ERROR;
+            uset_serialize(range, buffer, cbCount, &ec);
+            USerializedSet serializedSet;
+            uset_getSerializedSet(&serializedSet, buffer, cbCount);
+            int32_t nSets=uset_getSerializedRangeCount(&serializedSet);
+            for(int32_t i=0; i<nSets; i++)
+            {
+                UChar32 start, end;
+                uset_getSerializedRange(&serializedSet, i, &start, &end);
+                lwrToken->addRange(start, end);
+            }
+            // does this release the memory allocated by the set?
+            uset_setSerializedToOne(&serializedSet, 32);
+            uset_close(range);
+        }
+#else
         for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
             for (XMLInt32 ch = fRanges[i];  ch <= fRanges[i + 1];  ++ch) {
 #if XERCES_USE_TRANSCODER_ICU
@@ -122,6 +185,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
         }
 
         lwrToken->mergeRanges(this);
+#endif
         lwrToken->compactRanges();
         lwrToken->createMap();
 
