@@ -84,11 +84,9 @@ XMLNumber* XMLNumber::loadNumber(XMLNumber::NumberType  numType
     case XMLNumber::UnKnown:
         return 0;
         break;
-    default: //we treat this same as UnKnown
-        return 0;
-        break;
     }
-
+    //we treat this same as UnKnown
+    return 0;
 }
 
 XERCES_CPP_NAMESPACE_END

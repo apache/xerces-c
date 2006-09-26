@@ -214,12 +214,12 @@ inline void DOMLSSerializerImpl::setFeature(const int featureId
                                     , bool      val)
 {
     (val)? fFeatures |= (1<<featureId) : fFeatures &= ~(1<<featureId);
-};
+}
 
 inline bool DOMLSSerializerImpl::getFeature(const int featureId) const
 {
     return ((fFeatures & ( 1<<featureId )) != 0) ? true : false;
-};
+}
 
 inline void DOMLSSerializerImpl::setURCharRef()
 {

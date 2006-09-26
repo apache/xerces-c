@@ -70,6 +70,8 @@ static const IconvGNUEncoding    gIconvGNUEncodings[] = {
     { NULL, 0,    0 }
 };
 
+#define MAX_UCHSIZE 4
+
 //--------------------------------------------------
 // Macro-definitions to translate "native unicode"
 // characters <-> XMLCh with different host byte order
@@ -239,7 +241,7 @@ XMLCh    IconvGNUWrapper::toUpper (const XMLCh ch) const
     if (ch <= 0x7F)
         return toupper(ch);
 
-    char    wcbuf[fUChSize * 2];
+    char    wcbuf[MAX_UCHSIZE * 2];
     xmlChToMbc (ch, wcbuf);
 
     char    tmpArr[4];
@@ -269,7 +271,7 @@ XMLCh    IconvGNUWrapper::toLower (const XMLCh ch) const
     if (ch <= 0x7F)
         return tolower(ch);
 
-    char    wcbuf[fUChSize * 2];
+    char    wcbuf[MAX_UCHSIZE * 2];
     xmlChToMbc (ch, wcbuf);
 
     char    tmpArr[4];
@@ -1059,7 +1061,7 @@ bool        IconvGNUTranscoder::canTranscodeTo
     //  If the passed value is really a surrogate embedded together, then
     //  we need to break it out into its two chars. Else just one.
     //
-    char        srcBuf[2 * uChSize()];
+    char        srcBuf[MAX_UCHSIZE * 2];
     unsigned int    srcCount = 1;
     if (toCheck & 0xFFFF0000) {
         XMLCh    ch1 = (toCheck >> 10) + 0xD800;
