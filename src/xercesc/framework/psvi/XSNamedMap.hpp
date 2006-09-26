@@ -71,7 +71,7 @@ public:
      * The range of valid child object indices is 0 to 
      * <code>mapLength-1</code> inclusive. 
      */
-    unsigned int getLength();
+    unsigned int getLength() const;
 
     /**
      *  Returns the <code>index</code>th item in the collection. The index 
@@ -83,6 +83,7 @@ public:
      *   that is not a valid index. 
      */
     TVal *item(unsigned int index);
+    const TVal *item(unsigned int index) const;
 
     /**
      * Retrieves a component specified by local name and namespace URI.

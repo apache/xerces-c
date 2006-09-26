@@ -95,7 +95,7 @@ public:
      * [schema namespace]: A namespace name or <code>null</code>
      * corresponding to the target namespace of the schema document.
      */
-    const XMLCh *getSchemaNamespace();
+    const XMLCh *getSchemaNamespace() const;
 
     /**
      * [schema components]: a list of top-level components, i.e. element 
@@ -113,6 +113,7 @@ public:
      *  [annotations]: a set of annotations.
      */
     XSAnnotationList *getAnnotations();
+    const XSAnnotationList *getAnnotations() const;
 
     /**
      * Convenience method. Returns a top-level element declaration. 
@@ -226,7 +227,12 @@ inline XSAnnotationList* XSNamespaceItem::getAnnotations()
     return fXSAnnotationList;
 }
 
-inline const XMLCh *XSNamespaceItem::getSchemaNamespace()
+inline const XSAnnotationList* XSNamespaceItem::getAnnotations() const
+{
+    return fXSAnnotationList;
+}
+
+inline const XMLCh *XSNamespaceItem::getSchemaNamespace() const
 {
     return fSchemaNamespace;
 }

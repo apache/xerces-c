@@ -60,7 +60,7 @@ template <class TVal> XSNamedMap<TVal>::~XSNamedMap()
  * <code>mapLength-1</code> inclusive. 
  */
 template <class TVal> 
-unsigned int XSNamedMap<TVal>::getLength()
+unsigned int XSNamedMap<TVal>::getLength() const
 {
     return fVector->size();
 }
@@ -76,6 +76,16 @@ unsigned int XSNamedMap<TVal>::getLength()
  */
 template <class TVal> 
 TVal* XSNamedMap<TVal>::item(unsigned int index)
+{
+    if (index >= fVector->size()) 
+    {
+        return 0;
+    }
+    return fVector->elementAt(index);
+}
+
+template <class TVal> 
+const TVal* XSNamedMap<TVal>::item(unsigned int index) const
 {
     if (index >= fVector->size()) 
     {
