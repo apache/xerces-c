@@ -1421,20 +1421,6 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
     const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
 
-    if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);
-    }
-
-	// case of mixed complex types with attributes only
-    if (derivedURI == XMLElementDecl::fgPCDataElemId) {
-        return;
-    }
-
-    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
-                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
-        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName, fMemoryManager);
-    }
-
     SchemaGrammar* aGrammar = currentGrammar;
     const XMLCh* schemaURI = fGrammarResolver->getStringPool()->getValueForId(derivedURI);
 
@@ -1450,6 +1436,36 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
 
     if (!derivedElemDecl) {
         return;
+    }
+
+    bool subsGroup = false;
+
+    if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
+        // Check if derived is substitutable for base.
+        //
+        SchemaElementDecl* e = derivedElemDecl->getSubstitutionGroupElem ();
+
+        for (; e != 0; e = e->getSubstitutionGroupElem ()) {
+            if (XMLString::equals(e->getBaseName (), baseName) && e->getURI () == baseURI) {
+                break;
+            }
+        }
+
+        if (e == 0) {
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);
+        }
+
+        subsGroup = true;
+    }
+
+    // case of mixed complex types with attributes only
+    if (derivedURI == XMLElementDecl::fgPCDataElemId) {
+        return;
+    }
+
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName, fMemoryManager);
     }
 
     SchemaElementDecl* baseElemDecl =
@@ -1487,7 +1503,8 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     checkICRestriction(derivedElemDecl, baseElemDecl, derivedName, baseName);
 
     // check that the derived element's type is derived from the base's.
-    checkTypesOK(derivedElemDecl, baseElemDecl, derivedName);
+    if (!subsGroup)
+        checkTypesOK(derivedElemDecl, baseElemDecl, derivedName);
 }
 
 SchemaElementDecl*
