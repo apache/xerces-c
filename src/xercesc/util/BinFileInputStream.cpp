@@ -36,7 +36,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 BinFileInputStream::BinFileInputStream(const XMLCh* const fileName
                                        , MemoryManager* const manager) :
 
-    fSource(0)
+    fSource(XERCES_Invalid_File_Handle)
   , fMemoryManager(manager)
 {
     // Try to open the file
@@ -67,7 +67,7 @@ BinFileInputStream::BinFileInputStream(const FileHandle toAdopt
 
 BinFileInputStream::~BinFileInputStream()
 {
-    if (fSource)
+    if (getIsOpen())
         XMLPlatformUtils::closeFile(fSource, fMemoryManager);
 }
 
