@@ -35,30 +35,23 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 BinFileOutputStream::~BinFileOutputStream()
 {
-    if (fSource)
+    if (getIsOpen())
         XMLPlatformUtils::closeFile(fSource, fMemoryManager);
 }
 
 BinFileOutputStream::BinFileOutputStream(const XMLCh*   const fileName
                                          , MemoryManager* const manager)
 
-:fSource(0)
+:fSource(XMLPlatformUtils::openFileToWrite(fileName, manager))
 ,fMemoryManager(manager)
 {
-    fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
 }
 
 BinFileOutputStream::BinFileOutputStream(const char*    const fileName
                                        , MemoryManager* const manager)
-:fSource(0)
+:fSource(XMLPlatformUtils::openFileToWrite(fileName, manager))
 ,fMemoryManager(manager)
 {
-    // Transcode the file name and put a janitor on the temp buffer
-    XMLCh* realName = XMLString::transcode(fileName, manager);
-    ArrayJanitor<XMLCh> janName(realName, manager);
-
-    // Try to open the file
-    fSource = XMLPlatformUtils::openFileToWrite(realName, manager);
 }
 
 // ---------------------------------------------------------------------------

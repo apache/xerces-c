@@ -36,25 +36,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 BinFileInputStream::BinFileInputStream(const XMLCh* const fileName
                                        , MemoryManager* const manager) :
 
-    fSource(0)
+    fSource(XMLPlatformUtils::openFile(fileName, manager))
   , fMemoryManager(manager)
 {
-    // Try to open the file
-    fSource = XMLPlatformUtils::openFile(fileName, manager);
 }
 
 BinFileInputStream::BinFileInputStream(const char* const fileName,
                                        MemoryManager* const manager) :
 
-    fSource(0)
+    fSource(XMLPlatformUtils::openFile(fileName, manager))
   , fMemoryManager(manager)
 {
-    // Transcode the file name and put a janitor on the temp buffer
-    XMLCh* realName = XMLString::transcode(fileName, manager);
-    ArrayJanitor<XMLCh> janName(realName, manager);
-
-    // Try to open the file
-    fSource = XMLPlatformUtils::openFile(realName, manager);
 }
 
 BinFileInputStream::BinFileInputStream(const FileHandle toAdopt
@@ -67,7 +59,7 @@ BinFileInputStream::BinFileInputStream(const FileHandle toAdopt
 
 BinFileInputStream::~BinFileInputStream()
 {
-    if (fSource)
+    if (getIsOpen())
         XMLPlatformUtils::closeFile(fSource, fMemoryManager);
 }
 
