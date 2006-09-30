@@ -41,6 +41,20 @@ AM_MAINTAINER_MODE
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
+
+# If using MSVC (under Cygwin) or Solaris Forte, and the user didn't specify a linker, force a reasonable
+# choice in order to avoid the "cannot find 'ld'" error from the AC_PROG_LIBTOOL
+if test x$LD = x; then
+	case $CXX in
+	'cl.exe' | 'cl')
+		LD='link'
+		;;
+	'CC')
+		LD='CC'
+		;;
+	esac
+fi
+
 AC_PROG_LN_S
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
