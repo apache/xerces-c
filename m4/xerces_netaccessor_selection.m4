@@ -87,15 +87,19 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 			[AC_MSG_RESULT(no)]
 		)
 		;;
-	windows* | mingw*)
+	windows* | mingw* | cygwin*)
 		list_add=
+		no_winsock=false
+		AC_CHECK_HEADERS([winsock2.h], [], [no_winsock=true])
 		AC_MSG_CHECKING([whether we can support the WinSock NetAccessor (Windows)])
-		AC_ARG_ENABLE([netaccessor-winsock],
-			AS_HELP_STRING([--enable-netaccessor-winsock],
-				[Enable winsock-based NetAccessor support]),
-			[AS_IF([test x"$enableval" = xyes],
-				[list_add=WINSOCK])],
-			[list_add=winsock])
+		AS_IF([! $no_winsock], [
+			AC_ARG_ENABLE([netaccessor-winsock],
+				AS_HELP_STRING([--enable-netaccessor-winsock],
+					[Enable winsock-based NetAccessor support]),
+				[AS_IF([test x"$enableval" = xyes],
+					[list_add=WINSOCK])],
+				[list_add=winsock])
+		])
 		AS_IF([test x"$list_add" != x],
 			[na_list="$na_list -$list_add-"; AC_MSG_RESULT(yes)],
 			[AC_MSG_RESULT(no)]
@@ -121,17 +125,17 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		# Check for each netaccessor, in implicit rank order
 		case $na_list in
 		
-		*-curl-*)
-			netaccessor=curl
-			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
-			LIBS="${LIBS} -L${xerces_cv_curl_prefix}/lib -lcurl"
-			break
-			;;
-			
 		*-cfurl-*)
 			netaccessor=cfurl
 			AC_DEFINE([XERCES_USE_NETACCESSOR_CFURL], 1, [Define to use the Mac OS X CFURL NetAccessor])
 			XERCES_LINK_DARWIN_FRAMEWORK([CoreServices])
+			break
+			;;
+			
+		*-curl-*)
+			netaccessor=curl
+			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
+			LIBS="${LIBS} -L${xerces_cv_curl_prefix}/lib -lcurl"
 			break
 			;;
 			

@@ -149,18 +149,18 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 			break
 			;;
 
-		*-iconv-*)
-			transcoder=iconv
-			AC_DEFINE([XERCES_USE_TRANSCODER_ICONV], 1, [Define to use the iconv transcoder])
-			break
-			;;
-			
 		*-windows-*)
 			transcoder=windows
 			AC_DEFINE([XERCES_USE_TRANSCODER_WINDOWS], 1, [Define to use the Windows transcoder])
 			break
 			;;
 
+		*-iconv-*)
+			transcoder=iconv
+			AC_DEFINE([XERCES_USE_TRANSCODER_ICONV], 1, [Define to use the iconv transcoder])
+			break
+			;;
+			
 		*)
 			AS_IF([test $i -eq 2], [
 				AC_MSG_RESULT([none])
