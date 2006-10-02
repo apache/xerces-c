@@ -418,6 +418,21 @@ RegularExpression::~RegularExpression() {
 // ---------------------------------------------------------------------------
 //  RegularExpression: Setter methods
 // ---------------------------------------------------------------------------
+
+RegxParser* RegularExpression::getRegexParser(const int options, MemoryManager* const manager)
+{
+    // the following construct causes an error in an Intel 7.1 32 bit compiler for 
+    // red hat linux 7.2
+    // (when an exception is thrown the wrong object is deleted)
+    //RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
+    //	? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
+    //    : new (fMemoryManager) RegxParser(fMemoryManager);
+    if (isSet(options, XMLSCHEMA_MODE))
+	    return new (manager) ParserForXMLSchema(manager);
+
+    return new (manager) RegxParser(manager);
+}
+
 void RegularExpression::setPattern(const XMLCh* const pattern,
 								   const XMLCh* const options) {
 
@@ -425,23 +440,10 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 	fOptions = parseOptions(options);
 	fPattern = XMLString::replicate(pattern, fMemoryManager);
 
-    // the following construct causes an error in an Intel 7.1 32 bit compiler for 
-    // red hat linux 7.2
-    // (when an exception is thrown the wrong object is deleted)
-    //RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
-    //	? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
-    //    : new (fMemoryManager) RegxParser(fMemoryManager);
-    RegxParser* regxParser;
-    if (isSet(fOptions, XMLSCHEMA_MODE)) {
-	    regxParser = new (fMemoryManager) ParserForXMLSchema(fMemoryManager);
-    }
-    else {
-        regxParser = new (fMemoryManager) RegxParser(fMemoryManager);
-    }
+    RegxParser* regxParser=getRegexParser(fOptions, fMemoryManager);
 
-    if (regxParser) {
+    if (regxParser)
         regxParser->setTokenFactory(fTokenFactory);
-    }
 
 	Janitor<RegxParser> janRegxParser(regxParser);
 	fTokenTree = regxParser->parse(fPattern, fOptions);

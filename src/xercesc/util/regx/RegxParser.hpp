@@ -94,12 +94,14 @@ public:
 	int            getOffset() const;
 	bool           hasBackReferences() const;
     TokenFactory*  getTokenFactory() const;
+    int            getOptions() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
 	void setParseContext(const unsigned short value);
     void setTokenFactory(TokenFactory* const tokFactory);
+    void setOptions(const int options);
 
 	// -----------------------------------------------------------------------
     //  Public Parsing methods
@@ -154,6 +156,7 @@ protected:
     // -----------------------------------------------------------------------
 	virtual Token*      getTokenForShorthand(const XMLInt32 ch);
 
+    bool isSet(const int flag);
 private:
     // -----------------------------------------------------------------------
     //  Private parsing/processing methods
@@ -183,7 +186,6 @@ private:
     // -----------------------------------------------------------------------
     //  Private Helper methods
     // -----------------------------------------------------------------------
-    bool isSet(const int flag);
 	int hexChar(const XMLInt32 ch);
 
 	// -----------------------------------------------------------------------
@@ -245,6 +247,12 @@ inline TokenFactory* RegxParser::getTokenFactory() const {
 inline MemoryManager* RegxParser::getMemoryManager() const {
     return fMemoryManager;
 }
+
+inline int RegxParser::getOptions() const {
+
+    return fOptions;
+}
+
 // ---------------------------------------------------------------------------
 //  RegxParser: Setter Methods
 // ---------------------------------------------------------------------------
@@ -256,6 +264,11 @@ inline void RegxParser::setParseContext(const unsigned short value) {
 inline void RegxParser::setTokenFactory(TokenFactory* const tokFactory) {
 
     fTokenFactory = tokFactory;
+}
+
+inline void RegxParser::setOptions(const int options) {
+
+	fOptions = options;
 }
 
 // ---------------------------------------------------------------------------

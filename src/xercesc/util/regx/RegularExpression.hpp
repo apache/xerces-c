@@ -42,6 +42,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 class RangeToken;
 class Match;
+class RegxParser;
 
 class XMLUTIL_EXPORT RegularExpression : public XMemory
 {
@@ -150,6 +151,19 @@ public:
 
     static bool isSet(const int options, const int flag);
 
+protected:
+    virtual RegxParser* getRegexParser(const int options, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    // -----------------------------------------------------------------------
+    //  Cleanup methods
+    // -----------------------------------------------------------------------
+    void cleanUp();
+
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    void setPattern(const XMLCh* const pattern, const XMLCh* const options=0);
+
 private:
     // -----------------------------------------------------------------------
     //  Private data types
@@ -184,16 +198,6 @@ private:
     // -----------------------------------------------------------------------
     RegularExpression(const RegularExpression&);
     RegularExpression& operator=(const RegularExpression&);
-
-    // -----------------------------------------------------------------------
-    //  Cleanup methods
-    // -----------------------------------------------------------------------
-    void cleanUp();
-
-    // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setPattern(const XMLCh* const pattern, const XMLCh* const options=0);
 
     // -----------------------------------------------------------------------
     //  Private Helper methods
