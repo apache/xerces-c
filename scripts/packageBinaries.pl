@@ -491,9 +491,9 @@ if ( ($platform =~ m/AIX/i)      ||
             $icu_cflags = '"-w -O2 -qmaxmem=-1"';          
         }
 
-		if ($opt_b eq "64") {
-			$xercesc_64bit_cxxflags = '"-q64 -qwarn64"';     		
-		}
+        if ($opt_b eq "64") {
+            $xercesc_64bit_cxxflags = '"-q64 -qwarn64"';     		
+        }
 		
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LIBPATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'LIBPATH'}";
@@ -547,11 +547,11 @@ if ( ($platform =~ m/AIX/i)      ||
         
         if (($platform eq "hp-11") &&
             ($opt_x eq "aCC")) {
-        	$xercesc_cxxflags= '"-D_INCLUDE__STDC_A1_SOURCE"';
-			if ($opt_b eq "64") {
-				$xercesc_64bit_cxxflags = '"+DD64"';    
-				$xercesc_64bit_linkflags = '"+DD64"'; 		
-			}        	
+             $xercesc_cxxflags= '"-D_INCLUDE__STDC_A1_SOURCE"';
+             if ($opt_b eq "64") {
+                 $xercesc_64bit_cxxflags = '"+DD64"';    
+                 $xercesc_64bit_linkflags = '"+DD64"'; 		
+             }        	
         }                
 
         if ($opt_m =~ m/icu/i) {
@@ -603,21 +603,21 @@ if ( ($platform =~ m/AIX/i)      ||
         }
         
         if ($opt_b eq "32") {
-        	$icu_cxxflags = '"-w -O3"';
-        	$icu_cflags = '"-w -xO3"'; 
+            $icu_cxxflags = '"-w -O3"';
+            $icu_cflags = '"-w -xO3"'; 
         }
         else {        
-			$icu_cxxflags = '"-w -O3 -xarch=v9"';
+            $icu_cxxflags = '"-w -O3 -xarch=v9"';
             $icu_cflags = '"-w -xO3 -xarch=v9"';            
         }
                     
         if ($opt_x eq "CC") {
-        	$ENV{'PATH'}="/usr/ccs/bin:/usr/ucb:$ENV{'PATH'}"; 
-        	$xercesc_linkflags = '"-z muldefs"';
-			if ($opt_b eq "64") {
-				$xercesc_64bit_cxxflags  = '"-xarch=v9"';    
-				$xercesc_64bit_linkflags = '"-xarch=v9"'; 		
-			}        	
+            $ENV{'PATH'}="/usr/ccs/bin:/usr/ucb:$ENV{'PATH'}"; 
+            $xercesc_linkflags = '"-z muldefs"';
+            if ($opt_b eq "64") {
+                $xercesc_64bit_cxxflags  = '"-xarch=v9"';    
+                $xercesc_64bit_linkflags = '"-xarch=v9"'; 		
+            }        	
         }                
 
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
@@ -665,7 +665,7 @@ if ( ($platform =~ m/AIX/i)      ||
     
     $icu_bitflag = "";
     if ($opt_b eq "32") {
-		$icu_bitflag = "--disable-64bit-libs";     		
+        $icu_bitflag = "--disable-64bit-libs";     		
 	}
 	
     # Set defaults for platform tools
@@ -723,15 +723,14 @@ if ( ($platform =~ m/AIX/i)      ||
                     $cXX = "aCC";
                 }                                                                                            
                 psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT $icu_bitflag");                     
-           }elsif ($platform eq 'aix') {
+            }elsif ($platform eq 'aix') {
 
                 my $cXX = $opt_x;                 
                 if ($opt_x eq "xlC_rv5compat") {
                     $cXX = "xlC_r";
                 }                
                 psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT $icu_bitflag");                                             
-            } else {
-            # set the 32 bit or 64 bit                
+            } else {                     
                 psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT $icu_bitflag");                
             }
         
@@ -780,9 +779,13 @@ if ( ($platform =~ m/AIX/i)      ||
     if ($opt_t eq "icu")    {$cfg_t = "--enable-transcoder-icu"; $cfg_icu="--with-icu=$ICUROOT"; }
     if ($opt_t eq "native") {$cfg_t = "--disable-transcoder-icu --enable-transcoder-iconv"; }
 
-
-	$total_cxxflags  = $icu_cxxflags . " " . $xercesc_cxxflags . " " . $xercesc_64bit_cxxflags;
-	$total_linkflags = $xercesc_linkflags . " " . $xercesc_64bit_linkflags;
+    $icu_cxxflags =~ s/"//g;
+    $xercesc_cxxflags =~ s/"//g;
+    $xercesc_64bit_cxxflags =~ s/"//g;
+    $xercesc_linkflags =~ s/"//g;
+    $xercesc_64bit_linkflags =~ s/"//g;
+    $total_cxxflags  = '"' . $icu_cxxflags . " " . $xercesc_cxxflags . " " . $xercesc_64bit_cxxflags . '"';
+    $total_linkflags = '"' . $xercesc_linkflags . " " . $xercesc_64bit_linkflags . '"';
     psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$total_cxxflags CFLAGS=$icu_cflags LDFLAGS=$total_linkflags ./configure $cfg_icu $cfg_m $cfg_n $cfg_t --disable-pretty-make");  
     
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
