@@ -23,7 +23,7 @@ AC_DEFUN([XERCES_CURL_PREFIX],
 		if test x"$with_curl" != x"no"; then
 			search_list="$with_curl /usr/local /usr"
 			for i in $search_list; do
-				if test -r "$i/include/curl/easy.h"; then
+				if test -r "$i/include/curl/easy.h" -a -r "$i/include/curl/multi.h" ; then
 					xerces_cv_curl_prefix=$i
 					break
 				fi
