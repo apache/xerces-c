@@ -786,8 +786,11 @@ if ( ($platform =~ m/AIX/i)      ||
     if ($opt_t eq "icu")    {$cfg_t = "--enable-transcoder-icu"; $cfg_icu="--with-icu=$ICUROOT"; }
     if ($opt_t eq "native") {$cfg_t = "--disable-transcoder-icu --enable-transcoder-iconv"; }
 
+    $icu_cflags =~ s/"//g;
     $icu_cxxflags =~ s/"//g;
+    $xercesc_cflags =~ s/"//g;
     $xercesc_cxxflags =~ s/"//g;
+    $xercesc_64bit_cflags =~ s/"//g;
     $xercesc_64bit_cxxflags =~ s/"//g;
     $xercesc_linkflags =~ s/"//g;
     $xercesc_64bit_linkflags =~ s/"//g;
