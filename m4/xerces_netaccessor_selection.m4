@@ -125,17 +125,17 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		# Check for each netaccessor, in implicit rank order
 		case $na_list in
 		
-		*-cfurl-*)
-			netaccessor=cfurl
-			AC_DEFINE([XERCES_USE_NETACCESSOR_CFURL], 1, [Define to use the Mac OS X CFURL NetAccessor])
-			XERCES_LINK_DARWIN_FRAMEWORK([CoreServices])
-			break
-			;;
-			
 		*-curl-*)
 			netaccessor=curl
 			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
 			LIBS="${LIBS} -L${xerces_cv_curl_prefix}/lib -lcurl"
+			break
+			;;
+			
+		*-cfurl-*)
+			netaccessor=cfurl
+			AC_DEFINE([XERCES_USE_NETACCESSOR_CFURL], 1, [Define to use the Mac OS X CFURL NetAccessor])
+			XERCES_LINK_DARWIN_FRAMEWORK([CoreServices])
 			break
 			;;
 			
