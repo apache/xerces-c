@@ -472,8 +472,11 @@ if ( ($platform =~ m/AIX/i)      ||
     # Echo the current PATH to see what compiler it picks up
     psystem ("echo PATH=$ENV{'PATH'}");
     
+    $xercesc_cflags   = '';
     $xercesc_cxxflags   = '';
     $xercesc_linkflags   = '';
+    $xercesc_64bit_arflags = '"rcu"';
+    $xercesc_64bit_cflags = '';
     $xercesc_64bit_cxxflags = '';
     $xercesc_64bit_linkflags = '';
 
@@ -493,6 +496,8 @@ if ( ($platform =~ m/AIX/i)      ||
 
         if ($opt_b eq "64") {
             $xercesc_64bit_cxxflags = '"-q64 -qwarn64"';     		
+            $xercesc_64bit_cflags = '"-q64 -qwarn64"';
+            $xercesc_64bit_arflags = '"-X64 -rcu"';    		
         }
 		
         if ($opt_m =~ m/icu/i) {
@@ -550,6 +555,7 @@ if ( ($platform =~ m/AIX/i)      ||
              $xercesc_cxxflags= '"-D_INCLUDE__STDC_A1_SOURCE"';
              if ($opt_b eq "64") {
                  $xercesc_64bit_cxxflags = '"+DD64"';    
+                 $xercesc_64bit_cflags = '"+DD64"';  
                  $xercesc_64bit_linkflags = '"+DD64"'; 		
              }        	
         }                
@@ -616,6 +622,7 @@ if ( ($platform =~ m/AIX/i)      ||
             $xercesc_linkflags = '"-z muldefs"';
             if ($opt_b eq "64") {
                 $xercesc_64bit_cxxflags  = '"-xarch=v9"';    
+                $xercesc_64bit_cflags  = '"-xarch=v9"';  
                 $xercesc_64bit_linkflags = '"-xarch=v9"'; 		
             }        	
         }                
@@ -784,9 +791,10 @@ if ( ($platform =~ m/AIX/i)      ||
     $xercesc_64bit_cxxflags =~ s/"//g;
     $xercesc_linkflags =~ s/"//g;
     $xercesc_64bit_linkflags =~ s/"//g;
+    $total_cflags    = '"' . $icu_cflags . " " . $xercesc_cflags . " " . $xercesc_64bit_cflags . '"';
     $total_cxxflags  = '"' . $icu_cxxflags . " " . $xercesc_cxxflags . " " . $xercesc_64bit_cxxflags . '"';
     $total_linkflags = '"' . $xercesc_linkflags . " " . $xercesc_64bit_linkflags . '"';
-    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$total_cxxflags CFLAGS=$icu_cflags LDFLAGS=$total_linkflags ./configure $cfg_icu $cfg_m $cfg_n $cfg_t --disable-pretty-make");  
+    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$total_cxxflags CFLAGS=$total_cflags LDFLAGS=$total_linkflags AR_FLAGS=$xercesc_64bit_arflags ./configure $cfg_icu $cfg_m $cfg_n $cfg_t --disable-pretty-make");  
     
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
     psystem ("$MAKE");
