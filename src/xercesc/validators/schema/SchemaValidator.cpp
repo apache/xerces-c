@@ -1421,6 +1421,13 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
     const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
 
+    // case of mixed complex types with attributes only
+    if (derivedURI == XMLElementDecl::fgPCDataElemId) {
+        if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI)
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);
+        return;
+    }
+
     SchemaGrammar* aGrammar = currentGrammar;
     const XMLCh* schemaURI = fGrammarResolver->getStringPool()->getValueForId(derivedURI);
 
@@ -1456,11 +1463,6 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
         }
 
         subsGroup = true;
-    }
-
-    // case of mixed complex types with attributes only
-    if (derivedURI == XMLElementDecl::fgPCDataElemId) {
-        return;
     }
 
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
