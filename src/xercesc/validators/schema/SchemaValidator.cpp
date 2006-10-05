@@ -960,9 +960,12 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
     XMLReader* fCurReader = getReaderMgr()->getCurrentReader();
-
-    if ((wsFacet==DatatypeValidator::COLLAPSE) && fTrailing)
+    
+    if ((wsFacet==DatatypeValidator::COLLAPSE) && fTrailing) {
+        nextCh = *srcPtr;
+        if (!fCurReader->isWhitespace(nextCh))
         toFill.append(chSpace);
+    }
 
     while (*srcPtr)
     {

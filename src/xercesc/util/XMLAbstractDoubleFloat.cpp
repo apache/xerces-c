@@ -361,6 +361,7 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 
     XMLCh*   srcStr = inData;
 	bool     minusSeen = false;
+    bool     dotSeen = false;
 
 	// process sign if any
 	if (*srcStr == chDash)
@@ -380,9 +381,18 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
             ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
         }
 	}
+    else if (*srcStr == chPeriod)
+    {
+        dotSeen = true;
+        srcStr++;
+        if (!*srcStr)
+        {
+            ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, getMemoryManager());
+        }
+    }
 
 	// scan the string
-	bool  dotSeen = false;
+	
 	bool  isValidStr = true;
     XMLCh theChar;
 	while ((theChar=*srcStr++)!=0 && isValidStr)

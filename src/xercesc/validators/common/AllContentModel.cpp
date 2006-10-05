@@ -22,6 +22,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
@@ -112,8 +113,13 @@ AllContentModel::validateContent( QName** const         children
     if (childCount == 0 && (fHasOptionalContent || !fNumRequired))
         return -1;
 
+    MemoryManager* const    localMemoryManager =
+        children[0]->getMemoryManager();
+
     // Check for duplicate element
-    bool* elementSeen = (bool*) fMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
+    bool* elementSeen = (bool*) localMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
+
+    const ArrayJanitor<bool> jan(elementSeen, localMemoryManager);
 
     // initialize the array
     for (unsigned int i = 0; i < fCount; i++)
@@ -126,7 +132,7 @@ AllContentModel::validateContent( QName** const         children
         // Get the current child out of the source index
         const QName* curChild = children[outIndex];
 
-        // If its PCDATA, then we just accept that
+        // If it's PCDATA, then we just accept that
         if (fIsMixed && curChild->getURI() == XMLElementDecl::fgPCDataElemId)
             continue;
 
@@ -141,7 +147,6 @@ AllContentModel::validateContent( QName** const         children
                 // If this element was seen already, indicate an error was
                 // found at the duplicate index.
                 if (elementSeen[inIndex]) {
-                    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
                     return outIndex;
                 }
                 else
@@ -156,13 +161,10 @@ AllContentModel::validateContent( QName** const         children
 
         // We did not find this one, so the validation failed
         if (inIndex == fCount) {
-            fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
             return outIndex;
         }
 
     }
-
-    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
 
     // Were all the required elements of the <all> encountered?
     if (numRequiredSeen != fNumRequired) {
@@ -170,7 +172,6 @@ AllContentModel::validateContent( QName** const         children
     }
 
     // Everything seems to be ok, so return success
-    // success
     return -1;
 }
 
@@ -189,8 +190,13 @@ int AllContentModel::validateContentSpecial(QName** const           children
     if (childCount == 0 && (fHasOptionalContent || !fNumRequired))
         return -1;
 
+    MemoryManager* const    localMemoryManager =
+        children[0]->getMemoryManager();
+
     // Check for duplicate element
-    bool* elementSeen = (bool*) fMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
+    bool* elementSeen = (bool*) localMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
+
+    const ArrayJanitor<bool> jan(elementSeen, localMemoryManager);
 
     // initialize the array
     for (unsigned int i = 0; i < fCount; i++)
@@ -203,7 +209,7 @@ int AllContentModel::validateContentSpecial(QName** const           children
         // Get the current child out of the source index
         QName* const curChild = children[outIndex];
 
-        // If its PCDATA, then we just accept that
+        // If it's PCDATA, then we just accept that
         if (fIsMixed && curChild->getURI() == XMLElementDecl::fgPCDataElemId)
             continue;
 
@@ -217,7 +223,6 @@ int AllContentModel::validateContentSpecial(QName** const           children
                 // If this element was seen already, indicate an error was
                 // found at the duplicate index.
                 if (elementSeen[inIndex]) {
-                    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
                     return outIndex;
                 }
                 else
@@ -232,13 +237,10 @@ int AllContentModel::validateContentSpecial(QName** const           children
 
         // We did not find this one, so the validation failed
         if (inIndex == fCount) {
-            fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
             return outIndex;
         }
 
     }
-
-    fMemoryManager->deallocate(elementSeen); //delete [] elementSeen;
 
     // Were all the required elements of the <all> encountered?
     if (numRequiredSeen != fNumRequired) {
@@ -246,7 +248,6 @@ int AllContentModel::validateContentSpecial(QName** const           children
     }
 
     // Everything seems to be ok, so return success
-    // success
     return -1;
 
 }

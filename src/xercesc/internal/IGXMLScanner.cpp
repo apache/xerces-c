@@ -2300,8 +2300,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     if (switchGrammar(getURIText(uriId))) {
                         checkTopLevel = true;
                     }
-                    else {
-                        if (!laxThisOne) {
+                    else {        
+                        // the laxElementValidation routine (called above) will
+                        // set fValidate to false for a "skipped" element
+                        if (!laxThisOne && fValidate) {
                             fValidator->emitError(
                                 XMLValid::GrammarNotFound, getURIText(uriId)
                             );
@@ -2338,6 +2340,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     // go to original Grammar again to see if element needs
                     // to be fully qualified.
                     else if (uriId == fEmptyNamespaceId) {
+                        
                         if (switchGrammar(original_uriStr)) {
                             elemDecl = fGrammar->getElemDecl(
                                 orgGrammarUri, nameRawBuf, qnameRawBuf, currentScope
@@ -2348,7 +2351,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                                 );
                             }
                         }
-                        else if (!laxThisOne) {
+                        else if (!laxThisOne && fValidate) {
                             fValidator->emitError(
                                 XMLValid::GrammarNotFound,original_uriStr
                             );
@@ -2511,8 +2514,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
             // switch grammar if the typeinfo has a different grammar (happens when there is xsi:type)
             XMLCh* typeName = typeinfo->getTypeName();
-            const XMLCh poundStr[] = {chPound, chNull};
-            if (!XMLString::startsWith(typeName, poundStr)) {
+            //anonymous used to have a name starting with #
+            //const XMLCh poundStr[] = {chPound, chNull};
+            //if (!XMLString::startsWith(typeName, poundStr)) {
+            if (!typeinfo->getAnonymous()) {            
                 const int comma = XMLString::indexOf(typeName, chComma);
                 if (comma > 0) {
                     XMLBuffer prefixBuf(comma+1, fMemoryManager);
@@ -2526,6 +2531,17 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         (
                             XMLValid::GrammarNotFound
                             , prefixBuf.getRawBuffer()
+                        );                        
+                    }
+                }
+                else if (comma == 0) {
+                    bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
+                    if (errorCondition && !laxThisOne)
+                    {
+                        fValidator->emitError
+                        (
+                            XMLValid::GrammarNotFound
+                            , XMLUni::fgZeroLenString
                         );                        
                     }
                 }
