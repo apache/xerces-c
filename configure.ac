@@ -22,10 +22,10 @@
 # $Id$
 #
 
-AC_PREREQ(2.59)
+AC_PREREQ(2.60)
 AC_INIT([xercesc],[3.0])
 AC_CONFIG_SRCDIR([src/Makefile.am])
-AC_CONFIG_LIBOBJ_DIR([xercesc/compat])
+AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
@@ -160,6 +160,18 @@ AC_EGREP_CPP([0x580], [__SUNPRO_C],
 	]
 	)
 
+case $CXX in
+'cl.exe' | 'cl')
+	CXXFLAGS="`echo $CXXFLAGS | $SED 's%-g%/Od%'` /nologo /GX"
+	;;
+esac
+
+case $CC in
+'cl.exe' | 'cl')
+	CFLAGS="`echo $CFLAGS | $SED 's%-g%/Od%'` /nologo /GX"
+	;;
+esac
+
 case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
 	platform_export="__declspec(dllexport)"
@@ -186,7 +198,23 @@ AS_IF([test ! $ac_cv_cxx_have_bool],
 AS_IF([test $ac_cv_cxx_have_lstring],
 	AC_DEFINE([XERCES_LSTRSUPPORT], 1, [Define if there is support for L"widestring"]))
 
-AC_DEFINE_UNQUOTED([XERCES_XMLCH_T], [$xerces_cv_type_u16bit_int], [Define to the 16 bit type used to represent Xerces UTF-16 characters])
+# check if the Windows API is defined as using wchar_t or unsigned short; if it's wchar_t, we need to map XMLCh to be wchar_t
+# (this is safe because on Windows wchar_t is used to store UTF-16 codepoints, while it is not true on Unix)
+AC_MSG_CHECKING([whether the Windows SDK is available and using wchar_t as wide string])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
+                                        wchar_t file[] = L"dummy.file";]], 
+                                     [[DeleteFileW(file);]])],
+                    [ 
+                      xerces_cv_type_xmlch=wchar_t
+                   	  AC_MSG_RESULT([yes])
+                    ],
+	                [
+                      xerces_cv_type_xmlch=$xerces_cv_type_u16bit_int
+                      AC_MSG_RESULT([no])
+                    ]
+                 )
+
+AC_DEFINE_UNQUOTED([XERCES_XMLCH_T], [$xerces_cv_type_xmlch], [Define to the 16 bit type used to represent Xerces UTF-16 characters])
 	
 AS_IF([test x$ac_cv_type_size_t = xyes],
 	AC_DEFINE([XERCES_SIZE_T], [size_t], [Define as the appropriate size_t type]),
