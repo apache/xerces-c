@@ -207,6 +207,7 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
                     [ 
                       xerces_cv_type_xmlch=wchar_t
                    	  AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([XERCES_INCLUDE_WCHAR_H], 1, [Define to have Xerces_autoconf_config.hpp include wchar.h])
                     ],
 	                [
                       xerces_cv_type_xmlch=$xerces_cv_type_u16bit_int
