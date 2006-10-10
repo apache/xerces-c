@@ -408,6 +408,22 @@ sub package_sources {
 
    pchdir( $xercescroot );
    psystem( $doc_cmd );
+   
+   print "\nCOMPRESS DOCS\n\n";
+
+   pchdir( $xercescroot );
+
+   if ( $^O =~ /win/i ) {
+      psystem ( "zip -qr ${packages}-doc\.zip doc" );
+   } else {
+      psystem ( "tar -cf ${packages}-doc\.tar doc" );
+      psystem ( "gzip ${packages}-doc\.tar" );
+   }
+   
+   pchdir( $xercescroot . $fs . doc);
+   psystem ('rm -rf *');
+   pchdir( $xercescroot );
+   psystem ('mv ${packages}-doc* doc) 
 
    print "\nDELETING FILES\n\n";
 
