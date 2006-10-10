@@ -46,6 +46,7 @@
 #undef XERCES_AUTOCONF
 #undef XERCES_HAVE_SYS_TYPES_H
 #undef XERCES_HAVE_INTTYPES_H
+#undef XERCES_INCLUDE_WCHAR_H
 
 #undef XERCES_S16BIT_INT
 #undef XERCES_S32BIT_INT
@@ -73,7 +74,9 @@
 #if XERCES_HAVE_SYS_TYPES_H
 #	include <sys/types.h>
 #endif
-
+#if XERCES_INCLUDE_WCHAR_H
+#	include <wchar.h>
+#endif
 
 // ---------------------------------------------------------------------------
 //  XMLSize_t is the unsigned integral type.
