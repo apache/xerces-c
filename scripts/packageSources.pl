@@ -414,16 +414,16 @@ sub package_sources {
    pchdir( $xercescroot );
 
    if ( $^O =~ /win/i ) {
-      psystem ( "zip -qr ${packages}-doc\.zip doc" );
+      psystem ( "zip -qr ${packages}_doc\.zip doc" );
    } else {
-      psystem ( "tar -cf ${packages}-doc\.tar doc" );
-      psystem ( "gzip ${packages}-doc\.tar" );
+      psystem ( "tar -cf ${packages}_doc\.tar doc" );
+      psystem ( "gzip ${packages}_doc\.tar" );
    }
    
    pchdir( $xercescroot . $fs . 'doc');
    psystem ('rm -rf *');
    pchdir( $xercescroot );
-   psystem ('mv ${packages}-doc* doc');
+   psystem ("mv ${packages}_doc* doc");
 
    print "\nDELETING FILES\n\n";
 
