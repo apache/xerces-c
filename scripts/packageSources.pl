@@ -409,22 +409,6 @@ sub package_sources {
    pchdir( $xercescroot );
    psystem( $doc_cmd );
    
-   print "\nCOMPRESS DOCS\n\n";
-
-   pchdir( $xercescroot );
-
-   if ( $^O =~ /win/i ) {
-      psystem ( "zip -qr ${packages}_doc\.zip doc" );
-   } else {
-      psystem ( "tar -cf ${packages}_doc\.tar doc" );
-      psystem ( "gzip ${packages}_doc\.tar" );
-   }
-   
-   pchdir( $xercescroot . $fs . 'doc');
-   psystem ('rm -rf *');
-   pchdir( $xercescroot );
-   psystem ("mv ${packages}_doc* doc");
-
    print "\nDELETING FILES\n\n";
 
    pchdir( $xercescroot );
@@ -444,6 +428,22 @@ sub package_sources {
    print "\nREMOVING EXPORT CLAUSES\n\n";
 
    remove_exports( $xercescroot . $fs . 'doc' . $fs . 'html' . $fs . 'apiDocs' );
+
+   print "\nCOMPRESS DOCS\n\n";
+
+   pchdir( $xercescroot );
+
+   if ( $^O =~ /win/i ) {
+      psystem ( "zip -qr ${packages}_doc\.zip doc" );
+   } else {
+      psystem ( "tar -cf ${packages}_doc\.tar doc" );
+      psystem ( "gzip ${packages}_doc\.tar" );
+   }
+   
+   pchdir( $xercescroot . $fs . 'doc');
+   psystem ('rm -rf *');
+   pchdir( $xercescroot );
+   psystem ("mv ${packages}_doc* doc");
 
    print "\nREMOVING MYSELF\n\n";
 
