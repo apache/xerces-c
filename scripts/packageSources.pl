@@ -420,10 +420,10 @@ sub package_sources {
       psystem ( "gzip ${packages}-doc\.tar" );
    }
    
-   pchdir( $xercescroot . $fs . doc);
+   pchdir( $xercescroot . $fs . 'doc');
    psystem ('rm -rf *');
    pchdir( $xercescroot );
-   psystem ('mv ${packages}-doc* doc) 
+   psystem ('mv ${packages}-doc* doc');
 
    print "\nDELETING FILES\n\n";
 
