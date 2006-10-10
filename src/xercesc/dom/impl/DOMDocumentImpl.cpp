@@ -724,7 +724,12 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
       }
       int p=parent->getNodeType();
       int ch = child->getNodeType();
-      return (kidOK[p] & 1<<ch) != 0;
+      return ((kidOK[p] & 1<<ch) != 0) || 
+             (p==DOMNode::DOCUMENT_NODE && ch==DOMNode::TEXT_NODE && 
+              ((XMLString::equals(((DOMDocument*)parent)->getXmlVersion(), XMLUni::fgVersion1_1))?
+                    XMLChar1_1::isAllSpaces(child->getNodeValue(), XMLString::stringLen(child->getNodeValue())):
+                    XMLChar1_0::isAllSpaces(child->getNodeValue(), XMLString::stringLen(child->getNodeValue())))
+             );
 }
 
 void            DOMDocumentImpl::changed()
