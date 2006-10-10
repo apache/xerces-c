@@ -28165,6 +28165,11 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
                    	  { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 
+cat >>confdefs.h <<_ACEOF
+#define XERCES_INCLUDE_WCHAR_H 1
+_ACEOF
+
+
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5

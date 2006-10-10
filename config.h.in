@@ -304,6 +304,9 @@
 /* Define to 1 if we have sys/types.h */
 #undef XERCES_HAVE_SYS_TYPES_H
 
+/* Define to have Xerces_autoconf_config.hpp include wchar.h */
+#undef XERCES_INCLUDE_WCHAR_H
+
 /* Define if there is support for L"widestring" */
 #undef XERCES_LSTRSUPPORT
 
