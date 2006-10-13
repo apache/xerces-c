@@ -37,6 +37,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class DOMElement;
+class DOMNode;
 
 class CDOM_EXPORT DOMLSParserFilter {
 protected:
