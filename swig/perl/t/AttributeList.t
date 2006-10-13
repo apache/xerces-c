@@ -2,25 +2,17 @@
 # with `make test'. After `make install' it should work as `perl
 # AttributeList.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
-
-use Carp;
-use blib;
-use XML::Xerces;
+#use blib;
 use Test::More tests => 11;
-use Config;
+BEGIN {use_ok("XML::Xerces::SAX")};
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME);
-use vars qw($loaded);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin test
 
   # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
   #   when the module is loaded. Xerces.pm no longer does this.

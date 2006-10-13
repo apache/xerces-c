@@ -1,35 +1,32 @@
 # Before `make install' is performed this script should be runnable
 # with `make test'. After `make install' it should work as `perl
-# SAXCount.t
+# SAXCount.t`
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
-
-use Carp;
 # use blib;
-use XML::Xerces;
 use Test::More tests => 5;
-use Config;
+BEGIN { use_ok("XML::Xerces::SAX") };
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME $SAMPLE_DIR);
-use vars qw($loaded $file);
 use strict;
+use Config;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
 my @output = split(/\n/,`$perl -Mblib $SAMPLE_DIR/SAXCount.pl $PERSONAL_FILE_NAME 2>/dev/null`);
 $output[1] =~ /\s(\d+)/;
-ok($1 == 37);
+is($1, 37,
+   'elems');
 $output[2] =~ /\b(\d+)\b/;
-ok($1 == 12);
+is($1, 12,
+  'attrs');
 $output[3] =~ /\b(\d+)\b/;
-ok($1 == 134);
+is($1, 134,
+   'whitespace');
 $output[4] =~ /\b(\d+)\b/;
-ok($1 == 134);
+is($1, 134,
+   'characters');

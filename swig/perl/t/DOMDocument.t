@@ -83,7 +83,7 @@ my $isa = "XML::Xerces::DOMException";
 isa_ok($error,$isa)
   or diag($error);
 
-my $expect = "$XML::Xerces::DOMException::INVALID_CHARACTER_ERR";
+my $expect = $XML::Xerces::DOMException::INVALID_CHARACTER_ERR;
 ok(UNIVERSAL::isa($error,$isa)
    && $error->getCode == $expect,
   "received correct error code")
@@ -105,23 +105,16 @@ ok((UNIVERSAL::isa($error,$isa)
   || diag("found code: $error->{code}, expected code: $expect");
 
 # check that an element can start with an underscore
-eval {
-  my $el = $doc1->createElement('_');
-};
+$el = eval{$doc1->createElement('_')};
 ok(!$@,
   "element can start with underscore");
 
 # check that an element can start with an colon
-eval {
-  my $el = $doc1->createElement(':');
-};
+$el = eval {$doc1->createElement(':')};
 ok(!$@,
-  "element cannot start with colon");
+  "element can start with colon");
 
 # check that getElementById() doesn't segfault on undef ID
-eval {
-  $doc1->getElementById(undef);
-};
-ok($@,
-  "calling getElementById with null string causes exception");
-
+$el = eval {$doc1->getElementById(undef)};
+ok((not defined $el),
+  "calling getElementById with undef returns undef");

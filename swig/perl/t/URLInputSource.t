@@ -2,22 +2,16 @@
 # with `make test'. After `make install' it should work as `perl
 # URLInputSource.t'
 
-######################### We start with some black magic to print on failure.
+######################### Begin module loading
 
-END {fail() unless $loaded;}
-
-use Carp;
 # use blib;
-use XML::Xerces;
-use Test::More tests => 8;
+use Test::More tests => 9;
+BEGIN { use_ok("XML::Xerces") };
+BEGIN { use_ok("XML::Xerces::IO") };
 
-use vars qw($loaded $error);
 use strict;
 
-$loaded = 1;
-pass("module loaded");
-
-######################### End of black magic.
+######################### Begin Test
 
 # Insert your test code below (better if it prints "ok 13"
 # (correspondingly "not ok 13") depending on the success of chunk 13

@@ -5,8 +5,8 @@
 ######################### Begin module loading
 
 # use blib;
-use Test::More tests => 12;
-BEGIN { use_ok("XML::Xerces") };
+use Test::More tests => 13;
+BEGIN { use_ok("XML::Xerces::SAX") };
 
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME);
@@ -85,7 +85,8 @@ while ($SAX->parseNext($token)) {
   # do nothing
 }
 pass('successful progressive parse');
-ok($DOCUMENT_HANDLER->{elements} == 37, 'element count after progressive parse');
+ok($DOCUMENT_HANDLER->{elements} == 37,
+   'element count after progressive parse');
 
 # reset the counts
 $DOCUMENT_HANDLER->reset_document();
@@ -175,8 +176,13 @@ ok($::error,'fatal error in progressive parse')
 # reset the state for a new parse
 $::error = '';
 $SAX->parseReset($token);
-$SAX->setErrorHandler(XML::Xerces::PerlErrorHandler->new());
 
+$SAX->setErrorHandler(undef);
+eval {$SAX->parse(XML::Xerces::MemBufInputSource->new($document))};
+ok((not $@),'unset error handler')
+  or XML::Xerces::error($@);
+
+$SAX->setErrorHandler(XML::Xerces::PerlErrorHandler->new());
 eval {$SAX->parse($PERSONAL_FILE_NAME)};
 ok((not $@),'successful parse after fatal error');
 

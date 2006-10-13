@@ -4,8 +4,8 @@
 
 ######################### Begin module loading
 
-# use blib;
-use Test::More tests => 6;
+use blib;
+use Test::More tests => 26;
 BEGIN { use_ok("XML::Xerces::DOM") };
 
 use lib 't';
@@ -22,10 +22,85 @@ XML::Xerces::XMLPlatformUtils::Initialize();
 
 my $domImpl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
 isa_ok($domImpl,"XML::Xerces::DOMImplementation");
+isa_ok($domImpl,"XML::Xerces::DOMImplementationLS");
 
 my $dt  = eval{$domImpl->createDocumentType('x', 'x', 'x')};
 XML::Xerces::error($@) if $@;
 isa_ok($dt,"XML::Xerces::DOMDocumentType");
+
+$dt  = eval{$domImpl->createDocumentType(undef, 'x', 'x')};
+ok($@,
+   'exception with undef as qualified name');
+
+$dt  = eval{$domImpl->createDocumentType('x', undef, 'x')};
+ok(!$@,
+   'no exception with undef as public id');
+
+$dt  = eval{$domImpl->createDocumentType('x', 'x', undef)};
+ok(!$@,
+   'no exception with undef as system id');
+
+# test exceptions
+$dt  = eval{$domImpl->createDocumentType('!', 'x', 'x')};
+ok($@,
+   'exception with invalid char in qualified name');
+isa_ok($@,"XML::Xerces::DOMException");
+is($@->getCode(),$XML::Xerces::DOMException::INVALID_CHARACTER_ERR,
+  'invalid char exception code is returned');
+
+TODO: {
+  local $TODO = 'NAMESPACE_ERR not thrown';
+  $dt  = eval{$domImpl->createDocumentType('!malformed', 'x', 'x')};
+  is($@->getCode(),$XML::Xerces::DOMException::NAMESPACE_ERR,
+     'exception in qualified name');
+}
+
+my $mode_synch = $XML::Xerces::DOMImplementationLS::MODE_SYNCHRONOUS;
+is($mode_synch,1,
+   'mode synchronous');
+my $mode_asynch = $XML::Xerces::DOMImplementationLS::MODE_ASYNCHRONOUS;
+is($mode_asynch,2,
+   'mode asynchronous');
+
+my $dtd_type = $XML::Xerces::XMLUni::fgDOMDTDType;
+is($dtd_type, 'http://www.w3.org/TR/REC-xml',
+   'dtd type');
+my $schema_type = $XML::Xerces::XMLUni::fgDOMXMLSchemaType;
+is($schema_type, 'http://www.w3.org/2001/XMLSchema',
+   'schema type');
+
+TODO: {
+  local $TODO = 'asynchronous mode not supported';
+  my $parser = eval {$domImpl->createLSParser($mode_asynch, $dtd_type)};
+  ok((not $@),
+     'asynch mode, dtd type');
+  $parser = eval {$domImpl->createLSParser($mode_asynch, $schema_type)};
+  ok((not $@),
+     'asynch mode, schema type');
+}
+
+my $parser = eval {$domImpl->createLSParser($mode_synch, $dtd_type)};
+XML::Xerces::error($@)
+  if $@;
+ok((not $@),
+   'synch mode, dtd type');
+isa_ok($parser,"XML::Xerces::DOMLSParser");
+
+$parser = eval {$domImpl->createLSParser($mode_synch, $schema_type)};
+XML::Xerces::error($@)
+  if $@;
+ok((not $@),
+   'synch mode, schema type');
+isa_ok($parser,"XML::Xerces::DOMLSParser");
+
+my $writer = $domImpl->createLSSerializer();
+isa_ok($writer,"XML::Xerces::DOMLSSerializer");
+
+my $input = $domImpl->createLSInput();
+isa_ok($input,"XML::Xerces::DOMLSInput");
+
+my $output = $domImpl->createLSOutput();
+isa_ok($output,"XML::Xerces::DOMLSOutput");
 
 my $doc = $domImpl->createDocument('myns', 'HISTORY', $dt);
 isa_ok($doc,"XML::Xerces::DOMDocument");
@@ -33,21 +108,18 @@ isa_ok($doc,"XML::Xerces::DOMDocument");
 ok(keys %XML::Xerces::DOMDocument::OWNER == 0,
   "DOMDocument not owned after creation");
 
-$doc->getDocumentElement->setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:myns", 'myns');
+# test exceptions
+my $domImpl2 = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
+my $doc2 = eval{$domImpl2->createDocument('myns', 'BAR', $dt)};
+XML::Xerces::error($@) if $@;
 
-for (my $i = 0; $i < 10; $i++) {
-  my $record = $doc->createElement('RECORD');
-  $doc->getDocumentElement->appendChild($record);
-  $record->setAttribute('ID', '0');
-  $record->setAttribute('PRICE', '1.1');
-  $record->setAttribute('VOl', '10');
-}
-my @elements = $doc->getElementsByTagName('*');
-ok(scalar @elements == 11,
-  "Found all created elements")
-  or diag("Found only " . scalar @elements . " elements");
 
-$doc->release();
+my $doc3 = eval{$domImpl->createDocument('myns', '!', $dt)};
+ok($@,
+   'exception with invalid char in qualified name');
+isa_ok($@,"XML::Xerces::DOMException");
+is($@->getCode(),$XML::Xerces::DOMException::INVALID_CHARACTER_ERR,
+  'invalid char exception code is returned');
 
 END {
   # NOTICE: We must now explicitly call XMLPlatformUtils::Terminate()

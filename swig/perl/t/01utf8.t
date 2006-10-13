@@ -12,7 +12,7 @@ use utf8;
 use lib 't';
 use TestUtils qw($PERSONAL_NO_DOCTYPE);
 
-BEGIN { use_ok("XML::Xerces") };
+BEGIN { use_ok("XML::Xerces::SAX") };
 
 use strict;
 

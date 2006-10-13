@@ -6,13 +6,11 @@
 
 # use blib;
 use Test::More tests => 17;
-BEGIN { use_ok("XML::Xerces") };
+BEGIN { use_ok("XML::Xerces::SAX") };
 
 use lib 't';
-# use TestUtils qw($PERSONAL_FILE_NAME);
+use TestUtils qw($PERSONAL_FILE_NAME);
 use strict;
-
-my $PERSONAL_FILE_NAME = 'samples/personal.xml';
 
 ######################### Begin Test
 
@@ -30,18 +28,26 @@ SKIP: {
 
   skip "setFeature didn't raise an exception", 2, if not $error;
 
-  isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
+  my $skip = 0;
+  isa_ok($error,'XML::Xerces::SAXNotRecognizedException')
+    or $skip = 1;
+
+  skip "bad exception: $error", 1, if $skip;
   ok($error->getMessage(),"message");
 }
 
-SKSIP: {
+SKIP: {
   eval {$parser->getFeature($feature)};
   $error = $@;
   ok($error,"getFeature: $feature");
 
   skip "setFeature didn't raise an exception", 2, if not $error;
 
-  isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
+  my $skip = 0;
+  isa_ok($error,'XML::Xerces::SAXNotRecognizedException')
+    or $skip = 1;
+
+  skip "bad exception: $error", 1, if $skip;
   ok($error->getMessage(),"message");
 }
 
@@ -52,7 +58,11 @@ SKIP: {
 
   skip "setFeature didn't raise an exception", 2, if not $@;
 
-  isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
+  my $skip = 0;
+  isa_ok($error,'XML::Xerces::SAXNotRecognizedException')
+    or $skip = 1;
+
+  skip "bad exception: $error", 1, if $skip;
   ok($error->getMessage(),"message");
 }
 
@@ -63,7 +73,11 @@ SKIP: {
 
   skip "setFeature didn't raise an exception", 2, if not $error;
 
-  isa_ok($error,'XML::Xerces::SAXNotRecognizedException');
+  my $skip = 0;
+  isa_ok($error,'XML::Xerces::SAXNotRecognizedException')
+    or $skip = 1;
+
+  skip "bad exception: $error", 1, if $skip;
   ok($error->getMessage(),"message");
 }
 
@@ -98,6 +112,10 @@ SKIP: {
   skip "modifying a feature during a parse didn't raise a not supported exception", 2,
     if not $error;
 
-  isa_ok($error,'XML::Xerces::SAXNotSupportedException');
+  my $skip = 0;
+  isa_ok($error,'XML::Xerces::SAXNotSupportedException')
+    or $skip = 1;
+
+  skip "bad exception: $error", 1, if $skip;
   ok($error->getMessage(),"message");
 }

@@ -6,9 +6,8 @@
 
 # use blib;
 use Test::More tests => 26;
-BEGIN { use_ok("XML::Xerces") };
+BEGIN { use_ok("XML::Xerces::SAX") };
 
-use Carp;
 use lib 't';
 use TestUtils qw($PERSONAL_FILE_NAME $SCHEMA_FILE_NAME $PERSONAL_SCHEMA_INVALID_FILE_NAME);
 use vars qw($error);

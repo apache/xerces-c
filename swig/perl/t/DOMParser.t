@@ -4,8 +4,8 @@
 
 ######################### Begin module loading
 
-# use blib;
-use Test::More tests => 11;
+use blib;
+use Test::More tests => 13;
 BEGIN { use_ok("XML::Xerces::DOM") };
 
 use lib 't';
@@ -38,7 +38,23 @@ $DOM->setValidationScheme ($XML::Xerces::AbstractDOMParser::Val_Always);
 eval{$DOM->parse(XML::Xerces::MemBufInputSource->new($document, 'foo'))};
 ok($@,'no dtd');
 
-$DOM = XML::Xerces::XercesDOMParser->new();
+# this is stupid!! We should be able to reset the parser
+# after a fatal error - FIXME
+TODO: {
+  local $TODO = "cannot reuse parser after fatal error";
+  $DOM = XML::Xerces::XercesDOMParser->new();
+  fail("reset parser");
+}
+
+# ensure we can unset the error handler using undef
+$DOM->setErrorHandler(undef);
+$DOM->setValidationScheme ($XML::Xerces::AbstractDOMParser::Val_Always);
+eval{$DOM->parse(XML::Xerces::MemBufInputSource->new($document))};
+ok((not $@),'unsetting error handler')
+  or XML::Xerces::error($@);
+
+# no validation allows skipping the DTD
+$DOM->setValidationScheme ($XML::Xerces::AbstractDOMParser::Val_Never);
 $DOM->setErrorHandler(XML::Xerces::PerlErrorHandler->new());
 
 eval{$DOM->parse(XML::Xerces::MemBufInputSource->new($document, 'foo'))};
@@ -123,8 +139,10 @@ eval {
   while ($DOM->parseNext($token)) {
   }
 };
-ok($::error,'fatal error in progressive parse')
-  or diag("Here's the error: $@");
+ok($::error,
+   'fatal error in progressive parse')
+  or XML::Xerces::error($@);
+
 my $doc = $DOM->getDocument();
 ok($doc,'doc');
 my $root = $doc->getDocumentElement();

@@ -5,12 +5,12 @@
 ######################### Begin module loading
 
 # use blib;
-use Test::More tests => 12;
+use Test::More tests => 16;
 
 BEGIN{use_ok('XML::Xerces::DOM')};
 
 use lib 't';
-use TestUtils qw($PERSONAL_FILE_NAME);
+use TestUtils qw($PERSONAL_FILE_NAME $PERSONAL_DTD_NAME $PERSONAL_SCHEMA_NAME);
 use vars qw($error);
 use strict;
 
@@ -70,3 +70,34 @@ isa_ok($doc,'XML::Xerces::DOMDocument');
 @persons = $doc->getElementsByTagName('person');
 is(scalar @persons, 6,'getting <person>s');
 
+my $grammar = $DOM->loadGrammar($PERSONAL_DTD_NAME,
+				$XML::Xerces::Grammar::DTDGrammarType,
+				my $to_cache = 1);
+isa_ok($grammar, "XML::Xerces::DTDGrammar",
+       'loadGrammar(path)');
+
+eval{
+  my $sax_is = XML::Xerces::LocalFileInputSource->new($PERSONAL_DTD_NAME);
+  $dom_is = XML::Xerces::Wrapper4InputSource->new($sax_is);
+};
+$grammar = $DOM->loadGrammar($dom_is,
+			     $XML::Xerces::Grammar::DTDGrammarType,
+			     $to_cache = 1);
+isa_ok($grammar, "XML::Xerces::DTDGrammar",
+       'loadGrammar(is)');
+
+$grammar = $DOM->loadGrammar($PERSONAL_SCHEMA_NAME,
+				$XML::Xerces::Grammar::SchemaGrammarType,
+				my $to_cache = 1);
+isa_ok($grammar, "XML::Xerces::SchemaGrammar",
+       'loadGrammar(path)');
+
+eval{
+  my $sax_is = XML::Xerces::LocalFileInputSource->new($PERSONAL_SCHEMA_NAME);
+  $dom_is = XML::Xerces::Wrapper4InputSource->new($sax_is);
+};
+$grammar = $DOM->loadGrammar($dom_is,
+			     $XML::Xerces::Grammar::SchemaGrammarType,
+			     $to_cache = 1);
+isa_ok($grammar, "XML::Xerces::SchemaGrammar",
+       'loadGrammar(is)');

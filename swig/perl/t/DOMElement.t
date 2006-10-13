@@ -4,7 +4,7 @@
 
 ######################### Begin module loading
 
-use blib;
+# use blib;
 use Test::More tests => 23;
 BEGIN { use_ok("XML::Xerces::DOM") };
 
@@ -68,8 +68,8 @@ ok(($persons[0]->getAttribute('bar') eq $value),
 
 # try to set an Attribute, 'foo', to undef
 eval{$persons[0]->setAttribute('foo',undef)};
-ok($@,
-  "setAttribute - undef value fails");
+ok(!$@,
+  "setAttribute - undef value succeeds");
 
 # try to set an Attribute, undef, to 'foo'
 eval{$persons[0]->setAttribute(undef,'foo')};
@@ -104,8 +104,8 @@ is($element->getAttributeNS($uri,'foo'), 'foo',
 
 # try to set an Attribute, 'foo', to undef
 eval{$element->setAttributeNS($uri,'foo',undef)};
-ok($@,
-  "setAttributeNS - undef value fails");
+ok(!$@,
+  "setAttributeNS - undef value succeeds");
 
 # try to set an Attribute, undef, to 'foo'
 eval{$element->setAttributeNS($uri,undef,'foo')};
@@ -114,8 +114,8 @@ ok($@,
 
 # try to set an Attribute, with uri == undef
 eval{$element->setAttributeNS(undef,'foo','foo')};
-ok($@,
-  "setAttributeNS - undef uri fails");
+ok(!$@,
+  "setAttributeNS - undef uri succeeds");
 
 $uri = 'http://example.org/';
 $document = <<XML;

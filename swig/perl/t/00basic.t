@@ -1,13 +1,22 @@
+# Before `make install' is performed this script should be runnable
+# with `make test'. After `make install' it should work as `perl
+# 00basic.t'
+
+######################### Begin module loading
+
 # use blib;
-use XML::Xerces;
-use Cwd;
-use Test::More tests => 19;
+
+use Test::More tests => 20;
+BEGIN { use_ok(XML::Xerces::DOM) };
+
 use lib 't';
-use TestUtils qw(
-		 $SYSTEM_RESOLVER_FILE_NAME
+use TestUtils qw($SYSTEM_RESOLVER_FILE_NAME $SAMPLE_DIR
+		 $PERSONAL_FILE_NAME
+		 $PERSONAL_INVALID_FILE_NAME
+		 $PERSONAL_NOT_WELL_FORMED_FILE_NAME
 		);
 
-pass("loaded");
+######################### Begin Test
 
   # NOTICE: We must now explicitly call XMLPlatformUtils::Initialize()
   #   when the module is loaded. Xerces.pm no longer does this.
@@ -25,12 +34,10 @@ $parser->setErrorHandler($ERROR_HANDLER);
 my $tmp = $parser->getErrorHandler();
 isa_ok($tmp,'XML::Xerces::ErrorHandler');
 
-my $cwd = cwd();
-$cwd =~ s|/t/?$||;
-my $SAMPLE_DIR = "$cwd/samples";
-my $PERSONAL_FILE_NAME = "$SAMPLE_DIR/personal.xml";
-my $PERSONAL_INVALID_FILE_NAME = "$SAMPLE_DIR/personal-invalid.xml";
-my $PERSONAL_NOT_WELL_FORMED_FILE_NAME = "$SAMPLE_DIR/personal-not-well-formed.xml";
+my $resolver = XML::Xerces::PerlEntityResolver->new();
+$parser->setEntityResolver($resolver);
+$tmp = $parser->getEntityResolver();
+isa_ok($tmp,'XML::Xerces::EntityResolver');
 
 $parser->setValidationScheme($XML::Xerces::AbstractDOMParser::Val_Never);
 $tmp = $parser->getValidationScheme();
