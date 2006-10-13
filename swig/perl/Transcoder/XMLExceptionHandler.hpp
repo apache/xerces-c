@@ -52,7 +52,7 @@ extern "C" {
 #include "xercesc/validators/datatype/InvalidDatatypeValueException.hpp"
 #include "xercesc/validators/schema/identity/XPathException.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLExceptionHandler {
 
@@ -68,5 +68,7 @@ public:
   ~XMLExceptionHandler();
   XMLException* copyXMLException(const XMLException& e);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* __XMLEXCEPTIONHANDLER */

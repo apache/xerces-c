@@ -17,6 +17,8 @@
 #include "PerlNodeFilterCallbackHandler.hpp"
 #include "xerces-swig-perl.hpp"
 
+XERCES_CPP_NAMESPACE_USE
+
 PerlNodeFilterCallbackHandler::PerlNodeFilterCallbackHandler()
 {
     callbackObj = NULL;
@@ -28,6 +30,12 @@ PerlNodeFilterCallbackHandler::~PerlNodeFilterCallbackHandler()
 PerlNodeFilterCallbackHandler::PerlNodeFilterCallbackHandler(SV *obj)
 {
     set_callback_obj(obj);
+}
+
+short
+PerlNodeFilterCallbackHandler::acceptNode (DOMNode* node)
+{
+  return acceptNode((const DOMNode*)node);
 }
 
 short
@@ -60,6 +68,86 @@ PerlNodeFilterCallbackHandler::acceptNode (const DOMNode* node) const
     PUTBACK;
 
     int count = perl_call_method("acceptNode", G_SCALAR);
+
+    SPAGAIN ;
+
+    if (count != 1)
+	croak("NodeFilter did not return an answer\n") ;
+
+    accept = POPi;
+
+    PUTBACK ;
+    FREETMPS;
+    LEAVE;
+
+    return accept;
+}
+
+unsigned long
+PerlNodeFilterCallbackHandler::getWhatToShow() const
+{
+    if (!callbackObj) {
+        croak("\ngetWhatToShow: no NodeFilter set\n");
+	return 0;
+    }
+    unsigned long whatToShow = 0;
+
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+
+    PUSHMARK(SP);
+	// first put the callback object on the stack
+    XPUSHs(callbackObj);
+
+    PUTBACK;
+
+    int count = perl_call_method("whatToShow", G_SCALAR);
+
+    SPAGAIN ;
+
+    if (count != 1)
+	croak("Filter did not return an answer\n") ;
+
+    whatToShow = POPl;
+
+    PUTBACK ;
+    FREETMPS;
+    LEAVE;
+
+    return whatToShow;
+}
+
+short
+PerlNodeFilterCallbackHandler::startElement (DOMElement* node)
+{
+    if (!callbackObj) {
+        croak("\nstartElement: no NodeFilter set\n");
+	return 0;
+    }
+    short accept = 0;
+    char *domElementName = "XML::Xerces::DOMElement";
+
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+
+    PUSHMARK(SP);
+	// first put the callback object on the stack
+    XPUSHs(callbackObj);
+
+    // the only argument is the node
+    // god bless John Lenz's new type system in SWIG 1.3.25!!!
+    swig_type_info *ty = SWIG_TypeQuery(domElementName);
+    SV* node_sv = sv_newmortal();
+    SWIG_MakePtr(node_sv, (void *) node, ty,0);
+    XPUSHs(node_sv);
+
+    PUTBACK;
+
+    int count = perl_call_method("startElement", G_SCALAR);
 
     SPAGAIN ;
 

@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include "PerlCallbackHandler.hpp"
 
+XERCES_CPP_NAMESPACE_USE
+
 PerlCallbackHandler::PerlCallbackHandler() {
   // fprintf(stderr,"PerlCallback: constructor\n");
   UTF8_TRANSCODER = Transcoder::getInstance();

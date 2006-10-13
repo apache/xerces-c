@@ -27,6 +27,7 @@
 use strict;
 use blib;
 use XML::Xerces qw(error);
+use XML::Xerces::SAX;
 use Getopt::Long;
 use Benchmark;
 use vars qw(%OPTIONS);
@@ -58,7 +59,7 @@ XML::Xerces::XMLPlatformUtils::Initialize();
 my $val_to_use = XML::Xerces::SchemaValidator->new();
 my $parser = XML::Xerces::SAXParser->new($val_to_use);
 
-$parser->setValidationScheme ($XML::Xerces::AbstractDOMParser::Val_Auto);
+$parser->setValidationScheme ($XML::Xerces::SAXParser::Val_Auto);
 $parser->setErrorHandler(XML::Xerces::PerlErrorHandler->new());
 $parser->setDoNamespaces(1);
 $parser->setDoSchema(1);
@@ -80,9 +81,8 @@ if ($count == 0) {
 	$elem->getFullName(),
 	$elem->getFormattedContentModel();
       if ($elem->hasAttDefs()) {
-	my $attr_list = $elem->getAttDefList();
-	while ($attr_list->hasMoreElements()) {
-	  my $attr = $attr_list->nextElement();
+	my @attr_list = $elem->getAttDefList();
+	foreach my $attr (@attr_list) {
 	  my $type = $attr->getType();
 	  my $type_name;
 	  if ($type == $XML::Xerces::XMLAttDef::CData) {
@@ -93,10 +93,6 @@ if ($count == 0) {
 	    $type_name = 'NOTATION';
 	  } elsif ($type == $XML::Xerces::XMLAttDef::Enumeration) {
 	    $type_name = 'ENUMERATION';
-	  } elsif ($type == $XML::Xerces::XMLAttDef::Nmtoken
-		   or $type == $XML::Xerces::XMLAttDef::Nmtokens
-		  ) {
-	    $type_name = 'NMTOKEN(S)';
 	  } elsif ($type == $XML::Xerces::XMLAttDef::IDRef
 		   or $type == $XML::Xerces::XMLAttDef::IDRefs
 		  ) {
@@ -109,6 +105,10 @@ if ($count == 0) {
 		   or $type == $XML::Xerces::XMLAttDef::NmTokens
 		  ) {
 	    $type_name = 'NMTOKEN(S)';
+	  } elsif ($type == $XML::Xerces::XMLAttDef::Simple) {
+	    $type_name = 'Simple';
+	  } else {
+	    print STDERR "Unknown type: $type\n";
 	  }
 	  printf STDOUT "\tattribute Name: %s, Type: %s\n",
 	    $attr->getFullName(),

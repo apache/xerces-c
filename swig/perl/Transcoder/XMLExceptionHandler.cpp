@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include "XMLExceptionHandler.hpp"
 
+XERCES_CPP_NAMESPACE_USE
+
 XMLExceptionHandler* XMLExceptionHandler::_instance = NULL;
 
 XMLExceptionHandler*

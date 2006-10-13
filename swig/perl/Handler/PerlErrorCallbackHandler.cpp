@@ -17,6 +17,8 @@
 #include <stdlib.h>
 #include "PerlErrorCallbackHandler.hpp"
 
+XERCES_CPP_NAMESPACE_USE
+
 PerlErrorCallbackHandler::PerlErrorCallbackHandler()
 {
     callbackObj = NULL;

@@ -52,13 +52,13 @@ extern "C" {
 #define PERLCALLBACKHANDLER_ERROR_TYPE         0
 #define PERLCALLBACKHANDLER_ENTITY_TYPE        1
 #define PERLCALLBACKHANDLER_NODE_TYPE          2
-#define PERLCALLBACKHANDLER_CONTENT_TYPE       3
-#define PERLCALLBACKHANDLER_DOCUMENT_TYPE      4
+#define PERLCALLBACKHANDLER_SAX_TYPE           3
+#define PERLCALLBACKHANDLER_DOMERROR_TYPE      4
 
 #include "xercesc/util/PlatformUtils.hpp"
 #include "Transcoder.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
 class PerlCallbackHandler {
 
@@ -80,5 +80,7 @@ public:
 
     SV* set_callback_obj(SV*);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* __PERLCALLBACKHANDLER */

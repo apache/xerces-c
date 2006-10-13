@@ -34,7 +34,7 @@ DOM.pm: $SCRIPTS_DIR/postModule.pl DOM-tmp.pm
 Xerces_DOM.cpp: $SCRIPTS_DIR/postSource.pl Xerces_DOM-tmp.cpp
 	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postSource.pl --in=Xerces_DOM-tmp.cpp --out=Xerces_DOM.cpp
 
-Xerces_DOM-tmp.cpp: $INTERFACE_DIR/Xerces_DOM.i
+Xerces_DOM-tmp.cpp: $INTERFACE_DIR/Xerces_DOM.i @DOM_INTERFACE_FILES
 	\$(SWIG) $SWIG_ARGS -o Xerces_DOM-tmp.cpp -pm DOM-tmp.pm $INTERFACE_DIR/Xerces_DOM.i
 	perl  -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=DOM-tmp.pm --out=DOM.pm
 	mkdir -p $BLIB_DIR

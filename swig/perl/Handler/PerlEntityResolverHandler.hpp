@@ -21,10 +21,14 @@
 #include "xercesc/sax/EntityResolver.hpp"
 #include "xercesc/sax/InputSource.hpp"
 #include "xercesc/util/XMLString.hpp"
+#include "xercesc/util/XMLEntityResolver.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+class XMLResourceIdentifier;
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 class PerlEntityResolverHandler: public EntityResolver
+			       , public XMLEntityResolver
 			       , public PerlCallbackHandler
  {
 
@@ -42,6 +46,11 @@ public:
     InputSource* resolveEntity (const XMLCh* const publicId, 
 				const XMLCh* const systemId);
 
+	// The XMLEntityResolver interface
+    InputSource* resolveEntity(XMLResourceIdentifier*);
+
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* __PERLENTITYRESOLVERHANDLER */

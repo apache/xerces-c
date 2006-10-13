@@ -25,7 +25,7 @@
 
 use strict;
 # use blib;
-use XML::Xerces;
+use XML::Xerces::SAX;
 use Getopt::Long;
 use vars qw($opt_v $opt_n);
 use Benchmark;
@@ -123,7 +123,7 @@ my $t0 = new Benchmark;
 eval {
   $parser->parse (XML::Xerces::LocalFileInputSource->new($file));
 };
-XML::Xerces::error($@) if ($@);
+XML::Xerces::fatal_error($@) if ($@);
 
 my $t1 = new Benchmark;
 my $td = timediff($t1, $t0);

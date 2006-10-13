@@ -99,7 +99,7 @@ eval {
   $parser->setFeature("$XML::Xerces::XMLUni::fgXercesSchema", $schema);
   $parser->setFeature("$XML::Xerces::XMLUni::fgXercesSchemaFullChecking", $full_schema);
 };
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 
 # and the required features
 eval {
@@ -108,12 +108,12 @@ eval {
   $parser->setFeature("$XML::Xerces::XMLUni::fgSAX2CoreValidation", 1);
   $parser->setFeature("$XML::Xerces::XMLUni::fgXercesDynamic", 1);
 };
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 
 eval {
   my $is = XML::Xerces::LocalFileInputSource->new($OPTIONS{file});
   $parser->parse($is) ;
 } ;
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 exit(0);
 

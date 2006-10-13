@@ -18,11 +18,13 @@
 #define __PERLNODEFILTERCALLBACKHANDLER
 
 #include "PerlCallbackHandler.hpp"
-#include "xercesc/dom/DOMNodeFilter.hpp"
+#include "xercesc/dom/DOMLSParserFilter.hpp"
+#include "xercesc/dom/DOMLSSerializerFilter.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
-class PerlNodeFilterCallbackHandler : public DOMNodeFilter
+class PerlNodeFilterCallbackHandler : public DOMLSSerializerFilter
+				    , public DOMLSParserFilter
 				    , public PerlCallbackHandler
 {
 
@@ -30,14 +32,26 @@ protected:
 
 public:
 
-    PerlNodeFilterCallbackHandler();
-    PerlNodeFilterCallbackHandler(SV *obj);
-    ~PerlNodeFilterCallbackHandler();
+  PerlNodeFilterCallbackHandler();
+  PerlNodeFilterCallbackHandler(SV *obj);
+  ~PerlNodeFilterCallbackHandler();
 
-    int type() {return PERLCALLBACKHANDLER_NODE_TYPE;}
+  int type() {return PERLCALLBACKHANDLER_NODE_TYPE;}
 
-	// The NodeFilter interface
-    short acceptNode (const DOMNode* node) const;
+  // The DOMNodeFilter interface - inherited via DOMLSSerializerFilter
+  // short acceptNode (const DOMNode* node) const;
+
+
+  // The DOMLSSerializerFilter interface
+  short acceptNode (const DOMNode* node) const;
+  unsigned long getWhatToShow() const;
+
+  // The DOMLSParserFilter interface
+  // unsigned long getWhatToShow() const;
+  short acceptNode (DOMNode* node);
+  short startElement(DOMElement* node);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* __PERLNODEFILTERCALLBACKHANDLER */

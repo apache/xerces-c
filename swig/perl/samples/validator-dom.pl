@@ -100,7 +100,7 @@ eval {
   $parser->setDoSchema($schema);
   $parser->setValidationSchemaFullChecking($full_schema);
 };
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 
 # and the required features
 eval {
@@ -108,12 +108,12 @@ eval {
   $parser->setExitOnFirstFatalError(0);
   $parser->setValidationConstraintFatal(0);
 };
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 
 eval {
   my $is = XML::Xerces::LocalFileInputSource->new($OPTIONS{file});
   $parser->parse($is) ;
 } ;
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 exit(0);
 

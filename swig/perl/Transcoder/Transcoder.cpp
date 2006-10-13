@@ -17,6 +17,11 @@
 #include <stdlib.h>
 #include "Transcoder.hpp"
 
+XERCES_CPP_NAMESPACE_USE
+
+static bool DEBUG_IN = false;
+static bool DEBUG_OUT = false;
+
 Transcoder* Transcoder::_instance = NULL;
 
 Transcoder*
@@ -57,7 +62,11 @@ Transcoder::Transcoder() {
 }
 
 SV*
-Transcoder::XMLString2Perl(const XMLCh* input) {
+Transcoder::XMLString2Local(const XMLCh* input) {
+  if (input == NULL) {
+    return &PL_sv_undef;
+  }
+
   SV *output;
   unsigned int charsEaten = 0;
   int length  = XMLString::stringLen(input);            // string length
@@ -77,7 +86,7 @@ Transcoder::XMLString2Perl(const XMLCh* input) {
   res[total_chars] = '\0';
 
 #if (0) 
-  if (DEBUG_UTF8_OUT) {
+  if (DEBUG_OUT) {
       printf("Xerces out length = %d: ",total_chars);
       for (int i=0;i<length;i++){
 	  printf("<0x%.4X>",res[i]);
@@ -94,14 +103,19 @@ Transcoder::XMLString2Perl(const XMLCh* input) {
 }
 
 XMLCh* 
-Transcoder::Perl2XMLString(SV* input){
+Transcoder::Local2XMLString(SV* input){
+
+    if (input == &PL_sv_undef) {
+      return NULL;
+    }
+
     XMLCh* output;
 
     STRLEN length;
     char *ptr = (char *)SvPVutf8(input,length);
 
 #if (0) 
-    if (DEBUG_UTF8_IN) {
+    if (DEBUG_IN) {
 	printf("Perl in length = %d: ",length);
 	for (unsigned int i=0;i<length;i++){
 	    printf("<0x%.4X>",ptr[i]);
@@ -125,7 +139,7 @@ Transcoder::Perl2XMLString(SV* input){
 	delete [] sizes;
 
 #if (0) 
-	if (DEBUG_UTF8_IN) {
+	if (DEBUG_IN) {
 	    printf("Xerces in length = %d: ",chars_stored);
 	    for (unsigned int i=0;i<chars_stored;i++){
 		printf("<0x%.4X>",output[i]);
@@ -140,7 +154,7 @@ Transcoder::Perl2XMLString(SV* input){
 	output = XMLString::transcode(ptr);
 
 #if (0) 
-	if (DEBUG_UTF8_IN) {
+	if (DEBUG_IN) {
 	    printf("Xerces: ");
 	    for (int i=0;output[i];i++){
 		printf("<0x%.4X>",output[i]);
@@ -152,3 +166,4 @@ Transcoder::Perl2XMLString(SV* input){
     }
     return(output);
 }
+

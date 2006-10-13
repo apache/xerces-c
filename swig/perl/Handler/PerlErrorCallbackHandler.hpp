@@ -20,7 +20,7 @@
 #include "PerlCallbackHandler.hpp"
 #include "xercesc/sax/ErrorHandler.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
 class PerlErrorCallbackHandler : public ErrorHandler
 			       , public PerlCallbackHandler 
@@ -41,6 +41,9 @@ public:
     void error(const SAXParseException& exception);
     void fatalError(const SAXParseException& exception);
     void resetErrors();
+
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* __PERLERRORCALLBACKHANDLER */

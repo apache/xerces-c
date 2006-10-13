@@ -23,57 +23,78 @@ Samples:
 
 Internals:
 ==========
+Sun Oct  8 2006
+* write to c-dev:
+  - DOMLSSerializerFilter??
+  - DOMLSSerializer::setNewLine() not checking
+  - why is DOMLSParserFilter::acceptNode() not const?
+* write swig-dev about %include vs. #include problem
+  - there should at least be a warning
+* check memory leaks
+  - Perl/typemaps-xmlch.i - are the returned vars leaking? do we need
+    sv2mortal()
+* how to include make-xml-exception.i inside other .i files??
+* PSVIWriter.pl
+* why is InputSource dynamic resolver not returning StdInInputSource? 
+  DOMLSInput.t
+* why is DOMImplementation.t segfaulting after test 4? 
+  createDocumentType(undef) is not throwing exception
+* why is 00basic.t failing?
+  - 4: getErrorHandler() not returning XML::Xerces::ErrorHandler
+static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__ErrorHandler = {"_p_XERCES_CPP_NAMESPACE__ErrorHandler", "XERCES_CPP_NAMESPACE::ErrorHandler *", 0, 0, (void*)0, 0};
+  
+  last argument should not be (void*)0 - it should be
+  (void*)"XML::Xerces::ErrorHandler". ErrorHandler.hpp is being
+  %imported not %included
+  - 19: document is forgotten - another f***ing 'defined' macro replacement
+* move classes to IO:
+  - DOMLSInput/Output
+  - Wrapper4InputSource/DOMLSInput
+
 Sat Sep 9 2006
+* unify Handler/ classes into Xerces/XercesSAX/XercesDOM
+* email c-dev: why are the TypeInfo XML files broken?
+* DOMLSInput::setStringData() was broken - the XMLCh* is deleted by
+  SWIG after it is set. Check for other data that Xerces-C doesn't adopt
+* DOMLSParser
+  - test DOMErrorHandler
+  - test EntityHandler
+  - test DOMLSResourceResolver
 * move other code out of XML::Xerces into new modules:
   - Handler
-  - SAX
-  - SAX2
-* why are is createXMLReader dispatcher not working - mail swig-dev
-* why are we wrapping DefaultHandler??
+* approximate codebase sizes: 
+  44328  127438 1538438 Xerces.cpp
+  26517   78805  914588 DOM/Xerces_DOM.cpp
+  14132   43098  479167 SAX/Xerces_SAX.cpp
+   6654   21313  236250 IO/Xerces_IO.cpp
+
+  45550  130667 1576523 Xerces.cpp
+  29010   85970  989933 DOM/Xerces_DOM.cpp
+  14010   42589  470235 SAX/Xerces_SAX.cpp
+
+* why is createXMLReader dispatcher not working - mail swig-dev
+* why are classes that implement XMemory ignored unless we %import it?
+* why are all SAXExceptions being ignored by catch()? namespace?
+* moving all %ignore out of ignore.i into class.i files
 
 Tue Aug 22 23:47:05 IST 2006
 * need tests for the new DOM additions:
 %include "dom/DOMLSException.i"
 %include "dom/DOMLSSerializer.i"
 %include "dom/DOMLSSerializerFilter.i"
-%include "dom/DOMLSResourceResolver.i"
 %include "dom/DOMLocator.i"
 %include "dom/DOMErrorHandler.i"
-%include "xercesc/dom/DOMLSOutput.hpp"
-%include "xercesc/dom/DOMTypeInfo.hpp"
-%include "xercesc/dom/DOMPSVITypeInfo.hpp"
-%include "xercesc/dom/DOMXPathEvaluator.hpp"
-%include "xercesc/dom/DOMXPathException.hpp"
-%include "xercesc/dom/DOMXPathExpression.hpp"
-%include "xercesc/dom/DOMXPathNamespace.hpp"
-%include "xercesc/dom/DOMXPathNSResolver.hpp"
-%include "xercesc/dom/DOMXPathResult.hpp"
-%include "xercesc/dom/DOMUserDataHandler.hpp"
-%include "xercesc/dom/DOMStringList.hpp"
-%include "xercesc/dom/DOMImplementationList.hpp"
-%include "xercesc/dom/DOMImplementationSource.hpp"
-%include "xercesc/dom/DOMImplementationRegistry.hpp"
-%include "xercesc/dom/DOMError.hpp"
+%include "dom/DOMPSVITypeInfo.hpp"
+%include "dom/DOMError.hpp"
 
-Fri May 13 18:21:45 IST 2005
-* does Xerces have any methods were a NULL XMLCh* value is needed? -
-  if so we have to enable a %typemap to support it
-* Xerces has some methods were a NULL pointer value is needed and some
-  methods were it segfaults -  we have to enable a %typemap to
-  differentiate between them
-* %ignore and %rename behave differently when used with default
-  arguments, ensure that the default args are included in the
-  directives or it won't get used for all of them.
+* must tested cached grammars
+* support for void* in DOMNode::[gs]etUserData()
+* questionable interfaces
+%include "dom/DOMUserDataHandler.hpp"
 
-Fri Oct 11 21:57:23 MDT 2002
-* the %typecheck for XMLCh* is too greedy, it should happen later
-  in the typecheck process
-
-Fri Jun  7 00:37:01 MDT 2002
-* make entity resolver to find all the xml files
 
 Sun Jun  2 11:38:11 MDT 2002
-* use %newobject and %typemape(newfree) for methods like removeNode()
+* use %newobject and %typemap(newfree) for methods like removeNode()
 
 ### *** emacs file mode definition ***
 ### Local Variables: 

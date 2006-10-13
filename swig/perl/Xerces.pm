@@ -17,21 +17,18 @@
 # This file was created automatically by SWIG 1.3.30.
 # Don't modify this file, modify the SWIG interface instead.
 package XML::Xerces;
-require Exporter;
-require DynaLoader;
-use vars qw(@ISA);
-@ISA = qw(Exporter DynaLoader);
-package XML::Xercesc;
+use base qw(Exporter);
+use base qw(DynaLoader);
 bootstrap XML::Xerces;
 package XML::Xerces;
-@EXPORT = qw( );
+@EXPORT = qw();
 package XML::Xerces;
 
 use strict;
 use Carp;
 use vars qw(@EXPORT_OK $VERSION %REMEMBER);
-@EXPORT_OK = qw(error);
-$VERSION = 300.060829;
+@EXPORT_OK = qw(fatal_error error);
+$VERSION = 300.061003;
 
 #
 # Cleanup removes all objects being remembered by an object
@@ -50,9 +47,16 @@ sub cleanup {
 #   }
 }
 
+sub fatal_error {
+  my $error = shift;
+  my $context = shift;
+  error($error,$context, my $fatal = 1);
+}
+
 sub error {
   my $error = shift;
   my $context = shift;
+  my $fatal = defined (shift) ? 1 : 0;
   my $msg = "Error in eval: ";
   if (ref $error) {
     if ($error->isa('XML::Xerces::DOMException')) {
@@ -68,28 +72,12 @@ sub error {
   }
   $msg .= ", Context: $context"
     if defined $context;
-  croak($msg);
+  if ($fatal) {
+    croak($msg);
+  } else {
+    carp($msg);
+  }
 }
-
-package XML::Xerces::DOMException;
-use vars qw(@CODES);
-@CODES = qw(__NONEXISTENT__
-	    INDEX_SIZE_ERR
-	    DOMSTRING_SIZE_ERR
-	    HIERARCHY_REQUEST_ERR
-	    WRONG_DOCUMENT_ERR
-	    INVALID_CHARACTER_ERR
-	    NO_DATA_ALLOWED_ERR
-	    NO_MODIFICATION_ALLOWED_ERR
-	    NOT_FOUND_ERR
-	    NOT_SUPPORTED_ERR
-	    INUSE_ATTRIBUTE_ERR
-	    INVALID_STATE_ERR
-	    SYNTAX_ERR
-	    INVALID_MODIFICATION_ERR
-	    NAMESPACE_ERR
-	    INVALID_ACCESS_ERR
-	   );
 
 package XML::Xerces::XMLExcepts;
 use vars qw(@CODES);
@@ -499,73 +487,16 @@ use vars qw(@CODES);
 	    E_HighBounds
 	   );
 
-############# Class : XML::Xerces::PerlContentHandler ##############
-package XML::Xerces::PerlContentHandler;
-use vars qw(@ISA);
-@ISA = qw();
-sub new {
-  my $class = shift;
-  return bless {}, $class;
-}
-
-sub start_element {}
-sub end_element {}
-sub start_prefix_mapping {}
-sub end_prefix_mapping {}
-sub skipped_entity {}
-sub start_document {}
-sub end_document {}
-sub reset_document {}
-sub characters {}
-sub processing_instruction {}
-sub set_document_locator {}
-sub ignorable_whitespace {}
-
-
-############# Class : XML::Xerces::PerlDocumentHandler ##############
-package XML::Xerces::PerlDocumentHandler;
-use vars qw(@ISA);
-@ISA = qw();
-sub new {
-  my $class = shift;
-  return bless {}, $class;
-}
-
-sub start_element {}
-sub end_element {}
-sub start_document {}
-sub end_document {}
-sub reset_document {}
-sub characters {}
-sub processing_instruction {}
-sub set_document_locator {}
-sub ignorable_whitespace {}
-
-
 ############# Class : XML::Xerces::PerlEntityResolver ##############
 package XML::Xerces::PerlEntityResolver;
 use vars qw(@ISA);
-@ISA = qw();
+@ISA = qw(XML::Xerces::XMLEntityResolver XML::Xerces::EntityResolver);
 sub new {
   my $class = shift;
   return bless {}, $class;
 }
 
 sub resolve_entity {
-  return undef;
-}
-
-
-############# Class : XML::Xerces::PerlNodeFilter ##############
-package XML::Xerces::PerlNodeFilter;
-use vars qw(@ISA);
-@ISA = qw();
-sub new {
-  my $class = shift;
-  return bless {}, $class;
-}
-
-sub acceptNode {
   return undef;
 }
 
@@ -625,6 +556,20 @@ EOT
 
 sub reset_errors {}
 
+package XML::Xerces::XMLChVector;
+# convert the XMLChVector to a perl list
+sub to_list {
+  my $self = shift;
+  my @list;
+  my $count = $self->size();
+  if ($count) {
+    for (my $i=0;$i<$count;$i++) {
+      push(@list,$self->elementAt($i));
+    }
+  }
+  return @list;
+}
+
 package XML::Xerces::XMLAttDefList;
 #
 # This class is both a list and a hash, so at the moment we
@@ -636,9 +581,10 @@ package XML::Xerces::XMLAttDefList;
 sub to_list {
   my $self = shift;
   my @list;
-  if ($self->hasMoreElements()) {
-    while ($self->hasMoreElements()) {
-      push(@list,$self->nextElement());
+  my $count = $self->getAttDefCount();
+  if ($count) {
+    for (my $i=0;$i<$count;$i++) {
+      push(@list,$self->getAttDef($i));
     }
   }
   return @list;
@@ -648,35 +594,12 @@ sub to_list {
 sub to_hash {
   my $self = shift;
   my %hash;
-  if ($self->hasMoreElements()) {
-    while ($self->hasMoreElements()) {
-      my $attr = $self->nextElement();
+  my $count = $self->getAttDefCount();
+  if ($count) {
+    for (my $i=0;$i<$count;$i++) {
+      my $attr = $self->getAttDef($i);
       $hash{$attr->getFullName()} = $attr;
     }
-  }
-  return %hash;
-}
-
-package XML::Xerces::Attributes;
-sub to_hash {
-  my $self = shift;
-  my %hash;
-  for (my $i=0; $i < $self->getLength(); $i++) {
-    my $qname = $self->getQName($i);
-    $hash{$qname}->{localName} = $self->getLocalName($i);
-    $hash{$qname}->{URI} = $self->getURI($i);
-    $hash{$qname}->{value} = $self->getValue($i);
-    $hash{$qname}->{type} = $self->getType($i);
-  }
-  return %hash;
-}
-
-package XML::Xerces::AttributeList;
-sub to_hash {
-  my $self = shift;
-  my %hash;
-  for (my $i=0;$i<$self->getLength();$i++) {
-    $hash{$self->getName($i)} = $self->getValue($i)
   }
   return %hash;
 }
@@ -707,7 +630,7 @@ sub new {
 sub initialize {
   my $self = shift;
   my $CATALOG = $self->catalog();
-  XML::Xerces::error (__PACKAGE__ . ": Must set catalog before calling initialize")
+  XML::Xerces::fatal_error(__PACKAGE__ . ": Must set catalog before calling initialize")
       unless defined $CATALOG;
 
   my $DOM = XML::Xerces::XercesDOMParser->new();
@@ -716,7 +639,7 @@ sub initialize {
 
   # we parse the example XML Catalog
   eval{$DOM->parse($CATALOG)};
-  XML::Xerces::error ($@, __PACKAGE__ . ": Couldn't parse catalog: $CATALOG")
+  XML::Xerces::fatal_error($@, __PACKAGE__ . ": Couldn't parse catalog: $CATALOG")
       if $@;
 
   # now retrieve the mappings and store them
@@ -760,7 +683,10 @@ sub resolve_entity {
   # print STDERR "Got PUBLIC: $pub\n";
   # print STDERR "Got SYSTEM: $sys\n";
 
-  XML::Xerces::error (__PACKAGE__ . ": Must call initialize before using the resolver")
+  #
+  # FIXME - this should be creating and throwing an exception
+  #
+  XML::Xerces::fatal_error(__PACKAGE__ . ": Must call initialize before using the resolver")
       unless defined $self->maps or defined $self->remaps;
 
   # now check which one we were asked for
@@ -826,6 +752,721 @@ sub this {
 package XML::Xerces;
 
 
+############# Class : XML::Xerces::XMLUni ##############
+
+package XML::Xerces::XMLUni;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*fgAnyString = *XML::Xercesc::XMLUni_fgAnyString;
+*fgAttListString = *XML::Xercesc::XMLUni_fgAttListString;
+*fgCommentString = *XML::Xercesc::XMLUni_fgCommentString;
+*fgCDATAString = *XML::Xercesc::XMLUni_fgCDATAString;
+*fgDefaultString = *XML::Xercesc::XMLUni_fgDefaultString;
+*fgDocTypeString = *XML::Xercesc::XMLUni_fgDocTypeString;
+*fgEBCDICEncodingString = *XML::Xercesc::XMLUni_fgEBCDICEncodingString;
+*fgElemString = *XML::Xercesc::XMLUni_fgElemString;
+*fgEmptyString = *XML::Xercesc::XMLUni_fgEmptyString;
+*fgEncodingString = *XML::Xercesc::XMLUni_fgEncodingString;
+*fgEntitString = *XML::Xercesc::XMLUni_fgEntitString;
+*fgEntityString = *XML::Xercesc::XMLUni_fgEntityString;
+*fgEntitiesString = *XML::Xercesc::XMLUni_fgEntitiesString;
+*fgEnumerationString = *XML::Xercesc::XMLUni_fgEnumerationString;
+*fgExceptDomain = *XML::Xercesc::XMLUni_fgExceptDomain;
+*fgFixedString = *XML::Xercesc::XMLUni_fgFixedString;
+*fgIBM037EncodingString = *XML::Xercesc::XMLUni_fgIBM037EncodingString;
+*fgIBM037EncodingString2 = *XML::Xercesc::XMLUni_fgIBM037EncodingString2;
+*fgIBM1047EncodingString = *XML::Xercesc::XMLUni_fgIBM1047EncodingString;
+*fgIBM1047EncodingString2 = *XML::Xercesc::XMLUni_fgIBM1047EncodingString2;
+*fgIBM1140EncodingString = *XML::Xercesc::XMLUni_fgIBM1140EncodingString;
+*fgIBM1140EncodingString2 = *XML::Xercesc::XMLUni_fgIBM1140EncodingString2;
+*fgIBM1140EncodingString3 = *XML::Xercesc::XMLUni_fgIBM1140EncodingString3;
+*fgIBM1140EncodingString4 = *XML::Xercesc::XMLUni_fgIBM1140EncodingString4;
+*fgIESString = *XML::Xercesc::XMLUni_fgIESString;
+*fgIDString = *XML::Xercesc::XMLUni_fgIDString;
+*fgIDRefString = *XML::Xercesc::XMLUni_fgIDRefString;
+*fgIDRefsString = *XML::Xercesc::XMLUni_fgIDRefsString;
+*fgImpliedString = *XML::Xercesc::XMLUni_fgImpliedString;
+*fgIgnoreString = *XML::Xercesc::XMLUni_fgIgnoreString;
+*fgIncludeString = *XML::Xercesc::XMLUni_fgIncludeString;
+*fgISO88591EncodingString = *XML::Xercesc::XMLUni_fgISO88591EncodingString;
+*fgISO88591EncodingString2 = *XML::Xercesc::XMLUni_fgISO88591EncodingString2;
+*fgISO88591EncodingString3 = *XML::Xercesc::XMLUni_fgISO88591EncodingString3;
+*fgISO88591EncodingString4 = *XML::Xercesc::XMLUni_fgISO88591EncodingString4;
+*fgISO88591EncodingString5 = *XML::Xercesc::XMLUni_fgISO88591EncodingString5;
+*fgISO88591EncodingString6 = *XML::Xercesc::XMLUni_fgISO88591EncodingString6;
+*fgISO88591EncodingString7 = *XML::Xercesc::XMLUni_fgISO88591EncodingString7;
+*fgISO88591EncodingString8 = *XML::Xercesc::XMLUni_fgISO88591EncodingString8;
+*fgISO88591EncodingString9 = *XML::Xercesc::XMLUni_fgISO88591EncodingString9;
+*fgISO88591EncodingString10 = *XML::Xercesc::XMLUni_fgISO88591EncodingString10;
+*fgISO88591EncodingString11 = *XML::Xercesc::XMLUni_fgISO88591EncodingString11;
+*fgISO88591EncodingString12 = *XML::Xercesc::XMLUni_fgISO88591EncodingString12;
+*fgLocalHostString = *XML::Xercesc::XMLUni_fgLocalHostString;
+*fgNoString = *XML::Xercesc::XMLUni_fgNoString;
+*fgNotationString = *XML::Xercesc::XMLUni_fgNotationString;
+*fgNDATAString = *XML::Xercesc::XMLUni_fgNDATAString;
+*fgNmTokenString = *XML::Xercesc::XMLUni_fgNmTokenString;
+*fgNmTokensString = *XML::Xercesc::XMLUni_fgNmTokensString;
+*fgPCDATAString = *XML::Xercesc::XMLUni_fgPCDATAString;
+*fgPIString = *XML::Xercesc::XMLUni_fgPIString;
+*fgPubIDString = *XML::Xercesc::XMLUni_fgPubIDString;
+*fgRefString = *XML::Xercesc::XMLUni_fgRefString;
+*fgRequiredString = *XML::Xercesc::XMLUni_fgRequiredString;
+*fgStandaloneString = *XML::Xercesc::XMLUni_fgStandaloneString;
+*fgVersion1_0 = *XML::Xercesc::XMLUni_fgVersion1_0;
+*fgVersion1_1 = *XML::Xercesc::XMLUni_fgVersion1_1;
+*fgSysIDString = *XML::Xercesc::XMLUni_fgSysIDString;
+*fgUnknownURIName = *XML::Xercesc::XMLUni_fgUnknownURIName;
+*fgUCS4EncodingString = *XML::Xercesc::XMLUni_fgUCS4EncodingString;
+*fgUCS4EncodingString2 = *XML::Xercesc::XMLUni_fgUCS4EncodingString2;
+*fgUCS4EncodingString3 = *XML::Xercesc::XMLUni_fgUCS4EncodingString3;
+*fgUCS4BEncodingString = *XML::Xercesc::XMLUni_fgUCS4BEncodingString;
+*fgUCS4BEncodingString2 = *XML::Xercesc::XMLUni_fgUCS4BEncodingString2;
+*fgUCS4LEncodingString = *XML::Xercesc::XMLUni_fgUCS4LEncodingString;
+*fgUCS4LEncodingString2 = *XML::Xercesc::XMLUni_fgUCS4LEncodingString2;
+*fgUSASCIIEncodingString = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString;
+*fgUSASCIIEncodingString2 = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString2;
+*fgUSASCIIEncodingString3 = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString3;
+*fgUSASCIIEncodingString4 = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString4;
+*fgUTF8EncodingString = *XML::Xercesc::XMLUni_fgUTF8EncodingString;
+*fgUTF8EncodingString2 = *XML::Xercesc::XMLUni_fgUTF8EncodingString2;
+*fgUTF16EncodingString = *XML::Xercesc::XMLUni_fgUTF16EncodingString;
+*fgUTF16EncodingString2 = *XML::Xercesc::XMLUni_fgUTF16EncodingString2;
+*fgUTF16EncodingString3 = *XML::Xercesc::XMLUni_fgUTF16EncodingString3;
+*fgUTF16EncodingString4 = *XML::Xercesc::XMLUni_fgUTF16EncodingString4;
+*fgUTF16EncodingString5 = *XML::Xercesc::XMLUni_fgUTF16EncodingString5;
+*fgUTF16EncodingString6 = *XML::Xercesc::XMLUni_fgUTF16EncodingString6;
+*fgUTF16EncodingString7 = *XML::Xercesc::XMLUni_fgUTF16EncodingString7;
+*fgUTF16BEncodingString = *XML::Xercesc::XMLUni_fgUTF16BEncodingString;
+*fgUTF16BEncodingString2 = *XML::Xercesc::XMLUni_fgUTF16BEncodingString2;
+*fgUTF16LEncodingString = *XML::Xercesc::XMLUni_fgUTF16LEncodingString;
+*fgUTF16LEncodingString2 = *XML::Xercesc::XMLUni_fgUTF16LEncodingString2;
+*fgVersionString = *XML::Xercesc::XMLUni_fgVersionString;
+*fgValidityDomain = *XML::Xercesc::XMLUni_fgValidityDomain;
+*fgWin1252EncodingString = *XML::Xercesc::XMLUni_fgWin1252EncodingString;
+*fgXMLChEncodingString = *XML::Xercesc::XMLUni_fgXMLChEncodingString;
+*fgXMLDOMMsgDomain = *XML::Xercesc::XMLUni_fgXMLDOMMsgDomain;
+*fgXMLString = *XML::Xercesc::XMLUni_fgXMLString;
+*fgXMLStringSpace = *XML::Xercesc::XMLUni_fgXMLStringSpace;
+*fgXMLStringHTab = *XML::Xercesc::XMLUni_fgXMLStringHTab;
+*fgXMLStringCR = *XML::Xercesc::XMLUni_fgXMLStringCR;
+*fgXMLStringLF = *XML::Xercesc::XMLUni_fgXMLStringLF;
+*fgXMLStringSpaceU = *XML::Xercesc::XMLUni_fgXMLStringSpaceU;
+*fgXMLStringHTabU = *XML::Xercesc::XMLUni_fgXMLStringHTabU;
+*fgXMLStringCRU = *XML::Xercesc::XMLUni_fgXMLStringCRU;
+*fgXMLStringLFU = *XML::Xercesc::XMLUni_fgXMLStringLFU;
+*fgXMLDeclString = *XML::Xercesc::XMLUni_fgXMLDeclString;
+*fgXMLDeclStringSpace = *XML::Xercesc::XMLUni_fgXMLDeclStringSpace;
+*fgXMLDeclStringHTab = *XML::Xercesc::XMLUni_fgXMLDeclStringHTab;
+*fgXMLDeclStringLF = *XML::Xercesc::XMLUni_fgXMLDeclStringLF;
+*fgXMLDeclStringCR = *XML::Xercesc::XMLUni_fgXMLDeclStringCR;
+*fgXMLDeclStringSpaceU = *XML::Xercesc::XMLUni_fgXMLDeclStringSpaceU;
+*fgXMLDeclStringHTabU = *XML::Xercesc::XMLUni_fgXMLDeclStringHTabU;
+*fgXMLDeclStringLFU = *XML::Xercesc::XMLUni_fgXMLDeclStringLFU;
+*fgXMLDeclStringCRU = *XML::Xercesc::XMLUni_fgXMLDeclStringCRU;
+*fgXMLNSString = *XML::Xercesc::XMLUni_fgXMLNSString;
+*fgXMLNSColonString = *XML::Xercesc::XMLUni_fgXMLNSColonString;
+*fgXMLNSURIName = *XML::Xercesc::XMLUni_fgXMLNSURIName;
+*fgXMLErrDomain = *XML::Xercesc::XMLUni_fgXMLErrDomain;
+*fgXMLURIName = *XML::Xercesc::XMLUni_fgXMLURIName;
+*fgInfosetURIName = *XML::Xercesc::XMLUni_fgInfosetURIName;
+*fgYesString = *XML::Xercesc::XMLUni_fgYesString;
+*fgZeroLenString = *XML::Xercesc::XMLUni_fgZeroLenString;
+*fgDTDEntityString = *XML::Xercesc::XMLUni_fgDTDEntityString;
+*fgAmp = *XML::Xercesc::XMLUni_fgAmp;
+*fgLT = *XML::Xercesc::XMLUni_fgLT;
+*fgGT = *XML::Xercesc::XMLUni_fgGT;
+*fgQuot = *XML::Xercesc::XMLUni_fgQuot;
+*fgApos = *XML::Xercesc::XMLUni_fgApos;
+*fgWFXMLScanner = *XML::Xercesc::XMLUni_fgWFXMLScanner;
+*fgIGXMLScanner = *XML::Xercesc::XMLUni_fgIGXMLScanner;
+*fgSGXMLScanner = *XML::Xercesc::XMLUni_fgSGXMLScanner;
+*fgDGXMLScanner = *XML::Xercesc::XMLUni_fgDGXMLScanner;
+*fgXSAXMLScanner = *XML::Xercesc::XMLUni_fgXSAXMLScanner;
+*fgCDataStart = *XML::Xercesc::XMLUni_fgCDataStart;
+*fgCDataEnd = *XML::Xercesc::XMLUni_fgCDataEnd;
+*fgArrayIndexOutOfBoundsException_Name = *XML::Xercesc::XMLUni_fgArrayIndexOutOfBoundsException_Name;
+*fgEmptyStackException_Name = *XML::Xercesc::XMLUni_fgEmptyStackException_Name;
+*fgIllegalArgumentException_Name = *XML::Xercesc::XMLUni_fgIllegalArgumentException_Name;
+*fgInvalidCastException_Name = *XML::Xercesc::XMLUni_fgInvalidCastException_Name;
+*fgIOException_Name = *XML::Xercesc::XMLUni_fgIOException_Name;
+*fgNoSuchElementException_Name = *XML::Xercesc::XMLUni_fgNoSuchElementException_Name;
+*fgNullPointerException_Name = *XML::Xercesc::XMLUni_fgNullPointerException_Name;
+*fgXMLPlatformUtilsException_Name = *XML::Xercesc::XMLUni_fgXMLPlatformUtilsException_Name;
+*fgRuntimeException_Name = *XML::Xercesc::XMLUni_fgRuntimeException_Name;
+*fgTranscodingException_Name = *XML::Xercesc::XMLUni_fgTranscodingException_Name;
+*fgUnexpectedEOFException_Name = *XML::Xercesc::XMLUni_fgUnexpectedEOFException_Name;
+*fgUnsupportedEncodingException_Name = *XML::Xercesc::XMLUni_fgUnsupportedEncodingException_Name;
+*fgUTFDataFormatException_Name = *XML::Xercesc::XMLUni_fgUTFDataFormatException_Name;
+*fgNetAccessorException_Name = *XML::Xercesc::XMLUni_fgNetAccessorException_Name;
+*fgMalformedURLException_Name = *XML::Xercesc::XMLUni_fgMalformedURLException_Name;
+*fgNumberFormatException_Name = *XML::Xercesc::XMLUni_fgNumberFormatException_Name;
+*fgParseException_Name = *XML::Xercesc::XMLUni_fgParseException_Name;
+*fgInvalidDatatypeFacetException_Name = *XML::Xercesc::XMLUni_fgInvalidDatatypeFacetException_Name;
+*fgInvalidDatatypeValueException_Name = *XML::Xercesc::XMLUni_fgInvalidDatatypeValueException_Name;
+*fgSchemaDateTimeException_Name = *XML::Xercesc::XMLUni_fgSchemaDateTimeException_Name;
+*fgXPathException_Name = *XML::Xercesc::XMLUni_fgXPathException_Name;
+*fgXSerializationException_Name = *XML::Xercesc::XMLUni_fgXSerializationException_Name;
+*fgNegINFString = *XML::Xercesc::XMLUni_fgNegINFString;
+*fgNegZeroString = *XML::Xercesc::XMLUni_fgNegZeroString;
+*fgPosZeroString = *XML::Xercesc::XMLUni_fgPosZeroString;
+*fgPosINFString = *XML::Xercesc::XMLUni_fgPosINFString;
+*fgNaNString = *XML::Xercesc::XMLUni_fgNaNString;
+*fgEString = *XML::Xercesc::XMLUni_fgEString;
+*fgZeroString = *XML::Xercesc::XMLUni_fgZeroString;
+*fgNullString = *XML::Xercesc::XMLUni_fgNullString;
+*fgXercesDynamic = *XML::Xercesc::XMLUni_fgXercesDynamic;
+*fgXercesSchema = *XML::Xercesc::XMLUni_fgXercesSchema;
+*fgXercesSchemaFullChecking = *XML::Xercesc::XMLUni_fgXercesSchemaFullChecking;
+*fgXercesIdentityConstraintChecking = *XML::Xercesc::XMLUni_fgXercesIdentityConstraintChecking;
+*fgXercesSchemaExternalSchemaLocation = *XML::Xercesc::XMLUni_fgXercesSchemaExternalSchemaLocation;
+*fgXercesSchemaExternalNoNameSpaceSchemaLocation = *XML::Xercesc::XMLUni_fgXercesSchemaExternalNoNameSpaceSchemaLocation;
+*fgXercesSecurityManager = *XML::Xercesc::XMLUni_fgXercesSecurityManager;
+*fgXercesLoadExternalDTD = *XML::Xercesc::XMLUni_fgXercesLoadExternalDTD;
+*fgXercesContinueAfterFatalError = *XML::Xercesc::XMLUni_fgXercesContinueAfterFatalError;
+*fgXercesValidationErrorAsFatal = *XML::Xercesc::XMLUni_fgXercesValidationErrorAsFatal;
+*fgXercesUserAdoptsDOMDocument = *XML::Xercesc::XMLUni_fgXercesUserAdoptsDOMDocument;
+*fgXercesCacheGrammarFromParse = *XML::Xercesc::XMLUni_fgXercesCacheGrammarFromParse;
+*fgXercesUseCachedGrammarInParse = *XML::Xercesc::XMLUni_fgXercesUseCachedGrammarInParse;
+*fgXercesScannerName = *XML::Xercesc::XMLUni_fgXercesScannerName;
+*fgXercesParserUseDocumentFromImplementation = *XML::Xercesc::XMLUni_fgXercesParserUseDocumentFromImplementation;
+*fgXercesCalculateSrcOfs = *XML::Xercesc::XMLUni_fgXercesCalculateSrcOfs;
+*fgXercesStandardUriConformant = *XML::Xercesc::XMLUni_fgXercesStandardUriConformant;
+*fgXercesDOMHasPSVIInfo = *XML::Xercesc::XMLUni_fgXercesDOMHasPSVIInfo;
+*fgXercesGenerateSyntheticAnnotations = *XML::Xercesc::XMLUni_fgXercesGenerateSyntheticAnnotations;
+*fgXercesValidateAnnotations = *XML::Xercesc::XMLUni_fgXercesValidateAnnotations;
+*fgXercesIgnoreCachedDTD = *XML::Xercesc::XMLUni_fgXercesIgnoreCachedDTD;
+*fgXercesIgnoreAnnotations = *XML::Xercesc::XMLUni_fgXercesIgnoreAnnotations;
+*fgXercesDisableDefaultEntityResolution = *XML::Xercesc::XMLUni_fgXercesDisableDefaultEntityResolution;
+*fgXercesSkipDTDValidation = *XML::Xercesc::XMLUni_fgXercesSkipDTDValidation;
+*fgXercesEntityResolver = *XML::Xercesc::XMLUni_fgXercesEntityResolver;
+*fgSAX2CoreValidation = *XML::Xercesc::XMLUni_fgSAX2CoreValidation;
+*fgSAX2CoreNameSpaces = *XML::Xercesc::XMLUni_fgSAX2CoreNameSpaces;
+*fgSAX2CoreNameSpacePrefixes = *XML::Xercesc::XMLUni_fgSAX2CoreNameSpacePrefixes;
+*fgDOMCanonicalForm = *XML::Xercesc::XMLUni_fgDOMCanonicalForm;
+*fgDOMCDATASections = *XML::Xercesc::XMLUni_fgDOMCDATASections;
+*fgDOMComments = *XML::Xercesc::XMLUni_fgDOMComments;
+*fgDOMCharsetOverridesXMLEncoding = *XML::Xercesc::XMLUni_fgDOMCharsetOverridesXMLEncoding;
+*fgDOMCheckCharacterNormalization = *XML::Xercesc::XMLUni_fgDOMCheckCharacterNormalization;
+*fgDOMDatatypeNormalization = *XML::Xercesc::XMLUni_fgDOMDatatypeNormalization;
+*fgDOMDisallowDoctype = *XML::Xercesc::XMLUni_fgDOMDisallowDoctype;
+*fgDOMElementContentWhitespace = *XML::Xercesc::XMLUni_fgDOMElementContentWhitespace;
+*fgDOMErrorHandler = *XML::Xercesc::XMLUni_fgDOMErrorHandler;
+*fgDOMEntities = *XML::Xercesc::XMLUni_fgDOMEntities;
+*fgDOMIgnoreUnknownCharacterDenormalization = *XML::Xercesc::XMLUni_fgDOMIgnoreUnknownCharacterDenormalization;
+*fgDOMInfoset = *XML::Xercesc::XMLUni_fgDOMInfoset;
+*fgDOMNamespaces = *XML::Xercesc::XMLUni_fgDOMNamespaces;
+*fgDOMNamespaceDeclarations = *XML::Xercesc::XMLUni_fgDOMNamespaceDeclarations;
+*fgDOMNormalizeCharacters = *XML::Xercesc::XMLUni_fgDOMNormalizeCharacters;
+*fgDOMResourceResolver = *XML::Xercesc::XMLUni_fgDOMResourceResolver;
+*fgDOMSchemaLocation = *XML::Xercesc::XMLUni_fgDOMSchemaLocation;
+*fgDOMSchemaType = *XML::Xercesc::XMLUni_fgDOMSchemaType;
+*fgDOMSplitCDATASections = *XML::Xercesc::XMLUni_fgDOMSplitCDATASections;
+*fgDOMSupportedMediatypesOnly = *XML::Xercesc::XMLUni_fgDOMSupportedMediatypesOnly;
+*fgDOMValidate = *XML::Xercesc::XMLUni_fgDOMValidate;
+*fgDOMValidateIfSchema = *XML::Xercesc::XMLUni_fgDOMValidateIfSchema;
+*fgDOMWellFormed = *XML::Xercesc::XMLUni_fgDOMWellFormed;
+*fgDOMXMLSchemaType = *XML::Xercesc::XMLUni_fgDOMXMLSchemaType;
+*fgDOMDTDType = *XML::Xercesc::XMLUni_fgDOMDTDType;
+*fgDOMWRTCanonicalForm = *XML::Xercesc::XMLUni_fgDOMWRTCanonicalForm;
+*fgDOMWRTDiscardDefaultContent = *XML::Xercesc::XMLUni_fgDOMWRTDiscardDefaultContent;
+*fgDOMWRTEntities = *XML::Xercesc::XMLUni_fgDOMWRTEntities;
+*fgDOMWRTFormatPrettyPrint = *XML::Xercesc::XMLUni_fgDOMWRTFormatPrettyPrint;
+*fgDOMWRTNormalizeCharacters = *XML::Xercesc::XMLUni_fgDOMWRTNormalizeCharacters;
+*fgDOMWRTSplitCdataSections = *XML::Xercesc::XMLUni_fgDOMWRTSplitCdataSections;
+*fgDOMWRTValidation = *XML::Xercesc::XMLUni_fgDOMWRTValidation;
+*fgDOMWRTWhitespaceInElementContent = *XML::Xercesc::XMLUni_fgDOMWRTWhitespaceInElementContent;
+*fgDOMWRTBOM = *XML::Xercesc::XMLUni_fgDOMWRTBOM;
+*fgDOMXMLDeclaration = *XML::Xercesc::XMLUni_fgDOMXMLDeclaration;
+*fgDOMWRTXercesPrettyPrint = *XML::Xercesc::XMLUni_fgDOMWRTXercesPrettyPrint;
+*fgXercescInterfacePSVITypeInfo = *XML::Xercesc::XMLUni_fgXercescInterfacePSVITypeInfo;
+*fgXercescInterfaceDOMDocumentTypeImpl = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMDocumentTypeImpl;
+*fgXercescInterfaceDOMMemoryManager = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMMemoryManager;
+*fgXercescDefaultLocale = *XML::Xercesc::XMLUni_fgXercescDefaultLocale;
+*fgDefErrMsg = *XML::Xercesc::XMLUni_fgDefErrMsg;
+*fgValueZero = *XML::Xercesc::XMLUni_fgValueZero;
+*fgNegOne = *XML::Xercesc::XMLUni_fgNegOne;
+*fgValueOne = *XML::Xercesc::XMLUni_fgValueOne;
+*fgLongMaxInc = *XML::Xercesc::XMLUni_fgLongMaxInc;
+*fgLongMinInc = *XML::Xercesc::XMLUni_fgLongMinInc;
+*fgIntMaxInc = *XML::Xercesc::XMLUni_fgIntMaxInc;
+*fgIntMinInc = *XML::Xercesc::XMLUni_fgIntMinInc;
+*fgShortMaxInc = *XML::Xercesc::XMLUni_fgShortMaxInc;
+*fgShortMinInc = *XML::Xercesc::XMLUni_fgShortMinInc;
+*fgByteMaxInc = *XML::Xercesc::XMLUni_fgByteMaxInc;
+*fgByteMinInc = *XML::Xercesc::XMLUni_fgByteMinInc;
+*fgULongMaxInc = *XML::Xercesc::XMLUni_fgULongMaxInc;
+*fgUIntMaxInc = *XML::Xercesc::XMLUni_fgUIntMaxInc;
+*fgUShortMaxInc = *XML::Xercesc::XMLUni_fgUShortMaxInc;
+*fgUByteMaxInc = *XML::Xercesc::XMLUni_fgUByteMaxInc;
+*fgLangPattern = *XML::Xercesc::XMLUni_fgLangPattern;
+*fgBooleanValueSpace = *XML::Xercesc::XMLUni_fgBooleanValueSpace;
+*fgBooleanValueSpaceArraySize = *XML::Xercesc::XMLUni_fgBooleanValueSpaceArraySize;
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_XMLUni($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::SchemaSymbols ##############
+
+package XML::Xerces::SchemaSymbols;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*fgURI_XSI = *XML::Xercesc::SchemaSymbols_fgURI_XSI;
+*fgURI_SCHEMAFORSCHEMA = *XML::Xercesc::SchemaSymbols_fgURI_SCHEMAFORSCHEMA;
+*fgXSI_SCHEMALOCACTION = *XML::Xercesc::SchemaSymbols_fgXSI_SCHEMALOCACTION;
+*fgXSI_NONAMESPACESCHEMALOCACTION = *XML::Xercesc::SchemaSymbols_fgXSI_NONAMESPACESCHEMALOCACTION;
+*fgXSI_TYPE = *XML::Xercesc::SchemaSymbols_fgXSI_TYPE;
+*fgELT_ALL = *XML::Xercesc::SchemaSymbols_fgELT_ALL;
+*fgELT_ANNOTATION = *XML::Xercesc::SchemaSymbols_fgELT_ANNOTATION;
+*fgELT_ANY = *XML::Xercesc::SchemaSymbols_fgELT_ANY;
+*fgELT_WILDCARD = *XML::Xercesc::SchemaSymbols_fgELT_WILDCARD;
+*fgELT_ANYATTRIBUTE = *XML::Xercesc::SchemaSymbols_fgELT_ANYATTRIBUTE;
+*fgELT_APPINFO = *XML::Xercesc::SchemaSymbols_fgELT_APPINFO;
+*fgELT_ATTRIBUTE = *XML::Xercesc::SchemaSymbols_fgELT_ATTRIBUTE;
+*fgELT_ATTRIBUTEGROUP = *XML::Xercesc::SchemaSymbols_fgELT_ATTRIBUTEGROUP;
+*fgELT_CHOICE = *XML::Xercesc::SchemaSymbols_fgELT_CHOICE;
+*fgELT_COMPLEXTYPE = *XML::Xercesc::SchemaSymbols_fgELT_COMPLEXTYPE;
+*fgELT_CONTENT = *XML::Xercesc::SchemaSymbols_fgELT_CONTENT;
+*fgELT_DOCUMENTATION = *XML::Xercesc::SchemaSymbols_fgELT_DOCUMENTATION;
+*fgELT_DURATION = *XML::Xercesc::SchemaSymbols_fgELT_DURATION;
+*fgELT_ELEMENT = *XML::Xercesc::SchemaSymbols_fgELT_ELEMENT;
+*fgELT_ENCODING = *XML::Xercesc::SchemaSymbols_fgELT_ENCODING;
+*fgELT_ENUMERATION = *XML::Xercesc::SchemaSymbols_fgELT_ENUMERATION;
+*fgELT_FIELD = *XML::Xercesc::SchemaSymbols_fgELT_FIELD;
+*fgELT_WHITESPACE = *XML::Xercesc::SchemaSymbols_fgELT_WHITESPACE;
+*fgELT_GROUP = *XML::Xercesc::SchemaSymbols_fgELT_GROUP;
+*fgELT_IMPORT = *XML::Xercesc::SchemaSymbols_fgELT_IMPORT;
+*fgELT_INCLUDE = *XML::Xercesc::SchemaSymbols_fgELT_INCLUDE;
+*fgELT_REDEFINE = *XML::Xercesc::SchemaSymbols_fgELT_REDEFINE;
+*fgELT_KEY = *XML::Xercesc::SchemaSymbols_fgELT_KEY;
+*fgELT_KEYREF = *XML::Xercesc::SchemaSymbols_fgELT_KEYREF;
+*fgELT_LENGTH = *XML::Xercesc::SchemaSymbols_fgELT_LENGTH;
+*fgELT_MAXEXCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MAXEXCLUSIVE;
+*fgELT_MAXINCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MAXINCLUSIVE;
+*fgELT_MAXLENGTH = *XML::Xercesc::SchemaSymbols_fgELT_MAXLENGTH;
+*fgELT_MINEXCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MINEXCLUSIVE;
+*fgELT_MININCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MININCLUSIVE;
+*fgELT_MINLENGTH = *XML::Xercesc::SchemaSymbols_fgELT_MINLENGTH;
+*fgELT_NOTATION = *XML::Xercesc::SchemaSymbols_fgELT_NOTATION;
+*fgELT_PATTERN = *XML::Xercesc::SchemaSymbols_fgELT_PATTERN;
+*fgELT_PERIOD = *XML::Xercesc::SchemaSymbols_fgELT_PERIOD;
+*fgELT_TOTALDIGITS = *XML::Xercesc::SchemaSymbols_fgELT_TOTALDIGITS;
+*fgELT_FRACTIONDIGITS = *XML::Xercesc::SchemaSymbols_fgELT_FRACTIONDIGITS;
+*fgELT_SCHEMA = *XML::Xercesc::SchemaSymbols_fgELT_SCHEMA;
+*fgELT_SELECTOR = *XML::Xercesc::SchemaSymbols_fgELT_SELECTOR;
+*fgELT_SEQUENCE = *XML::Xercesc::SchemaSymbols_fgELT_SEQUENCE;
+*fgELT_SIMPLETYPE = *XML::Xercesc::SchemaSymbols_fgELT_SIMPLETYPE;
+*fgELT_UNION = *XML::Xercesc::SchemaSymbols_fgELT_UNION;
+*fgELT_LIST = *XML::Xercesc::SchemaSymbols_fgELT_LIST;
+*fgELT_UNIQUE = *XML::Xercesc::SchemaSymbols_fgELT_UNIQUE;
+*fgELT_COMPLEXCONTENT = *XML::Xercesc::SchemaSymbols_fgELT_COMPLEXCONTENT;
+*fgELT_SIMPLECONTENT = *XML::Xercesc::SchemaSymbols_fgELT_SIMPLECONTENT;
+*fgELT_RESTRICTION = *XML::Xercesc::SchemaSymbols_fgELT_RESTRICTION;
+*fgELT_EXTENSION = *XML::Xercesc::SchemaSymbols_fgELT_EXTENSION;
+*fgATT_ABSTRACT = *XML::Xercesc::SchemaSymbols_fgATT_ABSTRACT;
+*fgATT_ATTRIBUTEFORMDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_ATTRIBUTEFORMDEFAULT;
+*fgATT_BASE = *XML::Xercesc::SchemaSymbols_fgATT_BASE;
+*fgATT_ITEMTYPE = *XML::Xercesc::SchemaSymbols_fgATT_ITEMTYPE;
+*fgATT_MEMBERTYPES = *XML::Xercesc::SchemaSymbols_fgATT_MEMBERTYPES;
+*fgATT_BLOCK = *XML::Xercesc::SchemaSymbols_fgATT_BLOCK;
+*fgATT_BLOCKDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_BLOCKDEFAULT;
+*fgATT_DEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_DEFAULT;
+*fgATT_ELEMENTFORMDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_ELEMENTFORMDEFAULT;
+*fgATT_SUBSTITUTIONGROUP = *XML::Xercesc::SchemaSymbols_fgATT_SUBSTITUTIONGROUP;
+*fgATT_FINAL = *XML::Xercesc::SchemaSymbols_fgATT_FINAL;
+*fgATT_FINALDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_FINALDEFAULT;
+*fgATT_FIXED = *XML::Xercesc::SchemaSymbols_fgATT_FIXED;
+*fgATT_FORM = *XML::Xercesc::SchemaSymbols_fgATT_FORM;
+*fgATT_ID = *XML::Xercesc::SchemaSymbols_fgATT_ID;
+*fgATT_MAXOCCURS = *XML::Xercesc::SchemaSymbols_fgATT_MAXOCCURS;
+*fgATT_MINOCCURS = *XML::Xercesc::SchemaSymbols_fgATT_MINOCCURS;
+*fgATT_NAME = *XML::Xercesc::SchemaSymbols_fgATT_NAME;
+*fgATT_NAMESPACE = *XML::Xercesc::SchemaSymbols_fgATT_NAMESPACE;
+*fgATT_NILL = *XML::Xercesc::SchemaSymbols_fgATT_NILL;
+*fgATT_NILLABLE = *XML::Xercesc::SchemaSymbols_fgATT_NILLABLE;
+*fgATT_PROCESSCONTENTS = *XML::Xercesc::SchemaSymbols_fgATT_PROCESSCONTENTS;
+*fgATT_REF = *XML::Xercesc::SchemaSymbols_fgATT_REF;
+*fgATT_REFER = *XML::Xercesc::SchemaSymbols_fgATT_REFER;
+*fgATT_SCHEMALOCATION = *XML::Xercesc::SchemaSymbols_fgATT_SCHEMALOCATION;
+*fgATT_SOURCE = *XML::Xercesc::SchemaSymbols_fgATT_SOURCE;
+*fgATT_SYSTEM = *XML::Xercesc::SchemaSymbols_fgATT_SYSTEM;
+*fgATT_PUBLIC = *XML::Xercesc::SchemaSymbols_fgATT_PUBLIC;
+*fgATT_TARGETNAMESPACE = *XML::Xercesc::SchemaSymbols_fgATT_TARGETNAMESPACE;
+*fgATT_TYPE = *XML::Xercesc::SchemaSymbols_fgATT_TYPE;
+*fgATT_USE = *XML::Xercesc::SchemaSymbols_fgATT_USE;
+*fgATT_VALUE = *XML::Xercesc::SchemaSymbols_fgATT_VALUE;
+*fgATT_MIXED = *XML::Xercesc::SchemaSymbols_fgATT_MIXED;
+*fgATT_VERSION = *XML::Xercesc::SchemaSymbols_fgATT_VERSION;
+*fgATT_XPATH = *XML::Xercesc::SchemaSymbols_fgATT_XPATH;
+*fgATTVAL_TWOPOUNDANY = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDANY;
+*fgATTVAL_TWOPOUNDLOCAL = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDLOCAL;
+*fgATTVAL_TWOPOUNDOTHER = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDOTHER;
+*fgATTVAL_TWOPOUNDTRAGETNAMESPACE = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDTRAGETNAMESPACE;
+*fgATTVAL_POUNDALL = *XML::Xercesc::SchemaSymbols_fgATTVAL_POUNDALL;
+*fgATTVAL_BASE64 = *XML::Xercesc::SchemaSymbols_fgATTVAL_BASE64;
+*fgATTVAL_BOOLEAN = *XML::Xercesc::SchemaSymbols_fgATTVAL_BOOLEAN;
+*fgATTVAL_DEFAULT = *XML::Xercesc::SchemaSymbols_fgATTVAL_DEFAULT;
+*fgATTVAL_ELEMENTONLY = *XML::Xercesc::SchemaSymbols_fgATTVAL_ELEMENTONLY;
+*fgATTVAL_EMPTY = *XML::Xercesc::SchemaSymbols_fgATTVAL_EMPTY;
+*fgATTVAL_EXTENSION = *XML::Xercesc::SchemaSymbols_fgATTVAL_EXTENSION;
+*fgATTVAL_FALSE = *XML::Xercesc::SchemaSymbols_fgATTVAL_FALSE;
+*fgATTVAL_FIXED = *XML::Xercesc::SchemaSymbols_fgATTVAL_FIXED;
+*fgATTVAL_HEX = *XML::Xercesc::SchemaSymbols_fgATTVAL_HEX;
+*fgATTVAL_ID = *XML::Xercesc::SchemaSymbols_fgATTVAL_ID;
+*fgATTVAL_LAX = *XML::Xercesc::SchemaSymbols_fgATTVAL_LAX;
+*fgATTVAL_MAXLENGTH = *XML::Xercesc::SchemaSymbols_fgATTVAL_MAXLENGTH;
+*fgATTVAL_MINLENGTH = *XML::Xercesc::SchemaSymbols_fgATTVAL_MINLENGTH;
+*fgATTVAL_MIXED = *XML::Xercesc::SchemaSymbols_fgATTVAL_MIXED;
+*fgATTVAL_NCNAME = *XML::Xercesc::SchemaSymbols_fgATTVAL_NCNAME;
+*fgATTVAL_OPTIONAL = *XML::Xercesc::SchemaSymbols_fgATTVAL_OPTIONAL;
+*fgATTVAL_PROHIBITED = *XML::Xercesc::SchemaSymbols_fgATTVAL_PROHIBITED;
+*fgATTVAL_QNAME = *XML::Xercesc::SchemaSymbols_fgATTVAL_QNAME;
+*fgATTVAL_QUALIFIED = *XML::Xercesc::SchemaSymbols_fgATTVAL_QUALIFIED;
+*fgATTVAL_REQUIRED = *XML::Xercesc::SchemaSymbols_fgATTVAL_REQUIRED;
+*fgATTVAL_RESTRICTION = *XML::Xercesc::SchemaSymbols_fgATTVAL_RESTRICTION;
+*fgATTVAL_SKIP = *XML::Xercesc::SchemaSymbols_fgATTVAL_SKIP;
+*fgATTVAL_STRICT = *XML::Xercesc::SchemaSymbols_fgATTVAL_STRICT;
+*fgATTVAL_STRING = *XML::Xercesc::SchemaSymbols_fgATTVAL_STRING;
+*fgATTVAL_TEXTONLY = *XML::Xercesc::SchemaSymbols_fgATTVAL_TEXTONLY;
+*fgATTVAL_TIMEDURATION = *XML::Xercesc::SchemaSymbols_fgATTVAL_TIMEDURATION;
+*fgATTVAL_TRUE = *XML::Xercesc::SchemaSymbols_fgATTVAL_TRUE;
+*fgATTVAL_UNQUALIFIED = *XML::Xercesc::SchemaSymbols_fgATTVAL_UNQUALIFIED;
+*fgATTVAL_URI = *XML::Xercesc::SchemaSymbols_fgATTVAL_URI;
+*fgATTVAL_URIREFERENCE = *XML::Xercesc::SchemaSymbols_fgATTVAL_URIREFERENCE;
+*fgATTVAL_SUBSTITUTIONGROUP = *XML::Xercesc::SchemaSymbols_fgATTVAL_SUBSTITUTIONGROUP;
+*fgATTVAL_SUBSTITUTION = *XML::Xercesc::SchemaSymbols_fgATTVAL_SUBSTITUTION;
+*fgATTVAL_ANYTYPE = *XML::Xercesc::SchemaSymbols_fgATTVAL_ANYTYPE;
+*fgWS_PRESERVE = *XML::Xercesc::SchemaSymbols_fgWS_PRESERVE;
+*fgWS_COLLAPSE = *XML::Xercesc::SchemaSymbols_fgWS_COLLAPSE;
+*fgWS_REPLACE = *XML::Xercesc::SchemaSymbols_fgWS_REPLACE;
+*fgDT_STRING = *XML::Xercesc::SchemaSymbols_fgDT_STRING;
+*fgDT_TOKEN = *XML::Xercesc::SchemaSymbols_fgDT_TOKEN;
+*fgDT_LANGUAGE = *XML::Xercesc::SchemaSymbols_fgDT_LANGUAGE;
+*fgDT_NAME = *XML::Xercesc::SchemaSymbols_fgDT_NAME;
+*fgDT_NCNAME = *XML::Xercesc::SchemaSymbols_fgDT_NCNAME;
+*fgDT_INTEGER = *XML::Xercesc::SchemaSymbols_fgDT_INTEGER;
+*fgDT_DECIMAL = *XML::Xercesc::SchemaSymbols_fgDT_DECIMAL;
+*fgDT_BOOLEAN = *XML::Xercesc::SchemaSymbols_fgDT_BOOLEAN;
+*fgDT_NONPOSITIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_NONPOSITIVEINTEGER;
+*fgDT_NEGATIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_NEGATIVEINTEGER;
+*fgDT_LONG = *XML::Xercesc::SchemaSymbols_fgDT_LONG;
+*fgDT_INT = *XML::Xercesc::SchemaSymbols_fgDT_INT;
+*fgDT_SHORT = *XML::Xercesc::SchemaSymbols_fgDT_SHORT;
+*fgDT_BYTE = *XML::Xercesc::SchemaSymbols_fgDT_BYTE;
+*fgDT_NONNEGATIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_NONNEGATIVEINTEGER;
+*fgDT_ULONG = *XML::Xercesc::SchemaSymbols_fgDT_ULONG;
+*fgDT_UINT = *XML::Xercesc::SchemaSymbols_fgDT_UINT;
+*fgDT_USHORT = *XML::Xercesc::SchemaSymbols_fgDT_USHORT;
+*fgDT_UBYTE = *XML::Xercesc::SchemaSymbols_fgDT_UBYTE;
+*fgDT_POSITIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_POSITIVEINTEGER;
+*fgDT_DATETIME = *XML::Xercesc::SchemaSymbols_fgDT_DATETIME;
+*fgDT_DATE = *XML::Xercesc::SchemaSymbols_fgDT_DATE;
+*fgDT_TIME = *XML::Xercesc::SchemaSymbols_fgDT_TIME;
+*fgDT_DURATION = *XML::Xercesc::SchemaSymbols_fgDT_DURATION;
+*fgDT_DAY = *XML::Xercesc::SchemaSymbols_fgDT_DAY;
+*fgDT_MONTH = *XML::Xercesc::SchemaSymbols_fgDT_MONTH;
+*fgDT_MONTHDAY = *XML::Xercesc::SchemaSymbols_fgDT_MONTHDAY;
+*fgDT_YEAR = *XML::Xercesc::SchemaSymbols_fgDT_YEAR;
+*fgDT_YEARMONTH = *XML::Xercesc::SchemaSymbols_fgDT_YEARMONTH;
+*fgDT_BASE64BINARY = *XML::Xercesc::SchemaSymbols_fgDT_BASE64BINARY;
+*fgDT_HEXBINARY = *XML::Xercesc::SchemaSymbols_fgDT_HEXBINARY;
+*fgDT_FLOAT = *XML::Xercesc::SchemaSymbols_fgDT_FLOAT;
+*fgDT_DOUBLE = *XML::Xercesc::SchemaSymbols_fgDT_DOUBLE;
+*fgDT_URIREFERENCE = *XML::Xercesc::SchemaSymbols_fgDT_URIREFERENCE;
+*fgDT_ANYURI = *XML::Xercesc::SchemaSymbols_fgDT_ANYURI;
+*fgDT_QNAME = *XML::Xercesc::SchemaSymbols_fgDT_QNAME;
+*fgDT_NORMALIZEDSTRING = *XML::Xercesc::SchemaSymbols_fgDT_NORMALIZEDSTRING;
+*fgDT_ANYSIMPLETYPE = *XML::Xercesc::SchemaSymbols_fgDT_ANYSIMPLETYPE;
+*fgRegEx_XOption = *XML::Xercesc::SchemaSymbols_fgRegEx_XOption;
+*fgRedefIdentifier = *XML::Xercesc::SchemaSymbols_fgRedefIdentifier;
+*fgINT_MIN_VALUE = *XML::Xercesc::SchemaSymbols_fgINT_MIN_VALUE;
+*fgINT_MAX_VALUE = *XML::Xercesc::SchemaSymbols_fgINT_MAX_VALUE;
+*XSD_EMPTYSET = *XML::Xercesc::SchemaSymbols_XSD_EMPTYSET;
+*XSD_SUBSTITUTION = *XML::Xercesc::SchemaSymbols_XSD_SUBSTITUTION;
+*XSD_EXTENSION = *XML::Xercesc::SchemaSymbols_XSD_EXTENSION;
+*XSD_RESTRICTION = *XML::Xercesc::SchemaSymbols_XSD_RESTRICTION;
+*XSD_LIST = *XML::Xercesc::SchemaSymbols_XSD_LIST;
+*XSD_UNION = *XML::Xercesc::SchemaSymbols_XSD_UNION;
+*XSD_ENUMERATION = *XML::Xercesc::SchemaSymbols_XSD_ENUMERATION;
+*XSD_CHOICE = *XML::Xercesc::SchemaSymbols_XSD_CHOICE;
+*XSD_SEQUENCE = *XML::Xercesc::SchemaSymbols_XSD_SEQUENCE;
+*XSD_ALL = *XML::Xercesc::SchemaSymbols_XSD_ALL;
+*XSD_UNBOUNDED = *XML::Xercesc::SchemaSymbols_XSD_UNBOUNDED;
+*XSD_NILLABLE = *XML::Xercesc::SchemaSymbols_XSD_NILLABLE;
+*XSD_ABSTRACT = *XML::Xercesc::SchemaSymbols_XSD_ABSTRACT;
+*XSD_FIXED = *XML::Xercesc::SchemaSymbols_XSD_FIXED;
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_SchemaSymbols($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::PSVIUni ##############
+
+package XML::Xerces::PSVIUni;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*fgPsvColon = *XML::Xercesc::PSVIUni_fgPsvColon;
+*fgAllDeclarationsProcessed = *XML::Xercesc::PSVIUni_fgAllDeclarationsProcessed;
+*fgAttribute = *XML::Xercesc::PSVIUni_fgAttribute;
+*fgAttributes = *XML::Xercesc::PSVIUni_fgAttributes;
+*fgAttributeType = *XML::Xercesc::PSVIUni_fgAttributeType;
+*fgBaseURI = *XML::Xercesc::PSVIUni_fgBaseURI;
+*fgCharacter = *XML::Xercesc::PSVIUni_fgCharacter;
+*fgCharacterEncodingScheme = *XML::Xercesc::PSVIUni_fgCharacterEncodingScheme;
+*fgChildren = *XML::Xercesc::PSVIUni_fgChildren;
+*fgComment = *XML::Xercesc::PSVIUni_fgComment;
+*fgContent = *XML::Xercesc::PSVIUni_fgContent;
+*fgDocument = *XML::Xercesc::PSVIUni_fgDocument;
+*fgDocTypeDeclaration = *XML::Xercesc::PSVIUni_fgDocTypeDeclaration;
+*fgDocumentElement = *XML::Xercesc::PSVIUni_fgDocumentElement;
+*fgElement = *XML::Xercesc::PSVIUni_fgElement;
+*fgInScopeNamespaces = *XML::Xercesc::PSVIUni_fgInScopeNamespaces;
+*fgLocalName = *XML::Xercesc::PSVIUni_fgLocalName;
+*fgNamespace = *XML::Xercesc::PSVIUni_fgNamespace;
+*fgNamespaceAttributes = *XML::Xercesc::PSVIUni_fgNamespaceAttributes;
+*fgNamespaceName = *XML::Xercesc::PSVIUni_fgNamespaceName;
+*fgNormalizedValue = *XML::Xercesc::PSVIUni_fgNormalizedValue;
+*fgNotations = *XML::Xercesc::PSVIUni_fgNotations;
+*fgPrefix = *XML::Xercesc::PSVIUni_fgPrefix;
+*fgProcessingInstruction = *XML::Xercesc::PSVIUni_fgProcessingInstruction;
+*fgReferences = *XML::Xercesc::PSVIUni_fgReferences;
+*fgSpecified = *XML::Xercesc::PSVIUni_fgSpecified;
+*fgStandalone = *XML::Xercesc::PSVIUni_fgStandalone;
+*fgTarget = *XML::Xercesc::PSVIUni_fgTarget;
+*fgText = *XML::Xercesc::PSVIUni_fgText;
+*fgTextContent = *XML::Xercesc::PSVIUni_fgTextContent;
+*fgUnparsedEntities = *XML::Xercesc::PSVIUni_fgUnparsedEntities;
+*fgVersion = *XML::Xercesc::PSVIUni_fgVersion;
+*fgAbstract = *XML::Xercesc::PSVIUni_fgAbstract;
+*fgAnnotation = *XML::Xercesc::PSVIUni_fgAnnotation;
+*fgAnnotations = *XML::Xercesc::PSVIUni_fgAnnotations;
+*fgApplicationInformation = *XML::Xercesc::PSVIUni_fgApplicationInformation;
+*fgAttributeDeclaration = *XML::Xercesc::PSVIUni_fgAttributeDeclaration;
+*fgAttributeGroupDefinition = *XML::Xercesc::PSVIUni_fgAttributeGroupDefinition;
+*fgAttributeUse = *XML::Xercesc::PSVIUni_fgAttributeUse;
+*fgAttributeUses = *XML::Xercesc::PSVIUni_fgAttributeUses;
+*fgAttributeWildcard = *XML::Xercesc::PSVIUni_fgAttributeWildcard;
+*fgBaseTypeDefinition = *XML::Xercesc::PSVIUni_fgBaseTypeDefinition;
+*fgCanonicalRepresentation = *XML::Xercesc::PSVIUni_fgCanonicalRepresentation;
+*fgComplexTypeDefinition = *XML::Xercesc::PSVIUni_fgComplexTypeDefinition;
+*fgCompositor = *XML::Xercesc::PSVIUni_fgCompositor;
+*fgContentType = *XML::Xercesc::PSVIUni_fgContentType;
+*fgDeclaration = *XML::Xercesc::PSVIUni_fgDeclaration;
+*fgDerivationMethod = *XML::Xercesc::PSVIUni_fgDerivationMethod;
+*fgDisallowedSubstitutions = *XML::Xercesc::PSVIUni_fgDisallowedSubstitutions;
+*fgPsvDocument = *XML::Xercesc::PSVIUni_fgPsvDocument;
+*fgDocumentLocation = *XML::Xercesc::PSVIUni_fgDocumentLocation;
+*fgElementDeclaration = *XML::Xercesc::PSVIUni_fgElementDeclaration;
+*fgFacets = *XML::Xercesc::PSVIUni_fgFacets;
+*fgFacetFixed = *XML::Xercesc::PSVIUni_fgFacetFixed;
+*fgFields = *XML::Xercesc::PSVIUni_fgFields;
+*fgFinal = *XML::Xercesc::PSVIUni_fgFinal;
+*fgFundamentalFacets = *XML::Xercesc::PSVIUni_fgFundamentalFacets;
+*fgIdentityConstraintCategory = *XML::Xercesc::PSVIUni_fgIdentityConstraintCategory;
+*fgIdentityConstraintDefinition = *XML::Xercesc::PSVIUni_fgIdentityConstraintDefinition;
+*fgIdentityConstraintDefinitions = *XML::Xercesc::PSVIUni_fgIdentityConstraintDefinitions;
+*fgIdentityConstraintTable = *XML::Xercesc::PSVIUni_fgIdentityConstraintTable;
+*fgIdIdrefTable = *XML::Xercesc::PSVIUni_fgIdIdrefTable;
+*fgItemTypeDefinition = *XML::Xercesc::PSVIUni_fgItemTypeDefinition;
+*fgMaxOccurs = *XML::Xercesc::PSVIUni_fgMaxOccurs;
+*fgMemberTypeDefinition = *XML::Xercesc::PSVIUni_fgMemberTypeDefinition;
+*fgMemberTypeDefinitions = *XML::Xercesc::PSVIUni_fgMemberTypeDefinitions;
+*fgMinOccurs = *XML::Xercesc::PSVIUni_fgMinOccurs;
+*fgModelGroup = *XML::Xercesc::PSVIUni_fgModelGroup;
+*fgModelGroupDefinition = *XML::Xercesc::PSVIUni_fgModelGroupDefinition;
+*fgName = *XML::Xercesc::PSVIUni_fgName;
+*fgNamespaceConstraint = *XML::Xercesc::PSVIUni_fgNamespaceConstraint;
+*fgNamespaces = *XML::Xercesc::PSVIUni_fgNamespaces;
+*fgNamespaceSchemaInformation = *XML::Xercesc::PSVIUni_fgNamespaceSchemaInformation;
+*fgNil = *XML::Xercesc::PSVIUni_fgNil;
+*fgNillable = *XML::Xercesc::PSVIUni_fgNillable;
+*fgNotation = *XML::Xercesc::PSVIUni_fgNotation;
+*fgNotationDeclaration = *XML::Xercesc::PSVIUni_fgNotationDeclaration;
+*fgParticle = *XML::Xercesc::PSVIUni_fgParticle;
+*fgParticles = *XML::Xercesc::PSVIUni_fgParticles;
+*fgPrimitiveTypeDefinition = *XML::Xercesc::PSVIUni_fgPrimitiveTypeDefinition;
+*fgProcessContents = *XML::Xercesc::PSVIUni_fgProcessContents;
+*fgProhibitedSubstitutions = *XML::Xercesc::PSVIUni_fgProhibitedSubstitutions;
+*fgPublicIdentifier = *XML::Xercesc::PSVIUni_fgPublicIdentifier;
+*fgReferencedKey = *XML::Xercesc::PSVIUni_fgReferencedKey;
+*fgRequired = *XML::Xercesc::PSVIUni_fgRequired;
+*fgSchemaAnnotations = *XML::Xercesc::PSVIUni_fgSchemaAnnotations;
+*fgSchemaComponents = *XML::Xercesc::PSVIUni_fgSchemaComponents;
+*fgSchemaDefault = *XML::Xercesc::PSVIUni_fgSchemaDefault;
+*fgSchemaDocument = *XML::Xercesc::PSVIUni_fgSchemaDocument;
+*fgSchemaDocuments = *XML::Xercesc::PSVIUni_fgSchemaDocuments;
+*fgSchemaErrorCode = *XML::Xercesc::PSVIUni_fgSchemaErrorCode;
+*fgSchemaInformation = *XML::Xercesc::PSVIUni_fgSchemaInformation;
+*fgSchemaNamespace = *XML::Xercesc::PSVIUni_fgSchemaNamespace;
+*fgSchemaNormalizedValue = *XML::Xercesc::PSVIUni_fgSchemaNormalizedValue;
+*fgSchemaSpecified = *XML::Xercesc::PSVIUni_fgSchemaSpecified;
+*fgScope = *XML::Xercesc::PSVIUni_fgScope;
+*fgSelector = *XML::Xercesc::PSVIUni_fgSelector;
+*fgSimpleTypeDefinition = *XML::Xercesc::PSVIUni_fgSimpleTypeDefinition;
+*fgSubstitutionGroupAffiliation = *XML::Xercesc::PSVIUni_fgSubstitutionGroupAffiliation;
+*fgSubstitutionGroupExclusions = *XML::Xercesc::PSVIUni_fgSubstitutionGroupExclusions;
+*fgSystemIdentifier = *XML::Xercesc::PSVIUni_fgSystemIdentifier;
+*fgTargetNamespace = *XML::Xercesc::PSVIUni_fgTargetNamespace;
+*fgTerm = *XML::Xercesc::PSVIUni_fgTerm;
+*fgTypeDefinition = *XML::Xercesc::PSVIUni_fgTypeDefinition;
+*fgUserInformation = *XML::Xercesc::PSVIUni_fgUserInformation;
+*fgValidationAttempted = *XML::Xercesc::PSVIUni_fgValidationAttempted;
+*fgValidationContext = *XML::Xercesc::PSVIUni_fgValidationContext;
+*fgValidity = *XML::Xercesc::PSVIUni_fgValidity;
+*fgValue = *XML::Xercesc::PSVIUni_fgValue;
+*fgValueConstraint = *XML::Xercesc::PSVIUni_fgValueConstraint;
+*fgVariety = *XML::Xercesc::PSVIUni_fgVariety;
+*fgWildcard = *XML::Xercesc::PSVIUni_fgWildcard;
+*fgXpath = *XML::Xercesc::PSVIUni_fgXpath;
+*fgAll = *XML::Xercesc::PSVIUni_fgAll;
+*fgAny = *XML::Xercesc::PSVIUni_fgAny;
+*fgAppinfo = *XML::Xercesc::PSVIUni_fgAppinfo;
+*fgAtomic = *XML::Xercesc::PSVIUni_fgAtomic;
+*fgChoice = *XML::Xercesc::PSVIUni_fgChoice;
+*fgDefault = *XML::Xercesc::PSVIUni_fgDefault;
+*fgDocumentation = *XML::Xercesc::PSVIUni_fgDocumentation;
+*fgElementOnly = *XML::Xercesc::PSVIUni_fgElementOnly;
+*fgEmpty = *XML::Xercesc::PSVIUni_fgEmpty;
+*fgExtension = *XML::Xercesc::PSVIUni_fgExtension;
+*fgFalse = *XML::Xercesc::PSVIUni_fgFalse;
+*fgFull = *XML::Xercesc::PSVIUni_fgFull;
+*fgGlobal = *XML::Xercesc::PSVIUni_fgGlobal;
+*fgInfoset = *XML::Xercesc::PSVIUni_fgInfoset;
+*fgInvalid = *XML::Xercesc::PSVIUni_fgInvalid;
+*fgKey = *XML::Xercesc::PSVIUni_fgKey;
+*fgKeyref = *XML::Xercesc::PSVIUni_fgKeyref;
+*fgLax = *XML::Xercesc::PSVIUni_fgLax;
+*fgList = *XML::Xercesc::PSVIUni_fgList;
+*fgLocal = *XML::Xercesc::PSVIUni_fgLocal;
+*fgMixed = *XML::Xercesc::PSVIUni_fgMixed;
+*fgNone = *XML::Xercesc::PSVIUni_fgNone;
+*fgNotKnown = *XML::Xercesc::PSVIUni_fgNotKnown;
+*fgNsNamespace = *XML::Xercesc::PSVIUni_fgNsNamespace;
+*fgOnePointZero = *XML::Xercesc::PSVIUni_fgOnePointZero;
+*fgPartial = *XML::Xercesc::PSVIUni_fgPartial;
+*fgRestrict = *XML::Xercesc::PSVIUni_fgRestrict;
+*fgRestriction = *XML::Xercesc::PSVIUni_fgRestriction;
+*fgSchema = *XML::Xercesc::PSVIUni_fgSchema;
+*fgSequence = *XML::Xercesc::PSVIUni_fgSequence;
+*fgSimple = *XML::Xercesc::PSVIUni_fgSimple;
+*fgSkip = *XML::Xercesc::PSVIUni_fgSkip;
+*fgStrict = *XML::Xercesc::PSVIUni_fgStrict;
+*fgSubstitution = *XML::Xercesc::PSVIUni_fgSubstitution;
+*fgTotal = *XML::Xercesc::PSVIUni_fgTotal;
+*fgTrue = *XML::Xercesc::PSVIUni_fgTrue;
+*fgUnbounded = *XML::Xercesc::PSVIUni_fgUnbounded;
+*fgUnion = *XML::Xercesc::PSVIUni_fgUnion;
+*fgUnique = *XML::Xercesc::PSVIUni_fgUnique;
+*fgUnknown = *XML::Xercesc::PSVIUni_fgUnknown;
+*fgValid = *XML::Xercesc::PSVIUni_fgValid;
+*fgVCFixed = *XML::Xercesc::PSVIUni_fgVCFixed;
+*fgXMLChNull = *XML::Xercesc::PSVIUni_fgXMLChNull;
+*fgAg = *XML::Xercesc::PSVIUni_fgAg;
+*fgAnnot = *XML::Xercesc::PSVIUni_fgAnnot;
+*fgAttr = *XML::Xercesc::PSVIUni_fgAttr;
+*fgAu = *XML::Xercesc::PSVIUni_fgAu;
+*fgElt = *XML::Xercesc::PSVIUni_fgElt;
+*fgIdc = *XML::Xercesc::PSVIUni_fgIdc;
+*fgMg = *XML::Xercesc::PSVIUni_fgMg;
+*fgNot = *XML::Xercesc::PSVIUni_fgNot;
+*fgType = *XML::Xercesc::PSVIUni_fgType;
+*fgBounded = *XML::Xercesc::PSVIUni_fgBounded;
+*fgCardinality = *XML::Xercesc::PSVIUni_fgCardinality;
+*fgEnumeration = *XML::Xercesc::PSVIUni_fgEnumeration;
+*fgFractionDigits = *XML::Xercesc::PSVIUni_fgFractionDigits;
+*fgLength = *XML::Xercesc::PSVIUni_fgLength;
+*fgMaxExclusive = *XML::Xercesc::PSVIUni_fgMaxExclusive;
+*fgMaxInclusive = *XML::Xercesc::PSVIUni_fgMaxInclusive;
+*fgMaxLength = *XML::Xercesc::PSVIUni_fgMaxLength;
+*fgMinExclusive = *XML::Xercesc::PSVIUni_fgMinExclusive;
+*fgMinInclusive = *XML::Xercesc::PSVIUni_fgMinInclusive;
+*fgMinLength = *XML::Xercesc::PSVIUni_fgMinLength;
+*fgNumeric = *XML::Xercesc::PSVIUni_fgNumeric;
+*fgOrdered = *XML::Xercesc::PSVIUni_fgOrdered;
+*fgPattern = *XML::Xercesc::PSVIUni_fgPattern;
+*fgTotalDigits = *XML::Xercesc::PSVIUni_fgTotalDigits;
+*fgWhiteSpace = *XML::Xercesc::PSVIUni_fgWhiteSpace;
+*fgNamespaceInfoset = *XML::Xercesc::PSVIUni_fgNamespaceInfoset;
+*fgXsi = *XML::Xercesc::PSVIUni_fgXsi;
+*fgNamespaceInstance = *XML::Xercesc::PSVIUni_fgNamespaceInstance;
+*fgPsv = *XML::Xercesc::PSVIUni_fgPsv;
+*fgNamespacePsvi = *XML::Xercesc::PSVIUni_fgNamespacePsvi;
+*fgXml = *XML::Xercesc::PSVIUni_fgXml;
+*fgNamespaceXmlSchema = *XML::Xercesc::PSVIUni_fgNamespaceXmlSchema;
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_PSVIUni(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_PSVIUni($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::XMLDeleter ##############
 
 package XML::Xerces::XMLDeleter;
@@ -864,16 +1505,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
-*fgFileMgr = *XML::Xercesc::XMLPlatformUtils_fgFileMgr;
-*fgMutexMgr = *XML::Xercesc::XMLPlatformUtils_fgMutexMgr;
-*fgAtomicOpMgr = *XML::Xercesc::XMLPlatformUtils_fgAtomicOpMgr;
-*fgXMLChBigEndian = *XML::Xercesc::XMLPlatformUtils_fgXMLChBigEndian;
 *Initialize = *XML::Xercesc::XMLPlatformUtils_Initialize;
 *Terminate = *XML::Xercesc::XMLPlatformUtils_Terminate;
-*panic = *XML::Xercesc::XMLPlatformUtils_panic;
-*makeFileMgr = *XML::Xercesc::XMLPlatformUtils_makeFileMgr;
-*makeMutexMgr = *XML::Xercesc::XMLPlatformUtils_makeMutexMgr;
-*makeAtomicOpMgr = *XML::Xercesc::XMLPlatformUtils_makeAtomicOpMgr;
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
@@ -1497,281 +2130,6 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::XMLUni ##############
-
-package XML::Xerces::XMLUni;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-*fgAnyString = *XML::Xercesc::XMLUni_fgAnyString;
-*fgAttListString = *XML::Xercesc::XMLUni_fgAttListString;
-*fgCommentString = *XML::Xercesc::XMLUni_fgCommentString;
-*fgCDATAString = *XML::Xercesc::XMLUni_fgCDATAString;
-*fgDefaultString = *XML::Xercesc::XMLUni_fgDefaultString;
-*fgDocTypeString = *XML::Xercesc::XMLUni_fgDocTypeString;
-*fgEBCDICEncodingString = *XML::Xercesc::XMLUni_fgEBCDICEncodingString;
-*fgElemString = *XML::Xercesc::XMLUni_fgElemString;
-*fgEmptyString = *XML::Xercesc::XMLUni_fgEmptyString;
-*fgEncodingString = *XML::Xercesc::XMLUni_fgEncodingString;
-*fgEntitString = *XML::Xercesc::XMLUni_fgEntitString;
-*fgEntityString = *XML::Xercesc::XMLUni_fgEntityString;
-*fgEntitiesString = *XML::Xercesc::XMLUni_fgEntitiesString;
-*fgEnumerationString = *XML::Xercesc::XMLUni_fgEnumerationString;
-*fgExceptDomain = *XML::Xercesc::XMLUni_fgExceptDomain;
-*fgFixedString = *XML::Xercesc::XMLUni_fgFixedString;
-*fgIBM037EncodingString = *XML::Xercesc::XMLUni_fgIBM037EncodingString;
-*fgIBM037EncodingString2 = *XML::Xercesc::XMLUni_fgIBM037EncodingString2;
-*fgIBM1047EncodingString = *XML::Xercesc::XMLUni_fgIBM1047EncodingString;
-*fgIBM1047EncodingString2 = *XML::Xercesc::XMLUni_fgIBM1047EncodingString2;
-*fgIBM1140EncodingString = *XML::Xercesc::XMLUni_fgIBM1140EncodingString;
-*fgIBM1140EncodingString2 = *XML::Xercesc::XMLUni_fgIBM1140EncodingString2;
-*fgIBM1140EncodingString3 = *XML::Xercesc::XMLUni_fgIBM1140EncodingString3;
-*fgIBM1140EncodingString4 = *XML::Xercesc::XMLUni_fgIBM1140EncodingString4;
-*fgIESString = *XML::Xercesc::XMLUni_fgIESString;
-*fgIDString = *XML::Xercesc::XMLUni_fgIDString;
-*fgIDRefString = *XML::Xercesc::XMLUni_fgIDRefString;
-*fgIDRefsString = *XML::Xercesc::XMLUni_fgIDRefsString;
-*fgImpliedString = *XML::Xercesc::XMLUni_fgImpliedString;
-*fgIgnoreString = *XML::Xercesc::XMLUni_fgIgnoreString;
-*fgIncludeString = *XML::Xercesc::XMLUni_fgIncludeString;
-*fgISO88591EncodingString = *XML::Xercesc::XMLUni_fgISO88591EncodingString;
-*fgISO88591EncodingString2 = *XML::Xercesc::XMLUni_fgISO88591EncodingString2;
-*fgISO88591EncodingString3 = *XML::Xercesc::XMLUni_fgISO88591EncodingString3;
-*fgISO88591EncodingString4 = *XML::Xercesc::XMLUni_fgISO88591EncodingString4;
-*fgISO88591EncodingString5 = *XML::Xercesc::XMLUni_fgISO88591EncodingString5;
-*fgISO88591EncodingString6 = *XML::Xercesc::XMLUni_fgISO88591EncodingString6;
-*fgISO88591EncodingString7 = *XML::Xercesc::XMLUni_fgISO88591EncodingString7;
-*fgISO88591EncodingString8 = *XML::Xercesc::XMLUni_fgISO88591EncodingString8;
-*fgISO88591EncodingString9 = *XML::Xercesc::XMLUni_fgISO88591EncodingString9;
-*fgISO88591EncodingString10 = *XML::Xercesc::XMLUni_fgISO88591EncodingString10;
-*fgISO88591EncodingString11 = *XML::Xercesc::XMLUni_fgISO88591EncodingString11;
-*fgISO88591EncodingString12 = *XML::Xercesc::XMLUni_fgISO88591EncodingString12;
-*fgLocalHostString = *XML::Xercesc::XMLUni_fgLocalHostString;
-*fgNoString = *XML::Xercesc::XMLUni_fgNoString;
-*fgNotationString = *XML::Xercesc::XMLUni_fgNotationString;
-*fgNDATAString = *XML::Xercesc::XMLUni_fgNDATAString;
-*fgNmTokenString = *XML::Xercesc::XMLUni_fgNmTokenString;
-*fgNmTokensString = *XML::Xercesc::XMLUni_fgNmTokensString;
-*fgPCDATAString = *XML::Xercesc::XMLUni_fgPCDATAString;
-*fgPIString = *XML::Xercesc::XMLUni_fgPIString;
-*fgPubIDString = *XML::Xercesc::XMLUni_fgPubIDString;
-*fgRefString = *XML::Xercesc::XMLUni_fgRefString;
-*fgRequiredString = *XML::Xercesc::XMLUni_fgRequiredString;
-*fgStandaloneString = *XML::Xercesc::XMLUni_fgStandaloneString;
-*fgVersion1_0 = *XML::Xercesc::XMLUni_fgVersion1_0;
-*fgVersion1_1 = *XML::Xercesc::XMLUni_fgVersion1_1;
-*fgSysIDString = *XML::Xercesc::XMLUni_fgSysIDString;
-*fgUnknownURIName = *XML::Xercesc::XMLUni_fgUnknownURIName;
-*fgUCS4EncodingString = *XML::Xercesc::XMLUni_fgUCS4EncodingString;
-*fgUCS4EncodingString2 = *XML::Xercesc::XMLUni_fgUCS4EncodingString2;
-*fgUCS4EncodingString3 = *XML::Xercesc::XMLUni_fgUCS4EncodingString3;
-*fgUCS4BEncodingString = *XML::Xercesc::XMLUni_fgUCS4BEncodingString;
-*fgUCS4BEncodingString2 = *XML::Xercesc::XMLUni_fgUCS4BEncodingString2;
-*fgUCS4LEncodingString = *XML::Xercesc::XMLUni_fgUCS4LEncodingString;
-*fgUCS4LEncodingString2 = *XML::Xercesc::XMLUni_fgUCS4LEncodingString2;
-*fgUSASCIIEncodingString = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString;
-*fgUSASCIIEncodingString2 = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString2;
-*fgUSASCIIEncodingString3 = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString3;
-*fgUSASCIIEncodingString4 = *XML::Xercesc::XMLUni_fgUSASCIIEncodingString4;
-*fgUTF8EncodingString = *XML::Xercesc::XMLUni_fgUTF8EncodingString;
-*fgUTF8EncodingString2 = *XML::Xercesc::XMLUni_fgUTF8EncodingString2;
-*fgUTF16EncodingString = *XML::Xercesc::XMLUni_fgUTF16EncodingString;
-*fgUTF16EncodingString2 = *XML::Xercesc::XMLUni_fgUTF16EncodingString2;
-*fgUTF16EncodingString3 = *XML::Xercesc::XMLUni_fgUTF16EncodingString3;
-*fgUTF16EncodingString4 = *XML::Xercesc::XMLUni_fgUTF16EncodingString4;
-*fgUTF16EncodingString5 = *XML::Xercesc::XMLUni_fgUTF16EncodingString5;
-*fgUTF16EncodingString6 = *XML::Xercesc::XMLUni_fgUTF16EncodingString6;
-*fgUTF16EncodingString7 = *XML::Xercesc::XMLUni_fgUTF16EncodingString7;
-*fgUTF16BEncodingString = *XML::Xercesc::XMLUni_fgUTF16BEncodingString;
-*fgUTF16BEncodingString2 = *XML::Xercesc::XMLUni_fgUTF16BEncodingString2;
-*fgUTF16LEncodingString = *XML::Xercesc::XMLUni_fgUTF16LEncodingString;
-*fgUTF16LEncodingString2 = *XML::Xercesc::XMLUni_fgUTF16LEncodingString2;
-*fgVersionString = *XML::Xercesc::XMLUni_fgVersionString;
-*fgValidityDomain = *XML::Xercesc::XMLUni_fgValidityDomain;
-*fgWin1252EncodingString = *XML::Xercesc::XMLUni_fgWin1252EncodingString;
-*fgXMLChEncodingString = *XML::Xercesc::XMLUni_fgXMLChEncodingString;
-*fgXMLDOMMsgDomain = *XML::Xercesc::XMLUni_fgXMLDOMMsgDomain;
-*fgXMLString = *XML::Xercesc::XMLUni_fgXMLString;
-*fgXMLStringSpace = *XML::Xercesc::XMLUni_fgXMLStringSpace;
-*fgXMLStringHTab = *XML::Xercesc::XMLUni_fgXMLStringHTab;
-*fgXMLStringCR = *XML::Xercesc::XMLUni_fgXMLStringCR;
-*fgXMLStringLF = *XML::Xercesc::XMLUni_fgXMLStringLF;
-*fgXMLStringSpaceU = *XML::Xercesc::XMLUni_fgXMLStringSpaceU;
-*fgXMLStringHTabU = *XML::Xercesc::XMLUni_fgXMLStringHTabU;
-*fgXMLStringCRU = *XML::Xercesc::XMLUni_fgXMLStringCRU;
-*fgXMLStringLFU = *XML::Xercesc::XMLUni_fgXMLStringLFU;
-*fgXMLDeclString = *XML::Xercesc::XMLUni_fgXMLDeclString;
-*fgXMLDeclStringSpace = *XML::Xercesc::XMLUni_fgXMLDeclStringSpace;
-*fgXMLDeclStringHTab = *XML::Xercesc::XMLUni_fgXMLDeclStringHTab;
-*fgXMLDeclStringLF = *XML::Xercesc::XMLUni_fgXMLDeclStringLF;
-*fgXMLDeclStringCR = *XML::Xercesc::XMLUni_fgXMLDeclStringCR;
-*fgXMLDeclStringSpaceU = *XML::Xercesc::XMLUni_fgXMLDeclStringSpaceU;
-*fgXMLDeclStringHTabU = *XML::Xercesc::XMLUni_fgXMLDeclStringHTabU;
-*fgXMLDeclStringLFU = *XML::Xercesc::XMLUni_fgXMLDeclStringLFU;
-*fgXMLDeclStringCRU = *XML::Xercesc::XMLUni_fgXMLDeclStringCRU;
-*fgXMLNSString = *XML::Xercesc::XMLUni_fgXMLNSString;
-*fgXMLNSColonString = *XML::Xercesc::XMLUni_fgXMLNSColonString;
-*fgXMLNSURIName = *XML::Xercesc::XMLUni_fgXMLNSURIName;
-*fgXMLErrDomain = *XML::Xercesc::XMLUni_fgXMLErrDomain;
-*fgXMLURIName = *XML::Xercesc::XMLUni_fgXMLURIName;
-*fgInfosetURIName = *XML::Xercesc::XMLUni_fgInfosetURIName;
-*fgYesString = *XML::Xercesc::XMLUni_fgYesString;
-*fgZeroLenString = *XML::Xercesc::XMLUni_fgZeroLenString;
-*fgDTDEntityString = *XML::Xercesc::XMLUni_fgDTDEntityString;
-*fgAmp = *XML::Xercesc::XMLUni_fgAmp;
-*fgLT = *XML::Xercesc::XMLUni_fgLT;
-*fgGT = *XML::Xercesc::XMLUni_fgGT;
-*fgQuot = *XML::Xercesc::XMLUni_fgQuot;
-*fgApos = *XML::Xercesc::XMLUni_fgApos;
-*fgWFXMLScanner = *XML::Xercesc::XMLUni_fgWFXMLScanner;
-*fgIGXMLScanner = *XML::Xercesc::XMLUni_fgIGXMLScanner;
-*fgSGXMLScanner = *XML::Xercesc::XMLUni_fgSGXMLScanner;
-*fgDGXMLScanner = *XML::Xercesc::XMLUni_fgDGXMLScanner;
-*fgXSAXMLScanner = *XML::Xercesc::XMLUni_fgXSAXMLScanner;
-*fgCDataStart = *XML::Xercesc::XMLUni_fgCDataStart;
-*fgCDataEnd = *XML::Xercesc::XMLUni_fgCDataEnd;
-*fgArrayIndexOutOfBoundsException_Name = *XML::Xercesc::XMLUni_fgArrayIndexOutOfBoundsException_Name;
-*fgEmptyStackException_Name = *XML::Xercesc::XMLUni_fgEmptyStackException_Name;
-*fgIllegalArgumentException_Name = *XML::Xercesc::XMLUni_fgIllegalArgumentException_Name;
-*fgInvalidCastException_Name = *XML::Xercesc::XMLUni_fgInvalidCastException_Name;
-*fgIOException_Name = *XML::Xercesc::XMLUni_fgIOException_Name;
-*fgNoSuchElementException_Name = *XML::Xercesc::XMLUni_fgNoSuchElementException_Name;
-*fgNullPointerException_Name = *XML::Xercesc::XMLUni_fgNullPointerException_Name;
-*fgXMLPlatformUtilsException_Name = *XML::Xercesc::XMLUni_fgXMLPlatformUtilsException_Name;
-*fgRuntimeException_Name = *XML::Xercesc::XMLUni_fgRuntimeException_Name;
-*fgTranscodingException_Name = *XML::Xercesc::XMLUni_fgTranscodingException_Name;
-*fgUnexpectedEOFException_Name = *XML::Xercesc::XMLUni_fgUnexpectedEOFException_Name;
-*fgUnsupportedEncodingException_Name = *XML::Xercesc::XMLUni_fgUnsupportedEncodingException_Name;
-*fgUTFDataFormatException_Name = *XML::Xercesc::XMLUni_fgUTFDataFormatException_Name;
-*fgNetAccessorException_Name = *XML::Xercesc::XMLUni_fgNetAccessorException_Name;
-*fgMalformedURLException_Name = *XML::Xercesc::XMLUni_fgMalformedURLException_Name;
-*fgNumberFormatException_Name = *XML::Xercesc::XMLUni_fgNumberFormatException_Name;
-*fgParseException_Name = *XML::Xercesc::XMLUni_fgParseException_Name;
-*fgInvalidDatatypeFacetException_Name = *XML::Xercesc::XMLUni_fgInvalidDatatypeFacetException_Name;
-*fgInvalidDatatypeValueException_Name = *XML::Xercesc::XMLUni_fgInvalidDatatypeValueException_Name;
-*fgSchemaDateTimeException_Name = *XML::Xercesc::XMLUni_fgSchemaDateTimeException_Name;
-*fgXPathException_Name = *XML::Xercesc::XMLUni_fgXPathException_Name;
-*fgXSerializationException_Name = *XML::Xercesc::XMLUni_fgXSerializationException_Name;
-*fgNegINFString = *XML::Xercesc::XMLUni_fgNegINFString;
-*fgNegZeroString = *XML::Xercesc::XMLUni_fgNegZeroString;
-*fgPosZeroString = *XML::Xercesc::XMLUni_fgPosZeroString;
-*fgPosINFString = *XML::Xercesc::XMLUni_fgPosINFString;
-*fgNaNString = *XML::Xercesc::XMLUni_fgNaNString;
-*fgEString = *XML::Xercesc::XMLUni_fgEString;
-*fgZeroString = *XML::Xercesc::XMLUni_fgZeroString;
-*fgNullString = *XML::Xercesc::XMLUni_fgNullString;
-*fgXercesDynamic = *XML::Xercesc::XMLUni_fgXercesDynamic;
-*fgXercesSchema = *XML::Xercesc::XMLUni_fgXercesSchema;
-*fgXercesSchemaFullChecking = *XML::Xercesc::XMLUni_fgXercesSchemaFullChecking;
-*fgXercesIdentityConstraintChecking = *XML::Xercesc::XMLUni_fgXercesIdentityConstraintChecking;
-*fgXercesSchemaExternalSchemaLocation = *XML::Xercesc::XMLUni_fgXercesSchemaExternalSchemaLocation;
-*fgXercesSchemaExternalNoNameSpaceSchemaLocation = *XML::Xercesc::XMLUni_fgXercesSchemaExternalNoNameSpaceSchemaLocation;
-*fgXercesSecurityManager = *XML::Xercesc::XMLUni_fgXercesSecurityManager;
-*fgXercesLoadExternalDTD = *XML::Xercesc::XMLUni_fgXercesLoadExternalDTD;
-*fgXercesContinueAfterFatalError = *XML::Xercesc::XMLUni_fgXercesContinueAfterFatalError;
-*fgXercesValidationErrorAsFatal = *XML::Xercesc::XMLUni_fgXercesValidationErrorAsFatal;
-*fgXercesUserAdoptsDOMDocument = *XML::Xercesc::XMLUni_fgXercesUserAdoptsDOMDocument;
-*fgXercesCacheGrammarFromParse = *XML::Xercesc::XMLUni_fgXercesCacheGrammarFromParse;
-*fgXercesUseCachedGrammarInParse = *XML::Xercesc::XMLUni_fgXercesUseCachedGrammarInParse;
-*fgXercesScannerName = *XML::Xercesc::XMLUni_fgXercesScannerName;
-*fgXercesParserUseDocumentFromImplementation = *XML::Xercesc::XMLUni_fgXercesParserUseDocumentFromImplementation;
-*fgXercesCalculateSrcOfs = *XML::Xercesc::XMLUni_fgXercesCalculateSrcOfs;
-*fgXercesStandardUriConformant = *XML::Xercesc::XMLUni_fgXercesStandardUriConformant;
-*fgXercesDOMHasPSVIInfo = *XML::Xercesc::XMLUni_fgXercesDOMHasPSVIInfo;
-*fgXercesGenerateSyntheticAnnotations = *XML::Xercesc::XMLUni_fgXercesGenerateSyntheticAnnotations;
-*fgXercesValidateAnnotations = *XML::Xercesc::XMLUni_fgXercesValidateAnnotations;
-*fgXercesIgnoreCachedDTD = *XML::Xercesc::XMLUni_fgXercesIgnoreCachedDTD;
-*fgXercesIgnoreAnnotations = *XML::Xercesc::XMLUni_fgXercesIgnoreAnnotations;
-*fgXercesDisableDefaultEntityResolution = *XML::Xercesc::XMLUni_fgXercesDisableDefaultEntityResolution;
-*fgXercesSkipDTDValidation = *XML::Xercesc::XMLUni_fgXercesSkipDTDValidation;
-*fgXercesEntityResolver = *XML::Xercesc::XMLUni_fgXercesEntityResolver;
-*fgSAX2CoreValidation = *XML::Xercesc::XMLUni_fgSAX2CoreValidation;
-*fgSAX2CoreNameSpaces = *XML::Xercesc::XMLUni_fgSAX2CoreNameSpaces;
-*fgSAX2CoreNameSpacePrefixes = *XML::Xercesc::XMLUni_fgSAX2CoreNameSpacePrefixes;
-*fgDOMCanonicalForm = *XML::Xercesc::XMLUni_fgDOMCanonicalForm;
-*fgDOMCDATASections = *XML::Xercesc::XMLUni_fgDOMCDATASections;
-*fgDOMComments = *XML::Xercesc::XMLUni_fgDOMComments;
-*fgDOMCharsetOverridesXMLEncoding = *XML::Xercesc::XMLUni_fgDOMCharsetOverridesXMLEncoding;
-*fgDOMCheckCharacterNormalization = *XML::Xercesc::XMLUni_fgDOMCheckCharacterNormalization;
-*fgDOMDatatypeNormalization = *XML::Xercesc::XMLUni_fgDOMDatatypeNormalization;
-*fgDOMDisallowDoctype = *XML::Xercesc::XMLUni_fgDOMDisallowDoctype;
-*fgDOMElementContentWhitespace = *XML::Xercesc::XMLUni_fgDOMElementContentWhitespace;
-*fgDOMErrorHandler = *XML::Xercesc::XMLUni_fgDOMErrorHandler;
-*fgDOMEntities = *XML::Xercesc::XMLUni_fgDOMEntities;
-*fgDOMIgnoreUnknownCharacterDenormalization = *XML::Xercesc::XMLUni_fgDOMIgnoreUnknownCharacterDenormalization;
-*fgDOMInfoset = *XML::Xercesc::XMLUni_fgDOMInfoset;
-*fgDOMNamespaces = *XML::Xercesc::XMLUni_fgDOMNamespaces;
-*fgDOMNamespaceDeclarations = *XML::Xercesc::XMLUni_fgDOMNamespaceDeclarations;
-*fgDOMNormalizeCharacters = *XML::Xercesc::XMLUni_fgDOMNormalizeCharacters;
-*fgDOMResourceResolver = *XML::Xercesc::XMLUni_fgDOMResourceResolver;
-*fgDOMSchemaLocation = *XML::Xercesc::XMLUni_fgDOMSchemaLocation;
-*fgDOMSchemaType = *XML::Xercesc::XMLUni_fgDOMSchemaType;
-*fgDOMSplitCDATASections = *XML::Xercesc::XMLUni_fgDOMSplitCDATASections;
-*fgDOMSupportedMediatypesOnly = *XML::Xercesc::XMLUni_fgDOMSupportedMediatypesOnly;
-*fgDOMValidate = *XML::Xercesc::XMLUni_fgDOMValidate;
-*fgDOMValidateIfSchema = *XML::Xercesc::XMLUni_fgDOMValidateIfSchema;
-*fgDOMWellFormed = *XML::Xercesc::XMLUni_fgDOMWellFormed;
-*fgDOMXMLSchemaType = *XML::Xercesc::XMLUni_fgDOMXMLSchemaType;
-*fgDOMDTDType = *XML::Xercesc::XMLUni_fgDOMDTDType;
-*fgDOMWRTCanonicalForm = *XML::Xercesc::XMLUni_fgDOMWRTCanonicalForm;
-*fgDOMWRTDiscardDefaultContent = *XML::Xercesc::XMLUni_fgDOMWRTDiscardDefaultContent;
-*fgDOMWRTEntities = *XML::Xercesc::XMLUni_fgDOMWRTEntities;
-*fgDOMWRTFormatPrettyPrint = *XML::Xercesc::XMLUni_fgDOMWRTFormatPrettyPrint;
-*fgDOMWRTNormalizeCharacters = *XML::Xercesc::XMLUni_fgDOMWRTNormalizeCharacters;
-*fgDOMWRTSplitCdataSections = *XML::Xercesc::XMLUni_fgDOMWRTSplitCdataSections;
-*fgDOMWRTValidation = *XML::Xercesc::XMLUni_fgDOMWRTValidation;
-*fgDOMWRTWhitespaceInElementContent = *XML::Xercesc::XMLUni_fgDOMWRTWhitespaceInElementContent;
-*fgDOMWRTBOM = *XML::Xercesc::XMLUni_fgDOMWRTBOM;
-*fgDOMXMLDeclaration = *XML::Xercesc::XMLUni_fgDOMXMLDeclaration;
-*fgDOMWRTXercesPrettyPrint = *XML::Xercesc::XMLUni_fgDOMWRTXercesPrettyPrint;
-*fgXercescInterfacePSVITypeInfo = *XML::Xercesc::XMLUni_fgXercescInterfacePSVITypeInfo;
-*fgXercescInterfaceDOMDocumentTypeImpl = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMDocumentTypeImpl;
-*fgXercescInterfaceDOMMemoryManager = *XML::Xercesc::XMLUni_fgXercescInterfaceDOMMemoryManager;
-*fgXercescDefaultLocale = *XML::Xercesc::XMLUni_fgXercescDefaultLocale;
-*fgDefErrMsg = *XML::Xercesc::XMLUni_fgDefErrMsg;
-*fgValueZero = *XML::Xercesc::XMLUni_fgValueZero;
-*fgNegOne = *XML::Xercesc::XMLUni_fgNegOne;
-*fgValueOne = *XML::Xercesc::XMLUni_fgValueOne;
-*fgLongMaxInc = *XML::Xercesc::XMLUni_fgLongMaxInc;
-*fgLongMinInc = *XML::Xercesc::XMLUni_fgLongMinInc;
-*fgIntMaxInc = *XML::Xercesc::XMLUni_fgIntMaxInc;
-*fgIntMinInc = *XML::Xercesc::XMLUni_fgIntMinInc;
-*fgShortMaxInc = *XML::Xercesc::XMLUni_fgShortMaxInc;
-*fgShortMinInc = *XML::Xercesc::XMLUni_fgShortMinInc;
-*fgByteMaxInc = *XML::Xercesc::XMLUni_fgByteMaxInc;
-*fgByteMinInc = *XML::Xercesc::XMLUni_fgByteMinInc;
-*fgULongMaxInc = *XML::Xercesc::XMLUni_fgULongMaxInc;
-*fgUIntMaxInc = *XML::Xercesc::XMLUni_fgUIntMaxInc;
-*fgUShortMaxInc = *XML::Xercesc::XMLUni_fgUShortMaxInc;
-*fgUByteMaxInc = *XML::Xercesc::XMLUni_fgUByteMaxInc;
-*fgLangPattern = *XML::Xercesc::XMLUni_fgLangPattern;
-*fgBooleanValueSpace = *XML::Xercesc::XMLUni_fgBooleanValueSpace;
-*fgBooleanValueSpaceArraySize = *XML::Xercesc::XMLUni_fgBooleanValueSpaceArraySize;
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_XMLUni($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
 ############# Class : XML::Xerces::QName ##############
 
 package XML::Xerces::QName;
@@ -1826,6 +2184,46 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::SecurityManager ##############
+
+package XML::Xerces::SecurityManager;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+*ENTITY_EXPANSION_LIMIT = *XML::Xercesc::SecurityManager_ENTITY_EXPANSION_LIMIT;
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_SecurityManager(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_SecurityManager($self);
+        delete $OWNER{$self};
+    }
+}
+
+*setEntityExpansionLimit = *XML::Xercesc::SecurityManager_setEntityExpansionLimit;
+*getEntityExpansionLimit = *XML::Xercesc::SecurityManager_getEntityExpansionLimit;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::XMLElementDecl ##############
 
 package XML::Xerces::XMLElementDecl;
@@ -1856,7 +2254,16 @@ sub DESTROY {
     }
 }
 
-*getAttDefList = *XML::Xercesc::XMLElementDecl_getAttDefList;
+sub getAttDefList {
+    my $result = XML::Xercesc::XMLElementDecl_getAttDefList (@_);
+    unless (defined$result) {
+      return () if wantarray;
+      return undef;#if *not* wantarray
+    }
+    return $result->to_list() if wantarray;
+    return $result;#if *not* wantarray
+}
+  
 *getCharDataOpts = *XML::Xercesc::XMLElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::XMLElementDecl_hasAttDefs;
 *getContentSpec = *XML::Xercesc::XMLElementDecl_getContentSpec;
@@ -2138,8 +2545,11 @@ sub DESTROY {
     }
 }
 
+*requiresNamespaces = *XML::Xercesc::XMLValidator_requiresNamespaces;
 *getGrammar = *XML::Xercesc::XMLValidator_getGrammar;
 *setGrammar = *XML::Xercesc::XMLValidator_setGrammar;
+*handlesDTD = *XML::Xercesc::XMLValidator_handlesDTD;
+*handlesSchema = *XML::Xercesc::XMLValidator_handlesSchema;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -2179,18 +2589,8 @@ sub DESTROY {
 *getGrammarType = *XML::Xercesc::Grammar_getGrammarType;
 *getTargetNamespace = *XML::Xercesc::Grammar_getTargetNamespace;
 *getValidated = *XML::Xercesc::Grammar_getValidated;
-*findOrAddElemDecl = *XML::Xercesc::Grammar_findOrAddElemDecl;
-*getElemId = *XML::Xercesc::Grammar_getElemId;
-*getElemDecl = *XML::Xercesc::Grammar_getElemDecl;
-*getNotationDecl = *XML::Xercesc::Grammar_getNotationDecl;
-*putElemDecl = *XML::Xercesc::Grammar_putElemDecl;
-*putNotationDecl = *XML::Xercesc::Grammar_putNotationDecl;
-*setValidated = *XML::Xercesc::Grammar_setValidated;
-*reset = *XML::Xercesc::Grammar_reset;
 *setGrammarDescription = *XML::Xercesc::Grammar_setGrammarDescription;
 *getGrammarDescription = *XML::Xercesc::Grammar_getGrammarDescription;
-*storeGrammar = *XML::Xercesc::Grammar_storeGrammar;
-*loadGrammar = *XML::Xercesc::Grammar_loadGrammar;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -2224,7 +2624,6 @@ sub DESTROY {
 
 *getGrammarType = *XML::Xercesc::XMLGrammarDescription_getGrammarType;
 *getGrammarKey = *XML::Xercesc::XMLGrammarDescription_getGrammarKey;
-*getMemoryManager = *XML::Xercesc::XMLGrammarDescription_getMemoryManager;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -2274,6 +2673,100 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::BaseXMLChVector ##############
+
+package XML::Xerces::BaseXMLChVector;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_BaseXMLChVector(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_BaseXMLChVector($self);
+        delete $OWNER{$self};
+    }
+}
+
+*addElement = *XML::Xercesc::BaseXMLChVector_addElement;
+*setElementAt = *XML::Xercesc::BaseXMLChVector_setElementAt;
+*insertElementAt = *XML::Xercesc::BaseXMLChVector_insertElementAt;
+*orphanElementAt = *XML::Xercesc::BaseXMLChVector_orphanElementAt;
+*removeAllElements = *XML::Xercesc::BaseXMLChVector_removeAllElements;
+*removeElementAt = *XML::Xercesc::BaseXMLChVector_removeElementAt;
+*removeLastElement = *XML::Xercesc::BaseXMLChVector_removeLastElement;
+*containsElement = *XML::Xercesc::BaseXMLChVector_containsElement;
+*cleanup = *XML::Xercesc::BaseXMLChVector_cleanup;
+*reinitialize = *XML::Xercesc::BaseXMLChVector_reinitialize;
+*curCapacity = *XML::Xercesc::BaseXMLChVector_curCapacity;
+*elementAt = *XML::Xercesc::BaseXMLChVector_elementAt;
+*size = *XML::Xercesc::BaseXMLChVector_size;
+*getMemoryManager = *XML::Xercesc::BaseXMLChVector_getMemoryManager;
+*ensureExtraCapacity = *XML::Xercesc::BaseXMLChVector_ensureExtraCapacity;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::XMLChVector ##############
+
+package XML::Xerces::XMLChVector;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces::BaseXMLChVector XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_XMLChVector(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_XMLChVector($self);
+        delete $OWNER{$self};
+    }
+}
+
+*setElementAt = *XML::Xercesc::XMLChVector_setElementAt;
+*removeAllElements = *XML::Xercesc::XMLChVector_removeAllElements;
+*removeElementAt = *XML::Xercesc::XMLChVector_removeElementAt;
+*removeLastElement = *XML::Xercesc::XMLChVector_removeLastElement;
+*cleanup = *XML::Xercesc::XMLChVector_cleanup;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::XMLSchemaDescription ##############
 
 package XML::Xerces::XMLSchemaDescription;
@@ -2304,7 +2797,16 @@ sub DESTROY {
 *CONTEXT_UNKNOWN = *XML::Xercesc::XMLSchemaDescription_CONTEXT_UNKNOWN;
 *getContextType = *XML::Xercesc::XMLSchemaDescription_getContextType;
 *getTargetNamespace = *XML::Xercesc::XMLSchemaDescription_getTargetNamespace;
-*getLocationHints = *XML::Xercesc::XMLSchemaDescription_getLocationHints;
+sub getLocationHints {
+    my $result = XML::Xercesc::XMLSchemaDescription_getLocationHints (@_);
+    unless (defined$result) {
+      return () if wantarray;
+      return undef;#if *not* wantarray
+    }
+    return $result->to_list() if wantarray;
+    return $result;#if *not* wantarray
+}
+  
 *getTriggeringComponent = *XML::Xercesc::XMLSchemaDescription_getTriggeringComponent;
 *getEnclosingElementName = *XML::Xercesc::XMLSchemaDescription_getEnclosingElementName;
 *getAttributes = *XML::Xercesc::XMLSchemaDescription_getAttributes;
@@ -2350,7 +2852,16 @@ sub DESTROY {
     }
 }
 
-*getAttDefList = *XML::Xercesc::DTDElementDecl_getAttDefList;
+sub getAttDefList {
+    my $result = XML::Xercesc::XMLElementDecl_getAttDefList (@_);
+    unless (defined$result) {
+      return () if wantarray;
+      return undef;#if *not* wantarray
+    }
+    return $result->to_list() if wantarray;
+    return $result;#if *not* wantarray
+}
+  
 *getCharDataOpts = *XML::Xercesc::DTDElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::DTDElementDecl_hasAttDefs;
 *getContentSpec = *XML::Xercesc::DTDElementDecl_getContentSpec;
@@ -2593,15 +3104,7 @@ sub DESTROY {
 
 *getGrammarType = *XML::Xercesc::DTDGrammar_getGrammarType;
 *getTargetNamespace = *XML::Xercesc::DTDGrammar_getTargetNamespace;
-*findOrAddElemDecl = *XML::Xercesc::DTDGrammar_findOrAddElemDecl;
-*getElemId = *XML::Xercesc::DTDGrammar_getElemId;
-*getElemDecl = *XML::Xercesc::DTDGrammar_getElemDecl;
-*getNotationDecl = *XML::Xercesc::DTDGrammar_getNotationDecl;
 *getValidated = *XML::Xercesc::DTDGrammar_getValidated;
-*putElemDecl = *XML::Xercesc::DTDGrammar_putElemDecl;
-*putNotationDecl = *XML::Xercesc::DTDGrammar_putNotationDecl;
-*setValidated = *XML::Xercesc::DTDGrammar_setValidated;
-*reset = *XML::Xercesc::DTDGrammar_reset;
 *getEntityDecl = *XML::Xercesc::DTDGrammar_getEntityDecl;
 *getEntityDeclPool = *XML::Xercesc::DTDGrammar_getEntityDeclPool;
 *getElemEnumerator = *XML::Xercesc::DTDGrammar_getElemEnumerator;
@@ -2648,8 +3151,11 @@ sub DESTROY {
     }
 }
 
+*requiresNamespaces = *XML::Xercesc::DTDValidator_requiresNamespaces;
 *getGrammar = *XML::Xercesc::DTDValidator_getGrammar;
 *setGrammar = *XML::Xercesc::DTDValidator_setGrammar;
+*handlesDTD = *XML::Xercesc::DTDValidator_handlesDTD;
+*handlesSchema = *XML::Xercesc::DTDValidator_handlesSchema;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -2688,7 +3194,16 @@ sub DESTROY {
     }
 }
 
-*getAttDefList = *XML::Xercesc::SchemaElementDecl_getAttDefList;
+sub getAttDefList {
+    my $result = XML::Xercesc::XMLElementDecl_getAttDefList (@_);
+    unless (defined$result) {
+      return () if wantarray;
+      return undef;#if *not* wantarray
+    }
+    return $result->to_list() if wantarray;
+    return $result;#if *not* wantarray
+}
+  
 *getCharDataOpts = *XML::Xercesc::SchemaElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::SchemaElementDecl_hasAttDefs;
 *getContentSpec = *XML::Xercesc::SchemaElementDecl_getContentSpec;
@@ -2807,15 +3322,7 @@ sub DESTROY {
 
 *getGrammarType = *XML::Xercesc::SchemaGrammar_getGrammarType;
 *getTargetNamespace = *XML::Xercesc::SchemaGrammar_getTargetNamespace;
-*findOrAddElemDecl = *XML::Xercesc::SchemaGrammar_findOrAddElemDecl;
-*getElemId = *XML::Xercesc::SchemaGrammar_getElemId;
-*getElemDecl = *XML::Xercesc::SchemaGrammar_getElemDecl;
-*getNotationDecl = *XML::Xercesc::SchemaGrammar_getNotationDecl;
 *getValidated = *XML::Xercesc::SchemaGrammar_getValidated;
-*putElemDecl = *XML::Xercesc::SchemaGrammar_putElemDecl;
-*putNotationDecl = *XML::Xercesc::SchemaGrammar_putNotationDecl;
-*setValidated = *XML::Xercesc::SchemaGrammar_setValidated;
-*reset = *XML::Xercesc::SchemaGrammar_reset;
 *getElemEnumerator = *XML::Xercesc::SchemaGrammar_getElemEnumerator;
 *getNotationEnumerator = *XML::Xercesc::SchemaGrammar_getNotationEnumerator;
 *getAttributeDeclRegistry = *XML::Xercesc::SchemaGrammar_getAttributeDeclRegistry;
@@ -2877,8 +3384,11 @@ sub DESTROY {
     }
 }
 
+*requiresNamespaces = *XML::Xercesc::SchemaValidator_requiresNamespaces;
 *getGrammar = *XML::Xercesc::SchemaValidator_getGrammar;
 *setGrammar = *XML::Xercesc::SchemaValidator_setGrammar;
+*handlesDTD = *XML::Xercesc::SchemaValidator_handlesDTD;
+*handlesSchema = *XML::Xercesc::SchemaValidator_handlesSchema;
 *normalizeWhiteSpace = *XML::Xercesc::SchemaValidator_normalizeWhiteSpace;
 *setGrammarResolver = *XML::Xercesc::SchemaValidator_setGrammarResolver;
 *setXsiType = *XML::Xercesc::SchemaValidator_setXsiType;
@@ -2975,208 +3485,6 @@ sub DESTROY {
 *setNamespaceList = *XML::Xercesc::SchemaAttDef_setNamespaceList;
 *resetNamespaceList = *XML::Xercesc::SchemaAttDef_resetNamespaceList;
 *setEnclosingCT = *XML::Xercesc::SchemaAttDef_setEnclosingCT;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::InputSource ##############
-
-package XML::Xerces::InputSource;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_InputSource($self);
-        delete $OWNER{$self};
-    }
-}
-
-*makeStream = *XML::Xercesc::InputSource_makeStream;
-*getEncoding = *XML::Xercesc::InputSource_getEncoding;
-*getPublicId = *XML::Xercesc::InputSource_getPublicId;
-*getSystemId = *XML::Xercesc::InputSource_getSystemId;
-*getIssueFatalErrorIfNotFound = *XML::Xercesc::InputSource_getIssueFatalErrorIfNotFound;
-*getMemoryManager = *XML::Xercesc::InputSource_getMemoryManager;
-*setEncoding = *XML::Xercesc::InputSource_setEncoding;
-*setPublicId = *XML::Xercesc::InputSource_setPublicId;
-*setSystemId = *XML::Xercesc::InputSource_setSystemId;
-*setIssueFatalErrorIfNotFound = *XML::Xercesc::InputSource_setIssueFatalErrorIfNotFound;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::LocalFileInputSource ##############
-
-package XML::Xerces::LocalFileInputSource;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::InputSource XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_LocalFileInputSource(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_LocalFileInputSource($self);
-        delete $OWNER{$self};
-    }
-}
-
-*makeStream = *XML::Xercesc::LocalFileInputSource_makeStream;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::StdInInputSource ##############
-
-package XML::Xerces::StdInInputSource;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::InputSource XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_StdInInputSource(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_StdInInputSource($self);
-        delete $OWNER{$self};
-    }
-}
-
-*makeStream = *XML::Xercesc::StdInInputSource_makeStream;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::URLInputSource ##############
-
-package XML::Xerces::URLInputSource;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::InputSource XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_URLInputSource(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_URLInputSource($self);
-        delete $OWNER{$self};
-    }
-}
-
-*makeStream = *XML::Xercesc::URLInputSource_makeStream;
-*urlSrc = *XML::Xercesc::URLInputSource_urlSrc;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::MemBufInputSource ##############
-
-package XML::Xerces::MemBufInputSource;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::InputSource XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub new {
-  my $pkg = shift;
-  # SYSTEM ID is *optional*
-  if (scalar @_ == 1) {
-    push(@_,'FAKE_SYSTEM_ID');
-  }
-
-  my $self = XML::Xercesc::new_MemBufInputSource(@_);
-    
-  bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_MemBufInputSource($self);
-        delete $OWNER{$self};
-    }
-}
-
-*makeStream = *XML::Xercesc::MemBufInputSource_makeStream;
-*setCopyBufToStream = *XML::Xercesc::MemBufInputSource_setCopyBufToStream;
-*resetMemBufInputSource = *XML::Xercesc::MemBufInputSource_resetMemBufInputSource;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3331,28 +3639,30 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::ErrorHandler ##############
+############# Class : XML::Xerces::XMLPScanToken ##############
 
-package XML::Xerces::ErrorHandler;
+package XML::Xerces::XMLPScanToken;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_XMLPScanToken(@_);
+    bless $self, $pkg if defined($self);
+}
+
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_ErrorHandler($self);
+        XML::Xercesc::delete_XMLPScanToken($self);
         delete $OWNER{$self};
     }
 }
 
-*warning = *XML::Xercesc::ErrorHandler_warning;
-*error = *XML::Xercesc::ErrorHandler_error;
-*fatalError = *XML::Xercesc::ErrorHandler_fatalError;
-*resetErrors = *XML::Xercesc::ErrorHandler_resetErrors;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3366,25 +3676,45 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::DTDHandler ##############
+############# Class : XML::Xerces::BaseXMLAttrVector ##############
 
-package XML::Xerces::DTDHandler;
+package XML::Xerces::BaseXMLAttrVector;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_BaseXMLAttrVector(@_);
+    bless $self, $pkg if defined($self);
+}
+
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_DTDHandler($self);
+        XML::Xercesc::delete_BaseXMLAttrVector($self);
         delete $OWNER{$self};
     }
 }
 
-*unparsedEntityDecl = *XML::Xercesc::DTDHandler_unparsedEntityDecl;
+*addElement = *XML::Xercesc::BaseXMLAttrVector_addElement;
+*setElementAt = *XML::Xercesc::BaseXMLAttrVector_setElementAt;
+*insertElementAt = *XML::Xercesc::BaseXMLAttrVector_insertElementAt;
+*orphanElementAt = *XML::Xercesc::BaseXMLAttrVector_orphanElementAt;
+*removeAllElements = *XML::Xercesc::BaseXMLAttrVector_removeAllElements;
+*removeElementAt = *XML::Xercesc::BaseXMLAttrVector_removeElementAt;
+*removeLastElement = *XML::Xercesc::BaseXMLAttrVector_removeLastElement;
+*containsElement = *XML::Xercesc::BaseXMLAttrVector_containsElement;
+*cleanup = *XML::Xercesc::BaseXMLAttrVector_cleanup;
+*reinitialize = *XML::Xercesc::BaseXMLAttrVector_reinitialize;
+*curCapacity = *XML::Xercesc::BaseXMLAttrVector_curCapacity;
+*elementAt = *XML::Xercesc::BaseXMLAttrVector_elementAt;
+*size = *XML::Xercesc::BaseXMLAttrVector_size;
+*getMemoryManager = *XML::Xercesc::BaseXMLAttrVector_getMemoryManager;
+*ensureExtraCapacity = *XML::Xercesc::BaseXMLAttrVector_ensureExtraCapacity;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3398,9 +3728,96 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::DocumentHandler ##############
+############# Class : XML::Xerces::XMLAttrVector ##############
 
-package XML::Xerces::DocumentHandler;
+package XML::Xerces::XMLAttrVector;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces::BaseXMLAttrVector XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_XMLAttrVector(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_XMLAttrVector($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::XMLAttr ##############
+
+package XML::Xerces::XMLAttr;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_XMLAttr(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_XMLAttr($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getAttName = *XML::Xercesc::XMLAttr_getAttName;
+*getName = *XML::Xercesc::XMLAttr_getName;
+*getQName = *XML::Xercesc::XMLAttr_getQName;
+*getSpecified = *XML::Xercesc::XMLAttr_getSpecified;
+*getType = *XML::Xercesc::XMLAttr_getType;
+*getValue = *XML::Xercesc::XMLAttr_getValue;
+*getURIId = *XML::Xercesc::XMLAttr_getURIId;
+*set = *XML::Xercesc::XMLAttr_set;
+*setName = *XML::Xercesc::XMLAttr_setName;
+*setSpecified = *XML::Xercesc::XMLAttr_setSpecified;
+*setType = *XML::Xercesc::XMLAttr_setType;
+*setValue = *XML::Xercesc::XMLAttr_setValue;
+*setURIId = *XML::Xercesc::XMLAttr_setURIId;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::XMLDocumentHandler ##############
+
+package XML::Xerces::XMLDocumentHandler;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
@@ -3411,14 +3828,23 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_DocumentHandler($self);
+        XML::Xercesc::delete_XMLDocumentHandler($self);
         delete $OWNER{$self};
     }
 }
 
-*characters = *XML::Xercesc::DocumentHandler_characters;
-*processingInstruction = *XML::Xercesc::DocumentHandler_processingInstruction;
-*setDocumentLocator = *XML::Xercesc::DocumentHandler_setDocumentLocator;
+*docCharacters = *XML::Xercesc::XMLDocumentHandler_docCharacters;
+*docComment = *XML::Xercesc::XMLDocumentHandler_docComment;
+*docPI = *XML::Xercesc::XMLDocumentHandler_docPI;
+*endDocument = *XML::Xercesc::XMLDocumentHandler_endDocument;
+*endElement = *XML::Xercesc::XMLDocumentHandler_endElement;
+*endEntityReference = *XML::Xercesc::XMLDocumentHandler_endEntityReference;
+*ignorableWhitespace = *XML::Xercesc::XMLDocumentHandler_ignorableWhitespace;
+*resetDocument = *XML::Xercesc::XMLDocumentHandler_resetDocument;
+*startDocument = *XML::Xercesc::XMLDocumentHandler_startDocument;
+*startElement = *XML::Xercesc::XMLDocumentHandler_startElement;
+*startEntityReference = *XML::Xercesc::XMLDocumentHandler_startEntityReference;
+*XMLDecl = *XML::Xercesc::XMLDocumentHandler_XMLDecl;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3463,59 +3889,22 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::AttributeList ##############
+############# Class : XML::Xerces::XMLResourceIdentifier ##############
 
-package XML::Xerces::AttributeList;
+package XML::Xerces::XMLResourceIdentifier;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_AttributeList($self);
-        delete $OWNER{$self};
-    }
-}
-
-*getLength = *XML::Xercesc::AttributeList_getLength;
-*getName = *XML::Xercesc::AttributeList_getName;
-*getType = *XML::Xercesc::AttributeList_getType;
-*getValue = *XML::Xercesc::AttributeList_getValue;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::HandlerBase ##############
-
-package XML::Xerces::HandlerBase;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::EntityResolver XML::Xerces::DTDHandler XML::Xerces::DocumentHandler XML::Xerces::ErrorHandler XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-*characters = *XML::Xercesc::HandlerBase_characters;
-*processingInstruction = *XML::Xercesc::HandlerBase_processingInstruction;
-*setDocumentLocator = *XML::Xercesc::HandlerBase_setDocumentLocator;
-*error = *XML::Xercesc::HandlerBase_error;
-*fatalError = *XML::Xercesc::HandlerBase_fatalError;
-*warning = *XML::Xercesc::HandlerBase_warning;
-*resetErrors = *XML::Xercesc::HandlerBase_resetErrors;
-*unparsedEntityDecl = *XML::Xercesc::HandlerBase_unparsedEntityDecl;
+*SchemaGrammar = *XML::Xercesc::XMLResourceIdentifier_SchemaGrammar;
+*SchemaImport = *XML::Xercesc::XMLResourceIdentifier_SchemaImport;
+*SchemaInclude = *XML::Xercesc::XMLResourceIdentifier_SchemaInclude;
+*SchemaRedefine = *XML::Xercesc::XMLResourceIdentifier_SchemaRedefine;
+*ExternalEntity = *XML::Xercesc::XMLResourceIdentifier_ExternalEntity;
+*UnKnown = *XML::Xercesc::XMLResourceIdentifier_UnKnown;
 sub new {
     my $pkg = shift;
-    my $self = XML::Xercesc::new_HandlerBase(@_);
+    my $self = XML::Xercesc::new_XMLResourceIdentifier(@_);
     bless $self, $pkg if defined($self);
 }
 
@@ -3525,11 +3914,18 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_HandlerBase($self);
+        XML::Xercesc::delete_XMLResourceIdentifier($self);
         delete $OWNER{$self};
     }
 }
 
+*getResourceIdentifierType = *XML::Xercesc::XMLResourceIdentifier_getResourceIdentifierType;
+*getPublicId = *XML::Xercesc::XMLResourceIdentifier_getPublicId;
+*getSystemId = *XML::Xercesc::XMLResourceIdentifier_getSystemId;
+*getSchemaLocation = *XML::Xercesc::XMLResourceIdentifier_getSchemaLocation;
+*getBaseURI = *XML::Xercesc::XMLResourceIdentifier_getBaseURI;
+*getNameSpace = *XML::Xercesc::XMLResourceIdentifier_getNameSpace;
+*getLocator = *XML::Xercesc::XMLResourceIdentifier_getLocator;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3543,9 +3939,9 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::Locator ##############
+############# Class : XML::Xerces::XMLEntityResolver ##############
 
-package XML::Xerces::Locator;
+package XML::Xerces::XMLEntityResolver;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
@@ -3556,15 +3952,11 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_Locator($self);
+        XML::Xercesc::delete_XMLEntityResolver($self);
         delete $OWNER{$self};
     }
 }
 
-*getPublicId = *XML::Xercesc::Locator_getPublicId;
-*getSystemId = *XML::Xercesc::Locator_getSystemId;
-*getLineNumber = *XML::Xercesc::Locator_getLineNumber;
-*getColumnNumber = *XML::Xercesc::Locator_getColumnNumber;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3578,31 +3970,43 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::Attributes ##############
+############# Class : XML::Xerces::PSVIItem ##############
 
-package XML::Xerces::Attributes;
+package XML::Xerces::PSVIItem;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
+*VALIDITY_NOTKNOWN = *XML::Xercesc::PSVIItem_VALIDITY_NOTKNOWN;
+*VALIDITY_INVALID = *XML::Xercesc::PSVIItem_VALIDITY_INVALID;
+*VALIDITY_VALID = *XML::Xercesc::PSVIItem_VALIDITY_VALID;
+*VALIDATION_NONE = *XML::Xercesc::PSVIItem_VALIDATION_NONE;
+*VALIDATION_PARTIAL = *XML::Xercesc::PSVIItem_VALIDATION_PARTIAL;
+*VALIDATION_FULL = *XML::Xercesc::PSVIItem_VALIDATION_FULL;
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_Attributes($self);
+        XML::Xercesc::delete_PSVIItem($self);
         delete $OWNER{$self};
     }
 }
 
-*getLength = *XML::Xercesc::Attributes_getLength;
-*getURI = *XML::Xercesc::Attributes_getURI;
-*getLocalName = *XML::Xercesc::Attributes_getLocalName;
-*getQName = *XML::Xercesc::Attributes_getQName;
-*getIndex = *XML::Xercesc::Attributes_getIndex;
-*getType = *XML::Xercesc::Attributes_getType;
-*getValue = *XML::Xercesc::Attributes_getValue;
+*getValidationContext = *XML::Xercesc::PSVIItem_getValidationContext;
+*getValidity = *XML::Xercesc::PSVIItem_getValidity;
+*getValidationAttempted = *XML::Xercesc::PSVIItem_getValidationAttempted;
+*getSchemaNormalizedValue = *XML::Xercesc::PSVIItem_getSchemaNormalizedValue;
+*getTypeDefinition = *XML::Xercesc::PSVIItem_getTypeDefinition;
+*getMemberTypeDefinition = *XML::Xercesc::PSVIItem_getMemberTypeDefinition;
+*getSchemaDefault = *XML::Xercesc::PSVIItem_getSchemaDefault;
+*getIsSchemaSpecified = *XML::Xercesc::PSVIItem_getIsSchemaSpecified;
+*getCanonicalRepresentation = *XML::Xercesc::PSVIItem_getCanonicalRepresentation;
+*getActualValue = *XML::Xercesc::PSVIItem_getActualValue;
+*setValidationAttempted = *XML::Xercesc::PSVIItem_setValidationAttempted;
+*setValidity = *XML::Xercesc::PSVIItem_setValidity;
+*reset = *XML::Xercesc::PSVIItem_reset;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3616,146 +4020,16 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::ContentHandler ##############
+############# Class : XML::Xerces::PSVIElement ##############
 
-package XML::Xerces::ContentHandler;
+package XML::Xerces::PSVIElement;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
+@ISA = qw( XML::Xerces::PSVIItem XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_ContentHandler($self);
-        delete $OWNER{$self};
-    }
-}
-
-*characters = *XML::Xercesc::ContentHandler_characters;
-*processingInstruction = *XML::Xercesc::ContentHandler_processingInstruction;
-*setDocumentLocator = *XML::Xercesc::ContentHandler_setDocumentLocator;
-*startPrefixMapping = *XML::Xercesc::ContentHandler_startPrefixMapping;
-*endPrefixMapping = *XML::Xercesc::ContentHandler_endPrefixMapping;
-*skippedEntity = *XML::Xercesc::ContentHandler_skippedEntity;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::LexicalHandler ##############
-
-package XML::Xerces::LexicalHandler;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_LexicalHandler($self);
-        delete $OWNER{$self};
-    }
-}
-
-*comment = *XML::Xercesc::LexicalHandler_comment;
-*endCDATA = *XML::Xercesc::LexicalHandler_endCDATA;
-*endDTD = *XML::Xercesc::LexicalHandler_endDTD;
-*endEntity = *XML::Xercesc::LexicalHandler_endEntity;
-*startCDATA = *XML::Xercesc::LexicalHandler_startCDATA;
-*startDTD = *XML::Xercesc::LexicalHandler_startDTD;
-*startEntity = *XML::Xercesc::LexicalHandler_startEntity;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::DeclHandler ##############
-
-package XML::Xerces::DeclHandler;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_DeclHandler($self);
-        delete $OWNER{$self};
-    }
-}
-
-*attributeDecl = *XML::Xercesc::DeclHandler_attributeDecl;
-*internalEntityDecl = *XML::Xercesc::DeclHandler_internalEntityDecl;
-*externalEntityDecl = *XML::Xercesc::DeclHandler_externalEntityDecl;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::DefaultHandler ##############
-
-package XML::Xerces::DefaultHandler;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::EntityResolver XML::Xerces::DTDHandler XML::Xerces::ContentHandler XML::Xerces::ErrorHandler XML::Xerces::LexicalHandler XML::Xerces::DeclHandler XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-*characters = *XML::Xercesc::DefaultHandler_characters;
-*processingInstruction = *XML::Xercesc::DefaultHandler_processingInstruction;
-*setDocumentLocator = *XML::Xercesc::DefaultHandler_setDocumentLocator;
-*startPrefixMapping = *XML::Xercesc::DefaultHandler_startPrefixMapping;
-*endPrefixMapping = *XML::Xercesc::DefaultHandler_endPrefixMapping;
-*skippedEntity = *XML::Xercesc::DefaultHandler_skippedEntity;
-*error = *XML::Xercesc::DefaultHandler_error;
-*fatalError = *XML::Xercesc::DefaultHandler_fatalError;
-*warning = *XML::Xercesc::DefaultHandler_warning;
-*resetErrors = *XML::Xercesc::DefaultHandler_resetErrors;
-*unparsedEntityDecl = *XML::Xercesc::DefaultHandler_unparsedEntityDecl;
-*comment = *XML::Xercesc::DefaultHandler_comment;
-*endCDATA = *XML::Xercesc::DefaultHandler_endCDATA;
-*endDTD = *XML::Xercesc::DefaultHandler_endDTD;
-*endEntity = *XML::Xercesc::DefaultHandler_endEntity;
-*startCDATA = *XML::Xercesc::DefaultHandler_startCDATA;
-*startDTD = *XML::Xercesc::DefaultHandler_startDTD;
-*startEntity = *XML::Xercesc::DefaultHandler_startEntity;
-*attributeDecl = *XML::Xercesc::DefaultHandler_attributeDecl;
-*internalEntityDecl = *XML::Xercesc::DefaultHandler_internalEntityDecl;
-*externalEntityDecl = *XML::Xercesc::DefaultHandler_externalEntityDecl;
 sub new {
     my $pkg = shift;
-    my $self = XML::Xercesc::new_DefaultHandler(@_);
+    my $self = XML::Xercesc::new_PSVIElement(@_);
     bless $self, $pkg if defined($self);
 }
 
@@ -3765,11 +4039,17 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_DefaultHandler($self);
+        XML::Xercesc::delete_PSVIElement($self);
         delete $OWNER{$self};
     }
 }
 
+*getElementDeclaration = *XML::Xercesc::PSVIElement_getElementDeclaration;
+*getNotationDeclaration = *XML::Xercesc::PSVIElement_getNotationDeclaration;
+*getSchemaInformation = *XML::Xercesc::PSVIElement_getSchemaInformation;
+*getTypeDefinition = *XML::Xercesc::PSVIElement_getTypeDefinition;
+*getMemberTypeDefinition = *XML::Xercesc::PSVIElement_getMemberTypeDefinition;
+*reset = *XML::Xercesc::PSVIElement_reset;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3783,16 +4063,16 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::XMLPScanToken ##############
+############# Class : XML::Xerces::PSVIAttribute ##############
 
-package XML::Xerces::XMLPScanToken;
+package XML::Xerces::PSVIAttribute;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
+@ISA = qw( XML::Xerces::PSVIItem XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
 sub new {
     my $pkg = shift;
-    my $self = XML::Xercesc::new_XMLPScanToken(@_);
+    my $self = XML::Xercesc::new_PSVIAttribute(@_);
     bless $self, $pkg if defined($self);
 }
 
@@ -3802,11 +4082,61 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_XMLPScanToken($self);
+        XML::Xercesc::delete_PSVIAttribute($self);
         delete $OWNER{$self};
     }
 }
 
+*getAttributeDeclaration = *XML::Xercesc::PSVIAttribute_getAttributeDeclaration;
+*getTypeDefinition = *XML::Xercesc::PSVIAttribute_getTypeDefinition;
+*getMemberTypeDefinition = *XML::Xercesc::PSVIAttribute_getMemberTypeDefinition;
+*reset = *XML::Xercesc::PSVIAttribute_reset;
+*setValue = *XML::Xercesc::PSVIAttribute_setValue;
+*updateValidity = *XML::Xercesc::PSVIAttribute_updateValidity;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::PSVIAttributeList ##############
+
+package XML::Xerces::PSVIAttributeList;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_PSVIAttributeList(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_PSVIAttributeList($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getLength = *XML::Xercesc::PSVIAttributeList_getLength;
+*getAttributePSVIAtIndex = *XML::Xercesc::PSVIAttributeList_getAttributePSVIAtIndex;
+*getAttributeNameAtIndex = *XML::Xercesc::PSVIAttributeList_getAttributeNameAtIndex;
+*getAttributeNamespaceAtIndex = *XML::Xercesc::PSVIAttributeList_getAttributeNamespaceAtIndex;
+*getAttributePSVIByName = *XML::Xercesc::PSVIAttributeList_getAttributePSVIByName;
+*getPSVIAttributeToFill = *XML::Xercesc::PSVIAttributeList_getPSVIAttributeToFill;
+*reset = *XML::Xercesc::PSVIAttributeList_reset;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3854,9 +4184,9 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::Parser ##############
+############# Class : XML::Xerces::ErrorHandler ##############
 
-package XML::Xerces::Parser;
+package XML::Xerces::ErrorHandler;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces );
 %OWNER = ();
@@ -3867,273 +4197,15 @@ sub DESTROY {
     return unless defined $self;
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_Parser($self);
+        XML::Xercesc::delete_ErrorHandler($self);
         delete $OWNER{$self};
     }
 }
 
-sub setEntityResolver {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
-
-  return XML::Xercesc::Parser_setEntityResolver($self,$callback);
-}
-
-*setDTDHandler = *XML::Xercesc::Parser_setDTDHandler;
-*setDocumentHandler = *XML::Xercesc::Parser_setDocumentHandler;
-sub setErrorHandler {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
-
-  return XML::Xercesc::Parser_setErrorHandler($self,$callback);
-}
-
-*parse = *XML::Xercesc::Parser_parse;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::SAXParser ##############
-
-package XML::Xerces::SAXParser;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::Parser XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-*Val_Never = *XML::Xercesc::SAXParser_Val_Never;
-*Val_Always = *XML::Xercesc::SAXParser_Val_Always;
-*Val_Auto = *XML::Xercesc::SAXParser_Val_Auto;
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_SAXParser(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_SAXParser($self);
-        delete $OWNER{$self};
-    }
-}
-
-*getDocumentHandler = *XML::Xercesc::SAXParser_getDocumentHandler;
-*getEntityResolver = *XML::Xercesc::SAXParser_getEntityResolver;
-*getXMLEntityResolver = *XML::Xercesc::SAXParser_getXMLEntityResolver;
-*getErrorHandler = *XML::Xercesc::SAXParser_getErrorHandler;
-*getPSVIHandler = *XML::Xercesc::SAXParser_getPSVIHandler;
-*getValidator = *XML::Xercesc::SAXParser_getValidator;
-*getValidationScheme = *XML::Xercesc::SAXParser_getValidationScheme;
-*getDoSchema = *XML::Xercesc::SAXParser_getDoSchema;
-*getValidationSchemaFullChecking = *XML::Xercesc::SAXParser_getValidationSchemaFullChecking;
-*getIdentityConstraintChecking = *XML::Xercesc::SAXParser_getIdentityConstraintChecking;
-*getErrorCount = *XML::Xercesc::SAXParser_getErrorCount;
-*getDoNamespaces = *XML::Xercesc::SAXParser_getDoNamespaces;
-*getExitOnFirstFatalError = *XML::Xercesc::SAXParser_getExitOnFirstFatalError;
-*getValidationConstraintFatal = *XML::Xercesc::SAXParser_getValidationConstraintFatal;
-*getExternalSchemaLocation = *XML::Xercesc::SAXParser_getExternalSchemaLocation;
-*getExternalNoNamespaceSchemaLocation = *XML::Xercesc::SAXParser_getExternalNoNamespaceSchemaLocation;
-*getSecurityManager = *XML::Xercesc::SAXParser_getSecurityManager;
-*getLoadExternalDTD = *XML::Xercesc::SAXParser_getLoadExternalDTD;
-*isCachingGrammarFromParse = *XML::Xercesc::SAXParser_isCachingGrammarFromParse;
-*isUsingCachedGrammarInParse = *XML::Xercesc::SAXParser_isUsingCachedGrammarInParse;
-*getCalculateSrcOfs = *XML::Xercesc::SAXParser_getCalculateSrcOfs;
-*getStandardUriConformant = *XML::Xercesc::SAXParser_getStandardUriConformant;
-*getGrammar = *XML::Xercesc::SAXParser_getGrammar;
-*getRootGrammar = *XML::Xercesc::SAXParser_getRootGrammar;
-*getURIText = *XML::Xercesc::SAXParser_getURIText;
-*getSrcOffset = *XML::Xercesc::SAXParser_getSrcOffset;
-*getGenerateSyntheticAnnotations = *XML::Xercesc::SAXParser_getGenerateSyntheticAnnotations;
-*getValidateAnnotations = *XML::Xercesc::SAXParser_getValidateAnnotations;
-*getIgnoreCachedDTD = *XML::Xercesc::SAXParser_getIgnoreCachedDTD;
-*getIgnoreAnnotations = *XML::Xercesc::SAXParser_getIgnoreAnnotations;
-*getDisableDefaultEntityResolution = *XML::Xercesc::SAXParser_getDisableDefaultEntityResolution;
-*getSkipDTDValidation = *XML::Xercesc::SAXParser_getSkipDTDValidation;
-*setGenerateSyntheticAnnotations = *XML::Xercesc::SAXParser_setGenerateSyntheticAnnotations;
-*setValidateAnnotations = *XML::Xercesc::SAXParser_setValidateAnnotations;
-*setDoNamespaces = *XML::Xercesc::SAXParser_setDoNamespaces;
-*setValidationScheme = *XML::Xercesc::SAXParser_setValidationScheme;
-*setDoSchema = *XML::Xercesc::SAXParser_setDoSchema;
-*setValidationSchemaFullChecking = *XML::Xercesc::SAXParser_setValidationSchemaFullChecking;
-*setIdentityConstraintChecking = *XML::Xercesc::SAXParser_setIdentityConstraintChecking;
-*setExitOnFirstFatalError = *XML::Xercesc::SAXParser_setExitOnFirstFatalError;
-*setValidationConstraintFatal = *XML::Xercesc::SAXParser_setValidationConstraintFatal;
-*setExternalSchemaLocation = *XML::Xercesc::SAXParser_setExternalSchemaLocation;
-*setExternalNoNamespaceSchemaLocation = *XML::Xercesc::SAXParser_setExternalNoNamespaceSchemaLocation;
-*setSecurityManager = *XML::Xercesc::SAXParser_setSecurityManager;
-*setLoadExternalDTD = *XML::Xercesc::SAXParser_setLoadExternalDTD;
-*cacheGrammarFromParse = *XML::Xercesc::SAXParser_cacheGrammarFromParse;
-*useCachedGrammarInParse = *XML::Xercesc::SAXParser_useCachedGrammarInParse;
-*setCalculateSrcOfs = *XML::Xercesc::SAXParser_setCalculateSrcOfs;
-*setStandardUriConformant = *XML::Xercesc::SAXParser_setStandardUriConformant;
-*useScanner = *XML::Xercesc::SAXParser_useScanner;
-*setInputBufferSize = *XML::Xercesc::SAXParser_setInputBufferSize;
-*setIgnoreCachedDTD = *XML::Xercesc::SAXParser_setIgnoreCachedDTD;
-*setIgnoreAnnotations = *XML::Xercesc::SAXParser_setIgnoreAnnotations;
-*setDisableDefaultEntityResolution = *XML::Xercesc::SAXParser_setDisableDefaultEntityResolution;
-*setSkipDTDValidation = *XML::Xercesc::SAXParser_setSkipDTDValidation;
-*installAdvDocHandler = *XML::Xercesc::SAXParser_installAdvDocHandler;
-*removeAdvDocHandler = *XML::Xercesc::SAXParser_removeAdvDocHandler;
-*parseFirst = *XML::Xercesc::SAXParser_parseFirst;
-*parseNext = *XML::Xercesc::SAXParser_parseNext;
-*parseReset = *XML::Xercesc::SAXParser_parseReset;
-*loadGrammar = *XML::Xercesc::SAXParser_loadGrammar;
-*resetCachedGrammarPool = *XML::Xercesc::SAXParser_resetCachedGrammarPool;
-*parse = *XML::Xercesc::SAXParser_parse;
-sub setDocumentHandler {
-    my ($self,$handler) = @_;
-    my $callback = XML::Xerces::PerlDocumentCallbackHandler->new($handler);
-    $XML::Xerces::REMEMBER{tied(% {$self})}->{__DOCUMENT_HANDLER} = $callback;
-
-    my @args = ($self,$callback);
-    return XML::Xercesc::SAXParser_setDocumentHandler(@args);
-}
-
-*setDTDHandler = *XML::Xercesc::SAXParser_setDTDHandler;
-sub setErrorHandler {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
-
-  return XML::Xercesc::SAXParser_setErrorHandler($self,$callback);
-}
-
-*setPSVIHandler = *XML::Xercesc::SAXParser_setPSVIHandler;
-sub setEntityResolver {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
-
-  return XML::Xercesc::SAXParser_setEntityResolver($self,$callback);
-}
-
-*setXMLEntityResolver = *XML::Xercesc::SAXParser_setXMLEntityResolver;
-*error = *XML::Xercesc::SAXParser_error;
-*resetErrors = *XML::Xercesc::SAXParser_resetErrors;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::SAX2XMLReader ##############
-
-package XML::Xerces::SAX2XMLReader;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-*Val_Never = *XML::Xercesc::SAX2XMLReader_Val_Never;
-*Val_Always = *XML::Xercesc::SAX2XMLReader_Val_Always;
-*Val_Auto = *XML::Xercesc::SAX2XMLReader_Val_Auto;
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_SAX2XMLReader($self);
-        delete $OWNER{$self};
-    }
-}
-
-*getContentHandler = *XML::Xercesc::SAX2XMLReader_getContentHandler;
-*getDTDHandler = *XML::Xercesc::SAX2XMLReader_getDTDHandler;
-*getFeature = *XML::Xercesc::SAX2XMLReader_getFeature;
-*getProperty = *XML::Xercesc::SAX2XMLReader_getProperty;
-sub setContentHandler {
-    my ($self,$handler) = @_;
-    my $callback = XML::Xerces::PerlContentCallbackHandler->new($handler);
-    $XML::Xerces::REMEMBER{tied(% {$self})}->{__CONTENT_HANDLER} = $callback;
-
-    my @args = ($self,$callback);
-    return XML::Xercesc::SAX2XMLReader_setContentHandler(@args);
-}
-
-*setDTDHandler = *XML::Xercesc::SAX2XMLReader_setDTDHandler;
-sub setEntityResolver {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
-
-  return XML::Xercesc::SAX2XMLReader_setEntityResolver($self,$callback);
-}
-
-sub setErrorHandler {
-  my ($self,$handler) = @_;
-  my $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
-  $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
-
-  return XML::Xercesc::SAX2XMLReader_setErrorHandler($self,$callback);
-}
-
-*setFeature = *XML::Xercesc::SAX2XMLReader_setFeature;
-*setProperty = *XML::Xercesc::SAX2XMLReader_setProperty;
-*parse = *XML::Xercesc::SAX2XMLReader_parse;
-*getDeclarationHandler = *XML::Xercesc::SAX2XMLReader_getDeclarationHandler;
-*getLexicalHandler = *XML::Xercesc::SAX2XMLReader_getLexicalHandler;
-*setDeclarationHandler = *XML::Xercesc::SAX2XMLReader_setDeclarationHandler;
-*setLexicalHandler = *XML::Xercesc::SAX2XMLReader_setLexicalHandler;
-*getValidator = *XML::Xercesc::SAX2XMLReader_getValidator;
-*getErrorCount = *XML::Xercesc::SAX2XMLReader_getErrorCount;
-*getExitOnFirstFatalError = *XML::Xercesc::SAX2XMLReader_getExitOnFirstFatalError;
-*getValidationConstraintFatal = *XML::Xercesc::SAX2XMLReader_getValidationConstraintFatal;
-*getGrammar = *XML::Xercesc::SAX2XMLReader_getGrammar;
-*getRootGrammar = *XML::Xercesc::SAX2XMLReader_getRootGrammar;
-*getURIText = *XML::Xercesc::SAX2XMLReader_getURIText;
-*getSrcOffset = *XML::Xercesc::SAX2XMLReader_getSrcOffset;
-*setValidator = *XML::Xercesc::SAX2XMLReader_setValidator;
-*setExitOnFirstFatalError = *XML::Xercesc::SAX2XMLReader_setExitOnFirstFatalError;
-*setValidationConstraintFatal = *XML::Xercesc::SAX2XMLReader_setValidationConstraintFatal;
-*parseFirst = *XML::Xercesc::SAX2XMLReader_parseFirst;
-*parseNext = *XML::Xercesc::SAX2XMLReader_parseNext;
-*parseReset = *XML::Xercesc::SAX2XMLReader_parseReset;
-*loadGrammar = *XML::Xercesc::SAX2XMLReader_loadGrammar;
-*resetCachedGrammarPool = *XML::Xercesc::SAX2XMLReader_resetCachedGrammarPool;
-*setInputBufferSize = *XML::Xercesc::SAX2XMLReader_setInputBufferSize;
-*installAdvDocHandler = *XML::Xercesc::SAX2XMLReader_installAdvDocHandler;
-*removeAdvDocHandler = *XML::Xercesc::SAX2XMLReader_removeAdvDocHandler;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::XMLReaderFactory ##############
-
-package XML::Xerces::XMLReaderFactory;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces );
-%OWNER = ();
-*createXMLReader = *XML::Xercesc::XMLReaderFactory_createXMLReader;
+*warning = *XML::Xercesc::ErrorHandler_warning;
+*error = *XML::Xercesc::ErrorHandler_error;
+*fatalError = *XML::Xercesc::ErrorHandler_fatalError;
+*resetErrors = *XML::Xercesc::ErrorHandler_resetErrors;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -4211,6 +4283,9 @@ sub DESTROY {
 }
 
 *type = *XML::Xercesc::PerlErrorCallbackHandler_type;
+*warning = *XML::Xercesc::PerlErrorCallbackHandler_warning;
+*error = *XML::Xercesc::PerlErrorCallbackHandler_error;
+*fatalError = *XML::Xercesc::PerlErrorCallbackHandler_fatalError;
 *resetErrors = *XML::Xercesc::PerlErrorCallbackHandler_resetErrors;
 sub DISOWN {
     my $self = shift;
@@ -4229,7 +4304,7 @@ sub ACQUIRE {
 
 package XML::Xerces::PerlEntityResolverHandler;
 use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::EntityResolver XML::Xerces::PerlCallbackHandler XML::Xerces );
+@ISA = qw( XML::Xerces::EntityResolver XML::Xerces::XMLEntityResolver XML::Xerces::PerlCallbackHandler XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
 sub new {
@@ -4263,101 +4338,10 @@ sub ACQUIRE {
 }
 
 
-############# Class : XML::Xerces::PerlDocumentCallbackHandler ##############
-
-package XML::Xerces::PerlDocumentCallbackHandler;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::DocumentHandler XML::Xerces::PerlCallbackHandler XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_PerlDocumentCallbackHandler(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_PerlDocumentCallbackHandler($self);
-        delete $OWNER{$self};
-    }
-}
-
-*type = *XML::Xercesc::PerlDocumentCallbackHandler_type;
-*characters = *XML::Xercesc::PerlDocumentCallbackHandler_characters;
-*processingInstruction = *XML::Xercesc::PerlDocumentCallbackHandler_processingInstruction;
-*setDocumentLocator = *XML::Xercesc::PerlDocumentCallbackHandler_setDocumentLocator;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : XML::Xerces::PerlContentCallbackHandler ##############
-
-package XML::Xerces::PerlContentCallbackHandler;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( XML::Xerces::ContentHandler XML::Xerces::PerlCallbackHandler XML::Xerces );
-%OWNER = ();
-%ITERATORS = ();
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_PerlContentCallbackHandler(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_PerlContentCallbackHandler($self);
-        delete $OWNER{$self};
-    }
-}
-
-*type = *XML::Xercesc::PerlContentCallbackHandler_type;
-*characters = *XML::Xercesc::PerlContentCallbackHandler_characters;
-*processingInstruction = *XML::Xercesc::PerlContentCallbackHandler_processingInstruction;
-*setDocumentLocator = *XML::Xercesc::PerlContentCallbackHandler_setDocumentLocator;
-*startPrefixMapping = *XML::Xercesc::PerlContentCallbackHandler_startPrefixMapping;
-*endPrefixMapping = *XML::Xercesc::PerlContentCallbackHandler_endPrefixMapping;
-*skippedEntity = *XML::Xercesc::PerlContentCallbackHandler_skippedEntity;
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
 # ------- VARIABLE STUBS --------
 
 package XML::Xerces;
 
-*DEBUG_UTF8_OUT = *XML::Xercesc::DEBUG_UTF8_OUT;
-*DEBUG_UTF8_IN = *XML::Xercesc::DEBUG_UTF8_IN;
-*XMLPlatformUtils_fgFileMgr = *XML::Xercesc::XMLPlatformUtils_fgFileMgr;
-*XMLPlatformUtils_fgMutexMgr = *XML::Xercesc::XMLPlatformUtils_fgMutexMgr;
-*XMLPlatformUtils_fgAtomicOpMgr = *XML::Xercesc::XMLPlatformUtils_fgAtomicOpMgr;
-*XMLPlatformUtils_fgXMLChBigEndian = *XML::Xercesc::XMLPlatformUtils_fgXMLChBigEndian;
 *XMLUni_fgAnyString = *XML::Xercesc::XMLUni_fgAnyString;
 *XMLUni_fgAttListString = *XML::Xercesc::XMLUni_fgAttListString;
 *XMLUni_fgCommentString = *XML::Xercesc::XMLUni_fgCommentString;
@@ -4602,6 +4586,364 @@ package XML::Xerces;
 *XMLUni_fgLangPattern = *XML::Xercesc::XMLUni_fgLangPattern;
 *XMLUni_fgBooleanValueSpace = *XML::Xercesc::XMLUni_fgBooleanValueSpace;
 *XMLUni_fgBooleanValueSpaceArraySize = *XML::Xercesc::XMLUni_fgBooleanValueSpaceArraySize;
+*SchemaSymbols_fgURI_XSI = *XML::Xercesc::SchemaSymbols_fgURI_XSI;
+*SchemaSymbols_fgURI_SCHEMAFORSCHEMA = *XML::Xercesc::SchemaSymbols_fgURI_SCHEMAFORSCHEMA;
+*SchemaSymbols_fgXSI_SCHEMALOCACTION = *XML::Xercesc::SchemaSymbols_fgXSI_SCHEMALOCACTION;
+*SchemaSymbols_fgXSI_NONAMESPACESCHEMALOCACTION = *XML::Xercesc::SchemaSymbols_fgXSI_NONAMESPACESCHEMALOCACTION;
+*SchemaSymbols_fgXSI_TYPE = *XML::Xercesc::SchemaSymbols_fgXSI_TYPE;
+*SchemaSymbols_fgELT_ALL = *XML::Xercesc::SchemaSymbols_fgELT_ALL;
+*SchemaSymbols_fgELT_ANNOTATION = *XML::Xercesc::SchemaSymbols_fgELT_ANNOTATION;
+*SchemaSymbols_fgELT_ANY = *XML::Xercesc::SchemaSymbols_fgELT_ANY;
+*SchemaSymbols_fgELT_WILDCARD = *XML::Xercesc::SchemaSymbols_fgELT_WILDCARD;
+*SchemaSymbols_fgELT_ANYATTRIBUTE = *XML::Xercesc::SchemaSymbols_fgELT_ANYATTRIBUTE;
+*SchemaSymbols_fgELT_APPINFO = *XML::Xercesc::SchemaSymbols_fgELT_APPINFO;
+*SchemaSymbols_fgELT_ATTRIBUTE = *XML::Xercesc::SchemaSymbols_fgELT_ATTRIBUTE;
+*SchemaSymbols_fgELT_ATTRIBUTEGROUP = *XML::Xercesc::SchemaSymbols_fgELT_ATTRIBUTEGROUP;
+*SchemaSymbols_fgELT_CHOICE = *XML::Xercesc::SchemaSymbols_fgELT_CHOICE;
+*SchemaSymbols_fgELT_COMPLEXTYPE = *XML::Xercesc::SchemaSymbols_fgELT_COMPLEXTYPE;
+*SchemaSymbols_fgELT_CONTENT = *XML::Xercesc::SchemaSymbols_fgELT_CONTENT;
+*SchemaSymbols_fgELT_DOCUMENTATION = *XML::Xercesc::SchemaSymbols_fgELT_DOCUMENTATION;
+*SchemaSymbols_fgELT_DURATION = *XML::Xercesc::SchemaSymbols_fgELT_DURATION;
+*SchemaSymbols_fgELT_ELEMENT = *XML::Xercesc::SchemaSymbols_fgELT_ELEMENT;
+*SchemaSymbols_fgELT_ENCODING = *XML::Xercesc::SchemaSymbols_fgELT_ENCODING;
+*SchemaSymbols_fgELT_ENUMERATION = *XML::Xercesc::SchemaSymbols_fgELT_ENUMERATION;
+*SchemaSymbols_fgELT_FIELD = *XML::Xercesc::SchemaSymbols_fgELT_FIELD;
+*SchemaSymbols_fgELT_WHITESPACE = *XML::Xercesc::SchemaSymbols_fgELT_WHITESPACE;
+*SchemaSymbols_fgELT_GROUP = *XML::Xercesc::SchemaSymbols_fgELT_GROUP;
+*SchemaSymbols_fgELT_IMPORT = *XML::Xercesc::SchemaSymbols_fgELT_IMPORT;
+*SchemaSymbols_fgELT_INCLUDE = *XML::Xercesc::SchemaSymbols_fgELT_INCLUDE;
+*SchemaSymbols_fgELT_REDEFINE = *XML::Xercesc::SchemaSymbols_fgELT_REDEFINE;
+*SchemaSymbols_fgELT_KEY = *XML::Xercesc::SchemaSymbols_fgELT_KEY;
+*SchemaSymbols_fgELT_KEYREF = *XML::Xercesc::SchemaSymbols_fgELT_KEYREF;
+*SchemaSymbols_fgELT_LENGTH = *XML::Xercesc::SchemaSymbols_fgELT_LENGTH;
+*SchemaSymbols_fgELT_MAXEXCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MAXEXCLUSIVE;
+*SchemaSymbols_fgELT_MAXINCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MAXINCLUSIVE;
+*SchemaSymbols_fgELT_MAXLENGTH = *XML::Xercesc::SchemaSymbols_fgELT_MAXLENGTH;
+*SchemaSymbols_fgELT_MINEXCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MINEXCLUSIVE;
+*SchemaSymbols_fgELT_MININCLUSIVE = *XML::Xercesc::SchemaSymbols_fgELT_MININCLUSIVE;
+*SchemaSymbols_fgELT_MINLENGTH = *XML::Xercesc::SchemaSymbols_fgELT_MINLENGTH;
+*SchemaSymbols_fgELT_NOTATION = *XML::Xercesc::SchemaSymbols_fgELT_NOTATION;
+*SchemaSymbols_fgELT_PATTERN = *XML::Xercesc::SchemaSymbols_fgELT_PATTERN;
+*SchemaSymbols_fgELT_PERIOD = *XML::Xercesc::SchemaSymbols_fgELT_PERIOD;
+*SchemaSymbols_fgELT_TOTALDIGITS = *XML::Xercesc::SchemaSymbols_fgELT_TOTALDIGITS;
+*SchemaSymbols_fgELT_FRACTIONDIGITS = *XML::Xercesc::SchemaSymbols_fgELT_FRACTIONDIGITS;
+*SchemaSymbols_fgELT_SCHEMA = *XML::Xercesc::SchemaSymbols_fgELT_SCHEMA;
+*SchemaSymbols_fgELT_SELECTOR = *XML::Xercesc::SchemaSymbols_fgELT_SELECTOR;
+*SchemaSymbols_fgELT_SEQUENCE = *XML::Xercesc::SchemaSymbols_fgELT_SEQUENCE;
+*SchemaSymbols_fgELT_SIMPLETYPE = *XML::Xercesc::SchemaSymbols_fgELT_SIMPLETYPE;
+*SchemaSymbols_fgELT_UNION = *XML::Xercesc::SchemaSymbols_fgELT_UNION;
+*SchemaSymbols_fgELT_LIST = *XML::Xercesc::SchemaSymbols_fgELT_LIST;
+*SchemaSymbols_fgELT_UNIQUE = *XML::Xercesc::SchemaSymbols_fgELT_UNIQUE;
+*SchemaSymbols_fgELT_COMPLEXCONTENT = *XML::Xercesc::SchemaSymbols_fgELT_COMPLEXCONTENT;
+*SchemaSymbols_fgELT_SIMPLECONTENT = *XML::Xercesc::SchemaSymbols_fgELT_SIMPLECONTENT;
+*SchemaSymbols_fgELT_RESTRICTION = *XML::Xercesc::SchemaSymbols_fgELT_RESTRICTION;
+*SchemaSymbols_fgELT_EXTENSION = *XML::Xercesc::SchemaSymbols_fgELT_EXTENSION;
+*SchemaSymbols_fgATT_ABSTRACT = *XML::Xercesc::SchemaSymbols_fgATT_ABSTRACT;
+*SchemaSymbols_fgATT_ATTRIBUTEFORMDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_ATTRIBUTEFORMDEFAULT;
+*SchemaSymbols_fgATT_BASE = *XML::Xercesc::SchemaSymbols_fgATT_BASE;
+*SchemaSymbols_fgATT_ITEMTYPE = *XML::Xercesc::SchemaSymbols_fgATT_ITEMTYPE;
+*SchemaSymbols_fgATT_MEMBERTYPES = *XML::Xercesc::SchemaSymbols_fgATT_MEMBERTYPES;
+*SchemaSymbols_fgATT_BLOCK = *XML::Xercesc::SchemaSymbols_fgATT_BLOCK;
+*SchemaSymbols_fgATT_BLOCKDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_BLOCKDEFAULT;
+*SchemaSymbols_fgATT_DEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_DEFAULT;
+*SchemaSymbols_fgATT_ELEMENTFORMDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_ELEMENTFORMDEFAULT;
+*SchemaSymbols_fgATT_SUBSTITUTIONGROUP = *XML::Xercesc::SchemaSymbols_fgATT_SUBSTITUTIONGROUP;
+*SchemaSymbols_fgATT_FINAL = *XML::Xercesc::SchemaSymbols_fgATT_FINAL;
+*SchemaSymbols_fgATT_FINALDEFAULT = *XML::Xercesc::SchemaSymbols_fgATT_FINALDEFAULT;
+*SchemaSymbols_fgATT_FIXED = *XML::Xercesc::SchemaSymbols_fgATT_FIXED;
+*SchemaSymbols_fgATT_FORM = *XML::Xercesc::SchemaSymbols_fgATT_FORM;
+*SchemaSymbols_fgATT_ID = *XML::Xercesc::SchemaSymbols_fgATT_ID;
+*SchemaSymbols_fgATT_MAXOCCURS = *XML::Xercesc::SchemaSymbols_fgATT_MAXOCCURS;
+*SchemaSymbols_fgATT_MINOCCURS = *XML::Xercesc::SchemaSymbols_fgATT_MINOCCURS;
+*SchemaSymbols_fgATT_NAME = *XML::Xercesc::SchemaSymbols_fgATT_NAME;
+*SchemaSymbols_fgATT_NAMESPACE = *XML::Xercesc::SchemaSymbols_fgATT_NAMESPACE;
+*SchemaSymbols_fgATT_NILL = *XML::Xercesc::SchemaSymbols_fgATT_NILL;
+*SchemaSymbols_fgATT_NILLABLE = *XML::Xercesc::SchemaSymbols_fgATT_NILLABLE;
+*SchemaSymbols_fgATT_PROCESSCONTENTS = *XML::Xercesc::SchemaSymbols_fgATT_PROCESSCONTENTS;
+*SchemaSymbols_fgATT_REF = *XML::Xercesc::SchemaSymbols_fgATT_REF;
+*SchemaSymbols_fgATT_REFER = *XML::Xercesc::SchemaSymbols_fgATT_REFER;
+*SchemaSymbols_fgATT_SCHEMALOCATION = *XML::Xercesc::SchemaSymbols_fgATT_SCHEMALOCATION;
+*SchemaSymbols_fgATT_SOURCE = *XML::Xercesc::SchemaSymbols_fgATT_SOURCE;
+*SchemaSymbols_fgATT_SYSTEM = *XML::Xercesc::SchemaSymbols_fgATT_SYSTEM;
+*SchemaSymbols_fgATT_PUBLIC = *XML::Xercesc::SchemaSymbols_fgATT_PUBLIC;
+*SchemaSymbols_fgATT_TARGETNAMESPACE = *XML::Xercesc::SchemaSymbols_fgATT_TARGETNAMESPACE;
+*SchemaSymbols_fgATT_TYPE = *XML::Xercesc::SchemaSymbols_fgATT_TYPE;
+*SchemaSymbols_fgATT_USE = *XML::Xercesc::SchemaSymbols_fgATT_USE;
+*SchemaSymbols_fgATT_VALUE = *XML::Xercesc::SchemaSymbols_fgATT_VALUE;
+*SchemaSymbols_fgATT_MIXED = *XML::Xercesc::SchemaSymbols_fgATT_MIXED;
+*SchemaSymbols_fgATT_VERSION = *XML::Xercesc::SchemaSymbols_fgATT_VERSION;
+*SchemaSymbols_fgATT_XPATH = *XML::Xercesc::SchemaSymbols_fgATT_XPATH;
+*SchemaSymbols_fgATTVAL_TWOPOUNDANY = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDANY;
+*SchemaSymbols_fgATTVAL_TWOPOUNDLOCAL = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDLOCAL;
+*SchemaSymbols_fgATTVAL_TWOPOUNDOTHER = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDOTHER;
+*SchemaSymbols_fgATTVAL_TWOPOUNDTRAGETNAMESPACE = *XML::Xercesc::SchemaSymbols_fgATTVAL_TWOPOUNDTRAGETNAMESPACE;
+*SchemaSymbols_fgATTVAL_POUNDALL = *XML::Xercesc::SchemaSymbols_fgATTVAL_POUNDALL;
+*SchemaSymbols_fgATTVAL_BASE64 = *XML::Xercesc::SchemaSymbols_fgATTVAL_BASE64;
+*SchemaSymbols_fgATTVAL_BOOLEAN = *XML::Xercesc::SchemaSymbols_fgATTVAL_BOOLEAN;
+*SchemaSymbols_fgATTVAL_DEFAULT = *XML::Xercesc::SchemaSymbols_fgATTVAL_DEFAULT;
+*SchemaSymbols_fgATTVAL_ELEMENTONLY = *XML::Xercesc::SchemaSymbols_fgATTVAL_ELEMENTONLY;
+*SchemaSymbols_fgATTVAL_EMPTY = *XML::Xercesc::SchemaSymbols_fgATTVAL_EMPTY;
+*SchemaSymbols_fgATTVAL_EXTENSION = *XML::Xercesc::SchemaSymbols_fgATTVAL_EXTENSION;
+*SchemaSymbols_fgATTVAL_FALSE = *XML::Xercesc::SchemaSymbols_fgATTVAL_FALSE;
+*SchemaSymbols_fgATTVAL_FIXED = *XML::Xercesc::SchemaSymbols_fgATTVAL_FIXED;
+*SchemaSymbols_fgATTVAL_HEX = *XML::Xercesc::SchemaSymbols_fgATTVAL_HEX;
+*SchemaSymbols_fgATTVAL_ID = *XML::Xercesc::SchemaSymbols_fgATTVAL_ID;
+*SchemaSymbols_fgATTVAL_LAX = *XML::Xercesc::SchemaSymbols_fgATTVAL_LAX;
+*SchemaSymbols_fgATTVAL_MAXLENGTH = *XML::Xercesc::SchemaSymbols_fgATTVAL_MAXLENGTH;
+*SchemaSymbols_fgATTVAL_MINLENGTH = *XML::Xercesc::SchemaSymbols_fgATTVAL_MINLENGTH;
+*SchemaSymbols_fgATTVAL_MIXED = *XML::Xercesc::SchemaSymbols_fgATTVAL_MIXED;
+*SchemaSymbols_fgATTVAL_NCNAME = *XML::Xercesc::SchemaSymbols_fgATTVAL_NCNAME;
+*SchemaSymbols_fgATTVAL_OPTIONAL = *XML::Xercesc::SchemaSymbols_fgATTVAL_OPTIONAL;
+*SchemaSymbols_fgATTVAL_PROHIBITED = *XML::Xercesc::SchemaSymbols_fgATTVAL_PROHIBITED;
+*SchemaSymbols_fgATTVAL_QNAME = *XML::Xercesc::SchemaSymbols_fgATTVAL_QNAME;
+*SchemaSymbols_fgATTVAL_QUALIFIED = *XML::Xercesc::SchemaSymbols_fgATTVAL_QUALIFIED;
+*SchemaSymbols_fgATTVAL_REQUIRED = *XML::Xercesc::SchemaSymbols_fgATTVAL_REQUIRED;
+*SchemaSymbols_fgATTVAL_RESTRICTION = *XML::Xercesc::SchemaSymbols_fgATTVAL_RESTRICTION;
+*SchemaSymbols_fgATTVAL_SKIP = *XML::Xercesc::SchemaSymbols_fgATTVAL_SKIP;
+*SchemaSymbols_fgATTVAL_STRICT = *XML::Xercesc::SchemaSymbols_fgATTVAL_STRICT;
+*SchemaSymbols_fgATTVAL_STRING = *XML::Xercesc::SchemaSymbols_fgATTVAL_STRING;
+*SchemaSymbols_fgATTVAL_TEXTONLY = *XML::Xercesc::SchemaSymbols_fgATTVAL_TEXTONLY;
+*SchemaSymbols_fgATTVAL_TIMEDURATION = *XML::Xercesc::SchemaSymbols_fgATTVAL_TIMEDURATION;
+*SchemaSymbols_fgATTVAL_TRUE = *XML::Xercesc::SchemaSymbols_fgATTVAL_TRUE;
+*SchemaSymbols_fgATTVAL_UNQUALIFIED = *XML::Xercesc::SchemaSymbols_fgATTVAL_UNQUALIFIED;
+*SchemaSymbols_fgATTVAL_URI = *XML::Xercesc::SchemaSymbols_fgATTVAL_URI;
+*SchemaSymbols_fgATTVAL_URIREFERENCE = *XML::Xercesc::SchemaSymbols_fgATTVAL_URIREFERENCE;
+*SchemaSymbols_fgATTVAL_SUBSTITUTIONGROUP = *XML::Xercesc::SchemaSymbols_fgATTVAL_SUBSTITUTIONGROUP;
+*SchemaSymbols_fgATTVAL_SUBSTITUTION = *XML::Xercesc::SchemaSymbols_fgATTVAL_SUBSTITUTION;
+*SchemaSymbols_fgATTVAL_ANYTYPE = *XML::Xercesc::SchemaSymbols_fgATTVAL_ANYTYPE;
+*SchemaSymbols_fgWS_PRESERVE = *XML::Xercesc::SchemaSymbols_fgWS_PRESERVE;
+*SchemaSymbols_fgWS_COLLAPSE = *XML::Xercesc::SchemaSymbols_fgWS_COLLAPSE;
+*SchemaSymbols_fgWS_REPLACE = *XML::Xercesc::SchemaSymbols_fgWS_REPLACE;
+*SchemaSymbols_fgDT_STRING = *XML::Xercesc::SchemaSymbols_fgDT_STRING;
+*SchemaSymbols_fgDT_TOKEN = *XML::Xercesc::SchemaSymbols_fgDT_TOKEN;
+*SchemaSymbols_fgDT_LANGUAGE = *XML::Xercesc::SchemaSymbols_fgDT_LANGUAGE;
+*SchemaSymbols_fgDT_NAME = *XML::Xercesc::SchemaSymbols_fgDT_NAME;
+*SchemaSymbols_fgDT_NCNAME = *XML::Xercesc::SchemaSymbols_fgDT_NCNAME;
+*SchemaSymbols_fgDT_INTEGER = *XML::Xercesc::SchemaSymbols_fgDT_INTEGER;
+*SchemaSymbols_fgDT_DECIMAL = *XML::Xercesc::SchemaSymbols_fgDT_DECIMAL;
+*SchemaSymbols_fgDT_BOOLEAN = *XML::Xercesc::SchemaSymbols_fgDT_BOOLEAN;
+*SchemaSymbols_fgDT_NONPOSITIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_NONPOSITIVEINTEGER;
+*SchemaSymbols_fgDT_NEGATIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_NEGATIVEINTEGER;
+*SchemaSymbols_fgDT_LONG = *XML::Xercesc::SchemaSymbols_fgDT_LONG;
+*SchemaSymbols_fgDT_INT = *XML::Xercesc::SchemaSymbols_fgDT_INT;
+*SchemaSymbols_fgDT_SHORT = *XML::Xercesc::SchemaSymbols_fgDT_SHORT;
+*SchemaSymbols_fgDT_BYTE = *XML::Xercesc::SchemaSymbols_fgDT_BYTE;
+*SchemaSymbols_fgDT_NONNEGATIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_NONNEGATIVEINTEGER;
+*SchemaSymbols_fgDT_ULONG = *XML::Xercesc::SchemaSymbols_fgDT_ULONG;
+*SchemaSymbols_fgDT_UINT = *XML::Xercesc::SchemaSymbols_fgDT_UINT;
+*SchemaSymbols_fgDT_USHORT = *XML::Xercesc::SchemaSymbols_fgDT_USHORT;
+*SchemaSymbols_fgDT_UBYTE = *XML::Xercesc::SchemaSymbols_fgDT_UBYTE;
+*SchemaSymbols_fgDT_POSITIVEINTEGER = *XML::Xercesc::SchemaSymbols_fgDT_POSITIVEINTEGER;
+*SchemaSymbols_fgDT_DATETIME = *XML::Xercesc::SchemaSymbols_fgDT_DATETIME;
+*SchemaSymbols_fgDT_DATE = *XML::Xercesc::SchemaSymbols_fgDT_DATE;
+*SchemaSymbols_fgDT_TIME = *XML::Xercesc::SchemaSymbols_fgDT_TIME;
+*SchemaSymbols_fgDT_DURATION = *XML::Xercesc::SchemaSymbols_fgDT_DURATION;
+*SchemaSymbols_fgDT_DAY = *XML::Xercesc::SchemaSymbols_fgDT_DAY;
+*SchemaSymbols_fgDT_MONTH = *XML::Xercesc::SchemaSymbols_fgDT_MONTH;
+*SchemaSymbols_fgDT_MONTHDAY = *XML::Xercesc::SchemaSymbols_fgDT_MONTHDAY;
+*SchemaSymbols_fgDT_YEAR = *XML::Xercesc::SchemaSymbols_fgDT_YEAR;
+*SchemaSymbols_fgDT_YEARMONTH = *XML::Xercesc::SchemaSymbols_fgDT_YEARMONTH;
+*SchemaSymbols_fgDT_BASE64BINARY = *XML::Xercesc::SchemaSymbols_fgDT_BASE64BINARY;
+*SchemaSymbols_fgDT_HEXBINARY = *XML::Xercesc::SchemaSymbols_fgDT_HEXBINARY;
+*SchemaSymbols_fgDT_FLOAT = *XML::Xercesc::SchemaSymbols_fgDT_FLOAT;
+*SchemaSymbols_fgDT_DOUBLE = *XML::Xercesc::SchemaSymbols_fgDT_DOUBLE;
+*SchemaSymbols_fgDT_URIREFERENCE = *XML::Xercesc::SchemaSymbols_fgDT_URIREFERENCE;
+*SchemaSymbols_fgDT_ANYURI = *XML::Xercesc::SchemaSymbols_fgDT_ANYURI;
+*SchemaSymbols_fgDT_QNAME = *XML::Xercesc::SchemaSymbols_fgDT_QNAME;
+*SchemaSymbols_fgDT_NORMALIZEDSTRING = *XML::Xercesc::SchemaSymbols_fgDT_NORMALIZEDSTRING;
+*SchemaSymbols_fgDT_ANYSIMPLETYPE = *XML::Xercesc::SchemaSymbols_fgDT_ANYSIMPLETYPE;
+*SchemaSymbols_fgRegEx_XOption = *XML::Xercesc::SchemaSymbols_fgRegEx_XOption;
+*SchemaSymbols_fgRedefIdentifier = *XML::Xercesc::SchemaSymbols_fgRedefIdentifier;
+*SchemaSymbols_fgINT_MIN_VALUE = *XML::Xercesc::SchemaSymbols_fgINT_MIN_VALUE;
+*SchemaSymbols_fgINT_MAX_VALUE = *XML::Xercesc::SchemaSymbols_fgINT_MAX_VALUE;
+*PSVIUni_fgPsvColon = *XML::Xercesc::PSVIUni_fgPsvColon;
+*PSVIUni_fgAllDeclarationsProcessed = *XML::Xercesc::PSVIUni_fgAllDeclarationsProcessed;
+*PSVIUni_fgAttribute = *XML::Xercesc::PSVIUni_fgAttribute;
+*PSVIUni_fgAttributes = *XML::Xercesc::PSVIUni_fgAttributes;
+*PSVIUni_fgAttributeType = *XML::Xercesc::PSVIUni_fgAttributeType;
+*PSVIUni_fgBaseURI = *XML::Xercesc::PSVIUni_fgBaseURI;
+*PSVIUni_fgCharacter = *XML::Xercesc::PSVIUni_fgCharacter;
+*PSVIUni_fgCharacterEncodingScheme = *XML::Xercesc::PSVIUni_fgCharacterEncodingScheme;
+*PSVIUni_fgChildren = *XML::Xercesc::PSVIUni_fgChildren;
+*PSVIUni_fgComment = *XML::Xercesc::PSVIUni_fgComment;
+*PSVIUni_fgContent = *XML::Xercesc::PSVIUni_fgContent;
+*PSVIUni_fgDocument = *XML::Xercesc::PSVIUni_fgDocument;
+*PSVIUni_fgDocTypeDeclaration = *XML::Xercesc::PSVIUni_fgDocTypeDeclaration;
+*PSVIUni_fgDocumentElement = *XML::Xercesc::PSVIUni_fgDocumentElement;
+*PSVIUni_fgElement = *XML::Xercesc::PSVIUni_fgElement;
+*PSVIUni_fgInScopeNamespaces = *XML::Xercesc::PSVIUni_fgInScopeNamespaces;
+*PSVIUni_fgLocalName = *XML::Xercesc::PSVIUni_fgLocalName;
+*PSVIUni_fgNamespace = *XML::Xercesc::PSVIUni_fgNamespace;
+*PSVIUni_fgNamespaceAttributes = *XML::Xercesc::PSVIUni_fgNamespaceAttributes;
+*PSVIUni_fgNamespaceName = *XML::Xercesc::PSVIUni_fgNamespaceName;
+*PSVIUni_fgNormalizedValue = *XML::Xercesc::PSVIUni_fgNormalizedValue;
+*PSVIUni_fgNotations = *XML::Xercesc::PSVIUni_fgNotations;
+*PSVIUni_fgPrefix = *XML::Xercesc::PSVIUni_fgPrefix;
+*PSVIUni_fgProcessingInstruction = *XML::Xercesc::PSVIUni_fgProcessingInstruction;
+*PSVIUni_fgReferences = *XML::Xercesc::PSVIUni_fgReferences;
+*PSVIUni_fgSpecified = *XML::Xercesc::PSVIUni_fgSpecified;
+*PSVIUni_fgStandalone = *XML::Xercesc::PSVIUni_fgStandalone;
+*PSVIUni_fgTarget = *XML::Xercesc::PSVIUni_fgTarget;
+*PSVIUni_fgText = *XML::Xercesc::PSVIUni_fgText;
+*PSVIUni_fgTextContent = *XML::Xercesc::PSVIUni_fgTextContent;
+*PSVIUni_fgUnparsedEntities = *XML::Xercesc::PSVIUni_fgUnparsedEntities;
+*PSVIUni_fgVersion = *XML::Xercesc::PSVIUni_fgVersion;
+*PSVIUni_fgAbstract = *XML::Xercesc::PSVIUni_fgAbstract;
+*PSVIUni_fgAnnotation = *XML::Xercesc::PSVIUni_fgAnnotation;
+*PSVIUni_fgAnnotations = *XML::Xercesc::PSVIUni_fgAnnotations;
+*PSVIUni_fgApplicationInformation = *XML::Xercesc::PSVIUni_fgApplicationInformation;
+*PSVIUni_fgAttributeDeclaration = *XML::Xercesc::PSVIUni_fgAttributeDeclaration;
+*PSVIUni_fgAttributeGroupDefinition = *XML::Xercesc::PSVIUni_fgAttributeGroupDefinition;
+*PSVIUni_fgAttributeUse = *XML::Xercesc::PSVIUni_fgAttributeUse;
+*PSVIUni_fgAttributeUses = *XML::Xercesc::PSVIUni_fgAttributeUses;
+*PSVIUni_fgAttributeWildcard = *XML::Xercesc::PSVIUni_fgAttributeWildcard;
+*PSVIUni_fgBaseTypeDefinition = *XML::Xercesc::PSVIUni_fgBaseTypeDefinition;
+*PSVIUni_fgCanonicalRepresentation = *XML::Xercesc::PSVIUni_fgCanonicalRepresentation;
+*PSVIUni_fgComplexTypeDefinition = *XML::Xercesc::PSVIUni_fgComplexTypeDefinition;
+*PSVIUni_fgCompositor = *XML::Xercesc::PSVIUni_fgCompositor;
+*PSVIUni_fgContentType = *XML::Xercesc::PSVIUni_fgContentType;
+*PSVIUni_fgDeclaration = *XML::Xercesc::PSVIUni_fgDeclaration;
+*PSVIUni_fgDerivationMethod = *XML::Xercesc::PSVIUni_fgDerivationMethod;
+*PSVIUni_fgDisallowedSubstitutions = *XML::Xercesc::PSVIUni_fgDisallowedSubstitutions;
+*PSVIUni_fgPsvDocument = *XML::Xercesc::PSVIUni_fgPsvDocument;
+*PSVIUni_fgDocumentLocation = *XML::Xercesc::PSVIUni_fgDocumentLocation;
+*PSVIUni_fgElementDeclaration = *XML::Xercesc::PSVIUni_fgElementDeclaration;
+*PSVIUni_fgFacets = *XML::Xercesc::PSVIUni_fgFacets;
+*PSVIUni_fgFacetFixed = *XML::Xercesc::PSVIUni_fgFacetFixed;
+*PSVIUni_fgFields = *XML::Xercesc::PSVIUni_fgFields;
+*PSVIUni_fgFinal = *XML::Xercesc::PSVIUni_fgFinal;
+*PSVIUni_fgFundamentalFacets = *XML::Xercesc::PSVIUni_fgFundamentalFacets;
+*PSVIUni_fgIdentityConstraintCategory = *XML::Xercesc::PSVIUni_fgIdentityConstraintCategory;
+*PSVIUni_fgIdentityConstraintDefinition = *XML::Xercesc::PSVIUni_fgIdentityConstraintDefinition;
+*PSVIUni_fgIdentityConstraintDefinitions = *XML::Xercesc::PSVIUni_fgIdentityConstraintDefinitions;
+*PSVIUni_fgIdentityConstraintTable = *XML::Xercesc::PSVIUni_fgIdentityConstraintTable;
+*PSVIUni_fgIdIdrefTable = *XML::Xercesc::PSVIUni_fgIdIdrefTable;
+*PSVIUni_fgItemTypeDefinition = *XML::Xercesc::PSVIUni_fgItemTypeDefinition;
+*PSVIUni_fgMaxOccurs = *XML::Xercesc::PSVIUni_fgMaxOccurs;
+*PSVIUni_fgMemberTypeDefinition = *XML::Xercesc::PSVIUni_fgMemberTypeDefinition;
+*PSVIUni_fgMemberTypeDefinitions = *XML::Xercesc::PSVIUni_fgMemberTypeDefinitions;
+*PSVIUni_fgMinOccurs = *XML::Xercesc::PSVIUni_fgMinOccurs;
+*PSVIUni_fgModelGroup = *XML::Xercesc::PSVIUni_fgModelGroup;
+*PSVIUni_fgModelGroupDefinition = *XML::Xercesc::PSVIUni_fgModelGroupDefinition;
+*PSVIUni_fgName = *XML::Xercesc::PSVIUni_fgName;
+*PSVIUni_fgNamespaceConstraint = *XML::Xercesc::PSVIUni_fgNamespaceConstraint;
+*PSVIUni_fgNamespaces = *XML::Xercesc::PSVIUni_fgNamespaces;
+*PSVIUni_fgNamespaceSchemaInformation = *XML::Xercesc::PSVIUni_fgNamespaceSchemaInformation;
+*PSVIUni_fgNil = *XML::Xercesc::PSVIUni_fgNil;
+*PSVIUni_fgNillable = *XML::Xercesc::PSVIUni_fgNillable;
+*PSVIUni_fgNotation = *XML::Xercesc::PSVIUni_fgNotation;
+*PSVIUni_fgNotationDeclaration = *XML::Xercesc::PSVIUni_fgNotationDeclaration;
+*PSVIUni_fgParticle = *XML::Xercesc::PSVIUni_fgParticle;
+*PSVIUni_fgParticles = *XML::Xercesc::PSVIUni_fgParticles;
+*PSVIUni_fgPrimitiveTypeDefinition = *XML::Xercesc::PSVIUni_fgPrimitiveTypeDefinition;
+*PSVIUni_fgProcessContents = *XML::Xercesc::PSVIUni_fgProcessContents;
+*PSVIUni_fgProhibitedSubstitutions = *XML::Xercesc::PSVIUni_fgProhibitedSubstitutions;
+*PSVIUni_fgPublicIdentifier = *XML::Xercesc::PSVIUni_fgPublicIdentifier;
+*PSVIUni_fgReferencedKey = *XML::Xercesc::PSVIUni_fgReferencedKey;
+*PSVIUni_fgRequired = *XML::Xercesc::PSVIUni_fgRequired;
+*PSVIUni_fgSchemaAnnotations = *XML::Xercesc::PSVIUni_fgSchemaAnnotations;
+*PSVIUni_fgSchemaComponents = *XML::Xercesc::PSVIUni_fgSchemaComponents;
+*PSVIUni_fgSchemaDefault = *XML::Xercesc::PSVIUni_fgSchemaDefault;
+*PSVIUni_fgSchemaDocument = *XML::Xercesc::PSVIUni_fgSchemaDocument;
+*PSVIUni_fgSchemaDocuments = *XML::Xercesc::PSVIUni_fgSchemaDocuments;
+*PSVIUni_fgSchemaErrorCode = *XML::Xercesc::PSVIUni_fgSchemaErrorCode;
+*PSVIUni_fgSchemaInformation = *XML::Xercesc::PSVIUni_fgSchemaInformation;
+*PSVIUni_fgSchemaNamespace = *XML::Xercesc::PSVIUni_fgSchemaNamespace;
+*PSVIUni_fgSchemaNormalizedValue = *XML::Xercesc::PSVIUni_fgSchemaNormalizedValue;
+*PSVIUni_fgSchemaSpecified = *XML::Xercesc::PSVIUni_fgSchemaSpecified;
+*PSVIUni_fgScope = *XML::Xercesc::PSVIUni_fgScope;
+*PSVIUni_fgSelector = *XML::Xercesc::PSVIUni_fgSelector;
+*PSVIUni_fgSimpleTypeDefinition = *XML::Xercesc::PSVIUni_fgSimpleTypeDefinition;
+*PSVIUni_fgSubstitutionGroupAffiliation = *XML::Xercesc::PSVIUni_fgSubstitutionGroupAffiliation;
+*PSVIUni_fgSubstitutionGroupExclusions = *XML::Xercesc::PSVIUni_fgSubstitutionGroupExclusions;
+*PSVIUni_fgSystemIdentifier = *XML::Xercesc::PSVIUni_fgSystemIdentifier;
+*PSVIUni_fgTargetNamespace = *XML::Xercesc::PSVIUni_fgTargetNamespace;
+*PSVIUni_fgTerm = *XML::Xercesc::PSVIUni_fgTerm;
+*PSVIUni_fgTypeDefinition = *XML::Xercesc::PSVIUni_fgTypeDefinition;
+*PSVIUni_fgUserInformation = *XML::Xercesc::PSVIUni_fgUserInformation;
+*PSVIUni_fgValidationAttempted = *XML::Xercesc::PSVIUni_fgValidationAttempted;
+*PSVIUni_fgValidationContext = *XML::Xercesc::PSVIUni_fgValidationContext;
+*PSVIUni_fgValidity = *XML::Xercesc::PSVIUni_fgValidity;
+*PSVIUni_fgValue = *XML::Xercesc::PSVIUni_fgValue;
+*PSVIUni_fgValueConstraint = *XML::Xercesc::PSVIUni_fgValueConstraint;
+*PSVIUni_fgVariety = *XML::Xercesc::PSVIUni_fgVariety;
+*PSVIUni_fgWildcard = *XML::Xercesc::PSVIUni_fgWildcard;
+*PSVIUni_fgXpath = *XML::Xercesc::PSVIUni_fgXpath;
+*PSVIUni_fgAll = *XML::Xercesc::PSVIUni_fgAll;
+*PSVIUni_fgAny = *XML::Xercesc::PSVIUni_fgAny;
+*PSVIUni_fgAppinfo = *XML::Xercesc::PSVIUni_fgAppinfo;
+*PSVIUni_fgAtomic = *XML::Xercesc::PSVIUni_fgAtomic;
+*PSVIUni_fgChoice = *XML::Xercesc::PSVIUni_fgChoice;
+*PSVIUni_fgDefault = *XML::Xercesc::PSVIUni_fgDefault;
+*PSVIUni_fgDocumentation = *XML::Xercesc::PSVIUni_fgDocumentation;
+*PSVIUni_fgElementOnly = *XML::Xercesc::PSVIUni_fgElementOnly;
+*PSVIUni_fgEmpty = *XML::Xercesc::PSVIUni_fgEmpty;
+*PSVIUni_fgExtension = *XML::Xercesc::PSVIUni_fgExtension;
+*PSVIUni_fgFalse = *XML::Xercesc::PSVIUni_fgFalse;
+*PSVIUni_fgFull = *XML::Xercesc::PSVIUni_fgFull;
+*PSVIUni_fgGlobal = *XML::Xercesc::PSVIUni_fgGlobal;
+*PSVIUni_fgInfoset = *XML::Xercesc::PSVIUni_fgInfoset;
+*PSVIUni_fgInvalid = *XML::Xercesc::PSVIUni_fgInvalid;
+*PSVIUni_fgKey = *XML::Xercesc::PSVIUni_fgKey;
+*PSVIUni_fgKeyref = *XML::Xercesc::PSVIUni_fgKeyref;
+*PSVIUni_fgLax = *XML::Xercesc::PSVIUni_fgLax;
+*PSVIUni_fgList = *XML::Xercesc::PSVIUni_fgList;
+*PSVIUni_fgLocal = *XML::Xercesc::PSVIUni_fgLocal;
+*PSVIUni_fgMixed = *XML::Xercesc::PSVIUni_fgMixed;
+*PSVIUni_fgNone = *XML::Xercesc::PSVIUni_fgNone;
+*PSVIUni_fgNotKnown = *XML::Xercesc::PSVIUni_fgNotKnown;
+*PSVIUni_fgNsNamespace = *XML::Xercesc::PSVIUni_fgNsNamespace;
+*PSVIUni_fgOnePointZero = *XML::Xercesc::PSVIUni_fgOnePointZero;
+*PSVIUni_fgPartial = *XML::Xercesc::PSVIUni_fgPartial;
+*PSVIUni_fgRestrict = *XML::Xercesc::PSVIUni_fgRestrict;
+*PSVIUni_fgRestriction = *XML::Xercesc::PSVIUni_fgRestriction;
+*PSVIUni_fgSchema = *XML::Xercesc::PSVIUni_fgSchema;
+*PSVIUni_fgSequence = *XML::Xercesc::PSVIUni_fgSequence;
+*PSVIUni_fgSimple = *XML::Xercesc::PSVIUni_fgSimple;
+*PSVIUni_fgSkip = *XML::Xercesc::PSVIUni_fgSkip;
+*PSVIUni_fgStrict = *XML::Xercesc::PSVIUni_fgStrict;
+*PSVIUni_fgSubstitution = *XML::Xercesc::PSVIUni_fgSubstitution;
+*PSVIUni_fgTotal = *XML::Xercesc::PSVIUni_fgTotal;
+*PSVIUni_fgTrue = *XML::Xercesc::PSVIUni_fgTrue;
+*PSVIUni_fgUnbounded = *XML::Xercesc::PSVIUni_fgUnbounded;
+*PSVIUni_fgUnion = *XML::Xercesc::PSVIUni_fgUnion;
+*PSVIUni_fgUnique = *XML::Xercesc::PSVIUni_fgUnique;
+*PSVIUni_fgUnknown = *XML::Xercesc::PSVIUni_fgUnknown;
+*PSVIUni_fgValid = *XML::Xercesc::PSVIUni_fgValid;
+*PSVIUni_fgVCFixed = *XML::Xercesc::PSVIUni_fgVCFixed;
+*PSVIUni_fgXMLChNull = *XML::Xercesc::PSVIUni_fgXMLChNull;
+*PSVIUni_fgAg = *XML::Xercesc::PSVIUni_fgAg;
+*PSVIUni_fgAnnot = *XML::Xercesc::PSVIUni_fgAnnot;
+*PSVIUni_fgAttr = *XML::Xercesc::PSVIUni_fgAttr;
+*PSVIUni_fgAu = *XML::Xercesc::PSVIUni_fgAu;
+*PSVIUni_fgElt = *XML::Xercesc::PSVIUni_fgElt;
+*PSVIUni_fgIdc = *XML::Xercesc::PSVIUni_fgIdc;
+*PSVIUni_fgMg = *XML::Xercesc::PSVIUni_fgMg;
+*PSVIUni_fgNot = *XML::Xercesc::PSVIUni_fgNot;
+*PSVIUni_fgType = *XML::Xercesc::PSVIUni_fgType;
+*PSVIUni_fgBounded = *XML::Xercesc::PSVIUni_fgBounded;
+*PSVIUni_fgCardinality = *XML::Xercesc::PSVIUni_fgCardinality;
+*PSVIUni_fgEnumeration = *XML::Xercesc::PSVIUni_fgEnumeration;
+*PSVIUni_fgFractionDigits = *XML::Xercesc::PSVIUni_fgFractionDigits;
+*PSVIUni_fgLength = *XML::Xercesc::PSVIUni_fgLength;
+*PSVIUni_fgMaxExclusive = *XML::Xercesc::PSVIUni_fgMaxExclusive;
+*PSVIUni_fgMaxInclusive = *XML::Xercesc::PSVIUni_fgMaxInclusive;
+*PSVIUni_fgMaxLength = *XML::Xercesc::PSVIUni_fgMaxLength;
+*PSVIUni_fgMinExclusive = *XML::Xercesc::PSVIUni_fgMinExclusive;
+*PSVIUni_fgMinInclusive = *XML::Xercesc::PSVIUni_fgMinInclusive;
+*PSVIUni_fgMinLength = *XML::Xercesc::PSVIUni_fgMinLength;
+*PSVIUni_fgNumeric = *XML::Xercesc::PSVIUni_fgNumeric;
+*PSVIUni_fgOrdered = *XML::Xercesc::PSVIUni_fgOrdered;
+*PSVIUni_fgPattern = *XML::Xercesc::PSVIUni_fgPattern;
+*PSVIUni_fgTotalDigits = *XML::Xercesc::PSVIUni_fgTotalDigits;
+*PSVIUni_fgWhiteSpace = *XML::Xercesc::PSVIUni_fgWhiteSpace;
+*PSVIUni_fgNamespaceInfoset = *XML::Xercesc::PSVIUni_fgNamespaceInfoset;
+*PSVIUni_fgXsi = *XML::Xercesc::PSVIUni_fgXsi;
+*PSVIUni_fgNamespaceInstance = *XML::Xercesc::PSVIUni_fgNamespaceInstance;
+*PSVIUni_fgPsv = *XML::Xercesc::PSVIUni_fgPsv;
+*PSVIUni_fgNamespacePsvi = *XML::Xercesc::PSVIUni_fgNamespacePsvi;
+*PSVIUni_fgXml = *XML::Xercesc::PSVIUni_fgXml;
+*PSVIUni_fgNamespaceXmlSchema = *XML::Xercesc::PSVIUni_fgNamespaceXmlSchema;
 *XMLElementDecl_fgInvalidElemId = *XML::Xercesc::XMLElementDecl_fgInvalidElemId;
 *XMLElementDecl_fgPCDataElemId = *XML::Xercesc::XMLElementDecl_fgPCDataElemId;
 *XMLElementDecl_fgPCDataElemName = *XML::Xercesc::XMLElementDecl_fgPCDataElemName;
@@ -4612,4 +4954,5 @@ package XML::Xerces;
 *PERLCALLBACKHANDLER_NODE_TYPE = *XML::Xercesc::PERLCALLBACKHANDLER_NODE_TYPE;
 *PERLCALLBACKHANDLER_CONTENT_TYPE = *XML::Xercesc::PERLCALLBACKHANDLER_CONTENT_TYPE;
 *PERLCALLBACKHANDLER_DOCUMENT_TYPE = *XML::Xercesc::PERLCALLBACKHANDLER_DOCUMENT_TYPE;
+*PERLCALLBACKHANDLER_DOMERROR_TYPE = *XML::Xercesc::PERLCALLBACKHANDLER_DOMERROR_TYPE;
 1;

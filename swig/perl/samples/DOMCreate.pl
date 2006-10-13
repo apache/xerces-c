@@ -39,9 +39,9 @@ XML::Xerces::XMLPlatformUtils::Initialize();
 
 my $impl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');
 my $dt = eval{$impl->createDocumentType('contributors', '', 'contributors.dtd')};
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 my $doc = eval{$impl->createDocument('contributors', 'contributors',$dt)};
-XML::Xerces::error($@) if $@;
+XML::Xerces::fatal_error($@) if ($@);
 
 my $root = $doc->getDocumentElement();
 

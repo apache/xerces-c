@@ -134,7 +134,7 @@ $parser->setDoSchema ($schema);
 my $ERROR_HANDLER = XML::Xerces::PerlErrorHandler->new();
 $parser->setErrorHandler($ERROR_HANDLER);
 eval {$parser->parse ($file)};
-XML::Xerces::error($@) if ($@);
+XML::Xerces::fatal_error($@) if ($@);
 
 my $doc = $parser->getDocument();
 my $impl = XML::Xerces::DOMImplementationRegistry::getDOMImplementation('LS');

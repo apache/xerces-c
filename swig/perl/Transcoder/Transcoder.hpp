@@ -35,7 +35,7 @@ extern "C" {
 #include "xercesc/util/TransService.hpp"
 #include "xercesc/util/PlatformUtils.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
 class Transcoder {
 
@@ -53,8 +53,10 @@ public:
 
   ~Transcoder();
 
-  SV* XMLString2Perl(const XMLCh*);
-  XMLCh* Perl2XMLString(SV*);
+  SV* XMLString2Local(const XMLCh*);
+  XMLCh* Local2XMLString(SV*);
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif /* __TRANSCODER */

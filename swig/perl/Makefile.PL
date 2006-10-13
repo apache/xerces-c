@@ -23,6 +23,7 @@ use vars qw($INCLUDES $CXX $CFLAGS @LDFLAGS @OPTIMIZE $LIBS
 	    $TRANSCODER_LIB $HANDLER_LIB
 	    $XERCESCROOT $SWIG_DIR $PERL_DIR $HANDLER_DIR $SCRIPTS_DIR $INTERFACE_DIR
 	    $SWIG_ARGS
+	    @SAX_INTERFACE_FILES @DOM_INTERFACE_FILES @IO_INTERFACE_FILES
 	   );
 use File::Basename;
 use Cwd qw(abs_path);
@@ -75,7 +76,7 @@ print STDERR "Using XERCES_LIB = $XERCES_LIB\n";
 $LIBS .= " -L$XERCES_LIB ";
 
 print STDERR "Using XERCES_INCLUDE = $XERCES_INCLUDE\n";
-$INCLUDES .= " -I$XERCES_INCLUDE -I$XERCESCROOT";
+$INCLUDES .= " -I$XERCES_INCLUDE -I$XERCESCROOT  -I$XERCESCROOT/samples/src";
 
 
 my $config_file = 'config.status';
@@ -210,6 +211,7 @@ print STDERR "Successfully located $libxerces_name!!\n";
 
 $HANDLER_LIB = '$(INST_ARCHLIB)/auto/Handler/Handler$(LIB_EXT)';
 $TRANSCODER_LIB = '$(INST_ARCHLIB)/auto/Transcoder/Transcoder$(LIB_EXT)';
+my $PSVIUNI_OBJ = "$XERCESCROOT/samples/src/PSVIWriter/PSVIUni" . '$(OBJ_EXT)';
 
 sub MY_postamble {
 qq[
@@ -236,8 +238,8 @@ if ($XERCES_DEVEL) {
   my @header_files;
   my @handler_headers;
   my @interface_files;
-  my @dom_interface_files;
-  my @non_dom_interface_files;
+
+  my @general_interface_files;
   chomp(@handler_headers = `$FIND $HANDLER_DIR -name "*.swig.hpp"`);
 
   @OPTIMIZE = (OPTIMIZE => '-g');
@@ -247,10 +249,18 @@ if ($XERCES_DEVEL) {
     chomp(my @import_files = `$FIND $HANDLER_DIR -name "*.i"`);
     push(@header_files,@handler_headers,@import_files);
 
-    chomp(my @interface_files = `$FIND $INTERFACE_DIR -name "*.i"`);
+    chomp(my @tmp_interface_files = `$FIND $INTERFACE_DIR -name "*.i"`);
+    @IO_INTERFACE_FILES = qw("$INTERFACE_DIR/Xerces_IO.i");
+    my @interface_files;
+    foreach my $test_file (@tmp_interface_files) {
+      if (not scalar grep {$_ eq $test_file} @IO_INTERFACE_FILES) {
+	push(@interface_files, $test_file);
+      }
+    }
     @interface_files = grep {$_ !~ /shadow/} @interface_files;
-    @dom_interface_files = grep {$_ =~ /dom/i} @interface_files;
-    @non_dom_interface_files = grep {$_ !~ /dom/i} @interface_files;
+    @DOM_INTERFACE_FILES = grep {$_ =~ /dom/i} @interface_files;
+    @SAX_INTERFACE_FILES = grep {$_ =~ /sax/i} @interface_files;
+    @general_interface_files = grep {$_ !~ /dom/i && $_ !~ /sax/i} @interface_files;
     local $" = ' ';
 
     my $MAKE_HANDLER    = '	\$(MAKE) -C Handler static';
@@ -264,16 +274,17 @@ if ($XERCES_DEVEL) {
     ### We no longer need to munge the C++ code thanks to SWIG improvements
     # perl postSource.pl Xerces.cpp
     my $retval = <<TERMINUS;
-Xerces-tmp.pm: $SCRIPTS_DIR/postModule.pl $INTERFACE_DIR/Perl/shadow.i
-	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp -pm Xerces-tmp.pm $INTERFACE_DIR/Xerces.i
+Xerces-tmp.pm: $SCRIPTS_DIR/postModule.pl $INTERFACE_DIR/Perl/shadow.i $INTERFACE_DIR/Perl/Xerces-extra.pm
+	\$(SWIG) $SWIG_ARGS -o unused.cpp -pm Xerces-tmp.pm $INTERFACE_DIR/Xerces.i
 
 Xerces.pm: $SCRIPTS_DIR/postModule.pl Xerces-tmp.pm
 	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=Xerces-tmp.pm --out=Xerces.pm
+	rm -f unused.cpp
 
 Xerces.cpp: $SCRIPTS_DIR/postSource.pl Xerces-tmp.cpp
 	perl -I$SCRIPTS_DIR $SCRIPTS_DIR/postSource.pl --in=Xerces-tmp.cpp --out=Xerces.cpp
 
-Xerces-tmp.cpp: $INTERFACE_DIR/Xerces.i @non_dom_interface_files @header_files  $INTERFACE_DIR/Perl/Xerces-extra.pm
+Xerces-tmp.cpp: $INTERFACE_DIR/Xerces.i @general_interface_files @header_files
 	\$(SWIG) $SWIG_ARGS -o Xerces-tmp.cpp -pm Xerces-tmp.pm $INTERFACE_DIR/Xerces.i
 	perl  -I$SCRIPTS_DIR $SCRIPTS_DIR/postModule.pl --in=Xerces-tmp.pm --out=Xerces.pm
 	cp -f Xerces.pm blib/lib/XML/Xerces.pm
@@ -297,6 +308,11 @@ TERMINUS
 
   # we want all warnings
   $CFLAGS .= ' -Wall';
+
+  # coverage analysis
+  # $CFLAGS .= ' -fprofile-arcs -ftest-coverage';
+  # $LIBS   .= ' -lgcov';
+
 #  print STDERR "Using SWIG version: SWIG_$ {sv_maj}_$ {sv_min}\n";
   *MY::postamble = \&Xerces_postamble;
 }
@@ -317,7 +333,7 @@ WriteMakefile(
  #   'DOM.pm' => '$(INST_LIB)/XML/Xerces/DOM.pm',
   },
   'INC'         => $INCLUDES,
-  'MYEXTLIB'    => "$HANDLER_LIB $TRANSCODER_LIB",
+  'MYEXTLIB'    => "$HANDLER_LIB $TRANSCODER_LIB $PSVIUNI_OBJ",
 #  'SKIP'      => [qw( pm_to_blib )],
   'LIBS'        => [$LIBS],
   'OBJECT'      => $OBJS,

@@ -9,16 +9,16 @@ Handler/Makefile.PL
 Handler/PerlCallbackHandler.cpp
 Handler/PerlCallbackHandler.hpp
 Handler/PerlCallbackHandler.cpp
+Handler/PerlContentCallbackHandler.cpp
 Handler/PerlContentCallbackHandler.hpp
 Handler/PerlDocumentCallbackHandler.cpp
 Handler/PerlDocumentCallbackHandler.hpp
 Handler/PerlErrorCallbackHandler.cpp
 Handler/PerlErrorCallbackHandler.hpp
 Handler/PerlEntityResolverHandler.hpp
-Handler/PerlEntityResolverHandler.i
+Handler/PerlEntityResolverHandler.cpp
 Handler/PerlNodeFilterCallbackHandler.hpp
-Handler/PerlNodeFilterCallbackHandler.i
-Handler/PerlContentCallbackHandler.cpp
+Handler/PerlNodeFilterCallbackHandler.cpp
 
 hints/darwin.pl
 hints/dec_osf.pl
@@ -85,17 +85,18 @@ t/DOMPrint.t
 t/XercesDOMParser.t
 t/DOMNamedNodeMap.t
 t/DOMNodeList.t
+t/DOMStringList.t
 t/DOMEntity.t
 t/DOMDocument.t
 t/DOMNode.t
 t/DOMException.t
-t/DOMBuilder.t
+t/DOMLSParser.t
 t/DOMParser.t
 t/DOMNodeIterator.t
 t/DOMTreeWalker.t
 t/DOMAttr.t
 t/DOMElement.t
-t/DOMWriter.t
+t/DOMLSSerializer.t
 t/DOMImplementation.t
 
 t/AttributeList.t
