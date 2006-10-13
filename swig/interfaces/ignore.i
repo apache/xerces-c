@@ -5,62 +5,6 @@
 %ignore createXMLReader(const XMLCh *);
 
 
-// Operators we don't want to wrap
-%ignore operator =;
-%ignore operator new;
-%ignore operator delete;
-%ignore operator <<;
-
-
-// both of these static variables cause trouble
-// the transcoding service is only useful to C++ anyway.
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgTransService;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgNetAccessor;
-
-// these are other static variables that are useless to Perl
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgUserPanicHandler;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgDefaultPanicHandler;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgDefaulPanicHandler;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgArrayMemoryManager;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgAtomicMutex;
-
-// these are methods that are useless in Perl
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::curFilePos;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::closeFile;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::fileSize;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::openFile;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::openFileToWrite;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::openStdInHandle;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::readFileBuffer;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::writeBufferToFile;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::resetFile;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::getFullPath;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::getCurrentDirectory;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::isAnySlash;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::removeDotSlash;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::removeDotDotSlash;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::isRelative;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::weavePaths;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::getCurrentMillis;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::closeMutex;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::lockMutex;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::makeMutex;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::unlockMutex;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::loadMsgSet;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::compareAndSwap;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::atomicIncrement;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::atomicDecrement;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::recognizeNEL;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::isNELRecognized;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::strictIANAEncoding;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::isStrictIANAEncoding;
-%ignore XERCES_CPP_NAMESPACE::XMLPlatformUtils::alignPointerForNewBlockAllocation;
-
-%ignore PerlErrorCallbackHandler::warning(const SAXParseException&);
-%ignore PerlErrorCallbackHandler::error(const SAXParseException&);
-%ignore PerlErrorCallbackHandler::fatalError(const SAXParseException&);
-
 // ignore the char* versions of ALL constructors
 %ignore XERCES_CPP_NAMESPACE::DOMLSParser::parseURI(const char *const );
 %ignore MemBufInputSource(const XMLByte* const, const unsigned int, const char* const,
@@ -93,19 +37,6 @@
         ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager);
 
 %ignore XERCES_CPP_NAMESPACE::AttributeList::getValue(const char* const) const;
-%ignore setExternalSchemaLocation(const char* const);
-%ignore setExternalNoNamespaceSchemaLocation(const char* const);
-
-/* 
- * Ignore these char* methods for all Parsers
- */
-%ignore loadGrammar(const char* const systemId,
-                                 const short grammarType,
-                                 const bool toCache = false);
-
-
-%ignore parse(const char* const);
-%ignore parseFirst(const char *const,XMLPScanToken&,const bool);
 
 /*
  * We need these constructors to always adopt the input strings
@@ -128,17 +59,6 @@
 %ignore Wrapper4DOMLSInput(
         DOMLSInput* const
 	, DOMLSResourceResolver*);
-
-// These are odd cases. We want access to skip the method with the
-// memory manager argument, but we want access to the optional argument
-// *after* the memory manager. So we just ignore the method that doesn't 
-// include the memory manager - since our typemap defaults that argument
-// they are redundant
-%ignore createLSParser(short const,const XMLCh* const);
-%ignore SAXParser(XMLValidator*   const);
-
-// FIXME SWIG-1.3.30 broke this
-// %ignore createXMLReader();
 
 /*
  * ignore the constructors which set the MemoryManager
@@ -209,16 +129,6 @@
     );
 
 
-// changing the locale and the NLS home is probably useful
-// but changing the panic manager and memory manager is not
-%ignore Initialize(const char*          const
-                         , const char*          const
-                         ,       PanicHandler*  const
-                         ,       MemoryManager* const);
-%ignore Initialize(const char*          const
-                         , const char*          const
-                         ,       PanicHandler*  const);
-
 // this constructor has a single XMLCh that interfers with another bool constructor
 %ignore DTDEntityDecl(
         const   XMLCh* const
@@ -226,10 +136,8 @@
         , const bool            fromIntSubset = false
         , const bool            specialChar = false);
 
-%ignore XERCES_CPP_NAMESPACE::DOMImplementation::loadDOMExceptionMsg;
-
 /*
- * Perl won't need to create exceptions -- FIXME -- not true
+ * Scripting languages won't need to create exceptions -- FIXME -- not true
  *   callbacks should be able to call exceptions
  */
 
@@ -281,84 +189,6 @@
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 %ignore    SAXParseException(const SAXParseException& toCopy);
-
-/*
- * methods not needed by the XMLValidator interfaces
- */
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::emitError;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::checkRootElement;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::reinitMsgMutex;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::reinitMsgLoader;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::setErrorReporter;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::setScannerInfo;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::handlesSchema;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::handlesDTD;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::validateElement;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::validateAttrValue;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::requiresNamespaces;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::reset;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::postParseValidation;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::preContentValidation;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::faultInAttr;
-%ignore XERCES_CPP_NAMESPACE::XMLValidator::checkContent;
-
-// ignore all the constructors for the Grammar components
-%ignore XERCES_CPP_NAMESPACE::DTDAttDef::DTDAttDef;
-%ignore XERCES_CPP_NAMESPACE::DTDElementDecl::DTDElementDecl;
-%ignore XERCES_CPP_NAMESPACE::DTDEntityDecl::DTDEntityDecl;
-%ignore XERCES_CPP_NAMESPACE::SchemaElementDecl::SchemaElementDecl;
-%ignore XERCES_CPP_NAMESPACE::SchemaAttDef::SchemaAttDef;
-%ignore	XERCES_CPP_NAMESPACE::DTDAttDefList::DTDAttDefList;
-%ignore	XERCES_CPP_NAMESPACE::SchemaAttDefList::SchemaAttDefList;
-
-/*
- * methods not needed by the public Parser interfaces
- *
- *   this is probably because I'm not using AdvDocHandlers and things
- *   that want to control the parsing process, but until someone asks
- *   for them, I'm going to leave them out.
- */
-
-// XMLEntityHandler interface
-%ignore endInputSource;
-%ignore expandSystemId;
-%ignore resetEntities;
-%ignore resolveEntity;
-%ignore startInputSource;
-
-// XMLDocumentHandler interface.
-%ignore docCharacters;
-%ignore docComment;
-%ignore docPI;
-%ignore endDocument;
-%ignore endElement;
-%ignore endEntityReference;
-%ignore ignorableWhitespace;
-%ignore resetDocument;
-%ignore startDocument;
-%ignore startElement;
-%ignore startEntityReference;
-%ignore XMLDecl;
-
-// depricated methods - don't ask me to include these
-%ignore getDoValidation;
-%ignore setDoValidation;
-%ignore attDef;
-%ignore doctypeComment;
-%ignore doctypeDecl;
-%ignore doctypePI;
-%ignore doctypeWhitespace;
-%ignore elementDecl;
-%ignore endAttList;
-%ignore endIntSubset;
-%ignore endExtSubset;
-%ignore entityDecl;
-%ignore resetDocType;
-%ignore notationDecl;
-%ignore startAttList;
-%ignore startIntSubset;
-%ignore startExtSubset;
-%ignore TextDecl;
 
 // const methods
 %ignore getDocumentHandler() const;

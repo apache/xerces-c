@@ -16,15 +16,14 @@
 
 %{
 #include "xercesc/dom/DOM.hpp"
+
 #include "xercesc/util/XMLException.hpp"
+
 #include "xercesc/framework/Wrapper4InputSource.hpp"
 #include "xercesc/framework/Wrapper4DOMLSInput.hpp"
+
 #include "xercesc/parsers/AbstractDOMParser.hpp"
 #include "xercesc/parsers/XercesDOMParser.hpp"
-#include "xercesc/framework/MemBufFormatTarget.hpp"
-#include "xercesc/framework/LocalFileFormatTarget.hpp"
-#include "xercesc/framework/StdOutFormatTarget.hpp"
-#include "xercesc/util/XMLUni.hpp"
 
 %}
 

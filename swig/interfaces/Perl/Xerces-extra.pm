@@ -3,8 +3,8 @@ package XML::Xerces;
 use strict;
 use Carp;
 use vars qw(@EXPORT_OK $VERSION %REMEMBER);
-@EXPORT_OK = qw(error);
-$VERSION = 300.060829;
+@EXPORT_OK = qw(fatal_error error);
+$VERSION = 300.061003;
 
 #
 # Cleanup removes all objects being remembered by an object
@@ -23,9 +23,16 @@ sub cleanup {
 #   }
 }
 
+sub fatal_error {
+  my $error = shift;
+  my $context = shift;
+  error($error,$context, my $fatal = 1);
+}
+
 sub error {
   my $error = shift;
   my $context = shift;
+  my $fatal = defined (shift) ? 1 : 0;
   my $msg = "Error in eval: ";
   if (ref $error) {
     if ($error->isa('XML::Xerces::DOMException')) {
@@ -41,28 +48,12 @@ sub error {
   }
   $msg .= ", Context: $context"
     if defined $context;
-  croak($msg);
+  if ($fatal) {
+    croak($msg);
+  } else {
+    carp($msg);
+  }
 }
-
-package XML::Xerces::DOMException;
-use vars qw(@CODES);
-@CODES = qw(__NONEXISTENT__
-	    INDEX_SIZE_ERR
-	    DOMSTRING_SIZE_ERR
-	    HIERARCHY_REQUEST_ERR
-	    WRONG_DOCUMENT_ERR
-	    INVALID_CHARACTER_ERR
-	    NO_DATA_ALLOWED_ERR
-	    NO_MODIFICATION_ALLOWED_ERR
-	    NOT_FOUND_ERR
-	    NOT_SUPPORTED_ERR
-	    INUSE_ATTRIBUTE_ERR
-	    INVALID_STATE_ERR
-	    SYNTAX_ERR
-	    INVALID_MODIFICATION_ERR
-	    NAMESPACE_ERR
-	    INVALID_ACCESS_ERR
-	   );
 
 package XML::Xerces::XMLExcepts;
 use vars qw(@CODES);
@@ -472,73 +463,16 @@ use vars qw(@CODES);
 	    E_HighBounds
 	   );
 
-############# Class : XML::Xerces::PerlContentHandler ##############
-package XML::Xerces::PerlContentHandler;
-use vars qw(@ISA);
-@ISA = qw();
-sub new {
-  my $class = shift;
-  return bless {}, $class;
-}
-
-sub start_element {}
-sub end_element {}
-sub start_prefix_mapping {}
-sub end_prefix_mapping {}
-sub skipped_entity {}
-sub start_document {}
-sub end_document {}
-sub reset_document {}
-sub characters {}
-sub processing_instruction {}
-sub set_document_locator {}
-sub ignorable_whitespace {}
-
-
-############# Class : XML::Xerces::PerlDocumentHandler ##############
-package XML::Xerces::PerlDocumentHandler;
-use vars qw(@ISA);
-@ISA = qw();
-sub new {
-  my $class = shift;
-  return bless {}, $class;
-}
-
-sub start_element {}
-sub end_element {}
-sub start_document {}
-sub end_document {}
-sub reset_document {}
-sub characters {}
-sub processing_instruction {}
-sub set_document_locator {}
-sub ignorable_whitespace {}
-
-
 ############# Class : XML::Xerces::PerlEntityResolver ##############
 package XML::Xerces::PerlEntityResolver;
 use vars qw(@ISA);
-@ISA = qw();
+@ISA = qw(XML::Xerces::XMLEntityResolver XML::Xerces::EntityResolver);
 sub new {
   my $class = shift;
   return bless {}, $class;
 }
 
 sub resolve_entity {
-  return undef;
-}
-
-
-############# Class : XML::Xerces::PerlNodeFilter ##############
-package XML::Xerces::PerlNodeFilter;
-use vars qw(@ISA);
-@ISA = qw();
-sub new {
-  my $class = shift;
-  return bless {}, $class;
-}
-
-sub acceptNode {
   return undef;
 }
 
@@ -598,6 +532,20 @@ EOT
 
 sub reset_errors {}
 
+package XML::Xerces::XMLChVector;
+# convert the XMLChVector to a perl list
+sub to_list {
+  my $self = shift;
+  my @list;
+  my $count = $self->size();
+  if ($count) {
+    for (my $i=0;$i<$count;$i++) {
+      push(@list,$self->elementAt($i));
+    }
+  }
+  return @list;
+}
+
 package XML::Xerces::XMLAttDefList;
 #
 # This class is both a list and a hash, so at the moment we
@@ -609,9 +557,10 @@ package XML::Xerces::XMLAttDefList;
 sub to_list {
   my $self = shift;
   my @list;
-  if ($self->hasMoreElements()) {
-    while ($self->hasMoreElements()) {
-      push(@list,$self->nextElement());
+  my $count = $self->getAttDefCount();
+  if ($count) {
+    for (my $i=0;$i<$count;$i++) {
+      push(@list,$self->getAttDef($i));
     }
   }
   return @list;
@@ -621,35 +570,12 @@ sub to_list {
 sub to_hash {
   my $self = shift;
   my %hash;
-  if ($self->hasMoreElements()) {
-    while ($self->hasMoreElements()) {
-      my $attr = $self->nextElement();
+  my $count = $self->getAttDefCount();
+  if ($count) {
+    for (my $i=0;$i<$count;$i++) {
+      my $attr = $self->getAttDef($i);
       $hash{$attr->getFullName()} = $attr;
     }
-  }
-  return %hash;
-}
-
-package XML::Xerces::Attributes;
-sub to_hash {
-  my $self = shift;
-  my %hash;
-  for (my $i=0; $i < $self->getLength(); $i++) {
-    my $qname = $self->getQName($i);
-    $hash{$qname}->{localName} = $self->getLocalName($i);
-    $hash{$qname}->{URI} = $self->getURI($i);
-    $hash{$qname}->{value} = $self->getValue($i);
-    $hash{$qname}->{type} = $self->getType($i);
-  }
-  return %hash;
-}
-
-package XML::Xerces::AttributeList;
-sub to_hash {
-  my $self = shift;
-  my %hash;
-  for (my $i=0;$i<$self->getLength();$i++) {
-    $hash{$self->getName($i)} = $self->getValue($i)
   }
   return %hash;
 }
@@ -680,7 +606,7 @@ sub new {
 sub initialize {
   my $self = shift;
   my $CATALOG = $self->catalog();
-  XML::Xerces::error (__PACKAGE__ . ": Must set catalog before calling initialize")
+  XML::Xerces::fatal_error(__PACKAGE__ . ": Must set catalog before calling initialize")
       unless defined $CATALOG;
 
   my $DOM = XML::Xerces::XercesDOMParser->new();
@@ -689,7 +615,7 @@ sub initialize {
 
   # we parse the example XML Catalog
   eval{$DOM->parse($CATALOG)};
-  XML::Xerces::error ($@, __PACKAGE__ . ": Couldn't parse catalog: $CATALOG")
+  XML::Xerces::fatal_error($@, __PACKAGE__ . ": Couldn't parse catalog: $CATALOG")
       if $@;
 
   # now retrieve the mappings and store them
@@ -733,7 +659,10 @@ sub resolve_entity {
   # print STDERR "Got PUBLIC: $pub\n";
   # print STDERR "Got SYSTEM: $sys\n";
 
-  XML::Xerces::error (__PACKAGE__ . ": Must call initialize before using the resolver")
+  #
+  # FIXME - this should be creating and throwing an exception
+  #
+  XML::Xerces::fatal_error(__PACKAGE__ . ": Must call initialize before using the resolver")
       unless defined $self->maps or defined $self->remaps;
 
   # now check which one we were asked for

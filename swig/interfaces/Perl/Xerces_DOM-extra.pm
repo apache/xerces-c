@@ -1,3 +1,23 @@
+package XML::Xerces::DOMException;
+use vars qw(@CODES);
+@CODES = qw(__NONEXISTENT__
+	    INDEX_SIZE_ERR
+	    DOMSTRING_SIZE_ERR
+	    HIERARCHY_REQUEST_ERR
+	    WRONG_DOCUMENT_ERR
+	    INVALID_CHARACTER_ERR
+	    NO_DATA_ALLOWED_ERR
+	    NO_MODIFICATION_ALLOWED_ERR
+	    NOT_FOUND_ERR
+	    NOT_SUPPORTED_ERR
+	    INUSE_ATTRIBUTE_ERR
+	    INVALID_STATE_ERR
+	    SYNTAX_ERR
+	    INVALID_MODIFICATION_ERR
+	    NAMESPACE_ERR
+	    INVALID_ACCESS_ERR
+	   );
+
 package XML::Xerces::DOMNodeList;
 # convert the NodeList to a perl list
 sub to_list {
@@ -200,3 +220,82 @@ sub get_text {
   return $self->getTextContent(@_);
 }
 
+############# Class : XML::Xerces::PerlNodeFilter ##############
+package XML::Xerces::PerlNodeFilter;
+use vars qw(@ISA);
+@ISA = qw(XML::Xerces::DOMNodeFilter
+	  XML::Xerces::DOMLSParserFilter
+	  XML::Xerces::DOMLSSerializerFilter);
+
+sub new {
+  my $class = shift;
+
+  # support copy constructor syntax
+  $class = ref($class) if ref($class);
+
+  return bless {}, $class;
+}
+
+sub acceptNode {
+  my $self = shift;
+  return $self->accept_node(@_);
+}
+
+sub getWhatToShow {
+  my $self = shift;
+  return $self->get_what_to_show();
+}
+
+sub startElement {
+  my $self = shift;
+  return $self->start_element(@_);
+}
+
+#
+# support alternate Perl-friendly syntax
+#
+sub accept_node {
+  return undef;
+}
+
+sub get_what_to_whow {
+  return undef;
+}
+
+sub start_element {
+  return undef;
+}
+
+
+############# Class : XML::Xerces::PerlDOMErrorHandler ##############
+package XML::Xerces::PerlDOMErrorHandler;
+use Carp;
+use vars qw(@ISA);
+@ISA = qw(XML::Xerces::DOMErrorHandler);
+
+sub new {
+  my $class = shift;
+
+  # support copy constructor syntax
+  $class = ref($class) if ref($class);
+
+  return bless {}, $class;
+}
+
+sub handleError {
+  my $self = shift;
+  return $self->handle_error(@_);
+}
+
+#
+# support alternate Perl-friendly syntax
+#
+sub handle_error {
+  my $severity = $_[1]->getSeverity;
+  my $msg = $_[1]->getMessage;
+  croak(<<EOT);
+ERROR:
+SEVERITY: $severity
+MESSAGE:  $msg
+EOT
+}

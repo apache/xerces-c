@@ -27,13 +27,17 @@
 
 %define SET_ERRORHANDLER(class)
 %feature("shadow") XERCES_CPP_NAMESPACE::class::setErrorHandler {
-    sub setErrorHandler {
-      my ($self,$handler) = @_;
-      my $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
-      $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
+sub setErrorHandler {
+  my ($self,$handler) = @_;
 
-      return XML::Xercesc::class ##_setErrorHandler($self,$callback);
-    }
+  # allow undef to unset current value
+  my $callback;
+  if (defined ## $handler) {
+    $callback = XML::Xerces::PerlErrorCallbackHandler->new($handler);
+    $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $callback;
+  }
+  return XML::Xercesc::class ##_setErrorHandler($self,$callback);
+}
 }
 %enddef
 
@@ -46,13 +50,17 @@ SET_ERRORHANDLER(XercesDOMParser)
 
 %define SET_ENTITYRESOLVER(class)
 %feature("shadow") XERCES_CPP_NAMESPACE::class::setEntityResolver {
-    sub setEntityResolver {
-      my ($self,$handler) = @_;
-      my $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
-      $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
+sub setEntityResolver {
+  my ($self,$handler) = @_;
 
-      return XML::Xercesc::class ##_setEntityResolver($self,$callback);
-    }
+  # allow undef to unset current value
+  my $callback;
+  if (defined ## $handler) {
+    $callback = XML::Xerces::PerlEntityResolverHandler->new($handler);
+    $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $callback;
+  }
+  return XML::Xercesc::class ##_setEntityResolver($self,$callback);
+}
 }
 %enddef
 
@@ -82,24 +90,40 @@ sub new {
 }
 %}
 
-%feature("shadow") XERCES_CPP_NAMESPACE::SAXParser::setDocumentHandler %{
-sub setDocumentHandler {
-    my ($self,$handler) = @_;
-    my $callback = XML::Xerces::PerlDocumentCallbackHandler->new($handler);
-    $XML::Xerces::REMEMBER{tied(% {$self})}->{__DOCUMENT_HANDLER} = $callback;
+// Define a macro to rewrite all methods that return a list 
 
-    my @args = ($self,$callback);
-    return XML::Xercesc::SAXParser_setDocumentHandler(@args);
+// we need the "defined ## $result hack because defined is a cpp operator
+%define LIST_METHOD(class,method)
+  %feature("shadow") XERCES_CPP_NAMESPACE::class::method {
+sub method {
+    my $result = XML::Xercesc:: ## class ## _ ## method (@_);
+    unless (defined ## $result) {
+      return () if wantarray;
+      return undef; # if *not* wantarray
+    }
+    return $result->to_list() if wantarray;
+    return $result; # if *not* wantarray
 }
-%}
+  }
+%enddef
 
-%feature("shadow") XERCES_CPP_NAMESPACE::SAX2XMLReader::setContentHandler %{
-sub setContentHandler {
-    my ($self,$handler) = @_;
-    my $callback = XML::Xerces::PerlContentCallbackHandler->new($handler);
-    $XML::Xerces::REMEMBER{tied(% {$self})}->{__CONTENT_HANDLER} = $callback;
+// Define a macro to rewrite all methods that return a map 
 
-    my @args = ($self,$callback);
-    return XML::Xercesc::SAX2XMLReader_setContentHandler(@args);
+// we need the "defined ## $result hack because defined is a cpp operator
+%define MAP_METHOD(class,method)
+  %feature("shadow") XERCES_CPP_NAMESPACE::class::method {
+sub method {
+    my $result = XML::Xercesc:: ## class ## _ ## method (@_);
+    unless (defined ## $result) {
+      return () if wantarray;
+      return undef; # if *not* wantarray
+    }
+    return $result->to_hash() if wantarray;
+    return $result; # if *not* wantarray
 }
-%}
+  }
+%enddef
+
+LIST_METHOD(XMLElementDecl,getAttDefList)
+LIST_METHOD(XMLSchemaDescription,getLocationHints)
+// MAP_METHOD(XMLElementDecl,getAttDefList)

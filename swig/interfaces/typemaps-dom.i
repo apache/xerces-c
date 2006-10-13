@@ -14,58 +14,362 @@
  * limitations under the License.
  */
 
-/*
- * DOM_Node*
- */
+// DOMConfiguration::canSetParameter() must handle certain args specially
+%extend XERCES_CPP_NAMESPACE::DOMConfiguration {
+%typemap(in) const void* value (void *argp, int res) {
+  if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
+    res = SWIG_ConvertPtr($input, &argp,SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler, 0 |  0 );
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in method '" "$symname" "', argument " "$argnum"" of type '" "XERCES_CPP_NAMESPACE::DOMErrorHandler const *""'"); 
+    }
+    $1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DOMErrorHandler * >(argp);
+    
+  } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
+    res = SWIG_ConvertPtr($input, &argp,SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver, 0 |  0 );
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in method '" "$symname" "', argument " "$argnum"" of type '" "XERCES_CPP_NAMESPACE::XMLEntityResolver const *""'"); 
+    }
+    $1 = reinterpret_cast< XERCES_CPP_NAMESPACE::XMLEntityResolver * >(argp);
+    
+  } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
+    res = SWIG_ConvertPtr($input, &argp,SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver, 0 |  0 );
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in method '" "$symname" "', argument " "$argnum"" of type '" "XERCES_CPP_NAMESPACE::DOMLSResourceResolver const *""'"); 
+    }
+    $1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DOMLSResourceResolver * >(argp);
+    
+  } else {
+    $1 = UTF8_TRANSCODER->Local2XMLString($input);
+  }
+}
 
-%typemap(out) XERCES_CPP_NAMESPACE::DOMNode * = SWIGTYPE *DYNAMIC;
+%typemap(out) const void* {
+  if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler, 0 | SWIG_SHADOW); 
+  } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver, 0 | SWIG_SHADOW); 
+  } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver, 0 | SWIG_SHADOW); 
+  } else if (isDOMConfigXMLChParameter(arg2)) {
+    $result = UTF8_TRANSCODER->XMLString2Local((XMLCh*)$1);
+  } else {
+    $result = SWIG_From_bool  SWIG_PERL_CALL_ARGS_1(static_cast< bool >($1));
+  }
+  argvi++; 
+}
 
-DYNAMIC_CAST(SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNode, DOMNode_dynamic_cast);
+%typemap(freearg) void * %{
+  if (isDOMConfigXMLChParameter(arg2)) {
+    delete (XMLCh*) $1;
+  }
+%}
+
+%{
+
+bool
+isDOMConfigObjectParameter(const XMLCh* name) {
+    if (XMLString::compareIStringASCII(name, XMLUni::fgXercesEntityResolver) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMResourceResolver) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMErrorHandler) == 0) 
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool
+isDOMConfigBoolParameter(const XMLCh* name) {
+    if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0) 
+    {
+        // TODO
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0) 
+    {
+        // TODO
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSupportedMediatypesOnly) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidate) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMWellFormed) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ) 
+    {
+        // TODO
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ) 
+    {
+        // TODO
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCheckCharacterNormalization) == 0 ) 
+    {
+        // TODO
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMComments) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMDatatypeNormalization) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMElementContentWhitespace) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMEntities) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaceDeclarations) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMNormalizeCharacters) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSplitCDATASections) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMInfoset) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchema) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesUseCachedGrammarInParse) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesCalculateSrcOfs) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesStandardUriConformant) == 0)
+    {
+        return true;
+    }
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool
+isDOMConfigXMLChParameter(const XMLCh* name) {
+    if (XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0)
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0) 
+    {
+        return true;
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0) 
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+%}
+
+%typecheck(SWIG_TYPECHECK_VOIDPTR)
+void*, const void* 
+{
+        int res = -1;
+	XMLCh *name = UTF8_TRANSCODER->Local2XMLString(ST(1));
+        if (XMLString::compareIStringASCII(name, XMLUni::fgDOMErrorHandler) == 0) {
+          res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesEntityResolver) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMResourceResolver) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0) {
+	  res = 1;
+        } else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0) {
+	  res = 1;
+        }
+        _v = SWIG_CheckState(res);
+}
+}
+
+
+%typemap(out) XERCES_CPP_NAMESPACE::XMLFormatTarget * = SWIGTYPE *DYNAMIC;
+
+DYNAMIC_CAST(SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatTarget, XMLFormatTarget_dynamic_cast);
 
 %{
 static swig_type_info *
-DOMNode_dynamic_cast(void **ptr) {
-   DOMNode **nptr = (DOMNode **) ptr;
+XMLFormatTarget_dynamic_cast(void **ptr) {
+   XMLFormatTarget **nptr = (XMLFormatTarget **) ptr;
    if (*nptr == NULL) {
        return NULL;
    }
-   short int type = (*nptr)->getNodeType();
-   if (type == DOMNode::TEXT_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMText;
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::MemBufFormatTarget * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufFormatTarget;
    }
-   if (type == DOMNode::PROCESSING_INSTRUCTION_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMProcessingInstruction;
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::LocalFileFormatTarget * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileFormatTarget;
    }
-   if (type == DOMNode::DOCUMENT_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocument;
-   }
-   if (type == DOMNode::ELEMENT_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMElement;
-   }
-   if (type == DOMNode::ENTITY_REFERENCE_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMEntityReference;
-   }
-   if (type == DOMNode::CDATA_SECTION_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMCDATASection;
-   }
-   if (type == DOMNode::CDATA_SECTION_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMCDATASection;
-   }
-   if (type == DOMNode::COMMENT_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMComment;
-   }
-   if (type == DOMNode::DOCUMENT_TYPE_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentType;
-   }
-   if (type == DOMNode::ENTITY_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMEntity;
-   }
-   if (type == DOMNode::ATTRIBUTE_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMAttr;
-   }
-   if (type == DOMNode::NOTATION_NODE) {
-      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNotation;
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::StdOutFormatTarget * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdOutFormatTarget;
    }
    return NULL;
 }
 %}
+
+%typemap(out) XERCES_CPP_NAMESPACE::InputSource * = SWIGTYPE *DYNAMIC;
+
+DYNAMIC_CAST(SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource, InputSource_dynamic_cast);
+
+%{
+static swig_type_info *
+InputSource_dynamic_cast(void **ptr) {
+   InputSource **nptr = (InputSource **) ptr;
+   if (*nptr == NULL) {
+       return NULL;
+   }
+
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::Wrapper4DOMLSInput * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::MemBufInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufInputSource;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::LocalFileInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileInputSource;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::URLInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__URLInputSource;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::StdInInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdInInputSource;
+   }
+   return NULL;
+}
+%}
+

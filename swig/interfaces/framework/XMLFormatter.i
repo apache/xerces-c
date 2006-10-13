@@ -1,1 +1,1 @@
-%import "xercesc/framework/XMLFormatter.hpp"
+%include "xercesc/framework/XMLFormatter.hpp"

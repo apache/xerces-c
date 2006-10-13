@@ -23,30 +23,14 @@
  *   the namespace
  */
 #ifdef SWIGPERL
-%module(package="XML::Xerces") "DOM"
-// %module "XML::Xerces::DOM"
+%module(package="XML::Xerces") "XML::Xerces::DOM"
+#endif
+#ifdef SWIGXML
+%module(package="XML::Xerces") "XML::Xerces::DOM"
 #endif
 
-%include "includes.i"
-
+%include "io-includes.i"
 %include "dom-includes.i"
-
-/*
- * Import the language specific macros
- */
-
-#ifdef SWIGPERL
-%include "Perl/errors.i"
-%include "Perl/defines.i"
-%include "Perl/dom-shadow.i"
-%include "Perl/typemaps.i"
-%include "Perl/typemaps-xmlch.i"
-%include "Perl/includes.i"
-%include "Perl/dom-includes.i"
-#endif
-
-// Get the type information
-%import "Xerces.i"
 
 /*
  * After this we will be under the Xerces namespace
@@ -57,60 +41,47 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-// we initialize the static UTF-8 transcoding info
-// these are used by the typemaps to convert between
-// Xerces internal UTF-16 and Perl's internal UTF-8
-static Transcoder* UTF8_TRANSCODER  = NULL;
-
-static XMLExceptionHandler* XML_EXCEPTION_HANDLER  = NULL;
-
-void
-makeXMLException(const XMLException& e){
-    SV *error = ERRSV;
-    SWIG_MakePtr(error, (void *) XML_EXCEPTION_HANDLER->copyXMLException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException, SWIG_SHADOW|0);
-}
-
 void
 makeDOMException(const DOMException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new DOMException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_SHADOW|0);
 }
 
+// void
+// makeDOMXPathException(const DOMXPathException& e){
+//     SV *error = ERRSV;
+//     SWIG_MakePtr(error, (void *) new DOMXPathException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathException, SWIG_SHADOW|0);
+// }
+
 %}
 
-// %include "make-xml-exception.i"
-
-%include "typemaps-dom.i"
-
-%include "typemaps-general.i"
-
-/*****************************/
-/*                           */
-/*  Platforms and Compilers  */
-/*                           */
-/*****************************/
-
-// we seem to need these defs loaded before parsing XercesDefs.hpp
-// as of Xerces-3.0
-%import "xercesc/util/Xerces_autoconf_config.hpp" // for XMLSize_t and namespaces
-
-%import "xercesc/util/XercesDefs.hpp"
-
-/* 
- * All %ignore directives
+/*
+ * Import the common macros
  */
-
-%include "ignore.i"
+%include "Xerces_common.i"
 
 /*
- * Operator support
+ * Import the language-specific macros
  */
 
-// Operators we do want
-// %rename(operator_assignment) operator=;
-%rename(operator_equal_to) operator==;
-%rename(operator_not_equal_to) operator!=;
+#ifdef SWIGPERL
+%include "Perl/dom-shadow.i"
+%include "Perl/dom-includes.i"
+#endif
 
+/*
+ * Import the module-specific typemaps
+ */
+
+%include "typemaps-dom.i"
+%include "typemaps-domnode.i"
+
+/*
+ * Import the type information from other modules
+ */
+
+%import "Xerces.i"
+%import "Xerces_IO.i"
 
 /*
  * the DOM classes gets a special exception handler
@@ -137,6 +108,23 @@ makeDOMException(const DOMException& e){
         SWIG_croak("Handling Unknown exception"); \
         goto fail;                  \
     }
+
+#define CATCH_DOMXPATH_EXCEPTION    \
+    catch (const XMLException& e)   \
+    {                               \
+        makeXMLException(e);        \
+	goto fail;                  \
+    }                               \
+    catch (const DOMXPathException& e)   \
+    {                               \
+	makeDOMXPathException(e);    \
+	goto fail;                  \
+    }                               \
+    catch (...)                     \
+    {                               \
+        SWIG_croak("Handling Unknown exception"); \
+        goto fail;                  \
+    }
 %}
 
 %exception {
@@ -147,6 +135,25 @@ makeDOMException(const DOMException& e){
     CATCH_DOM_EXCEPTION
 }
 
+%define XPATH_METHOD(class,method)
+%exception XERCES_CPP_NAMESPACE::class::method %{
+    try 
+    {
+        $action
+    } 
+    CATCH_DOMXPATH_EXCEPTION
+%}
+%enddef
+
+%define XPATH_CLASS(class)
+%exception XERCES_CPP_NAMESPACE::class %{
+    try 
+    {
+        $action
+    } 
+    CATCH_DOMXPATH_EXCEPTION
+%}
+%enddef
 
 // Introduced in DOM Level 1
 %include "dom/DOMException.i"
@@ -170,18 +177,12 @@ makeDOMException(const DOMException& e){
 %include "dom/DOMTypeInfo.i"
 %include "dom/DOMPSVITypeInfo.i"
 
-// XPath
-%include "dom/DOMXPathEvaluator.i"
-%include "dom/DOMXPathException.i"
-%include "dom/DOMXPathExpression.i"
-%include "dom/DOMXPathNamespace.i"
-%include "dom/DOMXPathNSResolver.i"
-%include "dom/DOMXPathResult.i"
-
 // Introduced in DOM Level 2
 %include "dom/DOMDocumentRange.i"
 %include "dom/DOMDocumentTraversal.i"
 %include "dom/DOMNodeIterator.i"
+
+%feature("notabstract", 1) DOMNodeFilter;
 %include "dom/DOMNodeFilter.i"
 %include "dom/DOMRange.i"
 %include "dom/DOMRangeException.i"
@@ -190,20 +191,45 @@ makeDOMException(const DOMException& e){
 /*
  * Introduced in DOM Level 3
  */
+%include "dom/DOMStringList.i"
 %include "dom/DOMUserDataHandler.i"
 %include "dom/DOMConfiguration.i"
-%include "dom/DOMStringList.i"
 %include "dom/DOMImplementationLS.i"
 %include "dom/DOMImplementation.i"
 %include "dom/DOMImplementationList.i"
-%include "dom/DOMImplementationSource.i"
 %include "dom/DOMImplementationRegistry.i"
+
+// XPath - currently unimplemented
+%import "dom/DOMXPathEvaluator.i"
+%import "dom/DOMXPathException.i"
+%import "dom/DOMXPathExpression.i"
+%import "dom/DOMXPathNamespace.i"
+%import "dom/DOMXPathNSResolver.i"
+%import "dom/DOMXPathResult.i"
+
+// Interfaces not useful for scripting languages
+// %include "dom/DOMImplementationSource.i"
 
 %include "dom/DOMError.i"
 %include "dom/DOMErrorHandler.i"
+
+// from Level 1, but with extensions from Level 3
 %include "dom/DOMDocument.i"
+
 %include "dom/DOMLocator.i"
 %include "dom/DOMLSResourceResolver.i"
+
+// DOMLSSerializer
+%include "dom/DOMLSOutput.i"
+
+%include "dom/DOMLSException.i"
+
+%feature("notabstract", 1) DOMLSSerializerFilter;
+%include "dom/DOMLSSerializerFilter.i"
+%include "dom/DOMLSSerializer.i"
+
+// Base class for DOMLSParser and XercesDOMParser
+%include "parsers/AbstractDOMParser.i"
 
 // DOMLSParser
 %include "dom/DOMLSInput.i"
@@ -212,40 +238,9 @@ makeDOMException(const DOMException& e){
 %include "dom/DOMLSParserFilter.i"
 %include "dom/DOMLSParser.i"
 
-// DOMWriter
-%include "dom/DOMLSOutput.i"
-%include "framework/XMLFormatter.i"
-%include "framework/StdOutFormatTarget.i"
-%include "framework/LocalFileFormatTarget.i"
-%include "framework/MemBufFormatTarget.i"
-
-%include "dom/DOMLSException.i"
-%include "dom/DOMLSSerializer.i"
-%include "dom/DOMLSSerializerFilter.i"
-
-%import "xercesc/framework/XMLPScanToken.hpp"
-%import "xercesc/framework/psvi/PSVIHandler.hpp"
-
-%include "parsers/AbstractDOMParser.i"
+// XercesDOMParser
+%feature("notabstract", 1) XercesDOMParser;
 %include "parsers/XercesDOMParser.i"
-
-/* 
- * Include extra verbatim C code in the initialization function
- */
-%init {
-    // we create the global transcoder for UTF-8 to UTF-16
-    // must initialize the Xerces-C transcoding service
-    XMLPlatformUtils::Initialize();
-    UTF8_TRANSCODER = Transcoder::getInstance();
-    if (! UTF8_TRANSCODER) {
-	croak("ERROR: XML::Xerces: INIT: Could not create UTF-8 transcoder");
-    }
-
-    XML_EXCEPTION_HANDLER = XMLExceptionHandler::getInstance();
-    if (! XML_EXCEPTION_HANDLER) {
-	croak("ERROR: XML::Xerces: INIT: Could not create XMLExceptionHandler");
-    }
-}
 
 #ifdef SWIGPERL
 
@@ -260,13 +255,5 @@ makeDOMException(const DOMException& e){
  * Include extra verbatim Perl code
  */
 %pragma(perl5) include="../../interfaces/Perl/Xerces_DOM-extra.pm"
-
-/* 
- * Include extra verbatim Perl code immediately after Module header
- */
-
-%pragma(perl5) code="package XML::Xerces::DOM; 
-use XML::Xerces;
-use vars qw($VERSION @EXPORT);"
 
 #endif

@@ -29,83 +29,31 @@
 %module "XML::Xerces"
 #endif
 
-%include "includes.i"
-
 /*
- * Import the language specific macros - not namespace dependent
- *   we place these first so that they can define any master
- *   macros needed by the language-independent interface files
+ * Import the common macros
  */
-
-#ifdef SWIGPERL
-%include "Perl/shadow.i"
-// %include "Perl/dom-shadow.i"
-%include "Perl/defines.i"
-%include "Perl/errors.i"
-%include "Perl/includes.i"
-%include "Perl/typemaps.i"
-%include "Perl/typemaps-xmlch.i"
-#endif
+%include "Xerces_common.i"
 
 /*
- * Start the XERCES_CPP_NAMESPACE
  *    after this everything will be in Xerces namespace
  */ 
-%include "defines.i"
+%{
+
+XERCES_CPP_NAMESPACE_USE
+
+%}
+
+// This prevents a million warnings
+%ignore XSerializable;
+class XSerializable {
+private:
+XSerializable::XSerializable();
+};
 
 /*
- * language dependent features that are namespace dependent
- *   such as the transcoders
+ * Define exception handlers
  *
  */
-#ifdef SWIGPERL
-// %include "Perl/transcode.i"
-#endif
-
-
-%include typemaps-general.i
-
-// %include "typemaps-dom.i"
-
-/*****************************/
-/*                           */
-/*  Platforms and Compilers  */
-/*                           */
-/*****************************/
-
-// we seem to need these defs loaded before parsing XercesDefs.hpp
-// as of Xerces-3.0
-%import "xercesc/util/Xerces_autoconf_config.hpp" // for XMLSize_t and namespaces
-
-%import "xercesc/util/XercesDefs.hpp"
-
-/******************/
-/*                */
-/*  General code  */
-/*                */
-/******************/
-
-/*
- * The generic exception handler
- *    'goto fail' must be called - either explicitly, or via SWIG_croak()
- *    to ensure that any variable cleanup is done - to avoid memory leaks.
- *    By making these macros, it reduces the code *file* size dramatically
- *    (but doesn't reduce the compiled file size at all...)
- */
-
-%{
-#define CATCH_XML_EXCEPTION       \
-    catch (const XMLException& e) \
-    {                             \
-        makeXMLException(e);      \
-	goto fail;                \
-    }                             \
-    catch (...)                   \
-    {                             \
-        SWIG_croak("Handling Unknown exception"); \
-	goto fail;                \
-    }
-%}
 
 %exception {
     try 
@@ -116,31 +64,15 @@
 }
 
 /*
- * Have the scripting language manage the memory for objects created
- * in factory methods SWIG will automatically handle objects created
- * in constructors but it must be told what methods are factory
- * methods
+ * Module specific classes
+ *
  */
-// %newobject createDOMWriter;
-// %newobject createDocumentType;
-// %newobject createDocument;
-// %newobject getDOMImplementation;
-%newobject createXMLReader;
-
-/* 
- * All %ignore directives
- */
-
-%include "ignore.i"
 
 /*
- * Operator support
+ * Unicode contants
  */
 
-// Operators we do want
-// %rename(operator_assignment) operator=;
-%rename(operator_equal_to) operator==;
-%rename(operator_not_equal_to) operator!=;
+%include "unicode.i"
 
 /*
  * Utility Classes
@@ -154,55 +86,11 @@
 
 %include "grammars.i"
 
-/*
- * InputSource
- */
-
-%include "input-source.i"
-
-/*
- * DOM
- */
-
-// %include "DOM.i"
-
-// %include "xercesc/dom/DOMNode.hpp"
-
-/*
- * SAX1
- */
-
-%include "SAX.i"
-
-/*
- * SAX2
- */
-
-%include "SAX2.i"
-
 /* 
- * Parsers
+ * Auxiliary classes need for both DOM and SAX parsers
  */
 
 %include "parsers.i"
-
-/* 
- * Include extra verbatim C code in the initialization function
- */
-%init {
-    // we create the global transcoder for UTF-8 to UTF-16
-    // must initialize the Xerces-C transcoding service
-    XMLPlatformUtils::Initialize();
-    UTF8_TRANSCODER = Transcoder::getInstance();
-    if (! UTF8_TRANSCODER) {
-	croak("ERROR: XML::Xerces: INIT: Could not create UTF-8 transcoder");
-    }
-
-    XML_EXCEPTION_HANDLER = XMLExceptionHandler::getInstance();
-    if (! XML_EXCEPTION_HANDLER) {
-	croak("ERROR: XML::Xerces: INIT: Could not create XMLExceptionHandler");
-    }
-}
 
 #ifdef SWIGPERL
 
@@ -211,6 +99,8 @@
  *   so that SWIG can wrap the superclass methods properly
  */
 
+// must %include this or getErrorHandler() fails to return proper type
+%include "xercesc/sax/ErrorHandler.hpp"
 %include "Perl/callback.i"
 
 /* 

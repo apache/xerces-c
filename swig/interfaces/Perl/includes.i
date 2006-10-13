@@ -15,7 +15,7 @@
  */
 
 /*
- * Perl/includes.i - all #includes needed for Xerces.cpp
+ * Perl/includes.i - all Perl #includes needed for Xerces.cpp
  *
  */ 
 
@@ -26,8 +26,7 @@
 
 #include "PerlCallbackHandler.hpp"
 #include "PerlErrorCallbackHandler.hpp"
-#include "PerlDocumentCallbackHandler.hpp"
-#include "PerlContentCallbackHandler.hpp"
+#include "PerlDOMCallbackHandler.hpp"
 #include "PerlEntityResolverHandler.hpp"
 
 %}

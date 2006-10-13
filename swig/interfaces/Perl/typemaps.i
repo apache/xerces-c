@@ -1,3 +1,20 @@
+/*
+ * Adopting a validator
+ *
+ *   we have to disown the validator, because Xerces will adopt it
+ *   after all conversion has succeeded
+ *   the SWIG_POINTER_DISOWN flag makes sure it is disowned.
+ */
+%typemap(in) XERCES_CPP_NAMESPACE::XMLValidator* valToAdopt
+{
+    if ($input != &PL_sv_undef) {
+        int rc = SWIG_ConvertPtr($input, (void **) &$1, $1_descriptor, SWIG_POINTER_DISOWN |  0);
+	if (!SWIG_IsOK(rc)) {
+            %argument_fail(SWIG_TypeError, "$type", $symname, $argnum);
+        }
+    }
+}
+
 // 
 // FOR Perl*Handler MEMBER FUNCTIONS, SO PERL SCALAR DOESN'T GET WRAPPED 
 // 
@@ -10,64 +27,12 @@
   $1 = (void*) $input;
 }
 
-%typemap(in) (const XMLByte* const srcDocBytes, 
-	      unsigned int byteCount) {
-  if (SvPOK($input)||SvIOK($input)||SvNOK($input)) {
-    STRLEN len;
-    XMLByte *xmlbytes = (XMLByte *)SvPV($input, len);
-    $2 = len;
-    $1 = new XMLByte[len];
-    memcpy($1, xmlbytes, len);
-  } else {
-    SWIG_croak("Type error in argument 2 of $symname, Expected perl-string.");
-  }
-}
-
-// XMLByte arrays are just unisgned char*'s
-// force loading of FromCharPtr fragment - needed for DOM
-%typemap(out, noblock=1, fragment="SWIG_FromCharPtr") const XMLByte* getRawBuffer() {
-  %set_output(SWIG_FromCharPtr((char*)$1));
-}
-
-/*
- * Adopting a validator
- *
- *   we have to disown the validator, because Xerces will adopt it
- *   first we create a temp variable to store it's value in the
- *   'in' typemap, and the after all conversion has succeeded
- *   the 'check' typemap will disown it.
- */
-%typemap(in) XERCES_CPP_NAMESPACE::XMLValidator* valToAdopt (SV *temp)
-{
-        temp = $input;
-	if (SWIG_ConvertPtr($input, (void **) &$1, $1_descriptor,0) < 0) {
-            SWIG_Perl_TypeError("$1_mangle",$argnum,"$symname");
-        }
-}
-
-%typemap(check) XERCES_CPP_NAMESPACE::XMLValidator* valToAdopt
-{
-   SWIG_Disown(temp$argnum);
-}
-
 // The typecheck functions are for use by SWIG's auto-overloading support
+// we must set a *really* low precedence on this because it will return
+// true for *everything* 
 %typemap(typecheck, precedence=60)
 SV*
 {
-  $1 = SvOK($input) ? 1 : 0;
+  $1 = 1;
 }
 
-// The typecheck functions are for use by SWIG's auto-overloading support
-%typemap(typecheck, precedence=60)
-SV*
-{
-  $1 = SvOK($input) ? 1 : 0;
-}
-
-// %typemap(typecheck, precedence=70)
-// as long as the SV is not undef, convert it to a string
-%typecheck(SWIG_TYPECHECK_UNISTRING)
-XMLCh*, const XMLCh* 
-{
-  $1 = SvOK($input) ? 1 : 0; 
-}

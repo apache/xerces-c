@@ -1,1 +1,1 @@
-%import  "xercesc/dom/DOMLSParserFilter.hpp"
+%include  "xercesc/dom/DOMLSParserFilter.hpp"

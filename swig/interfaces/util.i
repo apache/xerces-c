@@ -1,8 +1,10 @@
 // we remove this macro for PlatformUtils and XMLURL
 #define MakeXMLException(theType, expKeyword)
 
-%include "xercesc/util/PlatformUtils.hpp"
+%include "util/PlatformUtils.i"
+
 %import "xercesc/util/XMemory.hpp"
+
 %include "xercesc/util/XMLURL.hpp"
 
 #define DECL_XSERIALIZABLE(XMLUri)
@@ -13,8 +15,6 @@
 %include "xercesc/util/XMLExceptMsgs.hpp"
 %include "xercesc/util/XMLException.hpp"
 
-// Unicode string constants for XML Formatter
-%include "xercesc/util/XMLUni.hpp"
-
 %include "xercesc/util/QName.hpp"
 
+%include "xercesc/util/SecurityManager.hpp"

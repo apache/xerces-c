@@ -19,20 +19,26 @@
  *
  */ 
 
-%feature("shadow") XERCES_CPP_NAMESPACE::DOMConfiguration::setParameter {
-    sub setParameter {
-      my ($self,$name,$value) = @_;
+%feature("shadow") XERCES_CPP_NAMESPACE::DOMConfiguration::setParameter %{
+sub setParameter {
+  my ($self,$name,$value) = @_;
 
-      if ($name eq $XML::Xerces::XMLUni::fgDOMErrorHandler) {
-        $value = XML::Xerces::PerlErrorCallbackHandler->new($_[2]);
-        $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $value;
-      } elsif ($name eq $XML::Xerces::XMLUni::fgXercesEntityResolver) {
-        $value = XML::Xerces::PerlEntityResolverHandler->new($_[2]);
-        $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $value;
-      }
-      return XML::Xercesc::DOMConfiguration_setParameter($self,$name,$value);
+  # we allow undef to unset existing values
+  if (defined $value) {
+    if ($name eq $XML::Xerces::XMLUni::fgDOMErrorHandler) {
+      $value = XML::Xerces::PerlDOMCallbackHandler->new($value);
+      $XML::Xerces::REMEMBER{tied(% {$self})}->{__ERROR_HANDLER} = $value;
+    } elsif ($name eq $XML::Xerces::XMLUni::fgDOMResourceResolver) {
+      $value = XML::Xerces::PerlDOMCallbackHandler->new($value);
+      $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $value;
+    } elsif ($name eq $XML::Xerces::XMLUni::fgXercesEntityResolver) {
+      $value = XML::Xerces::PerlEntityResolverHandler->new($value);
+      $XML::Xerces::REMEMBER{tied(% {$self})}->{__ENTITY_RESOLVER} = $value;
     }
+  }
+  return XML::Xercesc::DOMConfiguration_setParameter($self,$name,$value);
 }
+%}
 
 // Define a macro to rewrite all methods that return a list of DOMNodes
 
@@ -158,11 +164,12 @@ sub createDocument {
 }
 %}
 
-%feature("shadow") ~DOMDocument %{
+%define CLEANUP(class)
+%feature("shadow") ~class %{
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
-    return unless defined $self;
+    return unless defined ## $self;
 
     if ($self->can('cleanup')) {
         $_[0]->cleanup();
@@ -170,9 +177,12 @@ sub DESTROY {
 
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
-        XML::Xercesc::delete_DOMDocument($self);
+        XML::Xercesc::delete_##class($self);
         delete $OWNER{$self};
     }
 }
 %}
+%enddef
 
+CLEANUP(DOMDocument)
+CLEANUP(DOMConfiguration)

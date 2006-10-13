@@ -19,35 +19,36 @@
  */
 
 %{
-#include "xercesc/sax/InputSource.hpp"
 #include "xercesc/sax/SAXException.hpp"
 #include "xercesc/sax/SAXParseException.hpp"
-#include "xercesc/sax/Locator.hpp"
-#include "xercesc/sax/HandlerBase.hpp"
-#include "xercesc/sax2/Attributes.hpp"
-#include "xercesc/sax2/ContentHandler.hpp"
-#include "xercesc/sax2/LexicalHandler.hpp"
-#include "xercesc/sax2/DefaultHandler.hpp"
-#include "xercesc/sax2/SAX2XMLReader.hpp"
-#include "xercesc/sax2/XMLReaderFactory.hpp"
+#include "xercesc/sax/EntityResolver.hpp"
+
 #include "xercesc/util/PlatformUtils.hpp"
-#include "xercesc/util/TransService.hpp"
 #include "xercesc/util/XMLString.hpp"
 #include "xercesc/util/XMLUri.hpp"
 #include "xercesc/util/QName.hpp"
 #include "xercesc/util/HexBin.hpp"
 #include "xercesc/util/Base64.hpp"
-#include "xercesc/parsers/SAXParser.hpp"
-#include "xercesc/framework/LocalFileInputSource.hpp"
-#include "xercesc/framework/MemBufInputSource.hpp"
-#include "xercesc/framework/StdInInputSource.hpp"
-#include "xercesc/framework/URLInputSource.hpp"
+#include "xercesc/util/NameIdPool.hpp"
+#include "xercesc/util/XMLEnumerator.hpp"
+#include "xercesc/util/SecurityManager.hpp"
+#include "xercesc/util/XMLException.hpp"
+#include "xercesc/util/XMLEntityResolver.hpp"
+
+#include "xercesc/framework/XMLValidator.hpp"
+#include "xercesc/framework/XMLDocumentHandler.hpp"
+#include "xercesc/framework/XMLPScanToken.hpp"
+
+#include "xercesc/framework/psvi/PSVIHandler.hpp"
+#include "xercesc/framework/psvi/PSVIItem.hpp"
+#include "xercesc/framework/psvi/PSVIElement.hpp"
+#include "xercesc/framework/psvi/PSVIAttribute.hpp"
+#include "xercesc/framework/psvi/PSVIAttributeList.hpp"
+
 #include "xercesc/framework/XMLGrammarDescription.hpp"
 #include "xercesc/framework/XMLDTDDescription.hpp"
 #include "xercesc/framework/XMLSchemaDescription.hpp"
-#include "xercesc/util/NameIdPool.hpp"
-#include "xercesc/util/XMLEnumerator.hpp"
-#include "xercesc/framework/XMLValidator.hpp"
+
 #include "xercesc/validators/common/Grammar.hpp"
 #include "xercesc/validators/DTD/DTDAttDef.hpp"
 #include "xercesc/validators/DTD/DTDAttDefList.hpp"
@@ -57,11 +58,7 @@
 #include "xercesc/validators/schema/SchemaValidator.hpp"
 #include "xercesc/validators/schema/SchemaAttDefList.hpp"
 #include "xercesc/validators/schema/SchemaAttDef.hpp"
-#include "xercesc/framework/XMLFormatter.hpp"
-#include "xercesc/framework/MemBufFormatTarget.hpp"
-#include "xercesc/framework/LocalFileFormatTarget.hpp"
-#include "xercesc/framework/StdOutFormatTarget.hpp"
-#include "xercesc/framework/psvi/PSVIHandler.hpp"
 
+#include "PSVIWriter/PSVIUni.hpp"
 %}
 
