@@ -15,6 +15,9 @@
  #
 
 use strict;
+use Env qw(XERCES_DEVEL
+	   SWIG);
+my @MACRO;
 
 my $BLIB_DIR = '../blib/lib/XML/Xerces';
 if ($XERCES_DEVEL) {
@@ -41,6 +44,11 @@ TERMINUS
     return $retval;
   }
 
+  my $swig = $SWIG || 'swig';
+  @MACRO = ('macro'       => {
+    'SWIG'         => "$swig",
+  });
+
   *MY::postamble = \&Xerces_DOM_postamble;
 }
 
@@ -54,6 +62,7 @@ WriteMakefile(
     'CC'        => $CXX,
     'SKIP'      => [qw( test makeaperl xs_o)],
   @OPTIMIZE,
+  @MACRO,
   @LDFLAGS,
 );
 
