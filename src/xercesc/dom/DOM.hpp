@@ -56,6 +56,7 @@
 
 // Introduced in DOM Level 3
 #include <xercesc/dom/DOMLSParser.hpp>
+#include <xercesc/dom/DOMLSParserFilter.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/dom/DOMLSResourceResolver.hpp>
 #include <xercesc/dom/DOMError.hpp>
