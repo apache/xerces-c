@@ -51,7 +51,7 @@ public:
     //
     //  TOP_LEVEL_SCOPE - outermost scope level (i.e. global) of a declaration.
     //                    For DTD, all element decls and attribute decls always
-    //                    have TOP_LEVEL_SCOPE.  For schema, it may varies if
+    //                    have TOP_LEVEL_SCOPE.  For schema, it may vary if
     //                    it is inside a complex type.
     //
     //  UNKNOWN_SCOPE   - unknown scope level.  None of the decls should have this.

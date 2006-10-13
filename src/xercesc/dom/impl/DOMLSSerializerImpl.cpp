@@ -518,7 +518,7 @@ bool DOMLSSerializerImpl::write(const DOMNode* nodeToWrite,
     // The serialize engine (processNode) throws an exception to abort
     // serialization if
     //
-    //   . A fatal error occurs which renters the output ill-formed, or
+    //   . A fatal error occurs which renders the output ill-formed, or
     //   . Instructed by the application's error handler
     //
     catch (const TranscodingException&)

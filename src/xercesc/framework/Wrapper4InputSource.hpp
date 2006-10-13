@@ -31,7 +31,7 @@ class InputSource;
 
 
 /**
-  * Wrap a SAX InputSource object to a DOMLSInput.
+  * Wrap a SAX InputSource object and make it behave like DOMLSInput.
   */
 class XMLPARSER_EXPORT Wrapper4InputSource: public DOMLSInput
 {
@@ -42,7 +42,7 @@ public:
   /**
     * Constructor
     *
-    * Wrap a SAX InputSource and pretend it to be a DOMLSInput.
+    * Wrap a SAX InputSource and make it behave like a DOMLSInput.
     * By default, the wrapper will adopt the SAX InputSource that is wrapped.
     *
     * @param  inputSource  The SAX InputSource to be wrapped
