@@ -15,23 +15,25 @@
  */
 
 #include <stdlib.h>
-#include "PerlContentCallbackHandler.hpp"
+#include "PerlSAXCallbackHandler.hpp"
 
-PerlContentCallbackHandler::PerlContentCallbackHandler()
+XERCES_CPP_NAMESPACE_USE
+
+PerlSAXCallbackHandler::PerlSAXCallbackHandler()
 {
     callbackObj = NULL;
 }
 
-PerlContentCallbackHandler::~PerlContentCallbackHandler()
+PerlSAXCallbackHandler::~PerlSAXCallbackHandler()
 {}
 
-PerlContentCallbackHandler::PerlContentCallbackHandler(SV *obj)
+PerlSAXCallbackHandler::PerlSAXCallbackHandler(SV *obj)
 {
   set_callback_obj(obj);
 }
 
 void
-PerlContentCallbackHandler::startElement(const   XMLCh* const    uri,
+PerlSAXCallbackHandler::startElement(const   XMLCh* const    uri,
 					 const   XMLCh* const    localname,
 					 const   XMLCh* const    qname,
 					 const   Attributes&     attrs) 
@@ -48,15 +50,15 @@ PerlContentCallbackHandler::startElement(const   XMLCh* const    uri,
     XPUSHs(callbackObj);
 
         // the next argument is the uri
-    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(uri);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Local(uri);
     XPUSHs(string1);
 
         // the next argument is the localname
-    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(localname);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Local(localname);
     XPUSHs(string2);
 
         // the next argument is the qname
-    SV *string3 = UTF8_TRANSCODER->XMLString2Perl(qname);
+    SV *string3 = UTF8_TRANSCODER->XMLString2Local(qname);
     XPUSHs(string3);
 
         // next is the attributes
@@ -66,14 +68,14 @@ PerlContentCallbackHandler::startElement(const   XMLCh* const    uri,
 			(void *)&attrs));
     PUTBACK;
 
-    perl_call_method("start_element", G_VOID);
+    perl_call_method("startElement", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::endElement(const   XMLCh* const    uri,
+PerlSAXCallbackHandler::endElement(const   XMLCh* const    uri,
 				       const   XMLCh* const    localname,
 				       const   XMLCh* const    qname)
 {
@@ -89,27 +91,85 @@ PerlContentCallbackHandler::endElement(const   XMLCh* const    uri,
     XPUSHs(callbackObj);
 
         // the next argument is the uri
-    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(uri);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Local(uri);
     XPUSHs(string1);
 
         // the next argument is the localname
-    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(localname);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Local(localname);
     XPUSHs(string2);
 
         // the next argument is the qname
-    SV *string3 = UTF8_TRANSCODER->XMLString2Perl(qname);
+    SV *string3 = UTF8_TRANSCODER->XMLString2Local(qname);
     XPUSHs(string3);
 
     PUTBACK;
 
-    perl_call_method("end_element", G_VOID);
+    perl_call_method("endElement", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::characters(const XMLCh* const chars, 
+PerlSAXCallbackHandler::startElement(const   XMLCh* const    localname,
+				     AttributeList&     attrs) 
+{
+    if (!callbackObj) return;
+
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+
+    PUSHMARK(SP);
+	// first put the callback object on the stack
+    XPUSHs(callbackObj);
+
+        // the next argument is the localname
+    SV *string2 = UTF8_TRANSCODER->XMLString2Local(localname);
+    XPUSHs(string2);
+
+        // next is the attributes
+    char *class_name = "XML::Xerces::AttributeList";
+    XPUSHs(sv_setref_pv(sv_newmortal(), 
+			class_name, 
+			(void *)&attrs));
+    PUTBACK;
+
+    perl_call_method("startElement", G_VOID);
+
+    FREETMPS;
+    LEAVE;
+}
+
+void
+PerlSAXCallbackHandler::endElement(const   XMLCh* const    localname)
+{
+    if (!callbackObj) return;
+
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+
+    PUSHMARK(SP);
+	// first put the callback object on the stack
+    XPUSHs(callbackObj);
+
+        // the next argument is the localname
+    SV *string2 = UTF8_TRANSCODER->XMLString2Local(localname);
+    XPUSHs(string2);
+
+    PUTBACK;
+
+    perl_call_method("endElement", G_VOID);
+
+    FREETMPS;
+    LEAVE;
+}
+
+void
+PerlSAXCallbackHandler::characters(const XMLCh* const chars, 
 				const unsigned int length)
 {
     if (!callbackObj) return;
@@ -124,7 +184,7 @@ PerlContentCallbackHandler::characters(const XMLCh* const chars,
     XPUSHs(callbackObj);
 
         // the next argument is the char data
-    SV *string = UTF8_TRANSCODER->XMLString2Perl(chars);
+    SV *string = UTF8_TRANSCODER->XMLString2Local(chars);
     XPUSHs(string);
 
         // next is the length
@@ -138,7 +198,7 @@ PerlContentCallbackHandler::characters(const XMLCh* const chars,
     LEAVE;
 }
 void
-PerlContentCallbackHandler::ignorableWhitespace(const XMLCh* const chars, 
+PerlSAXCallbackHandler::ignorableWhitespace(const XMLCh* const chars, 
 						 const unsigned int length)
 {
     if (!callbackObj) return;
@@ -153,7 +213,7 @@ PerlContentCallbackHandler::ignorableWhitespace(const XMLCh* const chars,
     XPUSHs(callbackObj);
 
         // the next argument is the char data
-    SV *string = UTF8_TRANSCODER->XMLString2Perl(chars);
+    SV *string = UTF8_TRANSCODER->XMLString2Local(chars);
     XPUSHs(string);
 
         // next is the length
@@ -161,14 +221,14 @@ PerlContentCallbackHandler::ignorableWhitespace(const XMLCh* const chars,
 
     PUTBACK;
 
-    perl_call_method("ignorable_whitespace", G_VOID);
+    perl_call_method("ignorableWhitespace", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::resetDocument(void)
+PerlSAXCallbackHandler::resetDocument(void)
 {
     return;
     if (!callbackObj) return;
@@ -184,14 +244,14 @@ PerlContentCallbackHandler::resetDocument(void)
 
     PUTBACK;
 
-    perl_call_method("reset_document", G_VOID);
+    perl_call_method("resetDocument", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::startDocument(void)
+PerlSAXCallbackHandler::startDocument(void)
 {
     if (!callbackObj) return;
 
@@ -206,14 +266,14 @@ PerlContentCallbackHandler::startDocument(void)
 
     PUTBACK;
 
-    perl_call_method("start_document", G_VOID);
+    perl_call_method("startDocument", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::endDocument(void)
+PerlSAXCallbackHandler::endDocument(void)
 {
     if (!callbackObj) return;
 
@@ -228,7 +288,7 @@ PerlContentCallbackHandler::endDocument(void)
 
     PUTBACK;
 
-    perl_call_method("end_document", G_VOID);
+    perl_call_method("endDocument", G_VOID);
 
     FREETMPS;
     LEAVE;
@@ -236,7 +296,7 @@ PerlContentCallbackHandler::endDocument(void)
 
 
 void
-PerlContentCallbackHandler::processingInstruction(const XMLCh* const target,
+PerlSAXCallbackHandler::processingInstruction(const XMLCh* const target,
 						   const XMLCh* const data)
 {
     if (!callbackObj) return;
@@ -251,23 +311,23 @@ PerlContentCallbackHandler::processingInstruction(const XMLCh* const target,
     XPUSHs(callbackObj);
 
         // the next argument is the target
-    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(target);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Local(target);
     XPUSHs(string1);
 
         // the next argument is the data
-    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(data);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Local(data);
     XPUSHs(string2);
 
     PUTBACK;
 
-    perl_call_method("processing_instruction", G_VOID);
+    perl_call_method("processingInstruction", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::setDocumentLocator(const Locator* const locator)
+PerlSAXCallbackHandler::setDocumentLocator(const Locator* const locator)
 {
     if (!callbackObj) return;
 
@@ -288,14 +348,14 @@ PerlContentCallbackHandler::setDocumentLocator(const Locator* const locator)
 
     PUTBACK;
 
-    perl_call_method("set_document_locator", G_VOID);
+    perl_call_method("setDocumentLocator", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::startPrefixMapping (const XMLCh* const prefix,
+PerlSAXCallbackHandler::startPrefixMapping (const XMLCh* const prefix,
 						const XMLCh* const uri)
 {
     if (!callbackObj) return;
@@ -310,23 +370,23 @@ PerlContentCallbackHandler::startPrefixMapping (const XMLCh* const prefix,
     XPUSHs(callbackObj);
 
         // the next argument is the prefix
-    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(prefix);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Local(prefix);
     XPUSHs(string1);
 
         // the next argument is the uri
-    SV *string2 = UTF8_TRANSCODER->XMLString2Perl(uri);
+    SV *string2 = UTF8_TRANSCODER->XMLString2Local(uri);
     XPUSHs(string2);
 
     PUTBACK;
 
-    perl_call_method("start_prefix_mapping", G_VOID);
+    perl_call_method("startPrefixMapping", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::endPrefixMapping (const XMLCh* const prefix)
+PerlSAXCallbackHandler::endPrefixMapping (const XMLCh* const prefix)
 {
     if (!callbackObj) return;
 
@@ -340,19 +400,19 @@ PerlContentCallbackHandler::endPrefixMapping (const XMLCh* const prefix)
     XPUSHs(callbackObj);
 
         // the next argument is the prefix
-    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(prefix);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Local(prefix);
     XPUSHs(string1);
 
     PUTBACK;
 
-    perl_call_method("end_prefix_mapping", G_VOID);
+    perl_call_method("endPrefixMapping", G_VOID);
 
     FREETMPS;
     LEAVE;
 }
 
 void
-PerlContentCallbackHandler::skippedEntity (const XMLCh* const name)
+PerlSAXCallbackHandler::skippedEntity (const XMLCh* const name)
 {
     if (!callbackObj) return;
 
@@ -366,12 +426,12 @@ PerlContentCallbackHandler::skippedEntity (const XMLCh* const name)
     XPUSHs(callbackObj);
 
         // the next argument is the name
-    SV *string1 = UTF8_TRANSCODER->XMLString2Perl(name);
+    SV *string1 = UTF8_TRANSCODER->XMLString2Local(name);
     XPUSHs(string1);
 
     PUTBACK;
 
-    perl_call_method("skipped_entity", G_VOID);
+    perl_call_method("skippedEntity", G_VOID);
 
     FREETMPS;
     LEAVE;

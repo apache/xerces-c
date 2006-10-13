@@ -14,52 +14,60 @@
  * limitations under the License.
  */
 
-#ifndef __PERLCONTENTCALLBACKHANDLER
-#define __PERLCONTENTCALLBACKHANDLER
+#ifndef __PERLSAXCALLBACKHANDLER
+#define __PERLSAXCALLBACKHANDLER
 
 #include "PerlCallbackHandler.hpp"
+#include "xercesc/sax/DocumentHandler.hpp"
 #include "xercesc/sax2/ContentHandler.hpp"
 #include "xercesc/util/XMLString.hpp"
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
-class PerlContentCallbackHandler  : public ContentHandler
-				 , public PerlCallbackHandler 
+class PerlSAXCallbackHandler  : public ContentHandler
+			      , public DocumentHandler
+			      , public PerlCallbackHandler 
 {
 
 protected:
-//    SV *callbackObj;
 
 public:
 
-    PerlContentCallbackHandler();
-    PerlContentCallbackHandler(SV *obj);
-    ~PerlContentCallbackHandler();
+    PerlSAXCallbackHandler();
+    PerlSAXCallbackHandler(SV *obj);
+    ~PerlSAXCallbackHandler();
 
-    int type() {return PERLCALLBACKHANDLER_CONTENT_TYPE;}
+    int type() {return PERLCALLBACKHANDLER_SAX_TYPE;}
+
+	// The DocumentHandler interface
+    void characters(const XMLCh* const chars, 
+		    const unsigned int length);
+    void ignorableWhitespace(const XMLCh* const chars, 
+			     const unsigned int length);
+    void startElement(const XMLCh* const, AttributeList&);
+    void endElement(const XMLCh* const);
+
+    void resetDocument();
+    void startDocument();
+    void endDocument();
+    void processingInstruction (const XMLCh* const target,
+				const XMLCh* const data);
+    void setDocumentLocator(const Locator* const locator);
 
 	// The ContentHandler interface
     void startElement(const   XMLCh* const    uri,
 		      const   XMLCh* const    localname,
 		      const   XMLCh* const    qname,
 		      const   Attributes&     attrs);
-    void characters(const XMLCh* const chars, 
-		    const unsigned int length);
-    void ignorableWhitespace(const XMLCh* const chars, 
-			     const unsigned int length);
     void endElement(const   XMLCh* const    uri,
 		    const   XMLCh* const    localname,
 		    const   XMLCh* const    qname);
-    void resetDocument(void);
-    void startDocument();
-    void endDocument();
-    void processingInstruction (const XMLCh* const target,
-				const XMLCh* const data);
-    void setDocumentLocator(const Locator* const locator);
     void startPrefixMapping (const XMLCh* const prefix,
 			     const XMLCh* const uri);
     void endPrefixMapping (const XMLCh* const prefix);
     void skippedEntity (const XMLCh* const name);
 };
 
-#endif /* __PERLCONTENTCALLBACKHANDLER */
+XERCES_CPP_NAMESPACE_END
+
+#endif /* __PERLSAXCALLBACKHANDLER */
