@@ -72,7 +72,7 @@ public:
         , const XMLCh* const options
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
-    ~RegularExpression();
+    virtual ~RegularExpression();
 
     // -----------------------------------------------------------------------
     //  Public Constants
