@@ -1,0 +1,1 @@
+%include "xercesc/util/XMLResourceIdentifier.hpp"
