@@ -695,6 +695,7 @@ util_headers = \
 	xercesc/util/PanicHandler.hpp \
 	xercesc/util/ParseException.hpp \
 	xercesc/util/PlatformUtils.hpp \
+	xercesc/util/PSVIUni.hpp \
 	xercesc/util/QName.hpp \
 	xercesc/util/RefArrayOf.hpp \
 	xercesc/util/RefArrayOf.c \
@@ -823,6 +824,7 @@ util_sources = \
 	xercesc/util/Mutexes.cpp \
 	xercesc/util/PanicHandler.cpp \
 	xercesc/util/PlatformUtils.cpp \
+	xercesc/util/PSVIUni.cpp \
 	xercesc/util/QName.cpp \
 	xercesc/util/regx/ASCIIRangeFactory.cpp \
 	xercesc/util/regx/BlockRangeFactory.cpp \

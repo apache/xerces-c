@@ -49,6 +49,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\KVStringPair.obj \
     $(TARGETPATH)\obj\Mutexes.obj \
     $(TARGETPATH)\obj\PlatformUtils.obj \
+    $(TARGETPATH)\obj\PSVIUni.obj \
     $(TARGETPATH)\obj\QName.obj \
     $(TARGETPATH)\obj\StringPool.obj \
     $(TARGETPATH)\obj\TransService.obj \

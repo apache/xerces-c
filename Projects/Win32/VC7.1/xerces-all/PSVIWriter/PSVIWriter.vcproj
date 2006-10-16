@@ -251,12 +251,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\..\..\..\samples\src\PSVIWriter\PSVIUni.cpp">
-		</File>
-		<File
-			RelativePath="..\..\..\..\..\samples\src\PSVIWriter\PSVIUni.hpp">
-		</File>
-		<File
 			RelativePath="..\..\..\..\..\samples\src\PSVIWriter\PSVIWriter.cpp">
 		</File>
 		<File

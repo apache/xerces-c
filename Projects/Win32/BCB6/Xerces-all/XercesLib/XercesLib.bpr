@@ -53,6 +53,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\KVStringPair.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\Mutexes.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\PlatformUtils.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\PSVIUni.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\QName.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\StringPool.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SynchronizedStringPool.obj 
@@ -416,6 +417,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\KVStringPair.cpp" FORMNAME="" UNITNAME="KVStringPair" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\Mutexes.cpp" FORMNAME="" UNITNAME="Mutexes" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\PlatformUtils.cpp" FORMNAME="" UNITNAME="PlatformUtils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\PSVIUni.cpp" FORMNAME="" UNITNAME="PSVIUni" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\QName.cpp" FORMNAME="" UNITNAME="QName" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\StringPool.cpp" FORMNAME="" UNITNAME="StringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp" FORMNAME="" UNITNAME="SynchronizedStringPool" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

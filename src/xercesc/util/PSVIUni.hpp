@@ -20,9 +20,9 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+XERCES_CPP_NAMESPACE_BEGIN
 
-class PSVIUni
+class XMLUTIL_EXPORT PSVIUni
 {
 public :
 
@@ -218,7 +218,7 @@ public :
     static const XMLCh fgTotalDigits[];
     static const XMLCh fgWhiteSpace[];
     
-    	//Namespaces and prefixes
+   	//Namespaces and prefixes
     	
 	static const XMLCh fgNamespaceInfoset[];
 	static const XMLCh fgXsi[];
@@ -229,5 +229,7 @@ public :
 	static const XMLCh fgNamespaceXmlSchema[];
 
 };
+
+XERCES_CPP_NAMESPACE_END
 
 #endif

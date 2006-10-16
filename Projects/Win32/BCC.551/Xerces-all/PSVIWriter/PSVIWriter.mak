@@ -6,7 +6,6 @@ BCB = $(MAKEDIR)\..
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
 PROJECT = $(TARGETPATH)\PSVIWriter.exe
 OBJFILES = $(TARGETPATH)\obj\PSVIWriter.obj \
-    $(TARGETPATH)\obj\PSVIUni.obj \
     $(TARGETPATH)\obj\PSVIWriterHandlers.obj
 RESFILES = 
 MAINSOURCE = PSVIWriter.cpp

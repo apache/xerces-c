@@ -136,14 +136,6 @@ LINK32=link.exe
 # Name "PSVIWriter - Win64 Release"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\samples\src\PSVIWriter\PSVIUni.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\samples\src\PSVIWriter\PSVIUni.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\samples\src\PSVIWriter\PSVIWriter.cpp
 # End Source File
 # Begin Source File

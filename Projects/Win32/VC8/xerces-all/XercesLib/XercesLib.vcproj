@@ -555,6 +555,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\PSVIUni.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\PSVIUni.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\QName.cpp"
 				>
 			</File>

@@ -49,8 +49,7 @@ PParse_SOURCES =					src/PParse/PParse.cpp \
 							src/PParse/PParseHandlers.cpp
 
 sampleprogs +=						PSVIWriter
-PSVIWriter_SOURCES =					src/PSVIWriter/PSVIUni.cpp \
-							src/PSVIWriter/PSVIWriter.cpp \
+PSVIWriter_SOURCES =				src/PSVIWriter/PSVIWriter.cpp \
 							src/PSVIWriter/PSVIWriterHandlers.cpp
 
 sampleprogs +=						Redirect

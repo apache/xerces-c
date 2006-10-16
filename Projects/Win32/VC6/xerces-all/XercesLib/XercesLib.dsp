@@ -692,6 +692,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\PlatformUtils.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\PSVIUni.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\PSVIUni.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\QName.cpp
 # End Source File
 # Begin Source File

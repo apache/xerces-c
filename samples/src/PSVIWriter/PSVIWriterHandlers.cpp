@@ -18,7 +18,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "PSVIWriterHandlers.hpp"
-#include "PSVIUni.hpp"
+#include <xercesc/util/PSVIUni.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
