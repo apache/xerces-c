@@ -56,7 +56,7 @@ extern "C" {
 #define PERLCALLBACKHANDLER_DOMERROR_TYPE      4
 
 #include "xercesc/util/PlatformUtils.hpp"
-#include "Transcoder.hpp"
+#include "../Transcoder/Transcoder.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 

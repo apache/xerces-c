@@ -16,7 +16,7 @@
 
 #include "xercesc/sax/InputSource.hpp"
 #include "PerlEntityResolverHandler.hpp"
-#include "xerces-swig-perl.hpp"
+#include "../xerces-swig-perl.hpp"
 
 XERCES_CPP_NAMESPACE_USE
 
