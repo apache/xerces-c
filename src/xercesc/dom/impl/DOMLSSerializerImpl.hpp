@@ -72,7 +72,7 @@ public:
     /**
 	  *  The caller is responsible for the release of the returned string
 	  */
-    virtual XMLCh*                  writeToString(const DOMNode* nodeToWrite);
+    virtual XMLCh*                  writeToString(const DOMNode* nodeToWrite, MemoryManager* manager = NULL);
     virtual void                    release();
 
     //@}

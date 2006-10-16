@@ -506,13 +506,16 @@ public:
      * diagnostic purposes.
      *
      * @param nodeToWrite  The node to be written.
+     * @param manager  The memory manager to be used to allocate the result string.
+     *   If NULL is used, the memory manager used to construct the serializer will
+     *   be used.
      * @return  Returns the serialized data, or <code>null</code> in case a
      *   failure occured and the failure wasn't canceled by the error
      *   handler.   The returned string is always in UTF-16.
      *   The encoding information available in DOMLSSerializer is ignored in writeToString().
      * @since DOM Level 3
      */
-    virtual XMLCh*     writeToString(const DOMNode* nodeToWrite) = 0;
+    virtual XMLCh*     writeToString(const DOMNode* nodeToWrite, MemoryManager* manager = NULL) = 0;
 
     //@}
 

@@ -561,16 +561,18 @@ bool DOMLSSerializerImpl::writeToURI(const DOMNode* nodeToWrite, const XMLCh* ur
 // We don't throw DOMSTRING_SIZE_ERR since we are no longer
 // using DOMString.
 //
-XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
+XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite, MemoryManager* manager /*= NULL*/)
 {
-    MemBufFormatTarget  destination(1023, fMemoryManager);
+    if(manager==NULL)
+        manager = fMemoryManager;
+    MemBufFormatTarget  destination(1023, manager);
     bool retVal;
 
     bool bBOMFlag=getFeature(BYTE_ORDER_MARK_ID);
     setFeature(BYTE_ORDER_MARK_ID, false);
     try
     {
-        DOMLSOutputImpl output(fMemoryManager);
+        DOMLSOutputImpl output(manager);
         output.setByteStream(&destination);
         output.setEncoding(XMLUni::fgUTF16EncodingString);
         retVal = write(nodeToWrite, &output);
@@ -590,7 +592,7 @@ XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite)
     }
 
     setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
-    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), fMemoryManager) : 0);
+    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), manager) : 0);
 }
 
 //
