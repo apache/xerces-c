@@ -16,6 +16,8 @@
 
 use strict;
 
+my @MACRO;
+
 my $BLIB_DIR = '../blib/lib/XML/Xerces';
 if ($XERCES_DEVEL) {
   print STDERR "\tWelcome Xerces Developer!\n";
@@ -41,6 +43,11 @@ TERMINUS
     return $retval;
   }
 
+  my $swig = $SWIG || 'swig';
+  @MACRO = ('macro'       => {
+    'SWIG'         => "$swig",
+  });
+
   *MY::postamble = \&Xerces_IO_postamble;
 }
 
@@ -54,6 +61,7 @@ WriteMakefile(
     'CC'        => $CXX,
     'SKIP'      => [qw( test makeaperl xs_o)],
   @OPTIMIZE,
+  @MACRO,
   @LDFLAGS,
 );
 
