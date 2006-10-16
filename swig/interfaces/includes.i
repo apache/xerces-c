@@ -59,6 +59,6 @@
 #include "xercesc/validators/schema/SchemaAttDefList.hpp"
 #include "xercesc/validators/schema/SchemaAttDef.hpp"
 
-#include "PSVIWriter/PSVIUni.hpp"
+#include "xercesc/util/PSVIUni.hpp"
 %}
 

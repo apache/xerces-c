@@ -8,4 +8,4 @@
 %include "xercesc/validators/schema/SchemaSymbols.hpp"
 
 // constants for PSVI
-%include "PSVIWriter/PSVIUni.hpp"
+%include "xercesc/util/PSVIUni.hpp"
