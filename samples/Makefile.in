@@ -127,8 +127,7 @@ am_PParse_OBJECTS = src/PParse/PParse.$(OBJEXT) \
 PParse_OBJECTS = $(am_PParse_OBJECTS)
 PParse_LDADD = $(LDADD)
 PParse_DEPENDENCIES = ../obj/libxerces.la
-am_PSVIWriter_OBJECTS = src/PSVIWriter/PSVIUni.$(OBJEXT) \
-	src/PSVIWriter/PSVIWriter.$(OBJEXT) \
+am_PSVIWriter_OBJECTS = src/PSVIWriter/PSVIWriter.$(OBJEXT) \
 	src/PSVIWriter/PSVIWriterHandlers.$(OBJEXT)
 PSVIWriter_OBJECTS = $(am_PSVIWriter_OBJECTS)
 PSVIWriter_LDADD = $(LDADD)
@@ -373,8 +372,7 @@ MemParse_SOURCES = src/MemParse/MemParse.cpp \
 PParse_SOURCES = src/PParse/PParse.cpp \
 							src/PParse/PParseHandlers.cpp
 
-PSVIWriter_SOURCES = src/PSVIWriter/PSVIUni.cpp \
-							src/PSVIWriter/PSVIWriter.cpp \
+PSVIWriter_SOURCES = src/PSVIWriter/PSVIWriter.cpp \
 							src/PSVIWriter/PSVIWriterHandlers.cpp
 
 Redirect_SOURCES = src/Redirect/Redirect.cpp \
@@ -555,8 +553,6 @@ src/PSVIWriter/$(am__dirstamp):
 src/PSVIWriter/$(DEPDIR)/$(am__dirstamp):
 	@$(mkdir_p) src/PSVIWriter/$(DEPDIR)
 	@: > src/PSVIWriter/$(DEPDIR)/$(am__dirstamp)
-src/PSVIWriter/PSVIUni.$(OBJEXT): src/PSVIWriter/$(am__dirstamp) \
-	src/PSVIWriter/$(DEPDIR)/$(am__dirstamp)
 src/PSVIWriter/PSVIWriter.$(OBJEXT): src/PSVIWriter/$(am__dirstamp) \
 	src/PSVIWriter/$(DEPDIR)/$(am__dirstamp)
 src/PSVIWriter/PSVIWriterHandlers.$(OBJEXT):  \
@@ -685,7 +681,6 @@ mostlyclean-compile:
 	-rm -f src/MemParse/MemParseHandlers.$(OBJEXT)
 	-rm -f src/PParse/PParse.$(OBJEXT)
 	-rm -f src/PParse/PParseHandlers.$(OBJEXT)
-	-rm -f src/PSVIWriter/PSVIUni.$(OBJEXT)
 	-rm -f src/PSVIWriter/PSVIWriter.$(OBJEXT)
 	-rm -f src/PSVIWriter/PSVIWriterHandlers.$(OBJEXT)
 	-rm -f src/Redirect/Redirect.$(OBJEXT)
@@ -718,7 +713,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/MemParse/$(DEPDIR)/MemParseHandlers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/PParse/$(DEPDIR)/PParse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/PParse/$(DEPDIR)/PParseHandlers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/PSVIWriter/$(DEPDIR)/PSVIUni.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/PSVIWriter/$(DEPDIR)/PSVIWriter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/PSVIWriter/$(DEPDIR)/PSVIWriterHandlers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/Redirect/$(DEPDIR)/Redirect.Po@am__quote@

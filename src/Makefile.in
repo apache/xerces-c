@@ -502,8 +502,8 @@ am__objects_24 = xercesc/util/Base64.lo \
 	xercesc/util/HashXMLCh.lo xercesc/util/HeaderDummy.lo \
 	xercesc/util/HexBin.lo xercesc/util/KVStringPair.lo \
 	xercesc/util/Mutexes.lo xercesc/util/PanicHandler.lo \
-	xercesc/util/PlatformUtils.lo xercesc/util/QName.lo \
-	xercesc/util/regx/ASCIIRangeFactory.lo \
+	xercesc/util/PlatformUtils.lo xercesc/util/PSVIUni.lo \
+	xercesc/util/QName.lo xercesc/util/regx/ASCIIRangeFactory.lo \
 	xercesc/util/regx/BlockRangeFactory.lo \
 	xercesc/util/regx/BMPattern.lo xercesc/util/regx/CharToken.lo \
 	xercesc/util/regx/ClosureToken.lo \
@@ -1605,6 +1605,7 @@ util_headers = \
 	xercesc/util/PanicHandler.hpp \
 	xercesc/util/ParseException.hpp \
 	xercesc/util/PlatformUtils.hpp \
+	xercesc/util/PSVIUni.hpp \
 	xercesc/util/QName.hpp \
 	xercesc/util/RefArrayOf.hpp \
 	xercesc/util/RefArrayOf.c \
@@ -1733,6 +1734,7 @@ util_sources = \
 	xercesc/util/Mutexes.cpp \
 	xercesc/util/PanicHandler.cpp \
 	xercesc/util/PlatformUtils.cpp \
+	xercesc/util/PSVIUni.cpp \
 	xercesc/util/QName.cpp \
 	xercesc/util/regx/ASCIIRangeFactory.cpp \
 	xercesc/util/regx/BlockRangeFactory.cpp \
@@ -2782,6 +2784,8 @@ xercesc/util/PanicHandler.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
 xercesc/util/PlatformUtils.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
+xercesc/util/PSVIUni.lo: xercesc/util/$(am__dirstamp) \
+	xercesc/util/$(DEPDIR)/$(am__dirstamp)
 xercesc/util/QName.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
 xercesc/util/regx/$(am__dirstamp):
@@ -3597,6 +3601,8 @@ mostlyclean-compile:
 	-rm -f xercesc/util/NetAccessors/libWWW/libwwwna_la-BinURLInputStream.lo
 	-rm -f xercesc/util/NetAccessors/libWWW/libwwwna_la-LibWWWNetAccessor.$(OBJEXT)
 	-rm -f xercesc/util/NetAccessors/libWWW/libwwwna_la-LibWWWNetAccessor.lo
+	-rm -f xercesc/util/PSVIUni.$(OBJEXT)
+	-rm -f xercesc/util/PSVIUni.lo
 	-rm -f xercesc/util/PanicHandler.$(OBJEXT)
 	-rm -f xercesc/util/PanicHandler.lo
 	-rm -f xercesc/util/PlatformUtils.$(OBJEXT)
@@ -4051,6 +4057,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/HexBin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/KVStringPair.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/Mutexes.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/PSVIUni.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/PanicHandler.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/PlatformUtils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/QName.Plo@am__quote@
