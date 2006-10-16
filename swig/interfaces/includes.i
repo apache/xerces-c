@@ -60,5 +60,8 @@
 #include "xercesc/validators/schema/SchemaAttDef.hpp"
 
 #include "xercesc/util/PSVIUni.hpp"
+
+XERCES_CPP_NAMESPACE_USE
+
 %}
 
