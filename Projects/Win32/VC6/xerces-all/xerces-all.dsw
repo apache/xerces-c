@@ -378,6 +378,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "XSTSHarness"=".\XSTSHarness\XSTSHarness.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "XSValueTest"=".\XSValueTest\XSValueTest.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -511,6 +526,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XSValueTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSTSHarness
     End Project Dependency
 }}}
 
