@@ -23,9 +23,9 @@
 #include "xercesc/util/XMLString.hpp"
 #include "xercesc/util/XMLEntityResolver.hpp"
 
-class XMLResourceIdentifier;
-
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLResourceIdentifier;
 
 class PerlEntityResolverHandler: public EntityResolver
 			       , public XMLEntityResolver
