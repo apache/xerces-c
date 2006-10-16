@@ -110,7 +110,7 @@ if (-f $XERCES_CONFIG) {
   my $sep;
   while (<CONF>) {
     if (/\@CXXFLAGS\@/) {
-      my ($sep, $flags) = /^s(.)\@CXXFLAGS\@\1([^\1]*)\1;/;
+      my ($sep, $flags) = /^s(.)\@CXXFLAGS\@\1\|[^\|]*\|([^\1]*)\1/;
       my @flags = split /\s+/, $flags;
       my @new_flags;
       foreach my $flag (@flags) {
@@ -127,11 +127,11 @@ if (-f $XERCES_CONFIG) {
       }
       ($CXXFLAGS) = join(' ',@new_flags);
     } elsif (/\@LDFLAGS\@/) {
-      ($sep, $LDFLAGS) = /^s(.)\@LDFLAGS\@\1([^\1]*)\1;/;
+      ($sep, $LDFLAGS) = /^s(.)\@LDFLAGS\@\1\|[^\|]*\|([^\1]*)\1/;
       @LDFLAGS = ('LDFLAGS'     => $LDFLAGS)
 	if $LDFLAGS !~ /^\s*$/;
     } elsif (/\@CXX\@/) {
-      ($sep, $CXX) = /^s(.)\@CXX\@\1([^\1]*)\1;/
+      ($sep, $CXX) = /^s(.)\@CXX\@\1\|[^\|]*\|([^\1]*)\1/
     }
   }
   print STDERR <<EOM;
