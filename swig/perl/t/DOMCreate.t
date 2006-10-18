@@ -40,7 +40,12 @@ my $document = q[<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
-my $cmd = "$perl -Mblib $SAMPLE_DIR/DOMCreate.pl 2>/dev/null";
+my $cmd;
+if ($^O eq 'MSWin32') {
+  $cmd = "$perl $SAMPLE_DIR/DOMCreate.pl 2>NUL";
+} else {
+  $cmd = "$perl $SAMPLE_DIR/DOMCreate.pl 2>/dev/null";
+}
 # print STDERR "Running: $cmd\n";
 my $output = `$cmd`;
 

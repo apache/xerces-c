@@ -43,7 +43,7 @@ my @persons = $doc->getElementsByTagName('person');
 is(scalar @persons, 6,'getting <person>s');
 
 # test parseURI
-$doc = eval{$DOM->parseURI("file:$PERSONAL_FILE_NAME")};
+$doc = eval{$DOM->parseURI("file:///$PERSONAL_FILE_NAME")};
 ok((not $@),'parseURI with file:');
 isa_ok($doc,'XML::Xerces::DOMDocument');
 
@@ -69,10 +69,10 @@ isa_ok($doc,'XML::Xerces::DOMDocument');
 
 @persons = $doc->getElementsByTagName('person');
 is(scalar @persons, 6,'getting <person>s');
-
+my $to_cache;
 my $grammar = $DOM->loadGrammar($PERSONAL_DTD_NAME,
 				$XML::Xerces::Grammar::DTDGrammarType,
-				my $to_cache = 1);
+				$to_cache = 1);
 isa_ok($grammar, "XML::Xerces::DTDGrammar",
        'loadGrammar(path)');
 
@@ -88,7 +88,7 @@ isa_ok($grammar, "XML::Xerces::DTDGrammar",
 
 $grammar = $DOM->loadGrammar($PERSONAL_SCHEMA_NAME,
 				$XML::Xerces::Grammar::SchemaGrammarType,
-				my $to_cache = 1);
+				$to_cache = 1);
 isa_ok($grammar, "XML::Xerces::SchemaGrammar",
        'loadGrammar(path)');
 

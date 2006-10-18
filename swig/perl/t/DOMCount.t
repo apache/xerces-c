@@ -39,7 +39,12 @@ close(OUT);
 
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
-my $output = `$perl -Mblib $SAMPLE_DIR/DOMCount.pl $file 2>/dev/null`;
+my $output;
+if ($^O eq 'MSWin32') {
+  $output = `$perl $SAMPLE_DIR/DOMCount.pl $file 2>NUL`;
+} else {
+  $output = `$perl $SAMPLE_DIR/DOMCount.pl $file 2>/dev/null`;
+}
 # print STDERR "Out <$output>\n";
 $output =~ /(\d+) elems/;
 is($1, 10, 'element count');

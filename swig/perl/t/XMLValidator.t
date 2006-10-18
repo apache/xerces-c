@@ -4,7 +4,7 @@
 
 ######################### Begin module loading
 
-use blib;
+# use blib;
 use Test::More tests => 38;
 BEGIN { use_ok(XML::Xerces::DOM) };
 BEGIN { use_ok(XML::Xerces::SAX) };

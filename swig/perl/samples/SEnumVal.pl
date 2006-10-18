@@ -25,7 +25,7 @@
 ######################################################################
 
 use strict;
-use blib;
+# use blib;
 use XML::Xerces qw(error);
 use XML::Xerces::SAX;
 use Getopt::Long;

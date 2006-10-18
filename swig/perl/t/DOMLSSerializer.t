@@ -5,7 +5,7 @@
 ######################### Begin module loading
 
 # use blib;
-use Test::More tests => 35;
+use Test::More tests => 37;
 BEGIN { use_ok("XML::Xerces::DOM") };
 
 use strict;

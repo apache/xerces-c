@@ -17,7 +17,12 @@ use Config;
 
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
-my @output = split(/\n/,`$perl -Mblib $SAMPLE_DIR/SAXCount.pl $PERSONAL_FILE_NAME 2>/dev/null`);
+my @output;
+if ($^O eq 'MSWin32') {
+  @output = split(/\n/,`$perl $SAMPLE_DIR/SAXCount.pl $PERSONAL_FILE_NAME 2>NUL`);
+} else {
+  @output = split(/\n/,`$perl $SAMPLE_DIR/SAXCount.pl $PERSONAL_FILE_NAME 2>/dev/null`);
+}
 $output[1] =~ /\s(\d+)/;
 is($1, 37,
    'elems');

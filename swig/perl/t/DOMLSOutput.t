@@ -40,7 +40,7 @@ isa_ok($output->getByteStream(), "XML::Xerces::XMLFormatTarget",
 isa_ok($output->getByteStream(), "XML::Xerces::MemBufFormatTarget",
        'overloaded return val getByteStream');
 
-$target = XML::Xerces::LocalFileFormatTarget->new('/tmp/foo.xml');
+$target = XML::Xerces::LocalFileFormatTarget->new('./foo.xml');
 $output->setByteStream($target);
 isa_ok($output->getByteStream(), "XML::Xerces::XMLFormatTarget",
        'byte stream');

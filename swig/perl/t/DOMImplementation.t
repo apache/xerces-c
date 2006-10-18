@@ -4,8 +4,8 @@
 
 ######################### Begin module loading
 
-use blib;
-use Test::More tests => 26;
+# use blib;
+use Test::More tests => 29;
 BEGIN { use_ok("XML::Xerces::DOM") };
 
 use lib 't';

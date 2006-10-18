@@ -4,7 +4,7 @@
 
 ######################### Begin module loading
 
-use blib;
+# use blib;
 use Test::More tests => 12;
 BEGIN { use_ok(XML::Xerces::DOM) };
 use Config;
@@ -24,7 +24,12 @@ XML::Xerces::XMLPlatformUtils::Initialize();
 
 my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
-my $output = `$perl -Mblib $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>/dev/null`;
+my $output;
+if ($^O eq 'MSWin32') {
+  $output = `$perl $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>NUL`;
+} else {
+  $output = `$perl $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>/dev/null`;
+}
 
 my @lines = split("\n", $output);
 
