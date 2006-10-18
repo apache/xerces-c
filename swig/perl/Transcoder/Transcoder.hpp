@@ -17,10 +17,6 @@
 #ifndef __TRANSCODER
 #define __TRANSCODER
 
-/* Needed on some windows machines---since MS plays funny
-   games with the header files under C++ */
-extern "C" {
-
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -28,9 +24,6 @@ extern "C" {
 /* Get rid of free and malloc defined by perl */
 #undef free
 #undef malloc
-
-}
-
 
 #include "xercesc/util/TransService.hpp"
 #include "xercesc/util/PlatformUtils.hpp"
