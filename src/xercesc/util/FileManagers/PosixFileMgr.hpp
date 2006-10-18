@@ -34,18 +34,18 @@ class PosixFileMgr : public XMLFileMgr
         virtual ~PosixFileMgr();
 
 		// File access
-        virtual FileHandle	open(const XMLCh* path, bool toWrite, MemoryManager* const manager);
-        virtual FileHandle	open(const char* path, bool toWrite, MemoryManager* const manager);
+        virtual FileHandle	fileOpen(const XMLCh* path, bool toWrite, MemoryManager* const manager);
+        virtual FileHandle	fileOpen(const char* path, bool toWrite, MemoryManager* const manager);
         virtual FileHandle	openStdIn(MemoryManager* const manager);
         
-        virtual void		close(FileHandle f, MemoryManager* const manager);
-        virtual void		reset(FileHandle f, MemoryManager* const manager);
+        virtual void		fileClose(FileHandle f, MemoryManager* const manager);
+        virtual void		fileReset(FileHandle f, MemoryManager* const manager);
 
         virtual XMLFilePos	curPos(FileHandle f, MemoryManager* const manager);
-        virtual XMLFilePos	size(FileHandle f, MemoryManager* const manager);
+        virtual XMLFilePos	fileSize(FileHandle f, MemoryManager* const manager);
 
-        virtual size_t		read(FileHandle f, size_t byteCount, XMLByte* buffer, MemoryManager* const manager);
-        virtual void		write(FileHandle f, size_t byteCount, const XMLByte* buffer, MemoryManager* const manager);
+        virtual XMLSize_t	fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager);
+        virtual void		fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager);
         
         // Ancillary path handling routines
         virtual XMLCh*		getFullPath(const XMLCh* const srcPath, MemoryManager* const manager);

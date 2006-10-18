@@ -521,7 +521,7 @@ XMLPlatformUtils::openFile(const char* const fileName
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	return fgFileMgr->open(fileName, false, memmgr);
+	return fgFileMgr->fileOpen(fileName, false, memmgr);
 }
 
 
@@ -531,7 +531,7 @@ XMLPlatformUtils::openFile(const XMLCh* const fileName, MemoryManager* const mem
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	return fgFileMgr->open(fileName, false, memmgr);
+	return fgFileMgr->fileOpen(fileName, false, memmgr);
 }
 
 
@@ -542,7 +542,7 @@ XMLPlatformUtils::openFileToWrite(const char* const fileName
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	return fgFileMgr->open(fileName, true, memmgr);
+	return fgFileMgr->fileOpen(fileName, true, memmgr);
 }
 
 
@@ -553,7 +553,7 @@ XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
- 	return fgFileMgr->open(fileName, true, memmgr);
+ 	return fgFileMgr->fileOpen(fileName, true, memmgr);
 }
 
 
@@ -574,7 +574,7 @@ XMLPlatformUtils::closeFile(const FileHandle theFile
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	fgFileMgr->close(theFile, memmgr);
+	fgFileMgr->fileClose(theFile, memmgr);
 }
 
 void
@@ -584,7 +584,7 @@ XMLPlatformUtils::resetFile(FileHandle theFile
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	fgFileMgr->reset(theFile, memmgr);
+	fgFileMgr->fileReset(theFile, memmgr);
 }
 
 
@@ -605,7 +605,7 @@ XMLPlatformUtils::fileSize(const FileHandle theFile
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	return fgFileMgr->size(theFile, memmgr);
+	return fgFileMgr->fileSize(theFile, memmgr);
 }
 
 
@@ -618,7 +618,7 @@ XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-    return fgFileMgr->read(theFile, toRead, toFill, memmgr);
+    return fgFileMgr->fileRead(theFile, toRead, toFill, memmgr);
 }
 
 
@@ -631,7 +631,7 @@ XMLPlatformUtils::writeBufferToFile(   const   FileHandle   theFile
     if (!fgFileMgr)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, memmgr);
 
-	fgFileMgr->write(theFile, toWrite, toFlush, memmgr);
+	fgFileMgr->fileWrite(theFile, toWrite, toFlush, memmgr);
 }
 
 

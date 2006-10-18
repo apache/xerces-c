@@ -45,16 +45,16 @@ PosixFileMgr::~PosixFileMgr()
 
 
 FileHandle
-PosixFileMgr::open(const XMLCh* path, bool toWrite, MemoryManager* const manager)
+PosixFileMgr::fileOpen(const XMLCh* path, bool toWrite, MemoryManager* const manager)
 {
     const char* tmpFileName = XMLString::transcode(path, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
-    return open(tmpFileName, toWrite, manager);
+    return fileOpen(tmpFileName, toWrite, manager);
 }
 
 
 FileHandle
-PosixFileMgr::open(const char* path, bool toWrite, MemoryManager* const /*manager*/)
+PosixFileMgr::fileOpen(const char* path, bool toWrite, MemoryManager* const /*manager*/)
 {
     const char* perms = (toWrite) ? "wb" : "rb";
     FileHandle result = (FileHandle)fopen(path , perms);
@@ -70,7 +70,7 @@ PosixFileMgr::openStdIn(MemoryManager* const /*manager*/)
 
 
 void
-PosixFileMgr::close(FileHandle f, MemoryManager* const manager)
+PosixFileMgr::fileClose(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -82,7 +82,7 @@ PosixFileMgr::close(FileHandle f, MemoryManager* const manager)
 
 
 void
-PosixFileMgr::reset(FileHandle f, MemoryManager* const manager)
+PosixFileMgr::fileReset(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -110,7 +110,7 @@ PosixFileMgr::curPos(FileHandle f, MemoryManager* const manager)
 
 
 XMLFilePos
-PosixFileMgr::size(FileHandle f, MemoryManager* const manager)
+PosixFileMgr::fileSize(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -137,7 +137,7 @@ PosixFileMgr::size(FileHandle f, MemoryManager* const manager)
 
 
 XMLSize_t
-PosixFileMgr::read(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager)
+PosixFileMgr::fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager)
 {
     if (!f || !buffer)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -156,7 +156,7 @@ PosixFileMgr::read(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryMan
 
 
 void
-PosixFileMgr::write(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager)
+PosixFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager)
 {
     if (!f || !buffer)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);

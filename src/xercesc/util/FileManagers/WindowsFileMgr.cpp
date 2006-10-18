@@ -50,7 +50,7 @@ WindowsFileMgr::~WindowsFileMgr()
 
 
 FileHandle
-WindowsFileMgr::open(const XMLCh* fileName, bool toWrite, MemoryManager* const manager)
+WindowsFileMgr::fileOpen(const XMLCh* fileName, bool toWrite, MemoryManager* const manager)
 {
     // Watch for obvious wierdness
     if (!fileName)
@@ -178,11 +178,11 @@ WindowsFileMgr::open(const XMLCh* fileName, bool toWrite, MemoryManager* const m
 
 
 FileHandle
-WindowsFileMgr::open(const char* path, bool toWrite, MemoryManager* const manager)
+WindowsFileMgr::fileOpen(const char* path, bool toWrite, MemoryManager* const manager)
 {
     XMLCh* tmpFileName = XMLString::transcode(path, manager);
     ArrayJanitor<XMLCh> janText(tmpFileName, manager);
-    return open(tmpFileName, toWrite, manager);
+    return fileOpen(tmpFileName, toWrite, manager);
 }
 
 
@@ -219,7 +219,7 @@ WindowsFileMgr::openStdIn(MemoryManager* const manager)
 
 
 void
-WindowsFileMgr::close(FileHandle f, MemoryManager* const manager)
+WindowsFileMgr::fileClose(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -230,7 +230,7 @@ WindowsFileMgr::close(FileHandle f, MemoryManager* const manager)
 
 
 void
-WindowsFileMgr::reset(FileHandle f, MemoryManager* const manager)
+WindowsFileMgr::fileReset(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -257,7 +257,7 @@ WindowsFileMgr::curPos(FileHandle f, MemoryManager* const manager)
 
 
 XMLFilePos
-WindowsFileMgr::size(FileHandle f, MemoryManager* const manager)
+WindowsFileMgr::fileSize(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -273,7 +273,7 @@ WindowsFileMgr::size(FileHandle f, MemoryManager* const manager)
 
 
 XMLSize_t
-WindowsFileMgr::read(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager)
+WindowsFileMgr::fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager)
 {
     if (!f || !buffer)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
@@ -293,7 +293,7 @@ WindowsFileMgr::read(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryM
 
 
 void
-WindowsFileMgr::write(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager)
+WindowsFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager)
 {
     if (!f || !buffer)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
