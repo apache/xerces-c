@@ -18,7 +18,7 @@
 
 static XMLExceptionHandler* XML_EXCEPTION_HANDLER  = NULL;
 
-void
+static void
 makeXMLException(const XMLException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) XML_EXCEPTION_HANDLER->copyXMLException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException, SWIG_SHADOW|0);
