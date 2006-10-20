@@ -435,21 +435,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XercesP"=".\XercesP\XercesP.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XercesLib
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "all"=".\all\all.dsp" - Package Owner=<4>
 
 Package=<5>
