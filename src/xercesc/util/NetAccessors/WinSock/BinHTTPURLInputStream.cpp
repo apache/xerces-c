@@ -22,6 +22,10 @@
 #include <windows.h>
 #include <tchar.h>
 
+#ifdef WITH_IPV6
+#include <ws2tcpip.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -70,9 +74,6 @@ private :
     SOCKET*  fData;
 };
 
-typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYNAME)(const char* name);
-typedef unsigned long(WSAAPI * LPFN_INET_ADDR)(const char* cp);
-typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYADDR)(const char* addr, int len, int type);
 typedef u_short (WSAAPI * LPFN_HTONS)(u_short hostshort);
 typedef SOCKET (WSAAPI * LPFN_SOCKET)(int af, int type, int protocol);
 typedef int (WSAAPI * LPFN_CONNECT)(SOCKET s, const struct sockaddr* name, int namelen);
@@ -82,11 +83,16 @@ typedef int (WSAAPI * LPFN_SHUTDOWN)(SOCKET s, int how);
 typedef int (WSAAPI * LPFN_CLOSESOCKET)(SOCKET s);
 typedef int (WSAAPI * LPFN_WSACLEANUP)();
 typedef int (WSAAPI * LPFN_WSASTARTUP)(WORD wVersionRequested, LPWSADATA lpWSAData);
+#ifdef WITH_IPV6
+typedef int (WSAAPI * LPFN_GETADDRINFO)(const char* nodename, const char * servname, const struct addrinfo * hints, struct addrinfo ** res);
+typedef void (WSAAPI * LPFN_FREEADDRINFO)(struct addrinfo * ai);
+#else
+typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYNAME)(const char* name);
+typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYADDR)(const char* addr, int len, int type);
+typedef unsigned long(WSAAPI * LPFN_INET_ADDR)(const char* cp);
+#endif
 
 static HMODULE gWinsockLib = NULL;
-static LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
-static LPFN_INET_ADDR gWSinet_addr = NULL;
-static LPFN_GETHOSTBYADDR gWSgethostbyaddr = NULL;
 static LPFN_HTONS gWShtons = NULL;
 static LPFN_SOCKET gWSsocket = NULL;
 static LPFN_CONNECT gWSconnect = NULL;
@@ -95,6 +101,14 @@ static LPFN_RECV gWSrecv = NULL;
 static LPFN_SHUTDOWN gWSshutdown = NULL;
 static LPFN_CLOSESOCKET gWSclosesocket = NULL;
 static LPFN_WSACLEANUP gWSACleanup = NULL;
+#ifdef WITH_IPV6
+static LPFN_GETADDRINFO gWSgetaddrinfo = NULL;
+static LPFN_FREEADDRINFO gWSfreeaddrinfo = NULL;
+#else
+static LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
+static LPFN_GETHOSTBYADDR gWSgethostbyaddr = NULL;
+static LPFN_INET_ADDR gWSinet_addr = NULL;
+#endif
 
 bool BinHTTPURLInputStream::fInitialized = false;
 XMLMutex* BinHTTPURLInputStream::fInitMutex = 0;
@@ -108,16 +122,17 @@ void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
 
 	LPFN_WSASTARTUP startup = NULL;
 	if(gWinsockLib == NULL) {
+#ifdef WITH_IPV6
+		gWinsockLib = LoadLibrary(_T("WS2_32"));
+#else
 		gWinsockLib = LoadLibrary(_T("WSOCK32"));
+#endif
 		if(gWinsockLib == NULL) {
 			ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
 		}
 		else {
 			startup = (LPFN_WSASTARTUP) GetProcAddress(gWinsockLib,"WSAStartup");
 			gWSACleanup = (LPFN_WSACLEANUP) GetProcAddress(gWinsockLib,"WSACleanup");
-			gWSgethostbyname = (LPFN_GETHOSTBYNAME) GetProcAddress(gWinsockLib,"gethostbyname");
-			gWSinet_addr = (LPFN_INET_ADDR) GetProcAddress(gWinsockLib,"inet_addr");
-			gWSgethostbyaddr = (LPFN_GETHOSTBYADDR) GetProcAddress(gWinsockLib,"gethostbyaddr");
 			gWShtons = (LPFN_HTONS) GetProcAddress(gWinsockLib,"htons");
 			gWSsocket = (LPFN_SOCKET) GetProcAddress(gWinsockLib,"socket");
 			gWSconnect = (LPFN_CONNECT) GetProcAddress(gWinsockLib,"connect");
@@ -125,19 +140,33 @@ void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
 			gWSrecv = (LPFN_RECV) GetProcAddress(gWinsockLib,"recv");
 			gWSshutdown = (LPFN_SHUTDOWN) GetProcAddress(gWinsockLib,"shutdown");
 			gWSclosesocket = (LPFN_CLOSESOCKET) GetProcAddress(gWinsockLib,"closesocket");
+#ifdef WITH_IPV6
+			gWSgetaddrinfo = (LPFN_GETADDRINFO) GetProcAddress(gWinsockLib,"getaddrinfo");
+            gWSfreeaddrinfo = (LPFN_FREEADDRINFO) GetProcAddress(gWinsockLib,"freeaddrinfo");
+#else
+			gWSgethostbyname = (LPFN_GETHOSTBYNAME) GetProcAddress(gWinsockLib,"gethostbyname");
+			gWSgethostbyaddr = (LPFN_GETHOSTBYADDR) GetProcAddress(gWinsockLib,"gethostbyaddr");
+			gWSinet_addr = (LPFN_INET_ADDR) GetProcAddress(gWinsockLib,"inet_addr");
+#endif
 
-			if(startup == NULL ||
-				gWSACleanup == NULL ||
-				gWSgethostbyname == NULL ||
-				gWSinet_addr == NULL ||
-				gWSgethostbyaddr == NULL ||
-				gWShtons == NULL ||
-				gWSsocket == NULL ||
-				gWSconnect == NULL ||
-				gWSsend == NULL ||
-				gWSrecv == NULL ||
-				gWSshutdown == NULL ||
-				gWSclosesocket == NULL)
+			if(startup == NULL 
+				|| gWSACleanup == NULL
+				|| gWShtons == NULL
+				|| gWSsocket == NULL
+				|| gWSconnect == NULL
+				|| gWSsend == NULL
+				|| gWSrecv == NULL
+				|| gWSshutdown == NULL
+				|| gWSclosesocket == NULL
+#ifdef WITH_IPV6
+			    || gWSgetaddrinfo == NULL
+			    || gWSfreeaddrinfo == NULL
+#else
+				|| gWSgethostbyname == NULL
+				|| gWSgethostbyaddr == NULL
+				|| gWSinet_addr == NULL
+#endif
+                )
 			{
 				gWSACleanup = NULL;
 				Cleanup();
@@ -162,9 +191,6 @@ void BinHTTPURLInputStream::Cleanup() {
 		gWSACleanup = NULL;
 		FreeLibrary(gWinsockLib);
 		gWinsockLib = NULL;
-		gWSgethostbyname = NULL;
-		gWSinet_addr = NULL;
-		gWSgethostbyaddr = NULL;
 		gWShtons = NULL;
 		gWSsocket = NULL;
 		gWSconnect = NULL;
@@ -172,6 +198,14 @@ void BinHTTPURLInputStream::Cleanup() {
 		gWSrecv = NULL;
 		gWSshutdown = NULL;
 		gWSclosesocket = NULL;
+#ifdef WITH_IPV6
+		gWSgetaddrinfo = NULL;
+        gWSfreeaddrinfo = NULL;
+#else
+		gWSgethostbyname = NULL;
+		gWSgethostbyaddr = NULL;
+		gWSinet_addr = NULL;
+#endif
 
         fInitialized = false;
         delete fInitMutex;
@@ -179,21 +213,6 @@ void BinHTTPURLInputStream::Cleanup() {
 	}
 }
 
-
-hostent* BinHTTPURLInputStream::gethostbyname(const char* name)
-{
-	return (*gWSgethostbyname)(name);
-}
-
-unsigned long BinHTTPURLInputStream::inet_addr(const char* cp)
-{
-	return (*gWSinet_addr)(cp);
-}
-
-hostent* BinHTTPURLInputStream::gethostbyaddr(const char* addr,int len,int type)
-{
-	return (*gWSgethostbyaddr)(addr,len,type);
-}
 
 unsigned short BinHTTPURLInputStream::htons(unsigned short hostshort)
 {
@@ -230,6 +249,33 @@ int BinHTTPURLInputStream::closesocket(unsigned int socket)
 	return (*gWSclosesocket)(socket);
 }
 
+#ifdef WITH_IPV6
+int BinHTTPURLInputStream::getaddrinfo(const char* nodename,const char* servname,const struct addrinfo* hints,struct addrinfo** res)
+{
+   return (*gWSgetaddrinfo)(nodename,servname,hints,res);
+}
+
+void BinHTTPURLInputStream::freeaddrinfo(struct addrinfo* ai)
+{
+    (*gWSfreeaddrinfo)(ai);
+}
+#else
+hostent* BinHTTPURLInputStream::gethostbyname(const char* name)
+{
+	return (*gWSgethostbyname)(name);
+}
+
+hostent* BinHTTPURLInputStream::gethostbyaddr(const char* addr,int len,int type)
+{
+	return (*gWSgethostbyaddr)(addr,len,type);
+}
+
+unsigned long BinHTTPURLInputStream::inet_addr(const char* cp)
+{
+	return (*gWSinet_addr)(cp);
+}
+
+#endif
 
 BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo /*=0*/)
       : fSocketHandle(0)
@@ -283,9 +329,48 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     //
     // Set up a socket.
     //
+#ifdef WITH_IPV6
+    struct addrinfo hints, *res, *ai;
+
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = PF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    char tempbuf[10];
+    itoa (portNumber,tempbuf,10);
+    int n = getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+    if(n<0)
+    {
+        hints.ai_flags = AI_NUMERICHOST;
+        n = getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+        if(n<0)
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+    }
+    SOCKET s;
+    for (ai = res; ai != NULL; ai = ai->ai_next) {
+        // Open a socket with the correct address family for this address.
+        s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+        if (s == INVALID_SOCKET)
+            continue;
+        if (connect(s, ai->ai_addr, ai->ai_addrlen) == SOCKET_ERROR)
+        {
+            freeaddrinfo(res);
+            // Call WSAGetLastError() to get the error number.
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
+        }
+        break;
+    }
+    freeaddrinfo(res);
+    if (s == INVALID_SOCKET)
+    {
+        // Call WSAGetLastError() to get the error number.
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
+    }
+    SocketJanitor janSock(&s);
+#else
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
-
 
     if ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL)
     {
@@ -327,6 +412,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                  XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
     }
 
+#endif
 
     // Set a flag so we know that the headers have not been read yet.
     bool fHeaderRead = false;

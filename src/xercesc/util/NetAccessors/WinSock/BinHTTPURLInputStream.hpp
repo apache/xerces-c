@@ -32,8 +32,12 @@
 // This class implements the BinInputStream interface specified by the XML
 // parser.
 //
-struct hostent;
 struct sockaddr;
+#ifdef WITH_IPV6
+struct addrinfo;
+#else
+struct hostent;
+#endif
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -84,13 +88,10 @@ private :
     char *              fBufferEnd;
     char *              fBufferPos;
     static bool         fInitialized;
-    static XMLMutex*        fInitMutex;
+    static XMLMutex*    fInitMutex;
 
 	static void Initialize(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
-	inline static hostent* gethostbyname(const char* name);
-	inline static unsigned long inet_addr(const char* cp);
-	inline static hostent* gethostbyaddr(const char* addr,int len,int type);
 	inline static unsigned short htons(unsigned short hostshort);
 	inline static unsigned int socket(int af,int type,int protocol);
 	inline static int connect(unsigned int s,const sockaddr* name,int namelen);
@@ -98,6 +99,14 @@ private :
 	inline static int recv(unsigned int s,char* buf,int len,int flags);
 	inline static int shutdown(unsigned int s,int how);
 	inline static int closesocket(unsigned int socket);
+#ifdef WITH_IPV6
+    inline static int getaddrinfo(const char* nodename,const char* servname,const struct addrinfo* hints, struct addrinfo** res);
+    inline static void freeaddrinfo(struct addrinfo* ai);
+#else
+	inline static hostent* gethostbyname(const char* name);
+	inline static hostent* gethostbyaddr(const char* addr,int len,int type);
+	inline static unsigned long inet_addr(const char* cp);
+#endif
 
     friend class SocketJanitor;
 };
