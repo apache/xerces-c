@@ -104,13 +104,15 @@ ACX_PTHREAD
 #AC_FUNC_MEMCMP
 #AC_FUNC_STRCOLL
 #AC_FUNC_STRTOD
-AC_CHECK_FUNCS([clock_gettime ftime getcwd gethostbyaddr gethostbyname gettimeofday localeconv \
-				mblen memmove memset nl_langinfo pathconf realpath setlocale socket \
-				strcasecmp strncasecmp stricmp strnicmp strchr strdup \
-				strrchr strstr strtol strtoul \
-				towupper towlower \
-				mbrlen wcsrtombs mbsrtowcs \
-				])
+AC_CHECK_FUNCS([getcwd pathconf realpath \
+		getaddrinfo gethostbyaddr gethostbyname socket \
+		clock_gettime ftime gettimeofday \
+		memmove memset nl_langinfo setlocale localeconv \
+		strcasecmp strncasecmp stricmp strnicmp strchr strdup \
+		strrchr strstr strtol strtoul \
+		towupper towlower \
+		mblen mbrlen wcsrtombs mbsrtowcs \
+		])
 				
 AC_SUBST([SHREXT], [$shrext_cmds])
 

@@ -18,18 +18,32 @@
  * $Id$
  */
 
+#if HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#if !defined(XML_BEOS)
-  #include <netinet/in.h>
-  #include <arpa/inet.h>
+#if HAVE_UNISTD_H
+#  include <unistd.h>
 #endif
-#include <netdb.h>
+#if HAVE_SYS_TYPES_H
+#  include <sys/types.h>
+#endif
+#if HAVE_SYS_SOCKET_H 
+#  include <sys/socket.h>
+#endif
+#if HAVE_NETINET_IN_H 
+#  include <netinet/in.h>
+#endif
+#if HAVE_ARPA_INET_H
+#  include <arpa/inet.h>
+#endif
+#if HAVE_NETDB_H 
+#  include <netdb.h>
+#endif
 #include <errno.h>
 
 #include <xercesc/util/XMLNetAccessor.hpp>
@@ -247,6 +261,42 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     //
     // Set up a socket.
     //
+#if HAVE_GETADDRINFO
+    struct addrinfo hints, *res, *ai;
+
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = PF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    int n = getaddrinfo(hostNameAsCharStar,portAsASCII,&hints, &res);
+    if(n<0)
+    {
+        hints.ai_flags = AI_NUMERICHOST;
+        n = getaddrinfo(hostNameAsCharStar,portAsASCII,&hints, &res);
+        if(n<0)
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+    }
+    int s;
+    for (ai = res; ai != NULL; ai = ai->ai_next) {
+        // Open a socket with the correct address family for this address.
+        s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+        if (s < 0)
+            continue;
+        if (connect(s, ai->ai_addr, ai->ai_addrlen) < 0)
+        {
+            freeaddrinfo(res);
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
+        }
+        break;
+    }
+    freeaddrinfo(res);
+    if (s < 0)
+    {
+        ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
+    }
+    SocketJanitor janSock(&s);
+#else
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
 
@@ -282,6 +332,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
     }
+#endif
 
     // The port is open and ready to go.
     // Build up the http GET command to send to the server.
