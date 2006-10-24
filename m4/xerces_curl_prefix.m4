@@ -12,7 +12,7 @@ dnl $Id$
 AC_DEFUN([XERCES_CURL_PREFIX],
 	[
 	AC_ARG_WITH([curl],
-		[  --with-curl[[=DIR]]       Specify location of libcurl],
+		[AS_HELP_STRING([--with-curl[[[[=DIR]]]]],[Specify location of libcurl])],
 		[with_curl=m4_if($with_curl, [yes], [], $with_curl)],
 		[with_curl=])
 

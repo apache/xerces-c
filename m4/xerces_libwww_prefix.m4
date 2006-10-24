@@ -12,7 +12,7 @@ dnl $Id$
 AC_DEFUN([XERCES_LIBWWW_PREFIX],
 	[
 	AC_ARG_WITH([libwww],
-		[  --with-libwww[[=DIR]]     Specify location of libwww],
+		[AS_HELP_STRING([--with-libwww[[[[=DIR]]]]],[Specify location of libwww])],
 		[with_libwww=m4_if($with_libwww, [yes], [], $with_libwww)],
 		[with_libwww=])
 		

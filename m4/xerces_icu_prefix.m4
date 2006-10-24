@@ -12,7 +12,7 @@ dnl $Id$
 AC_DEFUN([XERCES_ICU_PREFIX],
 	[
 	AC_ARG_WITH([icu],
-		[  --with-icu[[=DIR]]        Specify location of icu],
+		[AS_HELP_STRING([--with-icu[[[[=DIR]]]]],[Specify location of icu])],
 		[with_icu=m4_if($with_icu, [yes], [], $with_icu)],
 		[with_icu=])
 
