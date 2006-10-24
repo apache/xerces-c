@@ -27685,12 +27685,12 @@ fi
 
 	{ echo "$as_me:$LINENO: checking for which File Manager to use" >&5
 echo $ECHO_N "checking for which File Manager to use... $ECHO_C" >&6; }
-	mgr=
+	filemgr=
 
 	# Platform specific checks
 	case $host_os in
 	windows* | cygwin* | mingw*)
-		mgr=Windows;
+		filemgr=Windows;
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_FILEMGR_WINDOWS 1
@@ -27700,8 +27700,8 @@ _ACEOF
 	esac
 
 	# Fall back to using posix files
-	if test -z "$mgr"; then
-  mgr=POSIX;
+	if test -z "$filemgr"; then
+  filemgr=POSIX;
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_FILEMGR_POSIX 1
@@ -27711,14 +27711,14 @@ _ACEOF
 fi
 
 
-	{ echo "$as_me:$LINENO: result: $mgr" >&5
-echo "${ECHO_T}$mgr" >&6; }
+	{ echo "$as_me:$LINENO: result: $filemgr" >&5
+echo "${ECHO_T}$filemgr" >&6; }
 
 	# Define the auto-make conditionals which determine what actually gets compiled
 	# Note that these macros can't be executed conditionally, which is why they're here, not above.
 
 
-if test x"$mgr" = xPOSIX; then
+if test x"$filemgr" = xPOSIX; then
   XERCES_USE_FILEMGR_POSIX_TRUE=
   XERCES_USE_FILEMGR_POSIX_FALSE='#'
 else
@@ -27728,7 +27728,7 @@ fi
 
 
 
-if test x"$mgr" = xWindows; then
+if test x"$filemgr" = xWindows; then
   XERCES_USE_FILEMGR_WINDOWS_TRUE=
   XERCES_USE_FILEMGR_WINDOWS_FALSE='#'
 else
@@ -27766,12 +27766,12 @@ fi
 
 	{ echo "$as_me:$LINENO: checking for which Mutex Manager to use" >&5
 echo $ECHO_N "checking for which Mutex Manager to use... $ECHO_C" >&6; }
-	mgr=
+	mutexmgr=
 
 	# If no threads is specified, use the NoThread Mutex Mgr
 	if test x$xerces_cv_no_threads = xyes; then
 
-			mgr=NoThreads
+			mutexmgr=NoThreads
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_MUTEXMGR_NOTHREAD 1
@@ -27782,11 +27782,11 @@ fi
 
 
 	# Platform specific checks
-	if test -z "$mgr"; then
+	if test -z "$mutexmgr"; then
 
 			case $host_os in
 			windows* | cygwin* | mingw*)
-				mgr=Windows;
+				mutexmgr=Windows;
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_MUTEXMGR_WINDOWS 1
@@ -27806,9 +27806,9 @@ fi
 
 
 	# Fall back to using posix mutex id we can
-	if test -z "$mgr" && test x$acx_pthread_ok = xyes; then
+	if test -z "$mutexmgr" && test x$acx_pthread_ok = xyes; then
 
-			mgr=POSIX;
+			mutexmgr=POSIX;
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_MUTEXMGR_POSIX 1
@@ -27823,21 +27823,21 @@ fi
 
 
 	# If we still didn't find a mutex package, bail
-	if test -z "$mgr"; then
+	if test -z "$mutexmgr"; then
   { { echo "$as_me:$LINENO: error: Xerces cannot function without mutex support. You may want to --disable-threads." >&5
 echo "$as_me: error: Xerces cannot function without mutex support. You may want to --disable-threads." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
 
-	{ echo "$as_me:$LINENO: result: $mgr" >&5
-echo "${ECHO_T}$mgr" >&6; }
+	{ echo "$as_me:$LINENO: result: $mutexmgr" >&5
+echo "${ECHO_T}$mutexmgr" >&6; }
 
 	# Define the auto-make conditionals which determine what actually gets compiled
 	# Note that these macros can't be executed conditionally, which is why they're here, not above.
 
 
-if test x"$mgr" = xNoThreads; then
+if test x"$mutexmgr" = xNoThreads; then
   XERCES_USE_MUTEXMGR_NOTHREAD_TRUE=
   XERCES_USE_MUTEXMGR_NOTHREAD_FALSE='#'
 else
@@ -27847,7 +27847,7 @@ fi
 
 
 
-if test x"$mgr" = xPOSIX; then
+if test x"$mutexmgr" = xPOSIX; then
   XERCES_USE_MUTEXMGR_POSIX_TRUE=
   XERCES_USE_MUTEXMGR_POSIX_FALSE='#'
 else
@@ -27857,7 +27857,7 @@ fi
 
 
 
-if test x"$mgr" = xWindows; then
+if test x"$mutexmgr" = xWindows; then
   XERCES_USE_MUTEXMGR_WINDOWS_TRUE=
   XERCES_USE_MUTEXMGR_WINDOWS_FALSE='#'
 else
@@ -27873,12 +27873,12 @@ fi
 
 	{ echo "$as_me:$LINENO: checking for which AtomicOp Manager to use" >&5
 echo $ECHO_N "checking for which AtomicOp Manager to use... $ECHO_C" >&6; }
-	mgr=
+	aopmgr=
 
 	# If no threads is specified, use the NoThread Atomic Op Mgr
 	if test x$xerces_cv_no_threads = xyes; then
 
-			mgr=NoThreads
+			aopmgr=NoThreads
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_ATOMICOPMGR_NOTHREAD 1
@@ -27889,11 +27889,11 @@ fi
 
 
 	# Platform specific checks
-	if test -z "$mgr"; then
+	if test -z "$aopmgr"; then
 
 			case $host_os in
 			windows* | cygwin* | mingw*)
-				mgr=Windows;
+				aopmgr=Windows;
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_ATOMICOPMGR_WINDOWS 1
@@ -27904,7 +27904,7 @@ _ACEOF
 				# On MacOS, use the built-in AtomicOp primitives
 				if test x$ac_cv_header_CoreServices_CoreServices_h = xyes; then
 
-						mgr=MacOS
+						aopmgr=MacOS
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_ATOMICOPMGR_MACOS 1
@@ -27935,9 +27935,9 @@ fi
 
 
 	# Fall back to using posix mutex
-	if test -z "$mgr"; then
+	if test -z "$aopmgr"; then
 
-			mgr=POSIX;
+			aopmgr=POSIX;
 
 cat >>confdefs.h <<\_ACEOF
 #define XERCES_USE_ATOMICOPMGR_POSIX 1
@@ -27947,14 +27947,14 @@ _ACEOF
 fi
 
 
-	{ echo "$as_me:$LINENO: result: $mgr" >&5
-echo "${ECHO_T}$mgr" >&6; }
+	{ echo "$as_me:$LINENO: result: $aopmgr" >&5
+echo "${ECHO_T}$aopmgr" >&6; }
 
 	# Define the auto-make conditionals which determine what actually gets compiled
 	# Note that these macros can't be executed conditionally, which is why they're here, not above.
 
 
-if test x"$mgr" = xNoThreads; then
+if test x"$aopmgr" = xNoThreads; then
   XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE=
   XERCES_USE_ATOMICOPMGR_NOTHREAD_FALSE='#'
 else
@@ -27964,7 +27964,7 @@ fi
 
 
 
-if test x"$mgr" = xPOSIX; then
+if test x"$aopmgr" = xPOSIX; then
   XERCES_USE_ATOMICOPMGR_POSIX_TRUE=
   XERCES_USE_ATOMICOPMGR_POSIX_FALSE='#'
 else
@@ -27974,7 +27974,7 @@ fi
 
 
 
-if test x"$mgr" = xMacOS; then
+if test x"$aopmgr" = xMacOS; then
   XERCES_USE_ATOMICOPMGR_MACOS_TRUE=
   XERCES_USE_ATOMICOPMGR_MACOS_FALSE='#'
 else
@@ -27984,7 +27984,7 @@ fi
 
 
 
-if test x"$mgr" = xWindows; then
+if test x"$aopmgr" = xWindows; then
   XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE=
   XERCES_USE_ATOMICOPMGR_WINDOWS_FALSE='#'
 else
@@ -29856,4 +29856,23 @@ if test "$no_create" != yes; then
   # would make configure fail if this is the last instruction.
   $ac_cs_success || { (exit 1); exit 1; }
 fi
+
+
+{ echo "$as_me:$LINENO: " >&5
+echo "$as_me: " >&6;}
+{ echo "$as_me:$LINENO: Report:" >&5
+echo "$as_me: Report:" >&6;}
+{ echo "$as_me:$LINENO:   NetAccessor: $netaccessor" >&5
+echo "$as_me:   NetAccessor: $netaccessor" >&6;}
+{ echo "$as_me:$LINENO:   File Manager: $filemgr" >&5
+echo "$as_me:   File Manager: $filemgr" >&6;}
+{ echo "$as_me:$LINENO:   Atomic Op Manager: $aopmgr" >&5
+echo "$as_me:   Atomic Op Manager: $aopmgr" >&6;}
+{ echo "$as_me:$LINENO:   Mutex Manager: $mutexmgr" >&5
+echo "$as_me:   Mutex Manager: $mutexmgr" >&6;}
+{ echo "$as_me:$LINENO:   Message Loader: $msgloader" >&5
+echo "$as_me:   Message Loader: $msgloader" >&6;}
+{ echo "$as_me:$LINENO:   Transcoder: $transcoder" >&5
+echo "$as_me:   Transcoder: $transcoder" >&6;}
+
 
