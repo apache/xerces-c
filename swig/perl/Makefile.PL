@@ -76,7 +76,7 @@ print STDERR "Using XERCES_LIB = $XERCES_LIB\n";
 $LIBS .= " -L$XERCES_LIB ";
 
 print STDERR "Using XERCES_INCLUDE = $XERCES_INCLUDE\n";
-$INCLUDES .= " -I$XERCES_INCLUDE -I$XERCESCROOT  -I$XERCESCROOT/samples/src";
+$INCLUDES .= " -I$XERCES_INCLUDE -I$XERCESCROOT";
 
 
 my $config_file = 'config.status';
@@ -190,7 +190,7 @@ my $LIBXERCES = "-lxerces";
 if ($^O eq 'cygwin') {
   $LIBXERCES .= "$major$minor.dll";
 } elsif ($^O eq 'MSWin32') {
-  $LIBXERCES = "-lxerces-c_2";
+  $LIBXERCES = "-lxerces-c_3";
 }
 $LIBS .= " $LIBXERCES";
 
@@ -211,7 +211,6 @@ print STDERR "Successfully located $libxerces_name!!\n";
 
 $HANDLER_LIB = '$(INST_ARCHLIB)/auto/Handler/Handler$(LIB_EXT)';
 $TRANSCODER_LIB = '$(INST_ARCHLIB)/auto/Transcoder/Transcoder$(LIB_EXT)';
-my $PSVIUNI_OBJ = "$XERCESCROOT/samples/src/PSVIWriter/PSVIUni" . '$(OBJ_EXT)';
 
 sub MY_postamble {
 qq[
@@ -333,7 +332,7 @@ WriteMakefile(
  #   'DOM.pm' => '$(INST_LIB)/XML/Xerces/DOM.pm',
   },
   'INC'         => $INCLUDES,
-  'MYEXTLIB'    => "$HANDLER_LIB $TRANSCODER_LIB $PSVIUNI_OBJ",
+  'MYEXTLIB'    => "$HANDLER_LIB $TRANSCODER_LIB",
 #  'SKIP'      => [qw( pm_to_blib )],
   'LIBS'        => [$LIBS],
   'OBJECT'      => $OBJS,
