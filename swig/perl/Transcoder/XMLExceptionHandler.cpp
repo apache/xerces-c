@@ -125,5 +125,6 @@ XMLExceptionHandler::copyXMLException(const XMLException& e)
     else
     {
         croak("Unknown Exception type: %d", e.getType());
+        return 0;
     }
 }
