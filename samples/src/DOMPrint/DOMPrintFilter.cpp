@@ -44,7 +44,7 @@ short DOMPrintFilter::acceptNode(const DOMNode* node) const
 	// shown to this filter.
 	// 
 	// REVISIT: In case the DOMLSSerializer does not follow the protocol, 
-	//          Shall the filter honour, or NOT, what it claimes
+	//          Shall the filter honour, or NOT, what it claims
 	//          it is interested in ?
 	// 
 	// The DOMLS specs does not specify that acceptNode() shall do
