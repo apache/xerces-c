@@ -1,0 +1,8 @@
+#!/bin/sh
+set -x
+rm -f config.cache
+aclocal -I m4
+autoheader
+automake -a
+autoconf
+exit
