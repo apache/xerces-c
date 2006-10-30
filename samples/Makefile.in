@@ -101,76 +101,76 @@ am_CreateDOMDocument_OBJECTS =  \
 	src/CreateDOMDocument/CreateDOMDocument.$(OBJEXT)
 CreateDOMDocument_OBJECTS = $(am_CreateDOMDocument_OBJECTS)
 CreateDOMDocument_LDADD = $(LDADD)
-CreateDOMDocument_DEPENDENCIES = ../obj/libxerces.la
+CreateDOMDocument_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_DOMCount_OBJECTS = src/DOMCount/DOMCount.$(OBJEXT)
 DOMCount_OBJECTS = $(am_DOMCount_OBJECTS)
 DOMCount_LDADD = $(LDADD)
-DOMCount_DEPENDENCIES = ../obj/libxerces.la
+DOMCount_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_DOMPrint_OBJECTS = src/DOMPrint/DOMPrint.$(OBJEXT) \
 	src/DOMPrint/DOMPrintErrorHandler.$(OBJEXT) \
 	src/DOMPrint/DOMPrintFilter.$(OBJEXT) \
 	src/DOMPrint/DOMTreeErrorReporter.$(OBJEXT)
 DOMPrint_OBJECTS = $(am_DOMPrint_OBJECTS)
 DOMPrint_LDADD = $(LDADD)
-DOMPrint_DEPENDENCIES = ../obj/libxerces.la
+DOMPrint_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_EnumVal_OBJECTS = src/EnumVal/EnumVal.$(OBJEXT)
 EnumVal_OBJECTS = $(am_EnumVal_OBJECTS)
 EnumVal_LDADD = $(LDADD)
-EnumVal_DEPENDENCIES = ../obj/libxerces.la
+EnumVal_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_MemParse_OBJECTS = src/MemParse/MemParse.$(OBJEXT) \
 	src/MemParse/MemParseHandlers.$(OBJEXT)
 MemParse_OBJECTS = $(am_MemParse_OBJECTS)
 MemParse_LDADD = $(LDADD)
-MemParse_DEPENDENCIES = ../obj/libxerces.la
+MemParse_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_PParse_OBJECTS = src/PParse/PParse.$(OBJEXT) \
 	src/PParse/PParseHandlers.$(OBJEXT)
 PParse_OBJECTS = $(am_PParse_OBJECTS)
 PParse_LDADD = $(LDADD)
-PParse_DEPENDENCIES = ../obj/libxerces.la
+PParse_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_PSVIWriter_OBJECTS = src/PSVIWriter/PSVIWriter.$(OBJEXT) \
 	src/PSVIWriter/PSVIWriterHandlers.$(OBJEXT)
 PSVIWriter_OBJECTS = $(am_PSVIWriter_OBJECTS)
 PSVIWriter_LDADD = $(LDADD)
-PSVIWriter_DEPENDENCIES = ../obj/libxerces.la
+PSVIWriter_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_Redirect_OBJECTS = src/Redirect/Redirect.$(OBJEXT) \
 	src/Redirect/RedirectHandlers.$(OBJEXT)
 Redirect_OBJECTS = $(am_Redirect_OBJECTS)
 Redirect_LDADD = $(LDADD)
-Redirect_DEPENDENCIES = ../obj/libxerces.la
+Redirect_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_SAX2Count_OBJECTS = src/SAX2Count/SAX2Count.$(OBJEXT) \
 	src/SAX2Count/SAX2CountHandlers.$(OBJEXT)
 SAX2Count_OBJECTS = $(am_SAX2Count_OBJECTS)
 SAX2Count_LDADD = $(LDADD)
-SAX2Count_DEPENDENCIES = ../obj/libxerces.la
+SAX2Count_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_SAX2Print_OBJECTS = src/SAX2Print/SAX2FilterHandlers.$(OBJEXT) \
 	src/SAX2Print/SAX2Print.$(OBJEXT) \
 	src/SAX2Print/SAX2PrintHandlers.$(OBJEXT)
 SAX2Print_OBJECTS = $(am_SAX2Print_OBJECTS)
 SAX2Print_LDADD = $(LDADD)
-SAX2Print_DEPENDENCIES = ../obj/libxerces.la
+SAX2Print_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_SAXCount_OBJECTS = src/SAXCount/SAXCount.$(OBJEXT) \
 	src/SAXCount/SAXCountHandlers.$(OBJEXT)
 SAXCount_OBJECTS = $(am_SAXCount_OBJECTS)
 SAXCount_LDADD = $(LDADD)
-SAXCount_DEPENDENCIES = ../obj/libxerces.la
+SAXCount_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_SAXPrint_OBJECTS = src/SAXPrint/SAXPrint.$(OBJEXT) \
 	src/SAXPrint/SAXPrintHandlers.$(OBJEXT)
 SAXPrint_OBJECTS = $(am_SAXPrint_OBJECTS)
 SAXPrint_LDADD = $(LDADD)
-SAXPrint_DEPENDENCIES = ../obj/libxerces.la
+SAXPrint_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_SCMPrint_OBJECTS = src/SCMPrint/SCMPrint.$(OBJEXT)
 SCMPrint_OBJECTS = $(am_SCMPrint_OBJECTS)
 SCMPrint_LDADD = $(LDADD)
-SCMPrint_DEPENDENCIES = ../obj/libxerces.la
+SCMPrint_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_SEnumVal_OBJECTS = src/SEnumVal/SEnumVal.$(OBJEXT)
 SEnumVal_OBJECTS = $(am_SEnumVal_OBJECTS)
 SEnumVal_LDADD = $(LDADD)
-SEnumVal_DEPENDENCIES = ../obj/libxerces.la
+SEnumVal_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 am_StdInParse_OBJECTS = src/StdInParse/StdInParse.$(OBJEXT) \
 	src/StdInParse/StdInParseHandlers.$(OBJEXT)
 StdInParse_OBJECTS = $(am_StdInParse_OBJECTS)
 StdInParse_LDADD = $(LDADD)
-StdInParse_DEPENDENCIES = ../obj/libxerces.la
+StdInParse_DEPENDENCIES = ${top_srcdir}/obj/libxerces.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/src/xercesc/util
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -353,7 +353,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-LDADD = ../obj/libxerces.la
+LDADD = ${top_srcdir}/obj/libxerces.la
 AM_CPPFLAGS = -I${top_srcdir}/src
 sampleprogs = CreateDOMDocument DOMCount DOMPrint EnumVal MemParse \
 	PParse PSVIWriter Redirect SAX2Count SAX2Print SAXCount \

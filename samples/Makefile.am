@@ -20,7 +20,7 @@
 
 bin_PROGRAMS =						${sampleprogs}
 
-LDADD =							../obj/libxerces.la
+LDADD =							${top_srcdir}/obj/libxerces.la
 AM_CPPFLAGS =						-I${top_srcdir}/src
 
 sampleprogs =

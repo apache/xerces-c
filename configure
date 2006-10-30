@@ -2045,7 +2045,7 @@ echo "$as_me: error: cannot find macro directory \`m4'" >&2;}
 
 ac_config_headers="$ac_config_headers config.h src/xercesc/util/Xerces_autoconf_config.hpp"
 
-ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile obj/Makefile tests/Makefile samples/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile obj/Makefile tests/Makefile samples/Makefile swig/Makefile"
 
 
 # Check the target system
@@ -28998,6 +28998,7 @@ do
     "obj/Makefile") CONFIG_FILES="$CONFIG_FILES obj/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "samples/Makefile") CONFIG_FILES="$CONFIG_FILES samples/Makefile" ;;
+    "swig/Makefile") CONFIG_FILES="$CONFIG_FILES swig/Makefile" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
