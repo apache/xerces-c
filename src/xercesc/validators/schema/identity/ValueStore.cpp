@@ -261,7 +261,7 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 
 
 // ---------------------------------------------------------------------------
-//  ValueStore: Docuement handling methods
+//  ValueStore: Document handling methods
 // ---------------------------------------------------------------------------
 void ValueStore::endDocumentFragment(ValueStoreCache* const valueStoreCache) {
 
