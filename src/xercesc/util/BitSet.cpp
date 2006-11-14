@@ -236,35 +236,35 @@ unsigned int BitSet::hash(const unsigned int hashModulus) const
 // ---------------------------------------------------------------------------
 void BitSet::ensureCapacity(const unsigned int size)
 {
+    // If we have enough space, do nothing
+    if(fUnitLen * kBitsPerUnit >= size)
+        return;
+
     // Calculate the units required to hold the passed bit count.
     unsigned int unitsNeeded = size / kBitsPerUnit;
     if (size % kBitsPerUnit)
         unitsNeeded++;
 
-    // If its more than we have, then reallocate
-    if (unitsNeeded > fUnitLen)
-    {
-        // Regrow the unit length by at least the expansion unit
-        if (unitsNeeded < (fUnitLen + kGrowBy))
-            unitsNeeded = fUnitLen + kGrowBy;
+    // Regrow the unit length by at least the expansion unit
+    if (unitsNeeded < (fUnitLen + kGrowBy))
+        unitsNeeded = fUnitLen + kGrowBy;
 
-        // Allocate the array, copy the old stuff, and zero the new stuff
-        unsigned long* newBits = (unsigned long*) fMemoryManager->allocate
-        (
-            unitsNeeded * sizeof(unsigned long)
-        ); //new unsigned long[unitsNeeded];
+    // Allocate the array, copy the old stuff, and zero the new stuff
+    unsigned long* newBits = (unsigned long*) fMemoryManager->allocate
+    (
+        unitsNeeded * sizeof(unsigned long)
+    ); //new unsigned long[unitsNeeded];
 
-        unsigned int index;
-        for (index = 0; index < fUnitLen; index++)
-            newBits[index] = fBits[index];
+    unsigned int index;
+    for (index = 0; index < fUnitLen; index++)
+        newBits[index] = fBits[index];
 
-        for (; index < unitsNeeded; index++)
-            newBits[index] = 0;
+    for (; index < unitsNeeded; index++)
+        newBits[index] = 0;
 
-        fMemoryManager->deallocate(fBits); //delete [] fBits;
-        fBits = newBits;
-        fUnitLen = unitsNeeded;
-    }
+    fMemoryManager->deallocate(fBits); //delete [] fBits;
+    fBits = newBits;
+    fUnitLen = unitsNeeded;
 }
 
 XERCES_CPP_NAMESPACE_END
