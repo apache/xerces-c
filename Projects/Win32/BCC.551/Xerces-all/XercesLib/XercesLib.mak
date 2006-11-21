@@ -305,7 +305,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XMLInitializer.obj \
     $(TARGETPATH)\obj\WindowsAtomicOpMgr.obj \
     $(TARGETPATH)\obj\WindowsFileMgr.obj \
-    $(TARGETPATH)\obj\WindowsMutexMgr.obj \
+    $(TARGETPATH)\obj\WindowsMutexMgr.obj
 RESFILES = 
 MAINSOURCE = XercesLib.cpp
 RESDEPEN = $(RESFILES)
