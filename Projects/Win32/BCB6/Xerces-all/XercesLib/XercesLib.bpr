@@ -256,8 +256,6 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationListImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationRegistry.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLocatorImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSInputImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSOutputImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSSerializerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNamedNodeMapImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeIDMap.obj 
@@ -302,7 +300,10 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSSimpleTypeDefinition.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSTypeDefinition.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSValue.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSException.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSOutputImpl.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSInputImpl.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -312,7 +313,7 @@
     <LIBRARIES value=""/>
     <SPARELIBS value="rtl.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi"/>
-    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi;"/>
+    <PATHCPP value=".;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework\psvi"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -329,8 +330,8 @@
   </MACROS>
   <OPTIONS>
     <IDLCFLAGS value="-I..\..\..\..\..\src\xercesc\framework\psvi 
-      -I..\..\..\..\..\src\xercesc\dom 
-      -I..\..\..\..\..\src\xercesc\dom\impl -I..\..\..\..\..\src\xercesc\sax2 
+      -I..\..\..\..\..\src\xercesc\dom -I..\..\..\..\..\src\xercesc\dom\impl 
+      -I..\..\..\..\..\src\xercesc\sax2 
       -I..\..\..\..\..\src\xercesc\validators\schema 
       -I..\..\..\..\..\src\xercesc\validators\schema\identity 
       -I..\..\..\..\..\src\xercesc\validators\DTD 
@@ -665,6 +666,9 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp" FORMNAME="" UNITNAME="XSTypeDefinition" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSValue.cpp" FORMNAME="" UNITNAME="XSValue" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp" FORMNAME="" UNITNAME="XSWildcard" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMLSException.cpp" FORMNAME="" UNITNAME="DOMLSException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMLSOutputImpl.cpp" FORMNAME="" UNITNAME="DOMLSOutputImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMLSInputImpl.cpp" FORMNAME="" UNITNAME="DOMLSInputImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
