@@ -46,11 +46,13 @@
 #undef XERCES_HAVE_SYS_TYPES_H
 #undef XERCES_HAVE_INTTYPES_H
 
-#define XERCES_S16BIT_INT   INT16
+#define XERCES_S16BIT_INT   signed short
+#define XERCES_U16BIT_INT   unsigned short
 #define XERCES_S32BIT_INT   INT32
-#define XERCES_U16BIT_INT   UINT16
 #define XERCES_U32BIT_INT   UINT32
+
 #define XERCES_XMLCH_T      wchar_t
+
 #define XERCES_SIZE_T       SIZE_T
 #define XERCES_SSIZE_T      SSIZE_T
 
