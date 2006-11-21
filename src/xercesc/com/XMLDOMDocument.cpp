@@ -1380,7 +1380,6 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 
 
 	if (!pThis->m_bParseError && !pThis->m_bAbort) {
-		parser.setDoValidation(pThis->m_bThreadValidate);
 		//
 		//   this brings the COM component into better mimicry to MSXML
 		//      by not throwing a validation error when there is no DOCTYPE
