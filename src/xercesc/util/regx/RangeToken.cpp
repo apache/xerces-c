@@ -36,7 +36,7 @@
 #if XERCES_USE_TRANSCODER_ICU
   #include <unicode/uchar.h>
 
-#if (U_ICU_VERSION_MAJOR_NUM >= 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4)
+#if (U_ICU_VERSION_MAJOR_NUM > 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4)
   #include <unicode/uset.h>
   #include <xercesc/util/XMLString.hpp>
   #include <xercesc/util/Janitor.hpp>
@@ -87,7 +87,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
         bool isNRange = (getTokenType() == T_NRANGE) ? true : false;
         RangeToken* lwrToken = tokFactory->createRange(isNRange);
 
-#if XERCES_USE_TRANSCODER_ICU && ((U_ICU_VERSION_MAJOR_NUM >= 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4))
+#if XERCES_USE_TRANSCODER_ICU && ((U_ICU_VERSION_MAJOR_NUM > 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4))
         UChar* rangeStr=(UChar*)fMemoryManager->allocate(40*fElemCount*sizeof(UChar));
         ArrayJanitor<UChar> janRange(rangeStr, fMemoryManager);
         int c=0;
