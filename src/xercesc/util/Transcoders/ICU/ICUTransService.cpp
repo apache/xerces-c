@@ -47,6 +47,19 @@ extern "C" const uint8_t U_IMPORT icudata_dat[];
 #endif
 #endif
 
+#if !defined(U16_NEXT_UNSAFE) && defined(UTF16_NEXT_CHAR_UNSAFE)
+    #define U16_NEXT_UNSAFE UTF16_NEXT_CHAR_UNSAFE
+#endif
+
+#if !defined(U16_APPEND_UNSAFE) && defined(UTF16_APPEND_CHAR_UNSAFE)
+    #define U16_APPEND_UNSAFE UTF16_APPEND_CHAR_UNSAFE
+#endif
+
+#if !defined(U_IS_BMP) && defined(UTF16_CHAR_LENGTH)
+    #define U_IS_BMP(c) (UTF16_CHAR_LENGTH(c)==1)
+#endif
+
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
