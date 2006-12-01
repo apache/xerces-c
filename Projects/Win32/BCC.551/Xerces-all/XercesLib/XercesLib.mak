@@ -69,7 +69,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XMLNumber.obj \
     $(TARGETPATH)\obj\XMLString.obj \
     $(TARGETPATH)\obj\XMLStringTokenizer.obj \
-    $(TARGETPATH)\obj\XMLUCSTranscoder.obj \
+    $(TARGETPATH)\obj\XMLUCS4Transcoder.obj \
     $(TARGETPATH)\obj\XMLUni.obj \
     $(TARGETPATH)\obj\XMLUri.obj \
     $(TARGETPATH)\obj\XMLURL.obj \

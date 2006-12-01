@@ -80,7 +80,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLString.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLStringTokenizer.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUCSTranscoder.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUCS4Transcoder.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUni.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUri.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLURL.obj 
@@ -445,7 +445,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp" FORMNAME="" UNITNAME="XMLRegisterCleanup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLString.cpp" FORMNAME="" UNITNAME="XMLString" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLStringTokenizer.cpp" FORMNAME="" UNITNAME="XMLStringTokenizer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUCSTranscoder.cpp" FORMNAME="" UNITNAME="XMLUCSTranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.cpp" FORMNAME="" UNITNAME="XMLUCS4Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUni.cpp" FORMNAME="" UNITNAME="XMLUni" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLUri.cpp" FORMNAME="" UNITNAME="XMLUri" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLURL.cpp" FORMNAME="" UNITNAME="XMLURL" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

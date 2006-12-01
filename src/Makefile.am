@@ -878,7 +878,7 @@ util_sources = \
 	xercesc/util/XMLRegisterCleanup.cpp \
 	xercesc/util/XMLString.cpp \
 	xercesc/util/XMLStringTokenizer.cpp \
-	xercesc/util/XMLUCSTranscoder.cpp \
+	xercesc/util/XMLUCS4Transcoder.cpp \
 	xercesc/util/XMLUni.cpp \
 	xercesc/util/XMLUri.cpp \
 	xercesc/util/XMLURL.cpp \

@@ -541,7 +541,7 @@ am__objects_24 = xercesc/util/Base64.lo \
 	xercesc/util/XMLInitializer.lo xercesc/util/XMLMsgLoader.lo \
 	xercesc/util/XMLNumber.lo xercesc/util/XMLRegisterCleanup.lo \
 	xercesc/util/XMLString.lo xercesc/util/XMLStringTokenizer.lo \
-	xercesc/util/XMLUCSTranscoder.lo xercesc/util/XMLUni.lo \
+	xercesc/util/XMLUCS4Transcoder.lo xercesc/util/XMLUni.lo \
 	xercesc/util/XMLUri.lo xercesc/util/XMLURL.lo \
 	xercesc/util/XMLUTF16Transcoder.lo \
 	xercesc/util/XMLUTF8Transcoder.lo \
@@ -1788,7 +1788,7 @@ util_sources = \
 	xercesc/util/XMLRegisterCleanup.cpp \
 	xercesc/util/XMLString.cpp \
 	xercesc/util/XMLStringTokenizer.cpp \
-	xercesc/util/XMLUCSTranscoder.cpp \
+	xercesc/util/XMLUCS4Transcoder.cpp \
 	xercesc/util/XMLUni.cpp \
 	xercesc/util/XMLUri.cpp \
 	xercesc/util/XMLURL.cpp \
@@ -2905,7 +2905,7 @@ xercesc/util/XMLString.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
 xercesc/util/XMLStringTokenizer.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
-xercesc/util/XMLUCSTranscoder.lo: xercesc/util/$(am__dirstamp) \
+xercesc/util/XMLUCS4Transcoder.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
 xercesc/util/XMLUni.lo: xercesc/util/$(am__dirstamp) \
 	xercesc/util/$(DEPDIR)/$(am__dirstamp)
@@ -3668,8 +3668,8 @@ mostlyclean-compile:
 	-rm -f xercesc/util/XMLString.lo
 	-rm -f xercesc/util/XMLStringTokenizer.$(OBJEXT)
 	-rm -f xercesc/util/XMLStringTokenizer.lo
-	-rm -f xercesc/util/XMLUCSTranscoder.$(OBJEXT)
-	-rm -f xercesc/util/XMLUCSTranscoder.lo
+	-rm -f xercesc/util/XMLUCS4Transcoder.$(OBJEXT)
+	-rm -f xercesc/util/XMLUCS4Transcoder.lo
 	-rm -f xercesc/util/XMLURL.$(OBJEXT)
 	-rm -f xercesc/util/XMLURL.lo
 	-rm -f xercesc/util/XMLUTF16Transcoder.$(OBJEXT)
@@ -4086,7 +4086,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLRegisterCleanup.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLString.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLStringTokenizer.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLUCSTranscoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLUCS4Transcoder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLURL.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLUTF16Transcoder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/util/$(DEPDIR)/XMLUTF8Transcoder.Plo@am__quote@

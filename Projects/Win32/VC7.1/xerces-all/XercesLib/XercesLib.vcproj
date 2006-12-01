@@ -694,7 +694,7 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCSTranscoder.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUni.cpp">

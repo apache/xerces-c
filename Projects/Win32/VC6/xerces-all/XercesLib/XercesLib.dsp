@@ -1166,7 +1166,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\XMLUCSTranscoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.cpp
 # End Source File
 # Begin Source File
 
