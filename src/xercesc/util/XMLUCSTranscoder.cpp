@@ -108,8 +108,9 @@ XMLUCS4Transcoder::transcodeFrom(const  XMLByte* const          srcData
             if (outPtr + 1 == outEnd)
                 break;
 
-            const XMLCh ch1 = XMLCh(((nextVal - 0x10000) >> 10) + 0xD800);
-            const XMLCh ch2 = XMLCh(((nextVal - 0x10000) & 0x3FF) + 0xDC00);
+            const XMLInt32 LEAD_OFFSET = 0xD800 - (0x10000 >> 10);
+	        const XMLCh ch1 = XMLCh(LEAD_OFFSET + (nextVal >> 10));
+	        const XMLCh ch2 = XMLCh(0xDC00 + (nextVal & 0x3FF));
 
             //
             //  We have room so store them both. But note that the
@@ -211,8 +212,8 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
                 ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadTrailingSurrogate, getMemoryManager());
 
             // And now combine the two into a single output char
-            *outPtr++ = ((curCh - 0xD800) << 10)
-                        + (trailCh - 0xDC00) + 0x10000;
+            const XMLInt32 SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
+            *outPtr++ = (curCh << 10) + trailCh + SURROGATE_OFFSET;
         }
          else
         {

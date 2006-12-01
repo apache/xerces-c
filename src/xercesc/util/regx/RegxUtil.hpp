@@ -67,8 +67,9 @@ inline bool RegxUtil::isEOLChar(const XMLCh ch) {
 }
 
 inline XMLInt32 RegxUtil::composeFromSurrogate(const XMLCh high, const XMLCh low) {
-
-	return 0x10000 + ((high - 0xD800) << 10) + (low - 0xDC00);
+    // see http://unicode.org/unicode/faq/utf_bom.html#35
+    const XMLInt32 SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
+	return (high << 10) + low + SURROGATE_OFFSET;
 }
 
 inline bool RegxUtil::isLowSurrogate(const XMLCh ch) {
@@ -82,10 +83,10 @@ inline bool RegxUtil::isHighSurrogate(const XMLCh ch) {
 }
 
 inline void RegxUtil::decomposeToSurrogates(XMLInt32 ch, XMLCh& high, XMLCh& low) {
-
-    ch -= 0x10000;
-	high = XMLCh((ch >> 10) + 0xD800);
-	low = XMLCh((ch & 0x03FF) + 0xDC00);
+    // see http://unicode.org/unicode/faq/utf_bom.html#35
+    const XMLInt32 LEAD_OFFSET = 0xD800 - (0x10000 >> 10);
+	high = XMLCh(LEAD_OFFSET + (ch >> 10));
+	low = XMLCh(0xDC00 + (ch & 0x3FF));
 }
 
 inline bool RegxUtil::isWordChar(const XMLCh ch) {
