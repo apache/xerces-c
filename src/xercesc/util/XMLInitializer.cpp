@@ -35,6 +35,8 @@ void XMLInitializer::InitializeAllStaticData()
 {
     try {
         initializeMsgLoader4DOM();
+        initializeRangeTokenMap();
+        initializeRegularExpression();
         initializeDOMImplementationImpl();
         initializeDOMImplementationRegistry();
         initializeEmptyNodeList();
@@ -48,8 +50,6 @@ void XMLInitializer::InitializeAllStaticData()
         initializeGeneralAttrCheckMap();
         initializeXSDErrReporterMsgLoader();
         initializeDTDGrammarDfltEntities();
-        initializeRangeTokenMap();
-        initializeRegularExpression();
         initializeAnyType();
     }
     catch(...) {
