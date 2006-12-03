@@ -160,7 +160,6 @@ private :
     // -----------------------------------------------------------------------
     static char*    fLocale;
     static char*    fPath;
-    static XMLCh    fLanguage[];
 };
 
 

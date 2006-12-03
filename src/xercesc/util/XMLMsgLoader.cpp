@@ -65,14 +65,7 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
      */
     if (localeToAdopt && (strlen(localeToAdopt) == 2 || (strlen(localeToAdopt) > 3 && localeToAdopt[2]=='_')))
     {
-        XMLCh *transcoded = XMLString::transcode(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-        if (transcoded[0] && transcoded[1] && (!transcoded[2] || transcoded[2]==chUnderscore))
-        {
-            fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
-            memcpy(fLanguage, transcoded, 2 * sizeof(XMLCh));
-            fLanguage[2]=0;
-            XMLPlatformUtils::fgMemoryManager->deallocate(transcoded);
-        }
+        fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);                   
     }
 
 }
