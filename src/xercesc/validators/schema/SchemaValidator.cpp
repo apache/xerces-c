@@ -1427,9 +1427,11 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
 
     // case of mixed complex types with attributes only
     if (derivedURI == XMLElementDecl::fgPCDataElemId) {
-        if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI)
-            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);
         return;
+    }
+
+    if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);        
     }
 
     SchemaGrammar* aGrammar = currentGrammar;
@@ -1634,28 +1636,85 @@ SchemaValidator::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
 
 void
 SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
-                                       ContentSpecNode* const derivedSpecNode,
+                                       ContentSpecNode* const derivedSpecNodeIn,
                                        const int derivedScope,
                                        const ContentSpecNode* const baseSpecNode,
                                        const int baseScope,
                                        ValueVectorOf<ContentSpecNode*>* const baseNodes,
                                        const ComplexTypeInfo* const baseInfo) {
 
-    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
-    ValueVectorOf<ContentSpecNode*> derivedNodes(1, fMemoryManager);
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();   
     bool toLax = false;
 
     //Treat the element as if it were in a group of the same variety as base
-    ContentSpecNode derivedGroupNode(baseType, derivedSpecNode, 0, false, true, fMemoryManager);
-
-    derivedNodes.addElement(derivedSpecNode);
+    ContentSpecNode derivedGroupNode(baseType, derivedSpecNodeIn, 0, false, true, fMemoryManager);
+    const ContentSpecNode* const derivedSpecNode = &derivedGroupNode;
 
     if ((baseSpecNode->getType() & 0x0f) == ContentSpecNode::Choice) {
         toLax = true;
     }
+    // Instead of calling this routine, inline it
+    // checkRecurse(currentGrammar, &derivedGroupNode, derivedScope, &derivedNodes,
+    //             baseSpecNode, baseScope, baseNodes, baseInfo, toLax);
+ 
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_Recurse1, fMemoryManager);
+    }
 
-    checkRecurse(currentGrammar, &derivedGroupNode, derivedScope, &derivedNodes,
-                 baseSpecNode, baseScope, baseNodes, baseInfo, toLax);
+    // check for mapping of children
+    XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;   
+    unsigned int count2= baseNodes->size();
+    unsigned int current = 0;    
+
+    {
+        bool matched = false;
+
+        for (unsigned int j = current; j < count2; j++) {
+
+            ContentSpecNode* baseNode = baseNodes->elementAt(j);
+            current++;
+
+            bool bDoBreak=false;    // workaround for Borland bug with 'break' in 'catch'
+            try {
+
+                checkParticleDerivationOk(currentGrammar, derivedSpecNodeIn,
+                                          derivedScope, baseNode, baseScope, baseInfo);
+                matched = true;
+                break;
+            }
+            catch(const XMLException&) {
+                if (!toLax && baseNode->getMinTotalRange()) {
+                    bDoBreak=true;
+                }
+            }
+            if(bDoBreak)
+                break;
+        }
+
+        // did not find a match
+        if (!matched) {
+            codeToThrow = XMLExcepts::PD_Recurse2;            
+        }
+    }
+
+    // Now, see if there are some elements in the base we didn't match up
+    // in case of Sequence or All
+    if (!toLax && codeToThrow == XMLExcepts::NoError &&
+        (true || (baseType & 0x0f) == ContentSpecNode::All || 
+         derivedSpecNodeIn->getElement()->getURI() != XMLElementDecl::fgPCDataElemId)) {
+        for (unsigned int j = current; j < count2; j++) {
+            if (baseNodes->elementAt(j)->getMinTotalRange() * baseSpecNode->getMinOccurs()) { //!emptiable
+                codeToThrow =  XMLExcepts::PD_Recurse2;                
+                break;
+            }
+        }
+    }
+
+    if (codeToThrow != XMLExcepts::NoError) {
+        ThrowXMLwithMemMgr(RuntimeException, codeToThrow, fMemoryManager);
+    }
+
 }
 
 void

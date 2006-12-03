@@ -194,9 +194,16 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsSpace, tok , true);
 
+    RangeToken* const dummyToken =
+        tokFactory->createRange();
+
+    dummyToken->addRange(-1, -2);
+    dummyToken->createMap();
+
     // build the internal maps.
     for (int l=0; l < UNICATEGSIZE; l++) {
         ranges[l]->createMap();
+        ranges[l]->setCaseInsensitiveToken(dummyToken);
     }
 
     fRangesCreated = true;

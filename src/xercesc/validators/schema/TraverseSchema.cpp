@@ -6175,7 +6175,12 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             // Compose the final content model by concatenating the base and
             // the current in sequence
             if (!specNode) {
-
+                if (isMixed) {
+                    if (baseSpecNode && baseSpecNode->hasAllContent()) {
+                        reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::NotAllContent);
+                        throw TraverseSchema::InvalidComplexTypeInfo; // REVISIT - should we continue
+                    }
+                }
                 if (baseSpecNode) {
                     specNodeJan.reset(new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode));
                     specNode = specNodeJan.get();
