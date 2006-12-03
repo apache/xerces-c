@@ -67,6 +67,72 @@ RangeToken::~RangeToken() {
 }
 
 
+// This is a struct that defines a mapping for
+// case-insensitive matching.  The first character
+// is the character we try to match in the range.
+// The second is the character we add to the range,
+// because it maps to the first when we're folding
+// case.
+struct ExceptionCharsStruct
+{
+    XMLInt32    baseChar;
+
+    XMLInt32    matchingChar;
+};
+
+
+// This is an array of character mappings that we will
+// add to ranges for case-insensitive matching.
+static const ExceptionCharsStruct   s_exceptions[] =
+{
+    { 0x49, 0x130 },
+    { 0x49, 0x131 },
+    { 0x4b, 0x212a },
+    { 0x53, 0x17f },
+    { 0x69, 0x130 },
+    { 0x69, 0x131 },
+    { 0x6b, 0x212a },
+    { 0x73, 0x17f },
+    { 0xc5, 0x212b },
+    { 0xe5, 0x212b },
+    { 0x1c4, 0x1c5 },
+    { 0x1c6, 0x1c5 },
+    { 0x1c7, 0x1c8 },
+    { 0x1c9, 0x1c8 },
+    { 0x1ca, 0x1cb },
+    { 0x1cc, 0x1cb },
+    { 0x1f1, 0x1f2 },
+    { 0x1f3, 0x1f2 },
+    { 0x392, 0x3d0 },
+    { 0x395, 0x3f5 },
+    { 0x398, 0x3d1 },
+    { 0x398, 0x3f4 },
+    { 0x399, 0x345 },
+    { 0x399, 0x1fbe },
+    { 0x39a, 0x3f0 },
+    { 0x39c, 0xb5 },
+    { 0x3a0, 0x3d6 },
+    { 0x3a1, 0x3f1 },
+    { 0x3a3, 0x3c2 },
+    { 0x3a6, 0x3d5 },
+    { 0x3a9, 0x2126 },
+    { 0x3b2, 0x3d0 },
+    { 0x3b5, 0x3f5 },
+    { 0x3b8, 0x3d1 },
+    { 0x3b8, 0x3f4 },
+    { 0x3b9, 0x345 },
+    { 0x3b9, 0x1fbe },
+    { 0x3ba, 0x3f0 },
+    { 0x3bc, 0xb5 },
+    { 0x3c0, 0x3d6 },
+    { 0x3c1, 0x3f1 },
+    { 0x3c3, 0x3c2 },
+    { 0x3c6, 0x3d5 },
+    { 0x3c9, 0x2126 },
+    { 0x1e60, 0x1e9b },
+    { 0x1e61, 0x1e9b }
+};
+
 // ---------------------------------------------------------------------------
 //  RangeToken: Getter methods
 // ---------------------------------------------------------------------------
@@ -76,6 +142,8 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
 
         bool isNRange = (getTokenType() == T_NRANGE) ? true : false;
         RangeToken* lwrToken = tokFactory->createRange(isNRange);
+
+        unsigned int exceptIndex = 0;
 
         for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
             for (XMLInt32 ch = fRanges[i];  ch <= fRanges[i + 1];  ++ch) {
@@ -114,6 +182,34 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
                     lwrToken->addRange(ch, ch);
                 }
 #endif
+
+                const unsigned int  exceptionsSize =
+                    sizeof(s_exceptions) / sizeof(s_exceptions[0]);
+
+                // Add any exception chars.  These are characters where the the
+                // case mapping is not symmetric.  (Unicode case mappings are not isomorphic...)
+                while (exceptIndex < exceptionsSize)
+                {
+                    if (s_exceptions[exceptIndex].baseChar < ch)
+                    {
+                        ++exceptIndex;
+                    }
+                    else if (s_exceptions[exceptIndex].baseChar == ch)
+                    {
+                        const XMLInt32  matchingChar =
+                            s_exceptions[exceptIndex].matchingChar;
+
+                        lwrToken->addRange(
+                            matchingChar,
+                            matchingChar);
+
+                        ++exceptIndex;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -193,7 +289,7 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
 
         if(fSorted && fRanges[fElemCount-1] >= val1)
         {
-            for (int i = 0; i < (int)fElemCount; i +=2) 
+            for (int i = 0; i < (int)fElemCount; i +=2)
             {
                 // check if this range is already part of this one
                 if (fRanges[i] <= val1 && fRanges[i+1] >= val2)
@@ -204,8 +300,8 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
                     fRanges[i+1]=val2;
                     break;
                 }
-                else if (fRanges[i] > val1 || 
-                          (fRanges[i]==val1 && fRanges[i+1] > val2)) 
+                else if (fRanges[i] > val1 ||
+                          (fRanges[i]==val1 && fRanges[i+1] > val2))
                 {
                     for(int j=fElemCount-1;j>=i;j--)
                         fRanges[j+2]=fRanges[j];
@@ -214,7 +310,7 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
                     fElemCount  += 2;
                     break;
                 }
-            }            
+            }
         }
         else
         {

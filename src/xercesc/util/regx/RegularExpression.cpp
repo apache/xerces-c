@@ -1619,7 +1619,8 @@ void RegularExpression::prepare() {
 
 	if (fOperations != 0 && fOperations->getNextOp() == 0 &&
 		(fOperations->getOpType() == Op::O_STRING ||
-		 fOperations->getOpType() == Op::O_CHAR) )			 {
+         fOperations->getOpType() == Op::O_CHAR) &&
+         !isSet(fOptions, IGNORE_CASE) )                      {
 
 		fFixedStringOnly = true;
 
@@ -1648,8 +1649,9 @@ void RegularExpression::prepare() {
 		fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
 								  isSet(fOptions, IGNORE_CASE), fMemoryManager);
 	}
-	else if (!isSet(fOptions, XMLSCHEMA_MODE) &&
-			 !isSet(fOptions, PROHIBIT_FIXED_STRING_OPTIMIZATION)) {
+	else if (!isSet(fOptions, XMLSCHEMA_MODE) &&		
+             !isSet(fOptions, PROHIBIT_FIXED_STRING_OPTIMIZATION) &&
+             !isSet(fOptions, IGNORE_CASE)) {
 
 		int fixedOpts = 0;
 		Token* tok = fTokenTree->findFixedString(fOptions, fixedOpts);

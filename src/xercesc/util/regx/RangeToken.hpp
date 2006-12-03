@@ -55,6 +55,8 @@ public:
     // -----------------------------------------------------------------------
     RangeToken* getCaseInsensitiveToken(TokenFactory* const tokFactory);
 
+    void setCaseInsensitiveToken(RangeToken* tok);
+
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -113,6 +115,11 @@ private:
     MemoryManager* fMemoryManager;
 };
 
+
+inline void RangeToken::setCaseInsensitiveToken(RangeToken* tok)
+{
+    fCaseIToken = tok;
+}
 
 inline void RangeToken::createMap()
 {
