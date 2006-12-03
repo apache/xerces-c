@@ -1514,7 +1514,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             , elemDecl->getElementName()->getPrefix()
             , *fAttrList
             , attCount
-            , false
+            , isEmpty
             , isRoot
         );
     }
@@ -1526,18 +1526,6 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
     {
         // Pop the element stack back off since it'll never be used now
         fElemStack.popTop();
-
-        // If we have a doc handler, tell it about the end tag
-        if (fDocHandler)
-        {
-            fDocHandler->endElement
-            (
-                *elemDecl
-                , uriId
-                , isRoot
-                , elemDecl->getElementName()->getPrefix()
-            );
-        }
 
         // If the elem stack is empty, then it was an empty root
         if (isRoot)

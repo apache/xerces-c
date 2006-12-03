@@ -1534,7 +1534,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             , (fDoNamespaces) ? elemDecl->getElementName()->getPrefix() : 0
             , *fAttrList
             , attCount
-            , false
+            , isEmpty
             , isRoot
         );
     }
@@ -1557,19 +1557,6 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                     , elemDecl->getFormattedContentModel()
                 );
             }
-        }
-
-        // If we have a doc handler, tell it about the end tag
-        if (fDocHandler)
-        {
-            fDocHandler->endElement
-            (
-                *elemDecl
-                , uriId
-                , isRoot
-                , (fDoNamespaces) ? elemDecl->getElementName()->getPrefix()
-                                  : XMLUni::fgZeroLenString
-            );
         }
 
         // Pop the element stack back off since it'll never be used now
