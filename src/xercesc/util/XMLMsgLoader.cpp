@@ -38,8 +38,6 @@ char* XMLMsgLoader::fLocale = 0;
 
 char* XMLMsgLoader::fPath = 0;
 
-XMLCh XMLMsgLoader::fLanguage[] = {chLatin_e, chLatin_n, chNull};
-
 /***
  *  if localeToAdopt is 0, that is to release memory for
  *  the user defined locale string
