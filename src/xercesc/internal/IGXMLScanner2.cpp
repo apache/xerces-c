@@ -1996,7 +1996,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
             (
                 root
                 , fURIStringPool
-                , (SchemaGrammar*) grammar
+                , grammar
                 , fGrammarResolver
                 , this
                 , src.getSystemId()

@@ -1421,14 +1421,15 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
                                     const ComplexTypeInfo* const baseInfo) {
 
     unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
-    unsigned int baseURI = baseSpecNode->getElement()->getURI();
-    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
-    const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
 
     // case of mixed complex types with attributes only
     if (derivedURI == XMLElementDecl::fgPCDataElemId) {
         return;
     }
+
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
+    const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
 
     if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);        
