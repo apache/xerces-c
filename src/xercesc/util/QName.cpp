@@ -323,20 +323,7 @@ void QName::setName(const XMLCh* const    rawName
 
 void QName::setPrefix(const XMLCh* prefix)
 {
-    unsigned int newLen;
-
-    newLen = XMLString::stringLen(prefix);
-    if (!fPrefixBufSz || (newLen > fPrefixBufSz))
-    {
-        fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
-        fPrefix = 0;
-        fPrefixBufSz = newLen + 8;
-        fPrefix = (XMLCh*) fMemoryManager->allocate
-        (
-            (fPrefixBufSz + 1) * sizeof(XMLCh)
-        ); //new XMLCh[fPrefixBufSz + 1];
-    }
-    XMLString::moveChars(fPrefix, prefix, newLen + 1);
+    setNPrefix(prefix, XMLString::stringLen(prefix));
 }
 
 void QName::setNPrefix(const XMLCh* prefix, const unsigned int newLen)
