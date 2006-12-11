@@ -694,8 +694,21 @@ startElement(   const   XMLElementDecl&         elemDecl
 
     if (fDocHandler)
     {
-        QName element(elemPrefix?elemPrefix:XMLUni::fgZeroLenString, elemDecl.getBaseName(), elemURLId, fMemoryManager);
-        const XMLCh* const elemQName = element.getRawName();
+        ArrayJanitor<XMLCh> janElemName(NULL);
+        XMLCh* elemQName = NULL;
+        if(elemPrefix==0 || *elemPrefix==0)
+            elemQName=(XMLCh*)elemDecl.getBaseName();
+        else if(XMLString::equals(elemPrefix, elemDecl.getElementName()->getPrefix()))
+            elemQName=(XMLCh*)elemDecl.getElementName()->getRawName();
+        else
+        {
+            unsigned int prefixLen=XMLString::stringLen(elemPrefix);
+            elemQName=(XMLCh*)fMemoryManager->allocate((prefixLen+1+XMLString::stringLen(elemDecl.getBaseName())+1)*sizeof(XMLCh));
+            XMLString::moveChars(elemQName, elemPrefix, prefixLen);
+            elemQName[prefixLen] = chColon;
+            XMLString::copyString(&elemQName[prefixLen+1], elemDecl.getBaseName());
+            janElemName.reset(elemQName, fMemoryManager);
+        }
 
         if (getDoNamespaces())
         {
@@ -814,14 +827,25 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                             , const bool            isRoot
                             , const XMLCh* const    elemPrefix)
 {
-    QName element(elemPrefix?elemPrefix:XMLUni::fgZeroLenString, elemDecl.getBaseName(), uriId, fMemoryManager);
-    const XMLCh* const elemQName = element.getRawName();
-
     // Just map to the SAX document handler
     if (fDocHandler)
     {
+        ArrayJanitor<XMLCh> janElemName(NULL);
+        XMLCh* elemQName = NULL;
+        if(elemPrefix==0 || *elemPrefix==0)
+            elemQName=(XMLCh*)elemDecl.getBaseName();
+        else if(XMLString::equals(elemPrefix, elemDecl.getElementName()->getPrefix()))
+            elemQName=(XMLCh*)elemDecl.getElementName()->getRawName();
+        else
+        {
+            unsigned int prefixLen=XMLString::stringLen(elemPrefix);
+            elemQName=(XMLCh*)fMemoryManager->allocate((prefixLen+1+XMLString::stringLen(elemDecl.getBaseName())+1)*sizeof(XMLCh));
+            XMLString::moveChars(elemQName, elemPrefix, prefixLen);
+            elemQName[prefixLen] = chColon;
+            XMLString::copyString(&elemQName[prefixLen+1], elemDecl.getBaseName());
+            janElemName.reset(elemQName, fMemoryManager);
+        }
 
-        // get the prefixes back so that we can call endPrefixMapping()
         if (getDoNamespaces())
         {
             fDocHandler->endElement
@@ -831,6 +855,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                 , elemQName
             );
 
+            // get the prefixes back so that we can call endPrefixMapping()
             unsigned int numPrefix = fPrefixCounts->pop();
             for (unsigned int i = 0; i < numPrefix; i++)
             {
