@@ -232,7 +232,7 @@ public:
     void                         callUserDataHandlers(const DOMNodeImpl* n,
                                                       DOMUserDataHandler::DOMOperationType operation,
                                                       const DOMNode* src,
-                                                      const DOMNode* dst) const;
+                                                      DOMNode* dst) const;
     void                         transferUserData(DOMNodeImpl* n1, DOMNodeImpl* n2);
 
     DOMNode*                     renameNode(DOMNode* n,

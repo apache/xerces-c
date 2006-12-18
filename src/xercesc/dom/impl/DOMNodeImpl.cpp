@@ -388,7 +388,7 @@ void* DOMNodeImpl::getUserData(const XMLCh* key) const
 
 void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
                                        const DOMNode* src,
-                                       const DOMNode* dst) const
+                                       DOMNode* dst) const
 {
     DOMDocumentImpl* doc=(DOMDocumentImpl*)getOwnerDocument();
     if (doc)

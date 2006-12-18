@@ -129,13 +129,13 @@ public:
                 const XMLCh* const key,
                 void* data,
                 const DOMNode* src,
-                const DOMNode* dst)
+                DOMNode* dst)
     {
         currentType = operation;
         currentKey = (XMLCh*) key;
         currentData = data;
         currentSrc = (DOMNode*) src;
-        currentDst = (DOMNode*) dst;
+        currentDst = dst;
     };
 
     DOMOperationType getCurrentType() {

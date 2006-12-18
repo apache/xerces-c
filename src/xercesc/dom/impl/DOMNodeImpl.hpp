@@ -133,7 +133,7 @@ public:
     void              release();
     void              callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
                                            const DOMNode* src,
-                                           const DOMNode* dst) const;
+                                           DOMNode* dst) const;
     //reverses the bit pattern given by compareDocumentPosition
     short             reverseTreeOrderBitPattern(short pattern) const;
     const DOMNode*    getTreeParentNode(const DOMNode* node) const;

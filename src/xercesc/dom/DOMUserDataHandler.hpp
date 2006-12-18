@@ -34,7 +34,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  * the application to implement various behaviors regarding the data it
  * associates to the DOM nodes. This interface defines that handler.
  *
- * <p>See also the <a href='http://www.w3.org/2001/07/WD-DOM-Level-3-Core-20010726'>Document Object Model (DOM) Level 3 Core Specification</a>.
+ * <p>See also the <a href='http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407'>Document Object Model (DOM) Level 3 Core Specification</a>.
  * @since DOM Level 3
  */
 class CDOM_EXPORT DOMUserDataHandler {
@@ -128,7 +128,7 @@ public:
                         const XMLCh* const key,
                         void* data,
                         const DOMNode* src,
-                        const DOMNode* dst) = 0;
+                        DOMNode* dst) = 0;
 
     //@}
 

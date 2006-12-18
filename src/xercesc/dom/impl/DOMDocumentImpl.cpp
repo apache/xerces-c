@@ -1305,7 +1305,7 @@ void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
     return 0;
 }
 
-void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHandler::DOMOperationType operation, const DOMNode* src, const DOMNode* dst) const
+void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHandler::DOMOperationType operation, const DOMNode* src, DOMNode* dst) const
 {
     if (fUserDataTable) {
         RefHash2KeysTableOfEnumerator<DOMUserDataRecord> userDataEnum(fUserDataTable, false, fMemoryManager);
