@@ -232,7 +232,7 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 	const XMLCh *qualifiedName, DOMDocumentType *doctype,
     MemoryManager* const manager)
 {
-    return new (manager) DOMDocumentImpl(namespaceURI, qualifiedName, doctype, manager);
+    return new (manager) DOMDocumentImpl(namespaceURI, qualifiedName, doctype, this, manager);
 }
 
 
@@ -244,7 +244,7 @@ void* DOMImplementationImpl::getFeature(const XMLCh*, const XMLCh*) const {
 // Non-standard extension
 DOMDocument *DOMImplementationImpl::createDocument(MemoryManager* const manager)
 {
-        return new (manager) DOMDocumentImpl(manager);
+        return new (manager) DOMDocumentImpl(this, manager);
 }
 
 //

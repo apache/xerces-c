@@ -68,7 +68,7 @@ static const XMLSize_t kMaxSubAllocationSize =  0x1000;  // Any request for more
 //                             fNode and fParent constructors used here can not
 //                             allocate.
 //
-DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
+DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* const manager)
     : fNode(this),
       fParent(this),
       fNodeIDMap(0),
@@ -94,6 +94,7 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
       fRanges(0),
       fNodeIterators(0),
       fMemoryManager(manager),
+      fDOMImplementation(domImpl),
       fChanges(0),      
       errorChecking(true)
 {
@@ -105,6 +106,7 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
 DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
                                const XMLCh *qualifiedName,
                                DOMDocumentType *doctype,
+                               DOMImplementation* domImpl, 
                                MemoryManager* const manager)
     : fNode(this),
       fParent(this),
@@ -131,6 +133,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fRanges(0),
       fNodeIterators(0),
       fMemoryManager(manager),
+      fDOMImplementation(domImpl),
       fChanges(0),
       errorChecking(true)
 {
@@ -211,7 +214,7 @@ DOMDocumentImpl::~DOMDocumentImpl()
 DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
 
     // Note:  the cloned document node goes on the same heap we live in.
-    DOMDocumentImpl *newdoc = new (fMemoryManager) DOMDocumentImpl(fMemoryManager);
+    DOMDocumentImpl *newdoc = new (fMemoryManager) DOMDocumentImpl(fDOMImplementation, fMemoryManager);
     if(fXmlEncoding && *fXmlEncoding)
         newdoc->setXmlEncoding(fXmlEncoding);
     if(fXmlVersion && *fXmlVersion)
@@ -474,8 +477,8 @@ DOMNodeList *DOMDocumentImpl::getElementsByTagName(const XMLCh *tagname) const
 
 
 DOMImplementation   *DOMDocumentImpl::getImplementation() const {
-    // REVISIT: we should return the implementation that created us
-    return DOMImplementation::getImplementation();
+
+    return fDOMImplementation;
 }
 
 

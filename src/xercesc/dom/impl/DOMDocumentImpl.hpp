@@ -89,10 +89,11 @@ public:
     DOMNodeIDMap*         fNodeIDMap;     // for use by GetElementsById().
 
 public:
-    DOMDocumentImpl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     DOMDocumentImpl(const XMLCh*     namespaceURI,     //DOM Level 2
                     const XMLCh*     qualifiedName,
                     DOMDocumentType* doctype,
+                    DOMImplementation* domImpl, 
                     MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~DOMDocumentImpl();
 
@@ -332,6 +333,7 @@ private:
     Ranges*               fRanges;
     NodeIterators*        fNodeIterators;
     MemoryManager*        fMemoryManager;   // configurable memory manager
+    DOMImplementation*    fDOMImplementation;
 
     int                   fChanges;
     bool                  errorChecking;    // Bypass error checking.
