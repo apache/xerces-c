@@ -216,7 +216,10 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
 FileHandle XMLPlatformUtils::openFile(const char* const fileName
                                       , MemoryManager* const manager)
 {
-    return (FileHandle) open( fileName , O_RDONLY | O_LARGEFILE);
+    int f = open( fileName , O_RDONLY | O_LARGEFILE);
+    if(f==-1)
+	return 0;
+    return (FileHandle)f;
 }
 
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
@@ -224,7 +227,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
 {
     const char* tmpFileName = XMLString::transcode(fileName, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
-    return (FileHandle) open( tmpFileName , O_RDONLY | O_LARGEFILE); 
+    return openFile( tmpFileName, manager); 
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
@@ -232,13 +235,16 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
 {
     const char* tmpFileName = XMLString::transcode(fileName, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
-    return (FileHandle)open( tmpFileName , O_WRONLY | O_CREAT | O_TRUNC | O_LARGEFILE, 0666);
+    return openFile( tmpFileName, manager);
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
                                              , MemoryManager* const manager)
 {
-    return (FileHandle)open( fileName , O_WRONLY | O_CREAT | O_TRUNC | O_LARGEFILE, 0666);
+    int f=open( fileName , O_WRONLY | O_CREAT | O_TRUNC | O_LARGEFILE, 0666);
+    if(f==-1)
+	return 0;
+    return (FileHandle)f;
 }
 
 unsigned int
