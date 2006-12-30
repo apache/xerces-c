@@ -620,7 +620,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
 {
     //Normalize sysId 
     XMLBuffer normalizedSysId(1023, fMemoryManager);
-    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
+    if(sysId)
+        XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
     const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
 
     // Create a buffer for expanding the system id
