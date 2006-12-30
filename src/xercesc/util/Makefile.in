@@ -416,7 +416,11 @@ else
 	      		        ifeq (${TRANSCODER},Uniconv390)
 	    			    TRANSCODERMODULE=Uniconv390
 	    		        else
-	    		            TRANSCODERMODULE=Iconv
+	    		            ifeq (${TRANSCODER},Win32)
+	    		            TRANSCODERMODULE=Win32
+	    		            else
+ 	    		            TRANSCODERMODULE=Iconv
+	    		            endif
 	      		        endif
   			        endif
   			    endif
@@ -452,6 +456,10 @@ else
 	else
 	  ifeq (${NETACCESSOR},LibWWW)
 		NETACCESSORMODULE=libWWW
+	  else
+			ifeq (${NETACCESSOR},WinSock)
+				NETACCESSORMODULE=WinSock
+			endif
 	  endif
 	endif
 endif

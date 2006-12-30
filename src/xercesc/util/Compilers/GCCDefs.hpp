@@ -64,7 +64,11 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-typedef unsigned short XMLCh;
+#if defined(__MINGW32__) && defined(_WCHAR_T_DEFINED)
+typedef wchar_t         XMLCh;
+#else
+typedef unsigned short  XMLCh;
+#endif
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers

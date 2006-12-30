@@ -59,9 +59,9 @@ usage()
             [default: no debug]"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 
             'iconv' [default: inmem]"
-    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket', 'winsock' or 
             'native' [default: socket]"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Uniconv390',  
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Uniconv390', 'Win32', 
              'IconvFBSD', 'IconvGNU' or 'native'
              [default: native]"
     echo "       -r <thread option> can be 'pthread' or 'dce' 
@@ -508,6 +508,9 @@ case $transcoder in
    IconvGNU)
        TRANSCODER=IconvGNU ;
        transcodingDefines="-DXML_USE_GNU_TRANSCODER -I/usr/local/include" ;;
+   Win32)
+       TRANSCODER=Win32 ;
+       transcodingDefines="-DXML_USE_WIN32_TRANSCODER" ;;
    native)
  	if test $platform = "cygwin"; then
  	    TRANSCODER=Cygwin ;
@@ -612,6 +615,17 @@ case $netaccessor in
        netaccessorDefines="-DXML_USE_NETACCESSOR_LIBWWW `libwww-config --cflags`"
        netaccessorLibs="`libwww-config --libs`"
        USELIBWWW=1;;
+
+   winsock)
+       if test $platform = "mingw-msys"; then
+           NETACCESSOR=WinSock
+           netaccessorDefines="-DXML_USE_NETACCESSOR_WINSOCK"
+           netaccessorLibs="-lws2_32"
+       else
+           echo "netaccessor option '$netaccessor' is supported on 'mingw-msys' only."
+           exit ${ERROR_EXIT_CODE}
+       fi
+       ;;
 
    native)
        if test $platform = "macosx"; then

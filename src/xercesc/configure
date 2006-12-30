@@ -1505,6 +1505,7 @@ ac_given_INSTALL="$INSTALL"
 trap 'rm -fr `echo "Makefile \
 util/Makefile \
 util/Transcoders/Cygwin/Makefile \
+util/Transcoders/Win32/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
@@ -1540,6 +1541,7 @@ util/MsgLoaders/ICU/resources/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
+util/NetAccessors/WinSock/Makefile \
 util/NetAccessors/libWWW/Makefile \
 util/NetAccessors/MacOSURLAccessCF/Makefile \
 util/regx/Makefile \
@@ -1665,6 +1667,7 @@ cat >> $CONFIG_STATUS <<EOF
 CONFIG_FILES=\${CONFIG_FILES-"Makefile \
 util/Makefile \
 util/Transcoders/Cygwin/Makefile \
+util/Transcoders/Win32/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
@@ -1700,6 +1703,7 @@ util/MsgLoaders/ICU/resources/Makefile \
 util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
+util/NetAccessors/WinSock/Makefile \
 util/NetAccessors/libWWW/Makefile \
 util/NetAccessors/MacOSURLAccessCF/Makefile \
 util/regx/Makefile \
