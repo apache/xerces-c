@@ -332,11 +332,13 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
     const XMLCh *qualifiedName, const XMLCh *fValue)
 {
     if (fNode.isReadOnly())
-        throw DOMException(
-        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
+        throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
-    DOMAttr* newAttr = getAttributeNodeNS(fNamespaceURI, qualifiedName);
+    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
+        throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
+    DOMAttr* newAttr = getAttributeNodeNS(fNamespaceURI, qualifiedName+index);
     if (!newAttr)
     {
         newAttr = this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
