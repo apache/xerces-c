@@ -113,6 +113,7 @@ AC_CHECK_FUNCS([getcwd pathconf realpath \
 		strrchr strstr strtol strtoul \
 		towupper towlower \
 		mblen mbrlen wcsrtombs mbsrtowcs \
+        wcsupr wcslwr wcsnicmp wcsicmp \
 		])
 				
 AC_SUBST([SHREXT], [$shrext_cmds])

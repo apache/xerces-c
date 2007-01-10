@@ -23,6 +23,10 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#if HAVE_CONFIG_H
+#	include <config.h>
+#endif
+
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/XMLException.hpp>
@@ -45,9 +49,89 @@ static const XMLCh gMyServiceId[] =
 };
 
 
+#if !HAVE_WCSUPR
+void wcsupr(LPWSTR str)
+{
+    int nLen=XMLString::stringLen(str);
+    ::LCMapStringW( GetThreadLocale(), LCMAP_UPPERCASE, str, nLen, str, nLen);
+}
+#endif
 
+#if !HAVE_WCSLWR
+void wcslwr(LPWSTR str)
+{
+    int nLen=XMLString::stringLen(str);
+    ::LCMapStringW( GetThreadLocale(), LCMAP_LOWERCASE, str, nLen, str, nLen);
+}
+#endif
 
+#if !HAVE_WCSNICMP
+int wcsnicmp(LPCWSTR comp1, LPCWSTR comp2, unsigned int nLen)
+{
+    unsigned int len = XMLString::stringLen( comp1);
+    unsigned int otherLen = XMLString::stringLen( comp2);
+    unsigned int countChar = 0;
+    unsigned int maxChars;
+    int          theResult = 0;
 
+    // Determine at what string index the comparison stops.
+    len = ( len > nLen ) ? nLen : len;
+    otherLen = ( otherLen > nLen ) ? nLen : otherLen;
+    maxChars = ( len > otherLen ) ? otherLen : len;
+
+    // Handle situation when one argument or the other is NULL
+    // by returning +/- string length of non-NULL argument (inferred
+    // from XMLString::CompareNString).
+
+    // Obs. Definition of stringLen(XMLCh*) implies NULL ptr and ptr
+    // to Empty String are equivalent.  It handles NULL args, BTW.
+
+    if ( !comp1 )
+    {
+        // Negative because null ptr (c1) less than string (c2).
+        return ( 0 - otherLen );
+    }
+
+    if ( !comp2 )
+    {
+        // Positive because string (c1) still greater than null ptr (c2).
+        return len;
+    }
+
+    // Copy const parameter strings (plus terminating nul) into locals.
+    XMLCh* firstBuf = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate( (++len) * sizeof(XMLCh) );//new XMLCh[ ++len];
+    XMLCh* secondBuf = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate( (++otherLen) * sizeof(XMLCh) );//new XMLCh[ ++otherLen];
+    memcpy( firstBuf, comp1, len * sizeof(XMLCh));
+    memcpy( secondBuf, comp2, otherLen * sizeof(XMLCh));
+
+    // Then uppercase both strings, losing their case info.
+    ::LCMapStringW( GetThreadLocale(), LCMAP_UPPERCASE, (LPWSTR)firstBuf, len, (LPWSTR)firstBuf, len);
+    ::LCMapStringW( GetThreadLocale(), LCMAP_UPPERCASE, (LPWSTR)secondBuf, otherLen, (LPWSTR)secondBuf, otherLen);
+
+    // Strings are equal until proven otherwise.
+    while ( ( countChar < maxChars ) && ( !theResult ) )
+    {
+        theResult = (int)(firstBuf[countChar]) - (int)(secondBuf[countChar]);
+        ++countChar;
+    }
+
+    XMLPlatformUtils::fgMemoryManager->deallocate(firstBuf);//delete [] firstBuf;
+    XMLPlatformUtils::fgMemoryManager->deallocate(secondBuf);//delete [] secondBuf;
+
+    return theResult;
+}
+#endif
+
+#if !HAVE_WCSICMP
+int wcsicmp(LPCWSTR comp1, LPCWSTR comp2)
+{
+    unsigned int len = XMLString::stringLen( comp1);
+    unsigned int otherLen = XMLString::stringLen( comp2);
+    // Must compare terminating NUL to return difference if one string is shorter than the other.
+    unsigned int maxChars = ( len > otherLen ) ? otherLen : len;
+    return wcsnicmp(comp1, comp2, maxChars+1);
+}
+#endif
 
 // ---------------------------------------------------------------------------
 //  This is the simple CPMapEntry class. It just contains an encoding name
@@ -142,7 +226,7 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
         //  Upper case it because we are using a hash table and need to be
         //  sure that we find all case combinations.
         //
-        _wcsupr(fEncodingName);
+        wcsupr(fEncodingName);
   }
 }
 
@@ -160,7 +244,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
     //  Upper case it because we are using a hash table and need to be
     //  sure that we find all case combinations.
     //
-    _wcsupr(fEncodingName);
+    wcsupr(fEncodingName);
 }
 
 CPMapEntry::~CPMapEntry()
@@ -377,7 +461,7 @@ Win32TransService::Win32TransService()
                 );//new XMLCh[targetLen + 1];
                 ::mbstowcs(uniAlias, aliasBuf, srcLen);
                 uniAlias[targetLen] = 0;
-                _wcsupr(uniAlias);
+                wcsupr(uniAlias);
 
                 // Look up the alias name
                 CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
@@ -393,7 +477,7 @@ Win32TransService::Win32TransService()
                     );//new XMLCh[targetLen + 1];
                     ::mbstowcs(uniName, nameBuf, srcLen);
                     uniName[targetLen] = 0;
-                    _wcsupr(uniName);
+                    wcsupr(uniName);
 
                     //
                     //  If the name is actually different, then take it.
@@ -433,7 +517,7 @@ Win32TransService::~Win32TransService()
 int Win32TransService::compareIString(  const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2)
 {
-    return _wcsicmp(comp1, comp2);
+    return wcsicmp(comp1, comp2);
 }
 
 
@@ -441,7 +525,7 @@ int Win32TransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
                                         , const unsigned int    maxChars)
 {
-    return _wcsnicmp(comp1, comp2, maxChars);
+    return wcsnicmp(comp1, comp2, maxChars);
 }
 
 
@@ -470,12 +554,12 @@ bool Win32TransService::supportsSrcOfs() const
 
 void Win32TransService::upperCase(XMLCh* const toUpperCase) const
 {
-    _wcsupr(toUpperCase);
+    wcsupr(toUpperCase);
 }
 
 void Win32TransService::lowerCase(XMLCh* const toLowerCase) const
 {
-    _wcslwr(toLowerCase);
+    wcslwr(toLowerCase);
 }
 
 bool Win32TransService::isAlias(const   HKEY            encodingKey
@@ -511,7 +595,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     //
     ::wcsncpy(upEncoding, encodingName, upLen);
     upEncoding[upLen] = 0;
-    _wcsupr(upEncoding);
+    wcsupr(upEncoding);
 
     // Now to try to find this guy in the CP map
     CPMapEntry* theEntry = fCPMap->get(upEncoding);

@@ -320,7 +320,7 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="_DEBUG;PLATFORM_WIN32;XERCES_BUILDING_LIBRARY;XERCES_PATH_DELIMITER_BACKSLASH=1;XERCES_USE_FILEMGR_WINDOWS=1;XERCES_USE_MUTEXMGR_WINDOWS=1;XERCES_USE_ATOMICOPMGR_WINDOWS=1;XERCES_USE_NETACCESSOR_WINSOCK=1;XERCES_USE_TRANSCODER_WINDOWS=1;XERCES_USE_MSGLOADER_INMEMORY=1;HAVE_LIMITS_H=1;HAVE_FTIME=1;HAVE_SYS_TIMEB_H=1;HAVE_STRICMP=1;HAVE_STRNICMP=1"/>
+    <USERDEFINES value="_DEBUG;PLATFORM_WIN32;XERCES_BUILDING_LIBRARY;XERCES_PATH_DELIMITER_BACKSLASH=1;XERCES_USE_FILEMGR_WINDOWS=1;XERCES_USE_MUTEXMGR_WINDOWS=1;XERCES_USE_ATOMICOPMGR_WINDOWS=1;XERCES_USE_NETACCESSOR_WINSOCK=1;XERCES_USE_TRANSCODER_WINDOWS=1;XERCES_USE_MSGLOADER_INMEMORY=1;HAVE_LIMITS_H=1;HAVE_FTIME=1;HAVE_SYS_TIMEB_H=1;HAVE_STRICMP=1;HAVE_STRNICMP=1;HAVE_WCSUPR=1;HAVE_WCSLWR=1;HAVE_WCSICMP=1;HAVE_WCSNICMP=1;"/>
     <SYSDEFINES value="NO_STRICT;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="Xerceslib.cpp"/>
     <INCLUDEPATH value="..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src;$(BCB)\include"/>
@@ -353,6 +353,7 @@
       -DXERCES_USE_ATOMICOPMGR_WINDOWS=1 -DXERCES_USE_NETACCESSOR_WINSOCK=1 
       -DXERCES_USE_TRANSCODER_WINDOWS=1 -DXERCES_USE_MSGLOADER_INMEMORY=1 
       -DHAVE_LIMITS_H=1 -DHAVE_FTIME=1 -DHAVE_SYS_TIMEB_H=1 -DHAVE_STRICMP=1 
+      -DHAVE_WCSUPR=1 -DHAVE_WCSLWR=1 -DHAVE_WCSICMP=1 -DHAVE_WCSNICMP=1
       -DHAVE_STRNICMP=1 -boa"/>
     <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b -k -y -v -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
