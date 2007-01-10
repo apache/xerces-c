@@ -234,11 +234,23 @@
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
 
+/* Define to 1 if you have the `wcsicmp' function. */
+#undef HAVE_WCSICMP
+
+/* Define to 1 if you have the `wcslwr' function. */
+#undef HAVE_WCSLWR
+
+/* Define to 1 if you have the `wcsnicmp' function. */
+#undef HAVE_WCSNICMP
+
 /* Define to 1 if you have the `wcsrtombs' function. */
 #undef HAVE_WCSRTOMBS
 
 /* Define to 1 if you have the `wcstombs' function. */
 #undef HAVE_WCSTOMBS
+
+/* Define to 1 if you have the `wcsupr' function. */
+#undef HAVE_WCSUPR
 
 /* Define to 1 if you have the <wctype.h> header file. */
 #undef HAVE_WCTYPE_H

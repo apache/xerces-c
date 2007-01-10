@@ -57,6 +57,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+LIBOBJDIR = ../lib/
 DIST_COMMON = $(srcdir)/../version.incl $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 @XERCES_USE_MSGLOADER_ICU_TRUE@am__append_1 = -L${top_srcdir}/obj/.libs -lXercesMessages$(VER)
@@ -179,6 +180,7 @@ PTHREAD_CC = @PTHREAD_CC@
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
 PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHREXT = @SHREXT@

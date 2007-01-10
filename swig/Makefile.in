@@ -37,6 +37,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+LIBOBJDIR = ../lib/
 subdir = swig
 DIST_COMMON = $(nobase_libutil_la_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -163,6 +164,7 @@ PTHREAD_CC = @PTHREAD_CC@
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
 PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHREXT = @SHREXT@
