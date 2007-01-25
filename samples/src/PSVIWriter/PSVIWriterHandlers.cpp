@@ -874,16 +874,22 @@ void PSVIWriterHandlers::processAnnotation(XSAnnotation* annotation) {
 	if (annotation == NULL) {
 		sendElementEmpty(PSVIUni::fgAnnotation);
 	} else {
-		XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document = DOMImplementationRegistry::getDOMImplementation(XMLUni::fgZeroLenString)->
+        XSAnnotation* annot;
+        annot = annotation;
+
+        while (annot) {
+		    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document = DOMImplementationRegistry::getDOMImplementation(XMLUni::fgZeroLenString)->
                 createDocument();
-		annotation->writeAnnotation((DOMNode*)document, XSAnnotation::W3C_DOM_DOCUMENT);
-		DOMElement* elem = document->getDocumentElement();
-		sendIndentedElement(PSVIUni::fgAnnotation);
-		processDOMElement(PSVIUni::fgApplicationInformation, elem, PSVIUni::fgAppinfo);
-		processDOMElement(PSVIUni::fgUserInformation, elem, PSVIUni::fgDocumentation);
-		processDOMAttributes(elem->getAttributes());
-		sendUnindentedElement(PSVIUni::fgAnnotation);
-        document->release();
+		    annot->writeAnnotation((DOMNode*)document, XSAnnotation::W3C_DOM_DOCUMENT);
+		    DOMElement* elem = document->getDocumentElement();
+		    sendIndentedElement(PSVIUni::fgAnnotation);
+		    processDOMElement(PSVIUni::fgApplicationInformation, elem, PSVIUni::fgAppinfo);
+		    processDOMElement(PSVIUni::fgUserInformation, elem, PSVIUni::fgDocumentation);
+		    processDOMAttributes(elem->getAttributes());
+		    sendUnindentedElement(PSVIUni::fgAnnotation);
+            document->release();
+            annot = annot->getNext();
+        }
 	}
 }
 

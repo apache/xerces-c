@@ -1281,7 +1281,8 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     }
     else if (!XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString)
          ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
-         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3))
+         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3)
+         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString4))
     {
         fMemoryManager->deallocate(inputEncoding);
 

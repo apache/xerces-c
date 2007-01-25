@@ -167,6 +167,9 @@ XMLMutex*           gXMLCleanupListMutex = 0;
 // ---------------------------------------------------------------------------
 XMLNetAccessor*         XMLPlatformUtils::fgNetAccessor = 0;
 XMLTransService*        XMLPlatformUtils::fgTransService = 0;
+#ifdef OS390
+XMLTransService*        XMLPlatformUtils::fgTransService2 = 0;
+#endif
 PanicHandler*           XMLPlatformUtils::fgUserPanicHandler = 0;
 PanicHandler*           XMLPlatformUtils::fgDefaultPanicHandler = 0;
 MemoryManager*          XMLPlatformUtils::fgMemoryManager = 0;

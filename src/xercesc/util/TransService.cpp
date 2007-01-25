@@ -464,6 +464,15 @@ void XMLTransService::initTransService()
             , false
         )
     );
+    gMappings->put
+    (
+		(void*)XMLUni::fgUCS4EncodingString4,
+        new EEndianNameMapFor<XMLUCS4Transcoder>
+        (
+            XMLUni::fgUCS4EncodingString4
+            , false
+        )
+    );
 
     //
     //  Add in our mappings for IBM037, and the one alias we support for

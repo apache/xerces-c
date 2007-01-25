@@ -105,6 +105,7 @@ public :
     static const XMLCh fgUCS4EncodingString[];
     static const XMLCh fgUCS4EncodingString2[];
     static const XMLCh fgUCS4EncodingString3[];
+    static const XMLCh fgUCS4EncodingString4[];
     static const XMLCh fgUCS4BEncodingString[];
     static const XMLCh fgUCS4BEncodingString2[];
     static const XMLCh fgUCS4LEncodingString[];

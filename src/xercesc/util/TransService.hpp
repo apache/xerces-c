@@ -150,6 +150,9 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected virtual methods.
     // -----------------------------------------------------------------------
+#ifdef OS390
+    friend class Uniconv390TransService;
+#endif
     virtual XMLTranscoder* makeNewXMLTranscoder
     (
         const   XMLCh* const            encodingName

@@ -191,7 +191,10 @@ else {
    fCaseConverter->ftolowerhand=UNICONV_NOHANDLE;
 }
 
-   fICUService = new ICUTransService;
+   if ((gForceTranscode == MUST_USE_ICU) |
+       (gForceTranscode == MUST_USE_ICU_SRC_OFFS)) {
+         XMLPlatformUtils::fgTransService2 = new ICUTransService;
+   }
 
    gViewTranscoder = false;
    if ( !strcmp(getenv("_IXM_VIEW_CONVERSION"),"YES") )
@@ -218,8 +221,8 @@ Uniconv390TransService::~Uniconv390TransService()
       delete fCaseConverter;
       fCaseConverter=0;
    }
-   if (fICUService) {
-    delete  fICUService;
+   if (XMLPlatformUtils::fgTransService2) {
+    delete  XMLPlatformUtils::fgTransService2;
    }
 }
 
@@ -277,7 +280,13 @@ int Uniconv390TransService::compareIString(const   XMLCh* const    comp1
    }
    // check if unicode services does not support upper casing again, then call ICU.
    if (fCaseConverter->ftoupperhand == UNICONV_ERROR) {
-      return fICUService->compareIString(comp1,comp2);
+      if (!XMLPlatformUtils::fgTransService2) {
+         XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+         if (!XMLPlatformUtils::fgTransService2) {
+            XMLPlatformUtils::fgTransService2 = new ICUTransService;
+         }
+      }
+      return XMLPlatformUtils::fgTransService2->compareIString(comp1,comp2);
    }
    return 0;
 }
@@ -343,7 +352,13 @@ int Uniconv390TransService::compareNIString(const  XMLCh* const    comp1
    }
    // check if unicode services does not support upper casing, then call ICU.
    if (fCaseConverter->ftoupperhand == UNICONV_ERROR) {
-      return fICUService->compareNIString(comp1,comp2,maxChars);
+      if (!XMLPlatformUtils::fgTransService2) {
+         XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+         if (!XMLPlatformUtils::fgTransService2) {
+            XMLPlatformUtils::fgTransService2 = new ICUTransService;
+         }
+      }
+      return XMLPlatformUtils::fgTransService2->compareNIString(comp1,comp2,maxChars);
    }
    return 0;
 }
@@ -391,7 +406,13 @@ void Uniconv390TransService::upperCase(XMLCh* const toUpperCase) const
       }
    }
    if (fCaseConverter->ftoupperhand==UNICONV_ERROR) {
-     return fICUService->upperCase(toUpperCase);
+     if (!XMLPlatformUtils::fgTransService2) {
+          XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+          if (!XMLPlatformUtils::fgTransService2) {
+             XMLPlatformUtils::fgTransService2 = new ICUTransService;
+          }
+     }
+     return XMLPlatformUtils::fgTransService2->upperCase(toUpperCase);
    }
 }
 
@@ -426,7 +447,13 @@ void Uniconv390TransService::lowerCase(XMLCh* const toLowerCase) const
       }
    }
    if (fCaseConverter->ftolowerhand==UNICONV_ERROR) {
-     return fICUService->lowerCase(toLowerCase);
+     if (!XMLPlatformUtils::fgTransService2) {
+        XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+        if (!XMLPlatformUtils::fgTransService2) {
+           XMLPlatformUtils::fgTransService2 = new ICUTransService;
+        }
+     }
+     return XMLPlatformUtils::fgTransService2->lowerCase(toLowerCase);
    }
 }
 
@@ -439,7 +466,13 @@ DBGPRINTF2("makeNewLCPTranscoder() localencoding=%s \n",nl_langinfo(CODESET));
        (gForceTranscode == MUST_USE_ICU_SRC_OFFS)) {
       if (gViewTranscoder)
          printf("IXM1004I LCP - Using ICU - %s\n",nl_langinfo(CODESET));
-      fLCPTranscoder = fICUService->makeNewLCPTranscoder();
+      if (!XMLPlatformUtils::fgTransService2) {
+         XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+         if (!XMLPlatformUtils::fgTransService2) {
+            XMLPlatformUtils::fgTransService2 = new ICUTransService;
+         }
+      }
+      fLCPTranscoder = XMLPlatformUtils::fgTransService2->makeNewLCPTranscoder();
    } else {
       char codepage[32];
       sprintf(codepage,"%s-s390", nl_langinfo(CODESET));
@@ -454,7 +487,13 @@ DBGPRINTF2("makeNewLCPTranscoder() localencoding=%s \n",nl_langinfo(CODESET));
          if (gForceTranscode != MUST_USE_UNICONV) {
             if (gViewTranscoder)
                printf("IXM1006I LCP - Using ICU - %s\n",nl_langinfo(CODESET));
-            fLCPTranscoder = fICUService->makeNewLCPTranscoder();
+            if (!XMLPlatformUtils::fgTransService2) {
+               XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+               if (!XMLPlatformUtils::fgTransService2) {
+                  XMLPlatformUtils::fgTransService2 = new ICUTransService;
+               }
+            }
+            fLCPTranscoder = XMLPlatformUtils::fgTransService2->makeNewLCPTranscoder();
          }
       }
    }
@@ -478,7 +517,13 @@ DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSi
        (gForceTranscode == MUST_USE_ICU_SRC_OFFS)) {
       if (gViewTranscoder)
          printf("IXM1001I XML - Using ICU - %s\n",localname);
-      return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
+      if (!XMLPlatformUtils::fgTransService2) {
+         XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+         if (!XMLPlatformUtils::fgTransService2) {
+            XMLPlatformUtils::fgTransService2 = new ICUTransService;
+         }
+      }
+      return XMLPlatformUtils::fgTransService2->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
    }
 
    uniconvconverter *tconv=addConverter(localname,resValue);
@@ -490,7 +535,13 @@ DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSi
       else {
          if (gViewTranscoder)
             printf("IXM1002I XML - Using ICU - %s\n",localname);
-         return fICUService->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
+         if (!XMLPlatformUtils::fgTransService2) {
+            XMLMutexLock lockConverter(&fCaseConverter->fcaseMutex);
+            if (!XMLPlatformUtils::fgTransService2) {
+               XMLPlatformUtils::fgTransService2 = new ICUTransService;
+            }
+         }
+         return XMLPlatformUtils::fgTransService2->makeNewXMLTranscoder(encodingName,resValue,blockSize, manager);
       }
    }
 
@@ -742,6 +793,15 @@ void Uniconv390TransService::initTransService()
            new EEndianNameMapFor<XMLUCS4Transcoder>
            (
                XMLUni::fgUCS4EncodingString3
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUCS4EncodingString4,
+           new EEndianNameMapFor<XMLUCS4Transcoder>
+           (
+               XMLUni::fgUCS4EncodingString4
                , false
            )
        );
@@ -1008,6 +1068,15 @@ void Uniconv390TransService::initTransService()
            new EEndianNameMapFor<XMLUCS4Transcoder>
            (
                XMLUni::fgUCS4EncodingString3
+               , false
+           )
+       );
+       gMappings->put
+       (
+   		(void*)XMLUni::fgUCS4EncodingString4,
+           new EEndianNameMapFor<XMLUCS4Transcoder>
+           (
+               XMLUni::fgUCS4EncodingString4
                , false
            )
        );

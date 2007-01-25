@@ -356,6 +356,11 @@ const XMLCh XMLUni::fgUCS4EncodingString3[] =
     chLatin_U, chLatin_C, chLatin_S, chUnderscore, chDigit_4, chNull
 };
 
+const XMLCh XMLUni::fgUCS4EncodingString4[] =
+{
+    chLatin_U, chLatin_T, chLatin_F, chDash, chDigit_3, chDigit_2, chNull
+};
+
 const XMLCh XMLUni::fgUCS4BEncodingString[] =
 {
     chLatin_U, chLatin_C, chLatin_S, chDash, chDigit_4, chSpace, chOpenParen, chLatin_B, chLatin_E, chCloseParen, chNull

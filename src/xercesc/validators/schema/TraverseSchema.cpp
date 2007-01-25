@@ -1012,6 +1012,7 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
         contentSpecNode.release();
         bool seeParticle = false;
+        bool wasAny = false;
         const XMLCh* childName = child->getLocalName();
 
         if (XMLString::equals(childName, SchemaSymbols::fgELT_ELEMENT)) {
@@ -1065,6 +1066,7 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
 
             contentSpecNode.reset(traverseAny(child));
             seeParticle = true;
+            wasAny = true;
         }
         else {
             reportSchemaError(child, XMLUni::fgValidityDomain, XMLValid::GroupContentRestricted, childName);
@@ -1076,6 +1078,9 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
 
         if (seeParticle) {
             checkMinMax(contentSpecNode.get(), child, Not_All_Context);
+            if (wasAny && contentSpecNode.get()->getMaxOccurs() == 0) {
+                contentSpecNode.reset(0);
+            }
         }
 
         if (left.get() == 0) {
@@ -2625,7 +2630,10 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
     // check annotation
     const DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);    
-    if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
+    // Put annotations on all elements for the situation where there is a group of
+    // elements and not all have annotations.
+    //if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
+    if (!fAnnotation && fScanner->getGenerateSyntheticAnnotations())
     {
         fAnnotation = generateSyntheticAnnotation(elem, fNonXSAttList);        
     }
@@ -5566,10 +5574,15 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
     // that is, make sure that the type we're deriving has some relatoinship
     // to substitutionGroupElt's type.
     else if (typeInfo) { // do complexType case ...need testing
+        
+        ComplexTypeInfo* subsTypeInfo = subsElemDecl->getComplexTypeInfo();
+
+        if (subsTypeInfo == typeInfo)
+            return true;
 
         int derivationMethod = typeInfo->getDerivedBy();
 
-        if (typeInfo->getContentType() == SchemaElementDecl::Simple) {  // take care of complexType based on simpleType case...
+        if (subsTypeInfo == 0) {  // take care of complexType based on simpleType case...
 
             DatatypeValidator* elemDV = typeInfo->getDatatypeValidator();
             DatatypeValidator* subsValidator = subsElemDecl->getDatatypeValidator();
@@ -5587,11 +5600,6 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
             }
         }
         else { // complex content
-
-            ComplexTypeInfo* subsTypeInfo = subsElemDecl->getComplexTypeInfo();
-
-            if (subsTypeInfo == typeInfo)
-                return true;
 
             const ComplexTypeInfo* elemTypeInfo = typeInfo;
 
@@ -5611,15 +5619,17 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
     }
     else if (validator) { // do simpleType case...
 
-        // first, check for type relation.
-        DatatypeValidator* subsValidator = subsElemDecl->getDatatypeValidator();
+        if (!subsElemDecl->getComplexTypeInfo()) {
+            // first, check for type relation.
+            DatatypeValidator* subsValidator = subsElemDecl->getDatatypeValidator();
 
-        if (subsValidator == validator) {
-            return true;
-        }
-        else if (subsValidator && subsValidator->isSubstitutableBy(validator)
-            && ((subsElemDecl->getFinalSet() & SchemaSymbols::XSD_RESTRICTION) == 0)) {
+            if (subsValidator == validator) {
                 return true;
+            }
+            else if (subsValidator && subsValidator->isSubstitutableBy(validator)
+                && ((subsElemDecl->getFinalSet() & SchemaSymbols::XSD_RESTRICTION) == 0)) {
+                return true;
+            }
         }
     }
     else // validator==0 && typeInfo==0 -- no checking
@@ -6304,7 +6314,15 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         }
     }
     else if (typeInfo->getContentSpec() == 0) {
-        typeInfo->setContentType(SchemaElementDecl::Empty);
+        if ((typeDerivedBy == SchemaSymbols::XSD_EXTENSION) &&
+             baseTypeInfo) {
+            typeInfo->setBaseDatatypeValidator(baseTypeInfo->getBaseDatatypeValidator());
+            typeInfo->setDatatypeValidator(baseTypeInfo->getDatatypeValidator());
+            typeInfo->setContentType(baseTypeInfo->getContentType());
+        }
+        else {
+            typeInfo->setContentType(SchemaElementDecl::Empty);
+        }
     }
     else {
         typeInfo->setContentType(SchemaElementDecl::Children);
