@@ -1682,7 +1682,8 @@ void DOMWriterImpl::processBOM()
     }
     else if ((XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString)  == 0) ||
              (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString2) == 0) ||
-             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString3) == 0)  )
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString3) == 0) ||
+             (XMLString::compareIStringASCII(fEncoding, XMLUni::fgUCS4EncodingString4) == 0)  )
     {
 #if defined(ENDIANMODE_LITTLE)
         fFormatter->writeBOM(BOM_ucs4le, 4);

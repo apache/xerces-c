@@ -1796,7 +1796,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         }
                     }
 
-                    grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+                    SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
                     XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
                     gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
                     gramDesc->setLocationHints(srcToFill->getSystemId());
@@ -1805,7 +1805,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     (
                         root
                         , fURIStringPool
-                        , (SchemaGrammar*) grammar
+                        , grammar
                         , fGrammarResolver
                         , this
                         , srcToFill->getSystemId()

@@ -93,6 +93,9 @@ public :
       * among parser instances within that process.
       */
     static XMLTransService*     fgTransService;
+#ifdef OS390
+    static XMLTransService*     fgTransService2;
+#endif
 
     /** The Panic Handler
       *
