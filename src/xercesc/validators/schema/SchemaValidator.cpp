@@ -961,7 +961,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
     XMLReader* fCurReader = getReaderMgr()->getCurrentReader();
-    
+
     if ((wsFacet==DatatypeValidator::COLLAPSE) && fTrailing) {
         nextCh = *srcPtr;
         if (!fCurReader->isWhitespace(nextCh))
@@ -1427,14 +1427,6 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
         return;
     }
 
-    unsigned int baseURI = baseSpecNode->getElement()->getURI();
-    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
-    const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
-
-    if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NameTypeOK1, fMemoryManager);        
-    }
-
     SchemaGrammar* aGrammar = currentGrammar;
     const XMLCh* schemaURI = fGrammarResolver->getStringPool()->getValueForId(derivedURI);
 
@@ -1445,6 +1437,8 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     if (!aGrammar) { //something is wrong
         return;
     }
+   
+    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();    
 
     SchemaElementDecl* derivedElemDecl = findElement(derivedScope, derivedURI, derivedName, aGrammar);
 
@@ -1452,6 +1446,8 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
         return;
     }
 
+	const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
+	unsigned int baseURI = baseSpecNode->getElement()->getURI();
     bool subsGroup = false;
 
     if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
@@ -1470,7 +1466,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
         }
 
         subsGroup = true;
-    }
+    } 
 
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
@@ -1644,16 +1640,17 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
                                        ValueVectorOf<ContentSpecNode*>* const baseNodes,
                                        const ComplexTypeInfo* const baseInfo) {
 
-    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();   
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();    
     bool toLax = false;
 
     //Treat the element as if it were in a group of the same variety as base
     ContentSpecNode derivedGroupNode(baseType, derivedSpecNodeIn, 0, false, true, fMemoryManager);
     const ContentSpecNode* const derivedSpecNode = &derivedGroupNode;
-
+    
     if ((baseSpecNode->getType() & 0x0f) == ContentSpecNode::Choice) {
         toLax = true;
     }
+
     // Instead of calling this routine, inline it
     // checkRecurse(currentGrammar, &derivedGroupNode, derivedScope, &derivedNodes,
     //             baseSpecNode, baseScope, baseNodes, baseInfo, toLax);
@@ -1715,7 +1712,6 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
     if (codeToThrow != XMLExcepts::NoError) {
         ThrowXMLwithMemMgr(RuntimeException, codeToThrow, fMemoryManager);
     }
-
 }
 
 void
@@ -1738,7 +1734,7 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
     XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
     unsigned int count1= derivedNodes->size();
     unsigned int count2= baseNodes->size();
-    unsigned int current = 0;
+    unsigned int current = 0;    
 
     for (unsigned int i=0; i<count1; i++) {
 
@@ -1778,9 +1774,8 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
     // in case of Sequence or All
     if (!toLax && codeToThrow == XMLExcepts::NoError) {
         for (unsigned int j = current; j < count2; j++) {
-            if (baseNodes->elementAt(j)->getMinTotalRange()) { //!emptiable
-
-                codeToThrow =  XMLExcepts::PD_Recurse2;
+            if (baseNodes->elementAt(j)->getMinTotalRange()) { //!emptiable                
+                codeToThrow =  XMLExcepts::PD_Recurse2;                
                 break;
             }
         }
