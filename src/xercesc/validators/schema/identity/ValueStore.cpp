@@ -154,7 +154,7 @@ void ValueStore::endValueScope() {
     // do we have enough values?
     if ((fValuesCount != fIdentityConstraint->getFieldCount()) && fDoReportError) {
 
-        if(fIdentityConstraint->getType()==IdentityConstraint::KEY)
+        if(fIdentityConstraint->getType()==IdentityConstraint::ICType_KEY)
         {
 			fScanner->getValidator()->emitError(XMLValid::IC_KeyNotEnoughValues,
                 fIdentityConstraint->getElementName(), fIdentityConstraint->getIdentityConstraintName());
