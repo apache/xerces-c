@@ -584,13 +584,6 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fAutoValidation
-    //      Whether validation will be enabled in case a schema reference is found
-    //
-    //  fValidation
-    //      Whether validation will be enabled (if fAutoValidation has been set, 
-    //      setting it is a no-op)
-    //
     //  fEntityResolver
     //      The installed DOM entity resolver, if any. Null if none.
     //
@@ -615,8 +608,6 @@ private :
     //      A list of the parameters that can be set, including the ones
     //      specific of Xerces
     //-----------------------------------------------------------------------
-    bool                        fAutoValidation;
-    bool                        fValidation;
     DOMLSResourceResolver*      fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
     DOMErrorHandler*            fErrorHandler;

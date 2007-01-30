@@ -76,8 +76,6 @@ DOMLSParserImpl::DOMLSParserImpl( XMLValidator* const   valToAdopt
                               , XMLGrammarPool* const gramPool) :
 
 AbstractDOMParser(valToAdopt, manager, gramPool)
-, fAutoValidation(false)
-, fValidation(false)
 , fEntityResolver(0)
 , fXMLEntityResolver(0)
 , fErrorHandler(0)
@@ -257,9 +255,7 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidate) == 0) 
     {
-        fValidation = state;
-
-        if (fValidation) {
+        if (state) {
             if (getValidationScheme() == AbstractDOMParser::Val_Never)
                 setValidationScheme(AbstractDOMParser::Val_Always);
         }
@@ -269,9 +265,7 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0) 
     {
-        fAutoValidation = state;
-
-        if (fAutoValidation) {
+        if (state) {
             setValidationScheme(AbstractDOMParser::Val_Auto);
         }
         else {
@@ -442,11 +436,11 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidate) == 0) 
     {
-        return (void*)fValidation;
+        return (void*)(getValidationScheme() != AbstractDOMParser::Val_Never);
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0) 
     {
-        return (void*)fAutoValidation;
+        return (void*)(getValidationScheme() == AbstractDOMParser::Val_Auto);
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMWellFormed) == 0) 
     {
