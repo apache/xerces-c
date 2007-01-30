@@ -5158,7 +5158,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         XMLCh* token = tokenizer.nextToken();
 
         if (XMLString::equals(token, SchemaSymbols::fgELT_UNION)
-            && finalType == S_Final) {
+            && (finalType == S_Final || finalType == ECS_Final)) {
 
             if ((finalSet & SchemaSymbols::XSD_UNION) == 0) {
                 finalSet += SchemaSymbols::XSD_UNION;
@@ -5168,7 +5168,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
             }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)
-                 && finalType != S_Final) {
+                 && (finalType == EC_Final || finalType == ECS_Final)) {
 
             if ((finalSet & SchemaSymbols::XSD_EXTENSION) == 0) {
                 finalSet += SchemaSymbols::XSD_EXTENSION;
@@ -5178,7 +5178,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
             }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgELT_LIST)
-                 && finalType == S_Final) {
+                 && (finalType == S_Final || finalType == ECS_Final)) {
 
             if ((finalSet & SchemaSymbols::XSD_LIST) == 0 ) {
                 finalSet += SchemaSymbols::XSD_LIST;
