@@ -227,21 +227,21 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 
     // see if this.fValidator is derived from value.fValidator:
     DatatypeValidator* tempVal = dv1;
-    for(; !tempVal || tempVal == dv2; tempVal = tempVal->getBaseValidator()) ;
+    for(; tempVal != NULL && tempVal != dv2; tempVal = tempVal->getBaseValidator()) ;
 
     if (tempVal) { // was derived!
         return ((dv2->compare(val1, val2, fMemoryManager)) == 0);
     }
 
     // see if value.fValidator is derived from this.fValidator:
-    for(tempVal = dv2; !tempVal || tempVal == dv1; tempVal = tempVal->getBaseValidator()) ;
+    for(tempVal = dv2; tempVal != NULL && tempVal != dv1; tempVal = tempVal->getBaseValidator()) ;
 
     if(tempVal) { // was derived!
         return ((dv1->compare(val1, val2, fMemoryManager)) == 0);
     }
 
-    // if we're here it means the types weren't related.  Must fall back to strings:
-    return (XMLString::equals(val1, val2));
+    // if we're here it means the types weren't related. They are different:
+    return false;
 }
 
 
