@@ -3195,6 +3195,10 @@ void IGXMLScanner::processSchemaLocation(XMLCh* const schemaLoc)
     while (*locStr)
     {
         do {
+            // Do we have an escaped character ?
+            if (*locStr == 0xFFFF)
+                continue;
+
             if (!curReader->isWhitespace(*locStr))
                break;
 
@@ -3206,6 +3210,9 @@ void IGXMLScanner::processSchemaLocation(XMLCh* const schemaLoc)
             fLocationPairs->addElement(locStr);
 
             while (*++locStr) {
+                // Do we have an escaped character ?
+                if (*locStr == 0xFFFF)
+                    continue;
                 if (curReader->isWhitespace(*locStr))
                     break;
             }
