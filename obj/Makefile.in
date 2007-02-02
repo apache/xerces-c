@@ -60,7 +60,7 @@ host_triplet = @host@
 LIBOBJDIR = ../lib/
 DIST_COMMON = $(srcdir)/../version.incl $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
-@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_1 = -L${top_srcdir}/obj/.libs -lXercesMessages$(VER)
+@XERCES_USE_MSGLOADER_ICU_TRUE@am__append_1 = -L${top_builddir}/obj/.libs -lXercesMessages$(VER)
 subdir = obj
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acx_pthread.m4 \
@@ -99,7 +99,8 @@ am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libxerces_la_DEPENDENCIES = ${src}/libsrc.la ${lib}/libcompat.la
+libxerces_la_DEPENDENCIES = ${top_builddir}/src/libsrc.la \
+	${top_builddir}/lib/libcompat.la
 am_libxerces_la_OBJECTS =
 libxerces_la_OBJECTS = $(am_libxerces_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/src/xercesc/util
@@ -303,12 +304,10 @@ target_alias = @target_alias@
 VER = 3_0_0
 VER_DOTTED = 3.0
 WIN_MSG_VER = 3_0
-src = ${top_srcdir}/src
-lib = ${top_srcdir}/lib
 lib_LTLIBRARIES = libxerces.la
 libxerces_la_SOURCES = 
 nodist_EXTRA_libxerces_la_SOURCES = dummyfile-to-force-cpp-linking.cpp
-libxerces_la_LIBADD = ${src}/libsrc.la ${lib}/libcompat.la
+libxerces_la_LIBADD = ${top_builddir}/src/libsrc.la ${top_builddir}/lib/libcompat.la
 libxerces_la_LDFLAGS = -release ${PACKAGE_VERSION} $(am__append_1)
 all: all-am
 

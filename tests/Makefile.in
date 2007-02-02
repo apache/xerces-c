@@ -99,60 +99,60 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_DOMMemTest_OBJECTS = src/DOM/DOMMemTest/DOMMemTest.$(OBJEXT)
 DOMMemTest_OBJECTS = $(am_DOMMemTest_OBJECTS)
 DOMMemTest_LDADD = $(LDADD)
-DOMMemTest_DEPENDENCIES = ../obj/libxerces.la
+DOMMemTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_DOMTest_OBJECTS = src/DOM/DOMTest/DTest.$(OBJEXT)
 DOMTest_OBJECTS = $(am_DOMTest_OBJECTS)
 DOMTest_LDADD = $(LDADD)
-DOMTest_DEPENDENCIES = ../obj/libxerces.la
+DOMTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_DOMTraversalTest_OBJECTS = src/DOM/Traversal/Traversal.$(OBJEXT)
 DOMTraversalTest_OBJECTS = $(am_DOMTraversalTest_OBJECTS)
 DOMTraversalTest_LDADD = $(LDADD)
-DOMTraversalTest_DEPENDENCIES = ../obj/libxerces.la
+DOMTraversalTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_DOMTypeInfoTest_OBJECTS = src/DOM/TypeInfo/TypeInfo.$(OBJEXT)
 DOMTypeInfoTest_OBJECTS = $(am_DOMTypeInfoTest_OBJECTS)
 DOMTypeInfoTest_LDADD = $(LDADD)
-DOMTypeInfoTest_DEPENDENCIES = ../obj/libxerces.la
+DOMTypeInfoTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_EncodingTest_OBJECTS = src/EncodingTest/EncodingTest.$(OBJEXT)
 EncodingTest_OBJECTS = $(am_EncodingTest_OBJECTS)
 EncodingTest_LDADD = $(LDADD)
-EncodingTest_DEPENDENCIES = ../obj/libxerces.la
+EncodingTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_InitTermTest_OBJECTS = src/InitTermTest/InitTermTest.$(OBJEXT)
 InitTermTest_OBJECTS = $(am_InitTermTest_OBJECTS)
 InitTermTest_LDADD = $(LDADD)
-InitTermTest_DEPENDENCIES = ../obj/libxerces.la
+InitTermTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_MemHandlerTest_OBJECTS =  \
 	src/MemHandlerTest/MemoryMonitor.$(OBJEXT) \
 	src/MemHandlerTest/SimpleHashPtr.$(OBJEXT)
 MemHandlerTest_OBJECTS = $(am_MemHandlerTest_OBJECTS)
 MemHandlerTest_LDADD = $(LDADD)
-MemHandlerTest_DEPENDENCIES = ../obj/libxerces.la
+MemHandlerTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_NetAccessorTest_OBJECTS =  \
 	src/NetAccessorTest/NetAccessorTest.$(OBJEXT)
 NetAccessorTest_OBJECTS = $(am_NetAccessorTest_OBJECTS)
 NetAccessorTest_LDADD = $(LDADD)
-NetAccessorTest_DEPENDENCIES = ../obj/libxerces.la
+NetAccessorTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_Normalizer_OBJECTS = src/DOM/Normalizer/Normalizer.$(OBJEXT)
 Normalizer_OBJECTS = $(am_Normalizer_OBJECTS)
 Normalizer_LDADD = $(LDADD)
-Normalizer_DEPENDENCIES = ../obj/libxerces.la
+Normalizer_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_RangeTest_OBJECTS = src/DOM/RangeTest/RangeTest.$(OBJEXT)
 RangeTest_OBJECTS = $(am_RangeTest_OBJECTS)
 RangeTest_LDADD = $(LDADD)
-RangeTest_DEPENDENCIES = ../obj/libxerces.la
+RangeTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_ThreadTest_OBJECTS = src/ThreadTest/ThreadTest.$(OBJEXT)
 ThreadTest_OBJECTS = $(am_ThreadTest_OBJECTS)
 ThreadTest_LDADD = $(LDADD)
-ThreadTest_DEPENDENCIES = ../obj/libxerces.la
+ThreadTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_XSValueTest_OBJECTS = src/XSValueTest/XSValueTest.$(OBJEXT)
 XSValueTest_OBJECTS = $(am_XSValueTest_OBJECTS)
 XSValueTest_LDADD = $(LDADD)
-XSValueTest_DEPENDENCIES = ../obj/libxerces.la
+XSValueTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 am_XSerializerTest_OBJECTS =  \
 	src/XSerializerTest/XSerializerHandlers.$(OBJEXT) \
 	src/XSerializerTest/XSerializerTest.$(OBJEXT)
 XSerializerTest_OBJECTS = $(am_XSerializerTest_OBJECTS)
 XSerializerTest_LDADD = $(LDADD)
-XSerializerTest_DEPENDENCIES = ../obj/libxerces.la
+XSerializerTest_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/src/xercesc/util
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -346,8 +346,10 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-LDADD = ../obj/libxerces.la
-AM_CPPFLAGS = -I${top_srcdir}/src
+LDADD = ${top_builddir}/obj/libxerces.la
+# the  -I${top_builddir}/src is needed to pick the xercesc/util/Xerces_autoconf_config.hpp 
+# header file when doing out-of-tree builds
+AM_CPPFLAGS = -I${top_builddir}/src -I${top_srcdir}/src
 
 # Doesn't compile under gcc4 for some reason
 # dcargill says this is obsolete and we can delete it.
