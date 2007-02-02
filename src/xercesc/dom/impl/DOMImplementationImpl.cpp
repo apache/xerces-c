@@ -61,6 +61,8 @@ static const XMLCh  gRange[] =     // Points to "Range"
         {chLatin_R, chLatin_a, chLatin_n, chLatin_g, chLatin_e, chNull};
 static const XMLCh  gLS[] =     // Points to "LS"
         {chLatin_L, chLatin_S, chNull};
+static const XMLCh  gXPath[] =     // Points to "XPath"
+        {chLatin_X, chLatin_P, chLatin_a, chLatin_t, chLatin_h, chNull};
 
 
 // -----------------------------------------------------------------------
@@ -208,6 +210,10 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
         return true;
 
     if (XMLString::compareIStringASCII(feature, gLS) == 0
+        && (anyVersion || version3_0))
+        return true;
+
+    if (XMLString::compareIStringASCII(feature, gXPath) == 0
         && (anyVersion || version3_0))
         return true;
 

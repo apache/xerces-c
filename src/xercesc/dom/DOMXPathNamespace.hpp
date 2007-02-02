@@ -90,7 +90,7 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
-    // Virtual DOMDocument interface
+    // Virtual DOMXPathNamespace interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{

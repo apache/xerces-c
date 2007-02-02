@@ -26,13 +26,21 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// Define a pure interface to allow XercesXPath to work on both NamespaceScope and DOMXPathNSResolver
+class VALIDATORS_EXPORT XercesNamespaceResolver
+{
+public:
+    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefix) = 0;
+};
+
 //
 // NamespaceScope provides a data structure for mapping namespace prefixes
 // to their URI's. The mapping accurately reflects the scoping of namespaces
 // at a particular instant in time.
 //
 
-class VALIDATORS_EXPORT NamespaceScope : public XMemory
+class VALIDATORS_EXPORT NamespaceScope : public XMemory,
+                                         public XercesNamespaceResolver
 {
 public :
     // -----------------------------------------------------------------------
@@ -83,9 +91,9 @@ public :
     void addPrefix(const XMLCh* const prefixToAdd,
                    const unsigned int uriId);
 
-    unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap) const;
-    unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap,
-                                       const int depthLevel) const;
+    unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap, const int depthLevel) const;
+
+    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap);
 
 
     // -----------------------------------------------------------------------
@@ -142,7 +150,7 @@ private :
 //  NamespaceScope: Stack access
 // ---------------------------------------------------------------------------
 inline unsigned int
-NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) const {
+NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) {
 
     return getNamespaceForPrefix(prefixToMap, (int)(fStackTop - 1));
 }

@@ -303,7 +303,10 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSWildcard.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSOutputImpl.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSInputImpl.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLSInputImpl.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathExpressionImpl.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathNSResolverImpl.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathResultImpl.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -670,6 +673,9 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\DOMLSException.cpp" FORMNAME="" UNITNAME="DOMLSException" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMLSOutputImpl.cpp" FORMNAME="" UNITNAME="DOMLSOutputImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMLSInputImpl.cpp" FORMNAME="" UNITNAME="DOMLSInputImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathExpressionImpl.cpp" FORMNAME="" UNITNAME="DOMXPathExpressionImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathNSResolverImpl.cpp" FORMNAME="" UNITNAME="DOMXPathNSResolverImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathResultImpl.cpp" FORMNAME="" UNITNAME="DOMXPathResultImpl.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

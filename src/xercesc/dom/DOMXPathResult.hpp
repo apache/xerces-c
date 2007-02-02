@@ -149,7 +149,7 @@ public:
 
 
     // -----------------------------------------------------------------------
-    // Virtual DOMDocument interface
+    // Virtual DOMXPathResult interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
@@ -159,7 +159,7 @@ public:
      * Returns the boolean value of this result
      * @return booleanValue of type boolean, readonly
      * The value of this boolean result.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not BOOLEAN_TYPE.
      */
 	virtual bool getBooleanValue() const = 0;
@@ -170,8 +170,6 @@ public:
      * Signifies that the iterator has become invalid. True if resultType is 
      * UNORDERED_NODE_ITERATOR_TYPE or ORDERED_NODE_ITERATOR_TYPE and the 
      * document has been modified since this result was returned.
-     * @exception XPathException 
-     * TYPE_ERR: raised if resultType is not NUMBER_TYPE.
      */
 	virtual bool getInvalidIteratorState() const = 0;
 
@@ -182,7 +180,7 @@ public:
      * binding does not directly support the exact IEEE 754 result of the XPath 
      * expression, then it is up to the definition of the binding to specify how 
      * the XPath number is converted to the native binding number.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not NUMBER_TYPE.
      */
 	virtual double getNumberValue() const = 0;
@@ -191,8 +189,6 @@ public:
      * Returns the result type of this result
      * @return resultType 
      * A code representing the type of this result, as defined by the type constants.       
-     * @exception XPathException
-     * TYPE_ERR: raised if resultType is not ANY_UNORDERED_NODE_TYPE or FIRST_ORDERED_NODE_TYPE.
      */
 	virtual short getResultType() const = 0;
     	
@@ -200,7 +196,7 @@ public:
      * Returns the single node value of this result
      * @return singleNodeValue 
      * The value of this single node result, which may be null.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not ANY_UNORDERED_NODE_TYPE or FIRST_ORDERED_NODE_TYPE.
      */
 	virtual DOMNode *getSingleNodeValue() const = 0;
@@ -210,7 +206,7 @@ public:
      * @return snapshotLength 
      * The number of nodes in the result snapshot. Valid values for snapshotItem indices 
      * are 0 to snapshotLength-1 inclusive.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not UNORDERED_NODE_SNAPSHOT_TYPE or 
      * ORDERED_NODE_SNAPSHOT_TYPE.        
      */
@@ -220,15 +216,15 @@ public:
      * Returns the string value of this result
      * @return stringValue 
      * The value of this string result.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not STRING_TYPE.
      */
 	virtual const XMLCh* getStringValue() const = 0;
     
     /**
-     * Iterates and returns the next node from the node set or nullif there are no more nodes.
+     * Iterates and returns the next node from the node set or <code>null</code> if there are no more nodes.
      * @return the next node.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not UNORDERED_NODE_ITERATOR_TYPE or ORDERED_NODE_ITERATOR_TYPE.
      * @exception DOMException
      * INVALID_STATE_ERR: The document has been mutated since the result was returned.	
@@ -242,11 +238,25 @@ public:
      * to the current document if it is mutated.
      * @param index of type unsigned long - Index into the snapshot collection.
      * @return The node at the indexth position in the NodeList, or null if that is not a valid index.
-     * @exception XPathException
+     * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not UNORDERED_NODE_SNAPSHOT_TYPE or ORDERED_NODE_SNAPSHOT_TYPE.	
      */
 	virtual DOMNode* snapshotItem(unsigned long index) const = 0;
 
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this DOMXPathResult is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void              release() const = 0;
     //@}
 };
 

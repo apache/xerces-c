@@ -42,6 +42,8 @@
 #include "DOMNodeIDMap.hpp"
 #include "DOMRangeImpl.hpp"
 #include "DOMTypeInfoImpl.hpp"
+#include "DOMXPathExpressionImpl.hpp"
+#include "DOMXPathNSResolverImpl.hpp"
 
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLChar.hpp>
@@ -420,24 +422,23 @@ void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
 }
 
 
-const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh *, const DOMXPathNSResolver *)
+const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh * expression, const DOMXPathNSResolver *resolver)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
-    return 0;
+    return new (getMemoryManager()) DOMXPathExpressionImpl(expression, resolver, getMemoryManager());
 }
 
-const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *)
-
+const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *nodeResolver)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
-    return 0;
+    return new (this) DOMXPathNSResolverImpl(nodeResolver);
 }
 
-void* DOMDocumentImpl::evaluate(const XMLCh *, DOMNode *, const DOMXPathNSResolver *, 
-                           unsigned short, void* ) 
+void* DOMDocumentImpl::evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
+                           unsigned short type, void* result) 
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
-    return 0;
+    const DOMXPathExpression* expr=createExpression(expression, resolver);
+    result=expr->evaluate(contextNode, type, result);
+    expr->release();
+    return result;
 }
 
 

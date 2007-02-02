@@ -294,7 +294,7 @@ typedef JanitorMemFunCall<XercesXPath>  CleanupType;
 // ---------------------------------------------------------------------------
 XercesXPath::XercesXPath(const XMLCh* const xpathExpr,
                          XMLStringPool* const stringPool,
-                         NamespaceScope* const scopeContext,
+                         XercesNamespaceResolver* const scopeContext,
                          const unsigned int emptyNamespaceId,
                          const bool isSelector,
                          MemoryManager* const manager)
@@ -380,7 +380,7 @@ void XercesXPath::checkForSelectedAttributes() {
 }
 
 void XercesXPath::parseExpression(XMLStringPool* const stringPool,
-                                  NamespaceScope* const scopeContext) {
+                                  XercesNamespaceResolver* const scopeContext) {
 
     unsigned int length = XMLString::stringLen(fExpression);
 

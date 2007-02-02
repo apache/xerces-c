@@ -87,6 +87,7 @@ bool testDocumentFragment(DOMDocument* document);
 
 bool testDocumentType(DOMDocument* document);
 bool testDOMerrors(DOMDocument* document);
+bool testXPath(DOMDocument* document);
 bool testDOMImplementation(DOMDocument* document);
 bool testElement(DOMDocument* document);
 bool testEntity(DOMDocument* document);

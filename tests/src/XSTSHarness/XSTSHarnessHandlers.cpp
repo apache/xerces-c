@@ -172,7 +172,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                 XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " skipped" << XERCES_STD_QUALIFIER endl;
                 return;
             }
-            bool success=true;
+            bool success=true, fatalFailure=false;
             try
             {
                 fErrorHandler.resetErrors();
@@ -181,6 +181,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             }
             catch (const OutOfMemoryException&)
             {
+                fatalFailure=true;
                 XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " ran out of memory" << XERCES_STD_QUALIFIER endl;
                 success=false;
             }
@@ -191,31 +192,42 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             }
             catch (...)
             {
+                fatalFailure=true;
                 XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " crashed" << XERCES_STD_QUALIFIER endl;
                 success=false;
             }
             fTests++;
-            if(success && !fErrorHandler.getSawErrors())
+            if(fatalFailure)
             {
-                if(fCurrentTest.fExpectedResult!=valid)
-                {
-                    // skip the rest of the group, as we had problems with the schema itself
-                    fCurrentTest.fSkipped=true;
-                    fFailures++;
-                    XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
-                    printFile(fCurrentTest.fXSDName);
-                }
+                // skip the rest of the group, as we had problems with the schema itself
+                fCurrentTest.fSkipped=true;
+                fFailures++;
+                printFile(fCurrentTest.fXSDName);
             }
             else
             {
-                if(fCurrentTest.fExpectedResult!=invalid)
+                if(success && !fErrorHandler.getSawErrors())
                 {
-                    // skip the rest of the group, as we had problems with the schema itself
-                    fCurrentTest.fSkipped=true;
-                    fFailures++;
-                    XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
-                    XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
-                    printFile(fCurrentTest.fXSDName);
+                    if(fCurrentTest.fExpectedResult!=valid)
+                    {
+                        // skip the rest of the group, as we had problems with the schema itself
+                        fCurrentTest.fSkipped=true;
+                        fFailures++;
+                        XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
+                        printFile(fCurrentTest.fXSDName);
+                    }
+                }
+                else
+                {
+                    if(fCurrentTest.fExpectedResult!=invalid)
+                    {
+                        // skip the rest of the group, as we had problems with the schema itself
+                        fCurrentTest.fSkipped=true;
+                        fFailures++;
+                        XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
+                        XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
+                        printFile(fCurrentTest.fXSDName);
+                    }
                 }
             }
         }
@@ -228,7 +240,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                 XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " skipped" << XERCES_STD_QUALIFIER endl;
                 return;
             }
-            bool success=true;
+            bool success=true, fatalFailure=false;
             try
             {
                 fErrorHandler.resetErrors();
@@ -236,6 +248,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             }
             catch (const OutOfMemoryException&)
             {
+                fatalFailure=true;
                 XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " ran out of memory" << XERCES_STD_QUALIFIER endl;
                 success=false;
             }
@@ -246,29 +259,39 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             }
             catch (...)
             {
+                fatalFailure=true;
                 XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " crashed" << XERCES_STD_QUALIFIER endl;
                 success=false;
             }
             fTests++;
-            if(success && !fErrorHandler.getSawErrors())
+            if(fatalFailure)
             {
-                if(fCurrentTest.fExpectedResult!=valid)
-                {
-                    fFailures++;
-                    XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
-                    printFile(fCurrentTest.fXSDName);
-                    printFile(fCurrentTest.fXMLName);
-                }
+                fFailures++;
+                printFile(fCurrentTest.fXSDName);
+                printFile(fCurrentTest.fXMLName);
             }
             else
             {
-                if(fCurrentTest.fExpectedResult!=invalid)
+                if(success && !fErrorHandler.getSawErrors())
                 {
-                    fFailures++;
-                    XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
-                    XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
-                    printFile(fCurrentTest.fXSDName);
-                    printFile(fCurrentTest.fXMLName);
+                    if(fCurrentTest.fExpectedResult!=valid)
+                    {
+                        fFailures++;
+                        XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
+                        printFile(fCurrentTest.fXSDName);
+                        printFile(fCurrentTest.fXMLName);
+                    }
+                }
+                else
+                {
+                    if(fCurrentTest.fExpectedResult!=invalid)
+                    {
+                        fFailures++;
+                        XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
+                        XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
+                        printFile(fCurrentTest.fXSDName);
+                        printFile(fCurrentTest.fXMLName);
+                    }
                 }
             }
         }

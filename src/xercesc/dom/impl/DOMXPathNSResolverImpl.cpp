@@ -15,36 +15,33 @@
  * limitations under the License.
  */
 
-/*
- * $Id$
- */
-
-#include "DOMLSException.hpp"
-#include <xercesc/util/XMLDOMMsg.hpp>
+#include "DOMXPathNSResolverImpl.hpp"
+#include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-DOMLSException::DOMLSException()
-: DOMException()
-{      
-}
-
-DOMLSException::DOMLSException(    LSExceptionCode              exCode
-                                 ,       short                  messageCode
-                                 ,       MemoryManager* const   memoryManager)
-: DOMException(exCode, messageCode?messageCode:XMLDOMMsg::DOMLSEXCEPTION_ERRX+exCode-DOMLSException::PARSE_ERR+1, memoryManager)
-{  
-}
-
-DOMLSException::DOMLSException(const DOMLSException &other)
-: DOMException(other)
+DOMXPathNSResolverImpl::DOMXPathNSResolverImpl(DOMNode *nodeResolver):
+ fResolverNode(nodeResolver)
 {
 }
 
-
-DOMLSException::~DOMLSException()
+const XMLCh* DOMXPathNSResolverImpl::lookupNamespaceURI(const XMLCh* prefix) const
 {
+    if (XMLString::equals(prefix, XMLUni::fgXMLString))
+        return XMLUni::fgXMLURIName;
+    if(fResolverNode)
+        return fResolverNode->lookupNamespaceURI(prefix);
+    return NULL;
+}
+
+const XMLCh* DOMXPathNSResolverImpl::lookupPrefix(const XMLCh* URI) const
+{
+    if (XMLString::equals(URI, XMLUni::fgXMLURIName))
+        return XMLUni::fgXMLString;
+    if(fResolverNode)
+        return fResolverNode->lookupPrefix(URI);
+    return NULL;
 }
 
 XERCES_CPP_NAMESPACE_END
-

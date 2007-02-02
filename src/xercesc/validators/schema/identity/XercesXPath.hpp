@@ -29,7 +29,7 @@
 #include <xercesc/util/QName.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
-
+#include <xercesc/validators/schema/NamespaceScope.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -38,8 +38,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class XMLStringPool;
-class NamespaceScope;
-
 
 class VALIDATORS_EXPORT XercesNodeTest : public XSerializable, public XMemory
 {
@@ -262,7 +260,7 @@ public:
     // -----------------------------------------------------------------------
     XercesXPath(const XMLCh* const xpathExpr,
                 XMLStringPool* const stringPool,
-                NamespaceScope* const scopeContext,
+                XercesNamespaceResolver* const scopeContext,
                 const unsigned int emptyNamespaceId,
                 const bool isSelector = false,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -301,7 +299,7 @@ private:
     void cleanUp();
     void checkForSelectedAttributes();
     void parseExpression(XMLStringPool* const stringPool,
-                         NamespaceScope* const scopeContext);
+                         XercesNamespaceResolver* const scopeContext);
 
     // -----------------------------------------------------------------------
     //  Data members

@@ -3143,6 +3143,30 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMXPathExpressionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMXPathExpressionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMXPathNSResolverImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMXPathNSResolverImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMXPathResultImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMXPathResultImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 # End Source File
 # Begin Source File

@@ -871,6 +871,11 @@
             <Message Id="DOMLSEXCEPTION_ERRX" Text="Just an index"/>
             <Message Id="PARSE_ERR" Text="An attempt was made to load a document, or an XML Fragment, using DOMLSParser and the processing has been stopped"/>
             <Message Id="SERIALIZE_ERR" Text="An attempt was made to serialize a DOMNode using DOMLSSerializer and the processing has been stopped"/>
+<!--The following are DOMXPathException error text, same order as DOMXPathException::ExceptionCode enum -->
+<!--DOMXPATHEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMXPathException::ExceptionCode enum -->
+            <Message Id="DOMXPATHEXCEPTION_ERRX" Text="Just an index"/>
+            <Message Id="INVALID_EXPRESSION_ERR" Text="The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax"/>
+            <Message Id="TYPE_ERR" Text="The requested result type is not supported"/>
 <!--The following are other messages related to DOM -->
 <!--Messages used by DOMLSSerializer -->
             <Message Id="Writer_NestedCDATA" Text="Nested CDATA sections"/>

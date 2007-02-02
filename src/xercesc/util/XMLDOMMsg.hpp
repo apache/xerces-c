@@ -39,16 +39,19 @@ public :
       , DOMLSEXCEPTION_ERRX                = 22
       , PARSE_ERR                          = 23
       , SERIALIZE_ERR                      = 24
-      , Writer_NestedCDATA                 = 25
-      , Writer_NotRepresentChar            = 26
-      , Writer_NotRecognizedType           = 27
-      , LSParser_ParseInProgress           = 28
-      , LSParser_ParsingAborted            = 29
-      , F_HighBounds                       = 30
-      , W_LowBounds                        = 31
-      , W_HighBounds                       = 32
-      , E_LowBounds                        = 33
-      , E_HighBounds                       = 34
+      , DOMXPATHEXCEPTION_ERRX             = 25
+      , INVALID_EXPRESSION_ERR             = 26
+      , TYPE_ERR                           = 27
+      , Writer_NestedCDATA                 = 28
+      , Writer_NotRepresentChar            = 29
+      , Writer_NotRecognizedType           = 30
+      , LSParser_ParseInProgress           = 31
+      , LSParser_ParsingAborted            = 32
+      , F_HighBounds                       = 33
+      , W_LowBounds                        = 34
+      , W_HighBounds                       = 35
+      , E_LowBounds                        = 36
+      , E_HighBounds                       = 37
     };
 
     static bool isFatal(const XMLDOMMsg::Codes toCheck)

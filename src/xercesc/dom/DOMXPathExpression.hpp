@@ -63,7 +63,7 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
-    // Virtual DOMDocument interface
+    // Virtual DOMXPathExpression interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{  
@@ -82,25 +82,40 @@ public:
      * serve as the XPath context.
      * @param type of type unsigned short If a specific type is specified, then the result
      * will be coerced to return the specified type relying on XPath conversions and fail 
-     * if the desired coercion is not possible. This must be one of the type codes of <code>XPathResult</code>.
+     * if the desired coercion is not possible. This must be one of the type codes of <code>DOMXPathResult</code>.
      * @param result of type void* The result specifies a specific result object which
      * may be reused and returned by this method. If this is specified as nullor the 
      * implementation does not reuse the specified result, a new result object will be constructed
      * and returned.
-     * For XPath 1.0 results, this object will be of type <code>XPathResult</code>.
+     * For XPath 1.0 results, this object will be of type <code>DOMXPathResult</code>.
      * @return void* The result of the evaluation of the XPath expression.
-     * For XPath 1.0 results, this object will be of type <code>XPathResult</code>.
-     * @exception <code>XPathException</code>
+     * For XPath 1.0 results, this object will be of type <code>DOMXPathResult</code>.
+     * @exception <code>DOMXPathException</code>
      * TYPE_ERR: Raised if the result cannot be converted to return the specified type.
      * @exception <code>DOMException</code>
      * WRONG_DOCUMENT_ERR: The <code>DOMNode</code> is from a document that is not supported by 
      * the <code>XPathEvaluator</code> that created this <code>DOMXPathExpression</code>.
-     * NOT_SUPPORTED_ERR: The Node is not a type permitted as an XPath context node or the 
+     * NOT_SUPPORTED_ERR: The DOMNode is not a type permitted as an XPath context node or the 
      * request type is not permitted by this <code>DOMXPathExpression</code>.
      */
 
     virtual void*          evaluate(DOMNode *contextNode, unsigned short type, void* result) const = 0;
     //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+    /**
+     * Called to indicate that this DOMXPathExpression is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void              release() const = 0;
+    //@}
+
 };
 
 XERCES_CPP_NAMESPACE_END

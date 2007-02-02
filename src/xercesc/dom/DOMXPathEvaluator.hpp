@@ -75,7 +75,7 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
-    // Virtual DOMDocument interface
+    // Virtual DOMXPathEvaluator interface
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
@@ -92,7 +92,7 @@ public:
      * prefix within the expression will result in <code>DOMException</code> being thrown with the
      * code NAMESPACE_ERR.
      * @return <code>XPathExpression</code> The compiled form of the XPath expression.
-     * @exception <code>XPathException</code>
+     * @exception <code>DOMXPathException</code>
      * INVALID_EXPRESSION_ERR: Raised if the expression is not legal according to the 
      * rules of the <code>DOMXPathEvaluator</code>.
      * @exception DOMException
@@ -140,25 +140,25 @@ public:
      * <code>DOMException</code> being thrown with the code NAMESPACE_ERR.
      * @param type of type unsigned short - If a specific type is specified, then 
      * the result will be returned as the corresponding type.
-     * For XPath 1.0 results, this must be one of the codes of the <code>XPathResult</code>
+     * For XPath 1.0 results, this must be one of the codes of the <code>DOMXPathResult</code>
      * interface.
      * @param result of type void* - The result specifies a specific result object
      * which may be reused and returned by this method. If this is specified as 
      * null or the implementation does not reuse the specified result, a new result
      * object will be constructed and returned.
-     * For XPath 1.0 results, this object will be of type <code>XPathResult</code>.
+     * For XPath 1.0 results, this object will be of type <code>DOMXPathResult</code>.
      * @return void* The result of the evaluation of the XPath expression.
-     * For XPath 1.0 results, this object will be of type <code>XPathResult</code>.
-     * @exception <code>XPathException</code>
+     * For XPath 1.0 results, this object will be of type <code>DOMXPathResult</code>.
+     * @exception <code>DOMXPathException</code>
      * INVALID_EXPRESSION_ERR: Raised if the expression is not legal 
      * according to the rules of the <code>DOMXPathEvaluator</code>
      * TYPE_ERR: Raised if the result cannot be converted to return the specified type.
-     * @exception DOMException
+     * @exception <code>DOMException</code>
      * NAMESPACE_ERR: Raised if the expression contains namespace prefixes 
      * which cannot be resolved by the specified <code>XPathNSResolver</code>.
-     * WRONG_DOCUMENT_ERR: The Node is from a document that is not supported 
+     * WRONG_DOCUMENT_ERR: The DOMNode is from a document that is not supported 
      * by this <code>DOMXPathEvaluator</code>.
-     * NOT_SUPPORTED_ERR: The Node is not a type permitted as an XPath context 
+     * NOT_SUPPORTED_ERR: The DOMNode is not a type permitted as an XPath context 
      * node or the request type is not permitted by this <code>DOMXPathEvaluator</code>.
      */
     virtual void* evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver, 

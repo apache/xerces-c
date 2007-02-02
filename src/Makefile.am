@@ -382,6 +382,9 @@ domimpl_headers	= \
 	xercesc/dom/impl/DOMLSSerializerImpl.hpp \
 	xercesc/dom/impl/DOMLSInputImpl.hpp \
 	xercesc/dom/impl/DOMLSOutputImpl.hpp \
+	xercesc/dom/impl/DOMXPathExpressionImpl.hpp \
+	xercesc/dom/impl/DOMXPathNSResolverImpl.hpp \
+	xercesc/dom/impl/DOMXPathResultImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
 							  
 domimpl_sources	= \
@@ -425,6 +428,9 @@ domimpl_sources	= \
 	xercesc/dom/impl/DOMLSSerializerImpl.cpp \
 	xercesc/dom/impl/DOMLSInputImpl.cpp \
 	xercesc/dom/impl/DOMLSOutputImpl.cpp \
+	xercesc/dom/impl/DOMXPathExpressionImpl.cpp \
+	xercesc/dom/impl/DOMXPathNSResolverImpl.cpp \
+	xercesc/dom/impl/DOMXPathResultImpl.cpp \
 	xercesc/dom/impl/XSDElementNSImpl.cpp
 
 

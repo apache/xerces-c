@@ -2728,6 +2728,24 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMTypeInfoImpl.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathExpressionImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathExpressionImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathNSResolverImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathNSResolverImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathResultImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMXPathResultImpl.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp">
 				</File>
 				<File

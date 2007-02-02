@@ -17,28 +17,31 @@
 
 
 #include "DOMXPathException.hpp"
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLMsgLoader.hpp>
+#include <xercesc/util/XMLDOMMsg.hpp>
+#include "impl/DOMImplementationImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMXPathException::DOMXPathException()
-: code((ExceptionCode) 0)
-, msg(0)
+: DOMException()
 {
 }
 
 
-DOMXPathException::DOMXPathException(short exCode, const XMLCh *message)
-: code((ExceptionCode) exCode)
-, msg(message)
+DOMXPathException::DOMXPathException(        short                 exCode
+                                     ,       short                 messageCode
+                                     ,       MemoryManager* const  memoryManager)
+: DOMException(exCode, messageCode?messageCode:XMLDOMMsg::DOMXPATHEXCEPTION_ERRX+exCode-DOMXPathException::INVALID_EXPRESSION_ERR+1, memoryManager)
 {
 }
 
 
 DOMXPathException::DOMXPathException(const DOMXPathException &other)
-: code(other.code)
-, msg(other.msg)
-{        
+: DOMException(other)
+{
 }
 
 

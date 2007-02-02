@@ -83,8 +83,6 @@ public:
     virtual void endElement(const XMLElementDecl& elemDecl,
                             const XMLCh* const elemContent);
 
-protected:
-
     enum
     {
         XP_MATCHED = 1        // matched any way
@@ -93,6 +91,8 @@ protected:
         , XP_MATCHED_DP = 13  // matched some previous (ancestor) node on the
                               // descendant-or-self-axis, but not this node
     };
+
+protected:
 
     // -----------------------------------------------------------------------
     //  Match methods

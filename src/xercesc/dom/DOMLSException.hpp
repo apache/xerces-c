@@ -111,55 +111,12 @@ public:
     virtual ~DOMLSException();
     //@}
 
-    // -----------------------------------------------------------------------
-    //  Getter
-    // -----------------------------------------------------------------------
-    inline const XMLCh* getMessage()    const;
-
-    // -----------------------------------------------------------------------
-    //  Class Types
-    // -----------------------------------------------------------------------
-    /** @name Public variables */
-    //@{
-	 /**
-	  * A code value, from the set defined by the LSExceptionCode enum,
-      * indicating the type of error that occured.
-      */
-    LSExceptionCode   code;
-
-	 /**
-	  * A string value.  Applications may use this field to hold an error
-      * message.  The field value is not set by the DOM implementation,
-      * meaning that the string will be empty when an exception is first
-      * thrown.
-	  */
-    const XMLCh *msg;
-    //@}
-
-protected:
-
-    MemoryManager*  fMemoryManager;
-
-private:
-
-	 /**
-	  * A boolean value.  
-      *   If the message is provided by the applications, it is not adopted.
-      *   If the message is resolved by the DOM implementation, it is owned.
-	  */
-    bool            fMsgOwned;
-
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------    
     DOMLSException & operator = (const DOMLSException &);
 };
-
-inline const XMLCh* DOMLSException::getMessage() const
-{
-    return msg;
-}
 
 XERCES_CPP_NAMESPACE_END
 

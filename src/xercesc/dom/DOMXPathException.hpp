@@ -18,14 +18,14 @@
  * limitations under the License.
  */
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/DOMException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  * @since DOM Level 3
  */
-class CDOM_EXPORT DOMXPathException
+class CDOM_EXPORT DOMXPathException : public DOMException
 {
 public:
     // -----------------------------------------------------------------------
@@ -45,7 +45,10 @@ public:
       * @param code The error code which indicates the exception
       * @param message The string containing the error message
       */
-    DOMXPathException(short code, const XMLCh *message);
+    DOMXPathException( short                 code
+                     , short                 messageCode = 0
+                     , MemoryManager* const  memoryManager = XMLPlatformUtils::fgMemoryManager
+                     );
 
     /**
       * Copy constructor.
@@ -75,7 +78,7 @@ public:
      * ExceptionCode
      * INVALID_EXPRESSION_ERR If the expression has a syntax error or otherwise
      * is not a legal expression according to the rules of the specific 
-     * <code>XPathEvaluator</code> or contains specialized extension functions
+     * <code>DOMXPathEvaluator</code> or contains specialized extension functions
      * or variables not supported by this implementation.
      * TYPE_ERR If the expression cannot be converted to return the specified type.
      */
@@ -83,26 +86,6 @@ public:
 		INVALID_EXPRESSION_ERR = 51,
 		TYPE_ERR = 52
 	};
-    //@}
-
-    // -----------------------------------------------------------------------
-    //  Class Types
-    // -----------------------------------------------------------------------
-    /** @name Public variables */
-    //@{
-	 /**
-	  * A code value, from the set defined by the ExceptionCode enum,
-     * indicating the type of error that occured.
-     */
-    ExceptionCode   code;
-
-	 /**
-	  * A string value.  Applications may use this field to hold an error
-     *  message.  The field value is not set by the DOM implementation,
-     *  meaning that the string will be empty when an exception is first
-     *  thrown.
-	  */
-    const XMLCh *msg;
     //@}
 
 private:

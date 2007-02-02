@@ -169,7 +169,7 @@ DOMNotation*                DOMTest::testNotationNode;
 
 DOMTest::DOMTest()
 {
-};
+}
 
 
 /**
@@ -183,7 +183,7 @@ DOMDocument* DOMTest::createDocument() {
 
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(coreStr);
     return impl->createDocument();
-};
+}
 
 
 /**
@@ -194,7 +194,7 @@ DOMDocument* DOMTest::createDocument() {
  */
 DOMDocumentType* DOMTest::createDocumentType(DOMDocument* doc, XMLCh* name) {
     return doc->createDocumentType(name);    //Replace with a DOMDocumentType* creator
-};
+}
 
 
 /**
@@ -206,7 +206,7 @@ DOMDocumentType* DOMTest::createDocumentType(DOMDocument* doc, XMLCh* name) {
  */
 DOMEntity* DOMTest::createEntity(DOMDocument* doc, XMLCh* name) {
     return doc->createEntity(name);
-};
+}
 
 
 
@@ -219,7 +219,7 @@ DOMEntity* DOMTest::createEntity(DOMDocument* doc, XMLCh* name) {
  */
 DOMNotation* DOMTest::createNotation(DOMDocument* doc, XMLCh* name) {
     return doc->createNotation(name);
-};
+}
 
 
 /**
@@ -702,7 +702,7 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
 
      // docBodyLevel32->getAttributes()->removeNamedItem(testAttribute->getName());    16  // To test removeNamedItem
 
-};  //END OF DOCBUILDER
+}  //END OF DOCBUILDER
 
 
 
@@ -760,7 +760,7 @@ void DOMTest::findTestNodes(DOMDocument* document) {
     }// End of switch
 
     }   // End of while
-};
+}
 
 
 /**
@@ -827,7 +827,7 @@ void DOMTest::findTestNodes(DOMNode* node) {
         default:
             ;
     }// End of switch
-};//End of class
+}//End of class
 
 /**
  *
@@ -896,6 +896,7 @@ int main(int /*argc*/, char ** /*argv*/)
          OK = test.testPI(d);
          OK = test.testText(d);
          OK = test.testDOMerrors(d);
+         OK = test.testXPath(d);
 
          // Null out the static object references in class DOMTest,
          // which will recover their storage.
@@ -956,7 +957,7 @@ int main(int /*argc*/, char ** /*argv*/)
     printf("Test Run Successfully\n");
 
     return 0;
-};
+}
 
 
 /**
@@ -1059,7 +1060,7 @@ bool DOMTest::testAttr(DOMDocument* document)
     if (node->getNodeValue() != 0 && attributeNode->getNodeValue() == 0)
     {
         cloneOK = false;
-    };
+    }
 
     if (node->getNodeValue() != 0 && attributeNode->getNodeValue() != 0)
     {
@@ -1460,7 +1461,7 @@ bool DOMTest::testAttr(DOMDocument* document)
         printf("\n*****The DOMAttr* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
 
-};
+}
 
 
 
@@ -1626,7 +1627,7 @@ bool DOMTest::testCDATASection(DOMDocument* document)
     if (! OK)
         printf("\n*****The DOMCDATASection* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -1892,7 +1893,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
         printf("\n*****The DOMCharacterData method calls listed above failed, all others worked correctly.*****\n");
     charData->setData(resetData); // reset node to original data
     return OK;
-};
+}
 
 
 
@@ -1920,7 +1921,7 @@ bool DOMTest::testChildNodeList(DOMDocument* document)
     if (!OK)
         printf("\n*****The ChildNodeList method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2082,7 +2083,7 @@ bool DOMTest::testComment(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMComment* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2127,7 +2128,7 @@ bool DOMTest::testDeepNodeList(DOMDocument* document)
     if (!OK)
         printf("\n*****The DeepNodeList method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2419,7 +2420,7 @@ bool DOMTest::testDocument(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMDocument* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2474,7 +2475,7 @@ bool DOMTest::testDocumentFragment(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMDocumentFragment* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2652,7 +2653,7 @@ bool DOMTest::testDocumentType(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMDocumentType* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2667,9 +2668,101 @@ bool DOMTest::testDOMerrors(DOMDocument* document) {
     EXCEPTIONSTEST(document->appendChild(testElementNode), DOMException::HIERARCHY_REQUEST_ERR, OK, 201 );
     EXCEPTIONSTEST(testTextNode->appendChild(testTextNode), DOMException::HIERARCHY_REQUEST_ERR, OK, 202 );
     return OK;
-};
+}
 
+#define TEST_VALID_XPATH(xpath, expected, line)   \
+    try \
+    { \
+        XMLCh xpathStr[100]; \
+        XMLString::transcode(xpath,xpathStr,99); \
+        DOMXPathResult* result=(DOMXPathResult*)document->evaluate(xpathStr, document->getDocumentElement(), NULL, DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE, NULL); \
+        if(result->getSnapshotLength() != expected) {  \
+            fprintf(stderr, "DOMDocument::evaluate does not work in line %i (%d nodes instead of %d)\n", line, result->getSnapshotLength(), expected);  \
+            OK = false; \
+        }   \
+        result->release(); \
+    }   \
+    catch(DOMException&) \
+    {   \
+        fprintf(stderr, "DOMDocument::evaluate failed at line %i\n", line); \
+        OK = false; \
+    }
 
+#define TEST_VALID_XPATH_NS(xpath, resolver, expected, line)   \
+    try \
+    { \
+        XMLCh xpathStr[100]; \
+        XMLString::transcode(xpath,xpathStr,99); \
+        DOMXPathResult* result=(DOMXPathResult*)document->evaluate(xpathStr, document->getDocumentElement(), resolver, DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE, NULL); \
+        if(result->getSnapshotLength() != expected) {  \
+            fprintf(stderr, "DOMDocument::evaluate does not work in line %i (%d nodes instead of %d)\n", line, result->getSnapshotLength(), expected);  \
+            OK = false; \
+        }   \
+        result->release(); \
+    }   \
+    catch(DOMException&) \
+    {   \
+        fprintf(stderr, "DOMDocument::evaluate failed at line %i\n", line); \
+        OK = false; \
+    }
+
+#define TEST_INVALID_XPATH(xpath, line)   \
+    try \
+    { \
+        XMLCh xpathStr[100]; \
+        XMLString::transcode(xpath,xpathStr,99); \
+        DOMXPathResult* result=(DOMXPathResult*)document->evaluate(xpathStr, document->getDocumentElement(), NULL, DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE, NULL); \
+        fprintf(stderr, "DOMDocument::evaluate does not work in line %i (invalid XPath)\n", line);  \
+        OK = false; \
+        result->release(); \
+    }   \
+    catch(DOMException& ) \
+    {   \
+    }
+
+#define TEST_VALID_XPATH_SINGLE(xpath, line)   \
+    try \
+    { \
+        XMLCh xpathStr[100]; \
+        XMLString::transcode(xpath,xpathStr,99); \
+        DOMXPathResult* result=(DOMXPathResult*)document->evaluate(xpathStr, document->getDocumentElement(), NULL, DOMXPathResult::FIRST_ORDERED_NODE_TYPE, NULL); \
+        if(result->getSingleNodeValue() == NULL) {  \
+            fprintf(stderr, "DOMDocument::evaluate does not work in line %i (single node not found)\n", line);  \
+            OK = false; \
+        }   \
+        result->release(); \
+    }   \
+    catch(DOMException& ) \
+    {   \
+        fprintf(stderr, "DOMDocument::evaluate failed at line %i\n", line); \
+        OK = false; \
+    }
+
+bool DOMTest::testXPath(DOMDocument* document) {
+    bool OK = true;
+
+    TEST_VALID_XPATH("*", 1, __LINE__);
+    TEST_VALID_XPATH("dFirstElement/dTestBody/dBodyLevel24", 1, __LINE__);
+    TEST_VALID_XPATH("//dBodyLevel34", 1, __LINE__);
+    TEST_VALID_XPATH("/*", 1, __LINE__);
+    TEST_VALID_XPATH("/dFirstElement/dTestBody/dBodyLevel24", 1, __LINE__);
+    TEST_INVALID_XPATH("/dFirstElement//dBodyLevel34", __LINE__);  // the "//" can only be at the beginning
+    TEST_INVALID_XPATH("/dFirstElement/@dFirstElementdFirstElement", __LINE__);   // cannot select attributes
+    TEST_VALID_XPATH("//*", 10, __LINE__);
+    TEST_VALID_XPATH_SINGLE("//*", __LINE__);
+    TEST_INVALID_XPATH("//ns:node", __LINE__);  // "ns" prefix is undefined
+
+    XMLCh tempStr[100];
+    XMLString::transcode("xmlns:ns",tempStr,99);
+    DOMAttr* attr=document->createAttributeNS(XMLUni::fgXMLNSURIName, tempStr);
+    attr->setNodeValue(XMLUni::fgXSAXMLScanner);
+    document->getDocumentElement()->setAttributeNodeNS(attr);
+    const DOMXPathNSResolver* resolver=document->createNSResolver(document->getDocumentElement());
+    TEST_VALID_XPATH_NS("//ns:node", resolver, 0, __LINE__);
+    document->getDocumentElement()->removeAttributeNode(attr);
+
+    return OK;
+}
 
 /**
  * This method tests DOMImplementation methods for the XML DOM implementation
@@ -2707,7 +2800,7 @@ bool DOMTest::testDOMImplementation(DOMDocument* document)
     if (!OK)
         fprintf(stderr, "\n*****The DOMImplementation method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -2800,7 +2893,7 @@ bool DOMTest::testElement(DOMDocument* document)
     {
         fprintf(stderr, "DOMElement* Tests Failure 001\n");
         OK = false;
-    };
+    }
     DOMNode* rem = element->setAttributeNode(newAttributeNode);
     if (rem)
         rem->release();
@@ -2809,7 +2902,7 @@ bool DOMTest::testElement(DOMDocument* document)
     {
         fprintf(stderr, "DOMElement* Tests Failure 002\n");
         OK = false;
-    };
+    }
 
     // Fetch the newly added attribute node back out of from the named node map,
     //  and check that we are returned the same node that we put in->
@@ -2820,7 +2913,7 @@ bool DOMTest::testElement(DOMDocument* document)
     {
         fprintf(stderr, "DOMElement* Tests Failure 003\n");
         OK = false;
-    };
+    }
 
     // Fetch the newly added attribute back out directly from the element itself.
     XMLString::transcode("AnotherFirstElementAttribute", tempStr, 3999);
@@ -2829,7 +2922,7 @@ bool DOMTest::testElement(DOMDocument* document)
     {
         fprintf(stderr, "DOMElement* Tests Failure 004\n");
         OK = false;
-    };
+    }
 
 
 
@@ -3395,7 +3488,7 @@ bool DOMTest::testElement(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMElement* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -3558,7 +3651,7 @@ bool DOMTest::testEntity(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMEntity* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 /**
@@ -3721,7 +3814,7 @@ bool DOMTest::testEntityReference(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMEntityReference* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -3896,7 +3989,7 @@ bool DOMTest::testNode(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMNode*  method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -4061,7 +4154,7 @@ bool DOMTest::testNotation(DOMDocument* document)
     if (!OK)
         printf("\n*****The DOMNotation* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
-};
+}
 
 
 
@@ -4250,7 +4343,7 @@ bool DOMTest::testPI(DOMDocument* document)
         printf("\n*****The PI method calls listed above failed, all others worked correctly.*****\n");
 
     return OK;
-};
+}
 
 
 
@@ -4441,7 +4534,7 @@ bool DOMTest::testText(DOMDocument* document)
         printf("\n*****The DOMText* method calls listed above failed, all others worked correctly.*****\n");
 
     return OK;
-};
+}
 
 
 /**
@@ -4915,6 +5008,6 @@ bool DOMTest::treeCompare(DOMNode* node, DOMNode* node2)
         return false;
 
     return answer;
-};
+}
 
 
