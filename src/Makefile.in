@@ -232,6 +232,9 @@ am__objects_4 = xercesc/dom/impl/DOMAttrImpl.lo \
 	xercesc/dom/impl/DOMLSSerializerImpl.lo \
 	xercesc/dom/impl/DOMLSInputImpl.lo \
 	xercesc/dom/impl/DOMLSOutputImpl.lo \
+	xercesc/dom/impl/DOMXPathExpressionImpl.lo \
+	xercesc/dom/impl/DOMXPathNSResolverImpl.lo \
+	xercesc/dom/impl/DOMXPathResultImpl.lo \
 	xercesc/dom/impl/XSDElementNSImpl.lo
 am_libdomimpl_la_OBJECTS = $(am__objects_4)
 libdomimpl_la_OBJECTS = $(am_libdomimpl_la_OBJECTS)
@@ -1300,6 +1303,9 @@ domimpl_headers = \
 	xercesc/dom/impl/DOMLSSerializerImpl.hpp \
 	xercesc/dom/impl/DOMLSInputImpl.hpp \
 	xercesc/dom/impl/DOMLSOutputImpl.hpp \
+	xercesc/dom/impl/DOMXPathExpressionImpl.hpp \
+	xercesc/dom/impl/DOMXPathNSResolverImpl.hpp \
+	xercesc/dom/impl/DOMXPathResultImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
 
 domimpl_sources = \
@@ -1343,6 +1349,9 @@ domimpl_sources = \
 	xercesc/dom/impl/DOMLSSerializerImpl.cpp \
 	xercesc/dom/impl/DOMLSInputImpl.cpp \
 	xercesc/dom/impl/DOMLSOutputImpl.cpp \
+	xercesc/dom/impl/DOMXPathExpressionImpl.cpp \
+	xercesc/dom/impl/DOMXPathNSResolverImpl.cpp \
+	xercesc/dom/impl/DOMXPathResultImpl.cpp \
 	xercesc/dom/impl/XSDElementNSImpl.cpp
 
 framework_headers = \
@@ -2341,6 +2350,15 @@ xercesc/dom/impl/DOMLSSerializerImpl.lo:  \
 xercesc/dom/impl/DOMLSInputImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/DOMLSOutputImpl.lo: xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMXPathExpressionImpl.lo:  \
+	xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMXPathNSResolverImpl.lo:  \
+	xercesc/dom/impl/$(am__dirstamp) \
+	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
+xercesc/dom/impl/DOMXPathResultImpl.lo:  \
+	xercesc/dom/impl/$(am__dirstamp) \
 	xercesc/dom/impl/$(DEPDIR)/$(am__dirstamp)
 xercesc/dom/impl/XSDElementNSImpl.lo:  \
 	xercesc/dom/impl/$(am__dirstamp) \
@@ -3364,6 +3382,12 @@ mostlyclean-compile:
 	-rm -f xercesc/dom/impl/DOMTreeWalkerImpl.lo
 	-rm -f xercesc/dom/impl/DOMTypeInfoImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/DOMTypeInfoImpl.lo
+	-rm -f xercesc/dom/impl/DOMXPathExpressionImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMXPathExpressionImpl.lo
+	-rm -f xercesc/dom/impl/DOMXPathNSResolverImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMXPathNSResolverImpl.lo
+	-rm -f xercesc/dom/impl/DOMXPathResultImpl.$(OBJEXT)
+	-rm -f xercesc/dom/impl/DOMXPathResultImpl.lo
 	-rm -f xercesc/dom/impl/XSDElementNSImpl.$(OBJEXT)
 	-rm -f xercesc/dom/impl/XSDElementNSImpl.lo
 	-rm -f xercesc/framework/BinOutputStream.$(OBJEXT)
@@ -3962,6 +3986,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTextImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTreeWalkerImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMTypeInfoImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMXPathExpressionImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMXPathNSResolverImpl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/DOMXPathResultImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/dom/impl/$(DEPDIR)/XSDElementNSImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/BinOutputStream.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/framework/$(DEPDIR)/LocalFileFormatTarget.Plo@am__quote@
