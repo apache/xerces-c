@@ -18,7 +18,7 @@
 
 <!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
 
-<book title="&XercesCName; Documentation" copyright="1999-2005 The Apache Software Foundation">
+<book title="&XercesCName; Documentation" copyright="1999-2007 The Apache Software Foundation">
 
   &home;
 
@@ -79,7 +79,6 @@
      <hidden   id="program-sax2"          source="program-sax2.xml"/>
      <hidden   id="program-dom"           source="program-dom.xml"/>
      <hidden   id="dom3"                  source="dom3.xml"/>
-     <hidden   id="program-deprecateddom" source="program-deprecateddom.xml"/>
      <hidden   id="schema"                source="schema.xml"/>
      <hidden   id="program-others"        source="program-others.xml"/>
 

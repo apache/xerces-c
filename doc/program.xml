@@ -92,7 +92,6 @@ int main(int argc, char* argv[])
           <li><jump href="program-dom.html#DOMLSSerializerEntityRef">How does DOMLSSerializer handle built-in entity Reference in node value?</jump></li>
           <li><jump href="program-dom.html#DOMLSSerializerFeatures">Supported Features</jump></li>
       </ul>
-      <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
     </ul>
   </s2>
 

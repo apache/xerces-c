@@ -183,54 +183,8 @@ qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
          <ul>
          <li>src/xercesc/dom/impl/DOMDocumentImpl.cpp</li>
          <li>src/xercesc/dom/impl/DOMDocumentImpl.hpp</li>
-         <li>src/xercesc/dom/deprecated/DocumentImpl.cpp</li>
-         <li>src/xercesc/dom/deprecated/DocumentImpl.hpp</li>
          <li>src/xercesc/validators/common/ContentSpecNode.hpp</li>
          </ul>
-
-         <p>Update  the following routines in src/xercesc/dom/deprecated/DocumentImpl.cpp as follows:</p>
-<source>
- void DocumentImpl::setUserData(NodeImpl* n, void* data)
- {
-	if (!userData &amp;&amp; data)
-  #ifdef __OS400__
-		userData = new RefHashTableOf&lt;char&gt;(29, false, new HashPtr());
-  #else
-		userData = new RefHashTableOf&lt;void&gt;(29, false, new HashPtr());
-  #endif
-	if (!data &amp;&amp; userData)
-		userData-&gt;removeKey((void*)n);
-	else
-  #ifdef __OS400__
-		userData-&gt;put((void*)n,(char*)data);
-  #else
-		userData-&gt;put((void*)n,data);
-  #endif
- }
-
- void* DocumentImpl::getUserData(NodeImpl* n)
- {
-	if (userData)
-  #ifdef __OS400__
-		return (void*)userData-&gt;get((void*)n);
-  #else
-		return userData-&gt;get((void*)n);
-  #endif
-	else
-		return null;
- }
-</source>
-
-         <p>To update src/xercesc/dom/deprecated/DoumentImpl.hpp as follows:</p>
-
-<source>
- #ifdef __OS400__
-	RefHashTableOf&lt;char&gt;		*userData;
- #else
-
-	RefHashTableOf&lt;void&gt;		*userData;
- #endif
-</source>
 
           <p>Update the following routines in src/xercesc/dom/impl/DOMDocumentImpl.cpp as follows:</p>
 <source>

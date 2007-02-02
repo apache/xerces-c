@@ -373,21 +373,6 @@
             <p/>
 
             <table>
-                <tr><th colspan="2"><em>void setExpandEntityReferences(const bool)</em> (deprecated) <br/>
-                please use <link anchor="createEntityRef">setCreateEntityReferenceNodes</link> </th></tr>
-                <tr><th><em>true:</em></th><td> Do not create EntityReference nodes in the DOM tree.  No
-                EntityReference nodes will be created, only the nodes corresponding to their fully
-                expanded sustitution text will be created.  </td></tr>
-                <tr><th><em>false:</em></th><td> Create EntityReference nodes in the DOM tree.   The
-                EntityReference nodes and their child nodes will be read-only. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>see:</em></th><td>
-                <link anchor="createEntityRef">setCreateEntityReferenceNodes</link>
-                </td></tr>
-            </table>
-            <p/>
-
-            <table>
                 <tr><th colspan="2"><em>void setIncludeIgnorableWhitespace(const bool)</em></th></tr>
                 <tr><th><em>true:</em></th><td> Include text nodes that can be considered "ignorable
                 whitespace" in the DOM tree. </td></tr>
@@ -413,23 +398,6 @@
                 <link anchor="validation-dynamic">setValidationScheme</link>
                 </td></tr>
             </table>
-            <p/>
-
-            <anchor name="validation"/>
-            <table>
-                <tr><th colspan="2"><em>void setDoValidation(const bool)</em> (deprecated) <br/>
-                please use <link anchor="validation-dynamic">setValidationScheme</link>
-                </th></tr>
-                <tr><th><em>true:</em></th><td> Report all validation errors. </td></tr>
-                <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
-                <tr><th><em>default:</em></th><td> see the default of
-                <link anchor="validation-dynamic">setValidationScheme</link>
-                </td></tr>
-                <tr><th><em>see:</em></th><td>
-                <link anchor="validation-dynamic">setValidationScheme</link>
-                </td></tr>
-            </table>
-
             <p/>
 
             <anchor name="validation-dynamic"/>
@@ -962,8 +930,8 @@
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCDATASection </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to false is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -976,8 +944,8 @@
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMComments </td></tr>                
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -995,8 +963,8 @@
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCharsetOverridesXMLEncoding </td></tr>                
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1015,8 +983,8 @@
                 <jump href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 (Second Edition)</jump>.
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 (Second Edition)</jump>.
@@ -1038,8 +1006,8 @@
                 EntityReference nodes in the DOM tree. The document will always contain the entity
                 reference child nodes. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1053,8 +1021,8 @@
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCanonicalForm </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1068,8 +1036,8 @@
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMInfoset </td></tr>  
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1088,8 +1056,8 @@
                 <link anchor="builder-validation">validation</link>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1107,8 +1075,8 @@
                 <link anchor="builder-namespaces">namespaces</link>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1122,8 +1090,8 @@
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMSupportedMediatypesOnly </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1141,8 +1109,8 @@
                 <link anchor="builder-validation">validation</link>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1166,8 +1134,8 @@
                 <link anchor="builder-load-external-dtd">http://apache.org/xml/features/nonvalidating/load-external-dtd</link>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1187,8 +1155,8 @@
                 they will be flagged as ignorable; and the method DOMText::isIgnorableWhitespace()
                 will return true for those text nodes. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
            </s4>
@@ -1814,8 +1782,8 @@
                 <tr><th><em>note:</em></th><td> This feature only affects the output XML stream.
 				The DOM tree to be serialized will not be changed. </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1833,8 +1801,8 @@
                 <link anchor="writer-pretty">format-pretty-print</link>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1855,8 +1823,8 @@
                 <link anchor="writer-canonical">canonical-form</link>
                 </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1870,8 +1838,8 @@
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTNormalizeCharacters </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1887,8 +1855,8 @@
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTSplitCdataSections </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1902,8 +1870,8 @@
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTValidation </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1918,8 +1886,8 @@
                 <tr><th><em>default:</em></th><td> true </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTWhitespaceInElementContent </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
-                DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
                 </td></tr>
             </table>
 
@@ -1963,15 +1931,6 @@
            </s4>
         </s3>
 
-    </s2>
-
-    <anchor name="Deprecated"/>
-    <s2 title="Deprecated - Java-like DOM">
-      <p>Earlier, &XercesCName; has provided a set of C++ DOM interfaces that is
-        very similar in design and use, to the Java DOM API bindings.
-        Currently, such interface has been deprecated.
-        See this <jump href="program-deprecateddom.html"> document </jump> for its programming details.
-      </p>
     </s2>
 
 </s1>
