@@ -221,7 +221,9 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
 
     // are the validators equal?
     // As always we are obliged to compare by reference...
-    if (dv1 == dv2) {
+    if (dv1 == dv2  || 
+        ((dv1->getType()==DatatypeValidator::ID || dv1->getType()==DatatypeValidator::IDREF) && 
+         (dv2->getType()==DatatypeValidator::ID || dv2->getType()==DatatypeValidator::IDREF))) {
         return ((dv1->compare(val1, val2, fMemoryManager)) == 0);
     }
 
