@@ -1271,11 +1271,20 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
     if (fUserDataTable) {
         RefHash2KeysTableOfEnumerator<DOMUserDataRecord> userDataEnum(fUserDataTable, false, fMemoryManager);
         userDataEnum.setPrimaryKey(n);
+        // Create a snapshot of the handlers to be called, as the "handle" callback could be invalidating the enumerator by calling
+        // setUserData on the dst node
+        ValueVectorOf< int > snapshot(3, fMemoryManager);
         while (userDataEnum.hasMoreElements()) {
             // get the key
             void* key;
             int key2;
             userDataEnum.nextElementKey(key,key2);
+            snapshot.addElement(key2);
+        }
+        ValueVectorEnumerator< int > snapshotEnum(&snapshot);
+        while(snapshotEnum.hasMoreElements())
+        {
+            int key2=snapshotEnum.nextElement();
 
             // get the DOMUserDataRecord
             DOMUserDataRecord* userDataRecord = fUserDataTable->get((void*)n,key2);
