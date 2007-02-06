@@ -61,6 +61,9 @@ AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
 
+AS_IF([test x$AR = xfalse],
+	AC_MSG_ERROR([Cannot find a valid 'ar' tool]))
+
 # Checks for libraries.
 AC_CHECK_LIB([socket], [socket])
 AC_CHECK_LIB([nsl], [gethostbyname])
