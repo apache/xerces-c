@@ -1011,7 +1011,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* sourceNode) {
     case DOCUMENT_NODE:
     case DOCUMENT_TYPE_NODE:
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
-    case ATTRIBUTE_NODE:    
+    case ATTRIBUTE_NODE:
         {
             DOMAttr* sourceAttr=(DOMAttr*)sourceNode;
             DOMElement* sourceAttrElem=sourceAttr->getOwnerElement();
@@ -1314,11 +1314,20 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
     if (fUserDataTable) {
         RefHash2KeysTableOfEnumerator<DOMUserDataRecord> userDataEnum(fUserDataTable, false, fMemoryManager);
         userDataEnum.setPrimaryKey(n);
+        // Create a snapshot of the handlers to be called, as the "handle" callback could be invalidating the enumerator by calling
+        // setUserData on the dst node
+        ValueVectorOf< int > snapshot(3, fMemoryManager);
         while (userDataEnum.hasMoreElements()) {
             // get the key
             void* key;
             int key2;
             userDataEnum.nextElementKey(key,key2);
+            snapshot.addElement(key2);
+        }
+        ValueVectorEnumerator< int > snapshotEnum(&snapshot);
+        while(snapshotEnum.hasMoreElements())
+        {
+            int key2=snapshotEnum.nextElement();
 
             // get the DOMUserDataRecord
             DOMUserDataRecord* userDataRecord = fUserDataTable->get((void*)n,key2);
