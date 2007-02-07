@@ -219,27 +219,15 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
         return false;
     }
 
-    // are the validators equal?
-    // As always we are obliged to compare by reference...
-    if (dv1 == dv2  || 
-        ((dv1->getType()==DatatypeValidator::ID || dv1->getType()==DatatypeValidator::IDREF) && 
-         (dv2->getType()==DatatypeValidator::ID || dv2->getType()==DatatypeValidator::IDREF))) {
-        return ((dv1->compare(val1, val2, fMemoryManager)) == 0);
-    }
-
-    // see if this.fValidator is derived from value.fValidator:
-    DatatypeValidator* tempVal = dv1;
-    for(; tempVal != NULL && tempVal != dv2; tempVal = tempVal->getBaseValidator()) ;
-
-    if (tempVal) { // was derived!
-        return ((dv2->compare(val1, val2, fMemoryManager)) == 0);
-    }
-
-    // see if value.fValidator is derived from this.fValidator:
-    for(tempVal = dv2; tempVal != NULL && tempVal != dv1; tempVal = tempVal->getBaseValidator()) ;
-
-    if(tempVal) { // was derived!
-        return ((dv1->compare(val1, val2, fMemoryManager)) == 0);
+    // find the common ancestor, if there is one
+    DatatypeValidator* tempVal1 = dv1;
+    while(tempVal1)
+    {
+        DatatypeValidator* tempVal2 = dv2;
+        for(; tempVal2 != NULL && tempVal2 != tempVal1; tempVal2 = tempVal2->getBaseValidator()) ;
+        if (tempVal2) 
+            return ((tempVal2->compare(val1, val2, fMemoryManager)) == 0);
+        tempVal1=tempVal1->getBaseValidator();
     }
 
     // if we're here it means the types weren't related. They are different:
