@@ -42,6 +42,8 @@ class DatatypeValidator;
 class XMLStringPool;
 class XercesLocationPath;
 class XMLAttr;
+class XercesNodeTest;
+class QName;
 
 class VALIDATORS_EXPORT XPathMatcher : public XMemory
 {
@@ -104,6 +106,8 @@ protected:
       */
     virtual void matched(const XMLCh* const content,
                          DatatypeValidator* const dv, const bool isNil);
+
+    bool matches(const XercesNodeTest* nodeTest, const QName* qName);
 
 private:
     // -----------------------------------------------------------------------

@@ -207,21 +207,16 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
             XercesStep* step = locPath->getStep(fCurrentStep[i]);
             XercesNodeTest* nodeTest = step->getNodeTest();
 
-            if (nodeTest->getType() == XercesNodeTest::NodeType_QNAME) {
+            QName elemQName(elemPrefix, elemDecl.getElementName()->getLocalPart(), urlId, fMemoryManager);
+            if (!matches(nodeTest, &elemQName)) {
 
-                QName elemQName(elemPrefix, elemDecl.getElementName()->getLocalPart(), urlId, fMemoryManager);
-
-//                if (!(*(nodeTest->getName()) == *(elemDecl.getElementName()))) {
-                if (!(*(nodeTest->getName()) == elemQName)) {
-
-                    if(fCurrentStep[i] > descendantStep) {
-                        fCurrentStep[i] = descendantStep;
-                        continue;
-                    }
-
-                    fNoMatchDepth[i]++;
+                if(fCurrentStep[i] > descendantStep) {
+                    fCurrentStep[i] = descendantStep;
                     continue;
                 }
+
+                fNoMatchDepth[i]++;
+                continue;
             }
 
             fCurrentStep[i]++;
@@ -253,8 +248,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
                     const XMLAttr* curDef = attrList.elementAt(attrIndex);
 
-                    if (nodeTest->getType() != XercesNodeTest::NodeType_QNAME ||
-                        (*(nodeTest->getName()) == *(curDef->getAttName()))) {
+                    if (matches(nodeTest, curDef->getAttName())) {
 
                         fCurrentStep[i]++;
 
@@ -309,9 +303,13 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
             int j=0;
             for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
 
-            if (j < i || (fMatched[j] == 0)
-                || ((fMatched[j] & XP_MATCHED_A) == XP_MATCHED_A))
-				continue;
+            if ((j < i) || (fMatched[j] == 0)) {
+                continue;
+            }
+            if ((fMatched[j] & XP_MATCHED_A) == XP_MATCHED_A) {
+                fMatched[i] = 0;
+                continue;
+            }
 
             DatatypeValidator* dv = ((SchemaElementDecl*) &elemDecl)->getDatatypeValidator();
             bool isNillable = (((SchemaElementDecl *) &elemDecl)->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) != 0;
@@ -344,6 +342,17 @@ void XPathMatcher::matched(const XMLCh* const,
     return;
 }
 
+bool XPathMatcher::matches(const XercesNodeTest* nodeTest, const QName* qName)
+{
+    if (nodeTest->getType() == XercesNodeTest::NodeType_QNAME) {
+        return (*nodeTest->getName())==(*qName);
+    }
+    if (nodeTest->getType() == XercesNodeTest::NodeType_NAMESPACE) {
+        return nodeTest->getName()->getURI() == qName->getURI();
+    }
+    // NodeType_WILDCARD
+    return true;
+}
 
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Match methods
