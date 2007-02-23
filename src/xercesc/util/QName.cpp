@@ -344,20 +344,7 @@ void QName::setNPrefix(const XMLCh* prefix, const unsigned int newLen)
 
 void QName::setLocalPart(const XMLCh* localPart)
 {
-    unsigned int newLen;
-
-    newLen = XMLString::stringLen(localPart);
-    if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
-    {
-        fMemoryManager->deallocate(fLocalPart); //delete [] fLocalPart;
-        fLocalPart = 0;
-        fLocalPartBufSz = newLen + 8;
-        fLocalPart = (XMLCh*) fMemoryManager->allocate
-        (
-            (fLocalPartBufSz + 1) * sizeof(XMLCh)
-        ); //new XMLCh[fLocalPartBufSz + 1];
-    }
-    XMLString::moveChars(fLocalPart, localPart, newLen + 1);
+    setNLocalPart(localPart, XMLString::stringLen(localPart));
 }
 
 void QName::setNLocalPart(const XMLCh* localPart, const unsigned int newLen)
