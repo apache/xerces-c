@@ -143,8 +143,11 @@ SUCH DAMAGE.</source>
     <a>
 
       <p>No.  The &XercesCName; &XercesCVersion; only has partial XPath implementation
-         for the purposes of handling Schema identity constraints.  For full XPath
-         support, you can refer
+         for the purposes of handling Schema identity constraints. 
+         The same engine is made available through the DOMDocument::evaluate API to 
+         let the user perform simple XPath queries involving DOMElement nodes only,
+         with no predicate testing and allowing the "//" operator only as the initial
+         step; for full XPath support, you can refer
          <jump href="http://xml.apache.org/xalan-c/overview.html">Apache Xalan C++</jump> or
          other Open Source Projects like
          <jump href="http://software.decisionsoft.com">Pathan</jump>.

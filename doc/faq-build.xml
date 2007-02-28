@@ -112,6 +112,9 @@
             must namespace qualify all the &XercesCName; classes, data and variables.  
             See the Programming Guide <jump href="program-others.html#CPPNamespace">
             Using C++ Namespace</jump> for details.</li>
+		<li>If you are using Microsoft Visual Studio .NET 2003 or 2005, check that the
+			option "Treat wchar_t as a built-in type" has been set to the same value
+			used to build Xerces</li>
       </ol>
     </a>
   </faq>
