@@ -16,7 +16,7 @@
  */
 
 /*
- * $Id:  $
+ * $Id$
  */
 
 #if !defined(XINCLUDELOCATION_HPP)
