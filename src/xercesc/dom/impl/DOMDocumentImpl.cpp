@@ -1464,6 +1464,12 @@ bool DOMDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) co
     // check for '+DOMMemoryManager'
     if(feature && *feature=='+' && XMLString::equals(feature+1, XMLUni::fgXercescInterfaceDOMMemoryManager))
         return true;
+    if(feature && *feature)
+    {
+        if((*feature==chPlus && XMLString::equals(feature+1, XMLUni::fgXercescInterfaceDOMDocumentImpl)) ||
+           XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentImpl))
+            return true;
+    }
     return fNode.isSupported (feature, version);
 }
 
@@ -1471,6 +1477,8 @@ void* DOMDocumentImpl::getFeature(const XMLCh* feature, const XMLCh* version) co
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMMemoryManager))
         return (DOMMemoryManager*)this;
+    if(XMLString::equals(feature, XMLUni::fgXercescInterfaceDOMDocumentImpl))
+        return (DOMDocumentImpl*)this;
     return fNode.getFeature(feature,version);
 }
 

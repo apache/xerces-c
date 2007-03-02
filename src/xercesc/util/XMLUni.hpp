@@ -195,6 +195,7 @@ public :
     static const XMLCh fgSchemaDateTimeException_Name[];
     static const XMLCh fgXPathException_Name[];
     static const XMLCh fgXSerializationException_Name[];
+    static const XMLCh fgXMLXIncludeException_Name[];
 
     // Numerical String
     static const XMLCh fgNegINFString[];
@@ -233,6 +234,7 @@ public :
     static const XMLCh fgXercesSkipDTDValidation[];
     static const XMLCh fgXercesEntityResolver[];
 
+	static const XMLCh fgXercesDoXInclude[];
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
     static const XMLCh fgSAX2CoreNameSpaces[];
@@ -284,6 +286,7 @@ public :
     // Private interface names
     static const XMLCh fgXercescInterfacePSVITypeInfo[];
     static const XMLCh fgXercescInterfaceDOMDocumentTypeImpl[];
+    static const XMLCh fgXercescInterfaceDOMDocumentImpl[];
     static const XMLCh fgXercescInterfaceDOMMemoryManager[];
 
     // Locale

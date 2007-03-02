@@ -50,6 +50,7 @@
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
+#include <xercesc/xinclude/XIncludeDOMDocumentProcessor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -83,6 +84,7 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
 , fCharsetOverridesXMLEncoding(true)
 , fUserAdoptsDocument(false)
 , fSupportedParameters(0)
+, fDoXInclude(false)
 {
     // dom spec has different default from scanner's default, so set explicitly
     getScanner()->setNormalizeData(false);
@@ -135,6 +137,7 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
     fSupportedParameters->add(XMLUni::fgXercesIgnoreAnnotations);
     fSupportedParameters->add(XMLUni::fgXercesDisableDefaultEntityResolution);
     fSupportedParameters->add(XMLUni::fgXercesSkipDTDValidation);
+    fSupportedParameters->add(XMLUni::fgXercesDoXInclude);
 }
 
 
@@ -402,6 +405,10 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
     {
         getScanner()->setSkipDTDValidation(state);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDoXInclude) == 0)
+    {
+        fDoXInclude = state;
+    }
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
 }
@@ -593,6 +600,10 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
     {
         return getSecurityManager();
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDoXInclude) == 0)
+    {
+        return (void *)fDoXInclude;
+    }
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
 }
@@ -642,7 +653,8 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
         XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0 ||
+		XMLString::compareIStringASCII(name, XMLUni::fgXercesDoXInclude) == 0) 
       return true;
     else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
             XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||
@@ -697,6 +709,21 @@ DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
     Wrapper4DOMLSInput isWrapper((DOMLSInput*)source, fEntityResolver, false, getMemoryManager());
 
     AbstractDOMParser::parse(isWrapper);
+
+    if (fDoXInclude){
+        XIncludeDOMDocumentProcessor xidp;
+		DOMDocument *doc = getDocument();
+        if(doc) {
+            // store the result of the XInclude processing in fDocument, then delete the original one
+            DOMDocument* xincluded=xidp.doXIncludeDOMProcess(doc, (XMLErrorReporter *) this);
+            if(xincluded)
+                fDocument = (DOMDocumentImpl*) (xincluded->getFeature(XMLUni::fgXercescInterfaceDOMDocumentImpl, 0));
+            else
+                fDocument = NULL;
+            delete doc;
+        }
+    }
+
     if (fUserAdoptsDocument)
         return adoptDocument();
     else
@@ -713,6 +740,21 @@ DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
         fFilter=0;
 
     AbstractDOMParser::parse(systemId);
+
+    if (fDoXInclude){
+        XIncludeDOMDocumentProcessor xidp;
+		DOMDocument *doc = getDocument();
+        if(doc) {
+            // store the result of the XInclude processing in fDocument, then delete the original one
+            DOMDocument* xincluded=xidp.doXIncludeDOMProcess(doc, (XMLErrorReporter *) this);
+            if(xincluded)
+                fDocument = (DOMDocumentImpl*) (xincluded->getFeature(XMLUni::fgXercescInterfaceDOMDocumentImpl, 0));
+            else
+                fDocument = NULL;
+            delete doc;
+        }
+    }
+
     if (fUserAdoptsDocument)
         return adoptDocument();
     else
@@ -729,6 +771,21 @@ DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
         fFilter=0;
 
     AbstractDOMParser::parse(systemId);
+
+    if (fDoXInclude){
+        XIncludeDOMDocumentProcessor xidp;
+		DOMDocument *doc = getDocument();
+        if(doc) {
+            // store the result of the XInclude processing in fDocument, then delete the original one
+            DOMDocument* xincluded=xidp.doXIncludeDOMProcess(doc, (XMLErrorReporter *) this);
+            if(xincluded)
+                fDocument = (DOMDocumentImpl*) (xincluded->getFeature(XMLUni::fgXercescInterfaceDOMDocumentImpl, 0));
+            else
+                fDocument = NULL;
+            delete doc;
+        }
+    }
+
     if (fUserAdoptsDocument)
         return adoptDocument();
     else
@@ -1080,4 +1137,5 @@ void DOMLSParserImpl::startElement(const XMLElementDecl&         elemDecl
 }
 
 XERCES_CPP_NAMESPACE_END
+
 

@@ -900,6 +900,14 @@ const XMLCh XMLUni::fgXSerializationException_Name[] =
     ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh XMLUni::fgXMLXIncludeException_Name[] =
+{
+        chLatin_X, chLatin_M, chLatin_L, chLatin_X, chLatin_I, chLatin_n
+    ,   chLatin_c, chLatin_l, chLatin_u, chLatin_d, chLatin_e, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
 const XMLCh XMLUni::fgNegINFString[] =
 {
     chDash, chLatin_I, chLatin_N, chLatin_F, chNull
@@ -1657,6 +1665,13 @@ const XMLCh XMLUni::fgXercescInterfaceDOMDocumentTypeImpl[] =
     chLatin_e, chLatin_I, chLatin_m, chLatin_p, chLatin_l, chNull
 };
 
+const XMLCh XMLUni::fgXercescInterfaceDOMDocumentImpl[] =
+{
+    chLatin_D, chLatin_O, chLatin_M, chLatin_D, chLatin_o, chLatin_c, chLatin_u,
+    chLatin_m, chLatin_e, chLatin_n, chLatin_t, chLatin_I, chLatin_m, chLatin_p, 
+    chLatin_l, chNull
+};
+
 const XMLCh XMLUni::fgXercescInterfaceDOMMemoryManager[] =
 {
     chLatin_D, chLatin_O, chLatin_M, chLatin_M, chLatin_e, chLatin_m, chLatin_o,
@@ -1797,7 +1812,14 @@ const XMLCh XMLUni::fgBooleanValueSpace[][8] =
     { chDigit_1, chNull }
 };
 
+const XMLCh XMLUni::fgXercesDoXInclude[] =
+{
+		 /* temp value */
+		 chLatin_D, chLatin_o, chLatin_X, chLatin_I, chNull
+};
+
 const unsigned int XMLUni::fgBooleanValueSpaceArraySize = sizeof XMLUni::fgBooleanValueSpace / sizeof (XMLUni::fgBooleanValueSpace[0]);
 
 XERCES_CPP_NAMESPACE_END
+
 

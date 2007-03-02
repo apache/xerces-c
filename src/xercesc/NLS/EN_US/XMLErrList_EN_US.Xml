@@ -14,6 +14,10 @@
             <Message Id="UndeclaredElemInCM" Text="Element '{0}' was referenced in a content model but never declared"/>
             <Message Id="UndeclaredElemInAttList" Text="Element '{0}' was referenced in an attlist but never declared"/>
             <Message Id="XMLException_Warning" Text="An exception occurred! Type:{0}, Message:{1}"/>
+            <Message Id="XIncludeResourceErrorWarning" Text="Error occurred including document '{0}'"/>
+            <Message Id="XIncludeCannotOpenFile" Text="Cannot open text file target '{0}'"/>
+			<Message Id="XIncludeInternalTextIncError" Text="Internal error including text file '{0}'"/>
+			<Message Id="XIncludeIncludeFailedResourceError" Text="Unable to include resource '{0}'"/>
         </Warning>
         <Error>
             <Message Id="FeatureUnsupported" Text="'{0}' is not allowed for the content of a simpleType.  Only list, union and restriction are allowed."/>
@@ -318,6 +322,14 @@
 			<Message Id="InvalidAttrName" Text="Attribute qname beginning with '{0}' invalid"/>
 			<Message Id="InvalidEntityRefName" Text="Entity qname for reference beginning '{0}' invalid"/>
 			<Message Id="DuplicateDocTypeDecl" Text="Already seen doctype"/>
+            <Message Id="XIncludeOrphanFallback" Text="Found a fallback element not a direct child of include element"/>
+            <Message Id="XIncludeNoHref" Text="include element found without href attribute"/>
+            <Message Id="XIncludeXPointerNotSupported" Text="Found an include element with xpointer specification. XPointer not yet supported"/>
+            <Message Id="XIncludeInvalidParseVal" Text="Invalid parse attribute value '{0}' found on include element - only text or xml is valid"/>
+            <Message Id="XIncludeMultipleFallbackElems" Text="Multiple fallback elements found in include element in document '{0}'"/>
+            <Message Id="XIncludeIncludeFailedNoFallback" Text="Include failed, no fallback found in document '{0}'"/>
+            <Message Id="XIncludeCircularInclusionLoop" Text="Circular inclusion document '{0}' includes previously included document"/>
+            <Message Id="XIncludeCircularInclusionDocIncludesSelf" Text="Circular inclusion document '{0}' includes itself"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">

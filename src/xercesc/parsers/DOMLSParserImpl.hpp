@@ -607,6 +607,10 @@ private :
     //  fSupportedParameters
     //      A list of the parameters that can be set, including the ones
     //      specific of Xerces
+	// 
+	//   fDoXinclude
+	//      A bool used to request that XInlcude processing occur on the
+	//      Document the parser parses.
     //-----------------------------------------------------------------------
     DOMLSResourceResolver*      fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
@@ -615,6 +619,7 @@ private :
     bool                        fCharsetOverridesXMLEncoding;
     bool                        fUserAdoptsDocument;
     DOMStringListImpl*          fSupportedParameters;
+    bool		 		 		 		 		 		 fDoXInclude;
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
