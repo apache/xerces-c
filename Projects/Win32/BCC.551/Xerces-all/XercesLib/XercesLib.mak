@@ -308,7 +308,10 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\WindowsMutexMgr.obj \
     $(TARGETPATH)\obj\DOMXPathExpressionImpl.obj \
     $(TARGETPATH)\obj\DOMXPathNSResolverImpl.obj \
-    $(TARGETPATH)\obj\DOMXPathResultImpl.obj
+    $(TARGETPATH)\obj\DOMXPathResultImpl.obj \
+    $(TARGETPATH)\obj\XIncludeDOMDocumentProcessor.obj \
+    $(TARGETPATH)\obj\XIncludeLocation.obj \
+    $(TARGETPATH)\obj\XIncludeUtils.obj
 RESFILES = 
 MAINSOURCE = XercesLib.cpp
 RESDEPEN = $(RESFILES)
@@ -319,7 +322,7 @@ LIBRARIES =
 SPARELIBS =
 DEFFILE =
 # ---------------------------------------------------------------------------
-PATHCPP = .;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;
+PATHCPP = .;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\dom\impl;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\AtomicOpManagers;..\..\..\..\..\src\xercesc\util\FileManagers;..\..\..\..\..\src\xercesc\util\MutexManagers;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\xinclude;
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;..\..\..\..\..\src\xercesc\util\Platforms\Win32
@@ -328,8 +331,8 @@ XERCES_NO_ASM=;XERCES_NO_ASM
 !endif
 USERDEFINES = _DEBUG;XERCES_BUILDING_LIBRARY;XERCES_USE_FILEMGR_WINDOWS=1;XERCES_USE_MUTEXMGR_WINDOWS=1;XERCES_USE_ATOMICOPMGR_WINDOWS=1;XERCES_USE_NETACCESSOR_WINSOCK=1;XERCES_USE_MSGLOADER_INMEMORY=1;XERCES_USE_TRANSCODER_WINDOWS=1;XERCES_PATH_DELIMITER_BACKSLASH=1;HAVE_LIMITS_H=1;HAVE_SYS_TIMEB_H=1;HAVE_FTIME=1;HAVE_STRICMP=1;HAVE_STRNICMP=1;HAVE_WCSUPR=1;HAVE_WCSLWR=1;HAVE_WCSICMP=1;HAVE_WCSNICMP=1;$(XERCES_NO_ASM)
 SYSDEFINES = NO_STRICT;_NO_VCL;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\src;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;
-LIBPATH = ..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;
+INCLUDEPATH = ..\..\..\..\..\src;..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\framework\psvi;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\xinclude;
+LIBPATH = ..\..\..\..\..\src\xercesc\dom;..\..\..\..\..\src\xercesc\framework;..\..\..\..\..\src\xercesc\internal;..\..\..\..\..\src\xercesc\parsers;..\..\..\..\..\src\xercesc\sax;..\..\..\..\..\src\xercesc\sax2;..\..\..\..\..\src\xercesc\util;..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock;..\..\..\..\..\src\xercesc\util\regx;..\..\..\..\..\src\xercesc\util\Transcoders\Win32;..\..\..\..\..\src\xercesc\validators\common;..\..\..\..\..\src\xercesc\validators\datatype;..\..\..\..\..\src\xercesc\validators\DTD;..\..\..\..\..\src\xercesc\validators\schema;..\..\..\..\..\src\xercesc\validators\schema\identity;..\..\..\..\..\src\xercesc\xinclude;
 WARNINGS= -w-par
 # ---------------------------------------------------------------------------
 CFLAG1 = -tWD -Od -Vx -Ve -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM

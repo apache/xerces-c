@@ -27,6 +27,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "SAX2Print - Win32 Release"
 
 OUTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release
@@ -50,9 +53,9 @@ CLEAN :"XercesLib - Win32 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
-	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
 	-@erase "$(OUTDIR)\SAX2Print.ilk"
@@ -63,51 +66,18 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
-CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
+CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SAX2Print.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /machine:I386 /out:"$(OUTDIR)\SAX2Print.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /machine:I386 /out:"$(OUTDIR)\SAX2Print.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
-	"$(INTDIR)\SAX2FilterHandlers.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_3.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -137,9 +107,9 @@ CLEAN :"XercesLib - Win32 DebugCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
-	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
@@ -152,51 +122,18 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
-CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
+CPP_PROJ=/G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SAX2Print.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /debug /machine:I386 /out:"$(OUTDIR)\SAX2Print.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /debug /machine:I386 /out:"$(OUTDIR)\SAX2Print.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
-	"$(INTDIR)\SAX2FilterHandlers.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -226,9 +163,9 @@ CLEAN :"XercesLib - Win64 DebugCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
-	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
@@ -241,51 +178,18 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
-CPP_PROJ=/MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
+CPP_PROJ=/MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SAX2Print.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\SAX2Print.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\SAX2Print.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
-	"$(INTDIR)\SAX2FilterHandlers.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -315,9 +219,9 @@ CLEAN :"XercesLib - Win64 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
-	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
 	-@erase "$(OUTDIR)\SAX2Print.ilk"
@@ -328,8 +232,25 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
-CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+BSC32=bscmake.exe
+BSC32_FLAGS=/o"$(OUTDIR)\SAX2Print.bsc" 
+BSC32_SBRS= \
+	
+LINK32=link.exe
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /machine:IX86 /out:"$(OUTDIR)\SAX2Print.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_OBJS= \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
+	"$(INTDIR)\SAX2Print.obj" \
+	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(OUTDIR)\xerces-c_3.lib"
+
+"$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+!ENDIF 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -360,26 +281,6 @@ CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D 
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
-
-RSC=rc.exe
-BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\SAX2Print.bsc" 
-BSC32_SBRS= \
-	
-LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SAX2Print.pdb" /machine:IX86 /out:"$(OUTDIR)\SAX2Print.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
-LINK32_OBJS= \
-	"$(INTDIR)\SAX2Print.obj" \
-	"$(INTDIR)\SAX2PrintHandlers.obj" \
-	"$(INTDIR)\SAX2FilterHandlers.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
-
-"$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
-    $(LINK32) @<<
-  $(LINK32_FLAGS) $(LINK32_OBJS)
-<<
-
-!ENDIF 
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -443,19 +344,19 @@ LINK32_OBJS= \
 
 !ENDIF 
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.cpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2FilterHandlers.cpp
 
 "$(INTDIR)\SAX2FilterHandlers.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2Print.cpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2Print.cpp
 
 "$(INTDIR)\SAX2Print.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2PrintHandlers.cpp
+SOURCE=..\..\..\..\..\samples\src\SAX2Print\SAX2PrintHandlers.cpp
 
 "$(INTDIR)\SAX2PrintHandlers.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)

@@ -92,6 +92,11 @@ libvalidators_ladir =				${includedir}
 nobase_libvalidators_la_HEADERS =	${validators_headers}
 libvalidators_la_SOURCES =			${validators_sources}
 
+src_libraries +=					libxinclude.la
+libxinclude_ladir =				${includedir}
+nobase_libxinclude_la_HEADERS =	                ${xinclude_headers}
+libxinclude_la_SOURCES =			${xinclude_sources}
+
 #
 # NetAccessors, conditionally built based on settings from configure
 #
@@ -1085,6 +1090,15 @@ validators_sources = \
 	xercesc/validators/schema/XSDLocator.cpp \
 	xercesc/validators/schema/XUtil.cpp
 
+xinclude_headers = \
+	xercesc/xinclude/XIncludeDOMDocumentProcessor.hpp \
+        xercesc/xinclude/XIncludeLocation.hpp \
+        xercesc/xinclude/XIncludeUtils.hpp
+	
+xinclude_sources = \
+	xercesc/xinclude/XIncludeDOMDocumentProcessor.cpp \
+        xercesc/xinclude/XIncludeLocation.cpp \
+        xercesc/xinclude/XIncludeUtils.cpp
 
 icu_headers = \
 	xercesc/util/Transcoders/ICU/ICUTransService.hpp
@@ -1276,6 +1290,7 @@ LTCXXCOMPILE = ${PRETTY_COMPILE}  \
 	$(LIBTOOL) --quiet --tag=CXX --mode=compile \
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+
 
 
 

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="DOMNormalizerTest"
-	ProjectGUID="{69220042-712E-41B5-A658-4CCF9D5B5FDF}"
+	ProjectGUID="{BE9C14B1-2301-4c62-85E2-B583D22AE29C}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>

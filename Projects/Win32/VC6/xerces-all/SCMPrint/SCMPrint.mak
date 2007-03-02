@@ -27,7 +27,7 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=$(CPP)
+CPP=cl.exe
 RSC=rc.exe
 
 !IF  "$(CFG)" == "SCMPrint - Win32 Release"
@@ -64,16 +64,16 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SCMPrint.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /machine:I386 /out:"$(OUTDIR)\SCMPrint.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /machine:I386 /out:"$(OUTDIR)\SCMPrint.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\SCMPrint.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_3.lib"
 
 "$(OUTDIR)\SCMPrint.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -116,16 +116,16 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_CONSOLE" /D "PLATFORM_WIN32" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SCMPrint.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /debug /machine:I386 /out:"$(OUTDIR)\SCMPrint.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /debug /machine:I386 /out:"$(OUTDIR)\SCMPrint.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\SCMPrint.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)\SCMPrint.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -168,16 +168,16 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SCMPrint.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\SCMPrint.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\SCMPrint.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\SCMPrint.obj" \
-	"$(OUTDIR)\xerces-c_2D.lib"
+	"$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)\SCMPrint.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -218,16 +218,16 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\SCMPrint.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /machine:IX86 /out:"$(OUTDIR)\SCMPrint.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\SCMPrint.pdb" /machine:IX86 /out:"$(OUTDIR)\SCMPrint.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\SCMPrint.obj" \
-	"$(OUTDIR)\xerces-c_2.lib"
+	"$(OUTDIR)\xerces-c_3.lib"
 
 "$(OUTDIR)\SCMPrint.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -328,7 +328,7 @@ LINK32_OBJS= \
 
 !ENDIF 
 
-SOURCE=..\..\..\..\..\samples\SCMPrint\SCMPrint.cpp
+SOURCE=..\..\..\..\..\samples\src\SCMPrint\SCMPrint.cpp
 
 "$(INTDIR)\SCMPrint.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)

@@ -94,7 +94,7 @@ am__EXEEXT_1 = CreateDOMDocument$(EXEEXT) DOMCount$(EXEEXT) \
 	PParse$(EXEEXT) PSVIWriter$(EXEEXT) Redirect$(EXEEXT) \
 	SAX2Count$(EXEEXT) SAX2Print$(EXEEXT) SAXCount$(EXEEXT) \
 	SAXPrint$(EXEEXT) SCMPrint$(EXEEXT) SEnumVal$(EXEEXT) \
-	StdInParse$(EXEEXT)
+	StdInParse$(EXEEXT) XInclude$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
@@ -173,6 +173,10 @@ am_StdInParse_OBJECTS = src/StdInParse/StdInParse.$(OBJEXT) \
 StdInParse_OBJECTS = $(am_StdInParse_OBJECTS)
 StdInParse_LDADD = $(LDADD)
 StdInParse_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
+am_XInclude_OBJECTS = src/XInclude/XInclude.$(OBJEXT)
+XInclude_OBJECTS = $(am_XInclude_OBJECTS)
+XInclude_LDADD = $(LDADD)
+XInclude_DEPENDENCIES = ${top_builddir}/obj/libxerces.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/src/xercesc/util
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -184,13 +188,13 @@ SOURCES = $(CreateDOMDocument_SOURCES) $(DOMCount_SOURCES) \
 	$(PParse_SOURCES) $(PSVIWriter_SOURCES) $(Redirect_SOURCES) \
 	$(SAX2Count_SOURCES) $(SAX2Print_SOURCES) $(SAXCount_SOURCES) \
 	$(SAXPrint_SOURCES) $(SCMPrint_SOURCES) $(SEnumVal_SOURCES) \
-	$(StdInParse_SOURCES)
+	$(StdInParse_SOURCES) $(XInclude_SOURCES)
 DIST_SOURCES = $(CreateDOMDocument_SOURCES) $(DOMCount_SOURCES) \
 	$(DOMPrint_SOURCES) $(EnumVal_SOURCES) $(MemParse_SOURCES) \
 	$(PParse_SOURCES) $(PSVIWriter_SOURCES) $(Redirect_SOURCES) \
 	$(SAX2Count_SOURCES) $(SAX2Print_SOURCES) $(SAXCount_SOURCES) \
 	$(SAXPrint_SOURCES) $(SCMPrint_SOURCES) $(SEnumVal_SOURCES) \
-	$(StdInParse_SOURCES)
+	$(StdInParse_SOURCES) $(XInclude_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -362,7 +366,7 @@ LDADD = ${top_builddir}/obj/libxerces.la
 AM_CPPFLAGS = -I${top_builddir}/src -I${top_srcdir}/src
 sampleprogs = CreateDOMDocument DOMCount DOMPrint EnumVal MemParse \
 	PParse PSVIWriter Redirect SAX2Count SAX2Print SAXCount \
-	SAXPrint SCMPrint SEnumVal StdInParse
+	SAXPrint SCMPrint SEnumVal StdInParse XInclude
 CreateDOMDocument_SOURCES = src/CreateDOMDocument/CreateDOMDocument.cpp
 DOMCount_SOURCES = src/DOMCount/DOMCount.cpp
 DOMPrint_SOURCES = src/DOMPrint/DOMPrint.cpp \
@@ -401,6 +405,7 @@ SEnumVal_SOURCES = src/SEnumVal/SEnumVal.cpp
 StdInParse_SOURCES = src/StdInParse/StdInParse.cpp \
 							src/StdInParse/StdInParseHandlers.cpp
 
+XInclude_SOURCES = src/XInclude/XInclude.cpp
 @XERCES_PRETTY_MAKE_TRUE@PRETTY_MAKE = ${top_srcdir}/config/pretty-make
 @XERCES_PRETTY_MAKE_TRUE@PRETTY_COMPILE = ${PRETTY_MAKE} Compiling
 CXXCOMPILE = ${PRETTY_COMPILE} \
@@ -672,6 +677,17 @@ src/StdInParse/StdInParseHandlers.$(OBJEXT):  \
 StdInParse$(EXEEXT): $(StdInParse_OBJECTS) $(StdInParse_DEPENDENCIES) 
 	@rm -f StdInParse$(EXEEXT)
 	$(CXXLINK) $(StdInParse_LDFLAGS) $(StdInParse_OBJECTS) $(StdInParse_LDADD) $(LIBS)
+src/XInclude/$(am__dirstamp):
+	@$(mkdir_p) src/XInclude
+	@: > src/XInclude/$(am__dirstamp)
+src/XInclude/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) src/XInclude/$(DEPDIR)
+	@: > src/XInclude/$(DEPDIR)/$(am__dirstamp)
+src/XInclude/XInclude.$(OBJEXT): src/XInclude/$(am__dirstamp) \
+	src/XInclude/$(DEPDIR)/$(am__dirstamp)
+XInclude$(EXEEXT): $(XInclude_OBJECTS) $(XInclude_DEPENDENCIES) 
+	@rm -f XInclude$(EXEEXT)
+	$(CXXLINK) $(XInclude_LDFLAGS) $(XInclude_OBJECTS) $(XInclude_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -703,6 +719,7 @@ mostlyclean-compile:
 	-rm -f src/SEnumVal/SEnumVal.$(OBJEXT)
 	-rm -f src/StdInParse/StdInParse.$(OBJEXT)
 	-rm -f src/StdInParse/StdInParseHandlers.$(OBJEXT)
+	-rm -f src/XInclude/XInclude.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -735,6 +752,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/SEnumVal/$(DEPDIR)/SEnumVal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/StdInParse/$(DEPDIR)/StdInParse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/StdInParse/$(DEPDIR)/StdInParseHandlers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/XInclude/$(DEPDIR)/XInclude.Po@am__quote@
 
 @XERCES_PRETTY_MAKE_FALSE@.cpp.o:
 @am__fastdepCXX_TRUE@	depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`; \
@@ -902,6 +920,8 @@ distclean-generic:
 	-rm -f src/SEnumVal/$(am__dirstamp)
 	-rm -f src/StdInParse/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/StdInParse/$(am__dirstamp)
+	-rm -f src/XInclude/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/XInclude/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -911,7 +931,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf src/CreateDOMDocument/$(DEPDIR) src/DOMCount/$(DEPDIR) src/DOMPrint/$(DEPDIR) src/EnumVal/$(DEPDIR) src/MemParse/$(DEPDIR) src/PParse/$(DEPDIR) src/PSVIWriter/$(DEPDIR) src/Redirect/$(DEPDIR) src/SAX2Count/$(DEPDIR) src/SAX2Print/$(DEPDIR) src/SAXCount/$(DEPDIR) src/SAXPrint/$(DEPDIR) src/SCMPrint/$(DEPDIR) src/SEnumVal/$(DEPDIR) src/StdInParse/$(DEPDIR)
+	-rm -rf src/CreateDOMDocument/$(DEPDIR) src/DOMCount/$(DEPDIR) src/DOMPrint/$(DEPDIR) src/EnumVal/$(DEPDIR) src/MemParse/$(DEPDIR) src/PParse/$(DEPDIR) src/PSVIWriter/$(DEPDIR) src/Redirect/$(DEPDIR) src/SAX2Count/$(DEPDIR) src/SAX2Print/$(DEPDIR) src/SAXCount/$(DEPDIR) src/SAXPrint/$(DEPDIR) src/SCMPrint/$(DEPDIR) src/SEnumVal/$(DEPDIR) src/StdInParse/$(DEPDIR) src/XInclude/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -937,7 +957,7 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf src/CreateDOMDocument/$(DEPDIR) src/DOMCount/$(DEPDIR) src/DOMPrint/$(DEPDIR) src/EnumVal/$(DEPDIR) src/MemParse/$(DEPDIR) src/PParse/$(DEPDIR) src/PSVIWriter/$(DEPDIR) src/Redirect/$(DEPDIR) src/SAX2Count/$(DEPDIR) src/SAX2Print/$(DEPDIR) src/SAXCount/$(DEPDIR) src/SAXPrint/$(DEPDIR) src/SCMPrint/$(DEPDIR) src/SEnumVal/$(DEPDIR) src/StdInParse/$(DEPDIR)
+	-rm -rf src/CreateDOMDocument/$(DEPDIR) src/DOMCount/$(DEPDIR) src/DOMPrint/$(DEPDIR) src/EnumVal/$(DEPDIR) src/MemParse/$(DEPDIR) src/PParse/$(DEPDIR) src/PSVIWriter/$(DEPDIR) src/Redirect/$(DEPDIR) src/SAX2Count/$(DEPDIR) src/SAX2Print/$(DEPDIR) src/SAXCount/$(DEPDIR) src/SAXPrint/$(DEPDIR) src/SCMPrint/$(DEPDIR) src/SEnumVal/$(DEPDIR) src/StdInParse/$(DEPDIR) src/XInclude/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

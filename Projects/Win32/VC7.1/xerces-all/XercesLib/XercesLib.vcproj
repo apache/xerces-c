@@ -691,10 +691,10 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLStringTokenizer.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLUni.cpp">
@@ -2752,6 +2752,28 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.hpp">
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="xinclude"
+			Filter="">
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeDOMDocumentProcessor.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeDOMDocumentProcessor.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeLocation.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeLocation.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeUtils.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeUtils.hpp">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

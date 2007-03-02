@@ -627,6 +627,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\KeyRefPair.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\KeyValuePair.c
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\KeyValuePair.hpp
 # End Source File
 # Begin Source File
@@ -3405,6 +3410,34 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\StDOMNode.hpp
+# End Source File
+# End Group
+# Begin Group "xinclude"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\xinclude\XIncludeDOMDocumentProcessor.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\xinclude\XIncludeDOMDocumentProcessor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\xinclude\XIncludeLocation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\xinclude\XIncludeLocation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\xinclude\XIncludeUtils.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\xinclude\XIncludeUtils.hpp
 # End Source File
 # End Group
 # End Target

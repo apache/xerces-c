@@ -86,6 +86,8 @@ sampleprogs +=						StdInParse
 StdInParse_SOURCES =					src/StdInParse/StdInParse.cpp \
 							src/StdInParse/StdInParseHandlers.cpp
 									
+sampleprogs +=						XInclude
+XInclude_SOURCES =					src/XInclude/XInclude.cpp
 									
 #
 # Override generated rules to provide prettier make rules

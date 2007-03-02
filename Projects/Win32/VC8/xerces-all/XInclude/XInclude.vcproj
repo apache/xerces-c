@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
-	Name="DOMNormalizerTest"
-	ProjectGUID="{BE9C14B1-2301-4c62-85E2-B583D22AE29C}"
+	Version="8.00"
+	Name="XInclude"
+	ProjectGUID="{117D4C21-4C54-478F-83AE-D6179A8D7EF1}"
 	>
 	<Platforms>
 		<Platform
@@ -16,7 +16,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\Release"
-			IntermediateDirectory="$(OutDir)\obj\DOMNormalizerTest"
+			IntermediateDirectory="$(OutDir)\obj\XInclude"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -36,7 +36,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="$(OutDir)\DOMNormalizerTest.tlb"
+				TypeLibraryName="$(OutDir)\XInclude.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -46,10 +46,11 @@
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile="$(IntDir)\DOMNormalizerTest.pch"
+				PrecompiledHeaderFile="$(IntDir)\XInclude.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\DOMNormalizer_vc80"
+				ProgramDataBaseFileName="$(IntDir)\XInclude_vc80"
+				BrowseInformation="0"
 				WarningLevel="3"
 				CompileAs="0"
 			/>
@@ -68,10 +69,10 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_3.lib"
-				OutputFile="$(OutDir)\DOMNormalizerTest.exe"
+				OutputFile="$(OutDir)\XInclude.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)"
-				ProgramDatabaseFile="$(OutDir)\DOMNormalizerTest.pdb"
+				ProgramDatabaseFile="$(OutDir)\XInclude.pdb"
 				SubSystem="1"
 			/>
 			<Tool
@@ -102,7 +103,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\Debug"
-			IntermediateDirectory="$(OutDir)\obj\DOMNormalizerTest"
+			IntermediateDirectory="$(OutDir)\obj\XInclude"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -122,21 +123,20 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="$(OutDir)\DOMNormalizerTest.tlb"
+				TypeLibraryName="$(OutDir)\XInclude.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS"
-				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="true"
 				TreatWChar_tAsBuiltInType="true"
-				PrecompiledHeaderFile="$(IntDir)\DOMNormalizerTest.pch"
+				PrecompiledHeaderFile="$(IntDir)\XInclude.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\DOMNormalizer_vc80"
+				ProgramDataBaseFileName="$(IntDir)\XInclude_vc80"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"
@@ -156,11 +156,11 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_3D.lib"
-				OutputFile="$(OutDir)\DOMNormalizerTest.exe"
+				OutputFile="$(OutDir)\XInclude.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\DOMNormalizerTest.pdb"
+				ProgramDatabaseFile="$(OutDir)\XInclude.pdb"
 				SubSystem="1"
 			/>
 			<Tool
@@ -191,7 +191,7 @@
 		<Configuration
 			Name="Static Release|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\StaticRelease"
-			IntermediateDirectory="$(OutDir)\obj\DOMNormalizerTest"
+			IntermediateDirectory="$(OutDir)\obj\XInclude"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -211,7 +211,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="$(OutDir)\DOMNormalizerTest.tlb"
+				TypeLibraryName="$(OutDir)\XInclude.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -221,10 +221,11 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile="$(IntDir)\DOMNormalizerTest.pch"
+				PrecompiledHeaderFile="$(IntDir)\XInclude.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\DOMNormalizer_vc80"
+				ProgramDataBaseFileName="$(IntDir)\XInclude_vc80"
+				BrowseInformation="1"
 				WarningLevel="3"
 				CompileAs="0"
 			/>
@@ -243,10 +244,10 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_static_3.lib"
-				OutputFile="$(OutDir)\DOMNormalizerTest.exe"
+				OutputFile="$(OutDir)\XInclude.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)"
-				ProgramDatabaseFile="$(OutDir)\DOMNormalizerTest.pdb"
+				ProgramDatabaseFile="$(OutDir)\XInclude.pdb"
 				SubSystem="1"
 			/>
 			<Tool
@@ -277,7 +278,7 @@
 		<Configuration
 			Name="Static Debug|Win32"
 			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\StaticDebug"
-			IntermediateDirectory="$(OutDir)\obj\DOMNormalizerTest"
+			IntermediateDirectory="$(OutDir)\obj\XInclude"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -297,20 +298,19 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName="$(OutDir)\DOMNormalizerTest.tlb"
+				TypeLibraryName="$(OutDir)\XInclude.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY"
-				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				DisableLanguageExtensions="true"
-				PrecompiledHeaderFile="$(IntDir)\DOMNormalizerTest.pch"
+				PrecompiledHeaderFile="$(IntDir)\XInclude.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\DOMNormalizer_vc80"
+				ProgramDataBaseFileName="$(IntDir)\XInclude_vc80"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"
@@ -330,11 +330,11 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_static_3D.lib"
-				OutputFile="$(OutDir)\DOMNormalizerTest.exe"
+				OutputFile="$(OutDir)\XInclude.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\DOMNormalizerTest.pdb"
+				ProgramDatabaseFile="$(OutDir)\XInclude.pdb"
 				SubSystem="1"
 			/>
 			<Tool
@@ -366,29 +366,14 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+		<File
+			RelativePath="..\..\..\..\..\samples\src\XInclude\XInclude.cpp"
 			>
-			<File
-				RelativePath="..\..\..\..\..\tests\src\Dom\Normalizer\Normalizer.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl"
+		</File>
+		<File
+			RelativePath="..\..\..\..\..\samples\src\XInclude\XInclude.hpp"
 			>
-			<File
-				RelativePath="..\..\..\..\..\tests\src\Dom\Normalizer\Normalizer.hpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-			>
-		</Filter>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

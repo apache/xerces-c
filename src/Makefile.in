@@ -134,7 +134,8 @@ DIST_COMMON = $(am__nobase_libcfurlna_la_HEADERS_DIST) \
 	$(nobase_libinternal_la_HEADERS) \
 	$(nobase_libparsers_la_HEADERS) $(nobase_libsax2_la_HEADERS) \
 	$(nobase_libsax_la_HEADERS) $(nobase_libutil_la_HEADERS) \
-	$(nobase_libvalidators_la_HEADERS) $(srcdir)/Makefile.am \
+	$(nobase_libvalidators_la_HEADERS) \
+	$(nobase_libxinclude_la_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acx_pthread.m4 \
@@ -482,18 +483,18 @@ libsocketsna_la_OBJECTS = $(am_libsocketsna_la_OBJECTS)
 @XERCES_USE_FILEMGR_WINDOWS_TRUE@am__DEPENDENCIES_22 = libwinfmgr.la
 am__DEPENDENCIES_23 = libutil.la libdom.la libdomimpl.la \
 	libframework.la libinternal.la libparsers.la libsax.la \
-	libsax2.la libvalidators.la $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3) \
-	$(am__DEPENDENCIES_4) $(am__DEPENDENCIES_5) \
-	$(am__DEPENDENCIES_6) $(am__DEPENDENCIES_7) \
-	$(am__DEPENDENCIES_8) $(am__DEPENDENCIES_9) \
-	$(am__DEPENDENCIES_10) $(am__DEPENDENCIES_11) \
-	$(am__DEPENDENCIES_12) $(am__DEPENDENCIES_13) \
-	$(am__DEPENDENCIES_14) $(am__DEPENDENCIES_15) \
-	$(am__DEPENDENCIES_16) $(am__DEPENDENCIES_17) \
-	$(am__DEPENDENCIES_18) $(am__DEPENDENCIES_19) \
-	$(am__DEPENDENCIES_20) $(am__DEPENDENCIES_21) \
-	$(am__DEPENDENCIES_22)
+	libsax2.la libvalidators.la libxinclude.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_4) \
+	$(am__DEPENDENCIES_5) $(am__DEPENDENCIES_6) \
+	$(am__DEPENDENCIES_7) $(am__DEPENDENCIES_8) \
+	$(am__DEPENDENCIES_9) $(am__DEPENDENCIES_10) \
+	$(am__DEPENDENCIES_11) $(am__DEPENDENCIES_12) \
+	$(am__DEPENDENCIES_13) $(am__DEPENDENCIES_14) \
+	$(am__DEPENDENCIES_15) $(am__DEPENDENCIES_16) \
+	$(am__DEPENDENCIES_17) $(am__DEPENDENCIES_18) \
+	$(am__DEPENDENCIES_19) $(am__DEPENDENCIES_20) \
+	$(am__DEPENDENCIES_21) $(am__DEPENDENCIES_22)
 libsrc_la_DEPENDENCIES = $(am__DEPENDENCIES_23)
 am_libsrc_la_OBJECTS =
 libsrc_la_OBJECTS = $(am_libsrc_la_OBJECTS)
@@ -696,6 +697,12 @@ am__objects_31 = xercesc/util/NetAccessors/libWWW/libwwwna_la-LibWWWNetAccessor.
 @XERCES_USE_NETACCESSOR_LIBWWW_TRUE@	$(am__objects_31)
 libwwwna_la_OBJECTS = $(am_libwwwna_la_OBJECTS)
 @XERCES_USE_NETACCESSOR_LIBWWW_TRUE@am_libwwwna_la_rpath =
+libxinclude_la_LIBADD =
+am__objects_32 = xercesc/xinclude/XIncludeDOMDocumentProcessor.lo \
+	xercesc/xinclude/XIncludeLocation.lo \
+	xercesc/xinclude/XIncludeUtils.lo
+am_libxinclude_la_OBJECTS = $(am__objects_32)
+libxinclude_la_OBJECTS = $(am_libxinclude_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir) -I$(top_builddir)/src/xercesc/util
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -726,7 +733,7 @@ SOURCES = $(libcfurlna_la_SOURCES) $(libcurlna_la_SOURCES) \
 	$(libvalidators_la_SOURCES) $(libwinaomgr_la_SOURCES) \
 	$(libwinfmgr_la_SOURCES) $(libwinmmgr_la_SOURCES) \
 	$(libwinsockna_la_SOURCES) $(libwintrans_la_SOURCES) \
-	$(libwwwna_la_SOURCES)
+	$(libwwwna_la_SOURCES) $(libxinclude_la_SOURCES)
 DIST_SOURCES = $(am__libcfurlna_la_SOURCES_DIST) \
 	$(am__libcurlna_la_SOURCES_DIST) $(libdom_la_SOURCES) \
 	$(libdomimpl_la_SOURCES) $(libframework_la_SOURCES) \
@@ -750,7 +757,7 @@ DIST_SOURCES = $(am__libcfurlna_la_SOURCES_DIST) \
 	$(am__libwinmmgr_la_SOURCES_DIST) \
 	$(am__libwinsockna_la_SOURCES_DIST) \
 	$(am__libwintrans_la_SOURCES_DIST) \
-	$(am__libwwwna_la_SOURCES_DIST)
+	$(am__libwwwna_la_SOURCES_DIST) $(libxinclude_la_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -790,7 +797,8 @@ am__installdirs = "$(DESTDIR)$(libcfurlna_ladir)" \
 	"$(DESTDIR)$(libwinfmgr_ladir)" \
 	"$(DESTDIR)$(libwinmmgr_ladir)" \
 	"$(DESTDIR)$(libwinsockna_ladir)" \
-	"$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)"
+	"$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)" \
+	"$(DESTDIR)$(libxinclude_ladir)"
 nobase_libcfurlna_laHEADERS_INSTALL = $(install_sh_DATA)
 am__nobase_libcurlna_la_HEADERS_DIST =  \
 	xercesc/util/NetAccessors/Curl/CurlNetAccessor.hpp \
@@ -869,6 +877,7 @@ am__nobase_libwwwna_la_HEADERS_DIST =  \
 	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp \
 	xercesc/util/NetAccessors/libWWW/BinURLInputStream.hpp
 nobase_libwwwna_laHEADERS_INSTALL = $(install_sh_DATA)
+nobase_libxinclude_laHEADERS_INSTALL = $(install_sh_DATA)
 HEADERS = $(nobase_libcfurlna_la_HEADERS) \
 	$(nobase_libcurlna_la_HEADERS) $(nobase_libdom_la_HEADERS) \
 	$(nobase_libdomimpl_la_HEADERS) \
@@ -894,7 +903,8 @@ HEADERS = $(nobase_libcfurlna_la_HEADERS) \
 	$(nobase_libwinfmgr_la_HEADERS) \
 	$(nobase_libwinmmgr_la_HEADERS) \
 	$(nobase_libwinsockna_la_HEADERS) \
-	$(nobase_libwintrans_la_HEADERS) $(nobase_libwwwna_la_HEADERS)
+	$(nobase_libwintrans_la_HEADERS) $(nobase_libwwwna_la_HEADERS) \
+	$(nobase_libxinclude_la_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = xercesc/util/MsgLoaders/ICU/resources
@@ -1087,14 +1097,14 @@ libsrc_la_LIBADD = ${src_libraries}
 #
 src_libraries = libutil.la libdom.la libdomimpl.la libframework.la \
 	libinternal.la libparsers.la libsax.la libsax2.la \
-	libvalidators.la $(am__append_1) $(am__append_2) \
-	$(am__append_3) $(am__append_4) $(am__append_5) \
-	$(am__append_6) $(am__append_7) $(am__append_8) \
-	$(am__append_9) $(am__append_10) $(am__append_11) \
-	$(am__append_12) $(am__append_14) $(am__append_15) \
-	$(am__append_16) $(am__append_17) $(am__append_18) \
-	$(am__append_19) $(am__append_20) $(am__append_21) \
-	$(am__append_22) $(am__append_23)
+	libvalidators.la libxinclude.la $(am__append_1) \
+	$(am__append_2) $(am__append_3) $(am__append_4) \
+	$(am__append_5) $(am__append_6) $(am__append_7) \
+	$(am__append_8) $(am__append_9) $(am__append_10) \
+	$(am__append_11) $(am__append_12) $(am__append_14) \
+	$(am__append_15) $(am__append_16) $(am__append_17) \
+	$(am__append_18) $(am__append_19) $(am__append_20) \
+	$(am__append_21) $(am__append_22) $(am__append_23)
 libutil_ladir = ${includedir}
 nobase_libutil_la_HEADERS = ${util_headers}
 libutil_la_SOURCES = ${util_sources}
@@ -1122,6 +1132,9 @@ libsax2_la_SOURCES = ${sax2_sources}
 libvalidators_ladir = ${includedir}
 nobase_libvalidators_la_HEADERS = ${validators_headers}
 libvalidators_la_SOURCES = ${validators_sources}
+libxinclude_ladir = ${includedir}
+nobase_libxinclude_la_HEADERS = ${xinclude_headers}
+libxinclude_la_SOURCES = ${xinclude_sources}
 @XERCES_USE_NETACCESSOR_CURL_TRUE@libcurlna_ladir = ${includedir}
 @XERCES_USE_NETACCESSOR_CURL_TRUE@nobase_libcurlna_la_HEADERS = ${curl_headers}
 @XERCES_USE_NETACCESSOR_CURL_TRUE@libcurlna_la_SOURCES = ${curl_sources}
@@ -1998,6 +2011,16 @@ validators_sources = \
 	xercesc/validators/schema/XSDErrorReporter.cpp \
 	xercesc/validators/schema/XSDLocator.cpp \
 	xercesc/validators/schema/XUtil.cpp
+
+xinclude_headers = \
+	xercesc/xinclude/XIncludeDOMDocumentProcessor.hpp \
+        xercesc/xinclude/XIncludeLocation.hpp \
+        xercesc/xinclude/XIncludeUtils.hpp
+
+xinclude_sources = \
+	xercesc/xinclude/XIncludeDOMDocumentProcessor.cpp \
+        xercesc/xinclude/XIncludeLocation.cpp \
+        xercesc/xinclude/XIncludeUtils.cpp
 
 icu_headers = \
 	xercesc/util/Transcoders/ICU/ICUTransService.hpp
@@ -3295,6 +3318,22 @@ xercesc/util/NetAccessors/libWWW/libwwwna_la-BinURLInputStream.lo:  \
 	xercesc/util/NetAccessors/libWWW/$(DEPDIR)/$(am__dirstamp)
 libwwwna.la: $(libwwwna_la_OBJECTS) $(libwwwna_la_DEPENDENCIES) 
 	$(CXXLINK) $(am_libwwwna_la_rpath) $(libwwwna_la_LDFLAGS) $(libwwwna_la_OBJECTS) $(libwwwna_la_LIBADD) $(LIBS)
+xercesc/xinclude/$(am__dirstamp):
+	@$(mkdir_p) xercesc/xinclude
+	@: > xercesc/xinclude/$(am__dirstamp)
+xercesc/xinclude/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) xercesc/xinclude/$(DEPDIR)
+	@: > xercesc/xinclude/$(DEPDIR)/$(am__dirstamp)
+xercesc/xinclude/XIncludeDOMDocumentProcessor.lo:  \
+	xercesc/xinclude/$(am__dirstamp) \
+	xercesc/xinclude/$(DEPDIR)/$(am__dirstamp)
+xercesc/xinclude/XIncludeLocation.lo:  \
+	xercesc/xinclude/$(am__dirstamp) \
+	xercesc/xinclude/$(DEPDIR)/$(am__dirstamp)
+xercesc/xinclude/XIncludeUtils.lo: xercesc/xinclude/$(am__dirstamp) \
+	xercesc/xinclude/$(DEPDIR)/$(am__dirstamp)
+libxinclude.la: $(libxinclude_la_OBJECTS) $(libxinclude_la_DEPENDENCIES) 
+	$(CXXLINK)  $(libxinclude_la_LDFLAGS) $(libxinclude_la_OBJECTS) $(libxinclude_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -3942,6 +3981,12 @@ mostlyclean-compile:
 	-rm -f xercesc/validators/schema/identity/XPathSymbols.lo
 	-rm -f xercesc/validators/schema/identity/XercesXPath.$(OBJEXT)
 	-rm -f xercesc/validators/schema/identity/XercesXPath.lo
+	-rm -f xercesc/xinclude/XIncludeDOMDocumentProcessor.$(OBJEXT)
+	-rm -f xercesc/xinclude/XIncludeDOMDocumentProcessor.lo
+	-rm -f xercesc/xinclude/XIncludeLocation.$(OBJEXT)
+	-rm -f xercesc/xinclude/XIncludeLocation.lo
+	-rm -f xercesc/xinclude/XIncludeUtils.$(OBJEXT)
+	-rm -f xercesc/xinclude/XIncludeUtils.lo
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -4268,6 +4313,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/validators/schema/identity/$(DEPDIR)/XPathMatcherStack.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/validators/schema/identity/$(DEPDIR)/XPathSymbols.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@xercesc/validators/schema/identity/$(DEPDIR)/XercesXPath.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/xinclude/$(DEPDIR)/XIncludeDOMDocumentProcessor.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/xinclude/$(DEPDIR)/XIncludeLocation.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@xercesc/xinclude/$(DEPDIR)/XIncludeUtils.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`; \
@@ -4364,6 +4412,7 @@ clean-libtool:
 	-rm -rf xercesc/validators/datatype/.libs xercesc/validators/datatype/_libs
 	-rm -rf xercesc/validators/schema/.libs xercesc/validators/schema/_libs
 	-rm -rf xercesc/validators/schema/identity/.libs xercesc/validators/schema/identity/_libs
+	-rm -rf xercesc/xinclude/.libs xercesc/xinclude/_libs
 
 distclean-libtool:
 	-rm -f libtool
@@ -4957,6 +5006,25 @@ uninstall-nobase_libwwwna_laHEADERS:
 	  echo " rm -f '$(DESTDIR)$(libwwwna_ladir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(libwwwna_ladir)/$$f"; \
 	done
+install-nobase_libxinclude_laHEADERS: $(nobase_libxinclude_la_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(libxinclude_ladir)" || $(mkdir_p) "$(DESTDIR)$(libxinclude_ladir)"
+	@$(am__vpath_adj_setup) \
+	list='$(nobase_libxinclude_la_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  $(am__vpath_adj) \
+	  echo " $(nobase_libxinclude_laHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(libxinclude_ladir)/$$f'"; \
+	  $(nobase_libxinclude_laHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(libxinclude_ladir)/$$f"; \
+	done
+
+uninstall-nobase_libxinclude_laHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@$(am__vpath_adj_setup) \
+	list='$(nobase_libxinclude_la_HEADERS)'; for p in $$list; do \
+	  $(am__vpath_adj) \
+	  echo " rm -f '$(DESTDIR)$(libxinclude_ladir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(libxinclude_ladir)/$$f"; \
+	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -5091,7 +5159,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/xercesc/dom $(distdir)/xercesc/dom/impl $(distdir)/xercesc/framework $(distdir)/xercesc/framework/psvi $(distdir)/xercesc/internal $(distdir)/xercesc/parsers $(distdir)/xercesc/sax $(distdir)/xercesc/sax2 $(distdir)/xercesc/util $(distdir)/xercesc/util/AtomicOpManagers $(distdir)/xercesc/util/FileManagers $(distdir)/xercesc/util/MsgLoaders/ICU $(distdir)/xercesc/util/MsgLoaders/InMemory $(distdir)/xercesc/util/MsgLoaders/MsgCatalog $(distdir)/xercesc/util/MutexManagers $(distdir)/xercesc/util/NetAccessors/Curl $(distdir)/xercesc/util/NetAccessors/MacOSURLAccessCF $(distdir)/xercesc/util/NetAccessors/Socket $(distdir)/xercesc/util/NetAccessors/WinSock $(distdir)/xercesc/util/NetAccessors/libWWW $(distdir)/xercesc/util/Transcoders/ICU $(distdir)/xercesc/util/Transcoders/Iconv $(distdir)/xercesc/util/Transcoders/IconvGNU $(distdir)/xercesc/util/Transcoders/MacOSUnicodeConverter $(distdir)/xercesc/util/Transcoders/Win32 $(distdir)/xercesc/util/regx $(distdir)/xercesc/validators/DTD $(distdir)/xercesc/validators/common $(distdir)/xercesc/validators/datatype $(distdir)/xercesc/validators/schema $(distdir)/xercesc/validators/schema/identity
+	$(mkdir_p) $(distdir)/xercesc/dom $(distdir)/xercesc/dom/impl $(distdir)/xercesc/framework $(distdir)/xercesc/framework/psvi $(distdir)/xercesc/internal $(distdir)/xercesc/parsers $(distdir)/xercesc/sax $(distdir)/xercesc/sax2 $(distdir)/xercesc/util $(distdir)/xercesc/util/AtomicOpManagers $(distdir)/xercesc/util/FileManagers $(distdir)/xercesc/util/MsgLoaders/ICU $(distdir)/xercesc/util/MsgLoaders/InMemory $(distdir)/xercesc/util/MsgLoaders/MsgCatalog $(distdir)/xercesc/util/MutexManagers $(distdir)/xercesc/util/NetAccessors/Curl $(distdir)/xercesc/util/NetAccessors/MacOSURLAccessCF $(distdir)/xercesc/util/NetAccessors/Socket $(distdir)/xercesc/util/NetAccessors/WinSock $(distdir)/xercesc/util/NetAccessors/libWWW $(distdir)/xercesc/util/Transcoders/ICU $(distdir)/xercesc/util/Transcoders/Iconv $(distdir)/xercesc/util/Transcoders/IconvGNU $(distdir)/xercesc/util/Transcoders/MacOSUnicodeConverter $(distdir)/xercesc/util/Transcoders/Win32 $(distdir)/xercesc/util/regx $(distdir)/xercesc/validators/DTD $(distdir)/xercesc/validators/common $(distdir)/xercesc/validators/datatype $(distdir)/xercesc/validators/schema $(distdir)/xercesc/validators/schema/identity $(distdir)/xercesc/xinclude
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -5138,7 +5206,7 @@ check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(libcfurlna_ladir)" "$(DESTDIR)$(libcurlna_ladir)" "$(DESTDIR)$(libdom_ladir)" "$(DESTDIR)$(libdomimpl_ladir)" "$(DESTDIR)$(libframework_ladir)" "$(DESTDIR)$(libgnuiconvtc_ladir)" "$(DESTDIR)$(libiconvtc_ladir)" "$(DESTDIR)$(libicutc_ladir)" "$(DESTDIR)$(libinternal_ladir)" "$(DESTDIR)$(libmacosaomgr_ladir)" "$(DESTDIR)$(libmacosunicodeconverter_ladir)" "$(DESTDIR)$(libmsgiconv_ladir)" "$(DESTDIR)$(libmsgicu_ladir)" "$(DESTDIR)$(libmsginmemory_ladir)" "$(DESTDIR)$(libnothreadaomgr_ladir)" "$(DESTDIR)$(libnothreadmmgr_ladir)" "$(DESTDIR)$(libparsers_ladir)" "$(DESTDIR)$(libposixaomgr_ladir)" "$(DESTDIR)$(libposixfmgr_ladir)" "$(DESTDIR)$(libposixmmgr_ladir)" "$(DESTDIR)$(libsax2_ladir)" "$(DESTDIR)$(libsax_ladir)" "$(DESTDIR)$(libsocketsna_ladir)" "$(DESTDIR)$(libutil_ladir)" "$(DESTDIR)$(libvalidators_ladir)" "$(DESTDIR)$(libwinaomgr_ladir)" "$(DESTDIR)$(libwinfmgr_ladir)" "$(DESTDIR)$(libwinmmgr_ladir)" "$(DESTDIR)$(libwinsockna_ladir)" "$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)"; do \
+	for dir in "$(DESTDIR)$(libcfurlna_ladir)" "$(DESTDIR)$(libcurlna_ladir)" "$(DESTDIR)$(libdom_ladir)" "$(DESTDIR)$(libdomimpl_ladir)" "$(DESTDIR)$(libframework_ladir)" "$(DESTDIR)$(libgnuiconvtc_ladir)" "$(DESTDIR)$(libiconvtc_ladir)" "$(DESTDIR)$(libicutc_ladir)" "$(DESTDIR)$(libinternal_ladir)" "$(DESTDIR)$(libmacosaomgr_ladir)" "$(DESTDIR)$(libmacosunicodeconverter_ladir)" "$(DESTDIR)$(libmsgiconv_ladir)" "$(DESTDIR)$(libmsgicu_ladir)" "$(DESTDIR)$(libmsginmemory_ladir)" "$(DESTDIR)$(libnothreadaomgr_ladir)" "$(DESTDIR)$(libnothreadmmgr_ladir)" "$(DESTDIR)$(libparsers_ladir)" "$(DESTDIR)$(libposixaomgr_ladir)" "$(DESTDIR)$(libposixfmgr_ladir)" "$(DESTDIR)$(libposixmmgr_ladir)" "$(DESTDIR)$(libsax2_ladir)" "$(DESTDIR)$(libsax_ladir)" "$(DESTDIR)$(libsocketsna_ladir)" "$(DESTDIR)$(libutil_ladir)" "$(DESTDIR)$(libvalidators_ladir)" "$(DESTDIR)$(libwinaomgr_ladir)" "$(DESTDIR)$(libwinfmgr_ladir)" "$(DESTDIR)$(libwinmmgr_ladir)" "$(DESTDIR)$(libwinsockna_ladir)" "$(DESTDIR)$(libwintrans_ladir)" "$(DESTDIR)$(libwwwna_ladir)" "$(DESTDIR)$(libxinclude_ladir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-recursive
@@ -5223,6 +5291,8 @@ distclean-generic:
 	-rm -f xercesc/validators/schema/$(am__dirstamp)
 	-rm -f xercesc/validators/schema/identity/$(DEPDIR)/$(am__dirstamp)
 	-rm -f xercesc/validators/schema/identity/$(am__dirstamp)
+	-rm -f xercesc/xinclude/$(DEPDIR)/$(am__dirstamp)
+	-rm -f xercesc/xinclude/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -5233,7 +5303,7 @@ clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-recursive
-	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/IconvGNU/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
+	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/IconvGNU/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR) xercesc/xinclude/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -5278,7 +5348,8 @@ install-data-am: install-nobase_libcfurlna_laHEADERS \
 	install-nobase_libwinmmgr_laHEADERS \
 	install-nobase_libwinsockna_laHEADERS \
 	install-nobase_libwintrans_laHEADERS \
-	install-nobase_libwwwna_laHEADERS
+	install-nobase_libwwwna_laHEADERS \
+	install-nobase_libxinclude_laHEADERS
 
 install-exec-am:
 
@@ -5289,7 +5360,7 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/IconvGNU/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR)
+	-rm -rf xercesc/dom/$(DEPDIR) xercesc/dom/impl/$(DEPDIR) xercesc/framework/$(DEPDIR) xercesc/framework/psvi/$(DEPDIR) xercesc/internal/$(DEPDIR) xercesc/parsers/$(DEPDIR) xercesc/sax/$(DEPDIR) xercesc/sax2/$(DEPDIR) xercesc/util/$(DEPDIR) xercesc/util/AtomicOpManagers/$(DEPDIR) xercesc/util/FileManagers/$(DEPDIR) xercesc/util/MsgLoaders/ICU/$(DEPDIR) xercesc/util/MsgLoaders/InMemory/$(DEPDIR) xercesc/util/MsgLoaders/MsgCatalog/$(DEPDIR) xercesc/util/MutexManagers/$(DEPDIR) xercesc/util/NetAccessors/Curl/$(DEPDIR) xercesc/util/NetAccessors/MacOSURLAccessCF/$(DEPDIR) xercesc/util/NetAccessors/Socket/$(DEPDIR) xercesc/util/NetAccessors/WinSock/$(DEPDIR) xercesc/util/NetAccessors/libWWW/$(DEPDIR) xercesc/util/Transcoders/ICU/$(DEPDIR) xercesc/util/Transcoders/Iconv/$(DEPDIR) xercesc/util/Transcoders/IconvGNU/$(DEPDIR) xercesc/util/Transcoders/MacOSUnicodeConverter/$(DEPDIR) xercesc/util/Transcoders/Win32/$(DEPDIR) xercesc/util/regx/$(DEPDIR) xercesc/validators/DTD/$(DEPDIR) xercesc/validators/common/$(DEPDIR) xercesc/validators/datatype/$(DEPDIR) xercesc/validators/schema/$(DEPDIR) xercesc/validators/schema/identity/$(DEPDIR) xercesc/xinclude/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -5336,7 +5407,8 @@ uninstall-am: uninstall-info-am uninstall-nobase_libcfurlna_laHEADERS \
 	uninstall-nobase_libwinmmgr_laHEADERS \
 	uninstall-nobase_libwinsockna_laHEADERS \
 	uninstall-nobase_libwintrans_laHEADERS \
-	uninstall-nobase_libwwwna_laHEADERS
+	uninstall-nobase_libwwwna_laHEADERS \
+	uninstall-nobase_libxinclude_laHEADERS
 
 uninstall-info: uninstall-info-recursive
 
@@ -5378,13 +5450,14 @@ uninstall-info: uninstall-info-recursive
 	install-nobase_libwinmmgr_laHEADERS \
 	install-nobase_libwinsockna_laHEADERS \
 	install-nobase_libwintrans_laHEADERS \
-	install-nobase_libwwwna_laHEADERS install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic maintainer-clean-recursive \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool mostlyclean-recursive pdf pdf-am ps ps-am \
-	tags tags-recursive uninstall uninstall-am uninstall-info-am \
-	uninstall-nobase_libcfurlna_laHEADERS \
+	install-nobase_libwwwna_laHEADERS \
+	install-nobase_libxinclude_laHEADERS install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
+	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
+	uninstall-info-am uninstall-nobase_libcfurlna_laHEADERS \
 	uninstall-nobase_libcurlna_laHEADERS \
 	uninstall-nobase_libdom_laHEADERS \
 	uninstall-nobase_libdomimpl_laHEADERS \
@@ -5414,7 +5487,8 @@ uninstall-info: uninstall-info-recursive
 	uninstall-nobase_libwinmmgr_laHEADERS \
 	uninstall-nobase_libwinsockna_laHEADERS \
 	uninstall-nobase_libwintrans_laHEADERS \
-	uninstall-nobase_libwwwna_laHEADERS
+	uninstall-nobase_libwwwna_laHEADERS \
+	uninstall-nobase_libxinclude_laHEADERS
 
 
 #
