@@ -509,9 +509,26 @@ IconvFBSDTransService::IconvFBSDTransService()
     }
 #endif
 
-    // Try to obtain local (host) characterset through the environment
-    char*    fLocalCP = setlocale (LC_CTYPE, "");
-    if (fLocalCP == NULL)
+    // Try to obtain local (host) characterset from the setlocale
+    // and through the environment. Do not call setlocale(LC_*, "")!
+    // Using an empty string instead of NULL, will modify the libc
+    // behavior.
+    //
+    char* fLocalCP = setlocale (LC_CTYPE, NULL);
+    if (fLocalCP == NULL || *fLocalCP == 0 ||
+        strcmp (fLocalCP, "C") == 0 ||
+        strcmp (fLocalCP, "POSIX") == 0) {
+      fLocalCP = getenv ("LC_ALL");
+      if (fLocalCP == NULL) {
+        fLocalCP = getenv ("LC_CTYPE");
+        if (fLocalCP == NULL)
+          fLocalCP = getenv ("LANG");
+      }
+    }
+
+    if (fLocalCP == NULL || *fLocalCP == 0 ||
+        strcmp (fLocalCP, "C") == 0 ||
+        strcmp (fLocalCP, "POSIX") == 0)
         fLocalCP = "iso-8859-1";    // fallback locale
     else {
         char    *ptr = strchr (fLocalCP, '.');
