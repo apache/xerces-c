@@ -1157,7 +1157,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             else
             {
                 // search for "]]>", the node value is not supposed to have this
-                if (XMLString::patternMatch((XMLCh* const) nodeValue, gEndCDATA) != -1)
+                if (XMLString::patternMatch((XMLCh*) nodeValue, gEndCDATA) != -1)
                 {
                     reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NestedCDATA);
                 }
@@ -1375,7 +1375,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 
     if (fErrorHandler)
     {
-        DOMLocatorImpl  locator(-1, -1, (DOMNode* const) errorNode, 0);
+        DOMLocatorImpl  locator(-1, -1, (DOMNode*) errorNode, 0);
         DOMErrorImpl    domError(errorType , errorMsg, &locator);
         try
         {
@@ -1405,7 +1405,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 
     if (fErrorHandler)
     {
-        DOMLocatorImpl  locator(-1, -1, (DOMNode* const) errorNode, 0);
+        DOMLocatorImpl  locator(-1, -1, (DOMNode*) errorNode, 0);
         DOMErrorImpl    domError(errorType , errText, &locator);
         try
         {
