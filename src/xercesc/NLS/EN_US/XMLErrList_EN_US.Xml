@@ -766,7 +766,7 @@
             <Message Id="XPath_NoSelectionOfRoot" Text="Not allowed to select the root of an xpath"/>
             <Message Id="XPath_EmptyExpr" Text="Empty xpath expression"/>
             <Message Id="XPath_NoUnionAtEnd" Text="The xpath expression cannot end with '|'"/>
-            <Message Id="XPath_InvalidChar" Text="Invalid character following '.' in xpath"/>
+            <Message Id="XPath_InvalidChar" Text="Invalid character '{0}' in xpath"/>
             <Message Id="XPath_TokenNotSupported" Text="XPath token not supported"/>
             <Message Id="XPath_FindSolution" Text="Find a solution!"/>
             <Message Id="DateTime_Assert_Buffer_Fail" Text="buffer not initialized yet!"/>

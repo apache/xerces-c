@@ -750,7 +750,7 @@ $set 3
 315  Not allowed to select the root of an xpath
 316  Empty xpath expression
 317  The xpath expression cannot end with '|'
-318  Invalid character following '.' in xpath
+318  Invalid character '{0}' in xpath
 319  XPath token not supported
 320  Find a solution!
 321  buffer not initialized yet!

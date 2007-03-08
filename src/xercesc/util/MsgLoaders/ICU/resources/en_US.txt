@@ -767,7 +767,7 @@ en_US {
 		"Not allowed to select the root of an xpath " ,
 		"Empty xpath expression " ,
 		"The xpath expression cannot end with '|' " ,
-		"Invalid character following '.' in xpath " ,
+		"Invalid character '{0}' in xpath " ,
 		"XPath token not supported " ,
 		"Find a solution! " ,
 		"buffer not initialized yet! " ,
