@@ -849,7 +849,8 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
                     break;
                 }
             } else {
-                ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_InvalidChar, tokens->getMemoryManager());
+                XMLCh str[2]= {ch, 0 };
+                ThrowXMLwithMemMgr1(XPathException, XMLExcepts::XPath_InvalidChar, str, tokens->getMemoryManager());
             }
 
             break;
@@ -1078,6 +1079,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
         case CHARTYPE_NONASCII: // possibly a valid non-ascii 'Letter' (BaseChar | Ideographic)
         case CHARTYPE_LETTER:
         case CHARTYPE_UNDERSCORE:
+            {
             //
             // 3.7 Lexical Structure
             //
@@ -1289,6 +1291,13 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
 
             starIsMultiplyOperator = true;
             break;
+            }
+        default:
+            {
+            XMLCh str[2]= {ch, 0 };
+            ThrowXMLwithMemMgr1(XPathException, XMLExcepts::XPath_InvalidChar, str, tokens->getMemoryManager());
+            break;
+            }
         }
     }
 
