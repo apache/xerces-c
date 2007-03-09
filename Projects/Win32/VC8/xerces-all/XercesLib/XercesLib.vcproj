@@ -3670,6 +3670,35 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="xinclude"
+			Filter=""
+            >
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeDOMDocumentProcessor.cpp"
+                >
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeDOMDocumentProcessor.hpp"
+                >
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeLocation.cpp"
+                >
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeLocation.hpp"
+                >
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeUtils.cpp"
+                >
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\xinclude\XIncludeUtils.hpp"
+                >
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
