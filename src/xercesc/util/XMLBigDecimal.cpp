@@ -288,7 +288,7 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
     /***
     E2-44 totalDigits
 
-     ... by restricting it to numbers that are expressible as i × 10^-n
+     ... by restricting it to numbers that are expressible as i x 10^-n
      where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits. 
 
         normalization: remove all trailing zero after the '.'
@@ -300,6 +300,9 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
         fractDigits--;
         totalDigits--;
     }
+    // 0.0 got past the check for zero because of the decimal point, so we need to double check it here
+    if(totalDigits==0)
+        sign = 0;
 
     *retPtr = chNull;   //terminated
     return;
