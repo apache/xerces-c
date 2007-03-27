@@ -1946,6 +1946,11 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
     //  in order to catch the scenario where the current entity ended at
     //  the > of some markup.
     XMLCh nextCh;
+
+    // avoid setting up the ThrowEOEJanitor if we know that we have data in the current reader
+    if(fReaderMgr.getCurrentReader() && fReaderMgr.getCurrentReader()->charsLeftInBuffer()>0)
+        nextCh = fReaderMgr.peekNextChar();
+    else
     {
         ThrowEOEJanitor janMgr(&fReaderMgr, true);
         nextCh = fReaderMgr.peekNextChar();

@@ -16,7 +16,7 @@
  */
 
 /*
- * $Id $
+ * $Id$
  */
 
 #if !defined(XMLSTRING_HPP)
@@ -1521,14 +1521,10 @@ inline unsigned int XMLString::hash(   const   XMLCh* const    tohash
         return 0;
 
     const XMLCh* curCh = tohash;
-    unsigned int hashVal = (unsigned int)(*curCh);
-    curCh++;
+    unsigned int hashVal = (unsigned int)(*curCh++);
 
     while (*curCh)
-    {
-        hashVal = (hashVal * 38) + (hashVal >> 24) + (unsigned int)(*curCh);
-        curCh++;
-    }
+        hashVal = (hashVal * 38) + (hashVal >> 24) + (unsigned int)(*curCh++);
 
     // Divide by modulus
     return hashVal % hashModulus;

@@ -771,7 +771,7 @@ inline bool XMLReader::peekNextChar(XMLCh& chGotten)
     //  normal char get method in regards to newline normalization, though
     //  its not as complicated as the actual character getting method's.
     //
-    if ((chGotten == chCR || ((chGotten == chNEL || chGotten == chLineSeparator) && fNEL))
+    if ((chGotten == chCR || (fNEL && (chGotten == chNEL || chGotten == chLineSeparator)))
         && (fSource == Source_External))
         chGotten = chLF;
 
