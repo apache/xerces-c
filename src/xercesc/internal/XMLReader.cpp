@@ -1120,7 +1120,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
         //  dirty comparison straight to its buffer with no requirement to unget
         //  if it fails.
         //
-        if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip, srcLen))
+        if (memcmp(&fCharBuf[fCharIndex], toSkip, srcLen*sizeof(XMLCh)))
             return false;
 
         //
@@ -1136,7 +1136,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
             if (charsLeft == 0)
                 return false; // error situation
         }
-        if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip, charsLeft))
+        if (memcmp(&fCharBuf[fCharIndex], toSkip, charsLeft*sizeof(XMLCh)))
             return false;
 
         fCharIndex += charsLeft;
@@ -1151,7 +1151,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
                 return false; // error situation
             if (charsLeft > remainingLen)
                 charsLeft = remainingLen;
-            if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip+offset, charsLeft))
+            if (memcmp(&fCharBuf[fCharIndex], toSkip+offset, charsLeft*sizeof(XMLCh)))
                 return false;
             offset += charsLeft;
             remainingLen -= charsLeft;
@@ -1205,7 +1205,7 @@ bool XMLReader::peekString(const XMLCh* const toPeek)
     //  dirty comparison straight to its buffer with no requirement to unget
     //  if it fails.
     //
-    if (XMLString::compareNString(&fCharBuf[fCharIndex], toPeek, srcLen))
+    if (memcmp(&fCharBuf[fCharIndex], toPeek, srcLen*sizeof(XMLCh)))
         return false;
 
     return true;
@@ -1848,8 +1848,6 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
     {
         fCurCol++;
     }
-
-    return;
 }
 
 XERCES_CPP_NAMESPACE_END
