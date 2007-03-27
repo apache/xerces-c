@@ -301,6 +301,9 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
         fractDigits--;
         totalDigits--;
     }
+    // 0.0 got past the check for zero because of the decimal point, so we need to double check it here
+    if(totalDigits==0)
+        sign = 0;
 
     *retPtr = chNull;   //terminated
     return;
