@@ -49,6 +49,7 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/HashPtr.hpp>
+#include <xercesc/util/XMLStringTokenizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1714,6 +1715,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             }
 
         }
+        else if (fGrammarType == Grammar::SchemaGrammarType) {
+            ((SchemaValidator*)fValidator)->setNillable(false);
+        }
 
         if (fPSVIHandler)
         {
@@ -2211,7 +2215,142 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         XMLAttDef::AttTypes attType;
         DatatypeValidator *attrValidator = 0;
         PSVIAttribute *psviAttr = 0;
-        if (!isNSAttr)
+        bool otherXSI = false;
+
+        if (isNSAttr)
+        {
+            if(fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
+            {
+                emitError
+                ( 
+                    XMLErrs::AttrAlreadyUsedInSTag
+                    , namePtr
+                    , elemDecl->getFullName()
+                );
+                fPSVIElemContext.fErrorOccurred = true;
+            }
+            else
+            {
+                bool ValueValidate = false;
+                bool tokenizeBuffer = false;
+
+                if (uriId == fXMLNSNamespaceId)
+                {
+                    attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
+                }
+                else if (XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI))
+                {
+                    if (XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL))
+                    {
+                        attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_BOOLEAN);
+
+                        ValueValidate = true;
+                    }
+                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
+                    {
+                        // use anyURI as the validator
+                        // tokenize the data and use the anyURI data for each piece
+                        attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
+                        //We should validate each value in the schema location however
+                        //this lead to a performance degradation of around 4%.  Since
+                        //the first value of each pair needs to match what is in the
+                        //schema document and the second value needs to be valid in
+                        //order to open the document we won't validate it.  Need to
+                        //do performance analysis of the anyuri datatype.
+                        //ValueValidate = true;
+                        ValueValidate = false;
+                        tokenizeBuffer = true;                        
+                    }
+                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
+                    {
+                        attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
+                        //We should validate this value however
+                        //this lead to a performance degradation of around 4%.  Since
+                        //the value needs to be valid in
+                        //order to open the document we won't validate it.  Need to
+                        //do performance analysis of the anyuri datatype.
+                        //ValueValidate = true;
+                        ValueValidate = false;
+                    }
+                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE))
+                    {
+                        attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME);
+
+                        ValueValidate = true;
+                    }
+                    else {
+                        otherXSI = true;                       
+                    }
+                }
+
+                if (!otherXSI) {
+                    fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
+
+                    // Just normalize as CDATA
+                    attType = XMLAttDef::CData;
+                    normalizeAttRawValue
+                    (
+                        namePtr
+                        , curPair->getValue()
+                        , normBuf
+                    );                    
+
+                    if (fValidate && attrValidator && ValueValidate)
+                    {
+                        ValidationContext* const    theContext =
+                            getValidationContext();
+
+                        if (theContext)
+                        {
+                            try
+                            {
+                                if (tokenizeBuffer) {
+                                    XMLStringTokenizer tokenizer(normBuf.getRawBuffer(), fMemoryManager);                                    
+                                    while (tokenizer.hasMoreTokens()) {                                       
+                                        attrValidator->validate(
+                                            tokenizer.nextToken(),
+                                            theContext,
+                                            fMemoryManager);
+                                    }                                  
+                                }
+                                else {
+                                    attrValidator->validate(
+                                        normBuf.getRawBuffer(),
+                                        theContext,
+                                        fMemoryManager);
+                                }
+                            }
+                            catch (const XMLException& idve)
+                            {
+                                fValidator->emitError (XMLValid::DatatypeError, idve.getCode(), idve.getType(), idve.getMessage());
+                            }
+                        }
+                    }
+
+                    if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
+                    {
+	                    psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
+	                    XSSimpleTypeDefinition *validatingType = (attrValidator)
+                            ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
+                            : 0;
+                        // no attribute declarations for these...
+	                    psviAttr->reset(
+	                        fRootElemName
+	                        , PSVIItem::VALIDITY_NOTKNOWN
+	                        , PSVIItem::VALIDATION_NONE
+	                        , validatingType
+	                        , 0
+	                        , 0
+                            , false
+	                        , 0
+                            , attrValidator
+                        );
+                    }
+                }
+            }
+        }
+
+        if (!isNSAttr || otherXSI)        
         {
             // Some checking for attribute wild card first (for schema)
             bool laxThisOne = false;
@@ -2541,39 +2680,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                );
                 }
 	        }
-        }
-        else
-        {
-            // Just normalize as CDATA
-            attType = XMLAttDef::CData;
-            normalizeAttRawValue
-            (
-                namePtr
-                , curPair->getValue()
-                , normBuf
-            );
-            if((uriId == fXMLNSNamespaceId)
-                  || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI))
-                attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
-            if(getPSVIHandler())
-            {
-                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
-                XSSimpleTypeDefinition *validatingType = 0;
-                if (attrValidator && fModel)
-                    validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-                // no attribute declarations for these...
-	            psviAttr->reset(
-	                fRootElemName
-	                , PSVIItem::VALIDITY_NOTKNOWN
-	                , PSVIItem::VALIDATION_NONE
-	                , validatingType
-	                , 0
-	                , 0
-                    , false
-	                , 0
-                    , attrValidator
-                );
-            }
         }
 
         //  Add this attribute to the attribute list that we use to pass them

@@ -1072,15 +1072,15 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
             reportSchemaError(child, XMLUni::fgValidityDomain, XMLValid::GroupContentRestricted, childName);
         }
 
-        if (contentSpecNode.get()) {
-            hadContent = true;
-        }
-
         if (seeParticle) {
             checkMinMax(contentSpecNode.get(), child, Not_All_Context);
             if (wasAny && contentSpecNode.get()->getMaxOccurs() == 0) {
                 contentSpecNode.reset(0);
             }
+        }
+
+        if (contentSpecNode.get()) {
+            hadContent = true;
         }
 
         if (left.get() == 0) {

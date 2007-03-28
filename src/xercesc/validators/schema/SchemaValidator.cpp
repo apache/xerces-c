@@ -1420,6 +1420,9 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
                                     const int baseScope,
                                     const ComplexTypeInfo* const baseInfo) {
 
+    if (derivedSpecNode->getMaxOccurs() == 0)
+        return;
+
     unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
 
     // case of mixed complex types with attributes only
