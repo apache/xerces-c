@@ -21,7 +21,7 @@ top_srcdir = @top_srcdir@
 ICU_PREFIX = @ICU_PREFIX@
 SHREXT = @SHREXT@
 
-include ../../../../../../version.incl
+include $(top_srcdir)/version.incl
 
 GENRB=$(ICU_PREFIX)/bin/genrb
 GENRBOPT=--package-name $(PKGNAME)
@@ -42,7 +42,7 @@ RESCPPFLAGS=
 
 # target file for resource bundle - this must be set, or 'make all' won't
 # build any resources.
-RESTARGET=$(top_srcdir)/obj/.libs/lib$(PKGNAME)$(SHREXT)
+RESTARGET=$(top_builddir)/obj/.libs/lib$(PKGNAME)$(SHREXT)
 PKGTARGET=lib$(PKGNAME)$(SHREXT)
 
 # Resource files.  Add new ones for additional locales here.
@@ -63,7 +63,7 @@ $(TARGET): $(OBJECTS)
 $(RESTARGET): $(RESFILES)
 	@echo building $(RESTARGET)
 	$(PKGDATA) --name $(PKGNAME) --mode dll $(PKGDATAOPTS) $(RESLIST)
-	mkdir -p $(top_srcdir)/obj/.libs
+	mkdir -p $(top_builddir)/obj/.libs
 	mv $(PKGTARGET) $(RESTARGET)
 	
 # clean out files
