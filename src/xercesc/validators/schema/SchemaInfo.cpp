@@ -25,6 +25,7 @@
 #include <xercesc/validators/schema/SchemaInfo.hpp>
 #include <xercesc/validators/schema/XUtil.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/validators/schema/NamespaceScope.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/internal/ValidationContextImpl.hpp>
 
@@ -38,7 +39,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const int finalDefault,
                        const int targetNSURI,
                        const int scopeCount,
-                       const unsigned int namespaceScopeLevel,
+                       const NamespaceScope* const currNamespaceScope,
                        XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
                        const DOMElement* const root,
@@ -50,7 +51,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fFinalDefault(finalDefault)
     , fTargetNSURI(targetNSURI)
     , fScopeCount(scopeCount)
-    , fNamespaceScopeLevel(namespaceScopeLevel)
+    , fNamespaceScope(0)
     , fCurrentSchemaURL(schemaURL)
     , fTargetNSURIString(targetNSURIString)
     , fSchemaRootElement(root)
@@ -78,6 +79,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
+    fNamespaceScope = new (fMemoryManager) NamespaceScope(currNamespaceScope, fMemoryManager);
 }
 
 
@@ -100,7 +102,8 @@ SchemaInfo::~SchemaInfo()
     }
 
     delete fNonXSAttList;  
-    delete fValidationContext;    
+    delete fValidationContext;
+    delete fNamespaceScope;
 }
 
 // ---------------------------------------------------------------------------

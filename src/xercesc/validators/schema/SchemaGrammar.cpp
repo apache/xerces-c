@@ -54,7 +54,6 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fComplexTypeRegistry(0)
     , fGroupInfoRegistry(0)
     , fAttGroupInfoRegistry(0)
-    , fNamespaceScope(0)
     , fValidSubstitutionGroups(0)
     , fValidationContext(0)
     , fMemoryManager(manager)
@@ -197,7 +196,6 @@ void SchemaGrammar::reset()
 
 void SchemaGrammar::cleanUp()
 {
-
     delete fElemDeclPool;
     if(fElemNonDeclPool)
         delete fElemNonDeclPool;
@@ -208,7 +206,6 @@ void SchemaGrammar::cleanUp()
     delete fComplexTypeRegistry;
     delete fGroupInfoRegistry;
     delete fAttGroupInfoRegistry;
-    delete fNamespaceScope;
     delete fValidSubstitutionGroups;
     delete fValidationContext;
     delete fGramDesc;
@@ -256,8 +253,7 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
 {
 
     /***
-     * don't serialize NamespaceScope*    fNamespaceScope;
-     *                 ValidationContext* fValidationContext;
+     * don't serialize ValidationContext* fValidationContext;
      *                                    fElemNonDeclPool
      ***/
 

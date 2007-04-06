@@ -196,8 +196,7 @@ private:
     void                traverseUnique(const DOMElement* const icElem,
                                        SchemaElementDecl* const elemDecl);
     void                traverseKeyRef(const DOMElement* const icElem,
-                                       SchemaElementDecl* const elemDecl,
-                                       const unsigned int namespaceDepth);
+                                       SchemaElementDecl* const elemDecl);
     bool                traverseIdentityConstraint(IdentityConstraint* const ic,
                                                    const DOMElement* const icElem);
 
@@ -233,7 +232,7 @@ private:
     /**
       * Retrived the Namespace mapping from the schema element
       */
-    void retrieveNamespaceMapping(const DOMElement* const schemaRoot);
+    bool retrieveNamespaceMapping(const DOMElement* const elem);
 
     /**
       * Loop through the children, and traverse the corresponding schema type
@@ -296,9 +295,6 @@ private:
 
     const XMLCh* resolvePrefixToURI(const DOMElement* const elem,
                                     const XMLCh* const prefix);
-    const XMLCh* resolvePrefixToURI(const DOMElement* const elem,
-                                    const XMLCh* const prefix,
-                                    const unsigned int namespaceDepth);
 
     /**
       * Return the prefix for a given rawname string
@@ -736,7 +732,6 @@ private:
     XMLStringPool*                                 fStringPool;
     XMLBuffer                                      fBuffer;
     XMLScanner*                                    fScanner;
-    NamespaceScope*                                fNamespaceScope;
     RefHashTableOf<XMLAttDef>*                     fAttributeDeclRegistry;
     RefHashTableOf<ComplexTypeInfo>*               fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*               fGroupRegistry;
@@ -749,13 +744,11 @@ private:
     ComplexTypeInfo*                               fCurrentComplexType;
     ValueVectorOf<unsigned int>*                   fCurrentTypeNameStack;
     ValueVectorOf<unsigned int>*                   fCurrentGroupStack;
-    ValueVectorOf<unsigned int>*                   fIC_NamespaceDepth;
     ValueVectorOf<SchemaElementDecl*>*             fIC_Elements;
     ValueVectorOf<const DOMElement*>*              fDeclStack;
     ValueVectorOf<unsigned int>**                  fGlobalDeclarations;
     ValueVectorOf<DOMNode*>*                       fNonXSAttList;
     RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
-    RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*                    fRedefineComponents;
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
@@ -770,6 +763,7 @@ private:
     GeneralAttributeCheck                          fAttributeCheck;
 
     friend class GeneralAttributeCheck;
+    friend class NamespaceScopeManager;
 };
 
 

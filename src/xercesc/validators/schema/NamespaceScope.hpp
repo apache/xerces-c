@@ -30,7 +30,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class VALIDATORS_EXPORT XercesNamespaceResolver
 {
 public:
-    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefix) = 0;
+    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefix) const = 0;
 };
 
 //
@@ -76,6 +76,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     NamespaceScope(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    NamespaceScope(const NamespaceScope* const initialize, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~NamespaceScope();
 
 
@@ -91,9 +92,7 @@ public :
     void addPrefix(const XMLCh* const prefixToAdd,
                    const unsigned int uriId);
 
-    unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap, const int depthLevel) const;
-
-    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap);
+    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefixToMap) const;
 
 
     // -----------------------------------------------------------------------
@@ -144,16 +143,6 @@ private :
     StackElem**   fStack;
     MemoryManager* fMemoryManager;
 };
-
-
-// ---------------------------------------------------------------------------
-//  NamespaceScope: Stack access
-// ---------------------------------------------------------------------------
-inline unsigned int
-NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) {
-
-    return getNamespaceForPrefix(prefixToMap, (int)(fStackTop - 1));
-}
 
 // ---------------------------------------------------------------------------
 //  NamespaceScope: Miscellaneous methods

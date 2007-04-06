@@ -65,8 +65,26 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
 // ---------------------------------------------------------------------------
-typedef RefVectorOf<DatatypeValidator> DVRefVector;
 
+// This helper class will handle the parsing of namespace prefixes for a given DOMElement, and its winding back
+class NamespaceScopeManager
+{
+public:
+    NamespaceScopeManager(const DOMElement* const node, SchemaInfo* info, TraverseSchema* traverser)
+    {
+        fScopeAdded=node?traverser->retrieveNamespaceMapping(node):false;
+        fSchemaInfo=info;
+    }
+    ~NamespaceScopeManager()
+    {
+        if(fScopeAdded)
+            fSchemaInfo->getNamespaceScope()->decreaseDepth();
+            
+    }
+protected:
+    bool        fScopeAdded;
+    SchemaInfo* fSchemaInfo;
+};
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Static member data
@@ -190,7 +208,6 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fStringPool(0)
     , fBuffer(1023, manager)
     , fScanner(xmlScanner)
-    , fNamespaceScope(0)
     , fAttributeDeclRegistry(0)
     , fComplexTypeRegistry(0)
     , fGroupRegistry(0)
@@ -203,13 +220,11 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fCurrentComplexType(0)
     , fCurrentTypeNameStack(0)
     , fCurrentGroupStack(0)
-    , fIC_NamespaceDepth(0)
     , fIC_Elements(0)
     , fDeclStack(0)
     , fGlobalDeclarations(0)
     , fNonXSAttList(0)
     , fIC_NodeListNS(0)    
-    , fIC_NamespaceDepthNS(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
     , fIdentityConstraintNames(0)
@@ -263,7 +278,6 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
     if (fIC_ElementsNS && fIC_ElementsNS->containsKey(fTargetNSURIString)) {
 
         fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
-        fIC_NamespaceDepth = fIC_NamespaceDepthNS->get(fTargetNSURIString);
 
         unsigned int icListSize = fIC_Elements->size();
 
@@ -272,10 +286,9 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
             SchemaElementDecl* curElem = fIC_Elements->elementAt(i);
             ValueVectorOf<DOMElement*>* icNodes =  fIC_NodeListNS->get(curElem);
             unsigned int icNodesSize = icNodes->size();
-            unsigned int scopeDepth = fIC_NamespaceDepth->elementAt(i);
 
             for (unsigned int j = 0; j < icNodesSize; j++) {
-                traverseKeyRef(icNodes->elementAt(j), curElem, scopeDepth);
+                traverseKeyRef(icNodes->elementAt(j), curElem);
             }
         }
     }
@@ -338,15 +351,6 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
         fSchemaGrammar->setAttributeDeclRegistry(fAttributeDeclRegistry);
     }
 
-    fNamespaceScope = fSchemaGrammar->getNamespaceScope();
-
-    if (fNamespaceScope == 0) {
-
-        fNamespaceScope = new (fGrammarPoolMemoryManager) NamespaceScope(fGrammarPoolMemoryManager);
-        fNamespaceScope->reset(fEmptyNamespaceURI);
-        fSchemaGrammar->setNamespaceScope(fNamespaceScope);
-    }
-
     fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
 
     if (!fValidSubstitutionGroups) {
@@ -370,15 +374,21 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fGrammarResolver->putGrammar(fSchemaGrammar);
     fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
 
-    // Save current schema info
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
-                                          fNamespaceScope->increaseDepth(),
+                                          fSchemaInfo?fSchemaInfo->getNamespaceScope():NULL,
                                           XMLString::replicate(schemaURL, fGrammarPoolMemoryManager),
                                           fTargetNSURIString, schemaRoot,
                                           fGrammarPoolMemoryManager);
 
-    if (fSchemaInfo) {
+    if (fSchemaInfo)
         fSchemaInfo->addSchemaInfo(currInfo, SchemaInfo::IMPORT);
+    else
+    {
+        currInfo->getNamespaceScope()->reset(fEmptyNamespaceURI);
+        // Add mappings for xml prefix and for the default namespace
+        if (!fTargetNSURIString || !*fTargetNSURIString)
+            currInfo->getNamespaceScope()->addPrefix(XMLUni::fgZeroLenString, fEmptyNamespaceURI);
+        currInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
     }
 
     fSchemaInfo = currInfo;
@@ -410,6 +420,7 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
     );
 
     retrieveNamespaceMapping(schemaRoot);
+
     unsigned short elemAttrDefaultQualified = 0;
 
     if (XMLString::equals(schemaRoot->getAttribute(SchemaSymbols::fgATT_ELEMENTFORMDEFAULT),
@@ -433,6 +444,7 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
                                        ValueVectorOf<DOMNode*>* const nonXSAttList,
                                        const bool topLevel) {
 
+    NamespaceScopeManager nsMgr(annotationElem, fSchemaInfo, this);
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
@@ -554,6 +566,8 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
   */
 void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check attributes
     // -----------------------------------------------------------------------
@@ -665,7 +679,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
             SchemaInfo* saveInfo = fSchemaInfo;
 
             fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
-                                         fNamespaceScope->increaseDepth(),
+                                         fSchemaInfo->getNamespaceScope(),
                                          XMLString::replicate(includeURL, fGrammarPoolMemoryManager),
                                          fTargetNSURIString, root,
                                          fGrammarPoolMemoryManager);
@@ -683,6 +697,8 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
 
 void TraverseSchema::traverseInclude(const DOMElement* const elem) {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     SchemaInfo* includeInfo = fPreprocessedNodes->get(elem);
 
@@ -709,6 +725,8 @@ void TraverseSchema::traverseInclude(const DOMElement* const elem) {
   *    </import>
   */
 void TraverseSchema::preprocessImport(const DOMElement* const elem) {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     // -----------------------------------------------------------------------
     // Check attributes
@@ -880,6 +898,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
 void TraverseSchema::traverseImport(const DOMElement* const elem) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     SchemaInfo* importInfo = fPreprocessedNodes->get(elem);
 
     if (importInfo) {
@@ -911,6 +931,8 @@ void TraverseSchema::traverseImport(const DOMElement* const elem) {
   *    </redefine>
   */
 void TraverseSchema::preprocessRedefine(const DOMElement* const redefineElem) {
+
+    NamespaceScopeManager nsMgr(redefineElem, fSchemaInfo, this);
 
     // -----------------------------------------------------------------------
     // Check attributes
@@ -954,6 +976,8 @@ void TraverseSchema::preprocessRedefine(const DOMElement* const redefineElem) {
 
 void TraverseSchema::traverseRedefine(const DOMElement* const redefineElem) {
 
+    NamespaceScopeManager nsMgr(redefineElem, fSchemaInfo, this);
+
     SchemaInfo* saveInfo = fSchemaInfo;
     SchemaInfo* redefinedInfo = fPreprocessedNodes->get(redefineElem);
 
@@ -986,6 +1010,8 @@ ContentSpecNode*
 TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
                                        const int modelGroupType)
 {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     // -----------------------------------------------------------------------
     // Check attributes
@@ -1150,6 +1176,7 @@ DatatypeValidator*
 TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
                                        const bool topLevel, int baseRefContext)
 {
+    NamespaceScopeManager nsMgr(childElem, fSchemaInfo, this);
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
@@ -1276,6 +1303,8 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
 int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
                                             const bool topLevel,
                                             const XMLCh* const recursingTypeName) {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     // Get the attributes of the complexType
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
@@ -1500,6 +1529,8 @@ XercesGroupInfo*
 TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
                                   const bool topLevel) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
     bool         nameEmpty = (!name || !*name);
@@ -1704,6 +1735,8 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
                                            ComplexTypeInfo* const typeInfo,
                                            const bool topLevel) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
     bool         nameEmpty = (!name || !*name) ? true : false;
@@ -1852,6 +1885,8 @@ TraverseSchema::traverseAttributeGroupDeclNS(const DOMElement* const elem,
                                              const XMLCh* const uriStr,
                                              const XMLCh* const name) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     // ------------------------------------------------------------------
     // Get grammar information
     // ------------------------------------------------------------------
@@ -1884,6 +1919,8 @@ TraverseSchema::traverseAttributeGroupDeclNS(const DOMElement* const elem,
   */
 ContentSpecNode*
 TraverseSchema::traverseAny(const DOMElement* const elem) {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -2064,6 +2101,8 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
 ContentSpecNode*
 TraverseSchema::traverseAll(const DOMElement* const elem) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check attributes
     // -----------------------------------------------------------------------
@@ -2187,6 +2226,8 @@ TraverseSchema::traverseAll(const DOMElement* const elem) {
 void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                                            ComplexTypeInfo* const typeInfo,
                                            const bool topLevel) {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     const XMLCh*   name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh*   ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
@@ -2590,6 +2631,8 @@ SchemaElementDecl*
 TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                                     const bool topLevel)
 {
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     // if local element and ref attribute exists
     if (!topLevel)
     {
@@ -2844,6 +2887,8 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
 const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check attributes
     // -----------------------------------------------------------------------
@@ -2900,6 +2945,8 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
 const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
                                                   const XMLCh* const name,
                                                   const XMLCh* const uriStr) {
+
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     unsigned int uriId = fURIStringPool->addOrFind(uriStr);
     SchemaInfo*  saveInfo = fSchemaInfo;
@@ -2961,6 +3008,8 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
                                const XMLCh* const qualifiedName,
                                const int finalSet,
                                Janitor<XSAnnotation>* const janAnnot) {
+
+    NamespaceScopeManager nsMgr(contentElem, fSchemaInfo, this);
 
     DatatypeValidator* baseValidator = 0;
     const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_ITEMTYPE);
@@ -3074,6 +3123,8 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                                       const XMLCh* const qualifiedName,
                                       const int finalSet,
                                       Janitor<XSAnnotation>* const janAnnot) {
+
+    NamespaceScopeManager nsMgr(contentElem, fSchemaInfo, this);
 
     DatatypeValidator* baseValidator = 0;
     DatatypeValidator* newDV = 0;
@@ -3345,6 +3396,8 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
                                 int baseRefContext,
                                 Janitor<XSAnnotation>* const janAnnot) {
 
+    NamespaceScopeManager nsMgr(contentElem, fSchemaInfo, this);
+
     fAttributeCheck.checkAttributes(
         contentElem, GeneralAttributeCheck::E_Union, this, false, fNonXSAttList
     );
@@ -3357,7 +3410,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     const XMLCh*                    baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_MEMBERTYPES);
     DatatypeValidator*              baseValidator = 0;
     RefVectorOf<DatatypeValidator>* validators = new (fGrammarPoolMemoryManager) RefVectorOf<DatatypeValidator>(4, false, fGrammarPoolMemoryManager);
-    Janitor<DVRefVector>            janValidators(validators);
+    Janitor<RefVectorOf<DatatypeValidator> > janValidators(validators);
     DOMElement*                     content = 0;
 
     if (baseTypeName && *baseTypeName) { //base was provided - get proper validator.
@@ -3505,6 +3558,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                                                ComplexTypeInfo* const typeInfo,
                                                Janitor<XSAnnotation>* const janAnnot)
 {
+    NamespaceScopeManager nsMgr(contentDecl, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
@@ -3910,6 +3965,8 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
                                                 const bool isMixed,
                                                 Janitor<XSAnnotation>* const janAnnot)
 {
+    NamespaceScopeManager nsMgr(contentDecl, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check attributes
     // -----------------------------------------------------------------------
@@ -4052,6 +4109,8 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
   */
 SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
@@ -4176,6 +4235,8 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
 void TraverseSchema::traverseKey(const DOMElement* const icElem,
                                  SchemaElementDecl* const elemDecl) {
 
+    NamespaceScopeManager nsMgr(icElem, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
@@ -4239,6 +4300,8 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
 void TraverseSchema::traverseUnique(const DOMElement* const icElem,
                                     SchemaElementDecl* const elemDecl) {
 
+    NamespaceScopeManager nsMgr(icElem, fSchemaInfo, this);
+
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
@@ -4301,8 +4364,9 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
   * </keyref>
   */
 void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
-                                    SchemaElementDecl* const elemDecl,
-                                    const unsigned int namespaceDepth) {
+                                    SchemaElementDecl* const elemDecl) {
+
+    NamespaceScopeManager nsMgr(icElem, fSchemaInfo, this);
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -4329,7 +4393,14 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
 
     const XMLCh* prefix = getPrefix(refer);
     const XMLCh* localPart = getLocalPart(refer);
-    const XMLCh* uriStr = resolvePrefixToURI(icElem, prefix, namespaceDepth);
+
+    // we use the DOM API, as the NamespaceScope is now pointing to a different place
+    const XMLCh* uriStr = icElem->lookupNamespaceURI(*prefix==0?NULL:prefix);
+    if ((!uriStr || !*uriStr) && (prefix && *prefix))
+        reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::UnresolvedPrefix, prefix);
+    if(!uriStr)
+        uriStr=XMLUni::fgZeroLenString;
+
     IdentityConstraint* icKey = (fIdentityConstraintNames)
         ? fIdentityConstraintNames->get(localPart, fURIStringPool->addOrFind(uriStr)) : 0;
 
@@ -4381,6 +4452,8 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
 
 bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
                                                 const DOMElement* const icElem) {
+
+    NamespaceScopeManager nsMgr(icElem, fSchemaInfo, this);
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -4469,7 +4542,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     // ------------------------------------------------------------------
     try {
 
-        XercesXPath* sXPath = new (fGrammarPoolMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fNamespaceScope, fEmptyNamespaceURI, true, fGrammarPoolMemoryManager);
+        XercesXPath* sXPath = new (fGrammarPoolMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fSchemaInfo->getNamespaceScope(), fEmptyNamespaceURI, true, fGrammarPoolMemoryManager);
         IC_Selector* icSelector = new (fGrammarPoolMemoryManager) IC_Selector(sXPath, ic);
         ic->setSelector(icSelector);
     }
@@ -4538,7 +4611,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
                 (
                     fBuffer.getRawBuffer()
                     , fStringPool
-                    , fNamespaceScope
+                    , fSchemaInfo->getNamespaceScope()
                     , fEmptyNamespaceURI
                     , false
                     , fGrammarPoolMemoryManager
@@ -4569,15 +4642,15 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Helper methods
 // ---------------------------------------------------------------------------
-void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot) {
+bool TraverseSchema::retrieveNamespaceMapping(const DOMElement* const elem) {
 
-    DOMNamedNodeMap* schemaEltAttrs = schemaRoot->getAttributes();
-    bool seenXMLNS = false;
-    int attrCount = schemaEltAttrs->getLength();
+    DOMNamedNodeMap* eltAttrs = elem->getAttributes();
+    bool seenNS=false;
+    int attrCount = eltAttrs->getLength();
 
     for (int i = 0; i < attrCount; i++) {
 
-        DOMNode* attribute = schemaEltAttrs->item(i);
+        DOMNode* attribute = eltAttrs->item(i);
 
         if (!attribute) {
             break;
@@ -4587,29 +4660,30 @@ void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot
 
         // starts with 'xmlns:'
         if (XMLString::startsWith(attName, XMLUni::fgXMLNSColonString)) {
+            if(!seenNS)
+                fSchemaInfo->getNamespaceScope()->increaseDepth();
+            seenNS=true;
 
             int offsetIndex = XMLString::indexOf(attName, chColon);
             const XMLCh* attValue = attribute->getNodeValue();
 
-            fNamespaceScope->addPrefix(attName + offsetIndex + 1, fURIStringPool->addOrFind(attValue));
+            fSchemaInfo->getNamespaceScope()->addPrefix(attName + offsetIndex + 1, fURIStringPool->addOrFind(attValue));
         }
         else if (XMLString::equals(attName, XMLUni::fgXMLNSString)) { // == 'xmlns'
+            if(!seenNS)
+                fSchemaInfo->getNamespaceScope()->increaseDepth();
+            seenNS=true;
 
             const XMLCh* attValue = attribute->getNodeValue();
-            fNamespaceScope->addPrefix(XMLUni::fgZeroLenString, fURIStringPool->addOrFind(attValue));
-            seenXMLNS = true;
+            fSchemaInfo->getNamespaceScope()->addPrefix(XMLUni::fgZeroLenString, fURIStringPool->addOrFind(attValue));
         }
     } // end for
-
-    if (!seenXMLNS && (!fTargetNSURIString || !*fTargetNSURIString)) {
-        fNamespaceScope->addPrefix(XMLUni::fgZeroLenString, fEmptyNamespaceURI);
-    }
-
-    // Add mapping for xml prefix
-    fNamespaceScope->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
+    return seenNS;
 }
 
 void TraverseSchema::processChildren(const DOMElement* const root) {
+
+    NamespaceScopeManager nsMgr(root, fSchemaInfo, this);
 
     bool sawAnnotation = false;
     // process <redefine>, <include> and <import> info items.
@@ -4803,6 +4877,8 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
 }
 
 void TraverseSchema::preprocessChildren(const DOMElement* const root) {
+
+    NamespaceScopeManager nsMgr(root, fSchemaInfo, this);
 
     // process <redefine>, <include> and <import> info items.
     DOMElement* child = XUtil::getFirstChildElement(root);
@@ -5009,7 +5085,7 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
 const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
                                                 const XMLCh* const prefix) {
 
-    int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, fSchemaInfo->getNamespaceScopeLevel());
+    int nameSpaceIndex = fSchemaInfo->getNamespaceScope()->getNamespaceForPrefix(prefix);
     const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
 
     if ((!uriStr || !*uriStr) && (prefix && *prefix)) {
@@ -5019,22 +5095,6 @@ const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
 
     return uriStr;
 }
-
-const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
-                                                const XMLCh* const prefix,
-                                                const unsigned int namespaceDepth) {
-
-    int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, namespaceDepth);
-    const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
-
-    if ((!uriStr || !*uriStr) && (prefix && *prefix)) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UnresolvedPrefix, prefix);
-        return XMLUni::fgZeroLenString;
-    }
-
-    return uriStr;
-}
-
 
 SchemaElementDecl*
 TraverseSchema::processElementDeclRef(const DOMElement* const elem,
@@ -6062,6 +6122,8 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                                            const bool isMixed,
                                            const bool isBaseAnyType) {
     
+    NamespaceScopeManager nsMgr(childElem, fSchemaInfo, this);
+
     Janitor<ContentSpecNode>    specNodeJan(0);
     ContentSpecNode* specNode = specNodeJan.get();
     const DOMElement* attrNode = 0;
@@ -6824,7 +6886,6 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         fAttributeDeclRegistry = fSchemaGrammar->getAttributeDeclRegistry();
         fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
         fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
-        fNamespaceScope = fSchemaGrammar->getNamespaceScope();
         fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
 
     }
@@ -7018,6 +7079,7 @@ void TraverseSchema::checkEnumerationRequiredNotation(const DOMElement* const el
 XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
                                                  const XMLCh* const refName) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
     
     DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     Janitor<XSAnnotation> janAnnot(fAnnotation);
@@ -7131,6 +7193,8 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
                                          const XMLCh* const refName,
                                          ComplexTypeInfo* const typeInfo) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
         reportSchemaError(elem ,XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_ATTRIBUTEGROUP);
     }
@@ -7228,6 +7292,8 @@ void TraverseSchema::processElements(const DOMElement* const elem,
                                      ComplexTypeInfo* const baseTypeInfo,
                                      ComplexTypeInfo* const newTypeInfo) {
 
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     unsigned int elemCount = baseTypeInfo->elementCount();
 
     if (elemCount) {
@@ -7279,6 +7345,8 @@ void TraverseSchema::processElements(const DOMElement* const elem,
                                      XercesGroupInfo* const fromGroup,
                                      ComplexTypeInfo* const typeInfo)
 {
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     unsigned int elemCount = fromGroup->elementCount();
     int newScope = typeInfo->getScopeDefined();
 
@@ -8078,7 +8146,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         // --------------------------------------------------------
         redefSchemaInfo = fSchemaInfo;
         Janitor<SchemaInfo> newSchemaInfo(new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
-                                     fNamespaceScope->increaseDepth(),
+                                     fSchemaInfo->getNamespaceScope(),
                                      XMLString::replicate(includeURL, fGrammarPoolMemoryManager),
                                      fTargetNSURIString, root,
                                      fGrammarPoolMemoryManager));
@@ -8604,7 +8672,6 @@ void TraverseSchema::cleanUp() {
     delete fIdentityConstraintNames;
     delete fDeclStack;
     delete fIC_ElementsNS;
-    delete fIC_NamespaceDepthNS;
     delete fIC_NodeListNS;
     delete fPreprocessedNodes;
     delete fLocator;
@@ -8693,27 +8760,19 @@ void TraverseSchema::processElemDeclIC(DOMElement* const icElem,
         if (!fIC_ElementsNS) {
 
             fIC_ElementsNS = new (fMemoryManager) RefHashTableOf<ElemVector>(13, fMemoryManager);
-            fIC_NamespaceDepthNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<unsigned int> >(13, fMemoryManager);
             fIC_NodeListNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<DOMElement*> >(29, true, new (fMemoryManager) HashPtr(), fMemoryManager);
         }
 
-        if (fIC_ElementsNS->containsKey(fTargetNSURIString)) {
-
+        if (fIC_ElementsNS->containsKey(fTargetNSURIString))
             fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
-            fIC_NamespaceDepth = fIC_NamespaceDepthNS->get(fTargetNSURIString);
-        }
 
         if (!fIC_Elements) {
-
             fIC_Elements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fMemoryManager);
-            fIC_NamespaceDepth = new (fMemoryManager) ValueVectorOf<unsigned int>(8, fMemoryManager);
             fIC_ElementsNS->put((void*) fTargetNSURIString, fIC_Elements);
-            fIC_NamespaceDepthNS->put((void*) fTargetNSURIString, fIC_NamespaceDepth);
         }
 
         fIC_NodeListNS->put(elemDecl, icNodes);
         fIC_Elements->addElement(elemDecl);
-        fIC_NamespaceDepth->addElement(fSchemaInfo->getNamespaceScopeLevel());
     }
 }
 
@@ -8781,6 +8840,8 @@ void TraverseSchema::processSubstitutionGroup(const DOMElement* const elem,
                                               DatatypeValidator*& validator,
                                               const XMLCh* const subsElemQName)
 {
+    NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+
     SchemaElementDecl* subsElemDecl = getGlobalElemDecl(elem, subsElemQName);
     if (subsElemDecl)
     {
@@ -9044,7 +9105,6 @@ void TraverseSchema::validateAnnotations() {
     grammar->setAttributeDeclRegistry(new (memMgr) RefHashTableOf<XMLAttDef>(29, memMgr));
     nsScope = new (memMgr) NamespaceScope(memMgr);
     nsScope->reset(fEmptyNamespaceURI);
-    grammar->setNamespaceScope(nsScope);
     grammar->setValidSubstitutionGroups(new (memMgr) RefHash2KeysTableOf<ElemVector>(29, memMgr));
     grammar->setTargetNamespace(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
     XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();

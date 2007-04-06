@@ -49,7 +49,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class ValidationContext;
-
+class NamespaceScope;
 
 class VALIDATORS_EXPORT SchemaInfo : public XMemory
 {
@@ -81,7 +81,7 @@ public:
                const int finalDefault,
                const int targetNSURI,
                const int scopeCount,
-               const unsigned int namespaceScopeLevel,
+               const NamespaceScope* const currNamespaceScope,
                XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
                const DOMElement* const root,
@@ -100,7 +100,7 @@ public:
     int                               getFinalDefault() const;
     int                               getTargetNSURI() const;
     int                               getScopeCount() const;
-    unsigned int                      getNamespaceScopeLevel() const;
+    NamespaceScope*                   getNamespaceScope() const;
     unsigned short                    getElemAttrDefaultQualified() const;
     BaseRefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
     ValueVectorOf<const DOMElement*>* getRecursingAnonTypes() const;
@@ -160,7 +160,7 @@ private:
     int                               fFinalDefault;
     int                               fTargetNSURI;
     int                               fScopeCount;
-    unsigned int                      fNamespaceScopeLevel;
+    NamespaceScope*                   fNamespaceScope;
     XMLCh*                            fCurrentSchemaURL;
     const XMLCh*                      fTargetNSURIString;
     const DOMElement*                 fSchemaRootElement;
@@ -201,8 +201,8 @@ inline int SchemaInfo::getFinalDefault() const {
     return fFinalDefault;
 }
 
-inline unsigned int SchemaInfo::getNamespaceScopeLevel() const {
-    return fNamespaceScopeLevel;
+inline NamespaceScope* SchemaInfo::getNamespaceScope() const {
+    return fNamespaceScope;
 }
 
 inline XMLCh* SchemaInfo::getCurrentSchemaURL() const {

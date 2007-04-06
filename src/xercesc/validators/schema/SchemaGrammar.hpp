@@ -171,7 +171,6 @@ public:
     RefHashTableOf<XercesGroupInfo>* getGroupInfoRegistry() const;
     RefHashTableOf<XercesAttGroupInfo>* getAttGroupInfoRegistry() const;
     DatatypeValidatorFactory* getDatatypeRegistry();
-    NamespaceScope* getNamespaceScope() const;
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
 
     ValidationContext*          getValidationContext() const;
@@ -184,7 +183,6 @@ public:
     void setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other);
     void setGroupInfoRegistry(RefHashTableOf<XercesGroupInfo>* const other);
     void setAttGroupInfoRegistry(RefHashTableOf<XercesAttGroupInfo>* const other);
-    void setNamespaceScope(NamespaceScope* const nsScope);
     void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
 
     virtual void                    setGrammarDescription( XMLGrammarDescription*);
@@ -297,9 +295,6 @@ private:
     //  fDatatypeRegistry
     //      Datatype validator factory
     //
-    //  fNamespaceScope
-    //      Prefix to Namespace map
-    //
     //  fValidSubstitutionGroups
     //      Valid list of elements that can substitute a given element
     //
@@ -324,7 +319,6 @@ private:
     RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
     RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
-    NamespaceScope*                        fNamespaceScope;
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
     ValidationContext*                     fValidationContext;
     MemoryManager*                         fMemoryManager;
@@ -377,11 +371,6 @@ SchemaGrammar::getAttGroupInfoRegistry() const {
 inline DatatypeValidatorFactory* SchemaGrammar::getDatatypeRegistry() {
 
     return &fDatatypeRegistry;
-}
-
-inline NamespaceScope* SchemaGrammar::getNamespaceScope() const {
-
-    return fNamespaceScope;
 }
 
 inline RefHash2KeysTableOf<ElemVector>*
@@ -461,11 +450,6 @@ inline void
 SchemaGrammar::setAttGroupInfoRegistry(RefHashTableOf<XercesAttGroupInfo>* const other) {
 
     fAttGroupInfoRegistry = other;
-}
-
-inline void SchemaGrammar::setNamespaceScope(NamespaceScope* const nsScope) {
-
-    fNamespaceScope = nsScope;
 }
 
 inline void

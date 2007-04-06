@@ -38,7 +38,7 @@ public:
     {
     }
 
-    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefix)
+    virtual unsigned int getNamespaceForPrefix(const XMLCh* const prefix) const
     {
         if(fResolver==NULL)
             throw DOMException(DOMException::NAMESPACE_ERR, 0, fMemoryManager);
