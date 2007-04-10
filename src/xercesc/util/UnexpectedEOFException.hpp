@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(UNEXPECTEDEOFEXCEPTION_HPP)
-#define UNEXPECTEDEOFEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_UNEXPECTEDEOFEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_UNEXPECTEDEOFEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

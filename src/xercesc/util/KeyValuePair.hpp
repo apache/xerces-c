@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(KEYVALUEPAIR_HPP)
-#define KEYVALUEPAIR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_KEYVALUEPAIR_HPP)
+#define XERCESC_INCLUDE_GUARD_KEYVALUEPAIR_HPP
 
 
 #include <xercesc/util/XMemory.hpp>

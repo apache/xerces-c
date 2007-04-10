@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(REFHASH3KEYSIDPOOL_HPP)
-#define REFHASH3KEYSIDPOOL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REFHASH3KEYSIDPOOL_HPP)
+#define XERCESC_INCLUDE_GUARD_REFHASH3KEYSIDPOOL_HPP
 
 
 #include <xercesc/util/HashBase.hpp>

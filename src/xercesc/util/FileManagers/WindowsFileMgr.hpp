@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef WINDOWSFILEMGR_HPP
-#define WINDOWSFILEMGR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_WINDOWSFILEMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_WINDOWSFILEMGR_HPP
 
 #include <xercesc/util/XMLFileMgr.hpp>
 

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef PANICHANDLER_HPP
-#define PANICHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PANICHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_PANICHANDLER_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

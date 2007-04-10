@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(MACOSURLACCESSCF_HPP)
-#define MACOSURLACCESSCF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MACOSURLACCESSCF_HPP)
+#define XERCESC_INCLUDE_GUARD_MACOSURLACCESSCF_HPP
 
 
 #include <xercesc/util/XercesDefs.hpp>

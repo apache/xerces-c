@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef UNICONV390TRANSSERVICE_HPP
-#define UNICONV390TRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_UNICONV390TRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_UNICONV390TRANSSERVICE_HPP
 
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/TransService.hpp>

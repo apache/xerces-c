@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(QNAME_HPP)
-#define QNAME_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_QNAME_HPP)
+#define XERCESC_INCLUDE_GUARD_QNAME_HPP
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

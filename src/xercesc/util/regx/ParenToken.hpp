@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(PARENTOKEN_HPP)
-#define PARENTOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PARENTOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_PARENTOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

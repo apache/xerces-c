@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSMODELGROUP_HPP)
-#define XSMODELGROUP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSMODELGROUP_HPP)
+#define XERCESC_INCLUDE_GUARD_XSMODELGROUP_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 

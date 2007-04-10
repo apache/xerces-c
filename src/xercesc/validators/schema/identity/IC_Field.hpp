@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(IC_FIELD_HPP)
-#define IC_FIELD_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_IC_FIELD_HPP)
+#define XERCESC_INCLUDE_GUARD_IC_FIELD_HPP
 
 
 // ---------------------------------------------------------------------------

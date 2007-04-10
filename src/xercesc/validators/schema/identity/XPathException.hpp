@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XPATHEXCEPTION_HPP)
-#define XPATHEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XPATHEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_XPATHEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

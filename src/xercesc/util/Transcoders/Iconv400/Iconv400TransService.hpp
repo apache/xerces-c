@@ -24,8 +24,8 @@
  * $Id$
  */
 
-#ifndef ICONV400TRANSSERVICE_HPP
-#define ICONV400TRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ICONV400TRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_ICONV400TRANSSERVICE_HPP
 
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/TransService.hpp>

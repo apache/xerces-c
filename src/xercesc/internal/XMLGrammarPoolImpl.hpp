@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLGrammarPoolImplIMPL_HPP)
-#define XMLGrammarPoolImplIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLGRAMMARPOOLIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLGRAMMARPOOLIMPL_HPP
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
 

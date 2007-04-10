@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XUTIL_HPP)
-#define XUTIL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XUTIL_HPP)
+#define XERCESC_INCLUDE_GUARD_XUTIL_HPP
 
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMDocument.hpp>

@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(NOSUCHELEMENTEXCEPTION_HPP)
-#define NOSUCHELEMENTEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_NOSUCHELEMENTEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_NOSUCHELEMENTEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

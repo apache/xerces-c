@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSOBJECTFACTORY_HPP)
-#define XSOBJECTFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSOBJECTFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_XSOBJECTFACTORY_HPP
 
 #include <xercesc/framework/psvi/XSConstants.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

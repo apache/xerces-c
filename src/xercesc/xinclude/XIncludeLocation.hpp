@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XINCLUDELOCATION_HPP)
-#define XINCLUDELOCATION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XINCLUDELOCATION_HPP)
+#define XERCESC_INCLUDE_GUARD_XINCLUDELOCATION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOM.hpp>

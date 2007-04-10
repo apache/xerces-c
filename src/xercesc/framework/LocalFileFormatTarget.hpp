@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef LocalFileFormatTarget_HEADER_GUARD_
-#define LocalFileFormatTarget_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_LOCALFILEFORMATTARGET_HPP)
+#define XERCESC_INCLUDE_GUARD_LOCALFILEFORMATTARGET_HPP
 
 #include <xercesc/framework/XMLFormatter.hpp>
 

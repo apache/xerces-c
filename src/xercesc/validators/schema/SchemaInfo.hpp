@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(SCHEMAINFO_HPP)
-#define SCHEMAINFO_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMAINFO_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMAINFO_HPP
 
 
 /** When in a <redefine>, type definitions being used (and indeed

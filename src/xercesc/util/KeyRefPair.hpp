@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(KEYREFPAIR_HPP)
-#define KEYREFPAIR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_KEYREFPAIR_HPP)
+#define XERCESC_INCLUDE_GUARD_KEYREFPAIR_HPP
 
 
 #include <xercesc/util/XMemory.hpp>

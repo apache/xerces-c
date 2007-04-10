@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(URLINPUTSOURCE_HPP)
-#define URLINPUTSOURCE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_URLINPUTSOURCE_HPP)
+#define XERCESC_INCLUDE_GUARD_URLINPUTSOURCE_HPP
 
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/sax/InputSource.hpp>

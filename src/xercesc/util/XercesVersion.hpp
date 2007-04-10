@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(XERCESVERSION_HPP)
-#define XERCESVERSION_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XERCESVERSION_HPP)
+#define XERCESC_INCLUDE_GUARD_XERCESVERSION_HPP
 
 // ---------------------------------------------------------------------------
 // X E R C E S   V E R S I O N   H E A D E R   D O C U M E N T A T I O N

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XPATHSYMBOLS_HPP)
-#define XPATHSYMBOLS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XPATHSYMBOLS_HPP)
+#define XERCESC_INCLUDE_GUARD_XPATHSYMBOLS_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

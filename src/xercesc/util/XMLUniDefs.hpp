@@ -18,8 +18,9 @@
 /*
  * $Id$
  */
-#if !defined(XMLUNIDEFS_HPP)
-#define XMLUNIDEFS_HPP
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLUNIDEFS_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLUNIDEFS_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

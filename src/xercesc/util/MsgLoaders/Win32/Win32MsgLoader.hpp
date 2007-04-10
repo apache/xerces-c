@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(WIN32MSGLOADER_HPP)
-#define WIN32MSGLOADER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_WIN32MSGLOADER_HPP)
+#define XERCESC_INCLUDE_GUARD_WIN32MSGLOADER_HPP
 
 #include <windows.h>
 #include <xercesc/util/XercesDefs.hpp>

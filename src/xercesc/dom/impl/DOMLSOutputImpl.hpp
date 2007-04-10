@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DOMLSOutputImpl_HEADER_GUARD_
-#define DOMLSOutputImpl_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_DOMLSOUTPUTIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMLSOUTPUTIMPL_HPP
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMLSOutput.hpp>

@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(IOEXCEPTION_HPP)
-#define IOEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_IOEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_IOEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(MEMORYMANAGERIMPL_HPP)
-#define MEMORYMANAGERIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MEMORYMANAGERIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_MEMORYMANAGERIMPL_HPP
 
 #include <xercesc/framework/MemoryManager.hpp>
 

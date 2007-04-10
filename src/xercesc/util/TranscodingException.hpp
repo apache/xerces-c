@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(TRANSCODINGEXCEPTION_HPP)
-#define TRANSCODINGEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_TRANSCODINGEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_TRANSCODINGEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

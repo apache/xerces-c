@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSMULTIVALUEFACET_HPP)
-#define XSMULTIVALUEFACET_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSMULTIVALUEFACET_HPP)
+#define XERCESC_INCLUDE_GUARD_XSMULTIVALUEFACET_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>

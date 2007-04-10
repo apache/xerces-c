@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLPSCANTOKEN_HPP)
-#define XMLPSCANTOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLPSCANTOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLPSCANTOKEN_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

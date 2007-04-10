@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CHARTOKEN_HPP)
-#define CHARTOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CHARTOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_CHARTOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

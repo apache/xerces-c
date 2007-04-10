@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(TOKENINC_HPP)
-#define TOKENINC_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_TOKENINC_HPP)
+#define XERCESC_INCLUDE_GUARD_TOKENINC_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

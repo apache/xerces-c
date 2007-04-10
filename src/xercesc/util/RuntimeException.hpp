@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(RUNTIMEEXCEPTION_HPP)
-#define RUNTIMEEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_RUNTIMEEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_RUNTIMEEXCEPTION_HPP
 
 
 #include <xercesc/util/XercesDefs.hpp>

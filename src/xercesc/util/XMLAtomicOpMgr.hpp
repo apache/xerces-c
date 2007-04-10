@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLATOMICOPMGL_HPP
-#define XMLATOMICOPMGL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLATOMICOPMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLATOMICOPMGR_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

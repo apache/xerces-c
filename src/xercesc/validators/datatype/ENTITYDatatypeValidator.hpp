@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ENTITY_DATATYPEVALIDATOR_HPP)
-#define ENTITY_DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ENTITY_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_ENTITY_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
 #include <xercesc/util/NameIdPool.hpp>

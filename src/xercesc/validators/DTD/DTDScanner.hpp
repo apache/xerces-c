@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(DTDSCANNER_HPP)
-#define DTDSCANNER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDSCANNER_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDSCANNER_HPP
 
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>

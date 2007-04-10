@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef LOCATOR_HPP
-#define LOCATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_LOCATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_LOCATOR_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

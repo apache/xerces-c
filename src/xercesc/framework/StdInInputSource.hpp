@@ -20,8 +20,8 @@
  */
 
 
-#if !defined(STDININPUTSOURCE_HPP)
-#define STDININPUTSOURCE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_STDININPUTSOURCE_HPP)
+#define XERCESC_INCLUDE_GUARD_STDININPUTSOURCE_HPP
 
 #include <xercesc/sax/InputSource.hpp>
 

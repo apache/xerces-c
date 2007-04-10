@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLIBM1140TRANSCODER390_HPP
-#define XMLIBM1140TRANSCODER390_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLIBM1140TRANSCODER390_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLIBM1140TRANSCODER390_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/Transcoders/Uniconv390/XML256TableTranscoder390.hpp>

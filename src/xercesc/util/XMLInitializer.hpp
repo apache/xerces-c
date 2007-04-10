@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLINITIALIZER_HPP)
-#define XMLINITIALIZER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLINITIALIZER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLINITIALIZER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

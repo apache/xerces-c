@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(IC_SELECTOR_HPP)
-#define IC_SELECTOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_IC_SELECTOR_HPP)
+#define XERCESC_INCLUDE_GUARD_IC_SELECTOR_HPP
 
 
 // ---------------------------------------------------------------------------

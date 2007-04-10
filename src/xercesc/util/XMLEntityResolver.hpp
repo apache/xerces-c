@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLENTITYRESOLVER_HPP
-#define XMLENTITYRESOLVER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLENTITYRESOLVER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLENTITYRESOLVER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMemory.hpp>

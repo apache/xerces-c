@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(NAMEIDPOOL_HPP)
-#define NAMEIDPOOL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_NAMEIDPOOL_HPP)
+#define XERCESC_INCLUDE_GUARD_NAMEIDPOOL_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>

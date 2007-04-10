@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(SCHEMASYMBOLS_HPP)
-#define SCHEMASYMBOLS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMASYMBOLS_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMASYMBOLS_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

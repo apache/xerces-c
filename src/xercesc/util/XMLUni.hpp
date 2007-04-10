@@ -28,8 +28,8 @@
 //  strings built up as arrays of those constants.
 // ---------------------------------------------------------------------------
 
-#if !defined(XMLUNI_HPP)
-#define XMLUNI_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLUNI_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLUNI_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

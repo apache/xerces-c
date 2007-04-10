@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef CONTENTHANDLER_HPP
-#define CONTENTHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CONTENTHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_CONTENTHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

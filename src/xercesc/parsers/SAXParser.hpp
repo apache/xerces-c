@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(SAXPARSER_HPP)
-#define SAXPARSER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SAXPARSER_HPP)
+#define XERCESC_INCLUDE_GUARD_SAXPARSER_HPP
 
 #include <xercesc/sax/Parser.hpp>
 #include <xercesc/internal/VecAttrListImpl.hpp>

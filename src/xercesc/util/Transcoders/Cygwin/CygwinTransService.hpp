@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
+/*
+ * $Id$
+ */
 
-#ifndef CYGWINTRANSSERVICE_HPP
-#define CYGWINTRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CYGWINTRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_CYGWINTRANSSERVICE_HPP
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

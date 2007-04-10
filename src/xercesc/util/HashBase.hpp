@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(HASHBASE_HPP)
-#define HASHBASE_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_HASHBASE_HPP)
+#define XERCESC_INCLUDE_GUARD_HASHBASE_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

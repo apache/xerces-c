@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLDTDDescriptionImplIMPL_HPP)
-#define XMLDTDDescriptionImplIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLDTDDESCRIPTIONIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLDTDDESCRIPTIONIMPL_HPP
 
 #include <xercesc/framework/XMLDTDDescription.hpp>
 

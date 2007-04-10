@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(READERMGR_HPP)
-#define READERMGR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_READERMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_READERMGR_HPP
 
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

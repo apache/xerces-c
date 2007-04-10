@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(PLATFORMUTILS_HPP)
-#define PLATFORMUTILS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PLATFORMUTILS_HPP)
+#define XERCESC_INCLUDE_GUARD_PLATFORMUTILS_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

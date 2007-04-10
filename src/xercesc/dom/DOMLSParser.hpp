@@ -1,6 +1,3 @@
-#ifndef DOMLSParser_HEADER_GUARD_
-#define DOMLSParser_HEADER_GUARD_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -23,6 +20,8 @@
  *
  */
 
+#if !defined(XERCESC_INCLUDE_GUARD_DOMLSPARSER_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMLSPARSER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>

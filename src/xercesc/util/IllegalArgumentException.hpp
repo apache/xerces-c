@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(ILLEGALARGUMENTEXCEPTION_HPP)
-#define ILLEGALARGUMENTEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ILLEGALARGUMENTEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_ILLEGALARGUMENTEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

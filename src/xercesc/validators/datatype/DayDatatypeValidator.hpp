@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(DAY_DATATYPE_VALIDATOR_HPP)
-#define DAY_DATATYPE_VALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DAY_DATATYPE_VALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_DAY_DATATYPE_VALIDATOR_HPP
 
 #include <xercesc/validators/datatype/DateTimeValidator.hpp>
 

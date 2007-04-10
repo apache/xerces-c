@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(SCHEMAATTDEFLIST_HPP)
-#define SCHEMAATTDEFLIST_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMAATTDEFLIST_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMAATTDEFLIST_HPP
 
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>

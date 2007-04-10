@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(LIST_DATATYPEVALIDATOR_HPP)
-#define LIST_DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_LIST_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_LIST_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>

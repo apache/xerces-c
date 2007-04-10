@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef INPUTSOURCE_HPP
-#define INPUTSOURCE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_INPUTSOURCE_HPP)
+#define XERCESC_INCLUDE_GUARD_INPUTSOURCE_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 

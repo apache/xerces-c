@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XPROTOTYPE_HPP)
-#define XPROTOTYPE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XPROTOTYPE_HPP)
+#define XERCESC_INCLUDE_GUARD_XPROTOTYPE_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 

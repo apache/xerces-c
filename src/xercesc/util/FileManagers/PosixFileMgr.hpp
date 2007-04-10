@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef POSIXFILEMGR_HPP
-#define POSIXFILEMGR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_POSIXFILEMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_POSIXFILEMGR_HPP
 
 #include <xercesc/util/XMLFileMgr.hpp>
 

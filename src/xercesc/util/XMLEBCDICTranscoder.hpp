@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef XMLEBCDICTRANSCODER_HPP
-#define XMLEBCDICTRANSCODER_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLEBCDICTRANSCODER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLEBCDICTRANSCODER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XML256TableTranscoder.hpp>

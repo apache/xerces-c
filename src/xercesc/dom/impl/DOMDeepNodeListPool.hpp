@@ -28,8 +28,8 @@
 //  name is substituded for the *.
 //
 
-#if !defined(DOMDeepNODELISTPOOL_HPP)
-#define DOMDeepNODELISTPOOL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMDEEPNODELISTPOOL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMDEEPNODELISTPOOL_HPP
 
 
 #include <xercesc/util/HashBase.hpp>

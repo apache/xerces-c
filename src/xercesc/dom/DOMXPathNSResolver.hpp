@@ -1,6 +1,3 @@
-#ifndef DOMXPathNSResolver_HEADER_GUARD_
-#define DOMXPathNSResolver_HEADER_GUARD_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,6 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_DOMXPATHNSRESOLVER_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMXPATHNSRESOLVER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

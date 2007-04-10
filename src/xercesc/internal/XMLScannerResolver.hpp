@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLSCANNERRESOLVER_HPP)
-#define XMLSCANNERRESOLVER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLSCANNERRESOLVER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLSCANNERRESOLVER_HPP
 
 #include <xercesc/internal/XMLScanner.hpp>
 

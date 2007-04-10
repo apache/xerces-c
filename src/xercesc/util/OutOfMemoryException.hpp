@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(OUT_OF_MEMORY_EXCEPTION_HPP)
-#define OUT_OF_MEMORY_EXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_OUT_OF_MEMORY_EXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_OUT_OF_MEMORY_EXCEPTION_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>

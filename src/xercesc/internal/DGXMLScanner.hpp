@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(DGXMLSCANNER_HPP)
-#define DGXMLSCANNER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DGXMLSCANNER_HPP)
+#define XERCESC_INCLUDE_GUARD_DGXMLSCANNER_HPP
 
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>

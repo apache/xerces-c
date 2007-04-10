@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(TOKEN_HPP)
-#define TOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_TOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_TOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

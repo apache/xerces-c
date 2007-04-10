@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef BASE64_HPP
-#define BASE64_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_BASE64_HPP)
+#define XERCESC_INCLUDE_GUARD_BASE64_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

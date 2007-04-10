@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(PARSERFORXMLSCHEMA_HPP)
-#define PARSERFORXMLSCHEMA_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PARSERFORXMLSCHEMA_HPP)
+#define XERCESC_INCLUDE_GUARD_PARSERFORXMLSCHEMA_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef ICONV390TRANSSERVICE_HPP
-#define ICONV390TRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ICONV390TRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_ICONV390TRANSSERVICE_HPP
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/Mutexes.hpp>

@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef LEXICALHANDLER_HPP
-#define LEXICALHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_LEXICALHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_LEXICALHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

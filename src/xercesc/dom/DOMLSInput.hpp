@@ -1,6 +1,3 @@
-#ifndef DOMLSInput_HEADER_GUARD_
-#define DOMLSInput_HEADER_GUARD_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,6 +19,8 @@
  * $Id$
  */
 
+#if !defined(XERCESC_INCLUDE_GUARD_DOMLSINPUT_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMLSINPUT_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

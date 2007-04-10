@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSOBJECT_HPP)
-#define XSOBJECT_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSOBJECT_HPP)
+#define XERCESC_INCLUDE_GUARD_XSOBJECT_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/XSConstants.hpp>

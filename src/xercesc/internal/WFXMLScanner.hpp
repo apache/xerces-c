@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(WFXMLSCANNER_HPP)
-#define WFXMLSCANNER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_WFXMLSCANNER_HPP)
+#define XERCESC_INCLUDE_GUARD_WFXMLSCANNER_HPP
 
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>

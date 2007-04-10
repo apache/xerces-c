@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLURI_HPP)
-#define XMLURI_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLURI_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLURI_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>

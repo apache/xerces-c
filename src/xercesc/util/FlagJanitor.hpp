@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(FLAGJANITOR_HPP)
-#define FLAGJANITOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_FLAGJANITOR_HPP)
+#define XERCESC_INCLUDE_GUARD_FLAGJANITOR_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

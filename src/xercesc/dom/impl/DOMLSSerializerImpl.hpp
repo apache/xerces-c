@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DOMLSSerializerImpl_HEADER_GUARD_
-#define DOMLSSerializerImpl_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_DOMLSSERIALIZERMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMLSSERIALIZERMPL_HPP
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMLSSerializer.hpp>

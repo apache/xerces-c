@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLERRORREPORTER_HPP)
-#define XMLERRORREPORTER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLERRORREPORTER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLERRORREPORTER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

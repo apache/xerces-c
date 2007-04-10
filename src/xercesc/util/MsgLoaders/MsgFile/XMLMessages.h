@@ -1,5 +1,5 @@
-#ifndef XML_ERROR_MESSAGES_H
-#define XML_ERROR_MESSAGES_H
+#if !defined(XERCESC_INCLUDE_GUARD_XML_ERROR_MESSAGES_H)
+#define XERCESC_INCLUDE_GUARD_XML_ERROR_MESSAGES_H
 
 #include <xercesc/util/XercesDefs.hpp>
 

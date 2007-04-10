@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef SAXEXCEPTION_HPP
-#define SAXEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SAXEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_SAXEXCEPTION_HPP
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>

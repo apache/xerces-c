@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLURL_HPP)
-#define XMLURL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLURL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLURL_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 

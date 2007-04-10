@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(EMPTYSTACKEXCEPTION_HPP)
-#define EMPTYSTACKEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_EMPTYSTACKEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_EMPTYSTACKEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

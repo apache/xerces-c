@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(CONTENTSPECNODE_HPP)
-#define CONTENTSPECNODE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CONTENTSPECNODE_HPP)
+#define XERCESC_INCLUDE_GUARD_CONTENTSPECNODE_HPP
 
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/framework/MemoryManager.hpp>

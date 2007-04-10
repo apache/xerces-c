@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(DOCTYPEHANDLER_HPP)
-#define DOCTYPEHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOCTYPEHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_DOCTYPEHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>

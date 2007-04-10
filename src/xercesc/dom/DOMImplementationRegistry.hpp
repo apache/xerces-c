@@ -1,6 +1,3 @@
-#ifndef DOMImplementationRegistry_HEADER_GUARD_
-#define DOMImplementationRegistry_HEADER_GUARD_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,7 +19,10 @@
  * $Id$
  */
 
-/**
+#if !defined(XERCESC_INCLUDE_GUARD_DOMIMPLEMENTATIONREGISTRY_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMIMPLEMENTATIONREGISTRY_HPP
+
+ /**
   * This class holds the list of registered DOMImplementations.  Implementation
   * or application can register DOMImplementationSource to the registry, and
   * then can query DOMImplementation based on a list of requested features.

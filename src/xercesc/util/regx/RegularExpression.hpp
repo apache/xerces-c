@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(REGULAREXPRESSION_HPP)
-#define REGULAREXPRESSION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REGULAREXPRESSION_HPP)
+#define XERCESC_INCLUDE_GUARD_REGULAREXPRESSION_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

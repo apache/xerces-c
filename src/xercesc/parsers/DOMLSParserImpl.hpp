@@ -17,11 +17,10 @@
 
 /*
  * $Id$
- *
  */
 
-#if !defined(DOMBUILDERIMPL_HPP)
-#define DOMBUILDERIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMBUILDERIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMBUILDERIMPL_HPP
 
 
 #include <xercesc/parsers/AbstractDOMParser.hpp>

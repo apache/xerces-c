@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(WINSOCKNETACCESSOR_HPP)
-#define WINSOCKNETACCESSOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_WINSOCKNETACCESSOR_HPP)
+#define XERCESC_INCLUDE_GUARD_WINSOCKNETACCESSOR_HPP
 
 
 #include <xercesc/util/XercesDefs.hpp>

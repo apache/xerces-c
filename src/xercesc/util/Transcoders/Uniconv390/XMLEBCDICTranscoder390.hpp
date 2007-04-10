@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLEBCDICTRANSCODER390_HPP
-#define XMLEBCDICTRANSCODER390_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLEBCDICTRANSCODER390_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLEBCDICTRANSCODER390_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/Transcoders/Uniconv390/XML256TableTranscoder390.hpp>

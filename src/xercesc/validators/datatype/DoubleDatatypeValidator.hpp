@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(DOUBLE_DATATYPEVALIDATOR_HPP)
-#define DOUBLE_DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOUBLE_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_DOUBLE_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>

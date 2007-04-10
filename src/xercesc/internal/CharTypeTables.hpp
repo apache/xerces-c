@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CHARTYPETABLES_HPP)
-#define CHARTYPETABLES_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CHARTYPETABLES_HPP)
+#define XERCESC_INCLUDE_GUARD_CHARTYPETABLES_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

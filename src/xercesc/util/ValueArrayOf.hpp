@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(VALUEARRAY_HPP)
-#define VALUEARRAY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VALUEARRAY_HPP)
+#define XERCESC_INCLUDE_GUARD_VALUEARRAY_HPP
 
 #include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>

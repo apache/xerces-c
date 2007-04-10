@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLNETACCESSOR_HPP)
-#define XMLNETACCESSOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLNETACCESSOR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLNETACCESSOR_HPP
 
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLException.hpp>

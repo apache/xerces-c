@@ -19,8 +19,8 @@
  *  $Id$
  */
 
-#if !defined(XMLRECOGNIZER_HPP)
-#define XMLRECOGNIZER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLRECOGNIZER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLRECOGNIZER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

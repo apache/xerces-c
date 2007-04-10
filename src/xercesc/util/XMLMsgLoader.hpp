@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLMSGLOADER_HPP)
-#define XMLMSGLOADER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLMSGLOADER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLMSGLOADER_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

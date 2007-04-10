@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLNOTATIONDECL_HPP)
-#define XMLNOTATIONDECL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLNOTATIONDECL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLNOTATIONDECL_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

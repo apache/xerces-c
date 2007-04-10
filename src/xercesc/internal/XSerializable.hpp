@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSERIALIZABLE_HPP)
-#define XSERIALIZABLE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSERIALIZABLE_HPP)
+#define XERCESC_INCLUDE_GUARD_XSERIALIZABLE_HPP
 
 #include <xercesc/internal/XSerializeEngine.hpp>
 #include <xercesc/internal/XProtoType.hpp>

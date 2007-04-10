@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSATTRIBUTEUSE_HPP)
-#define XSATTRIBUTEUSE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSATTRIBUTEUSE_HPP)
+#define XERCESC_INCLUDE_GUARD_XSATTRIBUTEUSE_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 

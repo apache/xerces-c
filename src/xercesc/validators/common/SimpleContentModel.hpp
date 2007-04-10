@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(SIMPLECONTENTMODEL_HPP)
-#define SIMPLECONTENTMODEL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SIMPLECONTENTMODEL_HPP)
+#define XERCESC_INCLUDE_GUARD_SIMPLECONTENTMODEL_HPP
 
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>

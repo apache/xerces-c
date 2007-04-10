@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ENCODINGVALIDATOR_HPP)
-#define ENCODINGVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ENCODINGVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_ENCODINGVALIDATOR_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

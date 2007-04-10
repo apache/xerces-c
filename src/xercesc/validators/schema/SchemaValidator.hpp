@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(SCHEMAVALIDATOR_HPP)
-#define SCHEMAVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMAVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMAVALIDATOR_HPP
 
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>

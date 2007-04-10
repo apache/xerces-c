@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(ALLCONTENTMODEL_HPP)
-#define ALLCONTENTMODEL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ALLCONTENTMODEL_HPP)
+#define XERCESC_INCLUDE_GUARD_ALLCONTENTMODEL_HPP
 
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSIDCDEFINITION_HPP)
-#define XSIDCDEFINITION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSIDCDEFINITION_HPP)
+#define XERCESC_INCLUDE_GUARD_XSIDCDEFINITION_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 

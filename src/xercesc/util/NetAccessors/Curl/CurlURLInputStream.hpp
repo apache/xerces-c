@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CURLURLINPUTSTREAM_HPP)
-#define CURLURLINPUTSTREAM_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CURLURLINPUTSTREAM_HPP)
+#define XERCESC_INCLUDE_GUARD_CURLURLINPUTSTREAM_HPP
 
 #include <curl.h>
 #include <multi.h>

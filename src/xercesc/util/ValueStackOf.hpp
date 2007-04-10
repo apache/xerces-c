@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(VALUESTACKOF_HPP)
-#define VALUESTACKOF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VALUESTACKOF_HPP)
+#define XERCESC_INCLUDE_GUARD_VALUESTACKOF_HPP
 
 #include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>

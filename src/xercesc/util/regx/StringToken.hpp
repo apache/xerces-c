@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(STRINGTOKEN_HPP)
-#define STRINGTOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_STRINGTOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_STRINGTOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

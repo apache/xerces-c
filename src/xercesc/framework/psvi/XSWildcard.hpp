@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSWILDCARD_HPP)
-#define XSWILDCARD_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSWILDCARD_HPP)
+#define XERCESC_INCLUDE_GUARD_XSWILDCARD_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 

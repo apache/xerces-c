@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XPATHMATCHER_HPP)
-#define XPATHMATCHER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XPATHMATCHER_HPP)
+#define XERCESC_INCLUDE_GUARD_XPATHMATCHER_HPP
 
 
 // ---------------------------------------------------------------------------

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(UNIONTOKEN_HPP)
-#define UNIONTOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_UNIONTOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_UNIONTOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

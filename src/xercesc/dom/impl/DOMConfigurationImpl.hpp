@@ -24,10 +24,8 @@
 //  name is substituded for the *.
 //
 
-
-
-#if !defined(DOMCONFIGURATIONIMPL_HPP)
-#define DOMCONFIGURATIONIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMCONFIGURATIONIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMCONFIGURATIONIMPL_HPP
 
 //------------------------------------------------------------------------------------
 //  Includes

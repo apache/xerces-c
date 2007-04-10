@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ABSTRACT_NUMERIC_FACET_VALIDATOR_HPP)
-#define ABSTRACT_NUMERIC_FACET_VALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ABSTRACT_NUMERIC_FACET_VALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_ABSTRACT_NUMERIC_FACET_VALIDATOR_HPP
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>

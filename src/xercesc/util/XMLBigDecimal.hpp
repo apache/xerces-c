@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XML_BIGDECIMAL_HPP
-#define XML_BIGDECIMAL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XML_BIGDECIMAL_HPP)
+#define XERCESC_INCLUDE_GUARD_XML_BIGDECIMAL_HPP
 
 #include <xercesc/util/XMLNumber.hpp>
 #include <xercesc/util/XMLString.hpp>

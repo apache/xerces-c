@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(HASH_CMSTATESET_HPP)
-#define HASH_CMSTATESET_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_HASH_CMSTATESET_HPP)
+#define XERCESC_INCLUDE_GUARD_HASH_CMSTATESET_HPP
 
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>

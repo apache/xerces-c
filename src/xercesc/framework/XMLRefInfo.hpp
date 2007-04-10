@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLIDREFINFO_HPP)
-#define XMLIDREFINFO_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLREFINFO_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLREFINFO_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

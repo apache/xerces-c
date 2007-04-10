@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DEFAULTHANDLER_HPP
-#define DEFAULTHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DEFAULTHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_DEFAULTHANDLER_HPP
 
 #include <xercesc/sax2/ContentHandler.hpp>
 #include <xercesc/sax2/LexicalHandler.hpp>

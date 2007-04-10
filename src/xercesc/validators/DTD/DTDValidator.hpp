@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(DTDVALIDATOR_HPP)
-#define DTDVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDVALIDATOR_HPP
 
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/framework/XMLValidator.hpp>

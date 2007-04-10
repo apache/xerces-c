@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLSTRINGTOKENIZER_HPP)
-#define XMLSTRINGTOKENIZER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLSTRINGTOKENIZER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLSTRINGTOKENIZER_HPP
 
 #include <xercesc/util/RefArrayVectorOf.hpp>
 #include <xercesc/util/XMLString.hpp>

@@ -17,10 +17,10 @@
 
 /*
  * $Id$
- *
  */
-#if !defined(ABSTRACTDOMPARSER_HPP)
-#define ABSTRACTDOMPARSER_HPP
+
+#if !defined(XERCESC_INCLUDE_GUARD_ABSTRACTDOMPARSER_HPP)
+#define XERCESC_INCLUDE_GUARD_ABSTRACTDOMPARSER_HPP
 
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>

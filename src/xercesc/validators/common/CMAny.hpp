@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CMANY_HPP)
-#define CMANY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CMANY_HPP)
+#define XERCESC_INCLUDE_GUARD_CMANY_HPP
 
 #include <xercesc/validators/common/CMNode.hpp>
 

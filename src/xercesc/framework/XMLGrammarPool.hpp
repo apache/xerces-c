@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLGRAMMARPOOL_HPP)
-#define XMLGRAMMARPOOL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLGRAMMARPOOL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLGRAMMARPOOL_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

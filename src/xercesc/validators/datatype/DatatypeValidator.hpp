@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(DATATYPEVALIDATOR_HPP)
-#define DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

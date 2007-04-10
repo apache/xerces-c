@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(TRAVERSESCHEMA_HPP)
-#define TRAVERSESCHEMA_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_TRAVERSESCHEMA_HPP)
+#define XERCESC_INCLUDE_GUARD_TRAVERSESCHEMA_HPP
 
 /**
   * Instances of this class get delegated to Traverse the Schema and

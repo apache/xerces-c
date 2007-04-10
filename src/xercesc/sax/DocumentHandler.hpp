@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DOCUMENTHANDLER_HPP
-#define DOCUMENTHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOCUMENTHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_DOCUMENTHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

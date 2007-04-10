@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CMLEAF_HPP)
-#define CMLEAF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CMLEAF_HPP)
+#define XERCESC_INCLUDE_GUARD_CMLEAF_HPP
 
 #include <xercesc/validators/common/CMNode.hpp>
 

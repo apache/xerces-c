@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSELEMENTDECLARATION_HPP)
-#define XSELEMENTDECLARATION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSELEMENTDECLARATION_HPP)
+#define XERCESC_INCLUDE_GUARD_XSELEMENTDECLARATION_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSNamedMap.hpp>

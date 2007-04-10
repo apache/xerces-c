@@ -18,8 +18,9 @@
 /*
  * $Id$
  */
-#if !defined(SCHEMAATTDEF_HPP)
-#define SCHEMAATTDEF_HPP
+
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMAATTDEF_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMAATTDEF_HPP
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLAttDef.hpp>

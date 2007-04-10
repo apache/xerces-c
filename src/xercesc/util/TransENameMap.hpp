@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
+/*
+ * $Id$
+ */
 
-#if !defined(TRANSENAMEMAP_HPP)
-#define TRANSENAMEMAP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_TRANSENAMEMAP_HPP)
+#define XERCESC_INCLUDE_GUARD_TRANSENAMEMAP_HPP
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLString.hpp>

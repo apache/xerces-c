@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef POSIXMUTEXMGL_HPP
-#define POSIXMUTEXMGL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_POSIXMUTEXMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_POSIXMUTEXMGR_HPP
 
 #include <xercesc/util/XMLMutexMgr.hpp>
 

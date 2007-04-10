@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(KVSTRINGPAIR_HPP)
-#define KVSTRINGPAIR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_KVSTRINGPAIR_HPP)
+#define XERCESC_INCLUDE_GUARD_KVSTRINGPAIR_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

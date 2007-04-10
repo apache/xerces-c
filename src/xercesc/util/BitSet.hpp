@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(BITSET_HPP)
-#define BITSET_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_BITSET_HPP)
+#define XERCESC_INCLUDE_GUARD_BITSET_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

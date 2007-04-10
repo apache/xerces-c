@@ -1,6 +1,3 @@
-#ifndef DOMHEADER_GUARD_HPP
-#define DOMHEADER_GUARD_HPP
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -21,6 +18,9 @@
 /*
  * $Id$
  */
+
+#if !defined(XERCESC_INCLUDE_GUARD_DOM_HPP)
+#define XERCESC_INCLUDE_GUARD_DOM_HPP
 
 //
 //  This is the primary header file for inclusion in application

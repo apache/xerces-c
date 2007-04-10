@@ -19,8 +19,9 @@
  * $Id$
  */
 
-#ifndef XML_ABSTRACT_DOUBLE_FLOAT_HPP
-#define XML_ABSTRACT_DOUBLE_FLOAT_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XML_ABSTRACT_DOUBLE_FLOAT_HPP)
+#define XERCESC_INCLUDE_GUARD_XML_ABSTRACT_DOUBLE_FLOAT_HPP
+
 
 #include <xercesc/util/XMLNumber.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

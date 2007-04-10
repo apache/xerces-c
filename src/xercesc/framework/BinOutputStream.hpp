@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(BIN_OUTPUT_STREAM_HPP)
-#define BIN_OUTPUT_STREAM_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_BIN_OUTPUT_STREAM_HPP)
+#define XERCESC_INCLUDE_GUARD_BIN_OUTPUT_STREAM_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

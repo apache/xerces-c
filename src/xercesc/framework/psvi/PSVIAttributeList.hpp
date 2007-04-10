@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(PSVIATTRIBUTEDERIVATION_LIST_HPP)
-#define PSVIATTRIBUTEDERIVATION_LIST_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PSVIATTRIBUTE_LIST_HPP)
+#define XERCESC_INCLUDE_GUARD_PSVIATTRIBUTE_LIST_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/PSVIAttribute.hpp>

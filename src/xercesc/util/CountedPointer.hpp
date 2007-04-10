@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(COUNTEDPOINTERTO_HPP)
-#define COUNTEDPOINTERTO_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_COUNTEDPOINTERTO_HPP)
+#define XERCESC_INCLUDE_GUARD_COUNTEDPOINTERTO_HPP
 
 #include <xercesc/util/NullPointerException.hpp>
 

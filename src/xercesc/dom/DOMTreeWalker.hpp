@@ -1,6 +1,3 @@
-#ifndef DOMTreeWalker_HEADER_GUARD_
-#define DOMTreeWalker_HEADER_GUARD_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -21,6 +18,9 @@
 /*
  * $Id$
  */
+
+#if !defined(XERCESC_INCLUDE_GUARD_DOMTREEWALKER_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMTREEWALKER_HPP
 
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMNodeFilter.hpp>

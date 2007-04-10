@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(XMLHOLDER_HPP)
-#define XMLHOLDER_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLHOLDER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLHOLDER_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

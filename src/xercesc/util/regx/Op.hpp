@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(OP_HPP)
-#define OP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_OP_HPP)
+#define XERCESC_INCLUDE_GUARD_OP_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

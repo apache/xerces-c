@@ -19,12 +19,12 @@
  * $Id$
  */
 
+#if !defined(XERCESC_INCLUDE_GUARD_REGXPARSER_HPP)
+#define XERCESC_INCLUDE_GUARD_REGXPARSER_HPP
+
 /*
  *	A regular expression parser
  */
-#if !defined(REGXPARSER_HPP)
-#define REGXPARSER_HPP
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------

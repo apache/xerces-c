@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(VECATTRIBUTESIMPL_HPP)
-#define VECATTRIBUTESIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VECATTRIBUTESIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_VECATTRIBUTESIMPL_HPP
 
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/framework/XMLAttr.hpp>

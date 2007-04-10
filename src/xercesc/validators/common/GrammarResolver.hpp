@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-/**
+/*
  * $Id$
  */
 
-#if !defined(GRAMMARRESOLVER_HPP)
-#define GRAMMARRESOLVER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_GRAMMARRESOLVER_HPP)
+#define XERCESC_INCLUDE_GUARD_GRAMMARRESOLVER_HPP
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLSCHEMADESCRIPTION_HPP)
-#define XMLSCHEMADESCRIPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLSCHEMADESCRIPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLSCHEMADESCRIPTION_HPP
 
 #include <xercesc/framework/XMLGrammarDescription.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>

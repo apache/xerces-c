@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XTEMPLATE_SERIALIZER_HPP)
-#define XTEMPLATE_SERIALIZER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XTEMPLATE_SERIALIZER_HPP)
+#define XERCESC_INCLUDE_GUARD_XTEMPLATE_SERIALIZER_HPP
 
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>

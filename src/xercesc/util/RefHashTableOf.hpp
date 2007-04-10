@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(REFHASHTABLEOF_HPP)
-#define REFHASHTABLEOF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REFHASHTABLEOF_HPP)
+#define XERCESC_INCLUDE_GUARD_REFHASHTABLEOF_HPP
 
 
 #include <xercesc/util/HashBase.hpp>

@@ -19,12 +19,10 @@
  * $Id$
  */
 
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
-#include <xercesc/validators/schema/NamespaceScope.hpp>
 #include <xercesc/validators/schema/ComplexTypeInfo.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>

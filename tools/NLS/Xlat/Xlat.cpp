@@ -611,9 +611,9 @@ int Xlat_main(int argC, XMLCh** argV)
                 //  the header protection define.
                 //                
                 fwprintf(outHeader, L"// This file is generated, don't edit it!!\n\n");
-                fwprintf(outHeader, L"#if !defined(ERRHEADER_%s)\n", xmlStrToPrintable(errNameSpace) );
+                fwprintf(outHeader, L"#if !defined(XERCESC_INCLUDE_GUARD_ERRHEADER_%s)\n", xmlStrToPrintable(errNameSpace) );
                 releasePrintableStr                
-                fwprintf(outHeader, L"#define ERRHEADER_%s\n\n", xmlStrToPrintable(errNameSpace) );
+                fwprintf(outHeader, L"#define XERCESC_INCLUDE_GUARD_ERRHEADER_%s\n\n", xmlStrToPrintable(errNameSpace) );
                 releasePrintableStr
 
                 // If its not the exception domain, then we need a header included

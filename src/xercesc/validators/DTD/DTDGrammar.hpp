@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(DTDGRAMMAR_HPP)
-#define DTDGRAMMAR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDGRAMMAR_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDGRAMMAR_HPP
 
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/NameIdPool.hpp>

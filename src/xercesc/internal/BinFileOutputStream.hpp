@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(BINFILEOUTPUTSTREAM_HPP)
-#define BINFILEOUTPUTSTREAM_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_BINFILEOUTPUTSTREAM_HPP)
+#define XERCESC_INCLUDE_GUARD_BINFILEOUTPUTSTREAM_HPP
 
 #include <xercesc/framework/BinOutputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

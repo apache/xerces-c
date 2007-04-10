@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef XMLIBM1047TRANSCODER_HPP
-#define XMLIBM1047TRANSCODER_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLIBM1047TRANSCODER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLIBM1047TRANSCODER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XML256TableTranscoder.hpp>

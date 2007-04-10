@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef BINMEMOUTPUTSTREAM_HEADER_GUARD_
-#define BINMEMOUTPUTSTREAM_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_BINMEMOUTPUTSTREAM_HPP)
+#define XERCESC_INCLUDE_GUARD_BINMEMOUTPUTSTREAM_HPP
 
 #include <xercesc/framework/BinOutputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

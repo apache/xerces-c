@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ELEMSTACK_HPP)
-#define ELEMSTACK_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ELEMSTACK_HPP)
+#define XERCESC_INCLUDE_GUARD_ELEMSTACK_HPP
 
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/QName.hpp>

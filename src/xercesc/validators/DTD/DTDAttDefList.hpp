@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(DTDATTDEFLIST_HPP)
-#define DTDATTDEFLIST_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDATTDEFLIST_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDATTDEFLIST_HPP
 
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>

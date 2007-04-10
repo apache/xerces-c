@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef XMLASCIITRANSCODER_HPP
-#define XMLASCIITRANSCODER_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLASCIITRANSCODER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLASCIITRANSCODER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>

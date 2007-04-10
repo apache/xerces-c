@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(REFARRAY_HPP)
-#define REFARRAY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REFARRAY_HPP)
+#define XERCESC_INCLUDE_GUARD_REFARRAY_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>

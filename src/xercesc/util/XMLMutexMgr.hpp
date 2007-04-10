@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLMUTEXMGL_HPP
-#define XMLMUTEXMGL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLMUTEXMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLMUTEXMGR_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

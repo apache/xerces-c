@@ -19,12 +19,12 @@
  * $Id$
  */
 
-
-#ifndef DOMERRORIMPL_HPP
-#define DOMERRORIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMERRORIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMERRORIMPL_HPP
 
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/util/XMLString.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 

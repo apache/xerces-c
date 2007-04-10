@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(SGXMLSCANNER_HPP)
-#define SGXMLSCANNER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SGXMLSCANNER_HPP)
+#define XERCESC_INCLUDE_GUARD_SGXMLSCANNER_HPP
 
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/KVStringPair.hpp>

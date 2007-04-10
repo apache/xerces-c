@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(MATCH_HPP)
-#define MATCH_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MATCH_HPP)
+#define XERCESC_INCLUDE_GUARD_MATCH_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

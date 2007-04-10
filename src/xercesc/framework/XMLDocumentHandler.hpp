@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLDOCUMENTHANDLER_HPP)
-#define XMLDOCUMENTHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLDOCUMENTHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLDOCUMENTHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>

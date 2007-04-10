@@ -1,6 +1,3 @@
-#ifndef DOMImplementationSource_HEADER_GUARD_
-#define DOMImplementationSource_HEADER_GUARD_
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,7 +19,10 @@
  * $Id$
  */
 
-/**
+#if !defined(XERCESC_INCLUDE_GUARD_DOMIMPLEMENTATIONSOURCE_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMIMPLEMENTATIONSOURCE_HPP
+
+ /**
   * This interface permits a DOM implementer to supply one or more
   * implementations, based upon requested features and versions. Each implemented
   * <code>DOMImplementationSource</code> object is listed in the

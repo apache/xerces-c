@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(LIBWWWNETACCESSOR_HPP)
-#define LIBWWWNETACCESSOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_LIBWWWNETACCESSOR_HPP)
+#define XERCESC_INCLUDE_GUARD_LIBWWWNETACCESSOR_HPP
 
 
 #include <xercesc/util/XercesDefs.hpp>

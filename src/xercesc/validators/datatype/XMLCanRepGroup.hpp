@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLCANREPGROUP_HPP)
-#define XMLCANREPGROUP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLCANREPGROUP_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLCANREPGROUP_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 

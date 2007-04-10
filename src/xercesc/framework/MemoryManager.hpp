@@ -20,8 +20,8 @@
  */
 
 
-#if !defined(MEMORYMANAGER_HPP)
-#define MEMORYMANAGER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MEMORYMANAGER_HPP)
+#define XERCESC_INCLUDE_GUARD_MEMORYMANAGER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <stdlib.h>

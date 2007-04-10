@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef SAX2XMLReader_HPP
-#define SAX2XMLReader_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SAX2XMLREADER_HPP)
+#define XERCESC_INCLUDE_GUARD_SAX2XMLREADER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

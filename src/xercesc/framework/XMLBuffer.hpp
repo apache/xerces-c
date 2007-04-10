@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLBUFFER_HPP)
-#define XMLBUFFER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLBUFFER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLBUFFER_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

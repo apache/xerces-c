@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef HANDLERBASE_HPP
-#define HANDLERBASE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_HANDLERBASE_HPP)
+#define XERCESC_INCLUDE_GUARD_HANDLERBASE_HPP
 
 #include <xercesc/sax/DocumentHandler.hpp>
 #include <xercesc/sax/DTDHandler.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSNAMESPACEITEM_HPP)
-#define XSNAMESPACEITEM_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSNAMESPACEITEM_HPP)
+#define XERCESC_INCLUDE_GUARD_XSNAMESPACEITEM_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/XSObject.hpp>

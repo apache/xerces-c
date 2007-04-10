@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ICONVMSGLOADER_HPP)
-#define ICONVMSGLOADER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MSGCATALOGLOADER_HPP)
+#define XERCESC_INCLUDE_GUARD_MSGCATALOGLOADER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>

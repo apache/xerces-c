@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(ICUMSGLOADER_HPP)
-#define ICUMSGLOADER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ICUMSGLOADER_HPP)
+#define XERCESC_INCLUDE_GUARD_ICUMSGLOADER_HPP
 
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include "unicode/ures.h"

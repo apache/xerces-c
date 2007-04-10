@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef MACOSUNICODECONVERTER_HPP
-#define MACOSUNICODECONVERTER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MACOSUNICODECONVERTER_HPP)
+#define XERCESC_INCLUDE_GUARD_MACOSUNICODECONVERTER_HPP
 
 #include <cstddef>
 #include <xercesc/util/TransService.hpp>

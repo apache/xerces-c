@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(SCHEMAGRAMMAR_HPP)
-#define SCHEMAGRAMMAR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMAGRAMMAR_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMAGRAMMAR_HPP
 
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
@@ -51,7 +49,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class ComplexTypeInfo;
-class NamespaceScope;
 class XercesGroupInfo;
 class XercesAttGroupInfo;
 class XSAnnotation;

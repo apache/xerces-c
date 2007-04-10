@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XSERIALIZATION_EXCEPTION_HPP)
-#define XSERIALIZATION_EXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSERIALIZATION_EXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_XSERIALIZATION_EXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

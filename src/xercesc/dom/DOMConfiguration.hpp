@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#if !defined(DOMCONFIGURATION_HPP)
-#define DOMCONFIGURATION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMCONFIGURATION_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMCONFIGURATION_HPP
 
 //------------------------------------------------------------------------------------
 //  Includes

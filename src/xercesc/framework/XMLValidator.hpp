@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLVALIDATOR_HPP)
-#define XMLVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLVALIDATOR_HPP
 
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLINTERNALERRORHANDLER_HPP)
-#define XMLINTERNALERRORHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLINTERNALERRORHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLINTERNALERRORHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>

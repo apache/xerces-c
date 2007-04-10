@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMEMORY_HPP)
-#define XMEMORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMEMORY_HPP)
+#define XERCESC_INCLUDE_GUARD_XMEMORY_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <stdlib.h>

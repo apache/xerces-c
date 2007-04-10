@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLREADERFACTORY_HPP
-#define XMLREADERFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLREADERFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLREADERFACTORY_HPP
 
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax/SAXException.hpp>

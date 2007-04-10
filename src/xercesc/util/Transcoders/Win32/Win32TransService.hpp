@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef WIN32TRANSSERVICE_HPP
-#define WIN32TRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_WIN32TRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_WIN32TRANSSERVICE_HPP
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

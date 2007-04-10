@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DTDHANDLER_HPP
-#define DTDHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

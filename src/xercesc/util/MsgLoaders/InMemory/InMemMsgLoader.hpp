@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(INMEMMSGLOADER_HPP)
-#define INMEMMSGLOADER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_INMEMMSGLOADER_HPP)
+#define XERCESC_INCLUDE_GUARD_INMEMMSGLOADER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>

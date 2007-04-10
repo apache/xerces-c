@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLELEMENTDECL_HPP)
-#define XMLELEMENTDECL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLELEMENTDECL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLELEMENTDECL_HPP
 
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLAttDefList.hpp>

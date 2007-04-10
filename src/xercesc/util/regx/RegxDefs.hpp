@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(REGXDEFS_HPP)
-#define REGXDEFS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REGXDEFS_HPP)
+#define XERCESC_INCLUDE_GUARD_REGXDEFS_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

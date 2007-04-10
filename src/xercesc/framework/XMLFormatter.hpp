@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLFORMATTER_HPP)
-#define XMLFORMATTER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLFORMATTER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLFORMATTER_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 

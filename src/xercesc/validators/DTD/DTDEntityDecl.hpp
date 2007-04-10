@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(DTDENTITYDECL_HPP)
-#define DTDENTITYDECL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDENTITYDECL_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDENTITYDECL_HPP
 
 #include <xercesc/framework/XMLEntityDecl.hpp>
 

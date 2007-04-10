@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#if !defined(DOMMEMORYMANAGER_HPP)
-#define DOMMEMORYMANAGER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMMEMORYMANAGER_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMMEMORYMANAGER_HPP
 
 //------------------------------------------------------------------------------------
 //  Includes

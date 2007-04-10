@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef ATTRIBUTES_HPP
-#define ATTRIBUTES_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ATTRIBUTES_HPP)
+#define XERCESC_INCLUDE_GUARD_ATTRIBUTES_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

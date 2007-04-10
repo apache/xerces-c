@@ -23,8 +23,8 @@
  * $Id$
  */
 
-#ifndef UCNV_H
-#define UCNV_H
+#if !defined(XERCESC_INCLUDE_GUARD_ICONVUCNV_HPP)
+#define XERCESC_INCLUDE_GUARD_ICONVUCNV_HPP
 
 #include "utypes.h"
 

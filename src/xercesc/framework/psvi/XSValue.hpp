@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSVALUE_HPP)
-#define XSVALUE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSVALUE_HPP)
+#define XERCESC_INCLUDE_GUARD_XSVALUE_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>

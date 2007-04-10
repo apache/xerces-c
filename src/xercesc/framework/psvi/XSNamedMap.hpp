@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XSNAMEDMAP_HPP)
-#define XSNAMEDMAP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSNAMEDMAP_HPP)
+#define XERCESC_INCLUDE_GUARD_XSNAMEDMAP_HPP
 
 
 #include <xercesc/util/XMemory.hpp>

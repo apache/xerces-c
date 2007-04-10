@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLREADER_HPP)
-#define XMLREADER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLREADER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLREADER_HPP
 
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>

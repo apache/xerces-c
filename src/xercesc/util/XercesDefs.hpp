@@ -17,12 +17,10 @@
 
 /*
  * $Id$
- *
  */
 
-
-#if !defined(XERCESDEFS_HPP)
-#define XERCESDEFS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XERCESDEFS_HPP)
+#define XERCESC_INCLUDE_GUARD_XERCESDEFS_HPP
 
 // ---------------------------------------------------------------------------
 //  The file xerces_hdr_config defines critical configuration information

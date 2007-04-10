@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(JANITOR_HPP)
-#define JANITOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_JANITOR_HPP)
+#define XERCESC_INCLUDE_GUARD_JANITOR_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/framework/MemoryManager.hpp>

@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XSAXMLSCANNER_HPP)
-#define XSAXMLSCANNER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSAXMLSCANNER_HPP)
+#define XERCESC_INCLUDE_GUARD_XSAXMLSCANNER_HPP
 
 #include <xercesc/internal/SGXMLScanner.hpp>
 

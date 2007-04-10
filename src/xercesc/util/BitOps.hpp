@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(BITOPS_HPP)
-#define BITOPS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_BITOPS_HPP)
+#define XERCESC_INCLUDE_GUARD_BITOPS_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

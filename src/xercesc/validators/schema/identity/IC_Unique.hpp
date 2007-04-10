@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(IC_UNIQUE_HPP)
-#define IC_UNIQUE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_IC_UNIQUE_HPP)
+#define XERCESC_INCLUDE_GUARD_IC_UNIQUE_HPP
 
 
 /**

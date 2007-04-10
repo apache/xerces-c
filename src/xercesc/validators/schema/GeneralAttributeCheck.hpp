@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(GENERALATTRIBUTECHECK_HPP)
-#define GENERALATTRIBUTECHECK_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_GENERALATTRIBUTECHECK_HPP)
+#define XERCESC_INCLUDE_GUARD_GENERALATTRIBUTECHECK_HPP
 
 /**
   * A general purpose class to check for valid values of attributes, as well

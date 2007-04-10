@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLATTR_HPP)
-#define XMLATTR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLATTR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLATTR_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/QName.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ANYURI_DATATYPEVALIDATOR_HPP)
-#define ANYURI_DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ANYURI_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_ANYURI_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 #include <xercesc/util/XMLUri.hpp>

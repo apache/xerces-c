@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(XMLBUFFERMGR_HPP)
-#define XMLBUFFERMGR_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLBUFFERMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLBUFFERMGR_HPP
 
 #include <xercesc/framework/XMLBuffer.hpp>
 

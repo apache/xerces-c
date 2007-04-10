@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,8 +19,8 @@
  * $Id$
  */
 
-#ifndef MACOSATOMICOPMGL_HPP
-#define MACOSATOMICOPMGL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MACOSATOMICOPMGR_HPP)
+#define XERCESC_INCLUDE_GUARD_MACOSATOMICOPMGR_HPP
 
 #include <xercesc/util/XMLAtomicOpMgr.hpp>
 

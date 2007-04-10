@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(VALIDATION_CONTEXT_HPP)
-#define VALIDATION_CONTEXT_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VALIDATION_CONTEXT_HPP)
+#define XERCESC_INCLUDE_GUARD_VALIDATION_CONTEXT_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>

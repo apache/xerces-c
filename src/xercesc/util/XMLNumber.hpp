@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLNUMBER_HPP
-#define XMLNUMBER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLNUMBER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLNUMBER_HPP
 
 #include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/util/XMemory.hpp>

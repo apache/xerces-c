@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(RANGEFACTORY_HPP)
-#define RANGEFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_RANGEFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_RANGEFACTORY_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#if !defined(DOMTYPEINFO_HPP)
-#define DOMTYPEINFO_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMTYPEINFO_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMTYPEINFO_HPP
 
 //------------------------------------------------------------------------------------
 //  Includes

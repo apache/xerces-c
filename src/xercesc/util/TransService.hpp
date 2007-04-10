@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef TRANSSERVICE_HPP
-#define TRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_TRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_TRANSSERVICE_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

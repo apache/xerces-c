@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(IDENTITYCONSTRAINT_HANDLER_HPP)
-#define IDENTITYCONSTRAINT_HANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_IDENTITYCONSTRAINT_HANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_IDENTITYCONSTRAINT_HANDLER_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

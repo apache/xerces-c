@@ -19,6 +19,9 @@
  * $Id$
  */
 
+#if !defined(XERCESC_INCLUDE_GUARD_XERCES_AUTOCONFIG_CONFIG_HPP)
+#define XERCESC_INCLUDE_GUARD_XERCES_AUTOCONFIG_CONFIG_HPP
+
 //
 // There are two primary xerces configuration header files:
 //
@@ -33,9 +36,6 @@
 //	config.h					--  This file is not used with Microsoft Visual C++; the macros
 //									it would specify are instead hardcoded in the makefiles
 //
-
-#ifndef XERCES_AUTOCONFIG_CONFIG_HPP
-#define XERCES_AUTOCONFIG_CONFIG_HPP
 
 #include <basetsd.h>
 

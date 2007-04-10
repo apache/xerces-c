@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef ICONVTRANSSERVICE_HPP
-#define ICONVTRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ICONVTRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_ICONVTRANSSERVICE_HPP
 
 #include <xercesc/util/TransService.hpp>
 

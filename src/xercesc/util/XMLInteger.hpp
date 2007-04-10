@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XML_INTEGER_HPP
-#define XML_INTEGER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XML_INTEGER_HPP)
+#define XERCESC_INCLUDE_GUARD_XML_INTEGER_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

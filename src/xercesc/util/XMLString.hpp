@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLSTRING_HPP)
-#define XMLSTRING_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLSTRING_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLSTRING_HPP
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>

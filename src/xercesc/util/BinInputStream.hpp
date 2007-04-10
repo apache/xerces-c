@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(BININPUTSTREAM_HPP)
-#define BININPUTSTREAM_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_BININPUTSTREAM_HPP)
+#define XERCESC_INCLUDE_GUARD_BININPUTSTREAM_HPP
 
 #include <xercesc/util/XMemory.hpp>
 

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef SAX2XMLFilter_HPP
-#define SAX2XMLFilter_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SAX2XMLFILTER_HPP)
+#define XERCESC_INCLUDE_GUARD_SAX2XMLFILTER_HPP
 
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 

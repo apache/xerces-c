@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CMNODE_HPP)
-#define CMNODE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CMNODE_HPP)
+#define XERCESC_INCLUDE_GUARD_CMNODE_HPP
 
 #include <limits.h>
 

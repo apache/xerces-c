@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CMBINARYOP_HPP)
-#define CMBINARYOP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CMBINARYOP_HPP)
+#define XERCESC_INCLUDE_GUARD_CMBINARYOP_HPP
 
 #include <xercesc/validators/common/CMNode.hpp>
 

@@ -19,11 +19,10 @@
  * $Id$
  */
 
-#if !defined(STRINGPOOL_HPP)
-#define STRINGPOOL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_STRINGPOOL_HPP)
+#define XERCESC_INCLUDE_GUARD_STRINGPOOL_HPP
 
 #include <xercesc/util/RefHashTableOf.hpp>
-
 #include <xercesc/internal/XSerializable.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

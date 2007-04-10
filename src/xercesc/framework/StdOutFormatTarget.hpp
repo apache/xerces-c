@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef StdOutFormatTarget_HEADER_GUARD_
-#define StdOutFormatTarget_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_STDOUTFORMATTARGET_HPP)
+#define XERCESC_INCLUDE_GUARD_STDOUTFORMATTARGET_HPP
 
 #include <xercesc/framework/XMLFormatter.hpp>
 

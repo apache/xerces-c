@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(REFARRAYVECTOROF_HPP)
-#define REFARRAYVECTOROF_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_REFARRAYVECTOROF_HPP)
+#define XERCESC_INCLUDE_GUARD_REFARRAYVECTOROF_HPP
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
 

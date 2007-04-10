@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLGRAMMARDESCRIPTION_HPP)
-#define XMLGRAMMARDESCRIPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLGRAMMARDESCRIPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLGRAMMARDESCRIPTION_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/validators/common/Grammar.hpp>

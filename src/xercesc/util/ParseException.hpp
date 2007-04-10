@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(PARSEEXCEPTION_HPP)
-#define PARSEEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PARSEEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_PARSEEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

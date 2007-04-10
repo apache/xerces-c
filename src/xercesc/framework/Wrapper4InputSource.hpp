@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef WRAPPER4INPUTSOURCE_HPP
-#define WRAPPER4INPUTSOURCE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_WRAPPER4INPUTSOURCE_HPP)
+#define XERCESC_INCLUDE_GUARD_WRAPPER4INPUTSOURCE_HPP
 
 #include <xercesc/dom/DOMLSInput.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

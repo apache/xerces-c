@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(NAMESPACESCOPE_HPP)
-#define NAMESPACESCOPE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_NAMESPACESCOPE_HPP)
+#define XERCESC_INCLUDE_GUARD_NAMESPACESCOPE_HPP
 
 #include <xercesc/util/StringPool.hpp>
 

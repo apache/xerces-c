@@ -14,8 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if !defined(ABSTRACTVECTOROF_HPP)
-#define ABSTRACTVECTOROF_HPP
+
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_ABSTRACTVECTOROF_HPP)
+#define XERCESC_INCLUDE_GUARD_ABSTRACTVECTOROF_HPP
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>

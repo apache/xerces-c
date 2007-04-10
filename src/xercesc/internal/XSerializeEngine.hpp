@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSERIALIZE_ENGINE_HPP)
-#define XSERIALIZE_ENGINE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSERIALIZE_ENGINE_HPP)
+#define XERCESC_INCLUDE_GUARD_XSERIALIZE_ENGINE_HPP
 
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>

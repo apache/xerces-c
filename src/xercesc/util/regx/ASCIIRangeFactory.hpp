@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ASCIIRANGEFACTORY_HPP)
-#define ASCIIRANGEFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ASCIIRANGEFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_ASCIIRANGEFACTORY_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

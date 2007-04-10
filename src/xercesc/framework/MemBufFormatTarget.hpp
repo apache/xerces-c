@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef MemBufFormatTarget_HEADER_GUARD_
-#define MemBufFormatTarget_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_MEMBUFFORMATTARGET_HPP)
+#define XERCESC_INCLUDE_GUARD_MEMBUFFORMATTARGET_HPP
 
 #include <xercesc/framework/XMLFormatter.hpp>
 

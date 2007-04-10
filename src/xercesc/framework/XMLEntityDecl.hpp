@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLENTITYDECL_HPP)
-#define XMLENTITYDECL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLENTITYDECL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLENTITYDECL_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

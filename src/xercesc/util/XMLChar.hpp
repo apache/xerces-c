@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLCHAR_HPP)
-#define XMLCHAR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLCHAR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLCHAR_HPP
 
 #include <xercesc/util/XMLUniDefs.hpp>
 

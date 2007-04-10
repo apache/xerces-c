@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(CMUNARYOP_HPP)
-#define CMUNARYOP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CMUNARYOP_HPP)
+#define XERCESC_INCLUDE_GUARD_CMUNARYOP_HPP
 
 #include <xercesc/validators/common/CMNode.hpp>
 

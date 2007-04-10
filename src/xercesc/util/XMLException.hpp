@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(EXCEPTION_HPP)
-#define EXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLEXCEPTION_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>

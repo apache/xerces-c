@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef HEXBIN_HPP
-#define HEXBIN_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_HEXBIN_HPP)
+#define XERCESC_INCLUDE_GUARD_HEXBIN_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 

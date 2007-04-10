@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XML_DATETIME_HPP
-#define XML_DATETIME_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XML_DATETIME_HPP)
+#define XERCESC_INCLUDE_GUARD_XML_DATETIME_HPP
 
 #include <xercesc/util/XMLNumber.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

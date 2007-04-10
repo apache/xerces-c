@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XERCESELEMENTWILDCARD_HPP)
-#define XERCESELEMENTWILDCARD_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XERCESELEMENTWILDCARD_HPP)
+#define XERCESC_INCLUDE_GUARD_XERCESELEMENTWILDCARD_HPP
 
 #include <xercesc/util/QName.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>

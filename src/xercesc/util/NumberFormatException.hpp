@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(NUMBERFORMATEXCEPTION_HPP)
-#define NUMBERFORMATEXCEPTION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_NUMBERFORMATEXCEPTION_HPP)
+#define XERCESC_INCLUDE_GUARD_NUMBERFORMATEXCEPTION_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>

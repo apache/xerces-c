@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#if !defined(DOMPSVITYPEINFO_HPP)
-#define DOMPSVITYPEINFO_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMPSVITYPEINFO_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMPSVITYPEINFO_HPP
 
 //------------------------------------------------------------------------------------
 //  Includes

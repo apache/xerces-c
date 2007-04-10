@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(DFACONTENTMODEL_HPP)
-#define DFACONTENTMODEL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DFACONTENTMODEL_HPP)
+#define XERCESC_INCLUDE_GUARD_DFACONTENTMODEL_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CONDITIONTOKEN_HPP)
-#define CONDITIONTOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CONDITIONTOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_CONDITIONTOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

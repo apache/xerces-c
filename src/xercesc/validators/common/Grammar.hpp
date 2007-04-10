@@ -19,10 +19,8 @@
  * $Id$
  */
 
-
-
-#if !defined(GRAMMAR_HPP)
-#define GRAMMAR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_GRAMMAR_HPP)
+#define XERCESC_INCLUDE_GUARD_GRAMMAR_HPP
 
 #include <limits.h>
 

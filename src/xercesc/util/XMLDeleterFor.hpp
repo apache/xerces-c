@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLDELETERFOR_HPP)
-#define XMLDELETERFOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLDELETERFOR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLDELETERFOR_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

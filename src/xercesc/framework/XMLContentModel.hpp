@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(CONTENTMODEL_HPP)
-#define CONTENTMODEL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLCONTENTMODEL_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLCONTENTMODEL_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/QName.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(IC_KEY_HPP)
-#define IC_KEY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_IC_KEY_HPP)
+#define XERCESC_INCLUDE_GUARD_IC_KEY_HPP
 
 
 // ---------------------------------------------------------------------------

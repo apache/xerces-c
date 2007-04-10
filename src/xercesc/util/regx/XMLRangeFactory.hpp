@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLRANGEFACTORY_HPP)
-#define XMLRANGEFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLRANGEFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLRANGEFACTORY_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(FIELDACTIVATOR_HPP)
-#define FIELDACTIVATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_FIELDACTIVATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_FIELDACTIVATOR_HPP
 
 /**
   * This class is responsible for activating fields within a specific scope;

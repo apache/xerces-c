@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(SCHEMAELEMENTDECL_HPP)
-#define SCHEMAELEMENTDECL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SCHEMAELEMENTDECL_HPP)
+#define XERCESC_INCLUDE_GUARD_SCHEMAELEMENTDECL_HPP
 
 #include <xercesc/util/QName.hpp>
 #include <xercesc/validators/common/Grammar.hpp>

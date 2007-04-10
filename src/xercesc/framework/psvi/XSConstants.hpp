@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSCONSTANTS_HPP)
-#define XSCONSTANTS_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSCONSTANTS_HPP)
+#define XERCESC_INCLUDE_GUARD_XSCONSTANTS_HPP
 
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>

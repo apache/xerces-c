@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef SECURITYMANAGER_HPP
-#define SECURITYMANAGER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SECURITYMANAGER_HPP)
+#define XERCESC_INCLUDE_GUARD_SECURITYMANAGER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

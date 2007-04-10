@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(STRING_DATATYPEVALIDATOR_HPP)
-#define STRING_DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_STRING_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_STRING_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 

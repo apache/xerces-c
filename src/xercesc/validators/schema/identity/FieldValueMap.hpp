@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(FIELDVALUEMAP_HPP)
-#define FIELDVALUEMAP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_FIELDVALUEMAP_HPP)
+#define XERCESC_INCLUDE_GUARD_FIELDVALUEMAP_HPP
 
 /**
   * This class maps values associated with fields of an identity constraint

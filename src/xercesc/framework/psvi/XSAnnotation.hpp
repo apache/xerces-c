@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XSANNOTATION_HPP)
-#define XSANNOTATION_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSANNOTATION_HPP)
+#define XERCESC_INCLUDE_GUARD_XSANNOTATION_HPP
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/internal/XSerializable.hpp>

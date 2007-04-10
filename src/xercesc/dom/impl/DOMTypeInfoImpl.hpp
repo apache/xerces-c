@@ -25,8 +25,8 @@
 //
 
 
-#if !defined(DOMTYPEINFOIMPL_HPP)
-#define DOMTYPEINFOIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMTYPEINFOIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMTYPEINFOIMPL_HPP
 
 //------------------------------------------------------------------------------------
 //  Includes

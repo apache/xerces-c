@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(VALUEVECTOROF_HPP)
-#define VALUEVECTOROF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VALUEVECTOROF_HPP)
+#define XERCESC_INCLUDE_GUARD_VALUEVECTOROF_HPP
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>

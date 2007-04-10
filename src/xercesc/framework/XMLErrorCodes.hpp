@@ -1,7 +1,7 @@
 // This file is generated, don't edit it!!
 
-#if !defined(ERRHEADER_XMLErrs)
-#define ERRHEADER_XMLErrs
+#if !defined(XERCESC_INCLUDE_GUARD_ERRHEADER_XMLErrs)
+#define XERCESC_INCLUDE_GUARD_ERRHEADER_XMLErrs
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/util/XercesDefs.hpp>

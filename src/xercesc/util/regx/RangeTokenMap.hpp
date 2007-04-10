@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(RANGETOKENMAP_HPP)
-#define RANGETOKENMAP_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_RANGETOKENMAP_HPP)
+#define XERCESC_INCLUDE_GUARD_RANGETOKENMAP_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

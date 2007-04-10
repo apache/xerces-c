@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(DTDATTDEF_HPP)
-#define DTDATTDEF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDATTDEF_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDATTDEF_HPP
 
 #include <xercesc/framework/XMLAttDef.hpp>
 

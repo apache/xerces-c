@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#if !defined(HASHPTR_HPP)
-#define HASHPTR_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_HASHPTR_HPP)
+#define XERCESC_INCLUDE_GUARD_HASHPTR_HPP
 
 #include <xercesc/util/HashBase.hpp>
 

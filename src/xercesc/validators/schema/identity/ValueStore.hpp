@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(VALUESTORE_HPP)
-#define VALUESTORE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VALUESTORE_HPP)
+#define XERCESC_INCLUDE_GUARD_VALUESTORE_HPP
 
 /**
   * This class stores values associated to an identity constraint.

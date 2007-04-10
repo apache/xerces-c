@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DOMLSInputImpl_HEADER_GUARD_
-#define DOMLSInputImpl_HEADER_GUARD_
+#if !defined(XERCESC_INCLUDE_GUARD_DOMLSINPUTIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMLSINPUTIMPL_HPP
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMLSInput.hpp>

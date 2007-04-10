@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(SOCKETNETACCESSOR_HPP)
-#define SOCKETNETACCESSOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SOCKETNETACCESSOR_HPP)
+#define XERCESC_INCLUDE_GUARD_SOCKETNETACCESSOR_HPP
 
 
 #include <xercesc/util/XercesDefs.hpp>

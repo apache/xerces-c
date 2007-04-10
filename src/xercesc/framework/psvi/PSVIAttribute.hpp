@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(PSVIATTRIBUTE_HPP)
-#define PSVIATTRIBUTE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PSVIATTRIBUTE_HPP)
+#define XERCESC_INCLUDE_GUARD_PSVIATTRIBUTE_HPP
 
 #include <xercesc/framework/psvi/PSVIItem.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>

@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef XMLUTF8TRANSCODER_HPP
-#define XMLUTF8TRANSCODER_HPP
+/*
+ * $Id$
+ */
+
+#if !defined(XERCESC_INCLUDE_GUARD_XMLUTF8TRANSCODER_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLUTF8TRANSCODER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(VALIDATION_CONTEXTIMPL_HPP)
-#define VALIDATION_CONTEXTIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_VALIDATION_CONTEXTIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_VALIDATION_CONTEXTIMPL_HPP
 
 #include <xercesc/framework/ValidationContext.hpp>
 

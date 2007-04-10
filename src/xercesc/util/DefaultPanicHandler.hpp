@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DEFAULT_PANICHANDLER_HPP
-#define DEFAULT_PANICHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DEFAULT_PANICHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_DEFAULT_PANICHANDLER_HPP
 
 #include <xercesc/util/PanicHandler.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

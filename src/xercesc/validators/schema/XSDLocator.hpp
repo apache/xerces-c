@@ -19,13 +19,12 @@
  * $Id$
  */
 
+#if !defined(XERCESC_INCLUDE_GUARD_XSDLOCATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_XSDLOCATOR_HPP
 
 /**
   * A Locator implementation
   */
-
-#ifndef XSDLOCATOR_HPP
-#define XSDLOCATOR_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/sax/Locator.hpp>

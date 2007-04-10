@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#ifndef DECLHANDLER_HPP
-#define DECLHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DECLHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_DECLHANDLER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

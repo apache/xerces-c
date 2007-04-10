@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(CURLNETACCESSOR_HPP)
-#define CURLNETACCESSOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CURLNETACCESSOR_HPP)
+#define XERCESC_INCLUDE_GUARD_CURLNETACCESSOR_HPP
 
 
 #include <xercesc/util/XercesDefs.hpp>

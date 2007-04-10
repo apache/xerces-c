@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(PSVIHANDLER_HPP)
-#define PSVIHANDLER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PSVIHANDLER_HPP)
+#define XERCESC_INCLUDE_GUARD_PSVIHANDLER_HPP
 
 #include <xercesc/framework/psvi/PSVIElement.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>

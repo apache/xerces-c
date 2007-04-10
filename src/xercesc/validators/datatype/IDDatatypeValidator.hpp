@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ID_DATATYPEVALIDATOR_HPP)
-#define ID_DATATYPEVALIDATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ID_DATATYPEVALIDATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_ID_DATATYPEVALIDATOR_HPP
 
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>

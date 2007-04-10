@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XERCESXPATH_HPP)
-#define XERCESXPATH_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XERCESXPATH_HPP)
+#define XERCESC_INCLUDE_GUARD_XERCESXPATH_HPP
 
 
 // ---------------------------------------------------------------------------

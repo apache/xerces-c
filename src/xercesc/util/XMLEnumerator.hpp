@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(XMLENUMERATOR_HPP)
-#define XMLENUMERATOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLENUMERATOR_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLENUMERATOR_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

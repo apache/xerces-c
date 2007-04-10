@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
+/*
+ * $Id$
+ */
 
-#if !defined(PSVIUNI_HPP)
-#define PSVIUNI_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_PSVIUNI_HPP)
+#define XERCESC_INCLUDE_GUARD_PSVIUNI_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 

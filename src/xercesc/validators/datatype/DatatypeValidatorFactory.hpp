@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(DATATYPEVALIDATORFACTORY_HPP)
-#define DATATYPEVALIDATORFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DATATYPEVALIDATORFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_DATATYPEVALIDATORFACTORY_HPP
 
 /**
  * This class implements a factory of Datatype Validators. Internally the

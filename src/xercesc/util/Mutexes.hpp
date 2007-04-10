@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(MUTEXES_HPP)
-#define MUTEXES_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_MUTEXES_HPP)
+#define XERCESC_INCLUDE_GUARD_MUTEXES_HPP
 
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(DTDELEMENTDECL_HPP)
-#define DTDELEMENTDECL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DTDELEMENTDECL_HPP)
+#define XERCESC_INCLUDE_GUARD_DTDELEMENTDECL_HPP
 
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/QName.hpp>

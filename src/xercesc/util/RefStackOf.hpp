@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(REFSTACKOF_HPP)
-#define REFSTACKOF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REFSTACKOF_HPP)
+#define XERCESC_INCLUDE_GUARD_REFSTACKOF_HPP
 
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/EmptyStackException.hpp>

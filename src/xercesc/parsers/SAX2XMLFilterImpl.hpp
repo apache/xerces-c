@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(SAX2XMLFilterImpl_HPP)
-#define SAX2XMLFilterImpl_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_SAX2XMLFILTERIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_SAX2XMLFILTERIMPL_HPP
 
 #include <xercesc/sax2/SAX2XMLFilter.hpp>
 #include <xercesc/sax/EntityResolver.hpp>

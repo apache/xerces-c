@@ -17,11 +17,10 @@
 
 /*
  * $Id$
- *
  */
 
-#if !defined(XSDDOMPARSER_HPP)
-#define XSDDOMPARSER_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XSDDOMPARSER_HPP)
+#define XERCESC_INCLUDE_GUARD_XSDDOMPARSER_HPP
 
 
 #include <xercesc/parsers/XercesDOMParser.hpp>

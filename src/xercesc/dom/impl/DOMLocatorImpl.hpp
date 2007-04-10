@@ -19,15 +19,12 @@
  * $Id$
  */
 
-
-#ifndef DOMLOCATORIMPL_HPP
-#define DOMLOCATORIMPL_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_DOMLOCATORIMPL_HPP)
+#define XERCESC_INCLUDE_GUARD_DOMLOCATORIMPL_HPP
 
 #include <xercesc/dom/DOMLocator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-
 
 /**
   * Introduced in DOM Level 3

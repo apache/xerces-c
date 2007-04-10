@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XMLASCIITRANSCODER390_HPP
-#define XMLASCIITRANSCODER390_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLASCIITRANSCODER390_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLASCIITRANSCODER390_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>

@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef XML_DOUBLE_HPP
-#define XML_DOUBLE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XML_DOUBLE_HPP)
+#define XERCESC_INCLUDE_GUARD_XML_DOUBLE_HPP
 
 #include <xercesc/util/XMLAbstractDoubleFloat.hpp>
 

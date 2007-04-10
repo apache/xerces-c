@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(REFVECTOROF_HPP)
-#define REFVECTOROF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_REFVECTOROF_HPP)
+#define XERCESC_INCLUDE_GUARD_REFVECTOROF_HPP
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
 

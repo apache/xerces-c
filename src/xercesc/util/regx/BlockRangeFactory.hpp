@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(BLOCKRANGEFACTORY_HPP)
-#define BLOCKRANGEFACTORY_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_BLOCKRANGEFACTORY_HPP)
+#define XERCESC_INCLUDE_GUARD_BLOCKRANGEFACTORY_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes

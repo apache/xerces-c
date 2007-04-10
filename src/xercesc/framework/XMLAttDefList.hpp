@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(XMLATTDEFLIST_HPP)
-#define XMLATTDEFLIST_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLATTDEFLIST_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLATTDEFLIST_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMemory.hpp>

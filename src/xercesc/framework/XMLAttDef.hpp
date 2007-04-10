@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(ATTDEF_HPP)
-#define ATTDEF_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_XMLATTDEF_HPP)
+#define XERCESC_INCLUDE_GUARD_XMLATTDEF_HPP
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>

@@ -19,6 +19,9 @@
  * $Id$
  */
 
+#if !defined(XERCESC_INCLUDE_GUARD_CMSTATESET_HPP)
+#define XERCESC_INCLUDE_GUARD_CMSTATESET_HPP
+
 //  DESCRIPTION:
 //
 //  This class is a specialized bitset class for the content model code of
@@ -27,9 +30,6 @@
 //  and away the most common. So it can be a lot more optimized than a general
 //  purpose utility bitset class
 //
-
-#if !defined(CMSTATESET_HPP)
-#define CMSTATESET_HPP
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/RuntimeException.hpp>

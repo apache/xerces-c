@@ -19,9 +19,8 @@
  * $Id$
  */
 
-
-#if !defined(CONTENTLEAFNAMETYPEVECTOR_HPP)
-#define CONTENTLEAFNAMETYPEVECTOR_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CONTENTLEAFNAMETYPEVECTOR_HPP)
+#define XERCESC_INCLUDE_GUARD_CONTENTLEAFNAMETYPEVECTOR_HPP
 
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/framework/MemoryManager.hpp>

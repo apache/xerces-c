@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef ICUTRANSSERVICE_HPP
-#define ICUTRANSSERVICE_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_ICUTRANSSERVICE_HPP)
+#define XERCESC_INCLUDE_GUARD_ICUTRANSSERVICE_HPP
 
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/TransService.hpp>

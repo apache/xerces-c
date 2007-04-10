@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#if !defined(CLOSURETOKEN_HPP)
-#define CLOSURETOKEN_HPP
+#if !defined(XERCESC_INCLUDE_GUARD_CLOSURETOKEN_HPP)
+#define XERCESC_INCLUDE_GUARD_CLOSURETOKEN_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes
