@@ -38,52 +38,6 @@ typedef struct XIncludeHistoryNode{
 	struct XIncludeHistoryNode *next;
 }XIncludeHistoryNode;
 
-// ---------------------------------------------------------------------------
-//  Simple error handler deriviative to install on parser
-// ---------------------------------------------------------------------------
-class XINCLUDE_EXPORT XIDOMErrorHandler : public DOMErrorHandler
-{
-public:
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    XIDOMErrorHandler();
-    ~XIDOMErrorHandler();
-
-
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-    bool getSawErrors() const;
-
-
-    // -----------------------------------------------------------------------
-    //  Implementation of the DOM ErrorHandler interface
-    // -----------------------------------------------------------------------
-    bool handleError(const DOMError& domError);
-    void resetErrors();
-
-
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    XIDOMErrorHandler(const XIDOMErrorHandler&);
-    void operator=(const XIDOMErrorHandler&);
-
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fSawErrors
-    //      This is set if we get any errors, and is queryable via a getter
-    //      method. Its used by the main code to suppress output if there are
-    //      errors.
-    // -----------------------------------------------------------------------
-    bool    fSawErrors;
-};
-
-
 /**
   * Class implementing all the utility functions required by an XInclude parser.
   *
@@ -152,7 +106,7 @@ private:
       * @return true if details are valid for an xi:include element, false
 	  * if not.
       */
-	bool isXIIncludeElement(const XMLCh *name, const XMLCh *namespaceURI);
+	static bool isXIIncludeElement(const XMLCh *name, const XMLCh *namespaceURI);
 
 	 /** Detect whether the supplied details are correct for an xi:fallback element
 	  *
@@ -162,7 +116,7 @@ private:
       * @return true if details are valid for an xi:fallback element, false
 	  * if not.
       */
-	bool isXIFallbackElement(const XMLCh *name, const XMLCh *namespaceURI);
+	static bool isXIFallbackElement(const XMLCh *name, const XMLCh *namespaceURI);
 
 	 /** Detect whether the supplied DOMNode is an xi:include element
 	  *
@@ -171,7 +125,7 @@ private:
       * @return true if node is an xi:include element, false
 	  * if not.
       */
-	bool isXIIncludeDOMNode(DOMNode *node);
+	static bool isXIIncludeDOMNode(DOMNode *node);
 
 	 /** Detect whether the supplied DOMNode is an xi:fallback element
 	  *
@@ -180,7 +134,7 @@ private:
       * @return true if node is an xi:fallback element, false
 	  * if not.
       */
-	bool isXIFallbackDOMNode(DOMNode *node);
+	static bool isXIFallbackDOMNode(DOMNode *node);
 
 	 /** Walk the content of the supplied source node, performing any xinclude actions
 	  * that are encountered.
@@ -300,6 +254,7 @@ private:
 	static const XMLCh fgXIIIncludeNamespaceURI[];
 
 	friend class XIncludeDOMDocumentProcessor;
+	friend class AbstractDOMParser;
 };
 
 XERCES_CPP_NAMESPACE_END

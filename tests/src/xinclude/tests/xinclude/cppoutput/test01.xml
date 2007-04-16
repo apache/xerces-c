@@ -14,7 +14,7 @@
 	
 	<!-- this tests a valid include -->
 	<!-- tests that files included from other directories work -->[Warning] include09.xml:3:69
-<child3 xmlns="" name="kid3" xml:base="../included/dir/include09.xml"><desc>Text3</desc></child3>
+<child3 name="kid3" xml:base="../included/dir/include09.xml" xmlns=""><desc>Text3</desc></child3>
 	
 	<!-- this tests that idrefs still work when an ID from an included file is used -->
 	<select name="kid3"/>

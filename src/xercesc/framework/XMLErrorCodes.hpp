@@ -1,7 +1,7 @@
 // This file is generated, don't edit it!!
 
-#if !defined(XERCESC_INCLUDE_GUARD_ERRHEADER_XMLErrs)
-#define XERCESC_INCLUDE_GUARD_ERRHEADER_XMLErrs
+#if !defined(ERRHEADER_XMLErrs)
+#define ERRHEADER_XMLErrs
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/util/XercesDefs.hpp>
@@ -338,7 +338,10 @@ public :
       , XIncludeIncludeFailedNoFallback    = 321
       , XIncludeCircularInclusionLoop      = 322
       , XIncludeCircularInclusionDocIncludesSelf   = 323
-      , F_HighBounds                       = 324
+      , XIncludeDisallowedChild            = 324
+      , XIncludeConflictingNotation        = 325
+      , XIncludeConflictingEntity          = 326
+      , F_HighBounds                       = 327
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

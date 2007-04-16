@@ -318,6 +318,9 @@ $set 1
 321  Include failed, no fallback found in document '{0}'
 322  Circular inclusion document '{0}' includes previously included document
 323  Circular inclusion document '{0}' includes itself
+324  Element '{0}' is not allowed as a child of an xi:include element
+325  Included notation '{0}' conflicts with a notation already defined
+326  Included entity '{0}' conflicts with an entity already defined
 
 
 $set 2

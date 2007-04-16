@@ -330,6 +330,9 @@
             <Message Id="XIncludeIncludeFailedNoFallback" Text="Include failed, no fallback found in document '{0}'"/>
             <Message Id="XIncludeCircularInclusionLoop" Text="Circular inclusion document '{0}' includes previously included document"/>
             <Message Id="XIncludeCircularInclusionDocIncludesSelf" Text="Circular inclusion document '{0}' includes itself"/>
+            <Message Id="XIncludeDisallowedChild" Text="Element '{0}' is not allowed as a child of an xi:include element"/>
+            <Message Id="XIncludeConflictingNotation" Text="Included notation '{0}' conflicts with a notation already defined"/>
+            <Message Id="XIncludeConflictingEntity" Text="Included entity '{0}' conflicts with an entity already defined"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">

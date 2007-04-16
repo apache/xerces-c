@@ -408,7 +408,18 @@ public :
       * @return  The state of the associate schema info flag.
       * @see #setCreateSchemaInfo
       */
-    bool  getCreateSchemaInfo() const;
+    bool getCreateSchemaInfo() const;
+
+    /** Get the 'do XInclude' flag
+      *
+      * This method returns the flag that specifies whether
+      * the parser will process XInclude nodes
+      * in the DOM tree being produced.
+      *
+      * @return  The state of the 'do XInclude' flag.
+      * @see #setDoXInclude
+      */
+    bool getDoXInclude() const;
 
     /** Get the 'generate synthetic annotations' flag
       *    
@@ -821,10 +832,21 @@ public :
       * the parser should store schema informations in the element 
       * and attribute nodes in the DOM tree being produced.
       *
-      * @return  The state of the associate schema info flag.
+      * @param newValue The state to set
       * @see #getCreateSchemaInfo
       */
     void  setCreateSchemaInfo(const bool newState);
+
+    /** Set the 'do XInclude' flag
+      *
+      * This method allows users to specify whether 
+      * the parser should process XInclude nodes
+      * in the DOM tree being produced.
+      *
+      * @param newValue The state to set
+      * @see #getDoXInclude
+      */
+    void  setDoXInclude(const bool newState);
 
     /** Set the 'ignore annotation' flag
       *
@@ -1637,6 +1659,9 @@ protected:
     //  fCreateSchemaInfo
     //      Indicates whether element and attributes will have schema info associated
     //
+	//   fDoXinclude
+	//      A bool used to request that XInlcude processing occur on the
+	//      Document the parser parses.
     // -----------------------------------------------------------------------
     bool                          fCreateEntityReferenceNodes;
     bool                          fIncludeIgnorableWhitespace;
@@ -1645,6 +1670,7 @@ protected:
     bool                          fCreateCommentNodes;
     bool                          fDocumentAdoptedByUser;
     bool                          fCreateSchemaInfo;
+    bool                          fDoXInclude;
     XMLScanner*                   fScanner;
     XMLCh*                        fImplementationFeatures;
     DOMNode*                      fCurrentParent;
@@ -1713,6 +1739,11 @@ inline bool AbstractDOMParser::getCreateSchemaInfo() const
 {
     return fCreateSchemaInfo;
 }
+
+inline bool AbstractDOMParser::getDoXInclude() const
+{
+    return fDoXInclude;
+}
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -1735,6 +1766,11 @@ inline void AbstractDOMParser::useImplementation(const XMLCh* const implementati
 {
     fMemoryManager->deallocate(fImplementationFeatures); 
     fImplementationFeatures = XMLString::replicate(implementationFeatures, fMemoryManager); 
+}
+
+inline void AbstractDOMParser::setDoXInclude(const bool newState)
+{
+    fDoXInclude = newState;
 }
 
 // ---------------------------------------------------------------------------

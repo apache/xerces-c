@@ -325,6 +325,9 @@ en_US {
 		"Include failed, no fallback found in document '{0}' " ,
 		"Circular inclusion document '{0}' includes previously included document " ,
 		"Circular inclusion document '{0}' includes itself " ,
+		"Element '{0}' is not allowed as a child of an xi:include element " ,
+		"Included notation '{0}' conflicts with a notation already defined " ,
+		"Included entity '{0}' conflicts with an entity already defined " ,
 		"F_ End " ,
 		} 
 

@@ -142,7 +142,7 @@ int main(int argC, char* argV[])
         XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << testFileName << "'\n";
     }
 
-    if (doc) {
+    if (!errorHandler.getSawErrors() && doc) {
 	    DOMLSSerializer	*writer = ((DOMImplementationLS*)impl)->createLSSerializer();
 	    DOMLSOutput     *theOutputDesc = ((DOMImplementationLS*)impl)->createLSOutput();
 
@@ -206,14 +206,17 @@ XIncludeErrorHandler::~XIncludeErrorHandler()
 bool XIncludeErrorHandler::handleError(const DOMError& domError)
 {
 	bool continueParsing = true;
-    fSawErrors = true;
     if (domError.getSeverity() == DOMError::DOM_SEVERITY_WARNING)
         XERCES_STD_QUALIFIER cerr << "\nWarning at file ";
     else if (domError.getSeverity() == DOMError::DOM_SEVERITY_ERROR)
+    {
         XERCES_STD_QUALIFIER cerr << "\nError at file ";
+        fSawErrors = true;
+    }
 	else {
         XERCES_STD_QUALIFIER cerr << "\nFatal Error at file ";
 		continueParsing = false;
+        fSawErrors = true;
 	}
 
     XERCES_STD_QUALIFIER cerr << StrX(domError.getLocation()->getURI())

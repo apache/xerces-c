@@ -63,6 +63,7 @@
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/xinclude/XIncludeUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -87,6 +88,7 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
 , fCreateCommentNodes(true)
 , fDocumentAdoptedByUser(false)
 , fCreateSchemaInfo(false)
+, fDoXInclude(false)
 , fScanner(0)
 , fImplementationFeatures(0)
 , fCurrentParent(0)
@@ -513,6 +515,13 @@ void AbstractDOMParser::parse(const InputSource& source)
     {
         fParseInProgress = true;
         fScanner->scanDocument(source);
+
+        if (fDoXInclude && getErrorCount()==0){
+		    DOMDocument *doc = getDocument();
+            // after XInclude, the document must be normalized
+            if(doc)
+            	doc->normalizeDocument();
+        }
     }
     catch(const OutOfMemoryException&)
     {
@@ -534,6 +543,13 @@ void AbstractDOMParser::parse(const XMLCh* const systemId)
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
+
+        if (fDoXInclude && getErrorCount()==0){
+		    DOMDocument *doc = getDocument();
+            // after XInclude, the document must be normalized
+            if(doc)
+            	doc->normalizeDocument();
+        }
     }
     catch(const OutOfMemoryException&)
     {
@@ -555,6 +571,13 @@ void AbstractDOMParser::parse(const char* const systemId)
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
+        
+        if (fDoXInclude && getErrorCount()==0){
+		    DOMDocument *doc = getDocument();
+            // after XInclude, the document must be normalized
+            if(doc)
+            	doc->normalizeDocument();
+        }
     }
     catch(const OutOfMemoryException&)
     {
@@ -826,6 +849,15 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
     // If we've hit the end of content, clear the flag
     if (fNodeStack->empty())
         fWithinElement = false;
+
+    if(fDoXInclude && XIncludeUtils::isXIIncludeDOMNode(fCurrentNode)
+        || (XIncludeUtils::isXIFallbackDOMNode(fCurrentNode) && !XMLString::equals(fCurrentParent->getNamespaceURI(), XIncludeUtils::fgXIIIncludeNamespaceURI)))
+    {
+    	XIncludeUtils xiu((XMLErrorReporter *) this);
+	    /* process the XInclude node, then update the fCurrentNode with the new content*/
+	    if(xiu.parseDOMNodeDoingXInclude(fCurrentNode, fDocument))
+            fCurrentNode = fCurrentParent->getLastChild();
+    }
 }
 
 

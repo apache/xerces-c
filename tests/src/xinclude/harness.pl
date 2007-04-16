@@ -91,10 +91,23 @@ while (<@ARGV>){
    print "R[$command]\n";
    system("$command");
 
-   $ACTUAL_TEST_RESULTS[$i] = &compareFiles($expected_result_file, $output_file);
+   $outcome = 0;
+   if (! -e $output_file) {
+    $ACTUAL_TEST_RESULTS[$i] = 0;
+    # we didn't generate an output, we are correct if the test was expected to fail
+    if($CORRECT_TEST_RESULTS[$i] eq 0) {
+      $outcome = 1;
+    }
+   } else {
+    $ACTUAL_TEST_RESULTS[$i] = 1;
+    # we generated an output, we are correct if our result matches
+    if($CORRECT_TEST_RESULTS[$i] eq 1) {
+      $outcome = &compareFiles($expected_result_file, $output_file);
+    }
+   }
 
    print outfile "<tr bgcolor=";
-   if ($ACTUAL_TEST_RESULTS[$i] eq $CORRECT_TEST_RESULTS[$i]) {
+   if ($outcome eq 1) {
       print outfile "green";
    } else {
       print outfile "red";
@@ -116,15 +129,13 @@ while (<@ARGV>){
    # actual result
    $result = (($ACTUAL_TEST_RESULTS[$i])?"true":"false");
    print outfile "<td>$result</td>";
-   if($ACTUAL_TEST_RESULTS[$i]) {
-      $successes++;
-   }
 
    # correct result
    $result = (($CORRECT_TEST_RESULTS[$i])?"true":"false");
    print outfile "<td>$result</td>";
 
-   if ($ACTUAL_TEST_RESULTS[$i] eq $CORRECT_TEST_RESULTS[$i]) {
+   if ($outcome eq 1) {
+      $successes++;
       $result = "Passed";
       print "[test $testNum PASSED]\n";
       $correct++;

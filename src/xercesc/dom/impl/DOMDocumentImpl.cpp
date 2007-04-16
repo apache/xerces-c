@@ -1151,6 +1151,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             newentity->setPublicId(srcentity->getPublicId());
             newentity->setSystemId(srcentity->getSystemId());
             newentity->setNotationName(srcentity->getNotationName());
+            newentity->setBaseURI(srcentity->getBaseURI());
             // Kids carry additional value
             newnode=newentity;
             castToNodeImpl(newentity)->setReadOnly(false, true);// allow deep import temporarily
@@ -1224,6 +1225,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             DOMNotationImpl *newnotation = (DOMNotationImpl *)createNotation(source->getNodeName());
             newnotation->setPublicId(srcnotation->getPublicId());
             newnotation->setSystemId(srcnotation->getSystemId());
+            newnotation->setBaseURI(srcnotation->getBaseURI());
             newnode=newnotation;
             // No name, no value
             break;

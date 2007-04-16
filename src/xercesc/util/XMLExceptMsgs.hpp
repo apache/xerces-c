@@ -1,7 +1,7 @@
 // This file is generated, don't edit it!!
 
-#if !defined(XERCESC_INCLUDE_GUARD_ERRHEADER_XMLExcepts)
-#define XERCESC_INCLUDE_GUARD_ERRHEADER_XMLExcepts
+#if !defined(ERRHEADER_XMLExcepts)
+#define ERRHEADER_XMLExcepts
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMError.hpp>
