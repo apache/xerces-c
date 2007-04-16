@@ -66,7 +66,6 @@ public:
     virtual void         release();
 
     //Introduced in DOM Level 3
-    virtual const XMLCh *getBaseURI() const;
     virtual const DOMTypeInfo * getSchemaTypeInfo() const;
 
    // helper function for DOM Level 3 renameNode

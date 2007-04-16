@@ -80,43 +80,6 @@ const XMLCh * DOMElementNSImpl::getLocalName() const
     return fLocalName;
 }
 
-const XMLCh* DOMElementNSImpl::getBaseURI() const
-{
-    const XMLCh* baseURI = (fNode.fOwnerNode)->getBaseURI();
-    if (fAttributes) {
-        const XMLCh baseString[] =
-        {
-            chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
-        };
-        DOMNode* attrNode = fAttributes->getNamedItemNS(DOMNodeImpl::getXmlURIString(), baseString);
-        if (attrNode) {
-            const XMLCh* uri =  attrNode->getNodeValue();
-            if (uri && *uri) {// attribute value is always empty string
-                // if there is a base URI for the parent node, use it to resolve relative URI
-                if(baseURI)
-                {
-                    try {
-                        XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                        XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                        uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
-                    }
-                    catch(const OutOfMemoryException&)
-                    {
-                        throw;
-                    }
-                    catch (...){
-                        // REVISIT: what should happen in this case?
-                        return 0;
-                    }
-                }
-                return uri;
-            }
-        }
-    }
-    return baseURI;
-}
-
-
 void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 {
     if (fNode.isReadOnly())
