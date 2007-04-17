@@ -132,7 +132,6 @@ public :
     Win32Transcoder
     (
         const   XMLCh* const    encodingName
-        , const unsigned int    winCP
         , const unsigned int    ieCP
         , const unsigned int    blockSize
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
@@ -180,13 +179,10 @@ private :
     //  Private data members
     //
     //  fIECP
-    //      This is the internet explorer code page for this encoding.
+    //      This is the code page for this encoding.
     //
-    //  fWinCP
-    //      This is the windows code page for this encoding.
     // -----------------------------------------------------------------------
     unsigned int    fIECP;
-    unsigned int    fWinCP;
 };
 
 

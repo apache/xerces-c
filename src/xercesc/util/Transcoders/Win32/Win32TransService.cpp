@@ -146,14 +146,12 @@ public :
     CPMapEntry
     (
         const   XMLCh* const    encodingName
-        , const unsigned int    cpId
         , const unsigned int    ieId
     );
 
     CPMapEntry
     (
         const   char* const     encodingName
-        , const unsigned int    cpId
         , const unsigned int    ieId
     );
 
@@ -165,7 +163,6 @@ public :
     // -----------------------------------------------------------------------
     const XMLCh* getEncodingName() const;
     const XMLCh* getKey() const;
-    unsigned int getWinCP() const;
     unsigned int getIEEncoding() const;
 
 
@@ -185,16 +182,10 @@ private :
     //      This is the encoding name for the code page that this instance
     //      represents.
     //
-    //  fCPId
-    //      This is the Windows specific code page for the encoding that this
-    //      instance represents.
-    //
     //  fIEId
-    //      This is the IE encoding id. Its not used at this time, but we
-    //      go ahead and get it and store it just in case for later.
+    //      This is the code page id.
     // -----------------------------------------------------------------------
     XMLCh*          fEncodingName;
-    unsigned int    fCPId;
     unsigned int    fIEId;
 };
 
@@ -202,10 +193,8 @@ private :
 //  CPMapEntry: Constructors and Destructor
 // ---------------------------------------------------------------------------
 CPMapEntry::CPMapEntry( const   char* const     encodingName
-                        , const unsigned int    cpId
                         , const unsigned int    ieId) :
     fEncodingName(0)
-    , fCPId(cpId)
     , fIEId(ieId)
 {
     // Transcode the name to Unicode and store that copy
@@ -231,11 +220,9 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
 }
 
 CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
-                        , const unsigned int    cpId
                         , const unsigned int    ieId) :
 
     fEncodingName(0)
-    , fCPId(cpId)
     , fIEId(ieId)
 {
     fEncodingName = XMLString::replicate(encodingName, XMLPlatformUtils::fgMemoryManager);
@@ -261,18 +248,10 @@ const XMLCh* CPMapEntry::getEncodingName() const
     return fEncodingName;
 }
 
-unsigned int CPMapEntry::getWinCP() const
-{
-    return fCPId;
-}
-
 unsigned int CPMapEntry::getIEEncoding() const
 {
     return fIEId;
 }
-
-
-
 
 
 
@@ -360,6 +339,9 @@ Win32TransService::Win32TransService()
             //  interested in. There should be a code page entry and an
             //  IE entry.
             //
+            //  The Codepage entry is the default code page for a computer using that charset
+            //  while the InternetEncoding holds the code page that represents that charset
+            //
             unsigned long theType;
             unsigned int CPId;
             unsigned int IEId;
@@ -398,7 +380,7 @@ Win32TransService::Win32TransService()
                     continue;
                 }
 
-                CPMapEntry* newEntry = new CPMapEntry(nameBuf, CPId, IEId);
+                CPMapEntry* newEntry = new CPMapEntry(nameBuf, IEId);
                 fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
             }
         }
@@ -486,7 +468,7 @@ Win32TransService::Win32TransService()
                     //
                     if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
                     {
-                        CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
+                        CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getIEEncoding());
                         fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
                     }
 
@@ -611,7 +593,6 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     return new (manager) Win32Transcoder
     (
         encodingName
-        , theEntry->getWinCP()
         , theEntry->getIEEncoding()
         , blockSize
         , manager
@@ -636,14 +617,12 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 //  Win32Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 Win32Transcoder::Win32Transcoder(const  XMLCh* const    encodingName
-                                , const unsigned int    winCP
                                 , const unsigned int    ieCP
                                 , const unsigned int    blockSize
                                 , MemoryManager* const manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
     , fIECP(ieCP)
-    , fWinCP(winCP)
 {
 }
 
@@ -683,7 +662,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         //  If we are looking at a leading byte of a multibyte sequence,
         //  then we are going to eat 2 bytes, else 1.
         //
-        unsigned char toEat = ::IsDBCSLeadByteEx(fWinCP, *inPtr) ?
+        unsigned char toEat = ::IsDBCSLeadByteEx(fIECP, *inPtr) ?
                                     2 : 1;
 
         // Make sure a whol char is in the source
@@ -693,7 +672,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         // Try to translate this next char and check for an error
         const unsigned int converted = ::MultiByteToWideChar
         (
-            fWinCP
+            fIECP
             , MB_PRECOMPOSED | MB_ERR_INVALID_CHARS
             , (const char*)inPtr
             , toEat
@@ -767,7 +746,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         //  Do one char and see if it made it.
         const unsigned int bytesStored = ::WideCharToMultiByte
         (
-            fWinCP
+            fIECP
             , WC_COMPOSITECHECK | WC_SEPCHARS
             , srcPtr
             , 1
@@ -840,7 +819,7 @@ bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck) const
     BOOL usedDef;
     const unsigned int bytesStored = ::WideCharToMultiByte
     (
-        fWinCP
+        fIECP
         , WC_COMPOSITECHECK | WC_SEPCHARS
         , srcBuf
         , srcCount
