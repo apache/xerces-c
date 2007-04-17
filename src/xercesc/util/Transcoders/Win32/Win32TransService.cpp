@@ -275,6 +275,9 @@ Win32TransService::Win32TransService()
             //  interested in. There should be a code page entry and an
             //  IE entry.
             //
+            //  The Codepage entry is the default code page for a computer using that charset
+            //  while the InternetEncoding holds the code page that represents that charset
+            //
             unsigned long theType;
             unsigned int CPId;
             unsigned int IEId;
@@ -605,7 +608,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         //  If we are looking at a leading byte of a multibyte sequence,
         //  then we are going to eat 2 bytes, else 1.
         //
-        unsigned char toEat = ::IsDBCSLeadByteEx(fWinCP, *inPtr) ?
+        unsigned char toEat = ::IsDBCSLeadByteEx(fIECP, *inPtr) ?
                                     2 : 1;
 
         // Make sure a whol char is in the source
@@ -615,7 +618,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         // Try to translate this next char and check for an error
         const unsigned int converted = ::MultiByteToWideChar
         (
-            fWinCP
+            fIECP
             , MB_PRECOMPOSED | MB_ERR_INVALID_CHARS
             , (const char*)inPtr
             , toEat
@@ -689,7 +692,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         //  Do one char and see if it made it.
         const unsigned int bytesStored = ::WideCharToMultiByte
         (
-            fWinCP
+            fIECP
             , WC_COMPOSITECHECK | WC_SEPCHARS
             , srcPtr
             , 1
@@ -762,7 +765,7 @@ bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck) const
     BOOL usedDef;
     const unsigned int bytesStored = ::WideCharToMultiByte
     (
-        fWinCP
+        fIECP
         , WC_COMPOSITECHECK | WC_SEPCHARS
         , srcBuf
         , srcCount
