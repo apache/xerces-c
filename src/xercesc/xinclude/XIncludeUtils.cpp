@@ -316,7 +316,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                         if(typeInfo && XMLString::equals(typeInfo->getTypeNamespace(), XMLUni::fgInfosetURIName)) {
                             if(XMLString::equals(typeInfo->getTypeName(), XMLUni::fgNotationString)) {
                                 const XMLCh* notationName=pAttributeNode->getNodeValue();
-                                DOMNotation* not=(DOMNotation*)includedDoc->getDoctype()->getNotations()->getNamedItem(notationName);
+                                DOMNotation* notat=(DOMNotation*)includedDoc->getDoctype()->getNotations()->getNamedItem(notationName);
                                 // ensure we have a DTD
                                 if(parsedDocument->getDoctype()==NULL)
                                     parsedDocument->insertBefore(parsedDocument->createDocumentType(parsedDocument->getDocumentElement()->getNodeName(), NULL,NULL), parsedDocument->getFirstChild());
@@ -324,11 +324,11 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                                 if(myNotation==NULL)
                                 {
                                     // it's missing, add it
-                                    parsedDocument->getDoctype()->getNotations()->setNamedItem(parsedDocument->importNode(not, true));
+                                    parsedDocument->getDoctype()->getNotations()->setNamedItem(parsedDocument->importNode(notat, true));
                                 }
-                                else if(XMLString::equals(myNotation->getPublicId(), not->getPublicId()) && 
-                                        XMLString::equals(myNotation->getSystemId(), not->getSystemId()) && 
-                                        XMLString::equals(myNotation->getBaseURI(), not->getBaseURI()))
+                                else if(XMLString::equals(myNotation->getPublicId(), notat->getPublicId()) && 
+                                        XMLString::equals(myNotation->getSystemId(), notat->getSystemId()) && 
+                                        XMLString::equals(myNotation->getBaseURI(), notat->getBaseURI()))
                                 {
                                     // it's duplicate, ignore it
                                 }
