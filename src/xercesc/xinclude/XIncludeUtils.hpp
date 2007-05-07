@@ -33,6 +33,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class XMLEntityHandler;
+
 typedef struct XIncludeHistoryNode{
 	XMLCh *URI;
 	struct XIncludeHistoryNode *next;
@@ -67,7 +69,7 @@ private:
       * @return true if the XInclude processing was successful, false if not. Note that an
 	  * XInclude that fails resulting in a successful fallback action would return true.
       */
-	bool doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocument);
+	bool doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver);
 
 	 /** Parse an XInclude xml file into a DOMDocument node.
 	  *
@@ -81,7 +83,8 @@ private:
 	DOMDocument *doXIncludeXMLFileDOM(const XMLCh *href, 
 		const XMLCh *relativeHref,
 		DOMNode *xincludeNode,
-		DOMDocument *parsedDocument);
+		DOMDocument *parsedDocument, 
+		XMLEntityHandler* entityResolver);
 
 	 /** Parse an XInclude text file into a DOMText node.
 	  *
@@ -96,7 +99,9 @@ private:
 	DOMText *doXIncludeTEXTFileDOM(const XMLCh *href, 
 		const XMLCh *relativeHref,
 		const XMLCh *encoding,  
-		DOMDocument *parsedDocument);
+		DOMNode *xincludeNode,
+		DOMDocument *parsedDocument, 
+		XMLEntityHandler* entityResolver);
 
 	 /** Detect whether the supplied details are correct for an xi:include element
 	  *
@@ -144,7 +149,7 @@ private:
 	  *
       * @return true if XInclude behaviour was successfully performed on source, false if not.
       */
-	bool parseDOMNodeDoingXInclude(DOMNode *source, DOMDocument *parsedDocument);
+	bool parseDOMNodeDoingXInclude(DOMNode *source, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver);
 
 	 /** Parse the supplied URI and escape all characters as specified by
 	  * the XINclusions specification.

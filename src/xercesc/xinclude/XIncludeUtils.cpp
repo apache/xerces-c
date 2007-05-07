@@ -25,8 +25,13 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
+#include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/internal/XMLInternalErrorHandler.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/sax/InputSource.hpp>
+#include <xercesc/framework/URLInputSource.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -46,7 +51,7 @@ XIncludeUtils::~XIncludeUtils(){
 //   all xinclude manipulation is done in place (i.e. source is manipulated).
 // ---------------------------------------------------------------------------
 bool 
-XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parsedDocument){
+XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver){
 	int included = 0;
     if (sourceNode) {
 		/* create the list of child elements here, since it gets changed during the parse */
@@ -59,7 +64,7 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
 			if (isXIIncludeDOMNode(sourceNode)){
 				/* once we do an include on the source element, it is unsafe to do the include
 				   on the children, since they will have been changed by the top level include */
-				bool success = doDOMNodeXInclude(sourceNode, parsedDocument);
+				bool success = doDOMNodeXInclude(sourceNode, parsedDocument, entityResolver);
 
 				//popFromCurrentInclusionHistoryStack(NULL);
 				/* return here as we do not want to fall through to the parsing of the children below
@@ -78,7 +83,7 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
 		   need to walk the entire child list parsing for each. An xinclude in  a
 		   node does not affect a peer, so we can simply parse each child in turn */
 		for (unsigned int i = 0; i < children.size(); i++){
-			parseDOMNodeDoingXInclude(children.elementAt(i), parsedDocument);
+			parseDOMNodeDoingXInclude(children.elementAt(i), parsedDocument, entityResolver);
 		}
 	}
 	return (included)?true:false;
@@ -115,7 +120,7 @@ getBaseAttrValue(DOMNode *node){
 //   it accordingly, acting on what it finds.
 // ---------------------------------------------------------------------------
 bool
-XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocument){
+XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver){
 	bool modifiedNode = false;
 	/* the relevant attributes to look for */
 	const XMLCh *href = NULL;
@@ -232,10 +237,10 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
 	DOMDocument *includedDoc = NULL;
 	if (XMLString::equals(parse, XIncludeUtils::fgXIIncludeParseAttrXMLValue)){
 		/* including a XML element */
-		includedDoc = doXIncludeXMLFileDOM(hrefLoc.getLocation(), relativeLocation.getLocation(), xincludeNode, parsedDocument);
+		includedDoc = doXIncludeXMLFileDOM(hrefLoc.getLocation(), relativeLocation.getLocation(), xincludeNode, parsedDocument, entityResolver);
 	} else if (XMLString::equals(parse, XIncludeUtils::fgXIIncludeParseAttrTextValue)){
 		/* including a text value */
-		includedText = doXIncludeTEXTFileDOM(hrefLoc.getLocation(), relativeLocation.getLocation(), encoding, parsedDocument);
+		includedText = doXIncludeTEXTFileDOM(hrefLoc.getLocation(), relativeLocation.getLocation(), encoding, xincludeNode, parsedDocument, entityResolver);
 	} else {
 		/* invalid parse attribute value - fatal error according to the specification */
 		XIncludeUtils::reportError(xincludeNode, XMLErrs::XIncludeInvalidParseVal,
@@ -282,7 +287,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                         }
                     }
                     DOMNode *newChild = includeParent->insertBefore(newNode, xincludeNode);
-					parseDOMNodeDoingXInclude(newChild, parsedDocument);
+					parseDOMNodeDoingXInclude(newChild, parsedDocument, entityResolver);
 				}
 				includeParent->removeChild(xincludeNode);
 				modifiedNode = true;
@@ -369,7 +374,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                 }
                 DOMNode *newNode = parsedDocument->importNode(child, true);
                 DOMNode *newChild = includeParent->insertBefore(newNode, xincludeNode);
-                parseDOMNodeDoingXInclude(newChild, parsedDocument);
+                parseDOMNodeDoingXInclude(newChild, parsedDocument, entityResolver);
             }
             includeParent->removeChild(xincludeNode);
             popFromCurrentInclusionHistoryStack(NULL);
@@ -387,7 +392,11 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
 }
 
 DOMDocument *
-XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href, const XMLCh *relativeHref, DOMNode *includeNode, DOMDocument *parsedDocument){
+XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href, 
+                                    const XMLCh *relativeHref, 
+                                    DOMNode *includeNode, 
+                                    DOMDocument *parsedDocument, 
+                                    XMLEntityHandler* entityResolver){
     if (XIncludeUtils::isInCurrentInclusionHistoryStack(href)){
          /* including something back up the current history */
          XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCircularInclusionLoop,
@@ -414,7 +423,21 @@ XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href, const XMLCh *relativeHref
 
     DOMDocument *includedNode = NULL;
     try {
-        parser.parse(href);
+        InputSource* is=NULL;
+        Janitor<InputSource> janIS(is);
+        if(entityResolver) {
+            XMLResourceIdentifier resIdentifier(XMLResourceIdentifier::ExternalEntity,
+                                                relativeHref,
+                                                NULL,
+                                                NULL,
+                                                includeNode->getBaseURI());
+            is=entityResolver->resolveEntity(&resIdentifier);
+            janIS.reset(is);
+        }
+        if(janIS.get()!=NULL)
+            parser.parse(*janIS.get());
+        else
+            parser.parse(href);
         /* need to be able to release the parser but keep the document */
         if (!xierrhandler.getSawError() && !xierrhandler.getSawFatal())
             includedNode = parser.adoptDocument();
@@ -465,69 +488,77 @@ XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href, const XMLCh *relativeHref
 }                                                                                                                                                                                                                                                      
 
 DOMText * 
-XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href, const XMLCh *relativeHref, const XMLCh *encoding, DOMDocument *parsedDocument){
+XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href, 
+                                     const XMLCh *relativeHref, 
+                                     const XMLCh *encoding, 
+                            		 DOMNode *includeNode,
+                                     DOMDocument *parsedDocument, 
+                                     XMLEntityHandler* entityResolver){
 	if (encoding == NULL)
 		/* "UTF-8" is stipulated default by spec */
 		encoding = XMLUni::fgUTF8EncodingString;
 
 	XMLTransService::Codes failReason;
 	XMLTranscoder* transcoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, 16*1024);
+    Janitor<XMLTranscoder> janTranscoder(transcoder);
 	if (failReason){
 		XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCannotOpenFile, href, href);
 		return NULL;
     }
 
-    DOMText *ret = NULL;
-
 	//addDocumentURIToCurrentInclusionHistoryStack(href);
 
-	int pathLen = XMLString::stringLen(href);
-	/*(XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh)
-	  I am guessing 9 == "file:///" + 1 (nullTerm?) */
-	XMLCh *fixedFullTargetPath = (XMLCh *)XMLPlatformUtils::fgMemoryManager->allocate((pathLen + 9) * sizeof(XMLCh));
-	if (fixedFullTargetPath == NULL){
-		delete transcoder;
-		return NULL;
-	}
-	XMLString::fixURI(href, fixedFullTargetPath);
-
-	/* openFile doesn't like the protocol prefix, probably a better way of doing this. */
-	const XMLCh *fileRefMinusProtocol = XIncludeLocation::findEndOfProtocol(fixedFullTargetPath);
-	FileHandle fh = XMLPlatformUtils::openFile(fileRefMinusProtocol);
-	if (fh == NULL){
-		delete transcoder;
-		XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCannotOpenFile,
-			href, href);
-		return NULL;
-	} 
-	/* TODO - is this really the easiest way to read in the file and pass it out to DocHandler? */
-	XMLFilePos fileLen = XMLPlatformUtils::fileSize(fh);
-	XMLByte *buffer = (XMLByte *) XMLPlatformUtils::fgMemoryManager->allocate(fileLen * sizeof(XMLByte));
-	XMLCh *xmlChars = (XMLCh *) XMLPlatformUtils::fgMemoryManager->allocate((fileLen + 1) * sizeof(XMLCh));
-	unsigned char *charSizes = (unsigned char *)XMLPlatformUtils::fgMemoryManager->allocate(fileLen * sizeof(unsigned char));
-	if (buffer != NULL && xmlChars != NULL && charSizes != NULL){
-		XMLSize_t sizeRead = XMLPlatformUtils::readFileBuffer(fh, fileLen, buffer);
-		XMLPlatformUtils::closeFile(fh);
-
-        unsigned int processedFromSource = 0;
-		int charsInBuffer = transcoder->transcodeFrom(buffer, sizeRead, xmlChars , fileLen, processedFromSource, charSizes);
-		xmlChars[fileLen] = chNull;
-		/* TODO check for and consume / act on byte order mark if present -
-		   possibly done under the covers actually */
-
-		/* report or record the xmlChars */
-		ret = parsedDocument->createTextNode(xmlChars);
-	}
-    else {
-    	/* memory manager should have thrown an exception */
-        ret = NULL;
+    InputSource* is=NULL;
+    Janitor<InputSource> janIS(is);
+    if(entityResolver) {
+        XMLResourceIdentifier resIdentifier(XMLResourceIdentifier::ExternalEntity,
+                                            relativeHref,
+                                            NULL,
+                                            NULL,
+                                            includeNode->getBaseURI());
+        is=entityResolver->resolveEntity(&resIdentifier);
+        janIS.reset(is);
     }
-	delete transcoder;
-	XMLPlatformUtils::fgMemoryManager->deallocate(buffer);
-	XMLPlatformUtils::fgMemoryManager->deallocate(fixedFullTargetPath);
-	XMLPlatformUtils::fgMemoryManager->deallocate(xmlChars);
-	XMLPlatformUtils::fgMemoryManager->deallocate(charSizes);
-    return ret;
+    if(janIS.get()==NULL)
+        janIS.reset(new URLInputSource(href));
+    if(janIS.get()==NULL) {
+	    XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCannotOpenFile,
+		    href, href);
+        return NULL;
+    }
+    BinInputStream* stream=janIS.get()->makeStream();
+    if(stream==NULL) {
+	    XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCannotOpenFile,
+		    href, href);
+        return NULL;
+    }
+    Janitor<BinInputStream> janStream(stream);
+    const int maxToRead=16*1024;
+    XMLByte* buffer=(XMLByte*)XMLPlatformUtils::fgMemoryManager->allocate(maxToRead * sizeof(XMLByte));
+    if(buffer==NULL)
+        throw OutOfMemoryException();
+    ArrayJanitor<XMLByte> janBuffer(buffer, XMLPlatformUtils::fgMemoryManager);
+    XMLCh* xmlChars=(XMLCh*)XMLPlatformUtils::fgMemoryManager->allocate(maxToRead*2*sizeof(XMLCh));
+    if(xmlChars==NULL)
+        throw OutOfMemoryException();
+    ArrayJanitor<XMLCh> janUniBuffer(xmlChars, XMLPlatformUtils::fgMemoryManager);
+    unsigned char *charSizes = (unsigned char *)XMLPlatformUtils::fgMemoryManager->allocate(maxToRead * sizeof(unsigned char));
+    if(charSizes==NULL)
+        throw OutOfMemoryException();
+    ArrayJanitor<unsigned char> janCharSizes(charSizes, XMLPlatformUtils::fgMemoryManager);
+
+    unsigned int nRead, nOffset=0;
+    XMLBuffer repository;
+    while((nRead=stream->readBytes(buffer+nOffset, maxToRead-nOffset))>0){
+        unsigned int bytesEaten=0;
+	    unsigned int nCount = transcoder->transcodeFrom(buffer, nRead, xmlChars, maxToRead*2, bytesEaten, charSizes);
+        repository.append(xmlChars, nCount);
+        if(bytesEaten<nRead) {
+            nOffset=nRead-bytesEaten;
+            memmove(buffer, buffer+bytesEaten, nRead-bytesEaten);
+        }
+    }
+    return parsedDocument->createTextNode(repository.getRawBuffer());
 }
 
 /*static*/ bool 

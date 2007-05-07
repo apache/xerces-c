@@ -28,6 +28,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class XMLEntityHandler;
+
 /**
   * Class for representing and manipulating the XMLCh * href's used
   * by an xi:include element.
@@ -47,7 +49,7 @@ public:
       * @return a newly created DOMDocument containing the parsed and actioned
 	  * xinclude elements.
       */
-	DOMDocument *doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler);
+	DOMDocument *doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver=NULL);
 };
 
 XERCES_CPP_NAMESPACE_END

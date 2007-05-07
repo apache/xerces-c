@@ -855,7 +855,7 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
     {
     	XIncludeUtils xiu((XMLErrorReporter *) this);
 	    /* process the XInclude node, then update the fCurrentNode with the new content*/
-	    if(xiu.parseDOMNodeDoingXInclude(fCurrentNode, fDocument))
+	    if(xiu.parseDOMNodeDoingXInclude(fCurrentNode, fDocument, getScanner()->getEntityHandler()))
             fCurrentNode = fCurrentParent->getLastChild();
     }
 }

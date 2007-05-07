@@ -32,7 +32,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMDocument *
-XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler){
+XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver /*=NULL*/){
 	XIncludeUtils xiu(errorHandler);
 
 	DOMImplementation* impl = source->getImplementation();
@@ -59,7 +59,7 @@ XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const sou
 
 	    DOMNode *docNode = xincludedDocument->getDocumentElement();
 	    /* parse and include the document node */
-	    xiu.parseDOMNodeDoingXInclude(docNode, xincludedDocument);
+	    xiu.parseDOMNodeDoingXInclude(docNode, xincludedDocument, entityResolver);
 
     	xincludedDocument->normalizeDocument();
     }
