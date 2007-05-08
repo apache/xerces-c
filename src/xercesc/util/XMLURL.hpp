@@ -46,6 +46,7 @@ public:
         File
         , HTTP
         , FTP
+        , HTTPS
 
         , Protocols_Count
         , Unknown

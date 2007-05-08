@@ -88,11 +88,17 @@ static const XMLCh gHTTPString[] =
         chLatin_h, chLatin_t, chLatin_t, chLatin_p, chNull
 };
 
+static const XMLCh gHTTPSString[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chLatin_s, chNull
+};
+
 static ProtoEntry gProtoList[XMLURL::Protocols_Count] =
 {
         { XMLURL::File     , gFileString    , 0  }
     ,   { XMLURL::HTTP     , gHTTPString    , 80 }
     ,   { XMLURL::FTP      , gFTPString     , 21 }
+    ,   { XMLURL::HTTPS    , gHTTPSString   , 443 }
 };
 
 // !!! Keep these up to date with list above!
