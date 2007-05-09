@@ -42,39 +42,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class SocketJanitor
-{
-public:
-    // -----------------------------------------------------------------------
-    //  Constructors and Destructor
-    // -----------------------------------------------------------------------
-    SocketJanitor(SOCKET* toDelete) : fData(toDelete) {}
-    ~SocketJanitor() { reset(); }
-
-    SOCKET* get() const { return fData; }
-    SOCKET* release() {	SOCKET* p = fData; fData = 0; return p; }
-
-    void reset(SOCKET* p = 0) { if(fData) BinHTTPURLInputStream::closesocket(*fData); fData=p; }
-    bool isDataNull() { return (fData == 0); }
-
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    SocketJanitor();
-    SocketJanitor(const SocketJanitor&);
-    SocketJanitor& operator=(const SocketJanitor&);
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fData
-    //      This is the pointer to the socket that must be closed when 
-    //      this object is destroyed.
-    // -----------------------------------------------------------------------
-    SOCKET*  fData;
-};
-
 typedef u_short (WSAAPI * LPFN_HTONS)(u_short hostshort);
 typedef SOCKET (WSAAPI * LPFN_SOCKET)(int af, int type, int protocol);
 typedef int (WSAAPI * LPFN_CONNECT)(SOCKET s, const struct sockaddr* name, int namelen);
@@ -90,7 +57,7 @@ typedef void (WSAAPI * LPFN_FREEADDRINFO)(struct addrinfo * ai);
 #else
 typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYNAME)(const char* name);
 typedef struct hostent *(WSAAPI * LPFN_GETHOSTBYADDR)(const char* addr, int len, int type);
-typedef unsigned long(WSAAPI * LPFN_INET_ADDR)(const char* cp);
+typedef unsigned long (WSAAPI * LPFN_INET_ADDR)(const char* cp);
 #endif
 
 static HMODULE gWinsockLib = NULL;
@@ -110,6 +77,103 @@ static LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
 static LPFN_GETHOSTBYADDR gWSgethostbyaddr = NULL;
 static LPFN_INET_ADDR gWSinet_addr = NULL;
 #endif
+
+static u_short wrap_htons(u_short hostshort)
+{
+	return (*gWShtons)(hostshort);
+}
+
+static SOCKET wrap_socket(int af,int type,int protocol)
+{
+	return (*gWSsocket)(af,type,protocol);
+}
+
+static int wrap_connect(SOCKET s,const struct sockaddr* name,int namelen)
+{
+	return (*gWSconnect)(s,name,namelen);
+}
+
+static int wrap_send(SOCKET s,const char* buf,int len,int flags)
+{
+	return (*gWSsend)(s,buf,len,flags);
+}
+
+static int wrap_recv(SOCKET s,char* buf,int len,int flags)
+{
+	return (*gWSrecv)(s,buf,len,flags);
+}
+
+static int wrap_shutdown(SOCKET s,int how)
+{
+	return (*gWSshutdown)(s,how);
+}
+
+static int wrap_closesocket(SOCKET socket)
+{
+	return (*gWSclosesocket)(socket);
+}
+
+#ifdef WITH_IPV6
+static int wrap_getaddrinfo(const char* nodename,const char* servname,const struct addrinfo* hints,struct addrinfo** res)
+{
+   return (*gWSgetaddrinfo)(nodename,servname,hints,res);
+}
+
+static void wrap_freeaddrinfo(struct addrinfo* ai)
+{
+    (*gWSfreeaddrinfo)(ai);
+}
+#else
+static struct hostent* wrap_gethostbyname(const char* name)
+{
+	return (*gWSgethostbyname)(name);
+}
+
+static struct hostent* wrap_gethostbyaddr(const char* addr,int len,int type)
+{
+	return (*gWSgethostbyaddr)(addr,len,type);
+}
+
+static unsigned long wrap_inet_addr(const char* cp)
+{
+	return (*gWSinet_addr)(cp);
+}
+
+#endif
+
+
+class SocketJanitor
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    SocketJanitor(SOCKET* toDelete) : fData(toDelete) {}
+    ~SocketJanitor() { reset(); }
+
+    SOCKET* get() const { return fData; }
+    SOCKET* release() {	SOCKET* p = fData; fData = 0; return p; }
+
+    void reset(SOCKET* p = 0) { if(fData) wrap_closesocket(*fData); fData=p; }
+    bool isDataNull() { return (fData == 0); }
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SocketJanitor();
+    SocketJanitor(const SocketJanitor&);
+    SocketJanitor& operator=(const SocketJanitor&);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fData
+    //      This is the pointer to the socket that must be closed when 
+    //      this object is destroyed.
+    // -----------------------------------------------------------------------
+    SOCKET*  fData;
+};
 
 bool BinHTTPURLInputStream::fInitialized = false;
 XMLMutex* BinHTTPURLInputStream::fInitMutex = 0;
@@ -215,69 +279,6 @@ void BinHTTPURLInputStream::Cleanup() {
 }
 
 
-unsigned short BinHTTPURLInputStream::htons(unsigned short hostshort)
-{
-	return (*gWShtons)(hostshort);
-}
-
-unsigned int BinHTTPURLInputStream::socket(int af,int type,int protocol)
-{
-	return (*gWSsocket)(af,type,protocol);
-}
-
-int BinHTTPURLInputStream::connect(unsigned int s,const sockaddr* name,int namelen)
-{
-	return (*gWSconnect)(s,name,namelen);
-}
-
-int BinHTTPURLInputStream::send(unsigned int s,const char* buf,int len,int flags)
-{
-	return (*gWSsend)(s,buf,len,flags);
-}
-
-int BinHTTPURLInputStream::recv(unsigned int s,char* buf,int len,int flags)
-{
-	return (*gWSrecv)(s,buf,len,flags);
-}
-
-int BinHTTPURLInputStream::shutdown(unsigned int s,int how)
-{
-	return (*gWSshutdown)(s,how);
-}
-
-int BinHTTPURLInputStream::closesocket(unsigned int socket)
-{
-	return (*gWSclosesocket)(socket);
-}
-
-#ifdef WITH_IPV6
-int BinHTTPURLInputStream::getaddrinfo(const char* nodename,const char* servname,const struct addrinfo* hints,struct addrinfo** res)
-{
-   return (*gWSgetaddrinfo)(nodename,servname,hints,res);
-}
-
-void BinHTTPURLInputStream::freeaddrinfo(struct addrinfo* ai)
-{
-    (*gWSfreeaddrinfo)(ai);
-}
-#else
-hostent* BinHTTPURLInputStream::gethostbyname(const char* name)
-{
-	return (*gWSgethostbyname)(name);
-}
-
-hostent* BinHTTPURLInputStream::gethostbyaddr(const char* addr,int len,int type)
-{
-	return (*gWSgethostbyaddr)(addr,len,type);
-}
-
-unsigned long BinHTTPURLInputStream::inet_addr(const char* cp)
-{
-	return (*gWSinet_addr)(cp);
-}
-
-#endif
-
 BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo /*=0*/)
       : fSocketHandle(0)
       , fBytesProcessed(0)
@@ -338,30 +339,30 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     hints.ai_socktype = SOCK_STREAM;
     char tempbuf[10];
     itoa (portNumber,tempbuf,10);
-    int n = getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+    int n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
     if(n<0)
     {
         hints.ai_flags = AI_NUMERICHOST;
-        n = getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+        n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
         if(n<0)
             ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
     }
     SOCKET s;
     for (ai = res; ai != NULL; ai = ai->ai_next) {
         // Open a socket with the correct address family for this address.
-        s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+        s = wrap_socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
         if (s == INVALID_SOCKET)
             continue;
-        if (connect(s, ai->ai_addr, ai->ai_addrlen) == SOCKET_ERROR)
+        if (wrap_connect(s, ai->ai_addr, ai->ai_addrlen) == SOCKET_ERROR)
         {
-            freeaddrinfo(res);
+            wrap_freeaddrinfo(res);
             // Call WSAGetLastError() to get the error number.
             ThrowXMLwithMemMgr1(NetAccessorException,
                      XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
         }
         break;
     }
-    freeaddrinfo(res);
+    wrap_freeaddrinfo(res);
     if (s == INVALID_SOCKET)
     {
         // Call WSAGetLastError() to get the error number.
@@ -373,18 +374,17 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
 
-    if ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL)
+    if ((hostEntPtr = wrap_gethostbyname(hostNameAsCharStar)) == NULL)
     {
-        unsigned long  numAddress = inet_addr(hostNameAsCharStar);
+        unsigned long  numAddress = wrap_inet_addr(hostNameAsCharStar);
         if (numAddress == INADDR_NONE)
         {
             // Call WSAGetLastError() to get the error number.
             ThrowXMLwithMemMgr1(NetAccessorException,
                      XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
         }
-        if ((hostEntPtr =
-                gethostbyaddr((const char *) &numAddress,
-                              sizeof(unsigned long), AF_INET)) == NULL)
+        if ((hostEntPtr =wrap_gethostbyaddr((const char *) &numAddress,
+                                            sizeof(unsigned long), AF_INET)) == NULL)
         {
             // Call WSAGetLastError() to get the error number.
             ThrowXMLwithMemMgr1(NetAccessorException,
@@ -395,9 +395,9 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     memcpy((void *) &sa.sin_addr,
            (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
     sa.sin_family = hostEntPtr->h_addrtype;
-    sa.sin_port = htons(portNumber);
+    sa.sin_port = wrap_htons(portNumber);
 
-    SOCKET s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
+    SOCKET s = wrap_socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
     if (s == INVALID_SOCKET)
     {
         // Call WSAGetLastError() to get the error number.
@@ -406,7 +406,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     }
     SocketJanitor janSock(&s);
 
-    if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
+    if (wrap_connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
     {
         // Call WSAGetLastError() to get the error number.
         ThrowXMLwithMemMgr1(NetAccessorException,
@@ -499,7 +499,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     // Send the http request
     int lent = strlen(fBuffer);
     int  aLent = 0;
-    if ((aLent = send(s, fBuffer, lent, 0)) != lent)
+    if ((aLent = wrap_send(s, fBuffer, lent, 0)) != lent)
     {
         // Call WSAGetLastError() to get the error number.
         ThrowXMLwithMemMgr1(NetAccessorException,
@@ -507,7 +507,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     }
 
     if(httpInfo!=0 && httpInfo->fPayload!=0) {
-        if ((aLent = send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
+        if ((aLent = wrap_send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
         {
             // Call WSAGetLastError() to get the error number.
             ThrowXMLwithMemMgr1(NetAccessorException,
@@ -519,7 +519,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     // get the response, check the http header for errors from the server.
     //
     memset(fBuffer, 0, sizeof(fBuffer));
-    aLent = recv(s, fBuffer, sizeof(fBuffer)-1, 0);
+    aLent = wrap_recv(s, fBuffer, sizeof(fBuffer)-1, 0);
     if (aLent == SOCKET_ERROR || aLent == 0)
     {
         // Call WSAGetLastError() to get the error number.
@@ -554,7 +554,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             {
                 //
                 // Header is not yet read, do another recv() to get more data...
-                aLent = recv(s, fBufferEnd, (sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer), 0);
+                aLent = wrap_recv(s, fBufferEnd, (sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer), 0);
                 if (aLent == SOCKET_ERROR || aLent == 0)
                 {
                     // Call WSAGetLastError() to get the error number.
@@ -596,8 +596,8 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
 
 BinHTTPURLInputStream::~BinHTTPURLInputStream()
 {
-    shutdown(fSocketHandle, SD_BOTH);
-    closesocket(fSocketHandle);
+    wrap_shutdown(fSocketHandle, SD_BOTH);
+    wrap_closesocket(fSocketHandle);
 }
 
 
@@ -622,7 +622,7 @@ unsigned int BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
         // There was no data in the local buffer.
         // Read some from the socket, straight into our caller's buffer.
         //
-        len = recv((SOCKET) fSocketHandle, (char *) toFill, maxToRead, 0);
+        len = wrap_recv((SOCKET) fSocketHandle, (char *) toFill, maxToRead, 0);
         if (len == SOCKET_ERROR)
         {
             // Call WSAGetLastError() to get the error number.
