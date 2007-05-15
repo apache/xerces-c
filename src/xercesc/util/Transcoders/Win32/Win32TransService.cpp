@@ -432,11 +432,9 @@ Win32TransService::Win32TransService()
         if (isAlias(encodingKey, aliasBuf, nameBufSz))
         {
             const unsigned int srcLen = strlen(aliasBuf);
-            const unsigned charLen = ::mblen(aliasBuf, MB_CUR_MAX);
-
-            if (charLen != -1) {
-                const unsigned int targetLen = srcLen/charLen;
-
+            size_t targetLen=::mbstowcs(NULL, aliasBuf, srcLen);
+            if(targetLen!=-1)
+            {
                 XMLCh* uniAlias = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
                 (
                     (targetLen + 1) * sizeof(XMLCh)
@@ -450,29 +448,30 @@ Win32TransService::Win32TransService()
                 if (aliasedEntry)
                 {
                     const unsigned int srcLen = strlen(nameBuf);
-                    const unsigned charLen = ::mblen(nameBuf, MB_CUR_MAX);
-                    const unsigned int targetLen = srcLen/charLen;
-                    
-                    XMLCh* uniName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
-                    (
-                        (targetLen + 1) * sizeof(XMLCh)
-                    );//new XMLCh[targetLen + 1];
-                    ::mbstowcs(uniName, nameBuf, srcLen);
-                    uniName[targetLen] = 0;
-                    wcsupr(uniName);
-
-                    //
-                    //  If the name is actually different, then take it.
-                    //  Otherwise, don't take it. They map aliases that are
-                    //  just different case.
-                    //
-                    if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
+                    size_t targetLen=::mbstowcs(NULL, nameBuf, srcLen);
+                    if(targetLen!=-1)
                     {
-                        CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getIEEncoding());
-                        fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
-                    }
+                        XMLCh* uniName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                        (
+                            (targetLen + 1) * sizeof(XMLCh)
+                        );//new XMLCh[targetLen + 1];
+                        ::mbstowcs(uniName, nameBuf, srcLen);
+                        uniName[targetLen] = 0;
+                        wcsupr(uniName);
 
-                    XMLPlatformUtils::fgMemoryManager->deallocate(uniName);//delete [] uniName;
+                        //
+                        //  If the name is actually different, then take it.
+                        //  Otherwise, don't take it. They map aliases that are
+                        //  just different case.
+                        //
+                        if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
+                        {
+                            CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getIEEncoding());
+                            fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
+                        }
+
+                        XMLPlatformUtils::fgMemoryManager->deallocate(uniName);//delete [] uniName;
+                    }
                 }
                 XMLPlatformUtils::fgMemoryManager->deallocate(uniAlias);//delete [] uniAlias;
             }
