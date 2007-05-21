@@ -385,9 +385,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     else
     {
         currInfo->getNamespaceScope()->reset(fEmptyNamespaceURI);
-        // Add mappings for xml prefix and for the default namespace
-        if (!fTargetNSURIString || !*fTargetNSURIString)
-            currInfo->getNamespaceScope()->addPrefix(XMLUni::fgZeroLenString, fEmptyNamespaceURI);
+        // Add mapping for the xml prefix
         currInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
     }
 
@@ -420,6 +418,9 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
     );
 
     retrieveNamespaceMapping(schemaRoot);
+    // Add mapping for the default namespace
+    if ((!fTargetNSURIString || !*fTargetNSURIString) && schemaRoot->getAttributeNode(XMLUni::fgXMLNSString)==NULL)
+        fSchemaInfo->getNamespaceScope()->addPrefix(XMLUni::fgZeroLenString, fEmptyNamespaceURI);
 
     unsigned short elemAttrDefaultQualified = 0;
 

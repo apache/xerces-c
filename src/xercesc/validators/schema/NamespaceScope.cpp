@@ -164,6 +164,16 @@ void NamespaceScope::addPrefix(const XMLCh* const prefixToAdd,
     // Map the prefix to its unique id
     const unsigned int prefId = fPrefixPool.addOrFind(prefixToAdd);
 
+    // Search the map at this level for the passed prefix
+    for (unsigned int mapIndex = 0; mapIndex < curRow->fMapCount; mapIndex++)
+    {
+        if (curRow->fMap[mapIndex].fPrefId == prefId)
+        {
+            curRow->fMap[mapIndex].fURIId = uriId;
+            return;
+        }
+    }
+
     //
     //  Add a new element to the prefix map for this element. If its full,
     //  then expand it out.
