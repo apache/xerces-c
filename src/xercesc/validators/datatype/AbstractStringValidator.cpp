@@ -457,8 +457,11 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
         {
             // ask parent do a complete check
             pBaseValidator->checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
+#if 0
+// spec says that only base has to checkContent          
             // enum shall pass this->checkContent() as well.
             checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
+#endif
         }
     }
 

@@ -7073,7 +7073,13 @@ void TraverseSchema::checkEnumerationRequiredNotation(const DOMElement* const el
     const XMLCh* localPart = getLocalPart(type);
 
     if (XMLString::equals(localPart, XMLUni::fgNotationString)) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNotationType, name);
+        const XMLCh* prefix = getPrefix(type);
+        const XMLCh* typeURI = resolvePrefixToURI(elem, prefix);        
+
+        if (XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
+
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNotationType, name);
+        }
     }
 }
 

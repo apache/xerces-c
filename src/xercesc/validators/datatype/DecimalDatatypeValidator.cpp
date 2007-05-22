@@ -362,7 +362,8 @@ void DecimalDatatypeValidator::setEnumeration(MemoryManager* const manager)
                     , manager);
         }
     }
-
+#if 0
+// spec says that only base has to checkContent          
     // We put the this->checkContent in a separate loop
     // to not block original message with in that method.
     //
@@ -370,7 +371,7 @@ void DecimalDatatypeValidator::setEnumeration(MemoryManager* const manager)
     {
         checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false, manager);
     }
-
+#endif
     fEnumeration = new (manager) RefVectorOf<XMLNumber>(enumLength, true, manager);
     fEnumerationInherited = false;
 
