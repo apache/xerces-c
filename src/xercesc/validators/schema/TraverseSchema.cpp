@@ -6221,7 +6221,8 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
     typeInfo->setContentSpec(specNode);
     typeInfo->setAdoptContentSpec(true);
     specNodeJan.release();
-
+    bool specNodeWasNull = false;
+    
     // -----------------------------------------------------------------------
     // Merge in information from base, if it exists
     // -----------------------------------------------------------------------
@@ -6248,6 +6249,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             // Compose the final content model by concatenating the base and
             // the current in sequence
             if (!specNode) {
+            	specNodeWasNull = true;
                 if (isMixed) {
                     if (baseSpecNode && baseSpecNode->hasAllContent()) {
                         reportSchemaError(ctElem, XMLUni::fgXMLErrDomain, XMLErrs::NotAllContent);
@@ -6376,16 +6378,15 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             typeInfo->setContentType(SchemaElementDecl::Mixed_Simple);
         }
     }
-    else if (typeInfo->getContentSpec() == 0) {
-        if ((typeDerivedBy == SchemaSymbols::XSD_EXTENSION) &&
+    else if (specNodeWasNull && 
+            (typeDerivedBy == SchemaSymbols::XSD_EXTENSION) &&
              baseTypeInfo) {
-            typeInfo->setBaseDatatypeValidator(baseTypeInfo->getBaseDatatypeValidator());
-            typeInfo->setDatatypeValidator(baseTypeInfo->getDatatypeValidator());
-            typeInfo->setContentType(baseTypeInfo->getContentType());
-        }
-        else {
-            typeInfo->setContentType(SchemaElementDecl::Empty);
-        }
+        typeInfo->setBaseDatatypeValidator(baseTypeInfo->getBaseDatatypeValidator());
+        typeInfo->setDatatypeValidator(baseTypeInfo->getDatatypeValidator());
+        typeInfo->setContentType(baseTypeInfo->getContentType());
+    }
+    else if (typeInfo->getContentSpec() == 0) {
+        typeInfo->setContentType(SchemaElementDecl::Empty);
     }
     else {
         typeInfo->setContentType(SchemaElementDecl::Children);

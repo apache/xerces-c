@@ -118,21 +118,30 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
             ((exemplarBlockSet & SchemaSymbols::XSD_RESTRICTION) == 0)));
     }
 
-    // now we have to make sure there are no blocks on the complexTypes that this is based upon
-    int anElementDerivationMethod = aComplexType->getDerivedBy();
-    if((anElementDerivationMethod & exemplarBlockSet) != 0)
-        return false;
-
-    // this will contain exemplar's complexType information.
+    // 2.3 The set of all {derivation method}s involved in the derivation of D's {type definition} from C's {type definition} does not intersect with the union of the blocking constraint, C's {prohibited substitutions} (if C is complex, otherwise the empty set) and the {prohibited substitutions} (respectively the empty set) of any intermediate {type definition}s in the derivation of D's {type definition} from C's {type definition}.
+    // prepare the combination of {derivation method} and
+    // {disallowed substitution}
+    int devMethod = 0;
+    int blockConstraint = exemplarBlockSet;
+        
     ComplexTypeInfo *exemplarComplexType = pElemDecl->getComplexTypeInfo();
+    ComplexTypeInfo *tempType = aComplexType;;
 
-    for(ComplexTypeInfo *tempType = aComplexType;
-        tempType != 0 && tempType != exemplarComplexType;
-        tempType = tempType->getBaseComplexTypeInfo())
+    while (tempType != 0 &&
+        tempType != exemplarComplexType) 
     {
-        if((tempType->getBlockSet() & anElementDerivationMethod) != 0)
-            return false;
-    }//for
+        devMethod |= tempType->getDerivedBy();
+        tempType = tempType->getBaseComplexTypeInfo();
+        if (tempType) {
+            blockConstraint |= tempType->getBlockSet();
+        }
+    }
+    if (tempType != exemplarComplexType) {
+        return false;
+    }
+    if ((devMethod & blockConstraint) != 0) {
+        return false;
+    }
 
     return true;
 }
