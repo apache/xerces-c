@@ -31,6 +31,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include "Win32TransService.hpp"
 #include <windows.h>
+#include <ctype.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
