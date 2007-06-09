@@ -645,10 +645,39 @@ const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 	return getEnumeration();
 }
 
-void AbstractStringValidator::normalizeEnumeration(MemoryManager* const)
+void AbstractStringValidator::normalizeEnumeration(MemoryManager* const manager)
 {
-    // default implementation: do nothing
-    return;
+    AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) getBaseValidator();    
+
+    if (!fEnumeration || !pBaseValidator) 
+        return;
+
+    int baseFacetsDefined = pBaseValidator->getFacetsDefined();
+    if ((baseFacetsDefined & DatatypeValidator::FACET_WHITESPACE) == 0)
+        return;    
+    
+    short whiteSpace = pBaseValidator->getWSFacet();   
+            
+    if ( whiteSpace == DatatypeValidator::PRESERVE )
+    {
+        return;
+    }
+    else if ( whiteSpace == DatatypeValidator::REPLACE )
+    {
+        int enumLength = getEnumeration()->size();
+        for ( int i=0; i < enumLength; i++)
+        {
+            XMLString::replaceWS(getEnumeration()->elementAt(i), manager);
+        }
+    }
+    else if ( whiteSpace == DatatypeValidator::COLLAPSE )
+    {
+        int enumLength = getEnumeration()->size();
+        for ( int i=0; i < enumLength; i++)
+        {
+            XMLString::collapseWS(getEnumeration()->elementAt(i), manager);
+        }                
+    }   
 }
 
 void AbstractStringValidator::normalizeContent(XMLCh* const, MemoryManager* const) const
