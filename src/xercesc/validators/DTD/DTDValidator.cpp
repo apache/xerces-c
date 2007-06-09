@@ -328,12 +328,14 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                 }
             }
         }
-         else if ((type == XMLAttDef::Entity) || (type == XMLAttDef::Entities))
+         else if (!preValidation && ((type == XMLAttDef::Entity) || (type == XMLAttDef::Entities)))
         {
             //
             //  If its refering to a entity, then look up the name in the
             //  general entity pool. If not there, then its an error. If its
             //  not an external unparsed entity, then its an error.
+            //
+            //  In case of pre-validation, the above errors should be ignored.
             //
             const XMLEntityDecl* decl = fDTDGrammar->getEntityDecl(pszTmpVal);
             if (decl)
