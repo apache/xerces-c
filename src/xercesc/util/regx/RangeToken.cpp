@@ -148,7 +148,7 @@ static const ExceptionCharsStruct   s_exceptions[] =
 // ---------------------------------------------------------------------------
 RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) {
 
-    if (fCaseIToken == 0 && tokFactory) {
+    if (fCaseIToken == 0 && tokFactory && fRanges) {
 
         bool isNRange = (getTokenType() == T_NRANGE) ? true : false;
         RangeToken* lwrToken = tokFactory->createRange(isNRange);
