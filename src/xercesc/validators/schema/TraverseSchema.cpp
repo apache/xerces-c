@@ -9106,13 +9106,10 @@ void TraverseSchema::validateAnnotations() {
 
     // create schema grammar
     SchemaGrammar  *grammar = new (memMgr) SchemaGrammar(memMgr);
-    NamespaceScope *nsScope;
     grammar->setComplexTypeRegistry(new (memMgr) RefHashTableOf<ComplexTypeInfo>(29, memMgr));
     grammar->setGroupInfoRegistry(new (memMgr) RefHashTableOf<XercesGroupInfo>(13, memMgr));
     grammar->setAttGroupInfoRegistry(new (memMgr) RefHashTableOf<XercesAttGroupInfo>(13, memMgr));
     grammar->setAttributeDeclRegistry(new (memMgr) RefHashTableOf<XMLAttDef>(29, memMgr));
-    nsScope = new (memMgr) NamespaceScope(memMgr);
-    nsScope->reset(fEmptyNamespaceURI);
     grammar->setValidSubstitutionGroups(new (memMgr) RefHash2KeysTableOf<ElemVector>(29, memMgr));
     grammar->setTargetNamespace(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
     XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
@@ -9211,6 +9208,7 @@ void TraverseSchema::validateAnnotations() {
         , false
         , memMgr
         );
+    Janitor<MemBufInputSource> janMemBuf(memBufIS);
     memBufIS->setEncoding(XMLUni::fgXMLChEncodingString);
     memBufIS->setCopyBufToStream(false);    
 
@@ -9218,6 +9216,7 @@ void TraverseSchema::validateAnnotations() {
     (
         fGrammarResolver, fURIStringPool, grammar, memMgr
     );
+    Janitor<XSAXMLScanner> janScanner(scanner);
 
     scanner->setErrorReporter(fErrorReporter);
 
@@ -9241,8 +9240,6 @@ void TraverseSchema::validateAnnotations() {
         scanner->scanDocument(*memBufIS);
     }
     
-    delete scanner;
-    delete memBufIS;
 }
 
 XERCES_CPP_NAMESPACE_END
