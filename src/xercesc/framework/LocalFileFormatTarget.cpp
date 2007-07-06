@@ -92,7 +92,7 @@ void LocalFileFormatTarget::flush()
 }
 
 void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
-                                     , const unsigned int   count
+                                     , const XMLSize_t      count
                                      , XMLFormatter * const        )
 {
     if (count) {
@@ -105,7 +105,7 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
         {
             //flush whatever we have in the buffer and the incoming byte stream
             flushBuffer();
-            XMLPlatformUtils::writeBufferToFile(fSource, (long) count, toWrite, fMemoryManager);
+            XMLPlatformUtils::writeBufferToFile(fSource, count, toWrite, fMemoryManager);
         }
     }
 
@@ -117,7 +117,7 @@ void LocalFileFormatTarget::flushBuffer()
     // Exception thrown in writeBufferToFile, if any, will be propagated to
     // the XMLFormatter and then to the DOMLSSerializer, which may notify
     // application through DOMErrorHandler, if any.
-    XMLPlatformUtils::writeBufferToFile(fSource, (long) fIndex, fDataBuf, fMemoryManager);
+    XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
     fIndex = 0;
     fDataBuf[0] = 0;
     fDataBuf[fIndex + 1] = 0;
@@ -131,14 +131,14 @@ void LocalFileFormatTarget::flushBuffer()
  *   enough memory for the new buffer, we got to notify the caller 
  *
  ***/
-bool LocalFileFormatTarget::insureCapacity(const unsigned int extraNeeded)
+bool LocalFileFormatTarget::insureCapacity(const XMLSize_t extraNeeded)
 {
     // If we can handle it, do nothing yet
     if (fIndex + extraNeeded < fCapacity)
         return true;
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
-    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
+    const XMLSize_t newCap = ((fIndex + extraNeeded) * 2);
     XMLByte* newBuf = 0;
 
     try

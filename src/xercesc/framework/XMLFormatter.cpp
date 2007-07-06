@@ -374,7 +374,7 @@ XMLFormatter::~XMLFormatter()
 // ---------------------------------------------------------------------------
 void
 XMLFormatter::formatBuf(const   XMLCh* const    toFormat
-                        , const unsigned int    count
+                        , const XMLSize_t       count
                         , const EscapeFlags     escapeFlags
                         , const UnRepFlags      unrepFlags)
 {
@@ -486,9 +486,9 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
 }
 
 
-unsigned int 
+XMLSize_t 
 XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr, 
-                                   const unsigned int             oCount, 
+                                   const XMLSize_t                oCount, 
                                    const UnRepFlags               actualUnRep) 
 { 
    //
@@ -503,7 +503,7 @@ XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr,
                                              : XMLTranscoder::UnRep_Throw;
                                              	
    XMLSize_t charsEaten; 
-   unsigned int count = oCount; 
+   XMLSize_t count = oCount; 
  
    while (count) { 
       const XMLSize_t srcChars = (count > kTmpBufSize) ? (int)kTmpBufSize : count; 
@@ -551,7 +551,7 @@ XMLFormatter& XMLFormatter::operator<<(const XMLCh toFormat)
  * "0x000x000xFF0xFE"
  **/
 void XMLFormatter::writeBOM(const XMLByte* const toFormat
-                          , const unsigned int   count)
+                          , const XMLSize_t      count)
 {
     fTarget->writeChars(toFormat, count, this);    
 }
@@ -602,8 +602,8 @@ void XMLFormatter::writeCharRef(unsigned long toWrite)
 }
 
 
-const XMLByte* XMLFormatter::getCharRef(unsigned int & count, 
-                                        XMLByte*       &ref, 
+const XMLByte* XMLFormatter::getCharRef(XMLSize_t     &count, 
+                                        XMLByte*      &ref, 
                                         const XMLCh *  stdRef) 
 {
    if (!ref) { 
@@ -631,7 +631,7 @@ const XMLByte* XMLFormatter::getCharRef(unsigned int & count,
 }
 
 void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
-                                , const unsigned int    count
+                                , const XMLSize_t       count
                                 , const EscapeFlags     escapeFlags)
 {
     //

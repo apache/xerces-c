@@ -94,7 +94,7 @@ void SAXPrintHandlers::writeChars(const XMLByte* const /* toWrite */)
 }
 
 void SAXPrintHandlers::writeChars(const XMLByte* const toWrite,
-                                  const unsigned int count,
+                                  const XMLSize_t      count,
                                   XMLFormatter* const /* formatter */)
 {
     // For this one, just dump them to the standard output

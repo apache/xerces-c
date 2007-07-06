@@ -36,7 +36,7 @@ void StdOutFormatTarget::flush()
 }
 
 void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
-                                  , const unsigned int    count
+                                  , const XMLSize_t       count
                                   , XMLFormatter* const)
 {
     // Surprisingly, Solaris was the only platform on which

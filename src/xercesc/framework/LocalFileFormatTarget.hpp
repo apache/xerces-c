@@ -50,7 +50,7 @@ public:
     //  Implementations of the format target interface
     // -----------------------------------------------------------------------
     virtual void writeChars(const XMLByte* const toWrite
-                          , const unsigned int   count
+                          , const XMLSize_t      count
                           , XMLFormatter* const  formatter);
 
     virtual void flush();
@@ -66,7 +66,7 @@ private:
     //  Private helpers
     // -----------------------------------------------------------------------
     void flushBuffer();
-    bool insureCapacity(const unsigned int extraNeeded);
+    bool insureCapacity(const XMLSize_t extraNeeded);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -89,8 +89,8 @@ private:
     // -----------------------------------------------------------------------
     FileHandle      fSource;
     XMLByte*        fDataBuf;
-    unsigned int    fIndex;
-    unsigned int    fCapacity;
+    XMLSize_t       fIndex;
+    XMLSize_t       fCapacity;
     MemoryManager*  fMemoryManager;
 };
 

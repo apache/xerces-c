@@ -49,7 +49,7 @@ public:
     //@{
     MemBufFormatTarget
     (
-          int                  initCapacity = 1023
+          XMLSize_t            initCapacity = 1023
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     ) ;
     ~MemBufFormatTarget();
@@ -59,7 +59,7 @@ public:
     //  Implementations of the format target interface
     // -----------------------------------------------------------------------
     virtual void writeChars(const XMLByte* const toWrite
-                          , const unsigned int   count
+                          , const XMLSize_t      count
                           , XMLFormatter* const  formatter);
 
     // -----------------------------------------------------------------------
@@ -81,7 +81,7 @@ public:
      *
      */
     //@}
-    unsigned int getLen() const
+    XMLSize_t getLen() const
     {
         return fIndex;
     }
@@ -105,7 +105,7 @@ private:
     // -----------------------------------------------------------------------
     //  Private helpers
     // -----------------------------------------------------------------------
-    void insureCapacity(const unsigned int extraNeeded);
+    void insureCapacity(const XMLSize_t extraNeeded);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -125,8 +125,8 @@ private:
     // -----------------------------------------------------------------------
     MemoryManager*  fMemoryManager;
     XMLByte*        fDataBuf;
-    unsigned int    fIndex;
-    unsigned int    fCapacity;
+    XMLSize_t       fIndex;
+    XMLSize_t       fCapacity;
 
 };
 

@@ -25,7 +25,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-MemBufFormatTarget::MemBufFormatTarget( int                  initCapacity
+MemBufFormatTarget::MemBufFormatTarget( XMLSize_t            initCapacity
                                       , MemoryManager* const manager)
     : fMemoryManager(manager)
     , fDataBuf(0)
@@ -48,7 +48,7 @@ MemBufFormatTarget::~MemBufFormatTarget()
 }
 
 void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
-                                  , const unsigned int   count
+                                  , const XMLSize_t      count
                                   , XMLFormatter * const)
 {
 
@@ -81,14 +81,14 @@ void MemBufFormatTarget::reset()
 // ---------------------------------------------------------------------------
 //  MemBufFormatTarget: Private helper methods
 // ---------------------------------------------------------------------------
-void MemBufFormatTarget::insureCapacity(const unsigned int extraNeeded)
+void MemBufFormatTarget::insureCapacity(const XMLSize_t extraNeeded)
 {
     // If we can handle it, do nothing yet
     if (fIndex + extraNeeded < fCapacity)
         return;
 
     // Oops, not enough room. Calc new capacity and allocate new buffer
-    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 2);
+    const XMLSize_t newCap = ((fIndex + extraNeeded) * 2);
     XMLByte* newBuf = (XMLByte*) fMemoryManager->allocate
     (
         (newCap+4) * sizeof(XMLByte)

@@ -47,10 +47,10 @@ public:
         const   XMLByte* const  toWrite
     );
 
-    void writeChars
+    virtual void writeChars
     (
         const   XMLByte* const  toWrite
-        , const unsigned int    count
+        , const XMLSize_t       count
         , XMLFormatter* const   formatter
     );
 

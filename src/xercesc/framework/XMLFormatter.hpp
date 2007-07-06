@@ -231,7 +231,7 @@ public:
     void formatBuf
     (
         const   XMLCh* const    toFormat
-        , const unsigned int    count
+        , const XMLSize_t       count
         , const EscapeFlags     escapeFlags = DefaultEscape
         , const UnRepFlags      unrepFlags = DefaultUnRep
     );
@@ -250,7 +250,7 @@ public:
     );
 
     void writeBOM(const XMLByte* const toFormat
-                , const unsigned int   count);
+                , const XMLSize_t      count);
 
     //@}
 
@@ -349,7 +349,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    const XMLByte* getCharRef(unsigned int & count, 
+    const XMLByte* getCharRef(XMLSize_t     &count, 
                               XMLByte*      &ref, 
                               const XMLCh *  stdRef);  
  
@@ -360,14 +360,14 @@ private :
                     , const XMLCh                     toCheck);
                               
 
-    unsigned int handleUnEscapedChars(const XMLCh *                  srcPtr, 
-                                      const unsigned int             count, 
-                                      const UnRepFlags               unrepFlags);
+    XMLSize_t handleUnEscapedChars(const XMLCh *      srcPtr, 
+                                   const XMLSize_t    count, 
+                                   const UnRepFlags   unrepFlags);
 
     void specialFormat
     (
         const   XMLCh* const    toFormat
-        , const unsigned int    count
+        , const XMLSize_t       count
         , const EscapeFlags     escapeFlags
     );
 
@@ -420,15 +420,15 @@ private :
     XMLTranscoder*              fXCoder;
     XMLByte                     fTmpBuf[kTmpBufSize + 4];
     XMLByte*                    fAposRef;
-    unsigned int                fAposLen;
+    XMLSize_t                   fAposLen;
     XMLByte*                    fAmpRef;
-    unsigned int                fAmpLen;
+    XMLSize_t                   fAmpLen;
     XMLByte*                    fGTRef;
-    unsigned int                fGTLen;
+    XMLSize_t                   fGTLen;
     XMLByte*                    fLTRef;
-    unsigned int                fLTLen;
+    XMLSize_t                   fLTLen;
     XMLByte*                    fQuoteRef;
-    unsigned int                fQuoteLen;
+    XMLSize_t                   fQuoteLen;
     bool                        fIsXML11;
     MemoryManager*              fMemoryManager;
 };
@@ -449,7 +449,7 @@ public:
     virtual void writeChars
     (
           const XMLByte* const      toWrite
-        , const unsigned int        count
+        , const XMLSize_t           count
         ,       XMLFormatter* const formatter
     ) = 0;
 
