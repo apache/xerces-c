@@ -52,19 +52,19 @@ public :
     //  Getter methods
     // -----------------------------------------------------------------------
     bool getIsOpen() const;
-    unsigned int getSize() const;
+    XMLFilePos getSize() const;
     void reset();
 
 
     // -----------------------------------------------------------------------
     //  Implementation of the input stream interface
     // -----------------------------------------------------------------------
-    virtual unsigned int curPos() const;
+    virtual XMLFilePos curPos() const;
 
     virtual void writeBytes
     (
           const XMLByte* const      toGo
-        , const unsigned int        maxToWrite
+        , const XMLSize_t        maxToWrite
     );
 
 

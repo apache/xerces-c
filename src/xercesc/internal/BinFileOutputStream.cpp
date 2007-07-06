@@ -58,7 +58,7 @@ BinFileOutputStream::BinFileOutputStream(const char*    const fileName
 // ---------------------------------------------------------------------------
 //  BinFileOutputStream: Getter methods
 // ---------------------------------------------------------------------------
-unsigned int BinFileOutputStream::getSize() const
+XMLFilePos BinFileOutputStream::getSize() const
 {
     return XMLPlatformUtils::fileSize(fSource, fMemoryManager);
 }
@@ -76,14 +76,14 @@ void BinFileOutputStream::reset()
 // ---------------------------------------------------------------------------
 //  BinFileOutputStream: Implementation of the input stream interface
 // ---------------------------------------------------------------------------
-unsigned int BinFileOutputStream::curPos() const
+XMLFilePos BinFileOutputStream::curPos() const
 {
     return XMLPlatformUtils::curFilePos(fSource, fMemoryManager);
 }
 
 
 void BinFileOutputStream::writeBytes( const XMLByte* const  toGo
-                                    , const unsigned int    maxToWrite)
+                                    , const XMLSize_t       maxToWrite)
 {
     //
     //  Write up to the maximum bytes requested. 

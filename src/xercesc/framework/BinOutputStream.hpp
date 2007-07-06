@@ -37,12 +37,12 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual output stream interface
     // -----------------------------------------------------------------------
-    virtual unsigned int curPos() const = 0;
+    virtual XMLFilePos curPos() const = 0;
 
     virtual void writeBytes
     (
           const XMLByte* const      toGo
-        , const unsigned int        maxToWrite
+        , const XMLSize_t           maxToWrite
     ) = 0;
 
 protected :
