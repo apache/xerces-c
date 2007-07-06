@@ -45,11 +45,11 @@ public :
     CurlURLInputStream(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     ~CurlURLInputStream();
 
-    unsigned int curPos() const;
-    unsigned int readBytes
+    XMLFilePos curPos() const;
+    XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t       maxToRead
     );
 
 
@@ -109,7 +109,7 @@ private :
 }; // CurlURLInputStream
 
 
-inline unsigned int
+inline XMLFilePos
 CurlURLInputStream::curPos() const
 {
     return fTotalBytesRead;

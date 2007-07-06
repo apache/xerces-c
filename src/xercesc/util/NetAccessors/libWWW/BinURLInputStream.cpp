@@ -141,7 +141,7 @@ void BinURLInputStream::reset()
 }
 
 
-unsigned int BinURLInputStream::curPos() const
+XMLFilePos BinURLInputStream::curPos() const
 {
     return fBytesProcessed;
 }
@@ -154,12 +154,12 @@ unsigned int BinURLInputStream::bytesAvail() const
 }
 
 
-unsigned int BinURLInputStream::readBytes(XMLByte* const  toFill
-                                  , const unsigned int    maxToRead)
+XMLSize_t BinURLInputStream::readBytes(XMLByte* const  toFill
+                                  , const XMLSize_t    maxToRead)
 {
-    unsigned int  retval = 0;
-    unsigned int  bytesAsked = maxToRead;
-    unsigned int  bytesForCopy = 0;
+    XMLSize_t  retval = 0;
+    XMLSize_t  bytesAsked = maxToRead;
+    XMLSize_t  bytesForCopy = 0;
 
     // Wipe out the old stuff from the destination buffer to fill.
 
@@ -193,7 +193,7 @@ unsigned int BinURLInputStream::readBytes(XMLByte* const  toFill
     else
     {
         // ...will need to read some more bytes out of the stream.
-        unsigned int    bufToFillIndex = 0;
+        XMLSize_t       bufToFillIndex = 0;
         HTRequest*      request = HTRequest_new();
         HTChunk*        result = NULL;
         char            ranges[64];
@@ -211,7 +211,7 @@ unsigned int BinURLInputStream::readBytes(XMLByte* const  toFill
             retval = bytesForCopy;
         }
 
-        unsigned int    bytesRemainingForCopy = bytesAsked - bytesForCopy;
+        XMLSize_t    bytesRemainingForCopy = bytesAsked - bytesForCopy;
 
         // Now read a new chunk from the stream. HTTP lets you specify the
         // range of bytes that you would like.

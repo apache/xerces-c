@@ -42,11 +42,11 @@ public :
     BinHTTPURLInputStream(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     ~BinHTTPURLInputStream();
 
-    unsigned int curPos() const;
-    unsigned int readBytes
+    XMLFilePos curPos() const;
+    XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t       maxToRead
     );
 
 	static void Cleanup();
@@ -78,7 +78,7 @@ private :
     // -----------------------------------------------------------------------
     MemoryManager*      fMemoryManager;
     unsigned int        fSocketHandle;
-    unsigned int        fBytesProcessed;
+    XMLSize_t           fBytesProcessed;
     char                fBuffer[4000];
     char *              fBufferEnd;
     char *              fBufferPos;
@@ -90,7 +90,7 @@ private :
 };
 
 
-inline unsigned int BinHTTPURLInputStream::curPos() const
+inline XMLFilePos BinHTTPURLInputStream::curPos() const
 {
     return fBytesProcessed;
 }

@@ -68,7 +68,7 @@ BinFileInputStream::~BinFileInputStream()
 // ---------------------------------------------------------------------------
 //  BinFileInputStream: Getter methods
 // ---------------------------------------------------------------------------
-unsigned int BinFileInputStream::getSize() const
+XMLFilePos BinFileInputStream::getSize() const
 {
     return XMLPlatformUtils::fileSize(fSource, fMemoryManager);
 }
@@ -86,14 +86,14 @@ void BinFileInputStream::reset()
 // ---------------------------------------------------------------------------
 //  BinFileInputStream: Implementation of the input stream interface
 // ---------------------------------------------------------------------------
-unsigned int BinFileInputStream::curPos() const
+XMLFilePos BinFileInputStream::curPos() const
 {
     return XMLPlatformUtils::curFilePos(fSource, fMemoryManager);
 }
 
-unsigned int
+XMLSize_t
 BinFileInputStream::readBytes(          XMLByte* const  toFill
-                                , const unsigned int    maxToRead)
+                                , const XMLSize_t       maxToRead)
 {
     //
     //  Read up to the maximum bytes requested. We return the number

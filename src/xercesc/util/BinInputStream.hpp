@@ -38,12 +38,12 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual input stream interface
     // -----------------------------------------------------------------------
-    virtual unsigned int curPos() const = 0;
+    virtual XMLFilePos curPos() const = 0;
 
-    virtual unsigned int readBytes
+    virtual XMLSize_t readBytes
     (
                 XMLByte* const      toFill
-        , const unsigned int        maxToRead
+        , const XMLSize_t           maxToRead
     ) = 0;
 
 

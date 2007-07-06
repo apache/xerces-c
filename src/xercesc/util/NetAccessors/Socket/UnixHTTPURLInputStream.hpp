@@ -41,11 +41,11 @@ public :
     UnixHTTPURLInputStream(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     ~UnixHTTPURLInputStream();
 
-    unsigned int curPos() const;
-    unsigned int readBytes
+    XMLFilePos curPos() const;
+    XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t    maxToRead
     );
 
 
@@ -82,7 +82,7 @@ private :
 }; // UnixHTTPURLInputStream
 
 
-inline unsigned int UnixHTTPURLInputStream::curPos() const
+inline XMLFilePos UnixHTTPURLInputStream::curPos() const
 {
     return fBytesProcessed;
 }

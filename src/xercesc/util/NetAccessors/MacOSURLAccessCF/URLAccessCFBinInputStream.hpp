@@ -49,11 +49,11 @@ public :
     URLAccessCFBinInputStream(const XMLURL&  urlSource);
     ~URLAccessCFBinInputStream();
 
-    unsigned int curPos() const;
-    unsigned int readBytes
+    XMLFilePos curPos() const;
+    XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t       maxToRead
     );
 
 
@@ -63,7 +63,7 @@ private :
 };
 
 
-inline unsigned int
+inline XMLFilePos
 URLAccessCFBinInputStream::curPos() const
 {
     return mBytesProcessed;

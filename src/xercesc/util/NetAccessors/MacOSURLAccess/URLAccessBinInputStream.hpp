@@ -48,11 +48,11 @@ public :
     URLAccessBinInputStream(const XMLURL&  urlSource);
     ~URLAccessBinInputStream();
 
-    unsigned int curPos() const;
-    unsigned int readBytes
+    XMLFilePos curPos() const;
+    XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t       maxToRead
     );
 
 
@@ -65,7 +65,7 @@ private :
 };
 
 
-inline unsigned int
+inline XMLFilePos
 URLAccessBinInputStream::curPos() const
 {
     return mBytesProcessed;

@@ -249,11 +249,12 @@ WindowsFileMgr::curPos(FileHandle f, MemoryManager* const manager)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 		 
     // Get the current position
-    const unsigned int curPos = ::SetFilePointer(f, 0, 0, FILE_CURRENT);
-    if (curPos == 0xFFFFFFFF)
+    LONG high=0;
+    DWORD low = ::SetFilePointer(f, 0, &high, FILE_CURRENT);
+    if (low == INVALID_SET_FILE_POINTER && GetLastError()!=NO_ERROR)
         ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
 
-    return curPos;
+    return (((XMLFilePos)high) << 32) | low;
 }
 
 
@@ -263,13 +264,13 @@ WindowsFileMgr::fileSize(FileHandle f, MemoryManager* const manager)
     if (!f)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 	
-    DWORD high;
+    DWORD high=0;
     DWORD low=GetFileSize(f, &high);
-    if(low==INVALID_FILE_SIZE)
+    if(low==INVALID_FILE_SIZE && GetLastError()!=NO_ERROR)
         // TODO: find a better exception
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
 
-    return low;
+    return (((XMLFilePos)high) << 32) | low;
 }
 
 
@@ -279,7 +280,7 @@ WindowsFileMgr::fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, Mem
     if (!f || !buffer)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 		
-    unsigned long bytesRead = 0;
+    DWORD bytesRead = 0;
     if (!::ReadFile(f, buffer, byteCount, &bytesRead, 0))
     {
         //
@@ -303,7 +304,7 @@ WindowsFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buff
 
     while (byteCount > 0)
     {
-        unsigned long bytesWritten = 0;
+        DWORD bytesWritten = 0;
         if (!::WriteFile(f, tmpFlush, byteCount, &bytesWritten, 0))
             ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 

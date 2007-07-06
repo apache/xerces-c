@@ -123,9 +123,9 @@ URLAccessBinInputStream::~URLAccessBinInputStream()
 //	passes us back buffers full of data, our object maintains
 //	a partial buffer across calls.
 //
-unsigned int
-URLAccessBinInputStream::readBytes(XMLByte* const    toFill
-                                    , const unsigned int    maxToRead)
+XMLSize_t
+URLAccessBinInputStream::readBytes(XMLByte* const     toFill
+                                    , const XMLSize_t maxToRead)
 {
 	OSStatus status = noErr;
 

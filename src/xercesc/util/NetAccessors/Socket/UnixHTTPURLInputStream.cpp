@@ -499,10 +499,10 @@ UnixHTTPURLInputStream::~UnixHTTPURLInputStream()
 }
 
 
-unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
-                                      , const unsigned int    maxToRead)
+XMLSize_t UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
+                                      , const XMLSize_t       maxToRead)
 {
-    unsigned int len = fBufferEnd - fBufferPos;
+    XMLSize_t len = fBufferEnd - fBufferPos;
     if (len > 0)
     {
         // If there's any data left over in the buffer into which we first

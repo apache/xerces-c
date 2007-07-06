@@ -633,12 +633,12 @@ Win32Transcoder::~Win32Transcoder()
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
+XMLSize_t
 Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
-                                , const unsigned int        srcCount
+                                , const XMLSize_t           srcCount
                                 ,       XMLCh* const        toFill
-                                , const unsigned int        maxChars
-                                ,       unsigned int&       bytesEaten
+                                , const XMLSize_t           maxChars
+                                ,       XMLSize_t&          bytesEaten
                                 ,       unsigned char* const charSizes)
 {
     // Get temp pointers to the in and out buffers, and the chars sizes one
@@ -716,12 +716,12 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
 }
 
 
-unsigned int
+XMLSize_t
 Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
-                            , const unsigned int    srcCount
+                            , const XMLSize_t       srcCount
                             ,       XMLByte* const  toFill
-                            , const unsigned int    maxBytes
-                            ,       unsigned int&   charsEaten
+                            , const XMLSize_t       maxBytes
+                            ,       XMLSize_t&      charsEaten
                             , const UnRepOpts       options)
 {
     // Get pointers to the start and end of each buffer

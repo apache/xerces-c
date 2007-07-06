@@ -33,7 +33,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  BinMemInputStream: Constructors and Destructor
 // ---------------------------------------------------------------------------
 BinMemInputStream::BinMemInputStream( const XMLByte* const       initData
-                                    , const unsigned int         capacity
+                                    , const XMLSize_t            capacity
                                     , const BufOpts              bufOpt
                                     ,       MemoryManager* const manager) :
     fBuffer(0)
@@ -72,19 +72,18 @@ BinMemInputStream::~BinMemInputStream()
 // ---------------------------------------------------------------------------
 //  MemBinInputStream: Implementation of the input stream interface
 // ---------------------------------------------------------------------------
-unsigned int BinMemInputStream::readBytes(          XMLByte* const  toFill
-                                            , const unsigned int    maxToRead)
+XMLSize_t BinMemInputStream::readBytes(       XMLByte* const  toFill
+                                      , const XMLSize_t       maxToRead)
 {
     //
     //  Figure out how much we can really read. Its the smaller of the
     //  amount available and the amount asked for.
     //
-    const unsigned int available = (fCapacity - fCurIndex);
+    const XMLSize_t available = (fCapacity - fCurIndex);
     if (!available)
         return 0;
 
-    const unsigned int actualToRead = available < maxToRead ?
-                                      available : maxToRead;
+    const XMLSize_t actualToRead = available < maxToRead ? available : maxToRead;
 
     memcpy(toFill, &fBuffer[fCurIndex], actualToRead);
     fCurIndex += actualToRead;

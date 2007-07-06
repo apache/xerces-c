@@ -48,11 +48,11 @@ public :
     BinURLInputStream(const XMLURL&  urlSource);
     ~BinURLInputStream();
 
-    unsigned int curPos() const;
-    unsigned int readBytes
+    XMLFilePos curPos() const;
+    XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t    maxToRead
     );
     void reset();
     unsigned int bytesAvail() const;

@@ -47,7 +47,7 @@ public :
     BinMemInputStream
     (
         const   XMLByte* const  initData
-        , const unsigned int    capacity
+        , const XMLSize_t       capacity
         , const BufOpts         bufOpt = BufOpt_Copy
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -63,15 +63,15 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the input stream interface
     // -----------------------------------------------------------------------
-    virtual unsigned int curPos() const;
+    virtual XMLFilePos curPos() const;
 
-    virtual unsigned int readBytes
+    virtual XMLSize_t readBytes
     (
                 XMLByte* const  toFill
-        , const unsigned int    maxToRead
+        , const XMLSize_t       maxToRead
     );
 
-    inline unsigned int getSize() const;
+    inline XMLSize_t getSize() const;
     
 private :
     // -----------------------------------------------------------------------
@@ -99,8 +99,8 @@ private :
     // -----------------------------------------------------------------------
     const XMLByte*  fBuffer;
     BufOpts         fBufOpt;
-    unsigned int    fCapacity;
-    unsigned int    fCurIndex;
+    XMLSize_t       fCapacity;
+    XMLSize_t       fCurIndex;
     MemoryManager*  fMemoryManager;
 };
 
@@ -117,12 +117,12 @@ inline void BinMemInputStream::reset()
 // ---------------------------------------------------------------------------
 //  BinMemInputStream: Implementation of the input stream interface
 // ---------------------------------------------------------------------------
-inline unsigned int BinMemInputStream::curPos() const
+inline XMLFilePos BinMemInputStream::curPos() const
 {
     return fCurIndex;
 }
 
-inline unsigned int BinMemInputStream::getSize() const
+inline XMLSize_t BinMemInputStream::getSize() const
 {
     return fCapacity;
 }

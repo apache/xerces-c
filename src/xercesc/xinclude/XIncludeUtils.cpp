@@ -547,11 +547,11 @@ XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href,
         throw OutOfMemoryException();
     ArrayJanitor<unsigned char> janCharSizes(charSizes, XMLPlatformUtils::fgMemoryManager);
 
-    unsigned int nRead, nOffset=0;
+    XMLSize_t nRead, nOffset=0;
     XMLBuffer repository;
     while((nRead=stream->readBytes(buffer+nOffset, maxToRead-nOffset))>0){
-        unsigned int bytesEaten=0;
-	    unsigned int nCount = transcoder->transcodeFrom(buffer, nRead, xmlChars, maxToRead*2, bytesEaten, charSizes);
+        XMLSize_t bytesEaten=0;
+	    XMLSize_t nCount = transcoder->transcodeFrom(buffer, nRead, xmlChars, maxToRead*2, bytesEaten, charSizes);
         repository.append(xmlChars, nCount);
         if(bytesEaten<nRead) {
             nOffset=nRead-bytesEaten;

@@ -136,9 +136,9 @@ URLAccessCFBinInputStream::~URLAccessCFBinInputStream()
 //	We've already read the data into a dataRef.
 //	Just spoon it out to the caller as they ask for it.
 //
-unsigned int
+XMLSize_t
 URLAccessCFBinInputStream::readBytes(XMLByte* const    toFill
-                                    , const unsigned int    maxToRead)
+                                    , const XMLSize_t  maxToRead)
 {
     //	If we don't have a dataRef, we can't return any data
     if (!mDataRef)
