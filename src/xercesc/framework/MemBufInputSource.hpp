@@ -93,7 +93,7 @@ public :
     MemBufInputSource
     (
         const   XMLByte* const  srcDocBytes
-        , const unsigned int    byteCount
+        , const XMLSize_t       byteCount
         , const XMLCh* const    bufId
         , const bool            adoptBuffer = false
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
@@ -106,7 +106,7 @@ public :
     MemBufInputSource
     (
         const   XMLByte* const  srcDocBytes
-        , const unsigned int    byteCount
+        , const XMLSize_t       byteCount
         , const char* const     bufId
         , const bool            adoptBuffer = false
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
@@ -180,7 +180,7 @@ public :
       *                         in the buffer.     
       */
     void resetMemBufInputSource(const   XMLByte* const  srcDocBytes
-                                , const unsigned int    byteCount);
+                                , const XMLSize_t       byteCount);
     //@}
 
 
@@ -214,7 +214,7 @@ private :
     //      fAdopted flag.
     // -----------------------------------------------------------------------
     bool            fAdopted;
-    unsigned int    fByteCount;
+    XMLSize_t       fByteCount;
     bool            fCopyBufToStream;
     const XMLByte*  fSrcBytes;
 };
