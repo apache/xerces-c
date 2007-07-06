@@ -145,9 +145,9 @@ DOMProcessingInstruction *DOMProcessingInstructionImpl::splitText(XMLSize_t offs
     if (this->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            XMLSize_t sz = ranges->size();
+            unsigned int sz = ranges->size();
             if (sz != 0) {
-                for (XMLSize_t i =0; i<sz; i++) {
+                for (unsigned int i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateSplitInfo( this, newText, offset);
                 }
             }

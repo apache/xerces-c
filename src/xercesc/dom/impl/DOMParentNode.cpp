@@ -257,9 +257,9 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     if (this->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if ( ranges != 0) {
-            XMLSize_t sz = ranges->size();
+            unsigned int sz = ranges->size();
             if (sz != 0) {
-                for (XMLSize_t i =0; i<sz; i++) {
+                for (unsigned int i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateRangeForInsertedNode(newChild);
                 }
             }
@@ -284,9 +284,9 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
         //notify iterators
         NodeIterators* nodeIterators = ((DOMDocumentImpl *)this->getOwnerDocument())->getNodeIterators();
         if (nodeIterators != 0) {
-            XMLSize_t sz = nodeIterators->size();
+            unsigned int sz = nodeIterators->size();
             if (sz != 0) {
-                for (XMLSize_t i =0; i<sz; i++) {
+                for (unsigned int i =0; i<sz; i++) {
                     if (nodeIterators->elementAt(i) != 0)
                         nodeIterators->elementAt(i)->removeNode(oldChild);
                 }
@@ -296,9 +296,9 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
         //fix other ranges for change before deleting the node
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            XMLSize_t sz = ranges->size();
+            unsigned int sz = ranges->size();
             if (sz != 0) {
-                for (XMLSize_t i =0; i<sz; i++) {
+                for (unsigned int i =0; i<sz; i++) {
                     if (ranges->elementAt(i) != 0)
                         ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
                 }

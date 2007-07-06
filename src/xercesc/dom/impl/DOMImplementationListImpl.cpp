@@ -40,12 +40,12 @@ void DOMImplementationListImpl::add(DOMImplementation* impl) {
     fList->addElement(impl);
 }
 
-XMLSize_t DOMImplementationListImpl::getLength() const{
+unsigned int DOMImplementationListImpl::getLength() const{
     return fList->size();
 }
 
 
-DOMImplementation *DOMImplementationListImpl::item(XMLSize_t index) const{
+DOMImplementation *DOMImplementationListImpl::item(unsigned int index) const{
     if(index<fList->size())
         return fList->elementAt(index);
     return 0;

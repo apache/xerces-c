@@ -126,7 +126,7 @@ public:
      *   index.
      * @since DOM Level 1
      */
-    virtual DOMNode     *item(XMLSize_t index) const = 0;
+    virtual DOMNode     *item(unsigned int index) const = 0;
 
     /**
      * Retrieves a node specified by name.
@@ -146,7 +146,7 @@ public:
      * 0 to <code>length-1</code> inclusive.
      * @since DOM Level 1
      */
-    virtual XMLSize_t   getLength() const = 0;
+    virtual unsigned int getLength() const = 0;
 
     // -----------------------------------------------------------------------
     //  Node methods

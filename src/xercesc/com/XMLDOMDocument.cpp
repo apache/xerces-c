@@ -1441,8 +1441,8 @@ STDMETHODIMP CXMLDOMDocument::save(VARIANT location)
 	
 	try {
 		DOMNodeList* childs = m_Document->getChildNodes();
-		int length = childs->getLength();
-		for (int i=0; i < length; ++i) {
+		unsigned int length = childs->getLength();
+		for (unsigned int i=0; i < length; ++i) {
 			DOMNode* child = childs->item(i);
 			_bstr_t nodeText;
 			GetXML(child,nodeText);

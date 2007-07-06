@@ -2196,8 +2196,8 @@ bool DOMTest::testDocument(DOMDocument* document)
 
     XMLString::transcode("*", tempStr, 3999);
     DOMNodeList* docElements = document->getElementsByTagName(tempStr);
-    int docSize = docElements->getLength();
-    int i;
+    unsigned int docSize = docElements->getLength();
+    unsigned int i;
     for (i = 0; i < docSize; i++)
     {
         DOMNode*  n = (DOMNode*) docElements->item(i);
@@ -2870,8 +2870,8 @@ bool DOMTest::testElement(DOMDocument* document)
     if (rem2)
         rem2->release();
     nodeMap = element->getAttributes();
-    int size = nodeMap->getLength();
-    int k;
+    unsigned int size = nodeMap->getLength();
+    unsigned int k;
     for (k = 0; k < size; k++)
     {
         DOMNode*  n = (DOMNode) nodeMap->item(k);
@@ -2888,7 +2888,7 @@ bool DOMTest::testElement(DOMDocument* document)
 #endif
 
     nodeMap = element->getAttributes();
-    int size = nodeMap->getLength();
+    unsigned int size = nodeMap->getLength();
     if (size != 2)
     {
         fprintf(stderr, "DOMElement* Tests Failure 001\n");
@@ -2928,8 +2928,8 @@ bool DOMTest::testElement(DOMDocument* document)
 
     XMLString::transcode("*",tempStr, 3999);
     DOMNodeList* docElements = document->getElementsByTagName(tempStr);
-    int docSize = docElements->getLength();
-    int i;
+    unsigned int docSize = docElements->getLength();
+    unsigned int i;
     for (i = 0; i < docSize; i++)
     {
         DOMNode*  n = docElements->item(i);

@@ -252,12 +252,12 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
 
     const XMLCh*     contextStr = (isTopLevel) ? fgGlobal : fgLocal;
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
-    int              attrCount = eltAttrs->getLength();
+    unsigned int     attrCount = eltAttrs->getLength();
     XMLByte          attList[A_Count];
 
     memset(attList, 0, sizeof(attList));
 
-    for (int i = 0; i < attrCount; i++) {
+    for (unsigned int i = 0; i < attrCount; i++) {
 
         DOMNode*     attribute = eltAttrs->item(i);
         const XMLCh* attName = attribute->getNodeName();

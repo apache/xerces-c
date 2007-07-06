@@ -75,10 +75,10 @@ public:
     DOMNodeList* getChildNodes() const;
     DOMNode*     getFirstChild() const;
     DOMNode*     getLastChild() const;
-    XMLSize_t    getLength() const;
+    unsigned int getLength() const;
     bool         hasChildNodes() const;
     DOMNode*     insertBefore(DOMNode *newChild, DOMNode *refChild);
-    DOMNode*     item(XMLSize_t index) const;
+    DOMNode*     item(unsigned int index) const;
     DOMNode*     removeChild(DOMNode *oldChild);
     DOMNode*     replaceChild(DOMNode *newChild, DOMNode *oldChild);
 

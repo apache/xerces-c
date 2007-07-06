@@ -71,14 +71,14 @@ private:
 
 private:
     DOMAttr      **fTable;
-    XMLSize_t  fSizeIndex;              // Index of the current table size in the
-                                           //   array of possible table sizes.
-	XMLSize_t  fSize;                   // The current size of the table array
-                                           //   (number of slots, not bytes.)
-    XMLSize_t  fNumEntries;             // The number of entries used.
-    XMLSize_t  fMaxEntries;             // The max number of entries to use before
-                                           //   growing the table.
-    DOMDocument *fDoc;                    // The owning document.
+    unsigned int   fSizeIndex;              // Index of the current table size in the
+                                            //   array of possible table sizes.
+	unsigned int   fSize;                   // The current size of the table array
+                                            //   (number of slots, not bytes.)
+    unsigned int  fNumEntries;              // The number of entries used.
+    unsigned int  fMaxEntries;              // The max number of entries to use before
+                                            //   growing the table.
+    DOMDocument *fDoc;                      // The owning document.
 
 
 };

@@ -43,9 +43,9 @@ class DOMDocument;
 class  DOMNodeVector {
 private:
     DOMNode        **data;
-    XMLSize_t      allocatedSize;
-    XMLSize_t      nextFreeSlot;
-    void           init(DOMDocument *doc, XMLSize_t size);
+    unsigned int   allocatedSize;
+    unsigned int   nextFreeSlot;
+    void           init(DOMDocument *doc, unsigned int size);
     void           checkSpace();
     
     // unimplemented
@@ -54,20 +54,20 @@ private:
 
 public:
     DOMNodeVector(DOMDocument *doc);
-    DOMNodeVector(DOMDocument *doc, XMLSize_t size);
+    DOMNodeVector(DOMDocument *doc, unsigned int size);
     ~DOMNodeVector();
 
-    XMLSize_t      size();
-    DOMNode*       elementAt(XMLSize_t index);
+    unsigned int   size();
+    DOMNode*       elementAt(unsigned int index);
     DOMNode*       lastElement();
     void           addElement(DOMNode *);
-    void           insertElementAt(DOMNode *, XMLSize_t index);
-    void           setElementAt(DOMNode *val, XMLSize_t index);
-    void           removeElementAt(XMLSize_t index);
+    void           insertElementAt(DOMNode *, unsigned int index);
+    void           setElementAt(DOMNode *val, unsigned int index);
+    void           removeElementAt(unsigned int index);
     void           reset();
 };
 
-inline DOMNode *DOMNodeVector::elementAt(XMLSize_t index) {
+inline DOMNode *DOMNodeVector::elementAt(unsigned int index) {
     if (index >= nextFreeSlot)
         return 0;
 	return data[index];
@@ -79,7 +79,7 @@ inline DOMNode *DOMNodeVector::lastElement() {
 	return data[nextFreeSlot-1];
 }
 
-inline XMLSize_t DOMNodeVector::size() {
+inline unsigned int DOMNodeVector::size() {
 	return nextFreeSlot;
 }
 

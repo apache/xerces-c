@@ -44,10 +44,10 @@ public:
     void add(const XMLCh* impl);
 
     virtual ~DOMStringListImpl();
-    virtual const XMLCh* item(XMLSize_t index) const;
-    virtual XMLSize_t getLength() const;
-    virtual bool contains(const XMLCh* str) const;
-    virtual void release();
+    virtual const XMLCh* item(unsigned int index) const;
+    virtual unsigned int getLength() const;
+    virtual bool         contains(const XMLCh* str) const;
+    virtual void         release();
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -158,8 +158,8 @@ DOMImplementationList* DOMImplementationRegistry::getDOMImplementationList(const
     for (unsigned int i = len; i > 0; i--) {
         DOMImplementationSource* source = getDOMImplSrcVector()->elementAt(i-1);
         DOMImplementationList* oneList = source->getDOMImplementationList(features);
-        XMLSize_t oneListLen=oneList->getLength();
-        for(XMLSize_t j=0; j<oneListLen; j++)
+        unsigned int oneListLen=oneList->getLength();
+        for(unsigned int j=0; j<oneListLen; j++)
             list->add(oneList->item(j));
         oneList->release();
     }

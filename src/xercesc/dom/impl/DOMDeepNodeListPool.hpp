@@ -99,16 +99,16 @@ public:
     // backwards compatability - default hasher is HashXMLCh
     DOMDeepNodeListPool
     (
-        const XMLSize_t modulus
-      , const XMLSize_t initSize = 128
+        const unsigned int modulus
+      , const unsigned int initSize = 128
     );
 
     // backwards compatability - default hasher is HashXMLCh
     DOMDeepNodeListPool
     (
-        const XMLSize_t modulus
+        const unsigned int modulus
       , const bool adoptElems
-      , const XMLSize_t initSize = 128
+      , const unsigned int initSize = 128
     );
 
     // if a hash function is passed in, it will be deleted when the hashtable is deleted.
@@ -116,10 +116,10 @@ public:
     // may delete the hasher of a different hashtable if both use the same hasher.
     DOMDeepNodeListPool
     (
-         const XMLSize_t modulus
+         const unsigned int modulus
        , const bool adoptElems
        , HashBase* hashBase
-       , const XMLSize_t initSize = 128
+       , const unsigned int initSize = 128
     );
 
     ~DOMDeepNodeListPool();
@@ -139,22 +139,22 @@ public:
     TVal* getByKey(const void* const key1, const XMLCh* const key2, const XMLCh* const key3);
     const TVal* getByKey(const void* const key1, const XMLCh* const key2, const XMLCh* const key3) const;
 
-    TVal* getById(const XMLSize_t elemId);
-    const TVal* getById(const XMLSize_t elemId) const;
+    TVal* getById(const unsigned int elemId);
+    const TVal* getById(const unsigned int elemId) const;
 
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-	XMLSize_t put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const valueToAdopt);
+	unsigned int put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const valueToAdopt);
 
 private:
 
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    DOMDeepNodeListPoolTableBucketElem<TVal>* findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal);
-    const DOMDeepNodeListPoolTableBucketElem<TVal>* findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal) const;
-    void initialize(const XMLSize_t modulus);
+    DOMDeepNodeListPoolTableBucketElem<TVal>* findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, unsigned int& hashVal);
+    const DOMDeepNodeListPoolTableBucketElem<TVal>* findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, unsigned int& hashVal) const;
+    void initialize(const unsigned int modulus);
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
@@ -197,11 +197,11 @@ private:
     // -----------------------------------------------------------------------
     bool                                       fAdoptedElems;
     DOMDeepNodeListPoolTableBucketElem<TVal>** fBucketList;
-    XMLSize_t                                  fHashModulus;
+    unsigned int                               fHashModulus;
     HashBase*                                  fHash;
     TVal**                                     fIdPtrs;
-    XMLSize_t                                  fIdPtrsCount;
-    XMLSize_t                                  fIdCounter;
+    unsigned int                               fIdPtrsCount;
+    unsigned int                               fIdCounter;
     MemoryManager*                             fMemoryManager;
 };
 

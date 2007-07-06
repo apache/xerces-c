@@ -4647,9 +4647,9 @@ bool TraverseSchema::retrieveNamespaceMapping(const DOMElement* const elem) {
 
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
     bool seenNS=false;
-    int attrCount = eltAttrs->getLength();
+    unsigned int attrCount = eltAttrs->getLength();
 
-    for (int i = 0; i < attrCount; i++) {
+    for (unsigned int i = 0; i < attrCount; i++) {
 
         DOMNode* attribute = eltAttrs->item(i);
 
@@ -9022,11 +9022,11 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     // next is the namespaces on the elem
     DOMElement* currentElem = (DOMElement*) elem;
     DOMNamedNodeMap* eltAttrs;
-    int              attrCount;
+    unsigned int     attrCount;
     do {    
         eltAttrs = currentElem->getAttributes();
         attrCount = eltAttrs->getLength();        
-        for (int j = 0; j < attrCount; j++) 
+        for (unsigned int j = 0; j < attrCount; j++) 
         {
             DOMNode*     attribute = eltAttrs->item(j);
             const XMLCh* attName = attribute->getNodeName();

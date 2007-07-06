@@ -99,8 +99,8 @@ getBaseAttrValue(DOMNode *node){
 		if(elem->hasAttributes()) {
             /* get all the attributes of the node */
             DOMNamedNodeMap *pAttributes = elem->getAttributes();
-            int nSize = pAttributes->getLength();
-            for(int i=0;i<nSize;++i) {
+            unsigned int nSize = pAttributes->getLength();
+            for(unsigned int i=0;i<nSize;++i) {
                 DOMAttr *pAttributeNode = (DOMAttr*) pAttributes->item(i);
                 /* get attribute name */
 				if (XMLString::equals(pAttributeNode->getName(), XIncludeUtils::fgXIBaseAttrName)){
@@ -135,8 +135,8 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
 	if(xincludeNode->hasAttributes()) {
 		/* get all the attributes of the node */
 		DOMNamedNodeMap *pAttributes = xincludeNode->getAttributes();
-		int nSize = pAttributes->getLength();
-		for(int i=0;i<nSize;++i) {
+		unsigned int nSize = pAttributes->getLength();
+		for(unsigned int i=0;i<nSize;++i) {
 			DOMAttr *pAttributeNode = (DOMAttr*) pAttributes->item(i);
 			const XMLCh *attrName = pAttributeNode->getName();
 	        /* check each attribute against the potential useful names */
@@ -314,8 +314,8 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                 // check for NOTATION or ENTITY clash
                 if(child->getNodeType()==DOMNode::ELEMENT_NODE && includedDoc->getDoctype()!=NULL) {
 		            DOMNamedNodeMap *pAttributes = child->getAttributes();
-		            int nSize = pAttributes->getLength();
-		            for(int i=0;i<nSize;++i) {
+		            unsigned int nSize = pAttributes->getLength();
+		            for(unsigned int i=0;i<nSize;++i) {
 			            DOMAttr *pAttributeNode = (DOMAttr*) pAttributes->item(i);
                         const DOMTypeInfo * typeInfo=pAttributeNode->getSchemaTypeInfo();
                         if(typeInfo && XMLString::equals(typeInfo->getTypeNamespace(), XMLUni::fgInfosetURIName)) {

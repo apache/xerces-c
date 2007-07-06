@@ -45,9 +45,9 @@ public:
     void add(DOMImplementation* impl);
 
     virtual             ~DOMImplementationListImpl();
-    virtual DOMImplementation *  item(XMLSize_t index) const;
-    virtual XMLSize_t getLength() const;
-    virtual void release();
+    virtual DOMImplementation *  item(unsigned int index) const;
+    virtual unsigned int         getLength() const;
+    virtual void                 release();
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -47,7 +47,7 @@ private:
     bool             fMatchAll;
     int              fChanges;
     DOMNode*         fCurrentNode;
-    XMLSize_t        fCurrentIndexPlus1;
+    unsigned int     fCurrentIndexPlus1;
 
     //DOM Level 2
     const XMLCh*     fNamespaceURI;
@@ -60,9 +60,9 @@ public:
 	                    const XMLCh *namespaceURI,
                        const XMLCh *localName);
     virtual          ~DOMDeepNodeListImpl();
-    virtual XMLSize_t getLength() const;
-    virtual DOMNode*  item(XMLSize_t index) const;
-    DOMNode*  cacheItem(XMLSize_t index);
+    virtual unsigned int getLength() const;
+    virtual DOMNode*     item(unsigned int index) const;
+    DOMNode*             cacheItem(unsigned int index);
 
 private:
     DOMNode*          nextMatchingElementAfter(DOMNode *current);

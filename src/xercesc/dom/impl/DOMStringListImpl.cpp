@@ -39,19 +39,19 @@ void DOMStringListImpl::add(const XMLCh* str) {
     fList->addElement((XMLCh*)str);
 }
 
-XMLSize_t DOMStringListImpl::getLength() const{
+unsigned int DOMStringListImpl::getLength() const{
     return fList->size();
 }
 
 
-const XMLCh* DOMStringListImpl::item(XMLSize_t index) const{
+const XMLCh* DOMStringListImpl::item(unsigned int index) const{
     if(index<fList->size())
         return fList->elementAt(index);
     return 0;
 }
 
 bool DOMStringListImpl::contains(const XMLCh* str) const{
-    for(XMLSize_t i=0;i<fList->size();i++)
+    for(unsigned int i=0;i<fList->size();i++)
         if(XMLString::equals(fList->elementAt(i), str))
             return true;
     return false;

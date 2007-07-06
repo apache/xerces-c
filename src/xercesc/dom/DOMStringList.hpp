@@ -87,7 +87,7 @@ public:
      *   index.
      * @since DOM Level 3
      */
-    virtual const XMLCh *item(XMLSize_t index) const = 0;
+    virtual const XMLCh *item(unsigned int index) const = 0;
 
     /**
      * Returns the number of strings in the list.
@@ -96,7 +96,7 @@ public:
      *
      * @since DOM Level 3
      */
-    virtual XMLSize_t getLength() const = 0;
+    virtual unsigned int getLength() const = 0;
 
     /**
      * Test if a string is part of this DOMStringList

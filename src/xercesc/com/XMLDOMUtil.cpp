@@ -827,8 +827,8 @@ xmlstream& operator<<(xmlstream& target, const DOMNode* toWrite)
 
             // Output any attributes on this element
             DOMNamedNodeMap* attributes = toWrite->getAttributes();
-            int attrCount = attributes->getLength();
-            for (int i = 0; i < attrCount; i++)
+            unsigned int attrCount = attributes->getLength();
+            for (unsigned int i = 0; i < attrCount; i++)
             {
                 DOMNode*  attribute = attributes->item(i);
 

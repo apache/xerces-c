@@ -844,7 +844,7 @@ void XSerializeEngine::fillBuffer()
  
     resetBuffer();
 
-    int bytesRead = fInputStream->readBytes(fBufStart, fBufSize);
+    XMLSize_t bytesRead = fInputStream->readBytes(fBufStart, fBufSize);
 
     /***
      * InputStream MUST fill in the exact amount of bytes as requested

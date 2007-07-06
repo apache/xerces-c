@@ -63,8 +63,8 @@ private:
 public:
     DOMNodeListImpl(DOMParentNode *node);
     virtual             ~DOMNodeListImpl();
-    virtual DOMNode *  item(XMLSize_t index) const;
-    virtual XMLSize_t getLength() const;
+    virtual DOMNode *    item(unsigned int index) const;
+    virtual unsigned int getLength() const;
 };
 
 XERCES_CPP_NAMESPACE_END

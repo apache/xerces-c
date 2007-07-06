@@ -656,8 +656,8 @@ void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
  void ThreadParser::SAXHandler::startElement(const XMLCh *const name, AttributeList &attributes)
 {
     SAXInstance->addToCheckSum(name);
-    int n = attributes.getLength();
-    int i;
+    unsigned int n = attributes.getLength();
+    unsigned int i;
     for (i=0; i<n; i++)
     {
         const XMLCh *attNam = attributes.getName(i);
@@ -680,8 +680,8 @@ void ThreadParser::SAX2Handler::startElement(const XMLCh *const /*uri*/,
 {
     SAX2Instance->addToCheckSum(localname);
 
-    int n = attributes.getLength();
-    int i;
+    unsigned int n = attributes.getLength();
+    unsigned int i;
     for (i=0; i<n; i++)
     {
         const XMLCh *attNam = attributes.getQName(i);
@@ -708,8 +708,8 @@ void ThreadParser::domCheckSum(const DOMNode *node)
             s = node->getNodeName();   // the element name
 
             attributes = node->getAttributes();  // Element's attributes
-            int numAttributes = attributes->getLength();
-            int i;
+            unsigned int numAttributes = attributes->getLength();
+            unsigned int i;
             for (i=0; i<numAttributes; i++)
                 domCheckSum(attributes->item(i));
 

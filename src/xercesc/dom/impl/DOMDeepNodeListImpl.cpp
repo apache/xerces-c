@@ -69,7 +69,7 @@ DOMDeepNodeListImpl::~DOMDeepNodeListImpl()
 {
 }
 
-XMLSize_t DOMDeepNodeListImpl::getLength() const
+unsigned int DOMDeepNodeListImpl::getLength() const
 {
     // Reset cache to beginning of list
     item(0);
@@ -80,7 +80,7 @@ XMLSize_t DOMDeepNodeListImpl::getLength() const
 }
 
 
-DOMNode *DOMDeepNodeListImpl::item(XMLSize_t index) const
+DOMNode *DOMDeepNodeListImpl::item(unsigned int index) const
 {
     return ((DOMDeepNodeListImpl*)this)->cacheItem(index);
 }
@@ -95,9 +95,9 @@ DOMNode *DOMDeepNodeListImpl::item(XMLSize_t index) const
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-DOMNode *DOMDeepNodeListImpl::cacheItem(XMLSize_t index)
+DOMNode *DOMDeepNodeListImpl::cacheItem(unsigned int index)
 {
-    XMLSize_t currentIndexPlus1 = fCurrentIndexPlus1;
+    unsigned int currentIndexPlus1 = fCurrentIndexPlus1;
     DOMNode *currentNode = fCurrentNode;
 
     if (castToParentImpl(fRootNode)->changes() != fChanges)

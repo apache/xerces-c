@@ -57,8 +57,8 @@ public:
     virtual DOMNamedNodeMapImpl *cloneMap(DOMNode *ownerNode);
     virtual void            setReadOnly(bool readOnly, bool deep);
 
-    virtual XMLSize_t       getLength() const;
-    virtual DOMNode*        item(XMLSize_t index) const;
+    virtual unsigned int    getLength() const;
+    virtual DOMNode*        item(unsigned int index) const;
     virtual DOMNode*        getNamedItem(const XMLCh *name) const;
     virtual DOMNode*        setNamedItem(DOMNode *arg);
     virtual DOMNode*        removeNamedItem(const XMLCh *name);

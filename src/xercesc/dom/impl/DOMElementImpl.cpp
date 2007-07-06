@@ -167,7 +167,7 @@ void DOMElementImpl::removeAttribute(const XMLCh *nam)
         throw DOMException(
              DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
-    XMLSSize_t i = fAttributes->findNamePoint(nam);
+    int i = fAttributes->findNamePoint(nam);
     if (i >= 0)
     {
         DOMNode *att = fAttributes->removeNamedItemAt(i);
@@ -188,7 +188,7 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
 
     // Since there is no removeAttributeNodeNS, check if this oldAttr has NS or not
     const XMLCh* localName = oldAttr->getLocalName();
-    XMLSSize_t i = 0;
+    unsigned int i = 0;
     if (localName)
         i = fAttributes->findNamePoint(oldAttr->getNamespaceURI(), localName);
     else
@@ -356,7 +356,7 @@ void DOMElementImpl::removeAttributeNS(const XMLCh *fNamespaceURI,
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
-    XMLSSize_t i = fAttributes->findNamePoint(fNamespaceURI, fLocalName);
+    int i = fAttributes->findNamePoint(fNamespaceURI, fLocalName);
     if (i >= 0)
     {
         DOMNode *att = fAttributes->removeNamedItemAt(i);
@@ -590,11 +590,11 @@ bool DOMElementImpl::isEqualNode(const DOMNode* arg) const
         DOMNamedNodeMap* map1 = getAttributes();
         DOMNamedNodeMap* map2 = arg->getAttributes();
 
-        XMLSize_t len = map1->getLength();
+        unsigned int len = map1->getLength();
         if (len != map2->getLength()) {
             return false;
         }
-        for (XMLSize_t i = 0; i < len; i++) {
+        for (unsigned int i = 0; i < len; i++) {
             DOMNode* n1 = map1->item(i);
             if (!n1->getLocalName()) { // DOM Level 1 Node
                 DOMNode* n2 = map2->getNamedItem(n1->getNodeName());

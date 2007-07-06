@@ -372,9 +372,9 @@ void ListDatatypeValidator::inheritFacet()
 /***
  * 2.5.1.2 List datatypes   
  *   
- * The canonical-lexical-representation for the �list� datatype is defined as 
- * the lexical form in which each item in the �list� has the canonical 
- * lexical representation of its �itemType�.
+ * The canonical-lexical-representation for the list datatype is defined as 
+ * the lexical form in which each item in the list has the canonical 
+ * lexical representation of its itemType.
  ***/
 const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                              ,       MemoryManager* const memMgr

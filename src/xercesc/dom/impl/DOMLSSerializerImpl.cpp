@@ -810,7 +810,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 // Output any attributes on this element
                 setURCharRef();
                 DOMNamedNodeMap *attributes = nodeToWrite->getAttributes();
-                int attrCount = attributes->getLength();
+                unsigned int attrCount = attributes->getLength();
 
                 // check if the namespace for the current node is already defined
                 const XMLCh* prefix = nodeToWrite->getPrefix();
@@ -853,7 +853,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 }
 
                 bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
-                for (int i = 0; i < attrCount; i++)
+                for (unsigned int i = 0; i < attrCount; i++)
                 {
                     DOMAttrSPtr  attribute = (DOMAttr*)attributes->item(i);
 

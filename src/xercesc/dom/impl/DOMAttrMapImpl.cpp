@@ -66,14 +66,14 @@ void DOMAttrMapImpl::cloneContent(const DOMAttrMapImpl *srcmap)
             fNodes->reset();
         else
         {
-            XMLSize_t size = srcmap->fNodes->size();
+            unsigned int size = srcmap->fNodes->size();
             if(size > 0) {
                 DOMDocument *doc = fOwnerNode->getOwnerDocument();
                 fNodes = new (doc) DOMNodeVector(doc, size);
             }
         }
 
-        for (XMLSize_t i = 0; i < srcmap->fNodes->size(); i++)
+        for (unsigned int i = 0; i < srcmap->fNodes->size(); i++)
         {
             DOMNode *n = srcmap->fNodes->elementAt(i);
             DOMNode *clone = n->cloneNode(true);
@@ -98,8 +98,8 @@ void DOMAttrMapImpl::setReadOnly(bool readOnl, bool deep)
     // this->fReadOnly=readOnl;
     if(deep && fNodes!=0)
     {
-        int sz = fNodes->size();
-        for (int i=0; i<sz; ++i) {
+        unsigned int sz = fNodes->size();
+        for (unsigned int i=0; i<sz; ++i) {
             castToNodeImpl(fNodes->elementAt(i))->setReadOnly(readOnl, deep);
         }
     }
@@ -113,10 +113,10 @@ int DOMAttrMapImpl::findNamePoint(const XMLCh *name) const
 {
 
     // Binary search
-    int i=0;
+    unsigned int i=0;
     if(fNodes!=0)
     {
-        int first=0,last=fNodes->size()-1;
+        unsigned int first=0,last=fNodes->size()-1;
 
         while(first<=last)
         {
@@ -211,7 +211,7 @@ int DOMAttrMapImpl::findNamePoint(const XMLCh *namespaceURI,
     // In addition, to get this to work with fNodes without any namespace
     // (namespaceURI and localNames are both 0) we then use the nodeName
     // as a secondary key.
-    int i, len = fNodes -> size();
+    unsigned int i, len = fNodes -> size();
     for (i = 0; i < len; ++i) {
         DOMNode *node = fNodes -> elementAt(i);
         const XMLCh * nNamespaceURI = node->getNamespaceURI();
@@ -337,7 +337,7 @@ DOMNode *DOMAttrMapImpl::removeNamedItemNS(const XMLCh *namespaceURI, const XMLC
 
 // remove the name using index
 // avoid calling findNamePoint again if the index is already known
-DOMNode * DOMAttrMapImpl::removeNamedItemAt(XMLSize_t index)
+DOMNode * DOMAttrMapImpl::removeNamedItemAt(unsigned int index)
 {
     if (this->readOnly())
         throw DOMException(
@@ -381,8 +381,8 @@ DOMNode * DOMAttrMapImpl::removeNamedItemAt(XMLSize_t index)
 void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) {
 
     // remove any existing default
-    XMLSize_t nsize = getLength();
-    for (XMLSSize_t i = nsize - 1; i >= 0; i--) {
+    unsigned int nsize = getLength();
+    for (unsigned int i = nsize - 1; i >= 0; i--) {
         DOMAttr* attr = (DOMAttr*)item(i);
         if (!attr->getSpecified()) {
             removeNamedItemAt(i);
@@ -399,8 +399,8 @@ void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) 
             cloneContent(defaults);
         }
         else {
-            XMLSize_t dsize = defaults->getLength();
-            for (XMLSize_t n = 0; n < dsize; n++) {
+            unsigned int dsize = defaults->getLength();
+            for (unsigned int n = 0; n < dsize; n++) {
                 DOMAttr* attr = (DOMAttr*)defaults->item(n);
 
                 DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
@@ -417,9 +417,9 @@ void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) 
  * Move specified attributes from the given map to this one
  */
 void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
-    XMLSize_t nsize = srcmap->getLength();
+    unsigned int nsize = srcmap->getLength();
 
-    for (XMLSSize_t i = nsize - 1; i >= 0; i--) {
+    for (unsigned int i = nsize - 1; i >= 0; i--) {
         DOMAttr* attr = (DOMAttr*)srcmap->item(i);
         if (attr->getSpecified()) {
             srcmap->removeNamedItemAt(i);
@@ -432,12 +432,12 @@ void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
     }
 } // moveSpecifiedAttributes(AttributeMap):void
 
-XMLSize_t DOMAttrMapImpl::getLength() const
+unsigned int DOMAttrMapImpl::getLength() const
 {
     return (fNodes != 0) ? fNodes->size() : 0;
 }
 
-DOMNode * DOMAttrMapImpl::item(XMLSize_t index) const
+DOMNode * DOMAttrMapImpl::item(unsigned int index) const
 {
     return (fNodes != 0 && index < fNodes->size()) ?
         fNodes->elementAt(index) : 0;

@@ -43,8 +43,8 @@ DOMNodeListImpl:: ~DOMNodeListImpl()
 
 
 
-XMLSize_t DOMNodeListImpl::getLength() const{
-    XMLSize_t count = 0;
+unsigned int DOMNodeListImpl::getLength() const{
+    unsigned int count = 0;
     if (fNode) {
         DOMNode *node = fNode->fFirstChild;
         while(node != 0){
@@ -58,10 +58,10 @@ XMLSize_t DOMNodeListImpl::getLength() const{
 
 
 
-DOMNode *DOMNodeListImpl::item(XMLSize_t index) const{
+DOMNode *DOMNodeListImpl::item(unsigned int index) const{
     if (fNode) {
         DOMNode *node = fNode->fFirstChild;
-        for(XMLSize_t i=0; i<index && node!=0; ++i)
+        for(unsigned int i=0; i<index && node!=0; ++i)
             node = castToChildImpl(node)->nextSibling;
         return node;
     }

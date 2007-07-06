@@ -95,7 +95,7 @@ public:
      *   index.
      * @since DOM Level 1
      */
-    virtual DOMNode  *item(XMLSize_t index) const = 0;
+    virtual DOMNode  *item(unsigned int index) const = 0;
 
     /**
      * Returns the number of nodes in the list.
@@ -103,7 +103,7 @@ public:
      * The range of valid child node indices is 0 to <code>length-1</code> inclusive.
      * @since DOM Level 1
      */
-    virtual XMLSize_t getLength() const = 0;
+    virtual unsigned int getLength() const = 0;
     //@}
 };
 

@@ -68,12 +68,12 @@ public:
     virtual int             findNamePoint(const XMLCh *name) const;
     virtual int             findNamePoint(const XMLCh *namespaceURI,
 	                                       const XMLCh *localName) const;
-    virtual DOMNode*        removeNamedItemAt(XMLSize_t index);
+    virtual DOMNode*        removeNamedItemAt(unsigned int index);
     virtual void            setReadOnly(bool readOnly, bool deep);
 
 
-    virtual XMLSize_t       getLength() const;
-    virtual DOMNode*        item(XMLSize_t index) const;
+    virtual unsigned int    getLength() const;
+    virtual DOMNode*        item(unsigned int index) const;
 
     virtual DOMNode*        getNamedItem(const XMLCh *name) const;
     virtual DOMNode*        setNamedItem(DOMNode *arg);
