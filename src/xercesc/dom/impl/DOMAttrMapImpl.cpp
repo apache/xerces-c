@@ -113,10 +113,10 @@ int DOMAttrMapImpl::findNamePoint(const XMLCh *name) const
 {
 
     // Binary search
-    unsigned int i=0;
+    int i=0;
     if(fNodes!=0)
     {
-        unsigned int first=0,last=fNodes->size()-1;
+        int first=0,last=(int)fNodes->size()-1;
 
         while(first<=last)
         {
@@ -381,8 +381,8 @@ DOMNode * DOMAttrMapImpl::removeNamedItemAt(unsigned int index)
 void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) {
 
     // remove any existing default
-    unsigned int nsize = getLength();
-    for (unsigned int i = nsize - 1; i >= 0; i--) {
+    int nsize = (int)getLength();
+    for (int i = nsize - 1; i >= 0; i--) {
         DOMAttr* attr = (DOMAttr*)item(i);
         if (!attr->getSpecified()) {
             removeNamedItemAt(i);
@@ -417,9 +417,9 @@ void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) 
  * Move specified attributes from the given map to this one
  */
 void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
-    unsigned int nsize = srcmap->getLength();
+    int nsize = (int)srcmap->getLength();
 
-    for (unsigned int i = nsize - 1; i >= 0; i--) {
+    for (int i = nsize - 1; i >= 0; i--) {
         DOMAttr* attr = (DOMAttr*)srcmap->item(i);
         if (attr->getSpecified()) {
             srcmap->removeNamedItemAt(i);
