@@ -464,12 +464,12 @@ ICUTranscoder::~ICUTranscoder()
 // ---------------------------------------------------------------------------
 //  ICUTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
+XMLSize_t
 ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
-                            , const unsigned int            srcCount
+                            , const XMLSize_t               srcCount
                             ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
-                            ,       unsigned int&           bytesEaten
+                            , const XMLSize_t               maxChars
+                            ,       XMLSize_t&              bytesEaten
                             ,       unsigned char* const    charSizes)
 {
     // If debugging, insure the block size is legal
@@ -603,12 +603,12 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
 }
 
 
-unsigned int
+XMLSize_t
 ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
-                            , const unsigned int    srcCount
+                            , const XMLSize_t       srcCount
                             ,       XMLByte* const  toFill
-                            , const unsigned int    maxBytes
-                            ,       unsigned int&   charsEaten
+                            , const XMLSize_t       maxBytes
+                            ,       XMLSize_t&      charsEaten
                             , const UnRepOpts       options)
 {
     //

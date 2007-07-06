@@ -1747,8 +1747,8 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
     }
 
     // Ask the transcoder to internalize another batch of chars
-    unsigned int bytesEaten;
-    const unsigned int charsDone = fTranscoder->transcodeFrom
+    XMLSize_t bytesEaten;
+    const XMLSize_t charsDone = fTranscoder->transcodeFrom
     (
         &fRawByteBuf[fRawBufIndex]
         , fRawBytesAvail - fRawBufIndex

@@ -168,22 +168,17 @@ XMLUTF8Transcoder390::~XMLUTF8Transcoder390()
 // ---------------------------------------------------------------------------
 //  XMLUTF8Transcoder390: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
-XMLUTF8Transcoder390::transcodeFrom(const  XMLByte* const          srcData
-                                , const unsigned int            srcCount
+XMLSize_t
+XMLUTF8Transcoder390::transcodeFrom(const  XMLByte* const       srcData
+                                , const XMLSize_t               srcCount
                                 ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
+                                , const XMLSize_t               maxChars
+                                ,       XMLSize_t&              bytesEaten
                                 ,       unsigned char* const    charSizes)
 {
     // Watch for pathological scenario. Shouldn't happen, but...
     if (!srcCount || !maxChars)
         return 0;
-
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxChars);
-    #endif
 
     //
     //  Get pointers to our start and end points of the input and output
@@ -194,7 +189,7 @@ XMLUTF8Transcoder390::transcodeFrom(const  XMLByte* const          srcData
     XMLCh*          outPtr = toFill;
     XMLCh*          outEnd = outPtr + maxChars;
     unsigned char*  sizePtr = charSizes;
-    unsigned int    countDone = (srcCount<maxChars)?srcCount:maxChars;
+    XMLSize_t       countDone = (srcCount<maxChars)?srcCount:maxChars;
     // if this flag is set, a none ASCII character is encountered
     int             flag = 0;
 
@@ -497,12 +492,12 @@ XMLUTF8Transcoder390::transcodeFrom(const  XMLByte* const          srcData
 }
 
 
-unsigned int
-XMLUTF8Transcoder390::transcodeTo( const   XMLCh* const    srcData
-                                , const unsigned int    srcCount
+XMLSize_t
+XMLUTF8Transcoder390::transcodeTo( const   XMLCh* const srcData
+                                , const XMLSize_t       srcCount
                                 ,       XMLByte* const  toFill
-                                , const unsigned int    maxBytes
-                                ,       unsigned int&   charsEaten
+                                , const XMLSize_t       maxBytes
+                                ,       XMLSize_t&      charsEaten
                                 , const UnRepOpts       options)
 {
     // Watch for pathological scenario. Shouldn't happen, but...

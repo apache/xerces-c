@@ -112,22 +112,17 @@ XMLUTF8Transcoder::~XMLUTF8Transcoder()
 // ---------------------------------------------------------------------------
 //  XMLUTF8Transcoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
+XMLSize_t
 XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
-                                , const unsigned int            srcCount
+                                , const XMLSize_t               srcCount
                                 ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
+                                , const XMLSize_t               maxChars
+                                ,       XMLSize_t&              bytesEaten
                                 ,       unsigned char* const    charSizes)
 {
     // Watch for pathological scenario. Shouldn't happen, but...
     if (!srcCount || !maxChars)
         return 0;
-
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxChars);
-    #endif
 
     //
     //  Get pointers to our start and end points of the input and output
@@ -429,12 +424,12 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
 }
 
 
-unsigned int
+XMLSize_t
 XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
-                                , const unsigned int    srcCount
+                                , const XMLSize_t       srcCount
                                 ,       XMLByte* const  toFill
-                                , const unsigned int    maxBytes
-                                ,       unsigned int&   charsEaten
+                                , const XMLSize_t       maxBytes
+                                ,       XMLSize_t&      charsEaten
                                 , const UnRepOpts       options)
 {
     // Watch for pathological scenario. Shouldn't happen, but...

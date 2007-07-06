@@ -48,19 +48,14 @@ XMLUCS4Transcoder::~XMLUCS4Transcoder()
 // ---------------------------------------------------------------------------
 //  XMLUCS4Transcoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
+XMLSize_t
 XMLUCS4Transcoder::transcodeFrom(const  XMLByte* const          srcData
-                                , const unsigned int            srcCount
+                                , const XMLSize_t               srcCount
                                 ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
+                                , const XMLSize_t               maxChars
+                                ,       XMLSize_t&              bytesEaten
                                 ,       unsigned char* const    charSizes)
 {
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxChars);
-    #endif
-
     //
     //  Get pointers to the start and end of the source buffer in terms of
     //  UCS-4 characters.
@@ -143,19 +138,14 @@ XMLUCS4Transcoder::transcodeFrom(const  XMLByte* const          srcData
 }
 
 
-unsigned int
+XMLSize_t
 XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
-                                , const unsigned int    srcCount
+                                , const XMLSize_t       srcCount
                                 ,       XMLByte* const  toFill
-                                , const unsigned int    maxBytes
-                                ,       unsigned int&   charsEaten
+                                , const XMLSize_t       maxBytes
+                                ,       XMLSize_t&      charsEaten
                                 , const UnRepOpts)
 {
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxBytes);
-    #endif
-
     //
     //  Get pointers to the start and end of the source buffer, which
     //  is in terms of XMLCh chars.

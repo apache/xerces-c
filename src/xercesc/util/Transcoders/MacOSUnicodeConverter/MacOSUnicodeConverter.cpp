@@ -528,13 +528,13 @@ MacOSTranscoder::~MacOSTranscoder()
 //  MacOSTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
 
-unsigned int
-MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
-                                , const unsigned int			srcCount
-                                ,       XMLCh* const			toFill
-                                , const unsigned int			maxChars
-                                ,       unsigned int&			bytesEaten
-                                ,       unsigned char* const	charSizes)
+XMLSize_t
+MacOSTranscoder::transcodeFrom(  const  XMLByte* const          srcData
+                                , const XMLSize_t               srcCount
+                                ,       XMLCh* const            toFill
+                                , const XMLSize_t               maxChars
+                                ,       XMLSize_t&              bytesEaten
+                                ,       unsigned char* const    charSizes)
 {
 	//  Reset the tec state (since we don't know that we're part of a
 	//  larger run of text).
@@ -568,12 +568,12 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
 }
 
 
-unsigned int
+XMLSize_t
 MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
-                            , const unsigned int    srcCount
+                            , const XMLSize_t       srcCount
                             ,       XMLByte* const  toFill
-                            , const unsigned int    maxBytes
-                            ,       unsigned int&   charsEaten
+                            , const XMLSize_t       maxBytes
+                            ,       XMLSize_t&      charsEaten
                             , const UnRepOpts       options)
 {
 	//  Reset the tec state (since we don't know that we're part of a

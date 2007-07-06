@@ -44,23 +44,23 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual transcoding interface
     // -----------------------------------------------------------------------
-    virtual unsigned int transcodeFrom
+    virtual XMLSize_t transcodeFrom
     (
         const   XMLByte* const          srcData
-        , const unsigned int            srcCount
+        , const XMLSize_t               srcCount
         ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
+        , const XMLSize_t               maxChars
+        ,       XMLSize_t&              bytesEaten
         ,       unsigned char* const    charSizes
     );
 
-    virtual unsigned int transcodeTo
+    virtual XMLSize_t transcodeTo
     (
         const   XMLCh* const    srcData
-        , const unsigned int    srcCount
+        , const XMLSize_t       srcCount
         ,       XMLByte* const  toFill
-        , const unsigned int    maxBytes
-        ,       unsigned int&   charsEaten
+        , const XMLSize_t       maxBytes
+        ,       XMLSize_t&      charsEaten
         , const UnRepOpts       options
     );
 

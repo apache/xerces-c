@@ -259,13 +259,13 @@ public :
       */
 
 
-    virtual unsigned int transcodeFrom
+    virtual XMLSize_t transcodeFrom
     (
         const   XMLByte* const          srcData
-        , const unsigned int            srcCount
+        , const XMLSize_t               srcCount
         ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
+        , const XMLSize_t               maxChars
+        ,       XMLSize_t&              bytesEaten
         ,       unsigned char* const    charSizes
     ) = 0;
 
@@ -282,13 +282,13 @@ public :
       * @return Returns the number of chars put into the target buffer
       */
 
-    virtual unsigned int transcodeTo
+    virtual XMLSize_t transcodeTo
     (
         const   XMLCh* const    srcData
-        , const unsigned int    srcCount
+        , const XMLSize_t       srcCount
         ,       XMLByte* const  toFill
-        , const unsigned int    maxBytes
-        ,       unsigned int&   charsEaten
+        , const XMLSize_t       maxBytes
+        ,       XMLSize_t&      charsEaten
         , const UnRepOpts       options
     ) = 0;
 
@@ -350,11 +350,6 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected helper methods
     // -----------------------------------------------------------------------
-    // As the body of this function is commented out it could be removed.
-    // However, currently all calls to it are guarded by #if defined(XERCES_DEBUG)
-    // so will leave it for now.
-    void checkBlockSize(const unsigned int toCheck);
-
 
 private :
     // -----------------------------------------------------------------------

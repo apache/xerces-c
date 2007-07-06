@@ -49,23 +49,19 @@ XML256TableTranscoder390::~XML256TableTranscoder390()
 // ---------------------------------------------------------------------------
 //  XML256TableTranscoder390: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
-XML256TableTranscoder390::transcodeFrom(const  XMLByte* const       srcData
-                                    , const unsigned int         srcCount
+XMLSize_t
+XML256TableTranscoder390::transcodeFrom(const  XMLByte* const    srcData
+                                    , const XMLSize_t            srcCount
                                     ,       XMLCh* const         toFill
-                                    , const unsigned int         maxChars
-                                    ,       unsigned int&        bytesEaten
+                                    , const XMLSize_t            maxChars
+                                    ,       XMLSize_t&           bytesEaten
                                     ,       unsigned char* const charSizes)
 {
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxChars);
-    #endif
     //
     //  Calculate the max chars we can do here. Its the lesser of the
     //  max output chars and the number of chars in the source.
     //
-    const unsigned int countToDo = srcCount < maxChars ? srcCount : maxChars;
+    const XMLSize_t countToDo = srcCount < maxChars ? srcCount : maxChars;
 
     //
     //  Loop through the count we have to do and map each char via the
@@ -89,24 +85,19 @@ XML256TableTranscoder390::transcodeFrom(const  XMLByte* const       srcData
 }
 
 
-unsigned int
-XML256TableTranscoder390::transcodeTo( const   XMLCh* const    srcData
-                                    , const unsigned int    srcCount
+XMLSize_t
+XML256TableTranscoder390::transcodeTo( const   XMLCh* const srcData
+                                    , const XMLSize_t       srcCount
                                     ,       XMLByte* const  toFill
-                                    , const unsigned int    maxBytes
-                                    ,       unsigned int&   charsEaten
+                                    , const XMLSize_t       maxBytes
+                                    ,       XMLSize_t&      charsEaten
                                     , const UnRepOpts       options)
 {
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxBytes);
-    #endif
-
     //
     //  Calculate the max chars we can do here. Its the lesser of the
     //  max output chars and the number of chars in the source.
     //
-    const unsigned int countToDo = srcCount < maxBytes ? srcCount : maxBytes;
+    const XMLSize_t countToDo = srcCount < maxBytes ? srcCount : maxBytes;
 
     //
     //  Loop through the count we have to do and map each char via the

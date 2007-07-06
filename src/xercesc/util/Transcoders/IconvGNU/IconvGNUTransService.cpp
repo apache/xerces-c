@@ -980,13 +980,13 @@ IconvGNUTranscoder::~IconvGNUTranscoder()
 // ---------------------------------------------------------------------------
 //  IconvGNUTranscoder: Implementation of the virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int    IconvGNUTranscoder::transcodeFrom
+XMLSize_t    IconvGNUTranscoder::transcodeFrom
 (
     const   XMLByte* const          srcData
-    , const unsigned int            srcCount
+    , const XMLSize_t               srcCount
     ,       XMLCh* const            toFill
-    , const unsigned int            maxChars
-    ,       unsigned int&           bytesEaten
+    , const XMLSize_t               maxChars
+    ,       XMLSize_t&              bytesEaten
     ,       unsigned char* const    charSizes )
 {
     // Transcode TO XMLCh
@@ -1033,13 +1033,13 @@ unsigned int    IconvGNUTranscoder::transcodeFrom
     return toReturn;
 }
 
-unsigned int    IconvGNUTranscoder::transcodeTo
+XMLSize_t    IconvGNUTranscoder::transcodeTo
 (
-    const   XMLCh* const    srcData
-    , const unsigned int    srcCount
-    ,       XMLByte* const    toFill
-    , const unsigned int    maxBytes
-    ,       unsigned int&    charsEaten
+    const   XMLCh* const     srcData
+    , const XMLSize_t        srcCount
+    ,       XMLByte* const   toFill
+    , const XMLSize_t        maxBytes
+    ,       XMLSize_t&       charsEaten
     , const UnRepOpts        options )
 {
     // Transcode FROM XMLCh

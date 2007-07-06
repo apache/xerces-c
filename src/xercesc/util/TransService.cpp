@@ -543,11 +543,6 @@ XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
 // ---------------------------------------------------------------------------
 //  XMLTranscoder: Protected helpers
 // ---------------------------------------------------------------------------
-void XMLTranscoder::checkBlockSize(const unsigned int)
-{
-//    if (toCheck > fBlockSize)
-//        ThrowXML(TranscodingException, XMLExcepts::Trans_BadBlockSize);
-}
 
 
 // ---------------------------------------------------------------------------

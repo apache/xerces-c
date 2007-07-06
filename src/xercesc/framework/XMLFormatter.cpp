@@ -502,13 +502,13 @@ XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr,
                                              ? XMLTranscoder::UnRep_RepChar
                                              : XMLTranscoder::UnRep_Throw;
                                              	
-   unsigned int charsEaten; 
+   XMLSize_t charsEaten; 
    unsigned int count = oCount; 
  
    while (count) { 
-      const unsigned srcChars = (count > kTmpBufSize) ? (int)kTmpBufSize : count; 
+      const XMLSize_t srcChars = (count > kTmpBufSize) ? (int)kTmpBufSize : count; 
  
-      const unsigned int outBytes  
+      const XMLSize_t outBytes  
          = fXCoder->transcodeTo(srcPtr, srcChars,  
                                 fTmpBuf, kTmpBufSize, 
                                 charsEaten, unRepOpts); 
@@ -608,8 +608,8 @@ const XMLByte* XMLFormatter::getCharRef(unsigned int & count,
 {
    if (!ref) { 
 
-       unsigned int charsEaten;
-       const unsigned int outBytes = 
+       XMLSize_t charsEaten;
+       const XMLSize_t outBytes = 
            fXCoder->transcodeTo(stdRef, XMLString::stringLen(stdRef), 
                                 fTmpBuf, kTmpBufSize, charsEaten, 
                                 XMLTranscoder::UnRep_Throw); 

@@ -45,25 +45,20 @@ XMLChTranscoder::~XMLChTranscoder()
 // ---------------------------------------------------------------------------
 //  XMLChTranscoder: Implementation of the transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
+XMLSize_t
 XMLChTranscoder::transcodeFrom( const   XMLByte* const          srcData
-                                , const unsigned int            srcCount
+                                , const XMLSize_t               srcCount
                                 ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten
+                                , const XMLSize_t               maxChars
+                                ,       XMLSize_t&              bytesEaten
                                 ,       unsigned char* const    charSizes)
 {
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxChars);
-    #endif
-
     //
     //  Calculate the max chars we can do here. Its the lesser of the
     //  max output chars and the number of chars in the source.
     //
-    const unsigned int srcChars = srcCount / sizeof(XMLCh);
-    const unsigned int countToDo = srcChars < maxChars ? srcChars : maxChars;
+    const XMLSize_t srcChars = srcCount / sizeof(XMLCh);
+    const XMLSize_t countToDo = srcChars < maxChars ? srcChars : maxChars;
 
     //
     //  Copy over the count of chars that we precalculated. Notice we
@@ -82,27 +77,21 @@ XMLChTranscoder::transcodeFrom( const   XMLByte* const          srcData
 }
 
 
-unsigned int
+XMLSize_t
 XMLChTranscoder::transcodeTo(const  XMLCh* const    srcData
-                            , const unsigned int    srcCount
+                            , const XMLSize_t       srcCount
                             ,       XMLByte* const  toFill
-                            , const unsigned int    maxBytes
-                            ,       unsigned int&   charsEaten
+                            , const XMLSize_t       maxBytes
+                            ,       XMLSize_t&      charsEaten
                                 , const UnRepOpts)
 {
-    // If debugging, make sure that the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxBytes);
-    #endif
-
-
     //
     //  Calculate the max chars we can do here. Its the lesser of the
     //  max chars we can store in the output byte buffer, and the number
     //  of chars in the source.
     //
-    const unsigned int maxOutChars  = maxBytes / sizeof(XMLCh);
-    const unsigned int countToDo    = maxOutChars < srcCount
+    const XMLSize_t maxOutChars  = maxBytes / sizeof(XMLCh);
+    const XMLSize_t countToDo    = maxOutChars < srcCount
                                     ? maxOutChars : srcCount;
 
     //
