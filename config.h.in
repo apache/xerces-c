@@ -292,11 +292,17 @@
 /* The size of `long', as computed by sizeof. */
 #undef SIZEOF_LONG
 
+/* The size of `long long', as computed by sizeof. */
+#undef SIZEOF_LONG_LONG
+
 /* The size of `short', as computed by sizeof. */
 #undef SIZEOF_SHORT
 
 /* The size of `wchar_t', as computed by sizeof. */
 #undef SIZEOF_WCHAR_T
+
+/* The size of `__int64', as computed by sizeof. */
+#undef SIZEOF___INT64
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
@@ -360,6 +366,9 @@
 
 /* An appropriate unsigned 32 bit integer type */
 #undef XERCES_U32BIT_INT
+
+/* An appropriate unsigned 64 bit integer type */
+#undef XERCES_U64BIT_INT
 
 /* Define to use the MacOS AtomicOp mgr */
 #undef XERCES_USE_ATOMICOPMGR_MACOS

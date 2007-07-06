@@ -53,6 +53,7 @@
 #undef XERCES_S32BIT_INT
 #undef XERCES_U16BIT_INT
 #undef XERCES_U32BIT_INT
+#undef XERCES_U64BIT_INT
 #undef XERCES_XMLCH_T
 #undef XERCES_SIZE_T
 #undef XERCES_SSIZE_T
@@ -104,7 +105,7 @@ typedef XERCES_S32BIT_INT			XMLInt32;
 // ---------------------------------------------------------------------------
 //  XMLFilePos is the type used to represent a file position.
 // ---------------------------------------------------------------------------
-typedef XERCES_U32BIT_INT			XMLFilePos;
+typedef XERCES_U64BIT_INT			XMLFilePos;
 
 
 // ---------------------------------------------------------------------------
