@@ -143,7 +143,7 @@ CurlURLInputStream::writeCallback(char *buffer,
 
 XMLSize_t
 CurlURLInputStream::readBytes(XMLByte* const          toFill
-                                     , constXMLSize_t maxToRead)
+                                     , const XMLSize_t maxToRead)
 {
 	fBytesRead = 0;
 	fBytesToRead = maxToRead;
