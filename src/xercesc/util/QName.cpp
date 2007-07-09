@@ -171,7 +171,7 @@ const XMLCh* QName::getRawName() const
             //  might be a little wasteful of memory but we don't have to do
             //  string len operations on the two strings.
             //
-            const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
+            const XMLSize_t neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
 
             //
             //  If no buffer, or the current one is too small, then allocate one
@@ -193,7 +193,7 @@ const XMLCh* QName::getRawName() const
                 *fRawName = 0;
             }
 
-            const unsigned int prefixLen = XMLString::stringLen(fPrefix);
+            const XMLSize_t prefixLen = XMLString::stringLen(fPrefix);
 
             XMLString::moveChars(fRawName, fPrefix, prefixLen);
             fRawName[prefixLen] = chColon;
@@ -227,7 +227,7 @@ XMLCh* QName::getRawName()
             //  might be a little wasteful of memory but we don't have to do
             //  string len operations on the two strings.
             //
-            const unsigned int neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
+            const XMLSize_t neededLen = fPrefixBufSz + fLocalPartBufSz + 1;
 
             //
             //  If no buffer, or the current one is too small, then allocate one
@@ -250,7 +250,7 @@ XMLCh* QName::getRawName()
             }
 
 
-            const unsigned int prefixLen = XMLString::stringLen(fPrefix);
+            const XMLSize_t prefixLen = XMLString::stringLen(fPrefix);
 
             XMLString::moveChars(fRawName, fPrefix, prefixLen);
             fRawName[prefixLen] = chColon;
@@ -414,11 +414,11 @@ void QName::serialize(XSerializeEngine& serEng)
     }
     else
     {
-        int dataLen = 0;
+        XMLSize_t dataLen = 0;
 
-        serEng.readString(fPrefix, (int&)fPrefixBufSz, dataLen, XSerializeEngine::toReadBufferLen);
+        serEng.readString(fPrefix, fPrefixBufSz, dataLen, XSerializeEngine::toReadBufferLen);
 
-        serEng.readString(fLocalPart, (int&)fLocalPartBufSz, dataLen, XSerializeEngine::toReadBufferLen);
+        serEng.readString(fLocalPart, fLocalPartBufSz, dataLen, XSerializeEngine::toReadBufferLen);
 
         //force raw name rebuilt
         fRawNameBufSz = 0;        

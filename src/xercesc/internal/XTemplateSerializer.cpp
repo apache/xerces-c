@@ -263,10 +263,10 @@ void XTemplateSerializer::storeObject(ValueVectorOf<SchemaElementDecl*>* const o
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorSize = objToStore->size();
+        unsigned int vectorSize = objToStore->size();
         serEng<<vectorSize;
 
-        for ( int i = 0; i < vectorSize; i++)
+        for ( unsigned int i = 0; i < vectorSize; i++)
         {            
             SchemaElementDecl*& data = objToStore->elementAt(i);
             serEng<<data;
@@ -297,10 +297,10 @@ void XTemplateSerializer::loadObject(ValueVectorOf<SchemaElementDecl*>**       o
 
         serEng.registerObject(*objToLoad);
 
-        int vectorSize = 0;
+        unsigned int vectorSize = 0;
         serEng>>vectorSize;
 
-        for ( int i = 0; i < vectorSize; i++)
+        for ( unsigned int i = 0; i < vectorSize; i++)
         {
             SchemaElementDecl* data;
             serEng>>data;
@@ -315,10 +315,10 @@ void XTemplateSerializer::storeObject(ValueVectorOf<unsigned int>* const objToSt
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorSize = objToStore->size();
+        unsigned int vectorSize = objToStore->size();
         serEng<<vectorSize;
 
-        for ( int i = 0; i < vectorSize; i++)
+        for ( unsigned int i = 0; i < vectorSize; i++)
         {            
             unsigned int& data = objToStore->elementAt(i);
             serEng<<data;
@@ -349,10 +349,10 @@ void XTemplateSerializer::loadObject(ValueVectorOf<unsigned int>**       objToLo
 
         serEng.registerObject(*objToLoad);
 
-        int vectorSize = 0;
+        unsigned int vectorSize = 0;
         serEng>>vectorSize;
 
-        for ( int i = 0; i < vectorSize; i++)
+        for ( unsigned int i = 0; i < vectorSize; i++)
         {
             unsigned int data;
             serEng>>data;
@@ -376,10 +376,10 @@ void XTemplateSerializer::storeObject(RefArrayVectorOf<XMLCh>* const objToStore
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorSize = objToStore->size();
+        unsigned int vectorSize = objToStore->size();
         serEng<<vectorSize;
 
-        for ( int i = 0; i < vectorSize; i++)
+        for ( unsigned int i = 0; i < vectorSize; i++)
         {            
             serEng.writeString(objToStore->elementAt(i));
         }
@@ -410,10 +410,10 @@ void XTemplateSerializer::loadObject(RefArrayVectorOf<XMLCh>**  objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorSize = 0;
+        unsigned int vectorSize = 0;
         serEng>>vectorSize;
 
-        for ( int i = 0; i < vectorSize; i++)
+        for ( unsigned int i = 0; i < vectorSize; i++)
         {
             XMLCh* data;
             serEng.readString(data);
@@ -446,10 +446,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<SchemaAttDef>* const objToStor
     if (serEng.needToStoreObject(objToStore))
     {
 
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             SchemaAttDef* data = objToStore->elementAt(i);
             serEng<<data;
@@ -483,9 +483,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<SchemaAttDef>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             SchemaAttDef* data;
             serEng>>data;
@@ -503,10 +503,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<SchemaElementDecl>* const objT
     if (serEng.needToStoreObject(objToStore))
     {
 
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             SchemaElementDecl* data = objToStore->elementAt(i);
             serEng<<data;
@@ -539,9 +539,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<SchemaElementDecl>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             SchemaElementDecl* data;
             serEng>>data;
@@ -557,10 +557,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<ContentSpecNode>* const objToS
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             ContentSpecNode* data = objToStore->elementAt(i);
             serEng<<data;
@@ -592,9 +592,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<ContentSpecNode>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             ContentSpecNode* data;
             serEng>>data;
@@ -610,10 +610,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<IC_Field>* const objToStore
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             IC_Field* data = objToStore->elementAt(i);
             serEng<<data;
@@ -645,9 +645,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<IC_Field>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             IC_Field* data;
             serEng>>data;
@@ -663,10 +663,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<DatatypeValidator>* const objT
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             DatatypeValidator* data = objToStore->elementAt(i);
             DatatypeValidator::storeDV(serEng, data);
@@ -698,9 +698,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<DatatypeValidator>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             DatatypeValidator*  data;
             data = DatatypeValidator::loadDV(serEng);
@@ -716,10 +716,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<IdentityConstraint>* const obj
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             IdentityConstraint* data = objToStore->elementAt(i);
             IdentityConstraint::storeIC(serEng, data);
@@ -751,9 +751,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<IdentityConstraint>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             IdentityConstraint*  data;
             data = IdentityConstraint::loadIC(serEng);
@@ -769,10 +769,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<XMLNumber>* const objToStore
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             XMLNumber* data = objToStore->elementAt(i);
             serEng<<data;
@@ -805,9 +805,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<XMLNumber>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             XMLNumber*  data;
             data = XMLNumber::loadNumber(numType , serEng);
@@ -823,10 +823,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<XercesLocationPath>* const obj
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             XercesLocationPath* data = objToStore->elementAt(i);
             serEng<<data;
@@ -858,9 +858,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesLocationPath>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             XercesLocationPath*  data;
             serEng>>data;
@@ -876,10 +876,10 @@ void XTemplateSerializer::storeObject(RefVectorOf<XercesStep>* const objToStore
 
     if (serEng.needToStoreObject(objToStore))
     {
-        int vectorLength = objToStore->size();
+        unsigned int vectorLength = objToStore->size();
         serEng<<vectorLength;
 
-        for ( int i = 0; i < vectorLength; i++)
+        for ( unsigned int i = 0; i < vectorLength; i++)
         {
             XercesStep* data = objToStore->elementAt(i);
             serEng<<data;
@@ -911,9 +911,9 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesStep>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int vectorLength = 0;
+        unsigned int vectorLength = 0;
         serEng>>vectorLength;
-        for ( int i = 0 ; i < vectorLength; i++)
+        for ( unsigned int i = 0 ; i < vectorLength; i++)
         {            
             XercesStep*  data;
             serEng>>data;
@@ -925,7 +925,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesStep>** objToLoad
 
 /**********************************************************
  *
- * RefHasbTableOf
+ * RefHashTableOf
  *
  *   KVStringPair
  *   XMLAttDef
@@ -948,7 +948,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<KVStringPair> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -964,7 +964,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1004,10 +1004,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<KVStringPair>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             KVStringPair*  data;
             serEng>>data;
@@ -1026,7 +1026,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XMLAttDef> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1042,7 +1042,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1083,10 +1083,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLAttDef>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             //This is used solely by SchemaGrammar and by all means it must be
             //SchemaAttDef, ideally we may change it to RefHashTableOf<SchemaAttDef>
@@ -1111,7 +1111,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<DTDAttDef> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1127,7 +1127,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1168,10 +1168,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DTDAttDef>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             DTDAttDef*  data;
             serEng>>data;
@@ -1191,7 +1191,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<ComplexTypeInfo> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1207,7 +1207,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1248,10 +1248,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<ComplexTypeInfo>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             ComplexTypeInfo*  data;
             serEng>>data;
@@ -1271,7 +1271,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XercesGroupInfo> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1287,7 +1287,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1349,10 +1349,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesGroupInfo>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             unsigned int id;
             serEng>>id;
@@ -1377,7 +1377,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XercesAttGroupInfo> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1393,7 +1393,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1434,15 +1434,15 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesAttGroupInfo>** objToL
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             XercesAttGroupInfo*  data;
             serEng>>data;
 
-           XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(data->getNameId());          
+            XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(data->getNameId());          
             (*objToLoad)->put((void*)key, data);
         }
     }
@@ -1458,7 +1458,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XMLRefInfo> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1474,7 +1474,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1520,10 +1520,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLRefInfo>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             XMLCh*      key;
             serEng.readString(key);
@@ -1546,7 +1546,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<DatatypeValidator> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1562,7 +1562,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1611,10 +1611,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {           
             DatatypeValidator*  data;
             data = DatatypeValidator::loadDV(serEng);
@@ -1660,7 +1660,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<Grammar> e(objToStore, false, objToStore->getMemoryManager());
-        int itemNumber = 0;        
+        unsigned int itemNumber = 0;        
 
         while (e.hasMoreElements())
         {
@@ -1676,7 +1676,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
         SORT_KEYSET_ONEKEY(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1718,10 +1718,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {
             Grammar*  data;
             data = Grammar::loadGrammar(serEng);
@@ -1746,7 +1746,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
 
 #ifdef XERCES_DEBUG_SORT_GRAMMAR
         //get the total item number
-        int   itemNumber = 0;
+        unsigned int   itemNumber = 0;
         while (e.hasMoreElements())
         {
             void* key = e.nextElementKey();
@@ -1780,7 +1780,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
         sortArray.sort();
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1806,10 +1806,10 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
             }
         }
 
-        int itemNumber = ids.size();
+        unsigned int itemNumber = ids.size();
         serEng<<itemNumber;
 
-        for (int i=0; i<itemNumber; i++)
+        for (unsigned int i=0; i<itemNumber; i++)
         {
             XSerializeEngine::XSerializedObjectId_t keyId = ids.elementAt(i);
             XSAnnotation* data = objToStore->get(keys.elementAt(i));
@@ -1844,10 +1844,10 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        int itemIndex;
+        unsigned int itemIndex;
         XSerializeEngine::XSerializedObjectId_t keyId;
         void* key;
         XSAnnotation*  data;
@@ -1889,7 +1889,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
 
         serEng<<objToStore->getHashModulus();
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
 
         RefHash2KeysTableOfEnumerator<SchemaAttDef> e(objToStore, false, objToStore->getMemoryManager());
 
@@ -1907,7 +1907,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
         SORT_KEYSET_TWOKEYS(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -1956,10 +1956,10 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<SchemaAttDef>** objToLo
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {               
             SchemaAttDef*  data;
             serEng>>data;
@@ -1984,7 +1984,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
 
         serEng<<objToStore->getHashModulus();
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
 
         RefHash2KeysTableOfEnumerator<ElemVector> e(objToStore, false, objToStore->getMemoryManager());
 
@@ -2003,7 +2003,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
         SORT_KEYSET_TWOKEYS(serEng.getMemoryManager())
 
         //to store the data
-        for (int i=0; i < itemNumber; i++)
+        for (unsigned int i=0; i < itemNumber; i++)
         {
             GET_NEXT_KEYSET()
 
@@ -2057,10 +2057,10 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {               
             XMLCh*      key1;
             serEng.readString(key1);
@@ -2082,8 +2082,8 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
             
             // bool FOUND=false;
 
-            int vectorSize = data->size();
-            for ( int i = 0; i < vectorSize; i++)
+            unsigned int vectorSize = data->size();
+            for ( unsigned int i = 0; i < vectorSize; i++)
             {            
                 SchemaElementDecl*& elem   = data->elementAt(i);
                 SchemaElementDecl*  subElem = elem->getSubstitutionGroupElem();
@@ -2176,12 +2176,12 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
         int scopeKey;
         SchemaElementDecl*  elemDecl;
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {                                                   
             serEng>>scopeKey;
             serEng>>elemDecl;
@@ -2249,10 +2249,10 @@ void XTemplateSerializer::loadObject(NameIdPool<DTDElementDecl>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {               
             DTDElementDecl*  data = new (serEng.getMemoryManager())
                                     DTDElementDecl(serEng.getMemoryManager());
@@ -2306,10 +2306,10 @@ void XTemplateSerializer::loadObject(NameIdPool<DTDEntityDecl>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {               
             DTDEntityDecl*  data = new (serEng.getMemoryManager()) 
                                    DTDEntityDecl(serEng.getMemoryManager());
@@ -2363,10 +2363,10 @@ void XTemplateSerializer::loadObject(NameIdPool<XMLNotationDecl>** objToLoad
 
         serEng.registerObject(*objToLoad);
 
-        int itemNumber = 0;
+        unsigned int itemNumber = 0;
         serEng>>itemNumber;
 
-        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
         {               
             XMLNotationDecl*  data = new (serEng.getMemoryManager()) 
                                      XMLNotationDecl(serEng.getMemoryManager());

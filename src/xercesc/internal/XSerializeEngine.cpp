@@ -95,7 +95,7 @@ XSerializeEngine::~XSerializeEngine()
 
 XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
                                  , XMLGrammarPool* const   gramPool
-                                 , unsigned long           bufSize)
+                                 , XMLSize_t               bufSize)
 :fStoreLoad(mode_Load)
 ,fStorerLevel(0)
 ,fGrammarPool(gramPool)
@@ -120,7 +120,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
 
 XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
                                  , XMLGrammarPool* const   gramPool
-                                 , unsigned long           bufSize)
+                                 , XMLSize_t               bufSize)
 :fStoreLoad(mode_Store)
 ,fStorerLevel(0)
 ,fGrammarPool(gramPool)
@@ -210,18 +210,17 @@ void XSerializeEngine::write(XProtoType* const protoType)
  *
 ***/ 
 void XSerializeEngine::write(const XMLCh* const toWrite
-                           ,       int          writeLen)
+                           ,       XMLSize_t    writeLen)
 {
     write((XMLByte*)toWrite, (sizeof(XMLCh)/sizeof(XMLByte)) * writeLen);
 }
 
 
 void XSerializeEngine::write(const XMLByte* const toWrite
-                           ,       int            writeLen)
+                           ,       XMLSize_t      writeLen)
 {
     ensureStoring();
     ensurePointer((void*)toWrite);
-    ensureBufferLen(writeLen);
     ensureStoreBuffer();
 
     if (writeLen == 0)
@@ -230,7 +229,7 @@ void XSerializeEngine::write(const XMLByte* const toWrite
     /***
      *  If the available space is sufficient, write it up
      ***/
-    int bufAvail = fBufEnd - fBufCur;
+    XMLSize_t bufAvail = fBufEnd - fBufCur;
 
     if (writeLen <= bufAvail)
     {
@@ -240,7 +239,7 @@ void XSerializeEngine::write(const XMLByte* const toWrite
     }
 
     const XMLByte*  tempWrite   = (const XMLByte*) toWrite;
-    unsigned int    writeRemain = writeLen;
+    XMLSize_t       writeRemain = writeLen;
 
     // fill up the avaiable space and flush
     memcpy(fBufCur, tempWrite, bufAvail);
@@ -283,7 +282,7 @@ void XSerializeEngine::write(const XMLByte* const toWrite
  */
 
 void XSerializeEngine::writeString(const XMLCh* const toWrite
-                                 , const int          bufferLen
+                                 , const XMLSize_t    bufferLen
                                  , bool               toWriteBufLen)
 {
     if (toWrite) 
@@ -291,7 +290,7 @@ void XSerializeEngine::writeString(const XMLCh* const toWrite
         if (toWriteBufLen)
             *this<<bufferLen;
 
-        int strLen = XMLString::stringLen(toWrite);
+        XMLSize_t strLen = XMLString::stringLen(toWrite);
         *this<<strLen;
 
         write(toWrite, strLen);
@@ -304,7 +303,7 @@ void XSerializeEngine::writeString(const XMLCh* const toWrite
 }
 
 void XSerializeEngine::writeString(const XMLByte* const toWrite
-                                 , const int            bufferLen
+                                 , const XMLSize_t      bufferLen
                                  , bool                 toWriteBufLen)
 {
 
@@ -313,7 +312,7 @@ void XSerializeEngine::writeString(const XMLByte* const toWrite
         if (toWriteBufLen)
             *this<<bufferLen;
 
-        int strLen = XMLString::stringLen((char*)toWrite);
+        XMLSize_t strLen = XMLString::stringLen((char*)toWrite);
         *this<<strLen;
         write(toWrite, strLen);
     }
@@ -404,16 +403,15 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
 }
 
 void XSerializeEngine::read(XMLCh* const toRead
-                          , int          readLen)
+                          , XMLSize_t    readLen)
 {
     read((XMLByte*)toRead, (sizeof(XMLCh)/sizeof(XMLByte))*readLen);
 }
 
 void XSerializeEngine::read(XMLByte* const toRead
-                          , int            readLen)
+                          , XMLSize_t      readLen)
 {
     ensureLoading();
-    ensureBufferLen(readLen);
     ensurePointer(toRead);
     ensureLoadBuffer();
 
@@ -423,7 +421,7 @@ void XSerializeEngine::read(XMLByte* const toRead
     /***
      *  If unread is sufficient, read it up
      ***/
-    int dataAvail = fBufLoadMax - fBufCur;
+    XMLSize_t dataAvail = fBufLoadMax - fBufCur;
 
     if (readLen <= dataAvail)
     {
@@ -441,7 +439,7 @@ void XSerializeEngine::read(XMLByte* const toRead
      *
      ***/
     XMLByte*     tempRead   = (XMLByte*) toRead;
-    unsigned int readRemain = readLen;
+    XMLSize_t    readRemain = readLen;
 
     // read the unread
     memcpy(tempRead, fBufCur, dataAvail);
@@ -482,10 +480,10 @@ void XSerializeEngine::read(XMLByte* const toRead
  *     only integer:   noDataFollowed
  *     >
  */
-void XSerializeEngine::readString(XMLCh*&  toRead
-                                , int&     bufferLen
-                                , int&     dataLen
-                                , bool     toReadBufLen)
+void XSerializeEngine::readString(XMLCh*&       toRead
+                                , XMLSize_t&    bufferLen
+                                , XMLSize_t&    dataLen
+                                , bool          toReadBufLen)
 {
     /***
      * Check if any data written
@@ -514,10 +512,10 @@ void XSerializeEngine::readString(XMLCh*&  toRead
     toRead[dataLen] = 0;
 }
 
-void XSerializeEngine::readString(XMLByte*&  toRead
-                                , int&       bufferLen
-                                , int&       dataLen
-                                , bool       toReadBufLen)
+void XSerializeEngine::readString(XMLByte*&     toRead
+                                , XMLSize_t&    bufferLen
+                                , XMLSize_t&    dataLen
+                                , bool          toReadBufLen)
 {
     /***
      * Check if any data written
@@ -850,13 +848,13 @@ void XSerializeEngine::fillBuffer()
      * InputStream MUST fill in the exact amount of bytes as requested
      * to do: combine the checking and create a new exception code later
      ***/
-    TEST_THROW_ARG2( (bytesRead < (int)fBufSize)
+    TEST_THROW_ARG2( (bytesRead < fBufSize)
                , bytesRead
                , fBufSize
                , XMLExcepts::XSer_InStream_Read_LT_Req
                )
 
-    TEST_THROW_ARG2( (bytesRead > (int)fBufSize)
+    TEST_THROW_ARG2( (bytesRead > fBufSize)
                , bytesRead
                , fBufSize
                , XMLExcepts::XSer_InStream_Read_OverFlow
@@ -890,7 +888,7 @@ void XSerializeEngine::flushBuffer()
     fBufCount++;
 }
 
-inline void XSerializeEngine::checkAndFlushBuffer(int bytesNeedToWrite)
+inline void XSerializeEngine::checkAndFlushBuffer(XMLSize_t bytesNeedToWrite)
 {
     TEST_THROW_ARG1( (bytesNeedToWrite <= 0)
                    , bytesNeedToWrite
@@ -902,7 +900,7 @@ inline void XSerializeEngine::checkAndFlushBuffer(int bytesNeedToWrite)
         flushBuffer();
 }
 
-inline void XSerializeEngine::checkAndFillBuffer(int bytesNeedToRead)
+inline void XSerializeEngine::checkAndFillBuffer(XMLSize_t bytesNeedToRead)
 {
 
     TEST_THROW_ARG1( (bytesNeedToRead <= 0)
@@ -922,8 +920,8 @@ inline void XSerializeEngine::ensureStoreBuffer() const
 {
 
     TEST_THROW_ARG2 ( !((fBufStart <= fBufCur) && (fBufCur <= fBufEnd))
-                    , (int)(fBufCur - fBufStart)
-                    , (int)(fBufEnd - fBufCur)
+                    , (fBufCur - fBufStart)
+                    , (fBufEnd - fBufCur)
                     , XMLExcepts::XSer_StoreBuffer_Violation
                     )
 
@@ -933,8 +931,8 @@ inline void XSerializeEngine::ensureLoadBuffer() const
 {
 
     TEST_THROW_ARG2 ( !((fBufStart <= fBufCur) && (fBufCur <= fBufLoadMax))
-                    , (int)(fBufCur - fBufStart)
-                    , (int)(fBufLoadMax - fBufCur)
+                    , (fBufCur - fBufStart)
+                    , (fBufLoadMax - fBufCur)
                     , XMLExcepts::XSer_LoadBuffer_Violation
                     )
 
@@ -946,16 +944,6 @@ inline void XSerializeEngine::ensurePointer(void* const ptr) const
     TEST_THROW_ARG1( (ptr == 0)
                    , 0
                    , XMLExcepts::XSer_Inv_Null_Pointer
-                   )
-
-}
-
-inline void XSerializeEngine::ensureBufferLen(int bufferLen) const
-{
-
-    TEST_THROW_ARG1( (bufferLen < 0)
-                   , bufferLen
-                   , XMLExcepts::XSer_Inv_Buffer_Len
                    )
 
 }

@@ -797,7 +797,7 @@ void XMLDateTime::parseDuration()
     int endDate = indexOf(fStart, fEnd, DATETIME_SEPARATOR);
     if ( endDate == NOT_FOUND )
     {
-        endDate = fEnd;  // 'T' absent
+        endDate = (int)fEnd;  // 'T' absent
     }
 
     //find 'Y'
@@ -1007,7 +1007,7 @@ void XMLDateTime::getTime()
     int sign = findUTCSign(fStart);
 
     //parse miliseconds
-    int milisec = (fBuffer[fStart] == MILISECOND_SEPARATOR)? fStart : NOT_FOUND;
+    int milisec = (fBuffer[fStart] == MILISECOND_SEPARATOR)? (int)fStart : NOT_FOUND;
     if ( milisec != NOT_FOUND )
     {
         fStart++;   // skip the '.'
@@ -1065,7 +1065,7 @@ void XMLDateTime::getYearMonth()
         //"Imcomplete YearMonth Format";
 
     // skip the first leading '-'
-    int start = ( fBuffer[0] == chDash ) ? fStart + 1 : fStart;
+    XMLSize_t start = ( fBuffer[0] == chDash ) ? fStart + 1 : fStart;
 
     //
     // search for year separator '-'
@@ -1124,7 +1124,7 @@ void XMLDateTime::parseTimeZone()
 // Note: Assuming fStart points to the beginning of TimeZone section
 //       fStart updated to meet fEnd
 //
-void XMLDateTime::getTimeZone(const int sign)
+void XMLDateTime::getTimeZone(const XMLSize_t sign)
 {
 
     if ( fBuffer[sign] == UTC_STD_CHAR )
@@ -1349,25 +1349,25 @@ void XMLDateTime::validateDateTime() const
 // -----------------------------------------------------------------------
 // locator and converter
 // -----------------------------------------------------------------------
-int XMLDateTime::indexOf(const int start, const int end, const XMLCh ch) const
+int XMLDateTime::indexOf(const XMLSize_t start, const XMLSize_t end, const XMLCh ch) const
 {
-    for ( int i = start; i < end; i++ )
+    for ( XMLSize_t i = start; i < end; i++ )
         if ( fBuffer[i] == ch )
-            return i;
+            return (int)i;
 
     return NOT_FOUND;
 }
 
-int XMLDateTime::findUTCSign (const int start)
+int XMLDateTime::findUTCSign (const XMLSize_t start)
 {
     int  pos;
-    for ( int index = start; index < fEnd; index++ )
+    for ( XMLSize_t index = start; index < fEnd; index++ )
     {
         pos = XMLString::indexOf(UTC_SET, fBuffer[index]);
         if ( pos != NOT_FOUND)
         {
             fValue[utc] = pos+1;   // refer to utcType, there is 1 diff
-            return index;
+            return (int)index;
         }
     }
 
@@ -1380,10 +1380,10 @@ int XMLDateTime::findUTCSign (const int start)
 //    end:   ending point in fBuffer (exclusive)
 //    fStart NOT updated
 //
-int XMLDateTime::parseInt(const int start, const int end) const
+int XMLDateTime::parseInt(const XMLSize_t start, const XMLSize_t end) const
 {
     unsigned int retVal = 0;
-    for (int i=start; i < end; i++) {
+    for (XMLSize_t i=start; i < end; i++) {
 
         if (fBuffer[i] < chDigit_0 || fBuffer[i] > chDigit_9)
             ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, fMemoryManager);
@@ -1400,12 +1400,12 @@ int XMLDateTime::parseInt(const int start, const int end) const
 //    end:   pointing to one position after the last digit
 //    fStart NOT updated
 //
-double XMLDateTime::parseMiliSecond(const int start, const int end) const
+double XMLDateTime::parseMiliSecond(const XMLSize_t start, const XMLSize_t end) const
 {
     double div = 10;
     double retval = 0;
     
-    for (int i=start; i < end; i++) {
+    for (XMLSize_t i=start; i < end; i++) {
 
         if (fBuffer[i] < chDigit_0 || fBuffer[i] > chDigit_9)
             ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, fMemoryManager);
@@ -1426,12 +1426,12 @@ double XMLDateTime::parseMiliSecond(const int start, const int end) const
 //       end (exclusive)
 //       fStart NOT updated
 //
-int XMLDateTime::parseIntYear(const int end) const
+int XMLDateTime::parseIntYear(const XMLSize_t end) const
 {
     // skip the first leading '-'
-    int start = ( fBuffer[0] == chDash ) ? fStart + 1 : fStart;
+    XMLSize_t start = ( fBuffer[0] == chDash ) ? fStart + 1 : fStart;
 
-    int length = end - start;
+    XMLSize_t length = end - start;
     if (length < 4)
     {
         ThrowXMLwithMemMgr1(SchemaDateTimeException
@@ -1479,7 +1479,7 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
 {
     XMLCh *miliStartPtr, *miliEndPtr;
     searchMiliSeconds(miliStartPtr, miliEndPtr);
-    int miliSecondsLen = miliEndPtr - miliStartPtr;
+    XMLSize_t miliSecondsLen = miliEndPtr - miliStartPtr;
     int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
 
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
@@ -1692,7 +1692,7 @@ XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) 
 {
     XMLCh *miliStartPtr, *miliEndPtr;
     searchMiliSeconds(miliStartPtr, miliEndPtr);
-    int miliSecondsLen = miliEndPtr - miliStartPtr;
+    XMLSize_t miliSecondsLen = miliEndPtr - miliStartPtr;
     int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
     
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
@@ -1853,7 +1853,7 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
         serEng>>fStart;
         serEng>>fEnd;
 
-        int dataLen = 0;
+        XMLSize_t dataLen = 0;
         serEng.readString(fBuffer, fBufferMaxLen, dataLen ,XSerializeEngine::toReadBufferLen);
 
     }

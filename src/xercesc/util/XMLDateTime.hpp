@@ -194,7 +194,7 @@ private:
 
     void                  getYearMonth();
 
-    void                  getTimeZone(const int);
+    void                  getTimeZone(const XMLSize_t);
 
     void                  parseTimeZone();
 
@@ -202,19 +202,19 @@ private:
     // locator and converter
     // -----------------------------------------------------------------------
 
-    int                   findUTCSign(const int start);
+    int                   findUTCSign(const XMLSize_t start);
 
-    int                   indexOf(const int start
-                                , const int end
+    int                   indexOf(const XMLSize_t start
+                                , const XMLSize_t end
                                 , const XMLCh ch)     const;
 
-    int                   parseInt(const int start
-                                 , const int end)     const;
+    int                   parseInt(const XMLSize_t start
+                                 , const XMLSize_t end)     const;
 
-    int                   parseIntYear(const int end) const;
+    int                   parseIntYear(const XMLSize_t end) const;
 
-    double                parseMiliSecond(const int start
-                                        , const int end) const;
+    double                parseMiliSecond(const XMLSize_t start
+                                        , const XMLSize_t end) const;
 
     // -----------------------------------------------------------------------
     // validator and normalizer
@@ -255,9 +255,9 @@ private:
 
     int          fValue[TOTAL_SIZE];
     int          fTimeZone[TIMEZONE_ARRAYSIZE];
-    int          fStart;
-    int          fEnd;
-    int          fBufferMaxLen;
+    XMLSize_t    fStart;
+    XMLSize_t    fEnd;
+    XMLSize_t    fBufferMaxLen;
 
     double       fMiliSecond;
     bool         fHasTime;

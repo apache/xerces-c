@@ -76,7 +76,7 @@ public:
       ***/
     XSerializeEngine(BinInputStream*         inStream
                    , XMLGrammarPool* const   gramPool
-                   , unsigned long           bufSize = 8192 );
+                   , XMLSize_t               bufSize = 8192 );
 
 
     /***
@@ -95,7 +95,7 @@ public:
       ***/
     XSerializeEngine(BinOutputStream*        outStream
                    , XMLGrammarPool* const   gramPool
-                   , unsigned long           bufSize = 8192 ); 
+                   , XMLSize_t               bufSize = 8192 ); 
 
     /***
       *
@@ -203,7 +203,7 @@ public:
       *
       ***/
            void           write(const XMLByte* const toWrite
-                               ,      int            writeLen);
+                               ,      XMLSize_t      writeLen);
 
     /***
       *
@@ -217,7 +217,7 @@ public:
       *
       ***/
            void           write(const XMLCh* const toWrite
-                               ,      int          writeLen);
+                               ,      XMLSize_t    writeLen);
 
     /***
       *
@@ -235,7 +235,7 @@ public:
       *
       ***/
            void           writeString(const XMLCh* const toWrite
-                                    , const int          bufferLen = 0
+                                    , const XMLSize_t    bufferLen = 0
                                     , bool               toWriteBufLen = false);
 
     /***
@@ -254,7 +254,7 @@ public:
       *
       ***/
            void           writeString(const XMLByte* const toWrite
-                                    , const int            bufferLen = 0
+                                    , const XMLSize_t      bufferLen = 0
                                     , bool                 toWriteBufLen = false);
 
     static const bool toWriteBufferLen;
@@ -299,7 +299,7 @@ public:
       *
       ***/
            void           read(XMLByte* const toRead
-                             , int            readLen);
+                             , XMLSize_t      readLen);
 
     /***
       *
@@ -313,7 +313,7 @@ public:
       *
       ***/
            void           read(XMLCh* const toRead
-                             , int          readLen);
+                             , XMLSize_t    readLen);
 
     /***
       *
@@ -332,8 +332,8 @@ public:
       *
       ***/
            void           readString(XMLCh*&        toRead
-                                   , int&           bufferLen
-                                   , int&           dataLen
+                                   , XMLSize_t&     bufferLen
+                                   , XMLSize_t&     dataLen
                                    , bool           toReadBufLen = false);
 
      /***
@@ -351,7 +351,7 @@ public:
        *
        ***/
             inline void     readString(XMLCh*&        toRead
-                                    , int&            bufferLen);
+                                    , XMLSize_t&      bufferLen);
  
      /***
        *
@@ -382,8 +382,8 @@ public:
       *
       ***/
            void           readString(XMLByte*&      toRead
-                                   , int&           bufferLen
-                                   , int&           dataLen
+                                   , XMLSize_t&     bufferLen
+                                   , XMLSize_t&     dataLen
                                    , bool           toReadBufLen = false);
 
 
@@ -402,7 +402,7 @@ public:
        *
        ***/
             inline void       readString(XMLByte*&      toRead
-                                       , int&           bufferLen);
+                                       , XMLSize_t&     bufferLen);
  
      /***
        *
@@ -517,13 +517,13 @@ public:
       *
       ***/
     inline 
-    unsigned long   getBufSize()    const; 
+    XMLSize_t       getBufSize()    const; 
 
     inline 
-    unsigned long   getBufCur()     const; 
+    XMLSize_t       getBufCur()     const; 
 
     inline 
-    unsigned long   getBufCurAccumulated()     const; 
+    XMLSize_t       getBufCurAccumulated()     const; 
 
     inline 
     unsigned long   getBufCount()    const; 
@@ -559,9 +559,9 @@ private:
       *    Intenal Buffer Operations
       *
       ***/
-    inline void           checkAndFillBuffer(int bytesNeedToRead);
+    inline void           checkAndFillBuffer(XMLSize_t bytesNeedToRead);
 
-    inline void           checkAndFlushBuffer(int bytesNeedToWrite);
+    inline void           checkAndFlushBuffer(XMLSize_t bytesNeedToWrite);
 
            void           fillBuffer();
 
@@ -585,8 +585,6 @@ private:
     inline void            ensureLoadBuffer()                       const;
 
     inline void            ensurePointer(void* const)               const;
-
-    inline void            ensureBufferLen(int  bufferLen)          const;
 
     inline void            Assert(bool  toEval
                                 , const XMLExcepts::Codes toThrow)  const;
@@ -661,7 +659,7 @@ private:
     unsigned long                          fBufCount;
 
     //buffer
-    const unsigned long                    fBufSize;
+    const XMLSize_t                        fBufSize;
 	XMLByte* const                         fBufStart;
 	XMLByte* const                         fBufEnd; 
     XMLByte*                               fBufCur;
@@ -738,47 +736,47 @@ inline void XSerializeEngine::Assert(bool toEval
 }
 
 inline void XSerializeEngine::readString(XMLCh*&        toRead
-                                       , int&           bufferLen)
+                                       , XMLSize_t&     bufferLen)
 {
-    int  dummyDataLen;                
+    XMLSize_t dummyDataLen;                
     readString(toRead, bufferLen, dummyDataLen);
 }
 
 inline void XSerializeEngine::readString(XMLCh*&        toRead)
 {
-    int  dummyBufferLen;
-    int  dummyDataLen;
+    XMLSize_t dummyBufferLen;
+    XMLSize_t dummyDataLen;
     readString(toRead, dummyBufferLen, dummyDataLen);
 }
 
 inline void XSerializeEngine::readString(XMLByte*&      toRead
-                                       , int&           bufferLen)
+                                       , XMLSize_t&     bufferLen)
 {
-    int  dummyDataLen;
+    XMLSize_t dummyDataLen;
     readString(toRead, bufferLen, dummyDataLen);
 }
 
 inline void XSerializeEngine::readString(XMLByte*&      toRead)
 {
-    int  dummyBufferLen;
-    int  dummyDataLen;
+    XMLSize_t dummyBufferLen;
+    XMLSize_t dummyDataLen;
     readString(toRead, dummyBufferLen, dummyDataLen);
 }
 
 inline 
-unsigned long XSerializeEngine::getBufSize() const
+XMLSize_t XSerializeEngine::getBufSize() const
 {
     return fBufSize;
 }
 
 inline 
-unsigned long XSerializeEngine::getBufCur() const
+XMLSize_t XSerializeEngine::getBufCur() const
 {
     return (fBufCur-fBufStart);
 }
 
 inline 
-unsigned long XSerializeEngine::getBufCurAccumulated() const
+XMLSize_t XSerializeEngine::getBufCurAccumulated() const
 {
     return (fBufCount - (isStoring() ? 0: 1)) * fBufSize + (fBufCur-fBufStart);
 }

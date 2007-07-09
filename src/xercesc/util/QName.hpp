@@ -151,9 +151,9 @@ private :
     //  fURIId
     //      The id of the URI that this attribute belongs to.
     // -----------------------------------------------------------------------
-    unsigned int        fPrefixBufSz;
-    unsigned int        fLocalPartBufSz;
-    unsigned int        fRawNameBufSz;
+    XMLSize_t           fPrefixBufSz;
+    XMLSize_t           fLocalPartBufSz;
+    XMLSize_t           fRawNameBufSz;
     unsigned int        fURIId;
     XMLCh*              fPrefix;
     XMLCh*              fLocalPart;
