@@ -123,9 +123,9 @@ int Iconv400TransService::compareIString(const   XMLCh* const    comp1
 }
 
 
-int Iconv400TransService::compareNIString(const  XMLCh* const    comp1
+int Iconv400TransService::compareNIString(const  XMLCh* const     comp1
                                           , const XMLCh* const    comp2
-                                          , const unsigned int    maxChars)
+                                          , const XMLSize_t       maxChars)
 {
     const XMLCh* psz1 = comp1;
     const XMLCh* psz2 = comp2;
@@ -805,7 +805,7 @@ XMLCh* Iconv400LCPTranscoder::transcode(const char* const toTranscode,
 
 bool Iconv400LCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars
+                                , const XMLSize_t       maxChars
                                 , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
@@ -846,7 +846,7 @@ bool Iconv400LCPTranscoder::transcode(const  char* const     toTranscode
 
 bool Iconv400LCPTranscoder::transcode(   const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  manager)
 {
     // Watch for a few psycho corner cases

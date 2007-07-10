@@ -294,7 +294,7 @@ int Uniconv390TransService::compareIString(const   XMLCh* const    comp1
 
 int Uniconv390TransService::compareNIString(const  XMLCh* const    comp1
                                     , const XMLCh* const    comp2
-                                    , const unsigned int    maxChars)
+                                    , const XMLSize_t       maxChars)
 {
 //char localname1[500];
 //XMLString::transcode(comp1,localname1,400);
@@ -1516,7 +1516,7 @@ DBGPRINTF2("Uniconv390LCPTranscoder::transcode(const char* const toTranscode):%s
 
 bool Uniconv390LCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars
+                                , const XMLSize_t       maxChars
                                 , MemoryManager* const  manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::transcode(const  char* const     toTranscode, etc.... \n");
@@ -1556,7 +1556,7 @@ DBGPRINTF1("Uniconv390LCPTranscoder::transcode(const  char* const     toTranscod
 
 bool Uniconv390LCPTranscoder::transcode(   const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes
+                                    , const XMLSize_t       maxBytes
                                     , MemoryManager* const  manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::transcode(const  XMLCh* const     toTranscode, etc.... \n");

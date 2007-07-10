@@ -516,9 +516,9 @@ int CygwinTransService::compareIString(  const   XMLCh* const    comp1
 }
 
 
-int CygwinTransService::compareNIString( const   XMLCh* const    comp1
+int CygwinTransService::compareNIString( const   XMLCh* const   comp1
                                         , const XMLCh* const    comp2
-                                        , const unsigned int    maxChars)
+                                        , const XMLSize_t       maxChars)
 {
     // Promote maxChars to signed long. Avoid any conceivable
     // portability issue from a simple C cast with extension
@@ -975,7 +975,7 @@ XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode,
 
 bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  /*manager*/)
 {
     // Check for a couple of psycho corner cases
@@ -1000,7 +1000,7 @@ bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
 
 bool CygwinLCPTranscoder::transcode( const  XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes
+                                    , const XMLSize_t       maxBytes
                                     , MemoryManager* const  /*manager*/)
 {
     // Watch for a couple of pyscho corner cases

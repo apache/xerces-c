@@ -643,7 +643,7 @@ int IconvFBSDTransService::compareIString(const XMLCh* const    comp1
 
 int IconvFBSDTransService::compareNIString(const XMLCh* const    comp1
                                          , const XMLCh* const    comp2
-                                         , const unsigned int    maxChars)
+                                         , const XMLSize_t       maxChars)
 {
     unsigned int  n = 0;
     const XMLCh* cptr1 = comp1;
@@ -1046,7 +1046,7 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode,
 
 bool IconvFBSDLCPTranscoder::transcode( const   XMLCh* const    toTranscode
                     , char* const        toFill
-                    , const unsigned int    maxBytes
+                    , const XMLSize_t       maxBytes
                     , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
@@ -1228,7 +1228,7 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode,
 
 bool IconvFBSDLCPTranscoder::transcode(const   char* const    toTranscode
                        ,       XMLCh* const    toFill
-                       , const unsigned int    maxChars
+                       , const XMLSize_t       maxChars
                        , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases

@@ -198,7 +198,7 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
     , fIEId(ieId)
 {
     // Transcode the name to Unicode and store that copy
-    const unsigned int srcLen = strlen(encodingName);
+    const XMLSize_t srcLen = strlen(encodingName);
     const unsigned charLen = ::mblen(encodingName, MB_CUR_MAX);
     if (charLen != -1) {
         const unsigned int targetLen = srcLen/charLen;
@@ -431,7 +431,7 @@ Win32TransService::Win32TransService()
         //
         if (isAlias(encodingKey, aliasBuf, nameBufSz))
         {
-            const unsigned int srcLen = strlen(aliasBuf);
+            const XMLSize_t srcLen = strlen(aliasBuf);
             size_t targetLen=::mbstowcs(NULL, aliasBuf, srcLen);
             if(targetLen!=-1)
             {
@@ -447,7 +447,7 @@ Win32TransService::Win32TransService()
                 CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
                 if (aliasedEntry)
                 {
-                    const unsigned int srcLen = strlen(nameBuf);
+                    const XMLSize_t srcLen = strlen(nameBuf);
                     size_t targetLen=::mbstowcs(NULL, nameBuf, srcLen);
                     if(targetLen!=-1)
                     {
@@ -504,7 +504,7 @@ int Win32TransService::compareIString(  const   XMLCh* const    comp1
 
 int Win32TransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
-                                        , const unsigned int    maxChars)
+                                        , const XMLSize_t       maxChars)
 {
     return wcsnicmp(comp1, comp2, maxChars);
 }
@@ -743,14 +743,14 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
     {
         //
         //  Do one char and see if it made it.
-        const unsigned int bytesStored = ::WideCharToMultiByte
+        const int bytesStored = ::WideCharToMultiByte
         (
             fIECP
             , WC_COMPOSITECHECK | WC_SEPCHARS
             , srcPtr
             , 1
             , (char*)outPtr
-            , outEnd - outPtr
+            , (int)(outEnd - outPtr)
             , 0
             , &usedDef
         );
@@ -940,7 +940,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
 
 bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  /*manager*/)
 {
     // Check for a couple of psycho corner cases
@@ -957,7 +957,7 @@ bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if ( 0 == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, maxChars + 1) )
+    if ( 0 == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, (int)(maxChars + 1)) )
         return false;
     return true;
 }
@@ -965,7 +965,7 @@ bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
 
 bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes
+                                    , const XMLSize_t       maxBytes
                                     , MemoryManager* const  /*manager*/)
 {
     // Watch for a couple of pyscho corner cases
@@ -982,7 +982,7 @@ bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if ( 0 == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, maxBytes + 1, NULL, NULL) )
+    if ( 0 == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, (int)(maxBytes + 1), NULL, NULL) )
         return false;
 
     // Cap it off just in case

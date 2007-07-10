@@ -123,7 +123,7 @@ int IconvTransService::compareIString(  const   XMLCh* const    comp1
 
 int IconvTransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
-                                        , const unsigned int    maxChars)
+                                        , const XMLSize_t       maxChars)
 {
     unsigned int  n = 0;
     const XMLCh* cptr1 = comp1;
@@ -284,7 +284,7 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 
 bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxBytes
+                                    , const XMLSize_t       maxBytes
                                     , MemoryManager* const  manager)
 {
     // Watch for a couple of pyscho corner cases
@@ -342,7 +342,7 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
 bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases

@@ -63,7 +63,7 @@ public :
     (
         const   XMLCh* const    comp1
         , const XMLCh* const    comp2
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
     );
 
     virtual const XMLCh* getId() const;
@@ -245,7 +245,7 @@ public :
     (
         const   char* const     toTranscode
         ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -253,7 +253,7 @@ public :
     (
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 

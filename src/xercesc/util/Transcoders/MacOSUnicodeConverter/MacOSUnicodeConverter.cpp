@@ -188,7 +188,7 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 
 int MacOSUnicodeConverter::compareNIString( const XMLCh* const  comp1
                                         , const XMLCh* const    comp2
-                                        , const unsigned int    maxChars)
+                                        , const XMLSize_t       maxChars)
 {
 	//	If unicode collation routines are available, use them.
 	//	This should be the case on Mac OS 8.6 and later,
@@ -941,7 +941,7 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
 bool
 MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
                                     ,       XMLCh* const    toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  manager)
 {
     // toFill must contain space for maxChars XMLCh characters + 1 (for terminating NULL).
@@ -976,7 +976,7 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
 bool
 MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  manager)
 {
     //	toFill must contain space for maxChars bytes + 1 (for terminating NULL).

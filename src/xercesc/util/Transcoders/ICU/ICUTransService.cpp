@@ -227,7 +227,7 @@ int ICUTransService::compareIString(const   XMLCh* const    comp1
 
 int ICUTransService::compareNIString(const  XMLCh* const    comp1
                                     , const XMLCh* const    comp2
-                                    , const unsigned int    maxChars)
+                                    , const XMLSize_t       maxChars)
 {
     if (maxChars > 0)
     {
@@ -1086,7 +1086,7 @@ XMLCh* ICULCPTranscoder::transcode(const char* const toTranscode,
 
 bool ICULCPTranscoder::transcode(const  char* const     toTranscode
                                 ,       XMLCh* const    toFill
-                                , const unsigned int    maxChars
+                                , const XMLSize_t       maxChars
                                 , MemoryManager* const  manager)
 {
     // Check for a couple of psycho corner cases
@@ -1162,7 +1162,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
 
 bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
-                                    , const unsigned int    maxChars
+                                    , const XMLSize_t       maxChars
                                     , MemoryManager* const  manager)
 {
     // Watch for a few psycho corner cases
