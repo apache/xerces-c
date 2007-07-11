@@ -189,9 +189,9 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XMLSSize_t getColumnNumber() const;
+    unsigned long getColumnNumber() const;
     const XMLCh* getEncodingStr() const;
-    XMLSSize_t getLineNumber() const;
+    unsigned long getLineNumber() const;
     bool getNoMoreFlag() const;
     const XMLCh* getPublicId() const;
     unsigned int getReaderNum() const;
@@ -430,8 +430,8 @@ private:
     XMLSize_t                   fCharsAvail;
     unsigned char               fCharSizeBuf[kCharBufSize];
     unsigned int                fCharOfsBuf[kCharBufSize];
-    XMLSSize_t                  fCurCol;
-    XMLSSize_t                  fCurLine;
+    unsigned long               fCurCol;
+    unsigned long               fCurLine;
     XMLRecognizer::Encodings    fEncoding;
     XMLCh*                      fEncodingStr;
     bool                        fForcedEncoding;
@@ -528,7 +528,7 @@ inline XMLSize_t XMLReader::charsLeftInBuffer() const
 // ---------------------------------------------------------------------------
 //  XMLReader: Getter methods
 // ---------------------------------------------------------------------------
-inline XMLSSize_t XMLReader::getColumnNumber() const
+inline unsigned long XMLReader::getColumnNumber() const
 {
     return fCurCol;
 }
@@ -538,7 +538,7 @@ inline const XMLCh* XMLReader::getEncodingStr() const
     return fEncodingStr;
 }
 
-inline XMLSSize_t XMLReader::getLineNumber() const
+inline unsigned long XMLReader::getLineNumber() const
 {
     return fCurLine;
 }
@@ -635,7 +635,7 @@ inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 
     if (count != fCharIndex)
     {
-        fCurCol    += (fCharIndex - count);
+        fCurCol    += (unsigned long)(fCharIndex - count);
         dest.append(&fCharBuf[count], fCharIndex - count);
     }
 }

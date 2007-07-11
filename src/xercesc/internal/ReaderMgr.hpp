@@ -56,8 +56,8 @@ public :
     {
         const   XMLCh*          systemId;
         const   XMLCh*          publicId;
-                XMLSSize_t      lineNumber;
-                XMLSSize_t      colNumber;
+                unsigned long   lineNumber;
+                unsigned long   colNumber;
     };
 
 
@@ -185,8 +185,8 @@ public :
     // -----------------------------------------------------------------------
     virtual const XMLCh* getPublicId() const;
     virtual const XMLCh* getSystemId() const;
-    virtual XMLSSize_t getLineNumber() const;
-    virtual XMLSSize_t getColumnNumber() const;
+    virtual unsigned long getLineNumber() const;
+    virtual unsigned long getColumnNumber() const;
 
 
 private :

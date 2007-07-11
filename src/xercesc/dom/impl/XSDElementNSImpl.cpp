@@ -38,8 +38,8 @@ XSDElementNSImpl::XSDElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
 XSDElementNSImpl::XSDElementNSImpl(DOMDocument *ownerDoc,
                                    const XMLCh *namespaceURI,
                                    const XMLCh *qualifiedName,
-                                   const XMLSSize_t lineNo,
-                                   const XMLSSize_t columnNo) :
+                                   const unsigned long lineNo,
+                                   const unsigned long columnNo) :
     DOMElementNSImpl(ownerDoc, namespaceURI, qualifiedName)
     , fLineNo(lineNo)
     , fColumnNo(columnNo)

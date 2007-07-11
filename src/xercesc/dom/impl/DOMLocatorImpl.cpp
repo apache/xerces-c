@@ -38,8 +38,8 @@ fLineNum(-1)
 }
 
 
-DOMLocatorImpl::DOMLocatorImpl(const XMLSSize_t lineNum,
-                               const XMLSSize_t columnNum,
+DOMLocatorImpl::DOMLocatorImpl(const unsigned long lineNum,
+                               const unsigned long columnNum,
                                DOMNode* const errorNode,
                                const XMLCh* const uri,
                                const XMLSSize_t byteOffset,

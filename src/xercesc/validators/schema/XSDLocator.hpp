@@ -77,7 +77,7 @@ public:
     * @return The line number, or -1 if none is available.
     * @see #getColumnNumber
     */
-    virtual XMLSSize_t getLineNumber() const;
+    virtual unsigned long getLineNumber() const;
 
   /**
     * Return the column number where the current document event ends.
@@ -87,7 +87,7 @@ public:
     * @return The column number, or -1 if none is available.
     * @see #getLineNumber
     */
-    virtual XMLSSize_t getColumnNumber() const;
+    virtual unsigned long getColumnNumber() const;
     //@}
 
     // -----------------------------------------------------------------------
@@ -95,7 +95,7 @@ public:
     // -----------------------------------------------------------------------
     void setValues(const XMLCh* const systemId,
                    const XMLCh* const publicId,
-                   const XMLSSize_t lineNo, const XMLSSize_t columnNo);
+                   const unsigned long lineNo, const unsigned long columnNo);
 
 private :
     // -----------------------------------------------------------------------
@@ -107,8 +107,8 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    XMLSSize_t fLineNo;
-    XMLSSize_t fColumnNo;
+    unsigned long fLineNo;
+    unsigned long fColumnNo;
     const XMLCh* fSystemId;
     const XMLCh* fPublicId;
 };
@@ -116,12 +116,12 @@ private :
 // ---------------------------------------------------------------------------
 //  XSDLocator: Getter methods
 // ---------------------------------------------------------------------------
-inline XMLSSize_t XSDLocator::getLineNumber() const
+inline unsigned long XSDLocator::getLineNumber() const
 {
     return fLineNo;
 }
 
-inline XMLSSize_t XSDLocator::getColumnNumber() const
+inline unsigned long XSDLocator::getColumnNumber() const
 {
     return fColumnNo;
 }

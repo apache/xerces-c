@@ -681,7 +681,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
         // we have to copy the accepted character(s), and update column
         if (fCharIndex != charIndex_start)
         {
-            fCurCol += fCharIndex - charIndex_start;
+            fCurCol += (unsigned long)(fCharIndex - charIndex_start);
             toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
         }
 
@@ -772,7 +772,7 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
         // we have to copy the accepted character(s), and update column
         if (fCharIndex != charIndex_start)
         {
-            fCurCol += fCharIndex - charIndex_start;
+            fCurCol += (unsigned long)(fCharIndex - charIndex_start);
             toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
         }
 
@@ -1172,7 +1172,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
     }
 
     // Add the source length to the current column to get it back right
-    fCurCol += srcLen;   
+    fCurCol += (unsigned long)srcLen;
 
     return true;
 }

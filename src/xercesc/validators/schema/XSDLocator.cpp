@@ -45,7 +45,7 @@ XSDLocator::XSDLocator() :
 // ---------------------------------------------------------------------------
 void XSDLocator::setValues(const XMLCh* const systemId,
                            const XMLCh* const publicId,
-                           const XMLSSize_t lineNo, const XMLSSize_t columnNo)
+                           const unsigned long lineNo, const unsigned long columnNo)
 {
     fLineNo = lineNo;
     fColumnNo = columnNo;

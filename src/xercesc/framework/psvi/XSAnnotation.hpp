@@ -122,14 +122,14 @@ public:
     //-----------------------------
     /** Getter */
     //@{
-    inline void           getLineCol(int& line, int& col)  const;
+    inline void           getLineCol(unsigned long& line, unsigned long& col)  const;
     inline const XMLCh*   getSystemId()                    const;    
     //@}
 
     //-----------------------------
     /** Setter */
     //@{
-    inline void           setLineCol(int line, int col);
+    inline void           setLineCol(unsigned long line, unsigned long col);
            void           setSystemId(const XMLCh* const systemId);    
     //@}
 
@@ -158,8 +158,8 @@ protected:
 private:
 
     XMLCh*        fSystemId;
-    int           fLine;
-    int           fCol;
+    unsigned long fLine;
+    unsigned long fCol;
 
 };
 
@@ -173,7 +173,7 @@ inline XMLCh *XSAnnotation::getAnnotationString()
     return fContents;
 }
 
-inline void XSAnnotation::getLineCol(int& line, int& col) const
+inline void XSAnnotation::getLineCol(unsigned long& line, unsigned long& col) const
 {
     line = fLine;
     col  = fCol;
@@ -184,7 +184,7 @@ inline const XMLCh* XSAnnotation::getSystemId() const
     return fSystemId;
 }
 
-inline void XSAnnotation::setLineCol(int line, int col)
+inline void XSAnnotation::setLineCol(unsigned long line, unsigned long col)
 {
     fLine = line;
     fCol  = col;

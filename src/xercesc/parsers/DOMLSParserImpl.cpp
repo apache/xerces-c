@@ -769,8 +769,8 @@ void DOMLSParserImpl::error( const   unsigned int                code
                             , const XMLCh* const                errorText
                             , const XMLCh* const                systemId
                             , const XMLCh* const
-                            , const XMLSSize_t                  lineNum
-                            , const XMLSSize_t                  colNum)
+                            , const unsigned long               lineNum
+                            , const unsigned long               colNum)
 {
     if (fErrorHandler) {
 
@@ -781,7 +781,7 @@ void DOMLSParserImpl::error( const   unsigned int                code
         else if (errType == XMLErrorReporter::ErrType_Fatal)
             severity = DOMError::DOM_SEVERITY_FATAL_ERROR;
 
-        DOMLocatorImpl location((int)lineNum, (int) colNum, getCurrentNode(), systemId);
+        DOMLocatorImpl location(lineNum, colNum, getCurrentNode(), systemId);
         if(getScanner()->getCalculateSrcOfs())
             location.setByteOffset(getScanner()->getSrcOffset());
         DOMErrorImpl domError(severity, errorText, &location);

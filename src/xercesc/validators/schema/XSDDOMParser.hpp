@@ -252,8 +252,8 @@ public :
         , const XMLCh* const        errorText
         , const XMLCh* const        systemId
         , const XMLCh* const        publicId
-        , const XMLSSize_t          lineNum
-        , const XMLSSize_t          colNum
+        , const unsigned long       lineNum
+        , const unsigned long       colNum
     );
 
     // -----------------------------------------------------------------------

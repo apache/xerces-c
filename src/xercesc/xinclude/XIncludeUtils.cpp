@@ -718,8 +718,8 @@ XIncludeUtils::reportError(const DOMNode* const    errorNode
     const XMLCh* const        			systemId = href;
     const XMLCh* const        			publicId = href;
     /* TODO - look these up somehow? */
-    const XMLSSize_t          			lineNum = -1;
-    const XMLSSize_t          			colNum = -1;
+    const unsigned long                 lineNum = 0;
+    const unsigned long                 colNum = 0;
 
     if (fErrorReporter)
     {

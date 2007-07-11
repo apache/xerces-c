@@ -86,7 +86,7 @@ public:
      *
      * @since DOM Level 3
      */
-    virtual XMLSSize_t getLineNumber() const = 0;
+    virtual unsigned long getLineNumber() const = 0;
 
     /**
      * Get the column number where the error occured, or -1 if there
@@ -94,7 +94,7 @@ public:
      *
      * @since DOM Level 3
      */
-    virtual XMLSSize_t getColumnNumber() const = 0;
+    virtual unsigned long getColumnNumber() const = 0;
 
     /**
      * Get the byte offset into the input source, or -1 if there is no byte offset available.

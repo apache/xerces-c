@@ -198,8 +198,8 @@ public:
                                                  const XMLCh *qualifiedName);
     virtual DOMElement*          createElementNS(const XMLCh *namespaceURI,
                                                  const XMLCh *qualifiedName,
-                                                 const XMLSSize_t lineNo,
-                                                 const XMLSSize_t columnNo);
+                                                 const unsigned long lineNo,
+                                                 const unsigned long columnNo);
     virtual DOMAttr*             createAttributeNS(const XMLCh *namespaceURI,
                                                    const XMLCh *qualifiedName);
     virtual DOMNodeList*         getElementsByTagNameNS(const XMLCh *namespaceURI,

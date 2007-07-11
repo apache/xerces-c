@@ -41,8 +41,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT XSDElementNSImpl: public DOMElementNSImpl {
 protected:
-    XMLSSize_t fLineNo;     //Line number
-    XMLSSize_t fColumnNo;   //Column number
+    unsigned long fLineNo;     //Line number
+    unsigned long fColumnNo;   //Column number
 
 
 public:
@@ -50,14 +50,14 @@ public:
     XSDElementNSImpl(DOMDocument *ownerDoc, //DOM Level 2
 	                 const XMLCh *namespaceURI,
                      const XMLCh *qualifiedName,
-                     const XMLSSize_t lineNo,
-                     const XMLSSize_t columnNo);
+                     const unsigned long lineNo,
+                     const unsigned long columnNo);
     XSDElementNSImpl(const XSDElementNSImpl &other, bool deep=false);
 
     virtual DOMNode * cloneNode(bool deep) const;
 
-    XMLSSize_t getLineNo() const   { return fLineNo;   }
-    XMLSSize_t getColumnNo() const { return fColumnNo; }
+    unsigned long getLineNo() const   { return fLineNo;   }
+    unsigned long getColumnNo() const { return fColumnNo; }
 
 private:
     // -----------------------------------------------------------------------

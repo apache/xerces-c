@@ -94,8 +94,8 @@ public:
         const   XMLCh* const    message
         , const XMLCh* const    publicId
         , const XMLCh* const    systemId
-        , const XMLSSize_t      lineNumber
-        , const XMLSSize_t      columnNumber
+        , const unsigned long   lineNumber
+        , const unsigned long   columnNumber
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -131,19 +131,19 @@ public:
     *
     * <p>The first column in a line is position 1.</p>
     *
-    * @return An integer representing the column number, or -1
+    * @return An integer representing the column number, or 0
     *         if none is available.
     * @see Locator#getColumnNumber
     */
-    XMLSSize_t getColumnNumber() const;
+    unsigned long getColumnNumber() const;
   /**
     * The line number of the end of the text where the exception occurred.
     *
-    * @return An integer representing the line number, or -1
+    * @return An integer representing the line number, or 0
     *         if none is available.
     * @see Locator#getLineNumber
     */
-    XMLSSize_t getLineNumber() const;
+    unsigned long getLineNumber() const;
   /**
     * Get the public identifier of the entity where the exception occurred.
     *
@@ -169,9 +169,9 @@ private:
     /* Data Members */
 
     /* The column in the source text where the error occured. */
-    XMLSSize_t      fColumnNumber;
+    unsigned long   fColumnNumber;
     /* The line in the source text where the error occured. */
-    XMLSSize_t      fLineNumber;
+    unsigned long   fLineNumber;
     /* The public id of the file where the error occured. */
     XMLCh*          fPublicId;
     /* The system id of the file where the error occured. */

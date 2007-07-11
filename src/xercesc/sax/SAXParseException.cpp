@@ -46,8 +46,8 @@ SAXParseException::SAXParseException(const  XMLCh* const    message
 SAXParseException::SAXParseException(const  XMLCh* const    message
                                     , const XMLCh* const    publicId
                                     , const XMLCh* const    systemId
-                                    , const XMLSSize_t      lineNumber
-                                    , const XMLSSize_t      columnNumber
+                                    , const unsigned long   lineNumber
+                                    , const unsigned long   columnNumber
                                     , MemoryManager* const  manager) :
     SAXException(message, manager)
     , fColumnNumber(columnNumber)
@@ -112,13 +112,12 @@ const XMLCh* SAXParseException::getSystemId() const
     return fSystemId;
 }
 
-XMLSSize_t SAXParseException::getLineNumber() const
+unsigned long SAXParseException::getLineNumber() const
 {
     return fLineNumber;
 }
 
-
-XMLSSize_t SAXParseException::getColumnNumber() const
+unsigned long SAXParseException::getColumnNumber() const
 {
     return fColumnNumber;
 }

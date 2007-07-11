@@ -99,7 +99,7 @@ public:
     * @return The line number, or -1 if none is available.
     * @see #getColumnNumber
     */
-    virtual XMLSSize_t getLineNumber() const = 0;
+    virtual unsigned long getLineNumber() const = 0;
 
   /**
     * Return the column number where the current document event ends.
@@ -109,7 +109,7 @@ public:
     * @return The column number, or -1 if none is available.
     * @see #getLineNumber
     */
-    virtual XMLSSize_t getColumnNumber() const = 0;
+    virtual unsigned long getColumnNumber() const = 0;
     //@}
 
 private :
