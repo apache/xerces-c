@@ -43,7 +43,7 @@ const unsigned short RegxParser::regexParserStateInBrackets	= 1;
 //  RegxParser::ReferencePostion: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RegxParser::ReferencePosition::ReferencePosition(const int refNo,
-						 const int position)
+						                         const XMLSize_t position)
 	:fReferenceNo(refNo)
 	, fPosition(position)
 {
@@ -984,7 +984,7 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
     if (fState != REGX_T_CHAR || fCharData != chOpenCurly)
         ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom2, fMemoryManager);
 
-    int nameStart = fOffset;
+    XMLSize_t nameStart = fOffset;
     int nameEnd = XMLString::indexOf(fString,chCloseCurly,nameStart, fMemoryManager);
 
     if (nameEnd < 0)
@@ -1118,7 +1118,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 			tok->mergeRanges(rangeTok);
 			end = true;
 
-			if (nameEnd+1 >= fStringLen || fString[nameEnd+1] != chCloseSquare) {
+			if (nameEnd+1 >= (int)fStringLen || fString[nameEnd+1] != chCloseSquare) {
 				ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC1, fMemoryManager);
 			}
 
@@ -1383,7 +1383,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 // ---------------------------------------------------------------------------
 //  RegxParser: Helper Methods
 // ---------------------------------------------------------------------------
-bool RegxParser::checkQuestion(const int off) {
+bool RegxParser::checkQuestion(const XMLSize_t off) {
 
     return ((off < fStringLen) && fString[off] == chQuestion);
 }

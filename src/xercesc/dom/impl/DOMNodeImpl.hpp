@@ -121,7 +121,7 @@ public:
     const XMLCh*      getBaseURI() const ;
     short             compareDocumentPosition(const DOMNode* other) const;
     const XMLCh*      getTextContent() const ;
-    const XMLCh*      getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const;
+    const XMLCh*      getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBufferLength) const;
     void              setTextContent(const XMLCh* textContent) ;
     const XMLCh*      lookupPrefix(const XMLCh* namespaceURI) const ;
     bool              isDefaultNamespace(const XMLCh* namespaceURI) const ;

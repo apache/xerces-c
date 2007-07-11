@@ -436,7 +436,7 @@ inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
         fTypeName = XMLString::replicate(typeName, fMemoryManager);
 
         int index = XMLString::indexOf(fTypeName, chComma);
-        int length = XMLString::stringLen(fTypeName);
+        XMLSize_t length = XMLString::stringLen(fTypeName);
         fTypeLocalName = (XMLCh*) fMemoryManager->allocate
         (
             (length - index + 1) * sizeof(XMLCh)

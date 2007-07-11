@@ -62,14 +62,14 @@ XIncludeLocation::prependPath(const XMLCh *baseToAdd){
 	if (fHref == NULL){
 		return NULL;
 	}
-	int fileLength = XMLString::stringLen(fHref);
+	XMLSize_t fileLength = XMLString::stringLen(fHref);
 
 	if (baseToAdd == NULL){
 		return fHref;
 	}
 
 	XMLPlatformUtils::removeDotDotSlash((XMLCh *const)baseToAdd);
-	int baseLength = XMLString::stringLen(baseToAdd);
+	XMLSize_t baseLength = XMLString::stringLen(baseToAdd);
 
 	int lastSlash = XMLString::lastIndexOf(baseToAdd, chForwardSlash);
 	if (lastSlash == -1){

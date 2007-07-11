@@ -175,8 +175,6 @@ static const XMLCh  gEndCDATA[] =
       chCloseSquare, chCloseSquare, chCloseAngle, chNull
 };
 
-static const int offset = XMLString::stringLen(gEndCDATA);
-
 //<!--
 static const XMLCh  gStartComment[] =
 {
@@ -638,7 +636,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
     // Get the name and value out for convenience
     const XMLCh*    nodeName = nodeToWrite->getNodeName();
     const XMLCh*    nodeValue = nodeToWrite->getNodeValue();
-    unsigned long   lent = XMLString::stringLen(nodeValue);
+    XMLSize_t       lent = XMLString::stringLen(nodeValue);
 
     switch (nodeToWrite->getNodeType())
     {
@@ -671,7 +669,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                         if (-1 != pos)
                         {
                             fLineFeedInTextNodePrinted = true;
-                            fLastWhiteSpaceInTextNode = lent - pos;
+                            fLastWhiteSpaceInTextNode = (unsigned int)(lent - pos);
                         }
                         else
                         {
@@ -681,7 +679,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                             if (-1 != pos)
                             {
                                 fLineFeedInTextNodePrinted = true;
-                                fLastWhiteSpaceInTextNode = lent - pos;
+                                fLastWhiteSpaceInTextNode = (unsigned int)(lent - pos);
                             }
                         }
                     }
@@ -1432,10 +1430,12 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
                                    , const DOMNode* const nodeToWrite
                                    , int level)
 {
+    static const XMLSize_t offset = XMLString::stringLen(gEndCDATA);
+
     /***
      * Append a ']]>' at the end
      */
-    int len = XMLString::stringLen(nodeValue);
+    XMLSize_t len = XMLString::stringLen(nodeValue);
     XMLCh* repNodeValue = (XMLCh*) fMemoryManager->allocate
     (
         (len + offset + 1) * sizeof(XMLCh)
@@ -1567,7 +1567,7 @@ void DOMLSSerializerImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeV
             {
                 // Build a char ref for the current char
                 XMLString::binToText(*srcPtr, &tmpBuf[3], 8, 16, fMemoryManager);
-                const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+                const XMLSize_t bufLen = XMLString::stringLen(tmpBuf);
                 tmpBuf[bufLen] = chSemiColon;
                 tmpBuf[bufLen+1] = chNull;
 
@@ -1609,7 +1609,7 @@ void DOMLSSerializerImpl::printNewLine()
     }
 }
 
-void DOMLSSerializerImpl::printIndent(int level)
+void DOMLSSerializerImpl::printIndent(unsigned int level)
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
     {
@@ -1622,7 +1622,7 @@ void DOMLSSerializerImpl::printIndent(int level)
             // output stream and we can no longer indent properly
         }
 
-        for(int i = 0; i < level; i++)
+        for(unsigned int i = 0; i < level; i++)
             *fFormatter << chSpace << chSpace;
     }
 }

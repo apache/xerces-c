@@ -41,7 +41,7 @@ bool XMLChar1_0::enableNEL = false;
 //  not. Breaks out on the first non-whitespace.
 //
 bool XMLChar1_0::isAllSpaces(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const XMLSize_t        count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -59,7 +59,7 @@ bool XMLChar1_0::isAllSpaces(const   XMLCh* const    toCheck
 //  not.
 //
 bool XMLChar1_0::containsWhiteSpace(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                                   , const XMLSize_t        count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -72,7 +72,7 @@ bool XMLChar1_0::containsWhiteSpace(const   XMLCh* const    toCheck
 }
 
 bool XMLChar1_0::isValidNCName(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                               , const XMLSize_t       count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -88,7 +88,7 @@ bool XMLChar1_0::isValidNCName(const   XMLCh* const    toCheck
 }
 
 bool XMLChar1_0::isValidNmtoken(const   XMLCh*       const    toCheck
-                              , const   unsigned int          count)
+                              , const   XMLSize_t             count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -102,7 +102,7 @@ bool XMLChar1_0::isValidNmtoken(const   XMLCh*       const    toCheck
 }
 
 bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const XMLSize_t        count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -126,12 +126,12 @@ bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck
   *
   */
 bool XMLChar1_0::isValidQName(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const XMLSize_t         count)
 {
-    int length = count;
+    XMLSize_t length = count;
     int colonPos = XMLString::indexOf(toCheck, chColon);
     if ((colonPos == 0) ||         // ":abcd"
-        (colonPos == length-1))    // "abcd:"
+        (colonPos == ((int)length)-1))    // "abcd:"
         return false;
 
     //
@@ -4317,7 +4317,7 @@ XMLByte XMLChar1_0::fgCharCharsTable1_0[0x10000] =
 //  not. Breaks out on the first non-whitespace.
 //
 bool XMLChar1_1::isAllSpaces(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const XMLSize_t        count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -4335,7 +4335,7 @@ bool XMLChar1_1::isAllSpaces(const   XMLCh* const    toCheck
 //  not.
 //
 bool XMLChar1_1::containsWhiteSpace(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                                    , const XMLSize_t       count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -4349,7 +4349,7 @@ bool XMLChar1_1::containsWhiteSpace(const   XMLCh* const    toCheck
 
 
 bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                               , const XMLSize_t       count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -4412,7 +4412,7 @@ bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
 }
 
 bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
-                              , const   unsigned int           count)
+                              , const   XMLSize_t              count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -4467,7 +4467,7 @@ bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
 }
 
 bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const XMLSize_t        count)
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -4538,12 +4538,12 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
   *
   */
 bool XMLChar1_1::isValidQName(const   XMLCh* const    toCheck
-                            , const unsigned int    count)
+                            , const XMLSize_t         count)
 {
-    int length = count;
+    XMLSize_t length = count;
     int colonPos = XMLString::indexOf(toCheck, chColon);
     if ((colonPos == 0) ||         // ":abcd"
-        (colonPos == length-1))    // "abcd:"
+        (colonPos == ((int)length)-1))    // "abcd:"
         return false;
 
     //

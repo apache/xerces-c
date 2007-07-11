@@ -99,14 +99,14 @@ BMPattern::~BMPattern() {
 // ---------------------------------------------------------------------------
 //  BMPattern: matches methods
 // ---------------------------------------------------------------------------
-int BMPattern::matches(const XMLCh* const content, int start, int limit) {
+int BMPattern::matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit) {
 
-	const unsigned int	patternLen = XMLString::stringLen(fPattern);
+	const XMLSize_t patternLen = XMLString::stringLen(fPattern);
 	// Uppercase Content
 	XMLCh* ucContent = 0;
 
 	if (patternLen == 0)
-		return start;
+		return (int)start;
 
 	if (fIgnoreCase) {
 		
@@ -116,12 +116,12 @@ int BMPattern::matches(const XMLCh* const content, int start, int limit) {
 
 	ArrayJanitor<XMLCh> janUCContent(ucContent, fMemoryManager);
 
-	int index = start + patternLen;
+	XMLSize_t index = start + patternLen;
 
 	while (index <= limit) {
 
-		int patternIndex = patternLen;
-		int nIndex = index + 1;
+		XMLSize_t patternIndex = patternLen;
+		XMLSize_t nIndex = index + 1;
 		XMLCh ch = 0;
 
 		while (patternIndex > 0) {
@@ -139,7 +139,7 @@ int BMPattern::matches(const XMLCh* const content, int start, int limit) {
 			}
 
 			if (patternIndex == 0)
-				return index;
+				return (int)index;
 		}
 
 		index += fShiftTable[ch % fShiftTableLen] + 1;
@@ -156,10 +156,10 @@ int BMPattern::matches(const XMLCh* const content, int start, int limit) {
 // ---------------------------------------------------------------------------
 void BMPattern::initialize() {
 
-	const unsigned int	patternLen = XMLString::stringLen(fPattern);
+	const XMLSize_t patternLen = XMLString::stringLen(fPattern);
 	XMLCh* lowercasePattern = 0;
 
-	fShiftTable = (int*) fMemoryManager->allocate(fShiftTableLen*sizeof(int)); //new int[fShiftTableLen];
+	fShiftTable = (XMLSize_t*) fMemoryManager->allocate(fShiftTableLen*sizeof(XMLSize_t)); //new XMLSize_t[fShiftTableLen];
 
 	if (fIgnoreCase) {
 
@@ -176,9 +176,9 @@ void BMPattern::initialize() {
 
 	for (unsigned int k=0; k< patternLen; k++) {
 
-		XMLCh	ch = fPattern[k];
-		int		diff = patternLen - k - 1;
-		int		index = ch % fShiftTableLen;
+		XMLCh	  ch = fPattern[k];
+		XMLSize_t diff = patternLen - k - 1;
+		int		  index = ch % fShiftTableLen;
 
 		if (diff < fShiftTable[index])
 			fShiftTable[index] = diff;

@@ -154,7 +154,7 @@ private:
     int            fSign;
     unsigned int   fTotalDigits;
     unsigned int   fScale;
-    unsigned int   fRawDataLen;
+    XMLSize_t      fRawDataLen;
     XMLCh*         fRawData;
     XMLCh*         fIntVal;
     MemoryManager* fMemoryManager;

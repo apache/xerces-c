@@ -831,7 +831,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
         case XSValue::dt_token:
         case XSValue::dt_language:
             {
-                unsigned int strLen = XMLString::stringLen(content);
+                XMLSize_t     strLen = XMLString::stringLen(content);
                 const XMLCh*  rawPtr = content;
                 bool     inWS = false;
 
@@ -1574,7 +1574,7 @@ XSValue::getActValStrings(const XMLCh*         const content
             }                   
         case XSValue::dt_base64Binary:
             {
-                unsigned int    len = 0;
+                XMLSize_t len = 0;
                 XMLByte* decodedData = Base64::decodeToXMLByte(content, &len, manager);
 
                 if (!decodedData)

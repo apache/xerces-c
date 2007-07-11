@@ -843,7 +843,7 @@ short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
 
 const XMLCh*     DOMNodeImpl::getTextContent() const
 {
-	unsigned int nBufferLength = 0;
+	XMLSize_t nBufferLength = 0;
 
 	getTextContent(NULL, nBufferLength);
 	XMLCh* pzBuffer = (XMLCh*)((DOMDocumentImpl*)getOwnerDocument())->allocate((nBufferLength+1) * sizeof(XMLCh));
@@ -854,10 +854,9 @@ const XMLCh*     DOMNodeImpl::getTextContent() const
 
 }
 
-const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const
+const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBufferLength) const
 {
-
-	unsigned int nRemainingBuffer = rnBufferLength;
+	XMLSize_t nRemainingBuffer = rnBufferLength;
 	rnBufferLength = 0;
 
 	if (pzBuffer)   
@@ -882,14 +881,14 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBuf
 
 				if (pzBuffer)
 				{
-					unsigned int nContentLength = nRemainingBuffer;
+					XMLSize_t nContentLength = nRemainingBuffer;
 					castToNodeImpl(current)->getTextContent(pzBuffer + rnBufferLength, nContentLength);
 					rnBufferLength += nContentLength;
 					nRemainingBuffer -= nContentLength;
 				}
 				else 
 				{
-					unsigned int nContentLength = 0;
+					XMLSize_t nContentLength = 0;
 					castToNodeImpl(current)->getTextContent(NULL, nContentLength);
 					rnBufferLength += nContentLength;
 				}
@@ -909,11 +908,11 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBuf
     case DOMNode::PROCESSING_INSTRUCTION_NODE:
     {
 		const XMLCh* pzValue = thisNode->getNodeValue();
-		unsigned int nStrLen = XMLString::stringLen(pzValue);
+		XMLSize_t nStrLen = XMLString::stringLen(pzValue);
 
 		if (pzBuffer) 
 		{
-			unsigned int nContentLength = (nRemainingBuffer >= nStrLen) ? nStrLen : nRemainingBuffer;
+			XMLSize_t nContentLength = (nRemainingBuffer >= nStrLen) ? nStrLen : nRemainingBuffer;
 			XMLString::copyNString(pzBuffer + rnBufferLength, pzValue, nContentLength);
 			rnBufferLength += nContentLength;
 			nRemainingBuffer -= nContentLength;

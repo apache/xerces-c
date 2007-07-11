@@ -148,7 +148,7 @@ void XMLAttr::setURIId(const unsigned int uriId)
 
 void XMLAttr::setValue(const XMLCh* const newValue)
 {
-    const unsigned int newLen = XMLString::stringLen(newValue);
+    const XMLSize_t newLen = XMLString::stringLen(newValue);
     if (!fValueBufSz || (newLen > fValueBufSz))
     {
         fMemoryManager->deallocate(fValue); //delete [] fValue;

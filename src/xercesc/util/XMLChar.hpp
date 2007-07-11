@@ -51,37 +51,37 @@ public:
     static bool isAllSpaces
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool containsWhiteSpace
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool isValidNmtoken
     (
         const   XMLCh*        const    toCheck
-      , const   unsigned int           count
+      , const   XMLSize_t              count
     );
 
     static bool isValidName
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool isValidNCName
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool isValidQName
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     // -----------------------------------------------------------------------
@@ -252,37 +252,37 @@ public:
     static bool isAllSpaces
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool containsWhiteSpace
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool isValidNmtoken
     (
         const   XMLCh*        const    toCheck
-      , const   unsigned int           count
+      , const   XMLSize_t              count
     );
 
     static bool isValidName
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool isValidNCName
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     static bool isValidQName
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     // -----------------------------------------------------------------------

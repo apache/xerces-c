@@ -2311,7 +2311,7 @@ bool XMLScanner::scanEq(bool inDecl)
 }
 
 
-unsigned int
+XMLSize_t
 XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
 {
     fReaderMgr.getUpToCharOrWS(toFill, chEndChar);

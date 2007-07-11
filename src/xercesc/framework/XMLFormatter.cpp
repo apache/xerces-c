@@ -529,7 +529,7 @@ XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr,
  
 XMLFormatter& XMLFormatter::operator<<(const XMLCh* const toFormat)
 {
-    const unsigned int len = XMLString::stringLen(toFormat);
+    const XMLSize_t len = XMLString::stringLen(toFormat);
     formatBuf(toFormat, len);
     return *this;
 }
@@ -568,7 +568,7 @@ void XMLFormatter::writeCharRef(const XMLCh &toWrite)
 
     // Build a char ref for the current char
     XMLString::binToText(toWrite, &tmpBuf[3], 8, 16, fMemoryManager);
-    const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+    const XMLSize_t bufLen = XMLString::stringLen(tmpBuf);
     tmpBuf[bufLen] = chSemiColon;
     tmpBuf[bufLen+1] = chNull;
 
@@ -589,7 +589,7 @@ void XMLFormatter::writeCharRef(unsigned long toWrite)
 
     // Build a char ref for the current char
     XMLString::binToText(toWrite, &tmpBuf[3], 8, 16, fMemoryManager);
-    const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+    const XMLSize_t bufLen = XMLString::stringLen(tmpBuf);
     tmpBuf[bufLen] = chSemiColon;
     tmpBuf[bufLen+1] = chNull;
 

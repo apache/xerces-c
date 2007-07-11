@@ -82,7 +82,7 @@ MemoryManager* XMLString::fgMemoryManager = 0;
 // ---------------------------------------------------------------------------
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       char* const     toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -172,7 +172,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
 void XMLString::binToText(  const   unsigned int    toFormat
                             ,       char* const     toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -182,7 +182,7 @@ void XMLString::binToText(  const   unsigned int    toFormat
 
 void XMLString::binToText(  const   long            toFormat
                             ,       char* const     toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -209,7 +209,7 @@ void XMLString::binToText(  const   long            toFormat
 
 void XMLString::binToText(  const   int             toFormat
                             ,       char* const     toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -249,7 +249,7 @@ int XMLString::compareIString(const char* const str1, const char* const str2)
 
 int XMLString::compareNString(  const   char* const     str1
                                 , const char* const     str2
-                                , const unsigned int    count)
+                                , const XMLSize_t       count)
 {
     // Watch for pathological secenario
     if (!count)
@@ -261,7 +261,7 @@ int XMLString::compareNString(  const   char* const     str1
 
 int XMLString::compareNIString( const   char* const     str1
                                 , const char* const     str2
-                                , const unsigned int    count)
+                                , const XMLSize_t       count)
 {
     if (!count)
         return 0;
@@ -285,7 +285,7 @@ void XMLString::copyString(         char* const    target
 
 
 void XMLString::cut(        XMLCh* const    toCutFrom
-                    , const unsigned int    count)
+                    , const XMLSize_t       count)
 {
     #if defined(XML_DEBUG)
     if (count > stringLen(toCutFrom))
@@ -332,11 +332,11 @@ unsigned int XMLString::hash(   const   char* const     tohash
 
 int XMLString::indexOf(const char* const toSearch, const char ch)
 {
-    const unsigned int len = strlen(toSearch);
-    for (unsigned int i = 0; i < len; i++)
+    const XMLSize_t len = strlen(toSearch);
+    for (XMLSize_t i = 0; i < len; i++)
     {
         if (toSearch[i] == ch)
-            return i;
+            return (int)i;
     }
     return -1;
 }
@@ -344,26 +344,26 @@ int XMLString::indexOf(const char* const toSearch, const char ch)
 
 int XMLString::indexOf( const   char* const     toSearch
                         , const char            ch
-                        , const unsigned int    fromIndex
+                        , const XMLSize_t       fromIndex
                         , MemoryManager* const  manager)
 {
-    const unsigned int len = strlen(toSearch);
+    const XMLSize_t len = strlen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
 	if ((int)fromIndex > ((int)len)-1)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
-    for (unsigned int i = fromIndex; i < len; i++)
+    for (XMLSize_t i = fromIndex; i < len; i++)
     {
         if (toSearch[i] == ch)
-            return i;
+            return (int)i;
     }
     return -1;
 }
 
 int XMLString::lastIndexOf(const char* const toSearch, const char ch)
 {
-    const int len = strlen(toSearch);
+    const int len = (int)strlen(toSearch);
     for (int i = len-1; i >= 0; i--)
     {
         if (toSearch[i] == ch)
@@ -374,13 +374,13 @@ int XMLString::lastIndexOf(const char* const toSearch, const char ch)
 
 int XMLString::lastIndexOf( const   char* const     toSearch
                             , const char            ch
-                            , const unsigned int    fromIndex
+                            , const XMLSize_t       fromIndex
                             , MemoryManager* const  manager)
 {
-    const int len = strlen(toSearch);
+    const XMLSize_t len = strlen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
-	if ((int)fromIndex > len-1)
+	if ((int)fromIndex > ((int)len)-1)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i = (int)fromIndex; i >= 0; i--)
@@ -392,8 +392,8 @@ int XMLString::lastIndexOf( const   char* const     toSearch
 }
 
 
-unsigned int XMLString::replaceTokens(          XMLCh* const    errText
-                                        , const unsigned int    maxChars
+XMLSize_t XMLString::replaceTokens(          XMLCh* const    errText
+                                        , const XMLSize_t       maxChars
                                         , const XMLCh* const    text1
                                         , const XMLCh* const    text2
                                         , const XMLCh* const    text3
@@ -410,7 +410,7 @@ unsigned int XMLString::replaceTokens(          XMLCh* const    errText
     ArrayJanitor<XMLCh> janText(orgText, manager);
 
     XMLCh* pszSrc = orgText;
-    unsigned int curOutInd = 0;
+    XMLSize_t curOutInd = 0;
 
     while (*pszSrc && (curOutInd < maxChars))
     {
@@ -489,7 +489,7 @@ char* XMLString::replicate( const char* const    toRep
     //  Get the len of the source and allocate a new buffer. Make sure to
     //  account for the nul terminator.
     //
-    const unsigned int srcLen = strlen(toRep);
+    const XMLSize_t srcLen = strlen(toRep);
     char* ret = (char*) manager->allocate((srcLen+1) * sizeof(char)); //new char[srcLen+1];
 
     // Copy over the text, adjusting for the size of a char
@@ -511,7 +511,7 @@ bool XMLString::startsWithI(const   char* const toTest
 }
 
 
-unsigned int XMLString::stringLen(const char* const src)
+XMLSize_t XMLString::stringLen(const char* const src)
 {
     return strlen(src);
 }
@@ -525,7 +525,7 @@ char* XMLString::transcode(const XMLCh* const toTranscode,
 
 bool XMLString::transcode(  const   XMLCh* const    toTranscode
                             ,       char* const     toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , MemoryManager* const  manager)
 {
     return gTranscoder->transcode(toTranscode, toFill, maxChars, manager);
@@ -539,7 +539,7 @@ XMLCh* XMLString::transcode(const char* const toTranscode,
 
 bool XMLString::transcode(  const   char* const     toTranscode
                             ,       XMLCh* const    toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , MemoryManager* const  manager)
 {
     return gTranscoder->transcode(toTranscode, toFill, maxChars, manager);
@@ -548,9 +548,9 @@ bool XMLString::transcode(  const   char* const     toTranscode
 
 void XMLString::trim(char* const toTrim)
 {
-    const unsigned int len = strlen(toTrim);
+    const XMLSize_t len = strlen(toTrim);
 
-    unsigned int skip, scrape;
+    XMLSize_t skip, scrape;
     for (skip = 0; skip < len; skip++)
     {
         if (! isspace(toTrim[skip]))
@@ -570,7 +570,7 @@ void XMLString::trim(char* const toTrim)
     if (skip)
     {
         // Copy the chars down
-        unsigned int index = 0;
+        XMLSize_t index = 0;
         while (toTrim[skip])
             toTrim[index++] = toTrim[skip++];
 
@@ -580,20 +580,21 @@ void XMLString::trim(char* const toTrim)
 
 
 void XMLString::subString(char* const targetStr, const char* const srcStr
-                          , const int startIndex, const int endIndex
+                          , const XMLSize_t startIndex, const XMLSize_t endIndex
                           , MemoryManager* const manager)
 {
     if (targetStr == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
-    const int srcLen = strlen(srcStr);
-    const int copySize = endIndex - startIndex;
+    const XMLSize_t srcLen = strlen(srcStr);
 
     // Make sure the start index is within the XMLString bounds
     if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
-    for (int i= startIndex; i < endIndex; i++) {
+    const XMLSize_t copySize = endIndex - startIndex;
+
+    for (XMLSize_t i= startIndex; i < endIndex; i++) {
         targetStr[i-startIndex] = srcStr[i];
     }
 
@@ -608,11 +609,11 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
     //  where URI is optional
     //        ':' and localPart must be present
     //
-    int nameLen = XMLString::stringLen(name);
+    XMLSize_t nameLen = XMLString::stringLen(name);
     int colPos = XMLString::lastIndexOf(name, chColon);
 
     if ((colPos == -1)         ||      // no ':'
-        (colPos == nameLen - 1)  )     // <URI>':'
+        (colPos == ((int)nameLen) - 1)  )     // <URI>':'
         return false;
 
 
@@ -715,7 +716,7 @@ bool XMLString::isHex(XMLCh const theChar)
 // ---------------------------------------------------------------------------
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       XMLCh* const    toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -806,7 +807,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
 void XMLString::binToText(  const   unsigned int    toFormat
                             ,       XMLCh* const    toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -816,7 +817,7 @@ void XMLString::binToText(  const   unsigned int    toFormat
 
 void XMLString::binToText(  const   long            toFormat
                             ,       XMLCh* const    toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -843,7 +844,7 @@ void XMLString::binToText(  const   long            toFormat
 
 void XMLString::binToText(  const   int             toFormat
                             ,       XMLCh* const    toFill
-                            , const unsigned int    maxChars
+                            , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
@@ -872,7 +873,7 @@ void XMLString::binToText(  const   int             toFormat
 void XMLString::catString(XMLCh* const target, const XMLCh* const src)
 {
     // Get the starting point for the cat on the target XMLString
-    unsigned int index = stringLen(target);
+    XMLSize_t index = stringLen(target);
 
     // While the source is not zero, add them to target and bump
     const XMLCh* pszTmp = src;
@@ -900,10 +901,10 @@ int XMLString::compareIStringASCII(  const   XMLCh* const    str1
     if (psz1 == 0 || psz2 == 0) {
 
         if (psz1 == 0) {
-            return 0 - XMLString::stringLen(psz2);
+            return 0 - (int)XMLString::stringLen(psz2);
         }
 		else if (psz2 == 0) {
-            return XMLString::stringLen(psz1);
+            return (int)XMLString::stringLen(psz1);
         }
     }
 
@@ -937,12 +938,12 @@ int XMLString::compareIStringASCII(  const   XMLCh* const    str1
 
 int XMLString::compareNString(  const   XMLCh* const    str1
                                 , const XMLCh* const    str2
-                                , const unsigned int    maxChars)
+                                , const XMLSize_t       maxChars)
 {
     const XMLCh* psz1 = str1;
     const XMLCh* psz2 = str2;
 
-    unsigned int curCount = 0;
+    XMLSize_t curCount = 0;
     while (curCount < maxChars)
     {
         // If an inequality, then return difference
@@ -969,7 +970,7 @@ int XMLString::compareNString(  const   XMLCh* const    str1
 
 int XMLString::compareNIString( const   XMLCh* const    str1
                                 , const XMLCh* const    str2
-                                , const unsigned int    maxChars)
+                                , const XMLSize_t       maxChars)
 {
     // Refer this oneto the transcoding service
     return XMLPlatformUtils::fgTransService->compareNIString(str1, str2, maxChars);
@@ -985,10 +986,10 @@ int XMLString::compareString(   const   XMLCh* const    str1
     if (psz1 == 0 || psz2 == 0) {
 
         if (psz1 == 0) {
-            return 0 - XMLString::stringLen(psz2);
+            return 0 - (int)XMLString::stringLen(psz2);
         }
 		else if (psz2 == 0) {
-            return XMLString::stringLen(psz1);
+            return (int)XMLString::stringLen(psz1);
         }
     }
 
@@ -1014,7 +1015,7 @@ bool XMLString::regionMatches(const   XMLCh* const	str1
 							  , const int			offset1
 							  , const XMLCh* const	str2
 							  , const int			offset2
-							  , const unsigned int	charCount)
+							  , const XMLSize_t     charCount)
 {
 	if (!validateRegion(str1, offset1,str2, offset2, charCount))
 		return false;
@@ -1029,7 +1030,7 @@ bool XMLString::regionIMatches(const   XMLCh* const	str1
 						 	   , const int			offset1
 							   , const XMLCh* const	str2
 							   , const int			offset2
-							   , const unsigned int	charCount)
+							   , const XMLSize_t    charCount)
 {
 	if (!validateRegion(str1, offset1,str2, offset2, charCount))
 		return false;
@@ -1060,7 +1061,7 @@ void XMLString::copyString(XMLCh* const target, const XMLCh* const src)
 
 bool XMLString::copyNString(        XMLCh* const    target
                             , const XMLCh* const    src
-                            , const unsigned int    maxChars)
+                            , const XMLSize_t       maxChars)
 {
     XMLCh* outPtr = target;
     const XMLCh* srcPtr = src;
@@ -1120,13 +1121,13 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
     if (!toSearch || !*toSearch )
         return -1;
 
-    const int patnLen = XMLString::stringLen(pattern);
+    const XMLSize_t patnLen = XMLString::stringLen(pattern);
 	if ( !patnLen )
 		return -1;
 
     const XMLCh* srcPtr    = toSearch;
     const XMLCh* patnStart = toSearch;
-    int  patnIndex = 0;
+    XMLSize_t patnIndex = 0;
 
     while (*srcPtr)
     {
@@ -1139,7 +1140,7 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
         {
             if (++patnIndex == patnLen)
                 // full pattern match found
-                return (srcPtr - patnLen - toSearch);
+                return (int)(srcPtr - patnLen - toSearch);
 
         }
     }
@@ -1149,7 +1150,7 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 
 
 unsigned int XMLString::hashN(  const   XMLCh* const    tohash
-                                , const unsigned int    n
+                                , const XMLSize_t       n
                                 , const unsigned int    hashModulus
                                 , MemoryManager* const)
 {
@@ -1158,7 +1159,7 @@ unsigned int XMLString::hashN(  const   XMLCh* const    tohash
     unsigned int hashVal = 0;
     if (tohash) {
         const XMLCh* curCh = tohash;
-        int i = n;
+        int i = (int)n;
         while (i--)
         {
             unsigned int top = hashVal >> 24;
@@ -1191,26 +1192,26 @@ int XMLString::indexOf(const XMLCh* const toSearch, const XMLCh ch)
 
 int XMLString::indexOf( const   XMLCh* const    toSearch
                         , const XMLCh           ch
-                        , const unsigned int    fromIndex
+                        , const XMLSize_t       fromIndex
                         , MemoryManager* const  manager)
 {
-    const int len = stringLen(toSearch);
+    const XMLSize_t len = stringLen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
-	if ((int)fromIndex > len-1)
+	if ((int)fromIndex > ((int)len)-1)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
-    for (int i = (int)fromIndex; i < len; i++)
+    for (XMLSize_t i = fromIndex; i < len; i++)
     {
         if (toSearch[i] == ch)
-            return i;
+            return (int)i;
     }
     return -1;
 }
 
 int XMLString::lastIndexOf(const XMLCh ch,
                            const XMLCh* const toSearch,
-                           const unsigned int toSearchLen)
+                           const XMLSize_t    toSearchLen)
 {
     for (int i = (int)toSearchLen-1; i >= 0; i--)
     {
@@ -1222,10 +1223,10 @@ int XMLString::lastIndexOf(const XMLCh ch,
 
 int XMLString::lastIndexOf( const   XMLCh* const    toSearch
                             , const XMLCh           ch
-                            , const unsigned int    fromIndex
+                            , const XMLSize_t       fromIndex
                             , MemoryManager* const  manager)
 {
-    const int len = stringLen(toSearch);
+    const int len = (int)stringLen(toSearch);
 	if ((int)fromIndex > len-1)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
@@ -1246,7 +1247,7 @@ XMLString::makeUName(const XMLCh* const pszURI, const XMLCh* const pszName)
     //  form. Otherwise, just set it to the same thing as the base name.
     //
     XMLCh* pszRet = 0;
-    const unsigned int uriLen = stringLen(pszURI);
+    const XMLSize_t uriLen = stringLen(pszURI);
     if (uriLen)
     {
         pszRet = new XMLCh[uriLen + stringLen(pszName) + 3];
@@ -1281,7 +1282,7 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill
 	XMLCh* trimmedStr = XMLString::replicate(toConvert, manager);
 	ArrayJanitor<XMLCh> jan1(trimmedStr, manager);
 	XMLString::trim(trimmedStr);
-    unsigned int trimmedStrLen = XMLString::stringLen(trimmedStr);
+    XMLSize_t trimmedStrLen = XMLString::stringLen(trimmedStr);
 
 	if ( !trimmedStrLen )
 		return false;
@@ -1321,7 +1322,7 @@ int XMLString::parseInt(const XMLCh* const toConvert
 	XMLCh* trimmedStr = XMLString::replicate(toConvert, manager);
 	ArrayJanitor<XMLCh> jan1(trimmedStr, manager);
 	XMLString::trim(trimmedStr);
-    unsigned int trimmedStrLen = XMLString::stringLen(trimmedStr);
+    XMLSize_t trimmedStrLen = XMLString::stringLen(trimmedStr);
 
 	if ( !trimmedStrLen )
         ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_null_ptr, manager);
@@ -1352,9 +1353,9 @@ int XMLString::parseInt(const XMLCh* const toConvert
 
 void XMLString::trim(XMLCh* const toTrim)
 {
-    const unsigned int len = stringLen(toTrim);
+    const XMLSize_t len = stringLen(toTrim);
 
-    unsigned int skip, scrape;
+    XMLSize_t skip, scrape;
     for (skip = 0; skip < len; skip++)
     {
         if (!XMLChar1_0::isWhitespace(toTrim[skip]))
@@ -1374,7 +1375,7 @@ void XMLString::trim(XMLCh* const toTrim)
     if (skip)
     {
         // Copy the chars down
-        unsigned int index = 0;
+        XMLSize_t index = 0;
         while (toTrim[skip])
             toTrim[index++] = toTrim[skip++];
 
@@ -1427,15 +1428,15 @@ void XMLString::lowerCaseASCII(XMLCh* const toLowerCase)
 }
 
 void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
-                          , const int startIndex, const int endIndex
+                          , const XMLSize_t startIndex, const XMLSize_t endIndex
                           , MemoryManager* const manager)
 {
     subString(targetStr, srcStr, startIndex, endIndex, stringLen(srcStr), manager);
 }
 
 void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
-                          , const int startIndex, const int endIndex
-                          , const int srcStrLength
+                          , const XMLSize_t startIndex, const XMLSize_t endIndex
+                          , const XMLSize_t srcStrLength
                           , MemoryManager* const manager)
 {
     //if (startIndex < 0 || endIndex < 0)
@@ -1444,13 +1445,13 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
     if (targetStr == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
-    const int copySize = endIndex - startIndex;
-
     // Make sure the start index is within the XMLString bounds
     if ( startIndex < 0 || startIndex > endIndex || endIndex > srcStrLength)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
-    for (int i= startIndex; i < endIndex; i++) {
+    const XMLSize_t copySize = endIndex - startIndex;
+
+    for (XMLSize_t i= startIndex; i < endIndex; i++) {
         targetStr[i-startIndex] = srcStr[i];
     }
 
@@ -1466,9 +1467,9 @@ BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh*      const   toke
 
     RefArrayVectorOf<XMLCh>* tokenStack = new (manager) RefArrayVectorOf<XMLCh>(16, true, manager);
 
-    unsigned int len = stringLen(tokenizeStr);
-    unsigned int skip;
-    unsigned int index = 0;
+    XMLSize_t len = stringLen(tokenizeStr);
+    XMLSize_t skip;
+    XMLSize_t index = 0;
 
     while (index != len) {
         // find the first non-space character
@@ -1517,10 +1518,10 @@ bool XMLString::isInList(const XMLCh* const toFind, const XMLCh* const enumList)
     //  when we hit the end of the enum list or get a match.
     //
     const XMLCh* listPtr = enumList;
-    const unsigned int findLen = XMLString::stringLen(toFind);
+    const XMLSize_t findLen = XMLString::stringLen(toFind);
     while (*listPtr)
     {
-        unsigned int testInd;
+        XMLSize_t testInd;
         for (testInd = 0; testInd < findLen; testInd++)
         {
             //
@@ -1593,7 +1594,7 @@ bool XMLString::isWSReplaced(const XMLCh* const toCheck)
 void XMLString::replaceWS(XMLCh* const toConvert
                           , MemoryManager* const  manager)
 {
-    int strLen = XMLString::stringLen(toConvert);
+    XMLSize_t strLen = XMLString::stringLen(toConvert);
     if (strLen == 0)
         return;
 

@@ -550,11 +550,11 @@ private:
      void cleanUp();
 
     static bool isConformantSchemeName(const XMLCh* const scheme,
-                                       const int schemeLen);
-    static bool processScheme(const XMLCh* const uriStr, int& index);
-    static bool processAuthority(const XMLCh* const uriStr, const int authLen);
-    static bool isWellFormedAddress(const XMLCh* const addr, const int addrLen);
-    static bool processPath(const XMLCh* const pathStr, const int pathStrLen,
+                                       const XMLSize_t schemeLen);
+    static bool processScheme(const XMLCh* const uriStr, XMLSize_t& index);
+    static bool processAuthority(const XMLCh* const uriStr, const XMLSize_t authLen);
+    static bool isWellFormedAddress(const XMLCh* const addr, const XMLSize_t addrLen);
+    static bool processPath(const XMLCh* const pathStr, const XMLSize_t pathStrLen,
                             const bool isSchemePresent, const bool bAllowSpaces=false);
 
     // -----------------------------------------------------------------------

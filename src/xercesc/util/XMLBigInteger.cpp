@@ -258,8 +258,8 @@ int  XMLBigInteger::compareValues(const XMLBigInteger* const lValue
     if (lSign == 0)    // optimization
         return 0;
 
-    int lStrLen = XMLString::stringLen(lValue->fMagnitude);
-    int rStrLen = XMLString::stringLen(rValue->fMagnitude);
+    XMLSize_t lStrLen = XMLString::stringLen(lValue->fMagnitude);
+    XMLSize_t rStrLen = XMLString::stringLen(rValue->fMagnitude);
 
     //
     // different length
@@ -310,8 +310,8 @@ int XMLBigInteger::compareValues(const XMLCh*         const lString
     if (lSign == 0)    // optimization
         return 0;
 
-    int lStrLen = XMLString::stringLen(lString);
-    int rStrLen = XMLString::stringLen(rString);
+    XMLSize_t lStrLen = XMLString::stringLen(lString);
+    XMLSize_t rStrLen = XMLString::stringLen(rString);
 
     //
     // different length
@@ -350,7 +350,7 @@ void XMLBigInteger::multiply(const unsigned int byteToShift)
     if (byteToShift <= 0)
         return;
 
-    int strLen = XMLString::stringLen(fMagnitude);
+    XMLSize_t strLen = XMLString::stringLen(fMagnitude);
     XMLCh* tmp = (XMLCh*) fMemoryManager->allocate
     (
         (strLen + byteToShift + 1) * sizeof(XMLCh)
@@ -376,7 +376,7 @@ void XMLBigInteger::divide(const unsigned int byteToShift)
     if (byteToShift <= 0)
         return;
 
-    int strLen = XMLString::stringLen(fMagnitude);
+    XMLSize_t strLen = XMLString::stringLen(fMagnitude);
     XMLCh* tmp = (XMLCh*) fMemoryManager->allocate
     (
         (strLen - byteToShift + 1) * sizeof(XMLCh)

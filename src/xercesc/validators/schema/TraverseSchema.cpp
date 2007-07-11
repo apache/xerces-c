@@ -4501,7 +4501,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     // Get xpath attribute
     // ------------------------------------------------------------------
     const XMLCh* xpathExpr = getElementAttValue(elem, SchemaSymbols::fgATT_XPATH, true);
-    unsigned int xpathLen = XMLString::stringLen(xpathExpr);
+    XMLSize_t    xpathLen = XMLString::stringLen(xpathExpr);
 
     if (!xpathExpr || !xpathLen) {
 
@@ -4511,7 +4511,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
 
     fBuffer.reset();
 
-    unsigned int startIndex = 0;
+    XMLSize_t startIndex = 0;
     	
     while (startIndex < xpathLen) {
         if(XMLChar1_0::isWhitespace(*(xpathExpr+startIndex)))

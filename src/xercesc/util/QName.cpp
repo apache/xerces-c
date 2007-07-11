@@ -127,7 +127,7 @@ QName::QName(const QName& qname)
 ,fRawName(0)
 ,fMemoryManager(qname.fMemoryManager)
 {
-    unsigned int newLen;
+    XMLSize_t newLen;
 
     newLen = XMLString::stringLen(qname.getLocalPart());
     fLocalPartBufSz = newLen + 8;
@@ -286,7 +286,7 @@ void QName::setName(const XMLCh* const    rawName
                   , const unsigned int    uriId)
 {
     //set the rawName
-    unsigned int newLen = XMLString::stringLen(rawName);
+    XMLSize_t newLen = XMLString::stringLen(rawName);
     //find out the prefix and localPart from the rawName
     const int colonInd = XMLString::indexOf(rawName, chColon);
 
@@ -326,7 +326,7 @@ void QName::setPrefix(const XMLCh* prefix)
     setNPrefix(prefix, XMLString::stringLen(prefix));
 }
 
-void QName::setNPrefix(const XMLCh* prefix, const unsigned int newLen)
+void QName::setNPrefix(const XMLCh* prefix, const XMLSize_t newLen)
 {
     if (!fPrefixBufSz || (newLen > fPrefixBufSz))
     {
@@ -347,7 +347,7 @@ void QName::setLocalPart(const XMLCh* localPart)
     setNLocalPart(localPart, XMLString::stringLen(localPart));
 }
 
-void QName::setNLocalPart(const XMLCh* localPart, const unsigned int newLen)
+void QName::setNLocalPart(const XMLCh* localPart, const XMLSize_t newLen)
 {
     if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
     {

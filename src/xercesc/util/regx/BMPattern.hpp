@@ -100,7 +100,7 @@ public:
 	  *	This method will perform a match of the given content against a
 	  *	predefined pattern.
 	  */
-	int matches(const XMLCh* const content, int start, int limit);
+	int matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit);
 
 	//@}
 
@@ -141,7 +141,7 @@ private :
     // -----------------------------------------------------------------------
 	bool           fIgnoreCase;
 	unsigned int   fShiftTableLen;
-	int*           fShiftTable;
+	XMLSize_t*     fShiftTable;
 	XMLCh*         fPattern;
 	XMLCh*         fUppercasePattern;
     MemoryManager* fMemoryManager; 

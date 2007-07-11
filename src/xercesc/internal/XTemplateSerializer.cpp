@@ -1624,8 +1624,8 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
              ***/
             XMLCh*       typeUri   = (XMLCh*) data->getTypeUri();
             XMLCh*       typeLocal = (XMLCh*) data->getTypeLocalName();
-            unsigned int uriLen    = XMLString::stringLen(typeUri);
-            unsigned int localLen  = XMLString::stringLen(typeLocal);
+            XMLSize_t    uriLen    = XMLString::stringLen(typeUri);
+            XMLSize_t    localLen  = XMLString::stringLen(typeLocal);
             XMLCh*       typeKey   = (XMLCh*) serEng.getMemoryManager()->allocate
                                      (
                                        (uriLen + localLen + 2) * sizeof(XMLCh)

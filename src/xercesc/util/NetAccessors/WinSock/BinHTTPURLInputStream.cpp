@@ -455,7 +455,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     if (portNumber != 80)
     {
         strcat(fBuffer, ":");
-        int i = strlen(fBuffer);
+        size_t i = strlen(fBuffer);
         itoa(portNumber, fBuffer+i, 10);
     }
     strcat(fBuffer, "\r\n");
@@ -471,7 +471,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
         ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
 
-        unsigned int len;
+        XMLSize_t len;
         XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
         ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
  
@@ -481,7 +481,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
             ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
             XMLByte* cursor=authData;
-            for(unsigned int i=0;i<len;i++)
+            for(XMLSize_t i=0;i<len;i++)
                 if(encodedData[i]!=chLF)
                     *cursor++=encodedData[i];
             *cursor++=0;
@@ -497,7 +497,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     strcat(fBuffer, "\r\n");
 
     // Send the http request
-    int lent = strlen(fBuffer);
+    int lent = (int)strlen(fBuffer);
     int  aLent = 0;
     if ((aLent = wrap_send(s, fBuffer, lent, 0)) != lent)
     {
@@ -554,7 +554,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             {
                 //
                 // Header is not yet read, do another recv() to get more data...
-                aLent = wrap_recv(s, fBufferEnd, (sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer), 0);
+                aLent = wrap_recv(s, fBufferEnd, (int)((sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer)), 0);
                 if (aLent == SOCKET_ERROR || aLent == 0)
                 {
                     // Call WSAGetLastError() to get the error number.
@@ -622,7 +622,7 @@ XMLSize_t BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
         // There was no data in the local buffer.
         // Read some from the socket, straight into our caller's buffer.
         //
-        len = wrap_recv((SOCKET) fSocketHandle, (char *) toFill, maxToRead, 0);
+        len = wrap_recv((SOCKET) fSocketHandle, (char *) toFill, (int)maxToRead, 0);
         if (len == SOCKET_ERROR)
         {
             // Call WSAGetLastError() to get the error number.

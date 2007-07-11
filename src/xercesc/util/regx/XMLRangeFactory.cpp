@@ -62,9 +62,9 @@ static void setupRange(XMLInt32* const rangeMap,
 
 static unsigned int getTableLen(const XMLCh* const theTable) {
 
-    unsigned int rangeLen = XMLString::stringLen(theTable);
+    XMLSize_t rangeLen = XMLString::stringLen(theTable);
 
-    return rangeLen + 2*XMLString::stringLen(theTable + rangeLen + 1);
+    return (unsigned int)(rangeLen + 2*XMLString::stringLen(theTable + rangeLen + 1));
 }
 
 // ---------------------------------------------------------------------------

@@ -33,10 +33,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XMLBuffer: Buffer management
 // ---------------------------------------------------------------------------
 
-void XMLBuffer::insureCapacity(const unsigned int extraNeeded)
+void XMLBuffer::insureCapacity(const XMLSize_t extraNeeded)
 {    
     // If we can't handle it, try doubling the buffer size.
-    unsigned int newCap = (fIndex + extraNeeded) * 2;
+    XMLSize_t newCap = (fIndex + extraNeeded) * 2;
 
     // If a maximum size is set, and double the current buffer size exceeds that
     // maximum, first check if the maximum size will accomodate the extra needed.

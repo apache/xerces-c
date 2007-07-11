@@ -204,7 +204,7 @@ public:
      *  by getValue(). If this entity is external, this will be zero since
      *  an external entity has no internal value.
      */
-    unsigned int getValueLen() const;
+    XMLSize_t getValueLen() const;
 
     /**
       * Indicates that this entity is an external entity. If not, then it is
@@ -366,7 +366,7 @@ private :
     //      is the URI where it is declared (NOT referenced).
     // -----------------------------------------------------------------------
     unsigned int    fId;
-    unsigned int    fValueLen;
+    XMLSize_t       fValueLen;
     XMLCh*          fValue;
     XMLCh*          fName;
     XMLCh*          fNotationName;
@@ -415,7 +415,7 @@ inline const XMLCh* XMLEntityDecl::getValue() const
     return fValue;
 }
 
-inline unsigned int XMLEntityDecl::getValueLen() const
+inline XMLSize_t XMLEntityDecl::getValueLen() const
 {
     return fValueLen;
 }

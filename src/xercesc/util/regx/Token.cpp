@@ -109,7 +109,7 @@ int Token::getMinLength() const {
 	case T_BACKREFERENCE:
 		return 0; // *****  - REVISIT
 	case T_STRING:
-		return XMLString::stringLen(getString());
+		return (int)XMLString::stringLen(getString());
 	case T_LOOKAHEAD:
 	case T_NEGATIVELOOKAHEAD:
 	case T_LOOKBEHIND:
@@ -191,7 +191,7 @@ int Token::getMaxLength() const {
     case T_BACKREFERENCE:
 		return -1; // REVISIT
     case T_STRING:
-        return XMLString::stringLen(getString());
+        return (int)XMLString::stringLen(getString());
     case T_LOOKAHEAD:
     case T_NEGATIVELOOKAHEAD:
     case T_LOOKBEHIND:
@@ -414,8 +414,8 @@ bool Token::isShorterThan(Token* const tok) {
 	if (getTokenType() != T_STRING && tok->getTokenType() != T_STRING)
 		return false; //Should we throw an exception?
 
-    int length = XMLString::stringLen(getString());
-    int tokLength = XMLString::stringLen(tok->getString());
+    XMLSize_t length = XMLString::stringLen(getString());
+    XMLSize_t tokLength = XMLString::stringLen(tok->getString());
 
 	return length < tokLength;
 }

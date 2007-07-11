@@ -199,12 +199,12 @@ const XMLCh*  XMLAbstractDoubleFloat::getFormattedString() const
 void XMLAbstractDoubleFloat::formatString()
 {
 
-    unsigned int rawDataLen = XMLString::stringLen(fRawData);
+    XMLSize_t rawDataLen = XMLString::stringLen(fRawData);
     fFormattedString = (XMLCh*) fMemoryManager->allocate
     (
         (rawDataLen + 8) * sizeof(XMLCh)
     );//new XMLCh [ rawDataLen + 8];
-    for (unsigned int i = 0; i < rawDataLen + 8; i++)
+    for (XMLSize_t i = 0; i < rawDataLen + 8; i++)
         fFormattedString[i] = chNull;
 
     XMLString::copyString(fFormattedString, fRawData);
@@ -534,7 +534,7 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
 
     try 
     {
-        int    strLen = XMLString::stringLen(rawData);
+        XMLSize_t strLen = XMLString::stringLen(rawData);
         XMLCh* manStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
         ArrayJanitor<XMLCh> janManStr(manStr, memMgr);
         XMLCh* manBuf = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
@@ -559,12 +559,12 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
         }
         else
         {
-            int    manLen = ePosition - rawData;
+            XMLSize_t manLen = ePosition - rawData;
             XMLString::copyNString(manStr, rawData, manLen);
             *(manStr + manLen) = chNull;
             XMLBigDecimal::parseDecimal(manStr, manBuf, sign, totalDigits, fractDigits, memMgr);
 
-            int    expLen = strLen - manLen - 1;
+            XMLSize_t expLen = strLen - manLen - 1;
             ePosition++;
             XMLString::copyNString(expStr, ePosition, expLen);
             *(expStr + expLen) = chNull;
@@ -611,7 +611,7 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
                     endPtr--;
             }
 
-            int remainLen = endPtr - &(manBuf[1]);
+            XMLSize_t remainLen = endPtr - &(manBuf[1]);
 
             if (remainLen)
             {

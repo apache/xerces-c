@@ -633,16 +633,16 @@ DOMElement *DOMDocumentImpl::getElementById(const XMLCh *elementId) const
 //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd" or "abcd:".
 int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 {
-    int qNameLen = XMLString::stringLen(qName);
+    XMLSize_t qNameLen = XMLString::stringLen(qName);
     int index = -1, count = 0;
-    for (int i = 0; i < qNameLen; ++i) {
+    for (XMLSize_t i = 0; i < qNameLen; ++i) {
         if (qName[i] == chColon) {
-            index = i;
+            index = (int)i;
             ++count;    //number of ':' found
         }
     }
 
-    if (qNameLen == 0 || count > 1 || index == 0 || index == qNameLen-1)
+    if (qNameLen == 0 || count > 1 || index == 0 || index == ((int)qNameLen)-1)
         return -1;
     return count == 0 ? 0 : index;
 }

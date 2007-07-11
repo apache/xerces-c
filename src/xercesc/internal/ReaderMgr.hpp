@@ -144,7 +144,7 @@ public :
         , const XMLReader::RefFrom  refFrom
         , const XMLReader::Types    type
         , const XMLCh* const        dataBuf
-        , const unsigned int        dataLen
+        , const XMLSize_t           dataLen
         , const bool                copyBuf
         , const bool                calcSrcOfs = true
     );

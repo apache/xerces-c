@@ -1002,7 +1002,7 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path
         return;
 
     XMLCh* srcPtr = XMLString::replicate(path, manager);
-    int    srcLen = XMLString::stringLen(srcPtr);
+    XMLSize_t srcLen = XMLString::stringLen(srcPtr);
     ArrayJanitor<XMLCh>   janName(srcPtr, manager);   
     XMLCh* tarPtr = path;
 
@@ -1051,7 +1051,7 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path
 void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path
                                          , MemoryManager* const manager)
 {
-    int pathLen = XMLString::stringLen(path);
+    XMLSize_t pathLen = XMLString::stringLen(path);
     XMLCh* tmp1 = (XMLCh*) manager->allocate
     (
         (pathLen+1) * sizeof(XMLCh)
@@ -1114,7 +1114,7 @@ int XMLPlatformUtils::searchSlashDotDotSlash(XMLCh* const srcPath)
         return -1;
 
     XMLCh* srcPtr = srcPath;
-    int    srcLen = XMLString::stringLen(srcPath);
+    XMLSize_t srcLen = XMLString::stringLen(srcPath);
     int    retVal = -1;
 
     while (*srcPtr)
@@ -1126,7 +1126,7 @@ int XMLPlatformUtils::searchSlashDotDotSlash(XMLCh* const srcPath)
                  (chPeriod == *(srcPtr+2)) &&
                  (isAnySlash(*(srcPtr+3)))  )
             {
-                retVal = (srcPtr - srcPath);
+                retVal = (int)(srcPtr - srcPath);
                 break;
             }
             else

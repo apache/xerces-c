@@ -355,8 +355,8 @@ public:
     // -----------------------------------------------------------------------
     //  Scan methods
     // -----------------------------------------------------------------------
-    bool scanExpression(const XMLCh* const data, int currentOffset,
-                        const int endOffset, ValueVectorOf<int>* const tokens);
+    bool scanExpression(const XMLCh* const data, XMLSize_t currentOffset,
+                        const XMLSize_t endOffset, ValueVectorOf<int>* const tokens);
 
 protected:
     // -----------------------------------------------------------------------
@@ -386,10 +386,10 @@ private:
     // -----------------------------------------------------------------------
     //  Scan methods
     // -----------------------------------------------------------------------
-    int scanNCName(const XMLCh* const data, const int endOffset,
-                   int currentOffset);
-    int scanNumber(const XMLCh* const data, const int endOffset,
-                   int currentOffset, ValueVectorOf<int>* const tokens);
+    XMLSize_t scanNCName(const XMLCh* const data, const XMLSize_t endOffset,
+                   XMLSize_t currentOffset);
+    XMLSize_t scanNumber(const XMLCh* const data, const XMLSize_t endOffset,
+                   XMLSize_t currentOffset, ValueVectorOf<int>* const tokens);
 
     // -----------------------------------------------------------------------
     //  Data members

@@ -110,8 +110,8 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 
     this-> fPrefix = ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(prefix);
 
-    int prefixLen = XMLString::stringLen(prefix);
-    int newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
+    XMLSize_t prefixLen = XMLString::stringLen(prefix);
+    XMLSize_t newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
 
     XMLCh *newName;
     XMLCh temp[4000];

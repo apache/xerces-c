@@ -82,9 +82,6 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
     CleanupType cleanup(this, &XMLStringTokenizer::cleanUp);
 
 	try {
-
-        
-
         if (fStringLen > 0) {
             fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
         }
@@ -127,8 +124,8 @@ XMLCh* XMLStringTokenizer::nextToken() {
     }
 
     bool tokFound = false;
-    int  startIndex = fOffset;
-    int  endIndex = fOffset;
+    XMLSize_t startIndex = fOffset;
+    XMLSize_t endIndex = fOffset;
 
     for (; endIndex < fStringLen; endIndex++) {
 

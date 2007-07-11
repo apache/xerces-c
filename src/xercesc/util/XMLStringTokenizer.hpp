@@ -111,7 +111,7 @@ public:
       * Returns the number of tokens remaining in the string using the current
       * delimiter set.
       */
-    int countTokens();
+    unsigned int countTokens();
 
     /**
       * Returns the next token from this string tokenizer.
@@ -158,8 +158,8 @@ private:
     //  fTokens
     //      A vector of the token strings
     // -----------------------------------------------------------------------
-    int                 fOffset;
-    int                 fStringLen;
+    XMLSize_t           fOffset;
+    XMLSize_t           fStringLen;
 	XMLCh*              fString;
     const XMLCh*        fDelimeters;
 	RefArrayVectorOf<XMLCh>* fTokens;
@@ -178,15 +178,15 @@ inline bool XMLStringTokenizer::isDelimeter(const XMLCh ch) {
 // ---------------------------------------------------------------------------
 //  XMLStringTokenizer: Management methods
 // ---------------------------------------------------------------------------
-inline int XMLStringTokenizer::countTokens() {
+inline unsigned int XMLStringTokenizer::countTokens() {
 
     if (fStringLen == 0)
 		return 0;
 
-    int  tokCount = 0;
+    unsigned int tokCount = 0;
     bool inToken = false;
 
-    for (int i= fOffset; i< fStringLen; i++) {
+    for (XMLSize_t i= fOffset; i< fStringLen; i++) {
 
         if (isDelimeter(fString[i])) {
 

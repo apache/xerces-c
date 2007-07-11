@@ -399,7 +399,7 @@ private :
     // -----------------------------------------------------------------------
     bool                fSpecified;
     XMLAttDef::AttTypes fType;
-    unsigned int        fValueBufSz;
+    XMLSize_t           fValueBufSz;
     XMLCh*              fValue;
     QName*              fAttName;
     MemoryManager*      fMemoryManager;   

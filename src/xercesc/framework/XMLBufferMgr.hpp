@@ -138,7 +138,7 @@ public :
         fBuffer.append(toAppend);
     }
 
-    void append(const XMLCh* const toAppend, const unsigned int count = 0)
+    void append(const XMLCh* const toAppend, const XMLSize_t count = 0)
     {
         fBuffer.append(toAppend, count);
     }
@@ -165,7 +165,7 @@ public :
         return fBuffer.fBuffer;
     }
 
-    unsigned int getLen() const
+    XMLSize_t getLen() const
     {
         return fBuffer.fIndex;
     }
@@ -180,7 +180,7 @@ public :
         fBuffer.reset();
     }
 
-    void set(const XMLCh* const chars, const unsigned int count = 0)
+    void set(const XMLCh* const chars, const XMLSize_t count = 0)
     {
         fBuffer.set(chars, count);
     }

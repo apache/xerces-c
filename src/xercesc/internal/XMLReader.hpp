@@ -88,13 +88,13 @@ public:
     bool isAllSpaces
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     ) const;
 
     bool containsWhiteSpace
     (
         const   XMLCh* const    toCheck
-        , const unsigned int    count
+        , const XMLSize_t       count
     ) const;
 
 
@@ -163,7 +163,7 @@ public:
     // -----------------------------------------------------------------------
     //  Character buffer management methods
     // -----------------------------------------------------------------------
-    unsigned long charsLeftInBuffer() const;
+    XMLSize_t charsLeftInBuffer() const;
     bool refreshCharBuffer();
 
 
@@ -266,11 +266,11 @@ private:
         const   XMLCh* const    newEncoding
     );
 
-    unsigned int xcodeMoreChars
+    XMLSize_t xcodeMoreChars
     (
                 XMLCh* const            bufToFill
         ,       unsigned char* const    charSizes
-        , const unsigned int            maxChars
+        , const XMLSize_t               maxChars
     );
 
     void handleEOL
@@ -425,9 +425,9 @@ private:
     //  fXMLVersion
     //      Enum to indicate if this Reader is conforming to XML 1.0 or XML 1.1
     // -----------------------------------------------------------------------
-    unsigned int                fCharIndex;
+    XMLSize_t                   fCharIndex;
     XMLCh                       fCharBuf[kCharBufSize];
-    unsigned int                fCharsAvail;
+    XMLSize_t                   fCharsAvail;
     unsigned char               fCharSizeBuf[kCharBufSize];
     unsigned int                fCharOfsBuf[kCharBufSize];
     XMLSSize_t                  fCurCol;
@@ -437,9 +437,9 @@ private:
     bool                        fForcedEncoding;
     bool                        fNoMore;
     XMLCh*                      fPublicId;
-    unsigned int                fRawBufIndex;
+    XMLSize_t                   fRawBufIndex;
     XMLByte                     fRawByteBuf[kRawBufSize];
-    unsigned int                fRawBytesAvail;
+    XMLSize_t                   fRawBytesAvail;
     unsigned int                fReaderNum;
     RefFrom                     fRefFrom;
     bool                        fSentTrailingSpace;
@@ -519,7 +519,7 @@ inline bool XMLReader::isControlChar(const XMLCh toCheck) const
 // ---------------------------------------------------------------------------
 //  XMLReader: Buffer management methods
 // ---------------------------------------------------------------------------
-inline unsigned long XMLReader::charsLeftInBuffer() const
+inline XMLSize_t XMLReader::charsLeftInBuffer() const
 {
     return fCharsAvail - fCharIndex;
 }
@@ -624,7 +624,7 @@ inline void XMLReader::setXMLVersion(const XMLVersion version)
 // ---------------------------------------------------------------------------
 inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 {
-    unsigned int count = fCharIndex;
+    XMLSize_t count = fCharIndex;
 
     while (fCharIndex < fCharsAvail)
     {

@@ -90,14 +90,11 @@ ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
             {
                 // create type name
                 XMLCh typeName[128];
-                unsigned int nsLen = XMLString::stringLen(
-                    SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+                XMLSize_t nsLen = XMLString::stringLen(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
 
-			    XMLString::copyString(
-                    typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+			    XMLString::copyString(typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
                 typeName[nsLen] = chComma;
-                XMLString::copyString(
-                    typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
+                XMLString::copyString(typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
 
                 // Create and initialize 'anyType'
                 fAnyType = new ComplexTypeInfo();

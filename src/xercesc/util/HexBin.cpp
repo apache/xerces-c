@@ -59,7 +59,7 @@ int HexBin::getDataLength(const XMLCh* const hexData)
     if (!isArrayByteHex(hexData))
         return -1;
 
-    return XMLString::stringLen(hexData)/2;
+    return (int)XMLString::stringLen(hexData)/2;
 }
 
 bool HexBin::isArrayByteHex(const XMLCh* const hexData)
@@ -67,11 +67,11 @@ bool HexBin::isArrayByteHex(const XMLCh* const hexData)
     if (( hexData == 0 ) || ( *hexData == 0 )) // zero length
         return true;
 
-    int strLen = XMLString::stringLen(hexData);
+    XMLSize_t strLen = XMLString::stringLen(hexData);
     if ( strLen%2 != 0 )
         return false;
 
-    for ( int i = 0; i < strLen; i++ )
+    for ( XMLSize_t i = 0; i < strLen; i++ )
         if( !isHex(hexData[i]) )
             return false;
 
@@ -97,7 +97,7 @@ XMLByte* HexBin::decodeToXMLByte(const XMLCh*          const   hexData
     if (( hexData == 0 ) || ( *hexData == 0 )) // zero length
         return 0;
 
-    int strLen = XMLString::stringLen(hexData);
+    XMLSize_t strLen = XMLString::stringLen(hexData);
     if ( strLen%2 != 0 )
         return 0;
 

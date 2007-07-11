@@ -80,17 +80,17 @@ public :
     //  auto sense, and their lengths.
     // -----------------------------------------------------------------------
     static const char           fgASCIIPre[];
-    static const unsigned int   fgASCIIPreLen;
+    static const XMLSize_t      fgASCIIPreLen;
     static const XMLByte        fgEBCDICPre[];
-    static const unsigned int   fgEBCDICPreLen;
+    static const XMLSize_t      fgEBCDICPreLen;
     static const XMLByte        fgUTF16BPre[];
     static const XMLByte        fgUTF16LPre[];
-    static const unsigned int   fgUTF16PreLen;
+    static const XMLSize_t      fgUTF16PreLen;
     static const XMLByte        fgUCS4BPre[];
     static const XMLByte        fgUCS4LPre[];
-    static const unsigned int   fgUCS4PreLen;
+    static const XMLSize_t      fgUCS4PreLen;
     static const char           fgUTF8BOM[];
-    static const unsigned int   fgUTF8BOMLen;
+    static const XMLSize_t      fgUTF8BOMLen;
 
 
     // -----------------------------------------------------------------------
@@ -99,7 +99,7 @@ public :
     static Encodings basicEncodingProbe
     (
         const   XMLByte* const      rawBuffer
-        , const unsigned int        rawByteCount
+        , const XMLSize_t           rawByteCount
     );
 
     static Encodings encodingForName

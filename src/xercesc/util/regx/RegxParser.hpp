@@ -92,7 +92,7 @@ public:
     unsigned short getState() const;
     XMLInt32       getCharData() const;
     int            getNoParen() const;
-	int            getOffset() const;
+	XMLSize_t      getOffset() const;
 	bool           hasBackReferences() const;
     TokenFactory*  getTokenFactory() const;
     int            getOptions() const;
@@ -113,7 +113,7 @@ protected:
     // -----------------------------------------------------------------------
     //  Protected Helper methods
     // -----------------------------------------------------------------------
-    virtual bool        checkQuestion(const int off);
+    virtual bool        checkQuestion(const XMLSize_t off);
 	virtual XMLInt32    decodeEscaped();
     MemoryManager*      getMemoryManager() const;
     // -----------------------------------------------------------------------
@@ -178,10 +178,10 @@ private:
     class ReferencePosition : public XMemory
     {
         public :
-            ReferencePosition(const int refNo, const int position);
+            ReferencePosition(const int refNo, const XMLSize_t position);
 
-            int	fReferenceNo;
-			int	fPosition;
+            int	        fReferenceNo;
+			XMLSize_t   fPosition;
     };
 
     // -----------------------------------------------------------------------
@@ -195,10 +195,10 @@ private:
     MemoryManager*                  fMemoryManager;
 	bool                            fHasBackReferences;
 	int                             fOptions;
-	int                             fOffset;
+	XMLSize_t                       fOffset;
 	int                             fNoGroups;
 	unsigned short                  fParseContext;
-	int                             fStringLen;
+	XMLSize_t                       fStringLen;
 	unsigned short                  fState;
 	XMLInt32                        fCharData;
 	XMLCh*                          fString;
@@ -230,7 +230,7 @@ inline int RegxParser::getNoParen() const {
     return fNoGroups;
 }
 
-inline int RegxParser::getOffset() const {
+inline XMLSize_t RegxParser::getOffset() const {
 
 	return fOffset;
 }

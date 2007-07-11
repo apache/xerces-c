@@ -78,7 +78,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DOMBuffer(DOMDocumentImpl *doc, int capacity = 31);
+    DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity = 31);
 
     DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string);
 
@@ -92,7 +92,7 @@ public :
     void append
     (
         const   XMLCh* const    chars
-        , const unsigned int    count = 0
+        , const XMLSize_t       count = 0
     );
 
     const XMLCh* getRawBuffer() const
@@ -110,12 +110,12 @@ public :
     void set
     (
         const   XMLCh* const    chars
-        , const unsigned int    count = 0
+        , const XMLSize_t       count = 0
     );
 
     void chop
     (
-        const unsigned int    count
+        const XMLSize_t    count
     )
     {
         fBuffer[count] = 0;
@@ -126,12 +126,12 @@ public :
     // -----------------------------------------------------------------------
     //  Getters
     // -----------------------------------------------------------------------
-    unsigned int getLen() const
+    XMLSize_t getLen() const
     {
         return fIndex;
     }
 
-    unsigned int getCapacity() const
+    XMLSize_t getCapacity() const
     {
         return fCapacity;
     }
@@ -139,7 +139,7 @@ public :
     // -----------------------------------------------------------------------
     //  Private helpers
     // -----------------------------------------------------------------------
-    void expandCapacity(const unsigned int extraNeeded);
+    void expandCapacity(const XMLSize_t extraNeeded);
 
 
 private :
@@ -161,9 +161,9 @@ private :
     //  fDoc
     //      For allocating memory
     // -----------------------------------------------------------------------
-    XMLCh*          fBuffer;
-    unsigned int    fIndex;
-    unsigned int    fCapacity;
+    XMLCh*           fBuffer;
+    XMLSize_t        fIndex;
+    XMLSize_t        fCapacity;
     DOMDocumentImpl* fDoc;
 
     // -----------------------------------------------------------------------

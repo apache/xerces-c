@@ -1414,7 +1414,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
     {
         // Get the raw data we need for the callback
         const XMLCh* rawBuf = toSend.getRawBuffer();
-        unsigned int len = toSend.getLen();
+        XMLSize_t len = toSend.getLen();
 
         // And see if the current element is a 'Children' style content model
         const ElemStack::StackElem* topElem = fElemStack.topElement();
@@ -1467,7 +1467,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
                 else
                 {
-                    unsigned int xsLen;
+                    XMLSize_t xsLen;
                     const XMLCh* xsNormalized;
                     SchemaValidator *schemaValidator = (SchemaValidator *)fValidator;
                     DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
@@ -1516,7 +1516,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
                 else
                 {
-                    unsigned int xsLen;
+                    XMLSize_t xsLen;
                     const XMLCh* xsNormalized;
                     SchemaValidator *schemaValidator = (SchemaValidator*)fValidator;
                     DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
@@ -2583,7 +2583,7 @@ void IGXMLScanner::scanCDSection()
 
             if (fGrammarType == Grammar::SchemaGrammarType) {
 
-                unsigned int xsLen = bbCData.getLen();
+                XMLSize_t xsLen = bbCData.getLen();
                 const XMLCh* xsNormalized = bbCData.getRawBuffer();
                 DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
@@ -2880,7 +2880,7 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
         // See if the text contains whitespace
         // Get the raw data we need for the callback
         const XMLCh* rawBuf = toUse.getRawBuffer();
-        const unsigned int len = toUse.getLen();
+        const XMLSize_t len = toUse.getLen();
         const bool isSpaces = fReaderMgr.getCurrentReader()->containsWhiteSpace(rawBuf, len);
 
         if (isSpaces)

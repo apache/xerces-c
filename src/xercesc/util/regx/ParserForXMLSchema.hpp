@@ -89,7 +89,7 @@ protected:
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
-    bool checkQuestion(const int off);
+    bool checkQuestion(const XMLSize_t off);
 	XMLInt32 decodeEscaped();
 
 private:

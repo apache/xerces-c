@@ -3312,7 +3312,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
     {
         // Get the raw data we need for the callback
         const XMLCh* rawBuf = toSend.getRawBuffer();
-        const unsigned int len = toSend.getLen();
+        const XMLSize_t len = toSend.getLen();
 
         // Get the character data opts for the current element
         XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
@@ -3350,7 +3350,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
             }
             else if (charOpts == XMLElementDecl::AllCharData)
             {
-                unsigned int xsLen;
+                XMLSize_t xsLen;
                 const XMLCh* xsNormalized;
                 DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
@@ -3390,7 +3390,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
             //  issue an error.
             if (charOpts == XMLElementDecl::AllCharData)
             {
-                unsigned int xsLen;
+                XMLSize_t xsLen;
                 const XMLCh *xsNormalized;
                 DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                 if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
@@ -4199,7 +4199,7 @@ void SGXMLScanner::scanCDSection()
                 emitError(XMLErrs::Expected2ndSurrogateChar);
             }
 
-            unsigned int xsLen = bbCData.getLen();
+            XMLSize_t xsLen = bbCData.getLen();
             const XMLCh* xsNormalized = bbCData.getRawBuffer();
             if (fValidate) {
 
@@ -4482,7 +4482,7 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
         // See if the text contains whitespace
         // Get the raw data we need for the callback
         const XMLCh* rawBuf = toUse.getRawBuffer();
-        const unsigned int len = toUse.getLen();
+        const XMLSize_t len = toUse.getLen();
         const bool isSpaces = fReaderMgr.getCurrentReader()->containsWhiteSpace(rawBuf, len);
 
         if (isSpaces)

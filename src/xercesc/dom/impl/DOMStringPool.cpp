@@ -108,7 +108,7 @@ const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
 // -----------------------------------------------------------------------
 //  DOMBuffer: Constructors
 // -----------------------------------------------------------------------
-DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, int capacity) :
+DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
     fBuffer(0)
     , fIndex(0)
     , fCapacity(capacity)
@@ -127,7 +127,7 @@ DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string) :
     , fCapacity(0)
     , fDoc(doc)
 {
-    unsigned int actualCount = XMLString::stringLen(string);
+    XMLSize_t actualCount = XMLString::stringLen(string);
     fCapacity = actualCount + 15;
 
     // Buffer is one larger than capacity, to allow for zero term
@@ -143,9 +143,9 @@ DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string) :
 // ---------------------------------------------------------------------------
 //  DOMBuffer: Buffer management
 // ---------------------------------------------------------------------------
-void DOMBuffer::append(const XMLCh* const chars, const unsigned int count)
+void DOMBuffer::append(const XMLCh* const chars, const XMLSize_t count)
 {
-    unsigned int actualCount = count;
+    XMLSize_t actualCount = count;
     if (!count)
         actualCount = XMLString::stringLen(chars);
     if (fIndex + actualCount >= fCapacity)
@@ -157,9 +157,9 @@ void DOMBuffer::append(const XMLCh* const chars, const unsigned int count)
     fBuffer[fIndex] = 0;
 }
 
-void DOMBuffer::set(const XMLCh* const chars, const unsigned int count)
+void DOMBuffer::set(const XMLCh* const chars, const XMLSize_t count)
 {
-    unsigned int actualCount = count;
+    XMLSize_t actualCount = count;
     if (!count)
         actualCount = XMLString::stringLen(chars);
     fIndex = 0;
@@ -176,10 +176,10 @@ void DOMBuffer::set(const XMLCh* const chars, const unsigned int count)
 // ---------------------------------------------------------------------------
 //  DOMBuffer: Private helper methods
 // ---------------------------------------------------------------------------
-void DOMBuffer::expandCapacity(const unsigned int extraNeeded)
+void DOMBuffer::expandCapacity(const XMLSize_t extraNeeded)
 {
     //not enough room. Calc new capacity and allocate new buffer
-    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 1.25);
+    const XMLSize_t newCap = (XMLSize_t)((fIndex + extraNeeded) * 1.25);
     XMLCh* newBuf = (XMLCh*) fDoc->allocate((newCap+1)*sizeof(XMLCh));
 
     // Copy over the old stuff

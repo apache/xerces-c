@@ -50,7 +50,7 @@ public :
 
     /** @name Constructor */
     //@{
-    XMLBuffer(const unsigned int capacity = 1023
+    XMLBuffer(const XMLSize_t capacity = 1023
               , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
         
         fIndex(0)
@@ -80,7 +80,7 @@ public :
     // -----------------------------------------------------------------------
     //  Buffer Full Handler Management
     // -----------------------------------------------------------------------
-    void setFullHandler(XMLBufferFullHandler* handler, const unsigned int fullSize)
+    void setFullHandler(XMLBufferFullHandler* handler, const XMLSize_t fullSize)
     {
         if (handler && fullSize) {            
             fFullHandler = handler;
@@ -117,7 +117,7 @@ public :
         fBuffer[fIndex++] = toAppend;
     }
 
-    void append (const XMLCh* const chars, const unsigned int count)
+    void append (const XMLCh* const chars, const XMLSize_t count)
     {        
         if (count) {
             if (fIndex + count >= fCapacity) {
@@ -146,7 +146,7 @@ public :
         }
     }
 
-    void set (const XMLCh* const chars, const unsigned int count)
+    void set (const XMLCh* const chars, const XMLSize_t count)
     {
         fIndex = 0;
         append(chars, count);
@@ -184,7 +184,7 @@ public :
         return fUsed;
     }
 
-    unsigned int getLen() const
+    XMLSize_t getLen() const
     {
         return fIndex;
     }
@@ -217,7 +217,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helpers
     // -----------------------------------------------------------------------
-    void insureCapacity(const unsigned int extraNeeded);
+    void insureCapacity(const XMLSize_t extraNeeded);
 
 
     // -----------------------------------------------------------------------
@@ -244,9 +244,9 @@ private :
     //      buffer's maximum size, fFullHandler's bufferFull callback is
     //      invoked, to empty the buffer.
     // -----------------------------------------------------------------------    
-    unsigned int                fIndex;
-    unsigned int                fCapacity;
-    unsigned int                fFullSize;
+    XMLSize_t                   fIndex;
+    XMLSize_t                   fCapacity;
+    XMLSize_t                   fFullSize;
     bool                        fUsed;
     MemoryManager* const        fMemoryManager;
     XMLBufferFullHandler*       fFullHandler;    

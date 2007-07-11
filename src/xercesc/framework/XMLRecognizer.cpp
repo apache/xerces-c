@@ -59,12 +59,12 @@ static const XMLCh* gEncodingNameMap[XMLRecognizer::Encodings_Count] =
 //      auto sense. Also included is the length of each sequence.
 // ---------------------------------------------------------------------------
 const char           XMLRecognizer::fgASCIIPre[]  = { 0x3C, 0x3F, 0x78, 0x6D, 0x6C, 0x20 };
-const unsigned int   XMLRecognizer::fgASCIIPreLen = 6;
+const XMLSize_t      XMLRecognizer::fgASCIIPreLen = 6;
 const XMLByte        XMLRecognizer::fgEBCDICPre[] = { 0x4C, 0x6F, 0xA7, 0x94, 0x93, 0x40 };
-const unsigned int   XMLRecognizer::fgEBCDICPreLen = 6;
+const XMLSize_t      XMLRecognizer::fgEBCDICPreLen = 6;
 const XMLByte        XMLRecognizer::fgUTF16BPre[] = { 0x00, 0x3C, 0x00, 0x3F, 0x00, 0x78, 0x00, 0x6D, 0x00, 0x6C, 0x00, 0x20 };
 const XMLByte        XMLRecognizer::fgUTF16LPre[] = { 0x3C, 0x00, 0x3F, 0x00, 0x78, 0x00, 0x6D, 0x00, 0x6C, 0x00, 0x20, 0x00 };
-const unsigned int   XMLRecognizer::fgUTF16PreLen = 12;
+const XMLSize_t      XMLRecognizer::fgUTF16PreLen = 12;
 const XMLByte        XMLRecognizer::fgUCS4BPre[]  =
 {
         0x00, 0x00, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x3F
@@ -77,17 +77,17 @@ const XMLByte        XMLRecognizer::fgUCS4LPre[]  =
     ,   0x78, 0x00, 0x00, 0x00, 0x6D, 0x00, 0x00, 0x00
     ,   0x6C, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00
 };
-const unsigned int   XMLRecognizer::fgUCS4PreLen = 24;
+const XMLSize_t      XMLRecognizer::fgUCS4PreLen = 24;
 
 const char           XMLRecognizer::fgUTF8BOM[] = {(char)0xEF, (char)0xBB, (char)0xBF};
-const unsigned int   XMLRecognizer::fgUTF8BOMLen = 3;
+const XMLSize_t      XMLRecognizer::fgUTF8BOMLen = 3;
 
 // ---------------------------------------------------------------------------
 //  XMLRecognizer: Encoding recognition methods
 // ---------------------------------------------------------------------------
 XMLRecognizer::Encodings
 XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
-                                    , const unsigned int    rawByteCount)
+                                    , const XMLSize_t       rawByteCount)
 {
     //
     //  As an optimization to check the 90% case, check first for the ASCII

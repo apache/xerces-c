@@ -398,7 +398,7 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
         }
     }
    
-    unsigned int  retBufSize = 2 * XMLString::stringLen(rawData);
+    XMLSize_t retBufSize = 2 * XMLString::stringLen(rawData);
     XMLCh* retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh));
     retBuf[0] = 0;
     XMLCh* retBufPtr = retBuf;
@@ -409,7 +409,7 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
         for (unsigned int i = 0; i < tokenVector->size(); i++)
         {
             XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), toUse, false);
-            unsigned int itemLen = XMLString::stringLen(itemCanRep); 
+            XMLSize_t itemLen = XMLString::stringLen(itemCanRep); 
 
             if(retBufPtr+itemLen+2 >= retBuf+retBufSize)
             {

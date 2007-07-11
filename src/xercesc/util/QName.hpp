@@ -96,8 +96,8 @@ public :
 
     void setPrefix(const XMLCh*) ;
     void setLocalPart(const XMLCh*) ;
-    void setNPrefix(const XMLCh*, const unsigned int) ;
-    void setNLocalPart(const XMLCh*, const unsigned int) ;
+    void setNPrefix(const XMLCh*, const XMLSize_t ) ;
+    void setNLocalPart(const XMLCh*, const XMLSize_t ) ;
     void setURI(const unsigned int) ;
 
     void setValues(const QName& qname);

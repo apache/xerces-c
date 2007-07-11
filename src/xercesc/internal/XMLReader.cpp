@@ -41,7 +41,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  not. Breaks out on the first non-whitespace.
 //
 bool XMLReader::isAllSpaces(const   XMLCh* const    toCheck
-                            , const unsigned int    count) const
+                            , const XMLSize_t       count) const
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -59,7 +59,7 @@ bool XMLReader::isAllSpaces(const   XMLCh* const    toCheck
 //  not.
 //
 bool XMLReader::containsWhiteSpace(const   XMLCh* const    toCheck
-                            , const unsigned int    count) const
+                            , const XMLSize_t     count) const
 {
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
@@ -475,10 +475,10 @@ bool XMLReader::refreshCharBuffer()
     if (fNoMore)
         return false;
 
-    unsigned int startInd;
+    XMLSize_t startInd;
 
     // See if we have any existing chars.
-    const unsigned int spareChars = fCharsAvail - fCharIndex;
+    const XMLSize_t spareChars = fCharsAvail - fCharIndex;
 
     // If we are full, then don't do anything.
     if (spareChars == kCharBufSize)
@@ -536,7 +536,7 @@ bool XMLReader::refreshCharBuffer()
     startInd = 0;
     if (spareChars)
     {
-        for (unsigned int index = fCharIndex; index < fCharsAvail; index++)
+        for (XMLSize_t index = fCharIndex; index < fCharsAvail; index++)
         {
             fCharBuf[startInd] = fCharBuf[index];
             fCharSizeBuf[startInd] = fCharSizeBuf[index];
@@ -612,7 +612,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
             return false;
     }
 
-    unsigned int charIndex_start = fCharIndex;
+    XMLSize_t charIndex_start = fCharIndex;
 
     //  Lets check the first char for being a first name char. If not, then
     //  what's the point in living mannnn? Just give up now. We only do this
@@ -699,7 +699,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
 
 bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
 {
-    unsigned int charIndex_start;
+    XMLSize_t charIndex_start;
     bool checkNextCharacterForFirstNCName = true;
 
     // We are only looking for two iterations (i.e. 'NCANAME':'NCNAME').
@@ -787,7 +787,7 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
                 return false;
             }
 
-            *colonPosition = toFill.getLen();
+            *colonPosition = (int)toFill.getLen();
             toFill.append(chColon);
             fCharIndex++;
             fCurCol++;
@@ -1102,8 +1102,8 @@ bool XMLReader::skippedSpace()
 bool XMLReader::skippedString(const XMLCh* const toSkip)
 {
     // Get the length of the string to skip
-    const unsigned int srcLen = XMLString::stringLen(toSkip);
-    unsigned int charsLeft = charsLeftInBuffer();
+    const XMLSize_t srcLen = XMLString::stringLen(toSkip);
+    XMLSize_t charsLeft = charsLeftInBuffer();
 
     if (srcLen <= fCharsAvail) {    
         //
@@ -1118,7 +1118,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
         while (charsLeft < srcLen)
         {
             refreshCharBuffer();
-            unsigned int t = charsLeftInBuffer();
+            XMLSize_t t = charsLeftInBuffer();
             if (t == charsLeft)   // if the refreshCharBuf() did not add anything new
                 return false;     //   give up and return.
             charsLeft = t;
@@ -1151,8 +1151,8 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
 
         fCharIndex += charsLeft;
     
-        unsigned int offset = charsLeft;
-        unsigned int remainingLen = srcLen - charsLeft;
+        XMLSize_t offset = charsLeft;
+        XMLSize_t remainingLen = srcLen - charsLeft;
 
         while (remainingLen > 0) {
             refreshCharBuffer();
@@ -1185,7 +1185,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
 bool XMLReader::peekString(const XMLCh* const toPeek)
 {
     // Get the length of the string to skip
-    const unsigned int srcLen = XMLString::stringLen(toPeek);
+    const XMLSize_t srcLen = XMLString::stringLen(toPeek);
 
     //
     //  See if the current reader has enough chars to test against this
@@ -1196,11 +1196,11 @@ bool XMLReader::peekString(const XMLCh* const toPeek)
     //  a string to skip will never have a new line in it, so we will never
     //  miss adjusting the current line.
     //
-    unsigned int charsLeft = charsLeftInBuffer();
+    XMLSize_t charsLeft = charsLeftInBuffer();
     while (charsLeft < srcLen)
     {
          refreshCharBuffer();
-         unsigned int t = charsLeftInBuffer();
+         XMLSize_t t = charsLeftInBuffer();
          if (t == charsLeft)   // if the refreshCharBuf() did not add anything new
              return false;     //   give up and return.
          charsLeft = t;
@@ -1556,7 +1556,7 @@ void XMLReader::doInitDecode()
             if (fRawBytesAvail < 2)
                 break;
 
-            unsigned int postBOMIndex = 0;
+            XMLSize_t postBOMIndex = 0;
             const UTF16Ch* asUTF16 = (const UTF16Ch*)&fRawByteBuf[fRawBufIndex];
             if ((*asUTF16 == chUnicodeMarker) || (*asUTF16 == chSwappedUnicodeMarker))
             {
@@ -1690,10 +1690,10 @@ void XMLReader::refreshRawBuffer()
     //  If there are any bytes left, move them down to the start. There
     //  should only ever be (max bytes per char - 1) at the most.
     //
-    const unsigned int bytesLeft = fRawBytesAvail - fRawBufIndex;
+    const XMLSize_t bytesLeft = fRawBytesAvail - fRawBufIndex;
 
     // Move the existing ones down
-    for (unsigned int index = 0; index < bytesLeft; index++)
+    for (XMLSize_t index = 0; index < bytesLeft; index++)
         fRawByteBuf[index] = fRawByteBuf[fRawBufIndex + index];
 
     //
@@ -1719,10 +1719,10 @@ void XMLReader::refreshRawBuffer()
 //  trancoded character buffer. We transcode up to another maxChars chars
 //  from the
 //
-unsigned int
+XMLSize_t 
 XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
                             ,       unsigned char* const    charSizes
-                            , const unsigned int            maxChars)
+                            , const XMLSize_t               maxChars)
 {
     // If we are plain tuckered out, then return zero now
     if (!fRawBytesAvail)
@@ -1736,7 +1736,7 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
     //  used until the next buffer (and the rest of the character)
     //  is read.
     //
-    unsigned int bytesLeft = fRawBytesAvail - fRawBufIndex;
+    XMLSize_t bytesLeft = fRawBytesAvail - fRawBufIndex;
     if (bytesLeft < 100)
     {
         refreshRawBuffer();

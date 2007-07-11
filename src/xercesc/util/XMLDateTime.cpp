@@ -1728,13 +1728,13 @@ XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) 
     return retBuf;
 }
 
-void XMLDateTime::fillString(XMLCh*& ptr, int value, int expLen) const
+void XMLDateTime::fillString(XMLCh*& ptr, int value, XMLSize_t expLen) const
 {
     XMLCh strBuffer[16];
     assert(expLen < 16);
     XMLString::binToText(value, strBuffer, expLen, 10, fMemoryManager);
-    int   actualLen = XMLString::stringLen(strBuffer);
-    int   i;
+    XMLSize_t actualLen = XMLString::stringLen(strBuffer);
+    XMLSize_t i;
     //append leading zeros
     for (i = 0; i < expLen - actualLen; i++)
     {
@@ -1753,27 +1753,25 @@ int XMLDateTime::fillYearString(XMLCh*& ptr, int value) const
     XMLCh strBuffer[16];
     // let's hope we get no years of 15 digits...
     XMLString::binToText(value, strBuffer, 15, 10, fMemoryManager);
-    int   actualLen = XMLString::stringLen(strBuffer);
+    XMLSize_t actualLen = XMLString::stringLen(strBuffer);
     // don't forget that years can be negative...
-    int negativeYear = 0;
+    XMLSize_t negativeYear = 0;
     if(strBuffer[0] == chDash)
     {
         *ptr++ = strBuffer[0];
         negativeYear = 1;
     }
-    int   i;
+    XMLSize_t i;
     //append leading zeros
-    for (i = 0; i < 4 - actualLen+negativeYear; i++)
-    {
-        *ptr++ = chDigit_0;
-    }
+    if(actualLen+negativeYear < 4)
+        for (i = 0; i < 4 - actualLen+negativeYear; i++)
+            *ptr++ = chDigit_0;
 
     for (i = negativeYear; i < actualLen; i++)
-    {
         *ptr++ = strBuffer[i];
-    }
+
     if(actualLen > 4)
-        return actualLen-4;
+        return (int)actualLen-4;
     return 0;
 }
 

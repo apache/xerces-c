@@ -1251,11 +1251,11 @@ void AbstractDOMParser::attDef
                 {
                     fInternalSubset.append(chSpace);
                     const XMLCh* enumString = attDef.getEnumeration();
-                    int length = XMLString::stringLen(enumString);
+                    XMLSize_t length = XMLString::stringLen(enumString);
                     if (length > 0) {
 
                         fInternalSubset.append(chOpenParen );
-                        for(int i=0; i<length; i++) {
+                        for(XMLSize_t i=0; i<length; i++) {
                             if (enumString[i] == chSpace)
                                 fInternalSubset.append(chPipe);
                             else

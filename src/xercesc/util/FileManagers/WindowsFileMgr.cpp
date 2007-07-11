@@ -281,7 +281,7 @@ WindowsFileMgr::fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, Mem
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 		
     DWORD bytesRead = 0;
-    if (!::ReadFile(f, buffer, byteCount, &bytesRead, 0))
+    if (!::ReadFile(f, buffer, (DWORD)byteCount, &bytesRead, 0))
     {
         //
         //  Check specially for a broken pipe error. If we get this, it just
@@ -305,7 +305,7 @@ WindowsFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buff
     while (byteCount > 0)
     {
         DWORD bytesWritten = 0;
-        if (!::WriteFile(f, tmpFlush, byteCount, &bytesWritten, 0))
+        if (!::WriteFile(f, tmpFlush, (DWORD)byteCount, &bytesWritten, 0))
             ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 
         tmpFlush+=bytesWritten;

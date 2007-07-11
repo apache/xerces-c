@@ -224,7 +224,7 @@ private:
 
     void                  normalize();
 
-    void                  fillString(XMLCh*& ptr, int value, int expLen) const;
+    void                  fillString(XMLCh*& ptr, int value, XMLSize_t expLen) const;
 
     int                   fillYearString(XMLCh*& ptr, int value) const;
 

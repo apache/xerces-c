@@ -382,7 +382,7 @@ void XercesXPath::checkForSelectedAttributes() {
 void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                                   XercesNamespaceResolver* const scopeContext) {
 
-    unsigned int length = XMLString::stringLen(fExpression);
+    XMLSize_t length = XMLString::stringLen(fExpression);
 
     if (!length) {
         return;
@@ -747,12 +747,12 @@ void XPathScanner::init() {
 //  XPathScanner: Scan methods
 // ---------------------------------------------------------------------------
 bool XPathScanner::scanExpression(const XMLCh* const data,
-                                  int currentOffset,
-                                  const int endOffset,
+                                  XMLSize_t currentOffset,
+                                  const XMLSize_t endOffset,
                                   ValueVectorOf<int>* const tokens) {
 
     bool      starIsMultiplyOperator = false;
-    int       nameOffset = -1;
+    XMLSize_t nameOffset = 0;
     int       nameHandle = -1;
     int       prefixHandle = -1;
     XMLCh     ch;
@@ -975,7 +975,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
 
                 ch = data[currentOffset];
 
-                int litOffset = currentOffset;
+                XMLSize_t litOffset = currentOffset;
                 while (ch != qchar) {
                     if (++currentOffset == endOffset) {
                         return false; // REVISIT
@@ -1302,9 +1302,9 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
 }
 
 
-int XPathScanner::scanNCName(const XMLCh* const data,
-                             const int endOffset,
-                             int currentOffset) {
+XMLSize_t XPathScanner::scanNCName(const XMLCh* const data,
+                             const XMLSize_t endOffset,
+                             XMLSize_t currentOffset) {
 
     XMLCh ch = data[currentOffset];
 
@@ -1325,9 +1325,9 @@ int XPathScanner::scanNCName(const XMLCh* const data,
 }
 
 
-int XPathScanner::scanNumber(const XMLCh* const data,
-                             const int endOffset,
-                             int currentOffset,
+XMLSize_t XPathScanner::scanNumber(const XMLCh* const data,
+                             const XMLSize_t endOffset,
+                             XMLSize_t currentOffset,
                              ValueVectorOf<int>* const tokens) {
 
     XMLCh ch = data[currentOffset];

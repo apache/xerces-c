@@ -702,7 +702,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             elemQName=(XMLCh*)elemDecl.getElementName()->getRawName();
         else
         {
-            unsigned int prefixLen=XMLString::stringLen(elemPrefix);
+            XMLSize_t prefixLen=XMLString::stringLen(elemPrefix);
             elemQName=(XMLCh*)fMemoryManager->allocate((prefixLen+1+XMLString::stringLen(elemDecl.getBaseName())+1)*sizeof(XMLCh));
             XMLString::moveChars(elemQName, elemPrefix, prefixLen);
             elemQName[prefixLen] = chColon;
@@ -838,7 +838,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
             elemQName=(XMLCh*)elemDecl.getElementName()->getRawName();
         else
         {
-            unsigned int prefixLen=XMLString::stringLen(elemPrefix);
+            XMLSize_t prefixLen=XMLString::stringLen(elemPrefix);
             elemQName=(XMLCh*)fMemoryManager->allocate((prefixLen+1+XMLString::stringLen(elemDecl.getBaseName())+1)*sizeof(XMLCh));
             XMLString::moveChars(elemQName, elemPrefix, prefixLen);
             elemQName[prefixLen] = chColon;
@@ -926,7 +926,7 @@ void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
         if (isEnumeration) {
 
             const XMLCh* enumString = attDef.getEnumeration();
-            unsigned int enumLen = XMLString::stringLen(enumString);
+            XMLSize_t enumLen = XMLString::stringLen(enumString);
 
             if (attType == XMLAttDef::Notation) {
 
@@ -936,7 +936,7 @@ void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
 
             enumBuf.append(chOpenParen);
 
-            for (unsigned int i=0; i<enumLen; i++) {
+            for (XMLSize_t i=0; i<enumLen; i++) {
                 if (enumString[i] == chSpace)
                     enumBuf.append(chPipe);
                 else
@@ -1065,7 +1065,7 @@ void SAX2XMLReaderImpl::entityDecl( const   DTDEntityDecl&  entityDecl
 
             if (isPEDecl) {
 
-                unsigned int nameLen = XMLString::stringLen(entityName);
+                XMLSize_t nameLen = XMLString::stringLen(entityName);
                 XMLCh* tmpName = (XMLCh*) fMemoryManager->allocate
                 (
                     (nameLen + 2) * sizeof(XMLCh)

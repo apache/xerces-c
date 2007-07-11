@@ -116,7 +116,7 @@ public :
         Grammar*            fCurrentGrammar;
         unsigned int        fCurrentURI;
         XMLCh *             fSchemaElemName;
-        unsigned int        fSchemaElemNameMaxLen;
+        XMLSize_t           fSchemaElemNameMaxLen;
         
         int                 fPrefixColonPos;
     };
@@ -492,7 +492,7 @@ inline void ElemStack::setReferenceEscaped()
 
 inline void ElemStack::setCurrentSchemaElemName(const XMLCh * const schemaElemName)
 {
-    unsigned int schemaElemNameLen = XMLString::stringLen(schemaElemName);
+    XMLSize_t schemaElemNameLen = XMLString::stringLen(schemaElemName);
     unsigned int stackPos = fStackTop-1;
     
     if(fStack[stackPos]->fSchemaElemNameMaxLen <= schemaElemNameLen)

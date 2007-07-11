@@ -160,7 +160,7 @@ public:
     (
         const   char* const     str1
         , const char* const     str2
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     /** Lexicographically compares, at most, the first count characters in
@@ -180,7 +180,7 @@ public:
     (
         const   XMLCh* const    str1
         , const XMLCh* const    str2
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
 
@@ -201,7 +201,7 @@ public:
     (
         const   char* const     str1
         , const char* const     str2
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     /** Lexicographically compares, at most, the first count characters in
@@ -222,7 +222,7 @@ public:
     (
         const   XMLCh* const    str1
         , const XMLCh* const    str2
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     /** Lexicographically compares <code>str1</code> and <code>str2</code> and
@@ -312,7 +312,7 @@ public:
 		, const	int				offset1
         , const XMLCh* const    str2
 		, const int				offset2
-		, const unsigned int	charCount
+		, const XMLSize_t       charCount
     );
 
 	/** Lexicographically compares <code>str1</code> and <code>str2</code>
@@ -348,7 +348,7 @@ public:
 		, const	int				offset1
         , const XMLCh* const    str2
 		, const int				offset2
-		, const unsigned int	charCount
+		, const XMLSize_t       charCount
     );
     //@}
 
@@ -402,7 +402,7 @@ public:
     (
                 XMLCh* const    target
         , const XMLCh* const    src
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
     );
     //@}
 
@@ -448,7 +448,7 @@ public:
     static unsigned int hashN
     (
         const   XMLCh* const    toHash
-        , const unsigned int    numChars
+        , const XMLSize_t       numChars
         , const unsigned int    hashModulus
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -492,7 +492,7 @@ public:
     (
         const   char* const     toSearch
         , const char            chToFind
-        , const unsigned int    fromIndex
+        , const XMLSize_t       fromIndex
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -511,7 +511,7 @@ public:
     (
         const   XMLCh* const    toSearch
         , const XMLCh           chToFind
-        , const unsigned int    fromIndex
+        , const XMLSize_t       fromIndex
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -548,7 +548,7 @@ public:
     (
         const XMLCh ch
         , const XMLCh* const toSearch
-        , const unsigned int toSearchLen
+        , const XMLSize_t    toSearchLen
     );
 
     /**
@@ -566,7 +566,7 @@ public:
     (
         const   char* const     toSearch
         , const char            chToFind
-        , const unsigned int    fromIndex
+        , const XMLSize_t       fromIndex
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -585,7 +585,7 @@ public:
     (
         const   XMLCh* const    toSearch
         , const XMLCh           ch
-        , const unsigned int    fromIndex
+        , const XMLSize_t       fromIndex
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     //@}
@@ -601,7 +601,7 @@ public:
     (
                 XMLCh* const    targetStr
         , const XMLCh* const    srcStr
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     //@}
@@ -621,8 +621,8 @@ public:
     (
                 char* const    targetStr
         , const char* const    srcStr
-        , const int            startIndex
-        , const int            endIndex
+        , const XMLSize_t      startIndex
+        , const XMLSize_t      endIndex
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -639,8 +639,8 @@ public:
     (
                 XMLCh* const    targetStr
         , const XMLCh* const    srcStr
-        , const int             startIndex
-        , const int             endIndex
+        , const XMLSize_t       startIndex
+        , const XMLSize_t       endIndex
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -658,9 +658,9 @@ public:
     (
                 XMLCh* const    targetStr
         , const XMLCh* const    srcStr
-        , const int             startIndex
-        , const int             endIndex
-        , const int             srcStrLength
+        , const XMLSize_t       startIndex
+        , const XMLSize_t       endIndex
+        , const XMLSize_t       srcStrLength
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -808,13 +808,13 @@ public:
       * @param src The string whose length is to be determined
       * @return Returns the length of the string
       */
-    static unsigned int stringLen(const char* const src);
+    static XMLSize_t stringLen(const char* const src);
 
     /** Get the length of the string
       * @param src The string whose length is to be determined
       * @return Returns the length of the string
       */
-    static unsigned int stringLen(const XMLCh* const src);
+    static XMLSize_t stringLen(const XMLCh* const src);
 
     /**
       *
@@ -889,7 +889,7 @@ public:
     (
         const   unsigned int    toFormat
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -909,7 +909,7 @@ public:
     (
         const   unsigned int    toFormat
         ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -929,7 +929,7 @@ public:
     (
         const   unsigned long   toFormat
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -949,7 +949,7 @@ public:
     (
         const   unsigned long   toFormat
         ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -969,7 +969,7 @@ public:
     (
         const   long            toFormat
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -989,7 +989,7 @@ public:
     (
         const   long            toFormat
         ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -1009,7 +1009,7 @@ public:
     (
         const   int             toFormat
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -1029,7 +1029,7 @@ public:
     (
         const   int             toFormat
         ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -1079,7 +1079,7 @@ public:
     static void cut
     (
                 XMLCh* const    toCutFrom
-        , const unsigned int    count
+        , const XMLSize_t       count
     );
 
     /** Transcodes a string to native code-page
@@ -1118,7 +1118,7 @@ public:
     (
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -1153,7 +1153,7 @@ public:
     (
         const   char* const     toTranscode
         ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -1215,10 +1215,10 @@ public:
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the count of characters that are outputted
       */
-    static unsigned int replaceTokens
+    static XMLSize_t replaceTokens
     (
                 XMLCh* const    errText
-        , const unsigned int    maxChars
+        , const XMLSize_t       maxChars
         , const XMLCh* const    text1
         , const XMLCh* const    text2
         , const XMLCh* const    text3
@@ -1361,7 +1361,7 @@ private :
 	  */
 	static bool validateRegion(const XMLCh* const str1, const int offset1,
 						const XMLCh* const str2, const int offset2,
-						const unsigned int charCount);
+						const XMLSize_t charCount);
 
     static MemoryManager* fgMemoryManager;
 
@@ -1375,25 +1375,25 @@ private :
 // ---------------------------------------------------------------------------
 inline void XMLString::moveChars(       XMLCh* const targetStr
                                 , const XMLCh* const srcStr
-                                , const unsigned int count)
+                                , const XMLSize_t    count)
 {
     memcpy(targetStr, srcStr, count * sizeof(XMLCh));
 }
 
-inline unsigned int XMLString::stringLen(const XMLCh* const src)
+inline XMLSize_t XMLString::stringLen(const XMLCh* const src)
 {
     if (src == 0 || *src == 0)
     {
         return 0;
-   }
+    }
     else
-   {
+    {
         const XMLCh* pszTmp = src + 1;
 
         while (*pszTmp)
             ++pszTmp;
 
-        return (unsigned int)(pszTmp - src);
+        return (pszTmp - src);
     }
 }
 
@@ -1404,7 +1404,7 @@ inline XMLCh* XMLString::replicate(const XMLCh* const toRep,
     XMLCh* ret = 0;
     if (toRep)
     {
-        const unsigned int len = stringLen(toRep);
+        const XMLSize_t len = stringLen(toRep);
         ret = (XMLCh*) manager->allocate((len+1) * sizeof(XMLCh)); //new XMLCh[len + 1];
         memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
     }
@@ -1427,9 +1427,9 @@ inline bool XMLString::endsWith(const XMLCh* const toTest,
                                 const XMLCh* const suffix)
 {
 
-    unsigned int suffixLen = XMLString::stringLen(suffix);
+    XMLSize_t suffixLen = XMLString::stringLen(suffix);
 
-    return regionMatches(toTest, XMLString::stringLen(toTest) - suffixLen,
+    return regionMatches(toTest, (int)(XMLString::stringLen(toTest) - suffixLen),
                          suffix, 0, suffixLen);
 }
 
@@ -1437,7 +1437,7 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 									  const int offset1,
 									  const XMLCh* const str2,
 									  const int offset2,
-									  const unsigned int charCount)
+									  const XMLSize_t charCount)
 {
 
 	if (offset1 < 0 || offset2 < 0 ||

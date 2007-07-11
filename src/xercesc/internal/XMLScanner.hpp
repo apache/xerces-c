@@ -815,7 +815,7 @@ private :
     //  Private scanning methods
     // -----------------------------------------------------------------------
     bool getQuotedString(XMLBuffer& toFill);
-    unsigned int scanUpToWSOr
+    XMLSize_t scanUpToWSOr
     (
                 XMLBuffer&  toFill
         , const XMLCh       chEndChar

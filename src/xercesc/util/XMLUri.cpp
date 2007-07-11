@@ -407,7 +407,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     XMLCh* trimmedUriSpec = XMLString::replicate(uriSpec, fMemoryManager);
     XMLString::trim(trimmedUriSpec);
     ArrayJanitor<XMLCh> janName(trimmedUriSpec, fMemoryManager);
-    int trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
+    XMLSize_t trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
 
     if ( !baseURI &&
         (!trimmedUriSpec || trimmedUriSpecLen == 0))
@@ -590,7 +590,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         XMLCh* basePath = XMLString::replicate(baseURI->getPath(), fMemoryManager);
         ArrayJanitor<XMLCh> basePathName(basePath, fMemoryManager);
 
-        int bufLen = trimmedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
+        XMLSize_t bufLen = trimmedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
         XMLCh* path = (XMLCh*) fMemoryManager->allocate(bufLen * sizeof(XMLCh));//new XMLCh[bufLen];
         ArrayJanitor<XMLCh> pathName(path, fMemoryManager);
         path[0] = 0;
@@ -715,7 +715,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     int index = 0;
     int start = 0;
-    const int end = XMLString::stringLen(uriSpec);
+    const XMLSize_t end = XMLString::stringLen(uriSpec);
 
     //
     // server = [ [ userinfo "@" ] hostport ]
@@ -851,8 +851,8 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
     }
 
     int index = 0;
-    int start = 0;
-    int end = XMLString::stringLen(uriSpec);
+    XMLSize_t start = 0;
+    XMLSize_t end = XMLString::stringLen(uriSpec);
     XMLCh testChar = 0;
 
     // path - everything up to query string or fragment
@@ -1638,7 +1638,7 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString
         return false;
         
     // Get address length.
-    int addrStrLen = XMLString::stringLen(addrString);
+    XMLSize_t addrStrLen = XMLString::stringLen(addrString);
     
     // Check if the host is a valid IPv6reference.
     if (*addrString == chOpenSquare)
@@ -1931,7 +1931,7 @@ bool XMLUri::isGenericURI()
 void XMLUri::buildFullText()
 {   
     // Calculate the worst case size of the buffer required
-    unsigned int bufSize = XMLString::stringLen(fScheme) + 1
+    XMLSize_t bufSize = XMLString::stringLen(fScheme) + 1
                            + XMLString::stringLen(fFragment) + 1
                            + XMLString::stringLen(fHost ? fHost : fRegAuth) + 2
                            + XMLString::stringLen(fPath)
@@ -2028,7 +2028,7 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
     while (XMLChar1_0::isWhitespace(*trimmedUriSpec))
         trimmedUriSpec++;
 
-    int trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
+    XMLSize_t trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
 
     while (trimmedUriSpecLen) {
         if (XMLChar1_0::isWhitespace(trimmedUriSpec[trimmedUriSpecLen-1]))
@@ -2045,7 +2045,7 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
             return true;
     }
 
-    int index = 0;
+    XMLSize_t index = 0;
     bool foundScheme = false;
 
     // Check for scheme, which must be before `/', '?' or '#'.     
@@ -2129,7 +2129,7 @@ bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr, bool bAllow
     while (XMLChar1_0::isWhitespace(*trimmedUriSpec))
         trimmedUriSpec++;
 
-    int trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
+    XMLSize_t trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
 
     while (trimmedUriSpecLen) {
         if (XMLChar1_0::isWhitespace(trimmedUriSpec[trimmedUriSpecLen-1]))
@@ -2145,7 +2145,7 @@ bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr, bool bAllow
         return true;
     }
 
-    int index = 0;
+    XMLSize_t index = 0;
     bool foundScheme = false;
 
     // Check for scheme, which must be before `/', '?' or '#'.     
@@ -2218,7 +2218,7 @@ bool XMLUri::isValidURI(bool haveBaseURI, const XMLCh* const uriStr, bool bAllow
 }
 
 bool XMLUri::isWellFormedAddress(const XMLCh* const addrString,
-                                 const int addrStrLen)
+                                 const XMLSize_t addrStrLen)
 {
     // Check that we have a non-zero length string.
     if (addrStrLen == 0)
@@ -2304,7 +2304,7 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString,
     return true;
 }
 
-bool XMLUri::processScheme(const XMLCh* const schemeStr, int& index)
+bool XMLUri::processScheme(const XMLCh* const schemeStr, XMLSize_t& index)
 {
     const XMLCh* tmpPtr = XMLString::findAny(schemeStr, SCHEME_SEPARATORS);
 
@@ -2319,13 +2319,13 @@ bool XMLUri::processScheme(const XMLCh* const schemeStr, int& index)
 
 
 bool XMLUri::isConformantSchemeName( const XMLCh* const scheme
-                                   , const int schemeLen)
+                                   , const XMLSize_t schemeLen)
 {
     if (!XMLString::isAlpha(*scheme))     // first: alpha
         return false;
 
     // second onwards: ( alpha | digit | "+" | "-" | "." )
-    for (int i=1; i<schemeLen; i++)
+    for (XMLSize_t i=1; i<schemeLen; i++)
     {
         if ( !XMLString::isAlphaNum(scheme[i]) &&
              (XMLString::indexOf(SCHEME_CHARACTERS, scheme[i]) == -1))
@@ -2336,7 +2336,7 @@ bool XMLUri::isConformantSchemeName( const XMLCh* const scheme
 }
 
 bool XMLUri::processAuthority( const XMLCh* const authSpec
-                             , const int authLen)
+                             , const XMLSize_t authLen)
 {
     int index = XMLString::indexOf(authSpec, chAt);
     int start = 0;
@@ -2418,7 +2418,7 @@ bool XMLUri::processAuthority( const XMLCh* const authSpec
 }
 
 bool XMLUri::processPath(const XMLCh* const pathStr,
-                         const int pathStrLen,
+                         const XMLSize_t pathStrLen,
                          const bool isSchemePresent,
                          const bool bAllowSpaces/*=false*/)
 {

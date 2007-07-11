@@ -38,16 +38,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 {
 public:
 
-	// -----------------------------------------------------------------------
-  //  Public Constructors and Destructor
-  // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    //  Public Constructors and Destructor
+    // -----------------------------------------------------------------------
 	Match(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	
-  /**
-  * Copy constructor
-  */
-  Match(const Match& toCopy);
-  Match& operator=(const Match& toAssign);
+    /**
+    * Copy constructor
+    */
+    Match(const Match& toCopy);
+    Match& operator=(const Match& toAssign);
 
 	virtual ~Match();
 
@@ -69,7 +69,7 @@ private:
 	// -----------------------------------------------------------------------
 	// Initialize/Clean up methods
 	// -----------------------------------------------------------------------
-  void initialize(const Match& toCopy);
+    void initialize(const Match& toCopy);
 	void cleanUp();
 
 	// -----------------------------------------------------------------------

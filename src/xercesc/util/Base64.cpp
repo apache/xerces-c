@@ -94,7 +94,7 @@ const XMLByte Base64::base64Padding = chEqual;
  */
 
 static void* getExternalMemory(  MemoryManager* const allocator
-                               , unsigned int const   sizeToAllocate)
+                               , XMLSize_t const   sizeToAllocate)
 {
    return allocator ? allocator->allocate(sizeToAllocate)
        : ::operator new(sizeToAllocate);
@@ -139,14 +139,14 @@ static void returnExternalMemory(  MemoryManager* const allocator
 const unsigned int Base64::quadsPerLine = 15;
 
 XMLByte* Base64::encode(const XMLByte* const inputData
-                      , const unsigned int   inputLength
-                      , unsigned int*        outputLength                      
+                      , const XMLSize_t      inputLength
+                      , XMLSize_t*           outputLength                      
                       , MemoryManager* const memMgr)
 {
     if (!inputData || !outputLength)
         return 0;
 
-    int quadrupletCount = ( inputLength + 2 ) / 3;
+    int quadrupletCount = ( (int)inputLength + 2 ) / 3;
     if (quadrupletCount == 0)
         return 0;
 
@@ -158,8 +158,8 @@ XMLByte* Base64::encode(const XMLByte* const inputData
     //
     XMLByte  b1, b2, b3, b4;  // base64 binary codes ( 0..63 )
 
-    unsigned int inputIndex = 0;
-    unsigned int outputIndex = 0;
+    XMLSize_t inputIndex = 0;
+    XMLSize_t outputIndex = 0;
     XMLByte *encodedData = (XMLByte*) getExternalMemory(memMgr, (quadrupletCount*FOURBYTE+lineCount+1) * sizeof(XMLByte));
 
     //
@@ -249,7 +249,7 @@ int Base64::getDataLength(const XMLCh*         const inputData
                         ,       Conformance          conform )
 
 {
-    unsigned int    retLen = 0;
+    XMLSize_t retLen = 0;
     XMLByte* decodedData = decodeToXMLByte(inputData, &retLen, manager, conform);
 
     if ( !decodedData )
@@ -257,12 +257,12 @@ int Base64::getDataLength(const XMLCh*         const inputData
     else
     {
         returnExternalMemory(manager, decodedData);
-        return retLen;
+        return (int)retLen;
     }
 }
 
 XMLByte* Base64::decode(const XMLByte*       const  inputData
-                      ,       unsigned int*         decodedLength
+                      ,       XMLSize_t*            decodedLength
                       ,       MemoryManager* const  memMgr
                       ,       Conformance           conform )
 {
@@ -285,9 +285,9 @@ XMLByte* Base64::decode(const XMLByte*       const  inputData
 
 
 XMLByte* Base64::decodeToXMLByte(const XMLCh*         const   inputData
-                    ,       unsigned int*          decodedLen
-                    ,       MemoryManager* const   memMgr
-                    ,       Conformance            conform )
+                                ,      XMLSize_t*             decodedLen
+                                ,      MemoryManager* const   memMgr
+                                ,      Conformance            conform )
 {
     if (!inputData || !*inputData)
         return 0;
@@ -295,11 +295,11 @@ XMLByte* Base64::decodeToXMLByte(const XMLCh*         const   inputData
     /***
      *  Move input data to a XMLByte buffer
      */
-    unsigned int srcLen = XMLString::stringLen(inputData);
+    XMLSize_t srcLen = XMLString::stringLen(inputData);
     XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
 
-    for (unsigned int i = 0; i < srcLen; i++)
+    for (XMLSize_t i = 0; i < srcLen; i++)
         dataInByte[i] = (XMLByte)inputData[i];
 
     dataInByte[srcLen] = 0;
@@ -331,11 +331,11 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
     /***
      *  Move input data to a XMLByte buffer
      */
-    unsigned int srcLen = XMLString::stringLen(inputData);
+    XMLSize_t srcLen = XMLString::stringLen(inputData);
     XMLByte *dataInByte = (XMLByte*) getExternalMemory(memMgr, (srcLen+1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> janFill(dataInByte, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
 
-    for (unsigned int i = 0; i < srcLen; i++)
+    for (XMLSize_t i = 0; i < srcLen; i++)
         dataInByte[i] = (XMLByte)inputData[i];
 
     dataInByte[srcLen] = 0;
@@ -343,7 +343,7 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
     /***
      * Forward to the actual decoding method to do the decoding
      */
-    unsigned int decodedLength = 0;
+    XMLSize_t decodedLength = 0;
     XMLByte*     canRepInByte = 0;
     XMLByte*     retStr = decode(
                               dataInByte
@@ -358,10 +358,10 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
     /***
      * Move canonical representation to a XMLCh buffer to return
      */
-    unsigned int canRepLen = XMLString::stringLen((char*)canRepInByte);
+    XMLSize_t canRepLen = XMLString::stringLen((char*)canRepInByte);
     XMLCh *canRepData = (XMLCh*) getExternalMemory(memMgr, (canRepLen + 1) * sizeof(XMLCh));
                
-    for (unsigned int j = 0; j < canRepLen; j++)
+    for (XMLSize_t j = 0; j < canRepLen; j++)
         canRepData[j] = (XMLCh)canRepInByte[j];
 
     canRepData[canRepLen] = 0;
@@ -424,7 +424,7 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
  *     The above definition of the lexical space is more restrictive than that given 
  *     in [RFC 2045] as regards whitespace -- this is not an issue in practice. Any 
  *     string compatible with the RFC can occur in an element or attribute validated 
- *     by this type, because the �whiteSpace� facet of this type is fixed to collapse, 
+ *     by this type, because the whiteSpace facet of this type is fixed to collapse, 
  *     which means that all leading and trailing whitespace will be stripped, and all 
  *     internal whitespace collapsed to single space characters, before the above grammar 
  *     is enforced.
@@ -432,7 +432,7 @@ XMLCh* Base64::getCanonicalRepresentation(const XMLCh*         const   inputData
 */
 
 XMLByte* Base64::decode (   const XMLByte*        const   inputData
-                          ,       unsigned int*           decodedLength
+                          ,       XMLSize_t*              decodedLength
                           ,       XMLByte*&               canRepData
                           ,       MemoryManager*  const   memMgr
                           ,       Conformance             conform
@@ -444,12 +444,12 @@ XMLByte* Base64::decode (   const XMLByte*        const   inputData
     //
     // remove all XML whitespaces from the base64Data
     //
-    int inputLength = XMLString::stringLen( (const char*)inputData );
+    XMLSize_t inputLength = XMLString::stringLen( (const char*)inputData );
     XMLByte* rawInputData = (XMLByte*) getExternalMemory(memMgr, (inputLength+1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> jan(rawInputData, memMgr ? memMgr : XMLPlatformUtils::fgMemoryManager);
 
-    int inputIndex = 0;
-    int rawInputLength = 0;
+    XMLSize_t inputIndex = 0;
+    XMLSize_t rawInputLength = 0;
     bool inWhiteSpace = false;
 
     switch (conform)
@@ -512,7 +512,7 @@ XMLByte* Base64::decode (   const XMLByte*        const   inputData
     if (( rawInputLength % FOURBYTE ) != 0 )
         return 0;
 
-    int quadrupletCount = rawInputLength / FOURBYTE;
+    int quadrupletCount = (int)rawInputLength / FOURBYTE;
     if ( quadrupletCount == 0 )
         return 0;
 
@@ -522,8 +522,8 @@ XMLByte* Base64::decode (   const XMLByte*        const   inputData
     XMLByte  d1, d2, d3, d4;  // base64 characters
     XMLByte  b1, b2, b3, b4;  // base64 binary codes ( 0..64 )
 
-    int rawInputIndex  = 0;
-    int outputIndex    = 0;
+    XMLSize_t rawInputIndex  = 0;
+    XMLSize_t outputIndex    = 0;
     XMLByte *decodedData = (XMLByte*) getExternalMemory(memMgr, (quadrupletCount*3+1) * sizeof(XMLByte));
 
     //

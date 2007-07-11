@@ -123,8 +123,8 @@ public:
     void updateSplitInfo(DOMNode* oldNode, DOMNode* startNode, XMLSize_t offset);
     void updateRangeForInsertedNode(DOMNode* node);
     void receiveReplacedText(DOMNode* node);
-    void updateRangeForDeletedText(DOMNode* node, XMLSize_t offset, int count);
-    void updateRangeForInsertedText(DOMNode* node, XMLSize_t offset, int count);
+    void updateRangeForDeletedText(DOMNode* node, XMLSize_t offset, XMLSize_t count);
+    void updateRangeForInsertedText(DOMNode* node, XMLSize_t offset, XMLSize_t count);
     void updateRangeForDeletedNode(DOMNode* node);
 
 private:

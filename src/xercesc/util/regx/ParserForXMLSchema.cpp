@@ -442,7 +442,7 @@ Token* ParserForXMLSchema::getTokenForShorthand(const XMLInt32 ch) {
 // ---------------------------------------------------------------------------
 //  ParserForXMLSchema: Helper methods
 // ---------------------------------------------------------------------------
-bool ParserForXMLSchema::checkQuestion(const int) {
+bool ParserForXMLSchema::checkQuestion(const XMLSize_t ) {
 
     return false;
 }

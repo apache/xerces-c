@@ -68,8 +68,8 @@ public :
      * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* encode(const XMLByte* const inputData
-                         , const unsigned int   inputLength
-                         , unsigned int*        outputLength
+                         , const XMLSize_t      inputLength
+                         , XMLSize_t*           outputLength
                          , MemoryManager* const memMgr = 0);
 
     /**
@@ -96,7 +96,7 @@ public :
      */
     static XMLByte* decode(
                            const XMLByte*        const   inputData
-                         ,       unsigned int*           decodedLength
+                         ,       XMLSize_t*              decodedLength
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
                           );
@@ -125,7 +125,7 @@ public :
      */
     static XMLByte* decodeToXMLByte(
                            const XMLCh*          const   inputData
-                         ,       unsigned int*           decodedLength
+                         ,       XMLSize_t*              decodedLength
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
                           );
@@ -179,7 +179,7 @@ private :
 
     static XMLByte* decode(
                            const XMLByte*        const   inputData
-                         ,       unsigned int*           outputLength
+                         ,       XMLSize_t*              outputLength
                          ,       XMLByte*&               canRepData
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
