@@ -85,7 +85,7 @@ STDMETHOD(get_length)(long  *pVal)
 
 	try
 	{
-		*pVal = get_DOMCharacterData()->getLength();
+		*pVal = (long)get_DOMCharacterData()->getLength();
 	}
 	catch(...)
 	{

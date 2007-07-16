@@ -16,6 +16,7 @@
  */
 
 #include "SimpleHashPtr.hpp"
+#include <xercesc/util/XercesDefs.hpp>
 
 // this is just a copy of HashPtr which is careful to rely on global new.
 
@@ -30,7 +31,7 @@ SimpleHashPtr::~SimpleHashPtr()
 
 unsigned int SimpleHashPtr::getHashVal(const void *const key, unsigned int mod)
 {
- return ((long)key % (unsigned long)mod);
+ return (unsigned int)((XMLSize_t)key % mod);
 }
 
 bool SimpleHashPtr::equals(const void *const key1, const void *const key2)

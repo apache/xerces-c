@@ -737,9 +737,9 @@ private:
 void outputContent(xmlstream& target, const XMLCh* toWrite)
 {
 
-    int            length = XMLString::stringLen(toWrite);
+    XMLSize_t length = XMLString::stringLen(toWrite);
 
-    int index;
+    XMLSize_t index;
     for (index = 0; index < length; index++)
     {
         switch (toWrite[index])

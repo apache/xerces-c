@@ -1621,7 +1621,7 @@ XMLCh* PSVIWriterHandlers::createID(XSObject* obj) {
 
 const XMLCh* PSVIWriterHandlers::getIdName(XSObject* obj) {
 	XMLCh* objLoc = new XMLCh[9];
-	XMLString::binToText((unsigned long)obj, objLoc, 8, 16);
+	XMLString::binToText((unsigned long)(XMLSize_t)obj, objLoc, 8, 16);
 	XMLCh* idName = fIdMap->get(objLoc);
 	if (!idName) {
 		idName = createID(obj);

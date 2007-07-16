@@ -429,7 +429,7 @@ void DOMBasicTests()
 
         el->appendChild(tx);
 
-        int     textLength = tx->getLength();
+        XMLSize_t textLength = tx->getLength();
         TASSERT(textLength == 5);
 
         DOMNodeList*      nl = tx->getChildNodes();
@@ -1434,8 +1434,8 @@ void DOMReleaseTests()
     for(i=0;i<20000;i++)
     {
         sprintf(tempchar, "time is %lu\n",XMLPlatformUtils::getCurrentMillis());
-        int len = strlen(tempchar);
-        for (int j = len; j < 4000-len; j++)
+        XMLSize_t len = strlen(tempchar);
+        for (XMLSize_t j = len; j < 4000-len; j++)
             tempchar[j] = 'a';
         pAttr->setNodeValue(X(tempchar));
     }
@@ -1444,8 +1444,8 @@ void DOMReleaseTests()
     for(i=0;i<20000;i++)
     {
         sprintf(tempchar, "time is %lu\n",XMLPlatformUtils::getCurrentMillis());
-        int len = strlen(tempchar);
-        for (int j = len; j < 4000-len; j++)
+        XMLSize_t len = strlen(tempchar);
+        for (XMLSize_t j = len; j < 4000-len; j++)
             tempchar[j] = 'a';
         text->setNodeValue(X(tempchar));
     }

@@ -179,7 +179,7 @@ LRESULT CXMLDOMDocument::OnReadyStateChange(UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	bHandled = TRUE;
 
-	m_lReadyState = wParam;
+	m_lReadyState = (long)wParam;
 	Fire_onreadystatechange();
 	if (NULL != m_pOnReadyStateChange) {
 		CComVariant varResult;

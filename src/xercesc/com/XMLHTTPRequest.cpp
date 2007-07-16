@@ -119,7 +119,7 @@ LRESULT CXMLHttpRequest::OnReadyStateChange(UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	bHandled = TRUE;
 
-	m_lReadyState = wParam;
+	m_lReadyState = (long)wParam;
 	if (NULL != m_pOnReadyStateChange) {
 		CComVariant varResult;
 		DISPPARAMS disp = { NULL, NULL, 0, 0 };
@@ -741,7 +741,7 @@ HWND CXMLHttpRequest::GetParentWindow()
 	if (S_OK != hr)
 		return hWnd;
 
-	long lWnd = 0;
+	SHANDLE_PTR lWnd = 0;
 	hr = pWB->get_HWND(&lWnd);
 	if (S_OK != hr)
 		return hWnd;
@@ -750,7 +750,7 @@ HWND CXMLHttpRequest::GetParentWindow()
 }
 
 void CALLBACK  CXMLHttpRequest::InternetStatusCallback(HINTERNET hInternet,
-													DWORD dwContext,
+													DWORD_PTR dwContext,
 													DWORD dwInternetStatus,
 													LPVOID lpvStatusInformation,
 													DWORD dwStatusInformationLength)
