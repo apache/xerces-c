@@ -26,6 +26,9 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+#ifndef INVALID_SET_FILE_POINTER
+#define INVALID_SET_FILE_POINTER ((DWORD)-1)
+#endif
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -237,7 +240,7 @@ WindowsFileMgr::fileReset(FileHandle f, MemoryManager* const manager)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 
     // Seek to the start of the file
-    if (::SetFilePointer(f, 0, 0, FILE_BEGIN) == 0xFFFFFFFF)
+    if (::SetFilePointer(f, 0, 0, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
         ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile, manager);
 }
 
@@ -265,7 +268,7 @@ WindowsFileMgr::fileSize(FileHandle f, MemoryManager* const manager)
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 	
     DWORD high=0;
-    DWORD low=GetFileSize(f, &high);
+    DWORD low=::GetFileSize(f, &high);
     if(low==INVALID_FILE_SIZE && GetLastError()!=NO_ERROR)
         // TODO: find a better exception
 		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos, manager);
