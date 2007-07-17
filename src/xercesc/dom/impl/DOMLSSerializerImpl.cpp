@@ -1373,7 +1373,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 
     if (fErrorHandler)
     {
-        DOMLocatorImpl  locator(-1, -1, (DOMNode*) errorNode, 0);
+        DOMLocatorImpl  locator(0, 0, (DOMNode*) errorNode, 0);
         DOMErrorImpl    domError(errorType , errorMsg, &locator);
         try
         {
@@ -1403,7 +1403,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 
     if (fErrorHandler)
     {
-        DOMLocatorImpl  locator(-1, -1, (DOMNode*) errorNode, 0);
+        DOMLocatorImpl  locator(0, 0, (DOMNode*) errorNode, 0);
         DOMErrorImpl    domError(errorType , errText, &locator);
         try
         {

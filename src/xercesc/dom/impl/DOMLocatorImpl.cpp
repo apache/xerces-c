@@ -28,8 +28,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  DOMLocatorImpl: Constructors and Destructor
 // ---------------------------------------------------------------------------
 DOMLocatorImpl::DOMLocatorImpl() :
-fLineNum(-1)
-, fColumnNum(-1)
+fLineNum(0)
+, fColumnNum(0)
 , fByteOffset(-1)
 , fUtf16Offset(-1)
 , fRelatedNode(0)
