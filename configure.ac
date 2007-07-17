@@ -72,12 +72,13 @@ AC_CHECK_LIB([nsl], [gethostbyname])
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h locale.h \
-				memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h stdlib.h \
-				string.h strings.h \
-				sys/param.h sys/socket.h sys/time.h sys/timeb.h \
-				unistd.h wchar.h wctype.h \
-				CoreServices/CoreServices.h \
-				])
+                  memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h stdlib.h \
+                  string.h strings.h \
+                  sys/param.h sys/socket.h sys/time.h sys/timeb.h \
+                  unistd.h wchar.h wctype.h \
+                  CoreServices/CoreServices.h \
+                  endian.h machine/endian.h \
+                 ])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL

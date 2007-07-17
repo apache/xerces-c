@@ -26,7 +26,11 @@
 
 #include <locale.h>
 #include <errno.h>
-#include <endian.h>
+#if HAVE_ENDIAN_H
+  #include <endian.h>
+#elif HAVE_MACHINE_ENDIAN_H
+  #include <machine/endian.h>
+#endif
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -36,25 +40,15 @@
 #include <xercesc/util/Janitor.hpp>
 #include "IconvGNUTransService.hpp"
 
-#if !defined(APP_NO_THREADS)
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
-#endif /* !APP_NO_THREADS */
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-#if !defined(APP_NO_THREADS)
 
 // Iconv() access syncronization point
 static XMLMutex    *gIconvMutex = NULL;
 static XMLRegisterCleanup IconvGNUMutexCleanup;
 #  define ICONV_LOCK    XMLMutexLock lockConverter(gIconvMutex);
-
-#else /* APP_NO_THREADS */
-
-# define ICONV_LOCK
-
-#endif /* !APP_NO_THREADS */
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -407,7 +401,6 @@ void reinitIconvGNUMutex()
 IconvGNUTransService::IconvGNUTransService()
     : IconvGNUWrapper(), fUnicodeCP(0)
 {
-#if !defined(APP_NO_THREADS)
     // Create global lock object
     if (gIconvMutex == NULL) {
         gIconvMutex = new XMLMutex;
@@ -415,7 +408,6 @@ IconvGNUTransService::IconvGNUTransService()
             XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
         IconvGNUMutexCleanup.registerCleanup(reinitIconvGNUMutex);
     }
-#endif
 
     // Try to obtain local (host) characterset from the setlocale
     // and through the environment. Do not call setlocale(LC_*, "")!
