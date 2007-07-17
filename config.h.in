@@ -96,6 +96,9 @@
 /* define if the compiler implements L"widestring" */
 #undef HAVE_LSTRING
 
+/* Define to 1 if you have the <machine/endian.h> header file. */
+#undef HAVE_MACHINE_ENDIAN_H
+
 /* Define to 1 if you have the `mblen' function. */
 #undef HAVE_MBLEN
 
