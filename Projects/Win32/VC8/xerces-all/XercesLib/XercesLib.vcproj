@@ -60,8 +60,10 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
 				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -112,246 +114,6 @@
 			/>
 			<Tool
 				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
-			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				TargetEnvironment="1"
-				TypeLibraryName="$(OutDir)\XercesLib.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
-				RuntimeLibrary="3"
-				TreatWChar_tAsBuiltInType="true"
-				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-				CompileAs="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="ws2_32.lib advapi32.lib"
-				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\xerces-c_3_0D.pdb"
-				SubSystem="2"
-				SetChecksum="false"
-				BaseAddress="0x12000000"
-				ImportLibrary="$(OutDir)\xerces-c_3D.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Static Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
-			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
-			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				TargetEnvironment="1"
-				TypeLibraryName="$(OutDir)\XercesLib.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="1"
-				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
-				WarningLevel="3"
-				CompileAs="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\xerces-c_static_3.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Static Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
-			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
-			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				TargetEnvironment="1"
-				TypeLibraryName="$(OutDir)\XercesLib.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\..\src"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
-				RuntimeLibrary="1"
-				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-				CompileAs="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\xerces-c_static_3D.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -432,6 +194,101 @@
 				BaseAddress="0x12000000"
 				ImportLibrary="$(OutDir)\xerces-c_3.lib"
 				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				TargetEnvironment="1"
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
+				RuntimeLibrary="3"
+				TreatWChar_tAsBuiltInType="true"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				CompileAs="0"
+				DisableSpecificWarnings="4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="ws2_32.lib advapi32.lib"
+				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_0D.pdb"
+				SubSystem="2"
+				SetChecksum="false"
+				BaseAddress="0x12000000"
+				ImportLibrary="$(OutDir)\xerces-c_3D.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -553,6 +410,82 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Static Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				TargetEnvironment="1"
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				CompileAs="0"
+				DisableSpecificWarnings="4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\xerces-c_static_3.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="Static Release|x64"
 			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
@@ -609,6 +542,81 @@
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile="$(OutDir)\xerces-c_static_3.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Static Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				TargetEnvironment="1"
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
+				RuntimeLibrary="1"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				CompileAs="0"
+				DisableSpecificWarnings="4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\xerces-c_static_3D.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1017,37 +1025,17 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
-						Outputs="$(InputPath)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Static Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
-						Outputs="$(InputPath)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Static Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
-						Outputs="$(InputPath)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						Outputs="$(InputPath)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1067,7 +1055,27 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Static Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						Outputs="$(InputPath)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Static Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						Outputs="$(InputPath)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Static Debug|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1376,7 +1384,7 @@
 				Filter=".cpp,.hpp"
 				>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp"
+					RelativePath="..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.msvc.hpp"
 					>
 				</File>
 			</Filter>
@@ -1396,7 +1404,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1404,7 +1412,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1432,7 +1440,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1440,7 +1448,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1472,7 +1480,23 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
@@ -1489,7 +1513,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Static Debug|Win32"
+						Name="Static Release|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1498,23 +1522,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCResourceCompilerTool"
-							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCResourceCompilerTool"
-							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|x64"
+						Name="Static Debug|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1544,7 +1552,23 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1561,7 +1585,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Static Debug|Win32"
+						Name="Static Release|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1570,23 +1594,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|x64"
+						Name="Static Debug|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1636,7 +1644,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Release|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1644,7 +1652,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|x64"
+						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1677,31 +1685,15 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1717,7 +1709,23 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
+						Name="Static Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Static Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1754,31 +1762,15 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1794,7 +1786,23 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
+						Name="Static Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Static Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1826,31 +1834,15 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="false"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1866,7 +1858,23 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
+						Name="Static Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Static Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -3675,7 +3683,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\sax2\DeclHandler.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\sax2\LexicalHandler.hpp"
 				>
 			</File>
 			<File
