@@ -1083,7 +1083,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
                 {
                     DOMAttr *attr = (DOMAttr *) srcattr->item(i);
                     if (attr -> getSpecified() || cloningDoc) { // not a default attribute or we are in the process of cloning the elements from inside a DOMDocumentType
-                        DOMAttr *nattr = (DOMAttr *) importNode(attr, true, false);
+                        DOMAttr *nattr = (DOMAttr *) importNode(attr, true, cloningDoc);
                         if (attr -> getLocalName() == 0)
                             newelement->setAttributeNode(nattr);
                         else
@@ -1180,14 +1180,14 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             DOMNamedNodeMap *tmap = newdoctype->getEntities();
             if(smap != 0) {
                 for(unsigned int i = 0; i < smap->getLength(); i++) {
-                    tmap->setNamedItem(importNode(smap->item(i), true, false));
+                    tmap->setNamedItem(importNode(smap->item(i), true, cloningDoc));
                 }
             }
             smap = srcdoctype->getNotations();
             tmap = newdoctype->getNotations();
             if (smap != 0) {
                 for(unsigned int i = 0; i < smap->getLength(); i++) {
-                    tmap->setNamedItem(importNode(smap->item(i), true, false));
+                    tmap->setNamedItem(importNode(smap->item(i), true, cloningDoc));
                 }
             }
             const XMLCh* intSubset=srcdoctype->getInternalSubset();
@@ -1205,7 +1205,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
                     tmap = newdoctype->getElements();
                     if (smap != 0) {
                         for(unsigned int i = 0; i < smap->getLength(); i++) {
-                            tmap->setNamedItem(importNode(smap->item(i), true, true));
+                            tmap->setNamedItem(importNode(smap->item(i), true, cloningDoc));
                         }
                     }
                 }
@@ -1242,7 +1242,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
              srckid != 0;
              srckid = srckid->getNextSibling())
         {
-            newnode->appendChild(importNode(srckid, true, false));
+            newnode->appendChild(importNode(srckid, true, cloningDoc));
         }
 
     if (newnode->getNodeType() == DOMNode::ENTITY_NODE) {
@@ -1250,7 +1250,13 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
         errorChecking = oldErrorCheckingFlag;
     }
 
-    if (!cloningDoc)
+    if (cloningDoc)
+    {
+        // we know for sure that the source node is a DOMNodeImpl, as cloningDoc is set to true when
+        // a DOMDocumentImpl is cloned
+        castToNodeImpl(source)->callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, source, newnode);
+    }
+    else
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_IMPORTED, source, newnode);
 
     return newnode;
