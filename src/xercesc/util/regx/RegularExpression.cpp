@@ -550,7 +550,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 
 			if (context.fMatch != 0) {
 
-				context.fMatch->setStartPos(0, context.fStart);
+				context.fMatch->setStartPos(0, (int)context.fStart);
 				context.fMatch->setEndPos(0, matchEnd);
 			}		
 			return true;
@@ -570,7 +570,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 
 			if (context.fMatch != 0) {
 				context.fMatch->setStartPos(0, ret);
-				context.fMatch->setEndPos(0, ret + strLength);
+				context.fMatch->setEndPos(0, (int)(ret + strLength));
 			}		
 			return true;
 		}		
@@ -672,7 +672,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 
 		if (context.fMatch != 0) {
 
-			context.fMatch->setStartPos(0, matchStart);
+			context.fMatch->setStartPos(0, (int)matchStart);
 			context.fMatch->setEndPos(0, matchEnd);
 		}		
 		return true;
@@ -746,13 +746,14 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 
   for (; matchStart <= end; matchStart++) { 
   
- 	  int matchEnd = match(&context, fOperations, matchStart, 1);
+ 	  int iMatchEnd = match(&context, fOperations, matchStart, 1);
   
- 	  if (matchEnd != -1) {
+ 	  if (iMatchEnd != -1) {
+          XMLSize_t matchEnd=iMatchEnd;
 
  	    if (context.fMatch != 0) {
- 	      context.fMatch->setStartPos(0, context.fStart);
- 	      context.fMatch->setEndPos(0, matchEnd);
+ 	      context.fMatch->setStartPos(0, (int)context.fStart);
+ 	      context.fMatch->setEndPos(0, (int)matchEnd);
  	    }
 
       if (subEx){
@@ -1035,7 +1036,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				if (id >= 0) {
 					int prevOffset = context->fOffsets[id];
 					if (prevOffset < 0 || prevOffset != offset) {
-						context->fOffsets[id] = offset;
+						context->fOffsets[id] = (int)offset;
 					}
 					else {
 
@@ -1128,8 +1129,9 @@ int RegularExpression::match(Context* const context, const Op* const operations
 		}
 	}
 	
-	return offset;
+	return (int)offset;
 }
+
 bool RegularExpression::matchChar(Context* const context,
 								  const XMLInt32 ch, XMLSize_t& offset,
 								  const short direction, const bool ignoreCase)
@@ -1330,18 +1332,18 @@ bool RegularExpression::matchBackReference(Context* const context,
 	int start = context->fMatch->getStartPos(refNo);
 	int length = context->fMatch->getEndPos(refNo) - start;
 
-    if(direction < 0 && offset<length)
+    if(direction < 0 && (int)offset<length)
         return false;
 
     XMLSize_t tmpOffset = (direction > 0) ? offset : offset - length;
 
-	if (context->fLimit - tmpOffset < length)
+	if (int(context->fLimit - tmpOffset) < length)
 		return false;
 
 	bool match = ignoreCase
-					? XMLString::regionIMatches(context->fString,tmpOffset,
+					? XMLString::regionIMatches(context->fString,(int)tmpOffset,
 												context->fString,start,length)
-					: XMLString::regionMatches(context->fString, tmpOffset,
+					: XMLString::regionMatches(context->fString, (int)tmpOffset,
 											   context->fString, start,length);
 
 	if (!match)
@@ -1365,9 +1367,9 @@ bool RegularExpression::matchString(Context* const context,
 		return false;
 
 	bool match = ignoreCase
-					? XMLString::regionIMatches(context->fString, tmpOffset,
+					? XMLString::regionIMatches(context->fString, (int)tmpOffset,
 												literal, 0, length)
-					: XMLString::regionMatches(context->fString, tmpOffset,
+					: XMLString::regionMatches(context->fString, (int)tmpOffset,
 											   literal, 0, length);
 
 	if (match) {
@@ -1388,14 +1390,14 @@ int RegularExpression::matchCapture(Context* const context, const Op* const op,
 
 	if (index > 0) {
 
-		context->fMatch->setStartPos(index, offset);
+		context->fMatch->setStartPos(index, (int)offset);
 		int ret = match(context, op->getNextOp(), offset, direction);
 		if (ret < 0)
 			context->fMatch->setStartPos(index, save);
 		return ret;
 	}
 	
-	context->fMatch->setEndPos(-index, offset);
+	context->fMatch->setEndPos(-index, (int)offset);
 	int ret = match(context, op->getNextOp(), offset, direction);
 	if (ret < 0)
 		context->fMatch->setEndPos(-index, save);
@@ -1413,7 +1415,7 @@ int RegularExpression::matchUnion(Context* const context,
   for(unsigned int i=0; i < opSize; i++) {
       Context tmpContext(context);
       int ret = match(&tmpContext, op->elementAt(i), offset, direction);
-      if (ret >= 0 && ret <= context->fLimit && ret>bestResult)
+      if (ret >= 0 && (XMLSize_t)ret <= context->fLimit && ret>bestResult)
       {
           bestResult=ret;
           bestResultContext=tmpContext;

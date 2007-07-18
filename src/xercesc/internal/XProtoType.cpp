@@ -37,7 +37,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 void XProtoType::store(XSerializeEngine& serEng) const
 {
     XMLSize_t strLen = XMLString::stringLen((char*)fClassName);
-	serEng << strLen;
+	serEng << (unsigned long)strLen;
 	serEng.write(fClassName, strLen * sizeof(XMLByte));
 }
 
@@ -60,14 +60,14 @@ void XProtoType::load(XSerializeEngine& serEng
     // read and check class name length
     XMLSize_t inNameLen = XMLString::stringLen((char*)inName); 
     XMLSize_t classNameLen = 0;
-    serEng >> classNameLen;
+    serEng >> (unsigned long&)classNameLen;
 
 	if (classNameLen != inNameLen)
     {
         XMLCh value1[17];
         XMLCh value2[17];
-        XMLString::binToText(inNameLen,    value1, 16, 10, manager);
-        XMLString::binToText(classNameLen, value2, 16, 10, manager);
+        XMLString::binToText((unsigned long)inNameLen,    value1, 16, 10, manager);
+        XMLString::binToText((unsigned long)classNameLen, value2, 16, 10, manager);
 
         ThrowXMLwithMemMgr2(XSerializationException
                 , XMLExcepts::XSer_ProtoType_NameLen_Dif

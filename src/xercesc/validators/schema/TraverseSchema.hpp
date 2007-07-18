@@ -792,7 +792,7 @@ inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
     int    colonIndex = XMLString::indexOf(rawName, chColon);
     XMLSize_t rawNameLen = XMLString::stringLen(rawName);
 
-    if (colonIndex + 1 == rawNameLen) {
+    if (XMLSize_t(colonIndex + 1) == rawNameLen) {
         return XMLUni::fgZeroLenString;
     }
 

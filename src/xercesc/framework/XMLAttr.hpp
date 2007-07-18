@@ -460,8 +460,8 @@ inline void XMLAttr::set(const  unsigned int        uriId
                         , const XMLCh* const        attrPrefix
                         , const XMLCh* const        attrValue
                         , const XMLAttDef::AttTypes type
-                        , DatatypeValidator * datatypeValidator 
-                        , const bool isSchema )
+                        , DatatypeValidator * /*datatypeValidator */
+                        , const bool /*isSchema*/ )
 {
     // Set the name info and the value via their respective calls
     fAttName->setName(attrPrefix, attrName, uriId);
@@ -475,8 +475,8 @@ inline void XMLAttr::set(const  unsigned int        uriId
                         , const XMLCh* const        attrRawName
                         , const XMLCh* const        attrValue
                         , const XMLAttDef::AttTypes type
-                        , DatatypeValidator * datatypeValidator 
-                        , const bool isSchema )
+                        , DatatypeValidator * /*datatypeValidator */
+                        , const bool /*isSchema*/ )
 {
     // Set the name info and the value via their respective calls
     fAttName->setName(attrRawName, uriId);

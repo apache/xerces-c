@@ -605,19 +605,19 @@ XIncludeUtils::isXIFallbackElement(const XMLCh *name, const XMLCh *namespaceURI)
 
 /* 4.1.1 */
 const XMLCh *
-XIncludeUtils::getEscapedHRefAttrValue(const XMLCh *hrefAttrValue, bool &needsDeallocating){
+XIncludeUtils::getEscapedHRefAttrValue(const XMLCh * /*hrefAttrValue*/, bool & /*needsDeallocating*/){
 	XMLCh *escapedAttr = NULL;
 	return escapedAttr;
 }
 
 /* 4.1.2 */
 bool 
-XIncludeUtils::setContentNegotiation(const XMLCh *acceptAttrValue, const XMLCh *acceptLangAttrValue){
+XIncludeUtils::setContentNegotiation(const XMLCh * /*acceptAttrValue*/, const XMLCh * /*acceptLangAttrValue*/){
 	return false;
 }
 
 bool
-XIncludeUtils::checkTextIsValidForInclude(XMLCh *includeChars){
+XIncludeUtils::checkTextIsValidForInclude(XMLCh * /*includeChars*/){
 	return false;
 }
 
@@ -669,7 +669,7 @@ XIncludeUtils::isInCurrentInclusionHistoryStack(const XMLCh *toFind){
 }
 
 XIncludeHistoryNode *
-XIncludeUtils::popFromCurrentInclusionHistoryStack(const XMLCh *toPop){
+XIncludeUtils::popFromCurrentInclusionHistoryStack(const XMLCh * /*toPop*/){
 	XIncludeHistoryNode *historyCursor = fIncludeHistoryHead;
 	XIncludeHistoryNode *penultimateCursor = historyCursor;
 
@@ -708,7 +708,7 @@ XIncludeUtils::freeInclusionHistory(){
 }
 
 bool 
-XIncludeUtils::reportError(const DOMNode* const    errorNode
+XIncludeUtils::reportError(const DOMNode* const    /*errorNode*/
                               , XMLErrs::Codes errorType
                               , const XMLCh*   const    errorMsg
 							  , const XMLCh * const href)

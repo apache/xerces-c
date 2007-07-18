@@ -1702,8 +1702,8 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
     // Now, see if there are some elements in the base we didn't match up
     // in case of Sequence or All
     if (!toLax && codeToThrow == XMLExcepts::NoError &&
-        (true || (baseType & 0x0f) == ContentSpecNode::All || 
-         derivedSpecNodeIn->getElement()->getURI() != XMLElementDecl::fgPCDataElemId)) {
+        (baseType & 0x0f) == ContentSpecNode::All || derivedSpecNodeIn->getElement()->getURI() != XMLElementDecl::fgPCDataElemId) 
+    {
         for (unsigned int j = current; j < count2; j++) {
             if (baseNodes->elementAt(j)->getMinTotalRange() * baseSpecNode->getMinOccurs()) { //!emptiable
                 codeToThrow =  XMLExcepts::PD_Recurse2;                

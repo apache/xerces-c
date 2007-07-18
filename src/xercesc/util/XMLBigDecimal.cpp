@@ -269,7 +269,7 @@ void  XMLBigDecimal::parseDecimal(const XMLCh* const toParse
             if (!dotSignFound)
             {
                 dotSignFound = true;
-                fractDigits = endPtr - startPtr - 1;
+                fractDigits = (int)(endPtr - startPtr - 1);
                 startPtr++;
                 continue;
             }

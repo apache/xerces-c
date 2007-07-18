@@ -382,10 +382,10 @@ private:
      * a valid server authority
      */
     static bool isValidServerBasedAuthority(const XMLCh* const host
-                                           , const int hostLen
+                                           , const XMLSize_t hostLen
                                            , const int port
                                            , const XMLCh* const userinfo
-                                           , const int userLen);
+                                           , const XMLSize_t userLen);
                                            
     /**
      * Determines whether the components host, port, and user info
@@ -407,7 +407,7 @@ private:
     * @return true if the given string is a registry based authority
     */
     static bool isValidRegistryBasedAuthority(const XMLCh* const authority
-                                             , const int authLen);
+                                             , const XMLSize_t authLen);
 
    /**
     * Determines whether the given string is a registry based authority.
@@ -447,7 +447,7 @@ private:
      *
      * @return true if the string is a syntactically valid IPv4 address
      */
-     static bool isWellFormedIPv4Address(const XMLCh* const addr, const int length);
+     static bool isWellFormedIPv4Address(const XMLCh* const addr, const XMLSize_t length);
      
     /**
      * Determines whether a string is an IPv6 reference as defined
@@ -462,7 +462,7 @@ private:
      *
      * @return true if the string is a syntactically valid IPv6 reference
      */
-     static bool isWellFormedIPv6Reference(const XMLCh* const addr, const int length);
+     static bool isWellFormedIPv6Reference(const XMLCh* const addr, const XMLSize_t length);
      
     /**
      * Helper function for isWellFormedIPv6Reference which scans the 
@@ -479,7 +479,7 @@ private:
      * @return the index of the next character to scan, or -1 if the
      * string cannot match a valid IPv6 address
      */
-     static int scanHexSequence (const XMLCh* const addr, int index, int end, int& counter);
+     static int scanHexSequence (const XMLCh* const addr, XMLSize_t index, XMLSize_t end, int& counter);
 
     /**
      * Get the indicator as to whether this URI uses the "generic URI"

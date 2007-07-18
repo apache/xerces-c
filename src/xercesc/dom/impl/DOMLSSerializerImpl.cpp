@@ -1457,7 +1457,7 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
         {
             nextPtr = curPtr + endTagPos + offset;  // skip the ']]>'
             *(curPtr + endTagPos) = chNull;         //nullify the first ']'
-            if (endTagPos != len)
+            if (XMLSize_t(endTagPos) != len)
                 reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, XMLDOMMsg::Writer_NestedCDATA);
             len = len - endTagPos - offset;
         }

@@ -102,7 +102,7 @@ XMLByte* HexBin::decodeToXMLByte(const XMLCh*          const   hexData
         return 0;
 
     //prepare the return string
-    int decodeLength = strLen/2;
+    int decodeLength = (int)strLen/2;
     XMLByte *retVal = (XMLByte*) manager->allocate( (decodeLength + 1) * sizeof(XMLByte));
     ArrayJanitor<XMLByte> janFill(retVal, manager);
     

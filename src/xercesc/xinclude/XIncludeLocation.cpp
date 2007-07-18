@@ -48,7 +48,6 @@ void deallocate(void *ptr){
 //  Destructor and Constructor
 // ---------------------------------------------------------------------------
 XIncludeLocation::XIncludeLocation(const XMLCh *href){
-	size_t length = XMLString::stringLen(href);
 	fHref = allocate(href);
 }
 

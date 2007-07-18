@@ -170,7 +170,7 @@ void XMLEntityDecl::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fId;
-        serEng<<fValueLen;
+        serEng<<(unsigned long)fValueLen;
         serEng.writeString(fValue);
         serEng.writeString(fName);
         serEng.writeString(fNotationName);
@@ -181,7 +181,7 @@ void XMLEntityDecl::serialize(XSerializeEngine& serEng)
     else
     {
         serEng>>fId;
-        serEng>>fValueLen;
+        serEng>>(unsigned long&)fValueLen;
         serEng.readString(fValue);
         serEng.readString(fName);
         serEng.readString(fNotationName);

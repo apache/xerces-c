@@ -109,7 +109,7 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
 
 	if (fOffset != fStringLen) {
         XMLCh value1[65];
-        XMLString::binToText(fOffset, value1, 64, 10, fMemoryManager);
+        XMLString::binToText((unsigned long)fOffset, value1, 64, 10, fMemoryManager);
         ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_Parse1, value1, fString, fMemoryManager);
     }
 

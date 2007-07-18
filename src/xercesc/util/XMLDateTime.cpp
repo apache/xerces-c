@@ -1831,8 +1831,8 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
             serEng<<fTimeZone[i];
         }
 
-        serEng<<fStart;
-        serEng<<fEnd;
+        serEng<<(unsigned long)fStart;
+        serEng<<(unsigned long)fEnd;
 
         serEng.writeString(fBuffer, fBufferMaxLen, XSerializeEngine::toWriteBufferLen);
     }
@@ -1848,8 +1848,8 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
             serEng>>fTimeZone[i];
         }
 
-        serEng>>fStart;
-        serEng>>fEnd;
+        serEng>>(unsigned long&)fStart;
+        serEng>>(unsigned long&)fEnd;
 
         XMLSize_t dataLen = 0;
         serEng.readString(fBuffer, fBufferMaxLen, dataLen ,XSerializeEngine::toReadBufferLen);

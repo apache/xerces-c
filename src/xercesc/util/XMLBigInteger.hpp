@@ -80,7 +80,7 @@ public:
 
     void        divide(const unsigned int byteToShift);
 
-    int         getTotalDigit() const;
+    unsigned int       getTotalDigit() const;
    
     /**
      *  Return a copy of the fMagnitue.
@@ -150,9 +150,9 @@ inline int XMLBigInteger::getSign() const
     return fSign;
 }
 
-inline int XMLBigInteger::getTotalDigit() const
+inline unsigned int XMLBigInteger::getTotalDigit() const
 {
-    return ((getSign() ==0) ? 0 : XMLString::stringLen(fMagnitude));
+    return ((getSign() ==0) ? 0 : (unsigned int)XMLString::stringLen(fMagnitude));
 }
 
 inline bool XMLBigInteger::operator==(const XMLBigInteger& toCompare) const

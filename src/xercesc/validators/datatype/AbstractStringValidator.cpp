@@ -716,7 +716,7 @@ void AbstractStringValidator::assignAdditionalFacet( const XMLCh* const key
 int AbstractStringValidator::getLength(const XMLCh* const content
                                    , MemoryManager* const) const
 {
-    return XMLString::stringLen(content);
+    return (int)XMLString::stringLen(content);
 }
 
 /***
