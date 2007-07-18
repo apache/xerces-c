@@ -123,9 +123,9 @@ public:
     void endElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname);
     void startDocument();
     void endDocument();
-    void characters(const XMLCh* const chars, const unsigned int length);
-    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length);
-    void comment(const XMLCh* const chars, const unsigned int length);
+    void characters(const XMLCh* const chars, const XMLSize_t length);
+    void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length);
+    void comment(const XMLCh* const chars, const XMLSize_t length);
     void processingInstruction(const XMLCh* const target, const XMLCh* const data);
     void startPrefixMapping(const XMLCh* const prefix, const XMLCh* const uri);
     void endPrefixMapping(const XMLCh* const prefix);
@@ -285,14 +285,14 @@ class PSVIAdvancedHandler: public XMLDocumentHandler {
 public:
     PSVIAdvancedHandler(PSVIWriterHandlers* writerHandler) : XMLDocumentHandler(), fWriterHandler(writerHandler) {}
     ~PSVIAdvancedHandler() {}
-    void docCharacters(const XMLCh* const, const unsigned int, const bool) {}
+    void docCharacters(const XMLCh* const, const XMLSize_t, const bool) {}
     void docComment(const XMLCh* const) {}
     void docPI(const XMLCh* const, const XMLCh* const) {}
     void endDocument() {}
     void endElement(const XMLElementDecl&, const unsigned int, const bool, const XMLCh* const) {}
     void endEntityReference(const   XMLEntityDecl&) {}
    
-    void ignorableWhitespace(const XMLCh* const, const unsigned int, const bool) {}
+    void ignorableWhitespace(const XMLCh* const, const XMLSize_t, const bool) {}
 
     void resetDocument() {}
     void startDocument() {}

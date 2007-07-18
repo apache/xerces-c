@@ -58,13 +58,13 @@ void XSerializerHandlers::startElement(const XMLCh* const /*uri*/
 }
 
 void XSerializerHandlers::characters(  const   XMLCh* const  /*chars*/
-                                     , const unsigned int    length)
+                                     , const XMLSize_t       length)
 {
     fCharacterCount += length;
 }
 
 void XSerializerHandlers::ignorableWhitespace( const   XMLCh* const /*chars*/
-                                             , const unsigned int length)
+                                             , const XMLSize_t length)
 {
     fSpaceCount += length;
 }

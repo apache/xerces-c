@@ -71,8 +71,8 @@ public:
     //  Handlers for the SAX ContentHandler interface
     // -----------------------------------------------------------------------
     void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attrs);
-    void characters(const XMLCh* const chars, const unsigned int length);
-    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length);
+    void characters(const XMLCh* const chars, const XMLSize_t length);
+    void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length);
     void startDocument();
 
 

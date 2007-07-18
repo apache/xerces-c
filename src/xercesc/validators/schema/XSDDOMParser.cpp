@@ -410,7 +410,7 @@ void XSDDOMParser::endElement( const XMLElementDecl& elemDecl
 }
 
 void XSDDOMParser::docCharacters(  const   XMLCh* const    chars
-                              , const unsigned int    length
+                              , const XMLSize_t       length
                               , const bool            cdataSection)
 {
     // Ignore chars outside of content
@@ -479,7 +479,7 @@ void XSDDOMParser::endEntityReference(const XMLEntityDecl&)
 }
 
 void XSDDOMParser::ignorableWhitespace( const XMLCh* const chars
-                                      , const unsigned int length
+                                      , const XMLSize_t    length
                                       , const bool)
 {
     // Ignore chars before the root element

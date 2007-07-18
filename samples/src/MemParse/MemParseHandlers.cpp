@@ -59,13 +59,13 @@ void MemParseHandlers::startElement(const   XMLCh* const    /* name */
 }
 
 void MemParseHandlers::characters(  const   XMLCh* const    /* chars */
-                                    , const unsigned int    length)
+                                    , const XMLSize_t    length)
 {
     fCharacterCount += length;
 }
 
 void MemParseHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
-                                            , const unsigned int length)
+                                            , const XMLSize_t length)
 {
     fSpaceCount += length;
 }

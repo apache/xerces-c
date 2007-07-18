@@ -935,7 +935,7 @@ public :
     virtual void docCharacters
     (
         const   XMLCh* const    chars
-        , const unsigned int    length
+        , const XMLSize_t       length
         , const bool            cdataSection
     );
 
@@ -1055,7 +1055,7 @@ public :
     virtual void ignorableWhitespace
     (
         const   XMLCh* const    chars
-        , const unsigned int    length
+        , const XMLSize_t       length
         , const bool            cdataSection
     );
 
@@ -1392,7 +1392,7 @@ public :
     virtual void doctypeWhitespace
     (
         const   XMLCh* const    chars
-        , const unsigned int    length
+        , const XMLSize_t       length
     );
 
     /**

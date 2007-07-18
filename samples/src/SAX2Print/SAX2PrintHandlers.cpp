@@ -162,7 +162,7 @@ void SAX2PrintHandlers::notationDecl(const  XMLCh* const /* name */
 //  SAX2PrintHandlers: Overrides of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
 void SAX2PrintHandlers::characters(const     XMLCh* const    chars
-                                  , const   unsigned int    length)
+                                  , const   XMLSize_t    length)
 {
     fFormatter.formatBuf(chars, length, XMLFormatter::CharEscapes);
 }
@@ -191,7 +191,7 @@ void SAX2PrintHandlers::endElement(const XMLCh* const uri,
 
 
 void SAX2PrintHandlers::ignorableWhitespace( const   XMLCh* const chars
-                                            ,const  unsigned int length)
+                                            ,const  XMLSize_t length)
 {
     fFormatter.formatBuf(chars, length, XMLFormatter::NoEscapes);
 }

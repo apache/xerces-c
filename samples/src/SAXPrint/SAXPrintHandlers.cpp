@@ -160,7 +160,7 @@ void SAXPrintHandlers::notationDecl(const   XMLCh* const /* name */
 //  SAXPrintHandlers: Overrides of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
 void SAXPrintHandlers::characters(const     XMLCh* const    chars
-                                  , const   unsigned int    length)
+                                  , const   XMLSize_t       length)
 {
     fFormatter.formatBuf(chars, length, XMLFormatter::CharEscapes);
 }
@@ -179,7 +179,7 @@ void SAXPrintHandlers::endElement(const XMLCh* const name)
 
 
 void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
-                                            ,const  unsigned int length)
+                                            ,const  XMLSize_t    length)
 {
     fFormatter.formatBuf(chars, length, XMLFormatter::NoEscapes);
 }

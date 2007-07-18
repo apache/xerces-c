@@ -85,13 +85,13 @@ void RedirectHandlers::startElement(const   XMLCh* const    /* name */
 }
 
 void RedirectHandlers::characters(  const   XMLCh* const    /* chars */
-                                    , const unsigned int    length)
+                                    , const XMLSize_t    length)
 {
     fCharacterCount += length;
 }
 
 void RedirectHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
-                                            , const unsigned int length)
+                                            , const XMLSize_t length)
 {
     fSpaceCount += length;
 }

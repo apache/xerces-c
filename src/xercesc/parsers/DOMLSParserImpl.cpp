@@ -960,7 +960,7 @@ unsigned int DOMLSParserImpl::getSrcOffset() const
 }
 
 void DOMLSParserImpl::docCharacters(const XMLCh* const    chars
-                                  , const unsigned int    length
+                                  , const XMLSize_t       length
                                   , const bool            cdataSection)
 {
     AbstractDOMParser::docCharacters(chars, length, cdataSection);

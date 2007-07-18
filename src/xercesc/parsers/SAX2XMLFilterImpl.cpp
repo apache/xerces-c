@@ -311,7 +311,7 @@ void SAX2XMLFilterImpl::resetDocType()
 // -----------------------------------------------------------------------
 
 void SAX2XMLFilterImpl::characters(const XMLCh* const    chars
-                                 , const unsigned int    length)
+                                 , const XMLSize_t       length)
 {
     if(fDocHandler)
         fDocHandler->characters(chars, length);
@@ -332,7 +332,7 @@ void SAX2XMLFilterImpl::endElement(const XMLCh* const uri
 }
 
 void SAX2XMLFilterImpl::ignorableWhitespace(const XMLCh* const    chars
-                                          , const unsigned int    length)
+                                          , const XMLSize_t       length)
 {
     if(fDocHandler)
         fDocHandler->ignorableWhitespace(chars, length);

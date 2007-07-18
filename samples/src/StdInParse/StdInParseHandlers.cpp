@@ -63,13 +63,13 @@ StdInParseHandlers::startElement(   const   XMLCh* const    /* name */
 }
 
 void StdInParseHandlers::characters(const   XMLCh* const    /* chars */
-								    , const unsigned int    length)
+								    , const XMLSize_t      length)
 {
     fCharacterCount += length;
 }
 
 void StdInParseHandlers::ignorableWhitespace(const  XMLCh* const /* chars */
-										    , const unsigned int length)
+										    , const XMLSize_t    length)
 {
     fSpaceCount += length;
 }

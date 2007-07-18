@@ -79,7 +79,7 @@ public:
     virtual void characters
     (
         const   XMLCh* const    chars
-        , const unsigned int    length
+        , const XMLSize_t       length
     );
 
   /**
@@ -129,7 +129,7 @@ public:
     virtual void ignorableWhitespace
     (
         const   XMLCh* const    chars
-        , const unsigned int    length
+        , const XMLSize_t       length
     );
 
   /**
@@ -377,7 +377,7 @@ private:
 //  HandlerBase: Inline default implementations
 // ---------------------------------------------------------------------------
 inline void HandlerBase::characters(const   XMLCh* const
-                                    , const unsigned int)
+                                    , const XMLSize_t)
 {
 }
 
@@ -400,7 +400,7 @@ inline void HandlerBase::fatalError(const SAXParseException& exc)
 
 inline void
 HandlerBase::ignorableWhitespace(   const   XMLCh* const
-                                    , const unsigned int)
+                                    , const XMLSize_t)
 {
 }
 

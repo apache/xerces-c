@@ -229,7 +229,7 @@ void PSVIWriterHandlers::endDocument() {
 }
 
 void PSVIWriterHandlers::characters(	const XMLCh* const chars,
-									const unsigned int /* length */ ) {
+									const XMLSize_t /* length */ ) {
 	processChildren();
 	sendIndentedElement(PSVIUni::fgCharacter);
 	sendElementValue(PSVIUni::fgTextContent, chars);
@@ -237,11 +237,11 @@ void PSVIWriterHandlers::characters(	const XMLCh* const chars,
 }
 
 void PSVIWriterHandlers::ignorableWhitespace(	const XMLCh* const /* chars */,
-												const unsigned int /* length */) {
+												const XMLSize_t    /* length */) {
 	//ignore it  
 }
 
-void PSVIWriterHandlers::comment(const XMLCh* const chars, const unsigned int /* length */) {
+void PSVIWriterHandlers::comment(const XMLCh* const chars, const XMLSize_t /* length */) {
 	processChildren();
 	sendIndentedElement(PSVIUni::fgComment);
 	sendElementValue(PSVIUni::fgContent, chars);

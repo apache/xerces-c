@@ -739,7 +739,7 @@ void SAXParser::parseReset(XMLPScanToken& token)
 //  SAXParser: Overrides of the XMLDocumentHandler interface
 // ---------------------------------------------------------------------------
 void SAXParser::docCharacters(  const   XMLCh* const    chars
-                                , const unsigned int    length
+                                , const XMLSize_t       length
                                 , const bool            cdataSection)
 {
     // Suppress the chars before the root element.
@@ -871,7 +871,7 @@ void SAXParser::endEntityReference(const XMLEntityDecl& entityDecl)
 
 
 void SAXParser::ignorableWhitespace(const   XMLCh* const    chars
-                                    , const unsigned int    length
+                                    , const XMLSize_t       length
                                     , const bool            cdataSection)
 {
     // Do not report the whitespace before the root element.
@@ -1041,7 +1041,7 @@ void SAXParser::doctypePI(  const   XMLCh* const
 
 
 void SAXParser::doctypeWhitespace(  const   XMLCh* const
-                                    , const unsigned int)
+                                    , const XMLSize_t)
 {
     // Unused by SAX DTDHandler interface at this time
 }

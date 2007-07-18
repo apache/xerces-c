@@ -70,8 +70,8 @@ public:
     // -----------------------------------------------------------------------
     void endElement(const XMLCh* const name);
 	void startElement(const XMLCh* const name, AttributeList& attributes);
-    void characters(const XMLCh* const chars, const unsigned int length);
-    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length);
+    void characters(const XMLCh* const chars, const XMLSize_t length);
+    void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length);
     void resetDocument();
 
 

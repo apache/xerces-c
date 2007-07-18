@@ -512,7 +512,7 @@ void SAX2XMLReaderImpl::parseReset(XMLPScanToken& token)
 //  SAX2XMLReaderImpl: Overrides of the XMLDocumentHandler interface
 // ---------------------------------------------------------------------------
 void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
-                                , const unsigned int    length
+                                , const XMLSize_t       length
                                 , const bool            cdataSection)
 {
     // Suppress the chars before the root element.
@@ -622,7 +622,7 @@ void SAX2XMLReaderImpl::endEntityReference(const XMLEntityDecl& entityDecl)
 
 
 void SAX2XMLReaderImpl::ignorableWhitespace(const   XMLCh* const    chars
-                                    , const unsigned int    length
+                                    , const XMLSize_t       length
                                     , const bool            cdataSection)
 {
     // Do not report the whitespace before the root element.
@@ -991,7 +991,7 @@ void SAX2XMLReaderImpl::doctypePI(  const   XMLCh* const
 
 
 void SAX2XMLReaderImpl::doctypeWhitespace(  const   XMLCh* const
-                                    , const unsigned int)
+                                    , const XMLSize_t)
 {
     // Unused by SAX DTDHandler interface at this time
 }

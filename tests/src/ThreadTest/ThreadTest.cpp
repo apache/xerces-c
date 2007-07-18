@@ -337,7 +337,7 @@ public:
 
     int getCheckSum() {
         return fCheckSum;
-    };
+    }
 
     int reCheck();                    // Try to compute the checksum again.
                                       //  for DOM, re-walk the tree.
@@ -349,34 +349,34 @@ public:
     
     //  These are the SAX call-back functions that this class implements. Can be used
     //  for SAX and SAX2.
-    void characters(const XMLCh* const chars, const unsigned int length) {
+    void characters(const XMLCh* const chars, const XMLSize_t length) {
         addToCheckSum(chars, length);
-    };
+    }
     
-    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length) {
+    void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length) {
         addToCheckSum(chars, length);
-    };
+    }
     
     void resetDocument() {
-    };
+    }
 
     void warning(const SAXParseException& exc)     {
         fprintf(stderr, "*** Warning ");
         fflush(stderr);
         throw exc;
-    };
+    }
 
     void error(const SAXParseException& exc)       {
         fprintf(stderr, "*** Error ");
         fflush(stderr);
         throw exc;
-    };
+    }
 
     void fatalError(const SAXParseException& exc)  {
         fprintf(stderr, "***** Fatal error ");
         fflush(stderr);
         throw exc;
-    };
+    }
 
     // Create a nested class that can inherit from HandlerBase
     // for SAX startElement callbacks.

@@ -83,7 +83,7 @@ public:
     virtual void doctypeWhitespace
     (
         const   XMLCh* const    chars
-        , const unsigned int    length
+        , const XMLSize_t       length
     ) = 0;
 
     virtual void elementDecl

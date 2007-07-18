@@ -58,13 +58,13 @@ void PParseHandlers::startElement(const   XMLCh* const    /* name */
 }
 
 void PParseHandlers::characters(  const   XMLCh* const    /* chars */ 
-								    , const unsigned int    length)
+								    , const XMLSize_t    length)
 {
     fCharacterCount += length;
 }
 
 void PParseHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
-										    , const unsigned int length)
+										    , const XMLSize_t length)
 {
     fSpaceCount += length;
 }

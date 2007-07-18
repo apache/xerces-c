@@ -58,13 +58,13 @@ void SAXCountHandlers::startElement(const   XMLCh* const    /* name */
 }
 
 void SAXCountHandlers::characters(  const   XMLCh* const    /* chars */
-								    , const unsigned int    length)
+								    , const XMLSize_t       length)
 {
     fCharacterCount += length;
 }
 
 void SAXCountHandlers::ignorableWhitespace( const   XMLCh* const /* chars */
-										    , const unsigned int length)
+										    , const XMLSize_t    length)
 {
     fSpaceCount += length;
 }
