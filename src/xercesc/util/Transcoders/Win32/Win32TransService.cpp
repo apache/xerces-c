@@ -199,11 +199,9 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
 {
     // Transcode the name to Unicode and store that copy
     const XMLSize_t srcLen = strlen(encodingName);
-    const unsigned charLen = ::mblen(encodingName, MB_CUR_MAX);
-    if (charLen != -1) {
-        const unsigned int targetLen = srcLen/charLen;
-
-
+    size_t targetLen=::mbstowcs(NULL, encodingName, srcLen);
+    if(targetLen!=-1)
+    {
         fEncodingName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
         (
             (targetLen + 1) * sizeof(XMLCh)
