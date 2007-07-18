@@ -46,8 +46,9 @@ public:
     /**
       * Constructor which takes an error code and a message.
       *
-      * @param code The error code which indicates the exception
-      * @param message The string containing the error message
+      * @param code The error code which indicates the exception      
+      * @param messageCode    The string containing the error message
+      * @param memoryManager  The memory manager used to (de)allocate memory      
       */
     DOMXPathException( short                 code
                      , short                 messageCode = 0
