@@ -622,12 +622,13 @@ XMLSize_t BinHTTPURLInputStream::readBytes(XMLByte* const    toFill
         // There was no data in the local buffer.
         // Read some from the socket, straight into our caller's buffer.
         //
-        len = wrap_recv((SOCKET) fSocketHandle, (char *) toFill, (int)maxToRead, 0);
-        if (len == SOCKET_ERROR)
+        int iLen = wrap_recv((SOCKET) fSocketHandle, (char *) toFill, (int)maxToRead, 0);
+        if (iLen == SOCKET_ERROR)
         {
             // Call WSAGetLastError() to get the error number.
             ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, fMemoryManager);
         }
+		len = iLen;
     }
 
     fBytesProcessed += len;

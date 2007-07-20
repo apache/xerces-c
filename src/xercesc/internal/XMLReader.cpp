@@ -961,8 +961,8 @@ bool XMLReader::skipIfQuote(XMLCh& chGotten)
 bool XMLReader::skipSpaces(bool& skippedSomething, bool inDecl)
 {
     // Remember the current line and column
-    XMLSSize_t    orgLine = fCurLine;
-    XMLSSize_t    orgCol  = fCurCol;
+    unsigned long orgLine = fCurLine;
+    unsigned long orgCol  = fCurCol;
 
     //  We enter a loop where we skip over spaces until we hit the end of
     //  this reader or a non-space value. The return indicates whether we

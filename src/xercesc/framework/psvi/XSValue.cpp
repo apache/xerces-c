@@ -380,6 +380,7 @@ bool XSValue::validate(const XMLCh*         const content
         return false;
         break;
     }
+    return false;
 }
 
 XMLCh* 
@@ -416,6 +417,7 @@ XSValue::getCanonicalRepresentation(const XMLCh*         const content
         return 0;
         break;
     }
+    return 0;
 }
 
 XSValue* XSValue::getActualValue(const XMLCh*         const content    
@@ -450,6 +452,7 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
         return 0;
         break;
     }    
+    return 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -631,9 +634,8 @@ XSValue::validateNumerics(const XMLCh*         const content
                 break;
             }
         default:            
-            return false;            
+            return false;
         } // end switch
-        return true;  //both valid chars and within boundary
     }
     catch (const NumberFormatException&)
     {
@@ -642,6 +644,7 @@ XSValue::validateNumerics(const XMLCh*         const content
         status = st_FOCA0002; 
         return false; 
     }
+    return true;  //both valid chars and within boundary
 }
 
 bool XSValue::validateDateTimes(const XMLCh*         const input_content    
@@ -688,8 +691,6 @@ bool XSValue::validateDateTimes(const XMLCh*         const input_content
             return false;
             break;
         }
-
-        return true; //parsing succeed
     }
 
     catch (const SchemaDateTimeException &e)
@@ -704,6 +705,8 @@ bool XSValue::validateDateTimes(const XMLCh*         const input_content
         status = st_FOCA0002;
         return false; 
     }      
+
+    return true; //parsing succeed
 }
 
 bool XSValue::validateStrings(const XMLCh*         const content    
@@ -1088,6 +1091,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         return 0;
     }
 
+    return 0;
 }
 
 XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content    

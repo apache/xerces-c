@@ -50,8 +50,7 @@
 #define XERCES_U16BIT_INT   unsigned short
 #define XERCES_S32BIT_INT   INT32
 #define XERCES_U32BIT_INT   UINT32
-// REVISIT: double check if Borland supports 64 bit integers
-#define XERCES_U64BIT_INT   UINT32
+#define XERCES_U64BIT_INT   UINT64
 
 #define XERCES_XMLCH_T      wchar_t
 

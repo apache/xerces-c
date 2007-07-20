@@ -188,7 +188,7 @@ DOMAttr *DOMElementImpl::removeAttributeNode(DOMAttr *oldAttr)
 
     // Since there is no removeAttributeNodeNS, check if this oldAttr has NS or not
     const XMLCh* localName = oldAttr->getLocalName();
-    unsigned int i = 0;
+    int i = 0;
     if (localName)
         i = fAttributes->findNamePoint(oldAttr->getNamespaceURI(), localName);
     else

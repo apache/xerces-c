@@ -22,8 +22,5 @@ Before build:
 How to build dll (without deprecated DOM API) and tests:
 	make -f Xerces-all.mak
 
-How to build dll (with deprecated DOM API, approx. 300k larger) and tests:
-	make -f Xerces-all.mak -DWITHDEPRDOM=Y
-
 Vitaly Prapirny (marl@mebius.net)
 
