@@ -164,8 +164,8 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         chSpace, chDigit_2, chDigit_0, chDigit_0, chSpace, chNull
     };
 
-    unsigned int charsEaten;
-    unsigned int transSize;
+    XMLSize_t charsEaten;
+    XMLSize_t transSize;
     XMLTransService::Codes failReason;
     const unsigned int blockSize = 2048;
     const unsigned int bufSize = 5;
@@ -201,7 +201,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     ArrayJanitor<char>  janBuf2(hostNameAsASCII, fMemoryManager);
 
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, fMemoryManager);
-    trans->transcodeTo(hostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    trans->transcodeTo(hostName, transSize, (XMLByte*) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     char*               pathAsASCII = 0;
     ArrayJanitor<char>  janBuf3(pathAsASCII, fMemoryManager);
@@ -213,7 +213,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
         janBuf3.reset(pathAsASCII, fMemoryManager);
-        trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+        trans->transcodeTo(path, transSize, (XMLByte*) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     char*               fragmentAsASCII = 0;
@@ -226,7 +226,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
         janBuf4.reset(fragmentAsASCII, fMemoryManager);
-        trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+        trans->transcodeTo(fragment, transSize, (XMLByte*) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     char*               queryAsASCII = 0;
@@ -239,7 +239,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
         janBuf5.reset(queryAsASCII, fMemoryManager);
-        trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+        trans->transcodeTo(query, transSize, (XMLByte*) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
@@ -255,7 +255,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
     ArrayJanitor<char>  janBuf6(portAsASCII, fMemoryManager);
-    trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    trans->transcodeTo(portBuffer, transSize, (XMLByte*) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
     delete trans;
 
@@ -387,7 +387,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
         ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
 
-        unsigned int len;
+        XMLSize_t len;
         XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
         ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
  
@@ -397,7 +397,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
             ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
             XMLByte* cursor=authData;
-            for(unsigned int i=0;i<len;i++)
+            for(XMLSize_t i=0;i<len;i++)
                 if(encodedData[i]!=chLF)
                     *cursor++=encodedData[i];
             *cursor++=0;

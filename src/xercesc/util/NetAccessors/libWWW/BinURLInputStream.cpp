@@ -50,12 +50,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 static char* localTranscode(const XMLCh* latinStrInUnicode
                             , MemoryManager* const  manager)
 {
-    unsigned int   lent = XMLString::stringLen(latinStrInUnicode);
+    XMLSize_t lent = XMLString::stringLen(latinStrInUnicode);
     char*  retval = (char*) manager->allocate
     (
         (lent + 1) * sizeof(char)
     );//new char[lent + 1];
-    unsigned int  i = 0;
+    XMLSize_t i = 0;
     for (i = 0; i < lent; i++)
         retval[i] = (char) latinStrInUnicode[i]; // drop the leading byte.
     retval[lent] = 0;
