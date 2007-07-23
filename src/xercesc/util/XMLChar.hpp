@@ -71,6 +71,11 @@ public:
         , const unsigned int    count
     );
 
+    static bool isValidName
+    (
+        const   XMLCh* const    toCheck
+    );
+
     static bool isValidNCName
     (
         const   XMLCh* const    toCheck
@@ -270,6 +275,11 @@ public:
     (
         const   XMLCh* const    toCheck
         , const unsigned int    count
+    );
+
+    static bool isValidName
+    (
+        const   XMLCh* const    toCheck
     );
 
     static bool isValidNCName
