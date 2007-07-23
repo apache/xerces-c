@@ -17,6 +17,7 @@
 #             code that can then be built into a .so
 #
 
+srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 top_builddir = @top_builddir@
 ICU_PREFIX = @ICU_PREFIX@
@@ -51,7 +52,7 @@ PKGTARGET=lib$(PKGNAME)$(SHREXT)
 RESFILES=$(PKGNAME)_en_US.res
 
 # list of resource bundles  - keep in sync with RESFILES
-RESLIST=res-file-list-unix.txt
+RESLIST=$(srcdir)/res-file-list-unix.txt
 
 # list of targets that aren't actually created
 .PHONY: check report 
@@ -73,7 +74,7 @@ distclean clean: $(CLEAN_SUBDIR)
 	-rm $(OBJECTS) $(TARGET) $(RESTARGET) $(RESFILES)
 
 ## resources
-$(PKGNAME)_%.res: %.txt
+$(PKGNAME)_%.res: $(srcdir)/%.txt
 	@echo "generating $@"
 	$(GENRB) $(GENRBOPT) $^
 
