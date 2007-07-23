@@ -55,7 +55,9 @@ RESFILES=$(PKGNAME)_en_US.res
 RESLIST=$(srcdir)/res-file-list-unix.txt
 
 # list of targets that aren't actually created
-.PHONY: check report 
+.PHONY: report 
+
+check: all
 
 all: $(RESTARGET) $(TARGET)  
 

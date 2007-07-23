@@ -21,7 +21,9 @@ RESTARGET=$(top_builddir)/obj/.libs/$(PKGNAME)_en_US.cat
 RESFILES=$(PKGNAME)_en_US.cat
 
 # list of targets that aren't actually created
-.PHONY: check report 
+.PHONY: report 
+
+check: all
 
 all: $(RESTARGET) $(TARGET)  
 
