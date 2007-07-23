@@ -16,7 +16,7 @@
  */
 
 /*
- * $Id: $
+ * $Id$
  */
 
 #if !defined(XERCESC_INCLUDE_GUARD_DOMXPATHNSRESOLVERIMPL_HPP)
