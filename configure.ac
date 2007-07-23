@@ -30,7 +30,7 @@ AC_CONFIG_LIBOBJ_DIR([lib])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile obj/Makefile tests/Makefile samples/Makefile swig/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile src/xercesc/util/MsgLoaders/MsgCatalog/Makefile obj/Makefile tests/Makefile samples/Makefile swig/Makefile])
 
 # Check the target system
 AC_CANONICAL_HOST

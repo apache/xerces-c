@@ -200,6 +200,8 @@ src_libraries +=					libmsgiconv.la
 libmsgiconv_ladir =					${includedir}
 nobase_libmsgiconv_la_HEADERS =				${msgiconv_headers}
 libmsgiconv_la_SOURCES =				${msgiconv_sources}
+
+SUBDIRS 						+= xercesc/util/MsgLoaders/MsgCatalog
 endif
 
 #

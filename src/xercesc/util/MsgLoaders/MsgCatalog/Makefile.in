@@ -1,0 +1,43 @@
+
+top_srcdir = @top_srcdir@
+top_builddir = @top_builddir@
+
+include $(top_srcdir)/version.incl
+
+# No conventional target - this dir is resources only.
+TARGET=
+CLEANFILES += $(RESFILES)
+
+# Resource shortname
+PKGNAME=XercesMessages
+
+# target file for resource bundle - this must be set, or 'make all' won't
+# build any resources.
+RESTARGET=$(top_builddir)/obj/.libs/$(PKGNAME)_en_US.cat
+
+# Resource files.  Add new ones for additional locales here.
+# keep in sync with the file RESLIST
+RESFILES=$(PKGNAME)_en_US.cat
+
+# list of targets that aren't actually created
+.PHONY: check report 
+
+all: $(RESTARGET) $(TARGET)  
+
+$(RESTARGET): $(RESFILES)
+	@echo building $(RESTARGET)
+	mkdir -p $(top_builddir)/obj/.libs
+	cp $(RESFILES) $(top_builddir)/obj/.libs
+	
+# clean out files
+distclean clean: $(CLEAN_SUBDIR)
+	-rm $(RESTARGET)
+
+## resources
+$(PKGNAME)_%.cat: $(top_srcdir)/src/xercesc/util/MsgLoaders/MsgCatalog/$(PKGNAME)_%.Msg
+	@echo "generating $@"
+	gencat $@ $^
+
+# for installing the library
+install: res-install
+
