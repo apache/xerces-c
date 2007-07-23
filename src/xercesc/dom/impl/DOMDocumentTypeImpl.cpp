@@ -148,7 +148,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         }
         else {
             // document is not there yet, so assume XML 1.0
-            if (!XMLChar1_0::isValidName(newName, index) || !XMLChar1_0::isValidName(qualifiedName+index+1, XMLString::stringLen(qualifiedName)-index-1))
+            if (!XMLChar1_0::isValidName(newName) || !XMLChar1_0::isValidName(qualifiedName+index+1))
                 throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
         }
 

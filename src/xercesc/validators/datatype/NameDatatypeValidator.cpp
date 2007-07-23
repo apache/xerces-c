@@ -99,7 +99,7 @@ void NameDatatypeValidator::checkValueSpace(const XMLCh* const content
     //
     // 3.3.6 check must: "Name"
     //
-    if ( !XMLChar1_0::isValidName(content, XMLString::stringLen(content)) )
+    if ( !XMLChar1_0::isValidName(content))
     {
         ThrowXMLwithMemMgr2(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Invalid_Name

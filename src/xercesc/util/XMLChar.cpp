@@ -117,6 +117,25 @@ bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck
     return true;
 }
 
+bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck)
+{
+    const XMLCh* curCh = toCheck;
+
+    if ((fgCharCharsTable1_0[*curCh++] & gFirstNameCharMask))
+	{
+		while ((fgCharCharsTable1_0[*curCh] & gNameCharMask))
+		{
+			curCh++;
+		}
+
+		if (*curCh == 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 /**
   * isValidQName
   *
@@ -4524,6 +4543,76 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
                 }
             }
             gotLeadingSurrogate = false;
+        }
+    }
+    return true;
+}
+
+bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck)
+{
+    const XMLCh* curCh = toCheck;
+
+    XMLCh nextCh = *curCh++;
+    if ((nextCh >= 0xD800) && (nextCh <= 0xDB7F))
+	{
+        nextCh = *curCh++;
+        if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
+		{
+            return false;
+		}
+    }
+    else if (!(fgCharCharsTable1_1[nextCh] & gFirstNameCharMask))
+	{
+            return false;
+	}
+
+    bool    gotLeadingSurrogate = false;
+
+    while (*curCh != 0)
+    {
+        nextCh = *curCh++;
+
+        // Deal with surrogate pairs
+        if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
+        {
+            //  Its a leading surrogate. If we already got one, then
+            //  issue an error, else set leading flag to make sure that
+            //  we look for a trailing next time.
+            if (nextCh > 0xDB7F || gotLeadingSurrogate)
+            {
+                return false;
+            }
+            else
+			{
+                gotLeadingSurrogate = true;
+			}
+        }
+        else
+        {
+            //  If its a trailing surrogate, make sure that we are
+            //  prepared for that. Else, its just a regular char so make
+            //  sure that we were not expected a trailing surrogate.
+           if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+           {
+                // Its trailing, so make sure we were expecting it
+                if (!gotLeadingSurrogate)
+                    return false;
+            }
+            else
+            {
+                //  Its just a char, so make sure we were not expecting a
+                //  trailing surrogate.
+                if (gotLeadingSurrogate)
+				{
+                    return false;
+                }
+                // Its got to at least be a valid XML character
+                else if (!(fgCharCharsTable1_1[nextCh] & gNameCharMask))
+                {
+                    return false;
+                }
+            }
+           gotLeadingSurrogate = false;
         }
     }
     return true;

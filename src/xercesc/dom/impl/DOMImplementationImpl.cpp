@@ -226,7 +226,7 @@ DOMDocumentType *DOMImplementationImpl::createDocumentType(const XMLCh *qualifie
 	const XMLCh * publicId, const XMLCh *systemId)
 {
     // assume XML 1.0 since we do not know its version yet.
-    if(!XMLChar1_0::isValidName(qualifiedName, XMLString::stringLen(qualifiedName)))
+    if(!XMLChar1_0::isValidName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR, 0);
 
     //to do: do we need to create with user's memorymanager???

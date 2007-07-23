@@ -542,9 +542,9 @@ DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
 bool DOMDocumentImpl::isXMLName(const XMLCh *s)
 {
     if (XMLString::equals(fXmlVersion, XMLUni::fgVersion1_1))
-        return XMLChar1_1::isValidName(s, XMLString::stringLen(s));
+        return XMLChar1_1::isValidName(s);
     else
-        return XMLChar1_0::isValidName(s, XMLString::stringLen(s));
+        return XMLChar1_0::isValidName(s);
 }
 
 

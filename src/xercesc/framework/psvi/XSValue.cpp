@@ -951,8 +951,8 @@ bool XSValue::validateStrings(const XMLCh*         const content
             }            
         case XSValue::dt_Name:
             isValid = (version == ver_10) ? 
-                XMLChar1_0::isValidName(content, XMLString::stringLen(content)) :
-                XMLChar1_1::isValidName(content, XMLString::stringLen(content));
+                XMLChar1_0::isValidName(content) :
+                XMLChar1_1::isValidName(content);
             break;
         case XSValue::dt_NCName:
         case XSValue::dt_ID:
@@ -992,7 +992,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
         default:
             status = st_NotSupported;
             isValid = false;        
-            break;
+            break;        
     }
 
 
@@ -1144,11 +1144,11 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const input_content
     }
     catch (SchemaDateTimeException &e)
     {
-        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;       
     }
     catch (const NumberFormatException&)
     {
-        status = st_FOCA0002;
+        status = st_FOCA0002;        
     }
     return 0;
 }
@@ -1233,16 +1233,16 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
             break;
         default:
             return 0;
-            break;
+            break;        
     }
 
     return 0;
 }
 
-XSValue*
+XSValue*  
 XSValue::getActValNumerics(const XMLCh*         const content    
                          ,       DataType             datatype
-                         ,       Status&              status    
+                         ,       Status&              status
                          ,       bool                 toValidate
                          ,       MemoryManager* const manager)
 {
@@ -1424,7 +1424,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
     }
     return 0; 
 }
-
+             
 XSValue*  
 XSValue::getActValDateTimes(const XMLCh*         const input_content    
                           ,       DataType             datatype
@@ -1510,13 +1510,13 @@ XSValue::getActValDateTimes(const XMLCh*         const input_content
     }
     catch (SchemaDateTimeException const &e)
     {
-        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
+        status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;        
     }
     catch (const NumberFormatException&)
     {
-        status = st_FOCA0002;
+        status = st_FOCA0002;         
     }
-    return 0; 
+    return 0;
 
 }
 
@@ -1618,7 +1618,7 @@ XSValue::getActValStrings(const XMLCh*         const content
             break;
         default:
             return 0;
-            break;
+            break;        
     }
 
     return 0; 
@@ -1634,7 +1634,7 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
                            ,       DataType             datatype)
 {
     char *nptr = XMLString::transcode(content, manager);
-    ArrayJanitor<char> jan(nptr, manager);
+    ArrayJanitor<char> jan(nptr, manager);    
     char *endptr = 0;
     errno = 0;
 

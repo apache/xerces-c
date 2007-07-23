@@ -72,6 +72,11 @@ public:
         , const XMLSize_t       count
     );
 
+    static bool isValidName
+    (
+        const   XMLCh* const    toCheck
+    );
+
     static bool isValidNCName
     (
         const   XMLCh* const    toCheck
@@ -271,6 +276,11 @@ public:
     (
         const   XMLCh* const    toCheck
         , const XMLSize_t       count
+    );
+
+    static bool isValidName
+    (
+        const   XMLCh* const    toCheck
     );
 
     static bool isValidNCName
