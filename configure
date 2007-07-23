@@ -2055,7 +2055,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 ac_config_headers="$ac_config_headers config.h src/xercesc/util/Xerces_autoconf_config.hpp"
 
-ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile obj/Makefile tests/Makefile samples/Makefile swig/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile src/xercesc/util/MsgLoaders/ICU/resources/Makefile src/xercesc/util/MsgLoaders/MsgCatalog/Makefile obj/Makefile tests/Makefile samples/Makefile swig/Makefile"
 
 
 # Check the target system
@@ -28421,6 +28421,7 @@ do
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/xercesc/util/MsgLoaders/ICU/resources/Makefile") CONFIG_FILES="$CONFIG_FILES src/xercesc/util/MsgLoaders/ICU/resources/Makefile" ;;
+    "src/xercesc/util/MsgLoaders/MsgCatalog/Makefile") CONFIG_FILES="$CONFIG_FILES src/xercesc/util/MsgLoaders/MsgCatalog/Makefile" ;;
     "obj/Makefile") CONFIG_FILES="$CONFIG_FILES obj/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "samples/Makefile") CONFIG_FILES="$CONFIG_FILES samples/Makefile" ;;

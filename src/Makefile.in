@@ -85,27 +85,28 @@ LIBOBJDIR = ../lib/
 @XERCES_USE_MSGLOADER_ICU_TRUE@am__append_12 = libmsgicu.la
 @XERCES_USE_MSGLOADER_ICU_TRUE@am__append_13 = xercesc/util/MsgLoaders/ICU/resources
 @XERCES_USE_MSGLOADER_ICONV_TRUE@am__append_14 = libmsgiconv.la
+@XERCES_USE_MSGLOADER_ICONV_TRUE@am__append_15 = xercesc/util/MsgLoaders/MsgCatalog
 
 #
 # AtomicOp Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__append_15 = libnothreadaomgr.la
-@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__append_16 = libposixaomgr.la
-@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__append_17 = libmacosaomgr.la
-@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__append_18 = libwinaomgr.la
+@XERCES_USE_ATOMICOPMGR_NOTHREAD_TRUE@am__append_16 = libnothreadaomgr.la
+@XERCES_USE_ATOMICOPMGR_POSIX_TRUE@am__append_17 = libposixaomgr.la
+@XERCES_USE_ATOMICOPMGR_MACOS_TRUE@am__append_18 = libmacosaomgr.la
+@XERCES_USE_ATOMICOPMGR_WINDOWS_TRUE@am__append_19 = libwinaomgr.la
 
 #
 # Mutex Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__append_19 = libnothreadmmgr.la
-@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__append_20 = libposixmmgr.la
-@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__append_21 = libwinmmgr.la
+@XERCES_USE_MUTEXMGR_NOTHREAD_TRUE@am__append_20 = libnothreadmmgr.la
+@XERCES_USE_MUTEXMGR_POSIX_TRUE@am__append_21 = libposixmmgr.la
+@XERCES_USE_MUTEXMGR_WINDOWS_TRUE@am__append_22 = libwinmmgr.la
 
 #
 # File Managers, conditionally built based on settings from configure
 #
-@XERCES_USE_FILEMGR_POSIX_TRUE@am__append_22 = libposixfmgr.la
-@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__append_23 = libwinfmgr.la
+@XERCES_USE_FILEMGR_POSIX_TRUE@am__append_23 = libposixfmgr.la
+@XERCES_USE_FILEMGR_WINDOWS_TRUE@am__append_24 = libwinfmgr.la
 subdir = src
 DIST_COMMON = $(am__nobase_libcfurlna_la_HEADERS_DIST) \
 	$(am__nobase_libcurlna_la_HEADERS_DIST) \
@@ -907,7 +908,8 @@ HEADERS = $(nobase_libcfurlna_la_HEADERS) \
 	$(nobase_libxinclude_la_HEADERS)
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = xercesc/util/MsgLoaders/ICU/resources
+DIST_SUBDIRS = xercesc/util/MsgLoaders/ICU/resources \
+	xercesc/util/MsgLoaders/MsgCatalog
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
@@ -1071,7 +1073,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = $(am__append_13)
+SUBDIRS = $(am__append_13) $(am__append_15)
 
 # the  -I${top_srcdir} is needed to pick the lib/stricmp.h 
 # header file when doing out-of-tree builds
@@ -1102,9 +1104,9 @@ src_libraries = libutil.la libdom.la libdomimpl.la libframework.la \
 	$(am__append_5) $(am__append_6) $(am__append_7) \
 	$(am__append_8) $(am__append_9) $(am__append_10) \
 	$(am__append_11) $(am__append_12) $(am__append_14) \
-	$(am__append_15) $(am__append_16) $(am__append_17) \
-	$(am__append_18) $(am__append_19) $(am__append_20) \
-	$(am__append_21) $(am__append_22) $(am__append_23)
+	$(am__append_16) $(am__append_17) $(am__append_18) \
+	$(am__append_19) $(am__append_20) $(am__append_21) \
+	$(am__append_22) $(am__append_23) $(am__append_24)
 libutil_ladir = ${includedir}
 nobase_libutil_la_HEADERS = ${util_headers}
 libutil_la_SOURCES = ${util_sources}
