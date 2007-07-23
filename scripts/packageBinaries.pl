@@ -613,19 +613,23 @@ if ( ($platform =~ m/AIX/i)      ||
             $icu_cxxflags = '"-w -O3"';
             $icu_cflags = '"-w -xO3"'; 
         }
-        else {        
-            $icu_cxxflags = '"-w -O3 -xarch=v9"';
-            $icu_cflags = '"-w -xO3 -xarch=v9"';            
+        else {
+        	# Solaris on AMD 64 doesn't use -xarch=v9
+            #$icu_cxxflags = '"-w -O3 -xarch=v9"';
+            #$icu_cflags = '"-w -xO3 -xarch=v9"';            
+            $icu_cxxflags = '"-w -O3"';
+            $icu_cflags = '"-w -xO3"';            
         }
                     
         if ($opt_x eq "CC") {
             $ENV{'PATH'}="/usr/ccs/bin:/usr/ucb:$ENV{'PATH'}"; 
             $xercesc_linkflags = '"-z muldefs"';
-            if ($opt_b eq "64") {
-                $xercesc_64bit_cxxflags  = '"-xarch=v9"';    
-                $xercesc_64bit_cflags  = '"-xarch=v9"';  
-                $xercesc_64bit_linkflags = '"-xarch=v9"'; 		
-            }        	
+            # Solaris on AMD 64 doesn't use -xarch=v9
+            #if ($opt_b eq "64") {
+            #    $xercesc_64bit_cxxflags  = '"-xarch=v9"';    
+            #    $xercesc_64bit_cflags  = '"-xarch=v9"';  
+            #    $xercesc_64bit_linkflags = '"-xarch=v9"'; 		
+            #}        	
         }                
 
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
@@ -802,6 +806,9 @@ if ( ($platform =~ m/AIX/i)      ||
     
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
     psystem ("$MAKE");
+    print "\nMAKE finished, config.log is:\n";
+    psystem ("cat config.log");
+    
     # build the tests
     print("\n\nBuild the tests ...\n");
     psystem ("$MAKE check");
