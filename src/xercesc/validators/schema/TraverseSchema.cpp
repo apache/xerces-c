@@ -6591,6 +6591,10 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
         return;
     }
 
+	ComplexTypeInfo* baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
+	if (baseTypeInfo && baseTypeInfo->getPreprocessed())
+		throw TraverseSchema::RecursingElement;
+
     const DOMElement* child = attElem;
     SchemaAttDef* attWildCard = 0;
     Janitor<SchemaAttDef> janAttWildCard(0);
@@ -6621,8 +6625,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
     // -------------------------------------------------------------
     // Handle wild card/any attribute
-    // -------------------------------------------------------------
-    ComplexTypeInfo* baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
+    // -------------------------------------------------------------   
     int derivedBy = typeInfo->getDerivedBy();
     unsigned int attGroupListSize = attGroupList.size();
 
