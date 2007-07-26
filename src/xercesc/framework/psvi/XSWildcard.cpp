@@ -117,7 +117,9 @@ XSWildcard::XSWildcard(const ContentSpecNode* const elmWildCard,
     else if (nodeType == ContentSpecNode::Any_NS_Choice)
     {
         fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
-        ContentSpecNode::NodeTypes anyType = elmWildCard->getFirst()->getType();
+        // inspect the second child, not the first one, as the first could hold another Any_NS_Choice wrapper
+        // if the choices are more than 2, while the second child is always a leaf node
+        ContentSpecNode::NodeTypes anyType = elmWildCard->getSecond()->getType();
 
         if (anyType == ContentSpecNode::Any_NS_Lax)
             fProcessContents = PC_LAX;
