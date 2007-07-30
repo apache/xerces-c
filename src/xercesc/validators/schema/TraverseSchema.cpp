@@ -1096,7 +1096,9 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
             wasAny = true;
         }
         else {
-            reportSchemaError(child, XMLUni::fgValidityDomain, XMLValid::GroupContentRestricted, childName);
+            reportSchemaError(child, XMLUni::fgValidityDomain, XMLValid::GroupContentRestricted, 
+                              childName, 
+                              ((ContentSpecNode::NodeTypes) modelGroupType) == ContentSpecNode::Choice?SchemaSymbols::fgELT_CHOICE:SchemaSymbols::fgELT_SEQUENCE);
         }
 
         if (seeParticle) {

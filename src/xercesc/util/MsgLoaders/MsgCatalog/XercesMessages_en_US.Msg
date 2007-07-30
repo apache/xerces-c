@@ -361,7 +361,7 @@ $set 2
 36  {0} not allowed if the order is all.
 37  Datatype qualifiers can only be used if you specify a type attribute.
 38  The datatype qualifier {0} is not supported.
-39  '{0}' is not allowed for the content of a 'choice' model group.  Only element, group, choice, sequence and any are allowed.
+39  '{0}' is not allowed for the content of a '{1}' model group.  Only element, group, choice, sequence and any are allowed.
 40  Unknown base type {0} for type {1}.
 41  Can only have one of type and ref attributes.
 42  A <{0}> declaration that has a ref attribute, cannot have child content.
