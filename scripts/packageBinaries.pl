@@ -775,7 +775,7 @@ if ( ($platform =~ m/AIX/i)      ||
     #        
     print("\n\nBuild the xerces-c library ...\n");
     pchdir ("$XERCESCROOT");
-    psystem ("chmod +x configure config/install-sh config/pretty-make");
+    psystem ("chmod +x configure config/install-sh config/pretty-make config/compile");
 
     $cfg_icu = "";
     $cfg_m = "";
@@ -876,27 +876,27 @@ if ( ($platform =~ m/AIX/i)      ||
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.so" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.so .");
-        psystem("ln -s libxerces-3.0.so libxerces-3.so ");
-        psystem("ln -s libxerces-3.so   libxerces.so    ");     
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c-3.0.so" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c-3.0.so .");
+        psystem("ln -s libxerces-c-3.0.so libxerces-c-3.so ");
+        psystem("ln -s libxerces-c-3.so   libxerces-c.so    ");     
     }
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.sl" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.sl .");
-        psystem("ln -s libxerces-3.0.sl libxerces-3.sl ");
-        psystem("ln -s libxerces-3.sl   libxerces.sl    ");               
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c-3.0.sl" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c-3.0.sl .");
+        psystem("ln -s libxerces-c-3.0.sl libxerces-c-3.sl ");
+        psystem("ln -s libxerces-c-3.sl   libxerces-c.sl    ");               
     }
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces.a" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces.a . ");
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c.a" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c.a . ");
     }
         
     # Mac OS X
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-3.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-3.0.dylib .");
-        psystem("ln -s libxerces-3.0.dylib libxerces-3.dylib ");
-        psystem("ln -s libxerces-3.dylib   libxerces.dylib    ");
+    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c-3.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c-3.0.dylib .");
+        psystem("ln -s libxerces-c-3.0.dylib libxerces-c-3.dylib ");
+        psystem("ln -s libxerces-c-3.dylib   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files

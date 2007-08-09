@@ -21,14 +21,14 @@
 
 include ../version.incl
 
-lib_LTLIBRARIES	= 			libxerces.la
-libxerces_la_SOURCES =
-nodist_EXTRA_libxerces_la_SOURCES = dummyfile-to-force-cpp-linking.cpp
+lib_LTLIBRARIES	= 			libxerces-c.la
+libxerces_c_la_SOURCES =
+nodist_EXTRA_libxerces_c_la_SOURCES = dummyfile-to-force-cpp-linking.cpp
 
-libxerces_la_LIBADD = 		${top_builddir}/src/libsrc.la ${top_builddir}/lib/libcompat.la
-libxerces_la_LDFLAGS =		-release ${PACKAGE_VERSION}
+libxerces_c_la_LIBADD = 		${top_builddir}/src/libsrc.la ${top_builddir}/lib/libcompat.la
+libxerces_c_la_LDFLAGS =		-release ${PACKAGE_VERSION}
 
 if XERCES_USE_MSGLOADER_ICU
-libxerces_la_LDFLAGS +=		-L${top_builddir}/obj/.libs -lXercesMessages$(VER)
+libxerces_c_la_LDFLAGS +=		-L${top_builddir}/obj/.libs -lXercesMessages$(VER)
 endif
 

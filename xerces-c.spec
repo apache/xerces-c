@@ -60,8 +60,8 @@ make
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT
 make prefix=$RPM_BUILD_ROOT%{prefix} libdir=$RPM_BUILD_ROOT%{prefix}/%{_lib} install
-ln -sf %{prefix}/%{_lib}/libxerces-3.0.so $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.so
-rm -f $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces.la
+ln -sf %{prefix}/%{_lib}/libxerces-c-3.0.so $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.so
+rm -f $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.la
 mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
 cp -a $XERCESCROOT/samples/src $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
 cp -a $XERCESCROOT/samples/data $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
@@ -78,8 +78,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(755,root,root)
 %{prefix}/bin/*
-%{prefix}/%{_lib}/libxerces*.so
-%{prefix}/%{_lib}/libxerces*.a
+%{prefix}/%{_lib}/libxerces-c*.so
+%{prefix}/%{_lib}/libxerces-c*.a
 
 %files devel
 %defattr(-,root,root)
