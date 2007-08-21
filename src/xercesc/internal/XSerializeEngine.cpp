@@ -902,13 +902,13 @@ void XSerializeEngine::fillBuffer()
      ***/
     TEST_THROW_ARG2( (bytesRead < (int)fBufSize)
                , bytesRead
-               , fBufSize
+               , (int)fBufSize
                , XMLExcepts::XSer_InStream_Read_LT_Req
                )
 
     TEST_THROW_ARG2( (bytesRead > (int)fBufSize)
                , bytesRead
-               , fBufSize
+               , (int)fBufSize
                , XMLExcepts::XSer_InStream_Read_OverFlow
                )
 
@@ -1110,20 +1110,20 @@ MemoryManager* XSerializeEngine::getMemoryManager() const
 // Based on the current position (fBufCur), calculated the needed size
 // to read/write
 //
-inline size_t XSerializeEngine::alignAdjust(size_t size) const
+inline XMLSize_t XSerializeEngine::alignAdjust(XMLSize_t size) const
 {
-    size_t remainder = (size_t) fBufCur % size;
+    XMLSize_t remainder = (XMLSize_t) fBufCur % size;
     return (remainder == 0) ? 0 : (size - remainder);
 }
 
 // Adjust the fBufCur
-inline void XSerializeEngine::alignBufCur(size_t size)
+inline void XSerializeEngine::alignBufCur(XMLSize_t size)
 {
     fBufCur+=alignAdjust(size);
-    assert(((size_t) fBufCur % size)==0);
+    assert(((XMLSize_t) fBufCur % size)==0);
 }
 
-inline size_t XSerializeEngine::calBytesNeeded(size_t size) const
+inline XMLSize_t XSerializeEngine::calBytesNeeded(XMLSize_t size) const
 {
     return (alignAdjust(size) + size);
 }

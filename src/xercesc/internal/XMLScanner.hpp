@@ -1298,7 +1298,7 @@ inline void XMLScanner::setValidateAnnotations(const bool newValue)
 inline void XMLScanner::setInputBufferSize(const size_t bufferSize)
 {
     fBufferSize = bufferSize;
-    fCDataBuf.setFullHandler(this, fBufferSize);
+    fCDataBuf.setFullHandler(this, (unsigned int)fBufferSize);
 }
 
 inline void XMLScanner::setIgnoredCachedDTD(const bool newValue)

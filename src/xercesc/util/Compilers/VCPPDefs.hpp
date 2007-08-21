@@ -89,6 +89,11 @@ typedef int             XMLInt32;
     #define XML_SIZE_MAX        SIZE_MAX
     typedef ssize_t             XMLSSize_t;
     #define XML_SSIZE_MAX       SSIZE_MAX
+#elif defined(_M_AMD64) || defined(_M_IA64)
+    typedef unsigned __int64    XMLSize_t;
+    #define XML_SIZE_MAX        _UI64_MAX
+    typedef __int64             XMLSSize_t;
+    #define XML_SSIZE_MAX       _I64_MAX
 #else
     typedef unsigned long       XMLSize_t;
     #define XML_SIZE_MAX        ULONG_MAX
