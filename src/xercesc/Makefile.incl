@@ -92,6 +92,10 @@ ifeq (${PLATFORM}, SOLARIS)
                   -licuuc -licudata -lXercesMessages -lm -lgen
     endif
 
+    ## Compiler switch to embed a library name
+    LD_SONAME = -Wl,-h,${SO_NAME}
+    LD_SODEPDOM = -Wl,-h,${SO_DEPDOM}
+
   else
     PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XML_OBJ_DIR) \
                                -features=rtti -D${PLATFORM} -D_REENTRANT
@@ -107,12 +111,13 @@ ifeq (${PLATFORM}, SOLARIS)
         ALLLIBS = -mt ${LIBS} -licuuc -licudata -lXercesMessages
     endif
 
-  endif
-  SHLIBSUFFIX=.so
-  ICUSHLIBSUFFIX=.so
   ## Compiler switch to embed a library name
   LD_SONAME = -h ${SO_NAME}
   LD_SODEPDOM = -h ${SO_DEPDOM}  
+  endif
+
+  SHLIBSUFFIX=.so
+  ICUSHLIBSUFFIX=.so
 endif
 
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
@@ -128,6 +133,12 @@ ifeq (${PLATFORM}, UNIXWARE)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lgen
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -licuuc -licudata -lXercesMessages -lm -lw -lgen
+    endif
+
   else
     PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs \
                                -D${PLATFORM} -D_REENTRANT
@@ -140,6 +151,12 @@ ifeq (${PLATFORM}, UNIXWARE)
         ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lC -lc -lgen
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
+                  -licuuc -licudata -lXercesMessages -lm -lw -lC -lc -lgen
+    endif
+
   endif
   SHLIBSUFFIX=.so
   ICUSHLIBSUFFIX=.so
@@ -195,47 +212,56 @@ endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, AIX)
+  ifeq (${GXX}, yes)
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
 
-#PLATFORM_CPP_COMPILER = xlC_r
-#PLATFORM_C_COMPILER = xlc_r
-#ifdef ICUROOT
-#  ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -L${ICUROOT}/lib -licuuc -licudata -lbsd
-#else
-#  ALLLIBS = -L/usr/lpp/xlC/lib -lbsd
-#endif
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib \
+                  -licuuc -licudata
+    else
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
+    endif
 
-ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc32 -licudata32
-else
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib \
+                  -licuuc -licudata -lXercesMessages
+    endif
+  else
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
+    else
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
-endif
+    endif
 
-ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc32 -licudata32 -lXercesMessages26
-endif
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata -lXercesMessages
+    endif
 
-ifeq (${CXXVER}, v5compat)
+    ifeq (${CXXVER}, v5compat)
    PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE -qnamemangling=v5
-else
+    else
    PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE -qnamemangling=ansi
-endif
+    endif
     
-ifeq (${BITSTOBUILD}, 64)
+    ifeq (${BITSTOBUILD}, 64)
     MAKE_SHARED = makeC++SharedLib_r -p 5000 ${LDFLAGS} -X64
     MAKE_SHARED_C = makeC++SharedLib_r -p 5000 ${LDFLAGS} -X64
-else
+    else
     MAKE_SHARED = makeC++SharedLib_r -p 5000 ${LDFLAGS}
     MAKE_SHARED_C = makeC++SharedLib_r -p 5000 ${LDFLAGS}
-endif
+    endif
 
-EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
-DEPDOM_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBDEPDOM}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+    EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+    DEPDOM_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBDEPDOM}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+  endif
 
-SHLIBSUFFIX=.a
-ICUSHLIBSUFFIX=.a
-## Compiler switch to embed a library name
-LD_SONAME =
-
+  SHLIBSUFFIX=.a
+  ICUSHLIBSUFFIX=.a
+  ## Compiler switch to embed a library name
+  LD_SONAME =
+  LD_SODEPDOM =
 endif
 
 #================= OS400 SPECIFIC OPTIONS ==========================
@@ -322,7 +348,7 @@ endif
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 
-    ifeq (${CXX}, xlC_r)
+    ifneq ($(filter xlC%,${CXX}),)
 
         PLATFORM_COMPILE_OPTIONS = -qpic -qnotempinc -D${PLATFORM}
         MAKE_SHARED = ${CXX} -D${PLATFORM} -qpic -qmkshrobj -G ${LDFLAGS}
@@ -337,7 +363,8 @@ ifeq (${PLATFORM}, LINUX)
         endif
 
         ## Compiler switch to embed a library name
-        LD_SONAME =
+        LD_SONAME = -Wl,-soname,${SO_NAME}
+        LD_SODEPDOM = -Wl,-soname,${SO_DEPDOM}
         
     else  
     #non xlC_r
@@ -484,6 +511,23 @@ ifeq (${PLATFORM}, HPUX)
     OSVERDEFINE=HPUX10
   endif
 
+  ifeq (${GXX}, yes)
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -fPIC -shared ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -fPIC -shared ${LDFLAGS}
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
+
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib \
+                  -licuuc -licudata
+    else
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
+    endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib \
+                  -licuuc -licudata -lXercesMessages
+    endif
+  else
   ifeq (${CXX}, aCC)
     ifeq (${CXXVER}, aCC05)
        PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC -D${OSVERDEFINE} -mt +Z
@@ -511,8 +555,6 @@ ifeq (${PLATFORM}, HPUX)
        DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
     endif
     
-    SHLIBSUFFIX=.sl
-    ICUSHLIBSUFFIX=.sl
   else
     TEMPLATESREPOSITORY = ${XML_OBJ_DIR}/ptrepository
     COMMON_COMPILE_OPTIONS = -D_HP_UX -DXERCES_TMPLSINC \
@@ -536,9 +578,11 @@ ifeq (${PLATFORM}, HPUX)
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
     DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared    
+    endif
+  endif # GXX
+
     SHLIBSUFFIX=.sl
     ICUSHLIBSUFFIX=.sl
-  endif
   ## Compiler switch to embed a library name
   LD_SONAME = -Wl,+h,${SO_NAME}
   LD_SODEPDOM = -Wl,+h,${SO_DEPDOM}  
@@ -597,6 +641,11 @@ ifeq (${PLATFORM}, TRU64)
     else
       ALLLIBS = ${LIBS} -lc -lrt
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages -lc -lrt
+    endif
+
   else
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -ptr ${XERCESCROOT}/.cxx_repository ${LDFLAGS}
     PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${XERCESCROOT}/.cxx_repository
@@ -605,6 +654,12 @@ ifeq (${PLATFORM}, TRU64)
     else
     ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -licuuc -licudata -lXercesMessages -lc -lrt
+    endif
+
   endif
 endif
 
@@ -623,6 +678,12 @@ ifeq (${PLATFORM}, MACOSX)
     else
         ALLLIBS = ${LIBS} -L/usr/lib
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -licuuc -licudata -lXercesMessages -lc
+    endif
+
     SHLIBSUFFIX=.dylib
     ICUSHLIBSUFFIX=.dylib
     LD_SONAME = -install_name ${PREFIX}/lib/${SO_NAME}
@@ -642,6 +703,12 @@ ifeq (${PLATFORM}, CYGWIN)
       else
               ALLLIBS = ${LIBS} -L/usr/lib
       endif
+
+      ifeq (${MESSAGELOADER}, ICU)
+          ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                    -licuuc -licudata -lXercesMessages -lc
+      endif
+
       EXTRA_LINK_OPTIONS = \
               -Xlinker --warn-once \
               -Xlinker -Map \
@@ -850,7 +917,11 @@ LINKLIB = $(XML_LIB_DIR)
 vpath %.$(TO) $(XML_OBJ_DIR)
 
 .cpp.$(TO):
+ifndef VERBOSE
 	$Qecho "  (C++) $@"
+else
+	$Qecho "$(CC1) -c $(XML_INCL) $(XML_BUILD_OPTIONS) $(XML_DEF) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)"
+endif
 	$Q$(CC1) -c $(XML_INCL) $(XML_BUILD_OPTIONS) $(XML_DEF) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)
 
 .c.$(TO):
