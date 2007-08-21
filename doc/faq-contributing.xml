@@ -32,8 +32,8 @@
     <ol>
         <li>Check out and build the most recent Xerces code.  For
             instructions on how to do this, see <jump
-            href="http://xml.apache.org/cvs.html">Apache XML Project CVS
-            Information</jump>.  If you do this, you can confirm that your
+            href="repository.html">Xerces-C++
+            Repository Information</jump>.  If you do this, you can confirm that your
             bug still exists and has not been fixed since the last
             release.
         </li>

@@ -417,7 +417,7 @@ creating sax2/Makefile
 creating ../../obj/Makefile
 
 Having build problems?
-Read instructions at http://xml.apache.org/xerces-c/build.html
+Read instructions at http://xerces.apache.org/xerces-c/build.html
 Still cannot resolve it?
 Find out if someone else had the same problem before.
 Go to http://marc.theaimsgroup.com/?l=xerces-c-dev
