@@ -327,7 +327,8 @@ private:
     //
     void*                 fCurrentBlock;
     char*                 fFreePtr;
-    XMLSize_t             fFreeBytesRemaining;
+    XMLSize_t             fFreeBytesRemaining,
+                          fHeapAllocSize;
 
     // To recycle the DOMNode pointer
     RefArrayOf<DOMNodePtr>* fRecycleNodePtr;

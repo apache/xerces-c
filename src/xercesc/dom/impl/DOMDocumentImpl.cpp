@@ -49,6 +49,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// The chunk size to allocate from the system allocator.
+static const XMLSize_t kInitialHeapAllocSize =  0x4000;
+static const XMLSize_t kMaxHeapAllocSize     = 020000;
+static const XMLSize_t kMaxSubAllocationSize =  0x1000;  // Any request for more bytes
+                                                         // than this will be handled by
+                                                         // allocating directly with system.
+
 
 //
 //   Constructors.   Warning - be very careful with the ordering of initialization
@@ -75,6 +82,7 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
       fCurrentBlock(0),      
       fFreePtr(0),
       fFreeBytesRemaining(0),
+      fHeapAllocSize(kInitialHeapAllocSize),
       fRecycleNodePtr(0),
       fRecycleBufferPtr(0),
       fNodeListPool(0),
@@ -111,6 +119,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fCurrentBlock(0),      
       fFreePtr(0),
       fFreeBytesRemaining(0),
+      fHeapAllocSize(kInitialHeapAllocSize),
       fRecycleNodePtr(0),
       fRecycleBufferPtr(0),
       fNodeListPool(0),
@@ -798,13 +807,6 @@ const XMLCh *  DOMDocumentImpl::getPooledString(const XMLCh *src)
     else return this->fNamePool->getPooledString(src);
 }
 
-static const int kHeapAllocSize = 0x10000;    // The chunk size to allocate from the
-                                              //   system allocator.
-
-static const size_t kMaxSubAllocationSize = 4096;  // Any request for more bytes
-                                                   //  than this will be handled by
-                                                   //  allocating directly with system.
-
 void *         DOMDocumentImpl::allocate(size_t amount)
 {	
 	//	Align the request size so that suballocated blocks
@@ -853,12 +855,15 @@ void *         DOMDocumentImpl::allocate(size_t amount)
 
         // Get a new block from the system allocator.
         void* newBlock;
-        newBlock = fMemoryManager->allocate(kHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
+        newBlock = fMemoryManager->allocate(fHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
         
         *(void **)newBlock = fCurrentBlock;
         fCurrentBlock = newBlock;
         fFreePtr = (char *)newBlock + sizeOfHeader;
-        fFreeBytesRemaining = kHeapAllocSize - sizeOfHeader;
+        fFreeBytesRemaining = fHeapAllocSize - sizeOfHeader;
+
+        if(fHeapAllocSize<kMaxHeapAllocSize)
+            fHeapAllocSize*=2;
     }
 
 	//	Subdivide the request off current block
