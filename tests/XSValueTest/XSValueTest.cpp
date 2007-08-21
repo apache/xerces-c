@@ -1388,7 +1388,7 @@ void test_dt_integer()
     XSValue::XSValue_Data act_v_ran64_v_2; act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
     XSValue::XSValue_Data act_v_ran32_v_1; act_v_ran32_v_1.fValue.f_long = (long)+2147483647;
-    XSValue::XSValue_Data act_v_ran32_v_2; act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
+    XSValue::XSValue_Data act_v_ran32_v_2; act_v_ran32_v_2.fValue.f_long = -(long)2147483648L;
 
     const char lex_v_ran64_v_1_canrep[]="9223372036854775807";
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
@@ -1541,7 +1541,7 @@ void test_dt_nonPositiveInteger()
 #if defined(XML_BITSTOBUILD_64)
     XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
-    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
+    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = -(long)2147483648L;
 
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
     const char lex_v_ran64_iv_2_canrep[]="-9223372036854775809";
@@ -1687,7 +1687,7 @@ void test_dt_negativeInteger()
 #if defined(XML_BITSTOBUILD_64)
     XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
-    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
+    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = -(long)2147483648L;
 
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
     const char lex_v_ran64_iv_2_canrep[]="-9223372036854775809";
@@ -1833,7 +1833,7 @@ void test_dt_long()
     XSValue::XSValue_Data act_v_ran64_v_2;   act_v_ran64_v_2.fValue.f_long = (long)-9223372036854775808;
 #endif
     XSValue::XSValue_Data act_v_ran32_v_1;   act_v_ran32_v_1.fValue.f_long = (long)+2147483647;
-    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = (long)-2147483648;
+    XSValue::XSValue_Data act_v_ran32_v_2;   act_v_ran32_v_2.fValue.f_long = -(long)2147483648L;
 
     const char lex_v_ran64_v_1_canrep[]="9223372036854775807";
     const char lex_v_ran64_v_2_canrep[]="-9223372036854775808";
@@ -1990,7 +1990,7 @@ void test_dt_int()
 
     XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_int = (int)1234;    
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_int = (int)+2147483647;
-    XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_int = (int)-2147483648;
+    XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_int = -(int)2147483648;
 
     const char lex_v_ran_v_1_canrep[]="2147483647";
     const char lex_v_ran_v_2_canrep[]="-2147483648";

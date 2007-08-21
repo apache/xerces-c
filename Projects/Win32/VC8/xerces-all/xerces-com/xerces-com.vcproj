@@ -34,8 +34,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC8\Release\xerces-c_2_7.dll $(TargetDir)&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win32\VC8\Release\xerces-c_2_7.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7.dll;$(OutDir)\regsvr32.trg"
+				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC8\Release\xerces-c_2_8.dll $(TargetDir)&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win32\VC8\Release\xerces-c_2_8.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)xerces-c_2_8.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -52,7 +52,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -129,8 +129,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC8\Debug\xerces-c_2_7D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win32\VC8\Debug\xerces-c_2_7D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7D.dll;$(OutDir)\regsvr32.trg"
+				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC8\Debug\xerces-c_2_8D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win32\VC8\Debug\xerces-c_2_8D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)xerces-c_2_8D.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -146,7 +146,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
@@ -226,7 +226,7 @@
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7.dll;$(OutDir)\regsvr32.trg"
+				Outputs="$(TargetDir)xerces-c_2_8.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -243,7 +243,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -321,7 +321,7 @@
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7D.dll;$(OutDir)\regsvr32.trg"
+				Outputs="$(TargetDir)xerces-c_2_8D.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -337,7 +337,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
@@ -416,8 +416,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win64\VC8\Release\xerces-c_2_7.dll $(TargetDir)&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win64\VC8\Release\xerces-c_2_7.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7.dll;$(OutDir)\regsvr32.trg"
+				CommandLine="echo copy ..\..\..\..\..\Build\Win64\VC8\Release\xerces-c_2_8.dll $(TargetDir)&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win64\VC8\Release\xerces-c_2_8.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)xerces-c_2_8.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -435,7 +435,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="NDEBUG;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -512,8 +512,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win64\VC8\Debug\xerces-c_2_7D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win64\VC8\Debug\xerces-c_2_7D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7D.dll;$(OutDir)\regsvr32.trg"
+				CommandLine="echo copy ..\..\..\..\..\Build\Win64\VC8\Debug\xerces-c_2_8D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;copy ..\..\..\..\..\Build\Win64\VC8\Debug\xerces-c_2_8D.dll &quot;$(TargetDir)&quot;&#x0D;&#x0A;regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)xerces-c_2_8D.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -530,7 +530,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_WIN32_MSGLOADER"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
@@ -610,7 +610,7 @@
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7.dll;$(OutDir)\regsvr32.trg"
+				Outputs="$(TargetDir)xerces-c_2_8.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -628,7 +628,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="NDEBUG;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -706,7 +706,7 @@
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
 				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
-				Outputs="$(TargetDir)xerces-c_2_7D.dll;$(OutDir)\regsvr32.trg"
+				Outputs="$(TargetDir)xerces-c_2_8D.dll;$(OutDir)\regsvr32.trg"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -723,7 +723,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
-				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;WIN64;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"

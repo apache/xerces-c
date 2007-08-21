@@ -41,12 +41,12 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_7.dll $(TargetDir)
-copy ..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_7.dll &quot;$(TargetDir)&quot;
+				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_8.dll $(TargetDir)
+copy ..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_8.dll &quot;$(TargetDir)&quot;
 regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
-				Outputs="$(TargetDir)xerces-c_2_7.dll;$(OutDir)\regsvr32.trg"/>
+				Outputs="$(TargetDir)xerces-c_2_8.dll;$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
@@ -103,12 +103,12 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Performing registration"
-				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7\Debug\xerces-c_2_7D.dll &quot;$(TargetDir)&quot;
-copy ..\..\..\..\..\Build\Win32\VC7\Debug\xerces-c_2_7D.dll &quot;$(TargetDir)&quot;
+				CommandLine="echo copy ..\..\..\..\..\Build\Win32\VC7\Debug\xerces-c_2_8D.dll &quot;$(TargetDir)&quot;
+copy ..\..\..\..\..\Build\Win32\VC7\Debug\xerces-c_2_8D.dll &quot;$(TargetDir)&quot;
 regsvr32 /s /c &quot;$(TargetPath)&quot;
 echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 "
-				Outputs="$(TargetDir)xerces-c_2_7D.dll;$(OutDir)\regsvr32.trg"/>
+				Outputs="$(TargetDir)xerces-c_2_8D.dll;$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
