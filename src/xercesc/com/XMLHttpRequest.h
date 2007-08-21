@@ -114,7 +114,7 @@ private:
 
 	static _bstr_t GetErrorMsg(DWORD rc);
 	static void CALLBACK InternetStatusCallback(HINTERNET hInternet,
-												DWORD dwContext,
+												DWORD_PTR dwContext,
 												DWORD dwInternetStatus,
 												LPVOID lpvStatusInformation,
 												DWORD dwStatusInformationLength);

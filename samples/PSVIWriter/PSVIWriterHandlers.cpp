@@ -296,8 +296,8 @@ InputSource* PSVIWriterHandlers::resolveEntity(const XMLCh* const publicId, cons
 void PSVIWriterHandlers::error(const SAXParseException& e) {
 	XMLCh* temp1 = new XMLCh[10];
 	XMLCh* temp2 = new XMLCh[10];
-	XMLString::binToText(e.getLineNumber(), temp1, 9, 10);
-	XMLString::binToText(e.getColumnNumber(), temp2, 9, 10);
+	XMLString::binToText((unsigned long)e.getLineNumber(), temp1, 9, 10);
+	XMLString::binToText((unsigned long)e.getColumnNumber(), temp2, 9, 10);
 	*fErrorFormatter << fgError << fgAtFile << chSpace << e.getSystemId()
 		<< chComma << fgLine << chSpace << temp1
 		<< chComma << fgChar << chSpace << temp2
@@ -309,8 +309,8 @@ void PSVIWriterHandlers::error(const SAXParseException& e) {
 void PSVIWriterHandlers::fatalError(const SAXParseException& e) {
 	XMLCh* temp1 = new XMLCh[10];
 	XMLCh* temp2 = new XMLCh[10];
-	XMLString::binToText(e.getLineNumber(), temp1, 9, 10);
-	XMLString::binToText(e.getColumnNumber(), temp2, 9, 10);
+	XMLString::binToText((unsigned long)e.getLineNumber(), temp1, 9, 10);
+	XMLString::binToText((unsigned long)e.getColumnNumber(), temp2, 9, 10);
 	*fErrorFormatter << fgFatalError << fgAtFile << chSpace << e.getSystemId()
 		<< chComma << fgLine << chSpace << temp1
 		<< chComma << fgChar << chSpace << temp2
@@ -323,8 +323,8 @@ void PSVIWriterHandlers::fatalError(const SAXParseException& e) {
 void PSVIWriterHandlers::warning(const SAXParseException& e) {
 	XMLCh* temp1 = new XMLCh[10];
 	XMLCh* temp2 = new XMLCh[10];
-	XMLString::binToText(e.getLineNumber(), temp1, 9, 10);
-	XMLString::binToText(e.getColumnNumber(), temp2, 9, 10);
+	XMLString::binToText((unsigned long)e.getLineNumber(), temp1, 9, 10);
+	XMLString::binToText((unsigned long)e.getColumnNumber(), temp2, 9, 10);
 	*fErrorFormatter << fgWarning << fgAtFile << chSpace << e.getSystemId()
 		<< chComma << fgLine << chSpace << temp1
 		<< chComma << fgChar << chSpace << temp2
@@ -1620,7 +1620,8 @@ XMLCh* PSVIWriterHandlers::createID(XSObject* obj) {
 
 const XMLCh* PSVIWriterHandlers::getIdName(XSObject* obj) {
 	XMLCh* objLoc = new XMLCh[9];
-	XMLString::binToText((unsigned long)obj, objLoc, 8, 16);
+	// This may not work on 64 bit platforms where unsigned long is 32 bit long.
+	XMLString::binToText((unsigned long)((XMLSize_t)obj), objLoc, 8, 16);
 	XMLCh* idName = fIdMap->get(objLoc);
 	if (!idName) {
 		idName = createID(obj);
