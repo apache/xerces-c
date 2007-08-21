@@ -116,26 +116,28 @@ endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, AIX)
-
-ifeq (${CXXVER}, v5compat)
+  ifeq (${GXX}, yes)
+    CMP= -c ${CXXFLAGS}
+    CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+    LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
+    PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+    EXTRA_LINK_OPTIONS= ${EXTRA_LIBS}
+  else
+    ifeq (${CXXVER}, v5compat)
    CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=v5   
-else
+    else
    CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=ansi
-endif
+    endif
 
-CC=${COMPILER} -D${PLATFORM}
-LINK =  ${COMPILER} ${LDFLAGS}
-
-ifeq (${BITSTOBUILD}, 64)                                   
+    CC=${COMPILER} -D${PLATFORM}
+    LINK =  ${COMPILER} ${LDFLAGS}
+    ifeq (${BITSTOBUILD}, 64)
 	EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000000
-else
+    else
 	EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000
-endif
-
-# the compiler knows about this two
-# PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
-# EXTRA_LINK_OPTIONS=-lC ${EXTRA_LIBS}
-SHLIBSUFFIX=.a
+    endif
+  endif
+  SHLIBSUFFIX=.a
 endif
 
 #=============== OS400 SPECIFIC OPTIONS =========================
@@ -257,6 +259,13 @@ endif
 
 #================= HP SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, HPUX)
+  ifeq (${GXX}, yes)
+    CMP= -c ${CXXFLAGS}
+    CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+    LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
+    PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+    EXTRA_LINK_OPTIONS= ${EXTRA_LIBS}
+  else
   ifeq (${COMPILER}, aCC)
     ifeq (${CXXVER}, aCC05)
        CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z -mt
@@ -272,8 +281,6 @@ ifeq (${PLATFORM}, HPUX)
     else
        PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -lpthread    
     endif      
-        
-    SHLIBSUFFIX=.sl
   else
     ifneq (${DEBUG}, 1)
       CXXFLAGS = -w +O1
@@ -286,8 +293,9 @@ ifeq (${PLATFORM}, HPUX)
     CC = CC
     LINK =  ${CC} $(COMMON_CMP) -Wl,+s -Wl,+b,. ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/CC/lib -L/usr/lib
-    SHLIBSUFFIX=.sl
   endif
+  endif
+  SHLIBSUFFIX=.sl
 endif
 
 #================= OS390 SPECIFIC OPTIONS ===========================
@@ -366,8 +374,8 @@ endif
 #=============== MacOS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MACOSX)
 	CMP= -c ${CXXFLAGS}
-	CC= c++ -c -D${PLATFORM} -D_REENTRANT
-	LINK = c++ -D${PLATFORM} ${LDFLAGS}
+	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT
+	LINK = ${COMPILER} -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
 	SHLIBSUFFIX=.dylib
 endif
