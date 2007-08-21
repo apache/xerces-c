@@ -350,6 +350,49 @@ DOMNode *DOMParentNode::replaceChild(DOMNode *newChild, DOMNode *oldChild)
 }
 
 
+DOMNode * DOMParentNode::appendChildFast(DOMNode *newChild)
+{
+    // This function makes the following assumptions:
+    //
+    // - newChild != 0
+    // - newChild is not read-only
+    // - newChild is not a document fragment
+    // - owner documents of this node and newChild are the same
+    // - appending newChild to this node cannot result in a cycle
+    // - DOMDocumentImpl::isKidOK (this, newChild) return true (that is,
+    //   appending newChild to this node results in a valid structure)
+    // - newChild->getParentNode() is 0
+    // - there are no ranges set for this document
+    //
+
+    // Attach up
+    castToNodeImpl(newChild)->fOwnerNode = castToNode(this);
+    castToNodeImpl(newChild)->isOwned(true);
+
+    // Attach before and after
+    // Note: fFirstChild.previousSibling == lastChild!!
+    if (fFirstChild != 0)
+    {
+        DOMNode *lastChild = castToChildImpl(fFirstChild)->previousSibling;
+        castToChildImpl(lastChild)->nextSibling = newChild;
+        castToChildImpl(newChild)->previousSibling = lastChild;
+        castToChildImpl(fFirstChild)->previousSibling = newChild;
+    }
+    else
+    {
+        // this our first and only child
+        fFirstChild = newChild;
+        castToNodeImpl(newChild)->isFirstChild(true);
+        // castToChildImpl(newChild)->previousSibling = newChild;
+        DOMChildNode *newChild_ci = castToChildImpl(newChild);
+        newChild_ci->previousSibling = newChild;
+    }
+
+    changed();
+
+    return newChild;
+}
+
 
 //Introduced in DOM Level 2
 
