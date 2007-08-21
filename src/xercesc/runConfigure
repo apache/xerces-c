@@ -53,7 +53,7 @@ usage()
             [required; no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc, icpc or ecc) 
             [default is make default; cc for gnu make]"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, xlC_rv5compat, QCC, 
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, xlC_r, xlC_rv5compat, QCC,
             icc, icpc or ecc) [default is make default; g++ for gnu make]"
     echo "       -d (specifies that you want to build debug version)
             [default: no debug]"
@@ -275,6 +275,8 @@ if test $debug = "off"; then
          debugflag="-w -O2 -DNDEBUG";
       elif test $platform = "os390"; then
          debugflag="-DNDEBUG";         
+      elif test $platform = "linux"; then
+         debugflag="-w -O2 -DNDEBUG";
       else
          debugflag="-w -O -DNDEBUG";
       fi
@@ -431,10 +433,32 @@ if test $bitsToBuild = 64; then
     if test $platform; then
         case $platform in
            solaris)
+	      if test $cppcompiler; then
+                  case $cppcompiler in
+                     CC)
+                         solaris_version=`./config.guess`
+                         case $solaris_version in
+			   sparc*)
               bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
               bitstobuildLink=" -xarch=v9 " ;;
+			        *)
+			     bitstobuildDefines=" $bitstobuildDefines -xarch=amd64 "
+			     bitstobuildLink=" -xarch=amd64 " ;;
+			 esac
+                         ;;
+                      *)
+                       ;;
+                  esac
+              fi ;;
            aix)
+              if test $cppcompiler; then
+                  case $cppcompiler in
+                     xlC*)
               bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+                       *)
+                       ;;
+                  esac
+              fi ;;
            irix)
               bitstobuildDefines=" $bitstobuildDefines -64 "
               bitstobuildLink=" -64 " ;;
@@ -444,9 +468,6 @@ if test $bitsToBuild = 64; then
                        aCC)
                           bitstobuildDefines=" $bitstobuildDefines +DD64 "
                           bitstobuildLink=" +DD64 " ;;     
-                       aCC05)
-                          bitstobuildDefines=" $bitstobuildDefines +DD64 "
-                          bitstobuildLink=" +DD64 " ;;
                        *)
                        ;;
                    esac
@@ -659,13 +680,15 @@ case $cppcompiler in
       CXXVER="v5compat"
       ;;
       
-   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | icpc | ICC | cxx | ecc | QCC )
+   xlC* | xlc* | g++* | c++ | cc | CC | icc | icpc | ICC | cxx | ecc | QCC )
       CXX="$cppcompiler"
       ;;
     
-   aCC05)
+   aCC)
       CXX="aCC"
+      if test "`$CXX -V 2>&1 | sed -e 's/^aCC: .* A\.03\..*$/3/'`" != "3"; then
       CXXVER="aCC05"
+      fi
       ;;      
 
    '')
@@ -734,7 +757,8 @@ if test $? != 0; then
 fi
 
 echo
-echo In future, you may also directly type the following commands to create the Makefiles.
+echo In future, you may also directly type the following commands to create
+echo the Makefiles.
 echo
 echo export TRANSCODER=\"$TRANSCODER\"
 echo export MESSAGELOADER=\"$MESSAGELOADER\"
@@ -743,6 +767,9 @@ echo export THREADS=\"$THREADS\"
 echo export BITSTOBUILD=\"$BITSTOBUILD\"
 echo export CC=\"$CC\"
 echo export CXX=\"$CXX\"
+if test "$CXXVER"; then
+  echo export CXXVER=\"$CXXVER\"
+fi
 echo export CXXFLAGS=\"$CXXFLAGS\"
 echo export CFLAGS=\"$CFLAGS\"
 echo export LDFLAGS=\"$LDFLAGS\"
@@ -750,7 +777,8 @@ echo export LIBS=\"$LIBS\"
 echo configure $configureoptions
 
 echo
-echo If the result of the above commands look OK to you, go to the directory
-echo ${XERCESCROOT}/src/xercesc and type \"gmake\" to make the XERCES-C system.
+echo "If the result of the above commands look OK to you, go to the directory"
+echo "${XERCESCROOT}/src/xercesc and type \"make\" (or \"gmake\")"
+echo "to make the XERCES-C system."
 
 exit  0;
