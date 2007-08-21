@@ -93,8 +93,13 @@ ${BATCH_TARGET}:: ${OBJS}
 
 ## SOLARIS
 ifeq (${PLATFORM}, SOLARIS)
+ifneq (${GXX}, yes)
 $(OUTDIR)/SEnumVal.o:: ${SRC}/SEnumVal.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -ptr${OUTDIR} -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
+else
+$(OUTDIR)/SEnumVal.o:: ${SRC}/SEnumVal.cpp ${HEADER_FILES}
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
+endif
 else
 $(OUTDIR)/SEnumVal.o:: ${SRC}/SEnumVal.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
