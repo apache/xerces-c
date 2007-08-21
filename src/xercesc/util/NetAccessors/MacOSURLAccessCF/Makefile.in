@@ -50,6 +50,7 @@ MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 NETACCESSOR = @netaccessor@
 THREADS = @threads@
+LIBTYPE = @libtype@
 
 MODULE = util
 SUBMODULE = NetAccessors/MacOSURLAccessCF

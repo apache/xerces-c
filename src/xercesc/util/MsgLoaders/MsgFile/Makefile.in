@@ -21,6 +21,7 @@ GCC = @GCC@
 GXX = @GXX@
 PREFIX = @prefix@
 THREADS = @threads@
+LIBTYPE = @libtype@
 PREFIX_INCLUDE = @prefix_include@
 include ../../../Makefile.incl
 

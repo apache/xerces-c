@@ -111,6 +111,9 @@ AC_SUBST(netaccessor)
 threads=${THREADS}
 AC_SUBST(threads)
 
+libtype=${LIBTYPE}
+AC_SUBST(libtype)
+
 bitstobuild=${BITSTOBUILD}
 AC_SUBST(bitstobuild)
 

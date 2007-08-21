@@ -67,7 +67,8 @@ usage()
     echo "       -r <thread option> can be 'pthread' or 'dce' 
              (AIX, HP-11, and Solaris) or  'sproc' (IRIX) or 'none'
              [default: pthread]"
-    echo "       -b <bitsToBuild> (accepts '64', '32')"   [default: 32]
+    echo "       -s (specifies that you want to build static libraries) [default: shared]"
+    echo "       -b <bitsToBuild> (accepts '64', '32') [default: 32]"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
@@ -105,23 +106,24 @@ fi
 debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
 msgloader=inmem          # by default use inmem message loader
-netaccessor=socket       # by default use socket (can do HTTP URL's)
+netaccessor=             # the default is platform-dependant
 thread=pthread           # by default use POSIX threads
 configureoptions=""
 bitsToBuild=32           # by default 32 bit build assumed
+libtype=shared           # by default build shared libraries
 
 # Check the command line parameters
 if test -x /usr/bin/getopt -o -x bin/getopt; then
 	#
 	# os400 Users will need to comment out the next line.
-	getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+	getoptErr=`getopt p:c:x:dm:n:t:r:sb:l:z:P:C:h $*`
 	if [ $? != 0 ]
 	   then
 	   usage
 	   exit ${ERROR_EXIT_CODE}
 	fi
 	# Now get the command line parameters
-	set -- `getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+	set -- `getopt p:c:x:dm:n:t:r:sb:l:z:P:C:h $*`
 	while [ $# -gt 0 ]
 	   do
 	   case $1 in
@@ -148,6 +150,9 @@ if test -x /usr/bin/getopt -o -x bin/getopt; then
 
 	   -r)
 			thread=$2; shift 2;;
+
+	   -s)
+	                libtype=static; shift;;
 
 	   -b)
 			bitsToBuild=$2; shift 2;;
@@ -179,7 +184,7 @@ if test -x /usr/bin/getopt -o -x bin/getopt; then
 	done
 
 else
-	while getopts "p:c:x:dm:n:t:r:b:l:z:P:C:h" switch; do
+	while getopts "p:c:x:dm:n:t:r:sb:l:z:P:C:h" switch; do
 	   case $switch in
 	   p)
 			platform=$OPTARG;;
@@ -204,6 +209,9 @@ else
 
 	   r)
 			thread=$OPTARG;;
+
+	   s)
+	                libtype=static;;
 
 	   b)
 			bitsToBuild=$OPTARG;;
@@ -232,6 +240,17 @@ else
 	done
 fi
 
+if test -z "$netaccessor"; then
+
+  # by default use socket (can do HTTP URL's)
+  #
+  if test "$platform" = "mingw-msys"; then
+    netaccessor=winsock
+  else
+    netaccessor=socket
+  fi
+fi
+
 echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
@@ -240,6 +259,7 @@ echo "Message Loader: $msgloader"
 echo "Net Accessor: $netaccessor"
 echo "Transcoder: $transcoder"
 echo "Thread option: $thread"
+echo "Library type: $libtype"
 echo "bitsToBuild option: $bitsToBuild"
 echo "Extra compile options: $compileroptions"
 echo "Extra link options: $linkeroptions"
@@ -739,6 +759,8 @@ export LDFLAGS
 LIBS="$transcodingLibs $msgloaderLibs $threadingLibs $netaccessorLibs"
 export LIBS
 
+LIBTYPE=$libtype
+export LIBTYPE
 
 echo
 rm -f config.cache
@@ -764,6 +786,7 @@ echo export TRANSCODER=\"$TRANSCODER\"
 echo export MESSAGELOADER=\"$MESSAGELOADER\"
 echo export NETACCESSOR=\"$NETACCESSOR\"
 echo export THREADS=\"$THREADS\"
+echo export LIBTYPE=\"$LIBTYPE\"
 echo export BITSTOBUILD=\"$BITSTOBUILD\"
 echo export CC=\"$CC\"
 echo export CXX=\"$CXX\"

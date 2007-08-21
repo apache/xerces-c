@@ -53,6 +53,7 @@ USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 THREADS = @threads@
+LIBTYPE = @libtype@
 
 MODULE = util
 SUBMODULE = Transcoders/IconvGNU

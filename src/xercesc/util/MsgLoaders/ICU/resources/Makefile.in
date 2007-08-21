@@ -42,6 +42,7 @@ USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 THREADS = @threads@
+LIBTYPE = @libtype@
 
 include ../../../../../../version.incl
 include ../../../../Makefile.incl
@@ -77,7 +78,11 @@ RMV=rm -rf
 TARGET=
 CLEANFILES += *.mak *.[co] *.lst *.a *.$(SO) $(RESFILES) *.ao README*resources.txt
 
-RESMODE=dll
+ifeq ($(LIBTYPE),shared)
+  RESMODE=dll
+else
+  RESMODE=static
+endif
 
 # Resource shortname
 RESNAME=XercesMessages
@@ -94,8 +99,14 @@ CHECK_VARS=
 # target file for resource bundle - this must be set, or 'make all' won't
 # build any resources.
 RESLIBNAME=lib$(RESNAME)
-RESTARGET=lib$(RESNAME)$(ICUSHLIBSUFFIX)
-PKGTARGET=lib$(PKGNAME)$(ICUSHLIBSUFFIX)
+
+ifeq ($(LIBTYPE),shared)
+  RESTARGET=lib$(RESNAME)$(ICUSHLIBSUFFIX)
+  PKGTARGET=lib$(PKGNAME)$(ICUSHLIBSUFFIX)
+else
+  RESTARGET=lib$(RESNAME)$(STLIBSUFFIX)
+  PKGTARGET=lib$(PKGNAME)$(STLIBSUFFIX)
+endif
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
@@ -117,10 +128,12 @@ $(RESTARGET): $(RESFILES)
 	$(PKGDATA) --name $(PKGNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST)
 	mv $(PKGTARGET) $(RESTARGET)
 	mv $(RESTARGET) ${FQ_RESLIB_REAL_NAME}
+ifeq (${LIBTYPE},shared)
 	@echo symlink ${FQ_RESLIB_SO_NAME}
 	ln -fs ${FQ_RESLIB_REAL_NAME} ${FQ_RESLIB_SO_NAME}
 	@echo symlink ${FQ_RESLIB_LINK_NAME}
 	ln -fs ${FQ_RESLIB_SO_NAME} ${FQ_RESLIB_LINK_NAME}
+endif
 	
 res-install: $(RESTARGET)
 	$(PKGDATA) --name $(PKGNAME) --mode $(RESMODE) $(PKGDATAOPTS) $(RESLIST) --install $(shell icu-config --libdir)
@@ -128,7 +141,7 @@ res-install: $(RESTARGET)
 # clean out files
 distclean clean: $(CLEAN_SUBDIR)
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
-	-rm $(OBJECTS) $(TARGET) $(RESTARGET) $(RESFILES)
+	-rm -f $(OBJECTS) $(TARGET) $(RESTARGET) $(RESFILES)
 
 # Make check: simply runs the sample, logged to a file
 check: $(TARGET)

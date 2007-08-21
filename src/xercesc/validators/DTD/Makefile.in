@@ -103,6 +103,7 @@ USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 THREADS = @threads@
+LIBTYPE = @libtype@
 
 include ../../Makefile.incl
 

@@ -36,6 +36,7 @@ CXXVER = @cxxver@
 PREFIX = @prefix@
 MESSAGELOADER=@messageloader@
 TRANSCODER=@transcoder@
+LIBTYPE = @libtype@
 
 GCC = @GCC@
 GXX = @GXX@
@@ -68,10 +69,14 @@ all:: lib
 
 compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators
 
-ifeq (${PLATFORM},CYGWIN)
+ifeq (${LIBTYPE},shared)
+  ifeq (${PLATFORM},CYGWIN)
 lib:: ${FQ_SO_NAME}
-else
+  else
 lib:: ${FQ_REAL_NAME}
+  endif
+else # static
+lib:: ${FQ_A_NAME}
 endif
 
 Prepare::
@@ -121,13 +126,19 @@ Validators::
 	@echo Building "validators"
 	$Q${MAKE} -s -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
 
-ifeq (${PLATFORM},CYGWIN)
+ifeq (${LIBTYPE},shared)
+  ifeq (${PLATFORM},CYGWIN)
 ${FQ_SO_NAME}:: compile
 	@echo Building ${FQ_SO_NAME}
-	$Q${MAKE} -s -C $(XML_OBJ) -k $(MAKE_FLAGS)
-else
+	$Q${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
+  else
 ${FQ_REAL_NAME}:: compile
 	@echo toplevel Building ${FQ_REAL_NAME}
+	$Q${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
+  endif
+else # static
+${FQ_A_NAME}:: compile
+	@echo Building ${FQ_A_NAME}
 	$Q${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
 endif
 

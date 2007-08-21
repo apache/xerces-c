@@ -33,7 +33,7 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#if defined(__MINGW32__)
+#if defined(__MINGW32__) && !defined (XML_LIBRARY)
 #define PLATFORM_EXPORT __declspec(dllexport)
 #define PLATFORM_IMPORT __declspec(dllimport)
 #else
