@@ -759,13 +759,13 @@ ifeq (${PLATFORM}, TRU64)
     endif
 
     ifeq (${TRANSCODER}, ICU)
-      ALLLIBS = ${LIBS} -licuuc -licudata -lc -lrt
+      ALLLIBS = ${LIBS} -licuuc -licudata -lrt
     else
-      ALLLIBS = ${LIBS} -lc -lrt
+      ALLLIBS = ${LIBS} -lrt
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
-        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages -lc -lrt
+        ALLLIBS = ${LIBS} -licuuc -licudata -lXercesMessages -lrt
     endif
 
   else
@@ -805,14 +805,14 @@ ifeq (${PLATFORM}, MACOSX)
     endif
 
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lc
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
     else
         ALLLIBS = ${LIBS} -L/usr/lib
     endif
 
     ifeq (${MESSAGELOADER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licuuc -licudata -lXercesMessages -lc
+                  -licuuc -licudata -lXercesMessages
     endif
 
     SHLIBSUFFIX=.dylib
@@ -834,14 +834,14 @@ ifeq (${PLATFORM}, CYGWIN)
       endif
 
       ifeq (${TRANSCODER}, ICU)
-              ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lc
+              ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
       else
               ALLLIBS = ${LIBS} -L/usr/lib
       endif
 
       ifeq (${MESSAGELOADER}, ICU)
           ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                    -licuuc -licudata -lXercesMessages -lc
+                    -licuuc -licudata -lXercesMessages
       endif
 
       EXTRA_LINK_OPTIONS = \
