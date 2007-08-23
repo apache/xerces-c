@@ -19,32 +19,227 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Releases Archive">
-    <s2 title="Release Information of earlier releases">
+    <s2 title="Release Information for earlier releases">
       <ul>
-        <li><link anchor="Release260">Release Information of &XercesCName; 2.6.0</link></li>
-        <li><link anchor="Release250">Release Information of &XercesCName; 2.5.0</link></li>
-        <li><link anchor="Release240">Release Information of &XercesCName; 2.4.0</link></li>            
-        <li><link anchor="Release230">Release Information of &XercesCName; 2.3.0</link></li>      
-        <li><link anchor="Release220">Release Information of &XercesCName; 2.2.0</link></li>
-        <li><link anchor="Release210">Release Information of &XercesCName; 2.1.0</link></li>
-        <li><link anchor="Release200">Release Information of &XercesCName; 2.0.0</link></li>
-        <li><link anchor="Release170">Release Information of &XercesCName; 1.7.0</link></li>
-        <li><link anchor="Release160">Release Information of &XercesCName; 1.6.0</link></li>
-        <li><link anchor="Release152">Release Information of &XercesCName; 1.5.2</link></li>
-        <li><link anchor="Release151">Release Information of &XercesCName; 1.5.1</link></li>
-        <li><link anchor="Release150">Release Information of &XercesCName; 1.5.0</link></li>
-        <li><link anchor="Release140">Release Information of &XercesCName; 1.4.0</link></li>
-        <li><link anchor="Release130">Release Information of &XercesCName; 1.3.0</link></li>
-        <li><link anchor="Release120">Release Information of &XercesCName; 1.2.0</link></li>
-        <li><link anchor="Release110">Release Information of &XercesCName; 1.1.0</link></li>
-        <li><link anchor="Release101">Release Information of &XercesCName; 1.0.1</link></li>
-        <li><link anchor="Release100">Release Information of &XercesCName; 1.0.0</link></li>
-        <li><link anchor="ReleaseBETA">Release Information of &XercesCName; BETA</link></li>
+        <li><link anchor="Release270">Release Information for &XercesCName; 2.7.0</link></li>
+        <li><link anchor="Release260">Release Information for &XercesCName; 2.6.0</link></li>
+        <li><link anchor="Release250">Release Information for &XercesCName; 2.5.0</link></li>
+        <li><link anchor="Release240">Release Information for &XercesCName; 2.4.0</link></li>
+        <li><link anchor="Release230">Release Information for &XercesCName; 2.3.0</link></li>
+        <li><link anchor="Release220">Release Information for &XercesCName; 2.2.0</link></li>
+        <li><link anchor="Release210">Release Information for &XercesCName; 2.1.0</link></li>
+        <li><link anchor="Release200">Release Information for &XercesCName; 2.0.0</link></li>
+        <li><link anchor="Release170">Release Information for &XercesCName; 1.7.0</link></li>
+        <li><link anchor="Release160">Release Information for &XercesCName; 1.6.0</link></li>
+        <li><link anchor="Release152">Release Information for &XercesCName; 1.5.2</link></li>
+        <li><link anchor="Release151">Release Information for &XercesCName; 1.5.1</link></li>
+        <li><link anchor="Release150">Release Information for &XercesCName; 1.5.0</link></li>
+        <li><link anchor="Release140">Release Information for &XercesCName; 1.4.0</link></li>
+        <li><link anchor="Release130">Release Information for &XercesCName; 1.3.0</link></li>
+        <li><link anchor="Release120">Release Information for &XercesCName; 1.2.0</link></li>
+        <li><link anchor="Release110">Release Information for &XercesCName; 1.1.0</link></li>
+        <li><link anchor="Release101">Release Information for &XercesCName; 1.0.1</link></li>
+        <li><link anchor="Release100">Release Information for &XercesCName; 1.0.0</link></li>
+        <li><link anchor="ReleaseBETA">Release Information for &XercesCName; BETA</link></li>
       </ul>
     </s2>
 
+<anchor name="Release270"/>
+<s2 title="Release Information for &XercesCName; 2.7.0">
+<p>Here is the list of bugs that are resolved in this release, &XercesCName; 2.7.0.
+</p>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Contributor</th>
+        <th>Description</th>
+    </tr>
+
+
+<tr><td>2005-05-19</td><td>David Cargill</td><td>390 update: use ICU table which is present with the uniconv390</td></tr>
+<tr><td>2005-05-19</td><td>David Cargill</td><td>Update table used for patterns to the Unicode 4.0.1 level.</td></tr>
+<tr><td>2005-05-18</td><td>David Cargill</td><td>For time schema datatypes, ensure milisecond only contains 0-9</td></tr>
+<tr><td>2005-05-18</td><td>Jay Hansen</td><td>OS400 updates </td></tr>
+<tr><td>2005-05-08</td><td>James Berry</td><td>Modify runConfigure to accept the names of C++ compilers that it doesn't recognize</td></tr>
+<tr><td>2005-05-06</td><td>David Bertoni</td><td>Change for loop control variable for compilers that don't enforce for scope.</td></tr>
+<tr><td>2005-05-05</td><td>David Cargill</td><td>Update XSValue to handle float and double the same way the main library does</td></tr>
+<tr><td>2005-05-05</td><td>Mike Pawlowski</td><td>Update HP 64 bit options</td></tr>
+<tr><td>2005-05-04</td><td>David Bertoni</td><td>Fix for Jira issue XERCESC-1416</td></tr>
+<tr><td>2005-05-04</td><td>David Bertoni</td><td>Fix for Jira issue XERCESC-1391</td></tr>
+<tr><td>2005-04-29</td><td>David Bertoni</td><td>Patch for Jira issue XERCESC-1407</td></tr>
+<tr><td>2005-04-29</td><td>David Bertoni</td><td>Patch for Jira issue XERCESC-1390</td></tr>
+<tr><td>2005-04-28</td><td>Alberto Massari</td><td>Move implementation of setDocument to the cpp file, where DOMDocumentImpl is a known class (jira 968)</td></tr>
+<tr><td>2005-04-27</td><td>David Cargill </td><td>Fix for problem on Solaris where open may return 0 as a valid FileHandle.  Check for -1 instead.</td></tr>
+<tr><td>2005-04-26</td><td>David Cargill </td><td>Fix for xercesc-1413: invalid operator equal template signature</td></tr>
+<tr><td>2005-04-26</td><td>David Cargill </td><td>Schema updates to match spec</td></tr>
+<tr><td>2005-04-26</td><td>David Cargill </td><td>Prefix mapping update to handle schema correctly.</td></tr>
+<tr><td>2005-04-24</td><td>David Cargill </td><td>Remove collaboration graph from apiDocs </td></tr>
+<tr><td>2005-04-22</td><td>David Bertoni </td><td> Patch for Jira issue XERCESC-1411 </td></tr>
+<tr><td>2005-04-22</td><td>David Cargill </td><td>Use isspace instead of isSpace as data is char not xmlch</td></tr>
+<tr><td>2005-04-22</td><td>David Bertoni </td><td>Patch for Jira issue XERCESC-1410</td></tr>
+<tr><td>2005-04-21</td><td>David Cargill </td><td>Add support for ucs-2</td></tr>
+<tr><td>2005-04-14</td><td>David Bertoni</td><td>Fix Jira 1406. Added include</td></tr>
+<tr><td>2005-04-12</td><td>Alberto Massari</td><td>Fix compiler errors on IRIX (jira 1405)</td></tr>
+<tr><td>2005-04-07</td><td>Khaled Noaman </td><td>Update chars table with an NCName char mask instead of an XML letter mask</td></tr>
+<tr><td>2005-04-07</td><td>Alberto Massari </td><td>appendChild now throws an exception when a NULL pointer is given (jira# 1401) </td></tr>
+<tr><td>2005-04-05</td><td>David Cargill</td><td>Update XSValue to handle leading and trailing whitespace</td></tr>
+<tr><td>2005-04-05</td><td>David Cargill </td><td>Change platform mutex code to do a panic </td></tr>
+<tr><td>2005-04-05</td><td>Khaled Noaman </td><td>Performance: do not make a copy of the expression to match</td></tr>
+<tr><td>2005-04-05</td><td>David Cargill </td><td>Implement version of lowercase that only check a to z</td></tr>
+<tr><td>2005-04-05</td><td>David Cargill</td><td>Update Redirect sample to use newer entity resolver callback </td></tr>
+<tr><td>2005-04-05</td><td>David Cargill</td><td>Implement support for disabling default entity resolution </td></tr>
+<tr><td>2005-04-05</td><td>Khaled Noaman </td><td> skip DTD validation feature </td></tr>
+<tr><td>2005-04-05</td><td>David Bertoni</td><td> Fix thread safety issues</td></tr>
+<tr><td>2005-04-05</td><td>Axel Weib </td><td>Fix for jira 1397. *Much* nicer make output</td></tr>
+<tr><td>2005-04-05</td><td>Gareth Reakes </td><td>Fix for Jira 1396. make distclean now removes all files</td></tr>
+<tr><td>2005-04-04</td><td>David Cargill </td><td>Fix a problem where illegal qualified names were not reported as errors</td></tr>
+<tr><td>2005-04-04</td><td>David Cargill </td><td>Fix memory leak when deserializing grammars </td></tr>
+<tr><td>2005-04-04</td><td>David Cargill </td><td>Add support for not creating xsannotations when deserializing a grammar </td></tr>
+<tr><td>2005-04-01</td><td>David Bertoni </td><td>Fix for Jira issue XERCESC-1389: memory manager </td></tr>
+<tr><td>2005-04-01</td><td>Alberto Massari </td><td>In case of a mixed-case standalone value, the flag was always set to false</td></tr>
+<tr><td>2005-03-31</td><td>Alberto Massari</td><td>Don't invoke the resolver when an empty xs:import is found</td></tr>
+<tr><td>2005-03-30</td><td>David Cargill </td><td>Allow XSAnnotation generation to be controlled by a feature </td></tr>
+<tr><td>2005-03-29</td><td>David Cargill </td><td>Begin work on adding some new features by checking in the feature handling support</td></tr>
+<tr><td>2005-03-25</td><td>Alberto Massari </td><td>On Windows, export the class from the DLL </td></tr>
+<tr><td>2005-03-22</td><td>Christian Will </td><td>Perf patches for Xercesc-1369 and 1370</td></tr>
+<tr><td>2005-03-20</td><td>David Cargill </td><td>Implement versions of uppercase and compareIstring that only check a to z</td></tr>
+<tr><td>2005-03-20</td><td>David Cargill </td><td>Add FLOAT(IEEE) to list of 390 compiler options so XSValueTest will compile </td></tr>
+<tr><td>2005-03-20</td><td>Christian Will </td><td>[jira 1381] Memory leak in GrammarResolver </td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari </td><td>Aligned method declaration (jira# 1386)</td></tr>
+<tr><td>2005-03-17</td><td>Gareth Reake </td><td>Updated doc to refect real behaviour with adoptBuffer</td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari</td><td>Remove variable declaration from 'if' statement (jira# 1379)</td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari </td><td>Fully qualify enum (jira# 1383)</td></tr>
+<tr><td>2005-03-17</td><td>Alberto Massari </td><td>Aligned method declaration (jira# 1384)</td></tr>
+<tr><td>2005-03-16</td><td>Matthew Hall </td><td>Fix possible overflow problem </td></tr>
+<tr><td>2005-03-14</td><td>Gareth Reakes </td><td> Fix for Jira 1376: wrong memory manager</td></tr>
+<tr><td>2005-03-14</td><td>Gareth Reakes</td><td>Fix to Jira 1375. Removed space char between #! and /.</td></tr>
+<tr><td>2005-03-11</td><td>Christian Will </td><td>XERCESC-1345: Reset fDTDElemeNonDeclPool in scanreset </td></tr>
+<tr><td>2005-03-11</td><td>David Earlam </td><td>XERCESC-1363: Increase size of BaseRefVectorOf based on size of data not by 32 </td></tr>
+<tr><td>2005-03-09</td><td>Alberto Massari </td><td>Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation </td></tr>
+<tr><td>2005-03-08</td><td>Alberto Massari </td><td>Redeclare a namespace binding if the prefix is already bound to a different namespace (jira# 1371)  </td></tr>
+<tr><td>2005-03-08</td><td>Christian Will </td><td>Improve performances of XMLString::tokenizeString (jira# 1363)</td></tr>
+<tr><td>2005-03-07</td><td>Khaled Noaman </td><td>Eliminate lazy creation of attribute lists</td></tr>
+<tr><td>2005-03-04</td><td>Markus Scherer </td><td>Initialize ICU to avoid multithreading problems</td></tr>
+<tr><td>2005-03-04</td><td>Alberto Massari </td><td>The URL fragments were leaked (jira# 1362)</td></tr>
+<tr><td>2005-03-03</td><td>Steve Dulin </td><td>Update samples to use XERCESCOUT instead of XERCESCROOT </td></tr>
+<tr><td>2005-03-03</td><td>Alberto Massari </td><td>Removing makefile project, as BCB6 users should use the .bpr project (jira# 1347)</td></tr>
+<tr><td>2005-03-03</td><td>David Bertoni </td><td>Removed superfluous const qualifiers</td></tr>
+<tr><td>2005-02-25</td><td>David Cargill </td><td>Attempt to fix compiler errors</td></tr>
+<tr><td>2005-02-25</td><td>David Bertoni </td><td> Performance improvements </td></tr>
+<tr><td>2005-02-25</td><td>Alberto Massari </td><td>Fixing spelling errors </td></tr>
+<tr><td>2005-02-25</td><td>Scott Cantor </td><td>Fix for compile under gcc 4</td></tr>
+<tr><td>2005-02-25</td><td>David Bertoni </td><td>Fix thread safety issues. Jira #30380. Thanks to David Bertoni</td></tr>
+<tr><td>2005-02-23</td><td>Mike Boos </td><td>Various PSVI fixes  </td></tr>
+<tr><td>2005-02-23</td><td>Steve Dulin</td><td>Allow ICU to be used for transcoding and casing </td></tr>
+<tr><td>2005-02-23</td><td>David Cargill </td><td>Copy performance change made to XMLUTF8Transcoder.cpp to the 390 version</td></tr>
+<tr><td>2005-02-21</td><td>James Berry </td><td>Bugfix: XERCESC-1074; get rid of warnings  </td></tr>
+<tr><td>2005-02-21</td><td>David Cargill </td><td>Doc updates, including xercesc-1352 </td></tr>
+<tr><td>2005-02-21</td><td>Christian Will</td><td>Performance fixes </td></tr>
+<tr><td>2005-02-21</td><td>Alberto Massari </td><td>Updated makefile (bug# 1346)</td></tr>
+<tr><td>2005-02-19</td><td>David Cargill </td><td>Update error message from regular expressions </td></tr>
+<tr><td>2005-02-19</td><td>David Bertoni </td><td>Prefix mapping fix </td></tr>
+<tr><td>2005-02-19</td><td>David Cargill  </td><td>Store key for recreating table instead of using enclosingscope</td></tr>
+<tr><td>2005-02-18</td><td>James Berry</td><td>Update release plan with tenative 3.0 list</td></tr>
+<tr><td>2005-02-14</td><td>James Berry</td><td>Fix spelling of fgMacLCPEncodingName</td></tr>
+<tr><td>2005-02-11</td><td>James Berry </td><td>Remove from project obsolete files XObjectComparator and XTemplateComparator. </td></tr>
+<tr><td>2005-02-11</td><td>Chris Cates</td><td>Explicitly create a unicode collator for Mac</td></tr>
+<tr><td>2005-02-07</td><td>Alberto Massari </td><td>AStatic builds had incomplete MIDL command lines </td></tr>
+<tr><td>2005-02-02</td><td>Alberto Massari </td><td>Enable building of tests and samples under Interix (jira# 1330)</td></tr>
+<tr><td>2005-02-02</td><td>Alberto Massari </td><td>Mark global variables for this module as static (jira# 1331)</td></tr>
+<tr><td>2005-02-02</td><td>Alberto Massari </td><td>Added rehashing capabilities </td></tr>
+<tr><td>2005-01-26</td><td>Alberto Massari</td><td>If the option /Zc:wchar_t is specified, map XMLCh to wchar_t (jira# 413) </td></tr>
+<tr><td>2005-01-26</td><td>Alberto Massari</td><td>XMemory updates</td></tr>
+<tr><td>2005-01-20</td><td>David Cargill </td><td>Xercesc-1326: Documentation update for getTextContext.</td></tr>
+<tr><td>2005-01-20</td><td>David Cargill </td><td>Xercesc-1328: Fix spelling of XMLUni::fgXercesUseCachedGrammarInParse (missing an a in parse)</td></tr>
+<tr><td>2005-01-18</td><td>Steve Dulin</td><td>Delete memory for parser and grammarpool</td></tr>
+<tr><td>2005-01-14</td><td>Alberto Massari</td><td>When entity reference creation was on, the document created by the parser was leaked (jira# 490)  </td></tr>
+<tr><td>2005-01-13</td><td>Alberto Massari </td><td>Support for UnixWare 7.1.1 (jira# 1148)</td></tr>
+<tr><td>2005-01-12</td><td>David Cargill </td><td>Fix for xercesc-1219</td></tr>
+<tr><td>2005-01-12</td><td>David Cargill</td><td>Remove warning messages.</td></tr>
+<tr><td>2005-01-08</td><td>Alberto Massari </td><td> Fixes to compile with Visual Studio 2005 (jira# 1253)</td></tr>
+<tr><td>2005-01-08</td><td>David Cargill </td><td>Fix for Xercesc-1283: incorrect case for xmluni predefined constant in doc</td></tr>
+<tr><td>2005-01-07</td><td>David Cargill </td><td>Fix for Xercesc-1314: clarify what is xercescroot.</td></tr>
+<tr><td>2005-01-07</td><td>Alberto Massari </td><td>Updated Borland makefile</td></tr>
+<tr><td>2005-01-07</td><td>Alberto Massari </td><td>scanReset() should always clear the maps used to detect duplicate attributes</td></tr>
+<tr><td>2005-01-06</td><td>Alberto Massari </td><td>Removed warnings</td></tr>
+<tr><td>2005-01-06</td><td>Alberto Massari </td><td> When emitting a "duplicate attribute" error, we were using an unitialized pointer variable</td></tr>
+<tr><td>2005-01-06</td><td>David Cargill </td><td>Update SAX2Print sample project files to add new files recently added to sample </td></tr>
+<tr><td>2005-01-05</td><td>Alberto Massari </td><td>Add icpc to the list of C++ compilers (jira# 1311) </td></tr>
+<tr><td>2005-01-03</td><td>James Berry </td><td>Add support for use of ICU with Mac OS X version</td></tr>
+<tr><td>2005-01-03</td><td>Alberto Massari </td><td>maps used to detect duplicate attributes are now cleaned </td></tr>
+<tr><td>2005-01-03</td><td>Alberto Massari </td><td>Fixed name of include file [jira#1321]</td></tr>
+<tr><td>2004-12-30</td><td>Alberto Massari</td><td>Notify advanced handlers of the whitespace before and after the root document element (jira# 729)</td></tr>
+<tr><td>2004-12-30</td><td>Alberto Massari</td><td>Delete the user data informations only after invoking all the NODE_DELETED handlers (jira# 620)</td></tr>
+<tr><td>2004-12-30</td><td>Alberto Massari</td><td>Added API to remove all entries having the same primary key</td></tr>
+<tr><td>2004-12-29</td><td>Alberto Massari</td><td>The second call to ucnv_fromUChars was causing the buffer not to be terminated (jira#1300)</td></tr>
+<tr><td>2004-12-28</td><td>James Berry</td><td>Add support for use of sockets netaccessor on Mac OS X.</td></tr>
+<tr><td>2004-12-28</td><td>James Berry</td><td>Fix syntax error caught by GCC 4</td></tr>
+<tr><td>2004-12-28</td><td>Alberto Massari</td><td>DOMDocument::cloneNode can clone the element definitions (bug# 647)</td></tr>
+<tr><td>2004-12-28</td><td>Alberto Massari</td><td>Store fAxisType as an integer, not as a XMLCh (bug# 1177)</td></tr>
+<tr><td>2004-12-24</td><td>Alberto Massari</td><td>Add support for SAX2 filters (jira# 1133)</td></tr>
+<tr><td>2004-12-23</td><td>David Cargill</td><td>XSValue Updates</td></tr>
+<tr><td>2004-12-23</td><td>Alberto Massari</td><td>Use correct prefix on end tag</td></tr>
+<tr><td>2004-12-21</td><td>David Cargill</td><td>Attempt to fix various apidoc problems</td></tr>
+<tr><td>2004-12-20</td><td>David Cargill</td><td>Add assert to avoid memory violation</td></tr>
+<tr><td>2004-12-13</td><td>Christian Will</td><td>Performance improvement</td></tr>
+<tr><td>2004-12-12</td><td>Alberto Massari</td><td>Take into account the fExpandEntityReferences setting [jira# 1303]</td></tr>
+<tr><td>2004-12-10</td><td>David Cargill</td><td>Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.</td></tr>
+<tr><td>2004-12-09</td><td>Khaled Noman</td><td> DOM L3: pass schema normalized value only when datatype-normalization feature is enabled.</td></tr>
+<tr><td>2004-12-09</td><td>Alberto Massari</td><td>Fxi for jira392</td></tr>
+<tr><td>2004-12-07</td><td>Khaled Noman</td><td>An option to ignore a cached DTD grammar</td></tr>
+<tr><td>2004-12-07</td><td>Alberto Massari</td><td>Fixed memory leak in operator= [jira# 1307]</td></tr>
+<tr><td>2004-12-06</td><td>Alberto Massari</td><td>Take into account the fExpandEntityReferences setting [jira# 1303]</td></tr>
+<tr><td>2004-12-06</td><td>David Cargill</td><td>Clean-up error text for a message that said unsupported</td></tr>
+<tr><td>2004-12-05</td><td>Alberto Massari</td><td>Added XMLString::release(void**, MemoryManager*) [jira# 1301]</td></tr>
+<tr><td>2004-12-05</td><td>Alberto Massari</td><td>entity resolver behaviour </td></tr>
+<tr><td>2004-12-01</td><td>Alberto Massari</td><td>Avoid throwing an exception when orphaning a cached grammar that has not been used yet</td></tr>
+<tr><td>2004-12-01</td><td>David Cargill</td><td>Update two error messages: add missing parameter, remove extra parameter</td></tr>
+<tr><td>2004-12-01</td><td>Stephen Dulin</td><td>Update ccsid.h for new release of icu</td></tr>
+<tr><td>2004-12-01</td><td>David Cargill</td><td>Fix for bug xercesc-1304</td></tr>
+<tr><td>2004-11-29</td><td>David Cargill</td><td>Update MS VC7.1 build options</td></tr>
+<tr><td>2004-11-29</td><td>David Cargill</td><td>Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.</td></tr>
+<tr><td>2004-11-25</td><td>Khaled Noaman</td><td>Fix for synthetic annotation generation on 'extension' element of simpleContent</td></tr>
+<tr><td>2004-11-25</td><td>Khaled Noaman</td><td>Fix problem with an All content model with minOccurs of 0.</td></tr>
+<tr><td>2004-11-24</td><td>Dave Bertoni</td><td>Fix to correctly report the boundaries of an external subset</td></tr>
+<tr><td>2004-11-18</td><td>Christian Will</td><td>Memory improvement to utility classes</td></tr>
+<tr><td>2004-11-18</td><td>David Cargill</td><td>Changes for linker problems with linux build using xlc.</td></tr>
+<tr><td>2004-11-17</td><td>Christian Will</td><td>Performance improvement to utility classes.</td></tr>
+<tr><td>2004-11-15</td><td>Alberto Massari</td><td>Add build target for VC7.1 to create a static library</td></tr>
+<tr><td>2004-11-14</td><td>PeiYong Zhang</td><td>XSValue updates</td></tr>
+<tr><td>2004-11-13</td><td>David Cargill</td><td>Fix for validate annotations.</td></tr>
+<tr><td>2004-11-12</td><td>Khaled Noaman</td><td>Fix multi threading problem.</td></tr>
+<tr><td>2004-11-10</td><td>PeiYong Zhang</td><td>To build ICU3.2 and on Linux/xlC_r</td></tr>
+<tr><td>2004-11-09</td><td>PeiYong Zhang</td><td>Storer_NewerThan_Loader</td></tr>
+<tr><td>2004-11-08</td><td>PeiYong Zhang</td><td>MSVC 7.1</td></tr>
+<tr><td>2004-11-08</td><td>Alberto Massari</td><td>Fix for jira#1298: NetBSD uses r+ to open files for reading</td></tr>
+<tr><td>2004-11-07</td><td>PeiYong Zhang</td><td>read/write Storer level</td></tr>
+<tr><td>2004-11-05</td><td>PeiYong Zhang</td><td>Msg build versioning</td></tr>
+<tr><td>2004-11-02</td><td>PeiYong Zhang</td><td>[Jira#1294] Compiler Warnings on IRIX with MIPSpro compiler ver 7.4</td></tr>
+<tr><td>2004-11-02</td><td>PeiYong Zhang</td><td>Handling OutOfMemory exception</td></tr>
+<tr><td>2004-10-28</td><td>David Cargill</td><td>Add missing parameter to three error messages.</td></tr>
+<tr><td>2004-10-28</td><td>PeiYong Zhang</td><td>Data member reshuffle and store/load</td></tr>
+<tr><td>2004-10-27</td><td>PeiYong Zhang</td><td>Optimized alignment for various data types</td></tr>
+<tr><td>2004-10-27</td><td>James Berry</td><td>MacOS build updates</td></tr>
+<tr><td>2004-10-26</td><td>PeiYong Zhang</td><td>Maintain consistent order among multiple store/load session to allow comparison</td></tr>
+<tr><td>2004-10-26</td><td>Gareth Reakes</td><td>Fixed version number</td></tr>
+<tr><td>2004-10-20</td><td>Khaled Noaman</td><td>Allow option of initializing static data in XMLPlatformUtils::Initialize</td></tr>
+<tr><td>2004-10-19</td><td>PeiYong Zhang</td><td>XercesC2_6_0 updates: build debuged libary on Windows/VC6</td></tr>
+<tr><td>2004-10-19</td><td>PeiYong Zhang</td><td>[Jira#1287] new deprecated DOM libraries not included in .spec file for Linux</td></tr>
+<tr><td>2004-10-19</td><td>Khaled Noaman</td><td>Performance improvement</td></tr>
+<tr><td>2004-10-15</td><td>David Cargill</td><td>Fix for jira bug 1234.  Infinite loop in XSComplexTypeDefinition::derviedFromType.</td></tr>
+<tr><td>2004-10-13</td><td>PeiYong Zhang</td><td>using ValueHashTableOf to reduce footprint</td></tr>
+<tr><td>2004-10-13</td><td>David Cargill</td><td>Fix for jira bug 1282: empty exception message being generated</td></tr>
+<tr><td>2004-10-13</td><td>David Cargill</td><td>Serialization fix, fPVSIScope not serialized.</td></tr>
+<tr><td>2004-10-12</td><td>PeiYong Zhang</td><td>Change attribute number threshold to 100</td></tr>
+<tr><td>2004-10-04</td><td>PeiYong Zhang</td><td>Support to build ICU3.0 on Solaris2.8 64-bit</td></tr>
+<tr><td>2004-10-04</td><td>Alberto Massari</td><td>Fix for Jira 866</td></tr>
+
+</table>
+</s2>
+
 <anchor name="Release260"/>
-<s2 title="Release Information of &XercesCName; 2.6.0">
+<s2 title="Release Information for &XercesCName; 2.6.0">
 <p>Here is the list of bugs that are resolved in this release, &XercesCName; 2.6.0.
 </p>
 <table>
@@ -228,7 +423,7 @@
 
 
 <anchor name="Release250"/>
-<s2 title="Release Information of &XercesCName; 2.5.0">
+<s2 title="Release Information for &XercesCName; 2.5.0">
 
 <p>Here is the list of <jump href=
 "http&colon;//nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02&percent;2F07&percent;2F03&amp;chfieldto=05&percent;2F23&percent;2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C&percent;2B&percent;2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
@@ -1299,7 +1494,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.5.
 
 
     <anchor name="Release240"/>
-<s2 title="Release Information of &XercesCName; 2.4.0 Dec. 2, 2003">
+<s2 title="Release Information for &XercesCName; 2.4.0 Dec. 2, 2003">
 
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02%2F07%2F03&amp;chfieldto=05%2F23%2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
@@ -2692,7 +2887,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.4.
 </s2>
 
     <anchor name="Release230"/>
-<s2 title="Release Information of &XercesCName; 2.3.0: May 23, 2003">
+<s2 title="Release Information for &XercesCName; 2.3.0: May 23, 2003">
 
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02%2F07%2F03&amp;chfieldto=05%2F23%2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
@@ -3444,7 +3639,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.3.
 </s2>
    
     <anchor name="Release220"/>
-    <s2 title="Release Information of &XercesCName; 2.2.0: February 7, 2003">
+    <s2 title="Release Information for &XercesCName; 2.2.0: February 7, 2003">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=08%2F28%2F02&amp;chfieldto=02%2F07%2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.2.0.
@@ -4424,7 +4619,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.2.
 </s2>
 
     <anchor name="Release210"/>
-    <s2 title="Release Information of &XercesCName; 2.1.0: August 26, 2002">
+    <s2 title="Release Information for &XercesCName; 2.1.0: August 26, 2002">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=07%2F25%2F02&amp;chfieldto=08%2F27%2F02&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.1.0.
@@ -4849,7 +5044,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.1.
     </s2>
 
     <anchor name="Release200"/>
-    <s2 title="Release Information of &XercesCName; 2.0.0: July 23, 2002">
+    <s2 title="Release Information for &XercesCName; 2.0.0: July 23, 2002">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=03%2F09%2F02&amp;chfieldto=07%2F24%2F02&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.0.0.
@@ -5782,7 +5977,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.0.
     </s2>
 
     <anchor name="Release170"/>
-    <s2 title="Release Information of &XercesCName; 1.7.0: March 8, 2002">
+    <s2 title="Release Information for &XercesCName; 1.7.0: March 8, 2002">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=12%2F08%2F01&amp;chfieldto=03%2F08%2F02&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.7.0.
@@ -6496,7 +6691,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.7.
     </s2>
 
     <anchor name="Release160"/>
-    <s2 title="Release Information of &XercesCName; 1.6.0: December 6, 2001">
+    <s2 title="Release Information for &XercesCName; 1.6.0: December 6, 2001">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=10%2F27%2F01&amp;chfieldto=12%2F07%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.6.0.
@@ -6988,7 +7183,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.6.
     </s2>
 
     <anchor name="Release152"/>
-    <s2 title="Release Information of &XercesCName; 1.5.2: October 26, 2001">
+    <s2 title="Release Information for &XercesCName; 1.5.2: October 26, 2001">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=07%2F19%2F01&amp;chfieldto=10%2F26%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.5.2.
@@ -7582,7 +7777,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.5.
     </s2>
 
     <anchor name="Release151"/>
-    <s2 title="Release Information of &XercesCName; 1.5.1: July 18, 2001">
+    <s2 title="Release Information for &XercesCName; 1.5.1: July 18, 2001">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=06%2F16%2F01&amp;chfieldto=07%2F18%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.5.1.
@@ -7988,7 +8183,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 1.5.
     </s2>
 
     <anchor name="Release150"/>
-    <s2 title="Release Information of &XercesCName; 1.5.0: June 15, 2001">
+    <s2 title="Release Information for &XercesCName; 1.5.0: June 15, 2001">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=01%2F31%2F01&amp;chfieldto=06%2F15%2F01&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0.
@@ -8512,7 +8707,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="Release140"/>
-    <s2 title="Release Information of &XercesCName; 1.4.0: January 31, 2001">
+    <s2 title="Release Information for &XercesCName; 1.4.0: January 31, 2001">
 
     <table>
         <tr>
@@ -9099,7 +9294,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="Release130"/>
-    <s2 title="Release Information of &XercesCName; 1.3.0: Sept 21, 2000">
+    <s2 title="Release Information for &XercesCName; 1.3.0: Sept 21, 2000">
 
     <table>
         <tr>
@@ -9563,7 +9758,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="Release120"/>
-    <s2 title="Release Information of &XercesCName; 1.2.0: June 22, 2000">
+    <s2 title="Release Information for &XercesCName; 1.2.0: June 22, 2000">
 
     <table>
         <tr>
@@ -9984,7 +10179,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="Release110"/>
-    <s2 title="Release Information of &XercesCName; 1.1.0: Feb 28, 2000">
+    <s2 title="Release Information for &XercesCName; 1.1.0: Feb 28, 2000">
 
     <table>
         <tr>
@@ -10141,7 +10336,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="Release101"/>
-    <s2 title="Release Information of &XercesCName; 1.0.1: December 15, 1999">
+    <s2 title="Release Information for &XercesCName; 1.0.1: December 15, 1999">
         <ul>
             <li>Port to Solaris.</li>
             <li>Improved error recovery and clarified error messages.</li>
@@ -10150,7 +10345,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="Release100"/>
-    <s2 title="Release Information of &XercesCName; 1.0.0: December 7, 1999">
+    <s2 title="Release Information for &XercesCName; 1.0.0: December 7, 1999">
         <ul>
             <li>Released &XercesCName; after incorporating ICU as a value-added plug-in.</li>
             <li>Has bug fixes, better conformance, better speed and cleaner internal architecture</li>
@@ -10165,7 +10360,7 @@ fixed bugzilla bugs</jump> that are resolved in this release &XercesCName; 1.5.0
     </s2>
 
     <anchor name="ReleaseBETA"/>
-    <s2 title="Release Information of &XercesCName; BETA: November 5, 1999">
+    <s2 title="Release Information for &XercesCName; BETA: November 5, 1999">
         <ul>
             <li>Created initial code base derived from IBM's XML4C Version 2.0</li>
             <li>Modified documentation to reflect new name (Xerces-C)</li>

@@ -23,21 +23,21 @@
 <s2 title="&XercesCName; Future Releases Plan">
 <p>This document highlights the release plan for &XercesCName;.</p>
 
-<s3 title="Current Status"><p>&XercesCName; 2.7.0 - released on September 1, 2005.</p></s3>
+<s3 title="Current Status"><p>&XercesCName; 2.8.0 - released on August 31, 2007.</p></s3>
 
 <s3 title="Next Target Release">
 	<p>The &XercesCName; team is currently working on plans for future releases.
 	At present, we believe there will be a 3.0 release with new functionality
-	targeted roughly at the second half of 2005. As a change in the major version allows us
+	targeted roughly at the end of 2007. As a change in the major version allows us
 	to break source compatibility, we are trying to take our time in order to
 	break now what needs to be broken. There is some chance that changes breaking
 	source compatibility will not be needed, and that "3.0" features will be
 	released in the 2.x line.</p>
 	<p>Further releases in the 2.x line are anticipated concurrent with 3.0 development
-	in order to fix issues or bugs in 2.6. Once 3.0 is released, we may also issue
+	in order to fix issues or bugs in 2.8.0. Once 3.0 is released, we may also issue
 	further 2.x releases as needed by the community.</p>
 	<p>&XercesCName; 2.y.z - as needed to address bugs or other issues.</p>
-	<p>&XercesCName; 3.0 - Targetted roughly for second half of 2005.</p>
+	<p>&XercesCName; 3.0 - Targetted roughly for the end of 2007.</p>
 </s3>
 
 <s3 title="&XercesCName; 3.0 (tentative) Features list">

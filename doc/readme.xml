@@ -97,20 +97,26 @@
     </s2>
 
     <s2 title="Platforms with Binaries">
+
+      <p>Precompiled binaries are available for the following platforms
+         and compilers:</p>
+
       &build-winunix-supported-platforms;
 	</s2>
 
-    <s2 title="Other ports...">
+    <s2 title="Other Platforms and Compilers">
         <ul>
+            <li>MS Visual C++ 6.0</li>
+            <li>GCC 3.2.x</li>
+            <li>Solaris 8, 9</li>
+            <li>AIX 5.1, 5.2</li>
             <li>OS/390</li>
             <li>AS/400</li>
             <li>FreeBSD</li>
             <li>SGI IRIX</li>
-            <li>Macintosh</li>
             <li>OS/2</li>
             <li>PTX</li>
             <li>UnixWare</li>
-            <li>and more!</li>
         </ul>
     </s2>
 

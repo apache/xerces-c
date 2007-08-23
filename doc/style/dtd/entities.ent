@@ -123,18 +123,30 @@ purpose of your reporting of the bug.
 <!ENTITY build-winunix-supported-platforms '
 <table>
 <tr><th><em>Operating System</em></th><th><em>Compiler</em></th></tr>
-<tr><th><em>32-bit binary</em></th><td></td></tr>
-<tr><td>Windows 2000</td><td>MS Visual C++ 6.0 SP3</td></tr>
-<tr><td>AIX 5.1</td><td>xlC_r 6.0.0</td></tr>
-<tr><td>Solaris 2.8</td><td>Forte C++ Version 6 Update 2</td></tr>
-<tr><td>HP-UX 11i</td><td>aCC A.03.52 with pthreads</td></tr>
-<tr><td>RHEL 4.0 (IA32)</td><td>gcc 3.4.3</td></tr>
+<tr><th colspan="2"><em>32-bit</em></th></tr>
+<tr><td>Windows x86</td><td>MS Visual C++ 7.1 (2003)</td></tr>
+<tr><td>Windows x86</td><td>MS Visual C++ 8.0 (2005)</td></tr>
+<tr><td>Linux x86</td><td>GCC 3.4.x or later</td></tr>
+<tr><td>Solaris 10 x86</td><td>GCC 3.4.x or later</td></tr>
+<tr><td>Solaris 10 x86</td><td>Sun C++ 5.7 (Studio 10) or later</td></tr>
+<tr><td>Solaris 10 SPARC</td><td>GCC 3.4.x or later</td></tr>
+<tr><td>Solaris 10 SPARC</td><td>Sun C++ 5.7 (Studio 10) or later</td></tr>
+<tr><td>AIX 5.3 PowerPC</td><td>IBM XL C++ 7.0 or later</td></tr>
+<tr><td>HP-UX 11i PA-RISC</td><td>HP aCC A.03.x</td></tr>
+<tr><td>HP-UX 11i IA-64</td><td>HP aCC A.06.x</td></tr>
+<tr><td>MacOS X 10.4 "Tiger" x86</td><td>GCC 4.0.x (Xcode 2.x) or later</td></tr>
+<tr><td>MacOS X 10.4 "Tiger" PowerPC</td><td>GCC 4.0.x (Xcode 2.x) or later</td></tr>
 
-<tr><th><em>64-bit binary</em></th><td></td></tr>
-<tr><td>AIX 5.1</td><td>xlC_r 6.0.0</td></tr>
-<tr><td>Solaris 2.8</td><td>Forte C++ Version 6 Update 2</td></tr>
-<tr><td>HP-UX 11i</td><td>aCC A.03.52 with pthreads</td></tr>
-<tr><td>SuSE Linux 8.0 (AMD64)</td><td>gcc 3.2.2</td></tr>
+<tr><th colspan="2"><em>64-bit</em></th></tr>
+<tr><td>Windows x86-64</td><td>MS Visual C++ 8.0 (2005)</td></tr>
+<tr><td>Linux x86-64</td><td>GCC 3.4.x or later</td></tr>
+<tr><td>Solaris 10 x86-64</td><td>GCC 3.4.x or later</td></tr>
+<tr><td>Solaris 10 x86-64</td><td>Sun C++ 5.7 (Studio 10) or later</td></tr>
+<tr><td>Solaris 10 SPARC</td><td>GCC 3.4.x or later</td></tr>
+<tr><td>Solaris 10 SPARC</td><td>Sun C++ 5.7 (Studio 10) or later</td></tr>
+<tr><td>AIX 5.3 PowerPC</td><td>IBM XL C++ 7.0 or later</td></tr>
+<tr><td>HP-UX 11i PA-RISC</td><td>HP aCC A.03.x</td></tr>
+<tr><td>HP-UX 11i IA-64</td><td>HP aCC A.06.x</td></tr>
 </table>
 '>
 
