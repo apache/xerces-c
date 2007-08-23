@@ -181,7 +181,7 @@ sax2/Makefile \
 
 echo
 echo Having build problems?
-echo   Read instructions at http://xml.apache.org/xerces-c/build.html
+echo   Read instructions at http://xerces.apache.org/xerces-c/build.html
 echo Still cannot resolve it?
 echo   Find out if someone else had the same problem before.
 echo   Go to http://marc.theaimsgroup.com/?l=xerces-c-dev

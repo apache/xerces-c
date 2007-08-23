@@ -8,8 +8,8 @@ Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
 Version:	2.8.0
 Release:	1
-URL:		http://xml.apache.org/xerces-c/
-Source0:    %{name}-src_%{tarversion}.tar.gz
+URL:		http://xerces.apache.org/xerces-c/
+Source0:	%{name}-src_%{tarversion}.tar.gz
 Copyright:	Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root

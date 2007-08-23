@@ -5343,5 +5343,5 @@ fi
 
 
 echo
-echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
+echo Having build problems? Read instructions at http://xerces.apache.org/xerces-c/build.html
 

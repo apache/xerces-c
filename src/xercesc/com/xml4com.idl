@@ -69,7 +69,7 @@ library Xerces
 	//       then you most probably do not have a recent
 	//        Microsoft Platform SDK in your include path
 	//
-	//    See http://xml.apache.org/xerces-c/build.html#BuildCOM
+	//    See http://xerces.apache.org/xerces-c/build.html#BuildCOM
 	import "xmldom.idl";
 	
 	[
