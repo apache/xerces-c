@@ -22,7 +22,7 @@
     <anchor name="ICUPerl"/>
     <s2 title="Building &XercesCName; with ICU">
         <p>&XercesCName; may be built in stand-alone mode using
-        native encoding support and also using ICU where you get support over 180
+        native encoding support and also using ICU where you get support for over 180
         different encodings and/or locale specific message support. ICU stands for
         International Components for Unicode and is an open source distribution from
         IBM. You can get

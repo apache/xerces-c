@@ -107,12 +107,12 @@ towards the resolution of the bug. Specifics about the bug, like
 <li>Whether you built the &XercesCName; library yourself or used the
 binary distribution</li>
 <li>What happened</li>
-</ul>			
+</ul>
 <p>
 are all necessary information to allow developer to reproduce,
 identify, evaluate and eventually, fix the bug, which is the very
 purpose of your reporting of the bug.
-</p>  
+</p>
 <p>If you are providing a patch please review the information in
 <jump href="faq-contributing.html#Submitting Patches">Submitting Patches</jump>.
 </p>
@@ -152,9 +152,10 @@ purpose of your reporting of the bug.
 
 <!-- note in build-winunix.xml about building on untested platforms -->
 <!ENTITY build-winunix-note '
-<p>If you are not using any of these compilers, you are taking a calculated risk
-by exploring new grounds. Your effort in making &XercesCName; work on this
-new compiler is greatly appreciated and any problems you face can be addressed
+<p>While older platforms/compilers will most likely work, if you are not using any of
+   these compilers, you are taking a calculated risk
+by exploring untested grounds. Your effort in making &XercesCName; work on
+new platforms/compilers is greatly appreciated and any problems you face can be addressed
 on the <jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>.
 </p>
 '>

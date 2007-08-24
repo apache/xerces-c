@@ -34,7 +34,7 @@
 	source compatibility will not be needed, and that "3.0" features will be
 	released in the 2.x line.</p>
 	<p>Further releases in the 2.x line are anticipated concurrent with 3.0 development
-	in order to fix issues or bugs in 2.8.0. Once 3.0 is released, we may also issue
+	in order to fix issues or bugs in 2.x. Once 3.0 is released, we may also issue
 	further 2.x releases as needed by the community.</p>
 	<p>&XercesCName; 2.y.z - as needed to address bugs or other issues.</p>
 	<p>&XercesCName; 3.0 - Targetted roughly for the end of 2007.</p>
@@ -46,7 +46,7 @@
 	It does not include fixing bugs that are opened in Jira; unless such Jira bug
 	involves a major development effort and requires an architectural redesign,
 	or is an enhancement suggestion.</p>
-	
+
 	<p>This list tracks current ideas and developer sign-up for 3.0 features. Some items
 	on this list have no volunteer. Items that have no volunteer will receive no
 	development attention and therefore will not become part of 3.0. If you would
@@ -59,13 +59,13 @@
 			<th>Feature Description</th>
 			<th>Volunteer</th>
 		</tr>
-	
+
 		<tr>
 			<td>1</td>
 			<td>Reorganization of public/private includes</td>
 			<td></td>
 		</tr>
-	   
+
 		<tr>
 			<td>2</td>
 			<td>Revisiting/sanity checking of install locations</td>
@@ -80,7 +80,7 @@
 					Mac re-port/test - James (done)<br/>
 					Windows re-port/test - Alberto<br/>
 					Linux re-port/test: Gareth, Alberto [VMWare (Red Hat 9, Red Hat 7.3) and I can add more],
-						Scott Cantor [test], cargilld [w/ xlC]<br/>					
+						Scott Cantor [test], cargilld [w/ xlC]<br/>
 					Solaris - Scott Cantor [test]<br/>
 					Cygwin - Neil/Alberto (mostly done?)<br/>
 					MingGW - Alberto (mostly done?)<br/>
@@ -89,7 +89,7 @@
 					OS390 - cargilld
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td>4</td>
 			<td>A true autoconf based build infrastructure</td>
@@ -141,13 +141,13 @@
 			<td>Add RelaxNG support</td>
 			<td>(Michael Fuller -- would provide some help)</td>
 		</tr>
-		
+
 		<tr>
 			<td>11</td>
 			<td>Audit/Update of XML Schema support.</td>
 			<td>cargilld</td>
 		</tr>
-		
+
 		<tr>
 			<td>12</td>
 			<td>Const signature changes. [783, 1153, 1223]</td>
@@ -157,14 +157,14 @@
 		<tr>
 			<td>13</td>
 			<td>XML Catalog Support</td>
-			<td></td>       
-		</tr>    
+			<td></td>
+		</tr>
 
 		<tr>
 			<td>14</td>
 			<td>Roll .c code into template headers?</td>
-			<td></td>       
-		</tr>    
+			<td></td>
+		</tr>
 
 		<tr>
 			<th></th><th colspan='2'>Features/APIs to be removed</th>
@@ -183,31 +183,31 @@
 			<td>Remove and/or update deprecated enums</td>
 			<td>Gareth</td>
 		</tr>
-		
+
 		<tr>
 			<td>22</td>
 			<td>Remove non-thread-safe psvi methods</td>
 			<td>Gareth</td>
 		</tr>
-		
+
 		<tr>
 			<td>23</td>
 			<td>Remove Mac OS Classic Support</td>
 			<td>James</td>
 		</tr>
-		
+
 		<tr>
 			<td>24</td>
 			<td>Remove OS/2 (or update it)</td>
 			<td>Alberto</td>
 		</tr>
-		
+
 		<tr>
 			<td>25</td>
 			<td>Remove Borland C++ 4, CodeWarrior, VACPP40 and Unsupported from Windows platform</td>
 			<td>Alberto</td>
 		</tr>
-		
+
 		<tr>
 			<td>26</td>
 			<td>Audit/Potential removal of all deprecated methods</td>
@@ -218,10 +218,10 @@
 			<td>27</td>
 			<td>Remove tests/samples not invoked by sanityTest.pl</td>
 			<td>cargilld / James</td>
-		</tr>		
-																																	 
+		</tr>
+
 	</table>
-	
+
 </s3>
 </s2>
 

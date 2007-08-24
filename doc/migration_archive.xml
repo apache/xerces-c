@@ -21,9 +21,10 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto270">Migrating from &XercesCName; 2.6.0 to 2.7.0</link></li>
         <li><link anchor="Migrateto260">Migrating from &XercesCName; 2.5.0 to 2.6.0</link></li>
         <li><link anchor="Migrateto250">Migrating from &XercesCName; 2.4.0 to 2.5.0</link></li>
-        <li><link anchor="Migrateto240">Migrating from &XercesCName; 2.3.0 to 2.4.0</link></li>      
+        <li><link anchor="Migrateto240">Migrating from &XercesCName; 2.3.0 to 2.4.0</link></li>
         <li><link anchor="Migrateto230">Migrating from &XercesCName; 2.2.0 to 2.3.0</link></li>
         <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>
         <li><link anchor="Migrateto210">Migrating from &XercesCName; 2.0.0 to 2.1.0</link></li>
@@ -34,6 +35,62 @@
         <li><link anchor="Migrateto140">Migrating from XML4C 2.x to 1.4.0</link></li>
       </ul>
     </s2>
+
+
+    <anchor name="Migrateto270"/>
+    <s2 title="Migrating from &XercesCName; 2.6.0 to &XercesCName; 2.7.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.6.0 code base and the &XercesCName; 2.7.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures270">New features in &XercesCName; 2.7.0</link></li>
+        <li><link anchor="API270">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI270">New Public API</link></li>
+            <li><link anchor="ModifiedAPI270">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI270">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures270"/>
+    <s3 title="New features in &XercesCName; 2.7.0">
+      <ul>
+        <li>Feature to not generate XML Schema annotations.  That is, not to add them to the grammar.  If you don't need annotations you may want to turn on this feature to avoid memory bloat for XML Schemas that use annotations heavily.</li>
+        <li>Option to skip regenerating the XML Schema annotations when deserializing a grammar.  If you don't need annotations you may want to turn on this option to avoid memory bloat for XML Schemas that use annotations heavily.</li>
+        <li>Feature to not perform default entity resolution.  When the entityResolver returns NULL, the parser doesn't try to resolve the entity externally.</li>
+        <li>Feature to do schema-only validation even if there is a DTD.</li>
+      </ul>
+    </s3>
+
+    <anchor name="API270"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.6.0; and the &XercesCName; 2.7.0 releases
+           of the parser. </p>
+
+        <anchor name="NewAPI270"/>
+        <s4 title="New Public API">
+            <ul>
+              <li>XMLString: subString, compareIStringASCII, lowercaseASCII, uppercaseASCII</li>
+              <li>RefHash2KeysTableOf: rehashing support</li>
+              <li>XMemory: placement new and delete</li>
+              <li>SAX2XMLFilter</li>
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI270"/>
+        <s4 title="Modified Public API">
+        </s4>
+
+        <anchor name="DeprecatedAPI270"/>
+        <s4 title="Deprecated/Removed Public API">
+        </s4>
+
+    </s3>
+    </s2>
+
 
 	<anchor name="Migrateto260"/>
 	<s2 title="Migrating from &XercesCName; 2.5.0 to &XercesCName; 2.6.0">
@@ -63,20 +120,20 @@
       <ul>
 		<li>Reduce footprint of DLL by building the deprecated DOM as a separate library</li>
         <li>Improve packaging scripts</li>
-        <li>Enable ID's to work on all kinds of schema components</li>       
-        <li>Add messages to DOMExceptions along with the error code</li>        
-        <li>Improve annotation error-reporting capabilities</li>       
-        <li>Make grammar caching work with DTD internal subsets</li>        
-        <li>Bring parser up to the XML 1.0 3rd Edition</li>        
+        <li>Enable ID's to work on all kinds of schema components</li>
+        <li>Add messages to DOMExceptions along with the error code</li>
+        <li>Improve annotation error-reporting capabilities</li>
+        <li>Make grammar caching work with DTD internal subsets</li>
+        <li>Bring parser up to the XML 1.0 3rd Edition</li>
         <li>Update to the XML 1.1 recommendation</li>
-        <li>Add new method to DOMDocument so that DOM level-2 style DOMDocumentTypes (which have a 
-        DOMDocument to own them) can be created</li>        
-        <li>Feature for disabling identity constraints</li>        
-        <li>Update schema errata</li>         
-        <li>Provide means to get actual values out of PSVI/schema component model</li>      
-        <li>Synthesize annotation components for non-schema attributes</li>        
-        <li>Expose partial PSVIElement information at the start element call</li>           
-        <li>Externalize validation, actual/canonical value production for arbitrary strings</li> 
+        <li>Add new method to DOMDocument so that DOM level-2 style DOMDocumentTypes (which have a
+        DOMDocument to own them) can be created</li>
+        <li>Feature for disabling identity constraints</li>
+        <li>Update schema errata</li>
+        <li>Provide means to get actual values out of PSVI/schema component model</li>
+        <li>Synthesize annotation components for non-schema attributes</li>
+        <li>Expose partial PSVIElement information at the start element call</li>
+        <li>Externalize validation, actual/canonical value production for arbitrary strings</li>
         <li>Laxly validate schema annotations</li>
         <li>Upgrade to ICU 3.0</li>
         <li>Handle elements with a large number of attributes more efficiently</li>
@@ -93,8 +150,8 @@
         <anchor name="NewAPI260"/>
         <s4 title="New Public API">
             <ul>
-              <li>XSValue</li>            
-              <li>IdentityConstraintHandler</li> 
+              <li>XSValue</li>
+              <li>IdentityConstraintHandler</li>
               <li>XMLBufferFullHandler</li>
               <li>XMLString: removeChar, isValidNOTATION</li>
               <li>XMLUri: normalizeUri</li>
@@ -102,7 +159,7 @@
               <li>RefHash family of classes: getHashModulus</li>
               <li>XSAnnotation: setline/col and systemid</li>
               <li>XMLReader: handeEOL</li>
-              <li>XMLChar: isValidNmToken</li>              
+              <li>XMLChar: isValidNmToken</li>
               <li>XMLBigDecimal: parseDecimal, getIntVal</li>
               <li>HexBin: getCanonicalRepresentation, decode</li>
               <li>Base64: getCanonicalRepresentation, decode</li>
@@ -126,12 +183,12 @@
         <anchor name="DeprecatedAPI260"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li>XSerializeEngine constructor</li>                
+              <li>XSerializeEngine constructor</li>
               <li>DTDAttDef: getDOMTypeInfoName,  getDOMTypeInfoUri</li>
 			  <li>DTDElementDecl: getDOMTypeInfoName, getDOMTypeInfoUri</li>
      	      <li>SchemaAttDef: setAnyDatatypeValidator</li>
  			  <li>UnionDatatypeValidator: getMemberTypeName, getMemberTypeUri, getMemberTypeAnonymous, getMemberTypeValidator</li>
- 			  <li>XMLAttr: getValidatingTypeURI, getValidatingTypeName, setDatatypeValidator, setSchemaValidated</li>                          
+ 			  <li>XMLAttr: getValidatingTypeURI, getValidatingTypeName, setDatatypeValidator, setSchemaValidated</li>
  			  <li>ComplexTypeInfo: setContentModel</li>
  			  <li>XMLGrammarPool: getXSModel</li>
  			  <li>SAXParser, mark this class deprecated</li>
@@ -140,7 +197,7 @@
 
     </s3>
     </s2>
-    
+
 	<anchor name="Migrateto250"/>
 	<s2 title="Migrating from &XercesCName; 2.4.0 to &XercesCName; 2.5.0">
       <p>The following section is a discussion of the technical differences between
@@ -167,7 +224,7 @@
               <li>Re-pluggable Panic Handler</li>
               <li>Enhenced mutex creation to impove thread safety</li>
               <li>Intrinsic transcoding support for 390.</li>
-              <li>Canonical Representation Support </li>              
+              <li>Canonical Representation Support </li>
               <li>New sample SCMPrint</li>
               <li>New sample PSVIWriter</li>
               <li>New test XSerializerTest</li>
@@ -184,7 +241,7 @@
         <anchor name="NewAPI250"/>
         <s4 title="New Public API">
             <ul>
-              <li></li>            
+              <li></li>
             </ul>
         </s4>
 
@@ -198,13 +255,13 @@
         <anchor name="DeprecatedAPI250"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li></li>              
+              <li></li>
             </ul>
         </s4>
 
     </s3>
     </s2>
-    
+
     <anchor name="Migrateto240"/>
     <s2 title="Migrating from &XercesCName; 2.3.0 to &XercesCName; 2.4.0">
       <p>The following section is a discussion of the technical differences between
@@ -225,7 +282,7 @@
     <s3 title="New features in &XercesCName; 2.4.0">
       <ul>
         <li>PSVI</li>
-        <li>Performance enhancement</li>        
+        <li>Performance enhancement</li>
         <li>Stateless Grammar </li>
         <li>Grammar Serialization/Deserialiation</li>
       </ul>
@@ -242,7 +299,7 @@
         <s4 title="New Public API">
             <ul>
               <li>PSVI related</li>
-              <li>Grammar serialization/deserialization related</li>              
+              <li>Grammar serialization/deserialization related</li>
             </ul>
         </s4>
 
@@ -259,7 +316,7 @@
               <li>XMLAttDef: getProvided, getDOMTypeInfoUri, getDOMTypeInfoName, setProvided</li>
               <li>XMLAttDefList: hasMoreElements, nextElement, Reset</li>
               <li>DTDAttDefList: hasMoreElements, nextElement, Reset</li>
-              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>       
+              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>
               <li>XMLElementDecl: LookupOpts</li>
               <li>XMLNumber family: toString</li>
               <li>ENTITYDatatypeValidator: setEntityDeclPool</li>
@@ -269,13 +326,13 @@
               <li>SchemaGrammar: getIDRefList</li>
               <li>SchemaElementDecl: all non thread safe methods </li>
               <li>SchemaAttDef: getters </li>
-              <li>DTDGrammar: getRootElemId</li>                           
+              <li>DTDGrammar: getRootElemId</li>
             </ul>
         </s4>
 
     </s3>
     </s2>
-    
+
     <anchor name="Migrateto230"/>
     <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; 2.3.0">
       <p>The following section is a discussion of the technical differences between
@@ -298,15 +355,15 @@
         <li>Experimental Implementation of Namespaces in XML 1.1 </li>
         <li>Experimental Implementation of XML 1.1: in DOMWriter</li>
         <li>More Schema 1.0 Errata Implementation</li>
-        <li>More DOM L3 Core Support</li>        
+        <li>More DOM L3 Core Support</li>
         <ul>
             <li>DOMConfiguration</li>
             <li>Document Normalization</li>
         </ul>
-        <li>Plugable Memory Manager</li>      
-        <li>Plugable Security Manager</li>      
+        <li>Plugable Memory Manager</li>
+        <li>Plugable Security Manager</li>
         <li>Plugable Panic Handler</li>
-        <li>Logical Path Resolution</li>        
+        <li>Logical Path Resolution</li>
       </ul>
     </s3>
 
@@ -342,7 +399,7 @@
 
     </s3>
     </s2>
-        
+
     <anchor name="Migrateto220"/>
     <s2 title="Migrating from &XercesCName; 2.1.0 to &XercesCName; 2.2.0">
       <p>The following section is a discussion of the technical differences between
@@ -384,9 +441,9 @@
         <li>Support for Linux/390</li>
         <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
         <li>New feature, "http://apache.org/xml/features/dom/byte-order-mark", allows user to enable
-            DOMWriter to write Byte-Order-Mark in the output XML stream, 
+            DOMWriter to write Byte-Order-Mark in the output XML stream,
             See <jump href="program-dom.html#Byte-Order-Mark">
-            Xercesc Feature: Byte Order Mark</jump> for details</li>        
+            Xercesc Feature: Byte Order Mark</jump> for details</li>
       </ul>
     </s3>
 
@@ -487,7 +544,7 @@
 
     </s3>
     </s2>
-        
+
     <anchor name="Migrateto210"/>
     <s2 title="Migrating from &XercesCName; 2.0.0 to &XercesCName; 2.1.0">
       <p>The following section is a discussion of the technical differences between
