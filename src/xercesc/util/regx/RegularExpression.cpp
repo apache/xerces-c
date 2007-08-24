@@ -37,6 +37,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/ValueStackOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -546,7 +547,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 
 		int matchEnd = match(&context, fOperations, context.fStart, 1);
 
-		if (matchEnd == context.fLimit) {
+		if (matchEnd == (int)context.fLimit) {
 
 			if (context.fMatch != 0) {
 
@@ -983,149 +984,188 @@ int RegularExpression::getOptionValue(const XMLCh ch) {
 	return ret;
 }
 
+struct RE_RuntimeContext {
+	const Op    *op_;
+	XMLSize_t   offs_;
+
+	RE_RuntimeContext(const Op *op, XMLSize_t offs) : op_(op), offs_(offs) { }
+};
 
 int RegularExpression::match(Context* const context, const Op* const operations
 							 , XMLSize_t offset, const short direction)
 {
+    ValueStackOf<RE_RuntimeContext>	opStack((unsigned int)(context->fLength - offset), fMemoryManager);
 	const Op* tmpOp = operations;
 	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
+	int	doReturn;
 
 	while (tmpOp != 0) {
+        // no one wants to return -5, only -1, 0, and greater
+		doReturn = -5;
 
 		if (offset > context->fLimit || offset < context->fStart)
-			return -1;
+			doReturn = -1;
+        else
+        {
+		    switch(tmpOp->getOpType()) {
+		    case Op::O_CHAR:
+			    if (!matchChar(context, tmpOp->getData(), offset, direction,
+						       ignoreCase))
+				    doReturn = -1;
+			    else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_DOT:
+			    if (!matchDot(context, offset, direction))
+				    doReturn = -1;
+			    else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_RANGE:
+		    case Op::O_NRANGE:
+			    if (!matchRange(context, tmpOp, offset, direction, ignoreCase))
+				    doReturn = -1;
+			    else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_ANCHOR:
+			    if (!matchAnchor(context, tmpOp->getData(), offset))
+				    doReturn = -1;
+			    else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_BACKREFERENCE:
+			    if (!matchBackReference(context, tmpOp->getData(), offset,
+									    direction, ignoreCase))
+				    doReturn = -1;
+			    else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_STRING:
+			    if (!matchString(context, tmpOp->getLiteral(), offset, direction,
+							     ignoreCase))
+				    doReturn = -1;
+			    else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_CLOSURE:
+			    {
+				    XMLInt32 id = tmpOp->getData();
+                    // if id is not -1, it's a closure with a child token having a minumum length, 
+                    // where id is the index of the fOffsets array where its status is stored
+			        if (id >= 0) {
+				        int prevOffset = context->fOffsets[id];
+				        if (prevOffset < 0 || prevOffset != (int)offset) {
+					        context->fOffsets[id] = (int)offset;
+				        }
+				        else {
+                            // the status didn't change, we haven't found other copies; move on to the next match
+					        context->fOffsets[id] = -1;
+					        tmpOp = tmpOp->getNextOp();
+					        break;
+				        }
+			        }
 
-		switch(tmpOp->getOpType()) {
-		case Op::O_CHAR:
-			if (!matchChar(context, tmpOp->getData(), offset, direction,
-						   ignoreCase))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_DOT:
-			if (!matchDot(context, offset, direction))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_RANGE:
-		case Op::O_NRANGE:
-			if (!matchRange(context, tmpOp, offset, direction, ignoreCase))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_ANCHOR:
-			if (!matchAnchor(context, tmpOp->getData(), offset))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_BACKREFERENCE:
-			if (!matchBackReference(context, tmpOp->getData(), offset,
-									direction, ignoreCase))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_STRING:
-			if (!matchString(context, tmpOp->getLiteral(), offset, direction,
-							 ignoreCase))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_CLOSURE:
-			{
+				    opStack.push(RE_RuntimeContext(tmpOp, offset));
+				    tmpOp = tmpOp->getChild();
+			    }
+			    break;
+		    case Op::O_QUESTION:
+			    {
+				    opStack.push(RE_RuntimeContext(tmpOp, offset));
+				    tmpOp = tmpOp->getChild();
+			    }
+			    break;
+		    case Op::O_NONGREEDYCLOSURE:
+		    case Op::O_NONGREEDYQUESTION:
+			    {
+				    int ret = match(context,tmpOp->getNextOp(),offset,direction);
+				    if (ret >= 0)
+                        doReturn = ret;
+                    else
+    				    tmpOp = tmpOp->getChild();
+			    }
+			    break;
+		    case Op::O_UNION:
+			    doReturn = matchUnion(context, tmpOp, offset, direction);
+                break;
+		    case Op::O_CAPTURE:
+			    if (context->fMatch != 0 && tmpOp->getData() != 0)
+				    doReturn = matchCapture(context, tmpOp, offset, direction);
+                else
+			        tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_LOOKAHEAD:
+			    if (0 > match(context, tmpOp->getChild(), offset, 1))
+    				doReturn = -1;
+    			else
+	    		    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_NEGATIVELOOKAHEAD:
+			    if (0 <= match(context, tmpOp->getChild(), offset, 1))
+    				doReturn = -1;
+    			else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_LOOKBEHIND:
+			    if (0 > match(context, tmpOp->getChild(), offset, -1))
+    				doReturn = -1;
+    			else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_NEGATIVELOOKBEHIND:
+			    if (0 <= match(context, tmpOp->getChild(), offset, -1))
+    				doReturn = -1;
+    			else
+    			    tmpOp = tmpOp->getNextOp();
+			    break;
+		    case Op::O_INDEPENDENT:
+            case Op::O_MODIFIER:
+			    {
+				    int ret = (tmpOp->getOpType() == Op::O_INDEPENDENT)
+					       ? match(context, tmpOp->getChild(), offset, direction)
+                           : matchModifier(context, tmpOp, offset, direction);
+                    if (ret < 0)
+    				    doReturn = ret;
+                    else {
+				        offset = ret;
+				        tmpOp = tmpOp->getNextOp();
+                    }
+			    }
+			    break;
+		    case Op::O_CONDITION:
+			    if (tmpOp->getRefNo() >= fNoGroups)
+    				doReturn = -1;
+    			else
+                {
+                    if (matchCondition(context, tmpOp, offset, direction))
+				        tmpOp = tmpOp->getYesFlow();
+			        else
+				        if (tmpOp->getNoFlow() != 0)
+                            tmpOp = tmpOp->getNoFlow();
+                        else
+                            tmpOp = tmpOp->getNextOp();
+                }
+			    break;
+		    }
+        }
+		if (doReturn != -5) {
+			if (opStack.size() == 0)
+				return doReturn;
+			RE_RuntimeContext	ctx = opStack.pop();
+			tmpOp = ctx.op_;
+			offset = ctx.offs_;
+			if (tmpOp->getOpType() == Op::O_CLOSURE) {
 				XMLInt32 id = tmpOp->getData();
-				if (id >= 0) {
-					int prevOffset = context->fOffsets[id];
-					if (prevOffset < 0 || prevOffset != offset) {
-						context->fOffsets[id] = (int)offset;
-					}
-					else {
-
-						context->fOffsets[id] = -1;
-						tmpOp = tmpOp->getNextOp();
-						break;
-					}
-				}
-
-				int ret = match(context, tmpOp->getChild(), offset, direction);
 				if (id >= 0) {
 					context->fOffsets[id] = -1;
 				}
-
-				if (ret >= 0)
-					return ret;
-
-				tmpOp = tmpOp->getNextOp();
 			}
-			break;
-		case Op::O_QUESTION:
-			{
-				int ret = match(context, tmpOp->getChild(), offset, direction);
-				if (ret >= 0)
-					return ret;
-				tmpOp = tmpOp->getNextOp();
+			if (tmpOp->getOpType() == Op::O_CLOSURE || tmpOp->getOpType() == Op::O_QUESTION) {
+				if (doReturn >= 0)
+					return doReturn;
 			}
-			break;
-		case Op::O_NONGREEDYCLOSURE:
-		case Op::O_NONGREEDYQUESTION:
-			{
-				int ret = match(context,tmpOp->getNextOp(),offset,direction);
-				if (ret >= 0)
-					return ret;
-				tmpOp = tmpOp->getChild();
-			}
-			break;
-		case Op::O_UNION:
-			{
-				return matchUnion(context, tmpOp, offset, direction);
-			}
-		case Op::O_CAPTURE:
-			if (context->fMatch != 0 && tmpOp->getData() != 0)
-				return matchCapture(context, tmpOp, offset, direction);
 			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_LOOKAHEAD:
-			if (0 > match(context, tmpOp->getChild(), offset, 1))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_NEGATIVELOOKAHEAD:
-			if (0 <= match(context, tmpOp->getChild(), offset, 1))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_LOOKBEHIND:
-			if (0 > match(context, tmpOp->getChild(), offset, -1))
-				return - 1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_NEGATIVELOOKBEHIND:
-			if (0 <= match(context, tmpOp->getChild(), offset, -1))
-				return -1;
-			tmpOp = tmpOp->getNextOp();
-			break;
-		case Op::O_INDEPENDENT:
-        case Op::O_MODIFIER:
-			{
-				int ret = (tmpOp->getOpType() == Op::O_INDEPENDENT)
-					   ? match(context, tmpOp->getChild(), offset, direction)
-                       : matchModifier(context, tmpOp, offset, direction);
-                if (ret < 0)
-                    return ret;
-				offset = ret;
-				tmpOp = tmpOp->getNextOp();
-			}
-			break;
-		case Op::O_CONDITION:
-			if (tmpOp->getRefNo() >= fNoGroups)
-				return -1;
-			if (matchCondition(context, tmpOp, offset, direction))
-				tmpOp = tmpOp->getYesFlow();
-			else
-				if (tmpOp->getNoFlow() != 0)
-                    tmpOp = tmpOp->getNoFlow();
-                else
-                    tmpOp = tmpOp->getNextOp();
-			break;
 		}
 	}
 	
