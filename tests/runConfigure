@@ -412,8 +412,7 @@ if test $bitsToBuild = 64; then
                           bitstobuildLink=" -q64 " ;;
                        *)                     
                           bitstobuildDefines=" $bitstobuildDefines -m64 "
-                          bitstobuildLink=" -m64 " ;;                                              
-                       ;;
+                          bitstobuildLink=" -m64 " ;;                                                                     
                    esac
                fi ;;              
            *)
