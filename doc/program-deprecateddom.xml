@@ -196,8 +196,8 @@
           <note>The ICU classes are a more general solution to UNICODE
             character handling for C++ applications.  ICU is an Open
             Source Unicode library, available at the <jump
-            href="http://oss.software.ibm.com/icu/">IBM
-            DeveloperWorks website</jump>.</note>
+            href="http://icu-project.org/">ICU
+            project website</jump>.</note>
 
         </s3>
 

@@ -1,21 +1,28 @@
 <?xml encoding="ISO-8859-1"?>
 
-<!ENTITY XercesCFullName      "Xerces C++ Parser">            <!-- fullproductname -->
-<!ENTITY XercesCName          "Xerces-C++">                   <!-- productname -->
-<!ENTITY XercesCVersion       "2.8.0">                        <!-- versionnumber -->
-<!ENTITY XercesCVersion152    "1.5.2">                        <!-- versionnumber -->
-<!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
-<!ENTITY XercesCInstallDir    "xerces-c_2_8_0">               <!-- installdirname -->
-<!ENTITY XercesCSrcInstallDir "xerces-c-src_2_8_0">           <!-- sourcedirectory -->
-<!ENTITY XercesCWindowsLib    "xerces-c_2">                   <!-- windowslibname -->
-<!ENTITY XercesCWindowsDLL    "xerces-c_2_8">                 <!-- windowsDLLname -->
-<!ENTITY XercesCUnixSoName    "28.0">                         <!-- unixlibname -->
-<!ENTITY XercesCUnixVersion   "28">                           <!-- unixlibname -->
-<!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
-<!ENTITY XercesCNamespace     "xercesc">                      <!-- C++ namespace name -->
-<!ENTITY XercesCNSVersion     "xercesc_2_8">                  <!-- C++ namespace name with Version -->
-<!ENTITY XercesCDevelEmailAddress  "c-dev@xerces.apache.org "> <!-- emailaddress -->
-<!ENTITY XercesCUserEmailAddress  "c-users@xerces.apache.org "> <!-- emailaddress -->
+<!ENTITY XercesCFullName        "Xerces C++ Parser">            <!-- fullproductname -->
+<!ENTITY XercesCName            "Xerces-C++">                   <!-- productname -->
+<!ENTITY XercesCVersion         "2.8.0">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion152      "1.5.2">                        <!-- versionnumber -->
+<!ENTITY XercesCProjectName     "Xerces">                       <!-- projectname -->
+<!ENTITY XercesCInstallDir      "xerces-c_2_8_0">               <!-- installdirname -->
+<!ENTITY XercesCSrcInstallDir   "xerces-c-src_2_8_0">           <!-- sourcedirectory -->
+<!ENTITY XercesCToolsInstallDir "xerces-c-tools_2_8_0">         <!-- sourcedirectory -->
+<!ENTITY XercesCWindowsLib      "xerces-c_2">                   <!-- windowslibname -->
+<!ENTITY XercesCWindowsDLL      "xerces-c_2_8">                 <!-- windowsDLLname -->
+<!ENTITY XercesCUnixSoName      "28.0">                         <!-- unixlibname -->
+<!ENTITY XercesCUnixVersion     "28">                           <!-- unixlibname -->
+<!ENTITY XercesCUnixLib         "libxerces-c">                  <!-- unixlibname -->
+<!ENTITY XercesCNamespace       "xercesc">                      <!-- C++ namespace name -->
+<!ENTITY XercesCNSVersion       "xercesc_2_8">                  <!-- C++ namespace name with Version -->
+<!ENTITY XercesCDevelEmailAddress "c-dev@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCDevelSAddress   "c-dev-subscribe@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCDevelUAddress   "c-dev-unsubscribe@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCDevelHAddress   "c-dev-help@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCUserEmailAddress "c-users@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCUserSAddress    "c-users-subscribe@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCUserUAddress    "c-users-unsubscribe@xerces.apache.org"> <!-- emailaddress -->
+<!ENTITY XercesCUserHAddress    "c-users-help@xerces.apache.org"> <!-- emailaddress -->
 <!ENTITY JiraURL  "http&colon;//issues.apache.org/jira/browse/XERCESC "> <!-- url -->
 <!ENTITY XercesDistDir        "xerces.apache.org/xerces-c/download.cgi"> <!-- download directory -->
 
@@ -42,25 +49,10 @@
 <entry id="faq-contributing" source="faq-contributing.xml"/>
 '>
 
-<!-- value for source_repository entity in xerces-c_book.xml -->
-<!ENTITY source_repository '
-<external href="http&colon;//svn.apache.org/viewcvs.cgi/xerces/?root=Apache-SVN" label="Source Repository"/>
-'>
-
-<!-- value for mail_archive entity in xerces-c_book.xml -->
-<!ENTITY mail_archive_user '
-<external href="http&colon;//marc.theaimsgroup.com/?l=xerces-c-users" label="User Mail Archive"/>
-'>
-
-<!ENTITY mail_archive_devel '
-<external href="http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev" label="Devel Mail Archive"/>
-'>
-
-
 <!-- Entity for bug report information used in bug-report.xml -->
 <!ENTITY bug-report '
 <s2 title="How to report bugs">
-<p> Please report bugs to <jump href="http&colon;//issues.apache.org/jira">Jira</jump>,
+<p> Please report bugs to <jump href="&JiraURL;">Jira</jump>,
 the Apache bug database.  Pick the product "Xerces-C++"
 using the following components&colon;
 </p>
@@ -77,12 +69,12 @@ using the following components&colon;
 <tr><td>Samples/Tests</td><td>Samples or test cases related issues</td></tr>
 <tr><td>Miscellaneous</td><td>Items not covered in other categories</td></tr>
 </table>
-<p>A copy of your bug report is sent automatically to the discussion list
-<jump href="mailto&colon;&XercesCDevelEmailAddress;">&XercesCName; development mailing list</jump>.
+<p>A copy of your bug report is sent automatically to the
+<jump href="mailing-lists.html">&XercesCName; development mailing list</jump>.
 </p>
 </s2>
 <s2 title="Search first">
-<p> Check the <jump href="http&colon;//issues.apache.org/jira">Jira</jump> database
+<p> Check the <jump href="&JiraURL;">Jira</jump> database
 before submitting your bug report to avoid creating a duplicate report.
 Even the bug has been reported already, you may add a comment to the existing report
 since your contribution may lead to a quicker identification/resolution to the bug reported.
@@ -156,7 +148,7 @@ purpose of your reporting of the bug.
    these compilers, you are taking a calculated risk
 by exploring untested grounds. Your effort in making &XercesCName; work on
 new platforms/compilers is greatly appreciated and any problems you face can be addressed
-on the <jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>.
+on the <jump href="mailing-lists.html">&XercesCName; mailing lists</jump>.
 </p>
 '>
 
@@ -172,12 +164,8 @@ are welcome to join any of these mailing lists (or all of them if you wish).
 You can choose to lurk, or to actively participate. It is up to you. Before you
 join these lists, you should look over the resources in the Reference Library
 section</p>
-<p>Instructions for subscribing are at
-<jump href="http&colon;//xml.apache.org/mail.html">http&colon;//xml.apache.org/mail.html</jump>.
-Archives of the lists are available from
-<jump href="http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev">
-http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev</jump>
-</p>
+<p>Instructions for subscribing as well as archives are available at the
+<jump href="mailing-lists.html">&XercesCName; mailing lists</jump> page.</p>
 </a>
 </faq>
 '>
@@ -187,14 +175,15 @@ http&colon;//marc.theaimsgroup.com/?l=xerces-c-dev</jump>
 <faq title="I have a patch to the &XercesCName; source code. How do I submit it?">
 <q>I have a patch to the &XercesCName; source code. How do I submit it?</q>
 <a>
-<p>Mail it to the <jump href="mailto&colon;&XercesCDevelEmailAddress;">&XercesCName;
-development mailing list</jump>. Its also a good idea to add a report to <jump href="&JiraURL;">Jira</jump> to track the issue There are no set rules about
+<p>Mail it to the <jump href="mailing-lists.html">&XercesCName;
+development mailing list</jump>. Its also a good idea to add a report to
+<jump href="&JiraURL;">Jira</jump> to track the issue There are no set rules about
 how or what must be included -- if you have fixed a problem or enhanced the code
 in some way, we really would like to get your changes, and will take them in
 any reasonable form.</p>
 <p>Generally a diff of the changed files against the current sources from
-CVS is good, along with some kind of description of what the change is.
-(Working with the current sources is important!)</p>
+<jump href="source-repository.html">SVN</jump> is good, along with some kind of
+description of what the change is. (Working with the current sources is important!)</p>
 </a>
 </faq>
 '>
@@ -232,10 +221,10 @@ please refer to <jump href="releases_plan.html">Releases Plan</jump>.
 
 <!-- feedback info in schema.xml -->
 <!ENTITY schema-feedback-info '
-<p>We would very much appreciate feedback on the package via the &XercesCName; mailing list
-<jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCUserEmailAddress; </jump>, and we
-encourage the submission of bugs as described on our
-<jump href="bug-report.html">Bug-Reporting</jump> page.
+<p>We would very much appreciate feedback on the package via the
+<jump href="mailing-lists.html">&XercesCName; mailing lists</jump>,
+and we encourage the submission of bugs as described on the
+<jump href="bug-report.html">Bug Reporting</jump> page.
 Please read this document before using this package.
 </p>
 '>
@@ -249,9 +238,9 @@ read the answer to "<jump href="faq-other.html#faq-4"> Is there any kind
 of support available for &XercesCName;?</jump>". Browsing this
 documentation, may be the quickest way to get an answer. Of course, if
 all else fails, as mentioned in the link above, you can post a question
-to the <jump href="mailto&colon;&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>.</p>
-<p>See <jump href="bug-report.html">Bug Reporting</jump> if you would like
-to report a defect (greatly appreciated!).</p>
+to one of the <jump href="mailing-lists.html">&XercesCName; mailing
+lists</jump>.</p> <p>See <jump href="bug-report.html">Bug Reporting</jump>
+if you would like to report a defect (which is greatly appreciated).</p>
 '>
 
 

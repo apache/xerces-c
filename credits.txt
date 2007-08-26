@@ -1,6 +1,7 @@
 The following people (in alphabetical order) have contributed to the
-development and ports of the XML4C source code, which was submitted to
-the Apache Software Foundation.
+development and ports of the Xerces-C++ and XML4C source code, which
+was submitted to the Apache Software Foundation.
+
 
 Nadav Aharoni
 Curt Arnold
@@ -24,6 +25,7 @@ Robert Buck
 Scott Cantor
 David Cargill
 Chris Cates
+Gilbert Chan
 Sumit Chawla
 Nick Chiang
 Chih Hsiang Chou
@@ -44,6 +46,7 @@ Mark Everline
 Andrew Fang
 Simon Fell
 Paul Ferguson
+Greg Franks
 Pierpaolo Fumagalli
 Syam Gadde
 Guido Gagliardi
@@ -69,9 +72,11 @@ Tom Jordahl
 Christopher Just
 Martin Kalen
 Joe Kesselman
+John Kim
 Artur Klauser
 Bob Kline
 Richard Ko
+Boris Kolpackov
 Paul Kramer
 Volker Krause
 Berin Lautenbach
@@ -86,11 +91,13 @@ Sean MacRoibeaird
 Alberto Massari
 Don Mastrovito
 David McCreedy
-Shin'ya MORINO
+Charles McLouth
+Shin'ya Morino
 Urs Muff
 Jordan Naftolin
 Tinny Ng
 David Nickerson
+Anton Nikolaevsky
 Khaled Noaman
 Michael Ottati
 Anthony O'Dowd
@@ -113,6 +120,7 @@ Markus Scherer
 Bill Schindler
 Erik Schroeder
 Christian Schuhegger
+Tobias Schuette
 John Smirl
 Andrei Smirnov
 John Snelson
@@ -131,8 +139,8 @@ Roger Webster
 Robert Weir
 Axel Weiss
 Carolyn Weiss
-Kari Whitcomb
 Christian Will
+Kari Whitcomb
 Dietrich Wolf
 Kirk Wylie
 Peter A. Volchek

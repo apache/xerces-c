@@ -25,12 +25,8 @@
         native encoding support and also using ICU where you get support for over 180
         different encodings and/or locale specific message support. ICU stands for
         International Components for Unicode and is an open source distribution from
-        IBM. You can get
-        <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
-        <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
-        or go to the ICU
-        <jump href="http://oss.software.ibm.com/icu/download/index.html">download page</jump>
-        directly.</p>
+        IBM. You can get ICU libraries from
+        <jump href="http://icu-project.org/">ICU project site</jump>.</p>
 
         <note><em>Important:</em> Please remember that <em>ICU and
         &XercesCName; must be built with the same compiler</em>,
@@ -112,7 +108,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         should be a new directory '<code>$HOME/icu</code>' which contains all the ICU
         source files.</p>
 
-        <p>Build the ICU according to the<jump href="http://oss.software.ibm.com/cvs/icu/~checkout~/icu/readme.html">
+        <p>Build the ICU according to the<jump href="http://icu-project.org/">
         ICU Build instruction in ICU Readme</jump>.   Then have its dll, <code>libicuuc*</code>
         and <code>libicudt*</code> available from your library search path.</p>
 
@@ -234,32 +230,44 @@ rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat
         the &XercesCName; module. These files reside in the
         <code>doc</code> directory.</p>
 
-        <p><em>Pre-requisites for building the user
-        documentation are:</em></p>
+        <p><em>Pre-requisites for building the user documentation are:</em></p>
 
         <ul>
           <li>JDK 1.2.2 (or later).</li>
-          <li>Xerces-J 1.0.1.<em>bundled</em></li>
-          <li>Xalan-J 0.19.2.<em>bundled</em></li>
-          <li>Stylebook 1.0-b2.<em>bundled</em></li>
-          <li>The Apache Style files (dtd's and .xsl files).<em>bundled</em></li>
+          <li>Xerces-J 1.0.1 (provided by &XercesCToolsInstallDir;)</li>
+          <li>Xalan-J 0.19.2 (provided by &XercesCToolsInstallDir;)</li>
+          <li>Stylebook 1.0-b2 (provided by &XercesCToolsInstallDir;)</li>
         </ul>
 
-        <p>Invoke a command window and setup PATH to include the JDK 1.2.2 bin
-        directory</p>
+        <p>Before proceeding, copy the contents of the &XercesCToolsInstallDir;
+           distribution into your <code>$XERCESCROOT</code>. Then invoke
+           a terminal or a command window and setup PATH to include the
+           JDK 1.2.2 bin directory. Next, cd to the <code>$XERCESCROOT</code>
+           source root directory, and enter:</p>
 
-        <p>Next, cd to the &XercesCName; source drop root directory,
-        and enter</p>
+<source>
+createDocs.bat (Windows)
+./createDocs.sh (UNIX)
+</source>
 
-        <ul>
-          <li>Under Windows:<br/>
-          <code>createDocs</code></li>
-          <li>Under Unix's:<br/>
-          <code>sh createDocs.bat</code></li>
-        </ul>
+        <p>This should generate the .html files in the 'doc/html' directory.</p>
 
-        <p>This should generate the .html files in the 'doc/html'
-        directory.</p>
+        <p>To regenerate the API documentation, you need to have at least
+           <jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump>
+           installed on your system.</p>
+
+        <p>If you want the API documentation to
+           contain dependency graphs, you also need to have <jump
+           href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump> installed on
+           your system.</p>
+
+        <p>If you do not have GraphViz, or do not want to use it, you
+           have to edit file <code>$XERCESCROOT/doc/Doxyfile</code> and change <code>HAVE_DOT =
+           YES</code> into <code>HAVE_DOT = NO</code>.</p>
+
+        <p>To actually regenerate the API documentation, go to directory
+           <code>$XERCESCROOT/doc/</code> and start Doxygen. The result can be
+           found in directory <code>$XERCESCROOT/doc/html/apiDocs</code>.</p>
     </s2>
 
 
@@ -324,11 +332,9 @@ rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat
         <p>If you have read this page, followed the instructions, and
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
-        solved this same problem before you, by checking the Apache XML
-        mailing list archives at <jump href="http://marc.theaimsgroup.com/?l=xerces-c-dev">
-        http://marc.theaimsgroup.com/?l=xerces-c-dev</jump> and the
-		<jump href="http://nagoya.apache.org/jira">Jira</jump>
-		Apache bug database.</p>
+        solved this same problem before you, by checking the
+        <jump href="mailing-lists.html">&XercesCName; mailing list archives</jump> and
+	<jump href="&JiraURL;">&XercesCName; bug database</jump>.</p>
     </s2>
 
 </s1>

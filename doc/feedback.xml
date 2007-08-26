@@ -35,7 +35,7 @@
 
         <p>Listed below are some names (in alphabetical order) of people to whom
         we would like to give special thanks. </p>
-        
+
         <ul>
             <li>Nadav Aharoni</li>
             <li>Curt Arnold</li>
@@ -59,6 +59,7 @@
             <li>Scott Cantor</li>
             <li>David Cargill</li>
             <li>Chris Cates</li>
+            <li>Gilbert Chan</li>
             <li>Sumit Chawla</li>
             <li>Nick Chiang</li>
             <li>Chih Hsiang Chou</li>
@@ -66,12 +67,12 @@
             <li>Hiram Clawson</li>
             <li>John Clayton</li>
             <li>Todd Collins</li>
-            <li>Nathan Coddin</li>
+            <li>Nathan Codding</li>
             <li>Michael Crawford</li>
             <li>Murray Cumming</li>
             <li>Zeid Derhally</li>
-			<li>James Devries</li>
-			<li>Ailian Ding</li>
+            <li>James Devries</li>
+            <li>Ailian Ding</li>
             <li>Steve Dulin</li>
             <li>David Earlam</li>
             <li>Helmut Eiken</li>
@@ -85,7 +86,7 @@
             <li>Guido Gagliardi</li>
             <li>Gary Gale</li>
             <li>Michael Glavassevich</li>
-			<li>Natalie Gorden</li>
+	    <li>Natalie Gorden</li>
             <li>Max Gotlib</li>
             <li>Petr Gotthard</li>
             <li>Neil Graham</li>
@@ -105,14 +106,16 @@
             <li>Christopher Just</li>
             <li>Martin Kalen</li>
             <li>Joe Kesselman</li>
+            <li>John Kim</li>
             <li>Artur Klauser</li>
             <li>Bob Kline</li>
             <li>Richard Ko</li>
+            <li>Boris Kolpackov</li>
             <li>Paul Kramer</li>
             <li>Volker Krause</li>
             <li>Berin Lautenbach</li>
             <li>Arnaud LeHors</li>
-            <li>Andy Levine</li>            
+            <li>Andy Levine</li>
             <li>Jeff Lewis</li>
             <li>James Littlejohn</li>
             <li>Ray Logel</li>
@@ -122,11 +125,13 @@
             <li>Alberto Massari</li>
             <li>Don Mastrovito</li>
             <li>David McCreedy</li>
-            <li>Shin'ya MORINO</li>
+            <li>Charles McLouth</li>
+            <li>Shin'ya Morino</li>
             <li>Urs Muff</li>
             <li>Jordan Naftolin</li>
             <li>Tinny Ng</li>
             <li>David Nickerson</li>
+            <li>Anton Nikolaevsky</li>
             <li>Khaled Noaman</li>
             <li>Michael Ottati</li>
             <li>Anthony O'Dowd</li>
@@ -149,6 +154,7 @@
             <li>Bill Schindler</li>
             <li>Erik Schroeder</li>
             <li>Christian Schuhegger</li>
+            <li>Tobias Schuette</li>
             <li>John Smirl</li>
             <li>Andrei Smirnov</li>
             <li>John Snelson</li>
@@ -163,7 +169,7 @@
             <li>John Warrier</li>
             <li>Tom Watson</li>
             <li>Mark Weaver</li>
-            <li>Roger Webster</li>                        
+            <li>Roger Webster</li>
             <li>Robert Weir</li>
             <li>Axel Weiss</li>
             <li>Carolyn Weiss</li>

@@ -18,7 +18,7 @@
 
 <!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
 
-<book title="&XercesCName; Documentation" copyright="1999-2005 The Apache Software Foundation">
+<book title="&XercesCName; Documentation" copyright="1999-2007 The Apache Software Foundation">
 
   &home;
 
@@ -36,6 +36,7 @@
 
      <document id="install"     label="Installation"       source="install.xml"/>
      <external href="http://&XercesDistDir;"              label="Download"/>
+     <hidden   id="download" source="download.xml"/>
      <document id="build"       label="Build Instructions" source="build.xml"/>
      <hidden   id="build-winunix" source="build-winunix.xml"/>
      <hidden   id="build-other" source="build-other.xml"/>
@@ -90,12 +91,11 @@
 
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
   <document id="bug-report"  label="Bug-Reporting" source="bug-report.xml"/>
-  <document id="pdf"         label="PDF Document" source="pdf-c.xml"/>
+  <document id="mailing-lists"  label="Mailing Lists" source="mailing-lists.xml"/>
 
   <separator/>
 
-   &source_repository;
-   &mail_archive_user;
-   &mail_archive_devel;
+   <document id="source-repository"  label="Source Repository" source="source-repository.xml"/>
+   <document id="applications"  label="Applications" source="applications.xml"/>
 
 </book>

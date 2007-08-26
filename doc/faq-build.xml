@@ -27,7 +27,7 @@
     <a>
 
       <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
-      
+
       <p>If C++ Namespace is ENABLED, users' applications must
          namespace qualify all the &XercesCName; classes, data, and
          variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER </code>
@@ -35,7 +35,7 @@
          Users also need to ensure all forward declarations are
          properly qualified or scoped.
       </p>
-      
+
       <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">
          Using C++ Namespace</jump> for details.
       </p>
@@ -131,7 +131,7 @@
             versions of <code>gmake</code> and <code>autoconf</code> are on your system.</li>
         <li>If C++ Namespace support is ENABLED (all the binary distributions of &XercesCName;
             &XercesCVersion; are built with C++ Namespace enabled), users' applications
-            must namespace qualify all the &XercesCName; classes, data and variables.  
+            must namespace qualify all the &XercesCName; classes, data and variables.
             See the Programming Guide <jump href="program-others.html#CPPNamespace">
             Using C++ Namespace</jump> for details.</li>
       </ol>
@@ -333,8 +333,8 @@ catch (const XMLException&amp; toCatch) {
 
   <faq title="First-chance exception in Microsoft debugger">
 
-    <q>"First-chance exception in DOMPrint.exe (KERNEL32.DLL): 0xE06D7363:
-      Microsoft C++ Exception." I am always getting this message when I am using the
+    <q>First-chance exception in DOMPrint.exe (KERNEL32.DLL): 0xE06D7363:
+      Microsoft C++ Exception. I am always getting this message when I am using the
       parser. My programs are terminating abnormally. Even the samples are giving
       this exception. I am using Visual C++ 6.0 with latest service pack
       installed.</q>
@@ -362,7 +362,7 @@ catch (const XMLException&amp; toCatch) {
   </faq>
 
   <faq title="Fatal Error: Cannot open include file: XXX: No such file or directory">
-    <q>"Fatal Error: Cannot open include file: XXX: No such file or directory"?</q>
+    <q>Fatal Error: Cannot open include file: XXX: No such file or directory</q>
     <a>
       <p>
 	      Due to the recent directory change, you may need to either update your
@@ -372,54 +372,56 @@ catch (const XMLException&amp; toCatch) {
   </faq>
 
   <faq title="Cannot load message domain, Xerces Panic Error">
-    <q>"Cannot load message domain, Xerces Panic Error"?</q>
+    <q>Cannot load message domain, Xerces Panic Error?</q>
     <a>
-      <p>If the parser is built with icu message loader (like IBM XML4C binaries), 
+      <p>If the parser is built with icu message loader (like IBM XML4C binaries),
          you need to make sure that the message library &faq-build-faq-distrib3;
          is located in a directory which is on the library search path.
-         Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to        
-         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable 
+         Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to
+         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable
          XERCESC_NLS_HOME, or at $XERCESCROOT/msg.
       </p>
       <p>If the parser is built with message catalog loader, you need to make sure that the message
          catalog file, XercesMessages_en_US.cat, is in the directory given at the call to XMLPlatformUtils::Initialize(),
-         or is located in the directory pointed to by the environment variable XERCESC_NLS_HOME, or  
+         or is located in the directory pointed to by the environment variable XERCESC_NLS_HOME, or
          at $XERCESCROOT/msg.
-      </p>      
+      </p>
 
     </a>
   </faq>
 
   <faq title="Why my document is valid on some platforms while invalid on others">
-    <q>"Why my document is valid on some platform while invalid on others"?</q>
+    <q>Why my document is valid on some platform while invalid on others?</q>
     <a>
-      <p>The parser relies on the system call, strtod(), to parse a string representation 
+      <p>The parser relies on the system call, strtod(), to parse a string representation
          of a double/float data. In the case of no invalid characters found, the strtod()
-         returns a double/float value if it is representable on that platform, or raises 
-         ERANGE to indicate either underflow or underflow occurs. And the parser assigns 
-         zero to the said data if underflow is found.        
+         returns a double/float value if it is representable on that platform, or raises
+         ERANGE to indicate either underflow or underflow occurs. And the parser assigns
+         zero to the said data if underflow is found.
       </p>
-      <p>The threshold, where the strtod() decides if an underflow occurs, varies on 
-         platforms. On windows, it is roughly the order of e-308, on Linux, e-325, and 
+      <p>The threshold, where the strtod() decides if an underflow occurs, varies on
+         platforms. On windows, it is roughly the order of e-308, on Linux, e-325, and
          on AIX, HP and Solaris, e-324.
-      </p>      
-      <p>So in an instance document, a data of value 1.0e-310 from a type with minExclusive 0, 
+      </p>
+      <p>So in an instance document, a data of value 1.0e-310 from a type with minExclusive 0,
          is considered invalid on windows (since it is converted to 0 and therefore violates
-         the minExclusive constraint), but valid on other unix platforms (since it remains 
-         the original value).          
+         the minExclusive constraint), but valid on other unix platforms (since it remains
+         the original value).
       </p>
       <p>The discussion above applies to data in xsd file as well.
-      </p>            
+      </p>
     </a>
   </faq>
- 
-  <faq title='Regenerating (API) documentation?'>
-    <q>How do I regenerate the (API) documentation?</q>
+
+  <faq title="How do I regenerate the documentation?">
+    <q>How do I regenerate the documentation?</q>
     <a>
      <p>To use the internal XML based application that creates the
         documentation, you must have a Java Virtual machine installed
         on your system. The application itself, written in Java, is
-        part of Xerces.</p>
+        provided in the &XercesCToolsInstallDir; distribution. You
+        should copy its contents into your <code>$XERCESCROOT</code>
+        directory.</p>
 
      <p>To regenerate the documentation, go to directory <code>$XERCESCROOT</code>
         and start <code>createDocs.sh</code> (for Unix) or
@@ -434,11 +436,7 @@ catch (const XMLException&amp; toCatch) {
       <p>If you want the API documentation to
       contain dependency graphs, you also need to have <jump
       href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump> installed on
-      your system. (Note that some people object to the 
-      <jump
-      href="http://www.research.att.com/sw/tools/graphviz/license/index.html">GraphViz
-      license</jump>, so there are Linux distributions that do not
-      include it.)</p>
+      your system.</p>
 
       <p>If you do not have GraphViz, or do not want to use it, you
       have to edit file <code>$XERCESCROOT/doc/Doxyfile</code> and change <code>HAVE_DOT =

@@ -47,8 +47,8 @@
         <li>
             Prepare a patch to fix Xerces code.  To do this, when you
             have applied your changes to a local copy of the most
-            recent xerces source code, do <code>cvs diff -u
-            file</code> for each file you&apos;ve changed.
+            recent xerces source code, do <code>svn diff file</code>
+	    for each file you&apos;ve changed.
             Keep in mind the coding guidelines for &XercesCName; as
             described below.
         </li>

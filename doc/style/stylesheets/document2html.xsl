@@ -434,6 +434,12 @@
   </xsl:template>
 
 <!-- ###################################################################### -->
+
+<!-- ignore -->
+  <xsl:template match="form">
+    <xsl:copy-of select="." />
+  </xsl:template>
+
 <!-- copy
 
   <xsl:template match="@*|node()">
