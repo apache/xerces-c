@@ -499,9 +499,16 @@ if test $bitsToBuild = 64; then
                        xlC*)
                           bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
                           bitstobuildLink=" -q64 " ;;
-                       *)
-                          bitstobuildDefines=" $bitstobuildDefines -m64 "
-                          bitstobuildLink=" -m64 " ;;                                                                 
+                       *)                       
+                         linux_version=`./config.guess`
+                         case $linux_version in
+			                powerpc*)
+              					bitstobuildDefines=" $bitstobuildDefines -m64 "
+              					bitstobuildLink=" -m64 " ;;
+			        		*)
+			        		    ;;
+			 			 esac
+                         ;;                                                          
                    esac
                fi ;;
            *)
@@ -513,9 +520,15 @@ elif test $bitsToBuild = 32; then
     bitstobuildLink=" "
     if test $platform; then
         case $platform in
-            linux)              
-              bitstobuildDefines=" $bitstobuildDefines -m32 "
-              bitstobuildLink=" -m32 " ;;                           
+        linux)            
+                linux_version=`./config.guess`
+                 case $linux_version in
+			          powerpc*)
+              			bitstobuildDefines=" $bitstobuildDefines -m32 "
+              			bitstobuildLink=" -m32 " ;;
+			     *)
+			        ;;
+			 	esac ;;	               
         *)
             ;;
         esac    
