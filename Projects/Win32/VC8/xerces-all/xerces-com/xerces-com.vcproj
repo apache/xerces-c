@@ -20,7 +20,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\Release"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\Release\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -116,7 +116,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\Debug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\Debug\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -211,7 +211,7 @@
 		<Configuration
 			Name="Static Release|Win32"
 			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticRelease"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -307,7 +307,7 @@
 		<Configuration
 			Name="Static Debug|Win32"
 			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticDebug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -402,7 +402,7 @@
 		<Configuration
 			Name="Release|x64"
 			OutputDirectory="..\..\..\..\..\Build\Win64\xml4com\Release"
-			IntermediateDirectory="..\..\..\..\..\Build\Win64\xml4com\Release\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -499,7 +499,7 @@
 		<Configuration
 			Name="Debug|x64"
 			OutputDirectory="..\..\..\..\..\Build\Win64\xml4com\Debug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win64\xml4com\Debug\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -595,7 +595,7 @@
 		<Configuration
 			Name="Static Release|x64"
 			OutputDirectory="..\..\..\..\..\Build\Win64\xml4com\StaticRelease"
-			IntermediateDirectory="..\..\..\..\..\Build\Win64\xml4com\StaticRelease\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -692,7 +692,7 @@
 		<Configuration
 			Name="Static Debug|x64"
 			OutputDirectory="..\..\..\..\..\Build\Win64\xml4com\StaticDebug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win64\xml4com\StaticDebug\obj"
+			IntermediateDirectory="$(OutDir)\obj\xerces-com"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
