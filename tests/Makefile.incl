@@ -270,7 +270,7 @@ ifeq (${PLATFORM}, HPUX)
   else
   ifeq (${COMPILER}, aCC)
     ifeq (${CXXVER}, aCC05)
-       CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z -mt
+       CMP = -c $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z -mt
     else
        CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
     endif    

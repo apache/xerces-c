@@ -496,7 +496,7 @@ case $cppcompiler in
       CXXVER="v5compat"
       ;;
       
-   xlC* | xlc* | g++* | c++ | cc | CC | aCC | icc | icpc | ICC | cxx | ecc)
+   xlC* | xlc* | g++* | c++ | cc | CC | icc | icpc | ICC | cxx | ecc)
    CXX="$cppcompiler"
       ;;
 
