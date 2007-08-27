@@ -43,6 +43,7 @@ my $xercescroot = undef;
 my $above_dir   = undef;
 my $packages    = undef;
 my $old_root    = undef;
+my $tools       = undef;
 
 my $fs          = undef;
 my $doc_cmd     = undef;
@@ -70,8 +71,12 @@ sub main {
    get_parameters();
    determine_opts();
    sanity_check();
-   package_sources();
 
+   if ( defined( $tools ) ) {
+       package_tools();
+   } else {
+       package_sources();
+   }
 
    exit( 0 );
 
@@ -91,18 +96,20 @@ sub get_parameters {
    my %opts     = ();
    my $help     = undef;
 
-   getopt('xhp', \%opts);
+   getopts('x:p:th', \%opts);
 
    $old_root    = $opts{'x'};
    $packages    = $opts{'p'};
+   $tools       = $opts{'t'};
    $help        = $opts{'h'};
 
    if ( defined( $help ) ||
         !defined( $packages ) ||
         !defined( $old_root ) ) {
-      print "\nperl packageSources.pl -x <xercescroot> -p <package names> [-h <help>]\n\n" .
+      print "\nperl packageSources.pl -x <xercescroot> -p <package names> [-t -h]\n\n" .
              "-x :  the root of Xerces-C\n" .
-             "-p :  the name of the source packages\n" .
+             "-p :  the name of the source/tools packages\n" .
+             "-t :  package the tools instead of sources\n" .
              "-h :  this help screen\n\n";
       exit( 1 );
    }
@@ -421,15 +428,20 @@ sub package_sources {
    psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'BCB5' );
    psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'Unsupported' );
    psystem( 'rm -rf .' . $fs . 'Projects' . $fs . 'Win32' . $fs . 'VACPP40' );
+   psystem( 'rm -rf .' . $fs . 'tools' );
+   psystem( 'rm .' . $fs . 'createDocs.sh' );
+   psystem( 'rm .' . $fs . 'createdocs.bat' );
 
    print "\nCHANGING FILE PERMISSIONS\n\n";
 
    pchdir( $xercescroot );
    psystem( 'find . -type f -exec chmod 644 {} ' . $find_delim );
    psystem( 'find . -type d -exec chmod 755 {} ' . $find_delim );
-   psystem( 'find . -name "con*" -exec chmod 755 {} ' . $find_delim );
-   psystem( 'find . -name "run*" -exec chmod 755 {} ' . $find_delim );
-   psystem( 'find . -name "install*" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "config.sub" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "config.guess" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "configure" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "runConfigure" -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "install-sh" -exec chmod 755 {} ' . $find_delim );
 
    print "\nREMOVING EXPORT CLAUSES\n\n";
 
@@ -452,7 +464,7 @@ sub package_sources {
       print "\nCREATING UNIX PACKAGE\n\n";
 
       pchdir( $xercescroot . $fs . '..' );
-      psystem ( "tar -cf ${packages}\.tar $packages" );
+      psystem ( "tar -cof ${packages}\.tar $packages" );
       psystem ( "gzip ${packages}\.tar" );
 
    }
@@ -467,7 +479,7 @@ sub package_sources {
       print "\nCREATING UNIX PACKAGE\n\n";
 
       pchdir( $xercescroot . $fs . '..' );
-      psystem ( "tar -cf ${packages}\.tar $packages" );
+      psystem ( "tar -cof ${packages}\.tar $packages" );
       psystem ( "gzip ${packages}\.tar" );
 
    } else {
@@ -485,6 +497,85 @@ sub package_sources {
    return 1;
 }
 
+# ==================================================================
+# Function [package_tools]:
+# ==================================================================
+# ==================================================================
+
+sub package_tools {
+
+   print "\nPACKAGING TOOLS\n";
+
+   print "\nRENAMING ROOT\n\n";
+
+   rename_root();
+
+   print "\nDELETING FILES\n\n";
+
+   pchdir( $xercescroot );
+   psystem( 'find . -depth -type "d" -name "CVS" -exec rm -fr {} ' . $find_delim );
+   psystem( 'find . -depth -type "d" -name ".svn" -exec rm -fr {} ' . $find_delim );
+   psystem( 'rm -rf .' . $fs . 'Projects');
+   psystem( 'rm -rf .' . $fs . 'doc');
+   psystem( 'rm -rf .' . $fs . 'obj');
+   psystem( 'rm -rf .' . $fs . 'samples');
+   psystem( 'rm -rf .' . $fs . 'scripts');
+   psystem( 'rm -rf .' . $fs . 'src');
+   psystem( 'rm -rf .' . $fs . 'tests');
+   psystem( 'rm .' . $fs . 'credits.txt' );
+   psystem( 'rm .' . $fs . 'version.incl' );
+   psystem( 'rm .' . $fs . 'xerces-c.spec' );
+
+   print "\nCHANGING FILE PERMISSIONS\n\n";
+
+   pchdir( $xercescroot );
+   psystem( 'find . -type f -exec chmod 644 {} ' . $find_delim );
+   psystem( 'find . -type d -exec chmod 755 {} ' . $find_delim );
+   psystem( 'find . -name "createDocs.sh" -exec chmod 755 {} ' . $find_delim );
+
+   if ( $^O =~ /win/i ) {
+
+      print "\nCREATING WINDOWS PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "zip -qr ${packages}\.zip $packages" );
+
+   } else {
+
+      print "\nCREATING UNIX PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "tar -cof ${packages}\.tar $packages" );
+      psystem ( "gzip ${packages}\.tar" );
+
+   }
+
+   print "\nCONVERTING ASCII FILES\n\n";
+
+   pchdir( $xercescroot );
+   convert();
+
+   if ( $^O =~ /win/i ) {
+
+      print "\nCREATING UNIX PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "tar -cof ${packages}\.tar $packages" );
+      psystem ( "gzip ${packages}\.tar" );
+
+   } else {
+
+      print "\nCREATING WINDOWS PACKAGE\n\n";
+
+      pchdir( $xercescroot . $fs . '..' );
+      psystem ( "zip -qr ${packages}\.zip $packages" );
+
+   }
+
+   print "\nTOOLS PACKAGING COMPLETE\n\n";
+
+   return 1;
+}
 
 # Main Program /////////////////////////////////////////////////////////////
 
