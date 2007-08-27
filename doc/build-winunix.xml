@@ -445,27 +445,6 @@ make clean
                <code>xlc</code> and <code>xlC</code> respectively</li>
             <li>Replace <code>makeC++SharedLib_r</code> with <code>makeC++SharedLib</code> in
                 Makefile.incl</li>
-            <li>Remove the <code>-D_THREAD_SAFE</code> and <code>-D_REENTRANT</code> compiler flags in Makefile.incl</li>
-          </ul>
-
-          <p>For Solaris -</p>
-          <ul>
-            <li>Remove the <code>-mt</code> and <code>-D_REENTRANT</code> compiler flags in Makefile.incl</li>
-          </ul>
-
-          <p>For Linux -</p>
-          <ul>
-            <li>Remove the <code>-D_REENTRANT</code> compiler flag in Makefile.incl</li>
-          </ul>
-
-          <p>For HP-UX -</p>
-          <ul>
-            <li>Remove the <code>-D_REENTRANT</code> and <code>-mt</code> compiler flags in Makefile.incl.</li>
-          </ul>
-
-          <p>For Mac OS X -</p>
-          <ul>
-            <li>Remove the <code>-D_REENTRANT</code> compiler flag in Makefile.incl.</li>
           </ul>
         </s3>
     </s2>

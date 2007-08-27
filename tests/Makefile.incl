@@ -47,16 +47,24 @@ TO = o
 ifeq (${PLATFORM}, IRIX)
   ifeq (${GXX}, yes)
 	CMP= -c ${CXXFLAGS}
-	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+	CC= ${COMPILER} -c -D${PLATFORM} -fpic
 	LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+
+        ifneq (${THREADS},none)
+          CC += -D_REENTRANT
+        endif
   else
 	CMP= -c ${CXXFLAGS}
-	CC= CC -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -D_REENTRANT -I/usr/local/include -no_auto_include
-	LINK =  CC -D${PLATFORM} ${LDFLAGS}
+	CC= ${COMPILER} -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -I/usr/local/include -no_auto_include
+	LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=
 	EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+
+        ifneq (${THREADS},none)
+          CC += -D_REENTRANT
+        endif
   endif
 endif
 
@@ -64,16 +72,24 @@ endif
 ifeq (${PLATFORM}, SOLARIS)
   ifeq (${GXX}, yes)
 	CMP= -c ${CXXFLAGS}
-	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+	CC= ${COMPILER} -c -D${PLATFORM} -fpic
 	LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+
+        ifneq (${THREADS},none)
+          CC += -D_REENTRANT
+        endif
   else
 	CMP= -c ${CXXFLAGS}
-	CC= CC -c -D${PLATFORM} -D_REENTRANT -KPIC
- LINK =  CC -D${PLATFORM} ${LDFLAGS}
+	CC= ${COMPILER} -c -D${PLATFORM} -pic
+        LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
 	EXTRA_LINK_OPTIONS=-lc -lgen ${EXTRA_LIBS}
+
+        ifneq (${THREADS},none)
+          CC += -D_REENTRANT -mt
+        endif
   endif
 endif
 
@@ -88,42 +104,54 @@ endif
 
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
-  CMP= -O2 -c ${CXXFLAGS} -pthread
-  CC= ${COMPILER} -O2 -c -D${PLATFORM} -D_REENTRANT -fpic -pthread
-  LINK = ${COMPILER} -D${PLATFORM} -fpic -pthread ${LDFLAGS}
+  CMP= -O2 -c ${CXXFLAGS}
+  CC= ${COMPILER} -D${PLATFORM} -fpic
+  LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
   EXTRA_LINK_OPTIONS=-lc -lsocket ${EXTRA_LIBS}
   PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+
+  ifneq (${THREADS},none)
+    CMP += -D_REENTRANT -pthread
+    LINK += -pthread
+  endif
 endif
 
 #================= PTX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, PTX)
-COMPILESWITCH= -KPIC -Kthread -DPTX -w -O
-CMP = -c ${COMPILESWITCH}
-CC= c++
-LINK =  ${CC} -DPTX -Kthread ${LDFLAGS}
-PLATFORM_CPP_COMPILER = c++
-PLATFORM_C_COMPILER = cc
-PLATFORM_LIBRARIES =
-PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -DPTX
-MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -DPTX -G
-MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX  -G
-PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
-EXTRA_LINK_OPTIONS=-lm -lgen ${EXTRA_LIBS}
+  CMP = -c -KPIC -D${PLATFORM} -w -O
+  CC= ${COMPILER}
+  LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
+  EXTRA_LINK_OPTIONS=-lm -lgen ${EXTRA_LIBS}
+  PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
+
+  ifneq (${THREADS},none)
+    CMP += -Kthread
+    LINK += -Kthread
+  endif
+
 endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, AIX)
   ifeq (${GXX}, yes)
     CMP= -c ${CXXFLAGS}
-    CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+    CC= ${COMPILER} -c -D${PLATFORM} -fpic
     LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
     EXTRA_LINK_OPTIONS= ${EXTRA_LIBS}
+
+    ifneq (${THREADS},none)
+      CC += -D_REENTRANT
+    endif
   else
     ifeq (${CXXVER}, v5compat)
-   CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=v5   
+      CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=v5
     else
-   CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=ansi
+      CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=ansi
+    endif
+
+    ifneq (${THREADS},none)
+      CMP += -D_THREAD_SAFE
     endif
 
     CC=${COMPILER} -D${PLATFORM}
@@ -166,23 +194,31 @@ ifeq (${PLATFORM}, LINUX)
   ifeq (${COMPILER}, xlC_r)
     CMP= -c ${CXXFLAGS} -qnotempinc
     CC= ${COMPILER} -c -D${PLATFORM}
-    LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
+    LINK =  ${COMPILER} ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
     EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+
+    ifneq (${THREADS},none)
+      CMP += -D_REENTRANT
+    endif
   else
     CMP= -c ${CXXFLAGS}
-    CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+    CC= ${COMPILER} -c -D${PLATFORM} -fpic
     LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
     EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+
+    ifneq (${THREADS},none)
+      CMP += -D_REENTRANT
+    endif
   endif
 endif
 
 #=============== QNX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, QNX)
 CMP= -c ${CXXFLAGS}
-CC=QCC -c -O -I/usr/local/include
-LINK =  ${COMPILER} ${LDFLAGS}
+CC= ${COMPILER}
+LINK = ${COMPILER} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
 EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
 endif
@@ -199,11 +235,15 @@ endif
 
 #=============== INTERIX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, INTERIX)
-CMP= -c ${CXXFLAGS} 
-CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -D_ALL_SOURCE
-LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
-PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
-EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
+  CMP= -c ${CXXFLAGS}
+  CC= ${COMPILER} -c -D${PLATFORM} -D_ALL_SOURCE
+  LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
+  PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
+  EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
+
+  ifneq (${THREADS},none)
+    CMP += -D_REENTRANT
+  endif
 endif
 
 #=============== MINGW SPECIFIC OPTIONS =========================
@@ -247,26 +287,41 @@ endif
 ifeq (${PLATFORM}, HPUX)
   ifeq (${GXX}, yes)
     CMP= -c ${CXXFLAGS}
-    CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+    CC= ${COMPILER} -c -D${PLATFORM} -fpic
     LINK = ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
     EXTRA_LINK_OPTIONS= ${EXTRA_LIBS}
+
+    ifneq (${THREADS},none)
+      CMP += -D_REENTRANT
+    endif
   else
   ifeq (${COMPILER}, aCC)
     ifeq (${CXXVER}, aCC05)
-       CMP = -c $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z -mt
+      CMP = -c $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
+      ifneq (${THREADS},none)
+        CMP += -mt
+      endif
     else
-       CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
-    endif    
+      CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
+    endif
 
     CC = aCC
     LINK =  ${CC} -Wl,+s -Wl,+b,. ${LDFLAGS}
-    
+
     ifeq (${CXXVER}, aCC05)
-       PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -mt
+      PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib
     else
-       PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -lpthread    
-    endif      
+      PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib
+    endif
+
+    ifneq (${THREADS},none)
+      ifeq (${CXXVER}, aCC05)
+        PLATFORM_LIB_LINK_OPTIONS += -mt
+      else
+        PLATFORM_LIB_LINK_OPTIONS += -lpthread
+      endif
+    endif
   else
     ifneq (${DEBUG}, 1)
       CXXFLAGS = -w +O1
@@ -356,8 +411,12 @@ endif
 
 #=============== MacOS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MACOSX)
-	CMP= -c ${CXXFLAGS}
-	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT
-	LINK = ${COMPILER} -D${PLATFORM} ${LDFLAGS}
-	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -framework CoreServices
+  CMP= -c ${CXXFLAGS}
+  CC= ${COMPILER} -c -D${PLATFORM}
+  LINK = ${COMPILER} -D${PLATFORM} ${LDFLAGS}
+  PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -framework CoreServices
+
+  ifneq (${THREADS},none)
+    CMP += -D_REENTRANT
+  endif
 endif

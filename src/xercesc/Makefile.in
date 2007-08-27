@@ -37,6 +37,7 @@ CXXVER = @cxxver@
 PREFIX = @prefix@
 MESSAGELOADER=@messageloader@
 TRANSCODER=@transcoder@
+THREADS = @threads@
 LIBTYPE = @libtype@
 ARCH = @host_cpu@
 
