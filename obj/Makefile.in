@@ -42,6 +42,7 @@ OSVER = @osver@
 TRANSCODER = @transcoder@
 MESSAGELOADER = @messageloader@
 LIBTYPE = @libtype@
+ARCH = @host_cpu@
 BITSTOBUILD = @bitstobuild@
 
 include ../version.incl

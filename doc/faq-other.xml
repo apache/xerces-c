@@ -70,9 +70,9 @@ SUCH DAMAGE.</source>
            the DLL name &XercesCWindowsDLL;.dll in the bin directory and look up
            properties. The version information may be found on the Version tab.</p>
 
-           <p>On AIX, just look for the library name &XercesCUnixLib;&XercesCUnixSoName;.so (or
-           &XercesCUnixLib;.so.&XercesCUnixSoName; on Solaris/Linux
-           and &XercesCUnixLib;.sl.&XercesCUnixSoName; on HP-UX). The
+           <p>On AIX, just look for the library name &XercesCUnixLib;&XercesCUnixSoName;.a (or
+           &XercesCUnixLib;.so.&XercesCUnixSoName; on Solaris/Linux/IA64 HP-UX
+           and &XercesCUnixLib;.sl.&XercesCUnixSoName; on PA-RISC HP-UX). The
            version number is indicated in the name of the library.</p>
         </a>
   </faq>

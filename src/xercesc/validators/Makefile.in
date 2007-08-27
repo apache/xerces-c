@@ -75,6 +75,7 @@ TRANSCODER = @transcoder@
 NETACCESSOR = @netaccessor@
 THREADS = @threads@
 LIBTYPE = @libtype@
+ARCH = @host_cpu@
 
 MODULE = validators
 

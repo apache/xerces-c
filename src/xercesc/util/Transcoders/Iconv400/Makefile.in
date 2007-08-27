@@ -54,6 +54,7 @@ MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 THREADS = @threads@
 LIBTYPE = @libtype@
+ARCH = @host_cpu@
 
 MODULE = util
 SUBMODULE = Transcoders/Iconv400

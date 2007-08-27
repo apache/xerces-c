@@ -38,6 +38,7 @@ PREFIX = @prefix@
 MESSAGELOADER=@messageloader@
 TRANSCODER=@transcoder@
 LIBTYPE = @libtype@
+ARCH = @host_cpu@
 
 GCC = @GCC@
 GXX = @GXX@

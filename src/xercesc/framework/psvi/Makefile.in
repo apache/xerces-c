@@ -51,6 +51,7 @@ MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 THREADS = @threads@
 LIBTYPE = @libtype@
+ARCH = @host_cpu@
 
 include ../../Makefile.incl
 

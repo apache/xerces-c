@@ -58,7 +58,6 @@ ifeq (${PLATFORM}, IRIX)
 	PLATFORM_LIB_LINK_OPTIONS=
 	EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
   endif
-  SHLIBSUFFIX=.so
 endif
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
@@ -76,7 +75,6 @@ ifeq (${PLATFORM}, SOLARIS)
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
 	EXTRA_LINK_OPTIONS=-lc -lgen ${EXTRA_LIBS}
   endif
-  SHLIBSUFFIX=.so
 endif
 
 #=============== OPENSERVER SPECIFIC OPTIONS =========================
@@ -86,7 +84,6 @@ ifeq (${PLATFORM}, OPENSERVER)
   LINK=${CC} ${LDFLAGS}
   EXTRA_LINK_OPTIONS=-lc -lsocket ${EXTRA_LIBS}
   PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-  SHLIBSUFFIX=.so
 endif
 
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
@@ -96,7 +93,6 @@ ifeq (${PLATFORM}, UNIXWARE)
   LINK = ${COMPILER} -D${PLATFORM} -fpic -pthread ${LDFLAGS}
   EXTRA_LINK_OPTIONS=-lc -lsocket ${EXTRA_LIBS}
   PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-  SHLIBSUFFIX=.so
 endif
 
 #================= PTX SPECIFIC OPTIONS ===========================
@@ -113,7 +109,6 @@ MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -DPTX -G
 MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX  -G
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
 EXTRA_LINK_OPTIONS=-lm -lgen ${EXTRA_LIBS}
-SHLIBSUFFIX=.so
 endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
@@ -139,7 +134,6 @@ ifeq (${PLATFORM}, AIX)
 	EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000
     endif
   endif
-  SHLIBSUFFIX=.a
 endif
 
 #=============== OS400 SPECIFIC OPTIONS =========================
@@ -155,7 +149,6 @@ CMP= -c -DOS400 ${CXXFLAGS}
 CXX = $(MYCC)
 CC = $(MYCC)
 #INCLUDES    += -I${ICUROOT}/include
-SHLIBSUFFIX=.a
 EXTRA_LINK_OPTIONS=-q OPTION='*DUPPROC *DUPVAR' ${EXTRA_LIBS}
 endif
 
@@ -166,7 +159,6 @@ CC= ${COMPILER} -c -D${PLATFORM} -DAPP_NO_THREADS -fpic
 LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/boot/develop/lib/x86 -L/boot/home/config/lib
 EXTRA_LINK_OPTIONS=-lbe ${EXTRA_LIBS}
-SHLIBSUFFIX=.so
 endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
@@ -177,14 +169,12 @@ ifeq (${PLATFORM}, LINUX)
     LINK =  ${COMPILER} ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
     EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
-    SHLIBSUFFIX=.so
   else
     CMP= -c ${CXXFLAGS}
     CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
     LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
     PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
     EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
-    SHLIBSUFFIX=.so
   endif
 endif
 
@@ -195,7 +185,6 @@ CC= QCC -c
 LINK = QCC ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
 EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
-SHLIBSUFFIX=.so
 endif
 
 
@@ -206,7 +195,6 @@ CC= ${COMPILER} -c -D__${PLATFORM}__
 LINK =  ${COMPILER} -D__${PLATFORM}__ ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
-SHLIBSUFFIX=.dll
 endif
 
 #=============== INTERIX SPECIFIC OPTIONS =========================
@@ -216,7 +204,6 @@ CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -D_ALL_SOURCE
 LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS} 
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
 EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
-SHLIBSUFFIX=.so
 endif
 
 #=============== MINGW SPECIFIC OPTIONS =========================
@@ -226,7 +213,6 @@ CC= ${COMPILER} -c -D__${PLATFORM}__
 LINK =  ${COMPILER} -D__${PLATFORM}__ ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
-SHLIBSUFFIX=.dll
 endif
 
 #=============== FREEBSD SPECIFIC OPTIONS =========================
@@ -241,7 +227,6 @@ ifeq (${PLATFORM}, FREEBSD)
   else
     EXTRA_LINK_OPTIONS=${EXTRA_LIBS} -lstdc++
   endif
-  SHLIBSUFFIX=.so
 endif
 
 #=============== NETBSD SPECIFIC OPTIONS =========================
@@ -256,7 +241,6 @@ ifeq (${PLATFORM}, NETBSD)
   else
     EXTRA_LINK_OPTIONS=${EXTRA_LIBS} -lstdc++
   endif
-  SHLIBSUFFIX=.so
 endif
 
 #================= HP SPECIFIC OPTIONS ===========================
@@ -297,7 +281,6 @@ ifeq (${PLATFORM}, HPUX)
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/CC/lib -L/usr/lib
   endif
   endif
-  SHLIBSUFFIX=.sl
 endif
 
 #================= OS390 SPECIFIC OPTIONS ===========================
@@ -341,7 +324,6 @@ endif
 LINK =  ${CC} ${LDFLAGS} ${XPLINK_LKOPTS}
 PLATFORM_LIB_LINK_OPTIONS=
 EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
-SHLIBSUFFIX=.dll
 ifeq (${OS390_XPLINK},1)
 OS390SIDEDECK=.xplink.x
 OS390BATCH_MAIN_DLL=IXM4C6XX
@@ -365,7 +347,6 @@ CMP= -c ${CXXFLAGS}
 CC = ${COMPILER} -c -D${PLATFORM}
 LINK = ${COMPILER} -D${PLATFORM} ${LDFLAGS}
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-SHLIBSUFFIX=.so
 endif
 
 
@@ -375,5 +356,4 @@ ifeq (${PLATFORM}, MACOSX)
 	CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT
 	LINK = ${COMPILER} -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -framework CoreServices
-	SHLIBSUFFIX=.dylib
 endif

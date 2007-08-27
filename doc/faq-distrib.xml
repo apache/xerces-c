@@ -64,7 +64,8 @@
             &XercesCWindowsDLL;.dll for Windows, or<br/>
             &XercesCUnixLib;&XercesCUnixSoName;.a for AIX, or<br/>
             &XercesCUnixLib;.so.&XercesCUnixSoName; for Solaris/Linux, or<br/>
-            &XercesCUnixLib;.sl.&XercesCUnixSoName; for HP-UX, or<br/>
+            &XercesCUnixLib;.sl.&XercesCUnixSoName; for HP-UX on PA-RISC, or<br/>
+            &XercesCUnixLib;.so.&XercesCUnixSoName; for HP-UX on IA64, or<br/>
             &XercesCUnixLib;.&XercesCUnixSoName;.dylib for Mac OS X.
             </p>
 
@@ -77,21 +78,24 @@
                     icuuc*.dll for Windows, or<br></br>
                     libicuuc*.a for AIX, or<br></br>
                     libicuuc*.so for Solaris/Linux, or<br></br>
-                    libicuuc*.sl for HP-UX, or<br></br>
+                    libicuuc*.sl for HP-UX on PA-RISC, or<br></br>
+                    libicuuc*.so for HP-UX on IA64, or<br></br>
                     libicuuc*.dylib for Mac OS X.</li>
 
                 <li><em>ICU converter data shared library file:</em><br></br>
                     icudt*.dll for Windows, or<br></br>
                     libicudt*.a for AIX, or<br></br>
                     libicudt*.so for Solaris/Linux, or<br></br>
-                    libicudt*.sl for HP-UX, or<br></br>
+                    libicudt*.sl for HP-UX on PA-RISC, or<br></br>
+                    libicudt*.so for HP-UX on IA-64, or<br></br>
                     libicudt*.dylib for Mac OS X.</li>
 
                 <li><em>The &XercesCName; Message file:</em><br></br>
                     XercesMessages*.dll for Windows, or<br></br>
                     libXercesMessages*.a for AIX, or<br></br>
                     libXercesMessages*.so for Solaris/Linux, or<br></br>
-                    libXercesMessages*.sl for HP-UX, or<br></br>
+                    libXercesMessages*.sl for HP-UX on PA-RISC, or<br></br>
+                    libXercesMessages*.so for HP-UX on IA64, or<br></br>
                     libXercesMessages*.dylib for Mac OS X.</li>
             </ol>
         </a>

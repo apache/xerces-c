@@ -697,8 +697,15 @@ ifeq (${PLATFORM}, HPUX)
     endif
   endif # GXX
 
+  # HP-UX on IA64 uses .so and on PA-RISC -- .sl.
+  #
+  ifeq (${ARCH},ia64)
+    SHLIBSUFFIX=.so
+    ICUSHLIBSUFFIX=.so
+  else
     SHLIBSUFFIX=.sl
     ICUSHLIBSUFFIX=.sl
+  endif
   ## Compiler switch to embed a library name
   LD_SONAME = -Wl,+h,${SO_NAME}
   LD_SODEPDOM = -Wl,+h,${SO_DEPDOM}  

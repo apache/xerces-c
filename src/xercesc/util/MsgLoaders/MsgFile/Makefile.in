@@ -23,6 +23,7 @@ GXX = @GXX@
 PREFIX = @prefix@
 THREADS = @threads@
 LIBTYPE = @libtype@
+ARCH = @host_cpu@
 PREFIX_INCLUDE = @prefix_include@
 include ../../../Makefile.incl
 
