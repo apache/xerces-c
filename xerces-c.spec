@@ -2,7 +2,7 @@
 
 # threads
 # values: pthreads, none
-%define threads pthreads
+%define threads pthread
 
 Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
@@ -10,7 +10,7 @@ Version:	2.8.0
 Release:	1
 URL:		http://xerces.apache.org/xerces-c/
 Source0:	%{name}-src_%{tarversion}.tar.gz
-Copyright:	Apache
+License:        Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root
 Prefix:		/usr
@@ -55,42 +55,59 @@ manipulating, and validating XML documents.
 %setup -q -n %{name}-src_%{tarversion}
 
 %build
+%ifarch alpha ppc64 s390x sparc64 x86_64 ia64
+  %define rcopts -b 64
+%else
+  %define rcopts -b 32
+%endif
+
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT/src/xercesc
-./runConfigure -plinux -cgcc -xg++ -minmem -nsocket -tnative -r%{threads} -P%{prefix}
-make
+./runConfigure %{rcopts} -c %{__cc} -x %{__cxx} -p %{_os} -C --libdir="%{_libdir}" -minmem -nsocket -tnative -r%{threads} -P%{_prefix}
+%{__make} DESTDIR=$RPM_BUILD_ROOT
 cd $XERCESCROOT/samples
-./runConfigure -plinux -cgcc -xg++
-make
+./runConfigure %{rcopts} -c %{__cc} -x %{__cxx} -p %{_os} -r%{threads}
+%{__make} DESTDIR=$RPM_BUILD_ROOT
 
 %install
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
 cd $XERCESCROOT/src/xercesc
-make PREFIX=$RPM_BUILD_ROOT%{prefix} install
-ln -sf %{prefix}/lib/libxerces-c.so.28 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
-mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
+%{__make} DESTDIR=$RPM_BUILD_ROOT TARGET=$RPM_BUILD_ROOT install
+if [ ! -e $RPM_BUILD_ROOT%{_prefix}/%{_lib} ]; then
+        %{__mv} $RPM_BUILD_ROOT%{_prefix}/lib $RPM_BUILD_ROOT%{_prefix}/%{_lib}
+fi
+%{__mkdir_p} $RPM_BUILD_ROOT%{_prefix}/bin
 #we don't want obj directory
-install `find $XERCESCROOT/bin -type f -maxdepth 1` $RPM_BUILD_ROOT%{prefix}/bin
-mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}
-cp -a $XERCESCROOT/samples $RPM_BUILD_ROOT%{prefix}/share/%{name}
+%ifos solaris2.8 solaris2.9 solaris2.10
+  %define find gfind
+%else
+  %define find find
+%endif
+%{__install} `%{find} $XERCESCROOT/bin -maxdepth 1 -type f` $RPM_BUILD_ROOT%{_prefix}/bin
+%{__mkdir_p} $RPM_BUILD_ROOT%{_prefix}/share/%{name}
+%{__cp} -a $XERCESCROOT/samples $RPM_BUILD_ROOT%{_prefix}/share/%{name}
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
+%ifnos solaris2.8 solaris2.9 solaris2.10
 %post -p /sbin/ldconfig
+%endif
 
+%ifnos solaris2.8 solaris2.9 solaris2.10
 %postun -p /sbin/ldconfig
+%endif
 
 %files
 %defattr(755,root,root)
-%{prefix}/bin/*
-%{prefix}/lib/libxerces-c.so*
-%{prefix}/lib/libxerces-depdom.so* 
+%{_bindir}/*
+%{_libdir}/libxerces-*.so.*
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/include/xercesc
-%{prefix}/share/%{name}/samples
+%{_includedir}
+%{_prefix}/share/%{name}/samples
+%{_libdir}/libxerces-*.so
 
 %files doc
 %defattr(-,root,root)
