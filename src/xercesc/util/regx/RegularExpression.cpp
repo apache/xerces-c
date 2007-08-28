@@ -593,6 +593,10 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 		}
 	}
 
+    // if the length is less than the minimum length, we cannot possibly match
+    if(context.fLimit<fMinLength)
+        return false;
+
 	XMLSize_t limit = context.fLimit - fMinLength;
 	XMLSize_t matchStart;
 	int matchEnd = -1;
@@ -1158,6 +1162,7 @@ int RegularExpression::match(Context* const context, const Op* const operations
 			if (tmpOp->getOpType() == Op::O_CLOSURE) {
 				XMLInt32 id = tmpOp->getData();
 				if (id >= 0) {
+                    // loop has ended, reset the status for this closure
 					context->fOffsets[id] = -1;
 				}
 			}
@@ -1448,22 +1453,25 @@ int RegularExpression::matchUnion(Context* const context,
                                    const Op* const op, XMLSize_t offset,
                                    const short direction)
 {
-  unsigned int opSize = op->getSize();
+    unsigned int opSize = op->getSize();
 
-  Context bestResultContext;
-  int bestResult=-1;
-  for(unsigned int i=0; i < opSize; i++) {
-      Context tmpContext(context);
-      int ret = match(&tmpContext, op->elementAt(i), offset, direction);
-      if (ret >= 0 && (XMLSize_t)ret <= context->fLimit && ret>bestResult)
-      {
-          bestResult=ret;
-          bestResultContext=tmpContext;
-      }
-  }
-  if(bestResult!=-1)
+    Context bestResultContext;
+    int bestResult=-1;
+    for(unsigned int i=0; i < opSize; i++) {
+        Context tmpContext(context);
+        int ret = match(&tmpContext, op->elementAt(i), offset, direction);
+        if (ret >= 0 && (XMLSize_t)ret <= context->fLimit && ret>bestResult)
+        {
+            bestResult=ret;
+            bestResultContext=tmpContext;
+            // exit early, if we reached the end of the string
+            if(ret == context->fLimit)
+                break;
+        }
+    }
+    if(bestResult!=-1)
       *context=bestResultContext;
-  return bestResult;
+    return bestResult;
 }
 
 
