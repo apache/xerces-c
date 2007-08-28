@@ -161,8 +161,8 @@ bool XML256TableTranscoder390::canTranscodeTo(const unsigned int toCheck) const
 //  XML256TableTranscoder390: Hidden constructor
 // ---------------------------------------------------------------------------
 XML256TableTranscoder390::
-XML256TableTranscoder390(  const   XMLCh* const                     encodingName
-                        , const unsigned int                     blockSize
+XML256TableTranscoder390( const XMLCh* const                     encodingName
+                        , const XMLSize_t                        blockSize
                         , const XMLCh* const                     fromTable
                         , const XMLTransService::TransRec* const toTable
                         , const unsigned int                     toTableSize

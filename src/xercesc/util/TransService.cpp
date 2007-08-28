@@ -120,7 +120,7 @@ void XMLTransService::addEncoding(const XMLCh* const encoding,
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  const   char* const             encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
     XMLCh* tmpName = XMLString::transcode(encodingName, manager);
@@ -132,7 +132,7 @@ XMLTransService::makeNewTranscoderFor(  const   char* const             encoding
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
     //
@@ -153,7 +153,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     //  name because we use a hash table and we stored all our mappings
     //  in all uppercase.
     //
-    const unsigned int bufSize = 2048;
+    const XMLSize_t bufSize = 2048;
     XMLCh upBuf[bufSize + 1];
     if (!XMLString::copyNString(upBuf, encodingName, bufSize))
     {
@@ -190,7 +190,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encodingEnum
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
     //
@@ -530,7 +530,7 @@ XMLTranscoder::~XMLTranscoder()
 //  XMLTranscoder: Hidden Constructors
 // ---------------------------------------------------------------------------
 XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
-                            , const unsigned int    blockSize
+                            , const XMLSize_t       blockSize
                             , MemoryManager* const  manager) :
       fBlockSize(blockSize)
     , fEncodingName(0)    

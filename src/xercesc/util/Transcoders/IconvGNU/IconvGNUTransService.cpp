@@ -580,7 +580,7 @@ IconvGNUTransService::makeNewXMLTranscoder
 (
     const    XMLCh* const    encodingName
     ,    XMLTransService::Codes&    resValue
-    , const    unsigned int    blockSize
+    , const    XMLSize_t    blockSize
     ,        MemoryManager* const    manager
 )
 {
@@ -637,8 +637,7 @@ void IconvGNUTransService::lowerCase(XMLCh* const toLowerCase) const
 // ---------------------------------------------------------------------------
 //  IconvGNULCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
-IconvGNULCPTranscoder::calcRequiredSize (const char* const srcText
+XMLSize_t IconvGNULCPTranscoder::calcRequiredSize (const char* const srcText
                                          , MemoryManager* const manager)
 {
     if (!srcText)
@@ -669,13 +668,12 @@ IconvGNULCPTranscoder::calcRequiredSize (const char* const srcText
 }
 
 
-unsigned int
-IconvGNULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t IconvGNULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                         , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
-    unsigned int  wLent = getWideCharLength(srcText);
+    XMLSize_t  wLent = getWideCharLength(srcText);
     if (wLent == 0)
         return 0;
 
@@ -830,7 +828,7 @@ XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode,
         return retVal;
     }
 
-    const unsigned int wLent = calcRequiredSize(toTranscode, manager);
+    const XMLSize_t wLent = calcRequiredSize(toTranscode, manager);
     if (wLent == 0) {
         retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
         retVal[0] = 0;
@@ -944,7 +942,7 @@ IconvGNULCPTranscoder::~IconvGNULCPTranscoder()
 //  IconvGNUTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 IconvGNUTranscoder::IconvGNUTranscoder (const    XMLCh* const    encodingName
-                      , const unsigned int    blockSize
+                      , const XMLSize_t    blockSize
                       ,    iconv_t        cd_from
                       ,    iconv_t        cd_to
                       ,    size_t        uchsize

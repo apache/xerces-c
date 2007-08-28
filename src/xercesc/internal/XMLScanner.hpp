@@ -254,7 +254,7 @@ public :
     ) const;*/
     const Locator* getLocator() const;
     const ReaderMgr* getReaderMgr() const;
-    unsigned int getSrcOffset() const;
+    XMLFilePos getSrcOffset() const;
     bool getStandalone() const;
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
@@ -936,7 +936,7 @@ inline const ReaderMgr* XMLScanner::getReaderMgr() const
     return &fReaderMgr;
 }
 
-inline unsigned int XMLScanner::getSrcOffset() const
+inline XMLFilePos XMLScanner::getSrcOffset() const
 {
     return fReaderMgr.getSrcOffset();
 }

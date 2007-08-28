@@ -536,7 +536,7 @@ void DOMNormalizer::error(const XMLErrs::Codes code, const DOMNode *node) const
 
         //  Load the message into alocal and replace any tokens found in
         //  the text.
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         if (!gNormalizerMsgLoader().loadMsg(code, errText, maxChars))

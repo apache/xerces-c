@@ -87,7 +87,7 @@ const XMLCh* SAX2XMLFilterImpl::getURIText(unsigned int uriId) const
     return NULL;
 }
 
-unsigned int SAX2XMLFilterImpl::getSrcOffset() const
+XMLFilePos SAX2XMLFilterImpl::getSrcOffset() const
 {
     if(fParentReader)
         fParentReader->getSrcOffset();

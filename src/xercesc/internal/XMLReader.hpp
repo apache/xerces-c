@@ -197,7 +197,7 @@ public:
     unsigned int getReaderNum() const;
     RefFrom getRefFrom() const;
     Sources getSource() const;
-    unsigned int getSrcOffset() const;
+    XMLFilePos getSrcOffset() const;
     const XMLCh* getSystemId() const;
     bool getThrowAtEnd() const;
     Types getType() const;
@@ -444,7 +444,7 @@ private:
     RefFrom                     fRefFrom;
     bool                        fSentTrailingSpace;
     Sources                     fSource;
-    unsigned int                fSrcOfsBase;
+    XMLFilePos                  fSrcOfsBase;
     bool                        fSrcOfsSupported;
     bool                        fCalculateSrcOfs;
     XMLCh*                      fSystemId;

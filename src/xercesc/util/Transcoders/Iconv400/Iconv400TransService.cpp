@@ -262,9 +262,9 @@ XMLCh Iconv400TransService::toUnicodeLower(XMLCh comp1) const
 //  Iconv400TransService: The protected virtual transcoding service API
 // ---------------------------------------------------------------------------
 XMLTranscoder*
-Iconv400TransService::makeNewXMLTranscoder(  const   XMLCh* const            encodingName
+Iconv400TransService::makeNewXMLTranscoder(const   XMLCh* const         encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
     UErrorCode uerr = U_ZERO_ERROR;
@@ -285,7 +285,7 @@ Iconv400TransService::makeNewXMLTranscoder(  const   XMLCh* const            enc
 // ---------------------------------------------------------------------------
 Iconv400Transcoder::Iconv400Transcoder( const XMLCh* const         encodingName
                                       ,       UConverter* const    toAdopt
-                                      , const unsigned int         blockSize
+                                      , const XMLSize_t            blockSize
                                       ,       MemoryManager* const manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
@@ -601,7 +601,7 @@ Iconv400LCPTranscoder::~Iconv400LCPTranscoder()
 // ---------------------------------------------------------------------------
 //  Iconv400LCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-unsigned int Iconv400LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t Iconv400LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                                      , MemoryManager* const manager)
 {
     if (!srcText)
@@ -626,10 +626,10 @@ unsigned int Iconv400LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (err != U_BUFFER_OVERFLOW_ERROR)
         return 0;
 
-    return (unsigned int)targetCap;
+    return (XMLSize_t)targetCap;
 }
 
-unsigned int Iconv400LCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t Iconv400LCPTranscoder::calcRequiredSize(const char* const srcText
                                                      , MemoryManager* const manager)
 {
     if (!srcText)
@@ -655,7 +655,7 @@ unsigned int Iconv400LCPTranscoder::calcRequiredSize(const char* const srcText
         return 0;
 
     // Subtract one since it includes the terminator space
-    return (unsigned int)(targetCap - 1);
+    return (XMLSize_t)(targetCap - 1);
 }
 
 

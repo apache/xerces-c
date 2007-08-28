@@ -51,8 +51,8 @@ public :
     // -----------------------------------------------------------------------
     XMLEBCDICTranscoder
     (
-        const   XMLCh* const    encodingName
-        , const unsigned int    blockSize
+        const   XMLCh* const   encodingName
+        , const XMLSize_t      blockSize
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 

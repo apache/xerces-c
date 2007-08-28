@@ -101,14 +101,14 @@ public:
      *
      * @since DOM Level 3
      */
-    virtual XMLSSize_t getByteOffset() const = 0;
+    virtual XMLFilePos getByteOffset() const = 0;
 
     /**
      * Get the UTF-16 offset into the input source, or -1 if there is no UTF-16 offset available.
      *
      * @since DOM Level 3
      */
-    virtual XMLSSize_t getUtf16Offset() const = 0;
+    virtual XMLFilePos getUtf16Offset() const = 0;
 
     /**
      * Get the DOMNode where the error occured, or <code>null</code> if there

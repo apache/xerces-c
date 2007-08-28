@@ -237,7 +237,7 @@ public:
     (
         const   DOMException::ExceptionCode  msgToLoad
         ,       XMLCh* const                 toFill
-        , const unsigned int                 maxChars
+        , const XMLSize_t                    maxChars
     );
 
     /**
@@ -253,9 +253,9 @@ public:
      */
     static bool loadDOMExceptionMsg
     (
-        const   DOMLSException::LSExceptionCode   msgToLoad
+        const   DOMLSException::LSExceptionCode msgToLoad
         ,       XMLCh* const                    toFill
-        , const unsigned int                    maxChars
+        , const XMLSize_t                       maxChars
     );
 
     /**
@@ -273,7 +273,7 @@ public:
     (
         const   DOMRangeException::RangeExceptionCode  msgToLoad
         ,       XMLCh* const                           toFill
-        , const unsigned int                           maxChars
+        , const XMLSize_t                              maxChars
     );
     //@}
 

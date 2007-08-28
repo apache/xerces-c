@@ -104,7 +104,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
 
     // This is used to fill the temp buffer
-    unsigned int tmpIndex = 0;
+    XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
     unsigned int tmpVal = toFormat;
@@ -162,7 +162,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
 
     // Reverse the tmp buffer into the caller's buffer
-    unsigned int outIndex = 0;
+    XMLSize_t outIndex = 0;
     for (; tmpIndex > 0; tmpIndex--)
         toFill[outIndex++] = tmpBuf[tmpIndex-1];
 
@@ -190,7 +190,7 @@ void XMLString::binToText(  const   long            toFormat
     //  If its negative, then put a negative sign into the output and flip
     //  the sign of the local temp value.
     //
-    unsigned int startInd = 0;
+    XMLSize_t startInd = 0;
     unsigned long actualVal;
     if (toFormat < 0)
     {
@@ -217,7 +217,7 @@ void XMLString::binToText(  const   int             toFormat
     //  If its negative, then put a negative sign into the output and flip
     //  the sign of the local temp value.
     //
-    unsigned int startInd = 0;
+    XMLSize_t startInd = 0;
     unsigned long actualVal;
     if (toFormat < 0)
     {
@@ -739,7 +739,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
 
     // This is used to fill the temp buffer
-    unsigned int tmpIndex = 0;
+    XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
     unsigned int tmpVal = toFormat;
@@ -797,7 +797,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     }
 
     // Reverse the tmp buffer into the caller's buffer
-    unsigned int outIndex = 0;
+    XMLSize_t outIndex = 0;
     for (; tmpIndex > 0; tmpIndex--)
         toFill[outIndex++] = tmpBuf[tmpIndex-1];
 
@@ -825,7 +825,7 @@ void XMLString::binToText(  const   long            toFormat
     //  If its negative, then put a negative sign into the output and flip
     //  the sign of the local temp value.
     //
-    unsigned int startInd = 0;
+    XMLSize_t startInd = 0;
     unsigned long actualVal;
     if (toFormat < 0)
     {
@@ -852,7 +852,7 @@ void XMLString::binToText(  const   int             toFormat
     //  If its negative, then put a negative sign into the output and flip
     //  the sign of the local temp value.
     //
-    unsigned int startInd = 0;
+    XMLSize_t startInd = 0;
     unsigned long actualVal;
     if (toFormat < 0)
     {

@@ -167,7 +167,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     XMLSize_t charsEaten;
     XMLSize_t transSize;
     XMLTransService::Codes failReason;
-    const unsigned int blockSize = 2048;
+    const XMLSize_t blockSize = 2048;
     const unsigned int bufSize = 5;
     static XMLCh portBuffer[bufSize+1];
 

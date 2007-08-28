@@ -1394,7 +1394,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
                               , DOMError::ErrorSeverity errorType
                               , XMLDOMMsg::Codes        toEmit)
 {
-    const unsigned int msgSize = 1023;
+    const XMLSize_t msgSize = 1023;
     XMLCh errText[msgSize + 1];
 
     DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(toEmit, errText, msgSize);

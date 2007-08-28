@@ -157,7 +157,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     //  Load the message into alocal and replace any tokens found in
     //  the text.
     //
-    const unsigned int msgSize = 1023;
+    const XMLSize_t msgSize = 1023;
     XMLCh errText[msgSize + 1];
     XMLMsgLoader* msgLoader = getErrMsgLoader();
     XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
@@ -200,7 +200,7 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     //  Load the message into alocal and replace any tokens found in
     //  the text.
     //
-    const unsigned int maxChars = 2047;
+    const XMLSize_t maxChars = 2047;
     XMLCh errText[maxChars + 1];
     XMLMsgLoader* msgLoader = getErrMsgLoader();
     XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);

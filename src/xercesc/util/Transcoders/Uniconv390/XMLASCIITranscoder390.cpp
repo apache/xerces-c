@@ -86,7 +86,7 @@ static struct temp padding_temp={
 //  XMLASCIITranscoder390: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLASCIITranscoder390::XMLASCIITranscoder390( const   XMLCh* const    encodingName
-                                        , const unsigned int    blockSize
+                                        , const XMLSize_t       blockSize
                                         , MemoryManager* const  manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)

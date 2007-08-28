@@ -219,7 +219,7 @@ void XMLException::loadExceptText(const XMLExcepts::Codes toLoad)
     fCode = toLoad;
 
     // Load up the text into a local buffer
-    const unsigned int msgSize = 2047;
+    const XMLSize_t msgSize = 2047;
     XMLCh errText[msgSize + 1];
 
     // load the text
@@ -249,7 +249,7 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     fCode = toLoad;
 
     // Load up the text into a local buffer
-    const unsigned int msgSize = 4095;
+    const XMLSize_t msgSize = 4095;
     XMLCh errText[msgSize + 1];
 
     // load the text
@@ -279,7 +279,7 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     fCode = toLoad;
 
     // Load up the text into a local buffer
-    const unsigned int msgSize = 4095;
+    const XMLSize_t msgSize = 4095;
     XMLCh errText[msgSize + 1];
 
     // load the text

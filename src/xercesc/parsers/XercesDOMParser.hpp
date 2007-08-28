@@ -199,7 +199,7 @@ public :
      *
      * @return offset within the input source
      */
-    unsigned int getSrcOffset() const;
+    XMLFilePos getSrcOffset() const;
 
     /** Get the 'ignore cached DTD grammar' flag
       *    

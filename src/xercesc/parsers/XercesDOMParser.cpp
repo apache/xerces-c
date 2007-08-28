@@ -94,7 +94,7 @@ const XMLCh* XercesDOMParser::getURIText(unsigned int uriId) const
     return getScanner()->getURIText(uriId);
 }
 
-unsigned int XercesDOMParser::getSrcOffset() const
+XMLFilePos XercesDOMParser::getSrcOffset() const
 {
     return getScanner()->getSrcOffset();
 }

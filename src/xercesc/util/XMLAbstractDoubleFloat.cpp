@@ -104,9 +104,9 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
         // digits, a decimal point,  or the exponent character,
         // they will all be single byte characters, and this will
         // work.
-        static const unsigned int  maxStackSize = 100;
+        static const XMLSize_t maxStackSize = 100;
 
-        unsigned int  lenTempStrValue = 0;
+        XMLSize_t lenTempStrValue = 0;
 
         
         // Need to check that the string only contains valid schema characters

@@ -179,7 +179,7 @@ bool IconvTransService::supportsSrcOfs() const
 XMLTranscoder*
 IconvTransService::makeNewXMLTranscoder(const   XMLCh* const
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            
+                                        , const XMLSize_t            
                                         ,       MemoryManager* const)
 {
     //
@@ -220,13 +220,13 @@ void IconvTransService::lowerCase(XMLCh* const toLowerCase) const
 // ---------------------------------------------------------------------------
 //  IconvLCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t IconvLCPTranscoder::calcRequiredSize(const char* const srcText
                                                   , MemoryManager* const)
 {
     if (!srcText)
         return 0;
 
-    unsigned int len = 0;
+    XMLSize_t len = 0;
     const char *src = srcText;
 #if HAVE_MBRLEN
     mbstate_t st;
@@ -247,13 +247,13 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
 }
 
 
-unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                                   , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
 
-    unsigned int  wLent = getWideCharLength(srcText);
+    XMLSize_t     wLent = getWideCharLength(srcText);
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
     wchar_t*      allocatedArray = 0;
     wchar_t*      wideCharBuf = 0;
@@ -267,13 +267,13 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     else
         wideCharBuf = tmpWideCharArr;
 
-    for (unsigned int i = 0; i < wLent; i++)
+    for (XMLSize_t i = 0; i < wLent; i++)
     {
         wideCharBuf[i] = srcText[i];
     }
     wideCharBuf[wLent] = 0x00;
 
-    const unsigned int retVal = ::wcstombs(NULL, wideCharBuf, 0);
+    const XMLSize_t retVal = ::wcstombs(NULL, wideCharBuf, 0);
     manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
     if (retVal == ~0)
@@ -358,7 +358,7 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         return true;
     }
 
-    unsigned int len = calcRequiredSize(toTranscode);
+    XMLSize_t     len = calcRequiredSize(toTranscode);
     wchar_t       tmpWideCharArr[gTempBuffArraySize];
     wchar_t*      allocatedArray = 0;
     wchar_t*      wideCharBuf = 0;
@@ -381,7 +381,7 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         return false;
     }
 
-    for (unsigned int i = 0; i < len; i++)
+    for (XMLSize_t i = 0; i < len; i++)
     {
         toFill[i] = (XMLCh) wideCharBuf[i];
     }

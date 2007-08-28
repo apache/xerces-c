@@ -542,7 +542,7 @@ public :
       *
       * @return offset within the input source
       */
-    virtual unsigned int getSrcOffset() const;
+    virtual XMLFilePos getSrcOffset() const;
 
     //@}
 
@@ -1741,7 +1741,7 @@ inline const XMLCh* SAX2XMLReaderImpl::getURIText(unsigned int uriId) const
     return fScanner->getURIText(uriId);
 }
 
-inline unsigned int SAX2XMLReaderImpl::getSrcOffset() const
+inline XMLFilePos SAX2XMLReaderImpl::getSrcOffset() const
 {
     return fScanner->getSrcOffset();
 }

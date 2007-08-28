@@ -77,7 +77,7 @@ protected :
     XML256TableTranscoder390
     (
         const   XMLCh* const                        encodingName
-        , const unsigned int                        blockSize
+        , const XMLSize_t                           blockSize
         , const XMLCh* const                        fromTable
         , const XMLTransService::TransRec* const    toTable
         , const unsigned int                        toTableSize

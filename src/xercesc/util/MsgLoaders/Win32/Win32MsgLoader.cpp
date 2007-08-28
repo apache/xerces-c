@@ -125,7 +125,7 @@ Win32MsgLoader::~Win32MsgLoader()
 //
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars)
+                            , const XMLSize_t               maxChars)
 {
     // In case we error return, and they don't check it...
     toFill[0] = 0;
@@ -170,7 +170,7 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
         pBlock += *pBlock + 1;
 
     // Calculate how many actual chars we will end up with
-    const unsigned int actualChars = ((maxChars < *pBlock) ? maxChars : *pBlock);
+    const XMLSize_t actualChars = ((maxChars < (XMLSize_t)*pBlock) ? maxChars : (XMLSize_t)*pBlock);
 
     // Ok, finally now copy as much as we can into the caller's buffer
     wcsncpy(toFill, pBlock + 1, actualChars);
@@ -182,7 +182,7 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
+                            , const XMLSize_t               maxChars
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
@@ -201,7 +201,7 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
+                            , const XMLSize_t               maxChars
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3

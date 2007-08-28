@@ -411,7 +411,7 @@ MacOSUnicodeConverter::ConvertWideToNarrow(const XMLCh* wide, char* narrow, std:
 XMLTranscoder*
 MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int			blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
 	XMLTranscoder* result = NULL;
@@ -444,7 +444,7 @@ MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
 XMLTranscoder*
 MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int			blockSize
+                                        , const XMLSize_t               blockSize
 										,		TextEncoding            textEncoding
                                         ,       MemoryManager* const    manager)
 {
@@ -507,7 +507,7 @@ MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported(void)
 MacOSTranscoder::MacOSTranscoder(const  XMLCh* const    encodingName
 								, TECObjectRef          textToUnicode
 								, TECObjectRef          unicodeToText
-                                , const unsigned int    blockSize
+                                , const XMLSize_t       blockSize
                                 , MemoryManager* const  manager) :
     XMLTranscoder(encodingName, blockSize, manager),
     mTextToUnicode(textToUnicode),
@@ -697,8 +697,7 @@ MacOSLCPTranscoder::~MacOSLCPTranscoder()
 //	converting twice. It would be nice if the calling code could do some
 //	extra buffering to avoid this result.
 // ---------------------------------------------------------------------------
-unsigned int
-MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
                                      , MemoryManager* const manager)
 {
 	if (!srcText)
@@ -711,7 +710,7 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
 	std::size_t totalCharsProduced = 0;
 
 	const char* src = srcText;
-	unsigned int srcCnt = std::strlen(src);
+	XMLSize_t srcCnt = std::strlen(src);
     
     //  Iterate over the characters, converting into a temporary buffer which we'll discard.
     //  All this to get the size required.
@@ -746,8 +745,7 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
 //	converting twice. It would be nice if the calling code could do some
 //	extra buffering to avoid this result.
 // ---------------------------------------------------------------------------
-unsigned int
-MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                      , MemoryManager* const manager)
 {
 	if (!srcText)
@@ -759,11 +757,11 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 	std::size_t     totalBytesProduced = 0;
 
 	const XMLCh*    src     = srcText;
-	unsigned int    srcCnt  = XMLString::stringLen(src);
+	XMLSize_t    srcCnt  = XMLString::stringLen(src);
     
     //  Iterate over the characters, converting into a temporary buffer which we'll discard.
     //  All this to get the size required.
-   while (srcCnt > 0)
+    while (srcCnt > 0)
     {
         TempCharBuf tmpBuf;
         unsigned int charsConsumed = 0;

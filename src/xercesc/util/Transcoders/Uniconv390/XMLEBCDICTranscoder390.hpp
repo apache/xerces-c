@@ -52,7 +52,7 @@ public :
     XMLEBCDICTranscoder390
     (
         const   XMLCh* const    encodingName
-        , const unsigned int    blockSize
+        , const XMLSize_t       blockSize
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 

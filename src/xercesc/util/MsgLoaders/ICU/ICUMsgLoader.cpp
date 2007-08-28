@@ -219,7 +219,7 @@ ICUMsgLoader::~ICUMsgLoader()
 // ---------------------------------------------------------------------------
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                           ,         XMLCh* const            toFill
-                          , const   unsigned int            maxChars)
+                          , const   XMLSize_t               maxChars)
 {
     UErrorCode   err = U_ZERO_ERROR;
     int32_t      strLen = 0;
@@ -256,7 +256,7 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
+                            , const XMLSize_t               maxChars
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
@@ -275,7 +275,7 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned int            maxChars
+                            , const XMLSize_t               maxChars
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3

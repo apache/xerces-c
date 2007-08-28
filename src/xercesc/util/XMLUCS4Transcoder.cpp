@@ -30,7 +30,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XMLUCS4Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLUCS4Transcoder::XMLUCS4Transcoder(const  XMLCh* const    encodingName
-                                    , const unsigned int    blockSize
+                                    , const XMLSize_t       blockSize
                                     , const bool            swapped
                                     , MemoryManager* const manager) :
 

@@ -562,10 +562,10 @@ bool Win32TransService::isAlias(const   HKEY            encodingKey
 XMLTranscoder*
 Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
-    const unsigned int upLen = 1024;
+    const XMLSize_t upLen = 1024;
     XMLCh upEncoding[upLen + 1];
 
     //
@@ -613,9 +613,9 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-Win32Transcoder::Win32Transcoder(const  XMLCh* const    encodingName
-                                , const unsigned int    ieCP
-                                , const unsigned int    blockSize
+Win32Transcoder::Win32Transcoder(const  XMLCh* const   encodingName
+                                , const unsigned int   ieCP
+                                , const XMLSize_t      blockSize
                                 , MemoryManager* const manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
@@ -856,7 +856,7 @@ Win32LCPTranscoder::~Win32LCPTranscoder()
 // ---------------------------------------------------------------------------
 //  Win32LCPTranscoder: Implementation of the virtual transcoder interface
 // ---------------------------------------------------------------------------
-unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t Win32LCPTranscoder::calcRequiredSize(const char* const srcText
                                                   , MemoryManager* const /*manager*/)
 {
     if (!srcText)
@@ -866,7 +866,7 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
 }
 
 
-unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                                   , MemoryManager* const /*manager*/)
 {
     if (!srcText)
@@ -885,11 +885,11 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
     if (*toTranscode)
     {
         // Calc the needed size
-        const unsigned int neededLen = calcRequiredSize(toTranscode, manager);
+        const XMLSize_t neededLen = calcRequiredSize(toTranscode, manager);
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char)); //new char[neededLen + 1];
-        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, neededLen+1, NULL, NULL);
+        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, (int)neededLen+1, NULL, NULL);
 
         // And cap it off anyway just to make sure
         retVal[neededLen] = 0;
@@ -912,7 +912,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
     if (*toTranscode)
     {
         // Calculate the buffer size required
-        const unsigned int neededLen = calcRequiredSize(toTranscode, manager);
+        const XMLSize_t neededLen = calcRequiredSize(toTranscode, manager);
         if (neededLen == 0)
         {
             retVal = (XMLCh*) manager->allocate(sizeof(XMLCh)); //new XMLCh[1];
@@ -922,7 +922,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = (XMLCh*) manager->allocate((neededLen + 1) * sizeof(XMLCh)); //new XMLCh[neededLen + 1];
-        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, neededLen + 1);
+        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, (int)neededLen + 1);
 
         // Cap it off just to make sure. We are so paranoid!
         retVal[neededLen] = 0;

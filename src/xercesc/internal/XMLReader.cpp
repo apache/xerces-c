@@ -447,7 +447,7 @@ XMLReader::~XMLReader()
 // ---------------------------------------------------------------------------
 //  XMLReader: Character buffer management methods
 // ---------------------------------------------------------------------------
-unsigned int XMLReader::getSrcOffset() const
+XMLFilePos XMLReader::getSrcOffset() const
 {
     if (!fSrcOfsSupported || !fCalculateSrcOfs)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Reader_SrcOfsNotSupported, fMemoryManager);
@@ -589,7 +589,7 @@ bool XMLReader::refreshCharBuffer()
     if (fCalculateSrcOfs)
     {
         fCharOfsBuf[0] = 0;
-        for (unsigned int index = 1; index < fCharsAvail; ++index) {
+        for (XMLSize_t index = 1; index < fCharsAvail; ++index) {
             fCharOfsBuf[index] = fCharOfsBuf[index-1]+fCharSizeBuf[index-1];
         }
     }
@@ -1427,7 +1427,7 @@ void XMLReader::doInitDecode()
             if (((fRawByteBuf[0] == 0x00) && (fRawByteBuf[1] == 0x00) && (fRawByteBuf[2] == 0xFE) && (fRawByteBuf[3] == 0xFF)) ||
                 ((fRawByteBuf[0] == 0xFF) && (fRawByteBuf[1] == 0xFE) && (fRawByteBuf[2] == 0x00) && (fRawByteBuf[3] == 0x00))  )
             {
-                for (unsigned int i = 0; i < fRawBytesAvail; i++)
+                for (XMLSize_t i = 0; i < fRawBytesAvail; i++)
                     fRawByteBuf[i] = fRawByteBuf[i+4];
 
                 fRawBytesAvail -=4;
@@ -1672,7 +1672,7 @@ void XMLReader::doInitDecode()
     if (fCalculateSrcOfs)
     {
         fCharOfsBuf[0] = 0;
-        for (unsigned int index = 1; index < fCharsAvail; ++index) {
+        for (XMLSize_t index = 1; index < fCharsAvail; ++index) {
             fCharOfsBuf[index] = fCharOfsBuf[index-1]+fCharSizeBuf[index-1];
         }
     }

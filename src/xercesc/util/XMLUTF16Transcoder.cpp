@@ -32,7 +32,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XMLUTF16Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLUTF16Transcoder::XMLUTF16Transcoder( const   XMLCh* const    encodingName
-                                        , const unsigned int    blockSize
+                                        , const XMLSize_t       blockSize
                                         , const bool            swapped
                                         , MemoryManager* const manager) :
 

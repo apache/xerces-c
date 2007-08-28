@@ -266,7 +266,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 (
     const   DOMException::ExceptionCode  msgToLoad
     ,       XMLCh* const                 toFill
-    , const unsigned int                 maxChars
+    , const XMLSize_t                    maxChars
 )
 {
     // load the text, the msgToLoad+XMLDOMMsgs::DOMEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
@@ -277,7 +277,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 (
     const   DOMLSException::LSExceptionCode  msgToLoad
     ,       XMLCh* const                     toFill
-    , const unsigned int                     maxChars
+    , const XMLSize_t                        maxChars
 )
 {
     // load the text, the msgToLoad+XMLDOMMsgs::DOMLSEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
@@ -288,7 +288,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 (
     const   DOMRangeException::RangeExceptionCode  msgToLoad
     ,       XMLCh* const                           toFill
-    , const unsigned int                           maxChars
+    , const XMLSize_t                              maxChars
 )
 {
     // load the text, the XMLDOMMsgs::DOMRANGEEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code

@@ -54,7 +54,7 @@ DOMException::DOMException(      short                 exCode
 ,fMemoryManager(memoryManager)
 ,fMsgOwned(true)
 {
-    const unsigned int msgSize = 2047;
+    const XMLSize_t msgSize = 2047;
     XMLCh errText[msgSize + 1];
 
     // load the text

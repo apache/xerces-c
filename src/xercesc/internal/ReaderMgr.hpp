@@ -168,7 +168,7 @@ public :
     unsigned int getCurrentReaderNum() const;
     unsigned int getReaderDepth() const;
     void getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const;
-    unsigned int getSrcOffset() const;
+    XMLFilePos getSrcOffset() const;
     bool getThrowEOE() const;
 
 
@@ -315,7 +315,7 @@ inline bool ReaderMgr::getThrowEOE() const
     return fThrowEOE;
 }
 
-inline unsigned int ReaderMgr::getSrcOffset() const
+inline XMLFilePos ReaderMgr::getSrcOffset() const
 {
     return fCurReader? fCurReader->getSrcOffset() : 0;
 }

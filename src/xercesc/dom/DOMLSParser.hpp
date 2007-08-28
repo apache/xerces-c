@@ -750,7 +750,7 @@ public:
       *
       * @return offset within the input source
       */
-    virtual unsigned int getSrcOffset() const = 0;
+    virtual XMLFilePos getSrcOffset() const = 0;
 
     //@}
 

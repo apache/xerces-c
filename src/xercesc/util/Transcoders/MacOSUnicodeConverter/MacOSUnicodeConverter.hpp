@@ -88,14 +88,14 @@ protected :
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t               blockSize
         ,       MemoryManager* const    manager
     );
     virtual XMLTranscoder* makeNewXMLTranscoder
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t               blockSize
         ,		TextEncoding			textEncoding
         ,       MemoryManager* const    manager
     );
@@ -147,7 +147,7 @@ public :
 	    const XMLCh* const		encodingName,
 	    TECObjectRef			textToUnicode,
 	    TECObjectRef			unicodeToText,
-	    const unsigned int		blockSize,
+	    const XMLSize_t         blockSize,
 	    MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
 		);
     ~MacOSTranscoder();
@@ -235,10 +235,10 @@ public :
 	// -----------------------------------------------------------------------
     //  DEPRECATED old transcode interface
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText
+    virtual XMLSize_t calcRequiredSize(const char* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText
+    virtual XMLSize_t calcRequiredSize(const XMLCh* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     virtual bool transcode

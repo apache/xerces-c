@@ -114,7 +114,7 @@ void XMLValidator::emitError(const XMLValid::Codes toEmit)
     if (fErrorReporter)
     {
         // Load the message into a local for display
-        const unsigned int msgSize = 1023;
+        const XMLSize_t msgSize = 1023;
         XMLCh errText[msgSize + 1];
 
         // load the text
@@ -172,7 +172,7 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
         //  Load the message into alocal and replace any tokens found in
         //  the text.
         //
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         // load the text
@@ -230,7 +230,7 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
         //  Load the message into alocal and replace any tokens found in
         //  the text.
         //
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         // load the text
@@ -289,7 +289,7 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
         //  Load the message into alocal and replace any tokens found in
         //  the text.
         //
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         // load the text

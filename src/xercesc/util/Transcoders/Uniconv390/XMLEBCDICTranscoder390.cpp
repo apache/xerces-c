@@ -193,7 +193,7 @@ XMLCh XMLEBCDICTranscoder390::xlatThisOne(const XMLByte toXlat)
 //  XMLEBCDICTranscoder390: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLEBCDICTranscoder390::XMLEBCDICTranscoder390(const  XMLCh* const    encodingName
-                                        , const unsigned int    blockSize
+                                        , const XMLSize_t      blockSize
                                         , MemoryManager* const manager) :
 
     XML256TableTranscoder390

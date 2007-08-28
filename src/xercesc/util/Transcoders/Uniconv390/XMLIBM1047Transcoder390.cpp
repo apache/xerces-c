@@ -193,7 +193,7 @@ XMLCh XMLIBM1047Transcoder390::xlatThisOne(const XMLByte toXlat)
 //  XMLIBM1047Transcoder390: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLIBM1047Transcoder390::XMLIBM1047Transcoder390(const  XMLCh* const    encodingName
-                                        , const unsigned int    blockSize
+                                        , const XMLSize_t       blockSize
                                         , MemoryManager* const  manager) :
 
     XML256TableTranscoder390

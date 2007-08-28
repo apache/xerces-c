@@ -185,7 +185,7 @@ static const unsigned int gToTableSz = 350;
 //  XML1140Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLWin1252Transcoder390::XMLWin1252Transcoder390( const   XMLCh* const encodingName
-                                            , const unsigned int blockSize
+                                            , const XMLSize_t      blockSize
                                             , MemoryManager* const manager) :
     XML256TableTranscoder390
     (

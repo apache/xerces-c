@@ -45,7 +45,7 @@ public :
     XMLUTF16Transcoder
     (
         const   XMLCh* const    encodingName
-        , const unsigned int    blockSize
+        , const XMLSize_t       blockSize
         , const bool            swapped
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );

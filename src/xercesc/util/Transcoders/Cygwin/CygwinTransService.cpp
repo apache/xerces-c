@@ -588,12 +588,12 @@ bool CygwinTransService::isAlias(const   HKEY            encodingKey
 
 
 XMLTranscoder*
-CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const           encodingName
+CygwinTransService::makeNewXMLTranscoder(const  XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize
+                                        , const XMLSize_t               blockSize
                                         ,       MemoryManager* const    manager)
 {
-    const unsigned int upLen = 1024;
+    const XMLSize_t upLen = 1024;
     XMLCh upEncoding[upLen + 1];
 
     //
@@ -647,10 +647,10 @@ CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const           encoding
 // ---------------------------------------------------------------------------
 //  CygwinTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-CygwinTranscoder::CygwinTranscoder(const  XMLCh* const    encodingName
-                                , const unsigned int    winCP
-                                , const unsigned int    ieCP
-                                , const unsigned int    blockSize
+CygwinTranscoder::CygwinTranscoder(const  XMLCh* const encodingName
+                                , const unsigned int   winCP
+                                , const unsigned int   ieCP
+                                , const XMLSize_t      blockSize
                                 , MemoryManager* const manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
@@ -892,7 +892,7 @@ CygwinLCPTranscoder::~CygwinLCPTranscoder()
 // ---------------------------------------------------------------------------
 //  CygwinLCPTranscoder: Implementation of the virtual transcoder interface
 // ---------------------------------------------------------------------------
-unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
                                                    , MemoryManager* const /*manager*/)
 {
     if (!srcText)
@@ -902,7 +902,7 @@ unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
 }
 
 
-unsigned int CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                                    , MemoryManager* const /*manager*/)
 {
     if (!srcText)

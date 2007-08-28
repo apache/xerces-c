@@ -61,16 +61,16 @@ public:
     // DOMLocator interface
     virtual unsigned long getLineNumber() const;
     virtual unsigned long getColumnNumber() const;
-    virtual XMLSSize_t getByteOffset() const;
-    virtual XMLSSize_t getUtf16Offset() const;
+    virtual XMLFilePos getByteOffset() const;
+    virtual XMLFilePos getUtf16Offset() const;
     virtual DOMNode* getRelatedNode() const;
     virtual const XMLCh* getURI() const;
 
     // Setter functions
     void setLineNumber(const unsigned long lineNumber);
     void setColumnNumber(const unsigned long columnNumber);
-    void setByteOffset(const XMLSSize_t offset);
-    void setUtf16Offset(const XMLSSize_t offset);
+    void setByteOffset(const XMLFilePos offset);
+    void setUtf16Offset(const XMLFilePos offset);
     void setRelatedNode(DOMNode* const errorNode);
     void setURI(const XMLCh* const uri);
 
@@ -107,8 +107,8 @@ private :
     // -----------------------------------------------------------------------
     unsigned long   fLineNum;
     unsigned long   fColumnNum;
-    XMLSSize_t      fByteOffset;
-    XMLSSize_t      fUtf16Offset;
+    XMLFilePos      fByteOffset;
+    XMLFilePos      fUtf16Offset;
     DOMNode*        fRelatedNode;
     const XMLCh*    fURI;
 };
@@ -127,12 +127,12 @@ inline unsigned long DOMLocatorImpl::getColumnNumber() const
     return fColumnNum;
 }
 
-inline XMLSSize_t DOMLocatorImpl::getByteOffset() const
+inline XMLFilePos DOMLocatorImpl::getByteOffset() const
 {
     return fByteOffset;
 }
 
-inline XMLSSize_t DOMLocatorImpl::getUtf16Offset() const
+inline XMLFilePos DOMLocatorImpl::getUtf16Offset() const
 {
     return fUtf16Offset;
 }
@@ -161,12 +161,12 @@ inline void DOMLocatorImpl::setColumnNumber(const unsigned long columnNumber)
     fColumnNum = columnNumber;
 }
 
-inline void DOMLocatorImpl::setByteOffset(const XMLSSize_t offset)
+inline void DOMLocatorImpl::setByteOffset(const XMLFilePos offset)
 {
     fByteOffset = offset;
 }
 
-inline void DOMLocatorImpl::setUtf16Offset(const XMLSSize_t offset)
+inline void DOMLocatorImpl::setUtf16Offset(const XMLFilePos offset)
 {
     fUtf16Offset = offset;
 }

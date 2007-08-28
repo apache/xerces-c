@@ -347,7 +347,7 @@ const XMLCh* SAXParser::getURIText(unsigned int uriId) const
     return fScanner->getURIText(uriId);
 }
 
-unsigned int SAXParser::getSrcOffset() const
+XMLFilePos SAXParser::getSrcOffset() const
 {
     return fScanner->getSrcOffset();
 }

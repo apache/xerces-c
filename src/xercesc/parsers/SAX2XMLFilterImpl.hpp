@@ -471,7 +471,7 @@ public :
       *
       * @return offset within the input source
       */
-    virtual unsigned int getSrcOffset() const;
+    virtual XMLFilePos getSrcOffset() const;
 
     //@}
 

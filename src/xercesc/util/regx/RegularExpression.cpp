@@ -995,7 +995,7 @@ struct RE_RuntimeContext {
 int RegularExpression::match(Context* const context, const Op* const operations
 							 , XMLSize_t offset, const short direction)
 {
-    ValueStackOf<RE_RuntimeContext>	opStack(0, fMemoryManager);
+    ValueStackOf<RE_RuntimeContext>	opStack(0, context->fMemoryManager);
 	const Op* tmpOp = operations;
 	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
 	int	doReturn;

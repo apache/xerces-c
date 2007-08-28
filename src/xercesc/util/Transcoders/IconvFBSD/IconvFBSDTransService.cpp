@@ -731,10 +731,10 @@ bool IconvFBSDTransService::supportsSrcOfs() const
 XMLTranscoder*
 IconvFBSDTransService::makeNewXMLTranscoder
 (
-    const    XMLCh* const    encodingName
-    ,    XMLTransService::Codes&    resValue
-    , const     unsigned int    blockSize
-    ,       MemoryManager* const    manager
+    const    XMLCh* const            encodingName
+    ,        XMLTransService::Codes& resValue
+    , const  XMLSize_t               blockSize
+    ,        MemoryManager* const    manager
 )
 {
 #ifndef XML_USE_LIBICONV
@@ -819,8 +819,7 @@ void IconvFBSDTransService::lowerCase(XMLCh* const toLowerCase) const
 // ---------------------------------------------------------------------------
 //  IconvFBSDLCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
-unsigned int
-IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText
+XMLSize_t IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText
                                           , MemoryManager* const manager)
 {
     if (!srcText)
@@ -828,7 +827,7 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText
 
 #ifndef XML_USE_LIBICONV
 
-    unsigned int retVal = fbsd_mbstowcs(NULL, srcText, 0);
+    XMLSize_t retVal = fbsd_mbstowcs(NULL, srcText, 0);
     if (retVal == ~0)
         return 0;
     return retVal;
@@ -862,13 +861,12 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText
 }
 
 
-unsigned int
-IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                          , MemoryManager* const manager)
 {
     if (!srcText)
         return 0;
-    unsigned int  wLent = getWideCharLength(srcText);
+    XMLSize_t  wLent = getWideCharLength(srcText);
     if (wLent == 0)
         return 0;
 
@@ -886,11 +884,11 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     else
         wideCharBuf = tmpWideCharArr;
 
-    for (unsigned int i = 0; i < wLent; i++)
+    for (XMLSize_t i = 0; i < wLent; i++)
         wideCharBuf[i] = srcText[i];
     wideCharBuf[wLent] = 0x00;
 
-    const unsigned int retVal = fbsd_wcstombs(NULL, wideCharBuf, 0);
+    const XMLSize_t retVal = fbsd_wcstombs(NULL, wideCharBuf, 0);
 
     if (allocatedArray)
         manager->deallocate(allocatedArray);//delete [] allocatedArray;
@@ -1144,7 +1142,7 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode,
 
     XMLCh* retVal = 0;
     if (*toTranscode) {
-        const unsigned int wLent = calcRequiredSize(toTranscode, manager);
+        const XMLSize_t wLent = calcRequiredSize(toTranscode, manager);
         if (wLent == 0) {
             retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
             retVal[0] = 0;
@@ -1172,7 +1170,7 @@ XMLCh* IconvFBSDLCPTranscoder::transcode(const char* const toTranscode,
                 manager->deallocate(allocatedArray);//delete [] allocatedArray;
             return NULL;
         }
-        for (unsigned int i = 0; i < wLent; i++)
+        for (XMLSize_t i = 0; i < wLent; i++)
             retVal[i] = (XMLCh) wideCharBuf[i];
         retVal[wLent] = 0x00;
         if (allocatedArray)
@@ -1350,7 +1348,7 @@ IconvFBSDLCPTranscoder::~IconvFBSDLCPTranscoder()
 //  IconvFBSDTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
 IconvFBSDTranscoder::IconvFBSDTranscoder (const    XMLCh* const    encodingName
-                      , const unsigned int    blockSize
+                      , const XMLSize_t    blockSize
                       ,    iconv_t        cd_from
                       ,    iconv_t        cd_to
                       ,    size_t        uchsize

@@ -197,7 +197,7 @@ protected :
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t            blockSize
         ,       MemoryManager* const    manager
     );
 
@@ -236,7 +236,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     IconvFBSDTranscoder(const	XMLCh* const	encodingName
-			, const unsigned int	blockSize
+			, const XMLSize_t	blockSize
 			,	iconv_t		cd_from
 			,	iconv_t		cd_to
 			,	size_t		uchsize
@@ -336,10 +336,10 @@ public:
     // -----------------------------------------------------------------------
     //  DEPRECATED old transcode interface
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText
+    virtual XMLSize_t calcRequiredSize(const char* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText
+    virtual XMLSize_t calcRequiredSize(const XMLCh* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     virtual bool transcode

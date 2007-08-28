@@ -153,7 +153,7 @@ static const XMLByte gFirstByteMark[7] =
 //  XMLUTF8Transcoder390: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLUTF8Transcoder390::XMLUTF8Transcoder390(const  XMLCh* const    encodingName
-                                    , const unsigned int    blockSize
+                                    , const XMLSize_t      blockSize
                                     , MemoryManager* const manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)

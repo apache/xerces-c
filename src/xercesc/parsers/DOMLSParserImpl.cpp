@@ -954,7 +954,7 @@ const XMLCh* DOMLSParserImpl::getURIText(unsigned int uriId) const
     return getScanner()->getURIText(uriId);
 }
 
-unsigned int DOMLSParserImpl::getSrcOffset() const
+XMLFilePos DOMLSParserImpl::getSrcOffset() const
 {
     return getScanner()->getSrcOffset();
 }

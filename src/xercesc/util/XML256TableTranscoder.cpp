@@ -160,10 +160,10 @@ bool XML256TableTranscoder::canTranscodeTo(const unsigned int toCheck) const
 // ---------------------------------------------------------------------------
 XML256TableTranscoder::
 XML256TableTranscoder(  const   XMLCh* const                     encodingName
-                        , const unsigned int                     blockSize
+                        , const XMLSize_t                        blockSize
                         , const XMLCh* const                     fromTable
                         , const XMLTransService::TransRec* const toTable
-                        , const unsigned int                     toTableSize
+                        , const XMLSize_t                        toTableSize
                         , MemoryManager* const                   manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
@@ -179,12 +179,12 @@ XML256TableTranscoder(  const   XMLCh* const                     encodingName
 // ---------------------------------------------------------------------------
 XMLByte XML256TableTranscoder::xlatOneTo(const XMLCh toXlat) const
 {
-    unsigned int    lowOfs = 0;
-    unsigned int    hiOfs = fToSize - 1;
+    XMLSize_t lowOfs = 0;
+    XMLSize_t hiOfs = fToSize - 1;
     do
     {
         // Calc the mid point of the low and high offset.
-        const unsigned int midOfs = ((hiOfs - lowOfs) / 2) + lowOfs;
+        const XMLSize_t midOfs = ((hiOfs - lowOfs) / 2) + lowOfs;
 
         //
         //  If our test char is greater than the mid point char, then

@@ -506,7 +506,7 @@ DBGPRINTF2("makeNewLCPTranscoder() localencoding=%s \n",nl_langinfo(CODESET));
 XMLTranscoder* Uniconv390TransService::
 makeNewXMLTranscoder(const  XMLCh* const            encodingName
                     ,       XMLTransService::Codes& resValue
-                    , const unsigned int            blockSize
+                    , const XMLSize_t               blockSize
                     ,       MemoryManager* const    manager)
 {
 char * localname = XMLString::transcode(encodingName, manager);
@@ -1128,7 +1128,7 @@ void Uniconv390TransService::initTransService()
 // ---------------------------------------------------------------------------
 Uniconv390Transcoder::Uniconv390Transcoder(const  XMLCh* const        encodingName
                             ,        uniconvconverter_t * const   toAdopt
-                            , const unsigned int        blockSize
+                            , const XMLSize_t        blockSize
                             , MemoryManager* const manager) :
     XMLTranscoder(encodingName, blockSize, manager)
     , fConverter(toAdopt)
@@ -1288,12 +1288,12 @@ Uniconv390LCPTranscoder::~Uniconv390LCPTranscoder()
 // transcode the string and see how long it is. Fortunately, this is only done as a last
 // ditch effort so it should only be used very rarely (if at all).
 // ---------------------------------------------------------------------------
-unsigned int Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                                        , MemoryManager* const manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)  \n");
 //printf("!!!***Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)  \n");
-   int thesize=0;
+   XMLSize_t thesize=0;
    if (!srcText)
       return 0;
    if (!*srcText)
@@ -1307,12 +1307,12 @@ DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
    return thesize;
 }
 
-unsigned int Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText
                                                        , MemoryManager* const manager)
 {
 DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)  \n");
 //printf("!!!***Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)  \n");
-   int thesize=0;
+   XMLSize_t thesize=0;
    if (!srcText)
       return 0;
    if (!*srcText)

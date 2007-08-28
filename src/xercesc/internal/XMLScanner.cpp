@@ -836,7 +836,7 @@ void XMLScanner::emitError(const XMLErrs::Codes toEmit)
     if (fErrorReporter)
     {
         // Load the message into a local for display
-        const unsigned int msgSize = 1023;
+        const XMLSize_t msgSize = 1023;
         XMLCh errText[msgSize + 1];
 
         if (!gScannerMsgLoader().loadMsg(toEmit, errText, msgSize))
@@ -883,7 +883,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
     {
         //  Load the message into alocal and replace any tokens found in
         //  the text.
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fMemoryManager))
@@ -930,7 +930,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
     {
         //  Load the message into alocal and replace any tokens found in
         //  the text.
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fMemoryManager))
@@ -978,7 +978,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes      toEmit
     {
         //  Load the message into alocal and replace any tokens found in
         //  the text.
-        const unsigned int maxChars = 2047;
+        const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
         if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4, fMemoryManager))
@@ -1451,7 +1451,7 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     while (true)
     {
         // Skip any spaces
-        const unsigned int spaceCount = fReaderMgr.skipPastSpaces(true);
+        const bool spaceCount = fReaderMgr.skipPastSpaces(true);
 
         // If we are looking at a question mark, then break out
         if (fReaderMgr.lookingAtChar(chQuestion))

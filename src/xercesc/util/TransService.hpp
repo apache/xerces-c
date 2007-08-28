@@ -82,7 +82,7 @@ public :
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t               blockSize
         , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -90,7 +90,7 @@ public :
     (
         const   char* const             encodingName
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t               blockSize
         , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -98,7 +98,7 @@ public :
     (
         XMLRecognizer::Encodings        encodingEnum
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t               blockSize
         , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -157,7 +157,7 @@ protected :
     (
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
-        , const unsigned int            blockSize
+        , const XMLSize_t               blockSize
         , MemoryManager* const          manager
     ) = 0;
 
@@ -311,7 +311,7 @@ public :
      *
        * @return The block size indicated in the constructor.
        */
-    unsigned int getBlockSize() const;
+    XMLSize_t getBlockSize() const;
 
     /** Get the encoding name
       *
@@ -342,7 +342,7 @@ protected :
     XMLTranscoder
     (
         const   XMLCh* const    encodingName
-        , const unsigned int    blockSize
+        , const XMLSize_t       blockSize
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -368,7 +368,7 @@ private :
     //      This is the name of the encoding this encoder is for. All basic
     //      XML transcoder's are for named encodings.
     // -----------------------------------------------------------------------
-    unsigned int    fBlockSize;
+    XMLSize_t       fBlockSize;
     XMLCh*          fEncodingName;
     MemoryManager*  fMemoryManager;
 };
@@ -418,10 +418,10 @@ public :
     // -----------------------------------------------------------------------
     //  DEPRECATED old transcode interface
     // -----------------------------------------------------------------------
-    virtual unsigned int calcRequiredSize(const char* const srcText
+    virtual XMLSize_t calcRequiredSize(const char* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
-    virtual unsigned int calcRequiredSize(const XMLCh* const srcText
+    virtual XMLSize_t calcRequiredSize(const XMLCh* const srcText
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
     virtual bool transcode
@@ -468,7 +468,7 @@ inline MemoryManager* XMLTranscoder::getMemoryManager() const
 // ---------------------------------------------------------------------------
 //  XMLTranscoder: Protected helper methods
 // ---------------------------------------------------------------------------
-inline unsigned int XMLTranscoder::getBlockSize() const
+inline XMLSize_t XMLTranscoder::getBlockSize() const
 {
     return fBlockSize;
 }

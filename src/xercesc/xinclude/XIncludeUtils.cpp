@@ -724,7 +724,7 @@ XIncludeUtils::reportError(const DOMNode* const    /*errorNode*/
     if (fErrorReporter)
     {
     	// Load the message into a local for display
-        const unsigned int msgSize = 1023;
+        const XMLSize_t msgSize = 1023;
         XMLCh errText[msgSize + 1];
 
 		/* TODO - investigate whether this is complete */

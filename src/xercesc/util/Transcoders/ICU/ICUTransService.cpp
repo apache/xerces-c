@@ -368,7 +368,7 @@ void ICUTransService::lowerCase(XMLCh* const toLowerCase) const
 XMLTranscoder* ICUTransService::
 makeNewXMLTranscoder(const  XMLCh* const            encodingName
                     ,       XMLTransService::Codes& resValue
-                    , const unsigned int            blockSize
+                    , const XMLSize_t               blockSize
                     ,       MemoryManager* const    manager)
 {
     //  
@@ -428,7 +428,7 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
 // ---------------------------------------------------------------------------
 ICUTranscoder::ICUTranscoder(const  XMLCh* const        encodingName
                             ,       UConverter* const   toAdopt
-                            , const unsigned int        blockSize
+                            , const XMLSize_t           blockSize
                             , MemoryManager* const      manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
@@ -799,7 +799,7 @@ ICULCPTranscoder::~ICULCPTranscoder()
 // ---------------------------------------------------------------------------
 //  ICULCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
+XMLSize_t ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
                                                 , MemoryManager* const manager)
 {
     if (!srcText)
@@ -853,10 +853,10 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (err != U_BUFFER_OVERFLOW_ERROR)
         return 0;
 
-    return (unsigned int)targetCap;
+    return (XMLSize_t)targetCap;
 }
 
-unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText
+XMLSize_t ICULCPTranscoder::calcRequiredSize(const char* const srcText
                                                 , MemoryManager* const /*manager*/)
 {
     if (!srcText)
@@ -884,11 +884,11 @@ unsigned int ICULCPTranscoder::calcRequiredSize(const char* const srcText
 
 #if (U_ICU_VERSION_MAJOR_NUM < 2)
     // Subtract one since it includes the terminator space
-    return (unsigned int)(targetCap - 1);
+    return (XMLSize_t)(targetCap - 1);
 #else
     // Starting ICU 2.0, this is fixed and all ICU String functions have consistent NUL-termination behavior.
     // The returned length is always the number of output UChar's, not counting an additional, terminating NUL.
-    return (unsigned int)(targetCap);
+    return (XMLSize_t)(targetCap);
 #endif
 }
 

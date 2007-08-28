@@ -77,10 +77,10 @@ protected :
     XML256TableTranscoder
     (
         const   XMLCh* const                        encodingName
-        , const unsigned int                        blockSize
+        , const XMLSize_t                           blockSize
         , const XMLCh* const                        fromTable
         , const XMLTransService::TransRec* const    toTable
-        , const unsigned int                        toTableSize
+        , const XMLSize_t                           toTableSize
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -137,7 +137,7 @@ private :
     //      itself.
     // -----------------------------------------------------------------------
     const XMLCh*                        fFromTable;
-    unsigned int                        fToSize;
+    XMLSize_t                           fToSize;
     const XMLTransService::TransRec*    fToTable;
 };
 

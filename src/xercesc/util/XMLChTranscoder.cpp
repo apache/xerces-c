@@ -28,8 +28,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  XMLChTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLChTranscoder::XMLChTranscoder(const  XMLCh* const    encodingName
-                                , const unsigned int    blockSize
+XMLChTranscoder::XMLChTranscoder(const  XMLCh* const   encodingName
+                                , const XMLSize_t      blockSize
                                 , MemoryManager* const manager) :
 
     XMLTranscoder(encodingName, blockSize, manager)
