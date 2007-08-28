@@ -8,7 +8,7 @@
 #             a binary .res file.
 #    pkgdata  combines all of the .res files into a single
 #             shared library that can then be linked with the
-#             main application.
+#             maRESTARGETin application.
 #
 #             pkgdata will recursively generate and run yet
 #             another makefile, which in turn runs two more
@@ -20,8 +20,14 @@
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 top_builddir = @top_builddir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+libdir = @libdir@
 ICU_PREFIX = @ICU_PREFIX@
 SHREXT = @SHREXT@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+mkdir_p = @mkdir_p@
 
 include $(top_srcdir)/version.incl
 
@@ -67,7 +73,7 @@ $(TARGET): $(OBJECTS)
 $(RESTARGET): $(RESFILES)
 	@echo building $(RESTARGET)
 	$(PKGDATA) --name $(PKGNAME) --mode dll $(PKGDATAOPTS) $(RESLIST)
-	mkdir -p $(top_builddir)/obj/.libs
+	$(mkdir_p) $(top_builddir)/obj/.libs
 	mv $(PKGTARGET) $(RESTARGET)
 	
 # clean out files
@@ -81,5 +87,9 @@ $(PKGNAME)_%.res: $(srcdir)/%.txt
 	$(GENRB) $(GENRBOPT) $^
 
 # for installing the library
-install: res-install
+install: $(RESTARGET)
+	$(mkdir_p) $(libdir)
+	$(INSTALL_PROGRAM) $(RESTARGET) $(libdir)
 
+uninstall: 
+	-rm $(libdir)/$(PKGTARGET)

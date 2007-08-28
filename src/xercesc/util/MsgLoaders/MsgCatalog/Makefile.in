@@ -2,6 +2,10 @@
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 top_builddir = @top_builddir@
+prefix = @prefix@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+mkdir_p = @mkdir_p@
 
 include $(top_srcdir)/version.incl
 
@@ -29,7 +33,7 @@ all: $(RESTARGET) $(TARGET)
 
 $(RESTARGET): $(RESFILES)
 	@echo building $(RESTARGET)
-	mkdir -p $(top_builddir)/obj/.libs
+	$(mkdir_p) $(top_builddir)/obj/.libs
 	cp $(RESFILES) $(top_builddir)/obj/.libs
 	
 # clean out files
@@ -42,5 +46,10 @@ $(PKGNAME)_%.cat: $(srcdir)/$(PKGNAME)_%.Msg
 	gencat $@ $^
 
 # for installing the library
-install: res-install
+# for installing the library
+install: $(RESTARGET)
+	$(mkdir_p) $(prefix)/msg
+	$(INSTALL_PROGRAM) $(RESTARGET) $(prefix)/msg
 
+uninstall: 
+	-rm $(prefix)/msg/$(RESFILES)
