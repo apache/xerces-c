@@ -806,8 +806,8 @@ if ( ($platform =~ m/AIX/i)      ||
     
     psystem ("$MAKE clean");     # May want to comment this line out to speed up
     psystem ("$MAKE");
-    print "\nMAKE finished, config.log is:\n";
-    psystem ("cat config.log");
+    #print "\nMAKE finished, config.log is:\n";
+    #psystem ("cat config.log");
     
     # build the tests
     print("\n\nBuild the tests ...\n");
