@@ -35,7 +35,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	StringToken(const unsigned short tokType,
+	StringToken(const tokType tkType,
                 const XMLCh* const literal,
                 const int refNo,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);

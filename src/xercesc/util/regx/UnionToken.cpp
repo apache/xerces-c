@@ -38,8 +38,8 @@ const unsigned short UnionToken::INITIALSIZE = 8;
 // ---------------------------------------------------------------------------
 //  UnionToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
-UnionToken::UnionToken(const unsigned short tokType, MemoryManager* const manager)
-    : Token(tokType, manager)
+UnionToken::UnionToken(const Token::tokType tkType, MemoryManager* const manager)
+    : Token(tkType, manager)
     , fChildren(0)
 {
 
@@ -68,7 +68,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
         return;
     }
 
-    unsigned short childType = child->getTokenType();
+    Token::tokType childType = child->getTokenType();
     unsigned int   childSize = child->size();
 
     if (childType == T_CONCAT) {
@@ -89,7 +89,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     }
 
     Token* previousTok = fChildren->elementAt(childrenSize - 1);
-    unsigned short previousType = previousTok->getTokenType();
+    Token::tokType previousType = previousTok->getTokenType();
 
     if (!((previousType == T_CHAR || previousType == T_STRING)
           && (childType == T_CHAR || childType == T_STRING))) {

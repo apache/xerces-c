@@ -57,9 +57,9 @@ public:
     // -----------------------------------------------------------------------
     //  Factory methods
     // -----------------------------------------------------------------------
-    Token* createToken(const unsigned short tokType);
+    Token* createToken(const Token::tokType tkType);
 
-    ParenToken* createLook(const unsigned short tokType, Token* const token);
+    ParenToken* createLook(const Token::tokType tkType, Token* const token);
     ParenToken* createParenthesis(Token* const token, const int noGroups);
     ClosureToken* createClosure(Token* const token, bool isNonGreedy = false);
     ConcatToken* createConcat(Token* const token1, Token* const token2);

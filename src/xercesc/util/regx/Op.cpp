@@ -30,7 +30,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Op: Constructors and Destructors
 // ---------------------------------------------------------------------------
-Op::Op(const short type, MemoryManager* const manager) 
+Op::Op(const Op::opType type, MemoryManager* const manager) 
     : fMemoryManager(manager)
     , fOpType(type)
     , fNextOp(0)
@@ -110,7 +110,7 @@ const Token* Op::getToken() const {
 // ---------------------------------------------------------------------------
 //  CharOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-CharOp::CharOp(const short type, const XMLInt32 charData
+CharOp::CharOp(const Op::opType type, const XMLInt32 charData
                , MemoryManager* const manager)
     : Op(type, manager)
       , fCharData(charData) {
@@ -127,7 +127,7 @@ XMLInt32 CharOp::getData() const {
 // ---------------------------------------------------------------------------
 //  UnionOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-UnionOp::UnionOp(const short type, const int size, MemoryManager* const manager)
+UnionOp::UnionOp(const Op::opType type, const int size, MemoryManager* const manager)
     : Op(type, manager)
       , fBranches(new (manager) RefVectorOf<Op> (size, false, manager)) {
 
@@ -154,7 +154,7 @@ void UnionOp::addElement(Op* const op) {
 // ---------------------------------------------------------------------------
 //  ChildOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-ChildOp::ChildOp(const short type, MemoryManager* const manager)
+ChildOp::ChildOp(const Op::opType type, MemoryManager* const manager)
     : Op(type, manager)
       , fChild(0) {
 
@@ -176,7 +176,7 @@ void ChildOp::setChild(const Op* const child) {
 // ---------------------------------------------------------------------------
 //  ModifierOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-ModifierOp::ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2
+ModifierOp::ModifierOp(const Op::opType type, const XMLInt32 v1, const XMLInt32 v2
                        , MemoryManager* const manager)
     : ChildOp(type, manager)
       , fVal1(v1)
@@ -200,7 +200,7 @@ XMLInt32 ModifierOp::getData2() const {
 // ---------------------------------------------------------------------------
 //  RangeOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-RangeOp::RangeOp(const short type, const Token* const token, MemoryManager* const manager)
+RangeOp::RangeOp(const Op::opType type, const Token* const token, MemoryManager* const manager)
     : Op (type, manager)
       , fToken(token) {
 
@@ -218,7 +218,7 @@ const Token* RangeOp::getToken() const {
 // ---------------------------------------------------------------------------
 //  StringOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-StringOp::StringOp(const short type, const XMLCh* const literal
+StringOp::StringOp(const Op::opType type, const XMLCh* const literal
                    , MemoryManager* const manager)
     : Op (type, manager)
       , fLiteral(XMLString::replicate(literal, manager)) {
@@ -236,7 +236,7 @@ const XMLCh* StringOp::getLiteral() const {
 // ---------------------------------------------------------------------------
 //  ConditionOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-ConditionOp::ConditionOp(const short type, const int refNo,
+ConditionOp::ConditionOp(const Op::opType type, const int refNo,
                          const Op* const condFlow, const Op* const yesFlow,
                          const Op* const noFlow, MemoryManager* const manager)
     : Op (type, manager)

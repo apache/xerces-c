@@ -68,14 +68,14 @@ TokenFactory::~TokenFactory() {
 // ---------------------------------------------------------------------------
 //  TokenFactory - Factory methods
 // ---------------------------------------------------------------------------
-Token* TokenFactory::createToken(const unsigned short tokType) {
+Token* TokenFactory::createToken(const Token::tokType tkType) {
 
-	if (tokType == Token::T_EMPTY && fEmpty != 0)
+	if (tkType == Token::T_EMPTY && fEmpty != 0)
 		return fEmpty;
 
-	Token* tmpTok = new (fMemoryManager) Token(tokType, fMemoryManager);
+	Token* tmpTok = new (fMemoryManager) Token(tkType, fMemoryManager);
 
-	if (tokType == Token::T_EMPTY) {
+	if (tkType == Token::T_EMPTY) {
 		fEmpty = tmpTok;
     }
 
@@ -85,10 +85,10 @@ Token* TokenFactory::createToken(const unsigned short tokType) {
 }
 
 
-ParenToken* TokenFactory::createLook(const unsigned short tokType,
+ParenToken* TokenFactory::createLook(const Token::tokType tkType,
 									 Token* const token) {
 
-	ParenToken* tmpTok = new (fMemoryManager) ParenToken(tokType, token, 0, fMemoryManager);
+	ParenToken* tmpTok = new (fMemoryManager) ParenToken(tkType, token, 0, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;

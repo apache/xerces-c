@@ -29,8 +29,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
 // ---------------------------------------------------------------------------
-CharToken::CharToken(const unsigned short tokType, const XMLInt32 ch, MemoryManager* const manager)
-    : Token(tokType, manager)
+CharToken::CharToken(const Token::tokType tkType, const XMLInt32 ch, MemoryManager* const manager)
+    : Token(tkType, manager)
     , fCharData(ch)
 {
 

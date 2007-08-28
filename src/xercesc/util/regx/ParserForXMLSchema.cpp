@@ -288,7 +288,7 @@ XMLInt32 ParserForXMLSchema::processCInCharacterClass(RangeToken* const tok,
     return -1;
 }
 
-Token* ParserForXMLSchema::processLook(const unsigned short) {
+Token* ParserForXMLSchema::processLook(const Token::tokType ) {
 
     ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value

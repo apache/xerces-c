@@ -109,6 +109,7 @@ bool testBaseURI(XercesDOMParser* parser);
 bool testWholeText(XercesDOMParser* parser);
 bool testLSExceptions();
 
+bool testRegex();
 };
 
 class myUserDataHandler : public DOMUserDataHandler {

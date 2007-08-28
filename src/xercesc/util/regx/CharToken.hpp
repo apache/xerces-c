@@ -34,7 +34,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	CharToken(const unsigned short tokType, const XMLInt32 ch
+	CharToken(const tokType tkType, const XMLInt32 ch
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~CharToken();
 

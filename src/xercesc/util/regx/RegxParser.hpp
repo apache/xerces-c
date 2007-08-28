@@ -30,6 +30,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/regx/Token.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -48,7 +49,7 @@ public:
     //  Public constant data
     // -----------------------------------------------------------------------
     // Parse tokens
-	enum {
+	typedef enum {
 		REGX_T_CHAR                     = 0,
 		REGX_T_EOF                      = 1,
 		REGX_T_OR                       = 2,
@@ -74,10 +75,12 @@ public:
 		REGX_T_MODIFIERS                = 22,
 		REGX_T_CONDITION                = 23,
 		REGX_T_XMLSCHEMA_CC_SUBTRACTION	= 24
-	};
+	} parserState;
 
-	static const unsigned short regexParserStateNormal;
-	static const unsigned short regexParserStateInBrackets;
+    typedef enum {
+        regexParserStateNormal = 0,
+        regexParserStateInBrackets = 1
+    } parserStateContext;
 
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
@@ -88,19 +91,19 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned short getParseContext() const;
-    unsigned short getState() const;
-    XMLInt32       getCharData() const;
-    int            getNoParen() const;
-	XMLSize_t      getOffset() const;
-	bool           hasBackReferences() const;
-    TokenFactory*  getTokenFactory() const;
-    int            getOptions() const;
+    parserStateContext  getParseContext() const;
+    parserState         getState() const;
+    XMLInt32            getCharData() const;
+    int                 getNoParen() const;
+	XMLSize_t           getOffset() const;
+	bool                hasBackReferences() const;
+    TokenFactory*       getTokenFactory() const;
+    int                 getOptions() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-	void setParseContext(const unsigned short value);
+	void setParseContext(const parserStateContext value);
     void setTokenFactory(TokenFactory* const tokFactory);
     void setOptions(const int options);
 
@@ -123,7 +126,7 @@ protected:
 	Token*              parseRegx(const bool matchingRParen = false);
 	virtual Token*      processCaret();
     virtual Token*      processDollar();
-	virtual Token*      processLook(const unsigned short tokType);
+	virtual Token*      processLook(const Token::tokType tkType);
     virtual Token*      processBacksolidus_A();
     virtual Token*      processBacksolidus_z();
     virtual Token*      processBacksolidus_Z();
@@ -197,9 +200,9 @@ private:
 	int                             fOptions;
 	XMLSize_t                       fOffset;
 	int                             fNoGroups;
-	unsigned short                  fParseContext;
+	parserStateContext              fParseContext;
 	XMLSize_t                       fStringLen;
-	unsigned short                  fState;
+	parserState                     fState;
 	XMLInt32                        fCharData;
 	XMLCh*                          fString;
 	RefVectorOf<ReferencePosition>* fReferences;
@@ -210,12 +213,12 @@ private:
 // ---------------------------------------------------------------------------
 //  RegxParser: Getter Methods
 // ---------------------------------------------------------------------------
-inline unsigned short RegxParser::getParseContext() const {
+inline RegxParser::parserStateContext RegxParser::getParseContext() const {
 
     return fParseContext;
 }
 
-inline unsigned short RegxParser::getState() const {
+inline RegxParser::parserState RegxParser::getState() const {
 
 	return fState;
 }
@@ -257,7 +260,7 @@ inline int RegxParser::getOptions() const {
 // ---------------------------------------------------------------------------
 //  RegxParser: Setter Methods
 // ---------------------------------------------------------------------------
-inline void RegxParser::setParseContext(const unsigned short value) {
+inline void RegxParser::setParseContext(const RegxParser::parserStateContext value) {
 
 	fParseContext = value;
 }

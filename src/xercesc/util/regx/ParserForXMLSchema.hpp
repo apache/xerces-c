@@ -55,7 +55,7 @@ protected:
                                          const XMLInt32 ch);
     Token*      processCaret();
     Token*      processDollar();
-	Token*		processLook(const unsigned short tokType);
+	Token*		processLook(const Token::tokType tkType);
     Token*      processBacksolidus_A();
     Token*      processBacksolidus_Z();
     Token*      processBacksolidus_z();

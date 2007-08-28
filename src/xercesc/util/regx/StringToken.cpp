@@ -29,11 +29,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
 // ---------------------------------------------------------------------------
-StringToken::StringToken(const unsigned short tokType,
+StringToken::StringToken(const Token::tokType tkType,
                          const XMLCh* const literal,
                          const int refNo,
                          MemoryManager* const manager)
-    : Token(tokType, manager)
+    : Token(tkType, manager)
     , fRefNo(refNo)
     , fString(XMLString::replicate(literal, manager))    
     , fMemoryManager(manager)

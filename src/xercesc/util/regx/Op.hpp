@@ -40,7 +40,7 @@ class XMLUTIL_EXPORT Op : public XMemory
 {
 public:
 
-    enum {
+    typedef enum {
         O_DOT                = 0,
         O_CHAR               = 1,
         O_RANGE              = 3,
@@ -61,7 +61,7 @@ public:
         O_INDEPENDENT        = 24,
         O_MODIFIER           = 25,
         O_CONDITION          = 26
-    };
+    } opType;
 
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
@@ -71,7 +71,7 @@ public:
     // -----------------------------------------------------------------------
     // Getter functions
     // -----------------------------------------------------------------------
-            short        getOpType() const;
+            opType       getOpType() const;
             const Op*    getNextOp() const;
     virtual XMLInt32     getData() const;
     virtual XMLInt32     getData2() const;
@@ -88,14 +88,14 @@ public:
     // -----------------------------------------------------------------------
     // Setter functions
     // -----------------------------------------------------------------------
-    void setOpType(const short type);
+    void setOpType(const opType type);
     void setNextOp(const Op* const next);
 
 protected:
     // -----------------------------------------------------------------------
     //  Protected Constructors
     // -----------------------------------------------------------------------
-    Op(const short type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    Op(const opType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     friend class OpFactory;
 
     MemoryManager* const fMemoryManager;
@@ -116,7 +116,7 @@ private:
     //  fNextOp
     //      Points to the next operation in the chain
     // -----------------------------------------------------------------------
-    short fOpType;
+    opType      fOpType;
     const Op*   fNextOp;
 };
 
@@ -126,7 +126,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	CharOp(const short type, const XMLInt32 charData, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	CharOp(const opType type, const XMLInt32 charData, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~CharOp() {}
 
 	// -----------------------------------------------------------------------
@@ -150,7 +150,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	UnionOp(const short type, const int size,
+	UnionOp(const opType type, const int size,
             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~UnionOp() { delete fBranches; }
 
@@ -182,7 +182,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ChildOp(const short type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	ChildOp(const opType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ChildOp() {}
 
 	// -----------------------------------------------------------------------
@@ -211,7 +211,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ModifierOp(const short type, const XMLInt32 v1, const XMLInt32 v2, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	ModifierOp(const opType type, const XMLInt32 v1, const XMLInt32 v2, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ModifierOp() {}
 
 	// -----------------------------------------------------------------------
@@ -237,7 +237,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RangeOp(const short type, const Token* const token, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	RangeOp(const opType type, const Token* const token, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~RangeOp() {}
 
 	// -----------------------------------------------------------------------
@@ -261,7 +261,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	StringOp(const short type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	StringOp(const opType type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~StringOp() { fMemoryManager->deallocate(fLiteral);}
 
 	// -----------------------------------------------------------------------
@@ -285,7 +285,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ConditionOp(const short type, const int refNo,
+	ConditionOp(const opType type, const int refNo,
 				const Op* const condFlow, const Op* const yesFlow,
 				const Op* const noFlow, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~ConditionOp() {}
@@ -315,7 +315,7 @@ private:
 // ---------------------------------------------------------------------------
 //  Op: getter methods
 // ---------------------------------------------------------------------------
-inline short Op::getOpType() const {
+inline Op::opType Op::getOpType() const {
 
 	return fOpType;
 }
@@ -328,7 +328,7 @@ inline const Op* Op::getNextOp() const {
 // ---------------------------------------------------------------------------
 //  Op: setter methods
 // ---------------------------------------------------------------------------
-inline void Op::setOpType(const short type) {
+inline void Op::setOpType(const Op::opType type) {
 
 	fOpType = type;
 }

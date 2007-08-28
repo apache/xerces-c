@@ -55,9 +55,6 @@ const unsigned int RegularExpression::PROHIBIT_HEAD_CHARACTER_OPTIMIZATION = 128
 const unsigned int RegularExpression::PROHIBIT_FIXED_STRING_OPTIMIZATION = 256;
 const unsigned int RegularExpression::XMLSCHEMA_MODE = 512;
 const unsigned int RegularExpression::SPECIAL_COMMA = 1024;
-const unsigned short RegularExpression::WT_IGNORE = 0;
-const unsigned short RegularExpression::WT_LETTER = 1;
-const unsigned short RegularExpression::WT_OTHER = 2;
 RangeToken*          RegularExpression::fWordRange = 0;
 
 
@@ -998,7 +995,7 @@ struct RE_RuntimeContext {
 int RegularExpression::match(Context* const context, const Op* const operations
 							 , XMLSize_t offset, const short direction)
 {
-    ValueStackOf<RE_RuntimeContext>	opStack((unsigned int)(context->fLength - offset), fMemoryManager);
+    ValueStackOf<RE_RuntimeContext>	opStack(0, fMemoryManager);
 	const Op* tmpOp = operations;
 	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
 	int	doReturn;
@@ -1279,9 +1276,9 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 		if (context->fLength == 0)
 			break;
 		{
-			int after = getWordType(context->fString, context->fStart,
+			wordType after = getWordType(context->fString, context->fStart,
 									context->fLimit, offset);
-			if (after == WT_IGNORE
+			if (after == wordTypeIgnore
 				|| after == getPreviousWordType(context->fString,
 												context->fStart,
 												context->fLimit, offset))
@@ -1292,9 +1289,9 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 		if (context->fLength == 0)
 			return false;
 		{
-			int after = getWordType(context->fString, context->fStart,
+			wordType after = getWordType(context->fString, context->fStart,
 									context->fLimit, offset);
-			if (after == WT_IGNORE
+			if (after == wordTypeIgnore
 				|| after == getPreviousWordType(context->fString,
 												context->fStart
 												, context->fLimit, offset))
@@ -1342,9 +1339,9 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 			return false;
 
 		if (getWordType(context->fString, context->fStart, context->fLimit,
-						offset) != WT_LETTER
+						offset) != wordTypeLetter
 			|| getPreviousWordType(context->fString, context->fStart,
-								   context->fLimit, offset) != WT_OTHER)
+								   context->fLimit, offset) != wordTypeOther)
 			return false;
 		break;
 	case chCloseAngle:
@@ -1352,9 +1349,9 @@ bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
 			return false;
 
 		if (getWordType(context->fString, context->fStart, context->fLimit,
-						offset) != WT_OTHER
+						offset) != wordTypeOther
 			|| getPreviousWordType(context->fString, context->fStart,
-								   context->fLimit, offset) != WT_LETTER)
+								   context->fLimit, offset) != wordTypeLetter)
 			return false;
 		break;
 	}
@@ -1524,7 +1521,7 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 
 	Op* ret = 0;
 
-	const unsigned short tokenType = token->getTokenType();
+    const Token::tokType tokenType = token->getTokenType();
 
 	switch(tokenType) {
 	case Token::T_DOT:
@@ -1667,7 +1664,7 @@ void RegularExpression::prepare() {
 		!isSet(fOptions, XMLSCHEMA_MODE))							{
 
 		RangeToken* rangeTok = fTokenFactory->createRange();
-		int result = fTokenTree->analyzeFirstCharacter(rangeTok, fOptions, fTokenFactory);
+        Token::firstCharacterOptions result = fTokenTree->analyzeFirstCharacter(rangeTok, fOptions, fTokenFactory);
 
 		if (result == Token::FC_TERMINAL) {
 
@@ -1741,7 +1738,7 @@ void RegularExpression::prepare() {
 	}
 }
 
-unsigned short RegularExpression::getCharType(const XMLCh ch) {
+RegularExpression::wordType RegularExpression::getCharType(const XMLCh ch) {
 
     if (!isSet(fOptions, UNICODE_WORD_BOUNDARY)) {
 
@@ -1754,10 +1751,10 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 					ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, fMemoryManager);
 			}
 
-			return fWordRange->match(ch) ? WT_LETTER : WT_OTHER;
+			return fWordRange->match(ch) ? wordTypeLetter : wordTypeOther;
 		}
 
-		return RegxUtil::isWordChar(ch);
+        return RegxUtil::isWordChar(ch) ? wordTypeLetter : wordTypeIgnore;
     }
 
 	switch (XMLUniCharacter::getType(ch)) {
@@ -1770,11 +1767,11 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 	case XMLUniCharacter::DECIMAL_DIGIT_NUMBER:
 	case XMLUniCharacter::OTHER_NUMBER:
 	case XMLUniCharacter::COMBINING_SPACING_MARK:
-		return WT_LETTER;
+		return wordTypeLetter;
 	case XMLUniCharacter::FORMAT:
 	case XMLUniCharacter::NON_SPACING_MARK:
 	case XMLUniCharacter::ENCLOSING_MARK:
-		return WT_IGNORE;
+		return wordTypeIgnore;
 	case XMLUniCharacter::CONTROL:
 		switch (ch) {
 		case chHTab:
@@ -1782,13 +1779,13 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 		case chVTab:
 		case chFF:
 		case chCR:
-			return WT_OTHER;
+			return wordTypeOther;
 		default:
-			return WT_IGNORE;
+			return wordTypeIgnore;
 		}
 	}
 
-    return WT_OTHER;
+    return wordTypeOther;
 }
 
 

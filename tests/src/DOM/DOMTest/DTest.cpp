@@ -897,6 +897,7 @@ int main(int /*argc*/, char ** /*argv*/)
          OK = test.testText(d);
          OK = test.testDOMerrors(d);
          OK = test.testXPath(d);
+         OK = test.testRegex();
 
          // Null out the static object references in class DOMTest,
          // which will recover their storage.
@@ -5010,4 +5011,182 @@ bool DOMTest::treeCompare(DOMNode* node, DOMNode* node2)
     return answer;
 }
 
+#define TEST_VALID_REGEX(str, regex, line) \
+    try \
+    { \
+        RegularExpression p(regex); \
+        if(!p.matches(str)) \
+        { \
+            fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+            OK = false; \
+        } \
+    }   \
+    catch(XMLException& ) \
+    {   \
+        fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+        OK = false; \
+    }
 
+#define TEST_INVALID_REGEX(str, regex, line) \
+    try \
+    { \
+        RegularExpression p(regex); \
+        if(p.matches(str)) \
+        { \
+            fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+            OK = false; \
+        } \
+    }   \
+    catch(XMLException& ) \
+    {   \
+        fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+        OK = false; \
+    }
+
+#define TEST_VALID_SCHEMA_REGEX(str, regex, line) \
+    try \
+    { \
+        RegularExpression p(regex, "X"); \
+        if(!p.matches(str)) \
+        { \
+            fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+            OK = false; \
+        } \
+    }   \
+    catch(XMLException& ) \
+    {   \
+        fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+        OK = false; \
+    }
+
+#define TEST_INVALID_SCHEMA_REGEX(str, regex, line) \
+    try \
+    { \
+        RegularExpression p(regex, "X"); \
+        if(p.matches(str)) \
+        { \
+            fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+            OK = false; \
+        } \
+    }   \
+    catch(XMLException& ) \
+    {   \
+        fprintf(stderr, "Regular expression test failed at line %i\n", line); \
+        OK = false; \
+    }
+
+#define HUGE_STRING (100*1024)  // 100Kb
+
+bool DOMTest::testRegex() {
+    bool OK = true;
+
+    char* hugeString=new char[HUGE_STRING+1];
+    for(int i=0;i<HUGE_STRING;i++)
+        hugeString[i]='A';
+    hugeString[HUGE_STRING]=0;
+    TEST_VALID_REGEX(hugeString, "([A-F0-9]{2})*", __LINE__);
+
+    TEST_VALID_REGEX("12_END", "[12]{2}_END", __LINE__);
+    TEST_INVALID_REGEX("12", "[12]{2}_END", __LINE__);
+
+    TEST_VALID_REGEX("AE", "(A|B*|C)E", __LINE__);
+    TEST_VALID_REGEX("E", "(A|B*|C)E", __LINE__);
+    TEST_VALID_REGEX("BBBBBBBBBBBBBE", "(A|B*|C)E", __LINE__);
+    TEST_VALID_REGEX("CE", "(A|B*|C)E", __LINE__);
+    TEST_INVALID_REGEX("A", "(A|B*|C)E", __LINE__);
+    TEST_INVALID_REGEX("", "(A|B*|C)E", __LINE__);
+    TEST_INVALID_REGEX("BBBBBBBBBBBBB", "(A|B*|C)E", __LINE__);
+    TEST_INVALID_REGEX("C", "(A|B*|C)E", __LINE__);
+
+    // this tests the closures that need fOffset in the context
+    for(int i=0;i<HUGE_STRING-1;i++)
+        hugeString[i]=i%2?'B':'C';
+    hugeString[HUGE_STRING-1]='E';
+    // we run out of stack space when testing this one
+    //TEST_VALID_REGEX(hugeString, "(B?C?)*E", __LINE__);
+    TEST_VALID_REGEX("BBBBE", "(B?C?)*E", __LINE__);
+    TEST_VALID_REGEX("E", "(B?C?)*E", __LINE__);
+    TEST_VALID_REGEX("CCCCCCCE", "(B?C?)*E", __LINE__);
+    TEST_VALID_REGEX("BCBCBBBBCCCCCE", "(B?C?)*E", __LINE__);
+
+    TEST_VALID_REGEX(" C", "[\\s]*[\\S]+[\\s\\S]*", __LINE__);
+    TEST_VALID_REGEX("C asasaskja ksakj", "[\\s]*[\\S]+[\\s\\S]*", __LINE__);
+    TEST_VALID_REGEX(" C", "[\\s]*[\\S]+[\\s\\S]*", __LINE__);
+    TEST_INVALID_REGEX("\t         ", "[\\s]*[\\S]+[\\S]*", __LINE__);
+
+    TEST_VALID_REGEX("U2VsZWN0IFRoaXMgaXMgZmlmdGg7DQogDQpOT1RFOiBUaGUgaW5mb3JtYXRpb24gY29udGFpbmVk\n"
+                     "IGluIHRoaXMgZW1haWwgbWVzc2FnZSBpcyBjb25zaWRlcmVkIGNvbmZpZGVudGlhbCBhbmQgcHJv\n"
+                     "cHJpZXRhcnkgdG8gdGhlIHNlbmRlciBhbmQgaXMgaW50ZW5kZWQgc29sZWx5IGZvciByZXZpZXcg\n"
+                     "YW5kIHVzZSBieSB0aGUgbmFtZWQgcmVjaXBpZW50LiAgQW55IHVuYXV0aG9yaXplZCByZXZpZXcs\n"
+                     "IHVzZSBvciBkaXN0cmlidXRpb24gaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGhhdmUg\n"
+                     "cmVjZWl2ZWQgdGhpcyBtZXNzYWdlIGluIGVycm9yLCBwbGVhc2UgYWR2aXNlIHRoZSBzZW5kZXIg\n"
+                     "YnkgcmVwbHkgZW1haWwgYW5kIGRlbGV0ZSB0aGUgbWVzc2FnZS4NCg==\n", "(^(([A-Za-z0-9+/=]){4}){1,19}$)*", __LINE__);
+
+    // examples from XMLSchema specs
+    TEST_VALID_SCHEMA_REGEX("123 456", "123 (\\d+\\s)*456", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("123 987 456", "123 (\\d+\\s)*456", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("123 987 567 456", "123 (\\d+\\s)*456", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("P0100Y02M", "P\\p{Nd}{4}Y\\p{Nd}{2}M", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("en-US", "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*", __LINE__);
+
+    TEST_VALID_SCHEMA_REGEX("123-XX", "\\d{3}-[A-Z]{2}", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("01803", "[0-9]{5}(-[0-9]{4})?", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("_id1", "\\i\\c*", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("0id", "\\i\\c*", __LINE__);
+
+    TEST_VALID_SCHEMA_REGEX("hello", "[\\i-[:]][\\c-[:]]*", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("0qq", "[\\i-[:]][\\c-[:]]*", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("ns:localname", "[\\i-[:]][\\c-[:]]*", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("ns:", "[\\i-[:]][\\c-[:]]*", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX(":qq", "[\\i-[:]][\\c-[:]]*", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("900", "[\\-+]?[0-9]+", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("-900", "[\\-+]?[0-9]+", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("+900", "[\\-+]?[0-9]+", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("+", "[\\-+]?[0-9]+", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("-", "[\\-+]?[0-9]+", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("0.4", "[\\-+]?[0-9]+", __LINE__);
+
+    TEST_VALID_SCHEMA_REGEX("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "A.*Z", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("Z", "A.*Z", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("A", "A.*Z", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("ABC", "A.*Z", __LINE__);
+
+    // tests from the XMLSchema Test Suite
+    TEST_VALID_SCHEMA_REGEX("Chapter b", "Chapter\\s{0,2}\\w", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("Chapter\tb", "Chapter\\s{0,2}\\w", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("Chapter\nb", "Chapter\\s{0,2}\\w", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("abx", "(a|b)+x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("bax", "(a|b)+x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("bbx", "(a|b)+x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("aaax", "(a|b)+x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("abax", "(a|b)+x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("abbx", "(a|b)+x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("bbax", "(a|b)+x", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("1x2abc", ".*abc.*", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("abc1x2", ".*abc.*", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("z3455abch00ray", ".*abc.*", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("bcabcabcab", ".*abc.*", __LINE__);
+
+    TEST_VALID_SCHEMA_REGEX("abbbx", "ab{2,4}x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("abbbbx", "ab{2,4}x", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("abx", "ab{2,4}x", __LINE__);
+    TEST_INVALID_SCHEMA_REGEX("abbbbbx", "ab{2,4}x", __LINE__);
+    
+    TEST_VALID_SCHEMA_REGEX("5 Bedford Street Boston , MA 15604-1536", "\\d{1,5}\\s([A-Z][a-z]{1,20}\\s){1}Street\\s([A-Z][a-z]{1,20}\\s){1},\\s[A-Z]{2}\\s15604-1536", __LINE__);
+    
+    // from X3D schema
+    TEST_VALID_SCHEMA_REGEX("0.5 0.2 1.0", "((((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))))?", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("5.0e-2 .2 1", "((((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))))?", __LINE__);
+
+    TEST_VALID_SCHEMA_REGEX("-0 +3989 -90.76754,+9E77, -0.3e+9", "(((\\+|\\-)?(0|[1-9][0-9]*)?(\\.[0-9]*)?((E|e)(\\+|\\-)?[0-9]+)?)?( )?(,)?( )?)*", __FILE__);
+
+    delete hugeString;
+
+    return OK;
+}

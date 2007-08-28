@@ -29,9 +29,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ParenToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
-ParenToken::ParenToken(const unsigned short tokType,
+ParenToken::ParenToken(const Token::tokType tkType,
                        Token* const tok, const int noParen, MemoryManager* const manager)
-    : Token(tokType, manager)
+    : Token(tkType, manager)
     , fNoParen(noParen)
     , fChild(tok)
 {

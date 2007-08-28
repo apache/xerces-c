@@ -72,7 +72,7 @@ public:
 	ChildOp* createNonGreedyClosureOp();
 	ChildOp* createQuestionOp(bool nonGreedy);
 	RangeOp* createRangeOp(const Token* const token);
-	ChildOp* createLookOp(const short type, const Op* const next,
+    ChildOp* createLookOp(const Op::opType type, const Op* const next,
                           const Op* const branch);
 	CharOp* createBackReferenceOp(int refNo);
 	StringOp* createStringOp(const XMLCh* const literal);

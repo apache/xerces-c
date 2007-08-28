@@ -120,7 +120,7 @@ RangeOp* OpFactory::createRangeOp(const Token* const token) {
 	return tmpOp;
 }
 
-ChildOp* OpFactory::createLookOp(const short type, const Op* const next,
+ChildOp* OpFactory::createLookOp(const Op::opType type, const Op* const next,
 						         const Op* const branch) {
 
 	ChildOp* tmpOp = new (fMemoryManager) ChildOp(type, fMemoryManager);

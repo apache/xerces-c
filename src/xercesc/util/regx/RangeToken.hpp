@@ -41,7 +41,7 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-    RangeToken(const unsigned short tokType,
+    RangeToken(const tokType tkType,
                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~RangeToken();
 

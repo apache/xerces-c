@@ -41,18 +41,10 @@ class XMLUTIL_EXPORT Token : public XMemory
 {
 public:
 	// -----------------------------------------------------------------------
-    //  Public Constructors and Destructor
-    // -----------------------------------------------------------------------
-	Token(const unsigned short tokType
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
-        );
-	virtual ~Token();
-
-	// -----------------------------------------------------------------------
     //  Public Constants
     // -----------------------------------------------------------------------
 	// Token types
-	enum {
+	typedef enum {
 		T_CHAR = 0,
 		T_CONCAT = 1,
 		T_UNION = 2,
@@ -73,18 +65,29 @@ public:
 		T_INDEPENDENT = 24,
 		T_MODIFIERGROUP = 25,
 		T_CONDITION = 26
-	};
+	} tokType;
+
+	// -----------------------------------------------------------------------
+    //  Public Constructors and Destructor
+    // -----------------------------------------------------------------------
+    Token(const tokType tkType
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        );
+	virtual ~Token();
 
 	static const XMLInt32		UTF16_MAX;
-	static const unsigned short FC_CONTINUE;
-	static const unsigned short FC_TERMINAL;
-	static const unsigned short FC_ANY;
+
+    typedef enum {
+        FC_CONTINUE = 0,
+        FC_TERMINAL = 1,
+        FC_ANY = 2
+    } firstCharacterOptions;
 
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	unsigned short       getTokenType() const;
-	int                  getMinLength() const;
+	tokType              getTokenType() const;
+	XMLSize_t            getMinLength() const;
     int                  getMaxLength() const;
 	virtual Token*       getChild(const int index) const;
 	virtual int          size() const;
@@ -98,7 +101,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-	void setTokenType(const unsigned short tokType);
+    void setTokenType(const tokType tokType);
 	virtual void setMin(const int minVal);
 	virtual void setMax(const int maxVal);
 
@@ -120,8 +123,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
-	int analyzeFirstCharacter(RangeToken* const rangeTok, const int options,
-                              TokenFactory* const tokFactory);
+	firstCharacterOptions analyzeFirstCharacter(RangeToken* const rangeTok, const int options,
+                                                TokenFactory* const tokFactory);
     Token* findFixedString(int options, int& outOptions);
 
 private:
@@ -140,7 +143,7 @@ private:
 	// -----------------------------------------------------------------------
     //  Private data members
 	// -----------------------------------------------------------------------
-	unsigned short fTokenType;
+	tokType fTokenType;
 protected:
     MemoryManager* const    fMemoryManager;
 };
@@ -149,7 +152,7 @@ protected:
 // ---------------------------------------------------------------------------
 //  Token: getter methods
 // ---------------------------------------------------------------------------
-inline unsigned short Token::getTokenType() const {
+inline Token::tokType Token::getTokenType() const {
 
 	return fTokenType;
 }
@@ -197,7 +200,7 @@ inline XMLInt32 Token::getChar() const {
 // ---------------------------------------------------------------------------
 //  Token: setter methods
 // ---------------------------------------------------------------------------
-inline void Token::setTokenType(const unsigned short tokType) {
+inline void Token::setTokenType(const Token::tokType tokType) {
 	
 	fTokenType = tokType;
 }

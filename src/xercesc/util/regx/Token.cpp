@@ -33,16 +33,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Static member data initialization
 // ---------------------------------------------------------------------------
 const XMLInt32		 Token::UTF16_MAX = 0x10FFFF;
-const unsigned short Token::FC_CONTINUE = 0;
-const unsigned short Token::FC_TERMINAL = 1;
-const unsigned short Token::FC_ANY = 2;
 
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
 // ---------------------------------------------------------------------------
-Token::Token(const unsigned short tokType
+Token::Token(const Token::tokType tkType
              , MemoryManager* const manager) 
-             : fTokenType(tokType) 
+             : fTokenType(tkType) 
              , fMemoryManager(manager)
 {
 
@@ -56,13 +53,13 @@ Token::~Token() {
 // ---------------------------------------------------------------------------
 //  Token: Getter mthods
 // ---------------------------------------------------------------------------
-int Token::getMinLength() const {
+XMLSize_t Token::getMinLength() const {
 
 	switch (fTokenType) {
 
 	case T_CONCAT:
         {
-            int sum = 0;
+            XMLSize_t sum = 0;
             unsigned int childSize = size();
 
             for (unsigned int i=0; i<childSize; i++) {
@@ -78,11 +75,11 @@ int Token::getMinLength() const {
             if (childSize == 0) {
                 return 0;
             }
-			int ret = getChild(0)->getMinLength();
+			XMLSize_t ret = getChild(0)->getMinLength();
 
             for (unsigned int i=1; i < childSize; i++) {
 
-                int min = getChild(i)->getMinLength();
+                XMLSize_t min = getChild(i)->getMinLength();
                 if (min < ret)
                     ret = min;
             }
@@ -109,7 +106,7 @@ int Token::getMinLength() const {
 	case T_BACKREFERENCE:
 		return 0; // *****  - REVISIT
 	case T_STRING:
-		return (int)XMLString::stringLen(getString());
+		return XMLString::stringLen(getString());
 	case T_LOOKAHEAD:
 	case T_NEGATIVELOOKAHEAD:
 	case T_LOOKBEHIND:
@@ -120,7 +117,7 @@ int Token::getMinLength() const {
 	}
 
 	// We should not get here, but we have it to make some compilers happy
-	return -1;
+	return (XMLSize_t)-1;
 }
 
 
@@ -207,14 +204,14 @@ int Token::getMaxLength() const {
 // ---------------------------------------------------------------------------
 //  Token: Helper mthods
 // ---------------------------------------------------------------------------
-int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
-								 const int options,
-                                 TokenFactory* const tokFactory)
+Token::firstCharacterOptions Token::analyzeFirstCharacter(RangeToken* const rangeTok,
+                                                          const int options,
+                                                          TokenFactory* const tokFactory)
 {
 	switch(fTokenType) {
 	case T_CONCAT:
 		{
-			int ret = FC_CONTINUE;
+			firstCharacterOptions ret = FC_CONTINUE;
 			for (int i=0; i<size(); i++) {
 
 				Token* tok = getChild(i);
@@ -231,7 +228,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
             if (childSize == 0)
                 return FC_CONTINUE;
 
-            int ret = FC_CONTINUE;
+            firstCharacterOptions ret = FC_CONTINUE;
 			bool hasEmpty = false;
 
 			for (unsigned int i=0; i < childSize; i++) {
@@ -247,7 +244,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 		}
 	case T_CONDITION:
 		{
-            int ret1 = getChild(0)->analyzeFirstCharacter(rangeTok, options, tokFactory);
+            firstCharacterOptions ret1 = getChild(0)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 
             if (size() == 1)
                 return FC_CONTINUE;
@@ -255,7 +252,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			if (ret1 == FC_ANY)
 				return FC_ANY;
 
-			int ret2 = getChild(1)->analyzeFirstCharacter(rangeTok, options, tokFactory);
+			firstCharacterOptions ret2 = getChild(1)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 			if (ret2 == FC_ANY)
 				return FC_ANY;
 
@@ -344,7 +341,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 //		throw;
 	}
 
-	return 0;
+	return FC_CONTINUE;
 }
 
 

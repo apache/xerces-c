@@ -89,9 +89,12 @@ public:
     static const unsigned int   PROHIBIT_FIXED_STRING_OPTIMIZATION;
     static const unsigned int   XMLSCHEMA_MODE;
     static const unsigned int   SPECIAL_COMMA;
-    static const unsigned short WT_IGNORE;
-    static const unsigned short WT_LETTER;
-    static const unsigned short WT_OTHER;
+    typedef enum 
+    {
+        wordTypeIgnore = 0,
+        wordTypeLetter = 1,
+        wordTypeOther = 2
+    } wordType;
 
     // -----------------------------------------------------------------------
     //  Public Helper methods
@@ -205,10 +208,10 @@ private:
     // -----------------------------------------------------------------------
     void prepare();
     int parseOptions(const XMLCh* const options);
-    unsigned short getWordType(const XMLCh* const target, const XMLSize_t begin,
+    wordType getWordType(const XMLCh* const target, const XMLSize_t begin,
                                const XMLSize_t end, const XMLSize_t offset);
-    unsigned short getCharType(const XMLCh ch);
-    unsigned short getPreviousWordType(const XMLCh* const target,
+    wordType getCharType(const XMLCh ch);
+    wordType getPreviousWordType(const XMLCh* const target,
                                        const XMLSize_t start, const XMLSize_t end,
                                        XMLSize_t offset);
 
@@ -274,7 +277,7 @@ private:
       *    Helper methods used by compile
       */
     Op* compileSingle(const Token* const token, Op* const next,
-                      const unsigned short tokType);
+                      const Token::tokType tkType);
     Op* compileUnion(const Token* const token, Op* const next,
                      const bool reverse);
     Op* compileCondition(const Token* const token, Op* const next,
@@ -282,11 +285,11 @@ private:
     Op* compileParenthesis(const Token* const token, Op* const next,
                            const bool reverse);
     Op* compileLook(const Token* const token, const Op* const next,
-                    const bool reverse, const unsigned short tokType);
+                    const bool reverse, const Token::tokType tkType);
     Op* compileConcat(const Token* const token, Op* const next,
                       const bool reverse);
     Op* compileClosure(const Token* const token, Op* const next,
-                       const bool reverse, const unsigned short tokType);
+                       const bool reverse, const Token::tokType tkType);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -294,8 +297,8 @@ private:
     bool               fHasBackReferences;
     bool               fFixedStringOnly;
     int                fNoGroups;
-    int                fMinLength;
-    int                fNoClosures;
+    XMLSize_t          fMinLength;
+    unsigned int       fNoClosures;
     unsigned int       fOptions;
     BMPattern*         fBMPattern;
     XMLCh*             fPattern;
@@ -341,12 +344,12 @@ private:
   inline Op* RegularExpression::compileLook(const Token* const token,
                                             const Op* const next,
                                             const bool reverse,
-                                            const unsigned short tokType) {
+                                            const Token::tokType tkType) {
 
       Op*    ret = 0;
       Op*    result = compile(token->getChild(0), 0, reverse);
 
-      switch(tokType) {
+      switch(tkType) {
       case Token::T_LOOKAHEAD:
           ret = fOpFactory.createLookOp(Op::O_LOOKAHEAD, next, result);
           break;
@@ -375,11 +378,11 @@ private:
 
   inline Op* RegularExpression::compileSingle(const Token* const token,
                                               Op* const next,
-                                              const unsigned short tokType) {
+                                              const Token::tokType tkType) {
 
       Op* ret = 0;
 
-      switch (tokType) {
+      switch (tkType) {
       case Token::T_DOT:
           ret = fOpFactory.createDotOp();
           break;
@@ -404,7 +407,7 @@ private:
           break;
       }
 
-      if (tokType != Token::T_EMPTY)
+      if (tkType != Token::T_EMPTY)
           ret->setNextOp(next);
 
       return ret;
@@ -492,7 +495,7 @@ private:
   inline Op* RegularExpression::compileClosure(const Token* const token,
                                                Op* const next,
                                                const bool reverse,
-                                               const unsigned short tokType) {
+                                               const Token::tokType tkType) {
 
       Op*    ret      = 0;
       Token* childTok = token->getChild(0);
@@ -518,7 +521,7 @@ private:
           for (int i=0; i<max; i++) {
 
               ChildOp* childOp = fOpFactory.createQuestionOp(
-                  tokType == Token::T_NONGREEDYCLOSURE);
+                  tkType == Token::T_NONGREEDYCLOSURE);
 
               childOp->setNextOp(next);
               childOp->setChild(compile(childTok, ret, reverse));
@@ -529,7 +532,7 @@ private:
 
           ChildOp* childOp = 0;
 
-          if (tokType == Token::T_NONGREEDYCLOSURE) {
+          if (tkType == Token::T_NONGREEDYCLOSURE) {
               childOp = fOpFactory.createNonGreedyClosureOp();
           }
           else {
@@ -570,26 +573,26 @@ private:
       return ret;
   }
 
-  inline unsigned short RegularExpression::getWordType(const XMLCh* const target
-                                                       , const XMLSize_t begin
-                                                       , const XMLSize_t end
-                                                       , const XMLSize_t offset)
+  inline RegularExpression::wordType RegularExpression::getWordType(const XMLCh* const target
+                                                                   , const XMLSize_t begin
+                                                                   , const XMLSize_t end
+                                                                   , const XMLSize_t offset)
   {
       if (offset < begin || offset >= end)
-          return WT_OTHER;
+          return wordTypeOther;
 
       return getCharType(target[offset]);
   }
 
   inline
-  unsigned short RegularExpression::getPreviousWordType(const XMLCh* const target
-                                                        , const XMLSize_t start
-                                                        , const XMLSize_t end
-                                                        , XMLSize_t offset)
+  RegularExpression::wordType RegularExpression::getPreviousWordType(const XMLCh* const target
+                                                                    , const XMLSize_t start
+                                                                    , const XMLSize_t end
+                                                                    , XMLSize_t offset)
   {
-      unsigned short ret = getWordType(target, start, end, --offset);
+      wordType ret = getWordType(target, start, end, --offset);
 
-      while (ret == WT_IGNORE) {
+      while (ret == wordTypeIgnore) {
           ret = getWordType(target, start, end, --offset);
       }
 

@@ -34,12 +34,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-const unsigned short RegxParser::regexParserStateNormal		= 0;
-const unsigned short RegxParser::regexParserStateInBrackets	= 1;
-
-// ---------------------------------------------------------------------------
 //  RegxParser::ReferencePostion: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RegxParser::ReferencePosition::ReferencePosition(const int refNo,
@@ -61,7 +55,7 @@ RegxParser::RegxParser(MemoryManager* const manager)
      fNoGroups(1),
      fParseContext(regexParserStateNormal),
      fStringLen(0),
-     fState(0),
+     fState(REGX_T_EOF),
      fCharData(0),
      fString(0),
      fReferences(0),
@@ -139,7 +133,7 @@ void RegxParser::processNext() {
         return;
 	}
 
-    unsigned short nextState;
+    parserState nextState;
 	XMLCh ch = fString[fOffset++];
 	fCharData = ch;
 
@@ -349,7 +343,7 @@ Token* RegxParser::parseRegx(const bool matchingRParen) {
 
 Token* RegxParser::parseTerm(const bool matchingRParen) {
 
-    unsigned short state = fState;
+    parserState state = fState;
 
     if (state == REGX_T_OR || state == REGX_T_EOF
         || (state == REGX_T_RPAREN && matchingRParen)) {
@@ -391,11 +385,11 @@ Token* RegxParser::processDollar() {
 }
 
 
-Token* RegxParser::processLook(const unsigned short tokType) {
+Token* RegxParser::processLook(const Token::tokType tkType) {
 
     processNext();
 
-	Token* tok = fTokenFactory->createLook(tokType, parseRegx());
+	Token* tok = fTokenFactory->createLook(tkType, parseRegx());
 
     if (fState != REGX_T_RPAREN) {
         ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Factor1, fMemoryManager);

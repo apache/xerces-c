@@ -54,9 +54,9 @@ const unsigned int RangeToken::INITIALSIZE = 16;
 // ---------------------------------------------------------------------------
 //  RangeToken: Constructors and Destructors
 // ---------------------------------------------------------------------------
-RangeToken::RangeToken(const unsigned short tokType,
+RangeToken::RangeToken(const Token::tokType tkType,
                        MemoryManager* const manager) 
-    : Token(tokType, manager)
+    : Token(tkType, manager)
     , fSorted(false)
     , fCompacted(false)
     , fNonMapIndex(0)
