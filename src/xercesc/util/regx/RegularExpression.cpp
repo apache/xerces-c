@@ -1391,22 +1391,25 @@ int RegularExpression::matchUnion(Context* const context,
                                    const Op* const op, int offset,
                                    const short direction)
 {
-  unsigned int opSize = op->getSize();
+    unsigned int opSize = op->getSize();
 
-  Context bestResultContext;
-  int bestResult=-1;
-  for(unsigned int i=0; i < opSize; i++) {
-      Context tmpContext(context);
-      int ret = match(&tmpContext, op->elementAt(i), offset, direction);
-      if (ret >= 0 && ret <= context->fLimit && ret>bestResult)
-      {
-          bestResult=ret;
-          bestResultContext=tmpContext;
-      }
-  }
-  if(bestResult!=-1)
-      *context=bestResultContext;
-  return bestResult;
+    Context bestResultContext;
+    int bestResult=-1;
+    for(unsigned int i=0; i < opSize; i++) {
+        Context tmpContext(context);
+        int ret = match(&tmpContext, op->elementAt(i), offset, direction);
+        if (ret >= 0 && ret <= context->fLimit && ret>bestResult)
+        {
+            bestResult=ret;
+            bestResultContext=tmpContext;
+            // exit early, if we reached the end of the string
+            if(ret == context->fLimit)
+                break;
+        }
+    }
+    if(bestResult!=-1)
+        *context=bestResultContext;
+    return bestResult;
 }
 
 
