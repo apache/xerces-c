@@ -144,7 +144,7 @@ public:
      * is deleted, callers need to copy and store the returned information
      * somewhere else; otherwise you may get unexpected result.  Since the returned
      * pointer is a generic void pointer, see
-     * http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties to learn
+     * http://xerces.apache.org/xerces-c/program-sax2.html#SAX2Properties to learn
      * exactly what type of property value each property returns for replication.
      *
      * @param name The unique identifier (URI) of the property being set.
@@ -230,7 +230,7 @@ public:
   /**
     * Set the state of any feature in a SAX2 XMLReader.
     * Supported features in SAX2 for xerces-c are:
-    * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Features for detail description).
+    * <br>(See http://xerces.apache.org/xerces-c/program-sax2.html#SAX2Features for detail description).
     *
     * <br>http://xml.org/sax/features/validation (default: true)
     * <br>http://xml.org/sax/features/namespaces (default: true)
@@ -254,20 +254,20 @@ public:
   /**
     * Set the value of any property in a SAX2 XMLReader.
     * Supported properties in SAX2 for xerces-c are:
-    * <br>(See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties for detail description).
+    * <br>(See http://xerces.apache.org/xerces-c/program-sax2.html#SAX2Properties for detail description).
     *
     * <br>http://apache.org/xml/properties/schema/external-schemaLocation
     * <br>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation.
     *
     * It takes a void pointer as the property value.  Application is required to initialize this void
-    * pointer to a correct type.  See http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties
+    * pointer to a correct type.  See http://xerces.apache.org/xerces-c/program-sax2.html#SAX2Properties
     * to learn exactly what type of property value each property expects for processing.
     * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
     * If the same property is set more than once, the last one takes effect.
     *
     * @param name The unique identifier (URI) of the property being set.
     * @param value The requested value for the property.  See
-    *            http://xml.apache.org/xerces-c/program-sax2.html#SAX2Properties to learn
+    *            http://xerces.apache.org/xerces-c/program-sax2.html#SAX2Properties to learn
     *            exactly what type of property value each property expects for processing.
     *            Passing a void pointer that was initialized with a wrong type will lead
     *            to unexpected result.

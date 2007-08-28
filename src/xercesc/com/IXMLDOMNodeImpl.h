@@ -36,9 +36,9 @@ XERCES_CPP_NAMESPACE_USE
 //      on the Directories tab on the dialog displayed after selecting Tools Options
 //      from the Visual Studio IDE.
 //
-//   See http://xml.apache.org/xerces-c/build.html#BuildCOM
+//   See http://xerces.apache.org/xerces-c/build.html#BuildCOM
 #ifndef __IXMLDOMNode_INTERFACE_DEFINED__
-#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See http://xml.apache.org/xerces-c/build.html#BuildCOM for directions to correct this problem."
+#error "xerces-dom requires an MSXML.H compatible with IE5 or later.  See http://xerces.apache.org/xerces-c/build.html#BuildCOM for directions to correct this problem."
 #endif
 
 

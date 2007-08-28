@@ -315,7 +315,7 @@ DOMImplementationList
 
 <td><font face="Courier New,Courier"><font size=-1>DOMImplementation</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>*item(XMLSize_t index) const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>*item(unsigned int index) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -323,7 +323,7 @@ DOMImplementationList
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>unsigned int</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() const = 0;</font></font></td>
 </tr>
@@ -591,7 +591,7 @@ DOMStringList
 
 <td><font face="Courier New,Courier"><font size=-1>const XMLCh</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>*item(XMLSize_t index) const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>*item(unsigned int index) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -599,7 +599,7 @@ DOMStringList
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>unsigned int</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() const = 0;</font></font></td>
 </tr>
@@ -681,7 +681,7 @@ DOMNamedNodeMap
 
 <td><font face="Courier New,Courier"><font size=-1>DOMNode</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>*item(XMLSize_t index) const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>*item(unsigned int index) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -699,7 +699,7 @@ DOMNamedNodeMap
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>unsigned int</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() const = 0;</font></font></td>
 </tr>
@@ -793,7 +793,7 @@ DOMNodeList
 
 <td><font face="Courier New,Courier"><font size=-1>DOMNode</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>*item(XMLSize_t index) const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>*item(unsigned int index) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -801,7 +801,7 @@ DOMNodeList
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>unsigned int</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() const = 0;</font></font></td>
 </tr>
@@ -1163,7 +1163,7 @@ DOMLocator
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>unsigned long</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLineNumber() const = 0;</font></font></td>
 </tr>
@@ -1173,7 +1173,7 @@ DOMLocator
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>unsigned long</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getColumnNumber() const = 0;</font></font></td>
 </tr>
@@ -2587,8 +2587,8 @@ DOMDocument
 <td><font face="Courier New,Courier"><font size=-1>DOMElement</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>*createElementNS(const XMLCh *namespaceURI,                                                  const XMLCh *qualifiedName,
-                                                  const XMLSSize_t lineNum,
-                                                  const XMLSSize_t columnNum) = 0;
+                                                  const unsigned long lineNum,
+                                                  const unsigned long columnNum) = 0;
 </font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3636,7 +3636,7 @@ DOMUserDataHandler
 <td><font face="Courier New,Courier"><font size=-1>handle(DOMOperationType operation,                        const XMLCh* const key,
                         void* data,
                         const DOMNode* src,
-                        const DOMNode* dst) = 0;
+                        DOMNode* dst) = 0;
 </font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4795,6 +4795,7 @@ DOMXPathEvaluator
 
 <div id="DOMXPathException"><font face="Courier New,Courier"><font size=-1>class
 DOMXPathException
+: public DOMException
 </font></font>
 <table>
 
@@ -4905,6 +4906,16 @@ DOMXPathExpression
 <td><font face="Courier New,Courier"><font size=-1>void*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>evaluate(DOMNode *contextNode, unsigned short type, void* result) const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>release() const = 0;</font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
 <td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
@@ -5283,6 +5294,16 @@ DOMXPathResult
 <td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>snapshotItem(unsigned long index) const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>release() const = 0;</font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
 <td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
