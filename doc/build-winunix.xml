@@ -385,7 +385,7 @@ src/xercesc and type "make" (or "gmake") to make the XERCES-C system.
             to that, it has set a few environment variables to correctly configure
             your compiler and compiler flags too.</p>
 
-            <note>If you are building a 64 bit &XercesCName; library
+            <note>If you are building a 64 bit &XercesCName;
                   using g++ that by default generated 32 bit code (or vice
                   versa), then you will need to specify additional compiler
                   and linker options via the -z and -l runConfigure options
@@ -394,7 +394,11 @@ src/xercesc and type "make" (or "gmake") to make the XERCES-C system.
                   may need to consult the GCC manual to determine which
                   ones to use. For the x86-64, PowerPC, and SPARC
                   architectures these options are -m64 (64 bit mode) and
-                  -m32 (32 bit mode).</note>
+                  -m32 (32 bit mode). Note also that if you are using
+                  the packageBinaries.pl script to build &XercesCName;
+                  then you may need to modify this script to pass the
+                  necessary options to runConfigure.
+            </note>
 
             <p>Now that the Makefiles are all created, you are ready to do the actual build.</p>
 
