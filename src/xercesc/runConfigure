@@ -500,14 +500,15 @@ if test $bitsToBuild = 64; then
                           bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
                           bitstobuildLink=" -q64 " ;;
                        *)                       
-                         linux_version=`./config.guess`
-                         case $linux_version in
-			                powerpc*)
-              					bitstobuildDefines=" $bitstobuildDefines -m64 "
-              					bitstobuildLink=" -m64 " ;;
-			        		*)
-			        		    ;;
-			 			 esac
+                          # following doesn't work for all versions of gcc                                              
+                          #linux_version=`./config.guess`
+                          #case $linux_version in
+			              #  powerpc*)
+              			  #		bitstobuildDefines=" $bitstobuildDefines -m64 "
+              			  #		bitstobuildLink=" -m64 " ;;
+			        	  #	*)
+			        	  #	    ;;
+			 			  #esac
                          ;;                                                          
                    esac
                fi ;;
@@ -518,21 +519,22 @@ if test $bitsToBuild = 64; then
 elif test $bitsToBuild = 32; then
     bitstobuildDefines=" "
     bitstobuildLink=" "
-    if test $platform; then
-        case $platform in
-        linux)            
-                linux_version=`./config.guess`
-                 case $linux_version in
-			          powerpc*)
-              			bitstobuildDefines=" $bitstobuildDefines -m32 "
-              			bitstobuildLink=" -m32 " ;;
-			     *)
-			        ;;
-			 	esac ;;	               
-        *)
-            ;;
-        esac    
-    fi        
+# following doesn't work for all versions of gcc    
+#    if test $platform; then
+#        case $platform in
+#            linux)                                         
+#                linux_version=`./config.guess`
+#                 case $linux_version in
+#			          powerpc*)
+#              			bitstobuildDefines=" $bitstobuildDefines -m32 "
+#              			bitstobuildLink=" -m32 " ;;
+#			     *)
+#			        ;;
+#			 	esac ;;	                                   
+#        *)
+#            ;;
+#        esac    
+#    fi        
 else
     echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
     exit ${ERROR_EXIT_CODE};
