@@ -47,7 +47,7 @@ void MemoryMonitor::deallocate(void* p)
 {
     // if fHashTable doesn't contain p, then this memory manager
     // didn't allocate that memory--a segfault waiting to happen...
-    assert(p == 0 || fHashTable->get(p) != 0);
+    assert(p == 0 || fHashTable->containsKey(p) != 0);
     if (p != 0)
         fHashTable->removeKey(p);
     ::operator delete(p);
