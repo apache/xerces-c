@@ -41,26 +41,28 @@ class XMLUTIL_EXPORT Op : public XMemory
 public:
 
     typedef enum {
-        O_DOT                = 0,
-        O_CHAR               = 1,
-        O_RANGE              = 3,
-        O_NRANGE             = 4,
-        O_ANCHOR             = 5,
-        O_STRING             = 6,
-        O_CLOSURE            = 7,
-        O_NONGREEDYCLOSURE   = 8,
-        O_QUESTION           = 9,
-        O_NONGREEDYQUESTION  = 10,
-        O_UNION              = 11,
-        O_CAPTURE            = 15,
-        O_BACKREFERENCE      = 16,
-        O_LOOKAHEAD          = 20,
-        O_NEGATIVELOOKAHEAD  = 21,
-        O_LOOKBEHIND         = 22,
-        O_NEGATIVELOOKBEHIND = 23,
-        O_INDEPENDENT        = 24,
-        O_MODIFIER           = 25,
-        O_CONDITION          = 26
+        O_DOT                       = 0,
+        O_CHAR                      = 1,
+        O_RANGE                     = 3,
+        O_NRANGE                    = 4,
+        O_ANCHOR                    = 5,
+        O_STRING                    = 6,
+        O_CLOSURE                   = 7,
+        O_NONGREEDYCLOSURE          = 8,
+        O_FINITE_CLOSURE            = 9,
+        O_FINITE_NONGREEDYCLOSURE   = 10,
+        O_QUESTION                  = 11,
+        O_NONGREEDYQUESTION         = 12,
+        O_UNION                     = 13,
+        O_CAPTURE                   = 15,
+        O_BACKREFERENCE             = 16,
+        O_LOOKAHEAD                 = 20,
+        O_NEGATIVELOOKAHEAD         = 21,
+        O_LOOKBEHIND                = 22,
+        O_NEGATIVELOOKBEHIND        = 23,
+        O_INDEPENDENT               = 24,
+        O_MODIFIER                  = 25,
+        O_CONDITION                 = 26
     } opType;
 
     // -----------------------------------------------------------------------

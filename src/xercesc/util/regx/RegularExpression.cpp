@@ -601,7 +601,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 	/*
 	 *	Check whether the expression start with ".*"
 	 */
-	if (fOperations != 0 && fOperations->getOpType() == Op::O_CLOSURE
+	if (fOperations != 0 && (fOperations->getOpType() == Op::O_CLOSURE || fOperations->getOpType() == Op::O_FINITE_CLOSURE)
         && fOperations->getChild()->getOpType() == Op::O_DOT) {
 
 		if (isSet(fOptions, SINGLE_LINE)) {
@@ -995,7 +995,13 @@ struct RE_RuntimeContext {
 int RegularExpression::match(Context* const context, const Op* const operations
 							 , XMLSize_t offset, const short direction)
 {
-    ValueStackOf<RE_RuntimeContext>	opStack(0, context->fMemoryManager);
+    ValueStackOf<RE_RuntimeContext>* opStack=NULL;
+    Janitor<ValueStackOf<RE_RuntimeContext> > janStack(NULL);
+    if(context->fLimit > 256)
+    {
+        opStack=new ValueStackOf<RE_RuntimeContext>(16, context->fMemoryManager);
+        janStack.reset(opStack);
+    }
 	const Op* tmpOp = operations;
 	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
 	int	doReturn;
@@ -1049,6 +1055,59 @@ int RegularExpression::match(Context* const context, const Op* const operations
 			    else
     			    tmpOp = tmpOp->getNextOp();
 			    break;
+		    case Op::O_FINITE_CLOSURE:
+			    {
+				    XMLInt32 id = tmpOp->getData();
+                    // if id is not -1, it's a closure with a child token having a minumum length, 
+                    // where id is the index of the fOffsets array where its status is stored
+			        if (id >= 0) {
+				        int prevOffset = context->fOffsets[id];
+				        if (prevOffset < 0 || prevOffset != (int)offset) {
+					        context->fOffsets[id] = (int)offset;
+				        }
+				        else {
+                            // the status didn't change, we haven't found other copies; move on to the next match
+					        context->fOffsets[id] = -1;
+					        tmpOp = tmpOp->getNextOp();
+					        break;
+				        }
+			        }
+
+                    // match the subitems until they do
+                    int ret;
+                    while((ret = match(context, tmpOp->getChild(), offset, direction)) != -1)
+                    {
+                        if(offset == (XMLSize_t)ret)
+                            break;
+                        offset = ret;
+                    }
+
+                    if (id >= 0) {
+                        // loop has ended, reset the status for this closure
+					    context->fOffsets[id] = -1;
+				    }
+				    tmpOp = tmpOp->getNextOp();
+			    }
+			    break;
+		    case Op::O_FINITE_NONGREEDYCLOSURE:
+			    {
+				    int ret = match(context,tmpOp->getNextOp(),offset,direction);
+				    if (ret >= 0)
+                        doReturn = ret;
+                    else
+                    {
+                        // match the subitems until they do
+                        int ret;
+                        while((ret = match(context, tmpOp->getChild(), offset, direction)) != -1)
+                        {
+                            if(offset == (XMLSize_t)ret)
+                                break;
+                            offset = ret;
+                        }
+    				    tmpOp = tmpOp->getNextOp();
+				    }
+			    }
+			    break;
 		    case Op::O_CLOSURE:
 			    {
 				    XMLInt32 id = tmpOp->getData();
@@ -1067,14 +1126,40 @@ int RegularExpression::match(Context* const context, const Op* const operations
 				        }
 			        }
 
-				    opStack.push(RE_RuntimeContext(tmpOp, offset));
-				    tmpOp = tmpOp->getChild();
+                    if(opStack!=NULL)
+                    {
+				        opStack->push(RE_RuntimeContext(tmpOp, offset));
+				        tmpOp = tmpOp->getChild();
+                    }
+                    else
+                    {
+				        int ret = match(context, tmpOp->getChild(), offset, direction);
+				        if (id >= 0) {
+					        context->fOffsets[id] = -1;
+				        }
+
+				        if (ret >= 0)
+					        doReturn = ret;
+                        else 
+				            tmpOp = tmpOp->getNextOp();
+                    }
 			    }
 			    break;
 		    case Op::O_QUESTION:
 			    {
-				    opStack.push(RE_RuntimeContext(tmpOp, offset));
-				    tmpOp = tmpOp->getChild();
+                    if(opStack!=NULL)
+                    {
+				        opStack->push(RE_RuntimeContext(tmpOp, offset));
+				        tmpOp = tmpOp->getChild();
+                    }
+                    else
+                    {
+				        int ret = match(context, tmpOp->getChild(), offset, direction);
+				        if (ret >= 0)
+					        doReturn = ret;
+                        else
+				            tmpOp = tmpOp->getNextOp();
+                    }
 			    }
 			    break;
 		    case Op::O_NONGREEDYCLOSURE:
@@ -1151,9 +1236,9 @@ int RegularExpression::match(Context* const context, const Op* const operations
 		    }
         }
 		if (doReturn != -5) {
-			if (opStack.size() == 0)
+			if (opStack==NULL || opStack->size() == 0)
 				return doReturn;
-			RE_RuntimeContext	ctx = opStack.pop();
+			RE_RuntimeContext	ctx = opStack->pop();
 			tmpOp = ctx.op_;
 			offset = ctx.offs_;
 			if (tmpOp->getOpType() == Op::O_CLOSURE) {
@@ -1462,7 +1547,7 @@ int RegularExpression::matchUnion(Context* const context,
             bestResult=ret;
             bestResultContext=tmpContext;
             // exit early, if we reached the end of the string
-            if(ret == context->fLimit)
+            if((XMLSize_t)ret == context->fLimit)
                 break;
         }
     }
@@ -1788,6 +1873,57 @@ RegularExpression::wordType RegularExpression::getCharType(const XMLCh ch) {
     return wordTypeOther;
 }
 
+bool RegularExpression::doTokenOverlap(const Op* op, Token* token)
+{
+    if(op->getOpType()==Op::O_RANGE)
+    {
+        RangeToken* t1=(RangeToken*)op->getToken();
+        switch(token->getTokenType())
+        {
+        case Token::T_CHAR:
+            return t1->match(token->getChar());
+        case Token::T_STRING:
+            return t1->match(*token->getString());
+        case Token::T_RANGE:
+            {
+                try
+                {
+                    RangeToken tempRange(Token::T_RANGE, fMemoryManager);
+                    tempRange.mergeRanges(t1);
+                    tempRange.intersectRanges((RangeToken*)token);
+                    return !tempRange.empty();
+                }
+                catch(RuntimeException&)
+                {
+                }
+                break;
+            }
+        }
+        return true;
+    }
+
+    XMLInt32 ch=0;
+    if(op->getOpType()==Op::O_CHAR)
+        ch=op->getData();
+    else if(op->getOpType()==Op::O_STRING)
+        ch=*op->getLiteral();
+
+    if(ch!=0)
+    {
+        switch(token->getTokenType())
+        {
+        case Token::T_CHAR:
+            return token->getChar()==ch;
+        case Token::T_STRING:
+            return *token->getString()==ch;
+        case Token::T_RANGE:
+        case Token::T_NRANGE:
+            return ((RangeToken*)token)->match(ch);
+        }
+    }
+    // in any other case, there is the chance that they overlap
+    return true;
+}
 
 XERCES_CPP_NAMESPACE_END
 

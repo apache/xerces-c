@@ -76,6 +76,8 @@ public:
                                    TokenFactory* const tokFactory,
                                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
+    bool empty() const;
+
     // -----------------------------------------------------------------------
     //  Match methods
     // -----------------------------------------------------------------------
@@ -85,8 +87,7 @@ public:
     //  Creates the map.  This will happen automatically,
     //  necessary.
     // -----------------------------------------------------------------------
-    void
-    createMap();
+    void createMap();
 
 private:
     // -----------------------------------------------------------------------
@@ -130,6 +131,10 @@ inline void RangeToken::createMap()
     }
 }
 
+inline bool RangeToken::empty() const
+{
+    return fElemCount==0; 
+}
 
 XERCES_CPP_NAMESPACE_END
 

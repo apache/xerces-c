@@ -291,6 +291,8 @@ private:
     Op* compileClosure(const Token* const token, Op* const next,
                        const bool reverse, const Token::tokType tkType);
 
+    bool doTokenOverlap(const Op* op, Token* token);
+
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
@@ -544,7 +546,15 @@ private:
           }
 
           childOp->setNextOp(next);
-          childOp->setChild(compile(childTok, childOp, reverse));
+          if(next==NULL || !doTokenOverlap(next, childTok))
+          {
+              childOp->setOpType(tkType == Token::T_NONGREEDYCLOSURE?Op::O_FINITE_NONGREEDYCLOSURE:Op::O_FINITE_CLOSURE);
+              childOp->setChild(compile(childTok, NULL, reverse));
+          }
+          else
+          {
+              childOp->setChild(compile(childTok, childOp, reverse));
+          }
           ret = childOp;
       }
 
