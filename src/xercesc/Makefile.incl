@@ -342,6 +342,12 @@ ifeq (${PLATFORM}, AIX)
   ## Compiler switch to embed a library name
   LD_SONAME =
   LD_SODEPDOM =
+
+  ifeq (${LIBTYPE},static)
+    ifeq (${BITSTOBUILD}, 64)
+      ARFLAGS += -X64
+    endif
+  endif  
 endif
 
 #================= OS400 SPECIFIC OPTIONS ==========================
