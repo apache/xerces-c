@@ -1279,9 +1279,12 @@ void XMLDateTime::validateDateTime() const
     if ( fValue[Day] > maxDayInMonthFor( fValue[CentYear], fValue[Month]) ||
          fValue[Day] == 0 )
     {
-        ThrowXMLwithMemMgr1(SchemaDateTimeException
+        XMLCh szMaxDay[3];
+        XMLString::binToText(maxDayInMonthFor( fValue[CentYear], fValue[Month]), szMaxDay, 3, 10, fMemoryManager);
+        ThrowXMLwithMemMgr2(SchemaDateTimeException
                 , XMLExcepts::DateTime_day_invalid
                 , fBuffer
+                , szMaxDay
                 , fMemoryManager);
         //"The day must have values 1 to 31");
     }

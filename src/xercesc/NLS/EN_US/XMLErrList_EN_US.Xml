@@ -799,7 +799,7 @@
             <Message Id="DateTime_tz_invalid"         Text="Invalid TimeZone! '{0}' "/>
             <Message Id="DateTime_year_zero"          Text="The year (0000) is an illegal year value! '{0}' "/>
             <Message Id="DateTime_mth_invalid"        Text="The month must have values 1 to 12! '{0}' "/>
-            <Message Id="DateTime_day_invalid"        Text="The day must have values 1 to 31! '{0}' "/>
+            <Message Id="DateTime_day_invalid"        Text="The day must have values 1 to {1}! '{0}' "/>
             <Message Id="DateTime_hour_invalid"       Text="Hour must have values 0-23! '{0}' "/>
             <Message Id="DateTime_min_invalid"        Text="Minute must have values 0-59! '{0}' "/>
             <Message Id="DateTime_second_invalid"     Text="Second must have values 0-60! '{0}' "/>

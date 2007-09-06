@@ -800,7 +800,7 @@ en_US {
 		"Invalid TimeZone! '{0}'  " ,
 		"The year (0000) is an illegal year value! '{0}'  " ,
 		"The month must have values 1 to 12! '{0}'  " ,
-		"The day must have values 1 to 31! '{0}'  " ,
+		"The day must have values 1 to {1}! '{0}'  " ,
 		"Hour must have values 0-23! '{0}'  " ,
 		"Minute must have values 0-59! '{0}'  " ,
 		"Second must have values 0-60! '{0}'  " ,
