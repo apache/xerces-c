@@ -2171,6 +2171,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
         resetUIntPool();
     }
     fUndeclaredAttrRegistry->removeAll();
+    fAttrNSList->removeAllElements();
 }
 
 
