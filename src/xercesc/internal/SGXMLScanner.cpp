@@ -1876,6 +1876,11 @@ SGXMLScanner::resolveQNameWithColon(const   XMLCh* const qName
             if (unknown)
                 emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
 
+            // check to see if uriId is empty
+            if (fXMLVersion != XMLReader::XMLV1_0 &&
+                uriId == fElemStack.getEmptyNamespaceId())             
+                emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
+
             return uriId;
         }
     }

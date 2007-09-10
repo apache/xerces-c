@@ -204,6 +204,7 @@ public :
         , const unsigned int    xmlNSId
     );
 
+    unsigned int getEmptyNamespaceId();
 
 private :
     // -----------------------------------------------------------------------
@@ -560,6 +561,10 @@ inline void ElemStack::setPrefixColonPos(int colonPos)
  
 inline int ElemStack::getPrefixColonPos() const {
     return fStack[fStackTop-1]->fPrefixColonPos;
+}
+
+inline unsigned int ElemStack::getEmptyNamespaceId() {
+    return fEmptyNamespaceId;
 }
 
 // ---------------------------------------------------------------------------

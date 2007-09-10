@@ -2064,6 +2064,14 @@ DGXMLScanner::resolvePrefix(  const   XMLCh* const        prefix
     if (unknown)
         emitError(XMLErrs::UnknownPrefix, prefix);
 
+    // check to see if uriId is empty; in XML 1.1 an emptynamespace is okay unless
+    // we are trying to use it.
+    if (*prefix &&
+        mode == ElemStack::Mode_Element &&
+        fXMLVersion != XMLReader::XMLV1_0 &&
+        uriId == fElemStack.getEmptyNamespaceId())             
+        emitError(XMLErrs::UnknownPrefix, prefix);
+
     return uriId;
 }
 
