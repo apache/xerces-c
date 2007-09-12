@@ -95,7 +95,7 @@ public:
      * into appropriate namespace URIs. If this is specified as null, any namespace 
      * prefix within the expression will result in <code>DOMException</code> being thrown with the
      * code NAMESPACE_ERR.
-     * @return <code>XPathExpression</code> The compiled form of the XPath expression.
+     * @return <code>DOMXPathExpression</code> The compiled form of the XPath expression.
      * @exception <code>DOMXPathException</code>
      * INVALID_EXPRESSION_ERR: Raised if the expression is not legal according to the 
      * rules of the <code>DOMXPathEvaluator</code>.
@@ -115,10 +115,10 @@ public:
      * is called. also correctly resolving the implicit xml prefix.
      * @param nodeResolver of type <code>DOMNode</code> The node to be used as a context 
      * for namespace resolution.
-     * @return <code>XPathNSResolver</code> <code>XPathNSResolver</code> which resolves namespaces 
-     * with respect to the definitions in scope for a specified node.
+     * @return <code>DOMXPathNSResolver</code> The object which resolves namespaces 
+     * with respect to the definitions in scope for the specified node.
      */
-    virtual const DOMXPathNSResolver*    createNSResolver(DOMNode *nodeResolver) = 0;
+    virtual const DOMXPathNSResolver*    createNSResolver(const DOMNode *nodeResolver) = 0;
 
 
     /**
@@ -165,7 +165,7 @@ public:
      * NOT_SUPPORTED_ERR: The DOMNode is not a type permitted as an XPath context 
      * node or the request type is not permitted by this <code>DOMXPathEvaluator</code>.
      */
-    virtual void* evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
+    virtual void* evaluate(const XMLCh *expression, const DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
                            unsigned short type, void* result) = 0;
 
     //@}

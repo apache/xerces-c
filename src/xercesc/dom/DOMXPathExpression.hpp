@@ -103,7 +103,7 @@ public:
      * request type is not permitted by this <code>DOMXPathExpression</code>.
      */
 
-    virtual void*          evaluate(DOMNode *contextNode, unsigned short type, void* result) const = 0;
+    virtual void*          evaluate(const DOMNode *contextNode, unsigned short type, void* result) const = 0;
     //@}
 
     // -----------------------------------------------------------------------

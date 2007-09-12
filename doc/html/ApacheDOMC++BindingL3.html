@@ -1183,7 +1183,7 @@ DOMLocator
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLFilePos</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getByteOffset() const = 0;</font></font></td>
 </tr>
@@ -1193,7 +1193,7 @@ DOMLocator
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>XMLSSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLFilePos</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getUtf16Offset() const = 0;</font></font></td>
 </tr>
@@ -4337,7 +4337,7 @@ DOMLSParser
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>unsigned int</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLFilePos</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getSrcOffset() const = 0;</font></font></td>
 </tr>
@@ -4766,7 +4766,7 @@ DOMXPathEvaluator
 
 <td><font face="Courier New,Courier"><font size=-1>const DOMXPathNSResolver*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>createNSResolver(DOMNode *nodeResolver) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>createNSResolver(const DOMNode *nodeResolver) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4776,7 +4776,7 @@ DOMXPathEvaluator
 
 <td><font face="Courier New,Courier"><font size=-1>void*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver,                            unsigned short type, void* result) = 0;
+<td><font face="Courier New,Courier"><font size=-1>evaluate(const XMLCh *expression, const DOMNode *contextNode, const DOMXPathNSResolver *resolver,                            unsigned short type, void* result) = 0;
 </font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -4905,7 +4905,7 @@ DOMXPathExpression
 
 <td><font face="Courier New,Courier"><font size=-1>void*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>evaluate(DOMNode *contextNode, unsigned short type, void* result) const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>evaluate(const DOMNode *contextNode, unsigned short type, void* result) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -5251,9 +5251,9 @@ DOMXPathResult
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMNode</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>const DOMNode*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>*getSingleNodeValue() const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>getSingleNodeValue() const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -5281,7 +5281,7 @@ DOMXPathResult
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>const DOMNode*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>iterateNext() const = 0;</font></font></td>
 </tr>
@@ -5291,7 +5291,7 @@ DOMXPathResult
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>const DOMNode*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>snapshotItem(unsigned long index) const = 0;</font></font></td>
 </tr>

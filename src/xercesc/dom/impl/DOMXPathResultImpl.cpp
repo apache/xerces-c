@@ -59,7 +59,7 @@ const XMLCh* DOMXPathResultImpl::getStringValue() const
     throw DOMXPathException(DOMXPathException::TYPE_ERR, 0, fMemoryManager);
 }
 
-DOMNode* DOMXPathResultImpl::iterateNext() const
+const DOMNode* DOMXPathResultImpl::iterateNext() const
 {
     throw DOMXPathException(DOMXPathException::TYPE_ERR, 0, fMemoryManager);
 }
@@ -74,7 +74,7 @@ short DOMXPathResultImpl::getResultType() const
     return fType;
 }
 
-DOMNode *DOMXPathResultImpl::getSingleNodeValue() const
+const DOMNode *DOMXPathResultImpl::getSingleNodeValue() const
 {
     if(fType==ANY_UNORDERED_NODE_TYPE || fType==FIRST_ORDERED_NODE_TYPE)
         if(fSnapshot->size()>0)
@@ -91,7 +91,7 @@ unsigned long DOMXPathResultImpl::getSnapshotLength() const
     throw DOMXPathException(DOMXPathException::TYPE_ERR, 0, fMemoryManager);
 }
 
-DOMNode* DOMXPathResultImpl::snapshotItem(unsigned long index) const
+const DOMNode* DOMXPathResultImpl::snapshotItem(unsigned long index) const
 {
     if(fType==UNORDERED_NODE_SNAPSHOT_TYPE || fType==ORDERED_NODE_SNAPSHOT_TYPE)
         if(fSnapshot->size()>index)

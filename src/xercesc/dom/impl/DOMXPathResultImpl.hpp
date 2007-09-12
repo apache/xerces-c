@@ -39,11 +39,11 @@ public:
 	virtual bool getInvalidIteratorState() const;
 	virtual double getNumberValue() const;
 	virtual short getResultType() const;
-	virtual DOMNode *getSingleNodeValue() const;
+	virtual const DOMNode *getSingleNodeValue() const;
 	virtual unsigned long getSnapshotLength() const;
 	virtual const XMLCh* getStringValue() const;
-	virtual DOMNode* iterateNext() const;
-	virtual DOMNode* snapshotItem(unsigned long index) const;
+	virtual const DOMNode* iterateNext() const;
+	virtual const DOMNode* snapshotItem(unsigned long index) const;
 
     virtual void release() const;
 

@@ -42,7 +42,7 @@ public:
     DOMXPathExpressionImpl(const XMLCh *expression, const DOMXPathNSResolver *resolver, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~DOMXPathExpressionImpl();
 
-    virtual void* evaluate(DOMNode *contextNode, unsigned short type, void* result) const;
+    virtual void* evaluate(const DOMNode *contextNode, unsigned short type, void* result) const;
 
     virtual void release() const;
 

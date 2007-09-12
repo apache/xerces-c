@@ -21,7 +21,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-DOMXPathNSResolverImpl::DOMXPathNSResolverImpl(DOMNode *nodeResolver):
+DOMXPathNSResolverImpl::DOMXPathNSResolverImpl(const DOMNode *nodeResolver):
  fResolverNode(nodeResolver)
 {
 }

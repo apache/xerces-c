@@ -32,13 +32,13 @@ class DOMNode;
 class CDOM_EXPORT DOMXPathNSResolverImpl : public DOMXPathNSResolver
 {
 public:
-    DOMXPathNSResolverImpl(DOMNode *nodeResolver);
+    DOMXPathNSResolverImpl(const DOMNode *nodeResolver);
 
     virtual const XMLCh*          lookupNamespaceURI(const XMLCh* prefix) const;
     virtual const XMLCh*          lookupPrefix(const XMLCh* URI) const;
 
 protected:
-    DOMNode*                    fResolverNode;
+    const DOMNode*                fResolverNode;
 };
 
 XERCES_CPP_NAMESPACE_END

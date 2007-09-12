@@ -112,7 +112,7 @@ void DOMXPathExpressionImpl::cleanUp()
     delete fStringPool;
 }
 
-void* DOMXPathExpressionImpl::evaluate(DOMNode *contextNode, unsigned short type, void* result) const
+void* DOMXPathExpressionImpl::evaluate(const DOMNode *contextNode, unsigned short type, void* result) const
 {
     if(type!=DOMXPathResult::FIRST_ORDERED_NODE_TYPE && type!=DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE && 
        type!=DOMXPathResult::ANY_UNORDERED_NODE_TYPE && type!=DOMXPathResult::UNORDERED_NODE_SNAPSHOT_TYPE)

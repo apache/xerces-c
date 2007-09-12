@@ -203,7 +203,7 @@ public:
      * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not ANY_UNORDERED_NODE_TYPE or FIRST_ORDERED_NODE_TYPE.
      */
-	virtual DOMNode *getSingleNodeValue() const = 0;
+	virtual const DOMNode* getSingleNodeValue() const = 0;
 
     /**
      * Returns the snapshot length
@@ -233,7 +233,7 @@ public:
      * @exception DOMException
      * INVALID_STATE_ERR: The document has been mutated since the result was returned.	
      */
-	virtual DOMNode* iterateNext() const = 0;
+	virtual const DOMNode* iterateNext() const = 0;
 
     /**
      * Returns the indexth item in the snapshot collection. If index is greater than or
@@ -245,7 +245,7 @@ public:
      * @exception DOMXPathException
      * TYPE_ERR: raised if resultType is not UNORDERED_NODE_SNAPSHOT_TYPE or ORDERED_NODE_SNAPSHOT_TYPE.	
      */
-	virtual DOMNode* snapshotItem(unsigned long index) const = 0;
+	virtual const DOMNode* snapshotItem(unsigned long index) const = 0;
 
     //@}
 
