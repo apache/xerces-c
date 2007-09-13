@@ -130,7 +130,8 @@ DFAContentModel::~DFAContentModel()
 int
 DFAContentModel::validateContent( QName** const        children
                                 , const unsigned int   childCount
-                                , const unsigned int) const
+                                , const unsigned int
+                                , MemoryManager*    const) const
 {
     //
     //  If there are no children, then either we fail on the 0th element
@@ -242,7 +243,8 @@ int DFAContentModel::validateContentSpecial(QName** const          children
                                             , const unsigned int      childCount
                                             , const unsigned int
                                             , GrammarResolver*  const pGrammarResolver
-                                            , XMLStringPool*    const pStringPool) const
+                                            , XMLStringPool*    const pStringPool
+                                            , MemoryManager*    const) const
 {
 
     SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
