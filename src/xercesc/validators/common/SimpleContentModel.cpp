@@ -42,7 +42,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 int
 SimpleContentModel::validateContent(QName** const       children
                                   , const unsigned int  childCount
-                                  , const unsigned int) const
+                                  , const unsigned int
+                                  , MemoryManager*    const) const
 {
     //
     //  According to the type of operation, we do the correct type of
@@ -231,7 +232,8 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
                                             , const unsigned int      childCount
                                             , const unsigned int
                                             , GrammarResolver*  const pGrammarResolver
-                                            , XMLStringPool*    const pStringPool) const
+                                            , XMLStringPool*    const pStringPool
+                                            , MemoryManager*    const) const
 {
 
     SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);

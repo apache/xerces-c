@@ -135,13 +135,14 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
 
             // Ask it to validate and return its return
             unsigned int emptyNS = getScanner()->getEmptyNamespaceId();
-            int result = elemCM->validateContent(children, childCount, emptyNS);
+            int result = elemCM->validateContent(children, childCount, emptyNS, getScanner()->getMemoryManager());
             if (result != -1) {
                 result = elemCM->validateContentSpecial(children
                                                       , childCount
                                                       , emptyNS
                                                       , fGrammarResolver
-                                                      , fGrammarResolver->getStringPool());
+                                                      , fGrammarResolver->getStringPool()
+                                                      , getScanner()->getMemoryManager());
             }
 
             if(result != -1) {

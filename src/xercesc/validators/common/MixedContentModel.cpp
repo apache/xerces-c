@@ -141,7 +141,8 @@ bool MixedContentModel::hasDups() const
 int
 MixedContentModel::validateContent( QName** const         children
                                   , const unsigned int    childCount
-                                  , const unsigned int) const
+                                  , const unsigned int
+                                  , MemoryManager*    const) const
 {
     // must match order
     if (fOrdered) {
@@ -250,7 +251,8 @@ int MixedContentModel::validateContentSpecial(QName** const           children
                                             , const unsigned int      childCount
                                             , const unsigned int
                                             , GrammarResolver*  const pGrammarResolver
-                                            , XMLStringPool*    const pStringPool) const
+                                            , XMLStringPool*    const pStringPool
+                                            , MemoryManager*    const) const
 {
 
     SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);

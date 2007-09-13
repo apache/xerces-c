@@ -88,7 +88,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
         const XMLContentModel* elemCM = elemDecl->getContentModel();
 
         // Ask it to validate and return its return
-        return elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId());
+        return elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId(), getScanner()->getMemoryManager());
     }
      else
     {

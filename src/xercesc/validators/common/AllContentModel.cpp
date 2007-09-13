@@ -107,7 +107,8 @@ AllContentModel::~AllContentModel()
 int
 AllContentModel::validateContent( QName** const         children
                                 , const unsigned int    childCount
-                                , const unsigned int) const
+                                , const unsigned int
+                                , MemoryManager*    const manager) const
 {
     // If <all> had minOccurs of zero and there are
     // no children to validate, trivially validate
@@ -118,13 +119,11 @@ AllContentModel::validateContent( QName** const         children
     unsigned int numRequiredSeen = 0;
 
     if(childCount > 0)
-    {
-        MemoryManager* const localMemoryManager = children[0]->getMemoryManager();
-
+    {        
         // Check for duplicate element
-        bool* elementSeen = (bool*) localMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
+        bool* elementSeen = (bool*) manager->allocate(fCount*sizeof(bool)); //new bool[fCount];
 
-        const ArrayJanitor<bool> jan(elementSeen, localMemoryManager);
+        const ArrayJanitor<bool> jan(elementSeen, manager);
 
         // initialize the array
         for (unsigned int i = 0; i < fCount; i++)
@@ -183,7 +182,8 @@ int AllContentModel::validateContentSpecial(QName** const           children
                                           , const unsigned int      childCount
                                           , const unsigned int
                                           , GrammarResolver*  const pGrammarResolver
-                                          , XMLStringPool*    const pStringPool) const
+                                          , XMLStringPool*    const pStringPool
+                                          , MemoryManager*    const manager) const
 {
     // If <all> had minOccurs of zero and there are
     // no children to validate, trivially validate
@@ -197,12 +197,10 @@ int AllContentModel::validateContentSpecial(QName** const           children
     {
         SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
 
-        MemoryManager* const localMemoryManager = children[0]->getMemoryManager();
-
         // Check for duplicate element
-        bool* elementSeen = (bool*) localMemoryManager->allocate(fCount*sizeof(bool)); //new bool[fCount];
+        bool* elementSeen = (bool*) manager->allocate(fCount*sizeof(bool)); //new bool[fCount];
 
-        const ArrayJanitor<bool> jan(elementSeen, localMemoryManager);
+        const ArrayJanitor<bool> jan(elementSeen, manager);
 
         // initialize the array
         for (unsigned int i = 0; i < fCount; i++)

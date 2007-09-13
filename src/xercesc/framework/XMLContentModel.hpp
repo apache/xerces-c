@@ -83,6 +83,7 @@ public:
         QName** const         children
       , const unsigned int    childCount
       , const unsigned int    emptyNamespaceId
+      , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     ) const = 0;
 
 	virtual int validateContentSpecial
@@ -92,6 +93,7 @@ public:
       , const unsigned int      emptyNamespaceId
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
+      , MemoryManager*    const manager = XMLPlatformUtils::fgMemoryManager
     ) const =0;
 
 	virtual void checkUniqueParticleAttribution
