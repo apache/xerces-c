@@ -566,7 +566,7 @@
             <Message Id="UTF8_Invalid_3BytesSeq"   Text="invalid bytes {0}, {1} of 3-byte sequence."/>
             <Message Id="UTF8_Irregular_3BytesSeq" Text="irregular bytes {0}, {1} of 3-byte sequence."/>
             <Message Id="UTF8_Invalid_4BytesSeq"   Text="invalid bytes {0}, {1} of 4-byte sequence."/>
-            <Message Id="UTF8_Exceede_BytesLimit"  Text="Exceede bytes limits {0}, {1}-byte sequence."/>
+            <Message Id="UTF8_Exceede_BytesLimit"  Text="Exceeded byte limits {0}, {1}-byte sequence."/>
             <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the Grammar, no internal subset is allowed"/>
@@ -606,7 +606,7 @@
             <Message Id="Parser_Process2" Text="'{0}' is not a valid character escape"/>
             <Message Id="Parser_Quantifier1" Text="Invalid quantifier in '{0}'. A digit is expected"/>
             <Message Id="Parser_Quantifier2" Text="Invalid quantifier in '{0}'. Invalid quantity or a '}' is missing"/>
-            <Message Id="Parser_Quantifier3" Text="Invalid quantifier in '{0}'. A digit or '}' is expexted"/>
+            <Message Id="Parser_Quantifier3" Text="Invalid quantifier in '{0}'. A digit or '}' is expected"/>
             <Message Id="Parser_Quantifier4" Text="Invalid quantifier in '{0}'. A min quantity must be &lt;= a max quantity"/>
             <Message Id="Parser_Quantifier5" Text="Invalid quantifier in '{0}'. A quantity value overflow"/>
             <Message Id="Gen_NoSchemaValidator" Text="A schema was seen but the installed validator does not understand schema"/>
@@ -835,7 +835,7 @@
             <Message Id="XSer_InStream_Read_OverFlow"    Text="InputStream read '{0}' beyond buffer available '{1}'"/>
             <Message Id="XSer_Storing_Violation"         Text="Storing violation"/>
             <Message Id="XSer_StoreBuffer_Violation"     Text="Store buffer violation '{0}', '{1}'"/>
-            <Message Id="XSer_LoadPool_UppBnd_Exceed"    Text="Object Tag '{0}' exceed load pool uppper Boundary '{1}'"/>
+            <Message Id="XSer_LoadPool_UppBnd_Exceed"    Text="Object Tag '{0}' exceed load pool upper Boundary '{1}'"/>
             <Message Id="XSer_LoadPool_NoTally_ObjCnt"   Text="Load pool size '{0}' not tally with object count '{1}'"/>
             <Message Id="XSer_Loading_Violation"         Text="Loading violation"/>
             <Message Id="XSer_LoadBuffer_Violation"      Text="Load buffer violation '{0}', '{1}'"/>
