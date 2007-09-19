@@ -79,6 +79,8 @@ protected:
                             , bool                           asBase
                             , MemoryManager* const manager);
 
+    virtual void inspectFacetBase(MemoryManager* const manager);
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators

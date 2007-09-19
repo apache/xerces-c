@@ -5099,8 +5099,8 @@ bool DOMTest::testRegex() {
     TEST_INVALID_REGEX("C", "(A|B*|C)E", __LINE__);
 
     // this tests the closures that need fOffset in the context
-    for(int i=0;i<HUGE_STRING-1;i++)
-        hugeString[i]=i%2?'B':'C';
+    for(int j=0;j<HUGE_STRING-1;j++)
+        hugeString[j]=j%2?'B':'C';
     hugeString[HUGE_STRING-1]='E';
     // we run out of stack space when testing this one
     //TEST_VALID_REGEX(hugeString, "(B?C?)*E", __LINE__);

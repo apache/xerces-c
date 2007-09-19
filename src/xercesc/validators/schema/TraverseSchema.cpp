@@ -3286,6 +3286,19 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                         fBuffer.append(localPart);
                         enums.get()->addElement(XMLString::replicate(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager));
                     }
+					else if (baseValidator->getType() == DatatypeValidator::QName) {
+						// We need the URI string for the prefix to determine
+						// if that matches the value in the instance document.
+						// Code was just comparing the string of prefix:localname
+						// and if the schema and instance document had different
+						// prefixes with the same URI string then we were giving an error.
+                        const XMLCh* localPart = getLocalPart(attValue);
+                        const XMLCh* prefix = getPrefix(attValue);
+                        const XMLCh* uriStr = (prefix && *prefix) ? resolvePrefixToURI(content, prefix) : fTargetNSURIString;                      
+                       
+						enums.get()->addElement(XMLString::replicate(attValue, fGrammarPoolMemoryManager));
+						enums.get()->addElement(XMLString::replicate(uriStr, fGrammarPoolMemoryManager));        
+                    }
                     else {
                         enums.get()->addElement(XMLString::replicate(attValue, fGrammarPoolMemoryManager));
                     }
