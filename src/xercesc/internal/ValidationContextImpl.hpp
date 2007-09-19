@@ -91,6 +91,9 @@ public :
       */
     virtual bool isPrefixUnknown(XMLCh* prefix);
     virtual void setElemStack(ElemStack* elemStack);
+    virtual const XMLCh* getURIForPrefix(XMLCh* prefix);
+    virtual void setScanner(XMLScanner* scanner);   
+
 
     //@}
   
@@ -131,6 +134,8 @@ private:
     bool                                fToCheckIdRefList;
     DatatypeValidator *                 fValidatingMemberType;    
     ElemStack*      fElemStack;
+    XMLScanner*     fScanner;
+
 
 };
 
@@ -148,6 +153,10 @@ inline void ValidationContextImpl::setValidatingMemberType(DatatypeValidator * v
 
 inline void ValidationContextImpl::setElemStack(ElemStack* elemStack) {
     fElemStack = elemStack;
+}
+
+inline void ValidationContextImpl::setScanner(XMLScanner* scanner) {
+    fScanner = scanner;
 }
 
 XERCES_CPP_NAMESPACE_END

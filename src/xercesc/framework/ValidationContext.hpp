@@ -33,6 +33,7 @@ class XMLRefInfo;
 class DTDEntityDecl;
 class DatatypeValidator;
 class ElemStack;
+class XMLScanner;
 
 class XMLPARSER_EXPORT ValidationContext : public XMemory
 {
@@ -94,6 +95,9 @@ public :
       */
     virtual bool isPrefixUnknown(XMLCh* /* prefix */) { return true; };
     virtual void setElemStack(ElemStack* /* elemStack */) {};
+    virtual const XMLCh* getURIForPrefix(XMLCh* /*prefix */) { return 0; };
+    virtual void setScanner(XMLScanner* /* scanner */) { };
+
     //@}
 
    

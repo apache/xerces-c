@@ -767,6 +767,7 @@ void XMLScanner::commonInit()
     //  semantics, i.e. all id refs must refer to elements that exist
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
     fValidationContext->setElemStack(&fElemStack);
+    fValidationContext->setScanner(this);
 
     //  Create the GrammarResolver
     //fGrammarResolver = new GrammarResolver();
