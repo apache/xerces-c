@@ -75,7 +75,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
         // According to Java 1.1: URLs may also be specified with a
         // String and the URL object that it is related to.
         //
-        if (XMLString::stringLen(content))
+        if (content && *content)
         {          
               if (!XMLUri::isValidURI(true, content, true))
                 ThrowXMLwithMemMgr1(InvalidDatatypeValueException

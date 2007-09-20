@@ -1371,22 +1371,22 @@ const XMLCh* PSVIWriterHandlers::translateBlockOrFinal(short val) {
 		XMLString::catString(fTempResult, PSVIUni::fgExtension);
 	}
 	if ((val & XSConstants::DERIVATION_RESTRICTION) != 0) {
-		if (XMLString::stringLen(fTempResult) != 0)
+		if (fTempResult && *fTempResult)
 			XMLString::catString(fTempResult, fgSpace);
 		XMLString::catString(fTempResult, PSVIUni::fgRestriction);
 	}
 	if ((val & XSConstants::DERIVATION_LIST) != 0) {
-		if (XMLString::stringLen(fTempResult) != 0)
+		if (fTempResult && *fTempResult)
 			XMLString::catString(fTempResult, fgSpace);
 		XMLString::catString(fTempResult, PSVIUni::fgList);
 	}
 	if ((val & XSConstants::DERIVATION_UNION) != 0) {
-		if (XMLString::stringLen(fTempResult) != 0)
+		if (fTempResult && *fTempResult)
 			XMLString::catString(fTempResult, fgSpace);
 		XMLString::catString(fTempResult, PSVIUni::fgUnion);
 	}
 	if ((val & XSConstants::DERIVATION_SUBSTITUTION) != 0) {
-		if (XMLString::stringLen(fTempResult) != 0)
+		if (fTempResult && *fTempResult)
 			XMLString::catString(fTempResult, fgSpace);
 		XMLString::catString(fTempResult, PSVIUni::fgSubstitution);
 	}
@@ -1589,7 +1589,7 @@ XMLCh* PSVIWriterHandlers::createID(XSObject* obj) {
 	} else {
 		const XMLCh period[] = { chPeriod, chNull };
 		XMLCh anonNum[6];
-		bool hasPrefix = objPrefix!=NULL && XMLString::stringLen(objPrefix)!=0;
+		bool hasPrefix = objPrefix!=NULL && *objPrefix!=0;
 		if (hasPrefix) {
 			XMLString::copyString(result, objPrefix);
 			XMLString::catString(result, period);

@@ -343,7 +343,7 @@ int main(int argC, char* argV[])
     
                     XERCES_STD_QUALIFIER cout << "Processing Namespace:   ";
                     const XMLCh *nameSpace = namespaces->elementAt(i);
-                    if (nameSpace && (XMLString::stringLen(nameSpace)>0))
+                    if (nameSpace && *nameSpace)
                         XERCES_STD_QUALIFIER cout << StrX(nameSpace);
                     XERCES_STD_QUALIFIER cout << "\n============================================" << XERCES_STD_QUALIFIER endl << XERCES_STD_QUALIFIER endl;
 
@@ -394,7 +394,7 @@ void printBasic(XSObject *xsObject, const char *type)
 {
     XERCES_STD_QUALIFIER cout << "Name:\t\t\t";
     const XMLCh *nameSpace = xsObject->getNamespace();
-    if (nameSpace && (XMLString::stringLen(nameSpace)>0)) {
+    if (nameSpace && *nameSpace) {
         XERCES_STD_QUALIFIER cout << StrX(nameSpace) << ", ";
     }
     XERCES_STD_QUALIFIER cout << StrX(xsObject->getName()) << "\n";

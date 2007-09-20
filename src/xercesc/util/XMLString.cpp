@@ -658,7 +658,7 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
 bool XMLString::isValidEncName(const XMLCh* const name)
 {
 
-    if ( XMLString::stringLen(name) == 0 )
+    if (name == 0 || *name == 0)
         return false;
 
     const XMLCh* tempName = name;
