@@ -180,7 +180,8 @@ static void writeUData(const XMLCh* s)
 //------------------------------------------------------------------------
 static void eatWhiteSpace(XMLCh* s, unsigned int &i)
 {
-    while (i < XMLString::stringLen(s))
+    size_t len = XMLString::stringLen(s);
+    while (i < len)
     {
     XMLCh c = s[i];
     if (!(c == 0x20 ||           // These are the official XML space characters,
@@ -210,7 +211,8 @@ static int convertHexValue(XMLCh* s, unsigned int &i)
                                    //                the letters a-f are Unicode 0x61-66
                                    // We can't use character literals - we might be
                                    //  building on an EBCDIC machine.
-    while (i < XMLString::stringLen(s))
+    size_t len = XMLString::stringLen(s);
+    while (i < len)
     {
         XMLCh c = s[i];
         if (c >= 0x61 && c <= 0x66)     // Uppercase a-f to A-F.

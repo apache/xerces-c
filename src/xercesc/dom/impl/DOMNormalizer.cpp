@@ -233,10 +233,12 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
             ((DOMText*)node)->appendData(next->getNodeValue());
             node->getParentNode()->removeChild(next);
             return node;
-        } else if (XMLString::stringLen(node->getNodeValue()) == 0) {
-            node->getParentNode()->removeChild(node);
+        } else {
+            const XMLCh* nv = node->getNodeValue();
+            if (nv == 0 || *nv == 0) {                                   
+                node->getParentNode()->removeChild(node);
+            }
         }
-
     }
     }
 
