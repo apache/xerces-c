@@ -22,10 +22,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <stdio.h>
+#include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLUTF8Transcoder.hpp>
 #include <xercesc/validators/datatype/AnyURIDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
-#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -67,6 +69,7 @@ DatatypeValidator* AnyURIDatatypeValidator::newInstance(
 void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
                                               , MemoryManager* const manager)
 {
+    bool validURI = true;
 
     // check 3.2.17.c0 must: URI (rfc 2396/2723)
     try
@@ -75,13 +78,14 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
         // According to Java 1.1: URLs may also be specified with a
         // String and the URL object that it is related to.
         //
-        if (content && *content)
+        const unsigned int len = XMLString::stringLen(content);
+        if (len)
         {          
-              if (!XMLUri::isValidURI(true, content, true))
-                ThrowXMLwithMemMgr1(InvalidDatatypeValueException
-                    , XMLExcepts::VALUE_URI_Malformed
-                    , content
-                    , manager);
+            // Encode special characters using XLink 5.4 algorithm
+            XMLCh* encoded = (XMLCh*)manager->allocate((len*3+1) * sizeof(XMLCh));
+            ArrayJanitor<XMLCh> encodedJan(encoded);
+            encode(content, len, encoded, manager);
+            validURI = XMLUri::isValidURI(true, encoded, true);            
         }
     }
     catch(const OutOfMemoryException&)
@@ -95,7 +99,99 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
                 , content
                 , manager);
     }
+    
+    if (!validURI) {
+        ThrowXMLwithMemMgr1(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_URI_Malformed
+                    , content
+                    , manager);
+    }
+}
 
+/***
+ * To encode special characters in anyURI, by using %HH to represent
+ * special ASCII characters: 0x00~0x1F, 0x7F, ' ', '<', '>', etc.
+ * and non-ASCII characters (whose value >= 128).
+ ***/
+void AnyURIDatatypeValidator::encode(const XMLCh* const content, const XMLSize_t len, XMLCh* encoded, MemoryManager* const manager)
+{
+    static const bool needEscapeMap[] = {
+        true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , /* 0x00 to 0x0F need escape */
+        true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , /* 0x10 to 0x1F need escape */
+        true , false, true , false, false, false, false, false, false, false, false, false, false, false, false, false, /* 0x20:' ', 0x22:'"' */
+        false, false, false, false, false, false, false, false, false, false, false, false, true , false, true , false, /* 0x3C:'<', 0x3E:'>' */
+        false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+        false, false, false, false, false, false, false, false, false, false, false, false, true , false, true , false, /* 0x5C:'\\', 0x5E:'^' */
+        true , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, /* 0x60:'`' */
+        false, false, false, false, false, false, false, false, false, false, false, true , true , true , true , true   /* 0x7B:'{', 0x7C:'|', 0x7D:'}', 0x7E:'~', 0x7F:DEL */
+    };
+
+    int bufferIndex = 0;
+
+    // For each character in content
+    XMLSize_t i;
+    for (i = 0; i < len; i++)
+    {
+        int ch = (int)content[i];
+        // If it's not an ASCII character, break here, and use UTF-8 encoding
+        if (ch >= 128)
+            break;
+
+        if (needEscapeMap[ch])
+        {
+            char tempStr[2] = "\0";
+            sprintf(tempStr, "%02X", ch);
+            encoded[bufferIndex++] = '%';
+            encoded[bufferIndex++] = (XMLCh)tempStr[0];
+            encoded[bufferIndex++] = (XMLCh)tempStr[1];
+        }
+        else
+        {
+            encoded[bufferIndex++] = (XMLCh)ch;
+        }
+    }
+
+    // we saw some non-ascii character
+    if (i < len) {
+        // get UTF-8 bytes for the remaining sub-string
+        const XMLCh* remContent = (XMLCh*)&content[i];
+        const XMLSize_t remContentLen = len - i;
+        XMLByte* UTF8Byte = (XMLByte*)manager->allocate((remContentLen*4+1) * sizeof(XMLByte));
+        XMLSize_t charsEaten;
+
+        XMLUTF8Transcoder transcoder(XMLUni::fgUTF8EncodingString, remContentLen*4+1, manager);
+        transcoder.transcodeTo(remContent, remContentLen, UTF8Byte, remContentLen*4, charsEaten, XMLTranscoder::UnRep_RepChar);
+        assert(charsEaten == remContentLen);
+
+        XMLSize_t j;
+        for (j = 0; j < remContentLen; j++) {
+            XMLByte b = UTF8Byte[j];
+            // for non-ascii character: make it positive, then escape
+            if (b < 0) {
+                int ch = b + 256;
+                char tempStr[2] = "\0";
+                sprintf(tempStr, "%02X", ch);
+                encoded[bufferIndex++] = '%';
+                encoded[bufferIndex++] = (XMLCh)tempStr[0];
+                encoded[bufferIndex++] = (XMLCh)tempStr[1];
+            }
+            else if (needEscapeMap[b])
+            {
+                char tempStr[2] = "\0";
+                sprintf(tempStr, "%02X", b);
+                encoded[bufferIndex++] = '%';
+                encoded[bufferIndex++] = (XMLCh)tempStr[0];
+                encoded[bufferIndex++] = (XMLCh)tempStr[1];
+            }
+            else
+            {
+                encoded[bufferIndex++] = (XMLCh)b;
+            }
+        }
+        manager->deallocate(UTF8Byte);
+    }
+
+    encoded[bufferIndex] = (XMLCh)0;
 }
 
 /***
