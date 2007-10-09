@@ -83,7 +83,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
         {          
             // Encode special characters using XLink 5.4 algorithm
             XMLCh* encoded = (XMLCh*)manager->allocate((len*3+1) * sizeof(XMLCh));
-            ArrayJanitor<XMLCh> encodedJan(encoded);
+            ArrayJanitor<XMLCh> encodedJan(encoded, manager);
             encode(content, len, encoded, manager);
             validURI = XMLUri::isValidURI(true, encoded, true);            
         }
