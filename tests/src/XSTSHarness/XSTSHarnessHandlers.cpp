@@ -345,7 +345,7 @@ void XSTSHarnessHandlers::printFile(XMLURL& url)
     }
     XERCES_STD_QUALIFIER cout << "Content of file " << StrX(url.getURLText()) << XERCES_STD_QUALIFIER endl;
     XMLByte buffer[256];
-    unsigned int nRead;
+    XMLSize_t nRead;
     while((nRead=stream->readBytes(buffer, 255)) >0)
     {
         buffer[nRead]=0;
