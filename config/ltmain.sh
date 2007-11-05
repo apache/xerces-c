@@ -1,8 +1,8 @@
 # ltmain.sh - Provide generalized library-building support services.
 # NOTE: Changing this file will not affect anything until you rerun configure.
 #
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
-# Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006,
+# 2007  Free Software Foundation, Inc.
 # Originally by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 #
 # This program is free software; you can redistribute it and/or modify
@@ -43,8 +43,8 @@ EXIT_FAILURE=1
 
 PROGRAM=ltmain.sh
 PACKAGE=libtool
-VERSION=1.5.23a
-TIMESTAMP=" (1.1220.2.412 2006/10/13 14:13:30)"
+VERSION=1.5.24
+TIMESTAMP=" (1.1220.2.455 2007/06/24 02:13:29)"
 
 # Be Bourne compatible (taken from Autoconf:_AS_BOURNE_COMPATIBLE).
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
@@ -485,7 +485,7 @@ do
     echo "\
 $PROGRAM (GNU $PACKAGE) $VERSION$TIMESTAMP
 
-Copyright (C) 2006  Free Software Foundation, Inc.
+Copyright (C) 2007  Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
     exit $?
@@ -784,7 +784,7 @@ if test -z "$show_help"; then
     *.class) xform=class ;;
     *.cpp) xform=cpp ;;
     *.cxx) xform=cxx ;;
-    *.f90) xform=f90 ;;
+    *.[fF][09]?) xform=[fF][09]. ;;
     *.for) xform=for ;;
     *.java) xform=java ;;
     *.obj) xform=obj ;;
@@ -1659,10 +1659,11 @@ EOF
       # -m* pass through architecture-specific compiler args for GCC
       # -m*, -t[45]*, -txscale* pass through architecture-specific
       # compiler args for GCC
-      # -pg, --coverage pass through profiling flag for GCC
+      # -p, -pg, --coverage, -fprofile-* pass through profiling flag for GCC
+      # -F/path gives path to uninstalled frameworks, gcc on darwin
       # @file GCC response files
       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
-      -t[45]*|-txscale*|-pg|--coverage|@*)
+      -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*)
 
 	# Unknown arguments in both finalize_command and compile_command need
 	# to be aesthetically quoted because they are evaled later.
@@ -1690,9 +1691,9 @@ EOF
 
       -no-install)
 	case $host in
-	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2*)
+	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-darwin*)
 	  # The PATH hackery in wrapper scripts is required on Windows
-	  # in order for the loader to find any dlls it needs.
+	  # and Darwin in order for the loader to find any dlls it needs.
 	  $echo "$modename: warning: \`-no-install' is ignored for $host" 1>&2
 	  $echo "$modename: warning: assuming \`-no-fast-install' instead" 1>&2
 	  fast_install=no
@@ -3238,9 +3239,10 @@ EOF
 	    age="0"
 	    ;;
 	  irix|nonstopux)
-	    current=`expr $number_major + $number_minor - 1`
+	    current=`expr $number_major + $number_minor`
 	    age="$number_minor"
 	    revision="$number_minor"
+	    lt_irix_increment=no
 	    ;;
 	  esac
 	  ;;
@@ -3299,7 +3301,8 @@ EOF
 	  versuffix="$major.$age.$revision"
 	  # Darwin ld doesn't like 0 for these options...
 	  minor_current=`expr $current + 1`
-	  verstring="${wl}-compatibility_version ${wl}$minor_current ${wl}-current_version ${wl}$minor_current.$revision"
+	  xlcverstring="${wl}-compatibility_version ${wl}$minor_current ${wl}-current_version ${wl}$minor_current.$revision"
+	  verstring="-compatibility_version $minor_current -current_version $minor_current.$revision"
 	  ;;
 
 	freebsd-aout)
@@ -3313,8 +3316,11 @@ EOF
 	  ;;
 
 	irix | nonstopux)
-	  major=`expr $current - $age + 1`
-
+	  if test "X$lt_irix_increment" = "Xno"; then
+	    major=`expr $current - $age`
+	  else
+	    major=`expr $current - $age + 1`
+	  fi
 	  case $version_type in
 	    nonstopux) verstring_prefix=nonstopux ;;
 	    *)         verstring_prefix=sgi ;;
@@ -4728,8 +4734,8 @@ static const void *lt_preloaded_setup() {
 	  $run eval '(cd $output_objdir && $LTCC  $LTCFLAGS -c$no_builtin_flag$pic_flag_for_symtable "$dlsyms")' || exit $?
 
 	  # Clean up the generated files.
-	  # $show "$rm $output_objdir/$dlsyms $nlist ${nlist}S ${nlist}T"
-	  # $run $rm "$output_objdir/$dlsyms" "$nlist" "${nlist}S" "${nlist}T"
+	  $show "$rm $output_objdir/$dlsyms $nlist ${nlist}S ${nlist}T"
+	  $run $rm "$output_objdir/$dlsyms" "$nlist" "${nlist}S" "${nlist}T"
 
 	  # Transform the symbol file into the correct name.
           case $host in
@@ -4775,9 +4781,8 @@ static const void *lt_preloaded_setup() {
 
 	# Delete the generated files.
 	if test -n "$dlsyms"; then
-	  # $show "$rm $output_objdir/${outputname}S.${objext}"
-	  # $run $rm "$output_objdir/${outputname}S.${objext}"
-	  :
+	  $show "$rm $output_objdir/${outputname}S.${objext}"
+	  $run $rm "$output_objdir/${outputname}S.${objext}"
 	fi
 
 	exit $exit_status
@@ -6477,8 +6482,6 @@ relink_command=\"$relink_command\""
       do
 	eval "if test \"\${save_$lt_var+set}\" = set; then
 		$lt_var=\$save_$lt_var; export $lt_var
-	      else
-		$lt_unset $lt_var
 	      fi"
       done
 
