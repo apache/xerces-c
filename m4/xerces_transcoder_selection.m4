@@ -132,6 +132,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 		*-icu-*)
 			transcoder=icu
 			AC_DEFINE([XERCES_USE_TRANSCODER_ICU], 1, [Define to use the ICU-based transcoder])
+			AC_SUBST([ICU_CXXFLAGS], [-I$xerces_cv_icu_prefix/include])
 			LIBS="${LIBS} -L${xerces_cv_icu_prefix}/lib -licuuc -licudata"
 			break
 			;;

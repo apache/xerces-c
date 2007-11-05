@@ -24,7 +24,7 @@ SUBDIRS =
 
 # the  -I${top_srcdir} is needed to pick the lib/stricmp.h 
 # header file when doing out-of-tree builds
-AM_CPPFLAGS =						-I${top_srcdir}
+AM_CXXFLAGS =						-I${top_srcdir} $(ICU_CXXFLAGS)
 
 
 
