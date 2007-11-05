@@ -24,7 +24,9 @@ SUBDIRS =
 
 # the  -I${top_srcdir} is needed to pick the lib/stricmp.h 
 # header file when doing out-of-tree builds
-AM_CPPFLAGS =						 -I${top_srcdir}
+AM_CPPFLAGS =						-I${top_srcdir}
+
+
 
 #
 # Specify the convenience libraries for various xerces components
@@ -93,8 +95,8 @@ nobase_libvalidators_la_HEADERS =	${validators_headers}
 libvalidators_la_SOURCES =			${validators_sources}
 
 src_libraries +=					libxinclude.la
-libxinclude_ladir =				${includedir}
-nobase_libxinclude_la_HEADERS =	                ${xinclude_headers}
+libxinclude_ladir =					${includedir}
+nobase_libxinclude_la_HEADERS =		${xinclude_headers}
 libxinclude_la_SOURCES =			${xinclude_sources}
 
 #
@@ -150,9 +152,9 @@ endif
 
 if XERCES_USE_TRANSCODER_GNUICONV
 src_libraries +=					libgnuiconvtc.la
-libgnuiconvtc_ladir =					${includedir}
-nobase_libgnuiconvtc_la_HEADERS =		${gnuiconv_headers}
-libgnuiconvtc_la_SOURCES =				${gnuiconv_sources}
+libgnuiconvtc_ladir =				${includedir}
+nobase_libgnuiconvtc_la_HEADERS =	${gnuiconv_headers}
+libgnuiconvtc_la_SOURCES =			${gnuiconv_sources}
 endif
 
 if XERCES_USE_TRANSCODER_ICONV
@@ -173,7 +175,7 @@ if XERCES_USE_TRANSCODER_WINDOWS
 src_libraries +=					libwintrans.la
 libwintrans_ladir =					${includedir}
 nobase_libwintrans_la_HEADERS =		${wintrans_headers}
-libwintrans_la_SOURCES =				${wintrans_sources}
+libwintrans_la_SOURCES =			${wintrans_sources}
 endif
 
 #
@@ -181,16 +183,16 @@ endif
 #
 if XERCES_USE_MSGLOADER_INMEMORY
 src_libraries +=					libmsginmemory.la
-libmsginmemory_ladir =					${includedir}
-nobase_libmsginmemory_la_HEADERS =			${msginmemory_headers}
-libmsginmemory_la_SOURCES =				${msginmemory_sources}
+libmsginmemory_ladir =				${includedir}
+nobase_libmsginmemory_la_HEADERS =	${msginmemory_headers}
+libmsginmemory_la_SOURCES =			${msginmemory_sources}
 endif
 
 if XERCES_USE_MSGLOADER_ICU
 src_libraries +=					libmsgicu.la
 libmsgicu_ladir =					${includedir}
-nobase_libmsgicu_la_HEADERS =				${msgicu_headers}
-libmsgicu_la_SOURCES =					${msgicu_sources}
+nobase_libmsgicu_la_HEADERS =		${msgicu_headers}
+libmsgicu_la_SOURCES =				${msgicu_sources}
 
 SUBDIRS 						+= xercesc/util/MsgLoaders/ICU/resources
 endif
@@ -198,8 +200,8 @@ endif
 if XERCES_USE_MSGLOADER_ICONV
 src_libraries +=					libmsgiconv.la
 libmsgiconv_ladir =					${includedir}
-nobase_libmsgiconv_la_HEADERS =				${msgiconv_headers}
-libmsgiconv_la_SOURCES =				${msgiconv_sources}
+nobase_libmsgiconv_la_HEADERS =		${msgiconv_headers}
+libmsgiconv_la_SOURCES =			${msgiconv_sources}
 
 SUBDIRS 						+= xercesc/util/MsgLoaders/MsgCatalog
 endif
