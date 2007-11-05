@@ -21,7 +21,7 @@
 
 include ../version.incl
 
-lib_LTLIBRARIES	= 			libxerces-c.la
+lib_LTLIBRARIES	= 				libxerces-c.la
 libxerces_c_la_SOURCES =
 nodist_EXTRA_libxerces_c_la_SOURCES = dummyfile-to-force-cpp-linking.cpp
 
