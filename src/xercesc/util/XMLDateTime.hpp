@@ -27,6 +27,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/SchemaDateTimeException.hpp>
+#include <xercesc/util/XMLChar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -273,6 +274,13 @@ inline void XMLDateTime::setBuffer(const XMLCh* const aString)
     reset();
 
     fEnd = XMLString::stringLen(aString);
+
+    for (; fEnd > 0; fEnd--)
+    {
+        if (!XMLChar1_0::isWhitespace(aString[fEnd - 1]))
+            break;
+    }
+
     if (fEnd > 0) {
     
         if (fEnd > fBufferMaxLen)
@@ -282,7 +290,8 @@ inline void XMLDateTime::setBuffer(const XMLCh* const aString)
             fBuffer = (XMLCh*) fMemoryManager->allocate((fBufferMaxLen+1) * sizeof(XMLCh));
         }
 
-        memcpy(fBuffer, aString, (fEnd+1) * sizeof(XMLCh));
+        memcpy(fBuffer, aString, (fEnd) * sizeof(XMLCh));
+        fBuffer[fEnd] = '\0';
     }
 }
 

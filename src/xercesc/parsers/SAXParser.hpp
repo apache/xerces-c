@@ -515,6 +515,14 @@ public :
       */
     bool getSkipDTDValidation() const;
 
+    /** Get the 'handle multiple schema imports' flag
+      *
+      * @return true, if the parser is currently configured to
+      *         import multiple schemas with the same namespace, false otherwise.
+      *
+      * @see #setHandleMultipleImports
+      */
+    bool getHandleMultipleImports() const;
     //@}
 
 
@@ -899,6 +907,19 @@ public :
       * @param newValue The state to set
       */
     void setSkipDTDValidation(const bool newValue);
+
+    /** Set the 'handle multiple schema imports' flag
+      *
+      * This method gives users the ability to import multiple schemas that
+      * have the same namespace.
+      *
+      * NOTE: This option is ignored if schema validation is disabled.
+      *
+      * The parser's default state is false
+      *
+      * @param newValue The state to set
+      */
+    void setHandleMultipleImports(const bool newValue);
     //@}
 
 

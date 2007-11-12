@@ -328,8 +328,31 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
 
         if (!fIncludeInfoList->containsElement(toAdd)) {
 
-		    fIncludeInfoList->addElement(toAdd);
-            toAdd->fIncludeInfoList = fIncludeInfoList;
+		    fIncludeInfoList->addElement(toAdd);	    
+            //code was originally:
+            //toAdd->fIncludeInfoList = fIncludeInfoList;
+            //however for handling multiple imports this was causing
+            //to schemaInfo's to have the same fIncludeInfoList which they
+            //both owned so when it was deleted it crashed.
+			if (toAdd->fIncludeInfoList) {
+			   if (toAdd->fIncludeInfoList != fIncludeInfoList) {
+                   unsigned int size = toAdd->fIncludeInfoList->size();
+                   for (unsigned int i=0; i<size; i++) {
+                       if (!fIncludeInfoList->containsElement(toAdd->fIncludeInfoList->elementAt(i))) {
+                            fIncludeInfoList->addElement(toAdd->fIncludeInfoList->elementAt(i));
+                       }
+                   }
+                   size = fIncludeInfoList->size();
+                   for (unsigned int j=0; j<size; j++) {
+                       if (!toAdd->fIncludeInfoList->containsElement(fIncludeInfoList->elementAt(j))) {
+                            toAdd->fIncludeInfoList->addElement(fIncludeInfoList->elementAt(j));
+                       }
+                   }
+			   }
+			}
+			else {
+				toAdd->fIncludeInfoList = fIncludeInfoList;
+			}			
         }
     }
 }

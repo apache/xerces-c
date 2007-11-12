@@ -130,7 +130,8 @@ private:
       */
     void                doTraverseSchema(const DOMElement* const schemaRoot);
     void                preprocessSchema(DOMElement* const schemaRoot,
-                                         const XMLCh* const schemaURL);
+                                         const XMLCh* const schemaURL,
+                                         bool  multipleImport = false);
     void                traverseSchemaHeader(const DOMElement* const schemaRoot);
     XSAnnotation*       traverseAnnotationDecl(const DOMElement* const childElem,
                                                ValueVectorOf<DOMNode*>* const nonXSAttList,
@@ -182,10 +183,12 @@ private:
     const XMLCh*        traverseNotationDecl(const DOMElement* const childElem,
                                              const XMLCh* const name,
                                              const XMLCh* const uriStr);
-    ContentSpecNode*    traverseChoiceSequence(const DOMElement* const elemDecl,
-                                               const int modelGroupType);
+    ContentSpecNode*    traverseChoiceSequence(const DOMElement* const elemDecl,                                               
+                                               const int modelGroupType,
+                                               bool& hasChildren);
     ContentSpecNode*    traverseAny(const DOMElement* const anyDecl);
-    ContentSpecNode*    traverseAll(const DOMElement* const allElem);
+    ContentSpecNode*    traverseAll(const DOMElement* const allElem,
+                                    bool& hasChildren);
     XercesGroupInfo*    traverseGroupDecl(const DOMElement* const childElem,
                                           const bool topLevel = true);
     XercesAttGroupInfo* traverseAttributeGroupDecl(const DOMElement* const elem,
@@ -432,7 +435,8 @@ private:
                                     const XMLCh* const attName,
                                     const bool toTrim = false);
 
-    void checkMinMax(ContentSpecNode* const specNode,
+    /* return minOccurs */
+    int checkMinMax(ContentSpecNode* const specNode,    
                      const DOMElement* const elem,
                      const int allContext = Not_All_Context);
 

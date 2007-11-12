@@ -1340,6 +1340,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setSkipDTDValidation(value);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
+    {
+        fScanner->setHandleMultipleImports(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 }
@@ -1386,6 +1390,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->getDisableDefaultEntityResolution();
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
         return fScanner->getSkipDTDValidation();
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
+        return fScanner->getHandleMultipleImports();
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 

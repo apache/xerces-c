@@ -102,8 +102,9 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     const SchemaElementDecl::ModelTypes modelType = (currType)
             ? (SchemaElementDecl::ModelTypes)(currType->getContentType())
             : ((SchemaElementDecl*)elemDecl)->getModelType();
-
-    if (modelType == SchemaElementDecl::Empty)
+   
+    if (modelType == SchemaElementDecl::Empty  ||
+        modelType == SchemaElementDecl::ElementOnlyEmpty)
     {
         //
         //  We can do this one here. It cannot have any children. If it does
@@ -194,9 +195,16 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         //  this value will be legal since it matches one of them.
                         int colonPos = -1;
                         unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);
-                        fNotationBuf->set(getScanner()->getURIText(uriId));
-                        fNotationBuf->append(chColon);
-                        fNotationBuf->append(&value[colonPos + 1]);
+                        const XMLCh* uriText = getScanner()->getURIText(uriId);
+                        if (uriText && *uriText) {
+                            fNotationBuf->set(getScanner()->getURIText(uriId));
+                            fNotationBuf->append(chColon);
+                            fNotationBuf->append(&value[colonPos + 1]);
+                        }
+                        else {
+                            fNotationBuf->set(value);
+                        }
+                        
                         value = fNotationBuf->getRawBuffer();
                     }
 
@@ -414,9 +422,15 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 XMLBuffer notationBuf(1023, fMemoryManager);
                 int colonPos = -1;
                 unsigned int uriId = getScanner()->resolveQName(attrValue, notationBuf, ElemStack::Mode_Element, colonPos);
-                notationBuf.set(getScanner()->getURIText(uriId));
-                notationBuf.append(chColon);
-                notationBuf.append(&attrValue[colonPos + 1]);
+                const XMLCh* uriText = getScanner()->getURIText(uriId);
+                if (uriText && *uriText) {
+                    notationBuf.set(uriText);
+                    notationBuf.append(chColon);                                
+                    notationBuf.append(&attrValue[colonPos + 1]);
+                }
+                else {
+                    notationBuf.set(attrValue);
+                }                
 
                 attDefDV->validate(notationBuf.getRawBuffer()
                                  , context

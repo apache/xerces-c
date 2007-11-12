@@ -1359,6 +1359,23 @@ const XMLCh XMLUni::fgXercesSkipDTDValidation[] =
     ,   chLatin_o, chLatin_n, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validation/schema/handle-multiple-imports
+const XMLCh XMLUni::fgXercesHandleMultipleImports[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a
+    ,   chForwardSlash, chLatin_h, chLatin_a, chLatin_n, chLatin_d, chLatin_l, chLatin_e, chDash
+    ,   chLatin_m, chLatin_u, chLatin_l, chLatin_t, chLatin_i, chLatin_p
+    ,   chLatin_l, chLatin_e, chDash, chLatin_i, chLatin_m, chLatin_p, chLatin_o 
+    ,   chLatin_r, chLatin_t, chLatin_s, chNull
+};
+
 //Introduced in DOM Level 3
 const XMLCh XMLUni::fgDOMCanonicalForm[] =
 {

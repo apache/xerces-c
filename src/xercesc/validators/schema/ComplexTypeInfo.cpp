@@ -303,7 +303,8 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     {
         newValue = XMLString::replicate(XMLUni::fgAnyString, fMemoryManager);
     }
-    else if (fContentType == SchemaElementDecl::Empty)
+    else if (fContentType == SchemaElementDecl::Empty ||
+             fContentType == SchemaElementDecl::ElementOnlyEmpty)
     {
         newValue = XMLString::replicate(XMLUni::fgEmptyString, fMemoryManager);
     }
@@ -352,7 +353,8 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA)
 XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpecNode)
 {
     XMLContentModel* cmRet = 0;
-    if (fContentType == SchemaElementDecl::Simple) {
+    if (fContentType == SchemaElementDecl::Simple ||
+        fContentType == SchemaElementDecl::ElementOnlyEmpty) {
        // just return nothing
     }
     else if (fContentType == SchemaElementDecl::Mixed_Simple)

@@ -612,7 +612,7 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
     XMLSize_t nameLen = XMLString::stringLen(name);
     int colPos = XMLString::lastIndexOf(name, chColon);
 
-    if ((colPos == -1)         ||      // no ':'
+    if ((colPos == 0)         ||      // no ':'
         (colPos == ((int)nameLen) - 1)  )     // <URI>':'
         return false;
 
@@ -622,7 +622,7 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
     {
         return false;
     }
-    else if (colPos == 0)
+    else if (colPos == -1)
     {
         return true;
     }
@@ -657,8 +657,7 @@ bool XMLString::isValidNOTATION(const XMLCh*         const name
   */
 bool XMLString::isValidEncName(const XMLCh* const name)
 {
-
-    if (name == 0 || *name == 0)
+	if (name == 0 || *name == 0)    
         return false;
 
     const XMLCh* tempName = name;

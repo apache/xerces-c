@@ -136,6 +136,7 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
     fSupportedParameters->add(XMLUni::fgXercesDisableDefaultEntityResolution);
     fSupportedParameters->add(XMLUni::fgXercesSkipDTDValidation);
     fSupportedParameters->add(XMLUni::fgXercesDoXInclude);
+    fSupportedParameters->add(XMLUni::fgXercesHandleMultipleImports);
 }
 
 
@@ -407,6 +408,10 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
     {
         setDoXInclude(state);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
+    {
+        getScanner()->setHandleMultipleImports(state);
+    }
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
 }
@@ -582,6 +587,10 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
     {
         return (void*)getScanner()->getSkipDTDValidation();
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
+    {
+        return (void*)getScanner()->getHandleMultipleImports();
+    }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesEntityResolver) == 0) 
     {
         return fXMLEntityResolver;
@@ -652,7 +661,8 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
         XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0 ||
-		XMLString::compareIStringASCII(name, XMLUni::fgXercesDoXInclude) == 0) 
+		XMLString::compareIStringASCII(name, XMLUni::fgXercesDoXInclude) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
       return true;
     else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
             XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||

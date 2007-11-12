@@ -301,77 +301,88 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
 }
 
 void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
-                                      const XMLCh* const schemaURL) {
+                                      const XMLCh* const schemaURL,
+                                      bool  multipleImport) {
 
-    // Make sure namespace binding is defaulted
-    const XMLCh* rootPrefix = schemaRoot->getPrefix();
+    if (!multipleImport) {
+        // Make sure namespace binding is defaulted
+        const XMLCh* rootPrefix = schemaRoot->getPrefix();
 
-    if (rootPrefix == 0 || !*rootPrefix) {
+        if (rootPrefix == 0 || !*rootPrefix) {
 
-		const XMLCh* xmlnsStr = schemaRoot->getAttribute(XMLUni::fgXMLNSString);
-
-        if (!xmlnsStr || !*xmlnsStr) {
-            schemaRoot->setAttribute(XMLUni::fgXMLNSString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+    		const XMLCh* xmlnsStr = schemaRoot->getAttribute(XMLUni::fgXMLNSString);
+    
+            if (!xmlnsStr || !*xmlnsStr) {
+                schemaRoot->setAttribute(XMLUni::fgXMLNSString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            }
         }
+
+        // Set schemaGrammar data and add it to GrammarResolver
+        // For complex type registry, attribute decl registry , group/attGroup
+        // and namespace mapping, needs to check whether the passed in
+        // Grammar was a newly instantiated one.
+        fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
+
+        if (fComplexTypeRegistry == 0 ) {
+
+            fComplexTypeRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<ComplexTypeInfo>(29, fGrammarPoolMemoryManager);
+            fSchemaGrammar->setComplexTypeRegistry(fComplexTypeRegistry);
+        }
+
+        fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
+
+        if (fGroupRegistry == 0 ) {
+
+            fGroupRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XercesGroupInfo>(13, fGrammarPoolMemoryManager);
+            fSchemaGrammar->setGroupInfoRegistry(fGroupRegistry);
+        }
+
+        fAttGroupRegistry = fSchemaGrammar->getAttGroupInfoRegistry();
+
+        if (fAttGroupRegistry == 0 ) {
+
+            fAttGroupRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XercesAttGroupInfo>(13, fGrammarPoolMemoryManager);
+            fSchemaGrammar->setAttGroupInfoRegistry(fAttGroupRegistry);
+        }
+
+        fAttributeDeclRegistry = fSchemaGrammar->getAttributeDeclRegistry();
+
+        if (fAttributeDeclRegistry == 0) {
+
+            fAttributeDeclRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XMLAttDef>(29, fGrammarPoolMemoryManager);
+            fSchemaGrammar->setAttributeDeclRegistry(fAttributeDeclRegistry);
+        }
+
+        fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
+
+        if (!fValidSubstitutionGroups) {
+
+            fValidSubstitutionGroups = new (fGrammarPoolMemoryManager) RefHash2KeysTableOf<ElemVector>(29, fGrammarPoolMemoryManager);
+            fSchemaGrammar->setValidSubstitutionGroups(fValidSubstitutionGroups);
+        }
+
+        //Retrieve the targetnamespace URI information
+        const XMLCh* targetNSURIStr = schemaRoot->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
+        fSchemaGrammar->setTargetNamespace(targetNSURIStr);
+
+        fScopeCount = 0;
+        fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
+        fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
+        fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
+
+        XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();
+        gramDesc->setTargetNamespace(fTargetNSURIString);
+
+        fGrammarResolver->putGrammar(fSchemaGrammar);
+    }
+    else {
+        fScopeCount = 0;
+        fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
+
+        fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
+        fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
     }
 
-    // Set schemaGrammar data and add it to GrammarResolver
-    // For complex type registry, attribute decl registry , group/attGroup
-    // and namespace mapping, needs to check whether the passed in
-    // Grammar was a newly instantiated one.
-    fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
-
-    if (fComplexTypeRegistry == 0 ) {
-
-        fComplexTypeRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<ComplexTypeInfo>(29, fGrammarPoolMemoryManager);
-        fSchemaGrammar->setComplexTypeRegistry(fComplexTypeRegistry);
-    }
-
-    fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
-
-    if (fGroupRegistry == 0 ) {
-
-        fGroupRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XercesGroupInfo>(13, fGrammarPoolMemoryManager);
-        fSchemaGrammar->setGroupInfoRegistry(fGroupRegistry);
-    }
-
-    fAttGroupRegistry = fSchemaGrammar->getAttGroupInfoRegistry();
-
-    if (fAttGroupRegistry == 0 ) {
-
-        fAttGroupRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XercesAttGroupInfo>(13, fGrammarPoolMemoryManager);
-        fSchemaGrammar->setAttGroupInfoRegistry(fAttGroupRegistry);
-    }
-
-    fAttributeDeclRegistry = fSchemaGrammar->getAttributeDeclRegistry();
-
-    if (fAttributeDeclRegistry == 0) {
-
-        fAttributeDeclRegistry = new (fGrammarPoolMemoryManager) RefHashTableOf<XMLAttDef>(29, fGrammarPoolMemoryManager);
-        fSchemaGrammar->setAttributeDeclRegistry(fAttributeDeclRegistry);
-    }
-
-    fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
-
-    if (!fValidSubstitutionGroups) {
-
-        fValidSubstitutionGroups = new (fGrammarPoolMemoryManager) RefHash2KeysTableOf<ElemVector>(29, fGrammarPoolMemoryManager);
-        fSchemaGrammar->setValidSubstitutionGroups(fValidSubstitutionGroups);
-    }
-
-    //Retrieve the targetnamespace URI information
-    const XMLCh* targetNSURIStr = schemaRoot->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
-    fSchemaGrammar->setTargetNamespace(targetNSURIStr);
-
-    fScopeCount = 0;
-    fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
-    fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
-    fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
-
-    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();
-    gramDesc->setTargetNamespace(fTargetNSURIString);
-
-    fGrammarResolver->putGrammar(fSchemaGrammar);
     fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
 
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
@@ -810,6 +821,10 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
     // Nothing to do
     if (!srcToFill) {
+        if (!grammarFound && nameSpace) {
+            fSchemaInfo->addImportedNS(fURIStringPool->addOrFind(nameSpace));
+        }
+
         return;
     }
 
@@ -829,7 +844,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     }
 
     if (grammarFound) {
-        return;
+        if (!fScanner->getHandleMultipleImports())
+            return;
     }
 
     // ------------------------------------------------------------------
@@ -879,13 +895,18 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             // --------------------------------------------------------
             // Preprocess new schema
             // --------------------------------------------------------
-            SchemaInfo* saveInfo = fSchemaInfo;            
-            fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+            SchemaInfo* saveInfo = fSchemaInfo; 
+            if (grammarFound) {
+                fSchemaGrammar = (SchemaGrammar*) aGrammar;                   
+            }
+            else {            
+                fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+            }
             XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();
             gramDesc->setContextType(XMLSchemaDescription::CONTEXT_IMPORT);
             gramDesc->setLocationHints(importURL);
 
-            preprocessSchema(root, importURL);
+            preprocessSchema(root, importURL, grammarFound);
             fPreprocessedNodes->put((void*) elem, fSchemaInfo);
 
             // --------------------------------------------------------
@@ -1008,10 +1029,11 @@ void TraverseSchema::traverseRedefine(const DOMElement* const redefineElem) {
   *    </choice-sequence>
   */
 ContentSpecNode*
-TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
-                                       const int modelGroupType)
+TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,                                       
+                                       const int modelGroupType,
+                                       bool& hasChildren)
 {
-
+    hasChildren = false;
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     // -----------------------------------------------------------------------
@@ -1037,6 +1059,7 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
 
     Janitor<ContentSpecNode> contentSpecNode(0);
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
+        hasChildren = true;
         contentSpecNode.release();
         bool seeParticle = false;
         bool wasAny = false;
@@ -1080,13 +1103,13 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
             seeParticle = true;
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
-
-            contentSpecNode.reset(traverseChoiceSequence(child,ContentSpecNode::Choice));
+            bool hasChild;
+            contentSpecNode.reset(traverseChoiceSequence(child,ContentSpecNode::Choice, hasChild));
             seeParticle = true;
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
-
-            contentSpecNode.reset(traverseChoiceSequence(child,ContentSpecNode::Sequence));
+            bool hasChild;
+            contentSpecNode.reset(traverseChoiceSequence(child,ContentSpecNode::Sequence, hasChild));            
             seeParticle = true;
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_ANY)) {
@@ -1625,15 +1648,17 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
         bool illegalChild = false;
         const XMLCh* childName = content->getLocalName();
+        bool hasChild;
+
 
         if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
-            specNode.reset(traverseChoiceSequence(content, ContentSpecNode::Sequence));
+            specNode.reset(traverseChoiceSequence(content, ContentSpecNode::Sequence, hasChild));           
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
-            specNode.reset(traverseChoiceSequence(content, ContentSpecNode::Choice));
+            specNode.reset(traverseChoiceSequence(content, ContentSpecNode::Choice, hasChild));
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_ALL)) {
-            specNode.reset(traverseAll(content));
+            specNode.reset(traverseAll(content, hasChild));
         }
         else {
             illegalChild = true;
@@ -2102,9 +2127,10 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
   *     </all>
   */
 ContentSpecNode*
-TraverseSchema::traverseAll(const DOMElement* const elem) {
+TraverseSchema::traverseAll(const DOMElement* const elem, bool& hasChildren) {
 
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
+    hasChildren = false;
 
     // -----------------------------------------------------------------------
     // Check attributes
@@ -2133,7 +2159,7 @@ TraverseSchema::traverseAll(const DOMElement* const elem) {
     bool hadContent = false;
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
-
+        hasChildren = true;
         contentSpecNode.release();
         const XMLCh* childName = child->getLocalName();
 
@@ -3212,6 +3238,8 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
         unsigned int                  fixedFlag = 0;
         unsigned short                scope = 0;
         bool                          isFirstPattern = true;
+        bool                          sawPattern = false;
+
 
         while (content != 0) {
 
@@ -3281,10 +3309,16 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                             traverseNotationDecl(content, localPart, uriStr);
                         }
 
-                        fBuffer.set(uriStr);
-                        fBuffer.append(chColon);
-                        fBuffer.append(localPart);
-                        enums.get()->addElement(XMLString::replicate(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager));
+                        if (uriStr && *uriStr) {
+                            fBuffer.set(uriStr);
+                            fBuffer.append(chColon);
+                            fBuffer.append(localPart);
+                            enums.get()->addElement(XMLString::replicate(fBuffer.getRawBuffer(), fGrammarPoolMemoryManager));
+                        }
+                        else {
+                            enums.get()->addElement(XMLString::replicate(localPart, fGrammarPoolMemoryManager));
+                        }                    
+
                     }
 					else if (baseValidator->getType() == DatatypeValidator::QName) {
 						// We need the URI string for the prefix to determine
@@ -3314,7 +3348,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                         else
                             janPatternAnnot.get()->setNext(fAnnotation);
                     }
-
+                    sawPattern = true;
                     if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
 
                         isFirstPattern = false;
@@ -3365,7 +3399,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
             content = XUtil::getNextSiblingElement(content);
         } // end while
 
-        if (!pattern.isEmpty()) {
+        if (sawPattern) {
 
             KVStringPair* kv = new (fGrammarPoolMemoryManager) KVStringPair(SchemaSymbols::fgELT_PATTERN, pattern.getRawBuffer(), pattern.getLen(), fGrammarPoolMemoryManager);
             if (!janPatternAnnot.isDataNull())
@@ -6015,7 +6049,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
 }
 
 
-void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
+int TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
                                  const DOMElement* const elem,
                                  const int allContextFlag) {
 
@@ -6074,7 +6108,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
     }
 
     if (minOccurs == 0 && maxOccurs == 0){
-        return;
+        return minOccurs;
     }
 
     // Constraint checking for min/max value
@@ -6127,6 +6161,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             }
         }
     }
+    return minOccurs;
 }
 
 
@@ -6172,6 +6207,8 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         }
     }
 
+    bool effectiveContent_hasChild = false;
+
     if (childElem != 0) {
 
         fCircularCheckIndex = fCurrentTypeNameStack->size();
@@ -6204,21 +6241,25 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
 
-            specNodeJan.reset(traverseChoiceSequence(childElem, ContentSpecNode::Sequence));
+            specNodeJan.reset(traverseChoiceSequence(childElem, ContentSpecNode::Sequence, effectiveContent_hasChild));            
             specNode = specNodeJan.get();
             checkMinMax(specNode, childElem);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
 
-            specNodeJan.reset(traverseChoiceSequence(childElem, ContentSpecNode::Choice));
+            specNodeJan.reset(traverseChoiceSequence(childElem, ContentSpecNode::Choice, effectiveContent_hasChild));
             specNode = specNodeJan.get();
-            checkMinMax(specNode, childElem);
+            int minOccurs = checkMinMax(specNode, childElem);
+            if (!effectiveContent_hasChild && minOccurs != 0) {
+                effectiveContent_hasChild = true;
+            }
+
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_ALL)) {
 
-            specNodeJan.reset(traverseAll(childElem));
+            specNodeJan.reset(traverseAll(childElem, effectiveContent_hasChild));
             specNode = specNodeJan.get();
             checkMinMax(specNode, childElem, All_Group);
             attrNode = XUtil::getNextSiblingElement(childElem);
@@ -6401,7 +6442,12 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         typeInfo->setContentType(baseTypeInfo->getContentType());
     }
     else if (typeInfo->getContentSpec() == 0) {
-        typeInfo->setContentType(SchemaElementDecl::Empty);
+        if (!effectiveContent_hasChild) {
+            typeInfo->setContentType(SchemaElementDecl::Empty);
+        }
+        else {
+            typeInfo->setContentType(SchemaElementDecl::ElementOnlyEmpty);
+        }
     }
     else {
         typeInfo->setContentType(SchemaElementDecl::Children);
@@ -6891,10 +6937,6 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         int targetNSURI = toRestore->getTargetNSURI();
 
         fSchemaGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(toRestore->getTargetNSURIString());
-
-        if (!fSchemaGrammar) {
-            return;
-        }
 
         fTargetNSURI = targetNSURI;
         fCurrentScope = saveScope;

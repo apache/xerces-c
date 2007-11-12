@@ -233,8 +233,9 @@ public :
     static const XMLCh fgXercesDisableDefaultEntityResolution[];
     static const XMLCh fgXercesSkipDTDValidation[];
     static const XMLCh fgXercesEntityResolver[];
-
+    static const XMLCh fgXercesHandleMultipleImports[];
 	static const XMLCh fgXercesDoXInclude[];
+
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
     static const XMLCh fgSAX2CoreNameSpaces[];
