@@ -260,6 +260,10 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         getScanner()->setSkipDTDValidation(state);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
+    {
+        getScanner()->setHandleMultipleImports(state);
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -374,6 +378,10 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     {
         return getScanner()->getSkipDTDValidation();
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
+    {
+        return getScanner()->getHandleMultipleImports();
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -401,7 +409,8 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0) ||
         (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0) ||
         (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0) ||
-        (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)       
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)       
        ) {
         return true;
     }

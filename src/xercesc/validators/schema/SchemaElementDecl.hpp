@@ -59,7 +59,7 @@ public :
         , Mixed_Complex
         , Children
         , Simple
-
+        , ElementOnlyEmpty
         , ModelTypes_Count
     };
 

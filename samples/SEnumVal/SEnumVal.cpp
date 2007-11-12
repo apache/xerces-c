@@ -17,7 +17,7 @@
 
 /*
  * $Id$
- * $Log$
+ * $Log: SEnumVal.cpp,v $
  * Revision 1.20  2005/03/07 20:11:21  knoaman
  * Use index to access attributes instead of enumerator.
  *
@@ -292,6 +292,7 @@ void process(char* const xmlFile)
 		case SchemaElementDecl::Mixed_Complex:  XERCES_STD_QUALIFIER cout << "Mixed_Complex"; break;
 		case SchemaElementDecl::Children:       XERCES_STD_QUALIFIER cout << "Children";      break;
 		case SchemaElementDecl::Simple:         XERCES_STD_QUALIFIER cout << "Simple";        break;
+        case SchemaElementDecl::ElementOnlyEmpty:    XERCES_STD_QUALIFIER cout << "ElementOnlyEmpty";    break;
 
 		default:                                XERCES_STD_QUALIFIER cout << "Unknown";       break;
 		}

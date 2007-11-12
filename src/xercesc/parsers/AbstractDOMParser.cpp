@@ -344,6 +344,11 @@ bool AbstractDOMParser::getSkipDTDValidation() const
     return fScanner->getSkipDTDValidation();
 }
 
+bool AbstractDOMParser::getHandleMultipleImports() const
+{
+    return fScanner->getHandleMultipleImports();
+}
+
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -493,6 +498,11 @@ void AbstractDOMParser::setDisableDefaultEntityResolution(const bool newValue)
 void AbstractDOMParser::setSkipDTDValidation(const bool newValue)
 {
     fScanner->setSkipDTDValidation(newValue);
+}
+
+void AbstractDOMParser::setHandleMultipleImports(const bool newValue)
+{
+    fScanner->setHandleMultipleImports(newValue);
 }
 
 void AbstractDOMParser::setDocument(DOMDocument* toSet)

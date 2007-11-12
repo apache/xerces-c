@@ -3334,8 +3334,9 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
         ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
         if(currType) 
         {
-            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
-            if(modelType == SchemaElementDecl::Children) 
+            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();             
+            if(modelType == SchemaElementDecl::Children ||
+               modelType == SchemaElementDecl::ElementOnlyEmpty) 
                 charOpts = XMLElementDecl::SpacesOk;
             else if(modelType == SchemaElementDecl::Empty) 
                 charOpts = XMLElementDecl::NoCharData; 
@@ -4162,8 +4163,9 @@ void SGXMLScanner::scanCDSection()
     ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
     if(currType) 
     {
-        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
-        if(modelType == SchemaElementDecl::Children) 
+        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();         
+        if(modelType == SchemaElementDecl::Children ||
+           modelType == SchemaElementDecl::ElementOnlyEmpty) 
             charOpts = XMLElementDecl::SpacesOk;
         else if(modelType == SchemaElementDecl::Empty) 
             charOpts = XMLElementDecl::NoCharData; 
@@ -4512,8 +4514,9 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                 ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
                 if(currType) 
                 {
-                    SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
-                    if(modelType == SchemaElementDecl::Children) 
+                    SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();                     
+                    if(modelType == SchemaElementDecl::Children ||
+                       modelType == SchemaElementDecl::ElementOnlyEmpty) 
                         charOpts = XMLElementDecl::SpacesOk;
                 } 
 

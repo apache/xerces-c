@@ -531,12 +531,13 @@ void DOMString::appendData(const DOMString &other)
         //  existing string, either because there is not space in
         //  the buffer, or because the buffer is being shared with
         //  some other string.  So, make a new buffer.
-        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength+1);
+        DOMStringData *newBuf = DOMStringData::allocateBuffer((newLength+1)*2);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
-        unsigned int i;
-        for (i=0; i<fHandle->fLength; ++i)
-            newP[i] = oldP[i];
+        //unsigned int i;
+        //for (i=0; i<fHandle->fLength; ++i)
+        //    newP[i] = oldP[i];
+        memcpy(newP, oldP, (fHandle->fLength) * sizeof(XMLCh));
 
         fHandle->fDSData->removeRef();
         fHandle->fDSData = newBuf;
@@ -547,10 +548,10 @@ void DOMString::appendData(const DOMString &other)
     //  be appended.  Go ahead and copy it in.
     XMLCh *srcP = other.fHandle->fDSData->fData;
     XMLCh *destP = &fHandle->fDSData->fData[fHandle->fLength];
-    unsigned int i;
-    for (i=0; i<other.fHandle->fLength; i++)
-        destP[i] = srcP[i];
-
+    //unsigned int i;
+    //for (i=0; i<other.fHandle->fLength; i++)
+    //    destP[i] = srcP[i];
+    memcpy(destP, srcP, (other.fHandle->fLength) * sizeof(XMLCh));
     fHandle->fLength += other.fHandle->fLength;
 }
 
@@ -1115,3 +1116,4 @@ static void reinitDomMutex()
 
 XERCES_CPP_NAMESPACE_END
 
+

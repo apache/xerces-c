@@ -1425,8 +1425,9 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
             ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
             if(currType) 
             {
-                SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
-                if(modelType == SchemaElementDecl::Children) 
+                SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();                 
+                if(modelType == SchemaElementDecl::Children || 
+                   modelType == SchemaElementDecl::ElementOnlyEmpty) 
                     charOpts = XMLElementDecl::SpacesOk;
                 else if(modelType == SchemaElementDecl::Empty) 
                     charOpts = XMLElementDecl::NoCharData; 
@@ -1438,14 +1439,14 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
         {
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
-            if(fGrammarType == Grammar::SchemaGrammarType) 
-            {
-                if (getPSVIHandler())
-                {
+            //if(fGrammarType == Grammar::SchemaGrammarType) 
+            //{
+              //  if (getPSVIHandler())
+              //  {
                     // REVISIT:                                   
                     // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);                    
-                }
-            }
+              //  }
+           // }
         }
         else if (fReaderMgr.getCurrentReader()->isAllSpaces(rawBuf, len))
         {
@@ -2527,8 +2528,9 @@ void IGXMLScanner::scanCDSection()
         ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
         if(currType) 
         {
-            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
-            if(modelType == SchemaElementDecl::Children) 
+            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();             
+            if(modelType == SchemaElementDecl::Children ||
+               modelType == SchemaElementDecl::ElementOnlyEmpty) 
                 charOpts = XMLElementDecl::SpacesOk;
             else if(modelType == SchemaElementDecl::Empty) 
                 charOpts = XMLElementDecl::NoCharData; 
@@ -2896,8 +2898,9 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                     ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
                     if(currType) 
                     {
-                        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
-                        if(modelType == SchemaElementDecl::Children) 
+                        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();                         
+                        if(modelType == SchemaElementDecl::Children ||
+                           modelType == SchemaElementDecl::ElementOnlyEmpty) 
                             charOpts = XMLElementDecl::SpacesOk;
                         else if(modelType == SchemaElementDecl::Empty) 
                             charOpts = XMLElementDecl::NoCharData; 

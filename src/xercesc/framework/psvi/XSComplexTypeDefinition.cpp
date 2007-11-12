@@ -126,8 +126,9 @@ XSComplexTypeDefinition::CONTENT_TYPE XSComplexTypeDefinition::getContentType() 
         case SchemaElementDecl::Simple:
             return CONTENTTYPE_SIMPLE;
         case SchemaElementDecl::Empty:
+        case SchemaElementDecl::ElementOnlyEmpty:
             return CONTENTTYPE_EMPTY;
-        case SchemaElementDecl::Children:
+        case SchemaElementDecl::Children:        
             return CONTENTTYPE_ELEMENT;
         default:
             //case SchemaElementDecl::Mixed_Complex:

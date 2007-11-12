@@ -176,6 +176,7 @@ public :
         , const XMLCh* const        text2 = 0
         , const XMLCh* const        text3 = 0
         , const XMLCh* const        text4 = 0
+        
     );
 
     // -----------------------------------------------------------------------
@@ -283,6 +284,7 @@ public :
     bool getIgnoreAnnotations() const;
     bool getDisableDefaultEntityResolution() const;
     bool getSkipDTDValidation() const;
+    bool getHandleMultipleImports() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -384,6 +386,7 @@ public :
     void setIgnoreAnnotations(const bool newValue);
     void setDisableDefaultEntityResolution(const bool newValue);
     void setSkipDTDValidation(const bool newValue);
+    void setHandleMultipleImports(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -755,6 +758,7 @@ protected:
     bool                        fIgnoreAnnotations;
     bool                        fDisableDefaultEntityResolution;
     bool                        fSkipDTDValidation;
+    bool                        fHandleMultipleImports;
     int                         fErrorCount;
     unsigned int                fEntityExpansionLimit;
     unsigned int                fEntityExpansionCount;
@@ -1133,6 +1137,11 @@ inline bool XMLScanner::getSkipDTDValidation() const
     return fSkipDTDValidation;
 }
 
+inline bool XMLScanner::getHandleMultipleImports() const
+{
+    return fHandleMultipleImports;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1320,6 +1329,11 @@ inline void XMLScanner::setDisableDefaultEntityResolution(const bool newValue)
 inline void XMLScanner::setSkipDTDValidation(const bool newValue)
 {
     fSkipDTDValidation = newValue;
+}
+
+inline void XMLScanner::setHandleMultipleImports(const bool newValue)
+{
+    fHandleMultipleImports = newValue;
 }
 
 // ---------------------------------------------------------------------------

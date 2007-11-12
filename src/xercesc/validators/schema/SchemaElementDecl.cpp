@@ -212,6 +212,7 @@ XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
     switch(modelType)
     {
         case Children :
+        case ElementOnlyEmpty :
             retVal = XMLElementDecl::SpacesOk;
             break;
 

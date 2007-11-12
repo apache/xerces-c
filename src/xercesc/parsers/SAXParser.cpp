@@ -372,6 +372,11 @@ bool SAXParser::getSkipDTDValidation() const
     return fScanner->getSkipDTDValidation();
 }
 
+bool SAXParser::getHandleMultipleImports() const
+{
+    return fScanner->getHandleMultipleImports();
+}
+
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -526,6 +531,11 @@ void SAXParser::setDisableDefaultEntityResolution(const bool newValue)
 void SAXParser::setSkipDTDValidation(const bool newValue)
 {
     fScanner->setSkipDTDValidation(newValue);
+}
+
+void SAXParser::setHandleMultipleImports(const bool newValue)
+{
+    fScanner->setHandleMultipleImports(newValue);
 }
 
 // ---------------------------------------------------------------------------
