@@ -110,6 +110,8 @@
     <s2 title="Other Platforms and Compilers">
         <ul>
             <li>MS Visual C++ 6.0</li>
+            <li>Cygwin</li>
+	    <li>MinGW-MSYS</li>
             <li>GCC 3.2.x</li>
             <li>Solaris 8, 9</li>
             <li>AIX 5.1, 5.2</li>
