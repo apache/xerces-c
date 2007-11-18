@@ -24,6 +24,7 @@
        <li><link anchor="WinNT">Building on Windows using Microsoft Visual C++</link></li>
        <li><link anchor="UNIX">Building on UNIX/Linux/Mac OS X platforms</link></li>
        <li><link anchor="CygWin">Building on Windows using Cygwin</link></li>
+       <li><link anchor="MinGW">Building on Windows using MinGW-MSYS</link></li>
        <li><link anchor="WinBorlandCC">Building on Windows using Borland C++</link></li>
        <li><link anchor="WinBorlandBuilder">Building on Windows using Borland C++ Builder</link></li>
        <li><link anchor="WinIntel">Building 64 bit libraries on Windows using Intel C++</link></li>
@@ -155,7 +156,12 @@
             <p>Next set your &XercesCName; root path as follows:</p>
 <source>export XERCESCROOT=&lt;full-path-to-&XercesCSrcInstallDir;&gt;</source>
 
-            <p>This should be the full path of the directory where you extracted &XercesCName;.</p>
+            <p>This should be the full path of the directory where you extracted &XercesCName;.
+            Note that this path should not have any spaces in it or the build process will fail. The
+            only UNIX environments where this is likely to occur in are
+            <jump href="#MinGW">MinGW</jump> and <jump href="#CygWin">Cygwin</jump> as the home
+	    directories are by default '/home/User Name' and '/cygdrive/c/Documents and Settings/'
+	    respectively. On Windows user names can, and often do, contain spaces.</p>
             </s3>
 
         <s3 title="Building &XercesCName; library">
@@ -468,28 +474,70 @@ make clean
     <s2 title="Building on Windows using Cygwin">
         <p><em>Do not jump into the build directly before reading this.</em></p>
 
-		<p>&XercesCName; may be built in the
-		<jump href="http://www.cygwin.com">Cygwin</jump> environment for use
-		by Cygwin applications.  As with the <jump href="#UNIX">UNIX</jump>
-		platforms, &XercesCName; on Cygwin uses
-		<jump href="http://www.gnu.org">GNU</jump> tools.  Therefore, with a
-		couple of notable exceptions, &XercesCName; on Cygwin is built using
-		the same instructions as the UNIX platforms.  The build environment
-		variable XERCESCROOT must be set to the proper path containing the
-		&XercesCName; sources and <em>runConfigure</em> must be run with the
-		"-pcygwin -cgcc -xg++" arguments.</p>
+	<p>&XercesCName; may be built in the
+	<jump href="http://www.cygwin.com">Cygwin</jump> environment for use
+	by Cygwin applications.  As with the <jump href="#UNIX">UNIX</jump>
+	platforms, &XercesCName; on Cygwin uses
+	<jump href="http://www.gnu.org">GNU</jump> tools.  Therefore, with a
+	couple of notable exceptions, &XercesCName; on Cygwin is built using
+	the same instructions as the UNIX platforms.  The build environment
+	variable XERCESCROOT must be set to the proper path containing the
+	&XercesCName; sources and <em>runConfigure</em> must be run with the
+	"-p cygwin -c gcc -x g++" arguments.</p>
 
-		<p>Note that Cygwin is different from the UNIX platforms in the way
-		that it finds libraries at run time.  While UNIX platforms may use the
-		environment variable LD_LIBRARY_PATH, Cygwin uses the PATH environment
-		variable.</p>
+	<p>Cygwin's GCC also has the ability to build MinGW targeted binaries.
+	This is supported via the -mno-cygwin compiler switch. In that case the
+	arguments to runConfigure should be
+	'-p mingw-msys -c gcc -x g++ -z -mno-cygwin -l -mno-cygwin -C --host=i686-mingw32'.
+	Note that both the compiler and linker flags need to be set.</p>
 
-		<p>There is an issue with the
-		<jump href="http://www.gnu.org/software/gcc/gcc.html">gcc/g++</jump>
-		compiler version 2.95, where C++ exceptions thrown from a dll will
-		cause the application to crash, regardless of whether there is a "catch"
-		statement.  This bug doesn't occur in tests using gcc 3.1 or 3.2, so it
-		is recommended that you use gcc 3.1 or higher.</p>
+	<p>Also note that Cygwin is different from the UNIX platforms in the way
+	that it finds libraries at run time.  While UNIX platforms may use the
+	environment variable LD_LIBRARY_PATH, Cygwin uses the PATH environment
+	variable.</p>
+
+	<p>There is an issue with the gcc/g++ compiler version 2.95, where C++
+	exceptions thrown from a DLL will cause the application to crash, regardless
+	of whether there is a "catch" statement.  This bug doesn't occur in tests
+	using gcc 3.1 or 3.2, so it is recommended that you use gcc 3.1 or higher.</p>
+    </s2>
+
+    <anchor name="MinGW"/>
+    <s2 title="Building on Windows using MinGW">
+        <p><em>Do not jump into the build directly before reading this.</em></p>
+
+	<p>&XercesCName; may be built in the
+	<jump href="http://www.mingw.org/msys.shtml">MinGW-MSYS</jump> environment for use
+	by MinGW applications.  As with the <jump href="#UNIX">UNIX</jump>
+	platforms, &XercesCName; on MinGW uses
+	<jump href="http://www.gnu.org">GNU</jump> tools.  Therefore, with a
+	couple of notable exceptions, &XercesCName; on MinGW is built using
+	the same instructions as the UNIX platforms.  The build environment
+	variable XERCESCROOT must be set to the proper path containing the
+	&XercesCName; sources and <em>runConfigure</em> must be run with the
+	"-pmingw-msys -cgcc -xg++" arguments. It is also possible to build
+        &XercesCName; libraries for MinGW using Cygwin. For more information
+        on how to do this see the <jump href="#CygWin">Building on Windows
+        using Cygwin</jump> section.</p>
+
+	<p>Note that MinGW is different from the UNIX platforms in the way
+	that it finds libraries at run time.  While UNIX platforms may use the
+	environment variable LD_LIBRARY_PATH, MinGW uses the PATH environment
+	variable.</p>
+
+	<p>When linking against the static version of &XercesCName;, be sure to
+	use the '-DXML_LIBRARY' compiler flag. Otherwise the functions in the
+	header files will be marked as to be imported from a DLL and the linker will fail.</p>
+
+	<p>Also note that you can run into a bug found in older MinGW's dllwrap utility,
+        which is used by &XercesCName; build system to link DLLs. For more information
+	see the following <jump href="http://marc.info/?l=xerces-c-users&amp;m=118891009725180&amp;w=2">
+        mailing list post</jump>.</p>
+
+	<p>There is an issue with the gcc/g++ compiler version 2.95, where C++
+	exceptions thrown from a DLL will cause the application to crash, regardless
+	of whether there is a "catch" statement.  This bug doesn't occur in tests
+	using gcc 3.1 or 3.2, so it is recommended that you use gcc 3.1 or higher.</p>
     </s2>
 
     <anchor name="WinBorlandBuilder"/>

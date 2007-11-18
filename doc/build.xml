@@ -27,6 +27,7 @@
        <li><jump href="build-winunix.html#WinNT">Building on Windows using Microsoft Visual C++</jump></li>
        <li><jump href="build-winunix.html#UNIX">Building on UNIX/Linux/Mac OS X platforms</jump></li>
        <li><jump href="build-winunix.html#CygWin">Building on Windows using Cygwin</jump></li>
+       <li><jump href="build-winunix.html#MinGW">Building on Windows using MinGW-MSYS</jump></li>
        <li><jump href="build-winunix.html#WinBorlandCC">Building on Windows using Borland C++</jump></li>
        <li><jump href="build-winunix.html#WinBorlandBuilder">Building on Windows using Borland C++ Builder</jump></li>
        <li><jump href="build-winunix.html#WinIntel">Building 64 bit libraries on Windows using Intel C++</jump></li>
