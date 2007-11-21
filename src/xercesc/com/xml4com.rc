@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "1 TYPELIB ""..\\\\..\\\\..\\\\Build\\\\Win32\\\\xml4com\\\\xml4com.tlb""\r\n"
     "\0"
@@ -47,15 +47,14 @@ END
 #endif    // APSTUDIO_INVOKED
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,5,0,0
- PRODUCTVERSION 2,5,0,0
+ FILEVERSION 3,0,0,0
+ PRODUCTVERSION 3,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -70,19 +69,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "\0"
-            VALUE "CompanyName", "Apache Software Foundation\0"
-            VALUE "FileDescription", "Xerces XML Parser for COM\0"
-            VALUE "FileVersion", "2, 5, 0, 0\0"
-            VALUE "InternalName", "Xerces XML Parser for COM \0"
-            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2000 subject to licensing terms\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OLESelfRegister", "\0"
-            VALUE "OriginalFilename", "xerces-com.dll\0"
-            VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Xerces XML Parser for COM\0"
-            VALUE "ProductVersion", "2, 5, 0, 0\0"
-            VALUE "SpecialBuild", "\0"
+            VALUE "CompanyName", "Apache Software Foundation"
+            VALUE "FileDescription", "Xerces XML Parser for COM"
+            VALUE "FileVersion", "3, 0, 0, 0"
+            VALUE "InternalName", "Xerces XML Parser for COM "
+            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2000 subject to licensing terms"
+            VALUE "OriginalFilename", "xerces-com.dll"
+            VALUE "ProductName", "Xerces XML Parser for COM"
+            VALUE "ProductVersion", "3, 0, 0, 0"
         END
     END
     BLOCK "VarFileInfo"
@@ -91,23 +85,21 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // REGISTRY
 //
 
-IDR_XMLDOCUMENT         REGISTRY DISCARDABLE    "xmldocument.rgs"
-IDR_XMLHTTPREQUEST      REGISTRY DISCARDABLE    "xmlhttprequest.rgs"
+IDR_XMLDOCUMENT         REGISTRY                "xmldocument.rgs"
+IDR_XMLHTTPREQUEST      REGISTRY                "xmlhttprequest.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_PROJNAME            "xml4com"
 END

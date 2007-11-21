@@ -78,7 +78,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
         // According to Java 1.1: URLs may also be specified with a
         // String and the URL object that it is related to.
         //
-        const unsigned int len = XMLString::stringLen(content);
+        XMLSize_t len = XMLString::stringLen(content);
         if (len)
         {          
             // Encode special characters using XLink 5.4 algorithm
