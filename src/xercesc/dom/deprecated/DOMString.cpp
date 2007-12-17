@@ -348,10 +348,10 @@ DOMString::DOMString(const XMLCh *data)
             fHandle = DOMStringHandle::createNewStringHandle(dataLength+1);
             fHandle->fLength = dataLength;
             XMLCh *strData = fHandle->fDSData->fData;
-            unsigned int i;
-            for (i=0; i<dataLength ; ++i)
-                strData[i] = data[i];
-
+            //unsigned int i;
+            //for (i=0; i<dataLength ; ++i)
+            //    strData[i] = data[i];
+            memcpy(strData, data, (dataLength) * sizeof(XMLCh));
             strData[dataLength] = 0;
         }
     }
@@ -369,10 +369,10 @@ DOMString::DOMString(const XMLCh *data, unsigned int dataLength)
             fHandle = DOMStringHandle::createNewStringHandle(dataLength+1);
             fHandle->fLength = dataLength;
             XMLCh *strData = fHandle->fDSData->fData;
-            unsigned int i;
-            for (i=0; i<dataLength ; ++i)
-                strData[i] = data[i];
-
+            //unsigned int i;
+            //for (i=0; i<dataLength ; ++i)
+            //    strData[i] = data[i];
+            memcpy(strData, data, (dataLength) * sizeof(XMLCh));
             strData[dataLength] = 0;
         }
     }
@@ -579,9 +579,10 @@ void DOMString::appendData(XMLCh ch)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength+1);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
-        unsigned int i;
-        for (i=0; i<fHandle->fLength; ++i)
-            newP[i] = oldP[i];
+        //unsigned int i;
+        //for (i=0; i<fHandle->fLength; ++i)
+        //    newP[i] = oldP[i];
+        memcpy(newP, oldP, (fHandle->fLength) * sizeof(XMLCh));
 
         fHandle->fDSData->removeRef();
         fHandle->fDSData = newBuf;
@@ -675,12 +676,13 @@ void DOMString::deleteData(unsigned int offset, unsigned int delLength)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newStringLength+1);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
-        unsigned int i;
-        for (i=0; i<offset; i++)
-            newP[i] = oldP[i];
-
-        for (i=offset; i<newStringLength; i++)
-            newP[i] = oldP[i+delLength];
+        //unsigned int i;
+        //for (i=0; i<offset; i++)
+        //    newP[i] = oldP[i];
+        memcpy(newP, oldP, (offset) * sizeof(XMLCh));
+        //for (i=offset; i<newStringLength; i++)
+        //    newP[i] = oldP[i+delLength];
+        memcpy(newP+offset, oldP+offset+delLength, (newStringLength)* sizeof(XMLCh));
 
         fHandle->fLength = newStringLength;
         fHandle->fDSData->removeRef();
@@ -691,10 +693,11 @@ void DOMString::deleteData(unsigned int offset, unsigned int delLength)
         // The deletion is of a range in the middle of the string,
         // but no other string is sharing the buffer, so we can
         // just delete in place.
-        unsigned int i;
+        //unsigned int i;
         XMLCh *bufP =  fHandle->fDSData->fData;
-        for (i=offset; i<newStringLength; i++)
-            bufP[i] = bufP[i+delLength];
+        //for (i=offset; i<newStringLength; i++)
+        //    bufP[i] = bufP[i+delLength];
+        memcpy(bufP+offset, bufP+offset+delLength, (newStringLength)* sizeof(XMLCh));
 
         fHandle->fLength = newStringLength;
     }
@@ -822,15 +825,18 @@ void DOMString::insertData(unsigned int offset, const DOMString &src)
         DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength+1);
         XMLCh *newP  = newBuf->fData;
         XMLCh *oldP   = fHandle->fDSData->fData;
-        unsigned int i;
-        for (i=0; i<offset; ++i)
-            newP[i] = oldP[i];
+        //unsigned int i;
+        //for (i=0; i<offset; ++i)
+        //    newP[i] = oldP[i];
+        memcpy(newP, oldP, (offset) * sizeof(XMLCh));
 
-        for (i=0; i<srcLength; i++)
-            newP[i+offset] = srcP[i];
+        //for (i=0; i<srcLength; i++)
+        //    newP[i+offset] = srcP[i];
+        memcpy(newP+offset, srcP, (srcLength)* sizeof(XMLCh));
 
-        for (i=offset; i<origStrLength; i++)
-            newP[i+srcLength] = oldP[i];
+        //for (i=offset; i<origStrLength; i++)
+        //    newP[i+srcLength] = oldP[i];
+        memcpy(newP+offset+srcLength, oldP+offset, (origStrLength)* sizeof(XMLCh));
 
         fHandle->fDSData->removeRef();
         fHandle->fDSData = newBuf;
@@ -845,9 +851,10 @@ void DOMString::insertData(unsigned int offset, const DOMString &src)
         for (i=(int)origStrLength-1; i>=(int)offset; i--)
             destP[i+srcLength] = destP[i];
 
-        unsigned int j;
-        for (j=0; j<srcLength; j++)
-            destP[j+offset] = srcP[j];
+        //unsigned int j;
+        //for (j=0; j<srcLength; j++)
+        //    destP[j+offset] = srcP[j];
+        memcpy(destP+offset, srcP, (srcLength)* sizeof(XMLCh));
     }
 
     fHandle->fLength += srcLength;

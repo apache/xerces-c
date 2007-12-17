@@ -101,7 +101,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     const SchemaElementDecl::ModelTypes modelType = (currType)
             ? (SchemaElementDecl::ModelTypes)(currType->getContentType())
             : ((SchemaElementDecl*)elemDecl)->getModelType();
-   
+
     if (modelType == SchemaElementDecl::Empty  ||
         modelType == SchemaElementDecl::ElementOnlyEmpty)
     {
@@ -142,7 +142,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                                                       , emptyNS
                                                       , fGrammarResolver
                                                       , fGrammarResolver->getStringPool()
-                                                      , getScanner()->getMemoryManager());
+													  , getScanner()->getMemoryManager());
             }
 
             if(result != -1) {
@@ -193,18 +193,15 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         //  the notation pool (after the Grammar is parsed), then obviously
                         //  this value will be legal since it matches one of them.
                         int colonPos = -1;
-                        unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);
+                        unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);                        
+
                         const XMLCh* uriText = getScanner()->getURIText(uriId);
                         if (uriText && *uriText) {
-                            fNotationBuf->set(getScanner()->getURIText(uriId));
-                            fNotationBuf->append(chColon);
+                            fNotationBuf->set(uriText);
+                            fNotationBuf->append(chColon);                                
                             fNotationBuf->append(&value[colonPos + 1]);
-                        }
-                        else {
-                            fNotationBuf->set(value);
-                        }
-                        
-                        value = fNotationBuf->getRawBuffer();
+                            value = fNotationBuf->getRawBuffer();
+                        }                        
                     }
 
                     if (elemDefaultValue)
@@ -429,7 +426,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 }
                 else {
                     notationBuf.set(attrValue);
-                }                
+                }
 
                 attDefDV->validate(notationBuf.getRawBuffer()
                                  , context
@@ -1715,9 +1712,7 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
 
     // Now, see if there are some elements in the base we didn't match up
     // in case of Sequence or All
-    if (!toLax && codeToThrow == XMLExcepts::NoError &&
-        (true || (baseType & 0x0f) == ContentSpecNode::All || 
-         derivedSpecNodeIn->getElement()->getURI() != XMLElementDecl::fgPCDataElemId)) {
+    if (!toLax && codeToThrow == XMLExcepts::NoError) {
         for (unsigned int j = current; j < count2; j++) {
             if (baseNodes->elementAt(j)->getMinTotalRange() * baseSpecNode->getMinOccurs()) { //!emptiable
                 codeToThrow =  XMLExcepts::PD_Recurse2;                

@@ -415,9 +415,11 @@ Token* ParserForXMLSchema::getTokenForShorthand(const XMLInt32 ch) {
 
     switch(ch) {
     case chLatin_d:
-        return getTokenFactory()->getRange(fgXMLDigit);
+        return getTokenFactory()->getRange(fgUniDecimalDigit);
+        //return getTokenFactory()->getRange(fgXMLDigit);
     case chLatin_D:
-        return getTokenFactory()->getRange(fgXMLDigit, true);
+        return getTokenFactory()->getRange(fgUniDecimalDigit, true);
+        //return getTokenFactory()->getRange(fgXMLDigit, true);
     case chLatin_w:
         return getTokenFactory()->getRange(fgXMLWord);
     case chLatin_W:

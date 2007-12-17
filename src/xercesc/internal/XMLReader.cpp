@@ -579,9 +579,16 @@ bool XMLReader::refreshCharBuffer()
     //  Calculate fCharOfsBuf using the elements from fCharBufSize
     if (fCalculateSrcOfs)
     {
+        unsigned int last = 0;
         fCharOfsBuf[0] = 0;
-        for (unsigned int index = 1; index < fCharsAvail; ++index) {
-            fCharOfsBuf[index] = fCharOfsBuf[index-1]+fCharSizeBuf[index-1];
+        for (unsigned int index = 1; index < fCharsAvail; ++index) {            
+            fCharOfsBuf[index] = last+fCharSizeBuf[index-1];
+            last = fCharOfsBuf[index];
+            // code was:
+            // fCharOfsBuf[index] = fCharOfsBuf[index-1]+fCharSizeBuf[index-1];
+            // but on Solaris 64 bit with sun studio 11 this didn't work as
+            // every value of fCharOfsBuf[] was 1.
+
         }
     }
 
