@@ -126,10 +126,11 @@ DOMImplementation *DOMImplementationRegistry::getDOMImplementation(const XMLCh* 
     unsigned int len = getDOMImplSrcVector()->size();
 
     // Put our defined source there
-    if (len == 0)
+    if (len == 0) {
         getDOMImplSrcVector()->addElement((DOMImplementationSource*)DOMImplementationImpl::getDOMImplementationImpl());
 
-    len = getDOMImplSrcVector()->size();
+        len = getDOMImplSrcVector()->size();
+    }
 
     for (unsigned int i = len; i > 0; i--) {
         DOMImplementationSource* source = getDOMImplSrcVector()->elementAt(i-1);

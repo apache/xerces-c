@@ -3245,6 +3245,8 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
             if (content->getNodeType() == DOMNode::ELEMENT_NODE) {
 
+                NamespaceScopeManager nsMgr(content, fSchemaInfo, this);
+
                 const XMLCh* facetName = content->getLocalName();
 
                 bool bContinue=false;   // workaround for Borland bug with 'continue' in 'catch'

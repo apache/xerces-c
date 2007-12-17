@@ -625,6 +625,17 @@
                 <tr><th><em>see:</em></th><td>
                 <link anchor="use-cached">useCachedGrammarInParse</link></td></tr>
             </table>
+            <p/>
+            
+            <anchor name="XercesHandleMultipleImports"/>
+            <table>            
+                <tr><th colspan="2"><em>setHandleMultipleImports</em></th></tr>
+                <tr><th><em>true:</em></th><td> During schema validation allow multiple schemas with the same namespace
+                                                to be imported.</td></tr>            
+                <tr><th><em>false:</em></th><td> Don't import multiple schemas with the same namespace. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                                
+            </table>            
+            <p/>
                         
             <anchor name="CreateSchemaInfo"/>
             <table>
@@ -1385,6 +1396,17 @@
             </table>
             <p/>              
             
+            <anchor name="builder-HandleMultipleImports"/>
+            <table>            
+                <tr><th colspan="2"><em>http://apache.org/xml/features/validation/schema/handle-multiple-imports</em></th></tr>
+                <tr><th><em>true:</em></th><td> During schema validation allow multiple schemas with the same namespace
+                                                to be imported.</td></tr>            
+                <tr><th><em>false:</em></th><td> Don't import multiple schemas with the same namespace. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>  
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesHandleMultipleImports </td></tr>                              
+            </table>   
+            <p/>           
+                        
             <anchor name="builder-DOMHasPsviInfo"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/dom-has-psvi-info</em></th></tr>
