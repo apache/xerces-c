@@ -360,8 +360,8 @@ const RefArrayVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
 /***
  * 2.5.1.3 Union datatypes
  *
- * The canonical-lexical-representation for a �union� datatype is defined as the lexical form 
- * in which the values have the canonical lexical representation of the appropriate �memberTypes�.       
+ * The canonical-lexical-representation for a union datatype is defined as the lexical form 
+ * in which the values have the canonical lexical representation of the appropriate memberTypes.       
  ***/
 const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
                                                               ,       MemoryManager* const memMgr
