@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="CreateDOMDocument"
 	ProjectGUID="{8709DC2A-0EC9-4B67-9E98-95D5174B2C3F}"
 	RootNamespace="CreateDOMDocument"
@@ -72,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="1"
@@ -106,7 +106,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -159,7 +159,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_3.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="1"
@@ -246,7 +245,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3D.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="2"
@@ -281,7 +280,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -334,7 +333,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3D.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="2"
@@ -422,7 +421,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="1"
@@ -456,7 +455,7 @@
 		</Configuration>
 		<Configuration
 			Name="Static Release|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -509,7 +508,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="1"
@@ -595,7 +594,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3D.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="2"
@@ -630,7 +629,7 @@
 		</Configuration>
 		<Configuration
 			Name="Static Debug|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -682,7 +681,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3D.lib"
 				OutputFile="$(OutDir)\CreateDOMDocument.exe"
 				LinkIncremental="2"

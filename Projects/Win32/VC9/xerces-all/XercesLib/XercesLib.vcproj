@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="XercesLib"
 	ProjectGUID="{152CE948-F659-4206-A50A-1D2B9658EF96}"
 	RootNamespace="XercesLib"
@@ -79,7 +79,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0.dll"
 				LinkIncremental="1"
@@ -121,7 +121,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -178,7 +178,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0.dll"
 				LinkIncremental="1"
@@ -277,7 +276,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
 				LinkIncremental="2"
@@ -315,7 +314,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -369,7 +368,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
 				LinkIncremental="2"
@@ -484,7 +482,7 @@
 		</Configuration>
 		<Configuration
 			Name="Static Release|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -633,7 +631,7 @@
 		</Configuration>
 		<Configuration
 			Name="Static Debug|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"

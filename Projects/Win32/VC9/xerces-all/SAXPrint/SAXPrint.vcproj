@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="1"
@@ -105,7 +105,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -158,7 +158,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="1"
@@ -245,7 +245,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3D.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="2"
@@ -280,7 +280,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -333,7 +333,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3D.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="2"
@@ -421,7 +421,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="1"
@@ -455,7 +455,7 @@
 		</Configuration>
 		<Configuration
 			Name="Static Release|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -508,7 +508,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="1"
@@ -594,7 +594,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3D.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="2"
@@ -629,7 +629,7 @@
 		</Configuration>
 		<Configuration
 			Name="Static Debug|x64"
-			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC9\$(ConfigurationName)"
 			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -681,7 +681,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3D.lib"
 				OutputFile="$(OutDir)\SAXPrint.exe"
 				LinkIncremental="2"
