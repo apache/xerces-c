@@ -469,7 +469,7 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
 
         /***
          E2-44 totalDigits
-         ... by restricting it to numbers that are expressible as i � 10^-n
+         ... by restricting it to numbers that are expressible as i x 10^-n
          where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
          ***/
 

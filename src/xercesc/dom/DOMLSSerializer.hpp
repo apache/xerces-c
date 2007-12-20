@@ -76,7 +76,7 @@
  * <p> Within markup, but outside of attributes, any occurrence of a character
  * that cannot be represented in the output character encoding is reported
  * as an error. An example would be serializing the element
- * &lt;LaCa�ada/&gt; with the encoding="us-ascii".
+ * &lt;LaCa&#xF1;ada/&gt; with the encoding="us-ascii".
  * <p> When requested by setting the <code>normalize-characters</code> feature
  * on <code>DOMLSSerializer</code>, all data to be serialized, both markup and
  * character data, is W3C Text normalized according to the rules defined in

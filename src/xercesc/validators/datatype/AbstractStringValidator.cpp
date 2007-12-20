@@ -298,7 +298,7 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
                                    base'    length and derived' (minLength | maxLength)
 
      E2-35
-     It is an �error� for both length and either of minLength or maxLength to be members of {facets},
+     It is an error for both length and either of minLength or maxLength to be members of {facets},
      unless they are specified in different derivation steps in which case the following must be true: 
      the {value} of minLength <= the {value} of length <= the {value} of maxLength   
     ***/
