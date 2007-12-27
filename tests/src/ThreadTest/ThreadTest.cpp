@@ -345,7 +345,7 @@ public:
 
     void domPrint();                  //   including any children.  Default (no param)
                                        //   version dumps the entire document.
-    void  addToCheckSum(const XMLCh *chars, int len=-1);
+    void  addToCheckSum(const XMLCh *chars, XMLSize_t len=(XMLSize_t)-1);
     
     //  These are the SAX call-back functions that this class implements. Can be used
     //  for SAX and SAX2.
@@ -627,9 +627,9 @@ int ThreadParser::parse(int fileNum)
 //                  will then default to -1), or provide an explicit
 //                  length.
 //
-void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
+void ThreadParser::addToCheckSum(const XMLCh *chars, XMLSize_t len)
 {
-    if (len == -1)
+    if (len == (XMLSize_t)-1)
     {
         // Null terminated string.
         while (*chars != 0)
@@ -641,7 +641,7 @@ void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
     else
     {
         // String with character count.
-        int i;
+        XMLSize_t i;
         for (i=0; i<len; i++)
             fCheckSum = fCheckSum*5 + chars[i];
     }

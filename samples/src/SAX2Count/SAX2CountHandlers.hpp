@@ -51,7 +51,7 @@ public:
         return fAttrCount;
     }
 
-    unsigned int getCharacterCount() const
+    XMLSize_t getCharacterCount() const
     {
         return fCharacterCount;
     }
@@ -61,7 +61,7 @@ public:
         return fSawErrors;
     }
 
-    unsigned int getSpaceCount() const
+    XMLSize_t getSpaceCount() const
     {
         return fSpaceCount;
     }
@@ -101,8 +101,8 @@ private:
     //      see if any errors occured.
     // -----------------------------------------------------------------------
     unsigned int    fAttrCount;
-    unsigned int    fCharacterCount;
+    XMLSize_t       fCharacterCount;
     unsigned int    fElementCount;
-    unsigned int    fSpaceCount;
+    XMLSize_t       fSpaceCount;
     bool            fSawErrors;
 };

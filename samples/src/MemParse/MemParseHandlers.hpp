@@ -55,12 +55,12 @@ public:
         return fAttrCount;
     }
 
-    unsigned int getCharacterCount()
+    XMLSize_t getCharacterCount()
     {
         return fCharacterCount;
     }
 
-    unsigned int getSpaceCount()
+    XMLSize_t getSpaceCount()
     {
         return fSpaceCount;
     }
@@ -96,7 +96,7 @@ private:
     //      from the document handlers.
     // -----------------------------------------------------------------------
     unsigned int    fAttrCount;
-    unsigned int    fCharacterCount;
+    XMLSize_t       fCharacterCount;
     unsigned int    fElementCount;
-    unsigned int    fSpaceCount;
+    XMLSize_t       fSpaceCount;
 };
