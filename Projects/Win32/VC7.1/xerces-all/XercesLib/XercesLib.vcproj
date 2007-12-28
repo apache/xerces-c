@@ -166,8 +166,9 @@
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
+				ProgramDataBaseFileName="$(OutDir)\XercesLib_vc71.pdb"
 				WarningLevel="3"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -216,7 +217,7 @@
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
+				ProgramDataBaseFileName="$(OutDir)\XercesLib_vc71D.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
