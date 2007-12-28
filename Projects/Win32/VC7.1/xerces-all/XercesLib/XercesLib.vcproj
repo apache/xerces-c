@@ -41,7 +41,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="ws2_32.lib advapi32.lib "
 				OutputFile="$(OutDir)\xerces-c_3_0.dll"
 				LinkIncremental="0"
@@ -109,7 +109,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="ws2_32.lib advapi32.lib "
 				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
 				LinkIncremental="0"

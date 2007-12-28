@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3.lib"
 				OutputFile="$(OutDir)\StdInParse.exe"
 				LinkIncremental="1"
@@ -99,7 +99,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_3D.lib"
 				OutputFile="$(OutDir)\StdInParse.exe"
 				LinkIncremental="2"
@@ -159,7 +159,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3.lib"
 				OutputFile="$(OutDir)\StdInParse.exe"
 				LinkIncremental="1"
@@ -218,7 +218,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_static_3D.lib"
 				OutputFile="$(OutDir)\StdInParse.exe"
 				LinkIncremental="2"

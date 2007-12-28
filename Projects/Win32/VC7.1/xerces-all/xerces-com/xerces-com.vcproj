@@ -48,7 +48,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3.lib"
 				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="1"
@@ -116,7 +116,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3D.lib"
 				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="2"
@@ -186,7 +186,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_3.lib"
 				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="1"
@@ -253,7 +253,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				Outputs="$(OutDir)\regsvr32.trg"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_3D.lib"
 				OutputFile="$(OutDir)\xerces-com.dll"
 				LinkIncremental="2"

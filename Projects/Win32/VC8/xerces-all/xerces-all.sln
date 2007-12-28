@@ -187,9 +187,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XSTSHarness", "XSTSHarness\
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
-		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
@@ -699,18 +696,25 @@ Global
 		{117D4C21-4C54-478F-83AE-D6179A8D7EF1}.Static Release|x64.Build.0 = Static Release|x64
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Debug|Win32.Build.0 = Debug|Win32
-		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Debug|x64.ActiveCfg = Debug|Win32
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Debug|x64.ActiveCfg = Debug|x64
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Debug|x64.Build.0 = Debug|x64
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Release|Win32.ActiveCfg = Release|Win32
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Release|Win32.Build.0 = Release|Win32
-		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Release|x64.ActiveCfg = Release|Win32
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Release|x64.ActiveCfg = Release|x64
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Release|x64.Build.0 = Release|x64
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Debug|Win32.Build.0 = Static Debug|Win32
-		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Debug|x64.ActiveCfg = Debug|Win32
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Debug|x64.Build.0 = Static Debug|x64
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Release|Win32.ActiveCfg = Static Release|Win32
 		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Release|Win32.Build.0 = Static Release|Win32
-		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Release|x64.ActiveCfg = Release|Win32
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Release|x64.ActiveCfg = Static Release|x64
+		{D92806DD-C591-4782-BCF2-8A0D0338D67A}.Static Release|x64.Build.0 = Static Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 EndGlobal

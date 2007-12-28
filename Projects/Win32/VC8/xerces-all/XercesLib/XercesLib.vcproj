@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="XercesLib"
 	ProjectGUID="{152CE948-F659-4206-A50A-1D2B9658EF96}"
 	RootNamespace="XercesLib"
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0.dll"
 				LinkIncremental="1"
@@ -178,7 +178,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0.dll"
 				LinkIncremental="1"
@@ -278,7 +277,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
 				LinkIncremental="2"
@@ -371,7 +370,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib advapi32.lib"
 				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
 				LinkIncremental="2"

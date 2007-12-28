@@ -39,7 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\..\bin/DOMCount.exe"
 				Version="1.0"
