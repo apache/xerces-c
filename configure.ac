@@ -42,6 +42,10 @@ AM_MAINTAINER_MODE
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
+# used by "make check"
+AC_PROG_SED
+#it would be nice to also check for PERL...
+#AC_PROG_PERL
 
 # If using MSVC (under Cygwin) or Solaris Forte, and the user didn't specify a linker, force a reasonable
 # choice in order to avoid the "cannot find 'ld'" error from the AC_PROG_LIBTOOL
