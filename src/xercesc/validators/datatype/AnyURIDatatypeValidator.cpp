@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/datatype/AnyURIDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
@@ -82,10 +83,9 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
         if (len)
         {          
             // Encode special characters using XLink 5.4 algorithm
-            XMLCh* encoded = (XMLCh*)manager->allocate((len*3+1) * sizeof(XMLCh));
-            ArrayJanitor<XMLCh> encodedJan(encoded, manager);
+			XMLBuffer encoded((len*3)+1, manager);
             encode(content, len, encoded, manager);
-            validURI = XMLUri::isValidURI(true, encoded, true);            
+            validURI = XMLUri::isValidURI(true, encoded.getRawBuffer(), true);            
         }
     }
     catch(const OutOfMemoryException&)
@@ -113,7 +113,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
  * special ASCII characters: 0x00~0x1F, 0x7F, ' ', '<', '>', etc.
  * and non-ASCII characters (whose value >= 128).
  ***/
-void AnyURIDatatypeValidator::encode(const XMLCh* const content, const XMLSize_t len, XMLCh* encoded, MemoryManager* const manager)
+void AnyURIDatatypeValidator::encode(const XMLCh* const content, const XMLSize_t len, XMLBuffer& encoded, MemoryManager* const manager)
 {
     static const bool needEscapeMap[] = {
         true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , true , /* 0x00 to 0x0F need escape */
@@ -139,15 +139,15 @@ void AnyURIDatatypeValidator::encode(const XMLCh* const content, const XMLSize_t
 
         if (needEscapeMap[ch])
         {
-            char tempStr[2] = "\0";
+            char tempStr[3] = "\0";
             sprintf(tempStr, "%02X", ch);
-            encoded[bufferIndex++] = '%';
-            encoded[bufferIndex++] = (XMLCh)tempStr[0];
-            encoded[bufferIndex++] = (XMLCh)tempStr[1];
+            encoded.append('%');
+            encoded.append((XMLCh)tempStr[0]);
+            encoded.append((XMLCh)tempStr[1]);
         }
         else
         {
-            encoded[bufferIndex++] = (XMLCh)ch;
+            encoded.append((XMLCh)ch);
         }
     }
 
@@ -160,38 +160,27 @@ void AnyURIDatatypeValidator::encode(const XMLCh* const content, const XMLSize_t
         XMLSize_t charsEaten;
 
         XMLUTF8Transcoder transcoder(XMLUni::fgUTF8EncodingString, remContentLen*4+1, manager);
-        transcoder.transcodeTo(remContent, remContentLen, UTF8Byte, remContentLen*4, charsEaten, XMLTranscoder::UnRep_RepChar);
+        XMLSize_t utf8Len = transcoder.transcodeTo(remContent, remContentLen, UTF8Byte, remContentLen*4, charsEaten, XMLTranscoder::UnRep_RepChar);
         assert(charsEaten == remContentLen);
 
         XMLSize_t j;
-        for (j = 0; j < remContentLen; j++) {
+        for (j = 0; j < utf8Len; j++) {
             XMLByte b = UTF8Byte[j];
-            // for non-ascii character: make it positive, then escape
-            if (b < 0) {
-                int ch = b + 256;
-                char tempStr[2] = "\0";
-                sprintf(tempStr, "%02X", ch);
-                encoded[bufferIndex++] = '%';
-                encoded[bufferIndex++] = (XMLCh)tempStr[0];
-                encoded[bufferIndex++] = (XMLCh)tempStr[1];
-            }
-            else if (needEscapeMap[b])
+            if (b >= 128 || needEscapeMap[b])
             {
-                char tempStr[2] = "\0";
+                char tempStr[3] = "\0";
                 sprintf(tempStr, "%02X", b);
-                encoded[bufferIndex++] = '%';
-                encoded[bufferIndex++] = (XMLCh)tempStr[0];
-                encoded[bufferIndex++] = (XMLCh)tempStr[1];
+                encoded.append('%');
+                encoded.append((XMLCh)tempStr[0]);
+                encoded.append((XMLCh)tempStr[1]);
             }
             else
             {
-                encoded[bufferIndex++] = (XMLCh)b;
+                encoded.append((XMLCh)b);
             }
         }
         manager->deallocate(UTF8Byte);
     }
-
-    encoded[bufferIndex] = (XMLCh)0;
 }
 
 /***

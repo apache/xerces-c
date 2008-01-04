@@ -27,6 +27,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class XMLBuffer;
+
 class VALIDATORS_EXPORT AnyURIDatatypeValidator : public AbstractStringValidator
 {
 public:
@@ -81,7 +83,7 @@ private:
     // -----------------------------------------------------------------------
     AnyURIDatatypeValidator(const AnyURIDatatypeValidator&);
     AnyURIDatatypeValidator& operator=(const AnyURIDatatypeValidator&);    
-    void encode(const XMLCh* const content, const XMLSize_t len, XMLCh* encoded, MemoryManager* const manager);
+    void encode(const XMLCh* const content, const XMLSize_t len, XMLBuffer& encoded, MemoryManager* const manager);
 };
 
 XERCES_CPP_NAMESPACE_END
