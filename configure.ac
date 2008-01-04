@@ -131,6 +131,10 @@ AC_SUBST([SHREXT], [$shrext_cmds])
 #
 AC_REPLACE_FUNCS([stricmp strnicmp towlower towupper])
 
+abs_top_srcdir=`cd $srcdir; pwd`
+AC_SUBST(abs_top_srcdir)
+abs_top_builddir=`pwd`
+AC_SUBST(abs_top_builddir)
 
 ######################################################
 # Look for availability of available packages
