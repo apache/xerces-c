@@ -21,7 +21,6 @@
 
 #include <winsock2.h>
 #include <windows.h>
-#include <tchar.h>
 
 #ifdef WITH_IPV6
 #include <ws2tcpip.h>
@@ -29,7 +28,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
@@ -188,9 +186,9 @@ void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
 	LPFN_WSASTARTUP startup = NULL;
 	if(gWinsockLib == NULL) {
 #ifdef WITH_IPV6
-		gWinsockLib = LoadLibrary(_T("WS2_32"));
+		gWinsockLib = LoadLibraryA("WS2_32");
 #else
-		gWinsockLib = LoadLibrary(_T("WSOCK32"));
+		gWinsockLib = LoadLibraryA("WSOCK32");
 #endif
 		if(gWinsockLib == NULL) {
 			ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
@@ -338,7 +336,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     hints.ai_family = PF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     char tempbuf[10];
-    itoa (portNumber,tempbuf,10);
+    XMLString::binToText(portNumber, tempbuf, 10, 10);
     int n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
     if(n<0)
     {
@@ -456,7 +454,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     {
         strcat(fBuffer, ":");
         size_t i = strlen(fBuffer);
-        itoa(portNumber, fBuffer+i, 10);
+        XMLString::binToText(portNumber, fBuffer+i, 10, 10);
     }
     strcat(fBuffer, "\r\n");
 
