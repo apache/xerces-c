@@ -36,8 +36,10 @@
 <source>&XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\xerces-all.dsw</source>
             <p>For MSVC Version 7.1 (Visual C++ .NET 2003):</p>
 <source>&XercesCSrcInstallDir;\Projects\Win32\VC7.1\xerces-all\xerces-all.sln</source>
-            <p>For MSVC Version 8.0 (Visual C++ .NET 2005):</p>
+            <p>For MSVC Version 8.0 (Visual C++ 2005):</p>
 <source>&XercesCSrcInstallDir;\Projects\Win32\VC8\xerces-all\xerces-all.sln</source>
+            <p>For MSVC Version 9.0 (Visual C++ 2008):</p>
+<source>&XercesCSrcInstallDir;\Projects\Win32\VC9\xerces-all\xerces-all.sln</source>
 
             <p>Once you are inside MSVC, you need to build the project marked
             <em>XercesLib</em>.</p>
@@ -45,7 +47,8 @@
             you need to pick up:</p>
 <source>(For MSVC V6) &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
 (For MSVC V7.1) &XercesCSrcInstallDir;\Projects\Win32\VC7.1\xerces-all\XercesLib\XercesLib.vcproj
-(For MSVC V8) &XercesCSrcInstallDir;\Projects\Win32\VC8\xerces-all\XercesLib\XercesLib.vcproj</source>
+(For MSVC V8) &XercesCSrcInstallDir;\Projects\Win32\VC8\xerces-all\XercesLib\XercesLib.vcproj
+(For MSVC V9) &XercesCSrcInstallDir;\Projects\Win32\VC9\xerces-all\XercesLib\XercesLib.vcproj</source>
             <p>You must make sure that you are linking your application with
             the &XercesCWindowsLib;.lib library and also make sure that
             the associated DLL is somewhere in your path.</p>
@@ -166,6 +169,12 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 		cause the application to crash, regardless of whether there is a "catch"
 		statement.  This bug doesn't occur in tests using gcc 3.1 or 3.2, so it
 		is recommended that you use gcc 3.1 or higher.</p>
+
+		<p>By default, autoconf on Cygwin and MinGW/MSYS doesn't build shared libraries,
+		even if <code>configure</code> will detect it's possible; you will have to force
+		it by specifying the <code>LDFLAGS=-no-undefined</code> option to <code>configure</code>
+		</p>
+
     </s2>
 
     <anchor name="UNIX"/>
@@ -235,7 +244,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
             directory. If not, type:</p>
 
 <source>cd &lt;full path to &XercesCSrcInstallDir;&gt;
-autoconf</source>
+./reconf</source>
 
             <p>This generates a shell-script called <code>configure</code>. It is tempting to run
             this script directly as is normally the case, but wait a minute. 
