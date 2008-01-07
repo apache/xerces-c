@@ -199,14 +199,14 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
 {
     // Transcode the name to Unicode and store that copy
     const XMLSize_t srcLen = strlen(encodingName);
-    size_t targetLen=::mbstowcs(NULL, encodingName, srcLen);
-    if(targetLen!=-1)
+	int targetLen=::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, encodingName, srcLen, NULL, 0);
+    if(targetLen!=0)
     {
         fEncodingName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
         (
             (targetLen + 1) * sizeof(XMLCh)
         );//new XMLCh[targetLen + 1];
-        ::mbstowcs(fEncodingName, encodingName, srcLen);
+		::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, encodingName, srcLen, (LPWSTR)fEncodingName, targetLen);
         fEncodingName[targetLen] = 0;
 
         //
@@ -430,14 +430,14 @@ Win32TransService::Win32TransService()
         if (isAlias(encodingKey, aliasBuf, nameBufSz))
         {
             const XMLSize_t srcLen = strlen(aliasBuf);
-            size_t targetLen=::mbstowcs(NULL, aliasBuf, srcLen);
-            if(targetLen!=-1)
+            int targetLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, srcLen, NULL, 0);
+            if(targetLen!=0)
             {
                 XMLCh* uniAlias = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
                 (
                     (targetLen + 1) * sizeof(XMLCh)
                 );//new XMLCh[targetLen + 1];
-                ::mbstowcs(uniAlias, aliasBuf, srcLen);
+	            ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, srcLen, (LPWSTR)uniAlias, targetLen);
                 uniAlias[targetLen] = 0;
                 wcsupr(uniAlias);
 
@@ -446,14 +446,14 @@ Win32TransService::Win32TransService()
                 if (aliasedEntry)
                 {
                     const XMLSize_t srcLen = strlen(nameBuf);
-                    size_t targetLen=::mbstowcs(NULL, nameBuf, srcLen);
-                    if(targetLen!=-1)
+		            int targetLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, nameBuf, srcLen, NULL, 0);
+                    if(targetLen!=0)
                     {
                         XMLCh* uniName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
                         (
                             (targetLen + 1) * sizeof(XMLCh)
                         );//new XMLCh[targetLen + 1];
-                        ::mbstowcs(uniName, nameBuf, srcLen);
+			            ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, nameBuf, srcLen, (LPWSTR)uniName, targetLen);
                         uniName[targetLen] = 0;
                         wcsupr(uniName);
 
@@ -572,8 +572,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     //  Get an upper cased copy of the encoding name, since we use a hash
     //  table and we store them all in upper case.
     //
-    ::wcsncpy(upEncoding, encodingName, upLen);
-    upEncoding[upLen] = 0;
+	XMLString::copyNString(upEncoding, encodingName, upLen);
     wcsupr(upEncoding);
 
     // Now to try to find this guy in the CP map
