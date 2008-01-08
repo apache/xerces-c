@@ -5768,7 +5768,7 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
                                         const XMLCh*& valConstraint,
                                         const bool topLevel)
 {
-    int enclosingScope = fCurrentScope;
+    unsigned int enclosingScope = fCurrentScope;
     int uriIndex = fEmptyNamespaceURI;
 
     if (topLevel) {

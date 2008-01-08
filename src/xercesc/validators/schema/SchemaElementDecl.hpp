@@ -71,7 +71,7 @@ public :
         , const XMLCh* const   localPart
         , const int            uriId
         , const ModelTypes     modelType = Any
-        , const int            enclosingScope = Grammar::TOP_LEVEL_SCOPE
+        , const unsigned int   enclosingScope = Grammar::TOP_LEVEL_SCOPE
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -79,7 +79,7 @@ public :
     (
           const QName* const   elementName
         , const ModelTypes     modelType = Any
-        , const int            enclosingScope = Grammar::TOP_LEVEL_SCOPE
+        , const unsigned int   enclosingScope = Grammar::TOP_LEVEL_SCOPE
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 

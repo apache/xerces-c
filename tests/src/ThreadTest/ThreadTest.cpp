@@ -1109,7 +1109,7 @@ unsigned long WINAPI threadMain (void *param)
                     checkSum = thParser->getCheckSum();
                 }
                 fprintf(stderr, "\nThread %d: Parse Check sum error on file  \"%s\" for parse # %d.  Expected %x,  got %x\n",
-                    thInfo->fThreadNum, thInfo->fParses, fInfo->fileName, fInfo->checkSum, checkSum);
+                    thInfo->fThreadNum, fInfo->fileName, thInfo->fParses, fInfo->checkSum, checkSum);
 
 	            double totalParsesCompleted = 0;
                 for (int threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {

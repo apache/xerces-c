@@ -112,7 +112,7 @@ public :
         bool                fValidationFlag;
         bool                fCommentOrPISeen;
         bool                fReferenceEscaped;
-        int                 fCurrentScope;
+        unsigned int        fCurrentScope;
         Grammar*            fCurrentGrammar;
         unsigned int        fCurrentURI;
         XMLCh *             fSchemaElemName;

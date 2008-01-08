@@ -243,7 +243,7 @@ bool RegularExpression::Context::nextCh(XMLInt32& ch, XMLSize_t& offset,
             return false;
 	}
     else if (RegxUtil::isLowSurrogate(ch)) {
-        if ((offset -1 >= 0) && (direction <= 0) &&
+        if ((offset > 0) && (direction <= 0) &&
             RegxUtil::isHighSurrogate(fString[offset-1])) {
             ch = RegxUtil::composeFromSurrogate(fString[--offset], ch);
         }

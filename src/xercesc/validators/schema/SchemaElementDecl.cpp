@@ -59,7 +59,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
                                    , const XMLCh* const                  localPart
                                    , const int                           uriId
                                    , const SchemaElementDecl::ModelTypes type
-                                   , const int                           enclosingScope
+                                   , const unsigned int                  enclosingScope
                                    , MemoryManager* const                manager) :
     XMLElementDecl(manager)
     , fModelType(type)
@@ -81,7 +81,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
 
 SchemaElementDecl::SchemaElementDecl(const QName* const                  elementName
                                    , const SchemaElementDecl::ModelTypes type
-                                   , const int                           enclosingScope
+                                   , const unsigned int                  enclosingScope
                                    , MemoryManager* const                manager) :
     XMLElementDecl(manager)
     , fModelType(type)

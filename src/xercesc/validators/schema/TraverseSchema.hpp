@@ -726,8 +726,8 @@ private:
     bool                                           fFullConstraintChecking;
     int                                            fTargetNSURI;
     int                                            fEmptyNamespaceURI;
-    int                                            fCurrentScope;
-    int                                            fScopeCount;
+    unsigned int                                   fCurrentScope;
+    unsigned int                                   fScopeCount;
     unsigned int                                   fAnonXSTypeCount;
     unsigned int                                   fCircularCheckIndex;
     const XMLCh*                                   fTargetNSURIString;
