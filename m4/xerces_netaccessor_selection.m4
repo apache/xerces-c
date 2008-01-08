@@ -154,7 +154,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		*-libwww-*)
 			netaccessor=libwww
 			AC_DEFINE([XERCES_USE_NETACCESSOR_LIBWWW], 1, [Define to use the libwww NetAccessor])
-			LIBS="${LIBS} -L${xerces_cv_libwww_prefix}/lib -lwww"
+			LIBS="${LIBS} `${xerces_cv_libwww_prefix}/bin/libwww-config --prefix=${xerces_cv_libwww_prefix} --libs`"
 			break
 			;;
 			
