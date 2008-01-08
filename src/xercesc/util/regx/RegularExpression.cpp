@@ -55,7 +55,7 @@ const unsigned int RegularExpression::PROHIBIT_HEAD_CHARACTER_OPTIMIZATION = 128
 const unsigned int RegularExpression::PROHIBIT_FIXED_STRING_OPTIMIZATION = 256;
 const unsigned int RegularExpression::XMLSCHEMA_MODE = 512;
 const unsigned int RegularExpression::SPECIAL_COMMA = 1024;
-RangeToken*          RegularExpression::fWordRange = 0;
+RangeToken*        RegularExpression::fWordRange = 0;
 
 
 static void
@@ -69,7 +69,7 @@ static XMLRegisterCleanup WordRangeCleanup;
 
 
 bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
-                                                 const XMLInt32 ch2)
+                                        const XMLInt32 ch2)
 {
     if (ch1 >= 0x10000)
     {
@@ -113,7 +113,7 @@ bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
 
         return (0==XMLString::compareNIString(&char1, &char2, 1));
     }
-  }
+}
 
 
 
@@ -121,36 +121,36 @@ bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
 //  RegularExpression::Context: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RegularExpression::Context::Context(MemoryManager* const manager) :    
-	fAdoptMatch(false)
+    fAdoptMatch(false)
     , fStart(0)
-	, fLimit(0)
-	, fLength(0)
-	, fSize(0)
+    , fLimit(0)
+    , fLength(0)
+    , fSize(0)
     , fStringMaxLen(0)
-	, fOffsets(0)
-	, fMatch(0)
-	, fString(0)
+    , fOffsets(0)
+    , fMatch(0)
+    , fString(0)
     , fMemoryManager(manager)
 {
 }
 
 RegularExpression::Context::Context(Context* src) :
-	fAdoptMatch(false)
+    fAdoptMatch(false)
     , fStart(src->fStart)
-	, fLimit(src->fLimit)
-	, fLength(src->fLength)
-	, fSize(src->fSize)
+    , fLimit(src->fLimit)
+    , fLength(src->fLength)
+    , fSize(src->fSize)
     , fStringMaxLen(src->fStringMaxLen)
-	, fOffsets(0)
-	, fMatch(0)
-	, fString(src->fString)
+    , fOffsets(0)
+    , fMatch(0)
+    , fString(src->fString)
     , fMemoryManager(src->fMemoryManager)
 {
-	if(src->fOffsets)
+    if(src->fOffsets)
     {
-		fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
-	    for (int i = 0; i< fSize; i++)
-		    fOffsets[i] = src->fOffsets[i];
+        fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
+        for (int i = 0; i< fSize; i++)
+            fOffsets[i] = src->fOffsets[i];
     }
     if(src->fMatch)
     {
@@ -162,25 +162,25 @@ RegularExpression::Context::Context(Context* src) :
 RegularExpression::Context& RegularExpression::Context::operator= (const RegularExpression::Context& other)
 {
     fStart=other.fStart;
-	fLimit=other.fLimit;
-	fLength=other.fLength;
-	fSize=other.fSize;
+    fLimit=other.fLimit;
+    fLength=other.fLength;
+    fSize=other.fSize;
     fStringMaxLen=other.fStringMaxLen;
-	fString=other.fString;
+    fString=other.fString;
     if (fOffsets)
         fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
     fOffsets=0;
-	if (fAdoptMatch)
-		delete fMatch;
+    if (fAdoptMatch)
+        delete fMatch;
     fMatch=0;
-	fAdoptMatch=false;
+    fAdoptMatch=false;
 
     fMemoryManager=other.fMemoryManager;
-	if(other.fOffsets)
+    if(other.fOffsets)
     {
-		fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
-	    for (int i = 0; i< fSize; i++)
-		    fOffsets[i] = other.fOffsets[i];
+        fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
+        for (int i = 0; i< fSize; i++)
+            fOffsets[i] = other.fOffsets[i];
     }
     if(other.fMatch)
     {
@@ -195,8 +195,8 @@ RegularExpression::Context::~Context()
     if (fOffsets)
         fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
 
-	if (fAdoptMatch)
-		delete fMatch;
+    if (fAdoptMatch)
+        delete fMatch;
 }
 
 // ---------------------------------------------------------------------------
@@ -210,52 +210,48 @@ void RegularExpression::Context::reset(const XMLCh* const string
 {
     fString = string;
     fStringMaxLen = stringLen;
-	fStart = start;
-	fLimit = limit;
-	fLength = fLimit - fStart;	
-	if (fAdoptMatch)
-		delete fMatch;
-	fMatch = 0;
+    fStart = start;
+    fLimit = limit;
+    fLength = fLimit - fStart;	
+    if (fAdoptMatch)
+        delete fMatch;
+    fMatch = 0;
 
-	if (fSize != noClosures) {
-
-		if (fOffsets)
+    if (fSize != noClosures) {
+        if (fOffsets)
             fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
-		fOffsets = (int*) fMemoryManager->allocate(noClosures * sizeof(int));//new int[noClosures];
-	}
+        fOffsets = (int*) fMemoryManager->allocate(noClosures * sizeof(int));//new int[noClosures];
+    }
 
-	fSize = noClosures;
+    fSize = noClosures;
 
-	for (int i = 0; i< fSize; i++)
-		fOffsets[i] = -1;
+    for (int i = 0; i< fSize; i++)
+        fOffsets[i] = -1;
 }
 
 bool RegularExpression::Context::nextCh(XMLInt32& ch, XMLSize_t& offset,
-										const short direction)
+                                        const short direction)
 {
+    ch = fString[offset];
 
-	ch = fString[offset];
-
-	if (RegxUtil::isHighSurrogate(ch)) {
-		if ((offset + 1 < fLimit) && (direction > 0) &&
-			RegxUtil::isLowSurrogate(fString[offset+1])) {
-
-				ch = RegxUtil::composeFromSurrogate(ch, fString[++offset]);
-		}
-		else
-			return false;
+    if (RegxUtil::isHighSurrogate(ch)) {
+        if ((offset + 1 < fLimit) && (direction > 0) &&
+            RegxUtil::isLowSurrogate(fString[offset+1])) {
+            ch = RegxUtil::composeFromSurrogate(ch, fString[++offset]);
+        }
+        else
+            return false;
 	}
-	else if (RegxUtil::isLowSurrogate(ch)) {
-		if ((offset - 1 >= 0) && (direction <= 0) &&
-			RegxUtil::isHighSurrogate(fString[offset-1])) {
+    else if (RegxUtil::isLowSurrogate(ch)) {
+        if ((offset -1 >= 0) && (direction <= 0) &&
+            RegxUtil::isHighSurrogate(fString[offset-1])) {
+            ch = RegxUtil::composeFromSurrogate(fString[--offset], ch);
+        }
+        else
+            return false;
+    }
 
-				ch = RegxUtil::composeFromSurrogate(fString[--offset], ch);
-		}
-		else
-			return false;
-	}
-
-	return true;
+    return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -266,30 +262,30 @@ typedef JanitorMemFunCall<RegularExpression>    CleanupType;
 
 RegularExpression::RegularExpression(const char* const pattern,
                                      MemoryManager* const manager)
-	:fHasBackReferences(false),
-	 fFixedStringOnly(false),
-	 fNoGroups(0),
-	 fMinLength(0),
-	 fNoClosures(0),
-	 fOptions(0),
-	 fBMPattern(0),
-	 fPattern(0),
-	 fFixedString(0),
-	 fOperations(0),
-	 fTokenTree(0),
-	 fFirstChar(0),
+    :fHasBackReferences(false),
+     fFixedStringOnly(false),
+     fNoGroups(0),
+     fMinLength(0),
+     fNoClosures(0),
+     fOptions(0),
+     fBMPattern(0),
+     fPattern(0),
+     fFixedString(0),
+     fOperations(0),
+     fTokenTree(0),
+     fFirstChar(0),
      fOpFactory(manager),
      fTokenFactory(0),
      fMemoryManager(manager)
 {
     CleanupType cleanup(this, &RegularExpression::cleanUp);
 
-	try {
+    try {
 
-		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
+        XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
         ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-		setPattern(tmpBuf);
-	}
+        setPattern(tmpBuf);
+    }
     catch(const OutOfMemoryException&)
     {
         cleanup.release();
@@ -301,34 +297,34 @@ RegularExpression::RegularExpression(const char* const pattern,
 }
 
 RegularExpression::RegularExpression(const char* const pattern,
-									 const char* const options,
+                                     const char* const options,
                                      MemoryManager* const manager)
-	:fHasBackReferences(false),
-	 fFixedStringOnly(false),
-	 fNoGroups(0),
-	 fMinLength(0),
-	 fNoClosures(0),
-	 fOptions(0),
-	 fBMPattern(0),
-	 fPattern(0),
-	 fFixedString(0),
-	 fOperations(0),
-	 fTokenTree(0),
-	 fFirstChar(0),
+    :fHasBackReferences(false),
+     fFixedStringOnly(false),
+     fNoGroups(0),
+     fMinLength(0),
+     fNoClosures(0),
+     fOptions(0),
+     fBMPattern(0),
+     fPattern(0),
+     fFixedString(0),
+     fOperations(0),
+     fTokenTree(0),
+     fFirstChar(0),
      fOpFactory(manager),
      fTokenFactory(0),
      fMemoryManager(manager)
 {
     CleanupType cleanup(this, &RegularExpression::cleanUp);
 
-	try {
+    try {
 
-		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
-		ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-		XMLCh* tmpOptions = XMLString::transcode(options, fMemoryManager);
-		ArrayJanitor<XMLCh> janOps(tmpOptions, fMemoryManager);
-		setPattern(tmpBuf, tmpOptions);
-	}
+        XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
+        ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
+        XMLCh* tmpOptions = XMLString::transcode(options, fMemoryManager);
+        ArrayJanitor<XMLCh> janOps(tmpOptions, fMemoryManager);
+        setPattern(tmpBuf, tmpOptions);
+    }
     catch(const OutOfMemoryException&)
     {
         cleanup.release();
@@ -342,28 +338,28 @@ RegularExpression::RegularExpression(const char* const pattern,
 
 RegularExpression::RegularExpression(const XMLCh* const pattern,
                                      MemoryManager* const manager)
-	:fHasBackReferences(false),
-	 fFixedStringOnly(false),
-	 fNoGroups(0),
-	 fMinLength(0),
-	 fNoClosures(0),
-	 fOptions(0),
-	 fBMPattern(0),
-	 fPattern(0),
-	 fFixedString(0),
-	 fOperations(0),
-	 fTokenTree(0),
-	 fFirstChar(0),
+    :fHasBackReferences(false),
+     fFixedStringOnly(false),
+     fNoGroups(0),
+     fMinLength(0),
+     fNoClosures(0),
+     fOptions(0),
+     fBMPattern(0),
+     fPattern(0),
+     fFixedString(0),
+     fOperations(0),
+     fTokenTree(0),
+     fFirstChar(0),
      fOpFactory(manager),
      fTokenFactory(0),
      fMemoryManager(manager)
 {
     CleanupType cleanup(this, &RegularExpression::cleanUp);
 
-	try {
+    try {
 
-		setPattern(pattern);
-	}
+        setPattern(pattern);
+    }
     catch(const OutOfMemoryException&)
     {
         cleanup.release();
@@ -375,30 +371,30 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 }
 
 RegularExpression::RegularExpression(const XMLCh* const pattern,
-									 const XMLCh* const options,
+                                     const XMLCh* const options,
                                      MemoryManager* const manager)
-	:fHasBackReferences(false),
-	 fFixedStringOnly(false),
-	 fNoGroups(0),
-	 fMinLength(0),
-	 fNoClosures(0),
-	 fOptions(0),
-	 fBMPattern(0),
-	 fPattern(0),
-	 fFixedString(0),
-	 fOperations(0),
-	 fTokenTree(0),
-	 fFirstChar(0),
+    :fHasBackReferences(false),
+     fFixedStringOnly(false),
+     fNoGroups(0),
+     fMinLength(0),
+     fNoClosures(0),
+     fOptions(0),
+     fBMPattern(0),
+     fPattern(0),
+     fFixedString(0),
+     fOperations(0),
+     fTokenTree(0),
+     fFirstChar(0),
      fOpFactory(manager),
      fTokenFactory(0),
      fMemoryManager(manager)
 {
     CleanupType cleanup(this, &RegularExpression::cleanUp);
 
-	try {
+    try {
 
-		setPattern(pattern, options);
-	}
+        setPattern(pattern, options);
+    }
     catch(const OutOfMemoryException&)
     {
         cleanup.release();
@@ -411,7 +407,7 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 
 RegularExpression::~RegularExpression() {
 
-	cleanUp();
+    cleanUp();
 }
 
 // ---------------------------------------------------------------------------
@@ -427,27 +423,28 @@ RegxParser* RegularExpression::getRegexParser(const int options, MemoryManager* 
     //	? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
     //    : new (fMemoryManager) RegxParser(fMemoryManager);
     if (isSet(options, XMLSCHEMA_MODE))
-	    return new (manager) ParserForXMLSchema(manager);
+        return new (manager) ParserForXMLSchema(manager);
 
     return new (manager) RegxParser(manager);
 }
 
 void RegularExpression::setPattern(const XMLCh* const pattern,
-								   const XMLCh* const options) {
+                                   const XMLCh* const options) 
+{
 
     fTokenFactory = new (fMemoryManager) TokenFactory(fMemoryManager);
-	fOptions = parseOptions(options);
-	fPattern = XMLString::replicate(pattern, fMemoryManager);
+    fOptions = parseOptions(options);
+    fPattern = XMLString::replicate(pattern, fMemoryManager);
 
     RegxParser* regxParser=getRegexParser(fOptions, fMemoryManager);
 
     if (regxParser)
         regxParser->setTokenFactory(fTokenFactory);
 
-	Janitor<RegxParser> janRegxParser(regxParser);
-	fTokenTree = regxParser->parse(fPattern, fOptions);
-	fNoGroups = regxParser->getNoParen();
-	fHasBackReferences = regxParser->hasBackReferences();
+    Janitor<RegxParser> janRegxParser(regxParser);
+    fTokenTree = regxParser->parse(fPattern, fOptions);
+    fNoGroups = regxParser->getNoParen();
+    fHasBackReferences = regxParser->hasBackReferences();
 
     prepare();
 }
@@ -456,236 +453,236 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 //  RegularExpression: Matching methods
 // ---------------------------------------------------------------------------
 bool RegularExpression::matches(const char* const expression
-                                , MemoryManager* const manager) {
+                                , MemoryManager* const manager) 
+{
+    XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
+    return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), 0, manager);
+}
+
+bool RegularExpression::matches(const char* const expression
+                                , const XMLSize_t start, const XMLSize_t end
+                                , MemoryManager* const manager)
+{
 
     XMLCh* tmpBuf = XMLString::transcode(expression, manager);
     ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
-	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), 0, manager);
+    return matches(tmpBuf, start, end, 0, manager);
 }
 
-bool RegularExpression::matches(const char* const expression,
-								const XMLSize_t start, const XMLSize_t end
-                                , MemoryManager* const manager) {
+bool RegularExpression::matches(const char* const expression
+                                , Match* const match
+                                , MemoryManager* const manager)
+{
 
-	XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    XMLCh* tmpBuf = XMLString::transcode(expression, manager);
     ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
-	return matches(tmpBuf, start, end, 0, manager);
+    return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), match, manager);
 }
 
-bool RegularExpression::matches(const char* const expression,
-								Match* const match
-                                , MemoryManager* const manager)				{
+bool RegularExpression::matches(const char* const expression, const XMLSize_t start
+                                , const XMLSize_t end, Match* const pMatch
+                                , MemoryManager* const manager)
+{
 
-	XMLCh* tmpBuf = XMLString::transcode(expression, manager);
+    XMLCh* tmpBuf = XMLString::transcode(expression, manager);
     ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
-	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), match, manager);
-}
-
-bool RegularExpression::matches(const char* const expression, const XMLSize_t start,
-                                const XMLSize_t end, Match* const pMatch
-                                , MemoryManager* const manager)				{
-
-	XMLCh* tmpBuf = XMLString::transcode(expression, manager);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf, manager);
-	return matches(tmpBuf, start, end, pMatch, manager);
+    return matches(tmpBuf, start, end, pMatch, manager);
 }
 
 
 // ---------------------------------------------------------------------------
 //  RegularExpression: Matching methods - Wide char version
 // ---------------------------------------------------------------------------
-bool RegularExpression::matches(const XMLCh* const expression, MemoryManager* const manager) {
-
-	return matches(expression, 0, XMLString::stringLen(expression), 0, manager);
+bool RegularExpression::matches(const XMLCh* const expression, MemoryManager* const manager) 
+{
+    return matches(expression, 0, XMLString::stringLen(expression), 0, manager);
 }
 
-bool RegularExpression::matches(const XMLCh* const expression,
-								const XMLSize_t start, const XMLSize_t end
-                                , MemoryManager* const manager) {
-
-	return matches(expression, start, end, 0, manager);
+bool RegularExpression::matches(const XMLCh* const expression
+                                , const XMLSize_t start, const XMLSize_t end
+                                , MemoryManager* const manager) 
+{
+    return matches(expression, start, end, 0, manager);
 }
 
-bool RegularExpression::matches(const XMLCh* const expression,
-								Match* const match
-                                , MemoryManager* const manager)				{
-
-	return matches(expression, 0, XMLString::stringLen(expression), match, manager);
+bool RegularExpression::matches(const XMLCh* const expression
+                                , Match* const match
+                                , MemoryManager* const manager)
+{
+    return matches(expression, 0, XMLString::stringLen(expression), match, manager);
 }
 
-bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t start,
-                                const XMLSize_t end, Match* const pMatch
-                                , MemoryManager* const manager)	{
-		
-	Context context(manager);
-	XMLSize_t strLength = XMLString::stringLen(expression);
+bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t start
+                                , const XMLSize_t end, Match* const pMatch
+                                , MemoryManager* const manager)	
+{
+	
+    Context context(manager);
+    XMLSize_t strLength = XMLString::stringLen(expression);
 
     context.reset(expression, strLength, start, end, fNoClosures);
 
-	bool adoptMatch = false;
-	Match* lMatch = pMatch;
+    bool adoptMatch = false;
+    Match* lMatch = pMatch;
 
-	if (lMatch != 0) {
-		lMatch->setNoGroups(fNoGroups);
-	}
-	else if (fHasBackReferences) {
+    if (lMatch != 0) {
+        lMatch->setNoGroups(fNoGroups);
+    }
+    else if (fHasBackReferences) {
+        lMatch = new (fMemoryManager) Match(fMemoryManager);
+        lMatch->setNoGroups(fNoGroups);
+        adoptMatch = true;
+    }
 
-		lMatch = new (fMemoryManager) Match(fMemoryManager);
-		lMatch->setNoGroups(fNoGroups);
-		adoptMatch = true;
-	}
-
-	if (context.fAdoptMatch)
-		delete context.fMatch;
+    if (context.fAdoptMatch)
+        delete context.fMatch;
     context.fMatch = lMatch;
-	context.fAdoptMatch = adoptMatch;
+    context.fAdoptMatch = adoptMatch;
 
-	if (isSet(fOptions, XMLSCHEMA_MODE)) {
+    if (isSet(fOptions, XMLSCHEMA_MODE)) {
 
-		int matchEnd = match(&context, fOperations, context.fStart, 1);
+        int matchEnd = match(&context, fOperations, context.fStart, 1);
 
-		if (matchEnd == (int)context.fLimit) {
+        if (matchEnd == (int)context.fLimit) {
 
-			if (context.fMatch != 0) {
+            if (context.fMatch != 0) {
 
-				context.fMatch->setStartPos(0, (int)context.fStart);
-				context.fMatch->setEndPos(0, matchEnd);
-			}		
-			return true;
-		}
+                context.fMatch->setStartPos(0, (int)context.fStart);
+                context.fMatch->setEndPos(0, matchEnd);
+            }		
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/*
-	 *	If the pattern has only fixed string, use Boyer-Moore
-	 */
-	if (fFixedStringOnly) {
+    /*
+     * If the pattern has only fixed string, use Boyer-Moore
+     */
+    if (fFixedStringOnly) {
 
-		int ret = fBMPattern->matches(expression, context.fStart,
-			                          context.fLimit);
-		if (ret >= 0) {
+        int ret = fBMPattern->matches(expression, context.fStart, context.fLimit);
+        if (ret >= 0) {
 
-			if (context.fMatch != 0) {
-				context.fMatch->setStartPos(0, ret);
-				context.fMatch->setEndPos(0, (int)(ret + strLength));
-			}		
-			return true;
-		}		
-		return false;
-	}
+            if (context.fMatch != 0) {
+                context.fMatch->setStartPos(0, ret);
+                context.fMatch->setEndPos(0, (int)(ret + strLength));
+            }		
+            return true;
+        }		
+        return false;
+    }
 
-	/*
-	 *	If the pattern contains a fixed string, we check with Boyer-Moore
-	 *	whether the text contains the fixed string or not. If not found
-	 *	return false
-	 */
-	if (fFixedString != 0) {
+    /*
+     * If the pattern contains a fixed string, we check with Boyer-Moore
+     * whether the text contains the fixed string or not. If not found
+     * return false
+     */
+    if (fFixedString != 0) {
 
-		int ret = fBMPattern->matches(expression, context.fStart,
-                                      context.fLimit);
+        int ret = fBMPattern->matches(expression, context.fStart, context.fLimit);
 
-		if (ret < 0) { // No match
-			return false;
-		}
-	}
+        if (ret < 0) { // No match
+            return false;
+        }
+    }
 
     // if the length is less than the minimum length, we cannot possibly match
     if(context.fLimit<fMinLength)
         return false;
 
-	XMLSize_t limit = context.fLimit - fMinLength;
-	XMLSize_t matchStart;
-	int matchEnd = -1;
+    XMLSize_t limit = context.fLimit - fMinLength;
+    XMLSize_t matchStart;
+    int matchEnd = -1;
 
-	/*
-	 *	Check whether the expression start with ".*"
-	 */
-	if (fOperations != 0 && (fOperations->getOpType() == Op::O_CLOSURE || fOperations->getOpType() == Op::O_FINITE_CLOSURE)
+    /*
+     * Check whether the expression start with ".*"
+     */
+    if (fOperations != 0 && (fOperations->getOpType() == Op::O_CLOSURE || fOperations->getOpType() == Op::O_FINITE_CLOSURE)
         && fOperations->getChild()->getOpType() == Op::O_DOT) {
 
-		if (isSet(fOptions, SINGLE_LINE)) {
-			matchStart = context.fStart;
-			matchEnd = match(&context, fOperations, matchStart, 1);
-		}
-		else {
-			bool previousIsEOL = true;
+        if (isSet(fOptions, SINGLE_LINE)) {
+            matchStart = context.fStart;
+            matchEnd = match(&context, fOperations, matchStart, 1);
+        }
+        else {
+            bool previousIsEOL = true;
 
-			for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
+            for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
 
-				XMLCh ch = expression[matchStart];
-				if (RegxUtil::isEOLChar(ch)) {
-					previousIsEOL = true;
-				}
-				else {
+                XMLCh ch = expression[matchStart];
+                if (RegxUtil::isEOLChar(ch)) {
+                    previousIsEOL = true;
+                }
+                else {
 
-					if (previousIsEOL) {
-						if (0 <= (matchEnd = match(&context, fOperations,
+                    if (previousIsEOL) {
+                        if (0 <= (matchEnd = match(&context, fOperations,
                                                    matchStart, 1)))
                             break;
-					}
+                    }
 
-					previousIsEOL = false;
-				}
-			}
-		}
-	}
-	else {
+                    previousIsEOL = false;
+                }
+            }
+        }
+    }
+    else {
         /*
          *	Optimization against the first char
          */
-		if (fFirstChar != 0) {
-			bool ignoreCase = isSet(fOptions, IGNORE_CASE);
-			RangeToken* range = fFirstChar;
+        if (fFirstChar != 0) {
+            bool ignoreCase = isSet(fOptions, IGNORE_CASE);
+            RangeToken* range = fFirstChar;
 
-			if (ignoreCase)
-				range = fFirstChar->getCaseInsensitiveToken(fTokenFactory);
+            if (ignoreCase)
+                range = fFirstChar->getCaseInsensitiveToken(fTokenFactory);
 
-			for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
+            for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
 
                 XMLInt32 ch;
 
-				if (!context.nextCh(ch, matchStart, 1))
-					break;
+                if (!context.nextCh(ch, matchStart, 1))
+                    break;
 
-				if (!range->match(ch)) {
+                if (!range->match(ch))
+                    continue;
 
-					continue;
-				}
-
-				if (0 <= (matchEnd = match(&context,fOperations,matchStart,1)))
-					break;
+                if (0 <= (matchEnd = match(&context,fOperations,matchStart,1)))
+                    break;
             }
-		}
-		else {
+        }
+        else {
 
             /*
              *	Straightforward matching
              */
-			for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
+            for (matchStart=context.fStart; matchStart<=limit; matchStart++) {
 
-				if (0 <= (matchEnd = match(&context,fOperations,matchStart,1)))
-					break;
-			}
-		}
-	}
+                if (0 <= (matchEnd = match(&context,fOperations,matchStart,1)))
+                    break;
+            }
+        }
+    }
 
-	if (matchEnd >= 0) {
+    if (matchEnd >= 0) {
 
-		if (context.fMatch != 0) {
+        if (context.fMatch != 0) {
 
-			context.fMatch->setStartPos(0, (int)matchStart);
-			context.fMatch->setEndPos(0, matchEnd);
-		}		
-		return true;
-	}
-	return false;
+            context.fMatch->setStartPos(0, (int)matchStart);
+            context.fMatch->setEndPos(0, matchEnd);
+        }		
+        return true;
+    }
+    return false;
 }
 
 // ---------------------------------------------------------------------------
 //  RegularExpression: Tokenize methods
 // ---------------------------------------------------------------------------
-RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression) {
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression) 
+{
 
   XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
   ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
@@ -693,7 +690,8 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expressio
 }
 
 RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expression,
-								const XMLSize_t start, const XMLSize_t end) {
+                                                     const XMLSize_t start, const XMLSize_t end) 
+{
 
   XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
   ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
@@ -705,126 +703,126 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const char* const expressio
 // ---------------------------------------------------------------------------
 //  RegularExpression: Tokenize methods - Wide char version
 // ---------------------------------------------------------------------------
-RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression) {
-  return tokenize(expression, 0, XMLString::stringLen(expression), 0);
+RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression) 
+{
+    return tokenize(expression, 0, XMLString::stringLen(expression), 0);
 }
 
 RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression,
-								                     const XMLSize_t start, const XMLSize_t end)
+                                                     const XMLSize_t start, const XMLSize_t end)
 {
-  return tokenize(expression, start, end, 0);
+    return tokenize(expression, start, end, 0);
 }
 
 RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expression, 
                                                      const XMLSize_t start, const XMLSize_t end,
-                                                     RefVectorOf<Match> *subEx){
+                                                     RefVectorOf<Match> *subEx)
+{
   
-  RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true, fMemoryManager);
+    RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true, fMemoryManager);
 
-  Context context(fMemoryManager);
+    Context context(fMemoryManager);
 
-  XMLSize_t strLength = XMLString::stringLen(expression);
+    XMLSize_t strLength = XMLString::stringLen(expression);
  
-  context.reset(expression, strLength, start, end, fNoClosures);
+    context.reset(expression, strLength, start, end, fNoClosures);
  
+    Match* lMatch = 0;
+    bool adoptMatch = false;
 
-  Match* lMatch = 0;
-  bool adoptMatch = false;
-
-  if (subEx || fHasBackReferences) {
-    lMatch = new (fMemoryManager) Match(fMemoryManager);
-    adoptMatch = true;
-    lMatch->setNoGroups(fNoGroups);
-  }
-
-  if (context.fAdoptMatch)
- 	  delete context.fMatch;
-  
-  context.fMatch = lMatch;
-  context.fAdoptMatch = adoptMatch;
-
-  XMLSize_t tokStart = start;
-  XMLSize_t matchStart = start;
-
-  for (; matchStart <= end; matchStart++) { 
-  
- 	  int iMatchEnd = match(&context, fOperations, matchStart, 1);
-  
- 	  if (iMatchEnd != -1) {
-          XMLSize_t matchEnd=iMatchEnd;
-
- 	    if (context.fMatch != 0) {
- 	      context.fMatch->setStartPos(0, (int)context.fStart);
- 	      context.fMatch->setEndPos(0, (int)matchEnd);
- 	    }
-
-      if (subEx){
-        subEx->addElement(context.fMatch);
-        lMatch = new (fMemoryManager) Match(*(context.fMatch));
+    if (subEx || fHasBackReferences) {
+        lMatch = new (fMemoryManager) Match(fMemoryManager);
         adoptMatch = true;
-        
-        context.fAdoptMatch = adoptMatch;
-        context.fMatch = lMatch;
-      }
+        lMatch->setNoGroups(fNoGroups);
+    }
 
-      XMLCh* token;
-      if (tokStart == matchStart){
+    if (context.fAdoptMatch)
+        delete context.fMatch;
   
-        if (tokStart == strLength){
-          tokStart--;
-          break;  
-        }
+    context.fMatch = lMatch;
+    context.fAdoptMatch = adoptMatch;
 
+    XMLSize_t tokStart = start;
+    XMLSize_t matchStart = start;
+
+    for (; matchStart <= end; matchStart++) { 
+
+        int iMatchEnd = match(&context, fOperations, matchStart, 1);
+  
+        if (iMatchEnd != -1) {
+            XMLSize_t matchEnd=iMatchEnd;
+
+            if (context.fMatch != 0) {
+                context.fMatch->setStartPos(0, (int)context.fStart);
+                context.fMatch->setEndPos(0, (int)matchEnd);
+            }
+
+            if (subEx){
+                subEx->addElement(context.fMatch);
+                lMatch = new (fMemoryManager) Match(*(context.fMatch));
+                adoptMatch = true;
+        
+                context.fAdoptMatch = adoptMatch;
+                context.fMatch = lMatch;
+            }
+
+            XMLCh* token;
+            if (tokStart == matchStart){
+  
+                if (tokStart == strLength){
+                    tokStart--;
+                    break;  
+                }
+
+                token = (XMLCh*) fMemoryManager->allocate(sizeof(XMLCh));//new XMLCh[1];
+                token[0] = chNull;
+
+                // When you tokenize using zero string, will return each
+                // token in the string. Since the zero string will also 
+                // match the start/end characters, resulting in empty 
+                // tokens, we ignore them and do not add them to the stack. 
+                if (!XMLString::equals(fPattern, &chNull)) 
+                    tokenStack->addElement(token); 
+                else
+                    fMemoryManager->deallocate(token);//delete[] token;
+
+            } else {
+                token = (XMLCh*) fMemoryManager->allocate
+                    (
+                        (matchStart + 1 - tokStart) * sizeof(XMLCh)
+                    );//new XMLCh[matchStart + 1 - tokStart];
+                XMLString::subString(token, expression, tokStart, matchStart, fMemoryManager);
+                tokenStack->addElement(token);
+            } 
+
+            tokStart = matchEnd;
+
+            //decrement matchStart as will increment it at the top of the loop
+            if (matchStart < matchEnd - 1) 
+                matchStart = matchEnd - 1; 	    
+        }
+    }
+ 
+    XMLCh* token;
+ 
+    if (matchStart == tokStart + 1){
         token = (XMLCh*) fMemoryManager->allocate(sizeof(XMLCh));//new XMLCh[1];
         token[0] = chNull;
-
-        // When you tokenize using zero string, will return each
-        // token in the string. Since the zero string will also 
-        // match the start/end characters, resulting in empty 
-        // tokens, we ignore them and do not add them to the stack. 
-        if (!XMLString::equals(fPattern, &chNull)) 
-          tokenStack->addElement(token); 
-        else
-            fMemoryManager->deallocate(token);//delete[] token;
-
-      } else {
-        token = (XMLCh*) fMemoryManager->allocate
-        (
-            (matchStart + 1 - tokStart) * sizeof(XMLCh)
-        );//new XMLCh[matchStart + 1 - tokStart];
-        XMLString::subString(token, expression, tokStart, matchStart, fMemoryManager);
-        tokenStack->addElement(token);
-      } 
-
-      tokStart = matchEnd;
-
-      //decrement matchStart as will increment it at the top of the loop
-      if (matchStart < matchEnd - 1) 
-        matchStart = matchEnd - 1; 	    
-    }
-  }
- 
-  XMLCh* token;
- 
-  if (matchStart == tokStart + 1){
-    token = (XMLCh*) fMemoryManager->allocate(sizeof(XMLCh));//new XMLCh[1];
-    token[0] = chNull;
   
-  } else {
-    token = (XMLCh*) fMemoryManager->allocate
-    (
-        (strLength + 1 - tokStart) * sizeof(XMLCh)
-    );//new XMLCh[strLength + 1 - tokStart];
-    XMLString::subString(token, expression, tokStart, strLength, fMemoryManager);
-  }  
+    } else {
+        token = (XMLCh*) fMemoryManager->allocate
+            (
+                (strLength + 1 - tokStart) * sizeof(XMLCh)
+            );//new XMLCh[strLength + 1 - tokStart];
+        XMLString::subString(token, expression, tokStart, strLength, fMemoryManager);
+    }  
 
-  if (!XMLString::equals(fPattern, &chNull)) 
-    tokenStack->addElement(token);
-  else
-    fMemoryManager->deallocate(token);//delete[] token;
+    if (!XMLString::equals(fPattern, &chNull)) 
+        tokenStack->addElement(token);
+    else
+        fMemoryManager->deallocate(token);//delete[] token;
 
-  return tokenStack;
-
+    return tokenStack;
 }
 
 
@@ -832,23 +830,25 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 //  RegularExpression: Replace methods
 // -----------------------------------------------------------------------
 XMLCh* RegularExpression::replace(const char* const matchString, 
-                                  const char* const replaceString){
+                                  const char* const replaceString)
+{
 
-	XMLCh* tmpBuf = XMLString::transcode(matchString, fMemoryManager);
+    XMLCh* tmpBuf = XMLString::transcode(matchString, fMemoryManager);
     ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
-	XMLCh* tmpBuf2 = XMLString::transcode(replaceString, fMemoryManager);
+    XMLCh* tmpBuf2 = XMLString::transcode(replaceString, fMemoryManager);
     ArrayJanitor<XMLCh> janBuf2(tmpBuf2, fMemoryManager);
 
-	return replace(tmpBuf, tmpBuf2, 0, XMLString::stringLen(tmpBuf));
+    return replace(tmpBuf, tmpBuf2, 0, XMLString::stringLen(tmpBuf));
 }
 
 XMLCh* RegularExpression::replace(const char* const matchString, 
                                   const char* const replaceString,
-                                  const XMLSize_t start, const XMLSize_t end){
+                                  const XMLSize_t start, const XMLSize_t end)
+{
 
- 	XMLCh* tmpBuf = XMLString::transcode(matchString, fMemoryManager);
+    XMLCh* tmpBuf = XMLString::transcode(matchString, fMemoryManager);
     ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
- 	XMLCh* tmpBuf2 = XMLString::transcode(replaceString, fMemoryManager);
+    XMLCh* tmpBuf2 = XMLString::transcode(replaceString, fMemoryManager);
     ArrayJanitor<XMLCh> janBuf2(tmpBuf2, fMemoryManager);
   
     return replace(tmpBuf, tmpBuf2, start, end);
@@ -859,10 +859,11 @@ XMLCh* RegularExpression::replace(const char* const matchString,
 //  RegularExpression: Replace methods - Wide char version
 // ---------------------------------------------------------------------------
 XMLCh* RegularExpression::replace(const XMLCh* const matchString, 
-                                  const XMLCh* const replaceString){
+                                  const XMLCh* const replaceString)
+{
 
     return replace(matchString, replaceString, 0, 
-                 XMLString::stringLen(matchString));
+                   XMLString::stringLen(matchString));
 }
 
 XMLCh* RegularExpression::replace(const XMLCh* const matchString,  
@@ -931,8 +932,8 @@ RegularExpression::staticInitialize(MemoryManager*  memoryManager)
 {
     fWordRange = TokenFactory::staticGetRange(fgUniIsWord, false);
 
-	if (fWordRange == 0)
-		ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, memoryManager);
+    if (fWordRange == 0)
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, memoryManager);
 
     WordRangeCleanup.registerCleanup(localCleanup);
 }
@@ -944,52 +945,52 @@ RegularExpression::staticInitialize(MemoryManager*  memoryManager)
 // ---------------------------------------------------------------------------
 int RegularExpression::getOptionValue(const XMLCh ch) {
 
-	int ret = 0;
+    int ret = 0;
 
-	switch (ch) {
+    switch (ch) {
 
-		case chLatin_i:
-			ret = IGNORE_CASE;
-			break;
-		case chLatin_m:
-			ret = MULTIPLE_LINE;
-			break;
-		case chLatin_s:
-			ret = SINGLE_LINE;
-			break;
-		case chLatin_x:
-			ret = EXTENDED_COMMENT;
-			break;
-		case chLatin_u:
-			ret = USE_UNICODE_CATEGORY;
-			break;
-		case chLatin_w:
-			ret = UNICODE_WORD_BOUNDARY;
-			break;
-		case chLatin_F:
-			ret = PROHIBIT_FIXED_STRING_OPTIMIZATION;
-			break;
-		case chLatin_H:
-			ret = PROHIBIT_HEAD_CHARACTER_OPTIMIZATION;
-			break;
-		case chLatin_X:
-			ret = XMLSCHEMA_MODE;
-			break;
-		case chComma:
-			ret = SPECIAL_COMMA;
-			break;
-		default:
-			break;
-	}
+        case chLatin_i:
+            ret = IGNORE_CASE;
+            break;
+        case chLatin_m:
+            ret = MULTIPLE_LINE;
+            break;
+        case chLatin_s:
+            ret = SINGLE_LINE;
+            break;
+        case chLatin_x:
+            ret = EXTENDED_COMMENT;
+            break;
+        case chLatin_u:
+            ret = USE_UNICODE_CATEGORY;
+            break;
+        case chLatin_w:
+            ret = UNICODE_WORD_BOUNDARY;
+            break;
+        case chLatin_F:
+            ret = PROHIBIT_FIXED_STRING_OPTIMIZATION;
+            break;
+        case chLatin_H:
+            ret = PROHIBIT_HEAD_CHARACTER_OPTIMIZATION;
+            break;
+        case chLatin_X:
+            ret = XMLSCHEMA_MODE;
+            break;
+        case chComma:
+            ret = SPECIAL_COMMA;
+            break;
+        default:
+            break;
+    }
 
-	return ret;
+    return ret;
 }
 
 struct RE_RuntimeContext {
-	const Op    *op_;
-	XMLSize_t   offs_;
+    const Op    *op_;
+    XMLSize_t   offs_;
 
-	RE_RuntimeContext(const Op *op, XMLSize_t offs) : op_(op), offs_(offs) { }
+    RE_RuntimeContext(const Op *op, XMLSize_t offs) : op_(op), offs_(offs) { }
 };
 
 int RegularExpression::match(Context* const context, const Op* const operations
@@ -1002,76 +1003,75 @@ int RegularExpression::match(Context* const context, const Op* const operations
         opStack=new ValueStackOf<RE_RuntimeContext>(16, context->fMemoryManager);
         janStack.reset(opStack);
     }
-	const Op* tmpOp = operations;
-	bool ignoreCase = isSet(fOptions, IGNORE_CASE);
-	int	doReturn;
+    const Op* tmpOp = operations;
+    bool ignoreCase = isSet(fOptions, IGNORE_CASE);
+    int doReturn;
 
-	while (tmpOp != 0) {
+    while (tmpOp != 0) {
         // no one wants to return -5, only -1, 0, and greater
-		doReturn = -5;
+        doReturn = -5;
 
-		if (offset > context->fLimit || offset < context->fStart)
-			doReturn = -1;
+        if (offset > context->fLimit || offset < context->fStart)
+            doReturn = -1;
         else
         {
-		    switch(tmpOp->getOpType()) {
-		    case Op::O_CHAR:
-			    if (!matchChar(context, tmpOp->getData(), offset, direction,
-						       ignoreCase))
-				    doReturn = -1;
-			    else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_DOT:
-			    if (!matchDot(context, offset, direction))
-				    doReturn = -1;
-			    else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_RANGE:
-		    case Op::O_NRANGE:
-			    if (!matchRange(context, tmpOp, offset, direction, ignoreCase))
-				    doReturn = -1;
-			    else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_ANCHOR:
-			    if (!matchAnchor(context, tmpOp->getData(), offset))
-				    doReturn = -1;
-			    else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_BACKREFERENCE:
-			    if (!matchBackReference(context, tmpOp->getData(), offset,
-									    direction, ignoreCase))
-				    doReturn = -1;
-			    else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_STRING:
-			    if (!matchString(context, tmpOp->getLiteral(), offset, direction,
-							     ignoreCase))
-				    doReturn = -1;
-			    else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_FINITE_CLOSURE:
-			    {
-				    XMLInt32 id = tmpOp->getData();
+            switch(tmpOp->getOpType()) {
+                case Op::O_CHAR:
+                    if (!matchChar(context, tmpOp->getData(), offset, direction, ignoreCase))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_DOT:
+                    if (!matchDot(context, offset, direction))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_RANGE:
+                case Op::O_NRANGE:
+                    if (!matchRange(context, tmpOp, offset, direction, ignoreCase))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_ANCHOR:
+                    if (!matchAnchor(context, tmpOp->getData(), offset))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_BACKREFERENCE:
+                    if (!matchBackReference(context, tmpOp->getData(), offset,
+                                            direction, ignoreCase))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_STRING:
+                    if (!matchString(context, tmpOp->getLiteral(), offset, direction,
+                                     ignoreCase))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_FINITE_CLOSURE:
+                {
+                    XMLInt32 id = tmpOp->getData();
                     // if id is not -1, it's a closure with a child token having a minumum length, 
                     // where id is the index of the fOffsets array where its status is stored
-			        if (id >= 0) {
-				        int prevOffset = context->fOffsets[id];
-				        if (prevOffset < 0 || prevOffset != (int)offset) {
-					        context->fOffsets[id] = (int)offset;
-				        }
-				        else {
+                    if (id >= 0) {
+                        int prevOffset = context->fOffsets[id];
+                        if (prevOffset < 0 || prevOffset != (int)offset) {
+                            context->fOffsets[id] = (int)offset;
+                        }
+                        else {
                             // the status didn't change, we haven't found other copies; move on to the next match
-					        context->fOffsets[id] = -1;
-					        tmpOp = tmpOp->getNextOp();
-					        break;
-				        }
-			        }
+                            context->fOffsets[id] = -1;
+                            tmpOp = tmpOp->getNextOp();
+                            break;
+                        }
+                    }
 
                     // match the subitems until they do
                     int ret;
@@ -1084,15 +1084,15 @@ int RegularExpression::match(Context* const context, const Op* const operations
 
                     if (id >= 0) {
                         // loop has ended, reset the status for this closure
-					    context->fOffsets[id] = -1;
-				    }
-				    tmpOp = tmpOp->getNextOp();
-			    }
-			    break;
-		    case Op::O_FINITE_NONGREEDYCLOSURE:
-			    {
-				    int ret = match(context,tmpOp->getNextOp(),offset,direction);
-				    if (ret >= 0)
+                        context->fOffsets[id] = -1;
+                    }
+                    tmpOp = tmpOp->getNextOp();
+                }
+                break;
+                case Op::O_FINITE_NONGREEDYCLOSURE:
+                {
+                    int ret = match(context,tmpOp->getNextOp(),offset,direction);
+                    if (ret >= 0)
                         doReturn = ret;
                     else
                     {
@@ -1104,431 +1104,430 @@ int RegularExpression::match(Context* const context, const Op* const operations
                                 break;
                             offset = ret;
                         }
-    				    tmpOp = tmpOp->getNextOp();
-				    }
-			    }
-			    break;
-		    case Op::O_CLOSURE:
-			    {
-				    XMLInt32 id = tmpOp->getData();
+                        tmpOp = tmpOp->getNextOp();
+                    }
+                }
+                break;
+                case Op::O_CLOSURE:
+                {
+                    XMLInt32 id = tmpOp->getData();
                     // if id is not -1, it's a closure with a child token having a minumum length, 
                     // where id is the index of the fOffsets array where its status is stored
-			        if (id >= 0) {
-				        int prevOffset = context->fOffsets[id];
-				        if (prevOffset < 0 || prevOffset != (int)offset) {
-					        context->fOffsets[id] = (int)offset;
-				        }
-				        else {
+                    if (id >= 0) {
+                        int prevOffset = context->fOffsets[id];
+                        if (prevOffset < 0 || prevOffset != (int)offset) {
+                            context->fOffsets[id] = (int)offset;
+                        }
+                        else {
                             // the status didn't change, we haven't found other copies; move on to the next match
-					        context->fOffsets[id] = -1;
-					        tmpOp = tmpOp->getNextOp();
-					        break;
-				        }
-			        }
+                            context->fOffsets[id] = -1;
+                            tmpOp = tmpOp->getNextOp();
+                            break;
+                        }
+                    }
 
                     if(opStack!=NULL)
                     {
-				        opStack->push(RE_RuntimeContext(tmpOp, offset));
-				        tmpOp = tmpOp->getChild();
+                        opStack->push(RE_RuntimeContext(tmpOp, offset));
+                        tmpOp = tmpOp->getChild();
                     }
                     else
                     {
-				        int ret = match(context, tmpOp->getChild(), offset, direction);
-				        if (id >= 0) {
-					        context->fOffsets[id] = -1;
-				        }
-
-				        if (ret >= 0)
-					        doReturn = ret;
+                        int ret = match(context, tmpOp->getChild(), offset, direction);
+                        if (id >= 0) {
+                            context->fOffsets[id] = -1;
+                        }
+                        if (ret >= 0)
+                            doReturn = ret;
                         else 
-				            tmpOp = tmpOp->getNextOp();
+                            tmpOp = tmpOp->getNextOp();
                     }
-			    }
-			    break;
-		    case Op::O_QUESTION:
-			    {
+                }
+                break;
+                case Op::O_QUESTION:
+                {
                     if(opStack!=NULL)
                     {
-				        opStack->push(RE_RuntimeContext(tmpOp, offset));
-				        tmpOp = tmpOp->getChild();
+                        opStack->push(RE_RuntimeContext(tmpOp, offset));
+                        tmpOp = tmpOp->getChild();
                     }
                     else
                     {
-				        int ret = match(context, tmpOp->getChild(), offset, direction);
-				        if (ret >= 0)
-					        doReturn = ret;
-                        else
-				            tmpOp = tmpOp->getNextOp();
-                    }
-			    }
-			    break;
-		    case Op::O_NONGREEDYCLOSURE:
-		    case Op::O_NONGREEDYQUESTION:
-			    {
-				    int ret = match(context,tmpOp->getNextOp(),offset,direction);
-				    if (ret >= 0)
-                        doReturn = ret;
-                    else
-    				    tmpOp = tmpOp->getChild();
-			    }
-			    break;
-		    case Op::O_UNION:
-			    doReturn = matchUnion(context, tmpOp, offset, direction);
-                break;
-		    case Op::O_CAPTURE:
-			    if (context->fMatch != 0 && tmpOp->getData() != 0)
-				    doReturn = matchCapture(context, tmpOp, offset, direction);
-                else
-			        tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_LOOKAHEAD:
-			    if (0 > match(context, tmpOp->getChild(), offset, 1))
-    				doReturn = -1;
-    			else
-	    		    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_NEGATIVELOOKAHEAD:
-			    if (0 <= match(context, tmpOp->getChild(), offset, 1))
-    				doReturn = -1;
-    			else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_LOOKBEHIND:
-			    if (0 > match(context, tmpOp->getChild(), offset, -1))
-    				doReturn = -1;
-    			else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_NEGATIVELOOKBEHIND:
-			    if (0 <= match(context, tmpOp->getChild(), offset, -1))
-    				doReturn = -1;
-    			else
-    			    tmpOp = tmpOp->getNextOp();
-			    break;
-		    case Op::O_INDEPENDENT:
-            case Op::O_MODIFIER:
-			    {
-				    int ret = (tmpOp->getOpType() == Op::O_INDEPENDENT)
-					       ? match(context, tmpOp->getChild(), offset, direction)
-                           : matchModifier(context, tmpOp, offset, direction);
-                    if (ret < 0)
-    				    doReturn = ret;
-                    else {
-				        offset = ret;
-				        tmpOp = tmpOp->getNextOp();
-                    }
-			    }
-			    break;
-		    case Op::O_CONDITION:
-			    if (tmpOp->getRefNo() >= fNoGroups)
-    				doReturn = -1;
-    			else
-                {
-                    if (matchCondition(context, tmpOp, offset, direction))
-				        tmpOp = tmpOp->getYesFlow();
-			        else
-				        if (tmpOp->getNoFlow() != 0)
-                            tmpOp = tmpOp->getNoFlow();
+                        int ret = match(context, tmpOp->getChild(), offset, direction);
+                        if (ret >= 0)
+                            doReturn = ret;
                         else
                             tmpOp = tmpOp->getNextOp();
+                    }
                 }
-			    break;
-		    }
+                break;
+                case Op::O_NONGREEDYCLOSURE:
+                case Op::O_NONGREEDYQUESTION:
+                {
+                    int ret = match(context,tmpOp->getNextOp(),offset,direction);
+                    if (ret >= 0)
+                        doReturn = ret;
+                    else
+                        tmpOp = tmpOp->getChild();
+                }
+                break;
+                case Op::O_UNION:
+                    doReturn = matchUnion(context, tmpOp, offset, direction);
+                    break;
+                case Op::O_CAPTURE:
+                    if (context->fMatch != 0 && tmpOp->getData() != 0)
+                        doReturn = matchCapture(context, tmpOp, offset, direction);
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_LOOKAHEAD:
+                    if (0 > match(context, tmpOp->getChild(), offset, 1))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_NEGATIVELOOKAHEAD:
+                    if (0 <= match(context, tmpOp->getChild(), offset, 1))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_LOOKBEHIND:
+                    if (0 > match(context, tmpOp->getChild(), offset, -1))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_NEGATIVELOOKBEHIND:
+                    if (0 <= match(context, tmpOp->getChild(), offset, -1))
+                        doReturn = -1;
+                    else
+                        tmpOp = tmpOp->getNextOp();
+                    break;
+                case Op::O_INDEPENDENT:
+                case Op::O_MODIFIER:
+                {
+                    int ret = (tmpOp->getOpType() == Op::O_INDEPENDENT)
+                            ? match(context, tmpOp->getChild(), offset, direction)
+                            : matchModifier(context, tmpOp, offset, direction);
+                    if (ret < 0)
+                        doReturn = ret;
+                    else {
+                        offset = ret;
+                        tmpOp = tmpOp->getNextOp();
+                    }
+                }
+                break;
+                case Op::O_CONDITION:
+                    if (tmpOp->getRefNo() >= fNoGroups)
+                        doReturn = -1;
+                    else
+                    {
+                        if (matchCondition(context, tmpOp, offset, direction))
+                            tmpOp = tmpOp->getYesFlow();
+                        else
+                            if (tmpOp->getNoFlow() != 0)
+                                tmpOp = tmpOp->getNoFlow();
+                            else
+                                tmpOp = tmpOp->getNextOp();
+                    }
+                    break;
+            }
         }
-		if (doReturn != -5) {
-			if (opStack==NULL || opStack->size() == 0)
-				return doReturn;
-			RE_RuntimeContext	ctx = opStack->pop();
-			tmpOp = ctx.op_;
-			offset = ctx.offs_;
-			if (tmpOp->getOpType() == Op::O_CLOSURE) {
-				XMLInt32 id = tmpOp->getData();
-				if (id >= 0) {
+        if (doReturn != -5) {
+            if (opStack==NULL || opStack->size() == 0)
+                return doReturn;
+            RE_RuntimeContext ctx = opStack->pop();
+            tmpOp = ctx.op_;
+            offset = ctx.offs_;
+            if (tmpOp->getOpType() == Op::O_CLOSURE) {
+                XMLInt32 id = tmpOp->getData();
+                if (id >= 0) {
                     // loop has ended, reset the status for this closure
-					context->fOffsets[id] = -1;
-				}
-			}
-			if (tmpOp->getOpType() == Op::O_CLOSURE || tmpOp->getOpType() == Op::O_QUESTION) {
-				if (doReturn >= 0)
-					return doReturn;
-			}
-			tmpOp = tmpOp->getNextOp();
-		}
-	}
+                    context->fOffsets[id] = -1;
+                }
+            }
+            if (tmpOp->getOpType() == Op::O_CLOSURE || tmpOp->getOpType() == Op::O_QUESTION) {
+                if (doReturn >= 0)
+                    return doReturn;
+            }
+            tmpOp = tmpOp->getNextOp();
+        }
+    }
 	
-	return (int)offset;
+    return (int)offset;
 }
 
 bool RegularExpression::matchChar(Context* const context,
-								  const XMLInt32 ch, XMLSize_t& offset,
-								  const short direction, const bool ignoreCase)
+                                  const XMLInt32 ch, XMLSize_t& offset,
+                                  const short direction, const bool ignoreCase)
 {
     if(direction < 0 && offset==0)
         return false;
 
-	XMLSize_t tmpOffset = direction > 0 ? offset : offset - 1;
+    XMLSize_t tmpOffset = direction > 0 ? offset : offset - 1;
 
-	if (tmpOffset >= context->fLimit)
-		return false;
+    if (tmpOffset >= context->fLimit)
+        return false;
 
-	XMLInt32 strCh = 0;
+    XMLInt32 strCh = 0;
 	
-	if (!context->nextCh(strCh, tmpOffset, direction))
-		return false;
+    if (!context->nextCh(strCh, tmpOffset, direction))
+        return false;
 
-	bool match = ignoreCase ? matchIgnoreCase(ch, strCh)
+    bool match = ignoreCase ? matchIgnoreCase(ch, strCh)
 		                    : (ch == strCh);
-	if (!match)
-		return false;
+    if (!match)
+        return false;
 
-	offset = (direction > 0) ? ++tmpOffset : tmpOffset;
+    offset = (direction > 0) ? ++tmpOffset : tmpOffset;
 
-	return true;
+    return true;
 }
 
 bool RegularExpression::matchDot(Context* const context, XMLSize_t& offset,
-								 const short direction)
+                                 const short direction)
 {
     if(direction < 0 && offset==0)
         return false;
 
-	XMLSize_t tmpOffset = direction > 0 ? offset : offset - 1;
+    XMLSize_t tmpOffset = direction > 0 ? offset : offset - 1;
 
-	if (tmpOffset >= context->fLimit)
-		return false;
+    if (tmpOffset >= context->fLimit)
+        return false;
 
-	XMLInt32 strCh = 0;
+    XMLInt32 strCh = 0;
 	
-	if (!context->nextCh(strCh, tmpOffset, direction))
-		return false;
+    if (!context->nextCh(strCh, tmpOffset, direction))
+        return false;
 
-	if (!isSet(fOptions, SINGLE_LINE)) {
+    if (!isSet(fOptions, SINGLE_LINE)) {
 
-		if (direction > 0 && RegxUtil::isEOLChar(strCh))
-			return false;
+        if (direction > 0 && RegxUtil::isEOLChar(strCh))
+            return false;
 
-		if (direction <= 0 && !RegxUtil::isEOLChar(strCh) )
-			return false;
-	}
+        if (direction <= 0 && !RegxUtil::isEOLChar(strCh) )
+            return false;
+    }
 
     offset = (direction > 0) ? ++tmpOffset : tmpOffset;
-	return true;
+    return true;
 }
 
 bool RegularExpression::matchRange(Context* const context, const Op* const op,
-								   XMLSize_t& offset, const short direction,
-								   const bool ignoreCase)
+                                   XMLSize_t& offset, const short direction,
+                                   const bool ignoreCase)
 {
     if(direction < 0 && offset==0)
         return false;
 
-	XMLSize_t tmpOffset = direction > 0 ? offset : offset - 1;
+    XMLSize_t tmpOffset = direction > 0 ? offset : offset - 1;
 
-	if (tmpOffset >= context->fLimit)
-		return false;
+    if (tmpOffset >= context->fLimit)
+        return false;
 
-	XMLInt32 strCh = 0;
+    XMLInt32 strCh = 0;
 	
-	if (!context->nextCh(strCh, tmpOffset, direction))
-		return false;
+    if (!context->nextCh(strCh, tmpOffset, direction))
+        return false;
 
-	RangeToken* tok = (RangeToken *) op->getToken();
-	bool match = false;
+    RangeToken* tok = (RangeToken *) op->getToken();
+    bool match = false;
 
-	if (ignoreCase) {
-		tok = tok->getCaseInsensitiveToken(fTokenFactory);
-	}
+    if (ignoreCase) {
+        tok = tok->getCaseInsensitiveToken(fTokenFactory);
+    }
 
     match = tok->match(strCh);
 
-	if (!match)
-		return false;
+    if (!match)
+        return false;
 
-	offset = (direction > 0) ? ++tmpOffset : tmpOffset;
+    offset = (direction > 0) ? ++tmpOffset : tmpOffset;
 
-	return true;
+    return true;
 }
 
 bool RegularExpression::matchAnchor(Context* const context, const XMLInt32 ch,
-									const XMLSize_t offset)
+                                    const XMLSize_t offset)
 {
-	switch ((XMLCh) ch) {
-	case chLatin_A:
-		if (offset != context->fStart)
-			return false;
-		break;
-	case chLatin_B:
-		if (context->fLength == 0)
-			break;
-		{
-			wordType after = getWordType(context->fString, context->fStart,
-									context->fLimit, offset);
-			if (after == wordTypeIgnore
-				|| after == getPreviousWordType(context->fString,
-												context->fStart,
-												context->fLimit, offset))
-				break;
-		}
-		return false;
-	case chLatin_b:
-		if (context->fLength == 0)
-			return false;
-		{
-			wordType after = getWordType(context->fString, context->fStart,
-									context->fLimit, offset);
-			if (after == wordTypeIgnore
-				|| after == getPreviousWordType(context->fString,
-												context->fStart
-												, context->fLimit, offset))
-				return false;
-		}
-		break;
-	case chLatin_Z:
-	case chDollarSign:
-		if ( (XMLCh) ch == chDollarSign && isSet(fOptions, MULTIPLE_LINE)) {
-			if (!(offset == context->fLimit || (offset < context->fLimit
-				&& RegxUtil::isEOLChar(context->fString[offset]))))
-				return false;
-		}
-		else {
+    switch ((XMLCh) ch) {
+    case chLatin_A:
+        if (offset != context->fStart)
+            return false;
+        break;
+    case chLatin_B:
+        if (context->fLength == 0)
+            break;
+        {
+            wordType after = getWordType(context->fString, context->fStart,
+                                         context->fLimit, offset);
+            if (after == wordTypeIgnore
+                || after == getPreviousWordType(context->fString,
+                                                context->fStart,
+                                                context->fLimit, offset))
+                break;
+        }
+        return false;
+    case chLatin_b:
+        if (context->fLength == 0)
+            return false;
+        {
+            wordType after = getWordType(context->fString, context->fStart,
+                                         context->fLimit, offset);
+            if (after == wordTypeIgnore
+                || after == getPreviousWordType(context->fString,
+                                                context->fStart,
+                                                context->fLimit, offset))
+                return false;
+        }
+        break;
+    case chLatin_Z:
+    case chDollarSign:
+        if ( (XMLCh) ch == chDollarSign && isSet(fOptions, MULTIPLE_LINE)) {
+            if (!(offset == context->fLimit || (offset < context->fLimit
+                && RegxUtil::isEOLChar(context->fString[offset]))))
+                return false;
+        }
+        else {
 
-			if (!(offset == context->fLimit
-				|| (offset+1 == context->fLimit
-				    && RegxUtil::isEOLChar(context->fString[offset]))
-				|| (offset+2 == context->fLimit
-				    && context->fString[offset] == chCR
-					&& context->fString[offset+1] == chLF)))
-				return false;
-		}
-		break;
-	case chLatin_z:
-		if (offset != context->fLimit)
-			return false;
-		break;
-	case chAt:
-	case chCaret:
-		if ( (XMLCh) ch == chCaret && !isSet(fOptions, MULTIPLE_LINE)) {
+            if (!(offset == context->fLimit
+                || (offset+1 == context->fLimit
+                    && RegxUtil::isEOLChar(context->fString[offset]))
+                || (offset+2 == context->fLimit
+                    && context->fString[offset] == chCR
+                    && context->fString[offset+1] == chLF)))
+                return false;
+        }
+        break;
+    case chLatin_z:
+        if (offset != context->fLimit)
+            return false;
+        break;
+    case chAt:
+    case chCaret:
+        if ( (XMLCh) ch == chCaret && !isSet(fOptions, MULTIPLE_LINE)) {
 
-			if (offset != context->fStart)
-				return false;
-		}
-		else {
+            if (offset != context->fStart)
+                return false;
+        }
+        else {
 
-			if (!(offset == context->fStart || (offset > context->fStart
-				      && RegxUtil::isEOLChar(context->fString[offset-1]))))
-				return false;
-		}
-		break;
-	case chOpenAngle:
-		if (context->fLength == 0 || offset == context->fLimit)
-			return false;
+            if (!(offset == context->fStart || (offset > context->fStart
+                && RegxUtil::isEOLChar(context->fString[offset-1]))))
+                return false;
+        }
+        break;
+    case chOpenAngle:
+        if (context->fLength == 0 || offset == context->fLimit)
+            return false;
 
-		if (getWordType(context->fString, context->fStart, context->fLimit,
-						offset) != wordTypeLetter
-			|| getPreviousWordType(context->fString, context->fStart,
-								   context->fLimit, offset) != wordTypeOther)
-			return false;
-		break;
-	case chCloseAngle:
-		if (context->fLength == 0 || offset == context->fStart)
-			return false;
+        if (getWordType(context->fString, context->fStart, context->fLimit,
+                        offset) != wordTypeLetter
+            || getPreviousWordType(context->fString, context->fStart,
+                                   context->fLimit, offset) != wordTypeOther)
+            return false;
+        break;
+    case chCloseAngle:
+        if (context->fLength == 0 || offset == context->fStart)
+            return false;
 
-		if (getWordType(context->fString, context->fStart, context->fLimit,
-						offset) != wordTypeOther
-			|| getPreviousWordType(context->fString, context->fStart,
-								   context->fLimit, offset) != wordTypeLetter)
-			return false;
-		break;
-	}
+        if (getWordType(context->fString, context->fStart, context->fLimit,
+                        offset) != wordTypeOther
+            || getPreviousWordType(context->fString, context->fStart,
+                                   context->fLimit, offset) != wordTypeLetter)
+            return false;
+        break;
+    }
 
-	return true;
+    return true;
 }
 
 bool RegularExpression::matchBackReference(Context* const context,
-										   const XMLInt32 refNo, XMLSize_t& offset,
-										   const short direction,
-										   const bool ignoreCase)
+                                           const XMLInt32 refNo, XMLSize_t& offset,
+                                           const short direction,
+                                           const bool ignoreCase)
 {
-	if (refNo <=0 || refNo >= fNoGroups)
-		ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Regex_BadRefNo, fMemoryManager);
+    if (refNo <=0 || refNo >= fNoGroups)
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Regex_BadRefNo, fMemoryManager);
 
-	if (context->fMatch->getStartPos(refNo) < 0
-		|| context->fMatch->getEndPos(refNo) < 0)
-		return false;
+    if (context->fMatch->getStartPos(refNo) < 0
+        || context->fMatch->getEndPos(refNo) < 0)
+        return false;
 
-	int start = context->fMatch->getStartPos(refNo);
-	int length = context->fMatch->getEndPos(refNo) - start;
+    int start = context->fMatch->getStartPos(refNo);
+    int length = context->fMatch->getEndPos(refNo) - start;
 
     if(direction < 0 && (int)offset<length)
         return false;
 
     XMLSize_t tmpOffset = (direction > 0) ? offset : offset - length;
 
-	if (int(context->fLimit - tmpOffset) < length)
-		return false;
+    if (int(context->fLimit - tmpOffset) < length)
+        return false;
 
-	bool match = ignoreCase
-					? XMLString::regionIMatches(context->fString,(int)tmpOffset,
-												context->fString,start,length)
-					: XMLString::regionMatches(context->fString, (int)tmpOffset,
-											   context->fString, start,length);
+    bool match = ignoreCase
+                            ? XMLString::regionIMatches(context->fString,(int)tmpOffset,
+                                                        context->fString,start,length)
+                            : XMLString::regionMatches(context->fString, (int)tmpOffset,
+                                                       context->fString, start,length);
 
-	if (!match)
-		return false;
+    if (!match)
+        return false;
 
-	offset = (direction > 0) ? offset + length : offset - length;
-	return true;
+    offset = (direction > 0) ? offset + length : offset - length;
+    return true;
 }
 
 bool RegularExpression::matchString(Context* const context,
-									const XMLCh* const literal, XMLSize_t& offset,
-									const short direction, const bool ignoreCase)
+                                    const XMLCh* const literal, XMLSize_t& offset,
+                                    const short direction, const bool ignoreCase)
 {
-	XMLSize_t length = XMLString::stringLen(literal);
+    XMLSize_t length = XMLString::stringLen(literal);
     if(direction < 0 && offset<length)
         return false;
 
-	XMLSize_t tmpOffset = (direction > 0) ? offset : offset - length;
+    XMLSize_t tmpOffset = (direction > 0) ? offset : offset - length;
 
-	if (context->fLimit - tmpOffset < length)
-		return false;
+    if (context->fLimit - tmpOffset < length)
+        return false;
 
-	bool match = ignoreCase
-					? XMLString::regionIMatches(context->fString, (int)tmpOffset,
-												literal, 0, length)
-					: XMLString::regionMatches(context->fString, (int)tmpOffset,
-											   literal, 0, length);
+    bool match = ignoreCase
+                            ? XMLString::regionIMatches(context->fString, (int)tmpOffset,
+                                                        literal, 0, length)
+                            : XMLString::regionMatches(context->fString, (int)tmpOffset,
+                                                       literal, 0, length);
 
-	if (match) {
-	    offset = direction > 0 ? offset + length : offset - length;
+    if (match) {
+        offset = direction > 0 ? offset + length : offset - length;
     }
 
-	return match;
+    return match;
 }
 
 int RegularExpression::matchCapture(Context* const context, const Op* const op,
                                     XMLSize_t offset, const short direction)
 {
-	// No check is made for nullness of fMatch as the function is only called if
-	// fMatch is not null.
-	XMLInt32 index = op->getData();
-	int save = (index > 0) ? context->fMatch->getStartPos(index)
+    // No check is made for nullness of fMatch as the function is only called if
+    // fMatch is not null.
+    XMLInt32 index = op->getData();
+    int save = (index > 0) ? context->fMatch->getStartPos(index)
                            : context->fMatch->getEndPos(-index);
 
-	if (index > 0) {
+    if (index > 0) {
 
-		context->fMatch->setStartPos(index, (int)offset);
-		int ret = match(context, op->getNextOp(), offset, direction);
-		if (ret < 0)
-			context->fMatch->setStartPos(index, save);
-		return ret;
-	}
+        context->fMatch->setStartPos(index, (int)offset);
+        int ret = match(context, op->getNextOp(), offset, direction);
+        if (ret < 0)
+            context->fMatch->setStartPos(index, save);
+            return ret;
+    }
 	
-	context->fMatch->setEndPos(-index, (int)offset);
-	int ret = match(context, op->getNextOp(), offset, direction);
-	if (ret < 0)
-		context->fMatch->setEndPos(-index, save);
-	return ret;
+    context->fMatch->setEndPos(-index, (int)offset);
+    int ret = match(context, op->getNextOp(), offset, direction);
+    if (ret < 0)
+        context->fMatch->setEndPos(-index, save);
+    return ret;
 }
 
 int RegularExpression::matchUnion(Context* const context,
@@ -1552,7 +1551,7 @@ int RegularExpression::matchUnion(Context* const context,
         }
     }
     if(bestResult!=-1)
-      *context=bestResultContext;
+        *context=bestResultContext;
     return bestResult;
 }
 
@@ -1562,97 +1561,98 @@ bool RegularExpression::matchCondition(Context* const context,
                                               const short direction)
 {
 
-	int refNo = op->getRefNo();
-	if ( refNo > 0)
-		return (context->fMatch->getStartPos(refNo) >= 0
+    int refNo = op->getRefNo();
+    if ( refNo > 0)
+        return (context->fMatch->getStartPos(refNo) >= 0
                 && context->fMatch->getEndPos(refNo) >= 0);
 
-	return (0 <= match(context, op->getConditionFlow(), offset, direction));
+    return (0 <= match(context, op->getConditionFlow(), offset, direction));
 }
 
 int RegularExpression::parseOptions(const XMLCh* const options)
 {
 
-	if (options == 0)
-		return 0;
+    if (options == 0)
+        return 0;
 
-	int opts = 0;
-	XMLSize_t length = XMLString::stringLen(options);
+    int opts = 0;
+    XMLSize_t length = XMLString::stringLen(options);
 
-	for (XMLSize_t i=0; i < length; i++) {
+    for (XMLSize_t i=0; i < length; i++) {
 	
-		int v = getOptionValue(options[i]);
+        int v = getOptionValue(options[i]);
 
-		if (v == 0)
-			ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Regex_UnknownOption, options, fMemoryManager);
+        if (v == 0)
+            ThrowXMLwithMemMgr1(ParseException, XMLExcepts::Regex_UnknownOption, options, fMemoryManager);
 
-		opts |= v;
-	}
+        opts |= v;
+    }
 
-	return opts;
+    return opts;
 }
 
 void RegularExpression::compile(const Token* const token) {
 
-	if (fOperations != 0)
-		return;
+    if (fOperations != 0)
+        return;
 
-	fNoClosures = 0;
-	fOperations = compile(token, 0, false);
+    fNoClosures = 0;
+    fOperations = compile(token, 0, false);
 }
 
 Op* RegularExpression::compile(const Token* const token, Op* const next,
-							   const bool reverse) {
+                               const bool reverse) 
+{
 
-	Op* ret = 0;
+    Op* ret = 0;
 
     const Token::tokType tokenType = token->getTokenType();
 
-	switch(tokenType) {
-	case Token::T_DOT:
-	case Token::T_CHAR:
-	case Token::T_ANCHOR:
-	case Token::T_RANGE:
-	case Token::T_NRANGE:
-	case Token::T_STRING:
-	case Token::T_BACKREFERENCE:
-	case Token::T_EMPTY:
-		ret = compileSingle(token, next, tokenType);
-		break;
-	case Token::T_CONCAT:
-		ret = compileConcat(token, next, reverse);
-		break;
-	case Token::T_UNION:
-		ret = compileUnion(token, next, reverse);
-		break;
-	case Token::T_CLOSURE:
-	case Token::T_NONGREEDYCLOSURE:
-		ret = compileClosure(token, next, reverse, tokenType);
-		break;
-	case Token::T_PAREN:
-		ret = compileParenthesis(token, next, reverse);
-		break;
-	case Token::T_LOOKAHEAD:
-	case Token::T_NEGATIVELOOKAHEAD:
-		ret = compileLook(token, next, false, tokenType);
-		break;
-	case Token::T_LOOKBEHIND:
-	case Token::T_NEGATIVELOOKBEHIND:
-		ret = compileLook(token, next, true, tokenType);
-		break;
-	case Token::T_INDEPENDENT:
-	case Token::T_MODIFIERGROUP:
-		ret = compileLook(token, next, reverse, tokenType);
-		break;
-	case Token::T_CONDITION:
-		ret = compileCondition(token, next, reverse);
-		break;
-	default:
-		ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_UnknownTokenType, fMemoryManager);
-		break; // this line to be deleted
-	}
+    switch(tokenType) {
+    case Token::T_DOT:
+    case Token::T_CHAR:
+    case Token::T_ANCHOR:
+    case Token::T_RANGE:
+    case Token::T_NRANGE:
+    case Token::T_STRING:
+    case Token::T_BACKREFERENCE:
+    case Token::T_EMPTY:
+        ret = compileSingle(token, next, tokenType);
+        break;
+    case Token::T_CONCAT:
+        ret = compileConcat(token, next, reverse);
+        break;
+    case Token::T_UNION:
+        ret = compileUnion(token, next, reverse);
+        break;
+    case Token::T_CLOSURE:
+    case Token::T_NONGREEDYCLOSURE:
+        ret = compileClosure(token, next, reverse, tokenType);
+        break;
+    case Token::T_PAREN:
+        ret = compileParenthesis(token, next, reverse);
+        break;
+    case Token::T_LOOKAHEAD:
+    case Token::T_NEGATIVELOOKAHEAD:
+        ret = compileLook(token, next, false, tokenType);
+        break;
+    case Token::T_LOOKBEHIND:
+    case Token::T_NEGATIVELOOKBEHIND:
+        ret = compileLook(token, next, true, tokenType);
+        break;
+    case Token::T_INDEPENDENT:
+    case Token::T_MODIFIERGROUP:
+        ret = compileLook(token, next, reverse, tokenType);
+        break;
+    case Token::T_CONDITION:
+        ret = compileCondition(token, next, reverse);
+        break;
+    default:
+        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_UnknownTokenType, fMemoryManager);
+        break; // this line to be deleted
+    }
 
-	return ret;
+    return ret;
 }
 
 /*
@@ -1666,71 +1666,72 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
  */
 const XMLCh* RegularExpression::subInExp(const XMLCh* const repString, 
                                          const XMLCh* const origString, 
-                                         const Match* subEx){
+                                         const Match* subEx)
+{
 
-  int numSubExp = subEx->getNoGroups() - 1;
+    int numSubExp = subEx->getNoGroups() - 1;
 
-  if (numSubExp == 0)
-    return XMLString::replicate(repString, fMemoryManager);
+    if (numSubExp == 0)
+        return XMLString::replicate(repString, fMemoryManager);
   
-  bool notEscaped = true;                 
+    bool notEscaped = true;                 
   
-  XMLBuffer newString(1023, fMemoryManager);                   
+    XMLBuffer newString(1023, fMemoryManager);                   
   
-  XMLCh indexStr[2]; //holds the string rep of a 
+    XMLCh indexStr[2]; //holds the string rep of a 
 
-  indexStr[1] = chNull;
-  int index = -1;
+    indexStr[1] = chNull;
+    int index = -1;
 
-  for (const XMLCh* ptr = repString; *ptr != chNull; ptr++){
+    for (const XMLCh* ptr = repString; *ptr != chNull; ptr++){
 
-    if ((*ptr == chDollarSign) && notEscaped) {
+        if ((*ptr == chDollarSign) && notEscaped) {
       
-      ptr++;
-      
-      //check that after the $ is a digit 
-      if (!XMLString::isDigit(*ptr)){
+            ptr++;
+
+            //check that after the $ is a digit 
+            if (!XMLString::isDigit(*ptr)){
        
-        //invalid replace string - $ must be followed by a digit
-				ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
-      }
+                //invalid replace string - $ must be followed by a digit
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
+            }
         
-      indexStr[0] = *ptr;                     //get the digit 
-      index = XMLString::parseInt(indexStr, fMemoryManager);  //convert it to an int
+            indexStr[0] = *ptr;                     //get the digit 
+            index = XMLString::parseInt(indexStr, fMemoryManager);  //convert it to an int
 
-      //now check that the index is legal
-      if (index > numSubExp){
-				ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
-      }
+            //now check that the index is legal
+            if (index > numSubExp){
+                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
+            }
         
-      int start = subEx->getStartPos(index);
-      int end = subEx->getEndPos(index);
+            int start = subEx->getStartPos(index);
+            int end = subEx->getEndPos(index);
 
-      //now copy the substring into the new string
-      for (int i=start; i<end; i++){
-        newString.append(origString[i]);
-      }
+            //now copy the substring into the new string
+            for (int i=start; i<end; i++){
+                newString.append(origString[i]);
+            }
           
-    } else {
+        } else {
  
-      //if you have a slash and then a character that's not a $ or /, 
-      //then it's an invalid replace string  
-      if (!notEscaped && (*ptr != chDollarSign && *ptr != chBackSlash)){
-				ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
-      }
+            //if you have a slash and then a character that's not a $ or /, 
+            //then it's an invalid replace string  
+            if (!notEscaped && (*ptr != chDollarSign && *ptr != chBackSlash)){
+              ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, fMemoryManager);
+            }
       
-      if (*ptr == chBackSlash){
-        notEscaped = false;
-        continue;
+            if (*ptr == chBackSlash){
+                notEscaped = false;
+                continue;
         
-      }else   
-        notEscaped = true;  
+            }else   
+                notEscaped = true;  
 
-      newString.append(*ptr);
+            newString.append(*ptr);
+        }
     }
-  }
 
-  return XMLString::replicate(newString.getRawBuffer(), fMemoryManager);
+    return XMLString::replicate(newString.getRawBuffer(), fMemoryManager);
        
 }
 
@@ -1740,22 +1741,22 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
  */
 void RegularExpression::prepare() {
 
-	compile(fTokenTree);
+    compile(fTokenTree);
 
-	fMinLength = fTokenTree->getMinLength();
-	fFirstChar = 0;
+    fMinLength = fTokenTree->getMinLength();
+    fFirstChar = 0;
 
-	if (!isSet(fOptions, PROHIBIT_HEAD_CHARACTER_OPTIMIZATION) &&
-		!isSet(fOptions, XMLSCHEMA_MODE))							{
+    if (!isSet(fOptions, PROHIBIT_HEAD_CHARACTER_OPTIMIZATION) &&
+        !isSet(fOptions, XMLSCHEMA_MODE))							{
 
-		RangeToken* rangeTok = fTokenFactory->createRange();
+        RangeToken* rangeTok = fTokenFactory->createRange();
         Token::firstCharacterOptions result = fTokenTree->analyzeFirstCharacter(rangeTok, fOptions, fTokenFactory);
 
-		if (result == Token::FC_TERMINAL) {
+        if (result == Token::FC_TERMINAL) {
 
-			rangeTok->compactRanges();
-			fFirstChar = rangeTok;
-		}
+            rangeTok->compactRanges();
+            fFirstChar = rangeTok;
+        }
 
         rangeTok->createMap();
 
@@ -1765,110 +1766,110 @@ void RegularExpression::prepare() {
         }
     }
 
-	if (fOperations != 0 && fOperations->getNextOp() == 0 &&
-		(fOperations->getOpType() == Op::O_STRING ||
+    if (fOperations != 0 && fOperations->getNextOp() == 0 &&
+        (fOperations->getOpType() == Op::O_STRING ||
          fOperations->getOpType() == Op::O_CHAR) &&
          !isSet(fOptions, IGNORE_CASE) )                      {
 
-		fFixedStringOnly = true;
+        fFixedStringOnly = true;
 
-		if (fOperations->getOpType() == Op::O_STRING) {
-			fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
-			fFixedString = XMLString::replicate(fOperations->getLiteral(), fMemoryManager);
-		}
-		else{
+        if (fOperations->getOpType() == Op::O_STRING) {
+            fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+            fFixedString = XMLString::replicate(fOperations->getLiteral(), fMemoryManager);
+        }
+        else{
 			
-			XMLInt32 ch = fOperations->getData();
+            XMLInt32 ch = fOperations->getData();
 
-			if ( ch >= 0x10000) { // add as constant
-				fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
-				fFixedString = RegxUtil::decomposeToSurrogates(ch, fMemoryManager);
-			}
-			else {
+            if ( ch >= 0x10000) { // add as constant
+                fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+                fFixedString = RegxUtil::decomposeToSurrogates(ch, fMemoryManager);
+            }
+            else {
 
-				XMLCh* dummyStr = (XMLCh*) fMemoryManager->allocate(2 * sizeof(XMLCh));//new XMLCh[2];
-				dummyStr[0] = (XMLCh) fOperations->getData();
-				dummyStr[1] = chNull;
-				fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
-				fFixedString = dummyStr;
-			}
-		}
+                XMLCh* dummyStr = (XMLCh*) fMemoryManager->allocate(2 * sizeof(XMLCh));//new XMLCh[2];
+                dummyStr[0] = (XMLCh) fOperations->getData();
+                dummyStr[1] = chNull;
+                fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+                fFixedString = dummyStr;
+            }
+        }
 
-		fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
-								  isSet(fOptions, IGNORE_CASE), fMemoryManager);
-	}
-	else if (!isSet(fOptions, XMLSCHEMA_MODE) &&		
+        fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
+                                                    isSet(fOptions, IGNORE_CASE), fMemoryManager);
+    }
+    else if (!isSet(fOptions, XMLSCHEMA_MODE) &&		
              !isSet(fOptions, PROHIBIT_FIXED_STRING_OPTIMIZATION) &&
              !isSet(fOptions, IGNORE_CASE)) {
 
-		int fixedOpts = 0;
-		Token* tok = fTokenTree->findFixedString(fOptions, fixedOpts);
+        int fixedOpts = 0;
+        Token* tok = fTokenTree->findFixedString(fOptions, fixedOpts);
 
-		fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+        fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
 
-		fFixedString = (tok == 0) ? 0
-			: XMLString::replicate(tok->getString(), fMemoryManager);
+        fFixedString = (tok == 0) ? 0
+            : XMLString::replicate(tok->getString(), fMemoryManager);
 
-		if (fFixedString != 0 && XMLString::stringLen(fFixedString) < 2) {
+        if (fFixedString != 0 && XMLString::stringLen(fFixedString) < 2) {
 
-			fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
-			fFixedString = 0;
-		}
+            fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+            fFixedString = 0;
+        }
 		
-		if (fFixedString != 0) {
+        if (fFixedString != 0) {
 
-			fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
-									   isSet(fixedOpts, IGNORE_CASE), fMemoryManager);
-		}
-	}
+            fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
+                                                        isSet(fixedOpts, IGNORE_CASE), fMemoryManager);
+        }
+    }
 }
 
 RegularExpression::wordType RegularExpression::getCharType(const XMLCh ch) {
 
     if (!isSet(fOptions, UNICODE_WORD_BOUNDARY)) {
 
-		if (isSet(fOptions, USE_UNICODE_CATEGORY)) {
+        if (isSet(fOptions, USE_UNICODE_CATEGORY)) {
 
-			if (fWordRange == 0) {
+            if (fWordRange == 0) {
 
-				fWordRange = fTokenFactory->getRange(fgUniIsWord);
-				if (fWordRange == 0)
-					ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, fMemoryManager);
-			}
+                fWordRange = fTokenFactory->getRange(fgUniIsWord);
+                    if (fWordRange == 0)
+                        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_RangeTokenGetError, fgUniIsWord, fMemoryManager);
+            }
 
-			return fWordRange->match(ch) ? wordTypeLetter : wordTypeOther;
-		}
+            return fWordRange->match(ch) ? wordTypeLetter : wordTypeOther;
+        }
 
         return RegxUtil::isWordChar(ch) ? wordTypeLetter : wordTypeIgnore;
     }
 
-	switch (XMLUniCharacter::getType(ch)) {
-	case XMLUniCharacter::UPPERCASE_LETTER:
-	case XMLUniCharacter::LOWERCASE_LETTER:
-	case XMLUniCharacter::TITLECASE_LETTER:
-	case XMLUniCharacter::MODIFIER_LETTER:
-	case XMLUniCharacter::OTHER_LETTER:
-	case XMLUniCharacter::LETTER_NUMBER:
-	case XMLUniCharacter::DECIMAL_DIGIT_NUMBER:
-	case XMLUniCharacter::OTHER_NUMBER:
-	case XMLUniCharacter::COMBINING_SPACING_MARK:
-		return wordTypeLetter;
-	case XMLUniCharacter::FORMAT:
-	case XMLUniCharacter::NON_SPACING_MARK:
-	case XMLUniCharacter::ENCLOSING_MARK:
-		return wordTypeIgnore;
-	case XMLUniCharacter::CONTROL:
-		switch (ch) {
-		case chHTab:
-		case chLF:
-		case chVTab:
-		case chFF:
-		case chCR:
-			return wordTypeOther;
-		default:
-			return wordTypeIgnore;
-		}
-	}
+    switch (XMLUniCharacter::getType(ch)) {
+    case XMLUniCharacter::UPPERCASE_LETTER:
+    case XMLUniCharacter::LOWERCASE_LETTER:
+    case XMLUniCharacter::TITLECASE_LETTER:
+    case XMLUniCharacter::MODIFIER_LETTER:
+    case XMLUniCharacter::OTHER_LETTER:
+    case XMLUniCharacter::LETTER_NUMBER:
+    case XMLUniCharacter::DECIMAL_DIGIT_NUMBER:
+    case XMLUniCharacter::OTHER_NUMBER:
+    case XMLUniCharacter::COMBINING_SPACING_MARK:
+        return wordTypeLetter;
+    case XMLUniCharacter::FORMAT:
+    case XMLUniCharacter::NON_SPACING_MARK:
+    case XMLUniCharacter::ENCLOSING_MARK:
+        return wordTypeIgnore;
+    case XMLUniCharacter::CONTROL:
+        switch (ch) {
+        case chHTab:
+        case chLF:
+        case chVTab:
+        case chFF:
+        case chCR:
+            return wordTypeOther;
+        default:
+            return wordTypeIgnore;
+        }
+    }
 
     return wordTypeOther;
 }
