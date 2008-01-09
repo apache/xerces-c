@@ -60,6 +60,10 @@ if test x$LD = x; then
 	esac
 fi
 
+#skip detection of Fortran
+m4_undefine([AC_PROG_F77])
+m4_defun([AC_PROG_F77],[])
+
 AC_PROG_LN_S
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
@@ -119,11 +123,51 @@ AC_CHECK_FUNCS([getcwd pathconf realpath \
 		memmove memset nl_langinfo setlocale localeconv \
 		strcasecmp strncasecmp stricmp strnicmp strchr strdup \
 		strrchr strstr strtol strtoul \
-		towupper towlower \
-		mblen mbrlen wcsrtombs mbsrtowcs \
+		towupper towlower mblen \
         wcsupr wcslwr wcsnicmp wcsicmp \
 		])
-				
+
+# The check for mbrlen, wcsrtombs and mbsrtowcs gives a false
+# positive on HP-UX, so we use a different snippet to set the
+# corresponding macro
+AC_MSG_CHECKING([for mbrlen])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]], 
+                                     [[mbstate_t st; mbrlen( "t", 5, &st );]])],
+                    [ 
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([HAVE_MBRLEN], 1, [Define to 1 if you have the `mbrlen' function.])
+                    ],
+                    [ 
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([HAVE_MBRLEN], 0, [Define to 1 if you have the `mbrlen' function.])
+                    ]
+                 )
+AC_MSG_CHECKING([for wcsrtombs])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]], 
+                                     [[mbstate_t st; char buffer[2]; wchar_t src[2]; wcsrtombs(buffer, &src, 2, &st);]])],
+                    [ 
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 1, [Define to 1 if you have the `wcsrtombs' function.])
+                    ],
+                    [ 
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 0, [Define to 1 if you have the `wcsrtombs' function.])
+                    ]
+                 )
+AC_MSG_CHECKING([for mbsrtowcs])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]], 
+                                     [[mbstate_t st; wchar_t buffer[2]; char src[2]; mbsrtowcs(buffer, &src, 2, &st);]])],
+                    [ 
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 1, [Define to 1 if you have the `mbsrtowcs' function.])
+                    ],
+                    [ 
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 0, [Define to 1 if you have the `mbsrtowcs' function.])
+                    ]
+                 )
+
+
 AC_SUBST([SHREXT], [$shrext_cmds])
 
 #
