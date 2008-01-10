@@ -519,7 +519,7 @@ XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
     XMLCh* resultString = localBuffer;
     size_t srcLen = strlen(toTranscode);
 
-    while(true)
+    while(srcLen > srcCursor)
     {
         wchar_t wcBuf[1];
         int len = mbtowc(wcBuf, toTranscode + srcCursor, srcLen - srcCursor);
