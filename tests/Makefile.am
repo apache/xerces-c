@@ -112,6 +112,12 @@ XSerializerTest_SOURCES = 			src/XSerializerTest/XSerializerHandlers.cpp \
 									src/XSerializerTest/XSerializerTest.cpp \
 									src/XSerializerTest/XSerializerTest.hpp
 
+testprogs +=                        XSTSHarness
+XSTSHarness_SOURCES =               src/XSTSHarness/XSTSHarness.cpp \
+                                    src/XSTSHarness/XSTSHarness.hpp \
+                                    src/XSTSHarness/XSTSHarnessHandlers.cpp \
+                                    src/XSTSHarness/XSTSHarnessHandlers.hpp
+
 # Fails to compile under gcc4 (values too long for long type)
 testprogs +=						XSValueTest
 XSValueTest_SOURCES = 				src/XSValueTest/XSValueTest.cpp \

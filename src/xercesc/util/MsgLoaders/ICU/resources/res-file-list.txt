@@ -1,1 +1,0 @@
-XercesMessages3_0_0_en_US.res

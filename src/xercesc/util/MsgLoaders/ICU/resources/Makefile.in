@@ -29,6 +29,7 @@ INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 mkdir_p = @mkdir_p@
 
+# Special build rules
 include $(top_srcdir)/version.incl
 
 GENRB=$(ICU_PREFIX)/bin/genrb
@@ -39,7 +40,7 @@ RMV=rm -rf
 
 # No conventional target - this dir is resources only.
 TARGET=
-CLEANFILES += *.mak *.[co] *.lst *.a *.$(SO) $(RESFILES) *.ao README*resources.txt
+CLEANFILES += *.[co] *.lst *.a *.$(SO) $(RESFILES) *.ao README*resources.txt
 
 # Resource shortname
 PKGNAME=XercesMessages$(VER)
@@ -86,10 +87,38 @@ $(PKGNAME)_%.res: $(srcdir)/%.txt
 	@echo "generating $@"
 	$(GENRB) $(GENRBOPT) $^
 
-# for installing the library
+# Needed to support "make install" and "make uninstall"
 install: $(RESTARGET)
 	$(mkdir_p) $(libdir)
 	$(INSTALL_PROGRAM) $(RESTARGET) $(libdir)
 
 uninstall: 
 	-rm $(libdir)/$(PKGTARGET)
+
+# Needed to support "make dist"
+distdir:
+	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
+	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
+	list='res-file-list-unix.txt res-file-list-wins.txt en_US.txt Makefile.in resources.mak'; \
+	  dist_files=`for file in $$list; do echo $$file; done | \
+	  sed -e "s|^$$srcdirstrip/||;t" \
+	      -e "s|^$$topsrcdirstrip/|$(top_builddir)/|;t"`; \
+	case $$dist_files in \
+	  */*) $(MKDIR_P) `echo "$$dist_files" | \
+			   sed '/\//!d;s|^|$(distdir)/|;s,/[^/]*$$,,' | \
+			   sort -u` ;; \
+	esac; \
+	for file in $$dist_files; do \
+	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
+	  if test -d $$d/$$file; then \
+	    dir=`echo "/$$file" | sed -e 's,/[^/]*$$,,'`; \
+	    if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
+	      cp -pR $(srcdir)/$$file $(distdir)$$dir || exit 1; \
+	    fi; \
+	    cp -pR $$d/$$file $(distdir)$$dir || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done

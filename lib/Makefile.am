@@ -29,9 +29,9 @@ noinst_LTLIBRARIES =				libcompat.la
 #
 # Build convenience libraries for the various xerces components
 #
-#noinst_libcompat_la_HEADERS =		
-libcompat_la_SOURCES =				xerces_compat.c
-libcompat_la_LIBADD =				${LTLIBOBJS}
+EXTRA_DIST =                        stricmp.h strnicmp.h towlower.h towupper.h
+libcompat_la_SOURCES =              xerces_compat.c
+libcompat_la_LIBADD =               ${LTLIBOBJS}
 
 #
 # Override generated rules to provide prettier make rules

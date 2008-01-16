@@ -52,6 +52,7 @@ src_libraries =
 src_libraries +=					libutil.la
 libutil_ladir =						${includedir}
 nobase_libutil_la_HEADERS =			${util_headers}
+nobase_nodist_libutil_la_HEADERS =    ${builddir}/xercesc/util/Xerces_autoconf_config.hpp
 libutil_la_SOURCES =				${util_sources}
 
 src_libraries +=					libdom.la
@@ -671,7 +672,6 @@ sax2_headers = \
 sax2_sources = \
 	xercesc/sax2/sax2Dummy.cpp
 		
-
 util_headers = \
 	xercesc/util/ArrayIndexOutOfBoundsException.hpp \
 	xercesc/util/Base64.hpp \
@@ -782,7 +782,6 @@ util_headers = \
 	xercesc/util/ValueVectorOf.c \
 	xercesc/util/XercesDefs.hpp \
 	xercesc/util/XercesVersion.hpp \
-	xercesc/util/Xerces_autoconf_config.hpp \
 	xercesc/util/XMemory.hpp \
 	xercesc/util/XML256TableTranscoder.hpp \
 	xercesc/util/XML88591Transcoder.hpp \
