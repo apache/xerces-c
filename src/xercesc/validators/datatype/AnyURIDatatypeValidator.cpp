@@ -85,7 +85,7 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content
             // Encode special characters using XLink 5.4 algorithm
 			XMLBuffer encoded((len*3)+1, manager);
             encode(content, len, encoded, manager);
-            validURI = XMLUri::isValidURI(true, encoded.getRawBuffer(), true);            
+            validURI = XMLUri::isValidURI(true, encoded.getRawBuffer());            
         }
     }
     catch(const OutOfMemoryException&)
