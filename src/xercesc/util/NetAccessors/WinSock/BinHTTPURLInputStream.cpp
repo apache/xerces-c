@@ -305,27 +305,29 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     //   and transcode them back to ASCII.
     //
     const XMLCh*        hostName = urlSource.getHost();
-    char*               hostNameAsCharStar = XMLString::transcode(hostName, urlSource.getMemoryManager());
-    ArrayJanitor<char>  janBuf1(hostNameAsCharStar, urlSource.getMemoryManager());
+    char*               hostNameAsCharStar = XMLString::transcode(hostName, fMemoryManager);
+    ArrayJanitor<char>  janHostName(hostNameAsCharStar, fMemoryManager);
 
     const XMLCh*        path = urlSource.getPath();
-    char*               pathAsCharStar = XMLString::transcode(path, urlSource.getMemoryManager());
-    ArrayJanitor<char>  janBuf2(pathAsCharStar, urlSource.getMemoryManager());
+    char*               pathAsCharStar = XMLString::transcode(path, fMemoryManager);
+    ArrayJanitor<char>  janPath(pathAsCharStar, fMemoryManager);
 
     const XMLCh*        fragment = urlSource.getFragment();
     char*               fragmentAsCharStar = 0;
     if (fragment)
-        fragmentAsCharStar = XMLString::transcode(fragment, urlSource.getMemoryManager());
-    ArrayJanitor<char>  janBuf3(fragmentAsCharStar, urlSource.getMemoryManager());
+        fragmentAsCharStar = XMLString::transcode(fragment, fMemoryManager);
+    ArrayJanitor<char>  janFragment(fragmentAsCharStar, fMemoryManager);
 
     const XMLCh*        query = urlSource.getQuery();
     char*               queryAsCharStar = 0;
     if (query)
-        queryAsCharStar = XMLString::transcode(query, urlSource.getMemoryManager());
-    ArrayJanitor<char>  janBuf4(queryAsCharStar, urlSource.getMemoryManager());		
+        queryAsCharStar = XMLString::transcode(query, fMemoryManager);
+    ArrayJanitor<char>  janQuery(queryAsCharStar, fMemoryManager);		
 
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
 
+    const XMLCh* username = urlSource.getUser();
+    const XMLCh* password = urlSource.getPassword();
     //
     // Set up a socket.
     //
@@ -372,221 +374,310 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
 
-    if ((hostEntPtr = wrap_gethostbyname(hostNameAsCharStar)) == NULL)
-    {
-        unsigned long  numAddress = wrap_inet_addr(hostNameAsCharStar);
-        if (numAddress == INADDR_NONE)
-        {
-            // Call WSAGetLastError() to get the error number.
-            ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
-        }
-        if ((hostEntPtr =wrap_gethostbyaddr((const char *) &numAddress,
-                                            sizeof(unsigned long), AF_INET)) == NULL)
-        {
-            // Call WSAGetLastError() to get the error number.
-            ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
-        }
-    }
+    bool sawRedirect;
+    int redirectCount = 0;
+    SOCKET s;
+    SocketJanitor janSock(0);
+    bool lookUpHost = true;
+ 
+    do {
 
-    memcpy((void *) &sa.sin_addr,
+        if (lookUpHost && 
+            ((hostEntPtr = wrap_gethostbyname(hostNameAsCharStar)) == NULL))
+        {             
+            unsigned long  numAddress = inet_addr(hostNameAsCharStar);
+            if (numAddress == INADDR_NONE)
+            {
+                // Call WSAGetLastError() to get the error number.
+                ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+            }
+            if ((hostEntPtr =
+                wrap_gethostbyaddr((const char *) &numAddress,
+                              sizeof(unsigned long), AF_INET)) == NULL)
+            {
+                // Call WSAGetLastError() to get the error number.
+                ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+            }
+        }
+        lookUpHost = false;
+
+        memcpy((void *) &sa.sin_addr,
            (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
-    sa.sin_family = hostEntPtr->h_addrtype;
-    sa.sin_port = wrap_htons(portNumber);
 
-    SOCKET s = wrap_socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
-    if (s == INVALID_SOCKET)
-    {
-        // Call WSAGetLastError() to get the error number.
-        ThrowXMLwithMemMgr1(NetAccessorException,
+        sa.sin_family = hostEntPtr->h_addrtype;
+        sa.sin_port = wrap_htons(portNumber);
+
+        if (janSock.get())
+            janSock.release();
+        s = wrap_socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
+        if (s == INVALID_SOCKET)
+        {
+            // Call WSAGetLastError() to get the error number.
+            ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
-    }
-    SocketJanitor janSock(&s);
+        }
+        janSock.reset(&s);
 
-    if (wrap_connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
-    {
-        // Call WSAGetLastError() to get the error number.
-        ThrowXMLwithMemMgr1(NetAccessorException,
+        if (wrap_connect(s, (struct sockaddr *) &sa, sizeof(sa)) == SOCKET_ERROR)
+        {
+            // Call WSAGetLastError() to get the error number.
+            ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
-    }
+        }
 
 #endif
 
-    // Set a flag so we know that the headers have not been read yet.
-    bool fHeaderRead = false;
+        // Set a flag so we know that the headers have not been read yet.
+        bool fHeaderRead = false;
+        sawRedirect = false;
 
-    // The port is open and ready to go.
-    // Build up the http GET command to send to the server.
-    // To do:  We should really support http 1.1.  This implementation
-    //         is weak.
+        // The port is open and ready to go.
+        // Build up the http GET command to send to the server.
+        // To do:  We should really support http 1.1.  This implementation
+        //         is weak.
 
-    memset(fBuffer, 0, sizeof(fBuffer));
+        memset(fBuffer, 0, sizeof(fBuffer));
 
-    if(httpInfo==0)
-        strcpy(fBuffer, "GET ");
-    else {
-        switch(httpInfo->fHTTPMethod) {
-        case XMLNetHTTPInfo::GET:   strcpy(fBuffer, "GET "); break;
-        case XMLNetHTTPInfo::PUT:   strcpy(fBuffer, "PUT "); break;
-        case XMLNetHTTPInfo::POST:  strcpy(fBuffer, "POST "); break;
+        if(httpInfo==0)
+            strcpy(fBuffer, "GET ");
+        else {
+            switch(httpInfo->fHTTPMethod) {
+            case XMLNetHTTPInfo::GET:   strcpy(fBuffer, "GET "); break;
+            case XMLNetHTTPInfo::PUT:   strcpy(fBuffer, "PUT "); break;
+            case XMLNetHTTPInfo::POST:  strcpy(fBuffer, "POST "); break;
+            }
         }
-    }
-    strcat(fBuffer, pathAsCharStar);
+        strcat(fBuffer, pathAsCharStar);
 
-    if (queryAsCharStar != 0)
-    {
-        // Tack on a ? before the fragment
-        strcat(fBuffer,"?");
-        strcat(fBuffer, queryAsCharStar);
-    }
-
-    if (fragmentAsCharStar != 0)
-    {
-        strcat(fBuffer, fragmentAsCharStar);
-    }
-    strcat(fBuffer, " HTTP/1.0\r\n");
-
-
-    strcat(fBuffer, "Host: ");
-    strcat(fBuffer, hostNameAsCharStar);
-    if (portNumber != 80)
-    {
-        strcat(fBuffer, ":");
-        size_t i = strlen(fBuffer);
-        XMLString::binToText(portNumber, fBuffer+i, 10, 10);
-    }
-    strcat(fBuffer, "\r\n");
-
-    const XMLCh* username = urlSource.getUser();
-    const XMLCh* password = urlSource.getPassword();
-    if (username && password)
-    {
-        XMLBuffer userPass(256, fMemoryManager);
-        userPass.append(username);
-        userPass.append(chColon);
-        userPass.append(password);
-        char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
-        ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
-
-        XMLSize_t len;
-        XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
-        ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
- 
-        if (encodedData)
+        if (queryAsCharStar != 0)
         {
-            // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
-            XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
-            ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
-            XMLByte* cursor=authData;
-            for(XMLSize_t i=0;i<len;i++)
-                if(encodedData[i]!=chLF)
-                    *cursor++=encodedData[i];
-            *cursor++=0;
-            strcat(fBuffer, "Authorization: Basic ");
-            strcat(fBuffer, (char*)authData);
-            strcat(fBuffer, "\r\n");
+            // Tack on a ? before the fragment
+            strcat(fBuffer,"?");
+            strcat(fBuffer, queryAsCharStar);
         }
-    }
 
-    if(httpInfo!=0 && httpInfo->fHeaders!=0)
-        strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
+        if (fragmentAsCharStar != 0)
+        {
+            strcat(fBuffer, fragmentAsCharStar);
+        }
+        strcat(fBuffer, " HTTP/1.0\r\n");
 
-    strcat(fBuffer, "\r\n");
 
-    // Send the http request
-    int lent = (int)strlen(fBuffer);
-    int  aLent = 0;
-    if ((aLent = wrap_send(s, fBuffer, lent, 0)) != lent)
-    {
-        // Call WSAGetLastError() to get the error number.
-        ThrowXMLwithMemMgr1(NetAccessorException,
-                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
-    }
+        strcat(fBuffer, "Host: ");
+        strcat(fBuffer, hostNameAsCharStar);
+        if (portNumber != 80)
+        {
+            strcat(fBuffer, ":");
+            size_t i = strlen(fBuffer);
+            XMLString::binToText(portNumber, fBuffer+i, 10, 10);
+        }
+        strcat(fBuffer, "\r\n");
+       
+        if (username && password)
+        {
+            XMLBuffer userPass(256, fMemoryManager);
+            userPass.append(username);
+            userPass.append(chColon);
+            userPass.append(password);
+            char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
+            ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
+            XMLSize_t len;
+            XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
+            ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
 
-    if(httpInfo!=0 && httpInfo->fPayload!=0) {
-        if ((aLent = wrap_send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
+            if (encodedData)
+            {
+                // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
+                XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
+                ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
+                XMLByte* cursor=authData;
+                for(XMLSize_t i=0;i<len;i++)
+                    if(encodedData[i]!=chLF)
+                        *cursor++=encodedData[i];
+                *cursor++=0;
+                strcat(fBuffer, "Authorization: Basic ");
+                strcat(fBuffer, (char*)authData);
+                strcat(fBuffer, "\r\n");
+            }
+        }
+
+        if(httpInfo!=0 && httpInfo->fHeaders!=0)
+            strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
+
+        strcat(fBuffer, "\r\n");
+
+        // Send the http request
+        int lent = (int)strlen(fBuffer);
+        int  aLent = 0;
+        if ((aLent = wrap_send(s, fBuffer, lent, 0)) != lent)
         {
             // Call WSAGetLastError() to get the error number.
             ThrowXMLwithMemMgr1(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+        }
+
+        if(httpInfo!=0 && httpInfo->fPayload!=0) {            
+            if ((aLent = wrap_send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
+            {
+                // Call WSAGetLastError() to get the error number.
+                ThrowXMLwithMemMgr1(NetAccessorException,
                      XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+            }
         }
-    }
-
-    //
-    // get the response, check the http header for errors from the server.
-    //
-    memset(fBuffer, 0, sizeof(fBuffer));
-    aLent = wrap_recv(s, fBuffer, sizeof(fBuffer)-1, 0);
-    if (aLent == SOCKET_ERROR || aLent == 0)
-    {
-        // Call WSAGetLastError() to get the error number.
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
-    }
-
-    fBufferEnd = fBuffer+aLent;
-    *fBufferEnd = 0;
-
-    do {
-        // Find the break between the returned http header and any data.
-        //  (Delimited by a blank line)
-        // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
+       
+        // get the response, check the http header for errors from the server.
         //
-        fBufferPos = strstr(fBuffer, "\r\n\r\n");
-        if (fBufferPos != 0)
+        memset(fBuffer, 0, sizeof(fBuffer));
+        aLent = wrap_recv(s, fBuffer, sizeof(fBuffer)-1, 0);
+        if (aLent == SOCKET_ERROR || aLent == 0)
         {
-            fBufferPos += 4;
-            *(fBufferPos-2) = 0;
-            fHeaderRead = true;
+            // Call WSAGetLastError() to get the error number.
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
         }
-        else
-        {
-            fBufferPos = strstr(fBuffer, "\n\n");
+
+        fBufferEnd = fBuffer+aLent;
+        *fBufferEnd = 0;
+
+        do {
+            // Find the break between the returned http header and any data.
+            //  (Delimited by a blank line)
+            // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
+            //
+            fBufferPos = strstr(fBuffer, "\r\n\r\n");
             if (fBufferPos != 0)
             {
-                fBufferPos += 2;
-                *(fBufferPos-1) = 0;
+                fBufferPos += 4;
+                *(fBufferPos-2) = 0;
                 fHeaderRead = true;
             }
             else
-            {
-                //
-                // Header is not yet read, do another recv() to get more data...
-                aLent = wrap_recv(s, fBufferEnd, (int)((sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer)), 0);
-                if (aLent == SOCKET_ERROR || aLent == 0)
+            {               
+                fBufferPos = strstr(fBuffer, "\n\n");
+                if (fBufferPos != 0)
                 {
-                    // Call WSAGetLastError() to get the error number.
+                    fBufferPos += 2;
+                    *(fBufferPos-1) = 0;
+                    fHeaderRead = true;
+                }
+                else
+                {
+                    //
+                    // Header is not yet read, do another recv() to get more data...
+                    aLent = wrap_recv(s, fBufferEnd, (int)((sizeof(fBuffer) - 1) - (fBufferEnd - fBuffer)), 0);
+                    if (aLent == SOCKET_ERROR || aLent == 0)
+                    {
+                        // Call WSAGetLastError() to get the error number.
+                        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+                    }
+                    fBufferEnd = fBufferEnd + aLent;
+                    *fBufferEnd = 0;
+                }
+            }
+        } while(fHeaderRead == false);
+
+        // Make sure the header includes an HTTP 200 OK response.
+        //
+        char *p = strstr(fBuffer, "HTTP");
+        if (p == 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+        }
+
+        p = strchr(p, ' ');
+        if (p == 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+        }
+
+        int httpResponse = atoi(p);
+        if (httpResponse != 200)
+        {
+            // a 3xx response means there was a HTTP redirect
+            if (httpResponse >= 300 && httpResponse < 400) {
+                sawRedirect = true;
+                redirectCount++;
+
+                p = strstr(fBuffer, "Location: ");               
+                if (p == 0)
+                {
                     ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
                 }
-                fBufferEnd = fBufferEnd + aLent;
-                *fBufferEnd = 0;
+                p += 10; // Length of string "Location: "
+            
+                char* endP = strstr(p, "\r\n");
+                if (endP == 0) 
+                {
+                    ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+                }
+                endP[0] = chNull;
+
+                XMLURL newURL(fMemoryManager);                
+                XMLCh* newURLString = XMLString::transcode(p, fMemoryManager);
+                ArrayJanitor<XMLCh>  janNewURLString(newURLString, fMemoryManager);
+
+                // The location string is either of the form:
+                // local.xsd (ie. a relative URL)
+                // http://host/path (ie. an absolute path)
+                char* colonP = strstr(p, ":");
+                if (colonP == 0) {
+                    // if no colon assume relative url
+                    newURL.setURL(urlSource, newURLString);                   
+                }
+                else {  
+                    // if colon then either a schema is specified or
+                    // a port is specified
+                    newURL.setURL(newURLString);     
+
+                    if (newURL.getProtocol() != XMLURL::HTTP) {                                               
+                        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, newURL.getURLText(), fMemoryManager);                    
+                    }
+
+                    const XMLCh* newHostName = newURL.getHost();
+                    if (XMLString::compareIStringASCII(hostName, newHostName) != 0) {
+                        lookUpHost = true;
+                        janHostName.release();
+                        hostNameAsCharStar = XMLString::transcode(newHostName, fMemoryManager);
+                        janHostName.reset(hostNameAsCharStar);
+                    }
+                }
+                    
+                path = newURL.getPath();
+                janPath.release();
+                pathAsCharStar = XMLString::transcode(path, fMemoryManager);
+                janPath.reset(pathAsCharStar);
+
+                fragment = newURL.getFragment();
+                janFragment.release();
+                fragmentAsCharStar = 0;
+                if (fragment)
+                    fragmentAsCharStar = XMLString::transcode(fragment, fMemoryManager);
+                janFragment.reset(fragmentAsCharStar);
+
+                query = newURL.getQuery();
+                janQuery.release();
+                queryAsCharStar = 0;
+                if (query)
+                    queryAsCharStar = XMLString::transcode(query, fMemoryManager);
+                janQuery.reset(queryAsCharStar);   
+
+                portNumber = (unsigned short) newURL.getPortNum();                
+
+                username = newURL.getUser();
+                password = newURL.getPassword();
+            }
+            else {
+                // Most likely a 404 Not Found error.
+                //   Should recognize and handle the forwarding responses.
+                //
+                ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
             }
         }
-    } while(fHeaderRead == false);
 
-    // Make sure the header includes an HTTP 200 OK response.
-    //
-    char *p = strstr(fBuffer, "HTTP");
-    if (p == 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
     }
-
-    p = strchr(p, ' ');
-    if (p == 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
-    }
-
-    int httpResponse = atoi(p);
-    if (httpResponse != 200)
-    {
-        // Most likely a 404 Not Found error.
-        //   Should recognize and handle the forwarding responses.
-        //
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
-    }
-
+    while(sawRedirect && redirectCount <6);
+                
     fSocketHandle = (unsigned int) *janSock.release();
 }
 

@@ -164,6 +164,11 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         chSpace, chDigit_2, chDigit_0, chDigit_0, chSpace, chNull
     };
 
+    const char LOCATION[] =
+    { 
+    	chLatin_L, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chColon, chSpace, chNull 
+   	};
+
     XMLSize_t charsEaten;
     XMLSize_t transSize;
     XMLTransService::Codes failReason;
@@ -186,7 +191,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     //
 
     char*               hostNameAsCharStar = XMLString::transcode(hostName, fMemoryManager);
-    ArrayJanitor<char>  janBuf1(hostNameAsCharStar, fMemoryManager);
+    ArrayJanitor<char>  janHostNameAsCharStar(hostNameAsCharStar, fMemoryManager);
 
     //
     //  Convert all the parts of the urlSource object to ASCII so they can be
@@ -198,13 +203,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     (
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
-    ArrayJanitor<char>  janBuf2(hostNameAsASCII, fMemoryManager);
+    ArrayJanitor<char>  janHostNameAsASCII(hostNameAsASCII, fMemoryManager);
 
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, fMemoryManager);
+
     trans->transcodeTo(hostName, transSize, (XMLByte*) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    Janitor<XMLTranscoder> janTranscoder(trans);
 
     char*               pathAsASCII = 0;
-    ArrayJanitor<char>  janBuf3(pathAsASCII, fMemoryManager);
+    ArrayJanitor<char>  janPathAsASCII(pathAsASCII, fMemoryManager);
     if (path)
     {
         transSize = XMLString::stringLen(path)+1;
@@ -212,12 +219,12 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
-        janBuf3.reset(pathAsASCII, fMemoryManager);
+        janPathAsASCII.reset(pathAsASCII, fMemoryManager);
         trans->transcodeTo(path, transSize, (XMLByte*) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     char*               fragmentAsASCII = 0;
-    ArrayJanitor<char>  janBuf4(fragmentAsASCII, fMemoryManager);
+    ArrayJanitor<char>  janfragmentAsASCII(fragmentAsASCII, fMemoryManager);
     if (fragment)
     {
         transSize = XMLString::stringLen(fragment)+1;
@@ -225,12 +232,12 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
-        janBuf4.reset(fragmentAsASCII, fMemoryManager);
+        janfragmentAsASCII.reset(fragmentAsASCII, fMemoryManager);
         trans->transcodeTo(fragment, transSize, (XMLByte*) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
     char*               queryAsASCII = 0;
-    ArrayJanitor<char>  janBuf5(queryAsASCII, fMemoryManager);
+    ArrayJanitor<char>  janqueryAsASCII(queryAsASCII, fMemoryManager);
     if (query)
     {
         transSize = XMLString::stringLen(query)+1;
@@ -238,7 +245,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         (
             (transSize+1) * sizeof(char)
         );//new char[transSize+1];
-        janBuf5.reset(queryAsASCII, fMemoryManager);
+        janqueryAsASCII.reset(queryAsASCII, fMemoryManager);
         trans->transcodeTo(query, transSize, (XMLByte*) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
     }
 
@@ -254,10 +261,11 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     (
         (transSize+1) * sizeof(char)
     );//new char[transSize+1];
-    ArrayJanitor<char>  janBuf6(portAsASCII, fMemoryManager);
+    ArrayJanitor<char>  janportAsASCII(portAsASCII, fMemoryManager);
     trans->transcodeTo(portBuffer, transSize, (XMLByte*) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
 
-    delete trans;
+    const XMLCh* username = urlSource.getUser();
+    const XMLCh* password = urlSource.getPassword();
 
     //
     // Set up a socket.
@@ -301,193 +309,322 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
 
-    // Use the hostName in the local code page ....
-    if ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL)
-    {
-        unsigned long numAddress = inet_addr(hostNameAsCharStar);
-        if ((hostEntPtr =
+	bool sawRedirect;
+	bool lookUpHost = true;
+	int redirectCount = 0;
+	int s;
+    SocketJanitor janSock(0);
+    
+	do {
+		sawRedirect = false;
+		
+    	// Use the hostName in the local code page ....
+    	if (lookUpHost &&
+    		((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL))
+    	{   
+            unsigned long  numAddress = inet_addr(hostNameAsCharStar);
+            if ((hostEntPtr =
                 gethostbyaddr((char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
+            {
+                ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+            }
+        }
+        lookUpHost = false;
+
+        memset(&sa, '\0', sizeof(sockaddr_in));  // iSeries fix ??
+        memcpy((void *) &sa.sin_addr,
+               (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
+        sa.sin_family = hostEntPtr->h_addrtype;
+        sa.sin_port = htons(portNumber);
+
+        if (janSock.get())
+            janSock.release();
+        s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
+        if (s < 0)
         {
             ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
-        }
-    }
-
-    memset(&sa, '\0', sizeof(sockaddr_in));  // iSeries fix ??
-    memcpy((void *) &sa.sin_addr,
-           (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
-    sa.sin_family = hostEntPtr->h_addrtype;
-    sa.sin_port = htons(portNumber);
-
-    int s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
-    if (s < 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
-    }
-    SocketJanitor janSock(&s);
+        }
+        janSock.reset(&s);
 
-    if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException,
+        if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException,
                  XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
-    }
+        }
 #endif
 
-    // The port is open and ready to go.
-    // Build up the http GET command to send to the server.
-    // To do:  We should really support http 1.1.  This implementation
-    //         is weak.
-    if(httpInfo==0)
-      strcpy(fBuffer, GET);
-    else
-      switch(httpInfo->fHTTPMethod)
-      {
-        case XMLNetHTTPInfo::GET:   strcpy(fBuffer, GET); break;
-        case XMLNetHTTPInfo::PUT:   strcpy(fBuffer, PUT); break;
-        case XMLNetHTTPInfo::POST:  strcpy(fBuffer, POST); break;
-      }
-    if (pathAsASCII != 0)
-    {
-         strcat(fBuffer, pathAsASCII);
-    }
-
-    if (queryAsASCII != 0)
-    {
-        size_t n = strlen(fBuffer);
-        fBuffer[n] = chQuestion;
-        fBuffer[n+1] = chNull;
-        strcat(fBuffer, queryAsASCII);
-    }
-
-    if (fragmentAsASCII != 0)
-    {
-        strcat(fBuffer, fragmentAsASCII);
-    }
-    strcat(fBuffer, HTTP10);
-
-    strcat(fBuffer, HOST);
-    strcat(fBuffer, hostNameAsASCII);
-    if (portNumber != 80)
-    {
-        strcat(fBuffer,COLON);
-        strcat(fBuffer,portAsASCII);
-    }
-    strcat(fBuffer, CRLF);
-
-    const XMLCh* username = urlSource.getUser();
-    const XMLCh* password = urlSource.getPassword();
-    if (username && password)
-    {
-        XMLBuffer userPass(256, fMemoryManager);
-        userPass.append(username);
-        userPass.append(chColon);
-        userPass.append(password);
-        char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
-        ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
-
-        XMLSize_t len;
-        XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
-        ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
- 
-        if (encodedData)
+        // The port is open and ready to go.
+        // Build up the http GET command to send to the server.
+        // To do:  We should really support http 1.1.  This implementation
+        //         is weak.
+        if(httpInfo==0)
+           strcpy(fBuffer, GET);
+        else
+            switch(httpInfo->fHTTPMethod)
+            {
+                case XMLNetHTTPInfo::GET:   strcpy(fBuffer, GET); break;
+                case XMLNetHTTPInfo::PUT:   strcpy(fBuffer, PUT); break;
+                case XMLNetHTTPInfo::POST:  strcpy(fBuffer, POST); break;
+            }
+        if (pathAsASCII != 0)
         {
-            // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
-            XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
-            ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
-            XMLByte* cursor=authData;
-            for(XMLSize_t i=0;i<len;i++)
-                if(encodedData[i]!=chLF)
-                    *cursor++=encodedData[i];
-            *cursor++=0;
-            strcat(fBuffer, AUTHORIZATION);
-            strcat(fBuffer, (char*)authData);
-            strcat(fBuffer, CRLF);
+             strcat(fBuffer, pathAsASCII);
         }
-    }
 
-    if(httpInfo!=0 && httpInfo->fHeaders!=0)
-        strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
+        if (queryAsASCII != 0)
+        {
+            size_t n = strlen(fBuffer);
+            fBuffer[n] = chQuestion;
+            fBuffer[n+1] = chNull;
+            strcat(fBuffer, queryAsASCII);
+        }
 
-    strcat(fBuffer, CRLF);
+        if (fragmentAsASCII != 0)
+        {
+            strcat(fBuffer, fragmentAsASCII);
+        }
+        strcat(fBuffer, HTTP10);
 
-    // Send the http request
-    int lent = strlen(fBuffer);
-    int  aLent = 0;
+        strcat(fBuffer, HOST);
+        strcat(fBuffer, hostNameAsASCII);
+        if (portNumber != 80)
+        {
+            strcat(fBuffer,COLON);
+            strcat(fBuffer,portAsASCII);
+        }
+        strcat(fBuffer, CRLF);
 
-    if ((aLent = write(s, (void *) fBuffer, lent)) != lent)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException,
-                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
-    }
+        if (username && password)
+        {
+            XMLBuffer userPass(256, fMemoryManager);
+            userPass.append(username);
+            userPass.append(chColon);
+            userPass.append(password);
+            char* userPassAsCharStar = XMLString::transcode(userPass.getRawBuffer(), fMemoryManager);
+            ArrayJanitor<char>  janBuf(userPassAsCharStar, fMemoryManager);
 
-    if(httpInfo!=0 && httpInfo->fPayload!=0) {
+            XMLSize_t len;
+            XMLByte* encodedData = Base64::encode((XMLByte *)userPassAsCharStar, strlen(userPassAsCharStar), &len, fMemoryManager);
+            ArrayJanitor<XMLByte>  janBuf2(encodedData, fMemoryManager);
+ 
+            if (encodedData)
+            {
+                // HTTP doesn't want the 0x0A separating the data in chunks of 76 chars per line
+                XMLByte* authData = (XMLByte*)fMemoryManager->allocate((len+1)*sizeof(XMLByte));
+                ArrayJanitor<XMLByte>  janBuf(authData, fMemoryManager);
+                XMLByte* cursor=authData;
+                for(XMLSize_t i=0;i<len;i++)
+                    if(encodedData[i]!=chLF)
+                        *cursor++=encodedData[i];
+                *cursor++=0;
+                strcat(fBuffer, AUTHORIZATION);
+                strcat(fBuffer, (char*)authData);
+                strcat(fBuffer, CRLF);
+            }
+        }      
+
+        if(httpInfo!=0 && httpInfo->fHeaders!=0)
+            strncat(fBuffer,httpInfo->fHeaders,httpInfo->fHeadersLen);
+
+        strcat(fBuffer, CRLF);
+
+        // Send the http request
+        int lent = strlen(fBuffer);
         int  aLent = 0;
-        if ((aLent = write(s, (void *) httpInfo->fPayload, httpInfo->fPayloadLen)) != httpInfo->fPayloadLen)
+
+        if ((aLent = write(s, (void *) fBuffer, lent)) != lent)
         {
             ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+                 XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
         }
-    }
 
-    //
-    // get the response, check the http header for errors from the server.
-    //
-    aLent = read(s, (void *)fBuffer, sizeof(fBuffer)-1);
-    if (aLent <= 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
-    }
+        if(httpInfo!=0 && httpInfo->fPayload!=0) {
+            int  aLent = 0;
+            if ((aLent = write(s, (void *) httpInfo->fPayload, httpInfo->fPayloadLen)) != httpInfo->fPayloadLen)
+            {
+                ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
+            }
+        }
 
-    fBufferEnd = fBuffer+aLent;
-    *fBufferEnd = 0;
+        //
+        // get the response, check the http header for errors from the server.
+        //
+        aLent = read(s, (void *)fBuffer, sizeof(fBuffer)-1);
+        if (aLent <= 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+        }
 
-    // Find the break between the returned http header and any data.
-    //  (Delimited by a blank line)
-    // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
-    //
-    fBufferPos = strstr(fBuffer, CRLF2X);
-    if (fBufferPos != 0)
-    {
-        fBufferPos += 4;
-        *(fBufferPos-2) = 0;
-    }
-    else
-    {
-        fBufferPos = strstr(fBuffer, LF2X);
+        fBufferEnd = fBuffer+aLent;
+        *fBufferEnd = 0;
+
+        // Find the break between the returned http header and any data.
+        //  (Delimited by a blank line)
+        // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
+        //
+        fBufferPos = strstr(fBuffer, CRLF2X);
         if (fBufferPos != 0)
         {
-            fBufferPos += 2;
-            *(fBufferPos-1) = 0;
+            fBufferPos += 4;
+            *(fBufferPos-2) = 0;
         }
         else
-            fBufferPos = fBufferEnd;
-    }
+        {
+            fBufferPos = strstr(fBuffer, LF2X);
+            if (fBufferPos != 0)
+            {
+                fBufferPos += 2;
+                *(fBufferPos-1) = 0;
+            }
+            else
+                fBufferPos = fBufferEnd;
+        }
 
-    // Make sure the header includes an HTTP 200 OK response.
-    //
-    char *p = strstr(fBuffer, HTTP);
-    if (p == 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
-    }
-
-    p = strchr(p, chSpace);
-    if (p == 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
-    }
-  
-    if (memcmp(p, resp200, strlen(resp200)))
-    {
-        // Most likely a 404 Not Found error.
-        //   Should recognize and handle the forwarding responses.
+        // Make sure the header includes an HTTP 200 OK response.
         //
-        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
-    }
+        char *p = strstr(fBuffer, HTTP);
+        if (p == 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+        }
 
-    fSocket = *janSock.release();
+        p = strchr(p, chSpace);
+        if (p == 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+        }
+  
+        if (memcmp(p, resp200, strlen(resp200)))
+        {
+            // a 3xx response means there was a HTTP redirect
+            if (p[1] = chDigit_3) {
+                sawRedirect = true;
+                redirectCount++;
+
+                p = strstr(fBuffer, LOCATION);               
+                if (p == 0)
+                {
+                    ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+                }
+                p += 10; // Length of string "Location: "
+            
+                char* endP = strstr(p, CRLF);
+                if (endP == 0) 
+                {
+                    ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
+                }
+                endP[0] = chNull;
+
+                XMLURL newURL(fMemoryManager);                
+                XMLCh* newURLString = XMLString::transcode(p, fMemoryManager);
+                ArrayJanitor<XMLCh>  janNewURLString(newURLString, fMemoryManager);
+
+                // The location string is either of the form:
+                // local.xsd (ie. a relative URL)
+                // http://host/path (ie. an absolute path)
+                char* colonP = strstr(p, COLON);
+                if (colonP == 0) {
+                    // if no colon assume relative url
+                    newURL.setURL(urlSource, newURLString);                   
+                }
+                else {  
+                    // if colon then either a schema is specified or
+                    // a port is specified
+                    newURL.setURL(newURLString);     
+
+                    if (newURL.getProtocol() != XMLURL::HTTP) {                                               
+                        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, newURL.getURLText(), fMemoryManager);                    
+                    }
+
+                    const XMLCh* newHostName = newURL.getHost();
+                    if (XMLString::compareIStringASCII(hostName, newHostName) != 0) {
+                        lookUpHost = true;
+                        janHostNameAsCharStar.release();
+                        hostNameAsCharStar = XMLString::transcode(newHostName, fMemoryManager);
+                        janHostNameAsCharStar.reset(hostNameAsCharStar, fMemoryManager);
+                        
+                        janHostNameAsASCII.release();
+   						transSize = XMLString::stringLen(newHostName)+1;
+   						hostNameAsASCII = (char*) fMemoryManager->allocate
+    					(
+        					(transSize+1) * sizeof(char)
+    					);//new char[transSize+1];
+    					janHostNameAsASCII.reset(hostNameAsASCII, fMemoryManager);
+     					trans->transcodeTo(newHostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);                        
+                    }
+                }
+                    
+                path = newURL.getPath();   
+   	 			if (path) {
+   	 				janPathAsASCII.release();
+        			transSize = XMLString::stringLen(path)+1;
+        			pathAsASCII = (char*) fMemoryManager->allocate
+        			(
+            			(transSize+1) * sizeof(char)
+        			);//new char[transSize+1];
+        			janPathAsASCII.reset(pathAsASCII, fMemoryManager);
+        			trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    			}                
+                
+                fragment = newURL.getFragment();
+    			if (fragment) {
+    				janfragmentAsASCII.release();
+        			transSize = XMLString::stringLen(fragment)+1;
+        			fragmentAsASCII = (char*) fMemoryManager->allocate
+        			(
+            			(transSize+1) * sizeof(char)
+        			);//new char[transSize+1];
+        			janfragmentAsASCII.reset(fragmentAsASCII, fMemoryManager);
+        			trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    			}                
+                               
+                query = newURL.getQuery();                               
+    			if (query) {
+    				janqueryAsASCII.release();
+        			transSize = XMLString::stringLen(query)+1;
+        			queryAsASCII = (char*) fMemoryManager->allocate
+        			(
+            			(transSize+1) * sizeof(char)
+        			);//new char[transSize+1];
+        			janqueryAsASCII.reset(queryAsASCII, fMemoryManager);
+        			trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    			}                
+                                 
+
+                portNumber = (unsigned short) newURL.getPortNum();                                
+                //
+    			//  Convert port number integer to unicode so we can transcode it to ASCII
+    			//
+
+				janportAsASCII.release();
+    			XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10, fMemoryManager);
+    			transSize = XMLString::stringLen(portBuffer)+1;
+    			portAsASCII = (char*) fMemoryManager->allocate
+    				(
+        				(transSize+1) * sizeof(char)
+    				);//new char[transSize+1];
+    			janportAsASCII.reset(portAsASCII, fMemoryManager);
+    			trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);                        
+
+                username = newURL.getUser();
+                password = newURL.getPassword();
+            }
+            else {    		
+        		// Most likely a 404 Not Found error.
+        		//   Should recognize and handle the forwarding responses.
+        		//
+        		ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
+        	}
+    	}
+
+	}
+	while (sawRedirect && redirectCount < 6);
+
+   fSocket = *janSock.release();
 
 }
 
