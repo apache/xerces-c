@@ -1434,9 +1434,10 @@ void DOMReleaseTests()
     for(i=0;i<20000;i++)
     {
         sprintf(tempchar, "time is %lu\n",XMLPlatformUtils::getCurrentMillis());
-        XMLSize_t len = strlen(tempchar);
-        for (XMLSize_t j = len; j < 4000-len; j++)
+        XMLSize_t len = strlen(tempchar), j;
+        for (j = len; j < 4000-len; j++)
             tempchar[j] = 'a';
+        tempchar[j]=0;
         pAttr->setNodeValue(X(tempchar));
     }
 
@@ -1444,9 +1445,10 @@ void DOMReleaseTests()
     for(i=0;i<20000;i++)
     {
         sprintf(tempchar, "time is %lu\n",XMLPlatformUtils::getCurrentMillis());
-        XMLSize_t len = strlen(tempchar);
-        for (XMLSize_t j = len; j < 4000-len; j++)
+        XMLSize_t len = strlen(tempchar), j;
+        for (j = len; j < 4000-len; j++)
             tempchar[j] = 'a';
+        tempchar[j]=0;
         text->setNodeValue(X(tempchar));
     }
 
