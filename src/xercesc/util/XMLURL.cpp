@@ -102,7 +102,7 @@ static ProtoEntry gProtoList[XMLURL::Protocols_Count] =
 };
 
 // !!! Keep these up to date with list above!
-static const unsigned int gMaxProtoLen = 4;
+static const unsigned int gMaxProtoLen = 5;
 
 static const XMLCh gListOne[]    = { chColon, chForwardSlash, chNull };
 static const XMLCh gListTwo[]    = { chAt, chNull };
