@@ -100,8 +100,8 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     * To open user-specified locale specific cat file
     * and default cat file if necessary
     */
-    if ( ((int)(fCatalogHandle=catopen(catuser, 0)) == -1) &&
-         ((int)(fCatalogHandle=catopen(catdefault, 0)) == -1)   )
+    if ( ((fCatalogHandle=catopen(catuser, 0)) == (nl_catd)-1) &&
+         ((fCatalogHandle=catopen(catdefault, 0)) == (nl_catd)-1)   )
     {
         // Probably have to call panic here
         printf("Could not open catalog:\n %s\n or %s\n", catuser, catdefault);
