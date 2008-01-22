@@ -41,7 +41,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 const bool XSerializeEngine::toWriteBufferLen = true;
 const bool XSerializeEngine::toReadBufferLen  = true;
 
-static const int noDataFollowed = -1;
+static const unsigned long noDataFollowed = (unsigned long)-1;
 
 static const XSerializeEngine::XSerializedObjectId_t fgNullObjectTag  = 0;           // indicating null ptrs
 static const XSerializeEngine::XSerializedObjectId_t fgNewClassTag    = 0xFFFFFFFF;  // indicating new class
@@ -488,7 +488,9 @@ void XSerializeEngine::readString(XMLCh*&       toRead
     /***
      * Check if any data written
      ***/
-    *this>>(unsigned long&)bufferLen;
+    unsigned long tmp;
+    *this>>tmp;
+    bufferLen=tmp;
 
     if (bufferLen == noDataFollowed)
     {
@@ -500,7 +502,8 @@ void XSerializeEngine::readString(XMLCh*&       toRead
 
     if (toReadBufLen)
     {
-        *this>>(unsigned long&)dataLen;
+        *this>>tmp;
+        dataLen=tmp;
     }
     else
     {
@@ -520,7 +523,9 @@ void XSerializeEngine::readString(XMLByte*&     toRead
     /***
      * Check if any data written
      ***/
-    *this>>(unsigned long&)bufferLen;
+    unsigned long tmp;
+    *this>>tmp;
+    bufferLen=tmp;
     if (bufferLen == noDataFollowed)
     {
         toRead = 0;
@@ -531,7 +536,8 @@ void XSerializeEngine::readString(XMLByte*&     toRead
 
     if (toReadBufLen)
     {
-        *this>>(unsigned long&)dataLen;
+        *this>>tmp;
+        dataLen=tmp;
     }
     else
     {
