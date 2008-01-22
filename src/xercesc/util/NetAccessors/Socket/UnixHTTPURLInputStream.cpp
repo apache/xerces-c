@@ -270,58 +270,59 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
     //
     // Set up a socket.
     //
-#if HAVE_GETADDRINFO
-    struct addrinfo hints, *res, *ai;
-
-    memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = PF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    int n = getaddrinfo(hostNameAsCharStar,portAsASCII,&hints, &res);
-    if(n<0)
-    {
-        hints.ai_flags = AI_NUMERICHOST;
-        n = getaddrinfo(hostNameAsCharStar,portAsASCII,&hints, &res);
-        if(n<0)
-            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
-    }
+    bool sawRedirect=false;
+    bool lookUpHost = true;
+    int redirectCount = 0;
     int s;
-    for (ai = res; ai != NULL; ai = ai->ai_next) {
-        // Open a socket with the correct address family for this address.
-        s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-        if (s < 0)
-            continue;
-        if (connect(s, ai->ai_addr, ai->ai_addrlen) < 0)
-        {
-            freeaddrinfo(res);
-            ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
-        }
-        break;
-    }
-    freeaddrinfo(res);
-    if (s < 0)
-    {
-        ThrowXMLwithMemMgr1(NetAccessorException,
-                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
-    }
-    SocketJanitor janSock(&s);
-#else
-    struct hostent*     hostEntPtr = 0;
-    struct sockaddr_in  sa;
-
-	bool sawRedirect;
-	bool lookUpHost = true;
-	int redirectCount = 0;
-	int s;
     SocketJanitor janSock(0);
     
-	do {
-		sawRedirect = false;
+    do {
+        sawRedirect = false;
 		
-    	// Use the hostName in the local code page ....
-    	if (lookUpHost &&
-    		((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL))
-    	{   
+#if HAVE_GETADDRINFO
+        struct addrinfo hints, *res, *ai;
+
+        memset(&hints, 0, sizeof(struct addrinfo));
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        int n = getaddrinfo(hostNameAsCharStar,portAsASCII,&hints, &res);
+        if(n<0)
+        {
+            hints.ai_flags = AI_NUMERICHOST;
+            n = getaddrinfo(hostNameAsCharStar,portAsASCII,&hints, &res);
+            if(n<0)
+                ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+        }
+        if (janSock.get())
+            janSock.release();
+        for (ai = res; ai != NULL; ai = ai->ai_next) {
+            // Open a socket with the correct address family for this address.
+            s = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+            if (s < 0)
+                continue;
+            if (connect(s, ai->ai_addr, ai->ai_addrlen) < 0)
+            {
+                freeaddrinfo(res);
+                ThrowXMLwithMemMgr1(NetAccessorException,
+                         XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
+            }
+            break;
+        }
+        freeaddrinfo(res);
+        if (s < 0)
+        {
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
+        }
+        janSock.reset(&s);
+#else
+        struct hostent*     hostEntPtr = 0;
+        struct sockaddr_in  sa;
+
+        // Use the hostName in the local code page ....
+        if (lookUpHost &&
+            ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL))
+        {   
             unsigned long  numAddress = inet_addr(hostNameAsCharStar);
             if ((hostEntPtr =
                 gethostbyaddr((char *) &numAddress,
@@ -548,84 +549,83 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
                         janHostNameAsCharStar.reset(hostNameAsCharStar, fMemoryManager);
                         
                         janHostNameAsASCII.release();
-   						transSize = XMLString::stringLen(newHostName)+1;
-   						hostNameAsASCII = (char*) fMemoryManager->allocate
-    					(
-        					(transSize+1) * sizeof(char)
-    					);//new char[transSize+1];
-    					janHostNameAsASCII.reset(hostNameAsASCII, fMemoryManager);
-     					trans->transcodeTo(newHostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);                        
+                        transSize = XMLString::stringLen(newHostName)+1;
+                        hostNameAsASCII = (char*) fMemoryManager->allocate
+                            (
+                                (transSize+1) * sizeof(char)
+                            );//new char[transSize+1];
+                        janHostNameAsASCII.reset(hostNameAsASCII, fMemoryManager);
+                        trans->transcodeTo(newHostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);                        
                     }
                 }
                     
                 path = newURL.getPath();   
-   	 			if (path) {
-   	 				janPathAsASCII.release();
-        			transSize = XMLString::stringLen(path)+1;
-        			pathAsASCII = (char*) fMemoryManager->allocate
-        			(
-            			(transSize+1) * sizeof(char)
-        			);//new char[transSize+1];
-        			janPathAsASCII.reset(pathAsASCII, fMemoryManager);
-        			trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
-    			}                
+                if (path) {
+                    janPathAsASCII.release();
+                    transSize = XMLString::stringLen(path)+1;
+                    pathAsASCII = (char*) fMemoryManager->allocate
+                        (
+                            (transSize+1) * sizeof(char)
+                        );//new char[transSize+1];
+                    janPathAsASCII.reset(pathAsASCII, fMemoryManager);
+                    trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+                }                
                 
                 fragment = newURL.getFragment();
-    			if (fragment) {
-    				janfragmentAsASCII.release();
-        			transSize = XMLString::stringLen(fragment)+1;
-        			fragmentAsASCII = (char*) fMemoryManager->allocate
-        			(
-            			(transSize+1) * sizeof(char)
-        			);//new char[transSize+1];
-        			janfragmentAsASCII.reset(fragmentAsASCII, fMemoryManager);
-        			trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
-    			}                
+                if (fragment) {
+                    janfragmentAsASCII.release();
+                    transSize = XMLString::stringLen(fragment)+1;
+                    fragmentAsASCII = (char*) fMemoryManager->allocate
+                        (
+                            (transSize+1) * sizeof(char)
+                        );//new char[transSize+1];
+                    janfragmentAsASCII.reset(fragmentAsASCII, fMemoryManager);
+                    trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+                }                
                                
                 query = newURL.getQuery();                               
-    			if (query) {
-    				janqueryAsASCII.release();
-        			transSize = XMLString::stringLen(query)+1;
-        			queryAsASCII = (char*) fMemoryManager->allocate
-        			(
-            			(transSize+1) * sizeof(char)
-        			);//new char[transSize+1];
-        			janqueryAsASCII.reset(queryAsASCII, fMemoryManager);
-        			trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
-    			}                
+                if (query) {
+                    janqueryAsASCII.release();
+                    transSize = XMLString::stringLen(query)+1;
+                    queryAsASCII = (char*) fMemoryManager->allocate
+                        (
+                            (transSize+1) * sizeof(char)
+                        );//new char[transSize+1];
+                    janqueryAsASCII.reset(queryAsASCII, fMemoryManager);
+                    trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+                }                
                                  
 
                 portNumber = (unsigned short) newURL.getPortNum();                                
                 //
-    			//  Convert port number integer to unicode so we can transcode it to ASCII
-    			//
+                //  Convert port number integer to unicode so we can transcode it to ASCII
+                //
 
-				janportAsASCII.release();
-    			XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10, fMemoryManager);
-    			transSize = XMLString::stringLen(portBuffer)+1;
-    			portAsASCII = (char*) fMemoryManager->allocate
-    				(
-        				(transSize+1) * sizeof(char)
-    				);//new char[transSize+1];
-    			janportAsASCII.reset(portAsASCII, fMemoryManager);
-    			trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);                        
+                janportAsASCII.release();
+                XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10, fMemoryManager);
+                transSize = XMLString::stringLen(portBuffer)+1;
+                portAsASCII = (char*) fMemoryManager->allocate
+                    (
+                        (transSize+1) * sizeof(char)
+                    );//new char[transSize+1];
+                janportAsASCII.reset(portAsASCII, fMemoryManager);
+                trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);                        
 
                 username = newURL.getUser();
                 password = newURL.getPassword();
             }
             else {    		
-        		// Most likely a 404 Not Found error.
-        		//   Should recognize and handle the forwarding responses.
-        		//
-        		ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
-        	}
-    	}
+                // Most likely a 404 Not Found error.
+                //   Should recognize and handle the forwarding responses.
+                //
+                ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText(), fMemoryManager);
+            }
+        }
 
-	}
-	while (sawRedirect && redirectCount < 6);
+    }
+    while (sawRedirect && redirectCount < 6);
 
-   fSocket = *janSock.release();
-
+    fSocket = *janSock.release();
 }
 
 
