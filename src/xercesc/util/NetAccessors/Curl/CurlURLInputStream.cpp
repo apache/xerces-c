@@ -222,19 +222,23 @@ CurlURLInputStream::readBytes(XMLByte* const          toFill
 		// read any yet on this invocation, call select to wait for data
 		if (!tryAgain && fBytesRead == 0)
 		{
-			fd_set readSet[16];
-			fd_set writeSet[16];
-			fd_set exceptSet[16];
-			int fdcnt = 16;
+			fd_set readSet;
+			fd_set writeSet;
+			fd_set exceptSet;
+			int fdcnt=0;
+
+			FD_ZERO(&readSet);
+			FD_ZERO(&writeSet);
+			FD_ZERO(&exceptSet);
 			
 			// As curl for the file descriptors to wait on
-			(void) curl_multi_fdset(fMulti, readSet, writeSet, exceptSet, &fdcnt);
+			curl_multi_fdset(fMulti, &readSet, &writeSet, &exceptSet, &fdcnt);
 			
 			// Wait on the file descriptors
 			timeval tv;
 			tv.tv_sec  = 2;
 			tv.tv_usec = 0;
-			(void) select(fdcnt, readSet, writeSet, exceptSet, &tv);
+			select(fdcnt+1, &readSet, &writeSet, &exceptSet, &tv);
 		}
 	}
 	
