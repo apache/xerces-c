@@ -331,49 +331,6 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     //
     // Set up a socket.
     //
-#ifdef WITH_IPV6
-    struct addrinfo hints, *res, *ai;
-
-    memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = PF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    char tempbuf[10];
-    XMLString::binToText(portNumber, tempbuf, 10, 10);
-    int n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
-    if(n<0)
-    {
-        hints.ai_flags = AI_NUMERICHOST;
-        n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
-        if(n<0)
-            ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
-    }
-    SOCKET s;
-    for (ai = res; ai != NULL; ai = ai->ai_next) {
-        // Open a socket with the correct address family for this address.
-        s = wrap_socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-        if (s == INVALID_SOCKET)
-            continue;
-        if (wrap_connect(s, ai->ai_addr, ai->ai_addrlen) == SOCKET_ERROR)
-        {
-            wrap_freeaddrinfo(res);
-            // Call WSAGetLastError() to get the error number.
-            ThrowXMLwithMemMgr1(NetAccessorException,
-                     XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
-        }
-        break;
-    }
-    wrap_freeaddrinfo(res);
-    if (s == INVALID_SOCKET)
-    {
-        // Call WSAGetLastError() to get the error number.
-        ThrowXMLwithMemMgr1(NetAccessorException,
-                 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
-    }
-    SocketJanitor janSock(&s);
-#else
-    struct hostent*     hostEntPtr = 0;
-    struct sockaddr_in  sa;
-
     bool sawRedirect;
     int redirectCount = 0;
     SOCKET s;
@@ -381,6 +338,50 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     bool lookUpHost = true;
  
     do {
+
+#ifdef WITH_IPV6
+		struct addrinfo hints, *res, *ai;
+
+		memset(&hints, 0, sizeof(struct addrinfo));
+		hints.ai_family = PF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		char tempbuf[10];
+		XMLString::binToText(portNumber, tempbuf, 10, 10);
+		int n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+		if(n<0)
+		{
+			hints.ai_flags = AI_NUMERICHOST;
+			n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+			if(n<0)
+				ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, fMemoryManager);
+		}
+		if (janSock.get())
+			janSock.release();
+		for (ai = res; ai != NULL; ai = ai->ai_next) {
+			// Open a socket with the correct address family for this address.
+			s = wrap_socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+			if (s == INVALID_SOCKET)
+				continue;
+			if (wrap_connect(s, ai->ai_addr, (int)ai->ai_addrlen) == SOCKET_ERROR)
+			{
+				wrap_freeaddrinfo(res);
+				// Call WSAGetLastError() to get the error number.
+				ThrowXMLwithMemMgr1(NetAccessorException,
+						 XMLExcepts::NetAcc_ConnSocket, urlSource.getURLText(), fMemoryManager);
+			}
+			break;
+		}
+		wrap_freeaddrinfo(res);
+		if (s == INVALID_SOCKET)
+		{
+			// Call WSAGetLastError() to get the error number.
+			ThrowXMLwithMemMgr1(NetAccessorException,
+					 XMLExcepts::NetAcc_CreateSocket, urlSource.getURLText(), fMemoryManager);
+		}
+		janSock.reset(&s);
+#else
+		struct hostent*     hostEntPtr = 0;
+		struct sockaddr_in  sa;
 
         if (lookUpHost && 
             ((hostEntPtr = wrap_gethostbyname(hostNameAsCharStar)) == NULL))
