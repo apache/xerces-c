@@ -52,7 +52,7 @@ src_libraries =
 src_libraries +=					libutil.la
 libutil_ladir =						${includedir}
 nobase_libutil_la_HEADERS =			${util_headers}
-nobase_nodist_libutil_la_HEADERS =    ${builddir}/xercesc/util/Xerces_autoconf_config.hpp
+nobase_nodist_libutil_la_HEADERS =    ${top_builddir}/src/xercesc/util/Xerces_autoconf_config.hpp
 libutil_la_SOURCES =				${util_sources}
 
 src_libraries +=					libdom.la
