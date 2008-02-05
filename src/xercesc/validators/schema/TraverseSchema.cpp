@@ -387,7 +387,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                           fSchemaInfo?fSchemaInfo->getNamespaceScope():NULL,
-                                          XMLString::replicate(schemaURL, fGrammarPoolMemoryManager),
+                                          schemaURL,
                                           fTargetNSURIString, schemaRoot,
                                           fGrammarPoolMemoryManager);
 
@@ -692,7 +692,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
             fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                          fSchemaInfo->getNamespaceScope(),
-                                         XMLString::replicate(includeURL, fGrammarPoolMemoryManager),
+                                         includeURL,
                                          fTargetNSURIString, root,
                                          fGrammarPoolMemoryManager);
 
@@ -8217,7 +8217,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         redefSchemaInfo = fSchemaInfo;
         Janitor<SchemaInfo> newSchemaInfo(new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                      fSchemaInfo->getNamespaceScope(),
-                                     XMLString::replicate(includeURL, fGrammarPoolMemoryManager),
+                                     includeURL,
                                      fTargetNSURIString, root,
                                      fGrammarPoolMemoryManager));
         fSchemaInfo = newSchemaInfo.get();

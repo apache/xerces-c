@@ -82,7 +82,7 @@ public:
                const int targetNSURI,
                const int scopeCount,
                const NamespaceScope* const currNamespaceScope,
-               XMLCh* const schemaURL,
+               const XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
                const DOMElement* const root,
                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -92,7 +92,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XMLCh*                            getCurrentSchemaURL() const;
+    XMLCh* const                      getCurrentSchemaURL() const;
     const XMLCh* const                getTargetNSURIString() const;
     const DOMElement*                 getRoot() const;
     bool                              getProcessed() const;
@@ -162,7 +162,7 @@ private:
     int                               fScopeCount;
     NamespaceScope*                   fNamespaceScope;
     XMLCh*                            fCurrentSchemaURL;
-    const XMLCh*                      fTargetNSURIString;
+    XMLCh*                            fTargetNSURIString;
     const DOMElement*                 fSchemaRootElement;
     RefVectorOf<SchemaInfo>*          fIncludeInfoList;
     RefVectorOf<SchemaInfo>*          fImportedInfoList;
@@ -205,7 +205,7 @@ inline NamespaceScope* SchemaInfo::getNamespaceScope() const {
     return fNamespaceScope;
 }
 
-inline XMLCh* SchemaInfo::getCurrentSchemaURL() const {
+inline XMLCh* const SchemaInfo::getCurrentSchemaURL() const {
 
     return fCurrentSchemaURL;
 }

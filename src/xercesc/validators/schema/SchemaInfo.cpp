@@ -40,7 +40,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const int targetNSURI,
                        const int scopeCount,
                        const NamespaceScope* const currNamespaceScope,
-                       XMLCh* const schemaURL,
+                       const XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
                        const DOMElement* const root,
                        MemoryManager* const manager)
@@ -52,8 +52,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fTargetNSURI(targetNSURI)
     , fScopeCount(scopeCount)
     , fNamespaceScope(0)
-    , fCurrentSchemaURL(schemaURL)
-    , fTargetNSURIString(targetNSURIString)
     , fSchemaRootElement(root)
     , fIncludeInfoList(0)
     , fImportedInfoList(0)
@@ -80,12 +78,15 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
     fNamespaceScope = new (fMemoryManager) NamespaceScope(currNamespaceScope, fMemoryManager);
+    fCurrentSchemaURL = XMLString::replicate(schemaURL, fMemoryManager);
+	fTargetNSURIString = XMLString::replicate(targetNSURIString, fMemoryManager);
 }
 
 
 SchemaInfo::~SchemaInfo()
 {
     fMemoryManager->deallocate(fCurrentSchemaURL);//delete [] fCurrentSchemaURL;
+	fMemoryManager->deallocate(fTargetNSURIString);
     delete fImportedInfoList;
 
     if (fAdoptInclude)
