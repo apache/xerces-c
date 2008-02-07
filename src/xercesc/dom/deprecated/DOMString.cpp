@@ -1123,4 +1123,3 @@ static void reinitDomMutex()
 
 XERCES_CPP_NAMESPACE_END
 
-
