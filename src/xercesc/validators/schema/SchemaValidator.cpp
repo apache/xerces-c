@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -194,15 +194,15 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         //  the notation pool (after the Grammar is parsed), then obviously
                         //  this value will be legal since it matches one of them.
                         int colonPos = -1;
-                        unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);                        
+                        unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);
 
                         const XMLCh* uriText = getScanner()->getURIText(uriId);
                         if (uriText && *uriText) {
                             fNotationBuf->set(uriText);
-                            fNotationBuf->append(chColon);                                
+                            fNotationBuf->append(chColon);
                             fNotationBuf->append(&value[colonPos + 1]);
                             value = fNotationBuf->getRawBuffer();
-                        }                        
+                        }
                     }
 
                     if (elemDefaultValue)
@@ -422,7 +422,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
                 const XMLCh* uriText = getScanner()->getURIText(uriId);
                 if (uriText && *uriText) {
                     notationBuf.set(uriText);
-                    notationBuf.append(chColon);                                
+                    notationBuf.append(chColon);
                     notationBuf.append(&attrValue[colonPos + 1]);
                 }
                 else {
@@ -442,7 +442,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         }
         catch (XMLException& idve) {
             fErrorOccurred = true;
-            emitError (XMLValid::DatatypeError, idve.getCode(), idve.getType(), idve.getMessage());       
+            emitError (XMLValid::DatatypeError, idve.getCode(), idve.getType(), idve.getMessage());
         }
         catch(const OutOfMemoryException&)
         {
@@ -453,7 +453,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
             fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
             fErrorOccurred = true;
             throw;
-        } 
+        }
         fMostRecentAttrValidator = attDefDV;
         // now we can look for ID's, entities, ...
 
@@ -561,7 +561,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                         fErrorOccurred = true;
                     }
                     else {
-                        if (elemTypeInfo || (fCurrentDatatypeValidator  
+                        if (elemTypeInfo || (fCurrentDatatypeValidator
                                 && !fCurrentDatatypeValidator->isSubstitutableBy(xsiTypeDV))) {
                             // the type is not derived from ancestor
                             emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
@@ -1193,7 +1193,7 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
                 {
                     ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_InvalidContentType, fMemoryManager);
                 }
-            }		
+            }
         }
     case ContentSpecNode::Any:
     case ContentSpecNode::Any_Other:
@@ -1442,27 +1442,28 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
         return;
     }
 
-    SchemaGrammar* aGrammar = currentGrammar;
-    const XMLCh* schemaURI = fGrammarResolver->getStringPool()->getValueForId(derivedURI);
+    SchemaGrammar* dGrammar = currentGrammar;
 
-    if (derivedURI != getScanner()->getEmptyNamespaceId()) {
-        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(schemaURI);
+    if (derivedURI != getScanner()->getEmptyNamespaceId())
+    {
+        const XMLCh* dURI = fGrammarResolver->getStringPool()->getValueForId(derivedURI);
+        dGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(dURI);
     }
 
-    if (!aGrammar) { //something is wrong
+    if (!dGrammar) { //something is wrong
         return;
     }
-   
-    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();    
 
-    SchemaElementDecl* derivedElemDecl = findElement(derivedScope, derivedURI, derivedName, aGrammar);
+    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
+
+    SchemaElementDecl* derivedElemDecl = findElement(derivedScope, derivedURI, derivedName, dGrammar);
 
     if (!derivedElemDecl) {
         return;
     }
 
-	const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
-	unsigned int baseURI = baseSpecNode->getElement()->getURI();
+    const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
     bool subsGroup = false;
 
     if (!XMLString::equals(derivedName, baseName) || derivedURI != baseURI) {
@@ -1481,15 +1482,28 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
         }
 
         subsGroup = true;
-    } 
+    }
 
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
         ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName, fMemoryManager);
     }
 
+    // Find the schema grammar for the base element using the base type as
+    // a reference.
+    //
+    SchemaGrammar* bGrammar = currentGrammar;
+    const XMLCh* baseTypeURI = baseInfo->getTypeUri ();
+
+    if (baseTypeURI != 0 && *baseTypeURI != 0) // Non-empty namespace.
+        bGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(baseTypeURI);
+
+    if (!bGrammar) { //something is wrong
+        return;
+    }
+
     SchemaElementDecl* baseElemDecl =
-        findElement(baseScope, baseURI, baseName, aGrammar, baseInfo);
+        findElement(baseScope, baseURI, baseName, bGrammar, baseInfo);
 
     if (!baseElemDecl) {
         return;
@@ -1655,13 +1669,13 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
                                        ValueVectorOf<ContentSpecNode*>* const baseNodes,
                                        const ComplexTypeInfo* const baseInfo) {
 
-    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();    
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
     bool toLax = false;
 
     //Treat the element as if it were in a group of the same variety as base
     ContentSpecNode derivedGroupNode(baseType, derivedSpecNodeIn, 0, false, true, fMemoryManager);
     const ContentSpecNode* const derivedSpecNode = &derivedGroupNode;
-    
+
     if ((baseSpecNode->getType() & 0x0f) == ContentSpecNode::Choice) {
         toLax = true;
     }
@@ -1669,16 +1683,16 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
     // Instead of calling this routine, inline it
     // checkRecurse(currentGrammar, &derivedGroupNode, derivedScope, &derivedNodes,
     //             baseSpecNode, baseScope, baseNodes, baseInfo, toLax);
- 
+
     if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
                              baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_Recurse1, fMemoryManager);
     }
 
     // check for mapping of children
-    XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;   
+    XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
     unsigned int count2= baseNodes->size();
-    unsigned int current = 0;    
+    unsigned int current = 0;
 
     {
         bool matched = false;
@@ -1707,7 +1721,7 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
 
         // did not find a match
         if (!matched) {
-            codeToThrow = XMLExcepts::PD_Recurse2;            
+            codeToThrow = XMLExcepts::PD_Recurse2;
         }
     }
 
@@ -1716,7 +1730,7 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
     if (!toLax && codeToThrow == XMLExcepts::NoError) {
         for (unsigned int j = current; j < count2; j++) {
             if (baseNodes->elementAt(j)->getMinTotalRange() * baseSpecNode->getMinOccurs()) { //!emptiable
-                codeToThrow =  XMLExcepts::PD_Recurse2;                
+                codeToThrow =  XMLExcepts::PD_Recurse2;
                 break;
             }
         }
@@ -1747,7 +1761,7 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
     XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
     unsigned int count1= derivedNodes->size();
     unsigned int count2= baseNodes->size();
-    unsigned int current = 0;    
+    unsigned int current = 0;
 
     for (unsigned int i=0; i<count1; i++) {
 
@@ -1787,8 +1801,8 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
     // in case of Sequence or All
     if (!toLax && codeToThrow == XMLExcepts::NoError) {
         for (unsigned int j = current; j < count2; j++) {
-            if (baseNodes->elementAt(j)->getMinTotalRange()) { //!emptiable                
-                codeToThrow =  XMLExcepts::PD_Recurse2;                
+            if (baseNodes->elementAt(j)->getMinTotalRange()) { //!emptiable
+                codeToThrow =  XMLExcepts::PD_Recurse2;
                 break;
             }
         }
