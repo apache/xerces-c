@@ -1490,16 +1490,21 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     }
 
     // Find the schema grammar for the base element using the base type as
-    // a reference.
+    // a reference if it is available (it is unavailable if we are checking
+    // element group restriction which happens in redefine).
     //
-    SchemaGrammar* bGrammar = currentGrammar;
-    const XMLCh* baseTypeURI = baseInfo->getTypeUri ();
+    SchemaGrammar* bGrammar = dGrammar;
 
-    if (baseTypeURI != 0 && *baseTypeURI != 0) // Non-empty namespace.
-        bGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(baseTypeURI);
+    if (baseInfo)
+    {
+        const XMLCh* baseTypeURI = baseInfo->getTypeUri ();
 
-    if (!bGrammar) { //something is wrong
-        return;
+        if (baseTypeURI != 0 && *baseTypeURI != 0) // Non-empty namespace.
+            bGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(baseTypeURI);
+
+        if (!bGrammar) { //something is wrong
+            return;
+        }
     }
 
     SchemaElementDecl* baseElemDecl =
