@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xsd:annotation>
+        <xsd:documentation>SRGS 1.0 Core Schema (20021115)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:annotation>
+      <xsd:documentation>
+        Copyright 1998-2004 W3C (MIT, ERCIM, Keio),
+        All Rights Reserved. Permission to use, copy, modify and
+        distribute the SRGS core schema and its accompanying documentation
+        for any purpose and without fee is hereby granted in
+        perpetuity, provided that the above copyright notice and this
+        paragraph appear in all copies.  The copyright holders make no
+        representation about the suitability of the schema for any purpose. 
+        It is provided "as is" without expressed or implied warranty.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
+                schemaLocation="xml.xsd"/>
+    <xsd:annotation>
+        <xsd:documentation>General Datatypes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:annotation>
+        <xsd:documentation>Grammar-specific datatypes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleType name="tag">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="example">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="Id.datatype">
+        <xsd:annotation>
+            <xsd:documentation>
+does not expression the constraint that NULL VOID GARBAGE are illegal as rule name
+</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:ID">
+            <xsd:pattern value="[^.:\-]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Scope.datatype">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="private"/>
+            <xsd:enumeration value="public"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Special.datatype">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="NULL"/>
+            <xsd:enumeration value="VOID"/>
+            <xsd:enumeration value="GARBAGE"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Repeat-prob.datatype">
+        <xsd:restriction base="xsd:float">
+            <xsd:minInclusive value="0.0"/>
+            <xsd:maxInclusive value="1.0"/>
+            <xsd:pattern value="[0-9]"/>
+            <xsd:pattern value="[0-9][.]([0-9]+)?"/>
+            <xsd:pattern value="([0-9])?[.][0-9]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Repeat.datatype">
+        <xsd:annotation>
+            <xsd:documentation>
+does not expression the constraint in n-m that m must be greater than n
+</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]+"/>
+            <xsd:pattern value="[0-9]+-([0-9]+)?"/>
+            <xsd:pattern value="([0-9]+)?-[0-9]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Weight.datatype">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]+[.]?"/>
+            <xsd:pattern value="([0-9]+)?[.][0-9]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Tag-format.datatype">
+        <xsd:restriction base="xsd:anyURI"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="Version.datatype">
+        <xsd:restriction base="xsd:NMTOKEN"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="Root.datatype">
+        <xsd:annotation>
+            <xsd:documentation>does not expression the constraint that NULL VOID GARBAGE
+are illegal as rule name</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:IDREF">
+            <xsd:pattern value="[^.:\-]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Mode.datatype">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="voice"/>
+            <xsd:enumeration value="dtmf"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Type.datatype">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+    <xsd:annotation>
+        <xsd:documentation>Grammar Attributes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attributeGroup name="Tag-format.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="tag-format" type="Tag-format.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Version.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="version" type="Version.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Mode.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="mode" type="Mode.datatype" default="voice"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Root.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="root" type="Root.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Special.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="special" type="Special.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Repeat-prob.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="repeat-prob" type="Repeat-prob.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Repeat.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="repeat" type="Repeat.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Type.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="type" type="Type.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Weight.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="weight" type="Weight.datatype"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Id.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="Id.datatype" use="required"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Scope.attrib">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="scope" type="Scope.datatype" default="private"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Token.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute ref="xml:lang"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="One-of.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute ref="xml:lang"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Item.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attributeGroup ref="Repeat-prob.attrib"/>
+        <xsd:attributeGroup ref="Repeat.attrib"/>
+        <xsd:attributeGroup ref="Weight.attrib"/>
+        <xsd:attribute ref="xml:lang"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Grammar.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attributeGroup ref="Tag-format.attrib"/>
+        <xsd:attributeGroup ref="Version.attrib"/>
+        <xsd:attribute ref="xml:lang"/>
+        <xsd:attribute ref="xml:base"/>
+        <xsd:attributeGroup ref="Root.attrib"/>
+        <xsd:attributeGroup ref="Mode.attrib"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Ruleref.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attributeGroup ref="Type.attrib"/>
+        <xsd:attribute name="uri" type="xsd:anyURI"/>
+        <xsd:attributeGroup ref="Special.attrib"/>
+        <xsd:attribute ref="xml:lang"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Rule.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attributeGroup ref="Id.attrib"/>
+        <xsd:attributeGroup ref="Scope.attrib"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Lexicon.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="uri" type="xsd:anyURI" use="required"/>
+        <xsd:attributeGroup ref="Type.attrib"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="Meta.attribs">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:attribute name="name" type="xsd:NMTOKEN"/>
+        <xsd:attribute name="content" type="xsd:string" use="required"/>
+        <xsd:attribute name="http-equiv" type="xsd:NMTOKEN"/>
+    </xsd:attributeGroup>
+    <xsd:annotation>
+        <xsd:documentation>Content Models</xsd:documentation>
+    </xsd:annotation>
+    <xsd:group name="rule-expansion">
+        <xsd:choice>
+            <xsd:element name="token" type="token"/>
+            <xsd:element name="ruleref" type="ruleref"/>
+            <xsd:element name="item" type="item"/>
+            <xsd:element name="one-of" type="one-of"/>
+            <xsd:element name="tag" type="tag"/>
+        </xsd:choice>
+    </xsd:group>
+    <xsd:complexType name="ruleref">
+        <xsd:attributeGroup ref="Ruleref.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="token" mixed="true">
+        <xsd:annotation>
+            <xsd:documentation>does not expression the constraint that empty content is illegal
+</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attributeGroup ref="Token.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="one-of">
+        <xsd:sequence maxOccurs="unbounded">
+            <xsd:element name="item" type="item"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="One-of.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="item" mixed="true">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:group ref="rule-expansion"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="Item.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="rule" mixed="true">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:group ref="rule-expansion"/>
+            <xsd:element name="example" type="example"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="Rule.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="lexicon">
+        <xsd:attributeGroup ref="Lexicon.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="meta">
+        <xsd:attributeGroup ref="Meta.attribs"/>
+    </xsd:complexType>
+    <xsd:complexType name="metadata">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:any namespace="##other" processContents="lax"/>
+        </xsd:choice>
+        <xsd:anyAttribute namespace="##any" processContents="strict"/>
+    </xsd:complexType>
+
+    <xsd:group name="grammar.class">
+    <xsd:annotation>
+        <xsd:documentation>grammar content model</xsd:documentation>
+    </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="lexicon" type="lexicon"/>
+                <xsd:element name="meta" type="meta"/>
+                <xsd:element name="metadata" type="metadata"/>
+            </xsd:choice>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="rule" type="rule"/>
+            </xsd:choice>
+        </xsd:sequence>
+   </xsd:group>
+
+    <xsd:complexType name="grammar">
+    <xsd:annotation>
+        <xsd:documentation>grammar type with grammar content model and attributes</xsd:documentation>
+    </xsd:annotation>
+       <xsd:group ref="grammar.class"/>
+        <xsd:attributeGroup ref="Grammar.attribs"/>
+    </xsd:complexType>
+
+    <xsd:annotation>
+        <xsd:documentation>Global Elements</xsd:documentation>
+    </xsd:annotation>
+    <xsd:element name="grammar" type="grammar"/>
+</xsd:schema>
