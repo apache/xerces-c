@@ -809,9 +809,8 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode)
             wideCharBuf = (char *) toTranscode;
 
         // perform conversion
-        wLent *= uChSize();
         char    *ptr = retVal;
-        size_t    rc = iconvTo(wideCharBuf, (size_t *) &wLent, &ptr, neededLen);
+        size_t    rc = iconvTo(wideCharBuf, &len, &ptr, neededLen);
         if (rc == (size_t)-1) {
             if (wBufPtr)
             delete [] wBufPtr;
@@ -867,9 +866,8 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode,
             wideCharBuf = (char *) toTranscode;
 
         // perform conversion
-        wLent *= uChSize();
         char    *ptr = retVal;
-        size_t    rc = iconvTo(wideCharBuf, (size_t *) &wLent, &ptr, neededLen);
+        size_t    rc = iconvTo(wideCharBuf, &len, &ptr, neededLen);
         if (rc == (size_t)-1) {
             if (wBufPtr)
             manager->deallocate(wBufPtr);//delete [] wBufPtr;
