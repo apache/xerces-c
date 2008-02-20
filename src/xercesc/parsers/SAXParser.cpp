@@ -923,10 +923,9 @@ void SAXParser::startDocument()
 {
     // Just map to the SAX document handler
     if (fDocHandler)
-    {
         fDocHandler->setDocumentLocator(fScanner->getLocator());
+    if(fDocHandler)
         fDocHandler->startDocument();
-    }
 
     //
     //  If there are any installed advanced handlers, then lets call them
@@ -963,7 +962,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 fDocHandler->startElement(fElemQNameBuf.getRawBuffer(), fAttrList);
 
                 // If its empty, send the end tag event now
-                if (isEmpty)
+                if (isEmpty && fDocHandler)
                     fDocHandler->endElement(fElemQNameBuf.getRawBuffer());
             }
             else {
@@ -971,7 +970,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 fDocHandler->startElement(elemDecl.getBaseName(), fAttrList);
 
                 // If its empty, send the end tag event now
-                if (isEmpty)
+                if (isEmpty && fDocHandler)
                     fDocHandler->endElement(elemDecl.getBaseName());
             }
         }
@@ -979,7 +978,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             fDocHandler->startElement(elemDecl.getFullName(), fAttrList);
 
             // If its empty, send the end tag event now
-            if (isEmpty)
+            if (isEmpty && fDocHandler)
                 fDocHandler->endElement(elemDecl.getFullName());
         }
     }
