@@ -755,7 +755,7 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode,
 
     // perform conversion
     char    *ptr = retVal;
-    size_t    rc = iconvTo(wideCharBuf, (size_t *) &len, &ptr, neededLen);
+    size_t    rc = iconvTo(wideCharBuf, &len, &ptr, neededLen);
     if (rc == (size_t)-1) {
         return 0;
     }

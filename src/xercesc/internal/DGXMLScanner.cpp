@@ -1922,10 +1922,9 @@ bool DGXMLScanner::scanStartTagNS(bool& gotData)
     //  If we have a document handler, then tell it about this start tag. We
     //  don't have any URI id to send along, so send fEmptyNamespaceId. We also do not send
     //  any prefix since its just one big name if we are not doing namespaces.
-    unsigned int uriId = fEmptyNamespaceId;
     if (fDocHandler)
     {
-            uriId = resolvePrefix
+        unsigned int uriId = resolvePrefix
             (
                 elemDecl->getElementName()->getPrefix()
                 , ElemStack::Mode_Element
