@@ -665,10 +665,9 @@ void SAX2XMLReaderImpl::startDocument()
 {
     // Just map to the SAX document handler
     if (fDocHandler)
-    {
         fDocHandler->setDocumentLocator(fScanner->getLocator());
+    if(fDocHandler)
         fDocHandler->startDocument();
-    }
 
     //
     //  If there are any installed advanced handlers, then lets call them
@@ -743,7 +742,8 @@ startElement(   const   XMLElementDecl&         elemDecl
                 {
                     if (nsPrefix == 0)
                         nsPrefix = XMLUni::fgZeroLenString;
-                    fDocHandler->startPrefixMapping(nsPrefix, nsURI);
+                    if(fDocHandler)
+                        fDocHandler->startPrefixMapping(nsPrefix, nsURI);
                     unsigned int nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);
                     fPrefixes->push(nPrefixId) ;
                     numPrefix++;
@@ -756,21 +756,27 @@ startElement(   const   XMLElementDecl&         elemDecl
                 fAttrList.setVector(&attrList, attrCount, fScanner);
 
             // call startElement() with namespace declarations
-            fDocHandler->startElement
-            (
-                fScanner->getURIText(elemURLId)
-                , elemDecl.getBaseName()
-                , elemQName
-                , fAttrList
-            );
+            if(fDocHandler)
+            {
+                fDocHandler->startElement
+                (
+                    fScanner->getURIText(elemURLId)
+                    , elemDecl.getBaseName()
+                    , elemQName
+                    , fAttrList
+                );
+            }
         }
         else // no namespace
         {
             fAttrList.setVector(&attrList, attrCount, fScanner);
-            fDocHandler->startElement(XMLUni::fgZeroLenString,
-										elemDecl.getBaseName(),
-										elemQName,
-										fAttrList);
+            if(fDocHandler)
+            {
+                fDocHandler->startElement(XMLUni::fgZeroLenString,
+                                          elemDecl.getBaseName(),
+                                          elemQName,
+                                          fAttrList);
+            }
         }
 
 
@@ -780,25 +786,32 @@ startElement(   const   XMLElementDecl&         elemDecl
             // call endPrefixMapping appropriately.
             if (getDoNamespaces())
             {
-                fDocHandler->endElement
-                (
-                    fScanner->getURIText(elemURLId)
-                    , elemDecl.getBaseName()
-                    , elemQName
-                );
+                if(fDocHandler)
+                {
+                    fDocHandler->endElement
+                    (
+                        fScanner->getURIText(elemURLId)
+                        , elemDecl.getBaseName()
+                        , elemQName
+                    );
+                }
 
                 unsigned int numPrefix = fPrefixCounts->pop();
                 for (unsigned int i = 0; i < numPrefix; ++i)
                 {
                     unsigned int nPrefixId = fPrefixes->pop() ;
-                    fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
+                    if(fDocHandler)
+                        fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
                 }
             }
             else
             {
-                fDocHandler->endElement(XMLUni::fgZeroLenString,
-                                elemDecl.getBaseName(),
-                                elemQName);
+                if(fDocHandler)
+                {
+                    fDocHandler->endElement(XMLUni::fgZeroLenString,
+                                    elemDecl.getBaseName(),
+                                    elemQName);
+                }
             }
         }
     }
@@ -848,29 +861,36 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 
         if (getDoNamespaces())
         {
-            fDocHandler->endElement
-            (
-                fScanner->getURIText(uriId)
-                , elemDecl.getBaseName()
-                , elemQName
-            );
+            if(fDocHandler)
+            {
+                fDocHandler->endElement
+                (
+                    fScanner->getURIText(uriId)
+                    , elemDecl.getBaseName()
+                    , elemQName
+                );
+            }
 
             // get the prefixes back so that we can call endPrefixMapping()
             unsigned int numPrefix = fPrefixCounts->pop();
             for (unsigned int i = 0; i < numPrefix; i++)
             {
                 unsigned int nPrefixId = fPrefixes->pop() ;
-                fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
+                if(fDocHandler)
+                    fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
             }
         }
         else
         {
-            fDocHandler->endElement
-            (
-                XMLUni::fgZeroLenString,
-                elemDecl.getBaseName(),
-                elemQName 
-            );
+            if(fDocHandler)
+            {
+                fDocHandler->endElement
+                (
+                    XMLUni::fgZeroLenString,
+                    elemDecl.getBaseName(),
+                    elemQName 
+                );
+            }
         }
     }
 
@@ -1025,11 +1045,10 @@ void SAX2XMLReaderImpl::endIntSubset()
 void SAX2XMLReaderImpl::endExtSubset()
 {
     // Call the installed LexicalHandler.
-    if (fLexicalHandler) {
-
+    if (fLexicalHandler)
         fLexicalHandler->endEntity(gDTDEntityStr);
+    if (fLexicalHandler)
         fLexicalHandler->endDTD();
-    }
 
     // Unused by SAX DTDHandler interface at this time
 }
