@@ -386,7 +386,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         if (lookUpHost && 
             ((hostEntPtr = wrap_gethostbyname(hostNameAsCharStar)) == NULL))
         {             
-            unsigned long  numAddress = inet_addr(hostNameAsCharStar);
+            unsigned long  numAddress = wrap_inet_addr(hostNameAsCharStar);
             if (numAddress == INADDR_NONE)
             {
                 // Call WSAGetLastError() to get the error number.
