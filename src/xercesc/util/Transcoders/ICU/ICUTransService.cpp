@@ -93,11 +93,11 @@ static const XMLCh gswaplfnlId[] =
 //  When XMLCh and ICU's UChar are not the same size, we have to do a temp
 //  conversion of all strings. These local helper methods make that easier.
 //
-static UChar* convertToUChar( const   XMLCh* const    toConvert
-                            , const unsigned int    srcLen = 0
+static UChar* convertToUChar( const XMLCh* const   toConvert
+                            , const XMLSize_t      srcLen = 0
                             , MemoryManager* const manager = 0)
 {
-    const unsigned int actualLen = srcLen
+    const XMLSize_t actualLen = srcLen
                                    ? srcLen : XMLString::stringLen(toConvert);
 
     UChar* tmpBuf = (manager)
@@ -306,16 +306,13 @@ bool ICUTransService::supportsSrcOfs() const
 
 
 template <class FunctionType>
-static void
-doCaseConvert(
-            XMLCh*          convertString,
-            FunctionType    caseFunction)
+static void doCaseConvert(XMLCh*          convertString,
+                          FunctionType    caseFunction)
 {
     // Note the semantics of this function are broken, since it's
     // possible that changing the case of a string could increase
     // its length, but there's no way to handle such a situation.
-    const unsigned int  len =
-            XMLString::stringLen(convertString);
+    const XMLSize_t len = XMLString::stringLen(convertString);
 
     size_t  readPos = 0;
     size_t  writePos = 0;
@@ -382,9 +379,9 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
     if ( (XMLString::endsWith(encodingNameToUse, gs390Id)) ||
          (XMLString::endsWith(encodingNameToUse, gS390Id)) )
     {
-       int workBufferSize = (XMLString::stringLen(encodingNameToUse) + XMLString::stringLen(gswaplfnlId) - XMLString::stringLen(gS390Id) + 1);
+       XMLSize_t workBufferSize = (XMLString::stringLen(encodingNameToUse) + XMLString::stringLen(gswaplfnlId) - XMLString::stringLen(gS390Id) + 1);
        workBuffer = (XMLCh*) manager->allocate(workBufferSize * sizeof(XMLCh));
-       int moveSize = XMLString::stringLen(encodingNameToUse) - XMLString::stringLen(gS390Id);
+       XMLSize_t moveSize = XMLString::stringLen(encodingNameToUse) - XMLString::stringLen(gS390Id);
        XMLString::moveChars(workBuffer, encodingNameToUse, moveSize);
        XMLString::moveChars((workBuffer + moveSize), gswaplfnlId, XMLString::stringLen(gswaplfnlId));
        encodingNameToUse = workBuffer;
@@ -491,7 +488,7 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
     UChar* orgTarget = startTarget;
 
     //
-    //  Transoode the buffer.  Buffer overflow errors are normal, occuring
+    //  Transcode the buffer.  Buffer overflow errors are normal, occuring
     //  when the raw input buffer holds more characters than will fit in
     //  the Unicode output buffer.
     //
@@ -536,7 +533,7 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
     bytesEaten = startSrc - srcData;
 
     // And the characters decoded
-    const unsigned int charsDecoded = startTarget - orgTarget;
+    const XMLSize_t charsDecoded = startTarget - orgTarget;
 
     //
     //  Translate the array of char offsets into an array of character
@@ -869,7 +866,7 @@ XMLSize_t ICULCPTranscoder::calcRequiredSize(const char* const srcText
             , 0
             , 0
             , srcText
-            , strlen(srcText)
+            , (int32_t)strlen(srcText)
             , &err
         );
     }
@@ -908,7 +905,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode,
     //  Get the length of the source string since we'll have to use it in
     //  a couple places below.
     //
-    const unsigned int srcLen = XMLString::stringLen(toTranscode);
+    const XMLSize_t srcLen = XMLString::stringLen(toTranscode);
 
     //
     //  If XMLCh and UChar are not the same size, then we have to make a
@@ -1098,7 +1095,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
     }
 
     // We'll need this in a couple of places below
-    const unsigned int srcLen = strlen(toTranscode);
+    const XMLSize_t srcLen = strlen(toTranscode);
 
     //
     //  Set up the target buffer. If XMLCh and UChar are not the same size
@@ -1124,9 +1121,9 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
         (
             fConverter
             , targetBuf
-            , maxChars + 1
+            , (int32_t)maxChars + 1
             , toTranscode
-            , srcLen
+            , (int32_t)srcLen
             , &err
         );
     }
@@ -1205,7 +1202,7 @@ bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
         (
             fConverter
             , toFill
-            , maxChars
+            , (int32_t)maxChars
             , actualSrc
             , -1
             , &err
