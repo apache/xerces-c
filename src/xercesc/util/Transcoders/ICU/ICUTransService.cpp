@@ -472,11 +472,6 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
                             ,       XMLSize_t&              bytesEaten
                             ,       unsigned char* const    charSizes)
 {
-    // If debugging, insure the block size is legal
-    #if defined(XERCES_DEBUG)
-    checkBlockSize(maxChars);
-    #endif
-
     // Set up pointers to the start and end of the source buffer
     const XMLByte*  startSrc = srcData;
     const XMLByte*  endSrc = srcData + srcCount;
