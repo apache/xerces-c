@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="xml4com"
 	ProjectGUID="{9488FCC8-E44D-468C-B805-85001457ECFB}"
 	Keyword="AtlProj"
@@ -789,6 +789,392 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="ICU Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(OutDir)\regsvr32.trg"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				TreatWChar_tAsBuiltInType="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc80"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				CompileAs="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3D.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)\xerces-com.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ICU Debug|x64"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(OutDir)\regsvr32.trg"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+				TypeLibraryName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN64;_WINDOWS;_USRDLL"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				TreatWChar_tAsBuiltInType="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc80"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3D.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)\xerces-com.lib"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ICU Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(OutDir)\regsvr32.trg"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;_USRDLL"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc80"
+				WarningLevel="3"
+				CompileAs="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)\xerces-com.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ICU Release|x64"
+			OutputDirectory=".\..\..\..\..\..\Build\Win64\VC8\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;&#x0D;&#x0A;echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;&#x0D;&#x0A;"
+				Outputs="$(OutDir)\regsvr32.trg"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+				TypeLibraryName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN64;_WINDOWS;_USRDLL"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc80"
+				WarningLevel="3"
+				CompileAs="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)\xerces-com.lib"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -993,6 +1379,38 @@
 							UsePrecompiledHeader="1"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\com\xml4com.cpp"
@@ -1093,6 +1511,50 @@
 							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						>
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|x64"
+						>
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						>
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|x64"
+						>
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\com\xml4com.rc"
@@ -1123,6 +1585,38 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						>
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|x64"
+						>
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						>
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|x64"
 						>
 						<Tool
 							Name="VCResourceCompilerTool"
