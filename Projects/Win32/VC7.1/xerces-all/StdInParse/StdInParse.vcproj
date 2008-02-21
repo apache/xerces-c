@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -28,7 +28,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\StdInParse.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -72,8 +72,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -86,7 +86,7 @@
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\StdInParse.pch"
 				AssemblerListingLocation="$(IntDir)\"
@@ -133,8 +133,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -148,7 +148,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\StdInParse.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -192,8 +192,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -206,7 +206,7 @@
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\StdInParse.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -238,6 +238,126 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				ImproveFloatingPointConsistency="TRUE"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;_WINDOWS"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				DisableLanguageExtensions="FALSE"
+				TreatWChar_tAsBuiltInType="FALSE"
+				PrecompiledHeaderFile="$(IntDir)\StdInParse.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\StdInParse_vc71.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="xerces-c_3D.lib"
+				OutputFile="$(OutDir)\StdInParse.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)\StdInParse.pdb"
+				SubSystem="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/StdInParse.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				ImproveFloatingPointConsistency="TRUE"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="NDEBUG;_CONSOLE;WIN32;_WINDOWS"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
+				PrecompiledHeaderFile="$(IntDir)\StdInParse.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\StdInParse_vc71.pdb"
+				WarningLevel="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="xerces-c_3.lib"
+				OutputFile="$(OutDir)\StdInParse.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ProgramDatabaseFile="$(OutDir)\StdInParse.pdb"
+				SubSystem="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/StdInParse.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>

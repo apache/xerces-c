@@ -14,8 +14,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -30,6 +30,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -85,8 +86,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -97,6 +98,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
 				RuntimeLibrary="3"
+				DisableLanguageExtensions="FALSE"
 				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
@@ -149,8 +151,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -163,6 +165,7 @@
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -202,8 +205,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -214,6 +217,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
 				RuntimeLibrary="1"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -246,6 +250,143 @@
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_CRTDBG_MAP_ALLOC;_DEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_ICU;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
+				RuntimeLibrary="3"
+				DisableLanguageExtensions="FALSE"
+				TreatWChar_tAsBuiltInType="FALSE"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="ws2_32.lib advapi32.lib icuuc.lib"
+				OutputFile="$(OutDir)\xerces-c_3_0D.dll"
+				LinkIncremental="0"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_0D.pdb"
+				SubSystem="2"
+				SetChecksum="TRUE"
+				BaseAddress="0x12000000"
+				ImportLibrary="$(OutDir)\xerces-c_3D.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XercesLib.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			WholeProgramOptimization="TRUE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="2"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_ICU;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
+				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc71.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="ws2_32.lib advapi32.lib icuuc.lib"
+				OutputFile="$(OutDir)\xerces-c_3_0.dll"
+				LinkIncremental="0"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_0.fullpdb"
+				StripPrivateSymbols="$(OutDir)\xerces-c_3_0.pdb"
+				GenerateMapFile="TRUE"
+				MapFileName="$(IntDir)\xerces-c_3_0.map"
+				SubSystem="2"
+				OptimizeReferences="2"
+				SetChecksum="TRUE"
+				BaseAddress="0x12000000"
+				ImportLibrary="$(OutDir)\xerces-c_3.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XercesLib.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
 			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
@@ -522,6 +663,26 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="ICU Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+"
+						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						Outputs="$(InputPath)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ICU Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
+"
+						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						Outputs="$(InputPath)"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XercesDefs.hpp">
@@ -753,6 +914,18 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 						<Tool
 							Name="VCCLCompilerTool"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\InMemMsgLoader.hpp">
@@ -764,6 +937,18 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCustomBuildTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCustomBuildTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
 						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCustomBuildTool"/>
@@ -800,34 +985,32 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 							Name="VCResourceCompilerTool"
 							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32;$(NoInherit)"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp">
 					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Static Release|Win32"
 						ExcludedFromBuild="TRUE">
 						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
+							Name="VCCLCompilerTool"/>
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Static Debug|Win32"
 						ExcludedFromBuild="TRUE">
 						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
+							Name="VCCLCompilerTool"/>
 					</FileConfiguration>
 				</File>
 				<File
@@ -853,11 +1036,53 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 						<Tool
 							Name="VCCustomBuildTool"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCustomBuildTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCustomBuildTool"/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
 				Name="Transcoders"
 				Filter=".cpp,.hpp">
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\Transcoders\ICU\ICUTransService.cpp">
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\Transcoders\ICU\ICUTransService.hpp">
+				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp">
 					<FileConfiguration
@@ -884,6 +1109,20 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 							Name="VCCLCompilerTool"
 							DisableLanguageExtensions="FALSE"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="FALSE"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						ExcludedFromBuild="TRUE">
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="FALSE"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.hpp">
@@ -894,60 +1133,12 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				Filter=".cpp,.hpp">
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp">
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp">
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableLanguageExtensions="FALSE"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.hpp">

@@ -14,8 +14,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\Release"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			UseOfATL="1"
@@ -31,6 +31,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
@@ -83,8 +84,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\Debug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -97,6 +98,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				DisableLanguageExtensions="FALSE"
 				TreatWChar_tAsBuiltInType="FALSE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
@@ -152,8 +154,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 		</Configuration>
 		<Configuration
 			Name="Static Release|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			UseOfATL="1"
@@ -169,6 +171,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
@@ -221,8 +224,8 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 		</Configuration>
 		<Configuration
 			Name="Static Debug|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
-			IntermediateDirectory="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -235,6 +238,7 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;XERCES_STATIC_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				DisableLanguageExtensions="FALSE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
@@ -275,6 +279,146 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				DisableLanguageExtensions="FALSE"
+				TreatWChar_tAsBuiltInType="FALSE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc71.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
+echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
+"
+				Outputs="$(OutDir)\regsvr32.trg"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3D.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)\xerces-com.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xerces-com.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)\xerces-com.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\xml4com_vc71.pdb"
+				WarningLevel="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
+echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
+"
+				Outputs="$(OutDir)\regsvr32.trg"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_3.lib"
+				OutputFile="$(OutDir)\xerces-com.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				ProgramDatabaseFile="$(OutDir)\xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)\xerces-com.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xerces-com.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
@@ -417,6 +561,18 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 							Name="VCCLCompilerTool"
 							UsePrecompiledHeader="1"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\com\xml4com.cpp">
@@ -462,6 +618,24 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
 							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32">
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32">
+						<Tool
+							Name="VCMIDLTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(NoInherit)"
+							TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\xml4com.tlb"
+							HeaderFileName="..\..\..\..\..\src\xercesc\com\xml4com.h"
+							InterfaceIdentifierFileName="..\..\..\..\..\src\xercesc\com\xml4com_i.c"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\com\xml4com.rc">
@@ -473,6 +647,18 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|Win32">
+						<Tool
+							Name="VCResourceCompilerTool"
+							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32">
 						<Tool
 							Name="VCResourceCompilerTool"
 							AdditionalIncludeDirectories="..\..\..\..\..\src\xercesc\com;$(OUTDIR);$(NoInherit)"/>

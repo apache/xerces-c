@@ -14,8 +14,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -29,7 +29,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\CreateDOMDocument.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -73,8 +73,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -86,7 +86,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS"
 				RuntimeLibrary="3"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				TreatWChar_tAsBuiltInType="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\CreateDOMDocument.pch"
 				AssemblerListingLocation="$(IntDir)\"
@@ -133,8 +133,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -148,7 +148,7 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\CreateDOMDocument.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -192,8 +192,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -205,7 +205,7 @@
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS;XERCES_STATIC_LIBRARY"
 				RuntimeLibrary="1"
-				DisableLanguageExtensions="TRUE"
+				DisableLanguageExtensions="FALSE"
 				PrecompiledHeaderFile="$(IntDir)\CreateDOMDocument.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
@@ -249,36 +249,131 @@
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
+		<Configuration
+			Name="ICU Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				ImproveFloatingPointConsistency="TRUE"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS"
+				RuntimeLibrary="3"
+				DisableLanguageExtensions="FALSE"
+				TreatWChar_tAsBuiltInType="FALSE"
+				PrecompiledHeaderFile="$(IntDir)\CreateDOMDocument.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\CreateDOMDocument_vc71.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="xerces-c_3D.lib"
+				OutputFile="$(OutDir)\CreateDOMDocument.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)\CreateDOMDocument.pdb"
+				SubSystem="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/CreateDOMDocument.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="ICU Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\$(ConfigurationName)"
+			IntermediateDirectory="$(OutDir)\obj\$(ProjectName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				ImproveFloatingPointConsistency="TRUE"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
+				PreprocessorDefinitions="_CONSOLE;WIN32;NDEBUG;_WINDOWS"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				DisableLanguageExtensions="FALSE"
+				PrecompiledHeaderFile="$(IntDir)\CreateDOMDocument.pch"
+				AssemblerListingLocation="$(IntDir)\"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\CreateDOMDocument_vc71.pdb"
+				WarningLevel="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=""
+				AdditionalDependencies="xerces-c_3.lib"
+				OutputFile="$(OutDir)\CreateDOMDocument.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				ProgramDatabaseFile="$(OutDir)\CreateDOMDocument.pdb"
+				SubSystem="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/CreateDOMDocument.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
 		<File
 			RelativePath="..\..\..\..\..\samples\src\CreateDOMDocument\CreateDOMDocument.cpp">
-			<FileConfiguration
-				Name="Release|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Static Release|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Static Debug|Win32">
-				<Tool
-					Name="VCCLCompilerTool"
-					ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>
