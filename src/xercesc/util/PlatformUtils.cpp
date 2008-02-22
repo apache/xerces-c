@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -188,7 +188,7 @@ bool					XMLPlatformUtils::fgXMLChBigEndian = true;
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::Initialize(const char*          const locale 
+void XMLPlatformUtils::Initialize(const char*          const locale
                                 , const char*          const nlsHome
                                 ,       PanicHandler*  const panicHandler
                                 ,       MemoryManager* const memoryManager
@@ -205,7 +205,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     //
     if (gInitFlag == LONG_MAX)
         return;
-	
+
     //
     //  Make sure we haven't already been initialized. Note that this is not
     //  thread safe and is not intended for that. Its more for those COM
@@ -243,8 +243,8 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     {
         fgUserPanicHandler = panicHandler;
     }
-    
-    
+
+
     // Determine our endianness (with regard to a XMLCh 16-bit word)
     union {
     	XMLCh ch;
@@ -252,14 +252,14 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     } endianTest;
     endianTest.ch = 1;
     fgXMLChBigEndian = (endianTest.ar[sizeof(XMLCh)-1] == 1);
-    
-    
+
+
     // Initialize the platform-specific mutex file, and atomic op mgrs
     fgMutexMgr		= makeMutexMgr(fgMemoryManager);
     fgAtomicOpMgr	= makeAtomicOpMgr(fgMemoryManager);
     fgFileMgr		= makeFileMgr(fgMemoryManager);
-    
-    
+
+
     // Create the local sync mutex
     gSyncMutex = new XMLMutex(fgMemoryManager);
 
@@ -306,8 +306,8 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     /***
      * Message Loader:
      *
-     *     Locale setting 
-     *     nlsHome setting 
+     *     Locale setting
+     *     nlsHome setting
      ***/
     XMLMsgLoader::setLocale(locale);
     XMLMsgLoader::setNLSHome(nlsHome);
@@ -330,7 +330,7 @@ void XMLPlatformUtils::Terminate()
         return;
 
 	gInitFlag--;
-	
+
 	if (gInitFlag > 0)
 		return;
 
@@ -368,7 +368,7 @@ void XMLPlatformUtils::Terminate()
 	delete fgFileMgr;		fgFileMgr = 0;
 	delete fgAtomicOpMgr;	fgAtomicOpMgr = 0;
 	delete fgMutexMgr;		fgMutexMgr = 0;
-	
+
     /***
      *  de-allocate resource
      *
@@ -402,7 +402,7 @@ void XMLPlatformUtils::Terminate()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-    fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);	
+    fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);
 }
 
 
@@ -414,20 +414,18 @@ void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 	XMLNetAccessor* na = 0;
-	
-	#if defined (XERCES_USE_NETACCESSOR_CURL)
+
+#if defined (XERCES_USE_NETACCESSOR_CURL)
 		na = new CurlNetAccessor();
-	#elif defined (XERCES_USE_NETACCESSOR_SOCKET)
+#elif defined (XERCES_USE_NETACCESSOR_SOCKET)
 		na = new SocketNetAccessor();
-	#elif defined (XERCES_USE_NETACCESSOR_LIBWWW)
+#elif defined (XERCES_USE_NETACCESSOR_LIBWWW)
 		na = new LibWWWNetAccessor();
-	#elif defined (XERCES_USE_NETACCESSOR_CFURL)
+#elif defined (XERCES_USE_NETACCESSOR_CFURL)
 		na = new MacOSURLAccessCF();
-    #elif defined (XERCES_USE_NETACCESSOR_WINSOCK)
+#elif defined (XERCES_USE_NETACCESSOR_WINSOCK)
 		na = new WinSockNetAccessor();
-	#else
-		#warning No NetAccessor is configured for this platform. Xerces will have no net access.
-	#endif
+#endif
 
 	return na;
 }
@@ -441,7 +439,7 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
     XMLMsgLoader* ms=0;
-    
+
     try
     {
 	#if defined (XERCES_USE_MSGLOADER_ICU)
@@ -464,7 +462,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     {
         panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
-    
+
     return ms;
 }
 
@@ -479,7 +477,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
 	XMLTransService* tc = 0;
-	
+
 	#if defined   (XERCES_USE_TRANSCODER_ICU)
 		tc = new ICUTransService;
 	#elif defined (XERCES_USE_TRANSCODER_GNUICONV)
@@ -493,7 +491,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 	#else
 		#error No Transcoder configured for platform! You must configure it.
 	#endif
-	
+
 	return tc;
 }
 
@@ -505,7 +503,7 @@ XMLFileMgr*
 XMLPlatformUtils::makeFileMgr(MemoryManager* const memmgr)
 {
 	XMLFileMgr* mgr = NULL;
-	
+
 	#if XERCES_USE_FILEMGR_POSIX
 		mgr = new (memmgr) PosixFileMgr;
 	#elif XERCES_USE_FILEMGR_WINDOWS
@@ -513,7 +511,7 @@ XMLPlatformUtils::makeFileMgr(MemoryManager* const memmgr)
 	#else
 		#error No File Manager configured for platform! You must configure it.
 	#endif
-	
+
 	return mgr;
 }
 
@@ -672,7 +670,7 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
 
 
 inline bool
-XMLPlatformUtils::isAnySlash(XMLCh c) 
+XMLPlatformUtils::isAnySlash(XMLCh c)
 {
 	// As far as we know, all supported Xerces
 	// platforms use at least a forward slash
@@ -701,7 +699,7 @@ XMLPlatformUtils::isAnySlash(XMLCh c)
 unsigned long XMLPlatformUtils::getCurrentMillis()
 {
 	unsigned long ms = 0;
-	
+
 	// *** TODO: additional platform support?
 	#if HAVE_GETTIMEOFDAY
 		struct timeval aTime;
@@ -726,7 +724,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 XMLMutexMgr* XMLPlatformUtils::makeMutexMgr(MemoryManager* const memmgr)
 {
 	XMLMutexMgr* mgr = NULL;
-	
+
 	#if XERCES_USE_MUTEXMGR_NOTHREAD
 		mgr = new (memmgr) NoThreadMutexMgr;
 	#elif XERCES_USE_MUTEXMGR_POSIX
@@ -736,7 +734,7 @@ XMLMutexMgr* XMLPlatformUtils::makeMutexMgr(MemoryManager* const memmgr)
 	#else
 		#error No Mutex Manager configured for platform! You must configure it.
 	#endif
-	
+
 	return mgr;
 }
 
@@ -783,7 +781,7 @@ void XMLPlatformUtils::unlockMutex(XMLMutexHandle const mtx)
 XMLAtomicOpMgr* XMLPlatformUtils::makeAtomicOpMgr(MemoryManager* const memmgr)
 {
 	XMLAtomicOpMgr* mgr = NULL;
-	
+
 	#if XERCES_USE_ATOMICOPMGR_NOTHREAD
 		mgr = new (memmgr) NoThreadAtomicOpMgr;
 	#elif XERCES_USE_ATOMICOPMGR_POSIX
@@ -795,7 +793,7 @@ XMLAtomicOpMgr* XMLPlatformUtils::makeAtomicOpMgr(MemoryManager* const memmgr)
 	#else
 		#error No AtomicOp Manager configured for platform! You must configure it.
 	#endif
-	
+
 	return mgr;
 }
 
@@ -900,12 +898,12 @@ bool XMLPlatformUtils::isStrictIANAEncoding() {
  *
  *  Previously, each <OS>PlatformUtils.cpp has its onw copy of the
  *  method weavePaths(), and almost of them implemented the same logic,
- *  with few platform specific difference, and unfortunately that 
+ *  with few platform specific difference, and unfortunately that
  *  implementation was wrong.
- *  
+ *
  *  The only platform specific issue is slash character.
- *  On all platforms other than Windows, chForwardSlash and chBackSlash 
- *  are considered slash, while on Windows, two additional characters, 
+ *  On all platforms other than Windows, chForwardSlash and chBackSlash
+ *  are considered slash, while on Windows, two additional characters,
  *  chYenSign and chWonSign are slash as well.
  *
  *  The idea is to maintain a SINGLE copy of this method rather than
@@ -913,17 +911,17 @@ bool XMLPlatformUtils::isStrictIANAEncoding() {
  *  method, XMLPlatformUtils::isAnySlash(), to replace the direct checking
  *  code ( if ( c == chForwardSlash || c == chBackSlash).
  *
- *  With this approach, we might have a performance hit since isAnySlash() 
- *  is so frequently used in this implementation, so we intend to make it 
+ *  With this approach, we might have a performance hit since isAnySlash()
+ *  is so frequently used in this implementation, so we intend to make it
  *  inline. Then we face a complier issue.
  *
- *  There are two compilation units involved, one is PlatformUtils.cpp and 
+ *  There are two compilation units involved, one is PlatformUtils.cpp and
  *  the other <OS>PlatformUtils.cpp. When PlatformUtils.cp get compiled,
  *  the weavePath(), remove**Slash() have dependency upon isAnySlash() which
  *  is in <OS>PlatformUtils.cpp (and what is worse, it is inlined), so we have
- *  undefined/unresolved symbol: isAnySlash() on AIX/xlc_r, Solaris/cc and 
+ *  undefined/unresolved symbol: isAnySlash() on AIX/xlc_r, Solaris/cc and
  *  Linux/gcc, while MSVC and HP/aCC are fine with this.
- *  
+ *
  *  That means we can not place these new methods in PlatformUtils.cpp with
  *  inlined XMLPlatformUtils::isAnySlash() in <OS>PlatformUtils.cpp.
  *
@@ -974,7 +972,7 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
     // 1. concatenate the base and relative
     // 2. remove all occurences of "/./"
     // 3. remove all occurences of segment/../ where segment is not ../
-	// 
+	//
 
     XMLString::subString(tmpBuf, basePath, 0, (basePtr - basePath + 1), manager);
     tmpBuf[basePtr - basePath + 1] = 0;
@@ -1003,7 +1001,7 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path
 
     XMLCh* srcPtr = XMLString::replicate(path, manager);
     XMLSize_t srcLen = XMLString::stringLen(srcPtr);
-    ArrayJanitor<XMLCh>   janName(srcPtr, manager);   
+    ArrayJanitor<XMLCh>   janName(srcPtr, manager);
     XMLCh* tarPtr = path;
 
     while (*srcPtr)
@@ -1017,7 +1015,7 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path
                 // "\.\x" seen
                 // skip the first two, and start from the 3rd,
                 // since "\x" could be another "\."
-                srcPtr+=2;              
+                srcPtr+=2;
                 srcLen-=2;
             }
             else
@@ -1135,7 +1133,7 @@ int XMLPlatformUtils::searchSlashDotDotSlash(XMLCh* const srcPath)
                 srcLen--;
             }
         }
-        else 
+        else
         {
             break;
         }

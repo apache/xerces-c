@@ -18,9 +18,9 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	# If the msgloader has been explicitly "enable"d, then vote for it strongly,
 	# in upper case.
 	######################################################
-	
+
 	ml_list=
-	
+
 	# Check for inmemory msgloader
 	AC_MSG_CHECKING([whether we support the InMemory MsgLoader])
 	list_add=
@@ -36,7 +36,7 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 		[ml_list="$ml_list -$list_add-"; AC_MSG_RESULT(yes)],
 		[AC_MSG_RESULT(no)]
 	)
-	
+
 	# Check for ICU
 	AC_REQUIRE([XERCES_ICU_PREFIX])
 	AC_MSG_CHECKING([whether we support the ICU MsgLoader])
@@ -74,8 +74,8 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	)
 
 	# TODO: Add test for additional msgloaders
-	
-	
+
+
 	######################################################
 	# Determine which msgloader to use.
 	#
@@ -89,19 +89,19 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	for i in 1 2; do
 		# Swap upper/lower case in the ml_list
 		ml_list=`echo $ml_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
-		
+
 		# Check for each msgloader, in implicit rank order
 		case $ml_list in
+		*-inmemory-*)
+			AC_DEFINE([XERCES_USE_MSGLOADER_INMEMORY], 1, [Define to use the InMemory MsgLoader])
+			msgloader=inmemory
+			break
+			;;
+
 		*-icu-*)
 			AC_DEFINE([XERCES_USE_MSGLOADER_ICU], 1, [Define to use the ICU-based MsgLoader])
 			msgloader=icu
 			LIBS="${LIBS} -L${xerces_cv_icu_prefix}/lib -licuuc -licudata"
-			break
-			;;
-			
-		*-inmemory-*)
-			AC_DEFINE([XERCES_USE_MSGLOADER_INMEMORY], 1, [Define to use the InMemory MsgLoader])
-			msgloader=inmemory
 			break
 			;;
 
@@ -123,13 +123,13 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	if test x"$msgloader" != x; then
 		AC_MSG_RESULT($msgloader)
 	fi
-	
+
 	# Define the auto-make conditionals which determine what actually gets compiled
 	# Note that these macros can't be executed conditionally, which is why they're here, not above.
 	AM_CONDITIONAL([XERCES_USE_MSGLOADER_ICU], 	[test x"$msgloader" = xicu])
 	AM_CONDITIONAL([XERCES_USE_MSGLOADER_ICONV], 	[test x"$msgloader" = xiconv])
 	AM_CONDITIONAL([XERCES_USE_MSGLOADER_INMEMORY],	[test x"$msgloader" = xinmemory])
-	
+
 	]
 )
 

@@ -9,9 +9,9 @@
 # The ASF licenses this file to You under the Apache License, Version 2.0
 # (the "License"); you may not use this file except in compliance with
 # the License.  You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,10 +79,6 @@ AM_PROG_CC_C_O
 AS_IF([test x$AR = xfalse],
 	AC_MSG_ERROR([Cannot find a valid 'ar' tool]))
 
-# Checks for libraries.
-AC_CHECK_LIB([socket], [socket])
-AC_CHECK_LIB([nsl], [gethostbyname])
-
 # Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_TIME
@@ -138,37 +134,37 @@ AC_CHECK_FUNCS([getcwd pathconf realpath \
 # positive on HP-UX, so we use a different snippet to set the
 # corresponding macro
 AC_MSG_CHECKING([for mbrlen])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]], 
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                                      [[mbstate_t st; mbrlen( "t", 5, &st );]])],
-                    [ 
+                    [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_MBRLEN], 1, [Define to 1 if you have the `mbrlen' function.])
                     ],
-                    [ 
+                    [
                       AC_MSG_RESULT([no])
                       AC_DEFINE_UNQUOTED([HAVE_MBRLEN], 0, [Define to 1 if you have the `mbrlen' function.])
                     ]
                  )
 AC_MSG_CHECKING([for wcsrtombs])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]], 
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                                      [[mbstate_t st; char buffer[2]; wchar_t src[2]; wcsrtombs(buffer, &src, 2, &st);]])],
-                    [ 
+                    [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 1, [Define to 1 if you have the `wcsrtombs' function.])
                     ],
-                    [ 
+                    [
                       AC_MSG_RESULT([no])
                       AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 0, [Define to 1 if you have the `wcsrtombs' function.])
                     ]
                  )
 AC_MSG_CHECKING([for mbsrtowcs])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]], 
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                                      [[mbstate_t st; wchar_t buffer[2]; char src[2]; mbsrtowcs(buffer, &src, 2, &st);]])],
-                    [ 
+                    [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 1, [Define to 1 if you have the `mbsrtowcs' function.])
                     ],
-                    [ 
+                    [
                       AC_MSG_RESULT([no])
                       AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 0, [Define to 1 if you have the `mbsrtowcs' function.])
                     ]
@@ -194,15 +190,13 @@ AC_SUBST(abs_top_builddir)
 XERCES_PRETTY_MAKE
 XERCES_PATH_DELIMITERS
 
-XERCES_CURL_PREFIX
-XERCES_LIBWWW_PREFIX
-
 XERCES_NETACCESSOR_SELECTION
 XERCES_TRANSCODER_SELECTION
 XERCES_MSGLOADER_SELECTION
 XERCES_FILEMGR_SELECTION
 XERCES_MUTEXMGR_SELECTION
 XERCES_ATOMICOPMGR_SELECTION
+
 
 ######################################################
 # Define some namespace-protected macros for use in the publicly visible
@@ -243,17 +237,17 @@ case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
 	platform_export="__declspec(dllexport)"
 	platform_import="__declspec(dllimport)"
-	;; 
+	;;
 * )
 	case $COMPILER in
 	SUNPRO)
 		platform_export="__declspec(dllexport)"
 		platform_import="__declspec(dllimport)"
-		;; 
+		;;
 	*)
 		platform_export=""
 		platform_import=""
-		;; 
+		;;
 	esac
 esac
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_EXPORT], [$platform_export], [Define as the platform's export attribute])
@@ -269,9 +263,9 @@ AS_IF([test $ac_cv_cxx_have_lstring],
 # (this is safe because on Windows wchar_t is used to store UTF-16 codepoints, while it is not true on Unix)
 AC_MSG_CHECKING([whether the Windows SDK is available and using wchar_t as wide string])
 AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
-                                        wchar_t file[] = L"dummy.file";]], 
+                                        wchar_t file[] = L"dummy.file";]],
                                      [[DeleteFileW(file);]])],
-                    [ 
+                    [
                       xerces_cv_type_xmlch=wchar_t
                    	  AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([XERCES_INCLUDE_WCHAR_H], 1, [Define to have Xerces_autoconf_config.hpp include wchar.h])
@@ -283,21 +277,21 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
                  )
 
 AC_DEFINE_UNQUOTED([XERCES_XMLCH_T], [$xerces_cv_type_xmlch], [Define to the 16 bit type used to represent Xerces UTF-16 characters])
-	
+
 AS_IF([test x$ac_cv_type_size_t = xyes],
 	AC_DEFINE([XERCES_SIZE_T], [size_t], [Define as the appropriate size_t type]),
 	AC_DEFINE([XERCES_SIZE_T], [long], [Define as the appropriate size_t type]))
-	
+
 AS_IF([test x$ac_cv_type_ssize_t = xyes],
 	AC_DEFINE([XERCES_SSIZE_T], [ssize_t], [Define as the appropriate ssize_t type]),
 	AC_DEFINE([XERCES_SSIZE_T], [unsigned long], [Define as the appropriate ssize_t type]))
-	
+
 AS_IF([test x$ac_cv_cxx_have_namespaces = xyes],
 	AC_DEFINE([XERCES_HAS_CPP_NAMESPACE], 1, [Define if namespaces is supported by the compiler]))
-	
+
 AS_IF([test x$ac_cv_cxx_have_std_namespace = xyes],
 	AC_DEFINE([XERCES_STD_NAMESPACE], 1, [Define if the std namespace is supported]))
-	
+
 AS_IF([test x$ac_cv_cxx_have_std_libs = xyes],
 	AC_DEFINE([XERCES_NEW_IOSTREAMS], 1, [Define if the isstream library can be included as <iostream>]))
 
