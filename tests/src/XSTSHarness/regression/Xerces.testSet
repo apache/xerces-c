@@ -365,6 +365,17 @@
 			<current status="accepted" date="2008-02-13"/>
 		</schemaTest>
 	</testGroup>
+	<testGroup name="XERCESC-1718">
+		<annotation>
+			<documentation>Invalid anonymous type definition with the name attribute is not caught in some situations</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1718"/>
+		<schemaTest name="XERCESC-1718">
+			<schemaDocument xlink:href="./XERCESC-1718/test.xsd"/>
+			<expected validity="invalid"/>
+			<current status="accepted" date="2008-02-25"/>
+		</schemaTest>
+	</testGroup>
 	<testGroup name="XERCESC-1745">
 		<annotation>
 			<documentation>Inheritance by restriction does not detect a missing type from an imported schema</documentation>
