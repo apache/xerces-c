@@ -354,7 +354,7 @@
            of the features below are set using the "setter" methods (e.g. <code>setDoNamespaces</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getDoNamespaces</code>).
            The following only gives you a quick summary of supported features.  Please
-           refer to <jump href="api.html">API Documentation</jump> for complete detail.
+           refer to <jump href="api-&XercesC2Series;.html">API Documentation</jump> for complete detail.
            </p>
            <p>None of these features can be modified in the middle of a parse, or an exception will be thrown.</p>
 
@@ -637,7 +637,7 @@
                             fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
-                <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
+                <tr><th><em>note: </em></th><td> See <jump href="program-others-&XercesC2Series;.html#UseSpecificScanner">Use Specific Scanner</jump>
                 for more programming details. </td></tr>
             </table>
 

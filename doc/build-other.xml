@@ -141,9 +141,9 @@ gmake</source>
          name based on the parser version (using apache xerces versioning)):</p>
 <source>qsh:
 cd &lt;full path to &XercesCName;&gt;/lib
-qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
+qar -cuv &XercesC2UnixLib;&XercesC2UnixSoName;.so *.o
 will results in
-command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesCUnixLib;&XercesCUnixSoName;.so')
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesC2UnixLib;&XercesC2UnixSoName;.so')
 command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
 
 
@@ -172,8 +172,8 @@ OPTION(*DUPPROC *DUPVAR *NOWARN) AUT(*USE)
 <source>
 qsh:
 cd &lt;full path to &XercesCName;&gt;/lib
-ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesCUnixLib;&XercesCUnixSoName;.so
-qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
+ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesC2UnixLib;&XercesC2UnixSoName;.so
+qar -cuv &XercesC2UnixLib;&XercesC2UnixSoName;.so *.o
 </source>
 
          <p>If you are on a v4 system using the ILE C++ PRPQ compiler (which is referred

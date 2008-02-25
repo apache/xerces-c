@@ -52,7 +52,7 @@
 
         <p>Extract &XercesCName; source files from the .zip archive using WinZip, say
         in the root directory (an arbitrary drive x:). It should create a directory like
-        '<code>x:\&XercesCSrcInstallDir;</code>'.</p>
+        '<code>x:\&XercesC2SrcInstallDir;</code>'.</p>
 
         <p>Extract the ICU files, using WinZip, in root directory of the disk
         where you have installed &XercesCName;, sources. After extraction, there
@@ -66,21 +66,21 @@
         '<code>VCVARS32.BAT</code>' or a similar file. Then at the prompt
         enter:</p>
 
-<source>set XERCESCROOT=x:\&XercesCSrcInstallDir;
+<source>set XERCESCROOT=x:\&XercesC2SrcInstallDir;
 set ICUROOT=x:\icu
-cd x:\&XercesCSrcInstallDir;\scripts
+cd x:\&XercesC2SrcInstallDir;\scripts
 </source>
 
         <p>To build with ICU, either specify using ICU transcoding service,</p>
 
 <source>
-perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -t icu
+perl packageBinaries.pl -s x:\&XercesC2SrcInstallDir; -o x:\temp\&XercesC2InstallDir;-win32 -t icu
 </source>
 
         <p> or specify using ICU message loader service</p>
 
 <source>
-perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallDir;-win32 -m icu
+perl packageBinaries.pl -s x:\&XercesC2SrcInstallDir; -o x:\temp\&XercesC2InstallDir;-win32 -m icu
 </source>
 
         <p>(Match the source directory to your system; the target directory can be
@@ -101,7 +101,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         </s3>
         <s3 title="Building on UNIX">
         <p>Extract &XercesCName; source files into, say, the home directory ($HOME).
-        It should create a directory like '<code>$HOME/&XercesCSrcInstallDir;</code>'.</p>
+        It should create a directory like '<code>$HOME/&XercesC2SrcInstallDir;</code>'.</p>
 
         <p>Extract the ICU files into the same directory
         where you have installed &XercesCName; sources. After extraction, there
@@ -113,7 +113,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         and <code>libicudt*</code> available from your library search path.</p>
 
         <p>Then build the &XercesCName; with ICU.  This is similar to building a standalone
-        &XercesCName; library as instructed in <jump href="build-winunix.html#UNIX">
+        &XercesCName; library as instructed in <jump href="build-winunix-&XercesC2Series;.html#UNIX">
         "Building &XercesCName; on UNIX platforms"</jump>; except that you have to specify
         the transcoder option <code>'-t icu'</code> and/or the message loader option
         <code>'-m icu'</code>.  For example:</p>
@@ -122,21 +122,21 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         <p>Or instead of building the ICU and &XercesCName; manually in two steps,
         you can use the bundled perl script '<code>packageBinaries.pl</code>' which
         will build both of them in one step.  For example:</p>
-<source>export XERCESCROOT=$HOME/&XercesCSrcInstallDir;
+<source>export XERCESCROOT=$HOME/&XercesC2SrcInstallDir;
 export ICUROOT=$HOME/icu
-cd $HOME/&XercesCSrcInstallDir;/scripts
+cd $HOME/&XercesC2SrcInstallDir;/scripts
 </source>
 
         <p>To build with ICU, either specify using ICU transcoding service,</p>
 
 <source>
-perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -t icu
+perl packageBinaries.pl -s $HOME/&XercesC2SrcInstallDir; -o $HOME/temp/&XercesC2InstallDir;-aix -t icu
 </source>
 
         <p> or specify using ICU message loader service</p>
 
 <source>
-perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -m icu
+perl packageBinaries.pl -s $HOME/&XercesC2SrcInstallDir; -o $HOME/temp/&XercesC2InstallDir;-aix -m icu
 </source>
 
         <p>If the parser is built with icu message loader (as mentioned above), or message
@@ -152,12 +152,12 @@ perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCIn
         <p>&XercesCName; may be built from the distributed source archive directly on Linux
         using RPM.  For example: </p>
 <source>
-rpm -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.0 and older)
+rpm -ta &XercesC2SrcInstallDir;.tar.gz (rpm 4.0 and older)
 or
-rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat 8)
+rpmbuild -ta &XercesC2SrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat 8)
 </source>
         <p>The &XercesCName; RPM specification can be found in
-           <br/><code>&XercesCSrcInstallDir;/xerces-c.spec</code>.</p>
+           <br/><code>&XercesC2SrcInstallDir;/xerces-c.spec</code>.</p>
         <p>Please refer to the <jump href="http://www.rpm.org/RPM-HOWTO">RPM-HOWTO</jump>,
            for more RPM related information.</p>
     </s2>
@@ -234,12 +234,12 @@ rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat
 
         <ul>
           <li>JDK 1.2.2 (or later).</li>
-          <li>Xerces-J 1.0.1 (provided by &XercesCToolsInstallDir;)</li>
-          <li>Xalan-J 0.19.2 (provided by &XercesCToolsInstallDir;)</li>
-          <li>Stylebook 1.0-b2 (provided by &XercesCToolsInstallDir;)</li>
+          <li>Xerces-J 1.0.1 (provided by &XercesC2ToolsInstallDir;)</li>
+          <li>Xalan-J 0.19.2 (provided by &XercesC2ToolsInstallDir;)</li>
+          <li>Stylebook 1.0-b2 (provided by &XercesC2ToolsInstallDir;)</li>
         </ul>
 
-        <p>Before proceeding, copy the contents of the &XercesCToolsInstallDir;
+        <p>Before proceeding, copy the contents of the &XercesC2ToolsInstallDir;
            distribution into your <code>$XERCESCROOT</code>. Then invoke
            a terminal or a command window and setup PATH to include the
            JDK 1.2.2 bin directory. Next, cd to the <code>$XERCESCROOT</code>
@@ -275,7 +275,7 @@ createDocs.bat (Windows)
     <s2 title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
       <p>All platform dependent code in &XercesCProjectName; has been
       isolated to a couple of files, which should ease the porting
-      effort.  Please refer to <jump href="program-others.html#PortingGuidelines">Porting
+      effort.  Please refer to <jump href="program-others-&XercesC2Series;.html#PortingGuidelines">Porting
       Guidelines</jump> for further details.</p>
     </s2>
 
@@ -333,8 +333,8 @@ createDocs.bat (Windows)
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
         solved this same problem before you, by checking the
-        <jump href="mailing-lists.html">&XercesCName; mailing list archives</jump> and
-	<jump href="&JiraURL;">&XercesCName; bug database</jump>.</p>
+        <jump href="&MailURI;">&XercesCName; mailing list archives</jump> and
+	<jump href="&BugURI;">&XercesCName; bug database</jump>.</p>
     </s2>
 
 </s1>

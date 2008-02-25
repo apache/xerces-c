@@ -20,20 +20,6 @@
 
 <faqs title="Distributing &XercesCName;">
 
-  <faq title="What platforms / compilers are being used to build the binary distribution kits?">
-
-    <q>What platforms / compilers are being used to build the binary distribution kits?</q>
-
-    <a>
-
-      <p>&XercesCProjectName; binaries has been built on the following platforms with
-        these compilers</p>
-
-	   &build-winunix-supported-platforms;
-
-    </a>
-  </faq>
-
     <faq title="What are the differences between Xerces-C and XML4C?">
         <q>What are the differences between Xerces-C and XML4C?</q>
         <a>
@@ -61,12 +47,12 @@
 
             <p>You only need to distribute <em>one</em> file:<br></br>
 
-            &XercesCWindowsDLL;.dll for Windows, or<br/>
-            &XercesCUnixLib;&XercesCUnixSoName;.a for AIX, or<br/>
-            &XercesCUnixLib;.so.&XercesCUnixSoName; for Solaris/Linux, or<br/>
-            &XercesCUnixLib;.sl.&XercesCUnixSoName; for HP-UX on PA-RISC, or<br/>
-            &XercesCUnixLib;.so.&XercesCUnixSoName; for HP-UX on IA64, or<br/>
-            &XercesCUnixLib;.&XercesCUnixSoName;.dylib for Mac OS X.
+            &XercesC2WindowsDLL;.dll for Windows, or<br/>
+            &XercesC2UnixLib;&XercesC2UnixSoName;.a for AIX, or<br/>
+            &XercesC2UnixLib;.so.&XercesC2UnixSoName; for Solaris/Linux, or<br/>
+            &XercesC2UnixLib;.sl.&XercesC2UnixSoName; for HP-UX on PA-RISC, or<br/>
+            &XercesC2UnixLib;.so.&XercesC2UnixSoName; for HP-UX on IA64, or<br/>
+            &XercesC2UnixLib;.&XercesC2UnixSoName;.dylib for Mac OS X.
             </p>
 
             <p>However, if you are using the ICU transcoder then in
@@ -129,8 +115,8 @@ options are:  -s &lt;source_directory&gt;
               -t &lt;transcoder&gt; can be 'icu' or 'native'
               -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
               -h to get help on these commands
-Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
-                                 -o$HOME/&XercesCInstallDir;
+Example: perl packageBinaries.pl -s$HOME/&XercesC2SrcInstallDir;
+                                 -o$HOME/&XercesC2InstallDir;
                                  -cgcc -xg++ -minmem
                                  -nfileonly -tnative</source>
 
@@ -150,7 +136,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             publish binaries for every platform. If you wish to
             contribute your time and effort in building binaries for a
             specific platform/environment then please send a mail to the
-            <jump href="mailing-lists.html">&XercesCName; development mailing list</jump>.
+            <jump href="&MailURI;">&XercesCName; developer mailing list</jump>.
             We can definitely use any extra help in this open source
             project</p>
         </a>
@@ -166,7 +152,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
           many platforms as there are. Again, due to limited resources
           we cannot do all the ports. We will help you make this port
           happen. Here are some <jump
-          href="program-others.html#PortingGuidelines">Porting
+          href="program-others-&XercesC2Series;.html#PortingGuidelines">Porting
           Guidelines</jump>.</p>
 
             <p>We strongly encourage you to submit the changes that
@@ -175,7 +161,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             them available in the future releases.</p>
 
             <p>All porting changes may be sent to the
-            <jump href="mailing-lists.html">&XercesCName; development mailing list</jump>
+            <jump href="&MailURI;">&XercesCName; developer mailing list</jump>
             .</p>
         </a>
     </faq>
@@ -185,7 +171,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
         <q>How can I port &XercesCProjectName; to my favourite platform?</q>
         <a>
           <p>Here are some <jump
-          href="program-others.html#PortingGuidelines">Porting
+          href="program-others-&XercesC2Series;.html#PortingGuidelines">Porting
           Guidelines</jump>.</p>
         </a>
     </faq>
@@ -207,7 +193,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             <jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
 	    <jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
 
-            <p>See <jump href="faq-build.html#faq-18">
+            <p>See <jump href="faq-build-&XercesC2Series;.html#faq-18">
             FAQ: Regenerating (API) documentation?</jump></p>
 
         </a>
@@ -219,8 +205,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
         <a>
             <p>Yes! Read the license agreement first and if you still
             have further questions, then please address them to the
-            <jump href="mailing-lists.html">&XercesCName; user mailing list</jump>
-            .</p>
+            <jump href="&MailURI;">&XercesCName; user mailing list</jump>.</p>
 
         </a>
 </faq>

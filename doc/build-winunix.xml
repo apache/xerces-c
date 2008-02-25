@@ -43,7 +43,7 @@
             project inside your application's solution.</p>
             <p>The solutions containing the &XercesCName; project files and
             all other samples are in the following sub-directories in the
-            &XercesCSrcInstallDir; directory:</p>
+            &XercesC2SrcInstallDir; directory:</p>
 
 <source>
 (For VC6)   Projects\Win32\VC6\xerces-all\xerces-all.dsw
@@ -65,7 +65,7 @@
 </source>
 
             <p>You must make sure that you are linking your application with
-            the &XercesCWindowsLib;.lib library (or Debug/Static version of it
+            the &XercesC2WindowsLib;.lib library (or Debug/Static version of it
             and also make sure that the associated DLL is somewhere in your
             path.</p>
 
@@ -77,9 +77,7 @@
 
             <note>If you are working on the AlphaWorks version which uses ICU,
                   you must have the ICU data DLL named <code>icudata.dll</code>
-                  available from your path setting. For finding out where you
-                  can get ICU from and build it, look at the
-                  <jump href="build-misc.html#faq-1">How to Build ICU</jump>.</note>
+                  available from your path setting.</note>
 
             <note>If the library is built with the ICU message loader,
                   or message catalog loader, then you need to make sure
@@ -120,15 +118,6 @@
         and what risks you are taking. So read the following instructions
         carefully before attempting to build it yourself.</p>
 
-        <p>Besides having all necessary build tools, you also need to know what
-        compilers we have tested &XercesCName; on. The following table lists the
-        relevant platforms and compilers.</p>
-
-     	&build-winunix-supported-platforms;
-
-        <!-- note about building on untested platforms - see entities.ent -->
-        &build-winunix-note;
-
         <p><em>Differences between the UNIX platforms:</em> The description below is
         generic, but as every programmer is aware, there are minor differences
         within the various UNIX flavors the world has been bestowed with.
@@ -141,10 +130,6 @@
         discussion assumes you are working on Linux, but it is with subtle
         understanding that you know how to interpret it for the other UNIX flavors.</p>
 
-        <note>If you wish to build &XercesCName; with ICU,
-        look at the <jump href="build-misc.html#faq-1">Building &XercesCName; with ICU</jump>.
-        It tells you where you can get ICU and how to build &XercesCName; with it.</note>
-
         <s3 title="Setting build environment variables">
             <p>Before doing the build, you must first set your environment variables
             to pick-up the compiler and also specify where you extracted &XercesCName;
@@ -154,7 +139,7 @@
             compiler invocation command without any parameters (e.g. xlc_r, or g++, or cc)
             and check if you get a proper response back.</p>
             <p>Next set your &XercesCName; root path as follows:</p>
-<source>export XERCESCROOT=&lt;full-path-to-&XercesCSrcInstallDir;&gt;</source>
+<source>export XERCESCROOT=&lt;full-path-to-&XercesC2SrcInstallDir;&gt;</source>
 
             <p>This should be the full path of the directory where you extracted &XercesCName;.
             Note that this path should not have any spaces in it or the build process will fail. The
@@ -168,7 +153,7 @@
             <p>As mentioned earlier, to build &XercesCName; from the source distribution,
             you will need GNU make.</p>
 
-            <p>If you look into the src/xercesc sub-directory in &XercesCSrcInstallDir;,
+            <p>If you look into the src/xercesc sub-directory in &XercesC2SrcInstallDir;,
              you will notice the familiar configure script. It is tempting to run
             this script directly as is normally the case, but wait a minute.
             Even if you are
@@ -447,7 +432,7 @@ make
 </source>
 
          <p>The sample executable can be found in the bin sub-directory in
-            &XercesCSrcInstallDir;. To delete all the generated object
+            &XercesC2SrcInstallDir;. To delete all the generated object
             files and executables, run:</p>
 <source>
 make clean
@@ -551,7 +536,7 @@ make clean
 		   </p>
 
            <ul>
-		       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB6\Xerces-all\Xerces-all.bpg </li>
+		       <li> &XercesC2SrcInstallDir;\Projects\Win32\BCB6\Xerces-all\Xerces-all.bpg </li>
     	   </ul>
 
 		   <p> Each project in the group refers a directory below \Xerces-all.
@@ -559,7 +544,7 @@ make clean
            </p>
 
            <ul>
-    	       <li> &XercesCSrcInstallDir;\Projects\Win32\BCB6\Xerces-all\XercesLib </li>
+    	       <li> &XercesC2SrcInstallDir;\Projects\Win32\BCB6\Xerces-all\XercesLib </li>
 		   </ul>
 
            <p> To build any project, open the project manager.  Double click on the project
@@ -581,7 +566,7 @@ make clean
 		&XercesCName;.</p>
 
         <ol>
-		   <li>Change directory to <code> &XercesCSrcInstallDir;\Projects\Win32\BCC.551\Xerces-all</code></li>
+		   <li>Change directory to <code> &XercesC2SrcInstallDir;\Projects\Win32\BCC.551\Xerces-all</code></li>
            <li>Run <code>MakeBuildDirs.bat</code>.</li>
 		   <li>Then issue</li>
 		       <ul>
@@ -603,18 +588,18 @@ make clean
             <p>&XercesCName; source distribution provides a makefile <code>all.mak</code>
             which will build everything including samples, tests and the parser library.</p>
 <source>
-cd &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\all
+cd &XercesC2SrcInstallDir;\Projects\Win32\VC6\xerces-all\all
 nmake -f all.mak "CFG=all - Win64 Release" CPP=ecl.exe
 </source>
 
             <p>If you want to just build the &XercesCName; parser library alone, then</p>
 <source>
-cd &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib
+cd &XercesC2SrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib
 nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 </source>
 
             <p>You must make sure that you are linking your application with
-            the &XercesCWindowsLib;.lib library and also make sure that
+            the &XercesC2WindowsLib;.lib library and also make sure that
             the associated DLL is somewhere in your path.</p>
         </s3>
     </s2>

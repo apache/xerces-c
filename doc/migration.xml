@@ -22,17 +22,17 @@
     <s2 title="Migration Archive">
 
        <p>For migration information to &XercesCName; 2.7.0 or earlier,
-          please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
+          please refer to <jump href="migrate_archive-&XercesC2Series;.html">Migration Archive. </jump></p>
 
     </s2>
 
-    <s2 title="Migrating from &XercesCName; 2.7.0 to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 2.7.0 to &XercesCName; &XercesC2Version;">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; 2.7.0 code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 2.7.0 code base and the &XercesCName; &XercesC2Version;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures280">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="NewFeatures280">New features in &XercesCName; &XercesC2Version;</link></li>
         <li><link anchor="API280">Public API Changes</link></li>
         <ul>
             <li><link anchor="NewAPI280">New Public API</link></li>
@@ -42,7 +42,7 @@
       </ul>
 
     <anchor name="NewFeatures280"/>
-    <s3 title="New features in &XercesCName; &XercesCVersion;">
+    <s3 title="New features in &XercesCName; &XercesC2Version;">
       <ul>
         <li>Exponential growth of memory block (from 16KB to 128KB) that are allocated by the DOM heap.</li>
         <li>The NODE_CLONED notification is now sent to each node's user data handler when cloning the entire DOMDocument.</li>
@@ -58,7 +58,7 @@
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           2.7.0; and the &XercesCName; &XercesCVersion; releases
+           2.7.0; and the &XercesCName; &XercesC2Version; releases
            of the parser. </p>
 
         <anchor name="NewAPI280"/>
