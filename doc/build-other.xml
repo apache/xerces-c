@@ -141,9 +141,9 @@ gmake</source>
          name based on the parser version (using apache xerces versioning)):</p>
 <source>qsh:
 cd &lt;full path to &XercesCName;&gt;/lib
-qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
+qar -cuv &XercesC3UnixLib;&XercesC3UnixSoName;.so *.o
 will results in
-command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesCUnixLib;&XercesCUnixSoName;.so')
+command = CRTBNDDIR BNDDIR(yourlib/libxercesc) TEXT('/yourlib/&XercesCName;/lib/&XercesC3UnixLib;&XercesC3UnixSoName;.so')
 command = ADDBNDDIRE BNDDIR(yourlib/libxercesc) OBJ((yourlib/LIBXERCESC *SRVPGM) )</source>
 
 
@@ -172,8 +172,8 @@ OPTION(*DUPPROC *DUPVAR *NOWARN) AUT(*USE)
 <source>
 qsh:
 cd &lt;full path to &XercesCName;&gt;/lib
-ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesCUnixLib;&XercesCUnixSoName;.so
-qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
+ln -s /qsys.lib/&lt;outputdir&gt;.lib/libxercesc.srvpgm   &XercesC3UnixLib;&XercesC3UnixSoName;.so
+qar -cuv &XercesC3UnixLib;&XercesC3UnixSoName;.so *.o
 </source>
 
          <p>If you are on a v4 system using the ILE C++ PRPQ compiler (which is referred
@@ -183,8 +183,54 @@ qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
          <ul>
          <li>src/xercesc/dom/impl/DOMDocumentImpl.cpp</li>
          <li>src/xercesc/dom/impl/DOMDocumentImpl.hpp</li>
+         <li>src/xercesc/dom/deprecated/DocumentImpl.cpp</li>
+         <li>src/xercesc/dom/deprecated/DocumentImpl.hpp</li>
          <li>src/xercesc/validators/common/ContentSpecNode.hpp</li>
          </ul>
+
+         <p>Update  the following routines in src/xercesc/dom/deprecated/DocumentImpl.cpp as follows:</p>
+<source>
+ void DocumentImpl::setUserData(NodeImpl* n, void* data)
+ {
+	if (!userData &amp;&amp; data)
+  #ifdef __OS400__
+		userData = new RefHashTableOf&lt;char&gt;(29, false, new HashPtr());
+  #else
+		userData = new RefHashTableOf&lt;void&gt;(29, false, new HashPtr());
+  #endif
+	if (!data &amp;&amp; userData)
+		userData-&gt;removeKey((void*)n);
+	else
+  #ifdef __OS400__
+		userData-&gt;put((void*)n,(char*)data);
+  #else
+		userData-&gt;put((void*)n,data);
+  #endif
+ }
+
+ void* DocumentImpl::getUserData(NodeImpl* n)
+ {
+	if (userData)
+  #ifdef __OS400__
+		return (void*)userData-&gt;get((void*)n);
+  #else
+		return userData-&gt;get((void*)n);
+  #endif
+	else
+		return null;
+ }
+</source>
+
+         <p>To update src/xercesc/dom/deprecated/DoumentImpl.hpp as follows:</p>
+
+<source>
+ #ifdef __OS400__
+	RefHashTableOf&lt;char&gt;		*userData;
+ #else
+
+	RefHashTableOf&lt;void&gt;		*userData;
+ #endif
+</source>
 
           <p>Update the following routines in src/xercesc/dom/impl/DOMDocumentImpl.cpp as follows:</p>
 <source>
@@ -382,13 +428,6 @@ gmake </source>
 				<li>The DOMPrint project illustrates one such usage of the Xerces.framework.
 				</li>
 			</ul>
-
-			<p>Projects for Apple's Project Builder environment, which is no longer supported
-			under Mac OS X 10.3, are provided but may be out of date. You may need to add or
-			delete files from the project in order to support changes in &XercesCName;. Please feel
-			free to submit patches against these projects If you care about the Project Builder
-			projects, and want to keep them up to date.
-			</p>
 			
 		</s3>
 		
@@ -408,14 +447,14 @@ gmake </source>
 				</li>
 			</ul>
 		
-<source>setenv XERCESCROOT "&lt;xerces-c-directory&gt;"
+<source>export XERCESCROOT="&lt;xerces-c-directory&gt;"
 cd src/xercesc
-./runConfigure -p macosx -n native
+./runConfigure -p macosx -n native -t native
 make</source>
 			
 			<ul>
 				<li>Similar instructions apply to build the samples and tests, though the
-				<code>-n</code> flag is not used in these cases:
+				<code>-n</code> and <code>-t</code> flags are not used in these cases:
 				</li>
 			</ul>
 		

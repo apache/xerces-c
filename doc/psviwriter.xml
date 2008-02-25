@@ -48,7 +48,7 @@ Options:
 </source>
           <p>Here is some sample output from PSVWriter (as the output is verbose
              it has been truncated)</p>
-<source>cd &XercesCInstallDir;-linux/samples/data
+<source>cd &XercesC3InstallDir;-linux/samples/data
 PSVIWriter personal.xml
 
 &lt;document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

@@ -20,13 +20,16 @@
 
 <s1 title="&XercesCFullName;">
 
-    <s2 title="&XercesCName; Version &XercesCVersion;">
+    <s2 title="&XercesCName; Version &XercesC3Version;">
 
         <p>&XercesCName; is a validating XML parser written in a portable subset of
         C++.   &XercesCName; makes it easy to give your application the ability to read and write
         <jump href="http://www.w3.org/XML/">XML</jump> data.    A shared
-        library is provided for parsing, generating, manipulating, and validating XML documents.
-        </p>
+        library is provided for parsing, generating, manipulating, and validating XML documents
+        using the DOM, SAX, and SAX2 APIs. For an introduction to programming
+        with &XercesCName; refer to the <jump href="program-&XercesC3Series;.html">Programming
+        Guide</jump>.</p>
+
         <p>&XercesCName; is faithful to the
         <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump> recommendation
         and many associated standards (see <link anchor="Features">Features</link> below).
@@ -60,8 +63,8 @@
                <li><jump href="http://www.w3.org/TR/2004/REC-xml-20040204/">
                    XML 1.0 (Third Edition)</jump>, W3C Recommendation</li>
 			   <li><jump href="http://www.w3.org/TR/2004/REC-xml11-20040204/">
-                   XML 1.1 (First Edition)</jump>, W3C Recommendation 
-                   (Note: section 2.13 Normalization Checking has not been implemented)</li>                   
+                   XML 1.1 (First Edition)</jump>, W3C Recommendation
+                   (Note: section 2.13 Normalization Checking has not been implemented)</li>
                <li><jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/">
                    DOM Level 1 Specification</jump>, W3C Recommendation of October 1, 1998</li>
                <li><jump href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/">
@@ -71,18 +74,18 @@
                    W3C Recommendation of November 13, 2000</li>
                <li><jump href="http://sax.sourceforge.net/">SAX 1.0 and SAX 2.0</jump></li>
                <li><jump href="http://www.w3.org/TR/1999/REC-xml-names-19990114/">
-                   Namespaces in XML</jump>, W3C Recommendation of January 14, 1999</li>    
+                   Namespaces in XML</jump>, W3C Recommendation of January 14, 1999</li>
 	           <li><jump href="http://www.w3.org/TR/xml-names11/">
-                   Namespaces in XML 1.1</jump>, W3C Recommendation</li>                                             
+                   Namespaces in XML 1.1</jump>, W3C Recommendation</li>
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/">
                    XML Schema Part 1: Structure</jump>, W3C Recommendation 2 May 2001</li>
                <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">
-                   XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>               
+                   XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>
                <li><jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407">
             	   DOM Level 3.0 Core Specification</jump>, W3C Recommendation 7 April 2004</li>
                <li><jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
             	   DOM Level 3.0 Load and Save Specification</jump>, W3C Recommendation 7 April 2004<br/>
-	               See <jump href="dom3.html">DOM Level 3 Support</jump> for detail.</li>
+	               See <jump href="dom3-&XercesC3Series;.html">DOM Level 3 Support</jump> for detail.</li>
                <li><jump href="http://www.w3.org/TR/2006/REC-xinclude-20061115/">
             	   XML Inclusions (XInclude) 1.0 (Second Edition)</jump>, W3C Recommendation 15 November 2006</li>
             </ul>
@@ -94,28 +97,10 @@
         </ul>
     </s2>
 
-    <s2 title="Platforms with Binaries">
-      &build-winunix-supported-platforms;
-	</s2>
-
-    <s2 title="Other ports...">
-        <ul>
-            <li>OS/390</li>
-            <li>AS/400</li>
-            <li>FreeBSD</li>
-            <li>SGI IRIX</li>
-            <li>Macintosh</li>
-            <li>OS/2</li>
-            <li>PTX</li>
-            <li>UnixWare</li>
-            <li>and more!</li>
-        </ul>
-    </s2>
-
-    <s2 title='License Information'>
-       <p>The &XercesCName; Version &XercesCVersion; is available in both source distribution and
+    <s2 title="License Information">
+       <p>The &XercesCName; Version &XercesC3Version; is available in both source distribution and
           binary distribution.   &XercesCName; is made available under the
-          <jump href='http://www.apache.org/licenses/LICENSE-2.0.html'>Apache Software License, Version 2.0</jump>.
+          <jump href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache Software License, Version 2.0</jump>.
        </p>
     </s2>
 

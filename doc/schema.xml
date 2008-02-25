@@ -19,17 +19,21 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 <s1 title="Schema">
        <s2 title="Introduction">
-               <p>This package contains an implementation of the W3C XML Schema
-                 Language, a recommendation of the Worldwide Web Consortium
-                 available in three parts:
-                 <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
-                 <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
-                 <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
-                 We consider this implementation complete except for the limitations cited below.
-               </p>
+         <p>This package contains an implementation of the W3C XML Schema
+            Language, a recommendation of the Worldwide Web Consortium
+            available in three parts:
+            <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
+            <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
+            <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
+            We consider this implementation complete except for the limitations cited below.
+         </p>
 
-               &schema-feedback-info;
-
+         <p>We would very much appreciate feedback on the package via the
+            <jump href="&MailURI;">&XercesCName; mailing lists</jump>,
+            and we encourage the submission of bugs as described on the
+            <jump href="&BugURI;">Bug Reporting</jump> page. Please
+            read this document before using this package.
+         </p>
 
        </s2>
        <anchor name="limitation"/>
@@ -42,8 +46,8 @@
             in the parser.  Large values for <code>minOccurs</code> should be
             avoided, and <code>unbounded</code> should be used instead of
             a large value for <code>maxOccurs</code>.</li>
-            <li>The parser treats local elements in the same scope with the 
-            same name and namespace as one element declaration and does not 
+            <li>The parser treats local elements in the same scope with the
+            same name and namespace as one element declaration and does not
             differentiate between them.</li>
          </ul>
        </s2>
@@ -61,8 +65,8 @@
          </s3>
 
          <s3 title="out-of-bound float values">
-         <p>                                              
-                For float data, the specs does not explicitly specify how to deal with 
+         <p>
+                For float data, the specs does not explicitly specify how to deal with
                 out-of-bound data. Xerces converts these values as below (the values
                 depend on the system specific values of FLT_MAX and FLT_MIN):
          </p>
@@ -74,30 +78,30 @@
                    <tr>
                        <td>less than -FLT_MAX (approx -3.402823466e+38) </td>
                        <td>-INF</td>
-                   </tr>                
+                   </tr>
                    <tr>
                        <td>greater than -FLT_MIN (approx -1.175494351e-38) and less than -0 </td>
                        <td>-0</td>
-                   </tr>                
+                   </tr>
                    <tr>
                        <td>greater than +0 and less than +FL_MIN (approx +1.175494351e-38) </td>
                        <td>+0</td>
-                   </tr>                
+                   </tr>
                    <tr>
                        <td>greater than +FLT_MAX (approx 3.402823466e+38) </td>
                        <td>+INF</td>
-                   </tr>                
-                </table>                   
+                   </tr>
+                </table>
             <p>
                 The effect of this conversion would invalidate an instance data, for example,
                 "1.1e-39", of a data type derived from float, with minExclusive value '+0',
                 since "1.1e-39" is converted to "+0", which is the same as the minExclusive.
-            </p>                
+            </p>
 
          </s3>
 
          <s3 title="out-of-bound double values">
-         <p>                                              
+         <p>
                 Similarly, Xerces converts double values as below (the values
                 depend on the system specific values of DBL_MAX and DBL_MIN):
          </p>
@@ -109,20 +113,20 @@
                    <tr>
                        <td>less than -DBL_MAX (approx -1.7976931348623158e+308) </td>
                        <td>-INF</td>
-                   </tr>                
+                   </tr>
                    <tr>
                        <td>greater than -DBL_MIN (approx -2.2250738585072014e-308) and less than -0 </td>
                        <td>-0</td>
-                   </tr>                
+                   </tr>
                    <tr>
                        <td>greater than +0 and less than +DBL_MIN (approx +2.2250738585072014e-308) </td>
                        <td>+0</td>
-                   </tr>                
+                   </tr>
                    <tr>
                        <td>greater than +DBL_MAX (approx +1.7976931348623158e+308) </td>
                        <td>+INF</td>
-                   </tr>                
-                </table>                                   
+                   </tr>
+                </table>
           </s3>
        </s2>
 

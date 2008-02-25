@@ -35,9 +35,9 @@
 
     <anchor name="DOM3"/>
     <s2 title="DOM Level 3 Support in &XercesCName;">
-      <p>The &XercesCName; &XercesCVersion; contains a partial implementation of the W3C
+      <p>The &XercesCName; &XercesC3Version; contains a partial implementation of the W3C
          Document Object Model Level 3.  This implementation is experimental.    See the document
-         <jump href="dom3.html"> DOM Level 3 Support</jump> for details.
+         <jump href="dom3-&XercesC3Series;.html"> DOM Level 3 Support</jump> for details.
       </p>
     </s2>
 
@@ -310,7 +310,7 @@
         }
 
         XercesDOMParser* parser = new XercesDOMParser();
-        parser->setValidationScheme(XercesDOMParser::Val_Always);    
+        parser->setValidationScheme(XercesDOMParser::Val_Always);
         parser->setDoNamespaces(true);    // optional
 
         ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
@@ -354,7 +354,7 @@
            of the features below are set using the "setter" methods (e.g. <code>setDoNamespaces</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getDoNamespaces</code>).
            The following only gives you a quick summary of supported features.  Please
-           refer to <jump href="api.html">API Documentation</jump> for complete detail.
+           refer to <jump href="api-&XercesC3Series;.html">API Documentation</jump> for complete detail.
            </p>
 
             <anchor name="createEntityRef"/>
@@ -552,26 +552,26 @@
                 improves the performance.</td></tr>
             </table>
             <p/>
-            
+
             <anchor name="IdentityConstraintChecking"/>
             <table>
                 <tr><th colspan="2"><em>void setIdentityConstraintChecking(const bool);</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable identity constraint checking. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable identity constraint checking. </td></tr>
-                <tr><th><em>default:</em></th><td> true </td></tr>                
+                <tr><th><em>default:</em></th><td> true </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="GenerateSyntheticAnnotations"/>
             <table>
                 <tr><th colspan="2"><em>void setGenerateSyntheticAnnotations(const bool);</em></th></tr>
-                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be 
+                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be
                 generated when a schema component has non-schema attributes but no child annotation. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable generation of synthetic annotations. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>default:</em></th><td> false </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="XercesValidateAnnotations"/>
             <table>
                 <tr><th colspan="2"><em>setValidateAnnotation</em></th></tr>
@@ -580,80 +580,80 @@
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
-            <p/>         
+            <p/>
 
             <anchor name="IgnoreAnnotations"/>
             <table>
                 <tr><th colspan="2"><em>setIgnoreAnnotations</em></th></tr>
                 <tr><th><em>true:</em></th><td> Do not generate XSAnnotations when traversing a schema.</td></tr>
                 <tr><th><em>false:</em></th><td> Generate XSAnnotations when traversing a schema.</td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>default:</em></th><td> false </td></tr>
             </table>
-            <p/>    
-            
+            <p/>
+
             <anchor name="DisableDefaultEntityResolution"/>
             <table>
                 <tr><th colspan="2"><em>setDisableDefaultEntityResolution</em></th></tr>
                 <tr><th><em>true:</em></th><td> The parser will not attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
                 <tr><th><em>false:</em></th><td> The parser will attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>default:</em></th><td> false </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="SkipDTDValidation"/>
             <table>
                 <tr><th colspan="2"><em>setSkipDTDValidation</em></th></tr>
                 <tr><th><em>true:</em></th><td> When schema validation is on the parser will ignore the DTD, except for entities.</td></tr>
                 <tr><th><em>false:</em></th><td> The parser will not ignore DTDs when validating.</td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <link anchor="schema">DoSchema</link></td></tr>                
+                <link anchor="schema">DoSchema</link></td></tr>
             </table>
-            <p/>                                               
-                        
+            <p/>
+
             <anchor name="XercesIgnoreCachedDTD"/>
-            <table>            
+            <table>
                 <tr><th colspan="2"><em>setIgnoreCachedDTD</em></th></tr>
-                <tr><th><em>true:</em></th><td> Ignore a cached DTD when an XML document contains both an 
+                <tr><th><em>true:</em></th><td> Ignore a cached DTD when an XML document contains both an
                 								internal and external DTD, and the use cached grammar from parse option
                 								is enabled. Currently, we do not allow using cached DTD grammar when an
                 								internal subset is present in the document. This option will only affect
-                								the behavior of the parser when an internal and external DTD both exist 
+                								the behavior of the parser when an internal and external DTD both exist
                 								in a document (i.e. no effect if document has no internal subset).</td></tr>
                 <tr><th><em>false:</em></th><td> Don't ignore cached DTD. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="use-cached">useCachedGrammarInParse</link></td></tr>
             </table>
             <p/>
-            
+
             <anchor name="XercesHandleMultipleImports"/>
-            <table>            
+            <table>
                 <tr><th colspan="2"><em>setHandleMultipleImports</em></th></tr>
                 <tr><th><em>true:</em></th><td> During schema validation allow multiple schemas with the same namespace
-                                                to be imported.</td></tr>            
+                                                to be imported.</td></tr>
                 <tr><th><em>false:</em></th><td> Don't import multiple schemas with the same namespace. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                                
-            </table>            
+                <tr><th><em>default:</em></th><td> false </td></tr>
+            </table>
             <p/>
-                        
+
             <anchor name="CreateSchemaInfo"/>
             <table>
                 <tr><th colspan="2"><em>setCreateSchemaInfo</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable storing of PSVI information in element and attribute nodes. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable storing of PSVI information in element and attribute nodes. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>               
+                <tr><th><em>default:</em></th><td> false </td></tr>
             </table>
-            <p/>         
-            
+            <p/>
+
             <anchor name="CreateCommentNodes"/>
             <table>
                 <tr><th colspan="2"><em>setCreateCommentNodes</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable the parser to create comment nodes in the DOM tree being produced.</td></tr>
                 <tr><th><em>false:</em></th><td> Disable comment nodes being produced. </td></tr>
-                <tr><th><em>default:</em></th><td> true </td></tr>               
+                <tr><th><em>default:</em></th><td> true </td></tr>
             </table>
-            <p/>                                       
+            <p/>
         </s3>
 
         <anchor name="XercesDOMProperties"/>
@@ -662,7 +662,7 @@
            of the properties below are set using the "setter" methods (e.g. <code>setExternalSchemaLocation</code>),
            and are queried using the corresponding "getter" methods (e.g. <code>getExternalSchemaLocation</code>).
            The following only gives you a quick summary of supported features.  Please
-           refer to <jump href="api.html">API Documentation</jump> for
+           refer to <jump href="api-&XercesC3Series;.html">API Documentation</jump> for
            complete details.
            </p>
             <table>
@@ -715,7 +715,7 @@
                             fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
-                <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
+                <tr><th><em>note: </em></th><td> See <jump href="program-others-&XercesC3Series;.html#UseSpecificScanner">Use Specific Scanner</jump>
                 for more programming details. </td></tr>
             </table>
 
@@ -736,7 +736,7 @@
                 <tr><th
                 colspan="2"><em>setSecurityManager(Security Manager * const)</em></th></tr>
                 <tr><th><em>Description</em></th>
-                <td> 
+                <td>
                     Certain valid XML and XML Schema constructs can force a
                     processor to consume more system resources than an
                     application may wish.  In fact, certain features could
@@ -744,10 +744,10 @@
                     denial-of-service attack.  This property allows
                     applications to impose limits on the amount of
                     resources the processor will consume while processing
-                    these constructs.  
+                    these constructs.
                 </td></tr>
                 <tr><th><em>Value</em></th>
-                <td> 
+                <td>
                     An instance of the SecurityManager class (see
                     <code>xercesc/util/SecurityManager</code>).  This
                     class's documentation describes the particular limits
@@ -798,7 +798,7 @@
     #endif
 
     XERCES_CPP_NAMESPACE_USE
-    
+
     int main (int argc, char* args[]) {
 
         try {
@@ -862,7 +862,7 @@
         return 0;
     }
     </source>
-           <p>Please refer to the <jump href="api.html">API Documentation</jump> and the sample
+           <p>Please refer to the <jump href="api-&XercesC3Series;.html">API Documentation</jump> and the sample
            DOMCount for more detail.
           </p>
         </s3>
@@ -918,7 +918,7 @@
            </source>
            </s4>
 
-        <p>Please refer to the <jump href="api.html">API Documentation</jump> for more detail.
+        <p>Please refer to the <jump href="api-&XercesC3Series;.html">API Documentation</jump> for more detail.
         </p>
         </s3>
 
@@ -953,7 +953,7 @@
                 <tr><th><em>true:</em></th><td> Keep Comment nodes in the document. </td></tr>
                 <tr><th><em>false:</em></th><td> Discard Comment nodes in the document. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMComments </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMComments </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
                 DOM Level 3.0 Load and Save Specification</jump>
@@ -972,7 +972,7 @@
                 <tr><th><em>false:</em></th><td> Any character set encoding information from higher
                 level protocols is ignored by the parser. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCharsetOverridesXMLEncoding </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCharsetOverridesXMLEncoding </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
                 DOM Level 3.0 Load and Save Specification</jump>
@@ -988,7 +988,7 @@
                 <tr><th><em>false:</em></th><td> Disable datatype normalization.
                 The XML 1.0 attribute value normalization always occurs though. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMDatatypeNormalization </td></tr>               
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMDatatypeNormalization </td></tr>
                 <tr><th><em>note:</em></th><td> Note that setting this feature to true does not affect
                 the DTD normalization operation which always takes place, in accordance to
                 <jump href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 (Second Edition)</jump>.
@@ -1012,7 +1012,7 @@
                 EntityReference nodes will be created, only the nodes corresponding to their fully
                 expanded substitution text will be created.  </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMEntities </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMEntities </td></tr>
                 <tr><th><em>note:</em></th><td> This feature only affects the appearance of
                 EntityReference nodes in the DOM tree. The document will always contain the entity
                 reference child nodes. </td></tr>
@@ -1044,7 +1044,7 @@
                 <tr><th><em>true:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>false:</em></th><td> No effect. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMInfoset </td></tr>  
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMInfoset </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
@@ -1060,7 +1060,7 @@
                 <tr><th><em>true:</em></th><td> Perform Namespace processing </td></tr>
                 <tr><th><em>false:</em></th><td> Do not perform Namespace processing</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMNamespaces </td></tr> 
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMNamespaces </td></tr>
                 <tr><th><em>note:</em></th><td> If the validation is on, then the
                 document must contain a grammar that supports the use of namespaces </td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -1179,7 +1179,7 @@
                 <tr><th><em>true:</em></th><td> Enable the parser's schema support.  </td></tr>
                 <tr><th><em>false:</em></th><td> Disable the parser's schema support. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchema </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchema </td></tr>
                 <tr><th><em>note</em></th><td> If set to true, namespace processing must also be turned on. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="builder-namespaces">namespaces</link>
@@ -1313,28 +1313,28 @@
                 improves the performance.</td></tr>
             </table>
             <p/>
-            
+
             <anchor name="builder-IdentityConstraintChecking"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/identity-constraint-checking</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable identity constraint checking. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable identity constraint checking. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIdentityConstraintChecking </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIdentityConstraintChecking </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="builder-GenerateSyntheticAnnotations"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/generate-synthetic-annotations</em></th></tr>
-                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be 
+                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be
                 generated when a schema component has non-schema attributes but no child annotation. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable generation of synthetic annotations. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesGenerateSyntheticAnnotations </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesGenerateSyntheticAnnotations </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="builder-XercesValidateAnnotations"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validate-annotations</em></th></tr>
@@ -1345,75 +1345,75 @@
                 <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="builder-IgnoreAnnotations"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/schema/ignore-annotations</em></th></tr>
                 <tr><th><em>true:</em></th><td> Do not generate XSAnnotations when traversing a schema.</td></tr>
                 <tr><th><em>false:</em></th><td> Generate XSAnnotations when traversing a schema.</td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>     
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIgnoreAnnotations </td></tr>           
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIgnoreAnnotations </td></tr>
             </table>
-            <p/>    
-            
+            <p/>
+
             <anchor name="builder-DisableDefaultEntityResolution"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/disable-default-entity-resolution</em></th></tr>
                 <tr><th><em>true:</em></th><td> The parser will not attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
                 <tr><th><em>false:</em></th><td> The parser will attempt to resolve the entity when the resolveEntity method returns NULL.</td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>       
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDisableDefaultEntityResolution </td></tr>         
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDisableDefaultEntityResolution </td></tr>
             </table>
             <p/>
-            
+
             <anchor name="builder-SkipDTDValidation"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/schema/skip-dtd-validation</em></th></tr>
                 <tr><th><em>true:</em></th><td> When schema validation is on the parser will ignore the DTD, except for entities.</td></tr>
                 <tr><th><em>false:</em></th><td> The parser will not ignore DTDs when validating.</td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>                
+                <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSkipDTDValidation </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <link anchor="builder-schema">Schema Validation</link></td></tr>                
+                <link anchor="builder-schema">Schema Validation</link></td></tr>
             </table>
-            <p/>                                               
-                        
+            <p/>
+
             <anchor name="builder-IgnoreCachedDTD"/>
-            <table>            
+            <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/ignoreCachedDTD</em></th></tr>
-                <tr><th><em>true:</em></th><td> Ignore a cached DTD when an XML document contains both an 
+                <tr><th><em>true:</em></th><td> Ignore a cached DTD when an XML document contains both an
                 								internal and external DTD, and the use cached grammar from parse option
                 								is enabled. Currently, we do not allow using cached DTD grammar when an
                 								internal subset is present in the document. This option will only affect
-                								the behavior of the parser when an internal and external DTD both exist 
+                								the behavior of the parser when an internal and external DTD both exist
                 								in a document (i.e. no effect if document has no internal subset).</td></tr>
                 <tr><th><em>false:</em></th><td> Don't ignore cached DTD. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIgnoreCachedDTD </td></tr>
-                <tr><th><em>see:</em></th><td>                
+                <tr><th><em>see:</em></th><td>
                 <link anchor="builder-use-cached">http://apache.org/xml/features/validation/use-cachedGrammarInParse</link>
                 </td></tr>
             </table>
-            <p/>              
-            
+            <p/>
+
             <anchor name="builder-HandleMultipleImports"/>
-            <table>            
+            <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/schema/handle-multiple-imports</em></th></tr>
                 <tr><th><em>true:</em></th><td> During schema validation allow multiple schemas with the same namespace
-                                                to be imported.</td></tr>            
+                                                to be imported.</td></tr>
                 <tr><th><em>false:</em></th><td> Don't import multiple schemas with the same namespace. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>  
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesHandleMultipleImports </td></tr>                              
-            </table>   
-            <p/>           
-                        
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesHandleMultipleImports </td></tr>
+            </table>
+            <p/>
+
             <anchor name="builder-DOMHasPsviInfo"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/dom-has-psvi-info</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable storing of PSVI information in element and attribute nodes.</td></tr>
                 <tr><th><em>false:</em></th><td> Disable storing of PSVI information in element and attribute nodes. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDOMHasPSVIInfo </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDOMHasPSVIInfo </td></tr>
             </table>
             <p/>
 
@@ -1429,7 +1429,7 @@
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesUserAdoptsDOMDocument </td></tr>
                 <tr><th><em>see:</em></th><td>
-                <jump href="apiDocs/classDOMLSParser.html">
+                <jump href="api-&XercesC3Series;.html">
                 DOMLSParser API Documentation</jump>, (DOMLSParser::parse and DOMLSParser::resetDocumentPool)
                 </td></tr>
             </table>
@@ -1511,7 +1511,7 @@
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesScannerName </td></tr>
-                <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
+                <tr><th><em>note: </em></th><td> See <jump href="program-others-&XercesC3Series;.html#UseSpecificScanner">Use Specific Scanner</jump>
                 for more programming details. </td></tr>
             </table>
             <p/>
@@ -1528,7 +1528,7 @@
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/properties/security-manager</em></th></tr>
                 <tr><th><em>Description</em></th>
-                <td> 
+                <td>
                     Certain valid XML and XML Schema constructs can force a
                     processor to consume more system resources than an
                     application may wish.  In fact, certain features could
@@ -1536,10 +1536,10 @@
                     denial-of-service attack.  This property allows
                     applications to impose limits on the amount of
                     resources the processor will consume while processing
-                    these constructs.  
+                    these constructs.
                 </td></tr>
-                <tr><th><em>Value</em></th>                
-                <td> 
+                <tr><th><em>Value</em></th>
+                <td>
                     An instance of the SecurityManager class (see
                     <code>xercesc/util/SecurityManager</code>).  This
                     class's documentation describes the particular limits
@@ -1584,7 +1584,7 @@
     #include &lt;xercesc/dom/DOM.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
-    
+
     #if defined(XERCES_NEW_IOSTREAMS)
     #include &lt;iostream>
     #else
@@ -1654,7 +1654,7 @@
     }
 
     </source>
-           <p>Please refer to the <jump href="api.html">API Documentation</jump> and the sample
+           <p>Please refer to the <jump href="api-&XercesC3Series;.html">API Documentation</jump> and the sample
            DOMPrint for more detail.
           </p>
         </s3>
@@ -1914,13 +1914,13 @@
             </table>
 
             <p/>
-            
+
             <table>
                 <tr><th colspan="2"><em>xml declaration</em></th></tr>
                 <tr><th><em>true:</em></th><td> Include xml declaration. </td></tr>
-                <tr><th><em>false:</em></th><td> Do not include xml declaration. </td></tr>                
+                <tr><th><em>false:</em></th><td> Do not include xml declaration. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMXMLDeclaration </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMXMLDeclaration </td></tr>
             </table>
 
             <p/>

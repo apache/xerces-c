@@ -21,8 +21,10 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto270">Migrating from &XercesCName; 2.6.0 to 2.7.0</link></li>
+        <li><link anchor="Migrateto260">Migrating from &XercesCName; 2.5.0 to 2.6.0</link></li>
         <li><link anchor="Migrateto250">Migrating from &XercesCName; 2.4.0 to 2.5.0</link></li>
-        <li><link anchor="Migrateto240">Migrating from &XercesCName; 2.3.0 to 2.4.0</link></li>      
+        <li><link anchor="Migrateto240">Migrating from &XercesCName; 2.3.0 to 2.4.0</link></li>
         <li><link anchor="Migrateto230">Migrating from &XercesCName; 2.2.0 to 2.3.0</link></li>
         <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>
         <li><link anchor="Migrateto210">Migrating from &XercesCName; 2.0.0 to 2.1.0</link></li>
@@ -32,6 +34,168 @@
         <li><link anchor="Migrateto152">Migrating from &XercesCName; 1.4.0 to 1.5.2</link></li>
         <li><link anchor="Migrateto140">Migrating from XML4C 2.x to 1.4.0</link></li>
       </ul>
+    </s2>
+
+
+    <anchor name="Migrateto270"/>
+    <s2 title="Migrating from &XercesCName; 2.6.0 to &XercesCName; 2.7.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.6.0 code base and the &XercesCName; 2.7.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures270">New features in &XercesCName; 2.7.0</link></li>
+        <li><link anchor="API270">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI270">New Public API</link></li>
+            <li><link anchor="ModifiedAPI270">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI270">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures270"/>
+    <s3 title="New features in &XercesCName; 2.7.0">
+      <ul>
+        <li>Feature to not generate XML Schema annotations.  That is, not to add them to the grammar.  If you don't need annotations you may want to turn on this feature to avoid memory bloat for XML Schemas that use annotations heavily.</li>
+        <li>Option to skip regenerating the XML Schema annotations when deserializing a grammar.  If you don't need annotations you may want to turn on this option to avoid memory bloat for XML Schemas that use annotations heavily.</li>
+        <li>Feature to not perform default entity resolution.  When the entityResolver returns NULL, the parser doesn't try to resolve the entity externally.</li>
+        <li>Feature to do schema-only validation even if there is a DTD.</li>
+      </ul>
+    </s3>
+
+    <anchor name="API270"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.6.0; and the &XercesCName; 2.7.0 releases
+           of the parser. </p>
+
+        <anchor name="NewAPI270"/>
+        <s4 title="New Public API">
+            <ul>
+              <li>XMLString: subString, compareIStringASCII, lowercaseASCII, uppercaseASCII</li>
+              <li>RefHash2KeysTableOf: rehashing support</li>
+              <li>XMemory: placement new and delete</li>
+              <li>SAX2XMLFilter</li>
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI270"/>
+        <s4 title="Modified Public API">
+        </s4>
+
+        <anchor name="DeprecatedAPI270"/>
+        <s4 title="Deprecated/Removed Public API">
+        </s4>
+
+    </s3>
+    </s2>
+
+
+	<anchor name="Migrateto260"/>
+	<s2 title="Migrating from &XercesCName; 2.5.0 to &XercesCName; 2.6.0">
+	<p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.5.0 code base and the &XercesCName; 2.6.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures260">New features in &XercesCName; 2.6.0</link></li>
+        <li><link anchor="API260">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI260">New Public API</link></li>
+            <li><link anchor="ModifiedAPI260">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI260">Deprecated/Removed Public API</link></li>
+            <li>Please note the following source code incompatibility: Rename VALUE_CONSTRAINT enumeration values in XSConstants.hpp due to conflict with system header.  New
+              values are VALUE_CONSTRAINT_NONE, VALUE_CONSTRAINT_DEFAULT and VALUE_CONSTRAINT_FIXED.  Old
+              values are VC_NONE, VC_DEFAULT and VC_FIXED.</li>
+            <li>Also note that if you have implemented your own XMLGrammarPool implementation, that
+                the original getXSModel has been marked deprecated and a new method, of the same
+                name, that takes a bool parameter has been added.  This new getXSModel needs
+                to always return an XSModel.</li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures260"/>
+    <s3 title="New features in &XercesCName; 2.6.0">
+      <ul>
+		<li>Reduce footprint of DLL by building the deprecated DOM as a separate library</li>
+        <li>Improve packaging scripts</li>
+        <li>Enable ID's to work on all kinds of schema components</li>
+        <li>Add messages to DOMExceptions along with the error code</li>
+        <li>Improve annotation error-reporting capabilities</li>
+        <li>Make grammar caching work with DTD internal subsets</li>
+        <li>Bring parser up to the XML 1.0 3rd Edition</li>
+        <li>Update to the XML 1.1 recommendation</li>
+        <li>Add new method to DOMDocument so that DOM level-2 style DOMDocumentTypes (which have a
+        DOMDocument to own them) can be created</li>
+        <li>Feature for disabling identity constraints</li>
+        <li>Update schema errata</li>
+        <li>Provide means to get actual values out of PSVI/schema component model</li>
+        <li>Synthesize annotation components for non-schema attributes</li>
+        <li>Expose partial PSVIElement information at the start element call</li>
+        <li>Externalize validation, actual/canonical value production for arbitrary strings</li>
+        <li>Laxly validate schema annotations</li>
+        <li>Upgrade to ICU 3.0</li>
+        <li>Handle elements with a large number of attributes more efficiently</li>
+      </ul>
+    </s3>
+
+    <anchor name="API260"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.5.0; and the &XercesCName; 2.6.0 releases
+           of the parser. </p>
+
+        <anchor name="NewAPI260"/>
+        <s4 title="New Public API">
+            <ul>
+              <li>XSValue</li>
+              <li>IdentityConstraintHandler</li>
+              <li>XMLBufferFullHandler</li>
+              <li>XMLString: removeChar, isValidNOTATION</li>
+              <li>XMLUri: normalizeUri</li>
+              <li>PSVIHandler: handlePartialElementPSVI</li>
+              <li>RefHash family of classes: getHashModulus</li>
+              <li>XSAnnotation: setline/col and systemid</li>
+              <li>XMLReader: handeEOL</li>
+              <li>XMLChar: isValidNmToken</li>
+              <li>XMLBigDecimal: parseDecimal, getIntVal</li>
+              <li>HexBin: getCanonicalRepresentation, decode</li>
+              <li>Base64: getCanonicalRepresentation, decode</li>
+              <li>XMLBigInteger: compareValues</li>
+              <li>XMLAbstractDoubleFloat: isDataConverted, getValue, isDataOverFlowed</li>
+              <li>PSVIItem: getActualValue</li>
+              <li>XSSimpleTypeDefinition: getDatatypeValidator</li>
+              <li>RefHash2KeysTableOf: transferElement</li>
+              <li>XMLGrammarPool: getXSModel</li>
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI260"/>
+        <s4 title="Modified Public API">
+            <ul>
+              <li>XSerializeEngine constructor</li>
+              <li>MACUnicodeConverters</li>
+            </ul>
+        </s4>
+
+        <anchor name="DeprecatedAPI260"/>
+        <s4 title="Deprecated/Removed Public API">
+            <ul>
+              <li>XSerializeEngine constructor</li>
+              <li>DTDAttDef: getDOMTypeInfoName,  getDOMTypeInfoUri</li>
+			  <li>DTDElementDecl: getDOMTypeInfoName, getDOMTypeInfoUri</li>
+     	      <li>SchemaAttDef: setAnyDatatypeValidator</li>
+ 			  <li>UnionDatatypeValidator: getMemberTypeName, getMemberTypeUri, getMemberTypeAnonymous, getMemberTypeValidator</li>
+ 			  <li>XMLAttr: getValidatingTypeURI, getValidatingTypeName, setDatatypeValidator, setSchemaValidated</li>
+ 			  <li>ComplexTypeInfo: setContentModel</li>
+ 			  <li>XMLGrammarPool: getXSModel</li>
+ 			  <li>SAXParser, mark this class deprecated</li>
+            </ul>
+        </s4>
+
+    </s3>
     </s2>
 
 	<anchor name="Migrateto250"/>
@@ -60,7 +224,7 @@
               <li>Re-pluggable Panic Handler</li>
               <li>Enhenced mutex creation to impove thread safety</li>
               <li>Intrinsic transcoding support for 390.</li>
-              <li>Canonical Representation Support </li>              
+              <li>Canonical Representation Support </li>
               <li>New sample SCMPrint</li>
               <li>New sample PSVIWriter</li>
               <li>New test XSerializerTest</li>
@@ -77,7 +241,7 @@
         <anchor name="NewAPI250"/>
         <s4 title="New Public API">
             <ul>
-              <li></li>            
+              <li></li>
             </ul>
         </s4>
 
@@ -91,13 +255,13 @@
         <anchor name="DeprecatedAPI250"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li></li>              
+              <li></li>
             </ul>
         </s4>
 
     </s3>
     </s2>
-    
+
     <anchor name="Migrateto240"/>
     <s2 title="Migrating from &XercesCName; 2.3.0 to &XercesCName; 2.4.0">
       <p>The following section is a discussion of the technical differences between
@@ -118,7 +282,7 @@
     <s3 title="New features in &XercesCName; 2.4.0">
       <ul>
         <li>PSVI</li>
-        <li>Performance enhancement</li>        
+        <li>Performance enhancement</li>
         <li>Stateless Grammar </li>
         <li>Grammar Serialization/Deserialiation</li>
       </ul>
@@ -135,7 +299,7 @@
         <s4 title="New Public API">
             <ul>
               <li>PSVI related</li>
-              <li>Grammar serialization/deserialization related</li>              
+              <li>Grammar serialization/deserialization related</li>
             </ul>
         </s4>
 
@@ -152,7 +316,7 @@
               <li>XMLAttDef: getProvided, getDOMTypeInfoUri, getDOMTypeInfoName, setProvided</li>
               <li>XMLAttDefList: hasMoreElements, nextElement, Reset</li>
               <li>DTDAttDefList: hasMoreElements, nextElement, Reset</li>
-              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>       
+              <li>SchemaAttDefList: hasMoreElements, nextElement, Reset</li>
               <li>XMLElementDecl: LookupOpts</li>
               <li>XMLNumber family: toString</li>
               <li>ENTITYDatatypeValidator: setEntityDeclPool</li>
@@ -162,13 +326,13 @@
               <li>SchemaGrammar: getIDRefList</li>
               <li>SchemaElementDecl: all non thread safe methods </li>
               <li>SchemaAttDef: getters </li>
-              <li>DTDGrammar: getRootElemId</li>                           
+              <li>DTDGrammar: getRootElemId</li>
             </ul>
         </s4>
 
     </s3>
     </s2>
-    
+
     <anchor name="Migrateto230"/>
     <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; 2.3.0">
       <p>The following section is a discussion of the technical differences between
@@ -191,15 +355,15 @@
         <li>Experimental Implementation of Namespaces in XML 1.1 </li>
         <li>Experimental Implementation of XML 1.1: in DOMWriter</li>
         <li>More Schema 1.0 Errata Implementation</li>
-        <li>More DOM L3 Core Support</li>        
+        <li>More DOM L3 Core Support</li>
         <ul>
             <li>DOMConfiguration</li>
             <li>Document Normalization</li>
         </ul>
-        <li>Plugable Memory Manager</li>      
-        <li>Plugable Security Manager</li>      
+        <li>Plugable Memory Manager</li>
+        <li>Plugable Security Manager</li>
         <li>Plugable Panic Handler</li>
-        <li>Logical Path Resolution</li>        
+        <li>Logical Path Resolution</li>
       </ul>
     </s3>
 
@@ -235,7 +399,7 @@
 
     </s3>
     </s2>
-        
+
     <anchor name="Migrateto220"/>
     <s2 title="Migrating from &XercesCName; 2.1.0 to &XercesCName; 2.2.0">
       <p>The following section is a discussion of the technical differences between
@@ -268,7 +432,7 @@
         <li>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
         to load the default error text message for the correspond Exception Code.</li>
         <li>New feature XMLPlatformUtils::Initialize(const char* const locale) to set
-        the locale for message loader.   See <jump href="program-others.html#SpecifylocaleforMessageLoader">
+        the locale for message loader.   See <jump href="program-others-&XercesC3Series;.html#SpecifylocaleforMessageLoader">
         Specify locale for Message Loader</jump> for details</li>
         <li>Support Build with ICU Message Loader, or Message Catalog Message Loader</li>
         <li>RPM for Linux</li>
@@ -277,23 +441,23 @@
         <li>Support for Linux/390</li>
         <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
         <li>New feature, "http://apache.org/xml/features/dom/byte-order-mark", allows user to enable
-            DOMWriter to write Byte-Order-Mark in the output XML stream, 
-            See <jump href="program-dom.html#Byte-Order-Mark">
-            Xercesc Feature: Byte Order Mark</jump> for details</li>        
+            DOMWriter to write Byte-Order-Mark in the output XML stream,
+            See <jump href="program-dom-&XercesC3Series;.html#Byte-Order-Mark">
+            Xercesc Feature: Byte Order Mark</jump> for details</li>
       </ul>
     </s3>
 
     <anchor name="CPPNamespace220"/>
     <s3 title="Using C++ Namespace">
         <p>&XercesCName; 2.2.0 now supports C++ Namespace.  All &XercesCName;
-           classes, data and variables are defined in the &XercesCNamespace; namespace
+           classes, data and variables are defined in the &XercesC3Namespace; namespace
            if C++ Namespace support is ENABLED.</p>
 
         <p>All the binary distributions of &XercesCName; 2.2.0 are now built with
            C++ Namespace enabled.   Therefore users' applications that links with the distributed
            binary packages must namespace qualify all the &XercesCName; classes, data and variables.</p>
 
-        <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump>
+        <p>See the Programming Guide <jump href="program-others-&XercesC3Series;.html#CPPNamespace">Using C++ Namespace</jump>
            for details.</p>
 
     </s3>
@@ -380,7 +544,7 @@
 
     </s3>
     </s2>
-        
+
     <anchor name="Migrateto210"/>
     <s2 title="Migrating from &XercesCName; 2.0.0 to &XercesCName; 2.1.0">
       <p>The following section is a discussion of the technical differences between
@@ -482,21 +646,21 @@
          <ul>
             <li>AIX</li>
             <ul>
-              <li>&XercesCUnixLib;&XercesCUnixSoName;.so</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;&XercesCUnixVersion;.so</li>
-              <li>symbolic link: &XercesCUnixLib;&XercesCUnixVersion;.so  ----&gt; &XercesCUnixLib;&XercesCUnixSoName;.so</li>
+              <li>&XercesC3UnixLib;&XercesC3UnixSoName;.so</li>
+              <li>symbolic link: &XercesC3UnixLib;.so                      ----&gt; &XercesC3UnixLib;&XercesC3UnixVersion;.so</li>
+              <li>symbolic link: &XercesC3UnixLib;&XercesC3UnixVersion;.so  ----&gt; &XercesC3UnixLib;&XercesC3UnixSoName;.so</li>
             </ul>
             <li>Solaris / Linux</li>
             <ul>
-              <li>&XercesCUnixLib;.so.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;.so.&XercesCUnixVersion;</li>
-              <li>symbolic link: &XercesCUnixLib;.so.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.so.&XercesCUnixSoName;</li>
+              <li>&XercesC3UnixLib;.so.&XercesC3UnixSoName;</li>
+              <li>symbolic link: &XercesC3UnixLib;.so                      ----&gt; &XercesC3UnixLib;.so.&XercesC3UnixVersion;</li>
+              <li>symbolic link: &XercesC3UnixLib;.so.&XercesC3UnixVersion; ----&gt; &XercesC3UnixLib;.so.&XercesC3UnixSoName;</li>
             </ul>
             <li>HP-UX</li>
             <ul>
-              <li>&XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl                      ----&gt; &XercesCUnixLib;.sl.&XercesCUnixVersion;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
+              <li>&XercesC3UnixLib;.sl.&XercesC3UnixSoName;</li>
+              <li>symbolic link: &XercesC3UnixLib;.sl                      ----&gt; &XercesC3UnixLib;.sl.&XercesC3UnixVersion;</li>
+              <li>symbolic link: &XercesC3UnixLib;.sl.&XercesC3UnixVersion; ----&gt; &XercesC3UnixLib;.sl.&XercesC3UnixSoName;</li>
             </ul>
          </ul>
     </s3>
@@ -547,7 +711,7 @@ void test(char* xmlFile) {
                      file is renamed as well</li>
                  <li>the rest is the same, see
                      <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding</jump>
-                     and <jump href="program-dom.html">DOM Programming Guide</jump> for more programming
+                     and <jump href="program-dom-&XercesC3Series;.html">DOM Programming Guide</jump> for more programming
                      information</li>
               </ul>
               <p>Users of IDOM are required to change all their #include lines and do a global rename of
@@ -642,7 +806,7 @@ void test(char* xmlFile) {
                   by targetNamespace (for Schema) or system id (for DTD).</li>
               <li>Plus "Grammar Caching" has much more functionalities other than above
                   (like "Pre-parsing Grammar").  Please refer to
-                  <jump href="program-others.html#GrammarCache">Preparsing Grammar and Grammar Caching
+                  <jump href="program-others-&XercesC3Series;.html#GrammarCache">Preparsing Grammar and Grammar Caching
                   </jump> for more programming details.</li>
            </ol>
     </s3>
@@ -658,7 +822,7 @@ void test(char* xmlFile) {
         <s4 title="New Public API">
             <ul>
               <li>To support DOM Level 3, the following are added (see
-                  <jump href="api.html">the API documentation page</jump> for details).</li>
+                  <jump href="api-&XercesC3Series;.html">the API documentation page</jump> for details).</li>
                 <ul>
                   <li>DOMNode functions set/getUserData, isSameNode isEqualNode.</li>
                   <li>DOMDocument functions renameNode, get/setActualEncoding, get/setEncoding, get/setVersion, get/setStandalone, get/setDocumentURI.</li>
@@ -745,7 +909,7 @@ void test(char* xmlFile) {
               <li>The old Java-like DOM is now deprecated as described in
                   <link anchor="DirChange200">DOM Reorganization</link></li>
               <li>SAX2XMLReader::setValidationConstraint.   For consistency, SAX2XMLReader users should
-                  set the feature http://apache.org/xml/features/validation-error-as-fatal" instead.</li>
+                  set the feature "http://apache.org/xml/features/validation-error-as-fatal" instead.</li>
               <li>SAX2XMLReader::setExitOnFirstFatalError.  For consistency, SAX2XMLReader users should
                   set the feature "http://apache.org/xml/features/continue-after-fatal-error" instead.</li>
               <li>With the new Grammar Caching introduced, the following features will not be
@@ -813,7 +977,7 @@ void test(char* xmlFile) {
         <s4 title="New Public API">
             <ul>
               <li>Added SAX2-ext's DeclHandler class.
-                  See <jump href="api.html">the API documentation page</jump> for details.</li>
+                  See <jump href="api-&XercesC3Series;.html">the API documentation page</jump> for details.</li>
               <li>To support SAX2-ext's DeclHandler, the following new methods are added
                   in classes DefaultHandler and SAX2XMLReader:</li>
               <ul>
@@ -886,7 +1050,7 @@ void test(char* xmlFile) {
     <s3 title="New features in &XercesCName; 1.6.0">
       <ul>
         <li>Full Schema support is available in this release.
-            See <jump href="schema.html">the Schema page</jump> for details.</li>
+            See <jump href="schema-&XercesC3Series;.html">the Schema page</jump> for details.</li>
         <li>New sample SEnumVal to show how to enumerate the markup decls in a Schema Grammar is added.</li>
       </ul>
     </s3>
@@ -974,16 +1138,13 @@ void test(char* xmlFile) {
               <li>New command line option "-s" for samples.</li>
             </ul>
             <p>
-               See <jump href="schema.html">the Schema page</jump> for details.
+               See <jump href="schema-&XercesC3Series;.html">the Schema page</jump> for details.
             </p>
         </s4>
 
         <s4 title="Experimental IDOM">
-           <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
-              to migrate from DOM to the experimental IDOM, please refer to
-              <jump href="program-idom.html">
-              IDOM programming guide.</jump> Please note that this experimental IDOM API is only
-              a prototype and is subject to change.
+           <p>The experimental IDOM API is a new design of the C++ DOM API. Please note that
+              this experimental IDOM API is only a prototype and is subject to change.
            </p>
         </s4>
 

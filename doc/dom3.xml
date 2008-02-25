@@ -21,7 +21,7 @@
 <s1 title="DOM Level 3 Support">
 <s2 title="Introduction">
     <p>
-    The &XercesCName; &XercesCVersion; contains an implementation of the W3C DOM Level 3 as specified in </p>
+    The &XercesCName; &XercesC3Version; contains an implementation of the W3C DOM Level 3 as specified in </p>
     <ul>
       <li><jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
           DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Recommendation 07 April 2004 and</li>
@@ -32,7 +32,7 @@
 </s2>
 
 <s2 title='Implementation of DOM Level 3 Core'>
-    <p>The following are NOT implemented in &XercesCName; &XercesCVersion;.</p>
+    <p>The following are NOT implemented in &XercesCName; &XercesC3Version;.</p>
 <ul>
     <li>
         <code>DOMError</code>: setRelatedException
@@ -47,7 +47,7 @@
 </s2>
 
 <s2 title='Implementation of DOM Level 3 Load and Save'>
-    <p>The following are implemented in &XercesCName; &XercesCVersion;.</p>
+    <p>The following are implemented in &XercesCName; &XercesC3Version;.</p>
 <ul>
     <li>
         <code>DOMLSParser</code>: parseWithContext().

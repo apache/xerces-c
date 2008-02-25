@@ -26,14 +26,14 @@
 
     <a>
 
-      <p>Yes.  The &XercesCName; &XercesCVersion; contains an implementation
+      <p>Yes.  The &XercesCName; &XercesC3Version; contains an implementation
          of the W3C XML Schema Language, a recommendation of the Worldwide Web Consortium
          available in three parts:
          <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
          We consider this implementation complete.  See
-         <jump href="schema.html#limitation">the Schema page</jump> for limitations.</p>
+         <jump href="schema-&XercesC3Series;.html#limitation">the Schema page</jump> for limitations.</p>
 
     </a>
   </faq>
@@ -44,19 +44,19 @@
 
     <a>
 
-      <p>The &XercesCName; &XercesCVersion; contains an implementation
+      <p>The &XercesCName; &XercesC3Version; contains an implementation
          of the W3C XML Schema Language, a recommendation of the Worldwide Web Consortium
          available in three parts:
          <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
          We consider this implementation complete.  See
-         <jump href="schema.html#limitation">the Schema page</jump> for limitations.</p>
+         <jump href="schema-&XercesC3Series;.html#limitation">the Schema page</jump> for limitations.</p>
 
       <p>If you find any Schema feature which is specified in the W3C XML Schema Language
-         Recommendation does not work with &XercesCName; &XercesCVersion;, we encourage
+         Recommendation does not work with &XercesCName; &XercesC3Version;, we encourage
          the submission of bugs as described in
-         <jump href="bug-report.html">Bug Reporting</jump> page.
+         <jump href="&BugURI;">Bug-Reporting</jump> page.
        </p>
 
     </a>
@@ -75,9 +75,9 @@
 
 <source>
 try {
-   XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
+   XMLPlatformUtils::Initialize();
 }
-catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
+catch (const XMLException&amp; toCatch) {
    // Do your failure processing here
 }</source>
 
@@ -90,7 +90,7 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
   <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
     <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
     <a>
-      <p>Yes.  Since &XercesCName; &XercesCVersion152;, the code has been enhanced so that
+      <p>Yes.  Since &XercesCName; 1.5.2, the code has been enhanced so that
          calling XMLPlatformUtils::Initialize/Terminate pair of routines
          multiple times in one process is now allowed.
       </p>
@@ -176,7 +176,7 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
 
     <a>
 
-      <p>Please make sure you are using the &XercesCName; &XercesCVersion152; or up.
+      <p>Please make sure you are using the &XercesCName; 1.5.2 or up.
       </p>
 
       <p>Earlier version of &XercesCName; does not allow XMLPlatformUtils::Initialize()/Terminate()
@@ -236,7 +236,7 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
 
   <faq title="I'm suddenly getting segfaults with Xerces-C 2.3.0;
     why might this be?">
-  
+
     <q>I'm suddenly getting segfaults with Xerces-C 2.3.0;
         why might this be?</q>
     <a>
@@ -281,7 +281,7 @@ void myParsingFunction()
         the parser object and destroy it explicitly before the
         call to XMLPlatformUtils::Terminate() is made.
       </p>
-      <p>Another way of producing segmentation faults--that again, 
+      <p>Another way of producing segmentation faults--that again,
       unfortunately, was employed by some of our
       samples--is to have calls to XMLPlatformUtils::Terminate()
       in a catch block that catches any of Xerces's exceptions.
@@ -291,7 +291,7 @@ void myParsingFunction()
       default memory manager to destroy dynamically-allocated
       objects, their destruction will provoke a segmentation
       fault even if a return statement is placed in the catch
-      block since the default memory manager will no longer exist.  
+      block since the default memory manager will no longer exist.
       This practice is now avoided in all our samples.
       </p>
     </a>
@@ -349,7 +349,7 @@ void myParsingFunction()
       </p>
 
       <p>If you are using XML4C where ICU is used, you may call ICU function u_cleanup() to clean up
-         ICU static data. Please see <jump href="http://ibm.com/software/globalization/icu/">ICU documentation</jump>
+         ICU static data.  Please see <jump href="http://icu-project.org/">ICU documentation</jump>
          for details.
       </p>
     </a>
@@ -375,7 +375,7 @@ void myParsingFunction()
       </p>
 
       <p>If you are using XML4C where ICU is used, you may call ICU function u_cleanup() to clean up
-         ICU static data.  Please see <jump href="http://ibm.com/software/globalization/icu/">ICU documentation</jump>
+         ICU static data.  Please see <jump href="http://icu-project.org/">ICU documentation</jump>
          for details.
       </p>
     </a>
@@ -426,10 +426,10 @@ void myParsingFunction()
   <faq title="How to write out a DOM tree into a string or an XML file?">
      <q>How to write out a DOM tree into a string or an XML file?</q>
      <a>
-      <p>Please make sure you are using &XercesCName; &XercesCVersion; or up.</p>
+      <p>Please make sure you are using &XercesCName; &XercesC3Version; or up.</p>
 
       <p>You can use
-         the DOMLSSerializer::writeToString, or DOMLSSerializer::write to serialize a DOM tree.
+         the DOMLSSerializer::writeToString, or DOMLSSerializer::writeNode to serialize a DOM tree.
          Please refer to the sample DOMPrint or the API documentation for more details of
          DOMLSSerializer.</p>
     </a>
@@ -505,9 +505,9 @@ void myParsingFunction()
         platforms.</p>
 
       <p>To address the need to make remote connections to resources specified
-        using additional protocols, ftp for example, &XercesCName; provides the <code>NetAccessor</code> interface. 
-		The header file is <code>src/xercesc/util/XMLNetAccessor.hpp</code>. 
-		This interface allows you to plug in your own implementation of URL
+        using additional protocols, ftp for example, &XercesCName; provides the
+        <code>NetAccessor</code> interface. The header file is <code>src/xercesc/util/XMLNetAccessor.hpp</code>.
+        This interface allows you to plug in your own implementation of URL
         networking code into the &XercesCName; parser.</p>
 
     </a>
@@ -567,7 +567,7 @@ void myParsingFunction()
         parse input XML files in these above mentioned encodings.</p>
 
       <p>XML4C -- the version of Xerces-C available from IBM -- combines Xerces-C
-         and <jump href="http://ibm.com/software/globalization/icu/">
+         and <jump href="http://icu-project.org/">
          International Components for Unicode (ICU)</jump> and
          extends the encoding support to over 100 different encodings that are allowed
          by ICU.  In particular, all the encodings registered with the
@@ -747,7 +747,7 @@ void myParsingFunction()
 <source>
 // create an XMLTranscoder that is able to transcode between Unicode and Big5
 // ASSUMPTION: assumes your underlying transcoding utility supports this encoding Big5
-XMLTranscoder* t = 
+XMLTranscoder* t =
     XMLPlatformUtils::fgTransService->makeNewTranscoderFor("Big5", failReason, 16*1024, MemoryManager);
 
 // source string is in Unicode, wanna to transcode to Big5
@@ -769,8 +769,8 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
       <p>The function <code>SAX2XMLReader::setProperty(const XMLCh* const name, void* value)</code>
          and <code>DOMLSParser::getDomConfig()->setParameter(const XMLCh* name, const void* value)</code>
          takes a void pointer for the property value.  Application is required to initialize this void pointer
-         to a correct type.  See <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump>
-         and <jump href="program-dom.html#DOMLSParserProperties">DOM Programming Guide</jump>
+         to a correct type.  See <jump href="program-sax2-&XercesC3Series;.html#SAX2Properties">SAX2 Programming Guide</jump>
+         and <jump href="program-dom-&XercesC3Series;.html#DOMLSParserProperties">DOM Programming Guide</jump>
          to learn exactly what type of property value that each property expects for processing.
          Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
       </p>
@@ -787,7 +787,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
       <p>The function <code>void* SAX2XMLReader::getProperty(const XMLCh* const name)</code>
          and <code>void* DOMLSParser::getDomConfig()->getParameter(const XMLCh* name)</code>
          returns a void pointer for the property value.  See
-         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> and
+         <jump href="program-sax2-&XercesC3Series;.html#SAX2Properties">SAX2 Programming Guide</jump> and
          exactly what type of object each property returns.
       </p>
       <p>The parser owns the returned pointer.  The memory allocated for
@@ -796,8 +796,8 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          is deleted, callers need to copy and store the returned information
          somewhere else; otherwise you may get unexpected result.  Since the returned
          pointer is a generic void pointer, see
-         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> and
-         <jump href="program-dom.html#DOMLSParserProperties">DOM Programming Guide</jump> to learn
+         <jump href="program-sax2-&XercesC3Series;.html#SAX2Properties">SAX2 Programming Guide</jump> and
+         <jump href="program-dom-&XercesC3Series;.html#DOMLSParserProperties">DOM Programming Guide</jump> to learn
          exactly what type of property value each property returns for replication.
       </p>
 
@@ -819,7 +819,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          validation is turned off.
       </p>
 
-      <p>To ignore the DTD, with &XercesCName; &XercesCVersion; or up, you can call
+      <p>To ignore the DTD, with &XercesCName; &XercesC3Version; or up, you can call
          <code>setLoadExternalDTD(false)</code> (or
          <code>setFeature(XMLUni::fgXercesLoadExternalDTD, false)</code>
          to disable the loading of external DTD.   The parser will then ignore
@@ -869,7 +869,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          back to the parser, it will not print the DOMNode node value as is. The DOMLSSerializer
          may do some "touch up" to the output data for it to be parsable.</p>
 
-      <p>See <jump href="program-dom.html#DOMLSSerializerEntityRef">How does DOMLSSerializer handle built-in entity
+      <p>See <jump href="program-dom-&XercesC3Series;.html#DOMLSSerializerEntityRef">How does DOMLSSerializer handle built-in entity
          Reference in node value?</jump> to understand further how DOMLSSerializer touches up the entity reference.
       </p>
     </a>
@@ -882,8 +882,8 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
     <a>
 
       <p>In most cases, the parser handles deleting documents when the parser gets deleted.  However, if an application
-         needs to release a document, it shall adopt the document before releasing it, so that the parser 
-         knows that the ownership of this particular document is transfered to the application and will not 
+         needs to release a document, it shall adopt the document before releasing it, so that the parser
+         knows that the ownership of this particular document is transfered to the application and will not
          try to delete it once the parser gets deleted.
       </p>
 
@@ -901,15 +901,15 @@ catch ()
 DOMNode *doc = parser->getDocument();
 ...
 parser->adoptDocument();
-doc->release();  
+doc->release();
 ...
 delete parser;
 </source>
 
-      <p>The alternative to release document is to call parser's resetDocumentPool(), which releases 
+      <p>The alternative to release document is to call parser's resetDocumentPool(), which releases
          all the documents parsed.
       </p>
-      
+
     </a>
   </faq>
 
@@ -920,7 +920,7 @@ delete parser;
     <a>
 
       <p>With the introduction of the configurable memory manager, we didn't want to break users by
-         changing the signature of the existing methods (for example, transcode and replicate). Also, 
+         changing the signature of the existing methods (for example, transcode and replicate). Also,
          we did not want to provide a default memory
          manager as it would introduce a side effect with users experiencing some strange core dumps.
          The latter will occur when the scope of the string allocated is beyond that of
@@ -931,5 +931,5 @@ delete parser;
 
     </a>
   </faq>
-  
+
 </faqs>

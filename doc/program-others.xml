@@ -45,7 +45,7 @@
     <anchor name="Schema"/>
     <s2 title="Schema Support">
         <p>&XercesCName; contains an implementation of the W3C XML Schema
-           Language.  See <jump href="schema.html">the Schema page</jump> for details.
+           Language.  See <jump href="schema-&XercesC3Series;.html">the Schema page</jump> for details.
          </p>
     </s2>
 
@@ -130,7 +130,7 @@ while (gotMore &amp;&amp; !handler.getDone())
 
     <anchor name="GrammarCache"/>
     <s2 title="Preparsing Grammar and Grammar Caching">
-        <p>&XercesCName; &XercesCVersion; provides a new function to pre-parse the grammar so that users
+        <p>&XercesCName; &XercesC3Version; provides a new function to pre-parse the grammar so that users
            can check for any syntax or error before using the grammar.  Users can also optionally
            cache these pre-parsed grammars for later use during actual parsing.
         </p>
@@ -378,7 +378,7 @@ parser->parse(xmlFile2);
             going, you may want to adapt the message catalog message loader, or
             write one of your own that uses local services.</li>
         <li>What should I define XMLCh to be? Please refer to <jump
-            href="build-misc.html#XMLChInfo">What should I define XMLCh to be?</jump> for
+            href="build-misc-&XercesC3Series;.html#XMLChInfo">What should I define XMLCh to be?</jump> for
             further details.</li>
       </ul>
 
@@ -388,7 +388,7 @@ parser->parse(xmlFile2);
     <anchor name="CPPNamespace"/>
     <s2 title="Using C++ Namespace">
 
-        <p>&XercesCName; &XercesCVersion; supports C++ Namespace as of Version 2.2.0.</p>
+        <p>&XercesCName; &XercesC3Version; supports C++ Namespace as of Version 2.2.0.</p>
 
         <p>The macro <code>XERCES_HAS_CPP_NAMESPACE</code> is defined in each Compiler
            Definition file if C++ Namespace is supported.</p>
@@ -404,7 +404,7 @@ parser->parse(xmlFile2);
 </source>
 
         <p>If C++ Namespace support is ENABLED (all the binary
-           distributions of &XercesCName; &XercesCVersion; are built
+           distributions of &XercesCName; &XercesC3Version; are built
            with C++ Namespace enabled), users' applications must
            namespace qualify all the &XercesCName; classes, data and
            variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER </code>
@@ -463,13 +463,13 @@ public:
 
 <source>
 #if defined(XERCES_HAS_CPP_NAMESPACE)
-    #define XERCES_CPP_NAMESPACE_BEGIN    namespace &XercesCNSVersion; {
+    #define XERCES_CPP_NAMESPACE_BEGIN    namespace &XercesC3NSVersion; {
     #define XERCES_CPP_NAMESPACE_END    }
-    #define XERCES_CPP_NAMESPACE_USE    using namespace &XercesCNSVersion;;
-    #define XERCES_CPP_NAMESPACE_QUALIFIER    &XercesCNSVersion;::
+    #define XERCES_CPP_NAMESPACE_USE    using namespace &XercesC3NSVersion;;
+    #define XERCES_CPP_NAMESPACE_QUALIFIER    &XercesC3NSVersion;::
 
-    namespace &XercesCNSVersion; { }
-    namespace &XercesCNamespace; = &XercesCNSVersion;;
+    namespace &XercesC3NSVersion; { }
+    namespace &XercesC3Namespace; = &XercesC3NSVersion;;
 #else
     #define XERCES_CPP_NAMESPACE_BEGIN
     #define XERCES_CPP_NAMESPACE_END
@@ -532,19 +532,19 @@ public:
 <source>
 new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 </source>
-           
+
         <p>Header file <code>xercesc/util/XercesDefs.hpp</code> also
-           declares <code>namespace &XercesCNamespace;</code> as a
+           declares <code>namespace &XercesC3Namespace;</code> as a
            generic namespace name which will be assigned to
            <code>xercesc_YY_ZZ</code> in each specific release, where
            "YY" is the Major Release Number and "ZZ" is the Minor
            Version Number. However, when you use
-           <code>&XercesCNamespace;::</code> instead of
+           <code>&XercesC3Namespace;::</code> instead of
            <code>XERCES_CPP_NAMESPACE_QUALIFIER </code> when your
            compiler does not support namespaces, your code will not
            work.</p>
- 
-           
+
+
 
     </s2>
 
@@ -603,7 +603,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
     {
     }
 ..
-</source> 
+</source>
     </s2>
 
     <anchor name="PluggablePanicHandler"/>
@@ -611,11 +611,11 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
 
         <p>The &XercesCName; reports, through the method panic(), any panic encountered,
            to the panic handler installed, which in turn takes whatever action appropriate,
-           to handle the panic.                    
+           to handle the panic.
         </p>
-        <p>The &XercesCName; allows application plugging a customized panic handler 
-           (class implementing the interface PanicHandler), in its very first invocation to 
-           XMLPlatformUtils::Initialize() by supplying a parameter for the panic handler 
+        <p>The &XercesCName; allows application plugging a customized panic handler
+           (class implementing the interface PanicHandler), in its very first invocation to
+           XMLPlatformUtils::Initialize() by supplying a parameter for the panic handler
            intended.
         </p>
         <p>In the absence of such a plugged panic handler, &XercesCName; default
@@ -660,7 +660,7 @@ new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
         parser, so long as their code conforms to Xerces-C best
         practices (e.g., avoids implicit destruction of objects
         related to the parser after XMLPlatformUtils::Terminate() has
-        been called; see <jump href="faq-parse.html#faq-7">the FAQ
+        been called; see <jump href="faq-parse-&XercesC3Series;.html#faq-7">the FAQ
         entry describing a reason why applications may suddenly start
         segfaulting with Xerces-C 2.3.0</jump> for details.).  Such users can ignore this subsection and
         continue using the parser as they always had.
@@ -705,7 +705,7 @@ XercesDOMParser *parser = new
 
 // ...
 delete parser;
-XMLPlatformUtils::Terminate(); 
+XMLPlatformUtils::Terminate();
 </source>
       <p>
         Notice that, to maintain backward compatibility, the
@@ -713,7 +713,7 @@ XMLPlatformUtils::Terminate();
         parameters to XMLPlatformUtils::Initialize(); this means that
         all other parameters must be specified with their defaults as
         found in Xerces code if all other aspects of standard
-        behaviour are to be preserved.  
+        behaviour are to be preserved.
       </p>
       <p>
         If a user provides a MemoryManager object to the parser, then
@@ -753,7 +753,7 @@ XMLPlatformUtils::Terminate();
 
     <anchor name="SecurityManager"/>
     <s2 title="Managing Security Vulnerabilities">
-      <p> 
+      <p>
         The purpose of the SecurityManager class is to permit applications a
         means to have the parser reject documents whose processing would
         otherwise consume large amounts of system resources.  Malicious
@@ -788,7 +788,7 @@ XMLPlatformUtils::Terminate();
 SAXParser *myParser = new SAXParser();
 SecurityManager *myManager = new SecurityManager();
 myManager->setEntityExpansionLimit(100000); // larger than default
-myParser->setSecurityManager(myManager); 
+myParser->setSecurityManager(myManager);
 // ... use the parser
 </source>
       <p>

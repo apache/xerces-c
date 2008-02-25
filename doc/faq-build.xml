@@ -26,17 +26,17 @@
 
     <a>
 
-      <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
-      
+      <p>&XercesCName; &XercesC3Version; now supports C++ Namespace.</p>
+
       <p>If C++ Namespace is ENABLED, users' applications must
          namespace qualify all the &XercesCName; classes, data, and
-         variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER</code>
+         variables with <code>XERCES_CPP_NAMESPACE_QUALIFIER </code>
          or add the <code>XERCES_CPP_NAMESPACE_USE</code> clause.
          Users also need to ensure all forward declarations are
          properly qualified or scoped.
       </p>
-      
-      <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">
+
+      <p>See the Programming Guide <jump href="program-others-&XercesC3Series;.html#CPPNamespace">
          Using C++ Namespace</jump> for details.
       </p>
 
@@ -53,10 +53,10 @@
 
       <p>Your application somehow has picked up the Microsoft SDK header <code>Msxml.h</code>
          which has its own typedef of <code>DOMDocument</code>.   This confuses
-         with the &XercesCName; &XercesCVersion; <code>&XercesCNamespace;::DOMDocument</code>
+         with the &XercesCName; &XercesC3Version; <code>&XercesC3Namespace;::DOMDocument</code>
          and thus lead to the compilation errors.</p>
 
-      <p> Qualifying the use of DOMDocument in your application explicitly e.g.
+      <p> Qualifier the use of DOMDocument in your application explicitly e.g.
          <br/><br/><code>XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * fDoc;</code><br/><br/>
          will eliminate these compilation problems.
       </p>
@@ -96,10 +96,10 @@
 
       <p>Please check the following:</p>
       <ol>
-        <li>Verify that you have specified the appropriate option and library path in the linker 
-		    command line</li>
+        <li>Verify that you have specified the appropriate option and library path in the linker
+            command line</li>
         <li>If you're using the binary build of &XercesCName;, make sure that the OS and compiler are
-            the same version as the ones used to build the binary &faq-build-faq-distrib1;.  Different OS and
+            the same version as the ones used to build the binary.  Different OS and
             compiler versions might cause unresolved linking problems or compilation
             errors. If the versions are different, rebuild the &XercesCName; library on
             your system before building your application. If you're using ICU (which is
@@ -108,13 +108,13 @@
         <li>Check that the library path is set properly and that the correct
             versions of <code>gmake</code> and <code>autoconf</code> are on your system.</li>
         <li>If C++ Namespace support is ENABLED (all the binary distributions of &XercesCName;
-            &XercesCVersion; are built with C++ Namespace enabled), users' applications
-            must namespace qualify all the &XercesCName; classes, data and variables.  
-            See the Programming Guide <jump href="program-others.html#CPPNamespace">
+            &XercesC3Version; are built with C++ Namespace enabled), users' applications
+            must namespace qualify all the &XercesCName; classes, data and variables.
+            See the Programming Guide <jump href="program-others-&XercesC3Series;.html#CPPNamespace">
             Using C++ Namespace</jump> for details.</li>
-		<li>If you are using Microsoft Visual Studio .NET 2003 or 2005, check that the
-			option "Treat wchar_t as a built-in type" has been set to the same value
-			used to build Xerces</li>
+        <li>If you are using Microsoft Visual Studio .NET 2003, 2005, or 2008, check that the
+	    option "Treat wchar_t as a built-in type" has been set to the same value
+	    used to build Xerces.</li>
       </ol>
     </a>
   </faq>
@@ -162,14 +162,14 @@
         from Apache, you must have the &XercesCName; runtime library available from
         your path settings.
       </p>
-      <p>On Windows this library is called <code>&XercesCWindowsDLL;.dll</code>
+      <p>On Windows this library is called <code>&XercesC3WindowsDLL;.dll</code>
         which must be available from your <code>PATH</code> settings. (Note that there are
         separate debug and release dlls for Windows.  The release dll is named
-        <code>&XercesCWindowsDLL;.dll</code>, and the debug dll
-        is named <code>&XercesCWindowsDLL;d.dll)</code>.
+        <code>&XercesC3WindowsDLL;.dll</code>, and the debug dll
+        is named <code>&XercesC3WindowsDLL;d.dll)</code>.
       </p>
-      <p>On UNIX platforms the library is called &XercesCUnixLib;.so.&XercesCUnixSoName; (or
-         &XercesCUnixLib;&XercesCUnixSoName;.so or &XercesCUnixLib;.sl.&XercesCUnixSoName;)
+      <p>On UNIX platforms the library is called &XercesC3UnixLib;.so.&XercesC3UnixSoName; (or
+         &XercesC3UnixLib;&XercesC3UnixSoName;.so or &XercesC3UnixLib;.sl.&XercesC3UnixSoName;)
          which must be available from your <code>LD_LIBRARY_PATH</code>
          (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
 
@@ -182,6 +182,11 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
       <p>If you are using the XML4C parser from IBM, you will
         need to put in two additional DLLs. In the Windows build these are <code>icuuc*.dll</code> and <code>icudt*.dll</code> which must be available from your PATH settings. On UNIX, these
         libraries are called <code>libicuuc*.so</code> and <code>libicudt*.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
+
+      <p>If the parser is built with icu message loader (as mentioned above), or message
+        catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
+        the directory, &XercesC3SrcInstallDir;/msg, where the message files reside.
+      </p>
 
     </a>
   </faq>
@@ -257,9 +262,9 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
 
 <source>
 try {
-   XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
+   XMLPlatformUtils::Initialize();
 }
-catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
+catch (const XMLException&amp; toCatch) {
    // Do your failure processing here
 }</source>
 
@@ -309,8 +314,8 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
 
   <faq title="First-chance exception in Microsoft debugger">
 
-    <q>"First-chance exception in DOMPrint.exe (KERNEL32.DLL): 0xE06D7363:
-      Microsoft C++ Exception." I am always getting this message when I am using the
+    <q>First-chance exception in DOMPrint.exe (KERNEL32.DLL): 0xE06D7363:
+      Microsoft C++ Exception. I am always getting this message when I am using the
       parser. My programs are terminating abnormally. Even the samples are giving
       this exception. I am using Visual C++ 6.0 with latest service pack
       installed.</q>
@@ -327,7 +332,7 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
         <li>start debugging (so the debug menu appears)</li>
         <li>from the debug menu select "Exceptions"</li>
         <li>from the box that opens select "Microsoft C++ Exception" and set it
-          to "Stop if not handled" instead of "Stop always".</li>
+          to "Stop if not handled" instead of "stop always".</li>
       </ul>
 
       <p>You'll still land in the debugger if your program is terminating
@@ -338,59 +343,62 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
   </faq>
 
   <faq title="Cannot load message domain, Xerces Panic Error">
-    <q>"Cannot load message domain, Xerces Panic Error"?</q>
+    <q>Cannot load message domain, Xerces Panic Error?</q>
     <a>
-      <p>If the parser is built with icu message loader (like IBM XML4C binaries), 
-         you need to make sure that the message library &faq-build-faq-distrib3;
-         is located in a directory which is on the library search path.
-         Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to        
-         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment 
-		 variable XERCESC_NLS_HOME, or at $XERCESCROOT/msg.
+      <p>If the parser is built with icu message loader (like IBM XML4C binaries),
+         you need to make sure that the message library (for the exact name see
+         <jump href="faq-distrib-&XercesC3Series;.html#faq-2">FAQ: Which DLLs do I need to distribute
+         with my application?</jump>) is located in a directory which is on the library search path.
+         Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to
+         XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable
+         XERCESC_NLS_HOME, or at &XercesC3SrcInstallDir;/msg.
       </p>
-      <p>If the parser is built with iconv message catalog loader, you need to make sure that the message
+      <p>If the parser is built with iconv message loader, you need to make sure that the message
          catalog file, XercesMessages_en_US.cat, is in the directory given at the call to XMLPlatformUtils::Initialize(),
-         or is located in the directory pointed to by the environment variable XERCESC_NLS_HOME, or  
-         at $XERCESCROOT/msg.
-      </p>      
+         or is located in the directory pointed to by the environment variable XERCESC_NLS_HOME, or
+         at &XercesC3SrcInstallDir;/msg.
+      </p>
 
     </a>
   </faq>
 
   <faq title="Why my document is valid on some platforms while invalid on others">
-    <q>"Why my document is valid on some platform while invalid on others"?</q>
+    <q>Why my document is valid on some platform while invalid on others?</q>
     <a>
-      <p>The parser relies on the system call, strtod(), to parse a string representation 
+      <p>The parser relies on the system call, strtod(), to parse a string representation
          of a double/float data. In the case of no invalid characters found, the strtod()
-         returns a double/float value if it is representable on that platform, or raises 
-         ERANGE to indicate either underflow or underflow occurs. And the parser assigns 
-         zero to the said data if underflow is found.        
+         returns a double/float value if it is representable on that platform, or raises
+         ERANGE to indicate either underflow or underflow occurs. And the parser assigns
+         zero to the said data if underflow is found.
       </p>
-      <p>The threshold, where the strtod() decides if an underflow occurs, varies on 
-         platforms. On windows, it is roughly the order of e-308, on Linux, e-325, and 
+      <p>The threshold, where the strtod() decides if an underflow occurs, varies on
+         platforms. On windows, it is roughly the order of e-308, on Linux, e-325, and
          on AIX, HP and Solaris, e-324.
-      </p>      
-      <p>So in an instance document, a data of value 1.0e-310 from a type with minExclusive 0, 
+      </p>
+      <p>So in an instance document, a data of value 1.0e-310 from a type with minExclusive 0,
          is considered invalid on windows (since it is converted to 0 and therefore violates
-         the minExclusive constraint), but valid on other unix platforms (since it remains 
-         the original value).          
+         the minExclusive constraint), but valid on other unix platforms (since it remains
+         the original value).
       </p>
       <p>The discussion above applies to data in xsd file as well.
-      </p>            
+      </p>
     </a>
   </faq>
- 
-  <faq title='Regenerating (API) documentation?'>
-    <q>How do I regenerate the (API) documentation?</q>
+
+  <faq title="How do I regenerate the documentation?">
+    <q>How do I regenerate the documentation?</q>
     <a>
      <p>To use the internal XML based application that creates the
         documentation, you must have a Java Virtual machine installed
         on your system. The application itself, written in Java, is
-        part of Xerces.</p>
+        provided in the &XercesC3ToolsInstallDir; distribution. You
+        should copy its contents into your <code>&XercesC3SrcInstallDir;</code>
+        directory.</p>
 
-     <p>To regenerate the documentation, go to Xerces directory 
+     <p>To regenerate the documentation, go to &XercesC3SrcInstallDir;
         and start <code>createDocs.sh</code> (for Unix) or
         <code>createdocs.bat</code> (for Windows). The result can be
-        found in the subdirectory <code>doc/html</code>.</p>
+        found in directory <code>&XercesC3SrcInstallDir;/doc/html</code>.</p>
 
      <p>
       To regenerate the API documentation, you need to have at least
@@ -400,19 +408,15 @@ catch (const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&amp; toCatch) {
       <p>If you want the API documentation to
       contain dependency graphs, you also need to have <jump
       href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump> installed on
-      your system. (Note that some people object to the 
-      <jump
-      href="http://www.research.att.com/sw/tools/graphviz/license/index.html">GraphViz
-      license</jump>, so there are Linux distributions that do not
-      include it.)</p>
+      your system.</p>
 
       <p>If you do not have GraphViz, or do not want to use it, you
-      have to edit file <code>doc/Doxyfile</code> and change <code>HAVE_DOT =
-      YES</code> into <code>HAVE_DOT = NO</code>.</p>
+      have to edit file <code>&XercesC3SrcInstallDir;/doc/Doxyfile</code> and
+      change <code>HAVE_DOT = YES</code> into <code>HAVE_DOT = NO</code>.</p>
 
       <p>To actually regenerate the API documentation, go to directory
-      <code>doc/</code> and start Doxygen. The result can be
-        found in directory <code>doc/html/apiDocs</code>.</p>
+      <code>&XercesC3SrcInstallDir;/doc/</code> and start Doxygen. The result can be
+        found in directory <code>&XercesC3SrcInstallDir;/doc/html/apiDocs</code>.</p>
     </a>
    </faq>
 

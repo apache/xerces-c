@@ -38,10 +38,10 @@
 <source>Redirect &lt;XML file&gt;</source>
 
                    <p>Redirect is invoked as follows:</p>
-<source>cd &XercesCInstallDir;-linux/samples/data
+<source>cd &XercesC3InstallDir;-linux/samples/data
 Redirect personal.xml</source>
           <p>The output is the following:</p>
-<source>cd &XercesCInstallDir;-linux/samples/data
+<source>cd &XercesC3InstallDir;-linux/samples/data
 Redirect personal.xml
 personal.xml: 30 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
 

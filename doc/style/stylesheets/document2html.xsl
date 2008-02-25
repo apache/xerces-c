@@ -119,10 +119,19 @@
     <br/>
   </xsl:template>
 
+  <xsl:template match="section">
+    <xsl:variable name="sectid" select="concat('sect-',position())"/>
+    <img name="side-{$sectid}" src="graphics/{$sectid}-label.jpg" width="120" height="17" hspace="0" vspace="0" border="0" alt="{@label}"/>
+    <br/>
+  </xsl:template>
+
   <xsl:template match="separator">
     <img src="resources/separator.gif" width="120" height="6" hspace="0" vspace="0" border="0"/><br/>
   </xsl:template>
 
+  <xsl:template match="separator-space">
+    <img src="resources/separator-space.gif" width="120" height="6" hspace="0" vspace="0" border="0"/><br/>
+  </xsl:template>
 
 <!-- ###################################################################### -->
 <!-- document -->
@@ -434,6 +443,12 @@
   </xsl:template>
 
 <!-- ###################################################################### -->
+
+<!-- ignore -->
+  <xsl:template match="form">
+    <xsl:copy-of select="." />
+  </xsl:template>
+
 <!-- copy
 
   <xsl:template match="@*|node()">

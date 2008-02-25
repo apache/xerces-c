@@ -21,39 +21,39 @@
 <s1 title="Build Instructions">
 
   <s2 title="Building on Windows and UNIX">
-    <p>Read the <jump href="build-winunix.html">Building on Windows and UNIX</jump> document
+    <p>Read the <jump href="build-winunix-&XercesC3Series;.html">Building on Windows and UNIX</jump> document
       or jump directly to:</p>
     <ul>
-       <li><jump href="build-winunix.html#WinNT">Building &XercesCName; on Windows using Microsoft Visual C++</jump></li>
-       <li><jump href="build-winunix.html#WinIntel">Building &XercesCName; 64 bit binary on Windows XP using Intel C++ Compiler</jump></li>
-       <li><jump href="build-winunix.html#WinBorlandBuilder">Building &XercesCName; on Windows using Borland C++Builder</jump></li>
-       <li><jump href="build-winunix.html#WinBorlandCC">Building &XercesCName; on Windows using Borland C++ Compiler</jump></li>
-       <li><jump href="build-winunix.html#CygWin">Building &XercesCName; on Windows using Cygwin</jump></li>
-       <li><jump href="build-winunix.html#UNIX">Building &XercesCName; on UNIX platforms</jump></li>
-<!--       <li><jump href="build-winunix.html#UNIX_SingleThread">Building &XercesCName; as a single-threaded library on Unix platforms</jump></li> -->
+       <li><jump href="build-winunix-&XercesC3Series;.html#WinNT">Building on Windows using Microsoft Visual C++</jump></li>
+       <li><jump href="build-winunix-&XercesC3Series;.html#UNIX">Building on UNIX/Linux/Mac OS X platforms</jump></li>
+       <li><jump href="build-winunix-&XercesC3Series;.html#CygWin">Building on Windows using Cygwin</jump></li>
+       <li><jump href="build-winunix-&XercesC3Series;.html#MinGW">Building on Windows using MinGW-MSYS</jump></li>
+       <li><jump href="build-winunix-&XercesC3Series;.html#WinBorlandCC">Building on Windows using Borland C++</jump></li>
+       <li><jump href="build-winunix-&XercesC3Series;.html#WinBorlandBuilder">Building on Windows using Borland C++ Builder</jump></li>
+       <li><jump href="build-winunix-&XercesC3Series;.html#WinIntel">Building 64 bit libraries on Windows using Intel C++</jump></li>
     </ul>
   </s2>
 
   <s2 title="Building on Other Platforms">
-    <p>Read the <jump href="build-other.html">Building on Other Platforms</jump> document
+    <p>Read the <jump href="build-other-&XercesC3Series;.html">Building on Other Platforms</jump> document
       or jump directly to:</p>
     <ul>
-       <li><jump href="build-other.html#iSeries">Building &XercesCName; on iSeries (AS/400)</jump></li>
-       <li><jump href="build-other.html#Mac">Building &XercesCName; on Macintosh</jump></li>
+       <li><jump href="build-other-&XercesC3Series;.html#iSeries">Building &XercesCName; on iSeries (AS/400)</jump></li>
+       <li><jump href="build-other-&XercesC3Series;.html#Mac">Building &XercesCName; on Macintosh</jump></li>
     </ul>
   </s2>
 
   <s2 title="Other Build Instructions">
-    <p>Read the <jump href="build-misc.html">Other Build Instructions</jump> document
+    <p>Read the <jump href="build-misc-&XercesC3Series;.html">Other Build Instructions</jump> document
       or jump directly to:</p>
     <ul>
-       <li><jump href="build-misc.html#ICUPerl">Building &XercesCName; with ICU</jump></li>
-       <li><jump href="build-misc.html#RPMLinux">Building &XercesCName; using RPM on Linux</jump></li>
-       <li><jump href="build-misc.html#WinCOM">Building &XercesCName; COM Wrapper on Windows</jump></li>
-       <li><jump href="build-misc.html#UserDoc">Building User Documentation</jump></li>
-       <li><jump href="build-misc.html#PortInfo">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</jump></li>
-       <li><jump href="build-misc.html#XMLChInfo">What should I define XMLCh to be?</jump></li>
-       <li><jump href="build-misc.html#HelpInfo">Where can I look for more help?</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#ICUPerl">Building &XercesCName; with ICU</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#RPMLinux">Building &XercesCName; using RPM on Linux</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#WinCOM">Building &XercesCName; COM Wrapper on Windows</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#UserDoc">Building User Documentation</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#PortInfo">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#XMLChInfo">What should I define XMLCh to be?</jump></li>
+       <li><jump href="build-misc-&XercesC3Series;.html#HelpInfo">Where can I look for more help?</jump></li>
     </ul>
   </s2>
 

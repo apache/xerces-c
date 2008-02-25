@@ -21,111 +21,59 @@
 <s1 title="Migration">
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; 2.5.0 or earlier,
-          please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
+       <p>For migration information to &XercesCName; 2.7.0 or earlier,
+          please refer to <jump href="migrate_archive-&XercesC3Series;.html">Migration Archive. </jump></p>
 
     </s2>
 
-    <s2 title="Migrating from &XercesCName; 2.5.0 to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 2.7.0 to &XercesCName; &XercesC3Version;">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; 2.5.0 code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 2.7.0 code base and the &XercesCName; &XercesC3Version;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures260">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="API260">Public API Changes</link></li>
+        <li><link anchor="NewFeatures280">New features in &XercesCName; &XercesC3Version;</link></li>
+        <li><link anchor="API280">Public API Changes</link></li>
         <ul>
-            <li><link anchor="NewAPI260">New Public API</link></li>
-            <li><link anchor="ModifiedAPI260">Modified Public API</link></li>
-            <li><link anchor="DeprecatedAPI260">Deprecated/Removed Public API</link></li>
-            <li>Please note the following source code incompatibility: Rename VALUE_CONSTRAINT enumeration values in XSConstants.hpp due to conflict with system header.  New
-              values are VALUE_CONSTRAINT_NONE, VALUE_CONSTRAINT_DEFAULT and VALUE_CONSTRAINT_FIXED.  Old
-              values are VC_NONE, VC_DEFAULT and VC_FIXED.</li>
-            <li>Also note that if you have implemented your own XMLGrammarPool implementation, that
-                the original getXSModel has been marked deprecated and a new method, of the same
-                name, that takes a bool parameter has been added.  This new getXSModel needs
-                to always return an XSModel.</li>
+            <li><link anchor="NewAPI280">New Public API</link></li>
+            <li><link anchor="ModifiedAPI280">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI280">Deprecated/Removed Public API</link></li>
         </ul>
       </ul>
 
-    <anchor name="NewFeatures260"/>
-    <s3 title="New features in &XercesCName; &XercesCVersion;">
+    <anchor name="NewFeatures280"/>
+    <s3 title="New features in &XercesCName; &XercesC3Version;">
       <ul>
-		<li>Reduce footprint of DLL by building the deprecated DOM as a separate library</li>
-        <li>Improve packaging scripts</li>
-        <li>Enable ID's to work on all kinds of schema components</li>       
-        <li>Add messages to DOMExceptions along with the error code</li>        
-        <li>Improve annotation error-reporting capabilities</li>       
-        <li>Make grammar caching work with DTD internal subsets</li>        
-        <li>Bring parser up to the XML 1.0 3rd Edition</li>        
-        <li>Update to the XML 1.1 recommendation</li>
-        <li>Add new method to DOMDocument so that DOM level-2 style DOMDocumentTypes (which have a 
-        DOMDocument to own them) can be created</li>        
-        <li>Feature for disabling identity constraints</li>        
-        <li>Update schema errata</li>         
-        <li>Provide means to get actual values out of PSVI/schema component model</li>      
-        <li>Synthesize annotation components for non-schema attributes</li>        
-        <li>Expose partial PSVIElement information at the start element call</li>           
-        <li>Externalize validation, actual/canonical value production for arbitrary strings</li> 
-        <li>Laxly validate schema annotations</li>
-        <li>Upgrade to ICU 3.0</li>
-        <li>Handle elements with a large number of attributes more efficiently</li>
+        <li>Exponential growth of memory block (from 16KB to 128KB) that are allocated by the DOM heap.</li>
+        <li>The NODE_CLONED notification is now sent to each node's user data handler when cloning the entire DOMDocument.</li>
+        <li>On Windows extract the registry code page from MIME\Database\Charset\&lt;encoding>\@InternetEncoding instead of MIME\Database\Charset\&lt;encoding>\@Codepage.</li>
+        <li>Allow whitespace-only nodes to be added as children of a DOMDocument.</li>
+        <li>When a node is cloned or imported the type information (PSVI) is also copied.</li>
+        <li>When using SAX2, including XMLReaderFactory to use createXMLReader doesn't include xercesc/parsers/SAX2XMLReaderImpl.hpp anymore. If you need to cast the SAX2XMLReader to SAX2XMLReaderImpl,
+            you need to include this header yourself.</li>
       </ul>
     </s3>
 
-    <anchor name="API260"/>
+    <anchor name="API280"/>
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           2.5.0; and the &XercesCName; &XercesCVersion; releases
+           2.7.0; and the &XercesCName; &XercesC3Version; releases
            of the parser. </p>
 
-        <anchor name="NewAPI260"/>
+        <anchor name="NewAPI280"/>
         <s4 title="New Public API">
             <ul>
-              <li>XSValue</li>            
-              <li>IdentityConstraintHandler</li> 
-              <li>XMLBufferFullHandler</li>
-              <li>XMLString: removeChar, isValidNOTATION</li>
-              <li>XMLUri: normalizeUri</li>
-              <li>PSVIHandler: handlePartialElementPSVI</li>
-              <li>RefHash family of classes: getHashModulus</li>
-              <li>XSAnnotation: setline/col and systemid</li>
-              <li>XMLReader: handeEOL</li>
-              <li>XMLChar: isValidNmToken</li>              
-              <li>XMLBigDecimal: parseDecimal, getIntVal</li>
-              <li>HexBin: getCanonicalRepresentation, decode</li>
-              <li>Base64: getCanonicalRepresentation, decode</li>
-              <li>XMLBigInteger: compareValues</li>
-              <li>XMLAbstractDoubleFloat: isDataConverted, getValue, isDataOverFlowed</li>
-              <li>PSVIItem: getActualValue</li>
-              <li>XSSimpleTypeDefinition: getDatatypeValidator</li>
-              <li>RefHash2KeysTableOf: transferElement</li>
-              <li>XMLGrammarPool: getXSModel</li>
+              <li>XMLBufferMgr: getBufferCount and getAvailableBufferCount</li>
             </ul>
         </s4>
 
-        <anchor name="ModifiedAPI260"/>
+        <anchor name="ModifiedAPI280"/>
         <s4 title="Modified Public API">
-            <ul>
-              <li>XSerializeEngine constructor</li>
-              <li>MACUnicodeConverters</li>
-            </ul>
         </s4>
 
-        <anchor name="DeprecatedAPI260"/>
+        <anchor name="DeprecatedAPI280"/>
         <s4 title="Deprecated/Removed Public API">
-            <ul>
-              <li>XSerializeEngine constructor</li>                
-              <li>DTDAttDef: getDOMTypeInfoName,  getDOMTypeInfoUri</li>
-			  <li>DTDElementDecl: getDOMTypeInfoName, getDOMTypeInfoUri</li>
-     	      <li>SchemaAttDef: setAnyDatatypeValidator</li>
- 			  <li>UnionDatatypeValidator: getMemberTypeName, getMemberTypeUri, getMemberTypeAnonymous, getMemberTypeValidator</li>
- 			  <li>XMLAttr: getValidatingTypeURI, getValidatingTypeName, setDatatypeValidator, setSchemaValidated</li>                          
- 			  <li>ComplexTypeInfo: setContentModel</li>
- 			  <li>XMLGrammarPool: getXSModel</li>
- 			  <li>SAXParser, mark this class deprecated</li>
-            </ul>
         </s4>
 
     </s3>

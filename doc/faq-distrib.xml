@@ -20,60 +20,40 @@
 
 <faqs title="Distributing &XercesCName;">
 
-  <faq title="What platforms / compilers are being used to build the binary distribution kits?">
-
-    <q>What platforms / compilers are being used to build the binary distribution kits?</q>
-
-    <a>
-
-      <p>&XercesCProjectName; binaries has been built on the following platforms with
-        these compilers</p>
-
-	   &build-winunix-supported-platforms;
-	   
-    </a>
-  </faq>
-
     <faq title="What are the differences between Xerces-C and XML4C?">
         <q>What are the differences between Xerces-C and XML4C?</q>
         <a>
 
-            <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16
+            <p>By default &XercesCName; has intrinsic support for ASCII, UTF-8, UTF-16
             (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037, IBM1047 and
             IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can parse
             input XML files in these above mentioned encodings.</p>
 
             <p>However, if you wish to parse XML files in any other
-            encodings, say in Shift-JIS, Big5 etc., then you cannot
-            use Xerces-C. XML4C addresses this need. It combines Xerces-C
-            and <jump
-            href="http://ibm.com/software/globalization/icu/">
-            International Components for Unicode (ICU)</jump> and
-            provides support for over 100 different encodings.
-            XML4C also uses ICU Resource Bundle to load the messages.
-            </p>
+            encodings, say in Shift-JIS, Big5 etc., then you will
+            need to build &XercesCName; with the <jump
+            href="http://icu-project.org/">
+            International Components for Unicode (ICU)</jump> library.</p>
 
-            <p>ICU is also an open source project but is licensed
-            under the <jump
-            href="http://www.x.org/terms.htm">
-            X License</jump>.  
-            Information about XML4C is available at <jump
-            href="http://www.alphaworks.ibm.com/tech/xml4c">Alphaworks</jump>
-            site.</p>  
 
+            <p><jump href="http://alphaworks.ibm.com/tech/xml4c">XML4C</jump>
+               is simply &XercesCName; built with ICU.</p>
         </a>
     </faq>
 
     <faq title="Which DLL's do I need to distribute with my application?">
         <q>Which DLL's do I need to distribute with my application?</q>
         <a>
- 
+
             <p>You only need to distribute <em>one</em> file:<br></br>
 
-            &XercesCWindowsDLL;.dll for Windows NT/2000, or<br/>
-            &XercesCUnixLib;&XercesCUnixSoName;.so for AIX, or<br/>
-            &XercesCUnixLib;.so.&XercesCUnixSoName; for Solaris/Linux, or<br/>
-            &XercesCUnixLib;.sl.&XercesCUnixSoName; for HP-UX.</p>
+            &XercesC3WindowsDLL;.dll for Windows, or<br/>
+            &XercesC3UnixLib;&XercesC3UnixSoName;.a for AIX, or<br/>
+            &XercesC3UnixLib;.so.&XercesC3UnixSoName; for Solaris/Linux, or<br/>
+            &XercesC3UnixLib;.sl.&XercesC3UnixSoName; for HP-UX on PA-RISC, or<br/>
+            &XercesC3UnixLib;.so.&XercesC3UnixSoName; for HP-UX on IA64, or<br/>
+            &XercesC3UnixLib;.&XercesC3UnixSoName;.dylib for Mac OS X.
+            </p>
 
             <p>However, if you are using the ICU transcoder then in
             <em>addition</em> to the library file
@@ -81,23 +61,28 @@
 
             <ol>
                 <li><em>ICU shared library file</em>:<br></br>
-                    icuuc*.dll for Windows NT/2000, or<br></br>
+                    icuuc*.dll for Windows, or<br></br>
                     libicuuc*.a for AIX, or<br></br>
                     libicuuc*.so for Solaris/Linux, or<br></br>
-                    libicuuc*.sl for HP-UX.</li>
+                    libicuuc*.sl for HP-UX on PA-RISC, or<br></br>
+                    libicuuc*.so for HP-UX on IA64, or<br></br>
+                    libicuuc*.dylib for Mac OS X.</li>
 
                 <li><em>ICU converter data shared library file:</em><br></br>
-                    icudt*.dll for Windows NT/2000, or<br></br>
+                    icudt*.dll for Windows, or<br></br>
                     libicudt*.a for AIX, or<br></br>
                     libicudt*.so for Solaris/Linux, or<br></br>
-                    libicudt*.sl for HP-UX.</li>
+                    libicudt*.sl for HP-UX on PA-RISC, or<br></br>
+                    libicudt*.so for HP-UX on IA-64, or<br></br>
+                    libicudt*.dylib for Mac OS X.</li>
 
                 <li><em>The &XercesCName; Message file:</em><br></br>
-                    XercesMessages*.dll for Windows NT/2000, or<br></br>
+                    XercesMessages*.dll for Windows, or<br></br>
                     libXercesMessages*.a for AIX, or<br></br>
                     libXercesMessages*.so for Solaris/Linux, or<br></br>
-                    libXercesMessages*.sl for HP-UX.</li>
-
+                    libXercesMessages*.sl for HP-UX on PA-RISC, or<br></br>
+                    libXercesMessages*.so for HP-UX on IA64, or<br></br>
+                    libXercesMessages*.dylib for Mac OS X.</li>
             </ol>
         </a>
     </faq>
@@ -130,8 +115,8 @@ options are:  -s &lt;source_directory&gt;
               -t &lt;transcoder&gt; can be 'icu' or 'native'
               -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
               -h to get help on these commands
-Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
-                                 -o$HOME/&XercesCInstallDir;
+Example: perl packageBinaries.pl -s$HOME/&XercesC3SrcInstallDir;
+                                 -o$HOME/&XercesC3InstallDir;
                                  -cgcc -xg++ -minmem
                                  -nfileonly -tnative</source>
 
@@ -151,7 +136,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             publish binaries for every platform. If you wish to
             contribute your time and effort in building binaries for a
             specific platform/environment then please send a mail to the
-            <jump href="mailto:&XercesCDevelEmailAddress;">&XercesCName; development mailing list</jump>.
+            <jump href="&MailURI;">&XercesCName; developer mailing list</jump>.
             We can definitely use any extra help in this open source
             project</p>
         </a>
@@ -167,7 +152,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
           many platforms as there are. Again, due to limited resources
           we cannot do all the ports. We will help you make this port
           happen. Here are some <jump
-          href="program-others.html#PortingGuidelines">Porting
+          href="program-others-&XercesC3Series;.html#PortingGuidelines">Porting
           Guidelines</jump>.</p>
 
             <p>We strongly encourage you to submit the changes that
@@ -176,7 +161,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             them available in the future releases.</p>
 
             <p>All porting changes may be sent to the
-            <jump href="mailto:&XercesCDevelEmailAddress;">&XercesCName; development mailing list</jump>
+            <jump href="&MailURI;">&XercesCName; developer mailing list</jump>
             .</p>
         </a>
     </faq>
@@ -186,7 +171,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
         <q>How can I port &XercesCProjectName; to my favourite platform?</q>
         <a>
           <p>Here are some <jump
-          href="program-others.html#PortingGuidelines">Porting
+          href="program-others-&XercesC3Series;.html#PortingGuidelines">Porting
           Guidelines</jump>.</p>
         </a>
     </faq>
@@ -208,7 +193,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
             <jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
 	    <jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</p>
 
-            <p>See <jump href="faq-build.html#faq-18">
+            <p>See <jump href="faq-build-&XercesC3Series;.html#faq-18">
             FAQ: Regenerating (API) documentation?</jump></p>
 
         </a>
@@ -220,8 +205,7 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
         <a>
             <p>Yes! Read the license agreement first and if you still
             have further questions, then please address them to the
-            <jump href="mailto:&XercesCUserEmailAddress;">&XercesCName; user mailing list</jump>
-            .</p>
+            <jump href="&MailURI;">&XercesCName; user mailing list</jump>.</p>
 
         </a>
 </faq>

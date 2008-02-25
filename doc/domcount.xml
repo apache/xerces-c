@@ -55,7 +55,7 @@ Options:
              <em>-v=never</em>  will not use any validation<br/>
              <em>-v=auto</em>   will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
           <p>Here is a sample output from DOMCount</p>
-<source>cd &XercesCInstallDir;-linux/samples/data
+<source>cd &XercesC3InstallDir;-linux/samples/data
 DOMCount -v=always personal.xml
 personal.xml: 20 ms (37 elems)</source>
 

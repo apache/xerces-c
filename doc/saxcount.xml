@@ -54,7 +54,7 @@ Options:
              <em>-v=never</em> will not use any validation<br/>
              <em>-v=auto</em> will validate if a DOCTYPE declaration or a schema declaration is present in the XML document</p>
           <p>Here is a sample output from SAXCount</p>
-<source>cd &XercesCInstallDir;-linux/samples/data
+<source>cd &XercesC3InstallDir;-linux/samples/data
 SAXCount -v=always personal.xml
 personal.xml: 60 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</source>
           <p>Running SAXCount with the validating parser gives a different result because

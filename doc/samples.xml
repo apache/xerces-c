@@ -30,72 +30,73 @@
     <s2 title="Running the Samples">
 
     <p>The sample applications are dependent on the &XercesCName; shared library
-		(and could also depend on the ICU library if you built &XercesCName; with ICU).
-		Therefore, on Windows platforms you must make sure that your <code>PATH</code>
-		environment variable is set properly to pick up these shared libraries at
-		runtime.</p>
+       (and could also depend on the ICU library if you built &XercesCName; with ICU).
+       Therefore, on Windows platforms you must make sure that your <code>PATH</code>
+       environment variable is set properly to pick up these shared libraries at
+       runtime.</p>
 
-		<p>On UNIX platforms you must ensure that <ref>LIBPATH</ref>
-		environment variable is set properly to pick up the shared libraries at
-		runtime. (UNIX gurus will understand here that <ref>LIBPATH</ref> actually
-		translates to <em>LD_LIBRARY_PATH</em> on Solaris and Linux, <em>SHLIB_PATH</em> on HP-UX,
-		<em>DYLD_LIBRARY_PATH</em> on Mac OS X,
-		and stays as <em>LIBPATH</em> on AIX).</p>
+    <p>On UNIX platforms you must ensure that <ref>LIBPATH</ref>
+       environment variable is set properly to pick up the shared libraries at
+       runtime. (UNIX gurus will understand here that <ref>LIBPATH</ref> actually
+       translates to <em>LD_LIBRARY_PATH</em> on Solaris and Linux, <em>SHLIB_PATH</em> on HP-UX,
+       <em>DYLD_LIBRARY_PATH</em> on Mac OS X,
+       and stays as <em>LIBPATH</em> on AIX).</p>
 
-		<p>To set you LIBPATH (on AIX for example), you would type:</p>
-<source>export LIBPATH=&XercesCInstallDir;/lib:$LIBPATH</source>
+    <p>To set you LIBPATH (on AIX for example), you would type:</p>
 
-               <p>On both Windows and UNIX platforms, if the parser is built with icu message loader
-               (like IBM XML4C binaries), or message catalog loader, then you need to set another environment
-               variable, XERCESC_NLS_HOME to point to the directory, $XERCESCROOT/msg, where the message
-               files reside.              
-               </p>
+    <source>export LIBPATH=&XercesC3InstallDir;/lib:$LIBPATH</source>
+
+    <p>On both Windows and UNIX platforms, if the parser is built with icu message loader
+       (like IBM XML4C binaries), or message catalog loader, then you need to set another environment
+       variable, XERCESC_NLS_HOME to point to the directory, &XercesC3SrcInstallDir;/msg, where
+       the message files reside.
+    </p>
 <source>
-set XERCESC_NLS_HOME=$XERCESCROOT\msg
+set XERCESC_NLS_HOME=&XercesC3InstallDir;\msg
 or
-export XERCESC_NLS_HOME=$XERCESCROOT/msg
+export XERCESC_NLS_HOME=&XercesC3InstallDir;/msg
 or
-setenv XERCESC_NLS_HOME=$XERCESCROOT/msg
+setenv XERCESC_NLS_HOME=&XercesC3InstallDir;/msg
 </source>
-               
-               <p>Once you have set up the environment variables, you can run the
-               samples by opening a command window (or your shell prompt for
-               UNIX environments).</p>
+
+   <p>Once you have set up the environment variables, you can run the
+      samples by opening a command window (or your shell prompt for
+      UNIX environments).</p>
 
 		<s3 title="&XercesCName; Samples">
 			<ul>
-				<li><link idref="saxcount">SAXCount</link>
+				<li><link idref="saxcount-&XercesC3Series;">SAXCount</link>
 					<br/>SAXCount counts the elements, attributes, spaces and
 					characters in an XML file.</li>
-				<li><link idref="saxprint">SAXPrint</link>
+				<li><link idref="saxprint-&XercesC3Series;">SAXPrint</link>
 					<br/>SAXPrint parses an XML file and prints it out.</li>
-				<li><link idref="domcount">DOMCount</link>
+				<li><link idref="domcount-&XercesC3Series;">DOMCount</link>
 					<br/>DOMCount counts the elements in a XML file.</li>
-				<li><link idref="domprint">DOMPrint</link>
+				<li><link idref="domprint-&XercesC3Series;">DOMPrint</link>
 					<br/>DOMPrint parses an XML file and prints it out.</li>
-				<li><link idref="memparse">MemParse</link>
+				<li><link idref="memparse-&XercesC3Series;">MemParse</link>
 					<br/>MemParse parses XML in a memory buffer, outputing the number of elements and attributes.</li>
-				<li><link idref="redirect">Redirect</link>
+				<li><link idref="redirect-&XercesC3Series;">Redirect</link>
 					<br/>Redirect redirects the input stream for external entities.</li>
-				<li><link idref="pparse">PParse</link>
+				<li><link idref="pparse-&XercesC3Series;">PParse</link>
 					<br/>PParse demonstrates progressive parsing.</li>
-				<li><link idref="stdinparse">StdInParse</link>
+				<li><link idref="stdinparse-&XercesC3Series;">StdInParse</link>
 					<br/>StdInParse demonstrates streaming XML data from standard input.</li>
-				<li><link idref="enumval">EnumVal</link>
+				<li><link idref="enumva-&XercesC3Series;">EnumVal</link>
 					<br/>EnumVal shows how to enumerate the markup decls in a DTD Grammar.</li>
-				<li><link idref="senumval">SEnumVal</link>
+				<li><link idref="senumval-&XercesC3Series;">SEnumVal</link>
 					<br/>SEnumVal shows how to enumerate the markup decls in a Schema Grammar.</li>
-				<li><link idref="createdoc">CreateDOMDocument</link>
+				<li><link idref="createdoc-&XercesC3Series;">CreateDOMDocument</link>
 					<br/>CreateDOMDocument creates a DOM tree in memory from scratch.</li>
-				<li><link idref="sax2count">SAX2Count</link>
+				<li><link idref="sax2count-&XercesC3Series;">SAX2Count</link>
 					<br/>SAX2Count counts the elements, attributes, spaces and
 					characters in an XML file.</li>
-				<li><link idref="sax2print">SAX2Print</link>
+				<li><link idref="sax2print-&XercesC3Series;">SAX2Print</link>
 					<br/>SAX2Print parses an XML file and prints it out.</li>
-				<li><link idref="psviwriter">PSVIWriter</link>
+				<li><link idref="psviwriter-&XercesC3Series;">PSVIWriter</link>
 					<br/>PSVIWriter exposes the underlying PSVI of the parsed XML file.</li>
-				<li><link idref="scmprint">SCMPrint</link>
-					<br/>SCMPrint parses an XSD file and prints information about the Schema Component Model.</li>										
+				<li><link idref="scmprint-&XercesC3Series;">SCMPrint</link>
+					<br/>SCMPrint parses an XSD file and prints information about the Schema Component Model.</li>
 			</ul>
 		</s3>
     </s2>
