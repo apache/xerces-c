@@ -26,7 +26,7 @@
 
     <a>
 
-      <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
+      <p>&XercesCName; &XercesC2Version; now supports C++ Namespace.</p>
 
       <p>If C++ Namespace is ENABLED, users' applications must
          namespace qualify all the &XercesCName; classes, data, and
@@ -36,7 +36,7 @@
          properly qualified or scoped.
       </p>
 
-      <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">
+      <p>See the Programming Guide <jump href="program-others-&XercesC2Series;.html#CPPNamespace">
          Using C++ Namespace</jump> for details.
       </p>
 
@@ -53,7 +53,7 @@
 
       <p>Your application somehow has picked up the Microsoft SDK header <code>Msxml.h</code>
          which has its own typedef of <code>DOMDocument</code>.   This confuses
-         with the &XercesCName; &XercesCVersion; <code>&XercesCNamespace;::DOMDocument</code>
+         with the &XercesCName; &XercesC2Version; <code>&XercesC2Namespace;::DOMDocument</code>
          and thus lead to the compilation errors.</p>
 
       <p> Qualifier the use of DOMDocument in your application explicitly e.g.
@@ -121,7 +121,7 @@
       <p>Please check the following:</p>
       <ol>
         <li>If you're using the binary build of &XercesCName;, make sure that the OS and compiler are
-            the same version as the ones used to build the binary &faq-build-faq-distrib1;.  Different OS and
+            the same version as the ones used to build the binary.  Different OS and
             compiler versions might cause unresolved linking problems or compilation
             errors. If the versions are different, rebuild the &XercesCName; library on
             your system before building your application. If you're using ICU (which is
@@ -130,9 +130,9 @@
         <li>Check that the library path is set properly and that the correct
             versions of <code>gmake</code> and <code>autoconf</code> are on your system.</li>
         <li>If C++ Namespace support is ENABLED (all the binary distributions of &XercesCName;
-            &XercesCVersion; are built with C++ Namespace enabled), users' applications
+            &XercesC2Version; are built with C++ Namespace enabled), users' applications
             must namespace qualify all the &XercesCName; classes, data and variables.
-            See the Programming Guide <jump href="program-others.html#CPPNamespace">
+            See the Programming Guide <jump href="program-others-&XercesC2Series;.html#CPPNamespace">
             Using C++ Namespace</jump> for details.</li>
       </ol>
     </a>
@@ -181,14 +181,14 @@
         from Apache, you must have the &XercesCName; runtime library available from
         your path settings.
       </p>
-      <p>On Windows this library is called <code>&XercesCWindowsDLL;.dll</code>
+      <p>On Windows this library is called <code>&XercesC2WindowsDLL;.dll</code>
         which must be available from your <code>PATH</code> settings. (Note that there are
         separate debug and release dlls for Windows.  The release dll is named
-        <code>&XercesCWindowsDLL;.dll</code>, and the debug dll
-        is named <code>&XercesCWindowsDLL;d.dll)</code>.
+        <code>&XercesC2WindowsDLL;.dll</code>, and the debug dll
+        is named <code>&XercesC2WindowsDLL;d.dll)</code>.
       </p>
-      <p>On UNIX platforms the library is called &XercesCUnixLib;.so.&XercesCUnixSoName; (or
-         &XercesCUnixLib;&XercesCUnixSoName;.so or &XercesCUnixLib;.sl.&XercesCUnixSoName;)
+      <p>On UNIX platforms the library is called &XercesC2UnixLib;.so.&XercesC2UnixSoName; (or
+         &XercesC2UnixLib;&XercesC2UnixSoName;.so or &XercesC2UnixLib;.sl.&XercesC2UnixSoName;)
          which must be available from your <code>LD_LIBRARY_PATH</code>
          (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
 
@@ -367,7 +367,7 @@ catch (const XMLException&amp; toCatch) {
       <p>
 	      Due to the recent directory change, you may need to either update your
 		  project file, makefile, or your source/header file, for details,
-          please refer to <jump href="migrate.html#DirChange">Directory Change. </jump></p>
+          please refer to <jump href="migrate-&XercesC2Series;.html#DirChange">Directory Change. </jump></p>
     </a>
   </faq>
 
@@ -375,8 +375,9 @@ catch (const XMLException&amp; toCatch) {
     <q>Cannot load message domain, Xerces Panic Error?</q>
     <a>
       <p>If the parser is built with icu message loader (like IBM XML4C binaries),
-         you need to make sure that the message library &faq-build-faq-distrib3;
-         is located in a directory which is on the library search path.
+         you need to make sure that the message library (for the exact name see
+         <jump href="faq-distrib-&XercesC2Series;.html#faq-2">FAQ: Which DLLs do I need to distribute
+         with my application?</jump>) is located in a directory which is on the library search path.
          Or the message resource file, XercesMessages_en_US.res, is in the directory given at the call to
          XMLPlatformUtils::Initialize(), or is located in the directory pointed to by the environment variable
          XERCESC_NLS_HOME, or at $XERCESCROOT/msg.
@@ -419,7 +420,7 @@ catch (const XMLException&amp; toCatch) {
      <p>To use the internal XML based application that creates the
         documentation, you must have a Java Virtual machine installed
         on your system. The application itself, written in Java, is
-        provided in the &XercesCToolsInstallDir; distribution. You
+        provided in the &XercesC2ToolsInstallDir; distribution. You
         should copy its contents into your <code>$XERCESCROOT</code>
         directory.</p>
 

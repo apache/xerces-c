@@ -432,7 +432,7 @@
         <li>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
         to load the default error text message for the correspond Exception Code.</li>
         <li>New feature XMLPlatformUtils::Initialize(const char* const locale) to set
-        the locale for message loader.   See <jump href="program-others.html#SpecifylocaleforMessageLoader">
+        the locale for message loader.   See <jump href="program-others-&XercesC2Series;.html#SpecifylocaleforMessageLoader">
         Specify locale for Message Loader</jump> for details</li>
         <li>Support Build with ICU Message Loader, or Message Catalog Message Loader</li>
         <li>RPM for Linux</li>
@@ -442,7 +442,7 @@
         <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
         <li>New feature, "http://apache.org/xml/features/dom/byte-order-mark", allows user to enable
             DOMWriter to write Byte-Order-Mark in the output XML stream,
-            See <jump href="program-dom.html#Byte-Order-Mark">
+            See <jump href="program-dom-&XercesC2Series;.html#Byte-Order-Mark">
             Xercesc Feature: Byte Order Mark</jump> for details</li>
       </ul>
     </s3>
@@ -450,14 +450,14 @@
     <anchor name="CPPNamespace220"/>
     <s3 title="Using C++ Namespace">
         <p>&XercesCName; 2.2.0 now supports C++ Namespace.  All &XercesCName;
-           classes, data and variables are defined in the &XercesCNamespace; namespace
+           classes, data and variables are defined in the &XercesC2Namespace; namespace
            if C++ Namespace support is ENABLED.</p>
 
         <p>All the binary distributions of &XercesCName; 2.2.0 are now built with
            C++ Namespace enabled.   Therefore users' applications that links with the distributed
            binary packages must namespace qualify all the &XercesCName; classes, data and variables.</p>
 
-        <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump>
+        <p>See the Programming Guide <jump href="program-others-&XercesC2Series;.html#CPPNamespace">Using C++ Namespace</jump>
            for details.</p>
 
     </s3>
@@ -646,21 +646,21 @@
          <ul>
             <li>AIX</li>
             <ul>
-              <li>&XercesCUnixLib;&XercesCUnixSoName;.so</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;&XercesCUnixVersion;.so</li>
-              <li>symbolic link: &XercesCUnixLib;&XercesCUnixVersion;.so  ----&gt; &XercesCUnixLib;&XercesCUnixSoName;.so</li>
+              <li>&XercesC2UnixLib;&XercesC2UnixSoName;.so</li>
+              <li>symbolic link: &XercesC2UnixLib;.so                      ----&gt; &XercesC2UnixLib;&XercesC2UnixVersion;.so</li>
+              <li>symbolic link: &XercesC2UnixLib;&XercesC2UnixVersion;.so  ----&gt; &XercesC2UnixLib;&XercesC2UnixSoName;.so</li>
             </ul>
             <li>Solaris / Linux</li>
             <ul>
-              <li>&XercesCUnixLib;.so.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.so                      ----&gt; &XercesCUnixLib;.so.&XercesCUnixVersion;</li>
-              <li>symbolic link: &XercesCUnixLib;.so.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.so.&XercesCUnixSoName;</li>
+              <li>&XercesC2UnixLib;.so.&XercesC2UnixSoName;</li>
+              <li>symbolic link: &XercesC2UnixLib;.so                      ----&gt; &XercesC2UnixLib;.so.&XercesC2UnixVersion;</li>
+              <li>symbolic link: &XercesC2UnixLib;.so.&XercesC2UnixVersion; ----&gt; &XercesC2UnixLib;.so.&XercesC2UnixSoName;</li>
             </ul>
             <li>HP-UX</li>
             <ul>
-              <li>&XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl                      ----&gt; &XercesCUnixLib;.sl.&XercesCUnixVersion;</li>
-              <li>symbolic link: &XercesCUnixLib;.sl.&XercesCUnixVersion; ----&gt; &XercesCUnixLib;.sl.&XercesCUnixSoName;</li>
+              <li>&XercesC2UnixLib;.sl.&XercesC2UnixSoName;</li>
+              <li>symbolic link: &XercesC2UnixLib;.sl                      ----&gt; &XercesC2UnixLib;.sl.&XercesC2UnixVersion;</li>
+              <li>symbolic link: &XercesC2UnixLib;.sl.&XercesC2UnixVersion; ----&gt; &XercesC2UnixLib;.sl.&XercesC2UnixSoName;</li>
             </ul>
          </ul>
     </s3>
@@ -711,7 +711,7 @@ void test(char* xmlFile) {
                      file is renamed as well</li>
                  <li>the rest is the same, see
                      <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding</jump>
-                     and <jump href="program-dom.html">DOM Programming Guide</jump> for more programming
+                     and <jump href="program-dom-&XercesC2Series;.html">DOM Programming Guide</jump> for more programming
                      information</li>
               </ul>
               <p>Users of IDOM are required to change all their #include lines and do a global rename of
@@ -806,7 +806,7 @@ void test(char* xmlFile) {
                   by targetNamespace (for Schema) or system id (for DTD).</li>
               <li>Plus "Grammar Caching" has much more functionalities other than above
                   (like "Pre-parsing Grammar").  Please refer to
-                  <jump href="program-others.html#GrammarCache">Preparsing Grammar and Grammar Caching
+                  <jump href="program-others-&XercesC2Series;.html#GrammarCache">Preparsing Grammar and Grammar Caching
                   </jump> for more programming details.</li>
            </ol>
     </s3>
@@ -822,7 +822,7 @@ void test(char* xmlFile) {
         <s4 title="New Public API">
             <ul>
               <li>To support DOM Level 3, the following are added (see
-                  <jump href="api.html">the API documentation page</jump> for details).</li>
+                  <jump href="api-&XercesC2Series;.html">the API documentation page</jump> for details).</li>
                 <ul>
                   <li>DOMNode functions set/getUserData, isSameNode isEqualNode.</li>
                   <li>DOMDocument functions renameNode, get/setActualEncoding, get/setEncoding, get/setVersion, get/setStandalone, get/setDocumentURI.</li>
@@ -909,7 +909,7 @@ void test(char* xmlFile) {
               <li>The old Java-like DOM is now deprecated as described in
                   <link anchor="DirChange200">DOM Reorganization</link></li>
               <li>SAX2XMLReader::setValidationConstraint.   For consistency, SAX2XMLReader users should
-                  set the feature http://apache.org/xml/features/validation-error-as-fatal" instead.</li>
+                  set the feature "http://apache.org/xml/features/validation-error-as-fatal" instead.</li>
               <li>SAX2XMLReader::setExitOnFirstFatalError.  For consistency, SAX2XMLReader users should
                   set the feature "http://apache.org/xml/features/continue-after-fatal-error" instead.</li>
               <li>With the new Grammar Caching introduced, the following features will not be
@@ -977,7 +977,7 @@ void test(char* xmlFile) {
         <s4 title="New Public API">
             <ul>
               <li>Added SAX2-ext's DeclHandler class.
-                  See <jump href="api.html">the API documentation page</jump> for details.</li>
+                  See <jump href="api-&XercesC2Series;.html">the API documentation page</jump> for details.</li>
               <li>To support SAX2-ext's DeclHandler, the following new methods are added
                   in classes DefaultHandler and SAX2XMLReader:</li>
               <ul>
@@ -1050,7 +1050,7 @@ void test(char* xmlFile) {
     <s3 title="New features in &XercesCName; 1.6.0">
       <ul>
         <li>Full Schema support is available in this release.
-            See <jump href="schema.html">the Schema page</jump> for details.</li>
+            See <jump href="schema-&XercesC2Series;.html">the Schema page</jump> for details.</li>
         <li>New sample SEnumVal to show how to enumerate the markup decls in a Schema Grammar is added.</li>
       </ul>
     </s3>
@@ -1138,16 +1138,13 @@ void test(char* xmlFile) {
               <li>New command line option "-s" for samples.</li>
             </ul>
             <p>
-               See <jump href="schema.html">the Schema page</jump> for details.
+               See <jump href="schema-&XercesC2Series;.html">the Schema page</jump> for details.
             </p>
         </s4>
 
         <s4 title="Experimental IDOM">
-           <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
-              to migrate from DOM to the experimental IDOM, please refer to
-              <jump href="program-idom.html">
-              IDOM programming guide.</jump> Please note that this experimental IDOM API is only
-              a prototype and is subject to change.
+           <p>The experimental IDOM API is a new design of the C++ DOM API. Please note that
+              this experimental IDOM API is only a prototype and is subject to change.
            </p>
         </s4>
 

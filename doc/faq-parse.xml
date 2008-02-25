@@ -26,14 +26,14 @@
 
     <a>
 
-      <p>Yes.  The &XercesCName; &XercesCVersion; contains an implementation
+      <p>Yes.  The &XercesCName; &XercesC2Version; contains an implementation
          of the W3C XML Schema Language, a recommendation of the Worldwide Web Consortium
          available in three parts:
          <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
          We consider this implementation complete.  See
-         <jump href="schema.html#limitation">the Schema page</jump> for limitations.</p>
+         <jump href="schema-&XercesC2Series;.html#limitation">the Schema page</jump> for limitations.</p>
 
     </a>
   </faq>
@@ -44,19 +44,19 @@
 
     <a>
 
-      <p>The &XercesCName; &XercesCVersion; contains an implementation
+      <p>The &XercesCName; &XercesC2Version; contains an implementation
          of the W3C XML Schema Language, a recommendation of the Worldwide Web Consortium
          available in three parts:
          <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
          <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
          We consider this implementation complete.  See
-         <jump href="schema.html#limitation">the Schema page</jump> for limitations.</p>
+         <jump href="schema-&XercesC2Series;.html#limitation">the Schema page</jump> for limitations.</p>
 
       <p>If you find any Schema feature which is specified in the W3C XML Schema Language
-         Recommendation does not work with &XercesCName; &XercesCVersion;, we encourage
+         Recommendation does not work with &XercesCName; &XercesC2Version;, we encourage
          the submission of bugs as described in
-         <jump href="bug-report.html">Bug Reporting</jump> page.
+         <jump href="&BugURI;">Bug-Reporting</jump> page.
        </p>
 
     </a>
@@ -90,7 +90,7 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
     <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
     <a>
-      <p>Yes.  Since &XercesCName; &XercesCVersion152;, the code has been enhanced so that
+      <p>Yes.  Since &XercesCName; 1.5.2, the code has been enhanced so that
          calling XMLPlatformUtils::Initialize/Terminate pair of routines
          multiple times in one process is now allowed.
       </p>
@@ -176,7 +176,7 @@ catch (const XMLException&amp; toCatch) {
 
     <a>
 
-      <p>Please make sure you are using the &XercesCName; &XercesCVersion152; or up.
+      <p>Please make sure you are using the &XercesCName; 1.5.2 or up.
       </p>
 
       <p>Earlier version of &XercesCName; does not allow XMLPlatformUtils::Initialize()/Terminate()
@@ -431,7 +431,7 @@ void myParsingFunction()
   <faq title="How to write out a DOM tree into a string or an XML file?">
      <q>How to write out a DOM tree into a string or an XML file?</q>
      <a>
-      <p>Please make sure you are using &XercesCName; &XercesCVersion; or up.</p>
+      <p>Please make sure you are using &XercesCName; &XercesC2Version; or up.</p>
 
       <p>You can use
          the DOMWriter::writeToString, or DOMWriter::writeNode to serialize a DOM tree.
@@ -772,8 +772,8 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
       <p>The function <code>SAX2XMLReader::setProperty(const XMLCh* const name, void* value)</code>
          and <code>DOMBuilder::setProperty(const XMLCh* const name, void* value)</code>
          takes a void pointer for the property value.  Application is required to initialize this void pointer
-         to a correct type.  See <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump>
-         and <jump href="program-dom.html#DOMBuilderProperties">DOM Programming Guide</jump>
+         to a correct type.  See <jump href="program-sax2-&XercesC2Series;.html#SAX2Properties">SAX2 Programming Guide</jump>
+         and <jump href="program-dom-&XercesC2Series;.html#DOMBuilderProperties">DOM Programming Guide</jump>
          to learn exactly what type of property value that each property expects for processing.
          Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
       </p>
@@ -790,7 +790,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
       <p>The function <code>void* SAX2XMLReader::getProperty(const XMLCh* const name)</code>
          and <code>void* DOMBuilder::getProperty(const XMLCh* const name)</code>
          returns a void pointer for the property value.  See
-         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> and
+         <jump href="program-sax2-&XercesC2Series;.html#SAX2Properties">SAX2 Programming Guide</jump> and
          exactly what type of object each property returns.
       </p>
       <p>The parser owns the returned pointer.  The memory allocated for
@@ -799,8 +799,8 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          is deleted, callers need to copy and store the returned information
          somewhere else; otherwise you may get unexpected result.  Since the returned
          pointer is a generic void pointer, see
-         <jump href="program-sax2.html#SAX2Properties">SAX2 Programming Guide</jump> and
-         <jump href="program-dom.html#DOMBuilderProperties">DOM Programming Guide</jump> to learn
+         <jump href="program-sax2-&XercesC2Series;.html#SAX2Properties">SAX2 Programming Guide</jump> and
+         <jump href="program-dom-&XercesC2Series;.html#DOMBuilderProperties">DOM Programming Guide</jump> to learn
          exactly what type of property value each property returns for replication.
       </p>
 
@@ -822,7 +822,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          validation is turned off.
       </p>
 
-      <p>To ignore the DTD, with &XercesCName; &XercesCVersion; or up, you can call
+      <p>To ignore the DTD, with &XercesCName; &XercesC2Version; or up, you can call
          <code>setLoadExternalDTD(false)</code> (or
          <code>setFeature(XMLUni::fgXercesLoadExternalDTD, false)</code>
          to disable the loading of external DTD.   The parser will then ignore
@@ -872,7 +872,7 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          back to the parser, it will not print the DOMNode node value as is.    The DOMWriter
          may do some "touch up" to the output data for it to be parsable.</p>
 
-      <p>See <jump href="program-dom.html#DOMWriterEntityRef">How does DOMWriter handle built-in entity
+      <p>See <jump href="program-dom-&XercesC2Series;.html#DOMWriterEntityRef">How does DOMWriter handle built-in entity
          Reference in node value?</jump> to understand further how DOMWriter touches up the entity reference.
       </p>
     </a>

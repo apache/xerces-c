@@ -42,13 +42,13 @@
                    <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                    DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
                    (W3C Working Draft of 09 April 2002).  This implementation is experimental.
-                   See <jump href="dom3.html">DOM Level 3 Support</jump> for details.</li>
+                   See <jump href="dom3-&XercesC2Series;.html">DOM Level 3 Support</jump> for details.</li>
                </ul>
 
            <p>For a complete understanding of how the &XercesCName; APIs work,
 		we recommend you to read these documents.</p>
 
-	    <p>See the <em><jump href="apiDocs/index.html">&XercesCName; API documentation</jump></em> for more details.</p>
+	    <p>See the <em><jump href="apiDocs-&XercesC2Series;/index.html">&XercesCName; API documentation</jump></em> for more details.</p>
 
 	    <note>The API documentation is automatically generated using
 		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
