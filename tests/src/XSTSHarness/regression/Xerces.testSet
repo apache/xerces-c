@@ -365,6 +365,17 @@
 			<current status="accepted" date="2008-02-13"/>
 		</schemaTest>
 	</testGroup>
+	<testGroup name="XERCESC-1745">
+		<annotation>
+			<documentation>Inheritance by restriction does not detect a missing type from an imported schema</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1745"/>
+		<schemaTest name="XERCESC-1745">
+			<schemaDocument xlink:href="./XERCESC-1745/b.xsd"/>
+			<expected validity="invalid"/>
+			<current status="accepted" date="2008-02-25"/>
+		</schemaTest>
+	</testGroup>
 	<testGroup name="XERCESC-1777">
 		<annotation>
 			<documentation>Restriction checking code resolves an element from a wrong schema grammar</documentation>
