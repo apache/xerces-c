@@ -1187,16 +1187,12 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
                           SchemaSymbols::fgELT_SIMPLETYPE);
         return 0;
     }
-
-    // -------------------------------------------------------------------
-    // Check attributes
-    // -------------------------------------------------------------------
-    unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_SimpleTypeGlobal
-                                      : GeneralAttributeCheck::E_SimpleTypeLocal;
-
-    fAttributeCheck.checkAttributes(
-        childElem, scope, this, topLevel, fNonXSAttList
-    );
+    else if(!topLevel && !nameEmpty) {
+        const XMLCh fgLocal[] = { chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_l, chNull };
+        reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDisallowed, 
+                          SchemaSymbols::fgATT_NAME, fgLocal, childElem->getLocalName());
+        return 0;
+    }
 
     if (nameEmpty) { // anonymous simpleType
         name = genAnonTypeName(fgAnonSNamePrefix);
@@ -1219,6 +1215,16 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     DatatypeValidator* dv = fDatatypeRegistry->getDatatypeValidator(fullName);
 
     if (!dv) {
+
+        // -------------------------------------------------------------------
+        // Check attributes
+        // -------------------------------------------------------------------
+        unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_SimpleTypeGlobal
+                                          : GeneralAttributeCheck::E_SimpleTypeLocal;
+
+        fAttributeCheck.checkAttributes(
+            childElem, scope, this, topLevel, fNonXSAttList
+        );
 
         // Circular constraint checking
         if (fCurrentTypeNameStack->containsElement(fullTypeNameId)) {
