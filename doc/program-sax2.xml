@@ -90,6 +90,7 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
     cout &lt;&lt; "Fatal Error: " &lt;&lt; message
          &lt;&lt; " at line: " &lt;&lt; exception.getLineNumber()
          &lt;&lt; endl;
+    XMLString::release(&amp;message);
 }</source>
 
       <p>The XMLCh and Attributes types are supplied by
