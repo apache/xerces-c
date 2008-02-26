@@ -44,6 +44,9 @@ libsrc_la_SOURCES =
 libsrc_la_LIBADD =					${src_libraries}
 
 
+autoconfheadersdir = $(includedir)/xercesc/util
+nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autoconf_config.hpp
+
 #
 # Build convenience libraries for the various xerces components
 #
@@ -52,7 +55,6 @@ src_libraries =
 src_libraries +=					libutil.la
 libutil_ladir =						${includedir}
 nobase_libutil_la_HEADERS =			${util_headers}
-nobase_nodist_libutil_la_HEADERS =    ${top_builddir}/src/xercesc/util/Xerces_autoconf_config.hpp
 libutil_la_SOURCES =				${util_sources}
 
 src_libraries +=					libdom.la
