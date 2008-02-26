@@ -23,7 +23,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	#
 	na_list=
 
-	if test x"$network" == xyes; then
+	if test x"$network" = xyes; then
 
 	# Checks for libraries.
 	AC_CHECK_LIB([socket], [socket])
