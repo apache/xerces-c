@@ -39,8 +39,8 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("  where options are:\n");
     print ("    -s <source_directory>\n");
     print ("    -o <target_directory>\n");
-    print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7.1, ecl or icl)\n");
-    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7.1 or VC8)\n");
+    print ("    -c <C compiler name> (e.g. gcc, cc, xlc_r, VC6, VC7.1, VC8, VC9, ecl or icl)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl, ecc, icl, VC6, VC7.1, VC8 or VC9)\n");
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
@@ -161,6 +161,12 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         $VCBuildDir     = "VC8"; 
         $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }
+    elsif ($opt_x =~ m/VC9/i ) 
+    {
+        $DevStudioVer   = "9.0";
+        $VCBuildDir     = "VC9"; 
+        $ProjectDir     = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
+    }
     elsif ($opt_x =~ m/ecl/i || $opt_x =~ m/icl/i )
     {
         $DevStudioVer   = "6.1";
@@ -171,7 +177,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     else
     {
         print ("Error: Invalid compilers used \n");
-        print ("-x <C++ compiler name> VC6, VC7.1, VC8, ecl and icl \n");        
+        print ("-x <C++ compiler name> VC6, VC7.1, VC8, VC9, ecl and icl \n");        
         exit(1);            	    	
     }
 
@@ -221,7 +227,9 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj");
         } elsif ($DevStudioVer eq "8.0") {
             changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj");
-        }        
+        } elsif ($DevStudioVer eq "9.0") {
+            changeWindowsProjectForFileOnlyNA_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC9/xerces-all/XercesLib/XercesLib.vcproj");
+        }
         #else: for now we do not build FO with ecl
     }
 
@@ -274,6 +282,16 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
 
 				psystem("devenv.com allinone.sln /rebuild debug /out buildlog_debug.txt");                
                 psystem("type buildlog_debug.txt");                
+            } elsif ($DevStudioVer eq "9.0") {
+            	# ICU only has allinone.sln for VC7.0
+            	# So the build with ICU on VC9.0 may fail until the VC9.0 version is available            	
+                pchdir ("$ICUROOT/source/allinone");
+                
+                psystem("devenv.com allinone.sln /rebuild Release /out buildlog_release.txt");
+                psystem("type buildlog_release.txt");
+
+				psystem("devenv.com allinone.sln /rebuild debug /out buildlog_debug.txt");                
+                psystem("type buildlog_debug.txt");                
             } else { #"6.1"
                 pchdir ("$ICUROOT/source/allinone/all");            	
  	  #ship release dlls only
@@ -310,6 +328,8 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
         } elsif ($DevStudioVer eq "8.0") {
             change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
+        } elsif ($DevStudioVer eq "9.0") {
+            change_windows_project_for_ICU_VC7_or_VC8("$XERCESCROOT/Projects/Win32/VC9/xerces-all/XercesLib/XercesLib.vcproj", $Transcoder , $MsgLoader);
         } else { # "6.1"
             change_windows_makefile_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak", $Transcoder, $MsgLoader);
         }
@@ -331,7 +351,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     #                  vc6      vc7.1   ecl        vc6       vc7.1    ecl
     # ===========================================================================
     # xercesc          yes      yes     yes        yes       yes      no
-    # depdom           yes      yes     yes        yes       yes      no
     # samples          yes      yes     yes        no        no       no
     # tests            yes      yes     yes        no        no       no
     #
@@ -409,11 +428,9 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem("cp -fv $ReleaseBuildDir/*.dll               $targetdir/bin");
     psystem("cp -fv $ReleaseBuildDir/*.exe               $targetdir/bin");        
     psystem("cp -fv $ReleaseBuildDir/xerces-c_*.lib      $targetdir/lib");
-    psystem("cp -fv $ReleaseBuildDir/xerces-depdom_*.lib $targetdir/lib");
 
     psystem("cp -fv $DebugBuildDir/*.dll                 $targetdir/bin");
     psystem("cp -fv $DebugBuildDir/xerces-c_*.lib        $targetdir/lib");
-    psystem("cp -fv $DebugBuildDir/xerces-depdom_*.lib   $targetdir/lib");
                
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
