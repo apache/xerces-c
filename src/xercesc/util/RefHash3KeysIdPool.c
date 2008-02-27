@@ -281,6 +281,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
 {
     // First see if the key exists already
     unsigned int hashVal;
+    unsigned int retId;
     RefHash3KeysTableBucketElem<TVal>* newBucket = findBucketElem(key1, key2, key3, hashVal);
 
     //
@@ -289,6 +290,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
     //
     if (newBucket)
     {
+    	retId = newBucket->fData->getId();
         if (fAdoptedElems)
             delete newBucket->fData;
         newBucket->fData = valueToAdopt;
@@ -296,7 +298,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
         newBucket->fKey2 = key2;
         newBucket->fKey3 = key3;
     }
-     else
+    else
     {
     // Revisit: the gcc compiler 2.95.x is generating an
     // internal compiler error message. So we use the default
@@ -308,31 +310,32 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
             new (fMemoryManager->allocate(sizeof(RefHash3KeysTableBucketElem<TVal>)))
             RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
 #endif
-        fBucketList[hashVal] = newBucket;
+        fBucketList[hashVal] = newBucket;    
+
+    	//
+    	//  Give this new one the next available id and add to the pointer list.
+    	//  Expand the list if that is now required.
+    	//
+    	if (fIdCounter + 1 == fIdPtrsCount)
+    	{
+        	// Create a new count 1.5 times larger and allocate a new array
+        	unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
+        	TVal** newArray = (TVal**) fMemoryManager->allocate
+        	(
+            	newCount * sizeof(TVal*)
+        	); //new TVal*[newCount];
+
+        	// Copy over the old contents to the new array
+        	memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TVal*));
+
+        	// Ok, toss the old array and store the new data
+        	fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
+        	fIdPtrs = newArray;
+        	fIdPtrsCount = newCount;
+    	}
+    	retId = ++fIdCounter;
     }
-
-    //
-    //  Give this new one the next available id and add to the pointer list.
-    //  Expand the list if that is now required.
-    //
-    if (fIdCounter + 1 == fIdPtrsCount)
-    {
-        // Create a new count 1.5 times larger and allocate a new array
-        unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
-        TVal** newArray = (TVal**) fMemoryManager->allocate
-        (
-            newCount * sizeof(TVal*)
-        ); //new TVal*[newCount];
-
-        // Copy over the old contents to the new array
-        memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TVal*));
-
-        // Ok, toss the old array and store the new data
-        fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
-        fIdPtrs = newArray;
-        fIdPtrsCount = newCount;
-    }
-    const unsigned int retId = ++fIdCounter;
+    
     fIdPtrs[retId] = valueToAdopt;
 
     // Set the id on the passed element
