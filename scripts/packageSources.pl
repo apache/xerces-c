@@ -445,7 +445,7 @@ sub package_sources {
 
    print "\nREMOVING EXPORT CLAUSES\n\n";
 
-   remove_exports( $xercescroot . $fs . 'doc' . $fs . 'html' . $fs . 'apiDocs' );
+   remove_exports( $xercescroot . $fs . 'doc' . $fs . 'html' . $fs . 'apiDocs-2' );
 
    print "\nREMOVING MYSELF\n\n";
 
