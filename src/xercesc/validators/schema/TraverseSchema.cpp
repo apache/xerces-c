@@ -7420,7 +7420,7 @@ void TraverseSchema::copyGroupElements(const DOMElement* const elem,
                 int                      elemURI = elemDecl->getURI();
                 const XMLCh*             localPart = elemDecl->getBaseName();
                 const SchemaElementDecl* other = (SchemaElementDecl*)
-                        fSchemaGrammar->getElemDecl(elemURI, localPart, 0, fCurrentScope);
+                        fSchemaGrammar->getElemDecl(elemURI, localPart, 0, newScope);
 
                 if (other) {
 
