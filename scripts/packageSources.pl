@@ -428,7 +428,7 @@ sub package_sources {
 
    print "\nREMOVING EXPORT CLAUSES\n\n";
 
-   remove_exports( $xercescroot . $fs . 'doc' . $fs . 'html' . $fs . 'apiDocs' );
+   remove_exports( $xercescroot . $fs . 'doc' . $fs . 'html' . $fs . 'apiDocs-3' );
 
    print "\nCOMPRESS DOCS\n\n";
 
