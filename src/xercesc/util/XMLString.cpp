@@ -28,10 +28,10 @@
 #endif
 
 #if !HAVE_STRICMP
-#	include <lib/stricmp.h>
+#	include <stricmp.h>
 #endif
 #if !HAVE_STRNICMP
-#	include <lib/strnicmp.h>
+#	include <strnicmp.h>
 #endif
 
 #include <string.h>

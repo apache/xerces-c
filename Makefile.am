@@ -1,14 +1,14 @@
-SUBDIRS						= lib src obj tests samples
+SUBDIRS = src tests samples
 
-EXTRA_DIST                  = config/pretty-make \
-                              scripts/createBindingsFormatFromHPP.pl \
-                              scripts/makeStringDefinition.pl \
-                              scripts/packageBinaries.pl \
-                              scripts/packageSources.pl \
-                              scripts/sanityTest.pl \
-                              scripts/sanityTest_ExpectedResult.log
+EXTRA_DIST = config/pretty-make \
+             scripts/createBindingsFormatFromHPP.pl \
+             scripts/makeStringDefinition.pl \
+             scripts/packageBinaries.pl \
+             scripts/packageSources.pl \
+             scripts/sanityTest.pl \
+             scripts/sanityTest_ExpectedResult.log
 
-ACLOCAL_AMFLAGS				= -I m4
+ACLOCAL_AMFLAGS = -I m4
 
 check:
 	-rm -f tempResult

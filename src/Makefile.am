@@ -5,9 +5,9 @@
 # The ASF licenses this file to You under the Apache License, Version 2.0
 # (the "License"); you may not use this file except in compliance with
 # the License.  You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,266 +19,183 @@
 # $Id$
 #
 
+include ${top_srcdir}/version.incl
+
 DEFS += -DXERCES_BUILDING_LIBRARY
-SUBDIRS = 
-
-# the  -I${top_srcdir} is needed to pick the lib/stricmp.h 
-# header file when doing out-of-tree builds
-AM_CXXFLAGS =						-I${top_srcdir} $(ICU_CXXFLAGS)
-
-
+SUBDIRS =
 
 #
-# Specify the convenience libraries for various xerces components
-# These are used only during the build process and are not themselves installed
 #
-noinst_LTLIBRARIES =				libsrc.la ${src_libraries}
+lib_LTLIBRARIES = libxerces-c.la
 
+# Use AM_* variables instead of per-target ones otherwise the
+# make pretty-printing won't work.
 #
-# We build a single convenience library (libsrc.la) that is composed of
-# all the other convenience libraries in this directory. This allows
-# us to decide here, and only here, which libraries the ultimate libXerces
-# will get built from: the libsrc.la library.
+AM_CPPFLAGS =
+AM_CXXFLAGS = $(ICU_CXXFLAGS)
+
+libxerces_c_la_LDFLAGS = -release ${PACKAGE_VERSION}
+
+libxerces_c_ladir = ${includedir} # Not sure what this one if for.
+
+
+libxerces_c_la_SOURCES = ${util_sources} ${dom_sources} ${domimpl_sources} \
+${framework_sources} ${internal_sources} ${parsers_sources} ${sax_sources} \
+${sax2_sources} ${validators_sources} ${xinclude_sources}
+
+nobase_libxerces_c_la_HEADERS = ${util_headers} ${dom_headers} \
+${domimpl_headers} ${framework_headers} ${internal_headers} \
+${parsers_headers} ${sax_headers} ${sax2_headers} ${validators_headers} \
+${xinclude_headers}
+
+# Make sure autoconf-generated Xerces_autoconf_config.hpp ends up in a
+# proper place when installed.
 #
-libsrc_la_SOURCES =
-libsrc_la_LIBADD =					${src_libraries}
-
-
 autoconfheadersdir = $(includedir)/xercesc/util
 nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autoconf_config.hpp
 
+# Compatibility library.
 #
-# Build convenience libraries for the various xerces components
-#
-src_libraries =
+EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h
+libxerces_c_la_LIBADD = ${LTLIBOBJS}
 
-src_libraries +=					libutil.la
-libutil_ladir =						${includedir}
-nobase_libutil_la_HEADERS =			${util_headers}
-libutil_la_SOURCES =				${util_sources}
 
-src_libraries +=					libdom.la
-libdom_ladir =						${includedir}
-nobase_libdom_la_HEADERS =			${dom_headers}
-libdom_la_SOURCES =					${dom_sources}
-
-src_libraries +=					libdomimpl.la
-libdomimpl_ladir =					${includedir}
-nobase_libdomimpl_la_HEADERS =		${domimpl_headers}
-libdomimpl_la_SOURCES =				${domimpl_sources}
-
-src_libraries +=					libframework.la
-libframework_ladir =				${includedir}
-nobase_libframework_la_HEADERS =	${framework_headers}
-libframework_la_SOURCES =			${framework_sources}
-
-src_libraries +=					libinternal.la
-libinternal_ladir =					${includedir}
-nobase_libinternal_la_HEADERS =		${internal_headers}
-libinternal_la_SOURCES =			${internal_sources}
-
-src_libraries +=					libparsers.la
-libparsers_ladir =					${includedir}
-nobase_libparsers_la_HEADERS =		${parsers_headers}
-libparsers_la_SOURCES =				${parsers_sources}
-
-src_libraries +=					libsax.la
-libsax_ladir =						${includedir}
-nobase_libsax_la_HEADERS =			${sax_headers}
-libsax_la_SOURCES =					${sax_sources}
-
-src_libraries +=					libsax2.la
-libsax2_ladir =						${includedir}
-nobase_libsax2_la_HEADERS =			${sax2_headers}
-libsax2_la_SOURCES =				${sax2_sources}
-
-src_libraries +=					libvalidators.la
-libvalidators_ladir =				${includedir}
-nobase_libvalidators_la_HEADERS =	${validators_headers}
-libvalidators_la_SOURCES =			${validators_sources}
-
-src_libraries +=					libxinclude.la
-libxinclude_ladir =					${includedir}
-nobase_libxinclude_la_HEADERS =		${xinclude_headers}
-libxinclude_la_SOURCES =			${xinclude_sources}
-
-#
 # NetAccessors, conditionally built based on settings from configure
 #
 if XERCES_USE_NETACCESSOR_CURL
-src_libraries +=					libcurlna.la
-libcurlna_ladir =					${includedir}
-nobase_libcurlna_la_HEADERS =		${curl_headers}
-libcurlna_la_SOURCES =				${curl_sources}
-libcurlna_la_CXXFLAGS =				${AM_CXXFLAGS} -I${CURL_PREFIX}/include/curl
+libxerces_c_la_SOURCES += ${curl_sources}
+nobase_libxerces_c_la_HEADERS += ${curl_headers}
+AM_CPPFLAGS += -I${CURL_PREFIX}/include/curl
 endif
 
 if XERCES_USE_NETACCESSOR_SOCKET
-src_libraries +=					libsocketsna.la
-libsocketsna_ladir =				${includedir}
-nobase_libsocketsna_la_HEADERS =	${sockets_headers}
-libsocketsna_la_SOURCES =			${sockets_sources}
+libxerces_c_la_SOURCES += ${sockets_sources}
+nobase_libxerces_c_la_HEADERS += ${sockets_headers}
+AM_CPPFLAGS += -I${CURL_PREFIX}/include/curl
 endif
 
 if XERCES_USE_NETACCESSOR_LIBWWW
-src_libraries +=					libwwwna.la
-libwwwna_ladir =					${includedir}
-nobase_libwwwna_la_HEADERS =		${libwww_headers}
-libwwwna_la_SOURCES =				${libwww_sources}
-libwwwna_la_CXXFLAGS =				${AM_CXXFLAGS} -I${LIBWWW_PREFIX}/include/w3c-libwww
+libxerces_c_la_SOURCES += ${libwww_sources}
+nobase_libxerces_c_la_HEADERS += ${libwww_headers}
+AM_CPPFLAGS += -I${LIBWWW_PREFIX}/include/w3c-libwww
 endif
 
 if XERCES_USE_NETACCESSOR_CFURL
-src_libraries +=					libcfurlna.la
-libcfurlna_ladir =					${includedir}
-nobase_libcfurlna_la_HEADERS =		${cfurl_headers}
-libcfurlna_la_SOURCES =				${cfurl_sources}
+libxerces_c_la_SOURCES += ${cfurl_sources}
+nobase_libxerces_c_la_HEADERS += ${cfurl_headers}
+AM_CPPFLAGS += -I${LIBWWW_PREFIX}/include/w3c-libwww
 endif
 
 if XERCES_USE_NETACCESSOR_WINSOCK
-src_libraries +=					libwinsockna.la
-libwinsockna_ladir =				${includedir}
-nobase_libwinsockna_la_HEADERS =	${winsock_headers}
-libwinsockna_la_SOURCES =			${winsock_sources}
+libxerces_c_la_SOURCES += ${winsock_sources}
+nobase_libxerces_c_la_HEADERS += ${winsock_headers}
 endif
 
-#
+
 # Transcoders, conditionally built based on settings from configure
 #
 if XERCES_USE_TRANSCODER_ICU
-src_libraries +=					libicutc.la
-libicutc_ladir =					${includedir}
-nobase_libicutc_la_HEADERS =		${icu_headers}
-libicutc_la_SOURCES =				${icu_sources}
-libicutc_la_CXXFLAGS =				${AM_CXXFLAGS} -I${ICU_PREFIX}/include
+libxerces_c_la_SOURCES += ${icu_sources}
+nobase_libxerces_c_la_HEADERS += ${icu_headers}
+AM_CPPFLAGS += -I${ICU_PREFIX}/include
 endif
 
 if XERCES_USE_TRANSCODER_GNUICONV
-src_libraries +=					libgnuiconvtc.la
-libgnuiconvtc_ladir =				${includedir}
-nobase_libgnuiconvtc_la_HEADERS =	${gnuiconv_headers}
-libgnuiconvtc_la_SOURCES =			${gnuiconv_sources}
+libxerces_c_la_SOURCES += ${gnuiconv_sources}
+nobase_libxerces_c_la_HEADERS += ${gnuiconv_headers}
 endif
 
 if XERCES_USE_TRANSCODER_ICONV
-src_libraries +=					libiconvtc.la
-libiconvtc_ladir =					${includedir}
-nobase_libiconvtc_la_HEADERS =		${iconv_headers}
-libiconvtc_la_SOURCES =				${iconv_sources}
+libxerces_c_la_SOURCES += ${iconv_sources}
+nobase_libxerces_c_la_HEADERS += ${iconv_headers}
 endif
 
 if XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER
-src_libraries +=								libmacosunicodeconverter.la
-libmacosunicodeconverter_ladir =				${includedir}
-nobase_libmacosunicodeconverter_la_HEADERS =	${macosunicodeconverter_headers}
-libmacosunicodeconverter_la_SOURCES =			${macosunicodeconverter_sources}
+libxerces_c_la_SOURCES += ${macosunicodeconverter_sources}
+nobase_libxerces_c_la_HEADERS += ${macosunicodeconverter_headers}
 endif
 
 if XERCES_USE_TRANSCODER_WINDOWS
-src_libraries +=					libwintrans.la
-libwintrans_ladir =					${includedir}
-nobase_libwintrans_la_HEADERS =		${wintrans_headers}
-libwintrans_la_SOURCES =			${wintrans_sources}
+libxerces_c_la_SOURCES += ${wintrans_sources}
+nobase_libxerces_c_la_HEADERS += ${wintrans_headers}
 endif
 
-#
+
 # MsgLoaders, conditionally built based on settings from configure
 #
 if XERCES_USE_MSGLOADER_INMEMORY
-src_libraries +=					libmsginmemory.la
-libmsginmemory_ladir =				${includedir}
-nobase_libmsginmemory_la_HEADERS =	${msginmemory_headers}
-libmsginmemory_la_SOURCES =			${msginmemory_sources}
+libxerces_c_la_SOURCES += ${msginmemory_sources}
+nobase_libxerces_c_la_HEADERS += ${msginmemory_headers}
 endif
 
 if XERCES_USE_MSGLOADER_ICU
-src_libraries +=					libmsgicu.la
-libmsgicu_ladir =					${includedir}
-nobase_libmsgicu_la_HEADERS =		${msgicu_headers}
-libmsgicu_la_SOURCES =				${msgicu_sources}
+libxerces_c_la_SOURCES += ${msgicu_sources}
+nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
+AM_CPPFLAGS += -I${ICU_PREFIX}/include
 
-SUBDIRS 						+= xercesc/util/MsgLoaders/ICU/resources
+SUBDIRS += xercesc/util/MsgLoaders/ICU/resources
+libxerces_c_la_LIBADD += xercesc/util/MsgLoaders/ICU/resources/XercesMessages.lo
 endif
 
 if XERCES_USE_MSGLOADER_ICONV
-src_libraries +=					libmsgiconv.la
-libmsgiconv_ladir =					${includedir}
-nobase_libmsgiconv_la_HEADERS =		${msgiconv_headers}
-libmsgiconv_la_SOURCES =			${msgiconv_sources}
+libxerces_c_la_SOURCES += ${msgiconv_sources}
+nobase_libxerces_c_la_HEADERS += ${msgiconv_headers}
 
-SUBDIRS 						+= xercesc/util/MsgLoaders/MsgCatalog
+SUBDIRS += xercesc/util/MsgLoaders/MsgCatalog
 endif
 
-#
+
 # AtomicOp Managers, conditionally built based on settings from configure
 #
 if XERCES_USE_ATOMICOPMGR_NOTHREAD
-src_libraries +=					libnothreadaomgr.la
-libnothreadaomgr_ladir =			${includedir}
-nobase_libnothreadaomgr_la_HEADERS =${nothreadaomgr_headers}
-libnothreadaomgr_la_SOURCES =		${nothreadaomgr_sources}
+libxerces_c_la_SOURCES += ${nothreadaomgr_sources}
+nobase_libxerces_c_la_HEADERS += ${nothreadaomgr_headers}
 endif
 
 if XERCES_USE_ATOMICOPMGR_POSIX
-src_libraries +=					libposixaomgr.la
-libposixaomgr_ladir =				${includedir}
-nobase_libposixaomgr_la_HEADERS =	${posixaomgr_headers}
-libposixaomgr_la_SOURCES =			${posixaomgr_sources}
+libxerces_c_la_SOURCES += ${posixaomgr_sources}
+nobase_libxerces_c_la_HEADERS += ${posixaomgr_headers}
 endif
 
 if XERCES_USE_ATOMICOPMGR_MACOS
-src_libraries +=					libmacosaomgr.la
-libmacosaomgr_ladir =				${includedir}
-nobase_libmacosaomgr_la_HEADERS =	${macosaomgr_headers}
-libmacosaomgr_la_SOURCES =			${macosaomgr_sources}
+libxerces_c_la_SOURCES += ${macosaomgr_sources}
+nobase_libxerces_c_la_HEADERS += ${macosaomgr_headers}
 endif
 
 if XERCES_USE_ATOMICOPMGR_WINDOWS
-src_libraries +=					libwinaomgr.la
-libwinaomgr_ladir =					${includedir}
-nobase_libwinaomgr_la_HEADERS =		${winaomgr_headers}
-libwinaomgr_la_SOURCES =			${winaomgr_sources}
+libxerces_c_la_SOURCES += ${winaomgr_sources}
+nobase_libxerces_c_la_HEADERS += ${winaomgr_headers}
 endif
 
-#
+
 # Mutex Managers, conditionally built based on settings from configure
 #
 if XERCES_USE_MUTEXMGR_NOTHREAD
-src_libraries +=					libnothreadmmgr.la
-libnothreadmmgr_ladir =				${includedir}
-nobase_libnothreadmmgr_la_HEADERS =	${nothreadmmgr_headers}
-libnothreadmmgr_la_SOURCES =		${nothreadmmgr_sources}
+libxerces_c_la_SOURCES += ${nothreadmmgr_sources}
+nobase_libxerces_c_la_HEADERS += ${nothreadmmgr_headers}
 endif
 
 if XERCES_USE_MUTEXMGR_POSIX
-src_libraries +=					libposixmmgr.la
-libposixmmgr_ladir =				${includedir}
-nobase_libposixmmgr_la_HEADERS =	${posixmmgr_headers}
-libposixmmgr_la_SOURCES =			${posixmmgr_sources}
+libxerces_c_la_SOURCES += ${posixmmgr_sources}
+nobase_libxerces_c_la_HEADERS += ${posixmmgr_headers}
 endif
 
 if XERCES_USE_MUTEXMGR_WINDOWS
-src_libraries +=					libwinmmgr.la
-libwinmmgr_ladir =					${includedir}
-nobase_libwinmmgr_la_HEADERS =		${winmmgr_headers}
-libwinmmgr_la_SOURCES =				${winmmgr_sources}
+libxerces_c_la_SOURCES += ${winmmgr_sources}
+nobase_libxerces_c_la_HEADERS += ${winmmgr_headers}
 endif
 
-#
+
 # File Managers, conditionally built based on settings from configure
 #
 if XERCES_USE_FILEMGR_POSIX
-src_libraries +=					libposixfmgr.la
-libposixfmgr_ladir =				${includedir}
-nobase_libposixfmgr_la_HEADERS =	${posixfmgr_headers}
-libposixfmgr_la_SOURCES =			${posixfmgr_sources}
+libxerces_c_la_SOURCES += ${posixfmgr_sources}
+nobase_libxerces_c_la_HEADERS += ${posixfmgr_headers}
 endif
 
 if XERCES_USE_FILEMGR_WINDOWS
-src_libraries +=					libwinfmgr.la
-libwinfmgr_ladir =					${includedir}
-nobase_libwinfmgr_la_HEADERS =		${winfmgr_headers}
-libwinfmgr_la_SOURCES =				${winfmgr_sources}
+libxerces_c_la_SOURCES += ${winfmgr_sources}
+nobase_libxerces_c_la_HEADERS += ${winfmgr_headers}
 endif
 
 #
@@ -347,7 +264,7 @@ dom_headers	= \
 	xercesc/dom/DOMXPathNSResolver.hpp \
 	xercesc/dom/DOMXPathResult.hpp \
 	xercesc/dom/StDOMNode.hpp
-								
+
 dom_sources	= \
 	xercesc/dom/DOMException.cpp \
 	xercesc/dom/DOMLSException.cpp \
@@ -402,7 +319,7 @@ domimpl_headers	= \
 	xercesc/dom/impl/DOMXPathNSResolverImpl.hpp \
 	xercesc/dom/impl/DOMXPathResultImpl.hpp \
 	xercesc/dom/impl/XSDElementNSImpl.hpp
-							  
+
 domimpl_sources	= \
 	xercesc/dom/impl/DOMAttrImpl.cpp \
 	xercesc/dom/impl/DOMAttrMapImpl.cpp \
@@ -514,7 +431,7 @@ framework_headers = \
 	xercesc/framework/XMLSchemaDescription.hpp \
 	xercesc/framework/XMLValidator.hpp \
 	xercesc/framework/XMLValidityCodes.hpp
-	
+
 framework_sources = \
 	xercesc/framework/BinOutputStream.cpp \
 	xercesc/framework/LocalFileFormatTarget.cpp \
@@ -597,7 +514,7 @@ internal_headers = \
 	xercesc/internal/XSerializeEngine.hpp \
 	xercesc/internal/XSObjectFactory.hpp \
 	xercesc/internal/XTemplateSerializer.hpp
-	
+
 internal_sources = \
 	xercesc/internal/BinFileOutputStream.cpp \
 	xercesc/internal/BinMemOutputStream.cpp \
@@ -631,7 +548,7 @@ parsers_headers = \
 	xercesc/parsers/SAX2XMLReaderImpl.hpp \
 	xercesc/parsers/SAXParser.hpp \
 	xercesc/parsers/XercesDOMParser.hpp
-	
+
 parsers_sources = \
 	xercesc/parsers/AbstractDOMParser.cpp \
 	xercesc/parsers/DOMLSParserImpl.cpp \
@@ -653,13 +570,13 @@ sax_headers = \
 	xercesc/sax/Parser.hpp \
 	xercesc/sax/SAXException.hpp \
 	xercesc/sax/SAXParseException.hpp
-	
+
 sax_sources = \
 	xercesc/sax/Dummy.cpp \
 	xercesc/sax/InputSource.cpp \
 	xercesc/sax/SAXException.cpp \
 	xercesc/sax/SAXParseException.cpp
-	
+
 
 sax2_headers = \
 	xercesc/sax2/Attributes.hpp \
@@ -673,7 +590,7 @@ sax2_headers = \
 
 sax2_sources = \
 	xercesc/sax2/sax2Dummy.cpp
-		
+
 util_headers = \
 	xercesc/util/ArrayIndexOutOfBoundsException.hpp \
 	xercesc/util/Base64.hpp \
@@ -828,7 +745,7 @@ util_headers = \
 	xercesc/util/XMLUTF16Transcoder.hpp \
 	xercesc/util/XMLUTF8Transcoder.hpp \
 	xercesc/util/XMLWin1252Transcoder.hpp
-	
+
 util_sources = \
 	xercesc/util/Base64.cpp \
 	xercesc/util/BinFileInputStream.cpp \
@@ -905,8 +822,8 @@ util_sources = \
 	xercesc/util/XMLUTF16Transcoder.cpp \
 	xercesc/util/XMLUTF8Transcoder.cpp \
 	xercesc/util/XMLWin1252Transcoder.cpp
-	
-	
+
+
 validators_headers = \
 	xercesc/validators/common/AllContentModel.hpp \
 	xercesc/validators/common/CMAny.hpp \
@@ -1004,7 +921,7 @@ validators_headers = \
 	xercesc/validators/schema/XSDErrorReporter.hpp \
 	xercesc/validators/schema/XSDLocator.hpp \
 	xercesc/validators/schema/XUtil.hpp
-	
+
 validators_sources = \
 	xercesc/validators/common/AllContentModel.cpp \
 	xercesc/validators/common/CMAny.cpp \
@@ -1099,7 +1016,7 @@ xinclude_headers = \
 	xercesc/xinclude/XIncludeDOMDocumentProcessor.hpp \
         xercesc/xinclude/XIncludeLocation.hpp \
         xercesc/xinclude/XIncludeUtils.hpp
-	
+
 xinclude_sources = \
 	xercesc/xinclude/XIncludeDOMDocumentProcessor.cpp \
         xercesc/xinclude/XIncludeLocation.cpp \
@@ -1125,7 +1042,7 @@ iconv_sources = \
 
 macosunicodeconverter_headers = \
 	xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp
-	
+
 macosunicodeconverter_sources = \
 	xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.cpp
 
@@ -1139,39 +1056,39 @@ wintrans_sources = \
 curl_headers = \
 	xercesc/util/NetAccessors/Curl/CurlNetAccessor.hpp \
 	xercesc/util/NetAccessors/Curl/CurlURLInputStream.hpp
-	
+
 curl_sources = \
 	xercesc/util/NetAccessors/Curl/CurlNetAccessor.cpp \
 	xercesc/util/NetAccessors/Curl/CurlURLInputStream.cpp
-	
+
 sockets_headers = \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.hpp
-	
+
 sockets_sources = \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.cpp \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp
-	
+
 libwww_headers = \
 	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp \
 	xercesc/util/NetAccessors/libWWW/BinURLInputStream.hpp
-	
+
 libwww_sources = \
 	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.cpp \
 	xercesc/util/NetAccessors/libWWW/BinURLInputStream.cpp
-	
+
 cfurl_headers = \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.hpp
-	
+
 cfurl_sources = \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.cpp \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.cpp
-	
+
 winsock_headers = \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.hpp \
 	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp
-	
+
 winsock_sources = \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.cpp \
 	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
@@ -1180,20 +1097,20 @@ winsock_sources = \
 msginmemory_headers = \
 	xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp \
 	xercesc/util/MsgLoaders/InMemory/XercesMessages_en_US.hpp
-	
+
 msginmemory_sources = \
 	xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.cpp
 
 msgicu_headers = \
 	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp
-	
+
 msgicu_sources = \
 	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp
 
 msgiconv_headers = \
 	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp \
 	xercesc/util/MsgLoaders/MsgCatalog/XMLMsgCat_Ids.hpp
-	
+
 msgiconv_sources = \
 	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.cpp
 
@@ -1267,13 +1184,21 @@ macplatform_sources = \
 	xercesc/util/Platforms/MacOS/MacOSPlatformUtils.cpp \
 	xercesc/util/Platforms/MacOS/MacPosixFile.cpp
 
-#
+
 # Override generated rules to provide prettier make rules
 #
 # Warning: If Automake changes sufficiently, these rules may need to
 #          be regenerated from the (new) default output of Automake
 #
 if XERCES_PRETTY_MAKE
+
+.c.lo:
+@am__fastdepCXX_TRUE@	@depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`; \
+@am__fastdepCXX_TRUE@	if $(LTCOMPILE) -MT $@ -MD -MP -MF "$$depbase.Tpo" -c -o $@ $<; \
+@am__fastdepCXX_TRUE@	then mv -f "$$depbase.Tpo" "$$depbase.Plo"; else rm -f "$$depbase.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	@source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
 .cpp.lo:
 @am__fastdepCXX_TRUE@	@depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`; \
@@ -1288,6 +1213,14 @@ PRETTY_COMPILE=${PRETTY_MAKE} Compiling
 
 endif
 
+COMPILE = ${PRETTY_COMPILE} \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = ${PRETTY_COMPILE}  \
+	$(LIBTOOL) --quiet --tag=CC --mode=compile \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+
 CXXCOMPILE = ${PRETTY_COMPILE} \
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -1295,7 +1228,3 @@ LTCXXCOMPILE = ${PRETTY_COMPILE}  \
 	$(LIBTOOL) --quiet --tag=CXX --mode=compile \
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-
-
-
-

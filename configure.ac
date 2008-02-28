@@ -26,16 +26,14 @@
 AC_PREREQ(2.60)
 AC_INIT([xercesc],[3.0])
 AC_CONFIG_SRCDIR([src/Makefile.am])
-AC_CONFIG_LIBOBJ_DIR([lib])
+AC_CONFIG_LIBOBJ_DIR([src])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
 AC_CONFIG_FILES([Makefile \
-                 lib/Makefile \
                  src/Makefile \
                  src/xercesc/util/MsgLoaders/ICU/resources/Makefile \
                  src/xercesc/util/MsgLoaders/MsgCatalog/Makefile \
-                 obj/Makefile \
                  tests/Makefile \
                  samples/Makefile])
 
@@ -78,6 +76,12 @@ AM_PROG_CC_C_O
 
 AS_IF([test x$AR = xfalse],
 	AC_MSG_ERROR([Cannot find a valid 'ar' tool]))
+
+# Export information on whether we are building static/shared libraries.
+# enable_shared and enable_static are defined by AC_PROG_LIBTOOL.
+#
+AC_SUBST([BUILD_SHARED], [$enable_shared])
+AC_SUBST([BUILD_STATIC], [$enable_static])
 
 # Checks for header files.
 AC_HEADER_STDC
