@@ -92,16 +92,16 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 
 		# Check for each msgloader, in implicit rank order
 		case $ml_list in
-		*-inmemory-*)
-			AC_DEFINE([XERCES_USE_MSGLOADER_INMEMORY], 1, [Define to use the InMemory MsgLoader])
-			msgloader=inmemory
-			break
-			;;
-
 		*-icu-*)
 			AC_DEFINE([XERCES_USE_MSGLOADER_ICU], 1, [Define to use the ICU-based MsgLoader])
 			msgloader=icu
 			LIBS="${LIBS} -L${xerces_cv_icu_prefix}/lib -licuuc -licudata"
+			break
+			;;
+
+		*-inmemory-*)
+			AC_DEFINE([XERCES_USE_MSGLOADER_INMEMORY], 1, [Define to use the InMemory MsgLoader])
+			msgloader=inmemory
 			break
 			;;
 

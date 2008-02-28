@@ -143,6 +143,13 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 
 		# Check for each netaccessor, in implicit rank order
 		case $na_list in
+		*-curl-*)
+			netaccessor=curl
+			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
+			LIBS="${LIBS} -L${xerces_cv_curl_prefix}/lib -lcurl"
+			break
+			;;
+
 		*-winsock-*)
 			netaccessor=winsock
 			AC_DEFINE([XERCES_USE_NETACCESSOR_WINSOCK], 1, [Define to use the WinSock NetAccessor])
@@ -152,13 +159,6 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		*-socket-*)
 			netaccessor=socket
 			AC_DEFINE([XERCES_USE_NETACCESSOR_SOCKET], 1, [Define to use the Sockets-based NetAccessor])
-			break
-			;;
-
-		*-curl-*)
-			netaccessor=curl
-			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
-			LIBS="${LIBS} -L${xerces_cv_curl_prefix}/lib -lcurl"
 			break
 			;;
 
