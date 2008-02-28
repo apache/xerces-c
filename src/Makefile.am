@@ -36,7 +36,8 @@ AM_CXXFLAGS = $(ICU_CXXFLAGS)
 
 libxerces_c_la_LDFLAGS = -release ${PACKAGE_VERSION}
 
-libxerces_c_ladir = ${includedir} # Not sure what this one if for.
+ # This sets {install}/include as target for the headers
+ libxerces_c_ladir = ${includedir}
 
 
 libxerces_c_la_SOURCES = ${util_sources} ${dom_sources} ${domimpl_sources} \
