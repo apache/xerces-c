@@ -46,7 +46,6 @@ BUILD_STATIC = @BUILD_STATIC@
 include $(top_srcdir)/version.incl
 
 GENRB=$(ICU_PREFIX)/bin/genrb
-GENRBOPT=--package-name $(PKGNAME)
 PKGDATA=$(ICU_PREFIX)/bin/pkgdata
 
 # Add -v if you want to see more verbose output.
@@ -59,7 +58,7 @@ PKGNAME=XercesMessages$(VER)
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
-RESFILES=$(PKGNAME)_en_US.res
+RESFILES=en_US.res
 
 # list of resource bundles  - keep in sync with RESFILES
 RESLIST=$(srcdir)/res-file-list-unix.txt
@@ -92,8 +91,8 @@ else
 	@echo "non_pic_object=none" >>$@
 endif
 
-$(PKGNAME)_%.res: $(srcdir)/%.txt
-	$(GENRB) $(GENRBOPT) $^
+%.res: $(srcdir)/%.txt
+	$(GENRB) $^
 
 # Let the corresponding tools (pkgdata, libtool) clean up their own
 # files. pkgdata does not remove the .dat and README file for some
