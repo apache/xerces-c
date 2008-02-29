@@ -18,7 +18,7 @@ PKGNAME=XercesMessages
 
 # target file for resource bundle - this must be set, or 'make all' won't
 # build any resources.
-RESTARGET=$(top_builddir)/obj/.libs/$(PKGNAME)_en_US.cat
+RESTARGET=$(top_builddir)/src/.libs/$(PKGNAME)_en_US.cat
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
@@ -33,8 +33,8 @@ all: $(RESTARGET) $(TARGET)
 
 $(RESTARGET): $(RESFILES)
 	@echo building $(RESTARGET)
-	$(mkdir_p) $(top_builddir)/obj/.libs
-	cp $(RESFILES) $(top_builddir)/obj/.libs
+	$(mkdir_p) $(top_builddir)/src/.libs
+	cp $(RESFILES) $(top_builddir)/src/.libs
 	
 # clean out files
 distclean clean: $(CLEAN_SUBDIR)

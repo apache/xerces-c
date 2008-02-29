@@ -37,10 +37,10 @@
 
 // Fill in for broken or missing wctype functions on some platforms
 #if !HAVE_TOWUPPER
-#	include <lib/towupper.h>
+#	include <towupper.h>
 #endif
 #if !HAVE_TOWLOWER
-#	include <lib/towlower.h>
+#	include <towlower.h>
 #endif
 
 #include <string.h>
