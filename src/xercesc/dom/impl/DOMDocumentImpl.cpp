@@ -53,8 +53,8 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // The chunk size to allocate from the system allocator.
-static const XMLSize_t kInitialHeapAllocSize =  0x2000;
-static const XMLSize_t kMaxHeapAllocSize     = 0x10000;
+static const XMLSize_t kInitialHeapAllocSize =  0x4000;
+static const XMLSize_t kMaxHeapAllocSize     = 0x20000;
 static const XMLSize_t kMaxSubAllocationSize =  0x1000;  // Any request for more bytes
                                                          // than this will be handled by
                                                          // allocating directly with system.
