@@ -161,7 +161,7 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
         rangeStr[c++] = chOpenSquare;        
         for (unsigned int i = 0;  i < fElemCount - 1;  i += 2) {
             XMLCh buffer[10];
-            unsigned int len, j;
+            XMLSize_t len, j;
 
             rangeStr[c++] = chBackSlash;
             rangeStr[c++] = chLatin_U;
