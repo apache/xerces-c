@@ -42,7 +42,6 @@ LDFLAGS = @LDFLAGS@
 BUILD_SHARED = @BUILD_SHARED@
 BUILD_STATIC = @BUILD_STATIC@
 
-# Special build rules
 include $(top_srcdir)/version.incl
 
 GENRB=$(ICU_PREFIX)/bin/genrb
@@ -54,21 +53,21 @@ PKGDATAOPTS=-d . -M '"CC=$(CC)" "CXX=$(CXX)" "AR=$(AR)" "RANLIB=$(RANLIB)" \
 "CPPFLAGS=$(CPPFLAGS)" "CXXFLAGS=$(CXXFLAGS)" "LDFLAGS=$(LDFLAGS)"'
 
 # Resource shortname
-PKGNAME=XercesMessages$(VER)
+PKGNAME=xercesc_messages_$(VER_UNDERSCORED)
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
 RESFILES=en_US.res
 
 # list of resource bundles  - keep in sync with RESFILES
-RESLIST=$(srcdir)/res-file-list-unix.txt
+RESLIST=$(srcdir)/res-file-list.txt
 
 #
 #
 .PHONY: all
-all: XercesMessages.lo
+all: xercesc_messages.lo
 
-XercesMessages.lo: $(RESFILES)
+xercesc_messages.lo: $(RESFILES)
 ifeq ($(BUILD_SHARED),yes)
 	$(PKGDATA) --name $(PKGNAME) --mode dll $(PKGDATAOPTS) $(RESLIST)
 	mv $(PKGNAME)_dat.o $(PKGNAME)_dat-pic.o
@@ -99,7 +98,7 @@ endif
 # reason.
 #
 distclean clean:
-	rm -f XercesMessages.lo
+	rm -f xercesc_messages.lo
 ifeq ($(BUILD_SHARED),yes)
 	$(PKGDATA) --name $(PKGNAME) --mode dll --clean $(PKGDATAOPTS) $(RESLIST)
 	rm -f $(PKGNAME)_dat-pic.o
@@ -121,7 +120,7 @@ check: all
 distdir:
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
-	list='res-file-list-unix.txt res-file-list-wins.txt en_US.txt Makefile.in resources.mak'; \
+	list='res-file-list.txt en_US.txt Makefile.in resources.mak'; \
 	  dist_files=`for file in $$list; do echo $$file; done | \
 	  sed -e "s|^$$srcdirstrip/||;t" \
 	      -e "s|^$$topsrcdirstrip/|$(top_builddir)/|;t"`; \

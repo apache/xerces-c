@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@
 #include "ICUMsgLoader.hpp"
 #include "unicode/putil.h"
 #include "unicode/uloc.h"
-#include "unicode/udata.h" 
+#include "unicode/udata.h"
 
 #include "string.h"
 #include <stdio.h>
@@ -45,24 +45,19 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 
 /*
- *  Resource Data Reference.  
- * 
+ *  Resource Data Reference.
+ *
  *  The data is packaged as a dll (or .so or whatever, depending on the platform) that exports a data symbol.
- *  The application (this *.cpp) references that symbol here, and will pass the data address to ICU, which 
+ *  The application (this *.cpp) references that symbol here, and will pass the data address to ICU, which
  *  will then  be able to fetch resources from the data.
  */
+#define ENTRY_POINT xercesc_messages_3_0_dat
+#define BUNDLE_NAME "xercesc_messages_3_0"
 
-#if defined(_WIN32) || defined(WIN32)
-#define ENTRY_POINT XercesMessages3_0_dat
-#define BUNDLE_NAME "XercesMessages3_0"
-#else
-#define ENTRY_POINT XercesMessages3_0_0_dat
-#define BUNDLE_NAME "XercesMessages3_0_0"
-#endif
 extern "C" void U_IMPORT *ENTRY_POINT;
 
-/* 
- *  Tell ICU where our resource data is located in memory. The data lives in the XercesMessages dll, and we just
+/*
+ *  Tell ICU where our resource data is located in memory. The data lives in the xercesc_nessages dll, and we just
  *  pass the address of an exported symbol from that library to ICU.
  */
 static bool setAppDataOK = false;
@@ -115,7 +110,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 
     /***
         Location resolution priority
-         
+
          1. XMLMsgLoader::getNLSHome(), set by user through
             XMLPlatformUtils::Initialize(), which provides user-specified
             location where the message loader shall retrieve error messages.
@@ -150,7 +145,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
                 strcpy(locationBuf, nlsHome);
                 strcat(locationBuf, U_FILE_SEP_STRING);
                 strcat(locationBuf, "msg");
-                strcat(locationBuf, U_FILE_SEP_STRING);                    
+                strcat(locationBuf, U_FILE_SEP_STRING);
             }
             else
             {
@@ -160,7 +155,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
                  ***/
                  setAppData();
             }
-        }    
+        }
     }
 
     /***
@@ -179,8 +174,8 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         ***/
 
         if (strcmp(locationBuf, BUNDLE_NAME) !=0 )
-        {    	     	   
-            setAppData();        	
+        {
+            setAppData();
             err = U_ZERO_ERROR;
             fLocaleBundle = ures_open(BUNDLE_NAME, XMLMsgLoader::getLocale(), &err);
             if (!U_SUCCESS(err) || fLocaleBundle == NULL)
@@ -189,9 +184,9 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
             }
         }
         else
-        {    	     	   
+        {
             XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
-        }        
+        }
     }
 
     /***
@@ -289,7 +284,7 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
     XMLCh* tmp1 = 0;
     XMLCh* tmp2 = 0;
     XMLCh* tmp3 = 0;
-    XMLCh* tmp4 = 0;    
+    XMLCh* tmp4 = 0;
 
     bool bRet = false;
     if (repText1)

@@ -19,9 +19,9 @@
 # for VER
 include ..\..\..\..\..\..\version.incl
 
-RESFILES= en_US.res 
+RESFILES= en_US.res
 
-PKGNAME       = XercesMessages$(WIN_MSG_VER)
+PKGNAME       = xercesc_messages_$(VER_UNDERSCORED)
 TARGET_DLL    = $(PKGNAME).DLL
 TARGET_LIB    = $(PKGNAME).lib
 
@@ -42,7 +42,7 @@ REN      = ren
 #  -t fools make into thinking there are files such as es.res, etc
 #
 .txt.res:
-	$(GENRB) -t --package-name $(PKGNAME) -d . $*.txt
+	$(GENRB) -d . $*.txt
 
 #
 #  all - nmake starts here by default
@@ -50,5 +50,5 @@ REN      = ren
 all: $(TARGET_DLL)
 
 $(TARGET_DLL): $(RESFILES)
-	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list-wins.txt
+	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
 
