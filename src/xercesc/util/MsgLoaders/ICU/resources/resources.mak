@@ -11,7 +11,7 @@
 #
 #    . When adding a resource source (.txt) file for a new locale,
 #           the corresponding .res file must be added to this list,
-#    . AND to the file res-file-list-wins.txt
+#    . AND to the file res-file-list.txt
 #
 #  keep synchronous with ICUMsgLoader.cpp
 #
@@ -39,10 +39,9 @@ REN      = ren
 
 #
 #  Inference rule, for compiling a .txt file into a .res file.
-#  -t fools make into thinking there are files such as es.res, etc
 #
 .txt.res:
-	$(GENRB) -t --package-name $(PKGNAME) -d . $*.txt
+	$(GENRB) -d . $*.txt
 
 #
 #  all - nmake starts here by default
@@ -50,5 +49,4 @@ REN      = ren
 all: $(TARGET_DLL)
 
 $(TARGET_DLL): $(RESFILES)
-	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list-wins.txt
-
+	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt

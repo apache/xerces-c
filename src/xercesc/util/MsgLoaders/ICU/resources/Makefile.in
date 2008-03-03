@@ -61,7 +61,6 @@ LDFLAGS_USTDIO =$(shell icu-config --ldflags-ustdio)
 INVOKE=$(shell icu-config --invoke)
 #GENRB=$(shell icu-config --invoke=genrb)
 GENRB=genrb
-GENRBOPT=--package-name $(PKGNAME)
 #PKGDATA=$(shell icu-config --invoke=pkgdata)
 PKGDATA=pkgdata
 SO=$(shell icu-config --so)
@@ -111,10 +110,10 @@ endif
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
-RESFILES=$(RESNAME)_en_US.res
+RESFILES=en_US.res
 
 # list of resource bundles  - keep in sync with RESFILES
-RESLIST=res-file-list-unix.txt
+RESLIST=res-file-list.txt
 
 # list of targets that aren't actually created
 .PHONY: all clean distclean check report 
@@ -149,9 +148,9 @@ check: $(TARGET)
 	$(INVOKE) $(CHECK_VARS) ./$(TARGET) $(CHECK_ARGS) | tee $(TARGET).out
 
 ## resources
-$(RESNAME)_%.res: %.txt
+%.res: %.txt
 	@echo "generating $@"
-	$(GENRB) $(GENRBOPT) $^
+	$(GENRB) $^
 
 #end of rules.mk
 
