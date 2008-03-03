@@ -82,6 +82,10 @@ public:
     DOMNode*     removeChild(DOMNode *oldChild);
     DOMNode*     replaceChild(DOMNode *newChild, DOMNode *oldChild);
 
+    // Append certain types of nodes fast. Used to speed up XML to DOM
+    // parsing. See the function implementation for detail.
+    DOMNode*     appendChildFast(DOMNode *newChild);
+
     //Introduced in DOM Level 2
     void	normalize();
 

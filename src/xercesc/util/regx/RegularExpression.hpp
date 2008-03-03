@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -89,7 +89,7 @@ public:
     static const unsigned int   PROHIBIT_FIXED_STRING_OPTIMIZATION;
     static const unsigned int   XMLSCHEMA_MODE;
     static const unsigned int   SPECIAL_COMMA;
-    typedef enum 
+    typedef enum
     {
         wordTypeIgnore = 0,
         wordTypeLetter = 1,
@@ -184,7 +184,7 @@ private:
             void reset(const XMLCh* const string, const XMLSize_t stringLen,
                        const XMLSize_t start, const XMLSize_t limit, const int noClosures);
             bool nextCh(XMLInt32& ch, XMLSize_t& offset, const short direction);
-            
+
             bool           fAdoptMatch;
             XMLSize_t      fStart;
             XMLSize_t      fLimit;
@@ -330,7 +330,7 @@ private:
   inline void RegularExpression::cleanUp() {
 
       fMemoryManager->deallocate(fPattern);//delete [] fPattern;
-      fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;      
+      fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
       delete fBMPattern;
       delete fTokenFactory;
   }
@@ -372,6 +372,8 @@ private:
                                      ((const ModifierToken *) token)->getOptions(),
                                      ((const ModifierToken *) token)->getOptionsMask());
           break;
+      default:
+          break;
       }
 
 
@@ -406,6 +408,8 @@ private:
           break;
       case Token::T_BACKREFERENCE:
           ret = fOpFactory.createBackReferenceOp(token->getReferenceNo());
+          break;
+      default:
           break;
       }
 
