@@ -315,8 +315,8 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
             psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
             system("type buildlog.txt");
             # to follow 2 digits convention
-            psystem("ren XercesMessages3_0_0.DLL XercesMessages3_0.DLL");
-            psystem("ren XercesMessages3_0_0.lib XercesMessages3_0.lib");            
+            psystem("ren xercesc_messages_3_0.DLL xercesc_messages_3_0.DLL");
+            psystem("ren xercesc_messages_3_0.lib xercesc_messages_3_0.lib");
         }
 
         #
@@ -395,13 +395,12 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     	
         print ("\n\nCopying icu outputs ...\n");        	
         # Copy the ICU dlls and libs
-        psystem("cp -fv $ICUROOT/bin/icuuc32.dll $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icuuc32d.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc*.dll $targetdir/bin");
 
         # it seems icudt32*.DLL is generated (upper case dll)
         # but just case, try lower case .dll as well
-        psystem("cp -fv $ICUROOT/bin/icudt32*.DLL $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icudt32*.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt*.DLL $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt*.dll $targetdir/bin");
 
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
         psystem("cp -fv $ICUROOT/lib/icuucd.lib $targetdir/lib");
@@ -411,12 +410,12 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {           
             pchdir ("$ICUResourceDir");    	
-            psystem("cp -fv XercesMessages*.DLL $ReleaseBuildDir");
-            psystem("cp -fv XercesMessages*.lib    $ReleaseBuildDir");
+            psystem("cp -fv xercesc_messages_*.DLL $ReleaseBuildDir");
+            psystem("cp -fv xercesc_messages_*.lib $ReleaseBuildDir");
 
-            psystem("cp -fv XercesMessages*.res   $targetdir/msg");
-            psystem("cp -fv XercesMessages*.DLL $targetdir/bin");
-            psystem("cp -fv XercesMessages*.lib    $targetdir/lib");                               
+            psystem("cp -fv xercesc_messages_*.dat $targetdir/msg");
+            psystem("cp -fv xercesc_messages_*.DLL $targetdir/bin");
+            psystem("cp -fv xercesc_messages_*.lib $targetdir/lib");                               
         }        	
 
     } #ICUIsPresent
@@ -867,19 +866,7 @@ if ( ($platform =~ m/AIX/i)      ||
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
             print ("\n\nCopying ICU message bundles ...\n");        	
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/XercesMessages*.res $targetdir/msg");
-           
-            psystem("cp -f $XERCESCROOT/obj/.libs/libXercesMessages3_0_0.so .");
-            psystem("find . -name 'libXercesMessages3_0_0.so' -exec ln -s {} libXercesMessages3_0.so \\;");
-            psystem("find . -name 'libXercesMessages3_0.so'   -exec ln -s {} libXercesMessages.so \\;");
-                    
-            psystem("cp -f $XERCESCROOT/obj/.libs/libXercesMessages3_0_0.sl .");
-            psystem("find . -name 'libXercesMessages3_0_0.sl' -exec ln -s {} libXercesMessages3_0.sl \\;");
-            psystem("find . -name 'libXercesMessages3_0.sl'   -exec ln -s {} libXercesMessages.sl \\;");
-
-            psystem("cp -f $XERCESCROOT/obj/.libs/libXercesMessages3_0_0.a .");
-            psystem("find . -name 'libXercesMessages3_0_0.a'   -exec ln -s {} libXercesMessages3_0.a \\;");
-            psystem("find . -name 'libXercesMessages3_0.a'     -exec ln -s {} libXercesMessages.a \\;");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/xercesc_messages_*.dat $targetdir/msg");
         }
 
     }
@@ -893,25 +880,25 @@ if ( ($platform =~ m/AIX/i)      ||
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c-3.0.so" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c-3.0.so .");
+    if ((-e "$XERCESCROOT/src/.libs/libxerces-c-3.0.so" )) {
+        psystem("cp -f $XERCESCROOT/src/.libs/libxerces-c-3.0.so .");
         psystem("ln -s libxerces-c-3.0.so libxerces-c-3.so ");
         psystem("ln -s libxerces-c-3.so   libxerces-c.so    ");     
     }
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c-3.0.sl" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c-3.0.sl .");
+    if ((-e "$XERCESCROOT/src/.libs/libxerces-c-3.0.sl" )) {
+        psystem("cp -f $XERCESCROOT/src/.libs/libxerces-c-3.0.sl .");
         psystem("ln -s libxerces-c-3.0.sl libxerces-c-3.sl ");
         psystem("ln -s libxerces-c-3.sl   libxerces-c.sl    ");               
     }
 
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c.a" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c.a . ");
+    if ((-e "$XERCESCROOT/src/.libs/libxerces-c.a" )) {
+        psystem("cp -f $XERCESCROOT/src/.libs/libxerces-c.a . ");
     }
         
     # Mac OS X
-    if ((-e "$XERCESCROOT/obj/.libs/libxerces-c-3.0.dylib" )) {
-        psystem("cp -f $XERCESCROOT/obj/.libs/libxerces-c-3.0.dylib .");
+    if ((-e "$XERCESCROOT/src/.libs/libxerces-c-3.0.dylib" )) {
+        psystem("cp -f $XERCESCROOT/src/.libs/libxerces-c-3.0.dylib .");
         psystem("ln -s libxerces-c-3.0.dylib libxerces-c-3.dylib ");
         psystem("ln -s libxerces-c-3.dylib   libxerces-c.dylib    ");
     }
@@ -1190,7 +1177,7 @@ sub change_windows_project_for_ICU() {
        
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages3_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib xercesc_messages_3_0.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1229,7 +1216,7 @@ sub change_windows_makefile_for_ICU() {
     while ($line = <FIZZLE>) {
         if ($line =~ /Win64 Debug/ ){
             $icuuc = "icuucd";
-            }
+        }
         if ($line =~ /Win64 Release/ ) {
             $icuuc = "icuuc";
         }
@@ -1239,7 +1226,7 @@ sub change_windows_makefile_for_ICU() {
 
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages3_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib xercesc_messages_3_0.lib/g;
         }        
         elsif ($Transcoder)
         {
@@ -1286,7 +1273,7 @@ sub change_windows_project_for_ICU_VC7_or_VC8() {
         
         if ($MsgLoader)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages3_0.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib xercesc_messages_3_0.lib $1/;
         }        
         elsif ($Transcoder)
         {
