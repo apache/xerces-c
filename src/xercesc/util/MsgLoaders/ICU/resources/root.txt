@@ -1,4 +1,4 @@
-en_US { 
+root { 
 
 	 // an array 
 	XMLErrors { 

@@ -19,7 +19,7 @@
 # for VER
 include ..\..\..\..\..\..\version.incl
 
-RESFILES= en_US.res
+RESFILES= root.res
 
 PKGNAME       = xercesc_messages_$(VER_UNDERSCORED)
 TARGET_DLL    = $(PKGNAME).DLL
@@ -39,7 +39,6 @@ REN      = ren
 
 #
 #  Inference rule, for compiling a .txt file into a .res file.
-#  -t fools make into thinking there are files such as es.res, etc
 #
 .txt.res:
 	$(GENRB) -d . $*.txt

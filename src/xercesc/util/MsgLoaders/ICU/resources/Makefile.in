@@ -57,7 +57,7 @@ PKGNAME=xercesc_messages_$(VER_UNDERSCORED)
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
-RESFILES=en_US.res
+RESFILES=root.res
 
 # list of resource bundles  - keep in sync with RESFILES
 RESLIST=$(srcdir)/res-file-list.txt
@@ -120,7 +120,7 @@ check: all
 distdir:
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
-	list='res-file-list.txt en_US.txt Makefile.in resources.mak'; \
+	list='res-file-list.txt root.txt Makefile.in resources.mak'; \
 	  dist_files=`for file in $$list; do echo $$file; done | \
 	  sed -e "s|^$$srcdirstrip/||;t" \
 	      -e "s|^$$topsrcdirstrip/|$(top_builddir)/|;t"`; \

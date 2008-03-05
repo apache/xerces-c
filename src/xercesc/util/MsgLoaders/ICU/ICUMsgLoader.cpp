@@ -163,7 +163,7 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     ***/
     strcat(locationBuf, BUNDLE_NAME);
     UErrorCode err = U_ZERO_ERROR;
-    uloc_setDefault("en_US", &err);   // in case user-specified locale unavailable
+    uloc_setDefault("root", &err);   // in case user-specified locale unavailable
     err = U_ZERO_ERROR;
     fLocaleBundle = ures_open(locationBuf, XMLMsgLoader::getLocale(), &err);
     if (!U_SUCCESS(err) || fLocaleBundle == NULL)
