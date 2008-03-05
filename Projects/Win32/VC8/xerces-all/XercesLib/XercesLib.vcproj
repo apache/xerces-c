@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="XercesLib"
 	ProjectGUID="{152CE948-F659-4206-A50A-1D2B9658EF96}"
 	RootNamespace="XercesLib"
@@ -48,7 +48,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="1"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
@@ -63,7 +63,7 @@
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4355"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -262,7 +262,7 @@
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4355"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -437,7 +437,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="1"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;XERCES_STATIC_LIBRARY;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_WINDOWS;XERCES_USE_MSGLOADER_INMEMORY;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
@@ -450,7 +450,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4355"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -599,7 +599,7 @@
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4355"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -748,7 +748,7 @@
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4355"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -924,7 +924,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="1"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;NDEBUG;WIN32;_WINDOWS;XERCES_BUILDING_LIBRARY;XERCES_USE_TRANSCODER_ICU;XERCES_USE_WIN32_MSGLOADER;XERCES_USE_NETACCESSOR_WINSOCK;XERCES_USE_FILEMGR_WINDOWS;XERCES_USE_MUTEXMGR_WINDOWS;XERCES_USE_ATOMICOPMGR_WINDOWS;XERCES_PATH_DELIMITER_BACKSLASH;HAVE_STRICMP;HAVE_STRNICMP;HAVE_LIMITS_H;HAVE_SYS_TIMEB_H;HAVE_FTIME;HAVE_WCSUPR;HAVE_WCSLWR;HAVE_WCSICMP;HAVE_WCSNICMP"
@@ -939,7 +939,7 @@
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4355"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -2099,34 +2099,6 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp"
@@ -2341,34 +2313,6 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp"
 					>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.hpp"
@@ -2377,34 +2321,6 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp"
 					>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.hpp"
