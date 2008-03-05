@@ -148,7 +148,7 @@ void ICUResBundFormatter::startMsgType(const MsgTypes type)
 }
 
 
-void ICUResBundFormatter::startOutput(const   XMLCh* const    locale
+void ICUResBundFormatter::startOutput(const   XMLCh* const    msgLocale
                                     , const   XMLCh* const    outPath)
 {
     //
@@ -165,8 +165,8 @@ void ICUResBundFormatter::startOutput(const   XMLCh* const    locale
     tmpBuf[0] = 0;
     XMLCh *tmpXMLStr = XMLString::transcode(".txt");
 
-
-
+    // ICU Resource Bundles now uses "root" as locale
+    const XMLCh* locale = L"root";
     XMLString::catString(tmpBuf, outPath);
     XMLString::catString(tmpBuf, locale);
     XMLString::catString(tmpBuf, tmpXMLStr );

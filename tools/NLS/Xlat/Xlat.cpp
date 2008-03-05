@@ -428,7 +428,7 @@ int Xlat_main(int argC, XMLCh** argV)
                 //  a DOM tree. Turn on validation when we do this.
                 //
                 XercesDOMParser parser;
-                parser.setDoValidation(true);
+                parser.setValidationScheme(AbstractDOMParser::Val_Always);
                 XlatErrHandler errHandler;
                 parser.setErrorHandler(&errHandler);
                 parser.parse(tmpFileBuf);
