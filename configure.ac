@@ -52,19 +52,6 @@ AC_PROG_SED
 #it would be nice to also check for PERL...
 #AC_PROG_PERL
 
-# If using MSVC (under Cygwin) or Solaris Forte, and the user didn't specify a linker, force a reasonable
-# choice in order to avoid the "cannot find 'ld'" error from the AC_PROG_LIBTOOL
-if test x$LD = x; then
-	case $CXX in
-	'cl.exe' | 'cl')
-		LD='link'
-		;;
-	'CC')
-		LD='CC'
-		;;
-	esac
-fi
-
 #skip detection of Fortran
 m4_undefine([AC_PROG_F77])
 m4_defun([AC_PROG_F77],[])
@@ -213,47 +200,17 @@ AS_IF([test x$ac_cv_header_sys_types_h = xyes],
 AS_IF([test x$ac_cv_header_inttypes_h = xyes],
 	AC_DEFINE([XERCES_HAVE_INTTYPES_H],    1, [Define to 1 if we have inttypes.h]))
 
-AC_MSG_CHECKING([whether we are using SunPro 5.8 compiler])
-AC_EGREP_CPP([0x580], [__SUNPRO_C],
-	[
-	 COMPILER="SUNPRO"
-	 AC_MSG_RESULT([yes])
-	],
-	[
-	 COMPILER=""
-	 AC_MSG_RESULT([no])
-	]
-	)
-
-case $CXX in
-'cl.exe' | 'cl')
-	CXXFLAGS="`echo $CXXFLAGS | $SED 's%-g%/Od%'` /nologo /GX"
-	;;
-esac
-
-case $CC in
-'cl.exe' | 'cl')
-	CFLAGS="`echo $CFLAGS | $SED 's%-g%/Od%'` /nologo /GX"
-	;;
-esac
-
 case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
 	platform_export="__declspec(dllexport)"
 	platform_import="__declspec(dllimport)"
 	;;
 * )
-	case $COMPILER in
-	SUNPRO)
-		platform_export="__declspec(dllexport)"
-		platform_import="__declspec(dllimport)"
-		;;
-	*)
-		platform_export=""
-		platform_import=""
-		;;
-	esac
+	platform_export=""
+	platform_import=""
+	;;
 esac
+
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_EXPORT], [$platform_export], [Define as the platform's export attribute])
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_IMPORT], [$platform_import], [Define as the platform's import attribute])
 
