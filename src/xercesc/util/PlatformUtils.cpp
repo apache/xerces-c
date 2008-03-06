@@ -570,7 +570,7 @@ XMLPlatformUtils::openStdInHandle(MemoryManager* const memmgr)
 
 
 void
-XMLPlatformUtils::closeFile(const FileHandle theFile
+XMLPlatformUtils::closeFile(FileHandle theFile
                             , MemoryManager* const memmgr)
 {
     if (!fgFileMgr)
@@ -591,7 +591,7 @@ XMLPlatformUtils::resetFile(FileHandle theFile
 
 
 XMLFilePos
-XMLPlatformUtils::curFilePos(const FileHandle theFile
+XMLPlatformUtils::curFilePos(FileHandle theFile
                              , MemoryManager* const memmgr)
 {
     if (!fgFileMgr)
@@ -601,7 +601,7 @@ XMLPlatformUtils::curFilePos(const FileHandle theFile
 }
 
 XMLFilePos
-XMLPlatformUtils::fileSize(const FileHandle theFile
+XMLPlatformUtils::fileSize(FileHandle theFile
                            , MemoryManager* const memmgr)
 {
     if (!fgFileMgr)
@@ -612,7 +612,7 @@ XMLPlatformUtils::fileSize(const FileHandle theFile
 
 
 XMLSize_t
-XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
+XMLPlatformUtils::readFileBuffer(   FileHandle      theFile
                                  ,  const XMLSize_t		  toRead
                                  ,        XMLByte* const  toFill
                                  ,  MemoryManager* const  memmgr)
@@ -626,7 +626,7 @@ XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
 
 void
 XMLPlatformUtils::writeBufferToFile(   const   FileHandle   theFile
-                                    ,  const XMLSize_t		toWrite
+                                    ,  XMLSize_t	    toWrite
                                     ,  const XMLByte* const toFlush
                                     ,  MemoryManager* const memmgr)
 {
