@@ -717,8 +717,8 @@ XMLSize_t MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
 	while (srcCnt > 0)
     {
         TempXMLBuf tmpBuf;
-        unsigned int bytesConsumed = 0;
-		unsigned int charsProduced = mTranscoder->transcodeFrom((XMLByte*)src, srcCnt,
+        XMLSize_t bytesConsumed = 0;
+		XMLSize_t charsProduced = mTranscoder->transcodeFrom((XMLByte*)src, srcCnt,
 														tmpBuf, kTempBufCount,
 														bytesConsumed,
 														NULL);
@@ -764,8 +764,8 @@ XMLSize_t MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     while (srcCnt > 0)
     {
         TempCharBuf tmpBuf;
-        unsigned int charsConsumed = 0;
-		unsigned int bytesProduced = mTranscoder->transcodeTo(src, srcCnt,
+        XMLSize_t charsConsumed = 0;
+		XMLSize_t bytesProduced = mTranscoder->transcodeTo(src, srcCnt,
                                             (XMLByte*)tmpBuf, kTempBufCount,
                                             charsConsumed,
                                             XMLTranscoder::UnRep_RepChar);
@@ -808,8 +808,8 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
     {
 		//  Transcode some characters
         TempCharBuf tmpBuf;
-        unsigned int charsConsumed = 0;
-        unsigned int bytesProduced = mTranscoder->transcodeTo(src, srcCnt,
+        XMLSize_t charsConsumed = 0;
+        XMLSize_t bytesProduced = mTranscoder->transcodeTo(src, srcCnt,
                                             (XMLByte*)tmpBuf, kTempBufCount,
                                             charsConsumed,
                                             XMLTranscoder::UnRep_RepChar);
@@ -884,8 +884,8 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
     {
         //  Transcode some characters
 		TempXMLBuf tmpBuf;
-        unsigned int bytesConsumed = 0;
-		unsigned int charsProduced = mTranscoder->transcodeFrom((XMLByte*)src, srcCnt,
+        XMLSize_t bytesConsumed = 0;
+		XMLSize_t charsProduced = mTranscoder->transcodeFrom((XMLByte*)src, srcCnt,
 												tmpBuf, kTempBufCount,
 												bytesConsumed,
 												NULL);
@@ -956,9 +956,9 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
 	XMLMutexLock lock(&mMutex);
 
     //  Call the transcoder to do the work
-    unsigned int srcLen = std::strlen(toTranscode);
-    unsigned int bytesConsumed = 0;
-    unsigned int charsProduced = mTranscoder->transcodeFrom((XMLByte*)toTranscode, srcLen,
+    XMLSize_t srcLen = std::strlen(toTranscode);
+    XMLSize_t bytesConsumed = 0;
+    XMLSize_t charsProduced = mTranscoder->transcodeFrom((XMLByte*)toTranscode, srcLen,
                                             toFill, maxChars,
 											bytesConsumed,
 											NULL);
@@ -991,9 +991,9 @@ MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
 	XMLMutexLock lock(&mMutex);
 
     //  Call the transcoder to do the work
-    unsigned int srcLen = XMLString::stringLen(toTranscode);
-    unsigned int charsConsumed = 0;
-    unsigned int bytesProduced = mTranscoder->transcodeTo(toTranscode, srcLen,
+    XMLSize_t srcLen = XMLString::stringLen(toTranscode);
+    XMLSize_t charsConsumed = 0;
+    XMLSize_t bytesProduced = mTranscoder->transcodeTo(toTranscode, srcLen,
                                             (XMLByte*)toFill, maxChars,
                                             charsConsumed,
                                             XMLTranscoder::UnRep_RepChar);
