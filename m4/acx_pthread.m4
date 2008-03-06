@@ -1,50 +1,54 @@
-dnl @synopsis ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
-dnl @summary figure out how to build C programs using POSIX threads
-dnl @category InstalledPackages
 dnl
-dnl This macro figures out how to build C programs using POSIX
-dnl threads.  It sets the PTHREAD_LIBS output variable to the threads
-dnl library and linker flags, and the PTHREAD_CFLAGS output variable
-dnl to any special C compiler flags that are needed.  (The user can also
-dnl force certain compiler flags/libs to be tested by setting these
-dnl environment variables.)
+dnl NOTE: This file was modified for Xerces-C++. See the comments
+dnl starting with 'XERCES' for more information.
+dnl
+dnl @synopsis ACX_PTHREAD([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
+dnl
+dnl @summary figure out how to build C programs using POSIX threads
+dnl
+dnl This macro figures out how to build C programs using POSIX threads.
+dnl It sets the PTHREAD_LIBS output variable to the threads library and
+dnl linker flags, and the PTHREAD_CFLAGS output variable to any special
+dnl C compiler flags that are needed. (The user can also force certain
+dnl compiler flags/libs to be tested by setting these environment
+dnl variables.)
 dnl
 dnl Also sets PTHREAD_CC to any special C compiler that is needed for
 dnl multi-threaded programs (defaults to the value of CC otherwise).
 dnl (This is necessary on AIX to use the special cc_r compiler alias.)
 dnl
 dnl NOTE: You are assumed to not only compile your program with these
-dnl flags, but also link it with them as well.  e.g. you should link
-dnl with $PTHREAD_CC $CFLAGS $PTHREAD_CFLAGS $LDFLAGS ... $PTHREAD_LIBS $LIBS
+dnl flags, but also link it with them as well. e.g. you should link
+dnl with $PTHREAD_CC $CFLAGS $PTHREAD_CFLAGS $LDFLAGS ... $PTHREAD_LIBS
+dnl $LIBS
 dnl
-dnl If you are only building threads programs, you may wish to
-dnl use these variables in your default LIBS, CFLAGS, and CC:
+dnl If you are only building threads programs, you may wish to use
+dnl these variables in your default LIBS, CFLAGS, and CC:
 dnl
 dnl        LIBS="$PTHREAD_LIBS $LIBS"
 dnl        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 dnl        CC="$PTHREAD_CC"
 dnl
 dnl In addition, if the PTHREAD_CREATE_JOINABLE thread-attribute
-dnl constant has a nonstandard name, defines PTHREAD_CREATE_JOINABLE
-dnl to that name (e.g. PTHREAD_CREATE_UNDETACHED on AIX).
+dnl constant has a nonstandard name, defines PTHREAD_CREATE_JOINABLE to
+dnl that name (e.g. PTHREAD_CREATE_UNDETACHED on AIX).
 dnl
 dnl ACTION-IF-FOUND is a list of shell commands to run if a threads
-dnl library is found, and ACTION-IF-NOT-FOUND is a list of commands
-dnl to run it if it is not found.  If ACTION-IF-FOUND is not specified,
-dnl the default action will define HAVE_PTHREAD.
+dnl library is found, and ACTION-IF-NOT-FOUND is a list of commands to
+dnl run it if it is not found. If ACTION-IF-FOUND is not specified, the
+dnl default action will define HAVE_PTHREAD.
 dnl
-dnl Please let the authors know if this macro fails on any platform,
-dnl or if you have any other suggestions or comments.  This macro was
-dnl based on work by SGJ on autoconf scripts for FFTW (www.fftw.org)
-dnl (with help from M. Frigo), as well as ac_pthread and hb_pthread
-dnl macros posted by Alejandro Forero Cuervo to the autoconf macro
-dnl repository.  We are also grateful for the helpful feedback of
-dnl numerous users.
+dnl Please let the authors know if this macro fails on any platform, or
+dnl if you have any other suggestions or comments. This macro was based
+dnl on work by SGJ on autoconf scripts for FFTW (www.fftw.org) (with
+dnl help from M. Frigo), as well as ac_pthread and hb_pthread macros
+dnl posted by Alejandro Forero Cuervo to the autoconf macro repository.
+dnl We are also grateful for the helpful feedback of numerous users.
 dnl
-dnl @version 2005-06-15
-dnl @license GPLWithACException
+dnl @category InstalledPackages
 dnl @author Steven G. Johnson <stevenj@alum.mit.edu>
-dnl (license info is here: http://ac-archive.sourceforge.net/doc/copyright.html)
+dnl @version 2006-05-29
+dnl @license GPLWithACException
 
 AC_DEFUN([ACX_PTHREAD], [
 AC_REQUIRE([AC_CANONICAL_HOST])
@@ -85,7 +89,12 @@ fi
 # which indicates that we try without any flags at all, and "pthread-config"
 # which is a program returning the flags for the Pth emulation library.
 
-acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mt -mthreads pthread --thread-safe pthread-config"
+# XERCES: On GNU/Linux with gcc both -pthread and -lpthread are valid.
+# However, libtool links libraries with -nostdlib which results in 
+# -pthread being stripped from the linker command line. To resolve
+# this we move pthread from after -mthreads to after pthreads.
+#
+acx_pthread_flags="pthreads pthread none -Kthread -kthread lthread -pthread -pthreads -mthreads --thread-safe -mt pthread-config"
 
 # The ordering *is* (sometimes) important.  Some notes on the
 # individual items follow:
@@ -102,6 +111,7 @@ acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -m
 # -mt: Sun Workshop C (may only link SunOS threads [-lthread], but it
 #      doesn't hurt to check since this sometimes defines pthreads too;
 #      also defines -D_REENTRANT)
+#      ... -mt is also the pthreads flag for HP/aCC
 # pthread: Linux, etcetera
 # --thread-safe: KAI C++
 # pthread-config: use pthread-config program (for GNU Pth library)
@@ -111,14 +121,14 @@ case "${host_cpu}-${host_os}" in
 
         # On Solaris (at least, for some versions), libc contains stubbed
         # (non-functional) versions of the pthreads routines, so link-based
-        # tests will erroneously succeed.  (We need to link with -pthread or
+        # tests will erroneously succeed.  (We need to link with -pthreads/-mt/
         # -lpthread.)  (The stubs are missing pthread_cleanup_push, or rather
         # a function called by this macro, so we could check for that, but
         # who knows whether they'll stub that too in a future libc.)  So,
         # we'll just look for -pthreads and -lpthread first:
-
+	
         acx_pthread_flags="-pthreads pthread -mt -pthread $acx_pthread_flags"
-        ;;
+        ;;		
 esac
 
 if test x"$acx_pthread_ok" = xno; then
@@ -161,10 +171,15 @@ for flag in $acx_pthread_flags; do
         # pthread_cleanup_push because it is one of the few pthread
         # functions on Solaris that doesn't have a non-functional libc stub.
         # We try pthread_create on general principles.
+	
+	# XERCES: Add tests for pthread_mutexattr_init and 
+	# pthread_mutexattr_destroy.
+	#
         AC_TRY_LINK([#include <pthread.h>],
                     [pthread_t th; pthread_join(th, 0);
                      pthread_attr_init(0); pthread_cleanup_push(0, 0);
-                     pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
+                     pthread_create(0,0,0,0); pthread_cleanup_pop(0);
+		     pthread_mutexattr_init(0); pthread_mutexattr_destroy(0);],
                     [acx_pthread_ok=yes])
 
         LIBS="$save_LIBS"
@@ -215,8 +230,12 @@ if test "x$acx_pthread_ok" = xyes; then
         LIBS="$save_LIBS"
         CFLAGS="$save_CFLAGS"
 
-        # More AIX lossage: must compile with cc_r
-        AC_CHECK_PROG(PTHREAD_CC, cc_r, cc_r, ${CC})
+        # More AIX lossage: must compile with xlc_r or cc_r
+	if test x"$GCC" != xyes; then
+          AC_CHECK_PROGS(PTHREAD_CC, xlc_r cc_r, ${CC})
+        else
+          PTHREAD_CC=$CC
+	fi
 else
         PTHREAD_CC="$CC"
 fi
