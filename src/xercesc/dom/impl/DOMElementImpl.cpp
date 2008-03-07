@@ -49,11 +49,11 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
     fName = docImpl->getPooledString(eName);
     setupDefaultAttributes();
     if (!fDefaultAttributes) {
-        fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
-        fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
+        fDefaultAttributes = new (docImpl) DOMAttrMapImpl(this);
+        fAttributes = new (docImpl) DOMAttrMapImpl(this);
     }
     else {
-        fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, fDefaultAttributes);
+        fAttributes = new (docImpl) DOMAttrMapImpl(this, fDefaultAttributes);
     }
 }
 

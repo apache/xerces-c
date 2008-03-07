@@ -368,6 +368,12 @@ inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumen
     return p;
 }
 
+inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *doc)
+{
+    void* p = doc->allocate(amt);
+    return p;
+}
+
 inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
 {
     XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
@@ -388,6 +394,11 @@ inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDoc
     return;
 }
 inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType /*type*/)
+{
+    return;
+}
+
+inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl * /*doc*/)
 {
     return;
 }

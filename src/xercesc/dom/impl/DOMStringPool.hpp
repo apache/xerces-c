@@ -80,8 +80,6 @@ public :
     // -----------------------------------------------------------------------
     DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity = 31);
 
-    DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string);
-
     ~DOMBuffer()
     {
     }

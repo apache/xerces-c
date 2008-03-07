@@ -121,25 +121,6 @@ DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
     fBuffer[0] = XMLCh(0);
 }
 
-DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string) :
-    fBuffer(0)
-    , fIndex(0)
-    , fCapacity(0)
-    , fDoc(doc)
-{
-    XMLSize_t actualCount = XMLString::stringLen(string);
-    fCapacity = actualCount + 15;
-
-    // Buffer is one larger than capacity, to allow for zero term
-    fBuffer = (XMLCh*) doc->allocate((fCapacity+1)*sizeof(XMLCh));
-
-    memcpy(fBuffer, string, actualCount * sizeof(XMLCh));
-    fIndex = actualCount;
-
-    // Keep it null terminated
-    fBuffer[fIndex] = 0;
-}
-
 // ---------------------------------------------------------------------------
 //  DOMBuffer: Buffer management
 // ---------------------------------------------------------------------------
