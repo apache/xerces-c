@@ -612,9 +612,9 @@ public :
       * compareAndSwap subroutine performs an atomic operation which
       * compares the contents of a single word variable with a stored old
       * value. If the values are equal, a new value is stored in the single
-      * word variable and TRUE is returned; otherwise, the old value is set
-      * to the current value of the single word variable and FALSE is
-      * returned.
+      * word variable and the comparison value is returned; otherwise,
+      * no value is stored and the current contents of the stored location
+      * are returned.
       *
       * The compareAndSwap subroutine is useful when a word value must be
       * updated only if it has not been changed since it was last read.
@@ -629,7 +629,7 @@ public :
       * against (and conditionally updated with) the value of the single word
       * variable.
       *
-      * @return Returns the new value assigned to the single word variable
+      * @return Returns the initial contents of the single word variable.
       */
     static void* compareAndSwap
     (
