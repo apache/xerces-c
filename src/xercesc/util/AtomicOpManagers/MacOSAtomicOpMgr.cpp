@@ -23,7 +23,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.hpp>
 
-#include <CoreServices/CoreServices.h>
+#include <libkern/OSAtomic.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -46,11 +46,11 @@ MacOSAtomicOpMgr::compareAndSwap(void**            toFill
 {
     // Replace *toFill with newValue iff *toFill == toCompare,
     // returning previous value of *toFill
-
-    Boolean success = CompareAndSwap(
-        reinterpret_cast<UInt32>(toCompare),
-        reinterpret_cast<UInt32>(newValue),
-        reinterpret_cast<UInt32*>(toFill));
+    bool success = OSAtomicCompareAndSwapPtrBarrier(
+    	const_cast<void*>(toCompare),
+    	const_cast<void*>(newValue),
+    	toFill
+    	);
 
     return (success) ? const_cast<void*>(toCompare) : *toFill;
 }
@@ -59,22 +59,19 @@ MacOSAtomicOpMgr::compareAndSwap(void**            toFill
 //
 //	Atomic Increment and Decrement
 //
-//	Apple's routines return the value as it was before the
-//	operation, while these routines want to return it as it
-//	is after. So we perform the translation before returning
-//	the value.
+//	The return value is the value following the increment or decrement operation
 //
 int
 MacOSAtomicOpMgr::increment(int &location)
 {
-    return IncrementAtomic(reinterpret_cast<long*>(&location)) + 1;
+    return OSAtomicIncrement32Barrier(reinterpret_cast<int32_t*>(&location));
 }
 
 
 int
 MacOSAtomicOpMgr::decrement(int &location)
 {
-    return DecrementAtomic(reinterpret_cast<long*>(&location)) - 1;
+    return OSAtomicDecrement32Barrier(reinterpret_cast<int32_t*>(&location));
 }
 
 
