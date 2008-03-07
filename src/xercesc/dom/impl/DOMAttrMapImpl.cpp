@@ -68,7 +68,7 @@ void DOMAttrMapImpl::cloneContent(const DOMAttrMapImpl *srcmap)
         {
             unsigned int size = srcmap->fNodes->size();
             if(size > 0) {
-                DOMDocument *doc = fOwnerNode->getOwnerDocument();
+                DOMDocumentImpl *doc = (DOMDocumentImpl*)fOwnerNode->getOwnerDocument();
                 fNodes = new (doc) DOMNodeVector(doc, size);
             }
         }
@@ -185,7 +185,7 @@ DOMNode *DOMAttrMapImpl::setNamedItem(DOMNode *arg)
         i=-1-i; // Insert point (may be end of list)
         if(0==fNodes)
         {
-            fNodes=new (doc) DOMNodeVector(doc);
+            fNodes=new ((DOMDocumentImpl*)doc) DOMNodeVector(doc);
         }
         fNodes->insertElementAt(arg,i);
     }
@@ -261,7 +261,7 @@ DOMNode *DOMAttrMapImpl::setNamedItemNS(DOMNode* arg)
         if (i<0)
           i = -1 - i;
         if(0==fNodes)
-            fNodes=new (doc) DOMNodeVector(doc);
+            fNodes=new ((DOMDocumentImpl*)doc) DOMNodeVector(doc);
         fNodes->insertElementAt(arg,i);
     }
     if (previous != 0) {

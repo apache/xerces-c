@@ -541,7 +541,8 @@ DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
 
 bool DOMDocumentImpl::isXMLName(const XMLCh *s)
 {
-    if (XMLString::equals(fXmlVersion, XMLUni::fgVersion1_1))
+    // fXmlVersion points directly to the static constants
+    if (fXmlVersion==XMLUni::fgVersion1_1)
         return XMLChar1_1::isValidName(s);
     else
         return XMLChar1_0::isValidName(s);
@@ -966,12 +967,18 @@ const XMLCh* DOMDocumentImpl::getXmlVersion() const {
 }
 
 void DOMDocumentImpl::setXmlVersion(const XMLCh* version){
-    if ((version && *version) &&
-        !XMLString::equals(version, XMLUni::fgVersion1_0) &&
-        !XMLString::equals(version, XMLUni::fgVersion1_1))
-        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 
-    fXmlVersion = cloneString(version);
+    // store the static strings, so that comparisons will be faster
+    if(version==0)
+        fXmlVersion = 0;
+    else if(*version==0)
+        fXmlVersion = XMLUni::fgZeroLenString;
+    else if(XMLString::equals(version, XMLUni::fgVersion1_0))
+        fXmlVersion = XMLUni::fgVersion1_0;
+    else if(XMLString::equals(version, XMLUni::fgVersion1_1))
+        fXmlVersion = XMLUni::fgVersion1_1;
+    else 
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 }
 
 const XMLCh* DOMDocumentImpl::getDocumentURI() const

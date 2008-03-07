@@ -186,7 +186,7 @@ void DOMAttrImpl::setValue(const XMLCh *val)
     }
 
     if (val != 0)              // Create and add the new one
-        appendChild(doc->createTextNode(val));
+        fParent.appendChildFast(doc->createTextNode(val));
     fNode.isSpecified(true);
     fParent.changed();
 

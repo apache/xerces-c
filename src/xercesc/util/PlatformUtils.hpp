@@ -121,23 +121,13 @@ public :
       */
     static MemoryManager*       fgMemoryManager;
     
-    /** The array-allocating memory manager
-      *
-      *   This memory manager always allocates memory by calling the
-      *   global new[] operator. It may be used to allocate memory
-      *   where such memory needs to be deletable by calling delete [].
-      *   Since this allocator is always guaranteed to do the same thing
-      *   there is no reason, nor facility, to override it.
-      */
-    static MemoryManager*       fgArrayMemoryManager;
-	
-	static XMLFileMgr*			fgFileMgr;
-	static XMLMutexMgr*			fgMutexMgr;
-	static XMLAtomicOpMgr*		fgAtomicOpMgr;
+    static XMLFileMgr*          fgFileMgr;
+    static XMLMutexMgr*         fgMutexMgr;
+    static XMLAtomicOpMgr*      fgAtomicOpMgr;
     
-    static XMLMutex*			fgAtomicMutex;
+    static XMLMutex*            fgAtomicMutex;
     
-    static bool					fgXMLChBigEndian;
+    static bool                 fgXMLChBigEndian;
     
     //@}
 
@@ -219,9 +209,8 @@ public :
       *
       * @param manager The MemoryManager to use to allocate objects
       */
-	static XMLFileMgr*
-	makeFileMgr(MemoryManager* const manager);
-	
+    static XMLFileMgr* makeFileMgr(MemoryManager* const manager);
+    
     /** Get the current file position
       *
       * This must be implemented by the per-platform driver, which should
@@ -347,7 +336,7 @@ public :
     static XMLSize_t readFileBuffer
     (
                 FileHandle      theFile
-        , const XMLSize_t	    toRead
+        , const XMLSize_t       toRead
         ,       XMLByte* const  toFill
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
@@ -541,7 +530,7 @@ public :
       *
       * @param manager The MemoryManager to use to allocate objects
       */
-	static XMLMutexMgr* makeMutexMgr(MemoryManager* const manager);
+    static XMLMutexMgr* makeMutexMgr(MemoryManager* const manager);
 
     /** Closes a mutex handle
       *
@@ -614,7 +603,7 @@ public :
       *
       * @param manager The MemoryManager to use to allocate objects
       */
-	static XMLAtomicOpMgr* makeAtomicOpMgr(MemoryManager* const manager);
+    static XMLAtomicOpMgr* makeAtomicOpMgr(MemoryManager* const manager);
 
 
     /** Conditionally updates or returns a single word variable atomically
@@ -701,7 +690,7 @@ public :
 
     /** @name NEL Character Handling  */
     //@{
-	/**
+    /**
       * This function enables the recognition of NEL(0x85) char and LSEP (0x2028) as newline chars
       * which is disabled by default.
       * It is only called once per process. Once it is set, any subsequent calls
@@ -723,7 +712,7 @@ public :
 
     /** @name Strict IANA Encoding Checking */
     //@{
-	/**
+    /**
       * This function enables/disables strict IANA encoding names checking.
       *
       * The strict checking is disabled by default.
@@ -740,15 +729,15 @@ public :
       */
     static bool isStrictIANAEncoding();
     //@}
-		
+        
     /**
       * Aligns the specified pointer per platform block allocation
-	  * requirements.
-	  *
-	  *	The results of this function may be altered by defining
-	  * XML_PLATFORM_NEW_BLOCK_ALIGNMENT.
-	  */
-	static inline size_t alignPointerForNewBlockAllocation(size_t ptrSize);
+      * requirements.
+      *
+      * The results of this function may be altered by defining
+      * XML_PLATFORM_NEW_BLOCK_ALIGNMENT.
+      */
+    static inline size_t alignPointerForNewBlockAllocation(size_t ptrSize);
 
 private :
     // -----------------------------------------------------------------------
@@ -789,22 +778,6 @@ private :
       */
     static XMLTransService* makeTransService();
 
-    /** Does initialization for a particular platform
-      *
-      * Each per-platform driver must implement this to do any low level
-      * system initialization required. It <b>cannot</b> use any XML
-      * parser or utilities services!
-      */
-    static void platformInit();
-
-    /** Does termination for a particular platform
-      *
-      * Each per-platform driver must implement this to do any low level
-      * system resource cleanup required. It <b>cannot</b> use any XML
-      * parser or utilities services!
-      */
-    static void platformTerm();
-
     /** Search for sequence, slash dot dot slash
       *
       * @param srcPath the path to search
@@ -838,8 +811,8 @@ MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 //  XMLPlatformUtils: alignPointerForNewBlockAllocation
 // ---------------------------------------------------------------------------
 //  Calculate alignment required by platform for a new
-//	block allocation. We use this in our custom allocators
-//	to ensure that returned blocks are properly aligned.
+//  block allocation. We use this in our custom allocators
+//  to ensure that returned blocks are properly aligned.
 //  Note that, although this will take a pointer and return the position
 //  at which it should be placed for correct alignment, in our code
 //  we normally use size_t parameters to discover what the alignment
@@ -859,23 +832,23 @@ MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 inline size_t
 XMLPlatformUtils::alignPointerForNewBlockAllocation(size_t ptrSize)
 {
-	//	Macro XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be defined
-	//	as needed to dictate alignment requirements on a
-	//	per-architecture basis. In the absense of that we
-	//	take an educated guess.
-	#ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
-		size_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
-	#else
-		size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
-	#endif
-	
-	//	Calculate current alignment of pointer
-	size_t current = ptrSize % alignment;
-	
-	//	Adjust pointer alignment as needed
-	return (current == 0)
-		 ? ptrSize
-		 : (ptrSize + alignment - current);
+    //    Macro XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be defined
+    //    as needed to dictate alignment requirements on a
+    //    per-architecture basis. In the absense of that we
+    //    take an educated guess.
+#ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
+    static const size_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
+#else
+    static const size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
+#endif
+    
+    //    Calculate current alignment of pointer
+    size_t current = ptrSize % alignment;
+    
+    //    Adjust pointer alignment as needed
+    return (current == 0)
+         ? ptrSize
+         : (ptrSize + alignment - current);
 }
 
 
