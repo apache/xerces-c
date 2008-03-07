@@ -29,13 +29,8 @@
 #include <cstddef>
 #include <cstring>
 
-#if defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
-	// Only used under metrowerks.
-	#include <cwctype>
-#endif
-
 #if defined(__APPLE__)
-    //	Framework includes from ProjectBuilder
+    //	Framework includes
     #include <CoreServices/CoreServices.h>
 #else
     //	Classic includes otherwise
@@ -97,7 +92,7 @@ MacOSUnicodeConverter::MacOSUnicodeConverter()
   : fCollator(NULL)
 {
 	//	Test for presense of unicode collation functions
-	fHasUnicodeCollation = (UCCompareText != (void*)kUnresolvedCFragSymbolAddress);
+	fHasUnicodeCollation = (UCCompareText != NULL);
     
     //  Create a unicode collator for doing string comparisons
     if (fHasUnicodeCollation)
@@ -156,25 +151,6 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 									
         return ((status != noErr) || equivalent) ? 0 : order;
 	}
-#if defined(XML_METROWERKS)
-	else
-	{
-		const XMLCh* cptr1 = comp1;
-		const XMLCh* cptr2 = comp2;
-		
-		while ( (*cptr1 != 0) && (*cptr2 != 0) )
-		{
-			std::wint_t wch1 = std::towupper(*cptr1);
-			std::wint_t wch2 = std::towupper(*cptr2);
-			if (wch1 != wch2)
-				break;
-			
-			cptr1++;
-			cptr2++;
-		}
-		return (int) (std::towupper(*cptr1) - std::towupper(*cptr2));
-	}
-#else
 	else
 	{
 		//	For some reason there is no platform utils available
@@ -182,7 +158,6 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 		XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
 		return 0;
 	}
-#endif
 }
 
 
@@ -224,27 +199,6 @@ int MacOSUnicodeConverter::compareNIString( const XMLCh* const  comp1
                                 
         return ((status != noErr) || equivalent) ? 0 : order;
 	}
-#if defined(XML_METROWERKS)
-	else
-	{
-		unsigned int  n = 0;
-		const XMLCh* cptr1 = comp1;
-		const XMLCh* cptr2 = comp2;
-	
-		while ( (*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars) )
-		{
-			std::wint_t wch1 = std::towupper(*cptr1);
-			std::wint_t wch2 = std::towupper(*cptr2);
-			if (wch1 != wch2)
-				break;
-			
-			cptr1++;
-			cptr2++;
-			n++;
-		}
-		return (int)(std::towupper(*cptr1) - std::towupper(*cptr2));
-	}
-#else
 	else
 	{
 		//	For some reason there is no platform utils available
@@ -252,7 +206,6 @@ int MacOSUnicodeConverter::compareNIString( const XMLCh* const  comp1
 		XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
 		return 0;
 	}
-#endif
 }
 
 
@@ -353,7 +306,7 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
    CFStringUppercase(cfString, NULL);
    CFRelease(cfString);
 
-#elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
+#elif (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
 
 	// Use this if there's a reasonable c library available.
 	// Metrowerks does this reasonably
@@ -382,7 +335,7 @@ void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
    CFStringLowercase(cfString, NULL);
    CFRelease(cfString);
 
-#elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
+#elif (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
 
 	// Use this if there's a reasonable c library available.
 	// Metrowerks does this reasonably
@@ -402,6 +355,17 @@ MacOSUnicodeConverter::ConvertWideToNarrow(const XMLCh* wide, char* narrow, std:
 	while (maxChars-- > 0)
 		if ((*narrow++ = *wide++) == 0)
 			break;
+}
+
+
+void
+MacOSUnicodeConverter::CopyCStringToPascal(const char* c, Str255 pas)
+{
+	int len = strlen(c);
+	if (len > sizeof(pas)-1)
+		len = sizeof(pas)-1;
+	memmove(&pas[1], c, len);
+	pas[0] = len;
 }
 
 
@@ -495,8 +459,8 @@ MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
 bool
 MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported(void)
 {
-    return UpgradeScriptInfoToTextEncoding != (void*)kUnresolvedCFragSymbolAddress
-        && CreateTextToUnicodeInfoByEncoding != (void*)kUnresolvedCFragSymbolAddress
+    return UpgradeScriptInfoToTextEncoding != (void*)NULL
+        && CreateTextToUnicodeInfoByEncoding != (void*)NULL
         ;
 }
 
@@ -606,7 +570,7 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
     	if (status == kTECUnmappableElementErr && options == UnRep_Throw)
     	{
     		XMLCh tmpBuf[17];
-            XMLString::binToText((unsigned int)&srcData[charsConsumed], tmpBuf, 16, 16);
+            XMLString::binToText(srcData[charsConsumed], tmpBuf, 16, 16);
             ThrowXML2
             (
                 TranscodingException
@@ -798,7 +762,7 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 
 	ArrayJanitor<char> result(0);
 	const XMLCh* src		= srcText;
-	unsigned int srcCnt		= XMLString::stringLen(src);
+	XMLSize_t srcCnt		= XMLString::stringLen(src);
 	std::size_t resultCnt	= 0;
 
     //  Iterate over the characters, buffering into a local temporary
