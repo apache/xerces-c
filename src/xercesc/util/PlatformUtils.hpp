@@ -662,8 +662,10 @@ public :
       * zero case, the value returned may differ from the actual result of
       * the operation - only the sign and zero/nonzero state is guaranteed
       * to be correct.
-      */
+      
+      * disabled for now pending further comment (unused)
     static int atomicIncrement(int& location);
+      */
 
     /** Decrements a single word variable atomically.
       *
@@ -683,8 +685,10 @@ public :
       * zero case, the value returned may differ from the actual result of the
       * operation - only the sign and zero/nonzero state is guaranteed to be
       * correct.
-      */
+      
+      * disabled for now pending further comment (unused)
     static int atomicDecrement(int& location);
+      */
 
     //@}
 

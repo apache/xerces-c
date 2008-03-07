@@ -807,6 +807,7 @@ void* XMLPlatformUtils::compareAndSwap(void**            toFill
 }
 
 
+/* These two routines are disabled pending further comment. They are unused in Xerces at present.
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
     if (!fgAtomicOpMgr)
@@ -823,7 +824,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 	return fgAtomicOpMgr->decrement(location);
 }
-
+*/
 
 
 
