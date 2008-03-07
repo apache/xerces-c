@@ -173,8 +173,6 @@ XMLTransService*        XMLPlatformUtils::fgTransService2 = 0;
 PanicHandler*           XMLPlatformUtils::fgUserPanicHandler = 0;
 PanicHandler*           XMLPlatformUtils::fgDefaultPanicHandler = 0;
 MemoryManager*          XMLPlatformUtils::fgMemoryManager = 0;
-MemoryManagerArrayImpl  gArrayMemoryManager;
-MemoryManager*          XMLPlatformUtils::fgArrayMemoryManager = &gArrayMemoryManager;
 bool                    XMLPlatformUtils::fgMemMgrAdopted = true;
 
 XMLFileMgr*             XMLPlatformUtils::fgFileMgr = 0;
