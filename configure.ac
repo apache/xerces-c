@@ -24,7 +24,7 @@
 #
 
 AC_PREREQ(2.60)
-AC_INIT([xercesc],[3.0])
+AC_INIT([xerces-c],[3.0.0])
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_LIBOBJ_DIR([src])
 AC_CONFIG_AUX_DIR([config])

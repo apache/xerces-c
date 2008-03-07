@@ -53,7 +53,7 @@ PKGDATAOPTS=-d . -M '"CC=$(CC)" "CXX=$(CXX)" "AR=$(AR)" "RANLIB=$(RANLIB)" \
 "CPPFLAGS=$(CPPFLAGS)" "CXXFLAGS=$(CXXFLAGS)" "LDFLAGS=$(LDFLAGS)"'
 
 # Resource shortname
-PKGNAME=xercesc_messages_$(VER_UNDERSCORED)
+PKGNAME=xercesc_messages_$(INTERFACE_VER_U)
 
 # Resource files.  Add new ones for additional locales here.
 # keep in sync with the file RESLIST
@@ -97,7 +97,7 @@ endif
 # files. pkgdata does not remove the .dat and README file for some
 # reason.
 #
-distclean clean:
+clean:
 	rm -f xercesc_messages.lo
 ifeq ($(BUILD_SHARED),yes)
 	$(PKGDATA) --name $(PKGNAME) --mode dll --clean $(PKGDATAOPTS) $(RESLIST)
@@ -109,6 +109,20 @@ ifeq ($(BUILD_STATIC),yes)
 endif
 	rm -f $(RESFILES)
 	rm -f $(PKGNAME).dat
+
+# Distclean is invoked even if we are not building with ICU.
+# As a result, we cannot use pkgdata to clean up.
+#
+distclean:
+	rm -f xercesc_messages.lo
+	rm -f lib$(PKGNAME).so
+	rm -f lib$(PKGNAME).a
+	rm -f $(PKGNAME)_dat*.o
+	rm -f $(PKGNAME)*.lst
+	rm -f $(PKGNAME)*.mak
+	rm -f $(RESFILES)
+	rm -f $(PKGNAME).dat
+	rm -f README_$(PKGNAME).txt
 
 #
 #

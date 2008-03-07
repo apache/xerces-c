@@ -21,7 +21,7 @@ include ..\..\..\..\..\..\version.incl
 
 RESFILES= root.res
 
-PKGNAME       = xercesc_messages_$(VER_UNDERSCORED)
+PKGNAME       = xercesc_messages_$(INTERFACE_VER_U)
 TARGET_DLL    = $(PKGNAME).DLL
 TARGET_LIB    = $(PKGNAME).lib
 

@@ -34,7 +34,7 @@ lib_LTLIBRARIES = libxerces-c.la
 AM_CPPFLAGS =
 AM_CXXFLAGS = $(ICU_CXXFLAGS)
 
-libxerces_c_la_LDFLAGS = -release ${PACKAGE_VERSION}
+libxerces_c_la_LDFLAGS = -release ${INTERFACE_VER_D}
 
  # This sets {install}/include as target for the headers
  libxerces_c_ladir = ${includedir}

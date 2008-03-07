@@ -38,7 +38,7 @@ $(RESTARGET): $(RESFILES)
 	
 # clean out files
 distclean clean: $(CLEAN_SUBDIR)
-	-rm $(RESTARGET)
+	-rm -f $(RESTARGET)
 
 ## resources
 $(PKGNAME)_%.cat: $(srcdir)/$(PKGNAME)_%.Msg
@@ -52,7 +52,7 @@ install: $(RESTARGET)
 	$(INSTALL_PROGRAM) $(RESTARGET) $(prefix)/msg
 
 uninstall: 
-	-rm $(prefix)/msg/$(RESFILES)
+	-rm -f $(prefix)/msg/$(RESFILES)
 
 
 # Needed to support "make dist"
