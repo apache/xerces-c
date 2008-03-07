@@ -1,15 +1,16 @@
-%define tarversion 3_0_0
-
 Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
 Version:	3.0.0
 Release:	1
-URL:		http://xml.apache.org/xerces-c/
-Source0:    %{name}-src_%{tarversion}.tar.gz
-Copyright:	Apache
+URL:		http://xerces.apache.org/xerces-c/
+Source0:	%{name}-%{version}.tar.gz
+License:        Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root
 Prefix:		/usr
+%{!?_without_curl:BuildRequires: curl-devel}
+%{?_with_icu:BuildRequires: libicu-devel}
+
 
 %description
 Xerces-C++ is a validating XML parser written in a portable subset of C++.
@@ -23,7 +24,7 @@ portability, care has been taken to make minimal use of templates, no RTTI,
 and minimal use of #ifdefs.
 
 %package devel
-Requires:	xerces-c = %{version}
+Requires:	%{name} = %{version}
 Group:		Development/Libraries
 Summary:	Header files for Xerces-C++ validating XML parser
 
@@ -35,64 +36,44 @@ Xerces-C++ makes it easy to give your application the ability to read and
 write XML data. A shared library is provided for parsing, generating,
 manipulating, and validating XML documents.
 
-%package doc
-Group:		Documentation
-Summary:	Documentation for Xerces-C++ validating XML parser
-
-%description doc
-Documentation for Xerces-C++.
-
-Xerces-C++ is a validating XML parser written in a portable subset of C++.
-Xerces-C++ makes it easy to give your application the ability to read and
-write XML data. A shared library is provided for parsing, generating,
-manipulating, and validating XML documents.
-
 %prep
-%setup -q -n %{name}-src_%{tarversion}
+%setup -q
 
 %build
-export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
-cd $XERCESCROOT
-CXXFLAGS=-O2 ./configure --prefix=%{prefix}
-make
+%configure %{!?_without_curl:--enable-netaccessor-curl} %{?_with_icu:--enable-transcoder-icu --enable-msgloader-icu} %{?xerces_options}
+%{__make}
 
 %install
-export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src_%{tarversion}
-cd $XERCESCROOT
-make prefix=$RPM_BUILD_ROOT%{prefix} libdir=$RPM_BUILD_ROOT%{prefix}/%{_lib} install
-ln -sf %{prefix}/%{_lib}/libxerces-c-3.0.so $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.so
-rm -f $RPM_BUILD_ROOT%{prefix}/%{_lib}/libxerces-c.la
-mkdir -p $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
-cp -a $XERCESCROOT/samples/src $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
-cp -a $XERCESCROOT/samples/data $RPM_BUILD_ROOT%{prefix}/share/%{name}/samples
-rm -rf `find $RPM_BUILD_ROOT%{prefix}/share/%{name} -name ".*"`
-rm -f `find $RPM_BUILD_ROOT%{prefix}/share/%{name} -name "*.o"`
+[ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+[ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
 
+%ifnos solaris2.8 solaris2.9 solaris2.10
 %post -p /sbin/ldconfig
+%endif
 
+%ifnos solaris2.8 solaris2.9 solaris2.10
 %postun -p /sbin/ldconfig
+%endif
 
 %files
 %defattr(755,root,root)
-%{prefix}/bin/*
-%{prefix}/%{_lib}/libxerces-c*.so
-%{prefix}/%{_lib}/libxerces-c*.a
+%{_bindir}/*
+%{_libdir}/lib%{name}-*.so
+%exclude %{_libdir}/lib%{name}.la
+
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/include/xercesc
-%{prefix}/share/%{name}/samples
-
-%files doc
-%defattr(-,root,root)
-%doc LICENSE NOTICE STATUS credits.txt Readme.html doc/
+%{_includedir}
+%{_libdir}/lib%{name}.so
+%{_libdir}/lib%{name}.a
 
 %changelog
-* Wed Apr 12 2006 Alberto Massari <amassari@apache.org>
-- updated for new Xerces-C 3.0 filename and directory format
+* Fri Mar  7 2008 Boris Kolpackov <boris@codesynthesis.com>
+- Integrated updates for 3.0.0 from Scott Cantor.
 
 * Fri Jun  6 2003 Tuan Hoang <tqhoang@bigfoot.com>
 - updated for new Xerces-C filename and directory format
