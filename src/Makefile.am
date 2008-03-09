@@ -146,29 +146,6 @@ SUBDIRS += xercesc/util/MsgLoaders/MsgCatalog
 endif
 
 
-# AtomicOp Managers, conditionally built based on settings from configure
-#
-if XERCES_USE_ATOMICOPMGR_NOTHREAD
-libxerces_c_la_SOURCES += ${nothreadaomgr_sources}
-nobase_libxerces_c_la_HEADERS += ${nothreadaomgr_headers}
-endif
-
-if XERCES_USE_ATOMICOPMGR_POSIX
-libxerces_c_la_SOURCES += ${posixaomgr_sources}
-nobase_libxerces_c_la_HEADERS += ${posixaomgr_headers}
-endif
-
-if XERCES_USE_ATOMICOPMGR_MACOS
-libxerces_c_la_SOURCES += ${macosaomgr_sources}
-nobase_libxerces_c_la_HEADERS += ${macosaomgr_headers}
-endif
-
-if XERCES_USE_ATOMICOPMGR_WINDOWS
-libxerces_c_la_SOURCES += ${winaomgr_sources}
-nobase_libxerces_c_la_HEADERS += ${winaomgr_headers}
-endif
-
-
 # Mutex Managers, conditionally built based on settings from configure
 #
 if XERCES_USE_MUTEXMGR_NOTHREAD
@@ -707,7 +684,6 @@ util_headers = \
 	xercesc/util/XML88591Transcoder.hpp \
 	xercesc/util/XMLAbstractDoubleFloat.hpp \
 	xercesc/util/XMLASCIITranscoder.hpp \
-	xercesc/util/XMLAtomicOpMgr.hpp \
 	xercesc/util/XMLBigDecimal.hpp \
 	xercesc/util/XMLBigInteger.hpp \
 	xercesc/util/XMLChar.hpp \
@@ -1146,44 +1122,6 @@ winmmgr_headers = \
 
 winmmgr_sources = \
 	xercesc/util/MutexManagers/WindowsMutexMgr.cpp
-
-
-nothreadaomgr_headers = \
-	xercesc/util/AtomicOpManagers/NoThreadAtomicOpMgr.hpp
-
-nothreadaomgr_sources = \
-	xercesc/util/AtomicOpManagers/NoThreadAtomicOpMgr.cpp
-
-posixaomgr_headers = \
-	xercesc/util/AtomicOpManagers/PosixAtomicOpMgr.hpp
-
-posixaomgr_sources = \
-	xercesc/util/AtomicOpManagers/PosixAtomicOpMgr.cpp
-
-macosaomgr_headers = \
-	xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.hpp
-
-macosaomgr_sources = \
-	xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.cpp
-
-winaomgr_headers = \
-	xercesc/util/AtomicOpManagers/WindowsAtomicOpMgr.hpp
-
-winaomgr_sources = \
-	xercesc/util/AtomicOpManagers/WindowsAtomicOpMgr.cpp
-
-
-macplatform_headers = \
-	xercesc/util/Platforms/MacOS/MacAbstractFile.hpp \
-	xercesc/util/Platforms/MacOS/MacCarbonFile.hpp \
-	xercesc/util/Platforms/MacOS/MacOSDefs.hpp \
-	xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp \
-	xercesc/util/Platforms/MacOS/MacPosixFile.hpp
-
-macplatform_sources = \
-	xercesc/util/Platforms/MacOS/MacCarbonFile.cpp \
-	xercesc/util/Platforms/MacOS/MacOSPlatformUtils.cpp \
-	xercesc/util/Platforms/MacOS/MacPosixFile.cpp
 
 
 # Override generated rules to provide prettier make rules

@@ -246,7 +246,6 @@ CLEAN :
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
-	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
@@ -361,7 +360,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -403,7 +402,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUniCharacter.obj" \
 	"$(INTDIR)\WindowsFileMgr.obj" \
 	"$(INTDIR)\WindowsMutexMgr.obj" \
-	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -898,7 +896,6 @@ CLEAN :
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
-	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
@@ -1013,7 +1010,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -1055,7 +1052,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUniCharacter.obj" \
 	"$(INTDIR)\WindowsFileMgr.obj" \
 	"$(INTDIR)\WindowsMutexMgr.obj" \
-	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -1550,7 +1546,6 @@ CLEAN :
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
-	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
@@ -1666,7 +1661,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -1708,7 +1703,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUniCharacter.obj" \
 	"$(INTDIR)\WindowsFileMgr.obj" \
 	"$(INTDIR)\WindowsMutexMgr.obj" \
-	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -2202,7 +2196,6 @@ CLEAN :
 	-@erase "$(INTDIR)\WFXMLScanner.obj"
 	-@erase "$(INTDIR)\Win32MsgLoader.obj"
 	-@erase "$(INTDIR)\Win32TransService.obj"
-	-@erase "$(INTDIR)\WindowsAtomicOpMgr.obj"
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
@@ -2318,7 +2311,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_ATOMICOPMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "XERCES_USE_FILEMGR_WINDOWS" /D "XERCES_USE_MUTEXMGR_WINDOWS" /D "XERCES_USE_NETACCESSOR_WINSOCK" /D "XERCES_USE_WIN32_MSGLOADER" /D "XERCES_USE_TRANSCODER_WINDOWS" /D "XERCES_PATH_DELIMITER_BACKSLASH" /D "XERCES_BUILDING_LIBRARY" /D "WIN32" /D "_WINDOWS" /D "HAVE_FTIME" /D "HAVE_LIMITS_H" /D "HAVE_SYS_TIMEB_H" /D "HAVE_STRICMP" /D "HAVE_STRNICMP" /D "HAVE_WCSUPR" /D "HAVE_WCSLWR" /D "HAVE_WCSNICMP" /D "HAVE_WCSICMP" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -2360,7 +2353,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUniCharacter.obj" \
 	"$(INTDIR)\WindowsFileMgr.obj" \
 	"$(INTDIR)\WindowsMutexMgr.obj" \
-	"$(INTDIR)\WindowsAtomicOpMgr.obj" \
 	"$(INTDIR)\Base64.obj" \
 	"$(INTDIR)\BinFileInputStream.obj" \
 	"$(INTDIR)\BinInputStream.obj" \
@@ -2903,12 +2895,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\FileManagers\WindowsFileMgr.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\MutexManagers\WindowsMutexMgr.cpp
 
 "$(INTDIR)\WindowsMutexMgr.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\..\..\src\xercesc\util\AtomicOpManagers\WindowsAtomicOpMgr.cpp
-
-"$(INTDIR)\WindowsAtomicOpMgr.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

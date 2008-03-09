@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,8 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLChar.hpp>
+#include <xercesc/util/Mutexes.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 
 #include "DOMNamedNodeMapImpl.hpp"
@@ -53,18 +55,14 @@ static DOMDocument& gDocTypeDocument()
 {
     if (!sDocument)
     {
-        static const XMLCh gCoreStr[] = { chLatin_C, chLatin_o, chLatin_r, chLatin_e, chNull };
-        DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(gCoreStr);
-        DOMDocument* tmpDoc = impl->createDocument();                   // document type object (DTD).
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 
-        if (XMLPlatformUtils::compareAndSwap((void**)&sDocument, tmpDoc, 0))
+        if (!sDocument)
         {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpDoc;
-        }
-        else
-        {
-            documentCleanup.registerCleanup(reinitDocument);
+          static const XMLCh gCoreStr[] = { chLatin_C, chLatin_o, chLatin_r, chLatin_e, chNull };
+          DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(gCoreStr);
+          sDocument = impl->createDocument(); // document type object (DTD).
+          documentCleanup.registerCleanup(reinitDocument);
         }
     }
 
@@ -117,8 +115,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     fElements(0),
     fPublicId(0),
     fSystemId(0),
-    fInternalSubset(0),    
-    fIntSubsetReading(false),        
+    fInternalSubset(0),
+    fIntSubsetReading(false),
     fIsCreatedFromHeap(heap)
 {
     int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
@@ -188,7 +186,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
     fPublicId(0),
     fSystemId(0),
     fInternalSubset(0),
-    fIntSubsetReading(other.fIntSubsetReading),       
+    fIntSubsetReading(other.fIntSubsetReading),
     fIsCreatedFromHeap(heap)
 {
     fName = other.fName;
@@ -242,7 +240,7 @@ void DOMDocumentTypeImpl::setOwnerDocument(DOMDocument *doc) {
             fSystemId = docImpl->cloneString(fSystemId);
             fInternalSubset = docImpl->cloneString(fInternalSubset);
             fName = docImpl->getPooledString(fName);
-            
+
             fNode.setOwnerDocument(doc);
             fParent.setOwnerDocument(doc);
 

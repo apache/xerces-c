@@ -62,8 +62,9 @@ void* XMemory::operator new(size_t size, MemoryManager* manager)
 {
     assert(manager != 0);
 	
-	size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
-										sizeof(MemoryManager*));
+    size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
+       sizeof(MemoryManager*));
+       
     void* const block = manager->allocate(headerSize + size);
     *(MemoryManager**)block = manager;
 
@@ -79,8 +80,8 @@ void XMemory::operator delete(void* p)
 {
     if (p != 0)
     {
-		size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
-											sizeof(MemoryManager*));
+        size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
+          sizeof(MemoryManager*));
         void* const block = (char*)p - headerSize;
 
         MemoryManager* const manager = *(MemoryManager**)block;

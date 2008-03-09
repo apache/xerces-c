@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,6 +34,7 @@
 #include <xercesc/util/XMLWin1252Transcoder.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/EncodingValidator.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -73,29 +74,27 @@ void XMLTransService::reinitMappingsRecognizer() {
 // ---------------------------------------------------------------------------
 XMLTransService::XMLTransService()
 {
-    if (!gMappings) {
-        RefHashTableOf<ENameMap>* t = new RefHashTableOf<ENameMap>(103);
+    if (!gMappings)
+    {
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 
-        if (XMLPlatformUtils::compareAndSwap((void **)&gMappings, t, 0) != 0)
+        if (!gMappings)
         {
-            delete t;
-        }
-        else
-        {
-            mappingsCleanup.registerCleanup(reinitMappings);
+          gMappings = new RefHashTableOf<ENameMap>(103);
+          mappingsCleanup.registerCleanup(reinitMappings);
         }
     }
 
-    if (!gMappingsRecognizer) {
-        RefVectorOf<ENameMap>* t = new RefVectorOf<ENameMap>(XMLRecognizer::Encodings_Count);
+    if (!gMappingsRecognizer)
+    {
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
 
-        if (XMLPlatformUtils::compareAndSwap((void **)&gMappingsRecognizer, t, 0) != 0)
+        if (!gMappingsRecognizer)
         {
-            delete t;
-        }
-        else
-        {
-            mappingsRecognizerCleanup.registerCleanup(reinitMappingsRecognizer);
+          gMappingsRecognizer = new RefVectorOf<ENameMap>(
+            XMLRecognizer::Encodings_Count);
+
+          mappingsRecognizerCleanup.registerCleanup(reinitMappingsRecognizer);
         }
     }
 }
@@ -165,7 +164,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 
     // If we found it, then call the factory method for it
     if (ourMapping)
-	{		
+	{
        XMLTranscoder* temp = ourMapping->makeNew(blockSize, manager);
        resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
        return temp;
@@ -204,7 +203,7 @@ XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encoding
     ENameMap* ourMapping = gMappingsRecognizer->elementAt(encodingEnum);
 
     // If we found it, then call the factory method for it
-    if (ourMapping)	{		
+    if (ourMapping)	{
        XMLTranscoder* temp = ourMapping->makeNew(blockSize, manager);
        resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
        return temp;
@@ -533,7 +532,7 @@ XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
                             , const XMLSize_t       blockSize
                             , MemoryManager* const  manager) :
       fBlockSize(blockSize)
-    , fEncodingName(0)    
+    , fEncodingName(0)
     , fMemoryManager(manager)
 {
     fEncodingName = XMLString::replicate(encodingName, fMemoryManager);

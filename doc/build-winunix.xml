@@ -267,7 +267,6 @@ checking whether we can support the iconv MsgLoader... yes
 checking for which MsgLoader to use (choices: -inmemory- -icu- -iconv-)... icu
 checking for which File Manager to use... POSIX
 checking for which Mutex Manager to use... POSIX
-checking for which AtomicOp Manager to use... POSIX
 checking whether we are using SunPro 5.8 compiler... no
 configure: creating ./config.status
 config.status: creating Makefile

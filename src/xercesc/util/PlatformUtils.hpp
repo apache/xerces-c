@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,6 @@
 
 #include <xercesc/util/XMLFileMgr.hpp>
 #include <xercesc/util/XMLMutexMgr.hpp>
-#include <xercesc/util/XMLAtomicOpMgr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -104,14 +103,14 @@ public :
 
     /** The Panic Handler
       *
-      *   This is the application provided panic handler. 
+      *   This is the application provided panic handler.
       */
     static PanicHandler*        fgUserPanicHandler;
-    
+
     /** The Panic Handler
       *
-      *   This is the default panic handler. 
-      */    
+      *   This is the default panic handler.
+      */
     static PanicHandler*        fgDefaultPanicHandler;
 
     /** The configurable memory manager
@@ -120,15 +119,20 @@ public :
       *   application, a default implementation is used.
       */
     static MemoryManager*       fgMemoryManager;
-    
+
     static XMLFileMgr*          fgFileMgr;
     static XMLMutexMgr*         fgMutexMgr;
-    static XMLAtomicOpMgr*      fgAtomicOpMgr;
-    
+
+    /** Global mutex for fast or infrequent operations.
+      *
+      *   Use this mutex only for fast (e.g., increment an integer,
+      *   check flag, etc.) or infrequent (e.g., once-off initialization)
+      *   operations.
+      */
     static XMLMutex*            fgAtomicMutex;
-    
+
     static bool                 fgXMLChBigEndian;
-    
+
     //@}
 
 
@@ -157,8 +161,8 @@ public :
       *          as well.
       *
       * panicHandler: application's panic handler, application owns this handler.
-      *               Application shall make sure that the plugged panic handler persists 
-      *               through the call to XMLPlatformUtils::terminate().       
+      *               Application shall make sure that the plugged panic handler persists
+      *               through the call to XMLPlatformUtils::terminate().
       *
       * memoryManager: plugged-in memory manager which is owned by user
       *                applications. Applications must make sure that the
@@ -192,14 +196,14 @@ public :
       * In case the default panic handler does not support a particular
       * platform, the platform specific panic hanlding shall be implemented
       * here </p>.
-      * 
+      *
       * @param reason The enumeration that defines the cause of the failure
       */
     static void panic
     (
         const   PanicHandler::PanicReasons    reason
     );
-    
+
     //@}
 
     /** @name File Methods */
@@ -210,7 +214,7 @@ public :
       * @param manager The MemoryManager to use to allocate objects
       */
     static XMLFileMgr* makeFileMgr(MemoryManager* const manager);
-    
+
     /** Get the current file position
       *
       * This must be implemented by the per-platform driver, which should
@@ -407,12 +411,12 @@ public :
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    /** Gets the current working directory 
+    /** Gets the current working directory
       *
-      * This must be implemented by the per-platform driver. It returns 
-      * the current working directory is. 
+      * This must be implemented by the per-platform driver. It returns
+      * the current working directory is.
       * @param manager The MemoryManager to use to allocate objects
-      * @return Returns the current working directory. 
+      * @return Returns the current working directory.
       *         This is dyanmically allocated and must be deleted
       *         by the caller when its no longer needed! The memory returned
       *         will be allocated using the static memory manager, if users
@@ -427,7 +431,7 @@ public :
 
     /** Check if a charater is a slash
       *
-      * This must be implemented by the per-platform driver. 
+      * This must be implemented by the per-platform driver.
       *
       * @param c the character to be examined
       *
@@ -435,20 +439,20 @@ public :
       *         false otherwise
       */
     static inline bool isAnySlash(XMLCh c);
-    
-    /** Remove occurences of the pair of dot slash 
+
+    /** Remove occurences of the pair of dot slash
       *
       * To remove the sequence, dot slash if it is part of the sequence,
       * slash dot slash.
       *
       * @param srcPath The path for which you want to remove the dot slash sequence.
       * @param manager The MemoryManager to use to allocate objects
-      * @return 
+      * @return
       */
     static void   removeDotSlash(XMLCh* const srcPath
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    /** Remove occurences of the dot dot slash 
+    /** Remove occurences of the dot dot slash
       *
       * To remove the sequence, slash dot dot slash and its preceding path segment
       * if and only if the preceding path segment is not slash dot dot slash.
@@ -456,7 +460,7 @@ public :
       * @param srcPath The path for which you want to remove the slash dot
       *        dot slash sequence and its preceding path segment.
       * @param manager The MemoryManager to use to allocate objects
-      * @return 
+      * @return
       */
     static void   removeDotDotSlash(XMLCh* const srcPath
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -593,104 +597,6 @@ public :
 
     //@}
 
-    /** @name Miscellaneous synchronization methods */
-    //@{
-
-    /** Factory method for creating MutexMgr object.
-      *
-      * This factory method creates an XMLAtomicOpMgr that will be used
-      * on the particular platform.
-      *
-      * @param manager The MemoryManager to use to allocate objects
-      */
-    static XMLAtomicOpMgr* makeAtomicOpMgr(MemoryManager* const manager);
-
-
-    /** Conditionally updates or returns a single word variable atomically
-      *
-      * This must be implemented by the per-platform driver. The
-      * compareAndSwap subroutine performs an atomic operation which
-      * compares the contents of a single word variable with a stored old
-      * value. If the values are equal, a new value is stored in the single
-      * word variable and the comparison value is returned; otherwise,
-      * no value is stored and the current contents of the stored location
-      * are returned.
-      *
-      * The compareAndSwap subroutine is useful when a word value must be
-      * updated only if it has not been changed since it was last read.
-      *
-      * Note: The word containing the single word variable must be aligned
-      * on a full word boundary.
-      *
-      * @param toFill Specifies the address of the single word variable
-      * @param newValue Specifies the new value to be conditionally assigned
-      * to the single word variable.
-      * @param toCompare Specifies the address of the old value to be checked
-      * against (and conditionally updated with) the value of the single word
-      * variable.
-      *
-      * @return Returns the initial contents of the single word variable.
-      */
-    static void* compareAndSwap
-    (
-                void**      toFill
-        , const void* const newValue
-        , const void* const toCompare
-    );
-
-    //@}
-
-
-    /** @name Atomic Increment and Decrement */
-    //@{
-
-    /** Increments a single word variable atomically.
-      *
-      * This must be implemented by the per-platform driver. The
-      * atomicIncrement subroutine increments one word in a single atomic
-      * operation. This operation is useful when a counter variable is shared
-      * between several threads or processes. When updating such a counter
-      * variable, it is important to make sure that the fetch, update, and
-      * store operations occur atomically (are not interruptible).
-      *
-      * @param location Specifies the address of the word variable to be
-      * incremented.
-      *
-      * @return The function return value is positive if the result of the
-      * operation was positive. Zero if the result of the operation was zero.
-      * Negative if the result of the operation was negative. Except for the
-      * zero case, the value returned may differ from the actual result of
-      * the operation - only the sign and zero/nonzero state is guaranteed
-      * to be correct.
-      
-      * disabled for now pending further comment (unused)
-    static int atomicIncrement(int& location);
-      */
-
-    /** Decrements a single word variable atomically.
-      *
-      * This must be implemented by the per-platform driver. The
-      * atomicDecrement subroutine increments one word in a single atomic
-      * operation. This operation is useful when a counter variable is shared
-      * between several threads or processes. When updating such a counter
-      * variable, it is important to make sure that the fetch, update, and
-      * store operations occur atomically (are not interruptible).
-      *
-      * @param location Specifies the address of the word variable to be
-      * decremented.
-      *
-      * @return The function return value is positive if the result of the
-      * operation was positive. Zero if the result of the operation was zero.
-      * Negative if the result of the operation was negative. Except for the
-      * zero case, the value returned may differ from the actual result of the
-      * operation - only the sign and zero/nonzero state is guaranteed to be
-      * correct.
-      
-      * disabled for now pending further comment (unused)
-    static int atomicDecrement(int& location);
-      */
-
-    //@}
 
     /** @name NEL Character Handling  */
     //@{
@@ -733,7 +639,7 @@ public :
       */
     static bool isStrictIANAEncoding();
     //@}
-        
+
     /**
       * Aligns the specified pointer per platform block allocation
       * requirements.
@@ -845,10 +751,10 @@ XMLPlatformUtils::alignPointerForNewBlockAllocation(size_t ptrSize)
 #else
     static const size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
 #endif
-    
+
     //    Calculate current alignment of pointer
     size_t current = ptrSize % alignment;
-    
+
     //    Adjust pointer alignment as needed
     return (current == 0)
          ? ptrSize

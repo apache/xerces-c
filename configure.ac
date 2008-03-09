@@ -186,7 +186,6 @@ XERCES_TRANSCODER_SELECTION
 XERCES_MSGLOADER_SELECTION
 XERCES_FILEMGR_SELECTION
 XERCES_MUTEXMGR_SELECTION
-XERCES_ATOMICOPMGR_SELECTION
 
 
 ######################################################
@@ -261,11 +260,8 @@ AC_OUTPUT
 
 AC_MSG_NOTICE
 AC_MSG_NOTICE([Report:])
-AC_MSG_NOTICE([  NetAccessor: $netaccessor])
 AC_MSG_NOTICE([  File Manager: $filemgr])
-AC_MSG_NOTICE([  Atomic Op Manager: $aopmgr])
 AC_MSG_NOTICE([  Mutex Manager: $mutexmgr])
-AC_MSG_NOTICE([  Message Loader: $msgloader])
 AC_MSG_NOTICE([  Transcoder: $transcoder])
-
-
+AC_MSG_NOTICE([  NetAccessor: $netaccessor])
+AC_MSG_NOTICE([  Message Loader: $msgloader])

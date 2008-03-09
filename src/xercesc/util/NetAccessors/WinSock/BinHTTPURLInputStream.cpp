@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Base64.hpp>
+#include <xercesc/util/Mutexes.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -167,14 +168,13 @@ private :
     //  Private data members
     //
     //  fData
-    //      This is the pointer to the socket that must be closed when 
+    //      This is the pointer to the socket that must be closed when
     //      this object is destroyed.
     // -----------------------------------------------------------------------
     SOCKET*  fData;
 };
 
 bool BinHTTPURLInputStream::fInitialized = false;
-XMLMutex* BinHTTPURLInputStream::fInitMutex = 0;
 
 void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
     //
@@ -212,7 +212,7 @@ void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
 			gWSinet_addr = (LPFN_INET_ADDR) GetProcAddress(gWinsockLib,"inet_addr");
 #endif
 
-			if(startup == NULL 
+			if(startup == NULL
 				|| gWSACleanup == NULL
 				|| gWShtons == NULL
 				|| gWSsocket == NULL
@@ -271,8 +271,6 @@ void BinHTTPURLInputStream::Cleanup() {
 #endif
 
         fInitialized = false;
-        delete fInitMutex;
-        fInitMutex = 0;
 	}
 }
 
@@ -283,20 +281,11 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
 {
     if(!fInitialized)
     {
-        if (!fInitMutex)
+        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+        if (!fInitialized)
         {
-            XMLMutex* tmpMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
-            if (XMLPlatformUtils::compareAndSwap((void**)&fInitMutex, tmpMutex, 0))
-            {
-                // Someone beat us to it, so let's clean up ours
-                delete tmpMutex;
-            }
-         }
-         XMLMutexLock lock(fInitMutex);
-         if (!fInitialized)
-         {
-             Initialize(urlSource.getMemoryManager());
-         }
+            Initialize(urlSource.getMemoryManager());
+        }
     }
 
     fMemoryManager = urlSource.getMemoryManager();
@@ -322,7 +311,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     char*               queryAsCharStar = 0;
     if (query)
         queryAsCharStar = XMLString::transcode(query, fMemoryManager);
-    ArrayJanitor<char>  janQuery(queryAsCharStar, fMemoryManager);		
+    ArrayJanitor<char>  janQuery(queryAsCharStar, fMemoryManager);
 
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
 
@@ -336,7 +325,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     SOCKET s;
     SocketJanitor janSock(0);
     bool lookUpHost = true;
- 
+
     do {
 
 #ifdef WITH_IPV6
@@ -383,9 +372,9 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
 		struct hostent*     hostEntPtr = 0;
 		struct sockaddr_in  sa;
 
-        if (lookUpHost && 
+        if (lookUpHost &&
             ((hostEntPtr = wrap_gethostbyname(hostNameAsCharStar)) == NULL))
-        {             
+        {
             unsigned long  numAddress = wrap_inet_addr(hostNameAsCharStar);
             if (numAddress == INADDR_NONE)
             {
@@ -475,7 +464,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             XMLString::binToText(portNumber, fBuffer+i, 10, 10);
         }
         strcat(fBuffer, "\r\n");
-       
+
         if (username && password)
         {
             XMLBuffer userPass(256, fMemoryManager);
@@ -519,7 +508,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                  XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
         }
 
-        if(httpInfo!=0 && httpInfo->fPayload!=0) {            
+        if(httpInfo!=0 && httpInfo->fPayload!=0) {
             if ((aLent = wrap_send(s, httpInfo->fPayload, httpInfo->fPayloadLen, 0)) != httpInfo->fPayloadLen)
             {
                 // Call WSAGetLastError() to get the error number.
@@ -527,7 +516,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                      XMLExcepts::NetAcc_WriteSocket, urlSource.getURLText(), fMemoryManager);
             }
         }
-       
+
         // get the response, check the http header for errors from the server.
         //
         memset(fBuffer, 0, sizeof(fBuffer));
@@ -554,7 +543,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                 fHeaderRead = true;
             }
             else
-            {               
+            {
                 fBufferPos = strstr(fBuffer, "\n\n");
                 if (fBufferPos != 0)
                 {
@@ -600,21 +589,21 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                 sawRedirect = true;
                 redirectCount++;
 
-                p = strstr(fBuffer, "Location: ");               
+                p = strstr(fBuffer, "Location: ");
                 if (p == 0)
                 {
                     ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
                 }
                 p += 10; // Length of string "Location: "
-            
+
                 char* endP = strstr(p, "\r\n");
-                if (endP == 0) 
+                if (endP == 0)
                 {
                     ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText(), fMemoryManager);
                 }
                 endP[0] = chNull;
 
-                XMLURL newURL(fMemoryManager);                
+                XMLURL newURL(fMemoryManager);
                 XMLCh* newURLString = XMLString::transcode(p, fMemoryManager);
                 ArrayJanitor<XMLCh>  janNewURLString(newURLString, fMemoryManager);
 
@@ -624,15 +613,15 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                 char* colonP = strstr(p, ":");
                 if (colonP == 0) {
                     // if no colon assume relative url
-                    newURL.setURL(urlSource, newURLString);                   
+                    newURL.setURL(urlSource, newURLString);
                 }
-                else {  
+                else {
                     // if colon then either a schema is specified or
                     // a port is specified
-                    newURL.setURL(newURLString);     
+                    newURL.setURL(newURLString);
 
-                    if (newURL.getProtocol() != XMLURL::HTTP) {                                               
-                        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, newURL.getURLText(), fMemoryManager);                    
+                    if (newURL.getProtocol() != XMLURL::HTTP) {
+                        ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, newURL.getURLText(), fMemoryManager);
                     }
 
                     const XMLCh* newHostName = newURL.getHost();
@@ -643,7 +632,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                         janHostName.reset(hostNameAsCharStar);
                     }
                 }
-                    
+
                 path = newURL.getPath();
                 janPath.release();
                 pathAsCharStar = XMLString::transcode(path, fMemoryManager);
@@ -661,9 +650,9 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
                 queryAsCharStar = 0;
                 if (query)
                     queryAsCharStar = XMLString::transcode(query, fMemoryManager);
-                janQuery.reset(queryAsCharStar);   
+                janQuery.reset(queryAsCharStar);
 
-                portNumber = (unsigned short) newURL.getPortNum();                
+                portNumber = (unsigned short) newURL.getPortNum();
 
                 username = newURL.getUser();
                 password = newURL.getPassword();
@@ -678,7 +667,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
 
     }
     while(sawRedirect && redirectCount <6);
-                
+
     fSocketHandle = (unsigned int) *janSock.release();
 }
 

@@ -71,20 +71,6 @@
 #	include <xercesc/util/MutexManagers/WindowsMutexMgr.hpp>
 #endif
 
-#include <xercesc/util/XMLAtomicOpMgr.hpp>
-#if XERCES_USE_ATOMICOPMGR_NOTHREAD
-#	include <xercesc/util/AtomicOpManagers/NoThreadAtomicOpMgr.hpp>
-#endif
-#if XERCES_USE_ATOMICOPMGR_POSIX
-#	include <xercesc/util/AtomicOpManagers/PosixAtomicOpMgr.hpp>
-#endif
-#if XERCES_USE_ATOMICOPMGR_MACOS
-#	include <xercesc/util/AtomicOpManagers/MacOSAtomicOpMgr.hpp>
-#endif
-#if XERCES_USE_ATOMICOPMGR_WINDOWS
-#	include <xercesc/util/AtomicOpManagers/WindowsAtomicOpMgr.hpp>
-#endif
-
 #include <xercesc/util/XMLNetAccessor.hpp>
 #if XERCES_USE_NETACCESSOR_CURL
 #	include <xercesc/util/NetAccessors/Curl/CurlNetAccessor.hpp>
@@ -177,11 +163,10 @@ bool                    XMLPlatformUtils::fgMemMgrAdopted = true;
 
 XMLFileMgr*             XMLPlatformUtils::fgFileMgr = 0;
 XMLMutexMgr*            XMLPlatformUtils::fgMutexMgr = 0;
-XMLAtomicOpMgr*         XMLPlatformUtils::fgAtomicOpMgr = 0;
 
-XMLMutex*				XMLPlatformUtils::fgAtomicMutex = 0;
+XMLMutex*               XMLPlatformUtils::fgAtomicMutex = 0;
 
-bool					XMLPlatformUtils::fgXMLChBigEndian = true;
+bool                    XMLPlatformUtils::fgXMLChBigEndian = true;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
@@ -252,9 +237,8 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     fgXMLChBigEndian = (endianTest.ar[sizeof(XMLCh)-1] == 1);
 
 
-    // Initialize the platform-specific mutex file, and atomic op mgrs
+    // Initialize the platform-specific mutex and file mgrs
     fgMutexMgr		= makeMutexMgr(fgMemoryManager);
-    fgAtomicOpMgr	= makeAtomicOpMgr(fgMemoryManager);
     fgFileMgr		= makeFileMgr(fgMemoryManager);
 
 
@@ -327,10 +311,10 @@ void XMLPlatformUtils::Terminate()
     if (gInitFlag == 0)
         return;
 
-	gInitFlag--;
+    gInitFlag--;
 
-	if (gInitFlag > 0)
-		return;
+    if (gInitFlag > 0)
+	return;
 
     // Delete any net accessor that got installed
     delete fgNetAccessor;
@@ -351,21 +335,20 @@ void XMLPlatformUtils::Terminate()
     delete gSyncMutex;		gSyncMutex = 0;
     delete fgAtomicMutex;	fgAtomicMutex = 0;
 
-	// Clean up statically allocated, lazily cleaned data in each class
-	// that has registered for it.
-	// Note that calling doCleanup() also unregisters the cleanup
-	// function, so that we are chewing the list down to nothing here
-	while (gXMLCleanupList)
-		gXMLCleanupList->doCleanup();
+    // Clean up statically allocated, lazily cleaned data in each class
+    // that has registered for it.
+    // Note that calling doCleanup() also unregisters the cleanup
+    // function, so that we are chewing the list down to nothing here
+    while (gXMLCleanupList)
+        gXMLCleanupList->doCleanup();
 
-	// Clean up the mutex for accessing gXMLCleanupList
-	delete gXMLCleanupListMutex;
-	gXMLCleanupListMutex = 0;
+    // Clean up the mutex for accessing gXMLCleanupList
+    delete gXMLCleanupListMutex;
+    gXMLCleanupListMutex = 0;
 
-	// Clean up our mgrs
-	delete fgFileMgr;		fgFileMgr = 0;
-	delete fgAtomicOpMgr;	fgAtomicOpMgr = 0;
-	delete fgMutexMgr;		fgMutexMgr = 0;
+    // Clean up our mgrs
+    delete fgFileMgr;		fgFileMgr = 0;
+    delete fgMutexMgr;		fgMutexMgr = 0;
 
     /***
      *  de-allocate resource
@@ -771,62 +754,6 @@ void XMLPlatformUtils::unlockMutex(XMLMutexHandle const mtx)
 
 	fgMutexMgr->unlock(mtx);
 }
-
-
-// -----------------------------------------------------------------------
-//  Miscellaneous synchronization methods
-// -----------------------------------------------------------------------
-XMLAtomicOpMgr* XMLPlatformUtils::makeAtomicOpMgr(MemoryManager* const memmgr)
-{
-	XMLAtomicOpMgr* mgr = NULL;
-
-	#if XERCES_USE_ATOMICOPMGR_NOTHREAD
-		mgr = new (memmgr) NoThreadAtomicOpMgr;
-	#elif XERCES_USE_ATOMICOPMGR_POSIX
-		mgr = new (memmgr) PosixAtomicOpMgr;
-	#elif XERCES_USE_ATOMICOPMGR_MACOS
-		mgr = new (memmgr) MacOSAtomicOpMgr;
-	#elif XERCES_USE_ATOMICOPMGR_WINDOWS
-		mgr = new (memmgr) WindowsAtomicOpMgr;
-	#else
-		#error No AtomicOp Manager configured for platform! You must configure it.
-	#endif
-
-	return mgr;
-}
-
-
-void* XMLPlatformUtils::compareAndSwap(void**            toFill
-                                     , const void* const newValue
-                                     , const void* const toCompare)
-{
-    if (!fgAtomicOpMgr)
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero);
-
-	return fgAtomicOpMgr->compareAndSwap(toFill, newValue, toCompare);
-}
-
-
-/* These two routines are disabled pending further comment. They are unused in Xerces at present.
-int XMLPlatformUtils::atomicIncrement(int &location)
-{
-    if (!fgAtomicOpMgr)
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero);
-
-	return fgAtomicOpMgr->increment(location);
-}
-
-
-int XMLPlatformUtils::atomicDecrement(int &location)
-{
-    if (!fgAtomicOpMgr)
-		ThrowXML(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero);
-
-	return fgAtomicOpMgr->decrement(location);
-}
-*/
-
-
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Msg support methods

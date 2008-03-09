@@ -999,7 +999,6 @@ sub populateInclude() {
         sax
         sax2
         util
-        util/AtomicOpManagers
         util/MsgLoaders
         util/MsgLoaders/ICU
         util/MsgLoaders/InMemory

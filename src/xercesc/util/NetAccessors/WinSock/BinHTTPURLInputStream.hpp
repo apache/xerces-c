@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,6 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/BinInputStream.hpp>
-#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 
 //
@@ -57,7 +56,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     BinHTTPURLInputStream(const BinHTTPURLInputStream&);
-    BinHTTPURLInputStream& operator=(const BinHTTPURLInputStream&); 
+    BinHTTPURLInputStream& operator=(const BinHTTPURLInputStream&);
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -83,9 +82,8 @@ private :
     char *              fBufferEnd;
     char *              fBufferPos;
     static bool         fInitialized;
-    static XMLMutex*    fInitMutex;
 
-	static void Initialize(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+    static void Initialize(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 
 };
 
