@@ -43,7 +43,7 @@ Options:
   * = Default if not provided explicitly
 
 EOU
-my $VERSION = q[$Id: DOMCount.pl,v 1.13 2002/08/27 19:33:19 jasons Exp $ ];
+my $VERSION = q[$Id$ ];
 
 my $rc = GetOptions(\%OPTIONS,
 		    'v=s',

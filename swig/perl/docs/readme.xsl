@@ -29,7 +29,7 @@
     <xsl:text>============================================================</xsl:text>
     <xsl:text>&#10;</xsl:text><!-- a newline -->
     <xsl:text>&#10;</xsl:text><!-- a newline -->
-    <xsl:text>        $Id: readme.xsl,v 1.1 2002/05/07 06:06:10 jasons Exp $</xsl:text>
+    <xsl:text>        $Id$</xsl:text>
     <xsl:text>&#10;</xsl:text><!-- a newline -->
     <xsl:text>
         LEGAL HOOP JUMPING:

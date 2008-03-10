@@ -45,7 +45,7 @@ Options:
   * = Default if not provided explicitly
 
 EOU
-my $VERSION = q[$Id: SAX2Count.pl,v 1.9 2002/08/27 19:33:20 jasons Exp $ ];
+my $VERSION = q[$Id$ ];
 
 my %OPTIONS;
 my $rc = GetOptions(\%OPTIONS,

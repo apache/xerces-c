@@ -46,7 +46,7 @@ Options:
   * = Default if not provided explicitly
 
 EOU
-my $VERSION = q[$Id: DOMPrint.pl,v 1.11 2002/10/19 23:01:12 jasons Exp $];
+my $VERSION = q[$Id$];
 my %OPTIONS;
 my $rc = GetOptions(\%OPTIONS,
 		    'v=s',

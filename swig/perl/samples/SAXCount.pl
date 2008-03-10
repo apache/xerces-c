@@ -45,7 +45,7 @@ Options:
 
 EOU
 
-my $VERSION = q[$Id: SAXCount.pl,v 1.7 2002/08/27 19:33:20 jasons Exp $ ];
+my $VERSION = q[$Id$ ];
 my %OPTIONS;
 my $rc = GetOptions(\%OPTIONS,
 		    'v=s',

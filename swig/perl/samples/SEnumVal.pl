@@ -40,7 +40,7 @@ use vars qw(%OPTIONS);
 my $USAGE = <<EOU;
 USAGE: $0 file
 EOU
-my $VERSION = q[$Id: DOMCount.pl,v 1.13 2002/08/27 19:33:19 jasons Exp $ ];
+my $VERSION = q[$Id$ ];
 
 my $rc = GetOptions(\%OPTIONS,
 		    'help');
