@@ -16,7 +16,7 @@
             <Message Id="XMLException_Warning" Text="{0}"/>
             <Message Id="XIncludeResourceErrorWarning" Text="Unable to include document '{0}'"/>
             <Message Id="XIncludeCannotOpenFile" Text="Cannot open text file target '{0}'"/>
-	    <Message Id="XIncludeIncludeFailedResourceError" Text="Unable to include resource '{0}'"/>
+            <Message Id="XIncludeIncludeFailedResourceError" Text="Unable to include resource '{0}'"/>
         </Warning>
         <Error>
             <Message Id="FeatureUnsupported" Text="'{0}' is not allowed for the content of a simpleType.  Only list, union and restriction are allowed."/>
@@ -278,11 +278,11 @@
             <Message Id="XMLURINotMatchXMLPrefix" Text="The namespace for 'xml' cannot be bound to any prefix other than 'xml'."/>
             <Message Id="NoXMLNSAsElementPrefix" Text="Element '{0}' cannot have 'xmlns' as its prefix."/>
             <Message Id="CT_SimpleTypeChildRequired" Text="Complex Type Definition Representation OK - 2.2: &lt;restriction&gt; must have a &lt;simpleType&gt; child."/>
-	    <Message Id="InvalidRootElemInDOCTYPE" Text="DOCTYPE root element qname beginning with '{0}' invalid"/>
-	    <Message Id="InvalidElementName" Text="Element qname beginning with '{0}' invalid"/>
-	    <Message Id="InvalidAttrName" Text="Attribute qname beginning with '{0}' invalid"/>
-	    <Message Id="InvalidEntityRefName" Text="Entity qname for reference beginning '{0}' invalid"/>
-	    <Message Id="DuplicateDocTypeDecl" Text="Already seen doctype"/>
+            <Message Id="InvalidRootElemInDOCTYPE" Text="DOCTYPE root element qname beginning with '{0}' invalid"/>
+            <Message Id="InvalidElementName" Text="Element qname beginning with '{0}' invalid"/>
+            <Message Id="InvalidAttrName" Text="Attribute qname beginning with '{0}' invalid"/>
+            <Message Id="InvalidEntityRefName" Text="Entity qname for reference beginning '{0}' invalid"/>
+            <Message Id="DuplicateDocTypeDecl" Text="Already seen doctype"/>
             <Message Id="XIncludeOrphanFallback" Text="Found a fallback element not a direct child of include element"/>
             <Message Id="XIncludeNoHref" Text="include element found without href attribute"/>
             <Message Id="XIncludeXPointerNotSupported" Text="Found an include element with xpointer specification. XPointer not yet supported"/>
@@ -403,6 +403,7 @@
             <Message Id="ElemStack_EmptyStack" Text="The element stack is empty"/>
             <Message Id="ElemStack_StackUnderflow" Text="The element stack was already empty when a pop request occurred"/>
             <Message Id="ElemStack_NoParentPushed" Text="A parent operation was requested, but only one element is on the stack"/>
+            <Message Id="Enum_NoMoreElements" Text="The enumerator contains no more elements"/>
             <Message Id="File_CouldNotOpenFile" Text="Could not open file: {0}"/>
             <Message Id="File_CouldNotGetCurPos" Text="Could not query the current file position"/>
             <Message Id="File_CouldNotCloseFile" Text="Could not close the file"/>
@@ -419,6 +420,9 @@
             <Message Id="Gen_CouldNotOpenDTD" Text="Could not open DTD file '{0}'"/>
             <Message Id="Gen_CouldNotOpenExtEntity" Text="Could not open external entity '{0}'"/>
             <Message Id="Gen_UnexpectedEOF" Text="The end of input was not expected"/>
+            <Message Id="HshTbl_ZeroModulus" Text="The hash modulus cannot be zero"/>
+            <Message Id="HshTbl_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
+            <Message Id="HshTbl_NoSuchKeyExists" Text="The key could not be found in the hash table"/>
             <Message Id="Mutex_CouldNotDestroy" Text="Could not destroy mutex"/>
             <Message Id="NetAcc_InternalError" Text="Internal Error in NetAccessor"/>
             <Message Id="NetAcc_LengthError" Text="Error in NetAccessor. Cannot determine length of remote file"/>
@@ -429,7 +433,9 @@
             <Message Id="NetAcc_WriteSocket" Text="Could not write to the socket for URL '{0}'"/>
             <Message Id="NetAcc_ReadSocket" Text="Could not read from the socket for URL '{0}'"/>
             <Message Id="NetAcc_UnsupportedMethod" Text="The specified HTTP method is not supported by this NetAccessor."/>
+            <Message Id="Pool_ElemAlreadyExists" Text="The element {0} already exists"/>
             <Message Id="Pool_InvalidId" Text="The passed id is not valid for this pool"/>
+            <Message Id="Pool_ZeroModulus" Text="The modulus value cannot be zero"/>
             <Message Id="RdrMgr_ReaderIdNotFound" Text="The indicated reader id was never found"/>
             <Message Id="Reader_BadAutoEncoding" Text="The auto encoding enum has an unknown value"/>
             <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
@@ -439,6 +445,8 @@
             <Message Id="Scan_CouldNotOpenSource" Text="The primary document entity could not be opened. Id={0}"/>
             <Message Id="Scan_UnbalancedStartEnd" Text="Unbalanced start/end tags found, cannot continue"/>
             <Message Id="Scan_BadPScanToken" Text="The call to scanNext() is illegal at this time"/>
+            <Message Id="Stack_BadIndex" Text="The index is past the top of stack"/>
+            <Message Id="Stack_EmptyStack" Text="The stack is empty, cannot access members"/>
             <Message Id="Str_ZeroSizedTargetBuf" Text="The target buffer cannot have a max size of zero"/>
             <Message Id="Str_UnknownRadix" Text="The given radix is not supported. Use 2, 8, 10, or 16"/>
             <Message Id="Str_TargetBufTooSmall" Text="The target buffer is too small to accept the results"/>
@@ -731,7 +739,7 @@
             <Message Id="XSer_GrammarPool_NotEmpty"      Text="Grammar Pool is NOT empty"/>
             <Message Id="XSer_StringPool_NotEmpty"       Text="String Pool is NOT empty"/>
             <Message Id="XSer_Storer_NewerThan_Loader"   Text="Storer Level '{0}' is newer than Loader Level'{1}' "/>
-	    <Message Id="VALUE_QName_Invalid2"           Text="Value '{0}' is not valid QName because the prefix is not defined"/>
+            <Message Id="VALUE_QName_Invalid2"           Text="Value '{0}' is not valid QName because the prefix is not defined"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">

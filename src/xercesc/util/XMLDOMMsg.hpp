@@ -1,7 +1,7 @@
 // This file is generated, don't edit it!!
 
-#if !defined(ERRHEADER_XMLDOMMsg)
-#define ERRHEADER_XMLDOMMsg
+#if !defined(XERCESC_INCLUDE_GUARD_ERRHEADER_XMLDOMMsg)
+#define XERCESC_INCLUDE_GUARD_ERRHEADER_XMLDOMMsg
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/util/XercesDefs.hpp>
@@ -18,40 +18,35 @@ public :
       , F_LowBounds                        = 1
       , DOMEXCEPTION_ERRX                  = 2
       , INDEX_SIZE_ERR                     = 3
-      , DOMSTRING_SIZE_ERR                 = 4
-      , HIERARCHY_REQUEST_ERR              = 5
-      , WRONG_DOCUMENT_ERR                 = 6
-      , INVALID_CHARACTER_ERR              = 7
-      , NO_DATA_ALLOWED_ERR                = 8
-      , NO_MODIFICATION_ALLOWED_ERR        = 9
-      , NOT_FOUND_ERR                      = 10
-      , NOT_SUPPORTED_ERR                  = 11
-      , INUSE_ATTRIBUTE_ERR                = 12
-      , INVALID_STATE_ERR                  = 13
-      , SYNTAX_ERR                         = 14
-      , INVALID_MODIFICATION_ERR           = 15
-      , NAMESPACE_ERR                      = 16
-      , INVALID_ACCESS_ERR                 = 17
-      , VALIDATION_ERR                     = 18
-      , DOMRANGEEXCEPTION_ERRX             = 19
-      , BAD_BOUNDARYPOINTS_ERR             = 20
-      , INVALID_NODE_TYPE_ERR              = 21
-      , DOMLSEXCEPTION_ERRX                = 22
-      , PARSE_ERR                          = 23
-      , SERIALIZE_ERR                      = 24
-      , DOMXPATHEXCEPTION_ERRX             = 25
-      , INVALID_EXPRESSION_ERR             = 26
-      , TYPE_ERR                           = 27
-      , Writer_NestedCDATA                 = 28
-      , Writer_NotRepresentChar            = 29
-      , Writer_NotRecognizedType           = 30
-      , LSParser_ParseInProgress           = 31
-      , LSParser_ParsingAborted            = 32
-      , F_HighBounds                       = 33
-      , W_LowBounds                        = 34
-      , W_HighBounds                       = 35
-      , E_LowBounds                        = 36
-      , E_HighBounds                       = 37
+      , HIERARCHY_REQUEST_ERR              = 4
+      , WRONG_DOCUMENT_ERR                 = 5
+      , INVALID_CHARACTER_ERR              = 6
+      , NO_MODIFICATION_ALLOWED_ERR        = 7
+      , NOT_FOUND_ERR                      = 8
+      , NOT_SUPPORTED_ERR                  = 9
+      , INUSE_ATTRIBUTE_ERR                = 10
+      , INVALID_STATE_ERR                  = 11
+      , NAMESPACE_ERR                      = 12
+      , INVALID_ACCESS_ERR                 = 13
+      , VALIDATION_ERR                     = 14
+      , DOMRANGEEXCEPTION_ERRX             = 15
+      , BAD_BOUNDARYPOINTS_ERR             = 16
+      , INVALID_NODE_TYPE_ERR              = 17
+      , DOMLSEXCEPTION_ERRX                = 18
+      , PARSE_ERR                          = 19
+      , DOMXPATHEXCEPTION_ERRX             = 20
+      , INVALID_EXPRESSION_ERR             = 21
+      , TYPE_ERR                           = 22
+      , Writer_NestedCDATA                 = 23
+      , Writer_NotRepresentChar            = 24
+      , Writer_NotRecognizedType           = 25
+      , LSParser_ParseInProgress           = 26
+      , LSParser_ParsingAborted            = 27
+      , F_HighBounds                       = 28
+      , W_LowBounds                        = 29
+      , W_HighBounds                       = 30
+      , E_LowBounds                        = 31
+      , E_HighBounds                       = 32
     };
 
     static bool isFatal(const XMLDOMMsg::Codes toCheck)
