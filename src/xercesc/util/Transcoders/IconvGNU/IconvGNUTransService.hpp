@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@
 #define XERCESC_INCLUDE_GUARD_ICONVGNUTRANSSERVICE_HPP
 
 #include <xercesc/util/TransService.hpp>
+#include <xercesc/util/Mutexes.hpp>
 
 #include <iconv.h>
 
@@ -53,12 +54,6 @@ public:
     // Convert XMLCh into "native unicode" character
     void	xmlChToMbc (XMLCh xch, char *mbc) const;
 
-    // Return uppercase equivalent for XMLCh
-    XMLCh 	toUpper (const XMLCh ch) const;
-
-    // Return uppercase equivalent for XMLCh
-    XMLCh 	toLower (const XMLCh ch) const;
-
     // Fill array of XMLCh characters with data, supplyed in the array
     // of "native unicode" characters.
     XMLCh*	mbsToXML (
@@ -77,6 +72,23 @@ public:
       size_t		cnt
     ) const;
 
+    // Private data accessors
+    inline iconv_t	cdTo () const { return fCDTo; }
+    inline iconv_t	cdFrom () const { return fCDFrom; }
+    inline size_t	uChSize () const { return fUChSize; }
+    inline unsigned int	UBO () const { return fUBO; }
+
+protected:
+    // The following four functions should called with the fMutex
+    // locked.
+    //
+
+    // Return uppercase equivalent for XMLCh
+    XMLCh 	toUpper (const XMLCh ch);
+
+    // Return uppercase equivalent for XMLCh
+    XMLCh 	toLower (const XMLCh ch);
+
     // Wrapper aroung the iconv() for transcoding from the local charset
     size_t	iconvFrom
     (
@@ -84,7 +96,7 @@ public:
       size_t		*fromLen,
       char		**toPtr,
       size_t		toLen
-    ) const;
+    );
 
     // Wrapper aroung the iconv() for transcoding to the local charset
     size_t	iconvTo
@@ -93,13 +105,7 @@ public:
       size_t		*fromLen,
       char		**toPtr,
       size_t		toLen
-    ) const;
-
-    // Private data accessors
-    inline iconv_t	cdTo () const { return fCDTo; }
-    inline iconv_t	cdFrom () const { return fCDFrom; }
-    inline size_t	uChSize () const { return fUChSize; }
-    inline unsigned int	UBO () const { return fUBO; }
+    );
 
 protected:
 
@@ -135,6 +141,9 @@ private:
     unsigned int fUBO;
     iconv_t	fCDTo;
     iconv_t	fCDFrom;
+
+protected:
+    XMLMutex    fMutex;
 };
 
 
@@ -175,8 +184,8 @@ public :
 
     virtual bool supportsSrcOfs() const;
 
-    virtual void upperCase(XMLCh* const toUpperCase) const;
-    virtual void lowerCase(XMLCh* const toUpperCase) const;
+    virtual void upperCase(XMLCh* const toUpperCase);
+    virtual void lowerCase(XMLCh* const toUpperCase);
 
 protected :
     // -----------------------------------------------------------------------
@@ -258,7 +267,7 @@ public :
     virtual bool canTranscodeTo
     (
         const   unsigned int	toCheck
-    )   const;
+    );
 
 private :
     // -----------------------------------------------------------------------

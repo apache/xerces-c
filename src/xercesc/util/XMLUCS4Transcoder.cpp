@@ -231,7 +231,7 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
 }
 
 
-bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int) const
+bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int)
 {
     // We can handle anything
     return true;

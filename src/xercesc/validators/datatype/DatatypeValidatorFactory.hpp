@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -111,12 +111,7 @@ public:
 
     //@}
 
-    // -----------------------------------------------------------------------
-    // Registry Initialization methods
-    // -----------------------------------------------------------------------
-    /** @name Registry Initialization Functions */
-    //@{
-
+  private:
     /**
      * Initializes registry with primitive and derived Simple types.
      *
@@ -127,12 +122,11 @@ public:
      * datatypes needed by the validator.
      *
      * If we start with Schema's then we initialize to full set of
-     * validators.	
+     * validators.
      */
     void expandRegistryToFullSchemaSet();
 
-    //@}
-
+  public:
     // -----------------------------------------------------------------------
     // Canonical Representation Group
     // -----------------------------------------------------------------------
@@ -209,11 +203,6 @@ public:
       */
     void resetRegistry();
 
-    // -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-    static void reinitRegistry();
-
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -247,6 +236,7 @@ private:
     XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager* const fMemoryManager;
 
     friend class XPath2ContextImpl;
+    friend class XMLInitializer;
 };
 
 inline DatatypeValidator*

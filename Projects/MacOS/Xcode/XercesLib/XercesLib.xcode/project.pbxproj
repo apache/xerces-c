@@ -3368,14 +3368,6 @@
 			settings = {
 			};
 		};
-		9019C4BB05EDC7A5007EE4FE = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = XMLRegisterCleanup.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		9019C4BD05EDC7A5007EE4FE = {
 			fileRef = 9019C4BB05EDC7A5007EE4FE;
 			isa = PBXBuildFile;
@@ -14158,14 +14150,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.h;
 			path = XMLDateTime.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A6C93E01B968C801000102 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = XMLRegisterCleanup.hpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};

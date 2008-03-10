@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -144,7 +144,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    
+
     const DTDEntityDecl* getEntityDecl(const XMLCh* const entName) const;
     DTDEntityDecl* getEntityDecl(const XMLCh* const entName);
     NameIdPool<DTDEntityDecl>* getEntityDeclPool();
@@ -165,23 +165,12 @@ public:
     // -----------------------------------------------------------------------
     unsigned int putEntityDecl(DTDEntityDecl* const entityDecl) const;
 
-
-    // -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-    static void reinitDfltEntities();
-
     /***
      * Support for Serialization/De-serialization
      ***/
     DECL_XSERIALIZABLE(DTDGrammar)
 
 private:
-    // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-    void resetEntityDeclPool();
-
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -224,7 +213,7 @@ private:
     NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
     NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
     XMLDTDDescription*                fGramDesc;
-    
+
     bool                              fValidated;
 
     friend class XMLInitializer;
@@ -359,7 +348,7 @@ inline XMLElementDecl* DTDGrammar::getElemDecl(const unsigned int elemId)
 
 inline unsigned int
 DTDGrammar::putElemDecl(XMLElementDecl* const elemDecl,
-                        const bool notDeclared) 
+                        const bool notDeclared)
 {
     if (notDeclared)
     {

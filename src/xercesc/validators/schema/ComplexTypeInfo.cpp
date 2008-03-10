@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,117 +32,74 @@
 #include <xercesc/validators/common/SimpleContentModel.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-// ---------------------------------------------------------------------------
-//  Local static data
-// ---------------------------------------------------------------------------
-static bool               sAnyTypeMutexRegistered = false;
-static XMLMutex*          sAnyTypeMutex = 0;
-static XMLRegisterCleanup anyTypeCleanup;
-
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Static member data
 // ---------------------------------------------------------------------------
 ComplexTypeInfo* ComplexTypeInfo::fAnyType = 0;
 
+void XMLInitializer::initializeComplexTypeInfo()
+{
+  // create type name
+  XMLCh typeName[128];
+  XMLSize_t nsLen = XMLString::stringLen(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
 
-// ---------------------------------------------------------------------------
-//  ComplexTypeInfo: Static meber methods
-// ---------------------------------------------------------------------------
-void ComplexTypeInfo::reinitAnyType() {
+  XMLString::copyString(typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+  typeName[nsLen] = chComma;
+  XMLString::copyString(typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
 
-    delete fAnyType;
-    fAnyType = 0;
+  // Create and initialize 'anyType'
+  ComplexTypeInfo::fAnyType = new ComplexTypeInfo();
 
-    // delete local static data
-    delete sAnyTypeMutex;
-    sAnyTypeMutex = 0;
-    sAnyTypeMutexRegistered = false;
+  ContentSpecNode* term = new ContentSpecNode
+    (
+      new QName
+      (
+        XMLUni::fgZeroLenString
+        , XMLUni::fgZeroLenString
+        , 1
+      )
+      , false
+    );
+  term->setType(ContentSpecNode::Any_Lax);
+  term->setMinOccurs(0);
+  term->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
+
+  ContentSpecNode* particle = new ContentSpecNode
+    (
+      ContentSpecNode::ModelGroupSequence
+      , term
+      , 0
+    );
+
+  SchemaAttDef* attWildCard = new SchemaAttDef
+    (
+      XMLUni::fgZeroLenString
+      , XMLUni::fgZeroLenString
+      , 1
+      , XMLAttDef::Any_Any
+      , XMLAttDef::ProcessContents_Lax
+    );
+
+  ComplexTypeInfo::fAnyType->setTypeName(typeName);
+  ComplexTypeInfo::fAnyType->setBaseComplexTypeInfo(ComplexTypeInfo::fAnyType);
+  ComplexTypeInfo::fAnyType->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
+  ComplexTypeInfo::fAnyType->setContentType(SchemaElementDecl::Mixed_Complex);
+  ComplexTypeInfo::fAnyType->setContentSpec(particle);
+  ComplexTypeInfo::fAnyType->setAttWildCard(attWildCard);
 }
 
-void XMLInitializer::initializeAnyType()
+void XMLInitializer::terminateComplexTypeInfo()
 {
-    ComplexTypeInfo::getAnyType(1);
+  delete ComplexTypeInfo::fAnyType;
+  ComplexTypeInfo::fAnyType = 0;
 }
 
 ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
 {
-    if (!sAnyTypeMutexRegistered)
-    {
-        if (!sAnyTypeMutex)
-        {
-            XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-            if (!sAnyTypeMutex)
-                sAnyTypeMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
-        }
-
-        // Use a faux scope to synchronize while we do this
-        {
-            XMLMutexLock lock(sAnyTypeMutex);
-
-            // If we got here first, then register it and set the registered flag
-            if (!sAnyTypeMutexRegistered)
-            {
-                // create type name
-                XMLCh typeName[128];
-                XMLSize_t nsLen = XMLString::stringLen(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-
-			    XMLString::copyString(typeName, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-                typeName[nsLen] = chComma;
-                XMLString::copyString(typeName + nsLen + 1, SchemaSymbols::fgATTVAL_ANYTYPE);
-
-                // Create and initialize 'anyType'
-                fAnyType = new ComplexTypeInfo();
-
-                ContentSpecNode* term = new ContentSpecNode
-                (
-                    new QName
-                    (
-                        XMLUni::fgZeroLenString
-                        , XMLUni::fgZeroLenString
-                        , emptyNSId
-                    )
-                    , false
-                );
-                term->setType(ContentSpecNode::Any_Lax);
-                term->setMinOccurs(0);
-                term->setMaxOccurs(SchemaSymbols::XSD_UNBOUNDED);
-
-                ContentSpecNode* particle = new ContentSpecNode
-                (
-                    ContentSpecNode::ModelGroupSequence
-                    , term
-                    , 0
-                );
-
-                SchemaAttDef* attWildCard = new SchemaAttDef
-                (
-                    XMLUni::fgZeroLenString
-                    , XMLUni::fgZeroLenString
-                    , emptyNSId
-                    , XMLAttDef::Any_Any
-                    , XMLAttDef::ProcessContents_Lax
-                );
-
-                fAnyType->setTypeName(typeName);
-                fAnyType->setBaseComplexTypeInfo(fAnyType);
-                fAnyType->setDerivedBy(SchemaSymbols::XSD_RESTRICTION);
-                fAnyType->setContentType(SchemaElementDecl::Mixed_Complex);
-                fAnyType->setContentSpec(particle);
-                fAnyType->setAttWildCard(attWildCard);
-
-                // register cleanup method
-                anyTypeCleanup.registerCleanup(ComplexTypeInfo::reinitAnyType);
-                sAnyTypeMutexRegistered = true;
-            }
-        }
-    }
-
     return fAnyType;
 }
 
@@ -171,9 +128,9 @@ ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
     , fDatatypeValidator(0)
     , fBaseComplexTypeInfo(0)
     , fContentSpec(0)
-    , fAttWildCard(0)    
+    , fAttWildCard(0)
     , fAttList(0)
-    , fElements(0)    
+    , fElements(0)
     , fAttDefs(0)
     , fContentModel(0)
     , fFormattedModel(0)
@@ -199,7 +156,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fAttWildCard;
     delete fAttDefs;
     delete fAttList;
-    delete fElements;    
+    delete fElements;
     delete fLocator;
 
     delete fContentModel;
@@ -773,9 +730,9 @@ IMPL_XSERIALIZABLE_TOCREATE(ComplexTypeInfo)
 
 void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
 {
-   
+
     if (serEng.isStoring())
-    {    
+    {
         serEng<<fAnonymous;
         serEng<<fAbstract;
         serEng<<fAdoptContentSpec;
@@ -802,7 +759,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng<<fAttList;
 
         /***
-         * 
+         *
          * Serialize RefVectorOf<SchemaElementDecl>*    fElements;
          * Serialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
@@ -810,12 +767,12 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::storeObject(fAttDefs, serEng);
 
          /***
-          *   Don't serialize 
+          *   Don't serialize
           *
           *   fContentModel;
           *   fFormattedModel;
-          *   fLocator;          
-          * 
+          *   fLocator;
+          *
           *   fContentSpecOrgURI:     start of the array
           *   fContentSpecOrgURISize: size of the array
           *   fUniqueURI:             the current last element in the array
@@ -850,7 +807,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng>>fAttList;
 
         /***
-         * 
+         *
          * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
          * Deserialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
@@ -859,18 +816,18 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);
 
          /***
-          *   Don't deserialize 
+          *   Don't deserialize
           *
           *   fFormattedModel;
-          *   fLocator;          
-          * 
+          *   fLocator;
+          *
           *   fContentSpecOrgURI:     start of the array
           *   fContentSpecOrgURISize: size of the array
           *   fUniqueURI:             the current last element in the array
           ***/
 
          fFormattedModel = 0;
-         fLocator = 0;         
+         fLocator = 0;
          fContentSpecOrgURI = 0;
          fContentSpecOrgURISize = 0;
          fUniqueURI = 0;

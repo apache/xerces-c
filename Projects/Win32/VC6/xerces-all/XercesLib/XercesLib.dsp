@@ -1123,14 +1123,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLResourceIdentifier.hpp
 # End Source File
 # Begin Source File

@@ -138,7 +138,7 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
 }
 
 
-bool XML88591Transcoder::canTranscodeTo(const unsigned int toCheck) const
+bool XML88591Transcoder::canTranscodeTo(const unsigned int toCheck)
 {
     return (toCheck < 256);
 }

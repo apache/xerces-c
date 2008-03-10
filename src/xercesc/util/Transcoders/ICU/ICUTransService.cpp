@@ -347,12 +347,12 @@ static void doCaseConvert(XMLCh*          convertString,
 
 
 
-void ICUTransService::upperCase(XMLCh* const toUpperCase) const
+void ICUTransService::upperCase(XMLCh* const toUpperCase)
 {
     doCaseConvert(toUpperCase, u_toupper);
 }
 
-void ICUTransService::lowerCase(XMLCh* const toLowerCase) const
+void ICUTransService::lowerCase(XMLCh* const toLowerCase)
 {
     doCaseConvert(toLowerCase, u_tolower);
 }
@@ -693,7 +693,7 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
 }
 
 
-bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
+bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck)
 {
     //
     //  If the passed value is really a surrogate embedded together, then

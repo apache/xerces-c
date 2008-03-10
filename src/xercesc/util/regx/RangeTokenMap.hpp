@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,7 +78,7 @@ public:
     //  Putter methods
     // -----------------------------------------------------------------------
     void addCategory(const XMLCh* const categoryName);
-	void addRangeMap(const XMLCh* const categoryName,
+    void addRangeMap(const XMLCh* const categoryName,
                      RangeFactory* const rangeFactory);
     void addKeywordMap(const XMLCh* const keyword,
                        const XMLCh* const categoryName);
@@ -91,18 +91,13 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-	void setRangeToken(const XMLCh* const keyword, RangeToken* const tok,
+    void setRangeToken(const XMLCh* const keyword, RangeToken* const tok,
                        const bool complement = false);
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	TokenFactory* getTokenFactory() const;
-
-	// -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-	static void reinitInstance();
+    TokenFactory* getTokenFactory() const;
 
 protected:
     // -----------------------------------------------------------------------
@@ -118,7 +113,7 @@ protected:
      *  Gets a commonly used RangeToken from the token registry based on the
      *  range name - Called by TokenFactory.
      */
-	 RangeToken* getRange(const XMLCh* const name,
+     RangeToken* getRange(const XMLCh* const name,
                           const bool complement = false);
 
      RefHashTableOf<RangeTokenElemMap>* getTokenRegistry() const;
@@ -149,7 +144,7 @@ private:
     //
     //  fTokenRegistry
     //      Contains a set of commonly used tokens
-	//
+    //
     //  fRangeMap
     //      Contains a map between a category name and a RangeFactory object.
     //
@@ -164,10 +159,10 @@ private:
     //
     //  fMutex
     //      A mutex object for synchronization
-    // -----------------------------------------------------------------------	
+    // -----------------------------------------------------------------------
     RefHashTableOf<RangeTokenElemMap>* fTokenRegistry;
     RefHashTableOf<RangeFactory>*      fRangeMap;
-	XMLStringPool*                     fCategories;
+    XMLStringPool*                     fCategories;
     TokenFactory*                      fTokenFactory;
     XMLMutex                           fMutex;
     static RangeTokenMap*              fInstance;

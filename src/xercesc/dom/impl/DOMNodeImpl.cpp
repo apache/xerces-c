@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,6 @@
 #include <xercesc/dom/DOMException.hpp>
 
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <stdio.h>
@@ -59,28 +58,19 @@ const unsigned short DOMNodeImpl::LEAFNODETYPE = 0x1<<10;
 const unsigned short DOMNodeImpl::CHILDNODE    = 0x1<<11;
 const unsigned short DOMNodeImpl::TOBERELEASED = 0x1<<12;
 
-// -----------------------------------------------------------------------
-//  Reset the singleton gEmptyNodeList
-// -----------------------------------------------------------------------
-static DOMNodeListImpl *gEmptyNodeList = 0;  // make a singleton empty node list
-static XMLMutex* gEmptyNodeListMutex = 0;
-static XMLRegisterCleanup emptyNodeListCleanup;
+//
+//
+static DOMNodeListImpl *gEmptyNodeList = 0; // Singleton empty node list.
 
-static void reinitEmptyNodeList()
+void XMLInitializer::initializeDOMNodeListImpl()
+{
+    gEmptyNodeList = new DOMNodeListImpl(0);
+}
+
+void XMLInitializer::terminateDOMNodeListImpl()
 {
     delete gEmptyNodeList;
     gEmptyNodeList = 0;
-
-    delete gEmptyNodeListMutex;
-    gEmptyNodeListMutex = 0;
-}
-
-void XMLInitializer::initializeEmptyNodeList()
-{
-    gEmptyNodeList = new DOMNodeListImpl(0);
-    if (gEmptyNodeList) {
-        emptyNodeListCleanup.registerCleanup(reinitEmptyNodeList);
-    }
 }
 
 // -----------------------------------------------------------------------
@@ -90,7 +80,7 @@ DOMNodeImpl::DOMNodeImpl(DOMNode *ownerNode)
 :  fOwnerNode(ownerNode)
 {
     this->flags = 0;
-    // as long as we do not have any owner, fOwnerNode is our ownerDocument    
+    // as long as we do not have any owner, fOwnerNode is our ownerDocument
 }
 
 // This only makes a shallow copy, cloneChildren must also be called for a
@@ -127,30 +117,7 @@ DOMNamedNodeMap * DOMNodeImpl::getAttributes() const {
 
 
 DOMNodeList *DOMNodeImpl::getChildNodes() const {
-
-    if (!gEmptyNodeList)
-    {
-        if (!gEmptyNodeListMutex)
-        {
-            XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-			
-            if (!gEmptyNodeListMutex)
-                gEmptyNodeListMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
-        }
-
-        // Use a faux scope to synchronize while we do this
-        {
-            XMLMutexLock lock(gEmptyNodeListMutex);
-
-            if (!gEmptyNodeList)
-            {
-                gEmptyNodeList = new DOMNodeListImpl(0);
-                emptyNodeListCleanup.registerCleanup(reinitEmptyNodeList);
-            }
-        }
-    }
-
-    return (DOMNodeList *)gEmptyNodeList;
+    return gEmptyNodeList;
 }
 
 
@@ -659,16 +626,16 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
         return reverseTreeOrderBitPattern(other->compareDocumentPosition(thisNode));
     }
 
-    // Otherwise, the order of two nodes is determined by looking for common containers -- 
-    // containers which contain both. A node directly contains any child nodes. 
-    // A node also directly contains any other nodes attached to it such as attributes 
-    // contained in an element or entities and notations contained in a document type. 
-    // Nodes contained in contained nodes are also contained, but less-directly as 
+    // Otherwise, the order of two nodes is determined by looking for common containers --
+    // containers which contain both. A node directly contains any child nodes.
+    // A node also directly contains any other nodes attached to it such as attributes
+    // contained in an element or entities and notations contained in a document type.
+    // Nodes contained in contained nodes are also contained, but less-directly as
     // the number of intervening containers increases.
 
-    // If one of the nodes being compared contains the other node, then the container precedes 
-    // the contained node, and reversely the contained node follows the container. For example, 
-    // when comparing an element against its own attribute or child, the element node precedes 
+    // If one of the nodes being compared contains the other node, then the container precedes
+    // the contained node, and reversely the contained node follows the container. For example,
+    // when comparing an element against its own attribute or child, the element node precedes
     // its attribute node and its child node, which both follow it.
 
     const DOMNode* tmpNode;
@@ -692,20 +659,20 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
         hisDepth++;
     }
 
-    // If there is no common container node, then the order is based upon order between the 
-    // root container of each node that is in no container. In this case, the result is 
-    // disconnected and implementation-specific. This result is stable as long as these 
-    // outer-most containing nodes remain in memory and are not inserted into some other 
-    // containing node. This would be the case when the nodes belong to different documents 
+    // If there is no common container node, then the order is based upon order between the
+    // root container of each node that is in no container. In this case, the result is
+    // disconnected and implementation-specific. This result is stable as long as these
+    // outer-most containing nodes remain in memory and are not inserted into some other
+    // containing node. This would be the case when the nodes belong to different documents
     // or fragments, and cloning the document or inserting a fragment might change the order.
 
     if(myRoot!=hisRoot)
         return DOMNode::DOCUMENT_POSITION_DISCONNECTED | DOMNode::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC |
               (myRoot<hisRoot?DOMNode::DOCUMENT_POSITION_PRECEDING:DOMNode::DOCUMENT_POSITION_FOLLOWING);
 
-    // If neither of the previous cases apply, then there exists a most-direct container common 
-    // to both nodes being compared. In this case, the order is determined based upon the two 
-    // determining nodes directly contained in this most-direct common container that either 
+    // If neither of the previous cases apply, then there exists a most-direct container common
+    // to both nodes being compared. In this case, the order is determined based upon the two
+    // determining nodes directly contained in this most-direct common container that either
     // are or contain the corresponding nodes being compared.
 
     // if the two depths are different, go to the same one
@@ -723,7 +690,7 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
     // We now have nodes at the same depth in the tree.  Find a common ancestor.
     const DOMNode *myNodeP=myRoot;
 	const DOMNode *hisNodeP=hisRoot;
-    while(myRoot!=hisRoot) 
+    while(myRoot!=hisRoot)
     {
         myNodeP = myRoot;
         hisNodeP = hisRoot;
@@ -736,8 +703,8 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
     bool bMyNodeIsChild=(myNodeType!=DOMNode::ATTRIBUTE_NODE && myNodeType!=DOMNode::ENTITY_NODE && myNodeType!=DOMNode::NOTATION_NODE);
     bool bHisNodeIsChild=(hisNodeType!=DOMNode::ATTRIBUTE_NODE && hisNodeType!=DOMNode::ENTITY_NODE && hisNodeType!=DOMNode::NOTATION_NODE);
 
-    // If these two determining nodes are both child nodes, then the natural DOM order of these 
-    // determining nodes within the containing node is returned as the order of the corresponding nodes. 
+    // If these two determining nodes are both child nodes, then the natural DOM order of these
+    // determining nodes within the containing node is returned as the order of the corresponding nodes.
     // This would be the case, for example, when comparing two child elements of the same element.
     if(bMyNodeIsChild && bHisNodeIsChild)
     {
@@ -750,8 +717,8 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
         return DOMNode::DOCUMENT_POSITION_PRECEDING;
     }
 
-    // If one of the two determining nodes is a child node and the other is not, then the corresponding 
-    // node of the child node follows the corresponding node of the non-child node. This would be the case, 
+    // If one of the two determining nodes is a child node and the other is not, then the corresponding
+    // node of the child node follows the corresponding node of the non-child node. This would be the case,
     // for example, when comparing an attribute of an element with a child element of the same element.
     else if(!bMyNodeIsChild && bHisNodeIsChild)
         return DOMNode::DOCUMENT_POSITION_FOLLOWING;
@@ -760,16 +727,16 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
 
     else
     {
-        // If neither of the two determining node is a child node and one determining node has a greater value 
-        // of nodeType than the other, then the corresponding node precedes the other. This would be the case, 
+        // If neither of the two determining node is a child node and one determining node has a greater value
+        // of nodeType than the other, then the corresponding node precedes the other. This would be the case,
         // for example, when comparing an entity of a document type against a notation of the same document type.
         if(myNodeType!=hisNodeType)
             return (myNodeType<hisNodeType)?DOMNode::DOCUMENT_POSITION_FOLLOWING:DOMNode::DOCUMENT_POSITION_PRECEDING;
 
-        // If neither of the two determining node is a child node and nodeType is the same for both determining 
-        // nodes, then an implementation-dependent order between the determining nodes is returned. This order 
-        // is stable as long as no nodes of the same nodeType are inserted into or removed from the direct container. 
-        // This would be the case, for example, when comparing two attributes of the same element, and inserting 
+        // If neither of the two determining node is a child node and nodeType is the same for both determining
+        // nodes, then an implementation-dependent order between the determining nodes is returned. This order
+        // is stable as long as no nodes of the same nodeType are inserted into or removed from the direct container.
+        // This would be the case, for example, when comparing two attributes of the same element, and inserting
         // or removing additional attributes might change the order between existing attributes.
         return DOMNode::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC | ((myNodeP<hisNodeP)?DOMNode::DOCUMENT_POSITION_FOLLOWING:DOMNode::DOCUMENT_POSITION_PRECEDING);
     }
@@ -805,39 +772,39 @@ short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
  *
  *   Excerpt from http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html#Node3-textContent
  *
- *   textContent of type DOMString, introduced in DOM Level 3 
- *   
- *   This attribute returns the text content of this node and its descendants. When it is defined 
- *   to be null, setting it has no effect. 
- *   
- *   When set, any possible children this node may have are removed and replaced by a single Text node 
- *   containing the string this attribute is set to. 
+ *   textContent of type DOMString, introduced in DOM Level 3
  *
- *   On getting, no serialization is performed, the returned string does not contain any markup. 
- *   No whitespace normalization is performed, the returned string does not contain the element content 
- *   whitespaces Fundamental Interfaces. 
+ *   This attribute returns the text content of this node and its descendants. When it is defined
+ *   to be null, setting it has no effect.
+ *
+ *   When set, any possible children this node may have are removed and replaced by a single Text node
+ *   containing the string this attribute is set to.
+ *
+ *   On getting, no serialization is performed, the returned string does not contain any markup.
+ *   No whitespace normalization is performed, the returned string does not contain the element content
+ *   whitespaces Fundamental Interfaces.
  *
  *   Similarly, on setting, no parsing is performed either, the input string is taken as pure textual content.
  *
- *   The string returned is made of the text content of this node depending on its type, 
- *   as defined below: 
+ *   The string returned is made of the text content of this node depending on its type,
+ *   as defined below:
  *
- *       Node type                                           Content          
+ *       Node type                                           Content
  *   ====================       ========================================================================
- *     ELEMENT_NODE               concatenation of the textContent attribute value of every child node, 
- *     ENTITY_NODE			      excluding COMMENT_NODE and PROCESSING_INSTRUCTION_NODE nodes. 
- *     ENTITY_REFERENCE_NODE	  This is the empty string if the node has no children. 
- *     DOCUMENT_FRAGMENT_NODE 
+ *     ELEMENT_NODE               concatenation of the textContent attribute value of every child node,
+ *     ENTITY_NODE			      excluding COMMENT_NODE and PROCESSING_INSTRUCTION_NODE nodes.
+ *     ENTITY_REFERENCE_NODE	  This is the empty string if the node has no children.
+ *     DOCUMENT_FRAGMENT_NODE
  *    --------------------------------------------------------------------------------------------------
  *     ATTRIBUTE_NODE
  *     TEXT_NODE
  *     CDATA_SECTION_NODE
- *     COMMENT_NODE, 
- *     PROCESSING_INSTRUCTION_NODE   nodeValue 
+ *     COMMENT_NODE,
+ *     PROCESSING_INSTRUCTION_NODE   nodeValue
  *    --------------------------------------------------------------------------------------------------
- *     DOCUMENT_NODE, 
- *     DOCUMENT_TYPE_NODE, 
- *     NOTATION_NODE                 null 
+ *     DOCUMENT_NODE,
+ *     DOCUMENT_TYPE_NODE,
+ *     NOTATION_NODE                 null
  *
  ***/
 
@@ -859,7 +826,7 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
 	XMLSize_t nRemainingBuffer = rnBufferLength;
 	rnBufferLength = 0;
 
-	if (pzBuffer)   
+	if (pzBuffer)
 		*pzBuffer = 0;
 
 	DOMNode *thisNode = castToNode(this);
@@ -873,7 +840,7 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
     {
 		DOMNode* current = thisNode->getFirstChild();
 
-		while (current != NULL) 
+		while (current != NULL)
 		{
 			if (current->getNodeType() != DOMNode::COMMENT_NODE &&
 				current->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
@@ -886,7 +853,7 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
 					rnBufferLength += nContentLength;
 					nRemainingBuffer -= nContentLength;
 				}
-				else 
+				else
 				{
 					XMLSize_t nContentLength = 0;
 					castToNodeImpl(current)->getTextContent(NULL, nContentLength);
@@ -910,14 +877,14 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
 		const XMLCh* pzValue = thisNode->getNodeValue();
 		XMLSize_t nStrLen = XMLString::stringLen(pzValue);
 
-		if (pzBuffer) 
+		if (pzBuffer)
 		{
 			XMLSize_t nContentLength = (nRemainingBuffer >= nStrLen) ? nStrLen : nRemainingBuffer;
 			XMLString::copyNString(pzBuffer + rnBufferLength, pzValue, nContentLength);
 			rnBufferLength += nContentLength;
 			nRemainingBuffer -= nContentLength;
 		}
-		else 
+		else
 		{
 			rnBufferLength += nStrLen;
 		}
@@ -942,7 +909,7 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
 
 void DOMNodeImpl::setTextContent(const XMLCh* textContent){
     DOMNode *thisNode = castToNode(this);
-    switch (thisNode->getNodeType()) 
+    switch (thisNode->getNodeType())
     {
         case DOMNode::ELEMENT_NODE:
         case DOMNode::ENTITY_NODE:
@@ -954,12 +921,12 @@ void DOMNodeImpl::setTextContent(const XMLCh* textContent){
 
                 // Remove all childs
                 DOMNode* current = thisNode->getFirstChild();
-                while (current != NULL) 
+                while (current != NULL)
                 {
                     thisNode->removeChild(current);
                     current = thisNode->getFirstChild();
                 }
-                if (textContent != NULL) 
+                if (textContent != NULL)
                 {
                     // Add textnode containing data
                     current = ((DOMDocumentImpl*)thisNode->getOwnerDocument())->createTextNode(textContent);

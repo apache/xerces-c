@@ -187,7 +187,7 @@ XMLUTF16Transcoder::transcodeTo(const   XMLCh* const    srcData
 }
 
 
-bool XMLUTF16Transcoder::canTranscodeTo(const unsigned int) const
+bool XMLUTF16Transcoder::canTranscodeTo(const unsigned int)
 {
     // We can handle anything
     return true;

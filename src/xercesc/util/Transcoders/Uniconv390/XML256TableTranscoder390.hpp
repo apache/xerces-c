@@ -67,7 +67,7 @@ public :
     virtual bool canTranscodeTo
     (
         const   unsigned int    toCheck
-    )   const;
+    );
 
 
 protected :

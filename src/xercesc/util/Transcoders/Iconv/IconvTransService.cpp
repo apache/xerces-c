@@ -195,7 +195,7 @@ IconvTransService::makeNewXMLTranscoder(const   XMLCh* const
 }
 
 
-void IconvTransService::upperCase(XMLCh* const toUpperCase) const
+void IconvTransService::upperCase(XMLCh* const toUpperCase)
 {
     XMLCh* outPtr = toUpperCase;
     while (*outPtr)
@@ -206,7 +206,7 @@ void IconvTransService::upperCase(XMLCh* const toUpperCase) const
 }
 
 
-void IconvTransService::lowerCase(XMLCh* const toLowerCase) const
+void IconvTransService::lowerCase(XMLCh* const toLowerCase)
 {
     XMLCh* outPtr = toLowerCase;
     while (*outPtr)

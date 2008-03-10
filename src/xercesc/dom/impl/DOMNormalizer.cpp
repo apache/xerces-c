@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,6 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -42,91 +41,25 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// ---------------------------------------------------------------------------
-//  Local static data
-// ---------------------------------------------------------------------------
-
-static bool            sRegistered = false;
-
-static XMLMutex*       sNormalizerMutex = 0;
-static XMLRegisterCleanup normalizerMutexCleanup;
-
 static XMLMsgLoader*   gMsgLoader = 0;
-static XMLRegisterCleanup cleanupMsgLoader;
 
-
-// ---------------------------------------------------------------------------
-//  Local, static functions
-// ---------------------------------------------------------------------------
-
-//  Cleanup for the message loader
-void DOMNormalizer::reinitMsgLoader()
-{
-	delete gMsgLoader;
-	gMsgLoader = 0;
-}
-
-//  Cleanup for the normalizer mutex
-void DOMNormalizer::reinitNormalizerMutex()
-{
-    delete sNormalizerMutex;
-    sNormalizerMutex = 0;
-    sRegistered = false;
-}
-
-//
-//  We need to fault in this mutex. But, since its used for synchronization
-//  itself, we have to do this the low level way using a compare and swap.
-//
-static XMLMutex& gNormalizerMutex()
-{
-    if (!sNormalizerMutex)
-    {
-        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-
-        // If we got here first, then register it and set the registered flag
-        if (!sRegistered)
-        {
-            sNormalizerMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
-            normalizerMutexCleanup.registerCleanup(DOMNormalizer::reinitNormalizerMutex);
-            sRegistered = true;
-        }
-    }
-    return *sNormalizerMutex;
-}
-
-static XMLMsgLoader& gNormalizerMsgLoader()
-{
-    if (!gMsgLoader)
-    {
-        XMLMutexLock lockInit(&gNormalizerMutex());
-
-        // If we haven't loaded our message yet, then do that
-        if (!gMsgLoader)
-        {
-            gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
-            if (!gMsgLoader)
-                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
-
-            // Register this object to be cleaned up at termination
-            cleanupMsgLoader.registerCleanup(DOMNormalizer::reinitMsgLoader);
-        }
-    }
-
-    return *gMsgLoader;
-}
-
-void XMLInitializer::initializeDOMNormalizerMsgLoader()
+void XMLInitializer::initializeDOMNormalizer()
 {
     gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
 
-    // Register this object to be cleaned up at termination
-    if (gMsgLoader) {
-        cleanupMsgLoader.registerCleanup(DOMNormalizer::reinitMsgLoader);
-    }
+    if (!gMsgLoader)
+      XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
 }
 
-DOMNormalizer::DOMNormalizer(MemoryManager* const manager) 
+void XMLInitializer::terminateDOMNormalizer()
+{
+    delete gMsgLoader;
+    gMsgLoader = 0;
+}
+
+//
+//
+DOMNormalizer::DOMNormalizer(MemoryManager* const manager)
     : fDocument(0)
     , fConfiguration(0)
     , fErrorHandler(0)
@@ -142,13 +75,13 @@ DOMNormalizer::~DOMNormalizer() {
 }
 
 void DOMNormalizer::normalizeDocument(DOMDocumentImpl *doc) {
- 
+
     fDocument = doc;
     fConfiguration = (DOMConfigurationImpl*)doc->getDOMConfig();
     DOMConfigurationImpl *dci = (DOMConfigurationImpl*)fDocument->getDOMConfig();
     if(dci)
-        fErrorHandler = dci->getErrorHandler();            
-    else 
+        fErrorHandler = dci->getErrorHandler();
+    else
         fErrorHandler = 0;
 
     DOMNode *child = 0;
@@ -174,7 +107,7 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
             namespaceFixUp((DOMElementImpl*)node);
         }
         else {
-            //this is done in namespace fixup so no need to do it if namespace is on 
+            //this is done in namespace fixup so no need to do it if namespace is on
             if(attrMap) {
                 for(unsigned int i = 0; i < attrMap->getLength(); i++) {
                     attrMap->item(i)->normalize();
@@ -194,7 +127,7 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
         fNSScope->removeScope();
         break;
     }
-    case DOMNode::COMMENT_NODE: {  
+    case DOMNode::COMMENT_NODE: {
         if (!(fConfiguration->featureValues & DOMConfigurationImpl::FEATURE_COMMENTS)) {
             DOMNode *prevSibling = node->getPreviousSibling();
             DOMNode *parent = node->getParentNode();
@@ -222,20 +155,20 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
                 text->insertData(0, prevSibling->getNodeValue());
                 parent->removeChild(prevSibling);
             }
-            return text; // Don't advance; 
+            return text; // Don't advance;
         }
         break;
     }
     case DOMNode::TEXT_NODE: {
         DOMNode *next = node->getNextSibling();
-        
+
         if(next != 0 && next->getNodeType() == DOMNode::TEXT_NODE) {
             ((DOMText*)node)->appendData(next->getNodeValue());
             node->getParentNode()->removeChild(next);
             return node;
         } else {
             const XMLCh* nv = node->getNodeValue();
-            if (nv == 0 || *nv == 0) {                                   
+            if (nv == 0 || *nv == 0) {
                 node->getParentNode()->removeChild(node);
             }
         }
@@ -259,14 +192,14 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
 
         const XMLCh *uri = at->getNamespaceURI();
         const XMLCh *value = at->getNodeValue();
-            
+
         if(XMLString::equals(XMLUni::fgXMLNSURIName, uri)) {
             if(XMLString::equals(XMLUni::fgXMLNSURIName, value)) {
                 error(XMLErrs::NSDeclInvalid, ele);
             }
             else {
                 const XMLCh *prefix = at->getPrefix();
-                
+
                 if(XMLString::equals(prefix, XMLUni::fgXMLNSString)) {
                     fNSScope->addOrChangeBinding(at->getLocalName(), value, fMemoryManager);
                 }
@@ -304,17 +237,17 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
     // hp aCC complains this i is a redefinition of the i on line 283
     for(unsigned int j = 0; j < len; j++) {
         DOMAttr *at = (DOMAttr*)attrMap->item(j);
-        const XMLCh *uri = at->getNamespaceURI();        
+        const XMLCh *uri = at->getNamespaceURI();
         const XMLCh* prefix = at->getPrefix();
 
         if(!XMLString::equals(XMLUni::fgXMLNSURIName, uri)) {
             if(uri != 0) {
                 if(prefix == 0 || !fNSScope->isValidBinding(prefix, uri)) {
-                    
+
                     const XMLCh* newPrefix =  fNSScope->getPrefix(uri);
 
                     if(newPrefix != 0) {
-                        at->setPrefix(newPrefix);                                                
+                        at->setPrefix(newPrefix);
                     }
                     else {
                         if(prefix != 0 && !fNSScope->getUri(prefix)) {
@@ -378,7 +311,7 @@ void DOMNormalizer::addOrChangeNamespaceDecl(const XMLCh* prefix, const XMLCh* u
         buf.set(XMLUni::fgXMLNSString);
         buf.append(chColon);
         buf.append(prefix);
-        element->setAttributeNS(XMLUni::fgXMLNSURIName, buf.getRawBuffer(), uri); 
+        element->setAttributeNS(XMLUni::fgXMLNSURIName, buf.getRawBuffer(), uri);
     }
 }
 
@@ -396,7 +329,7 @@ const XMLCh* DOMNormalizer::addCustomNamespaceDecl(const XMLCh* uri, DOMElementI
         preBuf.append(integerToXMLCh(fNewNamespaceCount));
         ((DOMNormalizer *)this)->fNewNamespaceCount++;
     }
-    
+
     XMLBuffer buf(1023, fMemoryManager);
     buf.set(XMLUni::fgXMLNSString);
     buf.append(chColon);
@@ -426,7 +359,7 @@ void DOMNormalizer::InScopeNamespaces::addOrChangeBinding(const XMLCh *prefix, c
 
     if(!s)
         addScope(manager);
-    
+
     Scope *curScope = fScopes->elementAt(s - 1);
     curScope->addOrChangeBinding(prefix, uri, manager);
 
@@ -476,17 +409,17 @@ void DOMNormalizer::InScopeNamespaces::Scope::addOrChangeBinding(const XMLCh *pr
     if(!fUriHash) {
         fPrefixHash = new (manager) RefHashTableOf<XMLCh>(10, (bool) false, manager);
         fUriHash = new (manager) RefHashTableOf<XMLCh>(10, (bool) false, manager);
-        
+
         if(fBaseScopeWithBindings) {
             RefHashTableOfEnumerator<XMLCh> preEnumer(fBaseScopeWithBindings->fPrefixHash, false, manager);
             while(preEnumer.hasMoreElements()) {
                 const XMLCh* prefix = (XMLCh*) preEnumer.nextElementKey();
                 const XMLCh* uri  = fBaseScopeWithBindings->fPrefixHash->get((void*)prefix);
-                
+
                 //have to cast here because otherwise we have delete problems under windows :(
                 fPrefixHash->put((void *)prefix, (XMLCh*)uri);
             }
-            
+
             RefHashTableOfEnumerator<XMLCh> uriEnumer(fBaseScopeWithBindings->fUriHash, false, manager);
             while(uriEnumer.hasMoreElements()) {
                 const XMLCh* uri = (XMLCh*) uriEnumer.nextElementKey();
@@ -516,7 +449,7 @@ const XMLCh* DOMNormalizer::InScopeNamespaces::Scope::getUri(const XMLCh *prefix
     else if(fBaseScopeWithBindings) {
         uri = fBaseScopeWithBindings->getUri(prefix);
     }
-    
+
     return uri ? uri : 0;
 }
 
@@ -541,7 +474,7 @@ void DOMNormalizer::error(const XMLErrs::Codes code, const DOMNode *node) const
         const XMLSize_t maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        if (!gNormalizerMsgLoader().loadMsg(code, errText, maxChars))
+        if (!gMsgLoader->loadMsg(code, errText, maxChars))
         {
                 // <TBD> Should probably load a default message here
         }

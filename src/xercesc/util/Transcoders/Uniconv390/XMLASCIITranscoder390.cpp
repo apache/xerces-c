@@ -210,7 +210,7 @@ XMLASCIITranscoder390::transcodeTo(const   XMLCh* const srcData
 }
 
 
-bool XMLASCIITranscoder390::canTranscodeTo(const unsigned int toCheck) const
+bool XMLASCIITranscoder390::canTranscodeTo(const unsigned int toCheck)
 {
     return (toCheck < 0x80);
 }

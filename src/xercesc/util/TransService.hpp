@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -125,19 +125,19 @@ public :
 
     virtual bool supportsSrcOfs() const = 0;
 
-    virtual void upperCase(XMLCh* const toUpperCase) const = 0;
-    virtual void lowerCase(XMLCh* const toLowerCase) const = 0;
+    virtual void upperCase(XMLCh* const toUpperCase) = 0;
+    virtual void lowerCase(XMLCh* const toLowerCase) = 0;
 
-	// -----------------------------------------------------------------------
-    //	Allow users to add their own encodings to the intrinsinc mapping
-	//	table
-	//	Usage:
-	//		XMLTransService::addEncoding (
-	//			gMyEncodingNameString
-    //			, new ENameMapFor<MyTransClassType>(gMyEncodingNameString)
-	//		);
     // -----------------------------------------------------------------------
-	static void addEncoding(const XMLCh* const encoding, ENameMap* const ownMapping);
+    //	Allow users to add their own encodings to the intrinsinc mapping
+    //	table
+    //	Usage:
+    //		XMLTransService::addEncoding (
+    //			gMyEncodingNameString
+    //			, new ENameMapFor<MyTransClassType>(gMyEncodingNameString)
+    //		);
+    // -----------------------------------------------------------------------
+    static void addEncoding(const XMLCh* const encoding, ENameMap* const ownMapping);
 
 
 protected :
@@ -194,9 +194,8 @@ private :
     // -----------------------------------------------------------------------
     void strictIANAEncoding(const bool newState);
     bool isStrictIANAEncoding();
-    static void reinitMappings();
-    static void reinitMappingsRecognizer();
 
+    friend class XMLInitializer;
 };
 
 /**
@@ -300,7 +299,7 @@ public :
     virtual bool canTranscodeTo
     (
         const   unsigned int    toCheck
-    )   const = 0;
+    ) = 0;
 
     //@}
 

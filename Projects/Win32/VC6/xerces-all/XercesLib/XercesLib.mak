@@ -297,7 +297,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLRefInfo.obj"
-	-@erase "$(INTDIR)\XMLRegisterCleanup.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
@@ -440,7 +439,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
-	"$(INTDIR)\XMLRegisterCleanup.obj" \
 	"$(INTDIR)\XMLString.obj" \
 	"$(INTDIR)\XMLStringTokenizer.obj" \
 	"$(INTDIR)\XMLUCS4Transcoder.obj" \
@@ -947,7 +945,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLRefInfo.obj"
-	-@erase "$(INTDIR)\XMLRegisterCleanup.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
@@ -1090,7 +1087,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
-	"$(INTDIR)\XMLRegisterCleanup.obj" \
 	"$(INTDIR)\XMLString.obj" \
 	"$(INTDIR)\XMLStringTokenizer.obj" \
 	"$(INTDIR)\XMLUCS4Transcoder.obj" \
@@ -1597,7 +1593,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLRefInfo.obj"
-	-@erase "$(INTDIR)\XMLRegisterCleanup.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
@@ -1741,7 +1736,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
-	"$(INTDIR)\XMLRegisterCleanup.obj" \
 	"$(INTDIR)\XMLString.obj" \
 	"$(INTDIR)\XMLStringTokenizer.obj" \
 	"$(INTDIR)\XMLUCS4Transcoder.obj" \
@@ -2247,7 +2241,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLReader.obj"
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLRefInfo.obj"
-	-@erase "$(INTDIR)\XMLRegisterCleanup.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
 	-@erase "$(INTDIR)\XMLSchemaDescription.obj"
@@ -2391,7 +2384,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
-	"$(INTDIR)\XMLRegisterCleanup.obj" \
 	"$(INTDIR)\XMLString.obj" \
 	"$(INTDIR)\XMLStringTokenizer.obj" \
 	"$(INTDIR)\XMLUCS4Transcoder.obj" \
@@ -3204,12 +3196,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLNumber.cpp
 
 "$(INTDIR)\XMLNumber.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp
-
-"$(INTDIR)\XMLRegisterCleanup.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

@@ -137,7 +137,6 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
     );
 
     DatatypeValidatorFactory dvFactory(manager);
-    dvFactory.expandRegistryToFullSchemaSet();
     addS4SToXSModel
     (
         namespaceItem
@@ -286,7 +285,6 @@ XSModel::XSModel( XSModel *baseModel
     if (!fAddedS4SGrammar)
     {
         DatatypeValidatorFactory dvFactory(manager);
-        dvFactory.expandRegistryToFullSchemaSet();
 
         XSNamespaceItem* namespaceItem = new (manager) XSNamespaceItem
         (

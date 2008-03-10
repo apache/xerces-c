@@ -301,7 +301,6 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XSValue.obj \
     $(TARGETPATH)\obj\IdentityConstraintHandler.obj \
     $(TARGETPATH)\obj\XSAXMLScanner.obj \
-    $(TARGETPATH)\obj\XMLRegisterCleanup.obj \
     $(TARGETPATH)\obj\XMLInitializer.obj \
     $(TARGETPATH)\obj\WindowsFileMgr.obj \
     $(TARGETPATH)\obj\WindowsMutexMgr.obj \

@@ -291,7 +291,7 @@ bool MacOSUnicodeConverter::supportsSrcOfs() const
 }
 
 
-void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
+void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase)
 {
 #if TARGET_API_MAC_CARBON
 
@@ -320,7 +320,7 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 }
 
 
-void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
+void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase)
 {
 #if TARGET_API_MAC_CARBON
 
@@ -587,7 +587,7 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
 
 
 bool
-MacOSTranscoder::canTranscodeTo(const unsigned int toCheck) const
+MacOSTranscoder::canTranscodeTo(const unsigned int toCheck)
 {
 	//
     //  If the passed value is really a surrogate embedded together, then

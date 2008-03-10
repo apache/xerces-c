@@ -46,7 +46,6 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/DefaultPanicHandler.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
@@ -132,21 +131,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 static XMLMutex*                gSyncMutex = 0;
 static long                     gInitFlag = 0;
 
-// ---------------------------------------------------------------------------
-//  Global data
-//
-//	gXMLCleanupList
-//		This is a list of cleanup functions to be called on
-//		XMLPlatformUtils::Terminate.  Their function is to reset static
-//		data in classes that use it.
-//
-//	gXMLCleanupListMutex
-//		This is a mutex that will be used to synchronise access to the global
-//		static data cleanup list
-// ---------------------------------------------------------------------------
-XMLRegisterCleanup*	gXMLCleanupList = 0;
-XMLMutex*           gXMLCleanupListMutex = 0;
-
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Static Data Members
@@ -174,8 +158,7 @@ bool                    XMLPlatformUtils::fgXMLChBigEndian = true;
 void XMLPlatformUtils::Initialize(const char*          const locale
                                 , const char*          const nlsHome
                                 ,       PanicHandler*  const panicHandler
-                                ,       MemoryManager* const memoryManager
-                                ,       bool                 toInitStatics)
+                                ,       MemoryManager* const memoryManager)
 {
     //
     //  Effects of overflow:
@@ -245,8 +228,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     // Create the local sync mutex
     gSyncMutex = new XMLMutex(fgMemoryManager);
 
-	// Create the mutex for the static data cleanup list
-    gXMLCleanupListMutex = new XMLMutex(fgMemoryManager);
+    // Create the global "atomic operations" mutex.
     fgAtomicMutex = new XMLMutex(fgMemoryManager);
 
     //
@@ -260,6 +242,8 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     //
     //  If we cannot make one, then we call panic to end the process.
     //
+    XMLInitializer::initializeTransService(); // TransService static data.
+
     fgTransService = makeTransService();
 
     if (!fgTransService)
@@ -294,9 +278,9 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     XMLMsgLoader::setLocale(locale);
     XMLMsgLoader::setNLSHome(nlsHome);
 
-    if (toInitStatics) {
-        XMLInitializer::InitializeAllStaticData();
-    }
+    // Initialize static data.
+    //
+    XMLInitializer::initializeStaticData();
 }
 
 
@@ -316,6 +300,10 @@ void XMLPlatformUtils::Terminate()
     if (gInitFlag > 0)
 	return;
 
+    // Terminate static data.
+    //
+    XMLInitializer::terminateStaticData();
+
     // Delete any net accessor that got installed
     delete fgNetAccessor;
     fgNetAccessor = 0;
@@ -331,20 +319,11 @@ void XMLPlatformUtils::Terminate()
     delete fgTransService;
     fgTransService = 0;
 
+    XMLInitializer::terminateTransService(); // TransService static data.
+
     // Clean up mutexes
     delete gSyncMutex;		gSyncMutex = 0;
     delete fgAtomicMutex;	fgAtomicMutex = 0;
-
-    // Clean up statically allocated, lazily cleaned data in each class
-    // that has registered for it.
-    // Note that calling doCleanup() also unregisters the cleanup
-    // function, so that we are chewing the list down to nothing here
-    while (gXMLCleanupList)
-        gXMLCleanupList->doCleanup();
-
-    // Clean up the mutex for accessing gXMLCleanupList
-    delete gXMLCleanupListMutex;
-    gXMLCleanupListMutex = 0;
 
     // Clean up our mgrs
     delete fgFileMgr;		fgFileMgr = 0;

@@ -1713,14 +1713,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLResourceIdentifier.hpp"
 				>
 			</File>

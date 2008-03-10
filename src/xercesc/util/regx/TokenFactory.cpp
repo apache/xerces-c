@@ -30,7 +30,6 @@
 #include <xercesc/util/regx/BlockRangeFactory.hpp>
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

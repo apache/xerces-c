@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,58 +32,27 @@
 #include <xercesc/util/regx/BlockRangeFactory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// ---------------------------------------------------------------------------
-//  Local static data
-// ---------------------------------------------------------------------------
-static XMLMutex* sRangeTokMapMutex = 0;
-static XMLRegisterCleanup rangeTokMapRegistryCleanup;
-static XMLRegisterCleanup rangeTokMapInstanceCleanup;
-
-// ---------------------------------------------------------------------------
-//  Local, static functions
-// ---------------------------------------------------------------------------
-static void reinitRangeTokMapMutex()
-{
-    delete sRangeTokMapMutex;
-    sRangeTokMapMutex = 0;
-}
-
-static XMLMutex& getRangeTokMapMutex()
-{
-    if (!sRangeTokMapMutex)
-    {
-        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-
-        // If we got here first, then register it and set the registered flag
-        if (!sRangeTokMapMutex)
-        {
-            sRangeTokMapMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
-            rangeTokMapRegistryCleanup.registerCleanup(reinitRangeTokMapMutex);
-        }
-    }
-    return *sRangeTokMapMutex;
-}
-
-// ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
 RangeTokenMap* RangeTokenMap::fInstance = 0;
 
 void XMLInitializer::initializeRangeTokenMap()
 {
-    RangeTokenMap::fInstance = new RangeTokenMap(XMLPlatformUtils::fgMemoryManager);
+    RangeTokenMap::fInstance = new RangeTokenMap(
+      XMLPlatformUtils::fgMemoryManager);
+
     if (RangeTokenMap::fInstance)
-    {
-        rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
-        RangeTokenMap::fInstance->buildTokenRanges();
-    }
+      RangeTokenMap::fInstance->buildTokenRanges();
+}
+
+void XMLInitializer::terminateRangeTokenMap()
+{
+    delete RangeTokenMap::fInstance;
+    RangeTokenMap::fInstance = 0;
 }
 
 
@@ -292,18 +261,7 @@ void RangeTokenMap::buildTokenRanges()
 // ---------------------------------------------------------------------------
 RangeTokenMap* RangeTokenMap::instance()
 {
-    if (!fInstance)
-    {
-        XMLMutexLock lock(&getRangeTokMapMutex());
-
-        if (!fInstance)
-        {
-            fInstance = new RangeTokenMap(XMLPlatformUtils::fgMemoryManager);
-            rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
-        }
-    }
-
-    return (fInstance);
+    return fInstance;
 }
 
 // ---------------------------------------------------------------------------
@@ -322,15 +280,6 @@ void RangeTokenMap::cleanUp()
 
     delete fTokenFactory;
     fTokenFactory = 0;
-}
-
-// -----------------------------------------------------------------------
-//  Notification that lazy data has been deleted
-// -----------------------------------------------------------------------
-void RangeTokenMap::reinitInstance() {
-
-    delete fInstance;
-    fInstance = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

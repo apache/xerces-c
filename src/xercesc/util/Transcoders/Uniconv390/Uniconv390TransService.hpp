@@ -73,8 +73,8 @@ public :
 
     virtual bool supportsSrcOfs() const;
 
-    virtual void upperCase(XMLCh* const toUpperCase) const;
-    virtual void lowerCase(XMLCh* const toLowerCase) const;
+    virtual void upperCase(XMLCh* const toUpperCase);
+    virtual void lowerCase(XMLCh* const toLowerCase);
 
 protected :
     // -----------------------------------------------------------------------
@@ -145,7 +145,7 @@ public :
     virtual bool canTranscodeTo
     (
         const   unsigned int    toCheck
-    )   const;
+    );
 
 
 

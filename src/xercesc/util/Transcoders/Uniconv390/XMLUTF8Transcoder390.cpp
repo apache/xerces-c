@@ -617,7 +617,7 @@ XMLUTF8Transcoder390::transcodeTo( const   XMLCh* const srcData
 }
 
 
-bool XMLUTF8Transcoder390::canTranscodeTo(const unsigned int toCheck) const
+bool XMLUTF8Transcoder390::canTranscodeTo(const unsigned int toCheck)
 {
     // We can represent anything in the Unicode (with surrogates) range
     return (toCheck <= 0x10FFFF);

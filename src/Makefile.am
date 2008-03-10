@@ -710,7 +710,6 @@ util_headers = \
 	xercesc/util/XMLMsgLoader.hpp \
 	xercesc/util/XMLNetAccessor.hpp \
 	xercesc/util/XMLNumber.hpp \
-	xercesc/util/XMLRegisterCleanup.hpp \
 	xercesc/util/XMLResourceIdentifier.hpp \
 	xercesc/util/XMLString.hpp \
 	xercesc/util/XMLStringTokenizer.hpp \
@@ -789,7 +788,6 @@ util_sources = \
 	xercesc/util/XMLInitializer.cpp \
 	xercesc/util/XMLMsgLoader.cpp \
 	xercesc/util/XMLNumber.cpp \
-	xercesc/util/XMLRegisterCleanup.cpp \
 	xercesc/util/XMLString.cpp \
 	xercesc/util/XMLStringTokenizer.cpp \
 	xercesc/util/XMLUCS4Transcoder.cpp \

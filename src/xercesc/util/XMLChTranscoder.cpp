@@ -108,7 +108,7 @@ XMLChTranscoder::transcodeTo(const  XMLCh* const    srcData
 }
 
 
-bool XMLChTranscoder::canTranscodeTo(const unsigned int) const
+bool XMLChTranscoder::canTranscodeTo(const unsigned int)
 {
     // We can handle anything
     return true;

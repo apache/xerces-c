@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -167,7 +167,7 @@ public:
     //@{
     /**
      * @param outEncoding the encoding for the formatted content
-     * @param docVersion  
+     * @param docVersion
      * @param target      the formatTarget where the formatted content is written to
      * @param escapeFlags the escape style for certain character
      * @param unrepFlags  the reaction to unrepresentable character
@@ -211,7 +211,7 @@ public:
         , const UnRepFlags              unrepFlags = UnRep_Fail
         ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
-    
+
     ~XMLFormatter();
     //@}
 
@@ -266,9 +266,14 @@ public:
     const XMLCh* getEncodingName() const;
 
     /**
-     * @return return the transcoder used internally for transcoding the formatter conent
+     * @return return constant transcoder used internally for transcoding the formatter conent
      */
     inline const XMLTranscoder*   getTranscoder() const;
+
+    /**
+     * @return return the transcoder used internally for transcoding the formatter conent
+     */
+    inline XMLTranscoder*   getTranscoder();
 
    //@}
 
@@ -349,19 +354,19 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    const XMLByte* getCharRef(XMLSize_t     &count, 
-                              XMLByte*      &ref, 
-                              const XMLCh *  stdRef);  
- 
+    const XMLByte* getCharRef(XMLSize_t     &count,
+                              XMLByte*      &ref,
+                              const XMLCh *  stdRef);
+
     void writeCharRef(const XMLCh &toWrite);
     void writeCharRef(unsigned long toWrite);
 
     bool inEscapeList(const XMLFormatter::EscapeFlags escStyle
                     , const XMLCh                     toCheck);
-                              
 
-    XMLSize_t handleUnEscapedChars(const XMLCh *      srcPtr, 
-                                   const XMLSize_t    count, 
+
+    XMLSize_t handleUnEscapedChars(const XMLCh *      srcPtr,
+                                   const XMLSize_t    count,
                                    const UnRepFlags   unrepFlags);
 
     void specialFormat
@@ -480,6 +485,11 @@ inline const XMLCh* XMLFormatter::getEncodingName() const
 }
 
 inline const XMLTranscoder* XMLFormatter::getTranscoder() const
+{
+    return fXCoder;
+}
+
+inline XMLTranscoder* XMLFormatter::getTranscoder()
 {
     return fXCoder;
 }

@@ -149,7 +149,7 @@ XML256TableTranscoder::transcodeTo( const   XMLCh* const    srcData
 }
 
 
-bool XML256TableTranscoder::canTranscodeTo(const unsigned int toCheck) const
+bool XML256TableTranscoder::canTranscodeTo(const unsigned int toCheck)
 {
     return (xlatOneTo(toCheck) != 0);
 }

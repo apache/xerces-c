@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,46 +40,106 @@ protected :
     /** @name Initialization methods */
     //@{
 
-    /** Perform per-class initialization of static data
+    /** Perform per-class allocationa and initialization of static data
       *
-      * Initialization <b>must</b> be called in XMLPlatformUtils::Initialize.
+      * These functions should be called from XMLPlatformUtils::Initialize.
       */
-    static void InitializeAllStaticData();
+    static void initializeTransService();
+    static void initializeStaticData();
+
+    /** Perform per-class release of static data
+      *
+      * These functions should be called from XMLPlatformUtils::Terminate.
+      */
+    static void terminateStaticData();
+    static void terminateTransService();
 
     //@}
 
     friend class XMLPlatformUtils;
 
 private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
     XMLInitializer();
     XMLInitializer(const XMLInitializer& toCopy);
     XMLInitializer& operator=(const XMLInitializer&);
 
-    /** @name Private static initialization methods */
-    //@{
+private:
+    // Note: The name of each function should be in the form
+    // initialize<class-name>.
+    //
 
-    static void initializeMsgLoader4DOM();
-    static void initializeDOMImplementationImpl();
-    static void initializeDOMImplementationRegistry();
-    static void initializeEmptyNodeList();
-    static void initializeDOMNormalizerMsgLoader();
-    static void initializeValidatorMsgLoader();
-    static void initializeXSValueStatics();
-    static void initializeScannerMsgLoader();
+    //
+    // Initialize
+    //
+
+    // Core
+    //
     static void initializeEncodingValidator();
-    static void initializeExceptionMsgLoader();
-    static void initializeDVFactory();
-    static void initializeGeneralAttrCheckMap();
-    static void initializeXSDErrReporterMsgLoader();
-    static void initializeDTDGrammarDfltEntities();
+    static void initializeXMLException();
+    static void initializeXMLScanner();
+    static void initializeXMLValidator();
+
+    // Regex
+    //
     static void initializeRangeTokenMap();
     static void initializeRegularExpression();
-    static void initializeAnyType();
 
-    //@}
+    // DTD
+    //
+    static void initializeDTDGrammar();
+
+    // Schema
+    //
+    static void initializeXSDErrorReporter();
+    static void initializeDatatypeValidatorFactory();
+    static void initializeGeneralAttributeCheck();
+    static void initializeXSValue();
+    static void initializeComplexTypeInfo();
+
+    // DOM
+    //
+    static void initializeDOMImplementationRegistry();
+    static void initializeDOMImplementationImpl();
+    static void initializeDOMDocumentTypeImpl();
+    static void initializeDOMNodeListImpl();
+    static void initializeDOMNormalizer();
+
+
+    //
+    // Terminate
+    //
+
+    // Core
+    //
+    static void terminateEncodingValidator();
+    static void terminateXMLException();
+    static void terminateXMLScanner();
+    static void terminateXMLValidator();
+
+    // Regex
+    //
+    static void terminateRangeTokenMap();
+    static void terminateRegularExpression();
+
+    // DTD
+    //
+    static void terminateDTDGrammar();
+
+    // Schema
+    //
+    static void terminateXSDErrorReporter();
+    static void terminateDatatypeValidatorFactory();
+    static void terminateGeneralAttributeCheck();
+    static void terminateXSValue();
+    static void terminateComplexTypeInfo();
+
+    // DOM
+    //
+    static void terminateDOMImplementationRegistry();
+    static void terminateDOMImplementationImpl();
+    static void terminateDOMDocumentTypeImpl();
+    static void terminateDOMNodeListImpl();
+    static void terminateDOMNormalizer();
 };
 
 

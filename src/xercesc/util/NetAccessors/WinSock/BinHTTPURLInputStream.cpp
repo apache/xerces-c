@@ -279,13 +279,16 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
       : fSocketHandle(0)
       , fBytesProcessed(0)
 {
-    if(!fInitialized)
+    // Check if we need to load the winsock library. While locking the
+    // mutex every time may be somewhat slow, we don't care in this
+    // particular case since the next operation will most likely be
+    // the network access which is a lot slower.
+    //
     {
         XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+
         if (!fInitialized)
-        {
-            Initialize(urlSource.getMemoryManager());
-        }
+          Initialize(urlSource.getMemoryManager());
     }
 
     fMemoryManager = urlSource.getMemoryManager();

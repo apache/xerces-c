@@ -34,11 +34,10 @@
 #include <xercesc/util/XMLWin1252Transcoder.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/EncodingValidator.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/TransENameMap.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -53,20 +52,21 @@ XERCES_CPP_NAMESPACE_BEGIN
 static bool gStrictIANAEncoding = false;
 RefHashTableOf<ENameMap>* XMLTransService::gMappings = 0;
 RefVectorOf<ENameMap> * XMLTransService::gMappingsRecognizer = 0;
-static XMLRegisterCleanup mappingsCleanup;
-static XMLRegisterCleanup mappingsRecognizerCleanup;
 
-// -----------------------------------------------------------------------
-//  Notification that lazy data has been deleted
-// -----------------------------------------------------------------------
-void XMLTransService::reinitMappings() {
-    delete gMappings;    // The contents of the gMappings hash table are owned by
-    gMappings = 0;       //   the it, and so will be deleted by gMapping's destructor.
+void XMLInitializer::initializeTransService()
+{
+    XMLTransService::gMappings = new RefHashTableOf<ENameMap>(103);
+    XMLTransService::gMappingsRecognizer = new RefVectorOf<ENameMap>(
+      XMLRecognizer::Encodings_Count);
 }
 
-void XMLTransService::reinitMappingsRecognizer() {
+void XMLInitializer::terminateTransService()
+{
     delete XMLTransService::gMappingsRecognizer;
-    gMappingsRecognizer = 0;
+    XMLTransService::gMappingsRecognizer = 0;
+
+    delete XMLTransService::gMappings;
+    XMLTransService::gMappings = 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -74,29 +74,6 @@ void XMLTransService::reinitMappingsRecognizer() {
 // ---------------------------------------------------------------------------
 XMLTransService::XMLTransService()
 {
-    if (!gMappings)
-    {
-        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-
-        if (!gMappings)
-        {
-          gMappings = new RefHashTableOf<ENameMap>(103);
-          mappingsCleanup.registerCleanup(reinitMappings);
-        }
-    }
-
-    if (!gMappingsRecognizer)
-    {
-        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-
-        if (!gMappingsRecognizer)
-        {
-          gMappingsRecognizer = new RefVectorOf<ENameMap>(
-            XMLRecognizer::Encodings_Count);
-
-          mappingsRecognizerCleanup.registerCleanup(reinitMappingsRecognizer);
-        }
-    }
 }
 
 XMLTransService::~XMLTransService()

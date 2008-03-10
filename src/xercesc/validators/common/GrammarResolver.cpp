@@ -104,7 +104,6 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
         if (!fDataTypeReg) {
 
             fDataTypeReg = new (fMemoryManager) DatatypeValidatorFactory(fMemoryManager);
-            fDataTypeReg->expandRegistryToFullSchemaSet();
         }
 
         dv = fDataTypeReg->getDatatypeValidator(localPartStr);

@@ -377,7 +377,7 @@ bool Uniconv390TransService::supportsSrcOfs() const
       return false;
 }
 
-void Uniconv390TransService::upperCase(XMLCh* const toUpperCase) const
+void Uniconv390TransService::upperCase(XMLCh* const toUpperCase)
 {
 
 //char localname1[500];
@@ -416,7 +416,7 @@ void Uniconv390TransService::upperCase(XMLCh* const toUpperCase) const
    }
 }
 
-void Uniconv390TransService::lowerCase(XMLCh* const toLowerCase) const
+void Uniconv390TransService::lowerCase(XMLCh* const toLowerCase)
 {
 //char localname1[500];
 //XMLString::transcode(toLowerCase,localname1,400);
@@ -1211,7 +1211,7 @@ DBGPRINTF2("Uniconv390Transcoder::transcodeTo bytes=%d\n",srcCount);
 }
 
 
-bool Uniconv390Transcoder::canTranscodeTo(const unsigned int toCheck) const
+bool Uniconv390Transcoder::canTranscodeTo(const unsigned int toCheck)
 {
    int retCode;
 DBGPRINTF1("Uniconv390Transcoder::canTranscodeTo\n");

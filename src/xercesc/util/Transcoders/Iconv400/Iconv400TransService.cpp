@@ -191,7 +191,7 @@ bool Iconv400TransService::supportsSrcOfs() const
     return true;
 }
 
-void Iconv400TransService::upperCase(XMLCh* const toUpperCase) const
+void Iconv400TransService::upperCase(XMLCh* const toUpperCase)
 {
     XMLCh* outPtr = toUpperCase;
     while (*outPtr)
@@ -201,7 +201,7 @@ void Iconv400TransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
-void Iconv400TransService::lowerCase(XMLCh* const toLowerCase) const
+void Iconv400TransService::lowerCase(XMLCh* const toLowerCase)
 {
     XMLCh* outPtr = toLowerCase;
     while (*outPtr)
@@ -532,7 +532,7 @@ Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
 }
 
 
-bool Iconv400Transcoder::canTranscodeTo(const unsigned int toCheck) const
+bool Iconv400Transcoder::canTranscodeTo(const unsigned int toCheck)
 {
     //
     //  If the passed value is really a surrogate embedded together, then

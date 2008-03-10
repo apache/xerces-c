@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -145,7 +145,7 @@ public:
     /**
       * Return a singleton that represents 'anyType'
       *
-      * @param emptyNSId the uri id of the empty namespace 
+      * @param emptyNSId the uri id of the empty namespace
       */
     static ComplexTypeInfo* getAnyType(unsigned int emptyNSId);
 
@@ -205,7 +205,7 @@ private:
     ContentSpecNode*                   fContentSpec;
     SchemaAttDef*                      fAttWildCard;
     SchemaAttDefList*                  fAttList;
-    RefVectorOf<SchemaElementDecl>*    fElements;    
+    RefVectorOf<SchemaElementDecl>*    fElements;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     XMLContentModel*                   fContentModel;
     XMLCh*                             fFormattedModel;
@@ -214,6 +214,8 @@ private:
     MemoryManager*                     fMemoryManager;
 
     static ComplexTypeInfo*            fAnyType;
+
+    friend class XMLInitializer;
 };
 
 // ---------------------------------------------------------------------------
@@ -429,7 +431,7 @@ inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
 
     fMemoryManager->deallocate(fTypeName);//delete [] fTypeName;
     fMemoryManager->deallocate(fTypeLocalName);//delete [] fTypeLocalName;
-    fMemoryManager->deallocate(fTypeUri);//delete [] fTypeUri;    
+    fMemoryManager->deallocate(fTypeUri);//delete [] fTypeUri;
 
     if (typeName)
     {
@@ -442,12 +444,12 @@ inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
             (length - index + 1) * sizeof(XMLCh)
         ); //new XMLCh[length - index + 1];
         XMLString::subString(fTypeLocalName, fTypeName, index + 1, length, fMemoryManager);
-        
+
         fTypeUri = (XMLCh*) fMemoryManager->allocate
         (
             (index + 1) * sizeof(XMLCh)
         ); //new XMLCh[index + 1];
-        XMLString::subString(fTypeUri, fTypeName, 0, index, fMemoryManager);        
+        XMLString::subString(fTypeUri, fTypeName, 0, index, fMemoryManager);
     }
     else
     {

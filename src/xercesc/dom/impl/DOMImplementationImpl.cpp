@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,6 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLChar.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
@@ -65,114 +64,38 @@ static const XMLCh  gXPath[] =     // Points to "XPath"
         {chLatin_X, chLatin_P, chLatin_a, chLatin_t, chLatin_h, chNull};
 
 
-// -----------------------------------------------------------------------
-//  Message Loader for DOM
-// -----------------------------------------------------------------------
-static XMLMsgLoader  *sMsgLoader4DOM = 0;   // Points to the singleton instance
-static XMLMutex      *sMutex4DOM = 0;
-static XMLRegisterCleanup mutex4DOMCleanup;
-static XMLRegisterCleanup msgLoader4DOMCleanup;
-
-static void reinitMsgLoader4DOM()
-{
-	delete sMsgLoader4DOM;
-	sMsgLoader4DOM = 0;
-}
-
-static void reinitMutex4DOM()
-{
-	delete sMutex4DOM;
-	sMutex4DOM = 0;
-}
-
-static XMLMutex& getMutex4DOM()
-{
-    if (!sMutex4DOM)
-    {
-        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-
-        // If we got here first, then register it and set the registered flag
-        if (!sMutex4DOM)
-        {
-            sMutex4DOM = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
-            mutex4DOMCleanup.registerCleanup(reinitMutex4DOM);
-        }
-    }
-    return *sMutex4DOM;
-}
-
-XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
-{
-    if (!sMsgLoader4DOM)
-    {
-        XMLMutexLock lock(&getMutex4DOM());
-
-        if (!sMsgLoader4DOM)
-        {
-            sMsgLoader4DOM = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
-
-            if (!sMsgLoader4DOM)
-                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
-            else
-                msgLoader4DOMCleanup.registerCleanup(reinitMsgLoader4DOM);
-        }
-    }
-
-    return sMsgLoader4DOM;
-}
-
-void XMLInitializer::initializeMsgLoader4DOM()
-{
-    sMsgLoader4DOM = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
-    if (sMsgLoader4DOM) {
-        msgLoader4DOMCleanup.registerCleanup(reinitMsgLoader4DOM);
-    }
-}
-
-// -----------------------------------------------------------------------
-//  Singleton DOMImplementationImpl
-// -----------------------------------------------------------------------
-static DOMImplementationImpl    *gDomimp = 0;   // Points to the singleton instance
-                                                //  of DOMImplementation that is returnedreturned
-                                                //  by any call to getImplementation().
-static XMLRegisterCleanup implementationCleanup;
-
-static void reinitImplementation()
-{
-	delete gDomimp;
-	gDomimp = 0;
-}
-
-//  getImplementation()  - Always returns the same singleton instance, which
-//                         is lazily created on the first call.  Note that
-//                         DOM_Implementation must be thread-safe because
-//                         it is common to all DOM documents, and while a single
-//                         document is not thread-safe within itself, we do
-//                         promise that different documents can safely be
-//                         used concurrently by different threads.
-//
-DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl()
-{
-    if (!gDomimp)
-    {
-        XMLMutexLock lock(&getMutex4DOM());
-
-        if (!gDomimp)
-        {
-            gDomimp = new DOMImplementationImpl;
-            implementationCleanup.registerCleanup(reinitImplementation);
-        }
-    }
-
-    return gDomimp;
-}
+static XMLMsgLoader *sMsgLoader = 0;
+static DOMImplementationImpl *gDomimp = 0;
 
 void XMLInitializer::initializeDOMImplementationImpl()
 {
+    sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
+
+    if (!sMsgLoader)
+      XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+
     gDomimp = new DOMImplementationImpl;
-    if (gDomimp) {
-        implementationCleanup.registerCleanup(reinitImplementation);
-    }
+}
+
+void XMLInitializer::terminateDOMImplementationImpl()
+{
+    delete gDomimp;
+    gDomimp = 0;
+
+    delete sMsgLoader;
+    sMsgLoader = 0;
+}
+
+//
+//
+XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
+{
+    return sMsgLoader;
+}
+
+DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl()
+{
+    return gDomimp;
 }
 
 // ------------------------------------------------------------
@@ -270,7 +193,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 )
 {
     // load the text, the msgToLoad+XMLDOMMsgs::DOMEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
-    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
+    return sMsgLoader->loadMsg(XMLDOMMsg::DOMEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
 }
 
 bool DOMImplementation::loadDOMExceptionMsg
@@ -281,7 +204,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 )
 {
     // load the text, the msgToLoad+XMLDOMMsgs::DOMLSEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
-    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMLSEXCEPTION_ERRX+msgToLoad-DOMLSException::PARSE_ERR+1, toFill, maxChars);
+    return sMsgLoader->loadMsg(XMLDOMMsg::DOMLSEXCEPTION_ERRX+msgToLoad-DOMLSException::PARSE_ERR+1, toFill, maxChars);
 }
 
 bool DOMImplementation::loadDOMExceptionMsg
@@ -292,7 +215,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 )
 {
     // load the text, the XMLDOMMsgs::DOMRANGEEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
-    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
+    return sMsgLoader->loadMsg(XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
 }
 
 // ------------------------------------------------------------

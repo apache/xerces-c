@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -176,7 +176,7 @@ public :
         , const XMLCh* const        text2 = 0
         , const XMLCh* const        text3 = 0
         , const XMLCh* const        text4 = 0
-        
+
     );
 
     // -----------------------------------------------------------------------
@@ -444,12 +444,6 @@ public :
         , const bool            toCache = false
     );
 
-    // -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-	static void reinitScannerMutex();
-	static void reinitMsgLoader();
-
 protected:
     // -----------------------------------------------------------------------
     //  Protected pure virtual methods
@@ -712,7 +706,7 @@ protected:
     //      This flag controls whether we force conformant URI
     //
     //  fXMLVersion
-    //      Enum to indicate if the main doc is XML 1.1 or XML 1.0 conformant    
+    //      Enum to indicate if the main doc is XML 1.1 or XML 1.0 conformant
     //  fUIntPool
     //      pool of unsigned integers to help with duplicate attribute
     //      detection and filling in default/fixed attributes
@@ -767,7 +761,7 @@ protected:
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     RefVectorOf<XMLAttr>*       fAttrList;
-    RefHash2KeysTableOf<XMLAttr>*  fAttrDupChkRegistry;    
+    RefHash2KeysTableOf<XMLAttr>*  fAttrDupChkRegistry;
     XMLDocumentHandler*         fDocHandler;
     DocTypeHandler*             fDocTypeHandler;
     XMLEntityHandler*           fEntityHandler;
@@ -1250,7 +1244,7 @@ inline void XMLScanner::setExternalNoNamespaceSchemaLocation(const char* const n
 inline void XMLScanner::setSecurityManager(SecurityManager* const securityManager)
 {
     fSecurityManager = securityManager;
-    if(securityManager != 0) 
+    if(securityManager != 0)
     {
         fEntityExpansionLimit = securityManager->getEntityExpansionLimit();
         fEntityExpansionCount = 0;

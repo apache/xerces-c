@@ -77,7 +77,6 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
         fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false, 128, fMemoryManager);
         fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
         fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
-        fDatatypeRegistry.expandRegistryToFullSchemaSet();
 
         //REVISIT: use grammarPool to create
         fGramDesc = new (fMemoryManager) XMLSchemaDescriptionImpl(XMLUni::fgXMLNSURIName, fMemoryManager);

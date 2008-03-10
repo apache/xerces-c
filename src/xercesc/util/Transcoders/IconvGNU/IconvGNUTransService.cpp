@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,15 +40,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include "IconvGNUTransService.hpp"
 
-#include <xercesc/util/Mutexes.hpp>
-#include <xercesc/util/XMLRegisterCleanup.hpp>
-
 XERCES_CPP_NAMESPACE_BEGIN
-
-// Iconv() access syncronization point
-static XMLMutex    *gIconvMutex = NULL;
-static XMLRegisterCleanup IconvGNUMutexCleanup;
-#  define ICONV_LOCK    XMLMutexLock lockConverter(gIconvMutex);
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -231,7 +223,7 @@ void    IconvGNUWrapper::xmlChToMbc (XMLCh xch, char *mbc) const
 }
 
 // Return uppercase equivalent for XMLCh
-XMLCh    IconvGNUWrapper::toUpper (const XMLCh ch) const
+XMLCh IconvGNUWrapper::toUpper (const XMLCh ch)
 {
     if (ch <= 0x7F)
         return toupper(ch);
@@ -245,7 +237,6 @@ XMLCh    IconvGNUWrapper::toUpper (const XMLCh ch) const
     char    *pTmpArr = tmpArr;
     size_t    bLen = 2;
 
-    ICONV_LOCK;
     if (::iconv (fCDTo, &ptr, &len, &pTmpArr, &bLen) == (size_t) -1)
         return 0;
     tmpArr[1] = toupper (*((unsigned char *)tmpArr));
@@ -261,7 +252,7 @@ XMLCh    IconvGNUWrapper::toUpper (const XMLCh ch) const
 }
 
 // Return lowercase equivalent for XMLCh
-XMLCh    IconvGNUWrapper::toLower (const XMLCh ch) const
+XMLCh IconvGNUWrapper::toLower (const XMLCh ch)
 {
     if (ch <= 0x7F)
         return tolower(ch);
@@ -275,7 +266,6 @@ XMLCh    IconvGNUWrapper::toLower (const XMLCh ch) const
     char    *pTmpArr = tmpArr;
     size_t    bLen = 2;
 
-    ICONV_LOCK;
     if (::iconv (fCDTo, &ptr, &len, &pTmpArr, &bLen) == (size_t) -1)
         return 0;
     tmpArr[1] = tolower (*((unsigned char*)tmpArr));
@@ -370,9 +360,8 @@ char*    IconvGNUWrapper::xmlToMbs
 size_t    IconvGNUWrapper::iconvFrom ( const char    *fromPtr,
                  size_t        *fromLen,
                  char        **toPtr,
-                 size_t        toLen ) const
+                 size_t        toLen )
 {
-    ICONV_LOCK;
     char ** tmpPtr = (char**)&fromPtr;
     return ::iconv (fCDFrom, tmpPtr, fromLen, toPtr, &toLen);
 }
@@ -380,9 +369,8 @@ size_t    IconvGNUWrapper::iconvFrom ( const char    *fromPtr,
 size_t    IconvGNUWrapper::iconvTo ( const char    *fromPtr,
                    size_t        *fromLen,
                    char        **toPtr,
-                   size_t        toLen ) const
+                   size_t        toLen )
 {
-    ICONV_LOCK;
     char ** tmpPtr = (char**)&fromPtr;
     return ::iconv (fCDTo, tmpPtr, fromLen, toPtr, &toLen);
 }
@@ -392,23 +380,9 @@ size_t    IconvGNUWrapper::iconvTo ( const char    *fromPtr,
 //  IconvGNUTransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
 
-void reinitIconvGNUMutex()
-{
-    delete gIconvMutex;
-    gIconvMutex = 0;
-}
-
 IconvGNUTransService::IconvGNUTransService()
     : IconvGNUWrapper(), fUnicodeCP(0)
 {
-    // Create global lock object
-    if (gIconvMutex == NULL) {
-        gIconvMutex = new XMLMutex;
-        if (gIconvMutex == NULL)
-            XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
-        IconvGNUMutexCleanup.registerCleanup(reinitIconvGNUMutex);
-    }
-
     // Try to obtain local (host) characterset from the setlocale
     // and through the environment. Do not call setlocale(LC_*, "")!
     // Using an empty string instead of NULL, will modify the libc
@@ -441,10 +415,11 @@ IconvGNUTransService::IconvGNUTransService()
     // Select the native unicode characters encoding schema
     const IconvGNUEncoding    *eptr;
     // first - try to use the schema with character size, equil to XMLCh
-    for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++) {
+    for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++)
+    {
         if (eptr->fUChSize != sizeof(XMLCh))
             continue;
-        ICONV_LOCK;
+
         // try to create conversion descriptor
         iconv_t    cd_to = iconv_open(fLocalCP, eptr->fSchema);
         if (cd_to == (iconv_t)-1)
@@ -454,6 +429,7 @@ IconvGNUTransService::IconvGNUTransService()
             iconv_close (cd_to);
             continue;
         }
+
         // got it
         setUChSize(eptr->fUChSize);
         setUBO(eptr->fUBO);
@@ -464,9 +440,9 @@ IconvGNUTransService::IconvGNUTransService()
     }
     if (fUnicodeCP == NULL)
         // try to use any known schema
-        for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++) {
+        for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++)
+        {
             // try to create conversion descriptor
-            ICONV_LOCK;
             iconv_t    cd_to = iconv_open(fLocalCP, eptr->fSchema);
             if (cd_to == (iconv_t)-1)
                 continue;
@@ -475,6 +451,7 @@ IconvGNUTransService::IconvGNUTransService()
                 iconv_close (cd_to);
                 continue;
             }
+
             // got it
             setUChSize(eptr->fUChSize);
             setUBO(eptr->fUBO);
@@ -509,6 +486,8 @@ int IconvGNUTransService::compareIString(const XMLCh* const    comp1
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
+    XMLMutexLock lockConverter(&fMutex);
+
     XMLCh    c1 = toUpper(*cptr1);
     XMLCh    c2 = toUpper(*cptr2);
     while ( (*cptr1 != 0) && (*cptr2 != 0) ) {
@@ -529,6 +508,8 @@ int IconvGNUTransService::compareNIString(const XMLCh* const     comp1
     unsigned int  n = 0;
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
+
+    XMLMutexLock lockConverter(&fMutex);
 
     while (true && maxChars)
     {
@@ -592,7 +573,6 @@ IconvGNUTransService::makeNewXMLTranscoder
     iconv_t    cd_from, cd_to;
 
     {
-        ICONV_LOCK;
         cd_from = iconv_open (fUnicodeCP, encLocal);
         if (cd_from == (iconv_t)-1) {
             resValue = XMLTransService::SupportFilesNotFound;
@@ -614,7 +594,7 @@ IconvGNUTransService::makeNewXMLTranscoder
     return newTranscoder;
 }
 
-void IconvGNUTransService::upperCase(XMLCh* const toUpperCase) const
+void IconvGNUTransService::upperCase(XMLCh* const toUpperCase)
 {
     XMLCh* outPtr = toUpperCase;
     while (*outPtr)
@@ -624,9 +604,12 @@ void IconvGNUTransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
-void IconvGNUTransService::lowerCase(XMLCh* const toLowerCase) const
+void IconvGNUTransService::lowerCase(XMLCh* const toLowerCase)
 {
     XMLCh* outPtr = toLowerCase;
+
+    XMLMutexLock lockConverter(&fMutex);
+
     while (*outPtr)
     {
         *outPtr = toLower(*outPtr);
@@ -643,13 +626,15 @@ XMLSize_t IconvGNULCPTranscoder::calcRequiredSize (const char* const srcText
     if (!srcText)
         return 0;
 
-    size_t      len, srcLen;
+    size_t len, srcLen;
     len = srcLen = strlen(srcText);
     if (len == 0)
         return 0;
 
-    char    tmpWideArr[gTempBuffArraySize];
-    size_t    totalLen = 0;
+    char tmpWideArr[gTempBuffArraySize];
+    size_t totalLen = 0;
+
+    XMLMutexLock lockConverter(&fMutex);
 
     for (;;) {
         char        *pTmpArr = tmpWideArr;
@@ -696,6 +681,8 @@ XMLSize_t IconvGNULCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     char    tmpBuff[gTempBuffArraySize];
     size_t    totalLen = 0;
     char    *srcEnd = wBuf + wLent * uChSize();
+
+    XMLMutexLock lockConverter(&fMutex);
 
     for (;;) {
         char        *pTmpArr = tmpBuff;
@@ -754,8 +741,14 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode,
         wideCharBuf = (char *) toTranscode;
 
     // perform conversion
-    char    *ptr = retVal;
-    size_t    rc = iconvTo(wideCharBuf, &len, &ptr, neededLen);
+    char* ptr = retVal;
+    size_t rc;
+
+    {
+      XMLMutexLock lockConverter(&fMutex);
+      rc = iconvTo(wideCharBuf, &len, &ptr, neededLen);
+    }
+
     if (rc == (size_t)-1) {
         return 0;
     }
@@ -804,7 +797,13 @@ bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
     // Ok, go ahead and try the transcoding. If it fails, then ...
     char    *ptr = toFill;
-    size_t    rc = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
+    size_t rc;
+
+    {
+      XMLMutexLock lockConverter(&fMutex);
+      rc = iconvTo(wideCharBuf, &len, &ptr, maxBytes);
+    }
+
     if (rc == (size_t)-1) {
         return false;
     }
@@ -854,7 +853,13 @@ XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode,
 
     size_t    flen = strlen(toTranscode);
     char    *ptr = wideCharBuf;
-    size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
+    size_t rc;
+
+    {
+      XMLMutexLock lockConverter(&fMutex);
+      rc = iconvFrom(toTranscode, &flen, &ptr, len);
+    }
+
     if (rc == (size_t) -1) {
         return NULL;
     }
@@ -906,7 +911,13 @@ bool IconvGNULCPTranscoder::transcode(const   char* const    toTranscode
 
     size_t    flen = strlen(toTranscode); // wLent;
     char    *ptr = wideCharBuf;
-    size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
+    size_t rc;
+
+    {
+      XMLMutexLock lockConverter(&fMutex);
+      rc = iconvFrom(toTranscode, &flen, &ptr, len);
+    }
+
     if (rc == (size_t)-1) {
         return false;
     }
@@ -956,7 +967,6 @@ IconvGNUTranscoder::IconvGNUTranscoder (const    XMLCh* const    encodingName
 
 IconvGNUTranscoder::~IconvGNUTranscoder()
 {
-    ICONV_LOCK;
     if (cdTo() != (iconv_t)-1) {
         iconv_close (cdTo());
         setCDTo ((iconv_t)-1);
@@ -1005,6 +1015,9 @@ XMLSize_t    IconvGNUTranscoder::transcodeFrom
     size_t    prevSrcLen = srcLen;
     unsigned int toReturn = 0;
     bytesEaten = 0;
+
+    XMLMutexLock lockConverter(&fMutex);
+
     for (size_t cnt = 0; cnt < maxChars && srcLen; cnt++) {
         size_t    rc = iconvFrom(startSrc, &srcLen, &orgTarget, uChSize());
         if (rc == (size_t)-1) {
@@ -1050,9 +1063,16 @@ XMLSize_t    IconvGNUTranscoder::transcodeTo
     } else
         startSrc = (char *) srcData;
 
-    char*    startTarget = (char *) toFill;
-    size_t    srcLen = len;
-    size_t    rc = iconvTo (startSrc, &srcLen, &startTarget, maxBytes);
+    char* startTarget = (char *) toFill;
+    size_t srcLen = len;
+
+    size_t rc;
+
+    {
+      XMLMutexLock lockConverter(&fMutex);
+      rc = iconvTo (startSrc, &srcLen, &startTarget, maxBytes);
+    }
+
     if (rc == (size_t)-1 && errno != E2BIG) {
         ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
     }
@@ -1060,10 +1080,10 @@ XMLSize_t    IconvGNUTranscoder::transcodeTo
     return startTarget - (char *)toFill;
 }
 
-bool        IconvGNUTranscoder::canTranscodeTo
+bool IconvGNUTranscoder::canTranscodeTo
 (
     const unsigned int toCheck
-)   const
+)
 {
     //
     //  If the passed value is really a surrogate embedded together, then
@@ -1083,7 +1103,9 @@ bool        IconvGNUTranscoder::canTranscodeTo
     char    tmpBuf[64];
     char*    pTmpBuf = tmpBuf;
 
-    size_t    rc = iconvTo( srcBuf, &len, &pTmpBuf, 64);
+    XMLMutexLock lockConverter(&fMutex);
+    size_t rc = iconvTo( srcBuf, &len, &pTmpBuf, 64);
+
     return (rc != (size_t)-1) && (len == 0);
 }
 

@@ -528,12 +528,12 @@ bool Win32TransService::supportsSrcOfs() const
 }
 
 
-void Win32TransService::upperCase(XMLCh* const toUpperCase) const
+void Win32TransService::upperCase(XMLCh* const toUpperCase)
 {
     wcsupr(toUpperCase);
 }
 
-void Win32TransService::lowerCase(XMLCh* const toLowerCase) const
+void Win32TransService::lowerCase(XMLCh* const toLowerCase)
 {
     wcslwr(toLowerCase);
 }
@@ -784,7 +784,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
 }
 
 
-bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck) const
+bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck)
 {
     //
     //  If the passed value is really a surrogate embedded together, then

@@ -788,7 +788,7 @@ IconvFBSDTransService::makeNewXMLTranscoder
 #endif /* !XML_USE_LIBICONV */
 }
 
-void IconvFBSDTransService::upperCase(XMLCh* const toUpperCase) const
+void IconvFBSDTransService::upperCase(XMLCh* const toUpperCase)
 {
     XMLCh* outPtr = toUpperCase;
     while (*outPtr)
@@ -802,7 +802,7 @@ void IconvFBSDTransService::upperCase(XMLCh* const toUpperCase) const
     }
 }
 
-void IconvFBSDTransService::lowerCase(XMLCh* const toLowerCase) const
+void IconvFBSDTransService::lowerCase(XMLCh* const toLowerCase)
 {
     XMLCh* outPtr = toLowerCase;
     while (*outPtr)
@@ -1483,7 +1483,7 @@ XMLSize_t    IconvFBSDTranscoder::transcodeTo
 bool        IconvFBSDTranscoder::canTranscodeTo
 (
     const unsigned int toCheck
-)   const
+)
 {
     //
     //  If the passed value is really a surrogate embedded together, then
