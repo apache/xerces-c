@@ -225,7 +225,6 @@ void DGXMLScanner::scanDocument(const InputSource& src)
                 (
                     XMLErrs::XMLException_Warning
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
@@ -233,7 +232,6 @@ void DGXMLScanner::scanDocument(const InputSource& src)
                 (
                     XMLErrs::XMLException_Fatal
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else
@@ -241,7 +239,6 @@ void DGXMLScanner::scanDocument(const InputSource& src)
                 (
                     XMLErrs::XMLException_Error
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
         }
@@ -408,7 +405,6 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
                 (
                     XMLErrs::XMLException_Warning
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
@@ -416,7 +412,6 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
                 (
                     XMLErrs::XMLException_Fatal
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else
@@ -424,7 +419,6 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
                 (
                     XMLErrs::XMLException_Error
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
         }
@@ -2083,7 +2077,7 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
             if (excToCatch.getErrorType() == XMLErrorReporter::ErrType_Warning)
                 emitError
                 (
-                    XMLErrs::DisplayErrorMessage
+                    XMLErrs::XMLException_Warning
                     , excToCatch.getCode()
                     , excToCatch.getMessage()
                 );
@@ -2092,7 +2086,6 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
                 (
                     XMLErrs::XMLException_Fatal
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else
@@ -2100,7 +2093,6 @@ Grammar* DGXMLScanner::loadGrammar(const   InputSource& src
                 (
                     XMLErrs::XMLException_Error
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
         }

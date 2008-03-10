@@ -319,7 +319,6 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                     (
                         XMLErrs::XMLException_Fatal
                         , e.getCode()
-                        , e.getType()
                         , e.getMessage()
                     );
                     return;
@@ -334,7 +333,6 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                     (
                         XMLErrs::XMLException_Fatal
                         , e.getCode()
-                        , e.getType()
                         , e.getMessage()
                     );
                     return;
@@ -356,7 +354,6 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
                 (
                     XMLErrs::XMLException_Fatal
                     , e.getCode()
-                    , e.getType()
                     , e.getMessage()
                 );
                 return;
@@ -373,7 +370,6 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
             (
                 XMLErrs::XMLException_Warning
                 , excToCatch.getCode()
-                , excToCatch.getType()
                 , excToCatch.getMessage()
             );
         else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
@@ -381,7 +377,6 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
             (
                 XMLErrs::XMLException_Fatal
                 , excToCatch.getCode()
-                , excToCatch.getType()
                 , excToCatch.getMessage()
             );
         else
@@ -389,7 +384,6 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
             (
                 XMLErrs::XMLException_Error
                 , excToCatch.getCode()
-                , excToCatch.getType()
                 , excToCatch.getMessage()
             );
         return;
@@ -438,7 +432,6 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
                     (
                         XMLErrs::XMLException_Fatal
                         , e.getCode()
-                        , e.getType()
                         , e.getMessage()
                     );
                     return false;
@@ -453,7 +446,6 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
                     (
                         XMLErrs::XMLException_Fatal
                         , e.getCode()
-                        , e.getType()
                         , e.getMessage()
                     );
                     return false;
@@ -474,7 +466,6 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
                 (
                     XMLErrs::XMLException_Fatal
                     , e.getCode()
-                    , e.getType()
                     , e.getMessage()
                 );
                 return false;
@@ -491,7 +482,6 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
             (
                 XMLErrs::XMLException_Warning
                 , excToCatch.getCode()
-                , excToCatch.getType()
                 , excToCatch.getMessage()
             );
         else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
@@ -499,7 +489,6 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
             (
                 XMLErrs::XMLException_Fatal
                 , excToCatch.getCode()
-                , excToCatch.getType()
                 , excToCatch.getMessage()
             );
         else
@@ -507,7 +496,6 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
             (
                 XMLErrs::XMLException_Error
                 , excToCatch.getCode()
-                , excToCatch.getType()
                 , excToCatch.getMessage()
             );
         return false;
@@ -585,7 +573,6 @@ bool XMLScanner::scanFirst( const   InputSource&    src
                 (
                     XMLErrs::XMLException_Warning
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
@@ -593,7 +580,6 @@ bool XMLScanner::scanFirst( const   InputSource&    src
                 (
                     XMLErrs::XMLException_Fatal
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else
@@ -601,7 +587,6 @@ bool XMLScanner::scanFirst( const   InputSource&    src
                 (
                     XMLErrs::XMLException_Error
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
         }
@@ -1703,7 +1688,6 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                         (
                             XMLErrs::XMLException_Fatal
                             , e.getCode()
-                            , e.getType()
                             , e.getMessage()
                         );
                         return 0;
@@ -1718,7 +1702,6 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                         (
                             XMLErrs::XMLException_Fatal
                             , e.getCode()
-                            , e.getType()
                             , e.getMessage()
                         );
                         return 0;
@@ -1740,7 +1723,6 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                     (
                         XMLErrs::XMLException_Fatal
                         , e.getCode()
-                        , e.getType()
                         , e.getMessage()
                     );
                     return 0;
@@ -1757,7 +1739,6 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                 (
                     XMLErrs::XMLException_Warning
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else if (excToCatch.getErrorType() >= XMLErrorReporter::ErrType_Fatal)
@@ -1765,7 +1746,6 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                 (
                     XMLErrs::XMLException_Fatal
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
             else
@@ -1773,7 +1753,6 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
                 (
                     XMLErrs::XMLException_Error
                     , excToCatch.getCode()
-                    , excToCatch.getType()
                     , excToCatch.getMessage()
                 );
                 return 0;

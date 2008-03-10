@@ -166,7 +166,7 @@ void ICUResBundFormatter::startOutput(const   XMLCh* const    msgLocale
     XMLCh *tmpXMLStr = XMLString::transcode(".txt");
 
     // ICU Resource Bundles now uses "root" as locale
-    const XMLCh* locale = L"root";
+    XMLCh* locale = XMLString::transcode ("root");
     XMLString::catString(tmpBuf, outPath);
     XMLString::catString(tmpBuf, locale);
     XMLString::catString(tmpBuf, tmpXMLStr );
@@ -184,5 +184,5 @@ void ICUResBundFormatter::startOutput(const   XMLCh* const    msgLocale
     // Set the message delimiter
     fwprintf(fOutFl, L"%s { \n", xmlStrToPrintable(locale) );
     releasePrintableStr
-
+    XMLString::release(&locale);
 }

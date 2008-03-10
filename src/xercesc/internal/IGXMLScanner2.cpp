@@ -300,7 +300,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             }
                             catch (const XMLException& idve)
                             {
-                                fValidator->emitError (XMLValid::DatatypeError, idve.getCode(), idve.getType(), idve.getMessage());
+                                fValidator->emitError (XMLValid::DatatypeError, idve.getCode(), idve.getMessage());
                             }
                         }
                     }
