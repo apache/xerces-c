@@ -35,7 +35,7 @@
         LEGAL HOOP JUMPING:
         ===================
         This code is distributed under the terms of the Apache Software
-        License, Version 1.1. See the file LICENSE for details</xsl:text>
+        License, Version 2.0. See the file LICENSE for details</xsl:text>
     <xsl:text>&#10;</xsl:text><!-- a newline -->
     <xsl:text>&#10;</xsl:text><!-- a newline -->
     <xsl:text>&#10;</xsl:text><!-- a newline -->
