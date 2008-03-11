@@ -231,7 +231,7 @@ CurlURLInputStream::readBytes(XMLByte* const          toFill
 			FD_ZERO(&writeSet);
 			FD_ZERO(&exceptSet);
 			
-			// As curl for the file descriptors to wait on
+			// Ask curl for the file descriptors to wait on
 			curl_multi_fdset(fMulti, &readSet, &writeSet, &exceptSet, &fdcnt);
 			
 			// Wait on the file descriptors
