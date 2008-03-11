@@ -198,7 +198,7 @@ IconvGNUWrapper::~IconvGNUWrapper()
 // Convert "native unicode" character into XMLCh
 void    IconvGNUWrapper::mbcToXMLCh (const char *mbc, XMLCh *toRet) const
 {
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh))
             *toRet = *((XMLCh*) mbc);
         else if (fUChSize == 2) {
@@ -218,7 +218,7 @@ void    IconvGNUWrapper::mbcToXMLCh (const char *mbc, XMLCh *toRet) const
 // Convert XMLCh into "native unicode" character
 void    IconvGNUWrapper::xmlChToMbc (XMLCh xch, char *mbc) const
 {
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh)) {
             memcpy (mbc, &xch, fUChSize);
             return;
@@ -338,7 +338,7 @@ XMLCh*    IconvGNUWrapper::mbsToXML
     if (mbs_str == NULL || mbs_cnt == 0 || xml_str == NULL || xml_cnt == 0)
         return NULL;
     size_t    cnt = (mbs_cnt < xml_cnt) ? mbs_cnt : xml_cnt;
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh)) {
             // null-transformation
             memcpy (xml_str, mbs_str, fUChSize * cnt);
@@ -379,7 +379,7 @@ char*    IconvGNUWrapper::xmlToMbs
         return NULL;
     size_t    cnt = (mbs_cnt < xml_cnt) ? mbs_cnt : xml_cnt;
     char    *toReturn = mbs_str;
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh)) {
             // null-transformation
             memcpy (mbs_str, xml_str, fUChSize * cnt);
@@ -483,9 +483,10 @@ IconvGNUTransService::IconvGNUTransService()
 
     // Select the native unicode characters encoding schema
     const IconvGNUEncoding    *eptr;
-    // first - try to use the schema with character size, equil to XMLCh
-    for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++) {
-        if (eptr->fUChSize != sizeof(XMLCh))
+    // first - try to use the schema with character size equal to XMLCh, and same endianness
+    for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++)
+    {
+        if (eptr->fUChSize != sizeof(XMLCh) || eptr->fUBO != BYTE_ORDER)
             continue;
         ICONV_LOCK;
         // try to create conversion descriptor
@@ -493,10 +494,11 @@ IconvGNUTransService::IconvGNUTransService()
         if (cd_to == (iconv_t)-1)
             continue;
         iconv_t    cd_from = iconv_open(eptr->fSchema, fLocalCP);
-        if (cd_to == (iconv_t)-1) {
+        if (cd_from == (iconv_t)-1) {
             iconv_close (cd_to);
             continue;
         }
+
         // got it
         setUChSize(eptr->fUChSize);
         setUBO(eptr->fUBO);
@@ -507,17 +509,19 @@ IconvGNUTransService::IconvGNUTransService()
     }
     if (fUnicodeCP == NULL)
         // try to use any known schema
-        for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++) {
+        for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++)
+        {
             // try to create conversion descriptor
             ICONV_LOCK;
             iconv_t    cd_to = iconv_open(fLocalCP, eptr->fSchema);
             if (cd_to == (iconv_t)-1)
                 continue;
             iconv_t    cd_from = iconv_open(eptr->fSchema, fLocalCP);
-            if (cd_to == (iconv_t)-1) {
+            if (cd_from == (iconv_t)-1) {
                 iconv_close (cd_to);
                 continue;
             }
+
             // got it
             setUChSize(eptr->fUChSize);
             setUBO(eptr->fUBO);
