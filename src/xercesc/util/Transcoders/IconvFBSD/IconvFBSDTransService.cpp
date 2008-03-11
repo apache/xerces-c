@@ -40,6 +40,8 @@ typedef struct __IconvFBSDEncoding {
 } IconvFBSDEncoding;
 
 static const IconvFBSDEncoding    gIconvFBSDEncodings[] = {
+    { "UTF-16LE",        2,    LITTLE_ENDIAN },
+    { "UTF-16BE",        2,    BIG_ENDIAN },
     { "ucs-2-internal",        2,    LITTLE_ENDIAN },
     { "ucs2-internal",        2,    LITTLE_ENDIAN },
     { "ucs-4-internal",        4,    LITTLE_ENDIAN },

@@ -66,8 +66,11 @@ typedef struct __IconvGNUEncoding {
 } IconvGNUEncoding;
 
 static const IconvGNUEncoding    gIconvGNUEncodings[] = {
-    { "UCS-2LE",        2,    LITTLE_ENDIAN },
-    { "ucs-2-internal",        2,    LITTLE_ENDIAN },
+    { "UTF-16LE",        2,    LITTLE_ENDIAN },
+    { "UTF-16BE",        2,    BIG_ENDIAN },
+    { "UCS-2LE",         2,    LITTLE_ENDIAN },
+    { "UCS-2BE",         2,    BIG_ENDIAN },
+    { "UCS-2-INTERNAL",  2,    BYTE_ORDER },
     { NULL, 0,    0 }
 };
 
@@ -430,8 +433,10 @@ size_t    IconvGNUWrapper::iconvTo ( const char    *fromPtr,
 
 void reinitIconvGNUMutex()
 {
+#if !defined(APP_NO_THREADS)
     delete gIconvMutex;
     gIconvMutex = 0;
+#endif
 }
 
 IconvGNUTransService::IconvGNUTransService()
