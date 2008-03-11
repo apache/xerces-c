@@ -52,9 +52,12 @@ typedef struct __IconvGNUEncoding {
 } IconvGNUEncoding;
 
 static const IconvGNUEncoding    gIconvGNUEncodings[] = {
-    { "UCS-2LE",        2,    LITTLE_ENDIAN },
-    { "ucs-2-internal",        2,    LITTLE_ENDIAN },
-    { NULL, 0,    0 }
+    { "UTF-16LE",        2,    LITTLE_ENDIAN },
+    { "UTF-16BE",        2,    BIG_ENDIAN },
+    { "UCS-2LE",         2,    LITTLE_ENDIAN },
+    { "UCS-2BE",         2,    BIG_ENDIAN },
+    { "UCS-2-INTERNAL",  2,    BYTE_ORDER },
+    { NULL,              0,    0 }
 };
 
 #define MAX_UCHSIZE 4
@@ -140,12 +143,12 @@ static const XMLCh        gMyServiceId[] =
 // ---------------------------------------------------------------------------
 //  Local methods
 // ---------------------------------------------------------------------------
-static unsigned int getWideCharLength(const XMLCh* const src)
+static XMLSize_t getWideCharLength(const XMLCh* const src)
 {
     if (!src)
         return 0;
 
-    unsigned int len = 0;
+    XMLSize_t len = 0;
     const XMLCh* pTmp = src;
     while (*pTmp++)
         len++;
@@ -172,7 +175,7 @@ IconvGNUWrapper::IconvGNUWrapper ( iconv_t    cd_from,
       fCDTo(cd_to), fCDFrom(cd_from)
 {
     if (fCDFrom == (iconv_t) -1 || fCDTo == (iconv_t) -1) {
-    XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
+        XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
     }
 }
 
@@ -597,6 +600,9 @@ IconvGNUTransService::makeNewXMLTranscoder
 void IconvGNUTransService::upperCase(XMLCh* const toUpperCase)
 {
     XMLCh* outPtr = toUpperCase;
+
+    XMLMutexLock lockConverter(&fMutex);
+
     while (*outPtr)
     {
         *outPtr = toUpper(*outPtr);
@@ -714,10 +720,10 @@ char* IconvGNULCPTranscoder::transcode(const XMLCh* const toTranscode,
         return retVal;
     }
 
-    unsigned int  wLent = getWideCharLength(toTranscode);
+    XMLSize_t wLent = getWideCharLength(toTranscode);
 
     // Calc needed size.
-    const size_t neededLen = calcRequiredSize (toTranscode, manager);
+    XMLSize_t neededLen = calcRequiredSize (toTranscode, manager);
     if (neededLen == 0)
         return 0;
     // allocate output buffer
@@ -773,7 +779,7 @@ bool IconvGNULCPTranscoder::transcode( const   XMLCh* const    toTranscode
         return true;
     }
 
-    unsigned int  wLent = getWideCharLength(toTranscode);
+    XMLSize_t wLent = getWideCharLength(toTranscode);
     if (wLent > maxBytes)
         wLent = maxBytes;
 
@@ -827,7 +833,7 @@ XMLCh* IconvGNULCPTranscoder::transcode(const char* const toTranscode,
         return retVal;
     }
 
-    const XMLSize_t wLent = calcRequiredSize(toTranscode, manager);
+    XMLSize_t wLent = calcRequiredSize(toTranscode, manager);
     if (wLent == 0) {
         retVal = (XMLCh*) manager->allocate(sizeof(XMLCh));//new XMLCh[1];
         retVal[0] = 0;
@@ -889,7 +895,7 @@ bool IconvGNULCPTranscoder::transcode(const   char* const    toTranscode
         return true;
     }
 
-    size_t wLent = calcRequiredSize(toTranscode);
+    XMLSize_t wLent = calcRequiredSize(toTranscode);
     if (wLent > maxChars)
         wLent = maxChars;
 
