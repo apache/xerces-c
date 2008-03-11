@@ -48,7 +48,7 @@ WinSockNetAccessor::WinSockNetAccessor()
 WinSockNetAccessor::~WinSockNetAccessor()
 {
     // Cleanup code for the WinSock library here.
-	BinHTTPURLInputStream::Cleanup();
+    BinHTTPURLInputStream::Cleanup();
 }
 
 

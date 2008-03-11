@@ -176,68 +176,74 @@ private :
 
 bool BinHTTPURLInputStream::fInitialized = false;
 
-void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
+void BinHTTPURLInputStream::Initialize(MemoryManager* const manager)
+{
     //
     // Initialize the WinSock library here.
     //
     WORD        wVersionRequested;
     WSADATA     wsaData;
 
-	LPFN_WSASTARTUP startup = NULL;
-	if(gWinsockLib == NULL) {
+    LPFN_WSASTARTUP startup = NULL;
+    if(gWinsockLib == NULL)
+    {
 #ifdef WITH_IPV6
-		gWinsockLib = LoadLibraryA("WS2_32");
+      gWinsockLib = LoadLibraryA("WS2_32");
 #else
-		gWinsockLib = LoadLibraryA("WSOCK32");
+      gWinsockLib = LoadLibraryA("WSOCK32");
 #endif
-		if(gWinsockLib == NULL) {
-			ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
-		}
-		else {
-			startup = (LPFN_WSASTARTUP) GetProcAddress(gWinsockLib,"WSAStartup");
-			gWSACleanup = (LPFN_WSACLEANUP) GetProcAddress(gWinsockLib,"WSACleanup");
-			gWShtons = (LPFN_HTONS) GetProcAddress(gWinsockLib,"htons");
-			gWSsocket = (LPFN_SOCKET) GetProcAddress(gWinsockLib,"socket");
-			gWSconnect = (LPFN_CONNECT) GetProcAddress(gWinsockLib,"connect");
-			gWSsend = (LPFN_SEND) GetProcAddress(gWinsockLib,"send");
-			gWSrecv = (LPFN_RECV) GetProcAddress(gWinsockLib,"recv");
-			gWSshutdown = (LPFN_SHUTDOWN) GetProcAddress(gWinsockLib,"shutdown");
-			gWSclosesocket = (LPFN_CLOSESOCKET) GetProcAddress(gWinsockLib,"closesocket");
+      if(gWinsockLib == NULL)
+      {
+          ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
+      }
+      else
+      {
+          startup = (LPFN_WSASTARTUP) GetProcAddress(gWinsockLib,"WSAStartup");
+          gWSACleanup = (LPFN_WSACLEANUP) GetProcAddress(gWinsockLib,"WSACleanup");
+          gWShtons = (LPFN_HTONS) GetProcAddress(gWinsockLib,"htons");
+          gWSsocket = (LPFN_SOCKET) GetProcAddress(gWinsockLib,"socket");
+          gWSconnect = (LPFN_CONNECT) GetProcAddress(gWinsockLib,"connect");
+          gWSsend = (LPFN_SEND) GetProcAddress(gWinsockLib,"send");
+          gWSrecv = (LPFN_RECV) GetProcAddress(gWinsockLib,"recv");
+          gWSshutdown = (LPFN_SHUTDOWN) GetProcAddress(gWinsockLib,"shutdown");
+          gWSclosesocket = (LPFN_CLOSESOCKET) GetProcAddress(gWinsockLib,"closesocket");
 #ifdef WITH_IPV6
-			gWSgetaddrinfo = (LPFN_GETADDRINFO) GetProcAddress(gWinsockLib,"getaddrinfo");
-            gWSfreeaddrinfo = (LPFN_FREEADDRINFO) GetProcAddress(gWinsockLib,"freeaddrinfo");
+          gWSgetaddrinfo = (LPFN_GETADDRINFO) GetProcAddress(gWinsockLib,"getaddrinfo");
+          gWSfreeaddrinfo = (LPFN_FREEADDRINFO) GetProcAddress(gWinsockLib,"freeaddrinfo");
 #else
-			gWSgethostbyname = (LPFN_GETHOSTBYNAME) GetProcAddress(gWinsockLib,"gethostbyname");
-			gWSgethostbyaddr = (LPFN_GETHOSTBYADDR) GetProcAddress(gWinsockLib,"gethostbyaddr");
-			gWSinet_addr = (LPFN_INET_ADDR) GetProcAddress(gWinsockLib,"inet_addr");
+          gWSgethostbyname = (LPFN_GETHOSTBYNAME) GetProcAddress(gWinsockLib,"gethostbyname");
+          gWSgethostbyaddr = (LPFN_GETHOSTBYADDR) GetProcAddress(gWinsockLib,"gethostbyaddr");
+          gWSinet_addr = (LPFN_INET_ADDR) GetProcAddress(gWinsockLib,"inet_addr");
 #endif
 
-			if(startup == NULL
-				|| gWSACleanup == NULL
-				|| gWShtons == NULL
-				|| gWSsocket == NULL
-				|| gWSconnect == NULL
-				|| gWSsend == NULL
-				|| gWSrecv == NULL
-				|| gWSshutdown == NULL
-				|| gWSclosesocket == NULL
+          if(startup == NULL
+             || gWSACleanup == NULL
+             || gWShtons == NULL
+             || gWSsocket == NULL
+             || gWSconnect == NULL
+             || gWSsend == NULL
+             || gWSrecv == NULL
+             || gWSshutdown == NULL
+             || gWSclosesocket == NULL
 #ifdef WITH_IPV6
-			    || gWSgetaddrinfo == NULL
-			    || gWSfreeaddrinfo == NULL
+             || gWSgetaddrinfo == NULL
+             || gWSfreeaddrinfo == NULL
 #else
-				|| gWSgethostbyname == NULL
-				|| gWSgethostbyaddr == NULL
-				|| gWSinet_addr == NULL
+             || gWSgethostbyname == NULL
+             || gWSgethostbyaddr == NULL
+             || gWSinet_addr == NULL
 #endif
-                )
-			{
-				gWSACleanup = NULL;
-				Cleanup();
-				ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
-			}
-		}
-	}
+          )
+          {
+              gWSACleanup = NULL;
+              Cleanup();
+              ThrowXMLwithMemMgr(NetAccessorException, XMLExcepts::NetAcc_InitFailed, manager);
+          }
+      }
+    }
+
     wVersionRequested = MAKEWORD( 2, 2 );
+
     int err = (*startup)(wVersionRequested, &wsaData);
     if (err != 0)
     {
@@ -247,31 +253,34 @@ void BinHTTPURLInputStream::Initialize(MemoryManager* const manager) {
     fInitialized = true;
 }
 
-void BinHTTPURLInputStream::Cleanup() {
-	if(fInitialized)
-	{
-		if(gWSACleanup) (*gWSACleanup)();
-		gWSACleanup = NULL;
-		FreeLibrary(gWinsockLib);
-		gWinsockLib = NULL;
-		gWShtons = NULL;
-		gWSsocket = NULL;
-		gWSconnect = NULL;
-		gWSsend = NULL;
-		gWSrecv = NULL;
-		gWSshutdown = NULL;
-		gWSclosesocket = NULL;
+void BinHTTPURLInputStream::Cleanup()
+{
+    XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+
+    if(fInitialized)
+    {
+        if(gWSACleanup) (*gWSACleanup)();
+        gWSACleanup = NULL;
+        FreeLibrary(gWinsockLib);
+        gWinsockLib = NULL;
+        gWShtons = NULL;
+        gWSsocket = NULL;
+        gWSconnect = NULL;
+        gWSsend = NULL;
+        gWSrecv = NULL;
+        gWSshutdown = NULL;
+        gWSclosesocket = NULL;
 #ifdef WITH_IPV6
-		gWSgetaddrinfo = NULL;
+        gWSgetaddrinfo = NULL;
         gWSfreeaddrinfo = NULL;
 #else
-		gWSgethostbyname = NULL;
-		gWSgethostbyaddr = NULL;
-		gWSinet_addr = NULL;
+        gWSgethostbyname = NULL;
+        gWSgethostbyaddr = NULL;
+        gWSinet_addr = NULL;
 #endif
 
         fInitialized = false;
-	}
+    }
 }
 
 
