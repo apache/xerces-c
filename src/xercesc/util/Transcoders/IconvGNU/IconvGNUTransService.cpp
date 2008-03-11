@@ -186,7 +186,7 @@ IconvGNUWrapper::~IconvGNUWrapper()
 // Convert "native unicode" character into XMLCh
 void    IconvGNUWrapper::mbcToXMLCh (const char *mbc, XMLCh *toRet) const
 {
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh))
             *toRet = *((XMLCh*) mbc);
         else if (fUChSize == 2) {
@@ -206,7 +206,7 @@ void    IconvGNUWrapper::mbcToXMLCh (const char *mbc, XMLCh *toRet) const
 // Convert XMLCh into "native unicode" character
 void    IconvGNUWrapper::xmlChToMbc (XMLCh xch, char *mbc) const
 {
-    if (fUBO == LITTLE_ENDIAN) {
+    if (fUBO == BYTE_ORDER) {
         if (fUChSize == sizeof(XMLCh)) {
             memcpy (mbc, &xch, fUChSize);
             return;
@@ -417,10 +417,10 @@ IconvGNUTransService::IconvGNUTransService()
 
     // Select the native unicode characters encoding schema
     const IconvGNUEncoding    *eptr;
-    // first - try to use the schema with character size, equil to XMLCh
+    // first - try to use the schema with character size equal to XMLCh, and same endianness
     for (eptr = gIconvGNUEncodings; eptr->fSchema; eptr++)
     {
-        if (eptr->fUChSize != sizeof(XMLCh))
+        if (eptr->fUChSize != sizeof(XMLCh) || eptr->fUBO != BYTE_ORDER)
             continue;
 
         // try to create conversion descriptor
@@ -575,23 +575,21 @@ IconvGNUTransService::makeNewXMLTranscoder
     ArrayJanitor<char> janBuf(encLocal, manager);
     iconv_t    cd_from, cd_to;
 
-    {
-        cd_from = iconv_open (fUnicodeCP, encLocal);
-        if (cd_from == (iconv_t)-1) {
-            resValue = XMLTransService::SupportFilesNotFound;
-            return NULL;
-        }
-        cd_to = iconv_open (encLocal, fUnicodeCP);
-        if (cd_to == (iconv_t)-1) {
-            resValue = XMLTransService::SupportFilesNotFound;
-            iconv_close (cd_from);
-            return NULL;
-        }
-        newTranscoder = new (manager) IconvGNUTranscoder (encodingName,
-                             blockSize,
-                             cd_from, cd_to,
-                             uChSize(), UBO(), manager);
+    cd_from = iconv_open (fUnicodeCP, encLocal);
+    if (cd_from == (iconv_t)-1) {
+        resValue = XMLTransService::SupportFilesNotFound;
+        return NULL;
     }
+    cd_to = iconv_open (encLocal, fUnicodeCP);
+    if (cd_to == (iconv_t)-1) {
+        resValue = XMLTransService::SupportFilesNotFound;
+        iconv_close (cd_from);
+        return NULL;
+    }
+    newTranscoder = new (manager) IconvGNUTranscoder (encodingName,
+                         blockSize,
+                         cd_from, cd_to,
+                         uChSize(), UBO(), manager);
     if (newTranscoder)
         resValue = XMLTransService::Ok;
     return newTranscoder;
