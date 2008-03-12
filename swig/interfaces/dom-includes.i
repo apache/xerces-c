@@ -21,7 +21,6 @@
 #include "xercesc/util/XMLException.hpp"
 
 #include "xercesc/framework/Wrapper4InputSource.hpp"
-#include "xercesc/framework/Wrapper4DOMLSInput.hpp"
 
 #include "xercesc/parsers/AbstractDOMParser.hpp"
 #include "xercesc/parsers/XercesDOMParser.hpp"

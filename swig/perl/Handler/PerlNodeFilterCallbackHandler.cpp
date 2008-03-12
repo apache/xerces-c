@@ -47,7 +47,11 @@ PerlNodeFilterCallbackHandler::acceptNode (const DOMNode* node) const
 	return 0;
     }
     short accept = 0;
+
+    // god bless John Lenz's new type system in SWIG 1.3.25!!!
     char *domNodeName = "XML::Xerces::DOMNode";
+    swig_type_info *domNodeType = SWIG_TypeQuery(domNodeName);
+    swig_type_info *ty = SWIG_TypeDynamicCast(domNodeType, (void **) &node);
 
     dSP;
 
@@ -59,9 +63,6 @@ PerlNodeFilterCallbackHandler::acceptNode (const DOMNode* node) const
     XPUSHs(callbackObj);
 
     // the only argument is the node
-    // god bless John Lenz's new type system in SWIG 1.3.25!!!
-    swig_type_info *domNodeType = SWIG_TypeQuery(domNodeName);
-    swig_type_info *ty = SWIG_TypeDynamicCast(domNodeType, (void **) &node);
     SV* node_sv = sv_newmortal();
     SWIG_MakePtr(node_sv, (void *) node, ty,0);
     XPUSHs(node_sv);

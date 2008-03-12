@@ -55,7 +55,7 @@ WriteMakefile(
     'NAME'        => 'XML::Xerces::SAX',
     'INC'       => $INCLUDES,
     'LIBS'      => [$LIBS],
-    'MYEXTLIB'  => "$TRANSCODER_LIB $HANDLER_LIB",
+    'MYEXTLIB'  => $MYEXTLIB,
     'OBJECT'    => 'Xerces_SAX$(OBJ_EXT)',
     'CCFLAGS'   => $CFLAGS,
     'CC'        => $CXX,

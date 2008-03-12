@@ -5,7 +5,7 @@
 ######################### Begin module loading
 
 # use blib;
-use Test::More tests => 20;
+use Test::More tests => 21;
 BEGIN { use_ok("XML::Xerces::DOM") };
 
 use strict;
@@ -71,6 +71,8 @@ isa_ok($input->getByteStream(), "XML::Xerces::URLInputSource",
       'overloaded return value in getByteStream');
 
 $is = XML::Xerces::StdInInputSource->new();
+isa_ok($is, "XML::Xerces::InputSource",
+      'input source to set');
 isa_ok($is, "XML::Xerces::StdInInputSource",
       'input source to set');
 $input->setByteStream($is);

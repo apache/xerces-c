@@ -4,8 +4,7 @@
   %set_output(SWIG_FromCharPtr((char*)$1));
 }
 
-%typemap(in) (const XMLByte* const srcDocBytes, 
-	      unsigned int byteCount) {
+%typemap(in) (const XMLByte* const srcDocBytes, XMLSize_t byteCount) {
   if (SvPOK($input)||SvIOK($input)||SvNOK($input)) {
     STRLEN len;
     XMLByte *xmlbytes = (XMLByte *)SvPV($input, len);
@@ -13,7 +12,7 @@
     $1 = new XMLByte[len];
     memcpy($1, xmlbytes, len);
   } else {
-    SWIG_croak("Type error in argument 2 of $symname, Expected perl-string.");
+    SWIG_croak("Type error in argument 1 of $symname, Expected perl-string.");
   }
 }
 

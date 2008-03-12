@@ -535,12 +535,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *Val_Never = *XML::Xercesc::SAXParser_Val_Never;
 *Val_Always = *XML::Xercesc::SAXParser_Val_Always;
 *Val_Auto = *XML::Xercesc::SAXParser_Val_Auto;
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_SAXParser(@_);
-    bless $self, $pkg if defined($self);
-}
-
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
@@ -584,6 +578,7 @@ sub DESTROY {
 *getIgnoreAnnotations = *XML::Xercesc::SAXParser_getIgnoreAnnotations;
 *getDisableDefaultEntityResolution = *XML::Xercesc::SAXParser_getDisableDefaultEntityResolution;
 *getSkipDTDValidation = *XML::Xercesc::SAXParser_getSkipDTDValidation;
+*getHandleMultipleImports = *XML::Xercesc::SAXParser_getHandleMultipleImports;
 *setGenerateSyntheticAnnotations = *XML::Xercesc::SAXParser_setGenerateSyntheticAnnotations;
 *setValidateAnnotations = *XML::Xercesc::SAXParser_setValidateAnnotations;
 *setDoNamespaces = *XML::Xercesc::SAXParser_setDoNamespaces;
@@ -607,6 +602,7 @@ sub DESTROY {
 *setIgnoreAnnotations = *XML::Xercesc::SAXParser_setIgnoreAnnotations;
 *setDisableDefaultEntityResolution = *XML::Xercesc::SAXParser_setDisableDefaultEntityResolution;
 *setSkipDTDValidation = *XML::Xercesc::SAXParser_setSkipDTDValidation;
+*setHandleMultipleImports = *XML::Xercesc::SAXParser_setHandleMultipleImports;
 *installAdvDocHandler = *XML::Xercesc::SAXParser_installAdvDocHandler;
 *removeAdvDocHandler = *XML::Xercesc::SAXParser_removeAdvDocHandler;
 *parseFirst = *XML::Xercesc::SAXParser_parseFirst;
@@ -791,12 +787,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces::ContentHandler XML::Xerces::DocumentHandler XML::Xerces::PerlCallbackHandler XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
-sub new {
-    my $pkg = shift;
-    my $self = XML::Xercesc::new_PerlSAXCallbackHandler(@_);
-    bless $self, $pkg if defined($self);
-}
-
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});

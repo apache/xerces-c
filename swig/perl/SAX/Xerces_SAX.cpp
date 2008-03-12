@@ -1037,7 +1037,7 @@ static void SWIG_croak_null()
 
 
 /* 
-   Define how strict is the cast between strings an integers/doubles
+   Define how strict is the cast between strings and integers/doubles
    when overloading between these types occurs.
    
    The default is making it as strict as possible by using SWIG_AddCast
@@ -1501,39 +1501,41 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdInInputSource swig_types[58]
 #define SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdOutFormatTarget swig_types[59]
 #define SWIGTYPE_p_XERCES_CPP_NAMESPACE__URLInputSource swig_types[60]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDef swig_types[61]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDefList swig_types[62]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttr swig_types[63]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLContentModel swig_types[64]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDTDDescription swig_types[65]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDocumentHandler swig_types[66]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLElementDecl swig_types[67]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityDecl swig_types[68]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver swig_types[69]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException swig_types[70]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatTarget swig_types[71]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatter swig_types[72]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarDescription swig_types[73]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool swig_types[74]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLNotationDecl swig_types[75]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken swig_types[76]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLReaderFactory swig_types[77]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLSchemaDescription swig_types[78]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLURL swig_types[79]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri swig_types[80]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator swig_types[81]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMemory swig_types[82]
-#define SWIGTYPE_p_XMLErrorReporter__ErrTypes swig_types[83]
-#define SWIGTYPE_p_char swig_types[84]
-#define SWIGTYPE_p_int32_t swig_types[85]
-#define SWIGTYPE_p_size_t swig_types[86]
-#define SWIGTYPE_p_ssize_t swig_types[87]
-#define SWIGTYPE_p_uint16_t swig_types[88]
-#define SWIGTYPE_p_uint32_t swig_types[89]
-#define SWIGTYPE_p_unsigned_char swig_types[90]
-#define SWIGTYPE_p_void swig_types[91]
-static swig_type_info *swig_types[93];
-static swig_module_info swig_module = {swig_types, 92, 0, 0, 0, 0};
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput swig_types[61]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDef swig_types[62]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDefList swig_types[63]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttr swig_types[64]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLContentModel swig_types[65]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDTDDescription swig_types[66]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDocumentHandler swig_types[67]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLElementDecl swig_types[68]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityDecl swig_types[69]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver swig_types[70]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException swig_types[71]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatTarget swig_types[72]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatter swig_types[73]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarDescription swig_types[74]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool swig_types[75]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLNotationDecl swig_types[76]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken swig_types[77]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLReaderFactory swig_types[78]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLSchemaDescription swig_types[79]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLURL swig_types[80]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri swig_types[81]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator swig_types[82]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMemory swig_types[83]
+#define SWIGTYPE_p_XMLErrorReporter__ErrTypes swig_types[84]
+#define SWIGTYPE_p_char swig_types[85]
+#define SWIGTYPE_p_int32_t swig_types[86]
+#define SWIGTYPE_p_size_t swig_types[87]
+#define SWIGTYPE_p_ssize_t swig_types[88]
+#define SWIGTYPE_p_uint16_t swig_types[89]
+#define SWIGTYPE_p_uint32_t swig_types[90]
+#define SWIGTYPE_p_uint64_t swig_types[91]
+#define SWIGTYPE_p_unsigned_char swig_types[92]
+#define SWIGTYPE_p_void swig_types[93]
+static swig_type_info *swig_types[95];
+static swig_module_info swig_module = {swig_types, 94, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1572,6 +1574,9 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 
 #include "xercesc/sax/InputSource.hpp"
 
+#include "xercesc/dom/DOMLSInput.hpp"
+#include "xercesc/framework/Wrapper4DOMLSInput.hpp"
+
 #include "xercesc/framework/LocalFileInputSource.hpp"
 #include "xercesc/framework/MemBufInputSource.hpp"
 #include "xercesc/framework/StdInInputSource.hpp"
@@ -1601,13 +1606,13 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 
 XERCES_CPP_NAMESPACE_USE
 
-void
+static void
 makeSAXNotRecognizedException(const SAXNotRecognizedException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new SAXNotRecognizedException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException, SWIG_SHADOW|0);
 }
 
-void
+static void
 makeSAXNotSupportedException(const SAXNotSupportedException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new SAXNotSupportedException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException, SWIG_SHADOW|0);
@@ -1655,7 +1660,10 @@ makeSAXNotSupportedException(const SAXNotSupportedException& e){
 #include "xercesc/validators/schema/SchemaAttDefList.hpp"
 #include "xercesc/validators/schema/SchemaAttDef.hpp"
 
-#include "PSVIWriter/PSVIUni.hpp"
+#include "xercesc/util/PSVIUni.hpp"
+
+XERCES_CPP_NAMESPACE_USE
+
 
 
 
@@ -1725,7 +1733,7 @@ static Transcoder* UTF8_TRANSCODER  = NULL;
 
 static XMLExceptionHandler* XML_EXCEPTION_HANDLER  = NULL;
 
-void
+static void
 makeXMLException(const XMLException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) XML_EXCEPTION_HANDLER->copyXMLException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException, SWIG_SHADOW|0);
@@ -1790,18 +1798,6 @@ XMLGrammarDescription_dynamic_cast(void **ptr) {
 
 #include "PerlSAXCallbackHandler.hpp"
 
-
-
-#include <limits.h>
-#ifndef LLONG_MIN
-# define LLONG_MIN	LONG_LONG_MIN
-#endif
-#ifndef LLONG_MAX
-# define LLONG_MAX	LONG_LONG_MAX
-#endif
-#ifndef ULLONG_MAX
-# define ULLONG_MAX	ULONG_LONG_MAX
-#endif
 
 
 SWIGINTERN int
@@ -1912,18 +1908,12 @@ SWIG_AsVal_unsigned_SS_long SWIG_PERL_DECL_ARGS_2(SV *obj, unsigned long *val)
 }
 
 
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
+SWIGINTERNINLINE int
+SWIG_AsVal_size_t SWIG_PERL_DECL_ARGS_2(SV * obj, size_t *val)
 {
   unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > UINT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< unsigned int >(v);
-    }
-  }  
+  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, val ? &v : 0);
+  if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
   return res;
 }
 
@@ -1944,10 +1934,31 @@ SWIG_From_unsigned_SS_int  SWIG_PERL_DECL_ARGS_1(unsigned int value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
-{    
-  return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(static_cast< unsigned long >(value));
+#include <limits.h>
+#ifndef LLONG_MIN
+# define LLONG_MIN	LONG_LONG_MIN
+#endif
+#ifndef LLONG_MAX
+# define LLONG_MAX	LONG_LONG_MAX
+#endif
+#ifndef ULLONG_MAX
+# define ULLONG_MAX	ULONG_LONG_MAX
+#endif
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v > UINT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< unsigned int >(v);
+    }
+  }  
+  return res;
 }
 
 
@@ -2044,16 +2055,6 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
       if (val) *val = static_cast< int >(v);
     }
   }  
-  return res;
-}
-
-
-SWIGINTERNINLINE int
-SWIG_AsVal_size_t SWIG_PERL_DECL_ARGS_2(SV * obj, size_t *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, val ? &v : 0);
-  if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
   return res;
 }
 
@@ -2223,19 +2224,19 @@ XS(_wrap_DTDHandler_unparsedEntityDecl) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DTDHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg4 = UTF8_TRANSCODER->Local2XMLString(ST(3));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg5 = UTF8_TRANSCODER->Local2XMLString(ST(4));
     
     {
@@ -2317,10 +2318,10 @@ XS(_wrap_DocumentHandler_characters) {
   {
     XERCES_CPP_NAMESPACE::DocumentHandler *arg1 = (XERCES_CPP_NAMESPACE::DocumentHandler *) 0 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
-    unsigned int arg3 ;
+    XMLSize_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    unsigned int val3 ;
+    size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -2334,14 +2335,14 @@ XS(_wrap_DocumentHandler_characters) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DocumentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "DocumentHandler_characters" "', argument " "3"" of type '" "unsigned int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "DocumentHandler_characters" "', argument " "3"" of type '" "XMLSize_t""'");
     } 
-    arg3 = static_cast< unsigned int >(val3);
+    arg3 = static_cast< XMLSize_t >(val3);
     {
       try 
       {
@@ -2386,11 +2387,11 @@ XS(_wrap_DocumentHandler_processingInstruction) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DocumentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -2693,7 +2694,7 @@ XS(_wrap_AttributeList_getType__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::AttributeList * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -2822,7 +2823,7 @@ XS(_wrap_AttributeList_getValue__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::AttributeList * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -2936,10 +2937,10 @@ XS(_wrap_HandlerBase_characters) {
   {
     XERCES_CPP_NAMESPACE::HandlerBase *arg1 = (XERCES_CPP_NAMESPACE::HandlerBase *) 0 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
-    unsigned int arg3 ;
+    XMLSize_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    unsigned int val3 ;
+    size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -2953,14 +2954,14 @@ XS(_wrap_HandlerBase_characters) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::HandlerBase * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "HandlerBase_characters" "', argument " "3"" of type '" "unsigned int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "HandlerBase_characters" "', argument " "3"" of type '" "XMLSize_t""'");
     } 
-    arg3 = static_cast< unsigned int >(val3);
+    arg3 = static_cast< XMLSize_t >(val3);
     {
       try 
       {
@@ -3005,11 +3006,11 @@ XS(_wrap_HandlerBase_processingInstruction) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::HandlerBase * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -3276,19 +3277,19 @@ XS(_wrap_HandlerBase_unparsedEntityDecl) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::HandlerBase * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg4 = UTF8_TRANSCODER->Local2XMLString(ST(3));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg5 = UTF8_TRANSCODER->Local2XMLString(ST(4));
     
     {
@@ -3501,7 +3502,7 @@ XS(_wrap_Locator_getSystemId) {
 XS(_wrap_Locator_getLineNumber) {
   {
     XERCES_CPP_NAMESPACE::Locator *arg1 = (XERCES_CPP_NAMESPACE::Locator *) 0 ;
-    XMLSSize_t result;
+    unsigned long result;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -3518,11 +3519,11 @@ XS(_wrap_Locator_getLineNumber) {
     {
       try 
       {
-        result = ((XERCES_CPP_NAMESPACE::Locator const *)arg1)->getLineNumber();
+        result = (unsigned long)((XERCES_CPP_NAMESPACE::Locator const *)arg1)->getLineNumber();
       } 
       CATCH_XML_EXCEPTION
     }
-    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1(static_cast< size_t >(result)); argvi++ ;
+    ST(argvi) = SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(static_cast< unsigned long >(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3535,7 +3536,7 @@ XS(_wrap_Locator_getLineNumber) {
 XS(_wrap_Locator_getColumnNumber) {
   {
     XERCES_CPP_NAMESPACE::Locator *arg1 = (XERCES_CPP_NAMESPACE::Locator *) 0 ;
-    XMLSSize_t result;
+    unsigned long result;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -3552,11 +3553,11 @@ XS(_wrap_Locator_getColumnNumber) {
     {
       try 
       {
-        result = ((XERCES_CPP_NAMESPACE::Locator const *)arg1)->getColumnNumber();
+        result = (unsigned long)((XERCES_CPP_NAMESPACE::Locator const *)arg1)->getColumnNumber();
       } 
       CATCH_XML_EXCEPTION
     }
-    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1(static_cast< size_t >(result)); argvi++ ;
+    ST(argvi) = SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(static_cast< unsigned long >(result)); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3889,11 +3890,11 @@ XS(_wrap_Attributes_getIndex__SWIG_0) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Attributes * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -3944,7 +3945,7 @@ XS(_wrap_Attributes_getIndex__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Attributes * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -4079,11 +4080,11 @@ XS(_wrap_Attributes_getType__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Attributes * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -4137,7 +4138,7 @@ XS(_wrap_Attributes_getType__SWIG_2) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Attributes * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -4308,11 +4309,11 @@ XS(_wrap_Attributes_getValue__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Attributes * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -4366,7 +4367,7 @@ XS(_wrap_Attributes_getValue__SWIG_2) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Attributes * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -4555,10 +4556,10 @@ XS(_wrap_ContentHandler_characters) {
   {
     XERCES_CPP_NAMESPACE::ContentHandler *arg1 = (XERCES_CPP_NAMESPACE::ContentHandler *) 0 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
-    unsigned int arg3 ;
+    XMLSize_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    unsigned int val3 ;
+    size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -4572,14 +4573,14 @@ XS(_wrap_ContentHandler_characters) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::ContentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ContentHandler_characters" "', argument " "3"" of type '" "unsigned int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ContentHandler_characters" "', argument " "3"" of type '" "XMLSize_t""'");
     } 
-    arg3 = static_cast< unsigned int >(val3);
+    arg3 = static_cast< XMLSize_t >(val3);
     {
       try 
       {
@@ -4624,11 +4625,11 @@ XS(_wrap_ContentHandler_processingInstruction) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::ContentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -4722,11 +4723,11 @@ XS(_wrap_ContentHandler_startPrefixMapping) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::ContentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -4776,7 +4777,7 @@ XS(_wrap_ContentHandler_endPrefixMapping) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::ContentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -4820,7 +4821,7 @@ XS(_wrap_ContentHandler_skippedEntity) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::ContentHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -4884,10 +4885,10 @@ XS(_wrap_LexicalHandler_comment) {
   {
     XERCES_CPP_NAMESPACE::LexicalHandler *arg1 = (XERCES_CPP_NAMESPACE::LexicalHandler *) 0 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
-    unsigned int arg3 ;
+    XMLSize_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    unsigned int val3 ;
+    size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -4901,14 +4902,14 @@ XS(_wrap_LexicalHandler_comment) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::LexicalHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LexicalHandler_comment" "', argument " "3"" of type '" "unsigned int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LexicalHandler_comment" "', argument " "3"" of type '" "XMLSize_t""'");
     } 
-    arg3 = static_cast< unsigned int >(val3);
+    arg3 = static_cast< XMLSize_t >(val3);
     {
       try 
       {
@@ -5018,7 +5019,7 @@ XS(_wrap_LexicalHandler_endEntity) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::LexicalHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -5097,15 +5098,15 @@ XS(_wrap_LexicalHandler_startDTD) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::LexicalHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg4 = UTF8_TRANSCODER->Local2XMLString(ST(3));
     
     {
@@ -5161,7 +5162,7 @@ XS(_wrap_LexicalHandler_startEntity) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::LexicalHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -5243,23 +5244,23 @@ XS(_wrap_DeclHandler_attributeDecl) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DeclHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg4 = UTF8_TRANSCODER->Local2XMLString(ST(3));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg5 = UTF8_TRANSCODER->Local2XMLString(ST(4));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg6 = UTF8_TRANSCODER->Local2XMLString(ST(5));
     
     {
@@ -5328,11 +5329,11 @@ XS(_wrap_DeclHandler_internalEntityDecl) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DeclHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -5384,15 +5385,15 @@ XS(_wrap_DeclHandler_externalEntityDecl) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::DeclHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg4 = UTF8_TRANSCODER->Local2XMLString(ST(3));
     
     {
@@ -5700,7 +5701,7 @@ XS(_wrap_Parser_parse__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::Parser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -5802,243 +5803,6 @@ XS(_wrap_Parser_parse) {
   }
   
   croak("No matching function for overloaded 'Parser_parse'");
-  XSRETURN(0);
-}
-
-
-XS(_wrap_new_SAXParser__SWIG_0) {
-  {
-    XERCES_CPP_NAMESPACE::XMLValidator *arg1 = (XERCES_CPP_NAMESPACE::XMLValidator *) (XERCES_CPP_NAMESPACE::XMLValidator *)0 ;
-    XERCES_CPP_NAMESPACE::MemoryManager *arg2 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
-    XERCES_CPP_NAMESPACE::XMLGrammarPool *arg3 = (XERCES_CPP_NAMESPACE::XMLGrammarPool *) (XERCES_CPP_NAMESPACE::XMLGrammarPool *)0 ;
-    XERCES_CPP_NAMESPACE::SAXParser *result = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    arg2 = XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;
-    if ((items < 1) || (items > 3)) {
-      SWIG_croak("Usage: new_SAXParser(valToAdopt,manager,gramPool);");
-    }
-    {
-      if (ST(0) != &PL_sv_undef) {
-        int rc = SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, SWIG_POINTER_DISOWN |  0);
-        if (!SWIG_IsOK(rc)) {
-          SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "new_SAXParser" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::XMLValidator *const""'");
-        }
-      }
-    }
-    if (items > 1) {
-      res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_SAXParser" "', argument " "2"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
-      }
-      arg2 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp2);
-    }
-    if (items > 2) {
-      res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool, 0 |  0 );
-      if (!SWIG_IsOK(res3)) {
-        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_SAXParser" "', argument " "3"" of type '" "XERCES_CPP_NAMESPACE::XMLGrammarPool *const""'"); 
-      }
-      arg3 = reinterpret_cast< XERCES_CPP_NAMESPACE::XMLGrammarPool * >(argp3);
-    }
-    {
-      try 
-      {
-        result = (XERCES_CPP_NAMESPACE::SAXParser *)new XERCES_CPP_NAMESPACE::SAXParser(arg1,arg2,arg3);
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_SAXParser__SWIG_1) {
-  {
-    XERCES_CPP_NAMESPACE::XMLValidator *arg1 = (XERCES_CPP_NAMESPACE::XMLValidator *) (XERCES_CPP_NAMESPACE::XMLValidator *)0 ;
-    XERCES_CPP_NAMESPACE::MemoryManager *arg2 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
-    XERCES_CPP_NAMESPACE::SAXParser *result = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    arg2 = XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;
-    if ((items < 1) || (items > 2)) {
-      SWIG_croak("Usage: new_SAXParser(valToAdopt,manager);");
-    }
-    {
-      if (ST(0) != &PL_sv_undef) {
-        int rc = SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, SWIG_POINTER_DISOWN |  0);
-        if (!SWIG_IsOK(rc)) {
-          SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "new_SAXParser" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::XMLValidator *const""'");
-        }
-      }
-    }
-    if (items > 1) {
-      res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
-      if (!SWIG_IsOK(res2)) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_SAXParser" "', argument " "2"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
-      }
-      arg2 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp2);
-    }
-    {
-      try 
-      {
-        result = (XERCES_CPP_NAMESPACE::SAXParser *)new XERCES_CPP_NAMESPACE::SAXParser(arg1,arg2);
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_SAXParser__SWIG_2) {
-  {
-    XERCES_CPP_NAMESPACE::SAXParser *result = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_SAXParser();");
-    }
-    {
-      try 
-      {
-        result = (XERCES_CPP_NAMESPACE::SAXParser *)new XERCES_CPP_NAMESPACE::SAXParser();
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_SAXParser) {
-  dXSARGS;
-  
-  {
-    unsigned long _index = 0;
-    SWIG_TypeRank _rank = 0; 
-    if (items == 0) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 1;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-    if ((items >= 1) && (items <= 2)) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_2;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (items > 1) {
-        {
-          void *vptr = 0;
-          int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0);
-          _v = SWIG_CheckState(res);
-        }
-        if (!_v) goto check_2;
-        _ranki += _v*_pi;
-        _rankm += _pi;
-        _pi *= SWIG_MAXCASTRANK;
-      }
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 2;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_2:
-    
-    if ((items >= 1) && (items <= 3)) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_3;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (items > 1) {
-        {
-          void *vptr = 0;
-          int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0);
-          _v = SWIG_CheckState(res);
-        }
-        if (!_v) goto check_3;
-        _ranki += _v*_pi;
-        _rankm += _pi;
-        _pi *= SWIG_MAXCASTRANK;
-        if (items > 2) {
-          {
-            void *vptr = 0;
-            int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool, 0);
-            _v = SWIG_CheckState(res);
-          }
-          if (!_v) goto check_3;
-          _ranki += _v*_pi;
-          _rankm += _pi;
-          _pi *= SWIG_MAXCASTRANK;
-        }
-      }
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 3;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_3:
-    
-  dispatch:
-    switch(_index) {
-    case 1:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_SAXParser__SWIG_2); return;
-    case 2:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_SAXParser__SWIG_1); return;
-    case 3:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_SAXParser__SWIG_0); return;
-    }
-  }
-  
-  croak("No matching function for overloaded 'new_SAXParser'");
   XSRETURN(0);
 }
 
@@ -6853,7 +6617,7 @@ XS(_wrap_SAXParser_getGrammar) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -6963,7 +6727,7 @@ XS(_wrap_SAXParser_getURIText) {
 XS(_wrap_SAXParser_getSrcOffset) {
   {
     XERCES_CPP_NAMESPACE::SAXParser *arg1 = (XERCES_CPP_NAMESPACE::SAXParser *) 0 ;
-    unsigned int result;
+    XMLFilePos result;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -6980,11 +6744,11 @@ XS(_wrap_SAXParser_getSrcOffset) {
     {
       try 
       {
-        result = (unsigned int)((XERCES_CPP_NAMESPACE::SAXParser const *)arg1)->getSrcOffset();
+        result = ((XERCES_CPP_NAMESPACE::SAXParser const *)arg1)->getSrcOffset();
       } 
       CATCH_XML_EXCEPTION
     }
-    ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1(static_cast< unsigned int >(result)); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj((new XMLFilePos(static_cast< const XMLFilePos& >(result))), SWIGTYPE_p_uint64_t, SWIG_POINTER_OWN | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -7185,6 +6949,40 @@ XS(_wrap_SAXParser_getSkipDTDValidation) {
       try 
       {
         result = (bool)((XERCES_CPP_NAMESPACE::SAXParser const *)arg1)->getSkipDTDValidation();
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_From_bool  SWIG_PERL_CALL_ARGS_1(static_cast< bool >(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_SAXParser_getHandleMultipleImports) {
+  {
+    XERCES_CPP_NAMESPACE::SAXParser *arg1 = (XERCES_CPP_NAMESPACE::SAXParser *) 0 ;
+    bool result;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: SAXParser_getHandleMultipleImports(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SAXParser_getHandleMultipleImports" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::SAXParser const *""'"); 
+    }
+    arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
+    {
+      try 
+      {
+        result = (bool)((XERCES_CPP_NAMESPACE::SAXParser const *)arg1)->getHandleMultipleImports();
       } 
       CATCH_XML_EXCEPTION
     }
@@ -7603,7 +7401,7 @@ XS(_wrap_SAXParser_setExternalSchemaLocation) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -7647,7 +7445,7 @@ XS(_wrap_SAXParser_setExternalNoNamespaceSchemaLocation) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -7949,7 +7747,7 @@ XS(_wrap_SAXParser_useScanner) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -8190,6 +7988,49 @@ XS(_wrap_SAXParser_setSkipDTDValidation) {
 }
 
 
+XS(_wrap_SAXParser_setHandleMultipleImports) {
+  {
+    XERCES_CPP_NAMESPACE::SAXParser *arg1 = (XERCES_CPP_NAMESPACE::SAXParser *) 0 ;
+    bool arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    bool val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: SAXParser_setHandleMultipleImports(self,newValue);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SAXParser_setHandleMultipleImports" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::SAXParser *""'"); 
+    }
+    arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
+    ecode2 = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SAXParser_setHandleMultipleImports" "', argument " "2"" of type '" "bool""'");
+    } 
+    arg2 = static_cast< bool >(val2);
+    {
+      try 
+      {
+        (arg1)->setHandleMultipleImports(arg2);
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_SAXParser_installAdvDocHandler) {
   {
     XERCES_CPP_NAMESPACE::SAXParser *arg1 = (XERCES_CPP_NAMESPACE::SAXParser *) 0 ;
@@ -8299,7 +8140,7 @@ XS(_wrap_SAXParser_parseFirst__SWIG_0) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken,  0 );
@@ -8833,7 +8674,7 @@ XS(_wrap_SAXParser_loadGrammar__SWIG_2) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     ecode3 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -8895,7 +8736,7 @@ XS(_wrap_SAXParser_loadGrammar__SWIG_3) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     ecode3 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -9229,7 +9070,7 @@ XS(_wrap_SAXParser_parse__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAXParser * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -9602,17 +9443,17 @@ XS(_wrap_SAXParser_error) {
     XMLCh *arg5 = (XMLCh *) (XMLCh *)0 ;
     XMLCh *arg6 = (XMLCh *) (XMLCh *)0 ;
     XMLCh *arg7 = (XMLCh *) (XMLCh *)0 ;
-    XMLSSize_t arg8 ;
-    XMLSSize_t arg9 ;
+    unsigned long arg8 ;
+    unsigned long arg9 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
     unsigned int val2 ;
     int ecode2 = 0 ;
     void *argp4 ;
     int res4 = 0 ;
-    size_t val8 ;
+    unsigned long val8 ;
     int ecode8 = 0 ;
-    size_t val9 ;
+    unsigned long val9 ;
     int ecode9 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -9631,7 +9472,7 @@ XS(_wrap_SAXParser_error) {
     } 
     arg2 = static_cast< unsigned int >(val2);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -9646,27 +9487,27 @@ XS(_wrap_SAXParser_error) {
       }
     }
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg5 = UTF8_TRANSCODER->Local2XMLString(ST(4));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg6 = UTF8_TRANSCODER->Local2XMLString(ST(5));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg7 = UTF8_TRANSCODER->Local2XMLString(ST(6));
     
-    ecode8 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
+    ecode8 = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "SAXParser_error" "', argument " "8"" of type '" "XMLSSize_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "SAXParser_error" "', argument " "8"" of type '" "unsigned long""'");
     } 
-    arg8 = static_cast< XMLSSize_t >(val8);
-    ecode9 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(8), &val9);
+    arg8 = static_cast< unsigned long >(val8);
+    ecode9 = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(ST(8), &val9);
     if (!SWIG_IsOK(ecode9)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "SAXParser_error" "', argument " "9"" of type '" "XMLSSize_t""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "SAXParser_error" "', argument " "9"" of type '" "unsigned long""'");
     } 
-    arg9 = static_cast< XMLSSize_t >(val9);
+    arg9 = static_cast< unsigned long >(val9);
     {
       try 
       {
@@ -9868,7 +9709,7 @@ XS(_wrap_SAX2XMLReader_getFeature) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -9912,7 +9753,7 @@ XS(_wrap_SAX2XMLReader_getProperty) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -10130,7 +9971,7 @@ XS(_wrap_SAX2XMLReader_setFeature) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     ecode3 = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -10181,7 +10022,7 @@ XS(_wrap_SAX2XMLReader_setProperty) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -10285,7 +10126,7 @@ XS(_wrap_SAX2XMLReader_parse__SWIG_1) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -10699,7 +10540,7 @@ XS(_wrap_SAX2XMLReader_getGrammar) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -10809,7 +10650,7 @@ XS(_wrap_SAX2XMLReader_getURIText) {
 XS(_wrap_SAX2XMLReader_getSrcOffset) {
   {
     XERCES_CPP_NAMESPACE::SAX2XMLReader *arg1 = (XERCES_CPP_NAMESPACE::SAX2XMLReader *) 0 ;
-    unsigned int result;
+    XMLFilePos result;
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
@@ -10826,11 +10667,11 @@ XS(_wrap_SAX2XMLReader_getSrcOffset) {
     {
       try 
       {
-        result = (unsigned int)((XERCES_CPP_NAMESPACE::SAX2XMLReader const *)arg1)->getSrcOffset();
+        result = ((XERCES_CPP_NAMESPACE::SAX2XMLReader const *)arg1)->getSrcOffset();
       } 
       CATCH_XML_EXCEPTION
     }
-    ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1(static_cast< unsigned int >(result)); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj((new XMLFilePos(static_cast< const XMLFilePos& >(result))), SWIGTYPE_p_uint64_t, SWIG_POINTER_OWN | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -10991,7 +10832,7 @@ XS(_wrap_SAX2XMLReader_parseFirst__SWIG_0) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken,  0 );
@@ -11525,7 +11366,7 @@ XS(_wrap_SAX2XMLReader_loadGrammar__SWIG_2) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     ecode3 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -11587,7 +11428,7 @@ XS(_wrap_SAX2XMLReader_loadGrammar__SWIG_3) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::SAX2XMLReader * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     ecode3 = SWIG_AsVal_short SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -12184,109 +12025,6 @@ XS(_wrap_XMLReaderFactory_createXMLReader) {
 }
 
 
-XS(_wrap_new_PerlSAXCallbackHandler__SWIG_0) {
-  {
-    XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *result = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_PerlSAXCallbackHandler();");
-    }
-    {
-      try 
-      {
-        result = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *)new XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler();
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlSAXCallbackHandler, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_PerlSAXCallbackHandler__SWIG_1) {
-  {
-    SV *arg1 = (SV *) 0 ;
-    XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *result = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: new_PerlSAXCallbackHandler(obj);");
-    }
-    {
-      arg1 = ST(0);
-    }
-    {
-      try 
-      {
-        result = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *)new XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler(arg1);
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlSAXCallbackHandler, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_PerlSAXCallbackHandler) {
-  dXSARGS;
-  
-  {
-    unsigned long _index = 0;
-    SWIG_TypeRank _rank = 0; 
-    if (items == 0) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 1;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-    if (items == 1) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        {
-          _v = 1;
-        }
-      }
-      if (!_v) goto check_2;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 2;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_2:
-    
-  dispatch:
-    switch(_index) {
-    case 1:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_PerlSAXCallbackHandler__SWIG_0); return;
-    case 2:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_PerlSAXCallbackHandler__SWIG_1); return;
-    }
-  }
-  
-  croak("No matching function for overloaded 'new_PerlSAXCallbackHandler'");
-  XSRETURN(0);
-}
-
-
 XS(_wrap_delete_PerlSAXCallbackHandler) {
   {
     XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *arg1 = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *) 0 ;
@@ -12376,7 +12114,7 @@ XS(_wrap_PerlSAXCallbackHandler_characters) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -12428,11 +12166,11 @@ XS(_wrap_PerlSAXCallbackHandler_processingInstruction) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -12526,11 +12264,11 @@ XS(_wrap_PerlSAXCallbackHandler_startPrefixMapping) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg3 = UTF8_TRANSCODER->Local2XMLString(ST(2));
     
     {
@@ -12580,7 +12318,7 @@ XS(_wrap_PerlSAXCallbackHandler_endPrefixMapping) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -12624,7 +12362,7 @@ XS(_wrap_PerlSAXCallbackHandler_skippedEntity) {
     }
     arg1 = reinterpret_cast< XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler * >(argp1);
     
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
     {
@@ -12673,6 +12411,9 @@ static void *_p_XERCES_CPP_NAMESPACE__URLInputSourceTo_p_XERCES_CPP_NAMESPACE__I
 }
 static void *_p_XERCES_CPP_NAMESPACE__MemBufInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::InputSource *)  ((XERCES_CPP_NAMESPACE::MemBufInputSource *) x));
+}
+static void *_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInputTo_p_XERCES_CPP_NAMESPACE__InputSource(void *x) {
+    return (void *)((XERCES_CPP_NAMESPACE::InputSource *)  ((XERCES_CPP_NAMESPACE::Wrapper4DOMLSInput *) x));
 }
 static void *_p_XERCES_CPP_NAMESPACE__HandlerBaseTo_p_XERCES_CPP_NAMESPACE__DTDHandler(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::DTDHandler *)  ((XERCES_CPP_NAMESPACE::HandlerBase *) x));
@@ -12878,6 +12619,9 @@ static void *_p_XERCES_CPP_NAMESPACE__XMLUriTo_p_XERCES_CPP_NAMESPACE__XMemory(v
 static void *_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::XMemory *)  ((XERCES_CPP_NAMESPACE::BaseRefVectorOf<XERCES_CPP_NAMESPACE::XMLAttr > *) x));
 }
+static void *_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInputTo_p_XERCES_CPP_NAMESPACE__XMemory(void *x) {
+    return (void *)((XERCES_CPP_NAMESPACE::XMemory *) (XERCES_CPP_NAMESPACE::InputSource *) ((XERCES_CPP_NAMESPACE::Wrapper4DOMLSInput *) x));
+}
 static void *_p_XERCES_CPP_NAMESPACE__XMLFormatterTo_p_XERCES_CPP_NAMESPACE__XMemory(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::XMemory *)  ((XERCES_CPP_NAMESPACE::XMLFormatter *) x));
 }
@@ -12910,6 +12654,7 @@ static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__LocalFileInputSource = {"_
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource = {"_p_XERCES_CPP_NAMESPACE__StdInInputSource", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__URLInputSource = {"_p_XERCES_CPP_NAMESPACE__URLInputSource", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource = {"_p_XERCES_CPP_NAMESPACE__MemBufInputSource", 0, 0, 0, 0, 0};
+static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput = {"_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__LexicalHandler = {"_p_XERCES_CPP_NAMESPACE__LexicalHandler", "XERCES_CPP_NAMESPACE::LexicalHandler *", 0, 0, (void*)"XML::Xerces::LexicalHandler", 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__Locator = {"_p_XERCES_CPP_NAMESPACE__Locator", "XERCES_CPP_NAMESPACE::Locator *", 0, 0, (void*)"XML::Xerces::Locator", 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__MemoryManager = {"_p_XERCES_CPP_NAMESPACE__MemoryManager", "XERCES_CPP_NAMESPACE::MemoryManager *", 0, 0, (void*)0, 0};
@@ -12980,6 +12725,7 @@ static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *|XMLSize_t *", 0
 static swig_type_info _swigt__p_ssize_t = {"_p_ssize_t", "ssize_t *|XMLSSize_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_uint16_t = {"_p_uint16_t", "uint16_t *|UTF16Ch *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_uint32_t = {"_p_uint32_t", "uint32_t *|UCS4Ch *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_uint64_t = {"_p_uint64_t", "uint64_t *|XMLFilePos *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|XMLByte *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
@@ -13045,6 +12791,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource,
   &_swigt__p_XERCES_CPP_NAMESPACE__StdOutFormatTarget,
   &_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource,
+  &_swigt__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput,
   &_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDef,
   &_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDefList,
   &_swigt__p_XERCES_CPP_NAMESPACE__XMLAttr,
@@ -13074,6 +12821,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_ssize_t,
   &_swigt__p_uint16_t,
   &_swigt__p_uint32_t,
+  &_swigt__p_uint64_t,
   &_swigt__p_unsigned_char,
   &_swigt__p_void,
 };
@@ -13097,7 +12845,8 @@ static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__LocalFileInputSource[] = {
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__StdInInputSource[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__URLInputSource[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__MemBufInputSource[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__InputSource[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__InputSource, 0, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileInputSource, _p_XERCES_CPP_NAMESPACE__LocalFileInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource, _p_XERCES_CPP_NAMESPACE__StdInInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource, _p_XERCES_CPP_NAMESPACE__URLInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource, _p_XERCES_CPP_NAMESPACE__MemBufInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__InputSource[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__InputSource, 0, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileInputSource, _p_XERCES_CPP_NAMESPACE__LocalFileInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource, _p_XERCES_CPP_NAMESPACE__StdInInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource, _p_XERCES_CPP_NAMESPACE__URLInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource, _p_XERCES_CPP_NAMESPACE__MemBufInputSourceTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput, _p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInputTo_p_XERCES_CPP_NAMESPACE__InputSource, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__LexicalHandler[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__LexicalHandler, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__Locator[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__Locator, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__MemoryManager[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__MemoryManager, 0, 0, 0},{0, 0, 0, 0}};
@@ -13160,7 +12909,7 @@ static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XMLFormatter[] = {{&_swigt
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__DTDEntityDecl[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__DTDEntityDecl, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XMLEntityDecl[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__XMLEntityDecl, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__PSVIElement[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__PSVIElement, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XMemory[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttr, _p_XERCES_CPP_NAMESPACE__XMLAttrTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t, _p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLUri, _p_XERCES_CPP_NAMESPACE__XMLUriTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLSchemaDescription, _p_XERCES_CPP_NAMESPACE__XMLSchemaDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLGrammarDescription, _p_XERCES_CPP_NAMESPACE__XMLGrammarDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLDTDDescription, _p_XERCES_CPP_NAMESPACE__XMLDTDDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaElementDecl, _p_XERCES_CPP_NAMESPACE__SchemaElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDElementDecl, _p_XERCES_CPP_NAMESPACE__DTDElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLElementDecl, _p_XERCES_CPP_NAMESPACE__XMLElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaValidator, _p_XERCES_CPP_NAMESPACE__SchemaValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDValidator, _p_XERCES_CPP_NAMESPACE__DTDValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLValidator, _p_XERCES_CPP_NAMESPACE__XMLValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLPScanToken, _p_XERCES_CPP_NAMESPACE__XMLPScanTokenTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t, _p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDAttDef, _p_XERCES_CPP_NAMESPACE__DTDAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDef, _p_XERCES_CPP_NAMESPACE__XMLAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXParser, _p_XERCES_CPP_NAMESPACE__SAXParserTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLNotationDecl, _p_XERCES_CPP_NAMESPACE__XMLNotationDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLFormatTarget, _p_XERCES_CPP_NAMESPACE__XMLFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdOutFormatTarget, _p_XERCES_CPP_NAMESPACE__StdOutFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileFormatTarget, _p_XERCES_CPP_NAMESPACE__LocalFileFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufFormatTarget, _p_XERCES_CPP_NAMESPACE__MemBufFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t, _p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIItem, _p_XERCES_CPP_NAMESPACE__PSVIItemTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__InputSource, _p_XERCES_CPP_NAMESPACE__InputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileInputSource, _p_XERCES_CPP_NAMESPACE__LocalFileInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource, _p_XERCES_CPP_NAMESPACE__StdInInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource, _p_XERCES_CPP_NAMESPACE__URLInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource, _p_XERCES_CPP_NAMESPACE__MemBufInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t, _p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaAttDef, _p_XERCES_CPP_NAMESPACE__SchemaAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t, _p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLURL, _p_XERCES_CPP_NAMESPACE__XMLURLTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLException, _p_XERCES_CPP_NAMESPACE__XMLExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLContentModel, _p_XERCES_CPP_NAMESPACE__XMLContentModelTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaGrammar, _p_XERCES_CPP_NAMESPACE__SchemaGrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDGrammar, _p_XERCES_CPP_NAMESPACE__DTDGrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__Grammar, _p_XERCES_CPP_NAMESPACE__GrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXException, _p_XERCES_CPP_NAMESPACE__SAXExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXNotSupportedException, _p_XERCES_CPP_NAMESPACE__SAXNotSupportedExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException, _p_XERCES_CPP_NAMESPACE__SAXNotRecognizedExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXParseException, _p_XERCES_CPP_NAMESPACE__SAXParseExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIAttributeList, _p_XERCES_CPP_NAMESPACE__PSVIAttributeListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t, _p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIAttribute, _p_XERCES_CPP_NAMESPACE__PSVIAttributeTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMemory, 0, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__QName, _p_XERCES_CPP_NAMESPACE__QNameTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaAttDefList, _p_XERCES_CPP_NAMESPACE__SchemaAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDAttDefList, _p_XERCES_CPP_NAMESPACE__DTDAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDefList, _p_XERCES_CPP_NAMESPACE__XMLAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLFormatter, _p_XERCES_CPP_NAMESPACE__XMLFormatterTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDEntityDecl, _p_XERCES_CPP_NAMESPACE__DTDEntityDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLEntityDecl, _p_XERCES_CPP_NAMESPACE__XMLEntityDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIElement, _p_XERCES_CPP_NAMESPACE__PSVIElementTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XMemory[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttr, _p_XERCES_CPP_NAMESPACE__XMLAttrTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t, _p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLUri, _p_XERCES_CPP_NAMESPACE__XMLUriTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLSchemaDescription, _p_XERCES_CPP_NAMESPACE__XMLSchemaDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLGrammarDescription, _p_XERCES_CPP_NAMESPACE__XMLGrammarDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLDTDDescription, _p_XERCES_CPP_NAMESPACE__XMLDTDDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaElementDecl, _p_XERCES_CPP_NAMESPACE__SchemaElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDElementDecl, _p_XERCES_CPP_NAMESPACE__DTDElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLElementDecl, _p_XERCES_CPP_NAMESPACE__XMLElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaValidator, _p_XERCES_CPP_NAMESPACE__SchemaValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDValidator, _p_XERCES_CPP_NAMESPACE__DTDValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLValidator, _p_XERCES_CPP_NAMESPACE__XMLValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLPScanToken, _p_XERCES_CPP_NAMESPACE__XMLPScanTokenTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t, _p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDAttDef, _p_XERCES_CPP_NAMESPACE__DTDAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDef, _p_XERCES_CPP_NAMESPACE__XMLAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXParser, _p_XERCES_CPP_NAMESPACE__SAXParserTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLNotationDecl, _p_XERCES_CPP_NAMESPACE__XMLNotationDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLFormatTarget, _p_XERCES_CPP_NAMESPACE__XMLFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdOutFormatTarget, _p_XERCES_CPP_NAMESPACE__StdOutFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileFormatTarget, _p_XERCES_CPP_NAMESPACE__LocalFileFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufFormatTarget, _p_XERCES_CPP_NAMESPACE__MemBufFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t, _p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIItem, _p_XERCES_CPP_NAMESPACE__PSVIItemTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__InputSource, _p_XERCES_CPP_NAMESPACE__InputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileInputSource, _p_XERCES_CPP_NAMESPACE__LocalFileInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource, _p_XERCES_CPP_NAMESPACE__StdInInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource, _p_XERCES_CPP_NAMESPACE__URLInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource, _p_XERCES_CPP_NAMESPACE__MemBufInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t, _p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaAttDef, _p_XERCES_CPP_NAMESPACE__SchemaAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t, _p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLURL, _p_XERCES_CPP_NAMESPACE__XMLURLTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLException, _p_XERCES_CPP_NAMESPACE__XMLExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLContentModel, _p_XERCES_CPP_NAMESPACE__XMLContentModelTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaGrammar, _p_XERCES_CPP_NAMESPACE__SchemaGrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDGrammar, _p_XERCES_CPP_NAMESPACE__DTDGrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__Grammar, _p_XERCES_CPP_NAMESPACE__GrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXException, _p_XERCES_CPP_NAMESPACE__SAXExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXNotSupportedException, _p_XERCES_CPP_NAMESPACE__SAXNotSupportedExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException, _p_XERCES_CPP_NAMESPACE__SAXNotRecognizedExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXParseException, _p_XERCES_CPP_NAMESPACE__SAXParseExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIAttributeList, _p_XERCES_CPP_NAMESPACE__PSVIAttributeListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t, _p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIAttribute, _p_XERCES_CPP_NAMESPACE__PSVIAttributeTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMemory, 0, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__QName, _p_XERCES_CPP_NAMESPACE__QNameTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput, _p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInputTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaAttDefList, _p_XERCES_CPP_NAMESPACE__SchemaAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDAttDefList, _p_XERCES_CPP_NAMESPACE__DTDAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDefList, _p_XERCES_CPP_NAMESPACE__XMLAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLFormatter, _p_XERCES_CPP_NAMESPACE__XMLFormatterTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDEntityDecl, _p_XERCES_CPP_NAMESPACE__DTDEntityDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLEntityDecl, _p_XERCES_CPP_NAMESPACE__XMLEntityDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIElement, _p_XERCES_CPP_NAMESPACE__PSVIElementTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XMLErrorReporter__ErrTypes[] = {  {&_swigt__p_XMLErrorReporter__ErrTypes, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int32_t[] = {  {&_swigt__p_int32_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -13168,6 +12917,7 @@ static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0
 static swig_cast_info _swigc__p_ssize_t[] = {  {&_swigt__p_ssize_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_uint16_t[] = {  {&_swigt__p_uint16_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_uint32_t[] = {  {&_swigt__p_uint32_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_uint64_t[] = {  {&_swigt__p_uint64_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -13233,6 +12983,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_XERCES_CPP_NAMESPACE__StdInInputSource,
   _swigc__p_XERCES_CPP_NAMESPACE__StdOutFormatTarget,
   _swigc__p_XERCES_CPP_NAMESPACE__URLInputSource,
+  _swigc__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput,
   _swigc__p_XERCES_CPP_NAMESPACE__XMLAttDef,
   _swigc__p_XERCES_CPP_NAMESPACE__XMLAttDefList,
   _swigc__p_XERCES_CPP_NAMESPACE__XMLAttr,
@@ -13262,6 +13013,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_ssize_t,
   _swigc__p_uint16_t,
   _swigc__p_uint32_t,
+  _swigc__p_uint64_t,
   _swigc__p_unsigned_char,
   _swigc__p_void,
 };
@@ -13338,7 +13090,6 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::Parser_setDocumentHandler", _wrap_Parser_setDocumentHandler},
 {"XML::Xercesc::Parser_setErrorHandler", _wrap_Parser_setErrorHandler},
 {"XML::Xercesc::Parser_parse", _wrap_Parser_parse},
-{"XML::Xercesc::new_SAXParser", _wrap_new_SAXParser},
 {"XML::Xercesc::delete_SAXParser", _wrap_delete_SAXParser},
 {"XML::Xercesc::SAXParser_getDocumentHandler", _wrap_SAXParser_getDocumentHandler},
 {"XML::Xercesc::SAXParser_getEntityResolver", _wrap_SAXParser_getEntityResolver},
@@ -13372,6 +13123,7 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::SAXParser_getIgnoreAnnotations", _wrap_SAXParser_getIgnoreAnnotations},
 {"XML::Xercesc::SAXParser_getDisableDefaultEntityResolution", _wrap_SAXParser_getDisableDefaultEntityResolution},
 {"XML::Xercesc::SAXParser_getSkipDTDValidation", _wrap_SAXParser_getSkipDTDValidation},
+{"XML::Xercesc::SAXParser_getHandleMultipleImports", _wrap_SAXParser_getHandleMultipleImports},
 {"XML::Xercesc::SAXParser_setGenerateSyntheticAnnotations", _wrap_SAXParser_setGenerateSyntheticAnnotations},
 {"XML::Xercesc::SAXParser_setValidateAnnotations", _wrap_SAXParser_setValidateAnnotations},
 {"XML::Xercesc::SAXParser_setDoNamespaces", _wrap_SAXParser_setDoNamespaces},
@@ -13395,6 +13147,7 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::SAXParser_setIgnoreAnnotations", _wrap_SAXParser_setIgnoreAnnotations},
 {"XML::Xercesc::SAXParser_setDisableDefaultEntityResolution", _wrap_SAXParser_setDisableDefaultEntityResolution},
 {"XML::Xercesc::SAXParser_setSkipDTDValidation", _wrap_SAXParser_setSkipDTDValidation},
+{"XML::Xercesc::SAXParser_setHandleMultipleImports", _wrap_SAXParser_setHandleMultipleImports},
 {"XML::Xercesc::SAXParser_installAdvDocHandler", _wrap_SAXParser_installAdvDocHandler},
 {"XML::Xercesc::SAXParser_removeAdvDocHandler", _wrap_SAXParser_removeAdvDocHandler},
 {"XML::Xercesc::SAXParser_parseFirst", _wrap_SAXParser_parseFirst},
@@ -13447,7 +13200,6 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::SAX2XMLReader_installAdvDocHandler", _wrap_SAX2XMLReader_installAdvDocHandler},
 {"XML::Xercesc::SAX2XMLReader_removeAdvDocHandler", _wrap_SAX2XMLReader_removeAdvDocHandler},
 {"XML::Xercesc::XMLReaderFactory_createXMLReader", _wrap_XMLReaderFactory_createXMLReader},
-{"XML::Xercesc::new_PerlSAXCallbackHandler", _wrap_new_PerlSAXCallbackHandler},
 {"XML::Xercesc::delete_PerlSAXCallbackHandler", _wrap_delete_PerlSAXCallbackHandler},
 {"XML::Xercesc::PerlSAXCallbackHandler_type", _wrap_PerlSAXCallbackHandler_type},
 {"XML::Xercesc::PerlSAXCallbackHandler_characters", _wrap_PerlSAXCallbackHandler_characters},
@@ -13472,7 +13224,7 @@ static swig_command_info swig_commands[] = {
  * structures together.
  *
  * The generated swig_type_info structures are assigned staticly to an initial 
- * array. We just loop though that array, and handle each type individually.
+ * array. We just loop through that array, and handle each type individually.
  * First we lookup if this type has been already loaded, and if so, use the
  * loaded structure instead of the generated one. Then we have to fill in the
  * cast linked list. The cast data is initially stored in something like a
@@ -13510,30 +13262,47 @@ extern "C" {
 #define SWIGRUNTIME_DEBUG
 #endif
 
+
 SWIGRUNTIME void
 SWIG_InitializeModule(void *clientdata) {
   size_t i;
-  swig_module_info *module_head;
-  static int init_run = 0;
+  swig_module_info *module_head, *iter;
+  int found;
   
   clientdata = clientdata;
   
-  if (init_run) return;
-  init_run = 1;
-  
-  /* Initialize the swig_module */
-  swig_module.type_initial = swig_type_initial;
-  swig_module.cast_initial = swig_cast_initial;
+  /* check to see if the circular list has been setup, if not, set it up */
+  if (swig_module.next==0) {
+    /* Initialize the swig_module */
+    swig_module.type_initial = swig_type_initial;
+    swig_module.cast_initial = swig_cast_initial;
+    swig_module.next = &swig_module;
+  }
   
   /* Try and load any already created modules */
   module_head = SWIG_GetModule(clientdata);
-  if (module_head) {
+  if (!module_head) {
+    /* This is the first module loaded for this interpreter */
+    /* so set the swig module into the interpreter */
+    SWIG_SetModule(clientdata, &swig_module);
+    module_head = &swig_module;
+  } else {
+    /* the interpreter has loaded a SWIG module, but has it loaded this one? */
+    found=0;
+    iter=module_head;
+    do {
+      if (iter==&swig_module) {
+        found=1;
+        break;
+      }
+      iter=iter->next;
+    } while (iter!= module_head);
+    
+    /* if the is found in the list, then all is done and we may leave */
+    if (found) return;
+    /* otherwise we must add out module into the list */
     swig_module.next = module_head->next;
     module_head->next = &swig_module;
-  } else {
-    /* This is the first module loaded */
-    swig_module.next = &swig_module;
-    SWIG_SetModule(clientdata, &swig_module);
   }
   
   /* Now work on filling in swig_module.types */

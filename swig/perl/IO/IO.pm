@@ -70,6 +70,98 @@ sub ACQUIRE {
 }
 
 
+############# Class : XML::Xerces::DOMLSInput ##############
+
+package XML::Xerces::DOMLSInput;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_DOMLSInput($self);
+        delete $OWNER{$self};
+    }
+}
+
+*getStringData = *XML::Xercesc::DOMLSInput_getStringData;
+*getByteStream = *XML::Xercesc::DOMLSInput_getByteStream;
+*getEncoding = *XML::Xercesc::DOMLSInput_getEncoding;
+*getPublicId = *XML::Xercesc::DOMLSInput_getPublicId;
+*getSystemId = *XML::Xercesc::DOMLSInput_getSystemId;
+*getBaseURI = *XML::Xercesc::DOMLSInput_getBaseURI;
+*setStringData = *XML::Xercesc::DOMLSInput_setStringData;
+*setByteStream = *XML::Xercesc::DOMLSInput_setByteStream;
+*setEncoding = *XML::Xercesc::DOMLSInput_setEncoding;
+*setPublicId = *XML::Xercesc::DOMLSInput_setPublicId;
+*setSystemId = *XML::Xercesc::DOMLSInput_setSystemId;
+*setBaseURI = *XML::Xercesc::DOMLSInput_setBaseURI;
+*setIssueFatalErrorIfNotFound = *XML::Xercesc::DOMLSInput_setIssueFatalErrorIfNotFound;
+*getIssueFatalErrorIfNotFound = *XML::Xercesc::DOMLSInput_getIssueFatalErrorIfNotFound;
+*release = *XML::Xercesc::DOMLSInput_release;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : XML::Xerces::Wrapper4DOMLSInput ##############
+
+package XML::Xerces::Wrapper4DOMLSInput;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( XML::Xerces::InputSource XML::Xerces );
+%OWNER = ();
+%ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_Wrapper4DOMLSInput(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        XML::Xercesc::delete_Wrapper4DOMLSInput($self);
+        delete $OWNER{$self};
+    }
+}
+
+*makeStream = *XML::Xercesc::Wrapper4DOMLSInput_makeStream;
+*getEncoding = *XML::Xercesc::Wrapper4DOMLSInput_getEncoding;
+*getPublicId = *XML::Xercesc::Wrapper4DOMLSInput_getPublicId;
+*getSystemId = *XML::Xercesc::Wrapper4DOMLSInput_getSystemId;
+*getIssueFatalErrorIfNotFound = *XML::Xercesc::Wrapper4DOMLSInput_getIssueFatalErrorIfNotFound;
+*setEncoding = *XML::Xercesc::Wrapper4DOMLSInput_setEncoding;
+*setPublicId = *XML::Xercesc::Wrapper4DOMLSInput_setPublicId;
+*setSystemId = *XML::Xercesc::Wrapper4DOMLSInput_setSystemId;
+*setIssueFatalErrorIfNotFound = *XML::Xercesc::Wrapper4DOMLSInput_setIssueFatalErrorIfNotFound;
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 ############# Class : XML::Xerces::LocalFileInputSource ##############
 
 package XML::Xerces::LocalFileInputSource;

@@ -42,7 +42,7 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-void
+static void
 makeDOMException(const DOMException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new DOMException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException, SWIG_SHADOW|0);
@@ -233,9 +233,7 @@ makeDOMException(const DOMException& e){
 %include "parsers/AbstractDOMParser.i"
 
 // DOMLSParser
-%include "dom/DOMLSInput.i"
 %include "framework/Wrapper4InputSource.i"
-%include "framework/Wrapper4DOMLSInput.i"
 %include "dom/DOMLSParserFilter.i"
 %include "dom/DOMLSParser.i"
 

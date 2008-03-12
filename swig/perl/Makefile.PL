@@ -21,7 +21,7 @@ use Env qw(XERCES_CONFIG
 	   SWIG);
 use strict;
 use vars qw($INCLUDES $CXX $CFLAGS @LDFLAGS @OPTIMIZE $LIBS
-	    $TRANSCODER_LIB $HANDLER_LIB
+	    $TRANSCODER_LIB $HANDLER_LIB $UTIL_LIB $MYEXTLIB
 	    $XERCESCROOT $SWIG_DIR $PERL_DIR $HANDLER_DIR $SCRIPTS_DIR $INTERFACE_DIR
 	    $SWIG_ARGS
 	    @SAX_INTERFACE_FILES @DOM_INTERFACE_FILES @IO_INTERFACE_FILES
@@ -71,10 +71,10 @@ $SCRIPTS_DIR = "$SWIG_DIR/scripts";
 
 $LIBS = '-lpthread';
 
-$INCLUDES = "-I$PERL_DIR -I$PERL_DIR/Handler -I$PERL_DIR/Transcoder";
+$INCLUDES = "-I$PERL_DIR -I$PERL_DIR/Handler -I$PERL_DIR/Transcoder -I$SWIG_DIR/util";
 
 print STDERR "Using XERCES_LIB = $XERCES_LIB\n";
-$LIBS .= " -L$XERCES_LIB ";
+$LIBS .= " -L$XERCES_LIB";
 
 print STDERR "Using XERCES_INCLUDE = $XERCES_INCLUDE\n";
 $INCLUDES .= " -I$XERCES_INCLUDE -I$XERCESCROOT";
@@ -187,7 +187,7 @@ print STDERR "Located Xerces-C version: $XERCES_VERSION\n";
 
 # this substitution will yield '1_4' from '1.4' to be used by 'LIBS'
 # $XERCES_LIB_VERSION =~ s/\./_/g;
-my $LIBXERCES = "-lxerces";
+my $LIBXERCES = "-lxerces-c";
 if ($^O eq 'cygwin') {
   $LIBXERCES .= "$major$minor.dll";
 } elsif ($^O eq 'MSWin32') {
@@ -195,7 +195,7 @@ if ($^O eq 'cygwin') {
 }
 $LIBS .= " $LIBXERCES";
 
-my $libxerces_name = "libxerces-$major.$minor.so";
+my $libxerces_name = "libxerces-c-$major.$minor.so";
 my $libxerces_path = "$XERCES_LIB/$libxerces_name";
 die <<EOE unless -f $libxerces_path;
 
@@ -212,6 +212,7 @@ print STDERR "Successfully located $libxerces_name!!\n";
 
 $HANDLER_LIB = '$(INST_ARCHLIB)/auto/Handler/Handler$(LIB_EXT)';
 $TRANSCODER_LIB = '$(INST_ARCHLIB)/auto/Transcoder/Transcoder$(LIB_EXT)';
+$UTIL_LIB = "$SWIG_DIR/.libs/libutil.a";
 
 sub MY_postamble {
 qq[
@@ -221,6 +222,9 @@ $HANDLER_LIB:
 
 $TRANSCODER_LIB:
 	\$(MAKE) -C Transcoder static
+
+$UTIL_LIB:
+	\$(MAKE) -C $SWIG_DIR
 ];
 
 }
@@ -265,10 +269,12 @@ if ($XERCES_DEVEL) {
 
     my $MAKE_HANDLER    = '	\$(MAKE) -C Handler static';
     my $MAKE_TRANSCODER = '	\$(MAKE) -C Transcoder static';
+    my $MAKE_UTIL       = '	\$(MAKE) -C ' . "$SWIG_DIR static";
     if ($^O eq 'MSWin32') {
       # nmake doesn't not honor '-C'
       $MAKE_HANDLER    =  '	cd Handler && \$(MAKE) static';
       $MAKE_TRANSCODER =  '	cd Transcoder && \$(MAKE) static';
+      $MAKE_UTIL       =  "	cd $SWIG_DIR" . ' && \$(MAKE) static';
     }
 
     ### We no longer need to munge the C++ code thanks to SWIG improvements
@@ -294,6 +300,9 @@ $MAKE_HANDLER
 
 $TRANSCODER_LIB:
 $MAKE_TRANSCODER
+
+$UTIL_LIB:
+$MAKE_UTIL
 TERMINUS
     return $retval;
   }
@@ -320,6 +329,8 @@ TERMINUS
 # set up the list of object files to include in Xerces\$(OBJ_EXT)
 my $OBJS = 'Xerces$(OBJ_EXT)';
 
+$MYEXTLIB = "$HANDLER_LIB $TRANSCODER_LIB $UTIL_LIB";
+
 # write the makefile
 # see the hints/ directory for architecture specific stuff!
 WriteMakefile(
@@ -333,9 +344,10 @@ WriteMakefile(
  #   'DOM.pm' => '$(INST_LIB)/XML/Xerces/DOM.pm',
   },
   'INC'         => $INCLUDES,
-  'MYEXTLIB'    => "$HANDLER_LIB $TRANSCODER_LIB",
+  'MYEXTLIB'    => $MYEXTLIB,
 #  'SKIP'      => [qw( pm_to_blib )],
   'LIBS'        => [$LIBS],
+#  'PMLIBDIRS'   => ['util'],
   'OBJECT'      => $OBJS,
   'VERSION'     => "$XERCES_PERL_VERSION",
   @OPTIMIZE,

@@ -7,7 +7,7 @@
 
 // ignore the char* versions of ALL constructors
 %ignore XERCES_CPP_NAMESPACE::DOMLSParser::parseURI(const char *const );
-%ignore MemBufInputSource(const XMLByte* const, const unsigned int, const char* const,
+%ignore MemBufInputSource(const XMLByte* const, const XMLSize_t, const char* const,
 	const bool foo=false,
         MemoryManager* const foo=XMLPlatformUtils::fgMemoryManager);
 
@@ -45,8 +45,8 @@
  * in a typemap. While we are at it, we also ignore the constructor
  * that sets the MemoryManager
  */
-%ignore MemBufInputSource(const XMLByte* const, const unsigned int, const XMLCh* const);
-%ignore MemBufInputSource(const XMLByte* const, const unsigned int, const XMLCh* const, 
+%ignore MemBufInputSource(const XMLByte* const, const XMLSize_t, const XMLCh* const);
+%ignore MemBufInputSource(const XMLByte* const, const XMLSize_t, const XMLCh* const, 
                           const bool, MemoryManager *const);
 %ignore Wrapper4InputSource(InputSource* const);
 %ignore Wrapper4InputSource(InputSource* const, const bool 

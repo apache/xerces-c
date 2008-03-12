@@ -17,41 +17,13 @@
 
 // in typemap
 %typemap(in) XMLCh * %{
-    // we convert *everything* into a string *including* undef
+    // we convert *everything* into a string *including* null/undef
     $1 = UTF8_TRANSCODER->Local2XMLString($input);
 %}
 
 %typemap(freearg) XMLCh * %{
   delete[] $1;
 %}
-
-%exception XERCES_CPP_NAMESPACE::DOMLSInput::~DOMLSInput %{
-    try 
-    {
-	XMLCh *current = (XMLCh *)(arg1)->getStringData();
-	if (current != NULL) {
-	  delete [] current;
-	}
-        $action
-    } 
-    CATCH_DOM_EXCEPTION
-%}
-
-%exception XERCES_CPP_NAMESPACE::DOMLSInput::setStringData %{
-    try 
-    {
-	XMLCh *current = (XMLCh *)(arg1)->getStringData();
-	if (current != NULL) {
-	  delete [] current;
-	}
-        $action
-    } 
-    CATCH_DOM_EXCEPTION
-%}
-
-%extend XERCES_CPP_NAMESPACE::DOMLSInput {
-%typemap(freearg) const XMLCh* data ""
-}
 
 // out typemap
 %typemap(out) XMLCh * %{

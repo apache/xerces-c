@@ -57,7 +57,7 @@ WriteMakefile(
     'NAME'        => 'XML::Xerces::DOM',
     'INC'       => $INCLUDES,
     'LIBS'      => [$LIBS],
-    'MYEXTLIB'  => "$TRANSCODER_LIB $HANDLER_LIB",
+    'MYEXTLIB'  => $MYEXTLIB,
     'OBJECT'    => 'Xerces_DOM$(OBJ_EXT)',
     'CCFLAGS'   => $CFLAGS,
     'CC'        => $CXX,

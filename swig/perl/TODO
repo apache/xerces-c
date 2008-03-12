@@ -24,16 +24,12 @@ Samples:
 Internals:
 ==========
 Sun Oct  8 2006
-* write to c-dev:
-  - DOMLSSerializerFilter??
-  - DOMLSSerializer::setNewLine() not checking
-  - why is DOMLSParserFilter::acceptNode() not const?
-* write swig-dev about %include vs. #include problem
-  - there should at least be a warning
+* remove libtool linking for libutil
+* using autoconf to handle the Perl module version problem
+* clean up Makefile.PL to remove old Xerces-C library version checking code
 * check memory leaks
   - Perl/typemaps-xmlch.i - are the returned vars leaking? do we need
     sv2mortal()
-* how to include make-xml-exception.i inside other .i files??
 * PSVIWriter.pl
 * why is InputSource dynamic resolver not returning StdInInputSource? 
   DOMLSInput.t

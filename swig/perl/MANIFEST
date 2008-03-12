@@ -30,8 +30,6 @@ SAX/Xerces_SAX.cpp
 
 Transcoder/Transcoder.cpp
 Transcoder/Transcoder.hpp
-Transcoder/XMLExceptionHandler.cpp
-Transcoder/XMLExceptionHandler.hpp
 
 hints/darwin.pl
 hints/dec_osf.pl

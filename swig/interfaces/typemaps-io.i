@@ -31,3 +31,34 @@
                                                              // and Wrapper4DOMInputSource
 %typemap(in,numinputs=0) const bool adoptBuffer "$1 = true;" // for MemBufInputSource
 
+%typemap(out) XERCES_CPP_NAMESPACE::InputSource * = SWIGTYPE *DYNAMIC;
+
+DYNAMIC_CAST(SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource, InputSource_dynamic_cast);
+
+%{
+static swig_type_info *
+InputSource_dynamic_cast(void **ptr) {
+   InputSource **nptr = (InputSource **) ptr;
+   if (*nptr == NULL) {
+       return NULL;
+   }
+
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::Wrapper4DOMLSInput * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::MemBufInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufInputSource;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::LocalFileInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileInputSource;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::URLInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__URLInputSource;
+   }
+   if (dynamic_cast< XERCES_CPP_NAMESPACE::StdInInputSource * >(*nptr)) {
+      return SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdInInputSource;
+   }
+   return NULL;
+}
+%}
+

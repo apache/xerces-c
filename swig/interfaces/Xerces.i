@@ -29,6 +29,9 @@
 #ifdef SWIGPERL
 %module "XML::Xerces"
 #endif
+#ifdef SWIGRUBY
+%module "Xerces"
+#endif
 
 /*
  * Import the common macros

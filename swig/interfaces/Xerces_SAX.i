@@ -43,13 +43,13 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-void
+static void
 makeSAXNotRecognizedException(const SAXNotRecognizedException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new SAXNotRecognizedException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException, SWIG_SHADOW|0);
 }
 
-void
+static void
 makeSAXNotSupportedException(const SAXNotSupportedException& e){
     SV *error = ERRSV;
     SWIG_MakePtr(error, (void *) new SAXNotSupportedException(e), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException, SWIG_SHADOW|0);
