@@ -42,9 +42,9 @@ public:
 
 	// The DocumentHandler interface
     void characters(const XMLCh* const chars, 
-		    const unsigned int length);
+		    const XMLSize_t length);
     void ignorableWhitespace(const XMLCh* const chars, 
-			     const unsigned int length);
+			     const XMLSize_t length);
     void startElement(const XMLCh* const, AttributeList&);
     void endElement(const XMLCh* const);
 

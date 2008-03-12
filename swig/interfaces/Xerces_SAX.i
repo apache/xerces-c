@@ -118,6 +118,7 @@ makeSAXNotSupportedException(const SAXNotSupportedException& e){
 
 %include "SAX2.i"
 
+%feature("notabstract", 1) SAXParser;
 %include "xercesc/sax/Parser.hpp"
 %include "xercesc/parsers/SAXParser.hpp"
 

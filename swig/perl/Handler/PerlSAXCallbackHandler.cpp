@@ -171,7 +171,7 @@ PerlSAXCallbackHandler::endElement(const   XMLCh* const    localname)
 
 void
 PerlSAXCallbackHandler::characters(const XMLCh* const chars, 
-				const unsigned int length)
+				const XMLSize_t length)
 {
     if (!callbackObj) return;
 
@@ -200,7 +200,7 @@ PerlSAXCallbackHandler::characters(const XMLCh* const chars,
 }
 void
 PerlSAXCallbackHandler::ignorableWhitespace(const XMLCh* const chars, 
-						 const unsigned int length)
+						 const XMLSize_t length)
 {
     if (!callbackObj) return;
 
