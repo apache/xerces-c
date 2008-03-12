@@ -55,8 +55,9 @@ ERROR
 }
 
 $XERCESCROOT = abs_path('../..');
+
 my $XERCES_INCLUDE = "$XERCESCROOT/src";
-my $XERCES_LIB = "$XERCESCROOT/obj/.libs";
+my $XERCES_LIB = "$XERCESCROOT/src/.libs";
 unless (-d $XERCES_LIB) {
   print STDERR "Building Xerces-C\n";
   system("make -C $XERCESCROOT");
@@ -269,6 +270,7 @@ if ($XERCES_DEVEL) {
 
     my $MAKE_HANDLER    = '	\$(MAKE) -C Handler static';
     my $MAKE_TRANSCODER = '	\$(MAKE) -C Transcoder static';
+
     my $MAKE_UTIL       = '	\$(MAKE) -C ' . "$SWIG_DIR static";
     if ($^O eq 'MSWin32') {
       # nmake doesn't not honor '-C'
