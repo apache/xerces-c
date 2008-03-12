@@ -19,21 +19,21 @@
 %extend XERCES_CPP_NAMESPACE::DOMConfiguration {
 %typemap(in) const void* value (void *argp, int res) {
   if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
-    res = SWIG_ConvertPtr($input, &argp, $descriptor(DOMErrorHandler*), 0 |  0 );
+    res = SWIG_ConvertPtr($input, &argp, $descriptor(XERCES_CPP_NAMESPACE::DOMErrorHandler*), 0 |  0 );
     if (!SWIG_IsOK(res)) {
       SWIG_exception_fail(SWIG_ArgError(res), "in method '" "$symname" "', argument " "$argnum"" of type '" "DOMErrorHandler const *""'"); 
     }
     $1 = reinterpret_cast< DOMErrorHandler * >(argp);
     
   } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
-    res = SWIG_ConvertPtr($input, &argp, $descriptor(XMLEntityResolver*), 0 |  0 );
+    res = SWIG_ConvertPtr($input, &argp, $descriptor(XERCES_CPP_NAMESPACE::XMLEntityResolver*), 0 |  0 );
     if (!SWIG_IsOK(res)) {
       SWIG_exception_fail(SWIG_ArgError(res), "in method '" "$symname" "', argument " "$argnum"" of type '" "XMLEntityResolver const *""'"); 
     }
     $1 = reinterpret_cast< XMLEntityResolver * >(argp);
     
   } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
-    res = SWIG_ConvertPtr($input, &argp, $descriptor(DOMLSResourceResolver*), 0 |  0 );
+    res = SWIG_ConvertPtr($input, &argp, $descriptor(XERCES_CPP_NAMESPACE::DOMLSResourceResolver*), 0 |  0 );
     if (!SWIG_IsOK(res)) {
       SWIG_exception_fail(SWIG_ArgError(res), "in method '" "$symname" "', argument " "$argnum"" of type '" "DOMLSResourceResolver const *""'"); 
     }
@@ -46,11 +46,11 @@
 
 %typemap(out) const void* {
   if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
-    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(DOMErrorHandler*), 0 | SWIG_SHADOW); 
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(XERCES_CPP_NAMESPACE::DOMErrorHandler*), 0 | SWIG_SHADOW); 
   } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
-    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(XMLEntityResolver*), 0 | SWIG_SHADOW); 
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(XERCES_CPP_NAMESPACE::XMLEntityResolver*), 0 | SWIG_SHADOW); 
   } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
-    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(DOMLSResourceResolver*), 0 | SWIG_SHADOW); 
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(XERCES_CPP_NAMESPACE::DOMLSResourceResolver*), 0 | SWIG_SHADOW); 
   } else if (isDOMConfigXMLChParameter(arg2)) {
     $result = UTF8_TRANSCODER->XMLString2Local((XMLCh*)$1);
   } else {

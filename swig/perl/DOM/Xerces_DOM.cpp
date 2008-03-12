@@ -1440,143 +1440,140 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_DOMErrorHandler swig_types[0]
-#define SWIGTYPE_p_DOMLSResourceResolver swig_types[1]
-#define SWIGTYPE_p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t swig_types[2]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__AbstractDOMParser swig_types[3]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[4]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t swig_types[5]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMAttr swig_types[6]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMCDATASection swig_types[7]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMCharacterData swig_types[8]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMComment swig_types[9]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMConfiguration swig_types[10]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocument swig_types[11]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentFragment swig_types[12]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentRange swig_types[13]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentTraversal swig_types[14]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentType swig_types[15]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMElement swig_types[16]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMEntity swig_types[17]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMEntityReference swig_types[18]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMError swig_types[19]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler swig_types[20]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException swig_types[21]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementation swig_types[22]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementationLS swig_types[23]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementationList swig_types[24]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementationRegistry swig_types[25]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSException swig_types[26]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSInput swig_types[27]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSOutput swig_types[28]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSParser swig_types[29]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSParserFilter swig_types[30]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver swig_types[31]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSSerializer swig_types[32]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSSerializerFilter swig_types[33]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLocator swig_types[34]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNamedNodeMap swig_types[35]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNode swig_types[36]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNodeFilter swig_types[37]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNodeIterator swig_types[38]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNodeList swig_types[39]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNotation swig_types[40]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMPSVITypeInfo swig_types[41]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMProcessingInstruction swig_types[42]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMRange swig_types[43]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMRangeException swig_types[44]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMStringList swig_types[45]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMText swig_types[46]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMTreeWalker swig_types[47]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMTypeInfo swig_types[48]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMUserDataHandler swig_types[49]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathEvaluator swig_types[50]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathException swig_types[51]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathNamespace swig_types[52]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDef swig_types[53]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDefList swig_types[54]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDElementDecl swig_types[55]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDEntityDecl swig_types[56]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDGrammar swig_types[57]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDValidator swig_types[58]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__EntityResolver swig_types[59]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ErrorHandler swig_types[60]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Grammar swig_types[61]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource swig_types[62]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileFormatTarget swig_types[63]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileInputSource swig_types[64]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufFormatTarget swig_types[65]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufInputSource swig_types[66]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager swig_types[67]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[68]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[69]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[70]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[71]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttribute swig_types[72]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttributeList swig_types[73]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIElement swig_types[74]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIHandler swig_types[75]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIItem swig_types[76]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlCallbackHandler swig_types[77]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlDOMCallbackHandler swig_types[78]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandler swig_types[79]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlErrorCallbackHandler swig_types[80]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlNodeFilterCallbackHandler swig_types[81]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__QName swig_types[82]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t swig_types[83]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[84]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[85]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[86]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXException swig_types[87]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException swig_types[88]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException swig_types[89]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParseException swig_types[90]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDef swig_types[91]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDefList swig_types[92]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaElementDecl swig_types[93]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaGrammar swig_types[94]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaValidator swig_types[95]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SecurityManager swig_types[96]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdInInputSource swig_types[97]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdOutFormatTarget swig_types[98]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__URLInputSource swig_types[99]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput swig_types[100]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4InputSource swig_types[101]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDef swig_types[102]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDefList swig_types[103]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttr swig_types[104]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLContentModel swig_types[105]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDTDDescription swig_types[106]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDocumentHandler swig_types[107]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLElementDecl swig_types[108]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityDecl swig_types[109]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver swig_types[110]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException swig_types[111]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatTarget swig_types[112]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatter swig_types[113]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarDescription swig_types[114]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool swig_types[115]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLNotationDecl swig_types[116]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken swig_types[117]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLSchemaDescription swig_types[118]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLURL swig_types[119]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri swig_types[120]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator swig_types[121]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMemory swig_types[122]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XercesDOMParser swig_types[123]
-#define SWIGTYPE_p_XMLEntityResolver swig_types[124]
-#define SWIGTYPE_p_XMLErrorReporter__ErrTypes swig_types[125]
-#define SWIGTYPE_p_char swig_types[126]
-#define SWIGTYPE_p_int32_t swig_types[127]
-#define SWIGTYPE_p_size_t swig_types[128]
-#define SWIGTYPE_p_ssize_t swig_types[129]
-#define SWIGTYPE_p_uint16_t swig_types[130]
-#define SWIGTYPE_p_uint32_t swig_types[131]
-#define SWIGTYPE_p_uint64_t swig_types[132]
-#define SWIGTYPE_p_unsigned_char swig_types[133]
-#define SWIGTYPE_p_void swig_types[134]
-static swig_type_info *swig_types[136];
-static swig_module_info swig_module = {swig_types, 135, 0, 0, 0, 0};
+#define SWIGTYPE_p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t swig_types[0]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__AbstractDOMParser swig_types[1]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[2]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t swig_types[3]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMAttr swig_types[4]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMCDATASection swig_types[5]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMCharacterData swig_types[6]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMComment swig_types[7]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMConfiguration swig_types[8]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocument swig_types[9]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentFragment swig_types[10]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentRange swig_types[11]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentTraversal swig_types[12]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMDocumentType swig_types[13]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMElement swig_types[14]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMEntity swig_types[15]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMEntityReference swig_types[16]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMError swig_types[17]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler swig_types[18]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMException swig_types[19]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementation swig_types[20]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementationLS swig_types[21]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementationList swig_types[22]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMImplementationRegistry swig_types[23]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSException swig_types[24]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSInput swig_types[25]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSOutput swig_types[26]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSParser swig_types[27]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSParserFilter swig_types[28]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver swig_types[29]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSSerializer swig_types[30]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSSerializerFilter swig_types[31]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLocator swig_types[32]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNamedNodeMap swig_types[33]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNode swig_types[34]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNodeFilter swig_types[35]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNodeIterator swig_types[36]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNodeList swig_types[37]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMNotation swig_types[38]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMPSVITypeInfo swig_types[39]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMProcessingInstruction swig_types[40]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMRange swig_types[41]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMRangeException swig_types[42]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMStringList swig_types[43]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMText swig_types[44]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMTreeWalker swig_types[45]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMTypeInfo swig_types[46]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMUserDataHandler swig_types[47]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathEvaluator swig_types[48]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathException swig_types[49]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMXPathNamespace swig_types[50]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDef swig_types[51]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDefList swig_types[52]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDElementDecl swig_types[53]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDEntityDecl swig_types[54]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDGrammar swig_types[55]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDValidator swig_types[56]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__EntityResolver swig_types[57]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ErrorHandler swig_types[58]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Grammar swig_types[59]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__InputSource swig_types[60]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileFormatTarget swig_types[61]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__LocalFileInputSource swig_types[62]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufFormatTarget swig_types[63]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemBufInputSource swig_types[64]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager swig_types[65]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[66]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[67]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[68]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[69]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttribute swig_types[70]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttributeList swig_types[71]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIElement swig_types[72]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIHandler swig_types[73]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIItem swig_types[74]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlCallbackHandler swig_types[75]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlDOMCallbackHandler swig_types[76]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandler swig_types[77]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlErrorCallbackHandler swig_types[78]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlNodeFilterCallbackHandler swig_types[79]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__QName swig_types[80]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t swig_types[81]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[82]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[83]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[84]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXException swig_types[85]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException swig_types[86]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException swig_types[87]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParseException swig_types[88]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDef swig_types[89]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDefList swig_types[90]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaElementDecl swig_types[91]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaGrammar swig_types[92]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaValidator swig_types[93]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SecurityManager swig_types[94]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdInInputSource swig_types[95]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__StdOutFormatTarget swig_types[96]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__URLInputSource swig_types[97]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput swig_types[98]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Wrapper4InputSource swig_types[99]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDef swig_types[100]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDefList swig_types[101]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttr swig_types[102]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLContentModel swig_types[103]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDTDDescription swig_types[104]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDocumentHandler swig_types[105]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLElementDecl swig_types[106]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityDecl swig_types[107]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver swig_types[108]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException swig_types[109]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatTarget swig_types[110]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLFormatter swig_types[111]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarDescription swig_types[112]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool swig_types[113]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLNotationDecl swig_types[114]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken swig_types[115]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLSchemaDescription swig_types[116]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLURL swig_types[117]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri swig_types[118]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator swig_types[119]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMemory swig_types[120]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XercesDOMParser swig_types[121]
+#define SWIGTYPE_p_XMLErrorReporter__ErrTypes swig_types[122]
+#define SWIGTYPE_p_char swig_types[123]
+#define SWIGTYPE_p_int32_t swig_types[124]
+#define SWIGTYPE_p_size_t swig_types[125]
+#define SWIGTYPE_p_ssize_t swig_types[126]
+#define SWIGTYPE_p_uint16_t swig_types[127]
+#define SWIGTYPE_p_uint32_t swig_types[128]
+#define SWIGTYPE_p_uint64_t swig_types[129]
+#define SWIGTYPE_p_unsigned_char swig_types[130]
+#define SWIGTYPE_p_void swig_types[131]
+static swig_type_info *swig_types[133];
+static swig_module_info swig_module = {swig_types, 132, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -10944,21 +10941,21 @@ XS(_wrap_DOMConfiguration_setParameter__SWIG_0) {
     
     {
       if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
-        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_DOMErrorHandler, 0 |  0 );
+        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler, 0 |  0 );
         if (!SWIG_IsOK(res3)) {
           SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DOMConfiguration_setParameter" "', argument " "3"" of type '" "DOMErrorHandler const *""'"); 
         }
         arg3 = reinterpret_cast< DOMErrorHandler * >(argp3);
         
       } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
-        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XMLEntityResolver, 0 |  0 );
+        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver, 0 |  0 );
         if (!SWIG_IsOK(res3)) {
           SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DOMConfiguration_setParameter" "', argument " "3"" of type '" "XMLEntityResolver const *""'"); 
         }
         arg3 = reinterpret_cast< XMLEntityResolver * >(argp3);
         
       } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
-        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_DOMLSResourceResolver, 0 |  0 );
+        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver, 0 |  0 );
         if (!SWIG_IsOK(res3)) {
           SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DOMConfiguration_setParameter" "', argument " "3"" of type '" "DOMLSResourceResolver const *""'"); 
         }
@@ -11208,11 +11205,11 @@ XS(_wrap_DOMConfiguration_getParameter) {
     }
     {
       if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
-        ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_DOMErrorHandler, 0 | SWIG_SHADOW); 
+        ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler, 0 | SWIG_SHADOW); 
       } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
-        ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XMLEntityResolver, 0 | SWIG_SHADOW); 
+        ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver, 0 | SWIG_SHADOW); 
       } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
-        ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_DOMLSResourceResolver, 0 | SWIG_SHADOW); 
+        ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver, 0 | SWIG_SHADOW); 
       } else if (isDOMConfigXMLChParameter(arg2)) {
         ST(argvi) = UTF8_TRANSCODER->XMLString2Local((XMLCh*)result);
       } else {
@@ -11262,21 +11259,21 @@ XS(_wrap_DOMConfiguration_canSetParameter__SWIG_0) {
     
     {
       if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMErrorHandler) == 0) {
-        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_DOMErrorHandler, 0 |  0 );
+        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMErrorHandler, 0 |  0 );
         if (!SWIG_IsOK(res3)) {
           SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DOMConfiguration_canSetParameter" "', argument " "3"" of type '" "DOMErrorHandler const *""'"); 
         }
         arg3 = reinterpret_cast< DOMErrorHandler * >(argp3);
         
       } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgXercesEntityResolver) == 0) {
-        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XMLEntityResolver, 0 |  0 );
+        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver, 0 |  0 );
         if (!SWIG_IsOK(res3)) {
           SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DOMConfiguration_canSetParameter" "', argument " "3"" of type '" "XMLEntityResolver const *""'"); 
         }
         arg3 = reinterpret_cast< XMLEntityResolver * >(argp3);
         
       } else if (XMLString::compareIStringASCII(arg2, XMLUni::fgDOMResourceResolver) == 0) {
-        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_DOMLSResourceResolver, 0 |  0 );
+        res3 = SWIG_ConvertPtr(ST(2), &argp3, SWIGTYPE_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver, 0 |  0 );
         if (!SWIG_IsOK(res3)) {
           SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "DOMConfiguration_canSetParameter" "', argument " "3"" of type '" "DOMLSResourceResolver const *""'"); 
         }
@@ -23490,14 +23487,14 @@ static void *_p_XERCES_CPP_NAMESPACE__PerlNodeFilterCallbackHandlerTo_p_XERCES_C
 static void *_p_XERCES_CPP_NAMESPACE__PerlNodeFilterCallbackHandlerTo_p_XERCES_CPP_NAMESPACE__DOMLSParserFilter(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::DOMLSParserFilter *)  ((XERCES_CPP_NAMESPACE::PerlNodeFilterCallbackHandler *) x));
 }
+static void *_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandlerTo_p_XERCES_CPP_NAMESPACE__XMLEntityResolver(void *x) {
+    return (void *)((XERCES_CPP_NAMESPACE::XMLEntityResolver *)  ((XERCES_CPP_NAMESPACE::PerlEntityResolverHandler *) x));
+}
 static void *_p_XERCES_CPP_NAMESPACE__PerlDOMCallbackHandlerTo_p_XERCES_CPP_NAMESPACE__DOMLSResourceResolver(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::DOMLSResourceResolver *)  ((XERCES_CPP_NAMESPACE::PerlDOMCallbackHandler *) x));
 }
 static void *_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandlerTo_p_XERCES_CPP_NAMESPACE__EntityResolver(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::EntityResolver *)  ((XERCES_CPP_NAMESPACE::PerlEntityResolverHandler *) x));
-}
-static void *_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandlerTo_p_XERCES_CPP_NAMESPACE__XMLEntityResolver(void *x) {
-    return (void *)((XERCES_CPP_NAMESPACE::XMLEntityResolver *)  ((XERCES_CPP_NAMESPACE::PerlEntityResolverHandler *) x));
 }
 static void *_p_XERCES_CPP_NAMESPACE__AbstractDOMParserTo_p_XERCES_CPP_NAMESPACE__PSVIHandler(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::PSVIHandler *)  ((XERCES_CPP_NAMESPACE::AbstractDOMParser *) x));
@@ -23760,8 +23757,6 @@ static void *_p_XERCES_CPP_NAMESPACE__DTDValidatorTo_p_XERCES_CPP_NAMESPACE__XML
 static void *_p_XERCES_CPP_NAMESPACE__SchemaValidatorTo_p_XERCES_CPP_NAMESPACE__XMLValidator(void *x) {
     return (void *)((XERCES_CPP_NAMESPACE::XMLValidator *)  ((XERCES_CPP_NAMESPACE::SchemaValidator *) x));
 }
-static swig_type_info _swigt__p_DOMErrorHandler = {"_p_DOMErrorHandler", "DOMErrorHandler *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_DOMLSResourceResolver = {"_p_DOMLSResourceResolver", "DOMLSResourceResolver *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t = {"_p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t", "ValueVectorOf<XERCES_CPP_NAMESPACE::SchemaElementDecl * > *|XERCES_CPP_NAMESPACE::ElemVector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__AbstractDOMParser = {"_p_XERCES_CPP_NAMESPACE__AbstractDOMParser", "XERCES_CPP_NAMESPACE::AbstractDOMParser *", 0, 0, (void*)"XML::Xerces::AbstractDOMParser", 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__DOMAttr = {"_p_XERCES_CPP_NAMESPACE__DOMAttr", "XERCES_CPP_NAMESPACE::DOMAttr *", 0, 0, (void*)"XML::Xerces::DOMAttr", 0};
@@ -23884,7 +23879,6 @@ static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__XMLFormatter = {"_p_XERCES
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__DTDEntityDecl = {"_p_XERCES_CPP_NAMESPACE__DTDEntityDecl", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__XMLEntityDecl = {"_p_XERCES_CPP_NAMESPACE__XMLEntityDecl", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_XERCES_CPP_NAMESPACE__XercesDOMParser = {"_p_XERCES_CPP_NAMESPACE__XercesDOMParser", "XERCES_CPP_NAMESPACE::XercesDOMParser *", 0, 0, (void*)"XML::Xerces::XercesDOMParser", 0};
-static swig_type_info _swigt__p_XMLEntityResolver = {"_p_XMLEntityResolver", "XMLEntityResolver *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_XMLErrorReporter__ErrTypes = {"_p_XMLErrorReporter__ErrTypes", "XMLErrorReporter::ErrTypes *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int32_t = {"_p_int32_t", "int32_t *|XMLInt32 *", 0, 0, (void*)0, 0};
@@ -23897,8 +23891,6 @@ static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned c
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
-  &_swigt__p_DOMErrorHandler,
-  &_swigt__p_DOMLSResourceResolver,
   &_swigt__p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t,
   &_swigt__p_XERCES_CPP_NAMESPACE__AbstractDOMParser,
   &_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t,
@@ -24021,7 +24013,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_XERCES_CPP_NAMESPACE__XMLValidator,
   &_swigt__p_XERCES_CPP_NAMESPACE__XMemory,
   &_swigt__p_XERCES_CPP_NAMESPACE__XercesDOMParser,
-  &_swigt__p_XMLEntityResolver,
   &_swigt__p_XMLErrorReporter__ErrTypes,
   &_swigt__p_char,
   &_swigt__p_int32_t,
@@ -24034,8 +24025,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_void,
 };
 
-static swig_cast_info _swigc__p_DOMErrorHandler[] = {  {&_swigt__p_DOMErrorHandler, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_DOMLSResourceResolver[] = {  {&_swigt__p_DOMLSResourceResolver, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t[] = {  {&_swigt__p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__AbstractDOMParser[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__AbstractDOMParser, 0, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XercesDOMParser, _p_XERCES_CPP_NAMESPACE__XercesDOMParserTo_p_XERCES_CPP_NAMESPACE__AbstractDOMParser, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__DOMAttr[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__DOMAttr, 0, 0, 0},{0, 0, 0, 0}};
@@ -24158,7 +24147,6 @@ static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__DTDEntityDecl[] = {{&_swig
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XMLEntityDecl[] = {{&_swigt__p_XERCES_CPP_NAMESPACE__XMLEntityDecl, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XMemory[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttr, _p_XERCES_CPP_NAMESPACE__XMLAttrTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t, _p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLUri, _p_XERCES_CPP_NAMESPACE__XMLUriTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLSchemaDescription, _p_XERCES_CPP_NAMESPACE__XMLSchemaDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLGrammarDescription, _p_XERCES_CPP_NAMESPACE__XMLGrammarDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLDTDDescription, _p_XERCES_CPP_NAMESPACE__XMLDTDDescriptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaElementDecl, _p_XERCES_CPP_NAMESPACE__SchemaElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDElementDecl, _p_XERCES_CPP_NAMESPACE__DTDElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLElementDecl, _p_XERCES_CPP_NAMESPACE__XMLElementDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaValidator, _p_XERCES_CPP_NAMESPACE__SchemaValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDValidator, _p_XERCES_CPP_NAMESPACE__DTDValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLValidator, _p_XERCES_CPP_NAMESPACE__XMLValidatorTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLPScanToken, _p_XERCES_CPP_NAMESPACE__XMLPScanTokenTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t, _p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDAttDef, _p_XERCES_CPP_NAMESPACE__DTDAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDef, _p_XERCES_CPP_NAMESPACE__XMLAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLNotationDecl, _p_XERCES_CPP_NAMESPACE__XMLNotationDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLFormatTarget, _p_XERCES_CPP_NAMESPACE__XMLFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdOutFormatTarget, _p_XERCES_CPP_NAMESPACE__StdOutFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileFormatTarget, _p_XERCES_CPP_NAMESPACE__LocalFileFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufFormatTarget, _p_XERCES_CPP_NAMESPACE__MemBufFormatTargetTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t, _p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIItem, _p_XERCES_CPP_NAMESPACE__PSVIItemTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__InputSource, _p_XERCES_CPP_NAMESPACE__InputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__LocalFileInputSource, _p_XERCES_CPP_NAMESPACE__LocalFileInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__StdInInputSource, _p_XERCES_CPP_NAMESPACE__StdInInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__URLInputSource, _p_XERCES_CPP_NAMESPACE__URLInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__MemBufInputSource, _p_XERCES_CPP_NAMESPACE__MemBufInputSourceTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t, _p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaAttDef, _p_XERCES_CPP_NAMESPACE__SchemaAttDefTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XercesDOMParser, _p_XERCES_CPP_NAMESPACE__XercesDOMParserTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__AbstractDOMParser, _p_XERCES_CPP_NAMESPACE__AbstractDOMParserTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t, _p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLURL, _p_XERCES_CPP_NAMESPACE__XMLURLTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLException, _p_XERCES_CPP_NAMESPACE__XMLExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLContentModel, _p_XERCES_CPP_NAMESPACE__XMLContentModelTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaGrammar, _p_XERCES_CPP_NAMESPACE__SchemaGrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDGrammar, _p_XERCES_CPP_NAMESPACE__DTDGrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__Grammar, _p_XERCES_CPP_NAMESPACE__GrammarTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXException, _p_XERCES_CPP_NAMESPACE__SAXExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXNotSupportedException, _p_XERCES_CPP_NAMESPACE__SAXNotSupportedExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException, _p_XERCES_CPP_NAMESPACE__SAXNotRecognizedExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SAXParseException, _p_XERCES_CPP_NAMESPACE__SAXParseExceptionTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIAttributeList, _p_XERCES_CPP_NAMESPACE__PSVIAttributeListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t, _p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t, _p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_tTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIAttribute, _p_XERCES_CPP_NAMESPACE__PSVIAttributeTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMemory, 0, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__QName, _p_XERCES_CPP_NAMESPACE__QNameTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInput, _p_XERCES_CPP_NAMESPACE__Wrapper4DOMLSInputTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__SchemaAttDefList, _p_XERCES_CPP_NAMESPACE__SchemaAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDAttDefList, _p_XERCES_CPP_NAMESPACE__DTDAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLAttDefList, _p_XERCES_CPP_NAMESPACE__XMLAttDefListTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLFormatter, _p_XERCES_CPP_NAMESPACE__XMLFormatterTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__DTDEntityDecl, _p_XERCES_CPP_NAMESPACE__DTDEntityDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__XMLEntityDecl, _p_XERCES_CPP_NAMESPACE__XMLEntityDeclTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},  {&_swigt__p_XERCES_CPP_NAMESPACE__PSVIElement, _p_XERCES_CPP_NAMESPACE__PSVIElementTo_p_XERCES_CPP_NAMESPACE__XMemory, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XERCES_CPP_NAMESPACE__XercesDOMParser[] = {  {&_swigt__p_XERCES_CPP_NAMESPACE__XercesDOMParser, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_XMLEntityResolver[] = {  {&_swigt__p_XMLEntityResolver, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_XMLErrorReporter__ErrTypes[] = {  {&_swigt__p_XMLErrorReporter__ErrTypes, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int32_t[] = {  {&_swigt__p_int32_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -24171,8 +24159,6 @@ static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
-  _swigc__p_DOMErrorHandler,
-  _swigc__p_DOMLSResourceResolver,
   _swigc__p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t,
   _swigc__p_XERCES_CPP_NAMESPACE__AbstractDOMParser,
   _swigc__p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t,
@@ -24295,7 +24281,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_XERCES_CPP_NAMESPACE__XMLValidator,
   _swigc__p_XERCES_CPP_NAMESPACE__XMemory,
   _swigc__p_XERCES_CPP_NAMESPACE__XercesDOMParser,
-  _swigc__p_XMLEntityResolver,
   _swigc__p_XMLErrorReporter__ErrTypes,
   _swigc__p_char,
   _swigc__p_int32_t,
