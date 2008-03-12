@@ -69,18 +69,18 @@ Transcoder::XMLString2Local(const XMLCh* input) {
   }
 
   SV *output;
-  unsigned int charsEaten = 0;
+  XMLSize_t charsEaten = 0;
   int length  = XMLString::stringLen(input);            // string length
   // use +1 to make room for the '\0' at the end of the string
   // in the pathological case when each character of the string 
   // is UTF8_MAXLEN bytes long
   XMLByte* res = new XMLByte[(length * UTF8_MAXLEN) + 1]; // output string
 
-  unsigned int total_chars =
+  XMLSize_t total_chars =
     UTF8_TRANSCODER->transcodeTo((const XMLCh*) input, 
-				   (unsigned int) length,
+				   (XMLSize_t) length,
 				   (XMLByte*) res,
-				   (unsigned int) (length*UTF8_MAXLEN),
+				   (XMLSize_t) (length*UTF8_MAXLEN),
 				   charsEaten,
 				   XMLTranscoder::UnRep_Throw
 				   );
@@ -126,14 +126,14 @@ Transcoder::Local2XMLString(SV* input){
 #endif
 
     if (SvUTF8(input)) {
-	unsigned int charsEaten = 0;
+	XMLSize_t charsEaten = 0;
         unsigned char* sizes = new unsigned char[length+1];
         output = new XMLCh[length+1];
-	unsigned int chars_stored = 
+	XMLSize_t chars_stored = 
 	    UTF8_TRANSCODER->transcodeFrom((const XMLByte*) ptr,
-					   (unsigned int) length,
+					   (XMLSize_t) length,
 					   (XMLCh*) output, 
-					   (unsigned int) length,
+					   (XMLSize_t) length,
 					   charsEaten,
 					   (unsigned char*)sizes
 					   );
