@@ -535,6 +535,12 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *Val_Never = *XML::Xercesc::SAXParser_Val_Never;
 *Val_Always = *XML::Xercesc::SAXParser_Val_Always;
 *Val_Auto = *XML::Xercesc::SAXParser_Val_Auto;
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_SAXParser(@_);
+    bless $self, $pkg if defined($self);
+}
+
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});
@@ -787,6 +793,12 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( XML::Xerces::ContentHandler XML::Xerces::DocumentHandler XML::Xerces::PerlCallbackHandler XML::Xerces );
 %OWNER = ();
 %ITERATORS = ();
+sub new {
+    my $pkg = shift;
+    my $self = XML::Xercesc::new_PerlSAXCallbackHandler(@_);
+    bless $self, $pkg if defined($self);
+}
+
 sub DESTROY {
     return unless $_[0]->isa('HASH');
     my $self = tied(%{$_[0]});

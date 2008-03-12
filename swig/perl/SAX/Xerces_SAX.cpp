@@ -5807,6 +5807,243 @@ XS(_wrap_Parser_parse) {
 }
 
 
+XS(_wrap_new_SAXParser__SWIG_0) {
+  {
+    XERCES_CPP_NAMESPACE::XMLValidator *arg1 = (XERCES_CPP_NAMESPACE::XMLValidator *) (XERCES_CPP_NAMESPACE::XMLValidator *)0 ;
+    XERCES_CPP_NAMESPACE::MemoryManager *arg2 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
+    XERCES_CPP_NAMESPACE::XMLGrammarPool *arg3 = (XERCES_CPP_NAMESPACE::XMLGrammarPool *) (XERCES_CPP_NAMESPACE::XMLGrammarPool *)0 ;
+    XERCES_CPP_NAMESPACE::SAXParser *result = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    arg2 = XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;
+    if ((items < 1) || (items > 3)) {
+      SWIG_croak("Usage: new_SAXParser(valToAdopt,manager,gramPool);");
+    }
+    {
+      if (ST(0) != &PL_sv_undef) {
+        int rc = SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, SWIG_POINTER_DISOWN |  0);
+        if (!SWIG_IsOK(rc)) {
+          SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "new_SAXParser" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::XMLValidator *const""'");
+        }
+      }
+    }
+    if (items > 1) {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_SAXParser" "', argument " "2"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
+      }
+      arg2 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp2);
+    }
+    if (items > 2) {
+      res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool, 0 |  0 );
+      if (!SWIG_IsOK(res3)) {
+        SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_SAXParser" "', argument " "3"" of type '" "XERCES_CPP_NAMESPACE::XMLGrammarPool *const""'"); 
+      }
+      arg3 = reinterpret_cast< XERCES_CPP_NAMESPACE::XMLGrammarPool * >(argp3);
+    }
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::SAXParser *)new XERCES_CPP_NAMESPACE::SAXParser(arg1,arg2,arg3);
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_SAXParser__SWIG_1) {
+  {
+    XERCES_CPP_NAMESPACE::XMLValidator *arg1 = (XERCES_CPP_NAMESPACE::XMLValidator *) (XERCES_CPP_NAMESPACE::XMLValidator *)0 ;
+    XERCES_CPP_NAMESPACE::MemoryManager *arg2 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
+    XERCES_CPP_NAMESPACE::SAXParser *result = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    arg2 = XERCES_CPP_NAMESPACE::XMLPlatformUtils::fgMemoryManager;
+    if ((items < 1) || (items > 2)) {
+      SWIG_croak("Usage: new_SAXParser(valToAdopt,manager);");
+    }
+    {
+      if (ST(0) != &PL_sv_undef) {
+        int rc = SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, SWIG_POINTER_DISOWN |  0);
+        if (!SWIG_IsOK(rc)) {
+          SWIG_exception_fail(SWIG_ArgError(SWIG_TypeError), "in method '" "new_SAXParser" "', argument " "1"" of type '" "XERCES_CPP_NAMESPACE::XMLValidator *const""'");
+        }
+      }
+    }
+    if (items > 1) {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_SAXParser" "', argument " "2"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
+      }
+      arg2 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp2);
+    }
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::SAXParser *)new XERCES_CPP_NAMESPACE::SAXParser(arg1,arg2);
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_SAXParser__SWIG_2) {
+  {
+    XERCES_CPP_NAMESPACE::SAXParser *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_SAXParser();");
+    }
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::SAXParser *)new XERCES_CPP_NAMESPACE::SAXParser();
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParser, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_SAXParser) {
+  dXSARGS;
+  
+  {
+    unsigned long _index = 0;
+    SWIG_TypeRank _rank = 0; 
+    if (items == 0) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 1;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+    if ((items >= 1) && (items <= 2)) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_2;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (items > 1) {
+        {
+          void *vptr = 0;
+          int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0);
+          _v = SWIG_CheckState(res);
+        }
+        if (!_v) goto check_2;
+        _ranki += _v*_pi;
+        _rankm += _pi;
+        _pi *= SWIG_MAXCASTRANK;
+      }
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 2;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_2:
+    
+    if ((items >= 1) && (items <= 3)) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(ST(0), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator, 0);
+        _v = SWIG_CheckState(res);
+      }
+      if (!_v) goto check_3;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (items > 1) {
+        {
+          void *vptr = 0;
+          int res = SWIG_ConvertPtr(ST(1), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0);
+          _v = SWIG_CheckState(res);
+        }
+        if (!_v) goto check_3;
+        _ranki += _v*_pi;
+        _rankm += _pi;
+        _pi *= SWIG_MAXCASTRANK;
+        if (items > 2) {
+          {
+            void *vptr = 0;
+            int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarPool, 0);
+            _v = SWIG_CheckState(res);
+          }
+          if (!_v) goto check_3;
+          _ranki += _v*_pi;
+          _rankm += _pi;
+          _pi *= SWIG_MAXCASTRANK;
+        }
+      }
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 3;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_3:
+    
+  dispatch:
+    switch(_index) {
+    case 1:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_SAXParser__SWIG_2); return;
+    case 2:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_SAXParser__SWIG_1); return;
+    case 3:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_SAXParser__SWIG_0); return;
+    }
+  }
+  
+  croak("No matching function for overloaded 'new_SAXParser'");
+  XSRETURN(0);
+}
+
+
 XS(_wrap_delete_SAXParser) {
   {
     XERCES_CPP_NAMESPACE::SAXParser *arg1 = (XERCES_CPP_NAMESPACE::SAXParser *) 0 ;
@@ -12025,6 +12262,109 @@ XS(_wrap_XMLReaderFactory_createXMLReader) {
 }
 
 
+XS(_wrap_new_PerlSAXCallbackHandler__SWIG_0) {
+  {
+    XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_PerlSAXCallbackHandler();");
+    }
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *)new XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler();
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlSAXCallbackHandler, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_PerlSAXCallbackHandler__SWIG_1) {
+  {
+    SV *arg1 = (SV *) 0 ;
+    XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: new_PerlSAXCallbackHandler(obj);");
+    }
+    {
+      arg1 = ST(0);
+    }
+    {
+      try 
+      {
+        result = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *)new XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler(arg1);
+      } 
+      CATCH_XML_EXCEPTION
+    }
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlSAXCallbackHandler, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_PerlSAXCallbackHandler) {
+  dXSARGS;
+  
+  {
+    unsigned long _index = 0;
+    SWIG_TypeRank _rank = 0; 
+    if (items == 0) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 1;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+    if (items == 1) {
+      SWIG_TypeRank _ranki = 0;
+      SWIG_TypeRank _rankm = 0;
+      SWIG_TypeRank _pi = 1;
+      int _v = 0;
+      {
+        {
+          _v = 1;
+        }
+      }
+      if (!_v) goto check_2;
+      _ranki += _v*_pi;
+      _rankm += _pi;
+      _pi *= SWIG_MAXCASTRANK;
+      if (!_index || (_ranki < _rank)) {
+        _rank = _ranki; _index = 2;
+        if (_rank == _rankm) goto dispatch;
+      }
+    }
+  check_2:
+    
+  dispatch:
+    switch(_index) {
+    case 1:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_PerlSAXCallbackHandler__SWIG_0); return;
+    case 2:
+      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_new_PerlSAXCallbackHandler__SWIG_1); return;
+    }
+  }
+  
+  croak("No matching function for overloaded 'new_PerlSAXCallbackHandler'");
+  XSRETURN(0);
+}
+
+
 XS(_wrap_delete_PerlSAXCallbackHandler) {
   {
     XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *arg1 = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *) 0 ;
@@ -12097,10 +12437,10 @@ XS(_wrap_PerlSAXCallbackHandler_characters) {
   {
     XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *arg1 = (XERCES_CPP_NAMESPACE::PerlSAXCallbackHandler *) 0 ;
     XMLCh *arg2 = (XMLCh *) (XMLCh *)0 ;
-    unsigned int arg3 ;
+    XMLSize_t arg3 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    unsigned int val3 ;
+    size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
     dXSARGS;
@@ -12117,11 +12457,11 @@ XS(_wrap_PerlSAXCallbackHandler_characters) {
     // we convert *everything* into a string *including* null/undef
     arg2 = UTF8_TRANSCODER->Local2XMLString(ST(1));
     
-    ecode3 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "PerlSAXCallbackHandler_characters" "', argument " "3"" of type '" "unsigned int""'");
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "PerlSAXCallbackHandler_characters" "', argument " "3"" of type '" "XMLSize_t""'");
     } 
-    arg3 = static_cast< unsigned int >(val3);
+    arg3 = static_cast< XMLSize_t >(val3);
     {
       try 
       {
@@ -13090,6 +13430,7 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::Parser_setDocumentHandler", _wrap_Parser_setDocumentHandler},
 {"XML::Xercesc::Parser_setErrorHandler", _wrap_Parser_setErrorHandler},
 {"XML::Xercesc::Parser_parse", _wrap_Parser_parse},
+{"XML::Xercesc::new_SAXParser", _wrap_new_SAXParser},
 {"XML::Xercesc::delete_SAXParser", _wrap_delete_SAXParser},
 {"XML::Xercesc::SAXParser_getDocumentHandler", _wrap_SAXParser_getDocumentHandler},
 {"XML::Xercesc::SAXParser_getEntityResolver", _wrap_SAXParser_getEntityResolver},
@@ -13200,6 +13541,7 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::SAX2XMLReader_installAdvDocHandler", _wrap_SAX2XMLReader_installAdvDocHandler},
 {"XML::Xercesc::SAX2XMLReader_removeAdvDocHandler", _wrap_SAX2XMLReader_removeAdvDocHandler},
 {"XML::Xercesc::XMLReaderFactory_createXMLReader", _wrap_XMLReaderFactory_createXMLReader},
+{"XML::Xercesc::new_PerlSAXCallbackHandler", _wrap_new_PerlSAXCallbackHandler},
 {"XML::Xercesc::delete_PerlSAXCallbackHandler", _wrap_delete_PerlSAXCallbackHandler},
 {"XML::Xercesc::PerlSAXCallbackHandler_type", _wrap_PerlSAXCallbackHandler_type},
 {"XML::Xercesc::PerlSAXCallbackHandler_characters", _wrap_PerlSAXCallbackHandler_characters},
