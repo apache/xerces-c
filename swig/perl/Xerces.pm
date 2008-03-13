@@ -1671,7 +1671,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *NoError = *XML::Xercesc::XMLExcepts_NoError;
 *W_LowBounds = *XML::Xercesc::XMLExcepts_W_LowBounds;
 *Scan_CouldNotOpenSource_Warning = *XML::Xercesc::XMLExcepts_Scan_CouldNotOpenSource_Warning;
-*GC_ExistingGrammar = *XML::Xercesc::XMLExcepts_GC_ExistingGrammar;
 *W_HighBounds = *XML::Xercesc::XMLExcepts_W_HighBounds;
 *F_LowBounds = *XML::Xercesc::XMLExcepts_F_LowBounds;
 *Array_BadIndex = *XML::Xercesc::XMLExcepts_Array_BadIndex;
@@ -1687,7 +1686,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *CM_BinOpHadUnaryType = *XML::Xercesc::XMLExcepts_CM_BinOpHadUnaryType;
 *CM_MustBeMixedOrChildren = *XML::Xercesc::XMLExcepts_CM_MustBeMixedOrChildren;
 *CM_NoPCDATAHere = *XML::Xercesc::XMLExcepts_CM_NoPCDATAHere;
-*CM_NotValidForSpecType = *XML::Xercesc::XMLExcepts_CM_NotValidForSpecType;
 *CM_UnaryOpHadBinType = *XML::Xercesc::XMLExcepts_CM_UnaryOpHadBinType;
 *CM_UnknownCMType = *XML::Xercesc::XMLExcepts_CM_UnknownCMType;
 *CM_UnknownCMSpecType = *XML::Xercesc::XMLExcepts_CM_UnknownCMSpecType;
@@ -1695,7 +1693,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *CM_NotValidSpecTypeForNode = *XML::Xercesc::XMLExcepts_CM_NotValidSpecTypeForNode;
 *DTD_UnknownCreateReason = *XML::Xercesc::XMLExcepts_DTD_UnknownCreateReason;
 *ElemStack_EmptyStack = *XML::Xercesc::XMLExcepts_ElemStack_EmptyStack;
-*ElemStack_BadIndex = *XML::Xercesc::XMLExcepts_ElemStack_BadIndex;
 *ElemStack_StackUnderflow = *XML::Xercesc::XMLExcepts_ElemStack_StackUnderflow;
 *ElemStack_NoParentPushed = *XML::Xercesc::XMLExcepts_ElemStack_NoParentPushed;
 *Enum_NoMoreElements = *XML::Xercesc::XMLExcepts_Enum_NoMoreElements;
@@ -1710,7 +1707,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *File_CouldNotResetFile = *XML::Xercesc::XMLExcepts_File_CouldNotResetFile;
 *File_CouldNotGetSize = *XML::Xercesc::XMLExcepts_File_CouldNotGetSize;
 *File_CouldNotGetBasePathName = *XML::Xercesc::XMLExcepts_File_CouldNotGetBasePathName;
-*File_BasePathUnderflow = *XML::Xercesc::XMLExcepts_File_BasePathUnderflow;
 *Gen_ParseInProgress = *XML::Xercesc::XMLExcepts_Gen_ParseInProgress;
 *Gen_NoDTDValidator = *XML::Xercesc::XMLExcepts_Gen_NoDTDValidator;
 *Gen_CouldNotOpenDTD = *XML::Xercesc::XMLExcepts_Gen_CouldNotOpenDTD;
@@ -1719,10 +1715,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *HshTbl_ZeroModulus = *XML::Xercesc::XMLExcepts_HshTbl_ZeroModulus;
 *HshTbl_BadHashFromKey = *XML::Xercesc::XMLExcepts_HshTbl_BadHashFromKey;
 *HshTbl_NoSuchKeyExists = *XML::Xercesc::XMLExcepts_HshTbl_NoSuchKeyExists;
-*Mutex_CouldNotCreate = *XML::Xercesc::XMLExcepts_Mutex_CouldNotCreate;
-*Mutex_CouldNotClose = *XML::Xercesc::XMLExcepts_Mutex_CouldNotClose;
-*Mutex_CouldNotLock = *XML::Xercesc::XMLExcepts_Mutex_CouldNotLock;
-*Mutex_CouldNotUnlock = *XML::Xercesc::XMLExcepts_Mutex_CouldNotUnlock;
 *Mutex_CouldNotDestroy = *XML::Xercesc::XMLExcepts_Mutex_CouldNotDestroy;
 *NetAcc_InternalError = *XML::Xercesc::XMLExcepts_NetAcc_InternalError;
 *NetAcc_LengthError = *XML::Xercesc::XMLExcepts_NetAcc_LengthError;
@@ -1734,14 +1726,12 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *NetAcc_ReadSocket = *XML::Xercesc::XMLExcepts_NetAcc_ReadSocket;
 *NetAcc_UnsupportedMethod = *XML::Xercesc::XMLExcepts_NetAcc_UnsupportedMethod;
 *Pool_ElemAlreadyExists = *XML::Xercesc::XMLExcepts_Pool_ElemAlreadyExists;
-*Pool_BadHashFromKey = *XML::Xercesc::XMLExcepts_Pool_BadHashFromKey;
 *Pool_InvalidId = *XML::Xercesc::XMLExcepts_Pool_InvalidId;
 *Pool_ZeroModulus = *XML::Xercesc::XMLExcepts_Pool_ZeroModulus;
 *RdrMgr_ReaderIdNotFound = *XML::Xercesc::XMLExcepts_RdrMgr_ReaderIdNotFound;
 *Reader_BadAutoEncoding = *XML::Xercesc::XMLExcepts_Reader_BadAutoEncoding;
 *Reader_CouldNotDecodeFirstLine = *XML::Xercesc::XMLExcepts_Reader_CouldNotDecodeFirstLine;
 *Reader_NelLsepinDecl = *XML::Xercesc::XMLExcepts_Reader_NelLsepinDecl;
-*Reader_EOIInMultiSeq = *XML::Xercesc::XMLExcepts_Reader_EOIInMultiSeq;
 *Reader_SrcOfsNotSupported = *XML::Xercesc::XMLExcepts_Reader_SrcOfsNotSupported;
 *Reader_EncodingStrRequired = *XML::Xercesc::XMLExcepts_Reader_EncodingStrRequired;
 *Scan_CouldNotOpenSource = *XML::Xercesc::XMLExcepts_Scan_CouldNotOpenSource;
@@ -1754,15 +1744,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *Str_TargetBufTooSmall = *XML::Xercesc::XMLExcepts_Str_TargetBufTooSmall;
 *Str_StartIndexPastEnd = *XML::Xercesc::XMLExcepts_Str_StartIndexPastEnd;
 *Str_ConvertOverflow = *XML::Xercesc::XMLExcepts_Str_ConvertOverflow;
-*Strm_StdErrWriteFailure = *XML::Xercesc::XMLExcepts_Strm_StdErrWriteFailure;
-*Strm_StdOutWriteFailure = *XML::Xercesc::XMLExcepts_Strm_StdOutWriteFailure;
-*Strm_ConWriteFailure = *XML::Xercesc::XMLExcepts_Strm_ConWriteFailure;
 *StrPool_IllegalId = *XML::Xercesc::XMLExcepts_StrPool_IllegalId;
-*Trans_CouldNotCreateDefCvtr = *XML::Xercesc::XMLExcepts_Trans_CouldNotCreateDefCvtr;
-*Trans_InvalidSizeReq = *XML::Xercesc::XMLExcepts_Trans_InvalidSizeReq;
 *Trans_Unrepresentable = *XML::Xercesc::XMLExcepts_Trans_Unrepresentable;
-*Trans_NotValidForEncoding = *XML::Xercesc::XMLExcepts_Trans_NotValidForEncoding;
-*Trans_BadBlockSize = *XML::Xercesc::XMLExcepts_Trans_BadBlockSize;
 *Trans_BadSrcSeq = *XML::Xercesc::XMLExcepts_Trans_BadSrcSeq;
 *Trans_BadSrcCP = *XML::Xercesc::XMLExcepts_Trans_BadSrcCP;
 *Trans_BadTrailingSurrogate = *XML::Xercesc::XMLExcepts_Trans_BadTrailingSurrogate;
@@ -1770,16 +1753,11 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *URL_MalformedURL = *XML::Xercesc::XMLExcepts_URL_MalformedURL;
 *URL_UnsupportedProto = *XML::Xercesc::XMLExcepts_URL_UnsupportedProto;
 *URL_UnsupportedProto1 = *XML::Xercesc::XMLExcepts_URL_UnsupportedProto1;
-*URL_OnlyLocalHost = *XML::Xercesc::XMLExcepts_URL_OnlyLocalHost;
 *URL_NoProtocolPresent = *XML::Xercesc::XMLExcepts_URL_NoProtocolPresent;
 *URL_ExpectingTwoSlashes = *XML::Xercesc::XMLExcepts_URL_ExpectingTwoSlashes;
-*URL_IncorrectEscapedCharRef = *XML::Xercesc::XMLExcepts_URL_IncorrectEscapedCharRef;
-*URL_UnterminatedHostComponent = *XML::Xercesc::XMLExcepts_URL_UnterminatedHostComponent;
 *URL_RelativeBaseURL = *XML::Xercesc::XMLExcepts_URL_RelativeBaseURL;
-*URL_BaseUnderflow = *XML::Xercesc::XMLExcepts_URL_BaseUnderflow;
 *URL_BadPortField = *XML::Xercesc::XMLExcepts_URL_BadPortField;
 *UTF8_FormatError = *XML::Xercesc::XMLExcepts_UTF8_FormatError;
-*UTF8_Invalid_2BytesSeq = *XML::Xercesc::XMLExcepts_UTF8_Invalid_2BytesSeq;
 *UTF8_Invalid_3BytesSeq = *XML::Xercesc::XMLExcepts_UTF8_Invalid_3BytesSeq;
 *UTF8_Irregular_3BytesSeq = *XML::Xercesc::XMLExcepts_UTF8_Irregular_3BytesSeq;
 *UTF8_Invalid_4BytesSeq = *XML::Xercesc::XMLExcepts_UTF8_Invalid_4BytesSeq;
@@ -1808,18 +1786,15 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *Parser_CC1 = *XML::Xercesc::XMLExcepts_Parser_CC1;
 *Parser_CC2 = *XML::Xercesc::XMLExcepts_Parser_CC2;
 *Parser_CC3 = *XML::Xercesc::XMLExcepts_Parser_CC3;
-*Parser_CC4 = *XML::Xercesc::XMLExcepts_Parser_CC4;
 *Parser_CC5 = *XML::Xercesc::XMLExcepts_Parser_CC5;
 *Parser_CC6 = *XML::Xercesc::XMLExcepts_Parser_CC6;
 *Parser_Ope1 = *XML::Xercesc::XMLExcepts_Parser_Ope1;
 *Parser_Ope2 = *XML::Xercesc::XMLExcepts_Parser_Ope2;
 *Parser_Ope3 = *XML::Xercesc::XMLExcepts_Parser_Ope3;
 *Parser_Descape1 = *XML::Xercesc::XMLExcepts_Parser_Descape1;
-*Parser_Descape2 = *XML::Xercesc::XMLExcepts_Parser_Descape2;
 *Parser_Descape3 = *XML::Xercesc::XMLExcepts_Parser_Descape3;
 *Parser_Descape4 = *XML::Xercesc::XMLExcepts_Parser_Descape4;
 *Parser_Descape5 = *XML::Xercesc::XMLExcepts_Parser_Descape5;
-*Parser_Process1 = *XML::Xercesc::XMLExcepts_Parser_Process1;
 *Parser_Process2 = *XML::Xercesc::XMLExcepts_Parser_Process2;
 *Parser_Quantifier1 = *XML::Xercesc::XMLExcepts_Parser_Quantifier1;
 *Parser_Quantifier2 = *XML::Xercesc::XMLExcepts_Parser_Quantifier2;
@@ -1827,7 +1802,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *Parser_Quantifier4 = *XML::Xercesc::XMLExcepts_Parser_Quantifier4;
 *Parser_Quantifier5 = *XML::Xercesc::XMLExcepts_Parser_Quantifier5;
 *Gen_NoSchemaValidator = *XML::Xercesc::XMLExcepts_Gen_NoSchemaValidator;
-*XUTIL_UnCopyableNodeType = *XML::Xercesc::XMLExcepts_XUTIL_UnCopyableNodeType;
 *SubGrpComparator_NGR = *XML::Xercesc::XMLExcepts_SubGrpComparator_NGR;
 *FACET_Invalid_Len = *XML::Xercesc::XMLExcepts_FACET_Invalid_Len;
 *FACET_Invalid_maxLen = *XML::Xercesc::XMLExcepts_FACET_Invalid_maxLen;
@@ -1838,7 +1812,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *FACET_Len_maxLen = *XML::Xercesc::XMLExcepts_FACET_Len_maxLen;
 *FACET_Len_minLen = *XML::Xercesc::XMLExcepts_FACET_Len_minLen;
 *FACET_maxLen_minLen = *XML::Xercesc::XMLExcepts_FACET_maxLen_minLen;
-*FACET_bool_Pattern = *XML::Xercesc::XMLExcepts_FACET_bool_Pattern;
 *FACET_Invalid_Tag = *XML::Xercesc::XMLExcepts_FACET_Invalid_Tag;
 *FACET_Len_baseLen = *XML::Xercesc::XMLExcepts_FACET_Len_baseLen;
 *FACET_minLen_baseminLen = *XML::Xercesc::XMLExcepts_FACET_minLen_baseminLen;
@@ -1899,7 +1872,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *FACET_fractDigit_base_fixed = *XML::Xercesc::XMLExcepts_FACET_fractDigit_base_fixed;
 *FACET_maxLen_base_fixed = *XML::Xercesc::XMLExcepts_FACET_maxLen_base_fixed;
 *FACET_minLen_base_fixed = *XML::Xercesc::XMLExcepts_FACET_minLen_base_fixed;
-*FACET_len_base_fixed = *XML::Xercesc::XMLExcepts_FACET_len_base_fixed;
 *FACET_whitespace_base_fixed = *XML::Xercesc::XMLExcepts_FACET_whitespace_base_fixed;
 *FACET_internalError_fixed = *XML::Xercesc::XMLExcepts_FACET_internalError_fixed;
 *FACET_List_Null_baseValidator = *XML::Xercesc::XMLExcepts_FACET_List_Null_baseValidator;
@@ -1943,13 +1915,8 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *XMLNUM_URI_No_Scheme = *XML::Xercesc::XMLExcepts_XMLNUM_URI_No_Scheme;
 *XMLNUM_URI_NullHost = *XML::Xercesc::XMLExcepts_XMLNUM_URI_NullHost;
 *XMLNUM_URI_NullPath = *XML::Xercesc::XMLExcepts_XMLNUM_URI_NullPath;
-*XMLNUM_URI_Component_inPath = *XML::Xercesc::XMLExcepts_XMLNUM_URI_Component_inPath;
 *XMLNUM_URI_PortNo_Invalid = *XML::Xercesc::XMLExcepts_XMLNUM_URI_PortNo_Invalid;
-*XMLNUM_DBL_FLT_maxNeg = *XML::Xercesc::XMLExcepts_XMLNUM_DBL_FLT_maxNeg;
-*XMLNUM_DBL_FLT_maxPos = *XML::Xercesc::XMLExcepts_XMLNUM_DBL_FLT_maxPos;
-*XMLNUM_DBL_FLT_minNegPos = *XML::Xercesc::XMLExcepts_XMLNUM_DBL_FLT_minNegPos;
 *XMLNUM_DBL_FLT_InvalidType = *XML::Xercesc::XMLExcepts_XMLNUM_DBL_FLT_InvalidType;
-*XMLNUM_DBL_FLT_No_Exponent = *XML::Xercesc::XMLExcepts_XMLNUM_DBL_FLT_No_Exponent;
 *Regex_Result_Not_Set = *XML::Xercesc::XMLExcepts_Regex_Result_Not_Set;
 *Regex_CompactRangesError = *XML::Xercesc::XMLExcepts_Regex_CompactRangesError;
 *Regex_MergeRangesTypeMismatch = *XML::Xercesc::XMLExcepts_Regex_MergeRangesTypeMismatch;
@@ -1967,7 +1934,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *Regex_RepPatMatchesZeroString = *XML::Xercesc::XMLExcepts_Regex_RepPatMatchesZeroString;
 *Regex_InvalidRepPattern = *XML::Xercesc::XMLExcepts_Regex_InvalidRepPattern;
 *NEL_RepeatedCalls = *XML::Xercesc::XMLExcepts_NEL_RepeatedCalls;
-*RethrowError = *XML::Xercesc::XMLExcepts_RethrowError;
 *Out_Of_Memory = *XML::Xercesc::XMLExcepts_Out_Of_Memory;
 *DV_InvalidOperation = *XML::Xercesc::XMLExcepts_DV_InvalidOperation;
 *XPath_NoAttrSelector = *XML::Xercesc::XMLExcepts_XPath_NoAttrSelector;
@@ -2031,7 +1997,6 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *PD_NameTypeOK5 = *XML::Xercesc::XMLExcepts_PD_NameTypeOK5;
 *PD_NameTypeOK6 = *XML::Xercesc::XMLExcepts_PD_NameTypeOK6;
 *PD_NameTypeOK7 = *XML::Xercesc::XMLExcepts_PD_NameTypeOK7;
-*PD_RecurseAsIfGroup = *XML::Xercesc::XMLExcepts_PD_RecurseAsIfGroup;
 *PD_Recurse1 = *XML::Xercesc::XMLExcepts_PD_Recurse1;
 *PD_Recurse2 = *XML::Xercesc::XMLExcepts_PD_Recurse2;
 *PD_ForbiddenRes1 = *XML::Xercesc::XMLExcepts_PD_ForbiddenRes1;
@@ -2057,14 +2022,11 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 *XSer_Loading_Violation = *XML::Xercesc::XMLExcepts_XSer_Loading_Violation;
 *XSer_LoadBuffer_Violation = *XML::Xercesc::XMLExcepts_XSer_LoadBuffer_Violation;
 *XSer_Inv_ClassIndex = *XML::Xercesc::XMLExcepts_XSer_Inv_ClassIndex;
-*XSer_Inv_FillBuffer_Size = *XML::Xercesc::XMLExcepts_XSer_Inv_FillBuffer_Size;
 *XSer_Inv_checkFillBuffer_Size = *XML::Xercesc::XMLExcepts_XSer_Inv_checkFillBuffer_Size;
 *XSer_Inv_checkFlushBuffer_Size = *XML::Xercesc::XMLExcepts_XSer_Inv_checkFlushBuffer_Size;
 *XSer_Inv_Null_Pointer = *XML::Xercesc::XMLExcepts_XSer_Inv_Null_Pointer;
-*XSer_Inv_Buffer_Len = *XML::Xercesc::XMLExcepts_XSer_Inv_Buffer_Len;
 *XSer_CreateObject_Fail = *XML::Xercesc::XMLExcepts_XSer_CreateObject_Fail;
 *XSer_ObjCount_UppBnd_Exceed = *XML::Xercesc::XMLExcepts_XSer_ObjCount_UppBnd_Exceed;
-*XSer_GrammarPool_Locked = *XML::Xercesc::XMLExcepts_XSer_GrammarPool_Locked;
 *XSer_GrammarPool_Empty = *XML::Xercesc::XMLExcepts_XSer_GrammarPool_Empty;
 *XSer_GrammarPool_NotEmpty = *XML::Xercesc::XMLExcepts_XSer_GrammarPool_NotEmpty;
 *XSer_StringPool_NotEmpty = *XML::Xercesc::XMLExcepts_XSer_StringPool_NotEmpty;
@@ -2122,8 +2084,6 @@ sub DESTROY {
 *getSrcLine = *XML::Xercesc::XMLException_getSrcLine;
 *getErrorType = *XML::Xercesc::XMLException_getErrorType;
 *setPosition = *XML::Xercesc::XMLException_setPosition;
-*reinitMsgMutex = *XML::Xercesc::XMLException_reinitMsgMutex;
-*reinitMsgLoader = *XML::Xercesc::XMLException_reinitMsgLoader;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -2261,16 +2221,7 @@ sub DESTROY {
     }
 }
 
-sub getAttDefList {
-    my $result = XML::Xercesc::XMLElementDecl_getAttDefList (@_);
-    unless (defined$result) {
-      return () if wantarray;
-      return undef;#if *not* wantarray
-    }
-    return $result->to_list() if wantarray;
-    return $result;#if *not* wantarray
-}
-  
+*getAttDefList = *XML::Xercesc::XMLElementDecl_getAttDefList;
 *getCharDataOpts = *XML::Xercesc::XMLElementDecl_getCharDataOpts;
 *hasAttDefs = *XML::Xercesc::XMLElementDecl_hasAttDefs;
 *getContentSpec = *XML::Xercesc::XMLElementDecl_getContentSpec;
@@ -2860,7 +2811,7 @@ sub DESTROY {
 }
 
 sub getAttDefList {
-    my $result = XML::Xercesc::XMLElementDecl_getAttDefList (@_);
+    my $result = XML::Xercesc::DTDElementDecl_getAttDefList (@_);
     unless (defined$result) {
       return () if wantarray;
       return undef;#if *not* wantarray
@@ -3120,7 +3071,6 @@ sub DESTROY {
 *setGrammarDescription = *XML::Xercesc::DTDGrammar_setGrammarDescription;
 *getGrammarDescription = *XML::Xercesc::DTDGrammar_getGrammarDescription;
 *putEntityDecl = *XML::Xercesc::DTDGrammar_putEntityDecl;
-*reinitDfltEntities = *XML::Xercesc::DTDGrammar_reinitDfltEntities;
 sub DISOWN {
     my $self = shift;
     my $ptr = tied(%$self);
@@ -3203,7 +3153,7 @@ sub DESTROY {
 }
 
 sub getAttDefList {
-    my $result = XML::Xercesc::XMLElementDecl_getAttDefList (@_);
+    my $result = XML::Xercesc::SchemaElementDecl_getAttDefList (@_);
     unless (defined$result) {
       return () if wantarray;
       return undef;#if *not* wantarray

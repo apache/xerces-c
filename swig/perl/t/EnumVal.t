@@ -26,9 +26,9 @@ my $perl = $Config{startperl};
 $perl =~ s/^\#!//;
 my $output;
 if ($^O eq 'MSWin32') {
-  $output = `$perl $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>NUL`;
+  $output = `$perl -Mblib $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>NUL`;
 } else {
-  $output = `$perl $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>/dev/null`;
+  $output = `$perl -Mblib $SAMPLE_DIR/EnumVal.pl $PERSONAL_FILE_NAME 2>/dev/null`;
 }
 
 my @lines = split("\n", $output);

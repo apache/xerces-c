@@ -125,6 +125,8 @@ sub method {
   }
 %enddef
 
-LIST_METHOD(XMLElementDecl,getAttDefList)
+LIST_METHOD(DTDElementDecl,getAttDefList)
+LIST_METHOD(SchemaElementDecl,getAttDefList)
+
 LIST_METHOD(XMLSchemaDescription,getLocationHints)
 // MAP_METHOD(XMLElementDecl,getAttDefList)

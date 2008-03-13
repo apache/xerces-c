@@ -20,10 +20,10 @@
 
 // ignore all the constructors for the Grammar components
 %ignore XERCES_CPP_NAMESPACE::DTDAttDef::DTDAttDef;
+%ignore XERCES_CPP_NAMESPACE::SchemaAttDef::SchemaAttDef;
 %ignore XERCES_CPP_NAMESPACE::DTDElementDecl::DTDElementDecl;
 %ignore XERCES_CPP_NAMESPACE::DTDEntityDecl::DTDEntityDecl;
 %ignore XERCES_CPP_NAMESPACE::SchemaElementDecl::SchemaElementDecl;
-%ignore XERCES_CPP_NAMESPACE::SchemaAttDef::SchemaAttDef;
 %ignore	XERCES_CPP_NAMESPACE::DTDAttDefList::DTDAttDefList;
 %ignore	XERCES_CPP_NAMESPACE::SchemaAttDefList::SchemaAttDefList;
 

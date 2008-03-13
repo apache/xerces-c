@@ -1446,117 +1446,116 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_DatatypeValidatorFactory swig_types[3]
 #define SWIGTYPE_p_IdentityConstraint swig_types[4]
 #define SWIGTYPE_p_PSVIDefs__PSVIScope swig_types[5]
-#define SWIGTYPE_p_PanicHandler swig_types[6]
-#define SWIGTYPE_p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t swig_types[7]
-#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t swig_types[8]
-#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t swig_types[9]
-#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XSAnnotation_t swig_types[10]
-#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XercesAttGroupInfo_t swig_types[11]
-#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XercesGroupInfo_t swig_types[12]
-#define SWIGTYPE_p_SchemaAttDef swig_types[13]
-#define SWIGTYPE_p_ValidationContext swig_types[14]
-#define SWIGTYPE_p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t swig_types[15]
-#define SWIGTYPE_p_ValueVectorOfTunsigned_int_t swig_types[16]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[17]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t swig_types[18]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BinInputStream swig_types[19]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ComplexTypeInfo swig_types[20]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ContentSpecNode swig_types[21]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDef swig_types[22]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDefList swig_types[23]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDElementDecl swig_types[24]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDEntityDecl swig_types[25]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDGrammar swig_types[26]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDValidator swig_types[27]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DatatypeValidator swig_types[28]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__EntityResolver swig_types[29]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ErrorHandler swig_types[30]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Grammar swig_types[31]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__GrammarResolver swig_types[32]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Locator swig_types[33]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager swig_types[34]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[35]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[36]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__XMLNotationDecl_t swig_types[37]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[38]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[39]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttribute swig_types[40]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttributeList swig_types[41]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIElement swig_types[42]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIHandler swig_types[43]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIItem swig_types[44]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIUni swig_types[45]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlCallbackHandler swig_types[46]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandler swig_types[47]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlErrorCallbackHandler swig_types[48]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__QName swig_types[49]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t swig_types[50]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[51]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[52]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[53]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXException swig_types[54]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException swig_types[55]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException swig_types[56]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParseException swig_types[57]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDef swig_types[58]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDefList swig_types[59]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaElementDecl swig_types[60]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaGrammar swig_types[61]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaSymbols swig_types[62]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaValidator swig_types[63]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SecurityManager swig_types[64]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDef swig_types[65]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDefList swig_types[66]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttr swig_types[67]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLContentModel swig_types[68]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDTDDescription swig_types[69]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDeleter swig_types[70]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDocumentHandler swig_types[71]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLElementDecl swig_types[72]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityDecl swig_types[73]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver swig_types[74]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[75]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[76]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[77]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException swig_types[78]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLExcepts swig_types[79]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarDescription swig_types[80]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLNotationDecl swig_types[81]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken swig_types[82]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPlatformUtils swig_types[83]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLResourceIdentifier swig_types[84]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLSchemaDescription swig_types[85]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLURL swig_types[86]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUni swig_types[87]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri swig_types[88]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator swig_types[89]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMemory swig_types[90]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSAnnotation swig_types[91]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSAttributeDeclaration swig_types[92]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSElementDeclaration swig_types[93]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSModel swig_types[94]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSNotationDeclaration swig_types[95]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSSimpleTypeDefinition swig_types[96]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSTypeDefinition swig_types[97]
-#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSValue swig_types[98]
-#define SWIGTYPE_p_XMLAttDefList swig_types[99]
-#define SWIGTYPE_p_XMLBuffer swig_types[100]
-#define SWIGTYPE_p_XMLErrorReporter swig_types[101]
-#define SWIGTYPE_p_XMLErrorReporter__ErrTypes swig_types[102]
-#define SWIGTYPE_p_XSerializable swig_types[103]
-#define SWIGTYPE_p_XSerializeEngine swig_types[104]
-#define SWIGTYPE_p_char swig_types[105]
-#define SWIGTYPE_p_int swig_types[106]
-#define SWIGTYPE_p_int32_t swig_types[107]
-#define SWIGTYPE_p_p_void swig_types[108]
-#define SWIGTYPE_p_size_t swig_types[109]
-#define SWIGTYPE_p_ssize_t swig_types[110]
-#define SWIGTYPE_p_uint16_t swig_types[111]
-#define SWIGTYPE_p_uint32_t swig_types[112]
-#define SWIGTYPE_p_uint64_t swig_types[113]
-#define SWIGTYPE_p_unsigned_char swig_types[114]
-static swig_type_info *swig_types[116];
-static swig_module_info swig_module = {swig_types, 115, 0, 0, 0, 0};
+#define SWIGTYPE_p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t swig_types[6]
+#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t swig_types[7]
+#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t swig_types[8]
+#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XSAnnotation_t swig_types[9]
+#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XercesAttGroupInfo_t swig_types[10]
+#define SWIGTYPE_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XercesGroupInfo_t swig_types[11]
+#define SWIGTYPE_p_SchemaAttDef swig_types[12]
+#define SWIGTYPE_p_ValidationContext swig_types[13]
+#define SWIGTYPE_p_ValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t swig_types[14]
+#define SWIGTYPE_p_ValueVectorOfTunsigned_int_t swig_types[15]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[16]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BaseRefVectorOfTuint16_t_t swig_types[17]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__BinInputStream swig_types[18]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ComplexTypeInfo swig_types[19]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ContentSpecNode swig_types[20]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDef swig_types[21]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDAttDefList swig_types[22]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDElementDecl swig_types[23]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDEntityDecl swig_types[24]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDGrammar swig_types[25]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DTDValidator swig_types[26]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__DatatypeValidator swig_types[27]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__EntityResolver swig_types[28]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__ErrorHandler swig_types[29]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Grammar swig_types[30]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__GrammarResolver swig_types[31]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__Locator swig_types[32]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager swig_types[33]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[34]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[35]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolEnumeratorTXERCES_CPP_NAMESPACE__XMLNotationDecl_t swig_types[36]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[37]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__NameIdPoolTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[38]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttribute swig_types[39]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIAttributeList swig_types[40]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIElement swig_types[41]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIHandler swig_types[42]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIItem swig_types[43]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PSVIUni swig_types[44]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlCallbackHandler swig_types[45]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlEntityResolverHandler swig_types[46]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__PerlErrorCallbackHandler swig_types[47]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__QName swig_types[48]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefArrayVectorOfTuint16_t_t swig_types[49]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[50]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefHash3KeysIdPoolTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[51]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__RefVectorOfTXERCES_CPP_NAMESPACE__XMLAttr_t swig_types[52]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXException swig_types[53]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotRecognizedException swig_types[54]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXNotSupportedException swig_types[55]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SAXParseException swig_types[56]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDef swig_types[57]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaAttDefList swig_types[58]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaElementDecl swig_types[59]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaGrammar swig_types[60]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaSymbols swig_types[61]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SchemaValidator swig_types[62]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__SecurityManager swig_types[63]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDef swig_types[64]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttDefList swig_types[65]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLAttr swig_types[66]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLContentModel swig_types[67]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDTDDescription swig_types[68]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDeleter swig_types[69]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLDocumentHandler swig_types[70]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLElementDecl swig_types[71]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityDecl swig_types[72]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEntityResolver swig_types[73]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEnumeratorTXERCES_CPP_NAMESPACE__DTDElementDecl_t swig_types[74]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEnumeratorTXERCES_CPP_NAMESPACE__DTDEntityDecl_t swig_types[75]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLEnumeratorTXERCES_CPP_NAMESPACE__SchemaElementDecl_t swig_types[76]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLException swig_types[77]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLExcepts swig_types[78]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLGrammarDescription swig_types[79]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLNotationDecl swig_types[80]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPScanToken swig_types[81]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLPlatformUtils swig_types[82]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLResourceIdentifier swig_types[83]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLSchemaDescription swig_types[84]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLURL swig_types[85]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUni swig_types[86]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLUri swig_types[87]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMLValidator swig_types[88]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XMemory swig_types[89]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSAnnotation swig_types[90]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSAttributeDeclaration swig_types[91]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSElementDeclaration swig_types[92]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSModel swig_types[93]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSNotationDeclaration swig_types[94]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSSimpleTypeDefinition swig_types[95]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSTypeDefinition swig_types[96]
+#define SWIGTYPE_p_XERCES_CPP_NAMESPACE__XSValue swig_types[97]
+#define SWIGTYPE_p_XMLAttDefList swig_types[98]
+#define SWIGTYPE_p_XMLBuffer swig_types[99]
+#define SWIGTYPE_p_XMLErrorReporter swig_types[100]
+#define SWIGTYPE_p_XMLErrorReporter__ErrTypes swig_types[101]
+#define SWIGTYPE_p_XSerializable swig_types[102]
+#define SWIGTYPE_p_XSerializeEngine swig_types[103]
+#define SWIGTYPE_p_char swig_types[104]
+#define SWIGTYPE_p_int swig_types[105]
+#define SWIGTYPE_p_int32_t swig_types[106]
+#define SWIGTYPE_p_p_void swig_types[107]
+#define SWIGTYPE_p_size_t swig_types[108]
+#define SWIGTYPE_p_ssize_t swig_types[109]
+#define SWIGTYPE_p_uint16_t swig_types[110]
+#define SWIGTYPE_p_uint32_t swig_types[111]
+#define SWIGTYPE_p_uint64_t swig_types[112]
+#define SWIGTYPE_p_unsigned_char swig_types[113]
+static swig_type_info *swig_types[115];
+static swig_module_info swig_module = {swig_types, 114, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1912,6 +1911,31 @@ SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
 
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_bool  SWIG_PERL_DECL_ARGS_1(bool value)
+{    
+  SV *obj = sv_newmortal();
+  if (value) {
+    sv_setsv(obj, &PL_sv_yes);
+  } else {
+    sv_setsv(obj, &PL_sv_no); 
+  }
+  return obj;
+}
+
+
+#include <limits.h>
+#ifndef LLONG_MIN
+# define LLONG_MIN	LONG_LONG_MIN
+#endif
+#ifndef LLONG_MAX
+# define LLONG_MAX	LONG_LONG_MAX
+#endif
+#ifndef ULLONG_MAX
+# define ULLONG_MAX	ULONG_LONG_MAX
+#endif
+
+
 #include <float.h>
 
 
@@ -1946,48 +1970,6 @@ SWIG_CanCastAsInteger(double *d, double min, double max) {
   }
   return 0;
 }
-
-
-SWIGINTERN int
-SWIG_AsVal_bool SWIG_PERL_DECL_ARGS_2(SV *obj, bool* val)
-{
-  if (obj == &PL_sv_yes) {
-    if (val) *val = true;
-    return SWIG_OK;
-  } else if (obj == &PL_sv_no) { 
-    if (val) *val = false;
-    return SWIG_OK;
-  } else {
-    if (val) *val = SvTRUE(obj) ? true: false;
-    return SWIG_AddCast(SWIG_OK);    
-  }
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_bool  SWIG_PERL_DECL_ARGS_1(bool value)
-{    
-  SV *obj = sv_newmortal();
-  if (value) {
-    sv_setsv(obj, &PL_sv_yes);
-  } else {
-    sv_setsv(obj, &PL_sv_no); 
-  }
-  return obj;
-}
-
-
-#include <limits.h>
-#ifndef LLONG_MIN
-# define LLONG_MIN	LONG_LONG_MIN
-#endif
-#ifndef LLONG_MAX
-# define LLONG_MAX	LONG_LONG_MAX
-#endif
-#ifndef ULLONG_MAX
-# define ULLONG_MAX	ULONG_LONG_MAX
-#endif
 
 
 SWIGINTERN int
@@ -2038,6 +2020,23 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
     }
   }  
   return res;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_bool SWIG_PERL_DECL_ARGS_2(SV *obj, bool* val)
+{
+  if (obj == &PL_sv_yes) {
+    if (val) *val = true;
+    return SWIG_OK;
+  } else if (obj == &PL_sv_no) { 
+    if (val) *val = false;
+    return SWIG_OK;
+  } else {
+    if (val) *val = SvTRUE(obj) ? true: false;
+    return SWIG_AddCast(SWIG_OK);    
+  }
+  return SWIG_TypeError;
 }
 
 
@@ -7792,81 +7791,6 @@ XS(_wrap_XMLPlatformUtils_Initialize__SWIG_0) {
   {
     char *arg1 = (char *) (char *)0 ;
     char *arg2 = (char *) (char *)0 ;
-    PanicHandler *arg3 = (PanicHandler *) (PanicHandler *)0 ;
-    XERCES_CPP_NAMESPACE::MemoryManager *arg4 = (XERCES_CPP_NAMESPACE::MemoryManager *) (XERCES_CPP_NAMESPACE::MemoryManager *)0 ;
-    bool arg5 ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    bool val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: XMLPlatformUtils_Initialize(locale,nlsHome,panicHandler,memoryManager,toInitStatics);");
-    }
-    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "XMLPlatformUtils_Initialize" "', argument " "1"" of type '" "char const *const""'");
-    }
-    arg1 = reinterpret_cast< char * >(buf1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "XMLPlatformUtils_Initialize" "', argument " "2"" of type '" "char const *const""'");
-    }
-    arg2 = reinterpret_cast< char * >(buf2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_PanicHandler, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "XMLPlatformUtils_Initialize" "', argument " "3"" of type '" "PanicHandler *const""'"); 
-    }
-    arg3 = reinterpret_cast< PanicHandler * >(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "XMLPlatformUtils_Initialize" "', argument " "4"" of type '" "XERCES_CPP_NAMESPACE::MemoryManager *const""'"); 
-    }
-    arg4 = reinterpret_cast< XERCES_CPP_NAMESPACE::MemoryManager * >(argp4);
-    ecode5 = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "XMLPlatformUtils_Initialize" "', argument " "5"" of type '" "bool""'");
-    } 
-    arg5 = static_cast< bool >(val5);
-    {
-      try 
-      {
-        XERCES_CPP_NAMESPACE::XMLPlatformUtils::Initialize((char const *)arg1,(char const *)arg2,arg3,arg4,arg5);
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    
-    if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-    if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-    if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_XMLPlatformUtils_Initialize__SWIG_1) {
-  {
-    char *arg1 = (char *) (char *)0 ;
-    char *arg2 = (char *) (char *)0 ;
     int res1 ;
     char *buf1 = 0 ;
     int alloc1 = 0 ;
@@ -7908,7 +7832,7 @@ XS(_wrap_XMLPlatformUtils_Initialize__SWIG_1) {
 }
 
 
-XS(_wrap_XMLPlatformUtils_Initialize__SWIG_2) {
+XS(_wrap_XMLPlatformUtils_Initialize__SWIG_1) {
   {
     char *arg1 = (char *) (char *)0 ;
     int res1 ;
@@ -7942,7 +7866,7 @@ XS(_wrap_XMLPlatformUtils_Initialize__SWIG_2) {
 }
 
 
-XS(_wrap_XMLPlatformUtils_Initialize__SWIG_3) {
+XS(_wrap_XMLPlatformUtils_Initialize__SWIG_2) {
   {
     int argvi = 0;
     dXSARGS;
@@ -8027,71 +7951,13 @@ XS(_wrap_XMLPlatformUtils_Initialize) {
     }
   check_3:
     
-    if (items == 5) {
-      SWIG_TypeRank _ranki = 0;
-      SWIG_TypeRank _rankm = 0;
-      SWIG_TypeRank _pi = 1;
-      int _v = 0;
-      {
-        int res = SWIG_AsCharPtrAndSize(ST(0), 0, NULL, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_4;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        int res = SWIG_AsCharPtrAndSize(ST(1), 0, NULL, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_4;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(2), &vptr, SWIGTYPE_p_PanicHandler, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_4;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(ST(3), &vptr, SWIGTYPE_p_XERCES_CPP_NAMESPACE__MemoryManager, 0);
-        _v = SWIG_CheckState(res);
-      }
-      if (!_v) goto check_4;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      {
-        {
-          int res = SWIG_AsVal_bool SWIG_PERL_CALL_ARGS_2(ST(4), NULL);
-          _v = SWIG_CheckState(res);
-        }
-      }
-      if (!_v) goto check_4;
-      _ranki += _v*_pi;
-      _rankm += _pi;
-      _pi *= SWIG_MAXCASTRANK;
-      if (!_index || (_ranki < _rank)) {
-        _rank = _ranki; _index = 4;
-        if (_rank == _rankm) goto dispatch;
-      }
-    }
-  check_4:
-    
   dispatch:
     switch(_index) {
     case 1:
-      ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLPlatformUtils_Initialize__SWIG_3); return;
-    case 2:
       ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLPlatformUtils_Initialize__SWIG_2); return;
-    case 3:
+    case 2:
       ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLPlatformUtils_Initialize__SWIG_1); return;
-    case 4:
+    case 3:
       ++PL_markstack_ptr; SWIG_CALLXS(_wrap_XMLPlatformUtils_Initialize__SWIG_0); return;
     }
   }
@@ -11505,52 +11371,6 @@ XS(_wrap_XMLException_setPosition) {
     
     if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
     
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_XMLException_reinitMsgMutex) {
-  {
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: XMLException_reinitMsgMutex();");
-    }
-    {
-      try 
-      {
-        XERCES_CPP_NAMESPACE::XMLException::reinitMsgMutex();
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_XMLException_reinitMsgLoader) {
-  {
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: XMLException_reinitMsgLoader();");
-    }
-    {
-      try 
-      {
-        XERCES_CPP_NAMESPACE::XMLException::reinitMsgLoader();
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    
-    XSRETURN(argvi);
-  fail:
     SWIG_croak_null();
   }
 }
@@ -22305,29 +22125,6 @@ XS(_wrap_DTDGrammar_putEntityDecl) {
   fail:
     
     
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_DTDGrammar_reinitDfltEntities) {
-  {
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: DTDGrammar_reinitDfltEntities();");
-    }
-    {
-      try 
-      {
-        XERCES_CPP_NAMESPACE::DTDGrammar::reinitDfltEntities();
-      } 
-      CATCH_XML_EXCEPTION
-    }
-    
-    XSRETURN(argvi);
-  fail:
     SWIG_croak_null();
   }
 }
@@ -40094,7 +39891,6 @@ static swig_type_info _swigt__p_DatatypeValidator = {"_p_DatatypeValidator", "Da
 static swig_type_info _swigt__p_DatatypeValidatorFactory = {"_p_DatatypeValidatorFactory", "DatatypeValidatorFactory *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_IdentityConstraint = {"_p_IdentityConstraint", "IdentityConstraint *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_PSVIDefs__PSVIScope = {"_p_PSVIDefs__PSVIScope", "PSVIDefs::PSVIScope *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_PanicHandler = {"_p_PanicHandler", "PanicHandler *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t = {"_p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t", "RefHash2KeysTableOf<ValueVectorOf<XERCES_CPP_NAMESPACE::SchemaElementDecl * > > *|RefHash2KeysTableOf<XERCES_CPP_NAMESPACE::ElemVector > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t = {"_p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t", "RefHashTableOf<XERCES_CPP_NAMESPACE::ComplexTypeInfo > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t = {"_p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t", "RefHashTableOf<XERCES_CPP_NAMESPACE::XMLAttDef > *", 0, 0, (void*)0, 0};
@@ -40211,7 +40007,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_DatatypeValidatorFactory,
   &_swigt__p_IdentityConstraint,
   &_swigt__p_PSVIDefs__PSVIScope,
-  &_swigt__p_PanicHandler,
   &_swigt__p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t,
   &_swigt__p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t,
   &_swigt__p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t,
@@ -40328,7 +40123,6 @@ static swig_cast_info _swigc__p_DatatypeValidator[] = {  {&_swigt__p_DatatypeVal
 static swig_cast_info _swigc__p_DatatypeValidatorFactory[] = {  {&_swigt__p_DatatypeValidatorFactory, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_IdentityConstraint[] = {  {&_swigt__p_IdentityConstraint, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PSVIDefs__PSVIScope[] = {  {&_swigt__p_PSVIDefs__PSVIScope, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_PanicHandler[] = {  {&_swigt__p_PanicHandler, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t[] = {  {&_swigt__p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t[] = {  {&_swigt__p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t[] = {  {&_swigt__p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -40445,7 +40239,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_DatatypeValidatorFactory,
   _swigc__p_IdentityConstraint,
   _swigc__p_PSVIDefs__PSVIScope,
-  _swigc__p_PanicHandler,
   _swigc__p_RefHash2KeysTableOfTValueVectorOfTXERCES_CPP_NAMESPACE__SchemaElementDecl_p_t_t,
   _swigc__p_RefHashTableOfTXERCES_CPP_NAMESPACE__ComplexTypeInfo_t,
   _swigc__p_RefHashTableOfTXERCES_CPP_NAMESPACE__XMLAttDef_t,
@@ -41241,8 +41034,6 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::XMLException_getSrcLine", _wrap_XMLException_getSrcLine},
 {"XML::Xercesc::XMLException_getErrorType", _wrap_XMLException_getErrorType},
 {"XML::Xercesc::XMLException_setPosition", _wrap_XMLException_setPosition},
-{"XML::Xercesc::XMLException_reinitMsgMutex", _wrap_XMLException_reinitMsgMutex},
-{"XML::Xercesc::XMLException_reinitMsgLoader", _wrap_XMLException_reinitMsgLoader},
 {"XML::Xercesc::new_QName", _wrap_new_QName},
 {"XML::Xercesc::delete_QName", _wrap_delete_QName},
 {"XML::Xercesc::QName_getPrefix", _wrap_QName_getPrefix},
@@ -41470,7 +41261,6 @@ static swig_command_info swig_commands[] = {
 {"XML::Xercesc::DTDGrammar_setGrammarDescription", _wrap_DTDGrammar_setGrammarDescription},
 {"XML::Xercesc::DTDGrammar_getGrammarDescription", _wrap_DTDGrammar_getGrammarDescription},
 {"XML::Xercesc::DTDGrammar_putEntityDecl", _wrap_DTDGrammar_putEntityDecl},
-{"XML::Xercesc::DTDGrammar_reinitDfltEntities", _wrap_DTDGrammar_reinitDfltEntities},
 {"XML::Xercesc::new_DTDValidator", _wrap_new_DTDValidator},
 {"XML::Xercesc::delete_DTDValidator", _wrap_delete_DTDValidator},
 {"XML::Xercesc::DTDValidator_requiresNamespaces", _wrap_DTDValidator_requiresNamespaces},
@@ -42156,11 +41946,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_GC_ExistingGrammar", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::GC_ExistingGrammar)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_W_HighBounds", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::W_HighBounds)));
     SvREADONLY_on(sv);
@@ -42236,11 +42021,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_CM_NotValidForSpecType", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::CM_NotValidForSpecType)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_CM_UnaryOpHadBinType", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::CM_UnaryOpHadBinType)));
     SvREADONLY_on(sv);
@@ -42273,11 +42053,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_ElemStack_EmptyStack", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::ElemStack_EmptyStack)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_ElemStack_BadIndex", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::ElemStack_BadIndex)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42351,11 +42126,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_File_BasePathUnderflow", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::File_BasePathUnderflow)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Gen_ParseInProgress", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Gen_ParseInProgress)));
     SvREADONLY_on(sv);
@@ -42393,26 +42163,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_HshTbl_NoSuchKeyExists", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::HshTbl_NoSuchKeyExists)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Mutex_CouldNotCreate", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Mutex_CouldNotCreate)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Mutex_CouldNotClose", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Mutex_CouldNotClose)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Mutex_CouldNotLock", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Mutex_CouldNotLock)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Mutex_CouldNotUnlock", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Mutex_CouldNotUnlock)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42471,11 +42221,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Pool_BadHashFromKey", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Pool_BadHashFromKey)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Pool_InvalidId", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Pool_InvalidId)));
     SvREADONLY_on(sv);
@@ -42503,11 +42248,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Reader_NelLsepinDecl", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Reader_NelLsepinDecl)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Reader_EOIInMultiSeq", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Reader_EOIInMultiSeq)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42571,48 +42311,13 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Strm_StdErrWriteFailure", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Strm_StdErrWriteFailure)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Strm_StdOutWriteFailure", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Strm_StdOutWriteFailure)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Strm_ConWriteFailure", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Strm_ConWriteFailure)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_StrPool_IllegalId", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::StrPool_IllegalId)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Trans_CouldNotCreateDefCvtr", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Trans_CouldNotCreateDefCvtr)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Trans_InvalidSizeReq", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Trans_InvalidSizeReq)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Trans_Unrepresentable", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Trans_Unrepresentable)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Trans_NotValidForEncoding", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Trans_NotValidForEncoding)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Trans_BadBlockSize", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Trans_BadBlockSize)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42651,11 +42356,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_URL_OnlyLocalHost", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::URL_OnlyLocalHost)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_URL_NoProtocolPresent", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::URL_NoProtocolPresent)));
     SvREADONLY_on(sv);
@@ -42666,23 +42366,8 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_URL_IncorrectEscapedCharRef", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::URL_IncorrectEscapedCharRef)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_URL_UnterminatedHostComponent", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::URL_UnterminatedHostComponent)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_URL_RelativeBaseURL", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::URL_RelativeBaseURL)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_URL_BaseUnderflow", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::URL_BaseUnderflow)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42693,11 +42378,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_UTF8_FormatError", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::UTF8_FormatError)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_UTF8_Invalid_2BytesSeq", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::UTF8_Invalid_2BytesSeq)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42841,11 +42521,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Parser_CC4", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Parser_CC4)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Parser_CC5", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Parser_CC5)));
     SvREADONLY_on(sv);
@@ -42876,11 +42551,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Parser_Descape2", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Parser_Descape2)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Parser_Descape3", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Parser_Descape3)));
     SvREADONLY_on(sv);
@@ -42893,11 +42563,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Parser_Descape5", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Parser_Descape5)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Parser_Process1", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Parser_Process1)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42933,11 +42598,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_Gen_NoSchemaValidator", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::Gen_NoSchemaValidator)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XUTIL_UnCopyableNodeType", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XUTIL_UnCopyableNodeType)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -42988,11 +42648,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_FACET_maxLen_minLen", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::FACET_maxLen_minLen)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_FACET_bool_Pattern", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::FACET_bool_Pattern)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -43296,11 +42951,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_FACET_len_base_fixed", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::FACET_len_base_fixed)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_FACET_whitespace_base_fixed", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::FACET_whitespace_base_fixed)));
     SvREADONLY_on(sv);
@@ -43516,38 +43166,13 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_URI_Component_inPath", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_URI_Component_inPath)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_URI_PortNo_Invalid", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_URI_PortNo_Invalid)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_DBL_FLT_maxNeg", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_DBL_FLT_maxNeg)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_DBL_FLT_maxPos", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_DBL_FLT_maxPos)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_DBL_FLT_minNegPos", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_DBL_FLT_minNegPos)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_DBL_FLT_InvalidType", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_DBL_FLT_InvalidType)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XMLNUM_DBL_FLT_No_Exponent", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XMLNUM_DBL_FLT_No_Exponent)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -43633,11 +43258,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_NEL_RepeatedCalls", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::NEL_RepeatedCalls)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_RethrowError", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::RethrowError)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
@@ -43956,11 +43576,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_PD_RecurseAsIfGroup", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::PD_RecurseAsIfGroup)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_PD_Recurse1", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::PD_Recurse1)));
     SvREADONLY_on(sv);
@@ -44086,11 +43701,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XSer_Inv_FillBuffer_Size", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XSer_Inv_FillBuffer_Size)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XSer_Inv_checkFillBuffer_Size", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XSer_Inv_checkFillBuffer_Size)));
     SvREADONLY_on(sv);
@@ -44106,11 +43716,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XSer_Inv_Buffer_Len", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XSer_Inv_Buffer_Len)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XSer_CreateObject_Fail", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XSer_CreateObject_Fail)));
     SvREADONLY_on(sv);
@@ -44118,11 +43723,6 @@ XS(SWIG_init) {
   /*@SWIG:%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XSer_ObjCount_UppBnd_Exceed", TRUE | 0x2);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XSer_ObjCount_UppBnd_Exceed)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "XMLExcepts_XSer_GrammarPool_Locked", TRUE | 0x2);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1(static_cast< int >(XERCES_CPP_NAMESPACE::XMLExcepts::XSer_GrammarPool_Locked)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:%set_constant@*/ do {
