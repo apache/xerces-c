@@ -78,7 +78,7 @@
           </tr>
         </table><br/>
         <table width="620" border="0" cellspacing="0" cellpadding="0">
-          <tr><td bgcolor="#0086b2"><img src="images/dot.gif" width="1" height="1"/></td></tr>
+          <tr><td bgcolor="#0086b2"><img src="resources/dot.gif" width="1" height="1"/></td></tr>
           <tr>
             <td align="center"><font size="-1" color="#0086b2"><i>
               Copyright &#169; <xsl:value-of select="$copyright"/>.
@@ -417,7 +417,7 @@
   </xsl:template>
 
   <xsl:template match="img">
-    <img src="images/{@src}" border="0" vspace="4" hspace="4" align="right"/>
+    <img src="resources/{@src}" border="0" vspace="4" hspace="4" align="right"/>
   </xsl:template>
 
   <xsl:template match="resource-ref">
