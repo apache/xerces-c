@@ -419,4 +419,15 @@
 			<current status="accepted" date="2008-02-13"/>
 		</schemaTest>
 	</testGroup>
+	<testGroup name="XERCESC-1787">
+		<annotation>
+			<documentation>Wildcard namespace prefixes in XPath are not reported as errors</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1787"/>
+		<schemaTest name="XERCESC-1787">
+			<schemaDocument xlink:href="./XERCESC-1787/schema.xsd"/>
+			<expected validity="invalid"/>
+			<current status="accepted" date="2008-03-14"/>
+		</schemaTest>
+	</testGroup>
 </testSet>

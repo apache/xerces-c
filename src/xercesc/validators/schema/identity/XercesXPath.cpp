@@ -390,7 +390,9 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
     ValueVectorOf<int>                tokens(16, fMemoryManager);
     XPathScannerForSchema             scanner(stringPool);
-    scanner.scanExpression(fExpression, 0, length, &tokens);
+    if(!scanner.scanExpression(fExpression, 0, length, &tokens))
+        ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_TokenNotSupported, fMemoryManager);
+
     bool                              firstTokenOfLocationPath=true;
     unsigned int                      tokenCount = tokens.size();
     RefVectorOf<XercesStep>*          stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16, true, fMemoryManager);
