@@ -395,8 +395,8 @@ catch (const XMLException&amp; toCatch) {
         should copy its contents into your <code>&XercesC3SrcInstallDir;</code>
         directory.</p>
 
-     <p>To regenerate the documentation, go to &XercesC3SrcInstallDir;
-        and start <code>createDocs.sh</code> (for Unix) or
+     <p>To regenerate the documentation, go to the &XercesC3SrcInstallDir;/tools
+        directory and start <code>createdocs.sh</code> (for Unix) or
         <code>createdocs.bat</code> (for Windows). The result can be
         found in directory <code>&XercesC3SrcInstallDir;/doc/html</code>.</p>
 

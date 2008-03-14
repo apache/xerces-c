@@ -180,12 +180,12 @@ rpmbuild -ta &XercesC3SrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHa
         <p>Before proceeding, copy the contents of the &XercesC3ToolsInstallDir;
            distribution into your <code>$XERCESCROOT</code>. Then invoke
            a terminal or a command window and setup PATH to include the
-           JDK 1.2.2 bin directory. Next, cd to the <code>$XERCESCROOT</code>
-           source root directory, and enter:</p>
+           JDK 1.2.2 bin directory. Next, cd to the <code>$XERCESCROOT/tools</code>
+           directory, and enter:</p>
 
 <source>
-createDocs.bat (Windows)
-./createDocs.sh (UNIX)
+createdocs.bat (Windows)
+./createdocs.sh (UNIX)
 </source>
 
         <p>This should generate the .html files in the 'doc/html' directory.</p>
