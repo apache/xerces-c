@@ -95,6 +95,7 @@ system ("DOMPrint -wfpp=on -wddc=off -v=never personal.xml");
 system ("DOMPrint -wfpp=on -wddc=off personal.xml");
 system ("DOMPrint -wfpp=on -wddc=on  personal.xml");
 system ("DOMPrint -wfpp=on -wddc=off -n -s personal-schema.xml");
+system ("DOMPrint -v=never -xpath=//name personal.xml");
 
 #  Run StdInParse
 system ("StdInParse < personal.xml");

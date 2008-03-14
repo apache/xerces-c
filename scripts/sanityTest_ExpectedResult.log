@@ -650,6 +650,7 @@ Options:
     -wflt=xxx   Enable/Disable filtering.                 Default off
     -wfpp=xxx   Enable/Disable format-pretty-print.       Default off
     -wbom=xxx   Enable/Disable write Byte-Order-Mark      Default off
+    -xpath=xxx  Prints only the nodes matching the given XPath.
     -?          Show this help.
 
   * = Default if not provided explicitly.
@@ -902,7 +903,7 @@ The parser has intrinsic support for the following encodings:
 
 
 </personnel>
-stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
+<name><family>Boss</family> <given>Big</given></name><name><family>Worker</family> <given>One</given></name><name><family>Worker</family> <given>Two</given></name><name><family>Worker</family> <given>Three</given></name><name><family>Worker</family> <given>Four</given></name><name><family>Worker</family> <given>Five</given></name>stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
 stdin:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 stdin:{timing removed}(37 elems, 29 attrs, 140 spaces, 128 chars)
 

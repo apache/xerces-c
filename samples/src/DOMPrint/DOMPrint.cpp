@@ -127,6 +127,8 @@ static bool                     gSchemaFullChecking    = false;
 static bool                     gDoCreate              = false;
 
 static char*                    goutputfile            = 0;
+static char*                    gXPathExpression       = 0;
+
 // options for DOMLSSerializer's features
 static XMLCh*                   gOutputEncoding        = 0;
 
@@ -169,6 +171,7 @@ void usage()
             "    -wflt=xxx   Enable/Disable filtering.                 Default off\n"
             "    -wfpp=xxx   Enable/Disable format-pretty-print.       Default off\n"
             "    -wbom=xxx   Enable/Disable write Byte-Order-Mark      Default off\n"
+            "    -xpath=xxx  Prints only the nodes matching the given XPath.\n"
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n\n"
             "The parser has intrinsic support for the following encodings:\n"
@@ -346,6 +349,10 @@ int main(int argC, char* argV[])
                 return 2;
             }
         }
+         else if (!strncmp(argV[parmInd], "-xpath=", 7))
+        {
+             gXPathExpression = &(argV[parmInd][7]);
+        }
          else
         {
             XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
@@ -487,12 +494,34 @@ int main(int argC, char* argV[])
             theOutputDesc->setByteStream(myFormTarget);
 
             // get the DOM representation
-            DOMNode                     *doc = parser->getDocument();
+            DOMDocument *doc = parser->getDocument();
 
             //
             // do the serialization through DOMLSSerializer::write();
             //
-            theSerializer->write(doc, theOutputDesc);
+            if(gXPathExpression!=NULL)
+            {
+                XMLCh* xpathStr=XMLString::transcode(gXPathExpression);
+                try
+                {
+                    const DOMXPathNSResolver* resolver=doc->createNSResolver(doc->getDocumentElement());
+                    DOMXPathResult* result=(DOMXPathResult*)doc->evaluate(xpathStr, doc->getDocumentElement(), resolver, DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE, NULL);
+                    unsigned long nLength=result->getSnapshotLength();
+                    for(unsigned long i=0;i<nLength;i++)
+                        theSerializer->write(result->snapshotItem(i), theOutputDesc);
+                    result->release();
+                }
+                catch(const DOMXPathException& e)
+                {
+                    XERCES_STD_QUALIFIER cerr << "An error occurred during processing of the XPath expression. Msg is:"
+                        << XERCES_STD_QUALIFIER endl
+                        << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+                    retval = 4;
+                }
+                XMLString::release(&xpathStr);
+            }
+            else
+                theSerializer->write(doc, theOutputDesc);
 
             theOutputDesc->release();
             theSerializer->release();
