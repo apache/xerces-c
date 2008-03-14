@@ -375,7 +375,7 @@ gmake </source>
 				<li>Run CodeWarrior (requires CodeWarrior 8.0 with support for long file names).
 				</li>
 				
-				<li>Import the project Projects/MacOS/CodeWarrior/XercesLib/XercesLib.mcp.xml,
+				<li>Import the project projects/MacOS/CodeWarrior/XercesLib/XercesLib.mcp.xml,
 				saving it back out to the same directory as XercesLib.mcp.
 				</li>
 				

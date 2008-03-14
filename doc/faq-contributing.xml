@@ -188,12 +188,12 @@
         <ol>
         <li>Update the release information in the following files:<br/>
 
-    		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp</code>
-    		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak</code>
-    		<code>Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj</code>
-    		<code>Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj</code>
+    		<code>projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp</code>
+    		<code>projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak</code>
+    		<code>projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj</code>
+    		<code>projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj</code>
     		<br/>
-    		<code>Projects/MacOS/Xcode/XercesLib/Info-XercesLib.plist</code>
+    		<code>projects/MacOS/Xcode/XercesLib/Info-XercesLib.plist</code>
     		<code>scripts/packageBinaries.pl</code>
     		<br/>
     		<code>src/xercesc/configure.in</code>

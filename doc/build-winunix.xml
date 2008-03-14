@@ -46,10 +46,10 @@
             &XercesC3SrcInstallDir; directory:</p>
 
 <source>
-(For VC6)   Projects\Win32\VC6\xerces-all\xerces-all.dsw
-(For VC7.1) Projects\Win32\VC7.1\xerces-all\xerces-all.sln
-(For VC8)   Projects\Win32\VC8\xerces-all\xerces-all.sln
-(For VC9)   Projects\Win32\VC9\xerces-all\xerces-all.sln
+(For VC6)   projects\Win32\VC6\xerces-all\xerces-all.dsw
+(For VC7.1) projects\Win32\VC7.1\xerces-all\xerces-all.sln
+(For VC8)   projects\Win32\VC8\xerces-all\xerces-all.sln
+(For VC9)   projects\Win32\VC9\xerces-all\xerces-all.sln
 </source>
 
             <p>Once you have the solution open, you need to build the
@@ -60,10 +60,10 @@
             <p>If you want to include the &XercesCName; project into
                your own solution, you need to pick up:</p>
 <source>
-(For VC6)   Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
-(For VC7.1) Projects\Win32\VC7.1\xerces-all\XercesLib\XercesLib.vcproj
-(For VC8)   Projects\Win32\VC8\xerces-all\XercesLib\XercesLib.vcproj
-(For VC9)   Projects\Win32\VC9\xerces-all\XercesLib\XercesLib.vcproj
+(For VC6)   projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
+(For VC7.1) projects\Win32\VC7.1\xerces-all\XercesLib\XercesLib.vcproj
+(For VC8)   projects\Win32\VC8\xerces-all\XercesLib\XercesLib.vcproj
+(For VC9)   projects\Win32\VC9\xerces-all\XercesLib\XercesLib.vcproj
 </source>
 
             <p>You must make sure that you are linking your application with
@@ -384,7 +384,7 @@ config.status: executing depfiles commands
 		   </p>
 
            <ul>
-		       <li> &XercesC3SrcInstallDir;\Projects\Win32\BCB6\Xerces-all\Xerces-all.bpg </li>
+		       <li> &XercesC3SrcInstallDir;\projects\Win32\BCB6\Xerces-all\Xerces-all.bpg </li>
     	   </ul>
 
 		   <p> Each project in the group refers a directory below \Xerces-all.
@@ -392,7 +392,7 @@ config.status: executing depfiles commands
            </p>
 
            <ul>
-    	       <li> &XercesC3SrcInstallDir;\Projects\Win32\BCB6\Xerces-all\XercesLib </li>
+    	       <li> &XercesC3SrcInstallDir;\projects\Win32\BCB6\Xerces-all\XercesLib </li>
 		   </ul>
 
            <p> To build any project, open the project manager.  Double click on the project
@@ -414,7 +414,7 @@ config.status: executing depfiles commands
 		&XercesCName;.</p>
 
         <ol>
-		   <li>Change directory to <code> &XercesC3SrcInstallDir;\Projects\Win32\BCC.551\Xerces-all</code></li>
+		   <li>Change directory to <code> &XercesC3SrcInstallDir;\projects\Win32\BCC.551\Xerces-all</code></li>
            <li>Run <code>MakeBuildDirs.bat</code>.</li>
 		   <li>Then issue</li>
 		       <ul>
@@ -436,13 +436,13 @@ config.status: executing depfiles commands
             <p>&XercesCName; source distribution provides a makefile <code>all.mak</code>
             which will build everything including samples, tests and the parser library.</p>
 <source>
-cd &XercesC3SrcInstallDir;\Projects\Win32\VC6\xerces-all\all
+cd &XercesC3SrcInstallDir;\projects\Win32\VC6\xerces-all\all
 nmake -f all.mak "CFG=all - Win64 Release" CPP=ecl.exe
 </source>
 
             <p>If you want to just build the &XercesCName; parser library alone, then</p>
 <source>
-cd &XercesC3SrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib
+cd &XercesC3SrcInstallDir;\projects\Win32\VC6\xerces-all\XercesLib
 nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 </source>
 
