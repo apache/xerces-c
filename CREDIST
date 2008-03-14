@@ -1,6 +1,5 @@
-The following people (in alphabetical order) have contributed to the
-development and ports of the XML4C source code, which was submitted to
-the Apache Software Foundation.
+The following people (in no particular order) have contributed to the
+development of the Xerces-C++ source code.
 
 Nadav Aharoni
 Curt Arnold
@@ -141,3 +140,4 @@ Grace Yan
 Hiramatsu Yoshifumi
 PeiYong Zhang
 Henry Zongaro
+Boris Kolpackov
