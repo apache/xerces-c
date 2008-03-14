@@ -117,7 +117,6 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj 
-      ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerArrayImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\MemoryManagerImpl.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\ReaderMgr.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\SGXMLScanner.obj 
@@ -487,7 +486,6 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ElemStack.cpp" FORMNAME="" UNITNAME="ElemStack" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp" FORMNAME="" UNITNAME="IGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp" FORMNAME="" UNITNAME="IGXMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp" FORMNAME="" UNITNAME="MemoryManagerArrayImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp" FORMNAME="" UNITNAME="MemoryManagerImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp" FORMNAME="" UNITNAME="ReaderMgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp" FORMNAME="" UNITNAME="SGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

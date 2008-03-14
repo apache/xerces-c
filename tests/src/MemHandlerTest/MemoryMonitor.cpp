@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,11 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/dom/DOM.hpp>
 
+MemoryManager* MemoryMonitor::getExceptionMemoryManager()
+{
+  return this;
+}
+
 void* MemoryMonitor::allocate(size_t size)
 {
     void *key = ::operator new(size);
@@ -53,10 +58,10 @@ void MemoryMonitor::deallocate(void* p)
     ::operator delete(p);
 }
 
-unsigned int MemoryMonitor::getTotalMemory() 
+unsigned int MemoryMonitor::getTotalMemory()
 {
     unsigned int total = 0;
-    ValueHashTableOfEnumerator<unsigned int> *memEnum = 
+    ValueHashTableOfEnumerator<unsigned int> *memEnum =
             new ValueHashTableOfEnumerator<unsigned int>(fHashTable);
     while(memEnum->hasMoreElements()) {
         total += memEnum->nextElement();
@@ -81,28 +86,28 @@ static void usage()
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
-            "    -r=n        Run file through domBuilders n times.\n" 
+            "    -r=n        Run file through domBuilders n times.\n"
 		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << XERCES_STD_QUALIFIER endl;
 }
 
-class DOMLSParserHandler : public DOMErrorHandler 
+class DOMLSParserHandler : public DOMErrorHandler
 {
 public:
     DOMLSParserHandler() {};
     ~DOMLSParserHandler() {};
-    bool handleError(const DOMError &error) 
+    bool handleError(const DOMError &error)
     {
         char *message = 0;
-        XERCES_STD_QUALIFIER cerr << "Error occurred in DOMBuilder!  Message:  " << 
+        XERCES_STD_QUALIFIER cerr << "Error occurred in DOMBuilder!  Message:  " <<
             (message = XMLString::transcode(error.getMessage())) << " of severity " << error.getSeverity() << "." << XERCES_STD_QUALIFIER endl;
         XMLString::release(&message);
         return true;
     }
 };
 
-class SAXErrorHandler : public ErrorHandler 
+class SAXErrorHandler : public ErrorHandler
 {
 public:
     SAXErrorHandler() {};
@@ -143,7 +148,7 @@ public:
  * allocations/deallocations.
  */
 
-int main (int argC,  char *argV[]) 
+int main (int argC,  char *argV[])
 {
 
     MemoryMonitor *staticMemMonitor = new MemoryMonitor();
@@ -271,7 +276,7 @@ int main (int argC,  char *argV[])
     SAXParser *saxParser = new (sax1MemMonitor) SAXParser(0, sax1MemMonitor);
     saxParser->setErrorHandler(&saxErrorHandler);
 
-    // set features 
+    // set features
     domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, doNamespaces);
     sax2parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
     saxParser->setDoNamespaces(doNamespaces);
@@ -378,7 +383,7 @@ int main (int argC,  char *argV[])
             }
             catch (const XMLException& toCatch)
             {
-                char *msg = XMLString::transcode(toCatch.getMessage()); 
+                char *msg = XMLString::transcode(toCatch.getMessage());
                 XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                     << "Exception message is:  \n"
                     << msg << "\n" << XERCES_STD_QUALIFIER endl;
@@ -395,7 +400,7 @@ int main (int argC,  char *argV[])
 
                 if (DOMImplementation::loadDOMExceptionMsg(toCatch.code, errText, maxChars))
                 {
-                    char * msg = XMLString::transcode(errText); 
+                    char * msg = XMLString::transcode(errText);
                     XERCES_STD_QUALIFIER cerr << "Message is: " << msg << XERCES_STD_QUALIFIER endl;
 
                     continue;

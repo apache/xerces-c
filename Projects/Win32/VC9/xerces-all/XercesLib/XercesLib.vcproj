@@ -3147,14 +3147,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp"
 				>
 			</File>

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,22 +44,26 @@ DOMException::DOMException()
 ,msg(0)
 ,fMemoryManager(0)
 ,fMsgOwned(false)
-{      
+{
 }
 
 DOMException::DOMException(      short                 exCode
                          ,       short                 messageCode
                          ,       MemoryManager* const  memoryManager)
 :code((ExceptionCode) exCode)
-,fMemoryManager(memoryManager)
+,fMemoryManager(0)
 ,fMsgOwned(true)
 {
+    if (memoryManager)
+      fMemoryManager = memoryManager->getExceptionMemoryManager();
+
     const XMLSize_t msgSize = 2047;
     XMLCh errText[msgSize + 1];
 
     // load the text
     if(messageCode==0)
         messageCode=XMLDOMMsg::DOMEXCEPTION_ERRX+exCode;
+
     msg = XMLString::replicate
          (
           DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(messageCode, errText, msgSize) ? errText : XMLUni::fgDefErrMsg
@@ -73,7 +77,8 @@ DOMException::DOMException(const DOMException &other)
 ,fMemoryManager(other.fMemoryManager)
 ,fMsgOwned(other.fMsgOwned)
 {
-    msg = other.fMsgOwned? XMLString::replicate(other.msg, other.fMemoryManager) : other.msg;
+    if (other.msg)
+      msg = other.fMsgOwned? XMLString::replicate(other.msg, other.fMemoryManager) : other.msg;
 }
 
 XERCES_CPP_NAMESPACE_END

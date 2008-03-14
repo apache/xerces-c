@@ -49,7 +49,6 @@
 #include <xercesc/util/DefaultPanicHandler.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
-#include <xercesc/internal/MemoryManagerArrayImpl.hpp>
 
 #include <xercesc/util/XMLFileMgr.hpp>
 #if XERCES_USE_FILEMGR_POSIX

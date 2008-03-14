@@ -605,7 +605,6 @@ xercesc/dom/impl/DOMTextImpl.hpp
 xercesc/dom/impl/DOMTreeWalkerImpl.hpp
 xercesc/dom/impl/DOMTypeInfoImpl.hpp
 xercesc/dom/impl/XSDElementNSImpl.hpp
-xercesc/internal/MemoryManagerArrayImpl.hpp
 xercesc/internal/MemoryManagerImpl.hpp
 xercesc/internal/ValidationContextImpl.hpp
 xercesc/internal/VecAttrListImpl.hpp

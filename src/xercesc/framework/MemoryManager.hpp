@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  Configurable memory manager
  *
  *  <p>This interface allows outside applications to plug in their own memory
- *  manager to be used by Xerces for memory allocation/deallocation.</p> 
+ *  manager to be used by Xerces for memory allocation/deallocation.</p>
  */
 class XMLPARSER_EXPORT MemoryManager
 {
@@ -53,6 +53,16 @@ public:
     {
     }
     //@}
+
+
+    /**
+      * This method is called to obtain the memory manager that should be
+      * used to allocate memory used in exceptions. If the same memory
+      * manager can be used, simply return 'this' from this function.
+      *
+      * @return A pointer to the memory manager
+      */
+    virtual MemoryManager* getExceptionMemoryManager() = 0;
 
 
     // -----------------------------------------------------------------------

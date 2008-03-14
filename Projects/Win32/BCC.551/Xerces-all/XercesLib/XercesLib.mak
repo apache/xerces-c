@@ -281,7 +281,6 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XProtoType.obj \
     $(TARGETPATH)\obj\XSerializeEngine.obj \
     $(TARGETPATH)\obj\XTemplateSerializer.obj \
-    $(TARGETPATH)\obj\MemoryManagerArrayImpl.obj \
     $(TARGETPATH)\obj\ValidationContextImpl.obj \
     $(TARGETPATH)\obj\XMLRefInfo.obj \
     $(TARGETPATH)\obj\XMLAttDefList.obj \

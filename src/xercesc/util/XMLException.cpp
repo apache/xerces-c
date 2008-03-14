@@ -86,7 +86,8 @@ XMLException::XMLException() :
     , fSrcFile(0)
     , fSrcLine(0)
     , fMsg(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(
+        XMLPlatformUtils::fgMemoryManager->getExceptionMemoryManager())
 {
 }
 
@@ -99,10 +100,14 @@ XMLException::XMLException( const   char* const     srcFile
     , fSrcFile(0)
     , fSrcLine(srcLine)
     , fMsg(0)
-    , fMemoryManager(memoryManager)
+    , fMemoryManager(0)
 {
     if (!memoryManager)
-        fMemoryManager = XMLPlatformUtils::fgMemoryManager;
+      fMemoryManager =
+        XMLPlatformUtils::fgMemoryManager->getExceptionMemoryManager();
+    else
+      fMemoryManager = memoryManager->getExceptionMemoryManager();
+
     fSrcFile = XMLString::replicate(srcFile, fMemoryManager);
 }
 

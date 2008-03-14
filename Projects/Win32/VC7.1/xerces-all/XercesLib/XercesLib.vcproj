@@ -1706,12 +1706,6 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 				RelativePath="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp">
 			</File>
 			<File

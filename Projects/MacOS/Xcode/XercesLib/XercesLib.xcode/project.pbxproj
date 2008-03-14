@@ -9227,22 +9227,6 @@
 			settings = {
 			};
 		};
-		9067ED1604FC0A9600A80082 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = MemoryManagerArrayImpl.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		9067ED1704FC0A9600A80082 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = MemoryManagerArrayImpl.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		906C9B3F06FF69AA00D1DCE1 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;

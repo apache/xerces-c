@@ -1724,14 +1724,6 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp
 # End Source File
 # Begin Source File

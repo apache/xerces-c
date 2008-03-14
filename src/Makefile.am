@@ -472,7 +472,6 @@ internal_headers = \
 	xercesc/internal/EndOfEntityException.hpp \
 	xercesc/internal/IANAEncodings.hpp \
 	xercesc/internal/IGXMLScanner.hpp \
-	xercesc/internal/MemoryManagerArrayImpl.hpp \
 	xercesc/internal/MemoryManagerImpl.hpp \
 	xercesc/internal/ReaderMgr.hpp \
 	xercesc/internal/SGXMLScanner.hpp \
@@ -500,7 +499,6 @@ internal_sources = \
 	xercesc/internal/ElemStack.cpp \
 	xercesc/internal/IGXMLScanner.cpp \
 	xercesc/internal/IGXMLScanner2.cpp \
-	xercesc/internal/MemoryManagerArrayImpl.cpp \
 	xercesc/internal/MemoryManagerImpl.cpp \
 	xercesc/internal/ReaderMgr.cpp \
 	xercesc/internal/SGXMLScanner.cpp \
