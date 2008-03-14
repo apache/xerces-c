@@ -190,11 +190,8 @@
 
     		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp</code>
     		<code>Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak</code>
-    		<code>Projects/Win32/VC6/xerces-all/xerces-com/xerces-com.dsp</code>
     		<code>Projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj</code>
-    		<code>Projects/Win32/VC7.1/xerces-all/xerces-com/xerces-com.vcproj</code>
     		<code>Projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj</code>
-    		<code>Projects/Win32/VC8/xerces-all/xerces-com/xerces-com.vcproj</code>
     		<br/>
     		<code>Projects/MacOS/Xcode/XercesLib/Info-XercesLib.plist</code>
     		<code>scripts/packageBinaries.pl</code>
