@@ -95,7 +95,7 @@ public:
       *
       */
 
-    bool isSubstitutableBy(const DatatypeValidator* const toCheck);
+    virtual bool isSubstitutableBy(const DatatypeValidator* const toCheck);
 
 	 //@}
 
@@ -113,7 +113,7 @@ public:
       * @param  value2    string to compare
       *
       */
-    int compare(const XMLCh* const value1, const XMLCh* const value2
+    virtual int compare(const XMLCh* const value1, const XMLCh* const value2
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
         );
 
@@ -151,17 +151,6 @@ private:
 inline bool AnySimpleTypeDatatypeValidator::isAtomic() const {
 
     return false;
-}
-
-
-// ---------------------------------------------------------------------------
-//  DatatypeValidators: Compare methods
-// ---------------------------------------------------------------------------
-inline int AnySimpleTypeDatatypeValidator::compare(const XMLCh* const,
-                                                   const XMLCh* const
-                                                   , MemoryManager* const)
-{
-    return -1;
 }
 
 // ---------------------------------------------------------------------------

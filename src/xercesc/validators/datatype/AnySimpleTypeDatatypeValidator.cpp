@@ -44,6 +44,16 @@ AnySimpleTypeDatatypeValidator::~AnySimpleTypeDatatypeValidator()
 }
 
 // ---------------------------------------------------------------------------
+//  DatatypeValidators: Compare methods
+// ---------------------------------------------------------------------------
+int AnySimpleTypeDatatypeValidator::compare(  const XMLCh* const lValue
+                                            , const XMLCh* const rValue
+                                            , MemoryManager* const)
+{
+    return XMLString::compareString(lValue, rValue);
+}
+
+// ---------------------------------------------------------------------------
 //  AnySimpleTypeDatatypeValidator: Instance methods
 // ---------------------------------------------------------------------------
 DatatypeValidator* AnySimpleTypeDatatypeValidator::newInstance

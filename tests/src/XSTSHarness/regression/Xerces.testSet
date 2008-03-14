@@ -252,6 +252,27 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
+	<testGroup name="XERCESC-1393">
+		<annotation>
+			<documentation>Identity constraint is not enforced on xs:anySimpleType</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1393"/>
+		<schemaTest name="XERCESC-1393-1">
+			<schemaDocument xlink:href="./XERCESC-1393/schema.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-03-14"/>
+		</schemaTest>
+		<instanceTest name="XERCESC-1393-2">
+			<instanceDocument xlink:href="./XERCESC-1393/invalid.xml"/>
+			<expected validity="invalid"/>
+			<current status="accepted" date="2008-03-14"/>
+		</instanceTest>
+		<instanceTest name="XERCESC-1393-3">
+			<instanceDocument xlink:href="./XERCESC-1393/valid.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-03-14"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-1419">
 		<annotation>
 			<documentation>Regular expressions in schema should allow unescaped '-'</documentation>
