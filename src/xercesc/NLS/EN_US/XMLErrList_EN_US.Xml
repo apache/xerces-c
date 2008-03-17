@@ -476,7 +476,7 @@
             <Message Id="XMLRec_UnknownEncoding" Text="The passed recognizer encoding was not known"/>
             <Message Id="Parser_Parse1" Text="The parser found an illegal character at offset {0} in the regular expression '{1}'."/>
             <Message Id="Parser_Parse2" Text="Invalid reference number"/>
-            <Message Id="Parser_Next1" Text="A character is required after \"/>
+            <Message Id="Parser_Next1" Text="A character is required after backslash."/>
             <Message Id="Parser_Next2" Text="'?' is not expected.  '(?:' or '(?=' or '(?!' or '(?&lt;' or '(?#' or '(?&gt;'?"/>
             <Message Id="Parser_Next3" Text="'(?&lt;=' or '(?&lt;!' is expected"/>
             <Message Id="Parser_Next4" Text="A comment is not terminated"/>
@@ -486,7 +486,7 @@
             <Message Id="Parser_Factor4" Text="Unexpected end of the pattern in a conditional group"/>
             <Message Id="Parser_Factor5" Text="A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern"/>
             <Message Id="Parser_Factor6" Text="There are more than three choices in a conditional group"/>
-            <Message Id="Parser_Atom1" Text="A character in U+0040-U+005f must follow \c"/>
+            <Message Id="Parser_Atom1" Text="A character in U+0040-U+005f must follow '\c'."/>
             <Message Id="Parser_Atom2" Text="A '{' is required before a category character."/>
             <Message Id="Parser_Atom3" Text="A property name is not closed by '}'"/>
             <Message Id="Parser_Atom4" Text="Unexpected meta character"/>
