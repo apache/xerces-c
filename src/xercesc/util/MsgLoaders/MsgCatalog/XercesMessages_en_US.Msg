@@ -460,7 +460,7 @@ $set 3
 97  The passed recognizer encoding was not known
 98  The parser found an illegal character at offset {0} in the regular expression '{1}'.
 99  Invalid reference number
-100  A character is required after \
+100  A character is required after backslash.
 101  '?' is not expected.  '(?:' or '(?=' or '(?!' or '(?<' or '(?#' or '(?>'?
 102  '(?<=' or '(?<!' is expected
 103  A comment is not terminated
@@ -470,7 +470,7 @@ $set 3
 107  Unexpected end of the pattern in a conditional group
 108  A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern
 109  There are more than three choices in a conditional group
-110  A character in U+0040-U+005f must follow \c
+110  A character in U+0040-U+005f must follow '\c'.
 111  A '{' is required before a category character.
 112  A property name is not closed by '}'
 113  Unexpected meta character
