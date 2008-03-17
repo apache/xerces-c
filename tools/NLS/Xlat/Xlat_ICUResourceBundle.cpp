@@ -105,11 +105,11 @@ ICUResBundFormatter::nextMessage(const  XMLCh* const            msgText
 	//
 
 #ifdef ICU_RESBUNDLE_IN_TABLE_FORM
-    fwprintf(fOutFl, L"\t\t %3d { \"%s \" } \n", curId, xmlStrToPrintable(msgText));
+    fwprintf(fOutFl, L"\t\t %3d { \"%s\" } \n", curId, xmlStrToPrintable(msgText));
     releasePrintableStr
 	// need to print leading 0 if less than 100, not tested yet
 #else
-    fwprintf(fOutFl, L"\t\t\"%s \" ,\n", xmlStrToPrintable(msgText));
+    fwprintf(fOutFl, L"\t\t\"%s\" ,\n", xmlStrToPrintable(msgText));
     releasePrintableStr
 	// need a space between the last character and the closing "
 #endif

@@ -81,9 +81,27 @@ Win32RCFormatter::nextMessage(  const  XMLCh* const             msgText
     //
     fwprintf(fOutFl, L"    %-16d  L\"", messageId + fMsgOffset);
 
+    bool isOnlyASCII=true;
     const XMLCh* rawData = msgText;
     while (*rawData)
-        fwprintf(fOutFl, L"\\x%04lX", *rawData++);
+    {
+        // don't allow " or \ in the message
+        if(*rawData > 0xFF || strchr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]()',-+ &.;:<>?!|*=/#_", *rawData)==NULL)
+        {
+            isOnlyASCII=false;
+            break;
+        }
+        rawData++;
+    }
+
+    if(isOnlyASCII)
+        fwprintf(fOutFl, msgText);
+    else
+    {
+        const XMLCh* rawData = msgText;
+        while (*rawData)
+            fwprintf(fOutFl, L"\\x%04lX", *rawData++);
+    }
     fwprintf(fOutFl, L"\\x00\"\n");
 }
 

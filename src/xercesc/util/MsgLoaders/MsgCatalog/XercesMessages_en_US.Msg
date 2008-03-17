@@ -156,7 +156,7 @@ $set 1
 159  Expected an attribute name
 160  Expected a notation name
 161  Repetition of individual elements is not legal for mixed content models
-162  Expected default attribute declaration, assuming #IMPLIED 
+162  Expected default attribute declaration, assuming #IMPLIED
 163  Expected equal sign
 164  Expected an element name
 165  Comments must start with <!--
@@ -174,7 +174,7 @@ $set 1
 177  Unterminated start tag, '{0}'
 178  Expected an attribute value
 179  Unterminated end tag, '{0}'
-180  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
+180  Expected type (CDATA, ID, NMTOKEN, etc.), for attribute '{0}' of element '{1}'
 181  Expected end of tag '{0}'
 182  Expected tag name, comment, PI, or other markup
 183  Not valid after content
@@ -356,16 +356,16 @@ $set 2
 70  The keyref '{0}' refers to a key/unique that is out of scope.
 71  The key for identity constraint of element '{0}' is not found.
 72  Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'.
-73  EMPTY Element '{0}' has Attribute '{1}' of type NOTATION 
-74  EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space). 
-75  Element '{0}' has more than one Attribute of type NOTATION 
-76  Attribute '{0}' has non distinct token '{1}' 
-77  Element '{0}' 's content model(children) does not allow escaped white space. 
+73  EMPTY Element '{0}' has Attribute '{1}' of type NOTATION
+74  EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space).
+75  Element '{0}' has more than one Attribute of type NOTATION
+76  Attribute '{0}' has non distinct token '{1}'
+77  Element '{0}' 's content model(children) does not allow escaped white space.
 
 
 $set 3
 2  The primary document entity could not be opened. Id={0}
-5  The index is beyond the array bounds 
+5  The index is beyond the array bounds
 6  The new size is less than the old one
 7  The index given was beyond the max attribute index
 8  The passed AttTypes value is not known
@@ -571,44 +571,44 @@ $set 3
 208  simpleType restriction's union 'base' is empty.
 209  simpleType restriction's union 'base' type is '{0}' instead of union.
 210  Value '{0}' does not match regular expression facet '{1}'
-211  Value '{0}' is not encoded in Base64 
-212  Value '{0}' is not encoded in HexBin 
-213  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
-214  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
-215  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
-216  Value '{0}' is not in enumeration 
-217  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
-218  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
-219  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
-220  Value '{0}' must be less than MaxExclusive '{1}' 
-221  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
-222  Value '{0}' must be greater than MinExclusive '{1}' 
-223  Value '{0}' is not whitespace replaced 
-224  Value '{0}' is not a whitespace collapsed 
-225  Value '{0}' is not valid NCName 
-226  Value '{0}' is not valid '{1}' 
-227  ID '{0}' is not unique 
-228  Value '{0}' is not valid ENTITY 
-229  Value '{0}' is not valid QName 
-230  NOTATION '{0}' must be a valid QName 
-231  Value '{0}' does not match any member types (of the union) 
-232  Value '{0}' is NOT a valid URI 
+211  Value '{0}' is not encoded in Base64
+212  Value '{0}' is not encoded in HexBin
+213  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}'
+214  Value '{0}' with length '{1}' is less than minimum length facet of '{2}'
+215  Value '{0}' with length '{1}' is not equal to length facet of '{2}'
+216  Value '{0}' is not in enumeration
+217  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}'
+218  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}'
+219  Value '{0}' must be less than or equal to MaxInclusive '{1}'
+220  Value '{0}' must be less than MaxExclusive '{1}'
+221  Value '{0}' must be greater than or equal to MinInclusive '{1}'
+222  Value '{0}' must be greater than MinExclusive '{1}'
+223  Value '{0}' is not whitespace replaced
+224  Value '{0}' is not a whitespace collapsed
+225  Value '{0}' is not valid NCName
+226  Value '{0}' is not valid '{1}'
+227  ID '{0}' is not unique
+228  Value '{0}' is not valid ENTITY
+229  Value '{0}' is not valid QName
+230  NOTATION '{0}' must be a valid QName
+231  Value '{0}' does not match any member types of the union
+232  Value '{0}' is NOT a valid URI
 233   Empty string encountered.
 234   String contains whitespaces only.
 235   More than one decimal points encountered.
 236   Invalid chars encountered.
 237   Null pointer encountered.
-238   Cannot construct URI with null/empty '{0}' 
-239   '{0}', '{1}' can only be set for a generic URI! 
+238   Cannot construct URI with null/empty '{0}'
+239   '{0}', '{1}' can only be set for a generic URI
 240   '{0}' contains invalid escape sequence '{1}'
 241   '{0}' contains invalid char '{1}'
-242   '{0}' can not be set to null 
-243   '{0}' is NOT conformance '{1}' 
+242   '{0}' can not be set to null
+243   '{0}' is NOT conformant to '{1}'
 244   No scheme found in URI
-245   '{0}', '{1}' may not be specified if host is not specified 
-246   '{0}', '{1}' may not be specified if path is not specified 
-247   Port no '{0}' shall be in (0, 65535) 
-248   Type '{0}' is invalid: internal error 
+245   '{0}', '{1}' may not be specified if host is not specified
+246   '{0}', '{1}' may not be specified if path is not specified
+247   Port number '{0}' must be in (0, 65535)
+248   Type '{0}' is invalid: internal error
 249  A result is not set.
 250  CompactRanges - Internal Error
 251  Merge Ranges - Mismatched type
@@ -646,39 +646,39 @@ $set 3
 283  The xpath expression cannot end with '|'
 284  Invalid character '{0}' in xpath
 285  XPath token not supported
-286  Find a solution!
-287  buffer not initialized yet!
-288  'T' is missing! '{0}' 
-289  invalid gDay! '{0}' 
-290  invalid gMonth! '{0}' 
-291  invalid gMonthDay! '{0}' 
-292  Duration shall start with '-' or 'P'! '{0}' 
-293  Duration shall always have 'P'! '{0}' 
-294  '-' can only appear at first! '{0}' 
-295  Duration has invalid stuff before 'T'! '{0}' 
-296  Duration has no time elements after 'T'! '{0}' 
-297  Duration shall have at least element ! '{0}' 
-298  Duration shall have at least one digit after the . ! '{0}' 
-299  Incomplete Date ! '{0}' 
-300  Invalid Date ! '{0}' 
-301  Incomplete Time ! '{0}' 
-302  Invalid Time ! '{0}' 
-303  ms shall be present once '.' is present ! '{0}' 
-304  Incomplete YearMonth! '{0}' 
-305  Year separator is missing or misplaced ! '{0}' 
-306  Year must have 'CCYY' format ! '{0}' 
-307  Invalid leading zero in year! '{0}' 
-308  no month in YearMonth ! '{0}' 
-309  TimeZone is expected ! '{0}' 
-310  Expecting nothing after 'Z'! '{0}' 
-311  Invalid TimeZone! '{0}' 
-312  The year (0000) is an illegal year value! '{0}' 
-313  The month must have values 1 to 12! '{0}' 
-314  The day must have values 1 to {1}! '{0}' 
-315  Hour must have values 0-23! '{0}' 
-316  Minute must have values 0-59! '{0}' 
-317  Second must have values 0-60! '{0}' 
-318  Minute must have values 0-59! '{0}' 
+286  Find a solution
+287  Buffer not yet initialized
+288  'T' is missing: '{0}'
+289  Invalid gDay: '{0}'
+290  Invalid gMonth: '{0}'
+291  Invalid gMonthDay: '{0}'
+292  Duration shall start with '-' or 'P': '{0}'
+293  Duration shall always have 'P': '{0}'
+294  In duration '-' can only appear first: '{0}'
+295  Duration has invalid text before 'T': '{0}'
+296  Duration has no time elements after 'T': '{0}'
+297  Duration must have at least one element: '{0}'
+298  Duration must have at least one digit after '.': '{0}'
+299  Incomplete Date: '{0}'
+300  Invalid Date: '{0}'
+301  Incomplete Time: '{0}'
+302  Invalid Time: '{0}'
+303  Expected fractional seconds after '.': '{0}'
+304  Incomplete YearMonth: '{0}'
+305  Year separator is missing or misplaced: '{0}'
+306  Year must have 'CCYY' format: '{0}'
+307  Invalid leading zero in year: '{0}'
+308  No month in YearMonth: '{0}'
+309  TimeZone is expected: '{0}'
+310  Unexpected text after 'Z': '{0}'
+311  Invalid TimeZone: '{0}'
+312  Year 0000 is an illegal year value: '{0}'
+313  The month value must be between 1 and 12: '{0}'
+314  The day value must be between 1 and {1}: '{0}'
+315  The hours value must be between 0 and 23: '{0}'
+316  The minutes value must be between 0 and 59: '{0}'
+317  The seconds value must be between 0 and 60: '{0}'
+318  The minutes value must be between 0 and 59: '{0}'
 319  Particle Derivation Restriction: The derived complexType has content, while base is empty.
 320  NSCompat: The namespace of '{0}' is not allowed by wildcard in base
 321  The occurrence range of '{0}' is not a valid restriction of base element's range
@@ -717,12 +717,12 @@ $set 3
 354  Invalid checkFillBuffer size '{0}'
 355  Invalid checkFlushBuffer size '{0}'
 356  Invalid null pointer encountered '{0}'
-357  CreateObject fails 
+357  CreateObject fails
 358  Object count '{0}' exceed upper boundary '{1}'
 359  Grammar Pool is empty
 360  Grammar Pool is NOT empty
 361  String Pool is NOT empty
-362  Storer Level '{0}' is newer than Loader Level'{1}' 
+362  Storer Level '{0}' is newer than Loader Level'{1}'
 363  Value '{0}' is not valid QName because the prefix is not defined
 
 
