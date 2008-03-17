@@ -20,6 +20,8 @@ noinst_LIBRARIES = libutil.a
 INCLUDES = \
 	-I${top_srcdir}/src
 
+CXXFLAGS += -DPIC -fPIC
+
 libutil_a_SOURCES = \
 	XMLExceptionHandler.cpp \
 	XMLExceptionHandler.hpp
