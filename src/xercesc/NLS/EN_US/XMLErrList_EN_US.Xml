@@ -168,7 +168,7 @@
             <Message Id="ExpectedAttrName" Text="Expected an attribute name"/>
             <Message Id="ExpectedNotationName" Text="Expected a notation name"/>
             <Message Id="NoRepInMixed" Text="Repetition of individual elements is not legal for mixed content models"/>
-            <Message Id="ExpectedDefAttrDecl" Text="Expected default attribute declaration, assuming #IMPLIED "/>
+            <Message Id="ExpectedDefAttrDecl" Text="Expected default attribute declaration, assuming #IMPLIED"/>
             <Message Id="ExpectedEqSign" Text="Expected equal sign"/>
             <Message Id="ExpectedElementName" Text="Expected an element name"/>
             <Message Id="CommentsMustStartWith" Text="Comments must start with &lt;!--"/>
@@ -186,7 +186,7 @@
             <Message Id="UnterminatedStartTag" Text="Unterminated start tag, '{0}'"/>
             <Message Id="ExpectedAttrValue" Text="Expected an attribute value"/>
             <Message Id="UnterminatedEndTag" Text="Unterminated end tag, '{0}'"/>
-            <Message Id="ExpectedAttributeType" Text="Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'"/>
+            <Message Id="ExpectedAttributeType" Text="Expected type (CDATA, ID, NMTOKEN, etc.), for attribute '{0}' of element '{1}'"/>
             <Message Id="ExpectedEndOfTagX" Text="Expected end of tag '{0}'"/>
             <Message Id="ExpectedMarkup" Text="Expected tag name, comment, PI, or other markup"/>
             <Message Id="NotValidAfterContent" Text="Not valid after content"/>
@@ -369,11 +369,11 @@
             <Message Id="IC_KeyRefOutOfScope" Text="The keyref '{0}' refers to a key/unique that is out of scope."/>
             <Message Id="IC_KeyNotFound" Text="The key for identity constraint of element '{0}' is not found."/>
             <Message Id="NonWSContent" Text="Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'."/>
-            <Message Id="EmptyElemNotationAttr" Text="EMPTY Element '{0}' has Attribute '{1}' of type NOTATION "/>
-            <Message Id="EmptyElemHasContent"   Text="EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space). "/>
-            <Message Id="ElemOneNotationAttr"   Text="Element '{0}' has more than one Attribute of type NOTATION "/>
-            <Message Id="AttrDupToken"          Text="Attribute '{0}' has non distinct token '{1}' "/>
-            <Message Id="ElemChildrenHasInvalidWS"   Text="Element '{0}' 's content model(children) does not allow escaped white space. "/>
+            <Message Id="EmptyElemNotationAttr" Text="EMPTY Element '{0}' has Attribute '{1}' of type NOTATION"/>
+            <Message Id="EmptyElemHasContent"   Text="EMPTY Element '{0}' can't have content(not even entity references, comments, PIs or white space)."/>
+            <Message Id="ElemOneNotationAttr"   Text="Element '{0}' has more than one Attribute of type NOTATION"/>
+            <Message Id="AttrDupToken"          Text="Attribute '{0}' has non distinct token '{1}'"/>
+            <Message Id="ElemChildrenHasInvalidWS"   Text="Element '{0}' 's content model(children) does not allow escaped white space."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -381,7 +381,7 @@
             <Message Id="Scan_CouldNotOpenSource_Warning" Text="The primary document entity could not be opened. Id={0}"/>
         </Warning>
         <FatalError>
-            <Message Id="Array_BadIndex" Text="The index is beyond the array bounds "/>
+            <Message Id="Array_BadIndex" Text="The index is beyond the array bounds"/>
             <Message Id="Array_BadNewSize" Text="The new size is less than the old one"/>
             <Message Id="AttrList_BadIndex" Text="The index given was beyond the max attribute index"/>
             <Message Id="AttDef_BadAttType" Text="The passed AttTypes value is not known"/>
@@ -587,44 +587,44 @@
             <Message Id="FACET_Union_Null_baseValidator" Text="simpleType restriction's union 'base' is empty."/>
             <Message Id="FACET_Union_invalid_baseValidatorType" Text="simpleType restriction's union 'base' type is '{0}' instead of union."/>
             <Message Id="VALUE_NotMatch_Pattern" Text="Value '{0}' does not match regular expression facet '{1}'"/>
-            <Message Id="VALUE_Not_Base64" Text="Value '{0}' is not encoded in Base64 "/>
-            <Message Id="VALUE_Not_HexBin" Text="Value '{0}' is not encoded in HexBin "/>
-            <Message Id="VALUE_GT_maxLen" Text="Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' "/>
-            <Message Id="VALUE_LT_minLen" Text="Value '{0}' with length '{1}' is less than minimum length facet of '{2}' "/>
-            <Message Id="VALUE_NE_Len" Text="Value '{0}' with length '{1}' is not equal to length facet of '{2}' "/>
-            <Message Id="VALUE_NotIn_Enumeration" Text="Value '{0}' is not in enumeration "/>
-            <Message Id="VALUE_exceed_totalDigit" Text="Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' "/>
-            <Message Id="VALUE_exceed_fractDigit" Text="Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' "/>
-            <Message Id="VALUE_exceed_maxIncl" Text="Value '{0}' must be less than or equal to MaxInclusive '{1}' "/>
-            <Message Id="VALUE_exceed_maxExcl" Text="Value '{0}' must be less than MaxExclusive '{1}' "/>
-            <Message Id="VALUE_exceed_minIncl" Text="Value '{0}' must be greater than or equal to MinInclusive '{1}' "/>
-            <Message Id="VALUE_exceed_minExcl" Text="Value '{0}' must be greater than MinExclusive '{1}' "/>
-            <Message Id="VALUE_WS_replaced" Text="Value '{0}' is not whitespace replaced "/>
-            <Message Id="VALUE_WS_collapsed" Text="Value '{0}' is not a whitespace collapsed "/>
-            <Message Id="VALUE_Invalid_NCName" Text="Value '{0}' is not valid NCName "/>
-            <Message Id="VALUE_Invalid_Name" Text="Value '{0}' is not valid '{1}' "/>
-            <Message Id="VALUE_ID_Not_Unique" Text="ID '{0}' is not unique "/>
-            <Message Id="VALUE_ENTITY_Invalid" Text="Value '{0}' is not valid ENTITY "/>
-            <Message Id="VALUE_QName_Invalid" Text="Value '{0}' is not valid QName "/>
-            <Message Id="VALUE_NOTATION_Invalid" Text="NOTATION '{0}' must be a valid QName "/>
-            <Message Id="VALUE_no_match_memberType" Text="Value '{0}' does not match any member types (of the union) "/>
-            <Message Id="VALUE_URI_Malformed" Text="Value '{0}' is NOT a valid URI "/>
+            <Message Id="VALUE_Not_Base64" Text="Value '{0}' is not encoded in Base64"/>
+            <Message Id="VALUE_Not_HexBin" Text="Value '{0}' is not encoded in HexBin"/>
+            <Message Id="VALUE_GT_maxLen" Text="Value '{0}' with length '{1}' exceeds maximum length facet of '{2}'"/>
+            <Message Id="VALUE_LT_minLen" Text="Value '{0}' with length '{1}' is less than minimum length facet of '{2}'"/>
+            <Message Id="VALUE_NE_Len" Text="Value '{0}' with length '{1}' is not equal to length facet of '{2}'"/>
+            <Message Id="VALUE_NotIn_Enumeration" Text="Value '{0}' is not in enumeration"/>
+            <Message Id="VALUE_exceed_totalDigit" Text="Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}'"/>
+            <Message Id="VALUE_exceed_fractDigit" Text="Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}'"/>
+            <Message Id="VALUE_exceed_maxIncl" Text="Value '{0}' must be less than or equal to MaxInclusive '{1}'"/>
+            <Message Id="VALUE_exceed_maxExcl" Text="Value '{0}' must be less than MaxExclusive '{1}'"/>
+            <Message Id="VALUE_exceed_minIncl" Text="Value '{0}' must be greater than or equal to MinInclusive '{1}'"/>
+            <Message Id="VALUE_exceed_minExcl" Text="Value '{0}' must be greater than MinExclusive '{1}'"/>
+            <Message Id="VALUE_WS_replaced" Text="Value '{0}' is not whitespace replaced"/>
+            <Message Id="VALUE_WS_collapsed" Text="Value '{0}' is not a whitespace collapsed"/>
+            <Message Id="VALUE_Invalid_NCName" Text="Value '{0}' is not valid NCName"/>
+            <Message Id="VALUE_Invalid_Name" Text="Value '{0}' is not valid '{1}'"/>
+            <Message Id="VALUE_ID_Not_Unique" Text="ID '{0}' is not unique"/>
+            <Message Id="VALUE_ENTITY_Invalid" Text="Value '{0}' is not valid ENTITY"/>
+            <Message Id="VALUE_QName_Invalid" Text="Value '{0}' is not valid QName"/>
+            <Message Id="VALUE_NOTATION_Invalid" Text="NOTATION '{0}' must be a valid QName"/>
+            <Message Id="VALUE_no_match_memberType" Text="Value '{0}' does not match any member types of the union"/>
+            <Message Id="VALUE_URI_Malformed" Text="Value '{0}' is NOT a valid URI"/>
             <Message Id="XMLNUM_emptyString" Text=" Empty string encountered."/>
             <Message Id="XMLNUM_WSString" Text=" String contains whitespaces only."/>
             <Message Id="XMLNUM_2ManyDecPoint" Text=" More than one decimal points encountered."/>
             <Message Id="XMLNUM_Inv_chars" Text=" Invalid chars encountered."/>
             <Message Id="XMLNUM_null_ptr" Text=" Null pointer encountered."/>
-            <Message Id="XMLNUM_URI_Component_Empty" Text=" Cannot construct URI with null/empty '{0}' "/>
-            <Message Id="XMLNUM_URI_Component_for_GenURI_Only" Text=" '{0}', '{1}' can only be set for a generic URI! "/>
+            <Message Id="XMLNUM_URI_Component_Empty" Text=" Cannot construct URI with null/empty '{0}'"/>
+            <Message Id="XMLNUM_URI_Component_for_GenURI_Only" Text=" '{0}', '{1}' can only be set for a generic URR"/>
             <Message Id="XMLNUM_URI_Component_Invalid_EscapeSequence" Text=" '{0}' contains invalid escape sequence '{1}'"/>
             <Message Id="XMLNUM_URI_Component_Invalid_Char" Text=" '{0}' contains invalid char '{1}'"/>
-            <Message Id="XMLNUM_URI_Component_Set_Null" Text=" '{0}' can not be set to null "/>
-            <Message Id="XMLNUM_URI_Component_Not_Conformant" Text=" '{0}' is NOT conformance '{1}' "/>
+            <Message Id="XMLNUM_URI_Component_Set_Null" Text=" '{0}' can not be set to null"/>
+            <Message Id="XMLNUM_URI_Component_Not_Conformant" Text=" '{0}' is NOT conformant to '{1}'"/>
             <Message Id="XMLNUM_URI_No_Scheme" Text=" No scheme found in URI"/>
-            <Message Id="XMLNUM_URI_NullHost" Text=" '{0}', '{1}' may not be specified if host is not specified "/>
-            <Message Id="XMLNUM_URI_NullPath" Text=" '{0}', '{1}' may not be specified if path is not specified "/>
-            <Message Id="XMLNUM_URI_PortNo_Invalid" Text=" Port no '{0}' shall be in (0, 65535) "/>
-            <Message Id="XMLNUM_DBL_FLT_InvalidType" Text=" Type '{0}' is invalid: internal error "/>
+            <Message Id="XMLNUM_URI_NullHost" Text=" '{0}', '{1}' may not be specified if host is not specified"/>
+            <Message Id="XMLNUM_URI_NullPath" Text=" '{0}', '{1}' may not be specified if path is not specified"/>
+            <Message Id="XMLNUM_URI_PortNo_Invalid" Text=" Port number '{0}' must be in (0, 65535)"/>
+            <Message Id="XMLNUM_DBL_FLT_InvalidType" Text=" Type '{0}' is invalid: internal error"/>
             <Message Id="Regex_Result_Not_Set" Text="A result is not set."/>
             <Message Id="Regex_CompactRangesError" Text="CompactRanges - Internal Error"/>
             <Message Id="Regex_MergeRangesTypeMismatch" Text="Merge Ranges - Mismatched type"/>
@@ -662,39 +662,39 @@
             <Message Id="XPath_NoUnionAtEnd" Text="The xpath expression cannot end with '|'"/>
             <Message Id="XPath_InvalidChar" Text="Invalid character '{0}' in xpath"/>
             <Message Id="XPath_TokenNotSupported" Text="XPath token not supported"/>
-            <Message Id="XPath_FindSolution" Text="Find a solution!"/>
-            <Message Id="DateTime_Assert_Buffer_Fail" Text="buffer not initialized yet!"/>
-            <Message Id="DateTime_dt_missingT"        Text="'T' is missing! '{0}' "/>
-            <Message Id="DateTime_gDay_invalid"       Text="invalid gDay! '{0}' "/>
-            <Message Id="DateTime_gMth_invalid"      Text="invalid gMonth! '{0}' "/>
-            <Message Id="DateTime_gMthDay_invalid"   Text="invalid gMonthDay! '{0}' "/>
-            <Message Id="DateTime_dur_Start_dashP"    Text="Duration shall start with '-' or 'P'! '{0}' "/>
-            <Message Id="DateTime_dur_noP"            Text="Duration shall always have 'P'! '{0}' "/>
-            <Message Id="DateTime_dur_DashNotFirst"   Text="'-' can only appear at first! '{0}' "/>
-            <Message Id="DateTime_dur_inv_b4T"        Text="Duration has invalid stuff before 'T'! '{0}' "/>
-            <Message Id="DateTime_dur_NoTimeAfterT"   Text="Duration has no time elements after 'T'! '{0}' "/>
-            <Message Id="DateTime_dur_NoElementAtAll" Text="Duration shall have at least element ! '{0}' "/>
-            <Message Id="DateTime_dur_inv_seconds"    Text="Duration shall have at least one digit after the . ! '{0}' "/>
-            <Message Id="DateTime_date_incomplete"    Text="Incomplete Date ! '{0}' "/>
-            <Message Id="DateTime_date_invalid"       Text="Invalid Date ! '{0}' "/>
-            <Message Id="DateTime_time_incomplete"    Text="Incomplete Time ! '{0}' "/>
-            <Message Id="DateTime_time_invalid"       Text="Invalid Time ! '{0}' "/>
-            <Message Id="DateTime_ms_noDigit"         Text="ms shall be present once '.' is present ! '{0}' "/>
-            <Message Id="DateTime_ym_incomplete"      Text="Incomplete YearMonth! '{0}' "/>
-            <Message Id="DateTime_ym_invalid"         Text="Year separator is missing or misplaced ! '{0}' "/>
-            <Message Id="DateTime_year_tooShort"      Text="Year must have 'CCYY' format ! '{0}' "/>
-            <Message Id="DateTime_year_leadingZero"   Text="Invalid leading zero in year! '{0}' "/>
-            <Message Id="DateTime_ym_noMonth"         Text="no month in YearMonth ! '{0}' "/>
-            <Message Id="DateTime_tz_noUTCsign"       Text="TimeZone is expected ! '{0}' "/>
-            <Message Id="DateTime_tz_stuffAfterZ"     Text="Expecting nothing after 'Z'! '{0}' "/>
-            <Message Id="DateTime_tz_invalid"         Text="Invalid TimeZone! '{0}' "/>
-            <Message Id="DateTime_year_zero"          Text="The year (0000) is an illegal year value! '{0}' "/>
-            <Message Id="DateTime_mth_invalid"        Text="The month must have values 1 to 12! '{0}' "/>
-            <Message Id="DateTime_day_invalid"        Text="The day must have values 1 to {1}! '{0}' "/>
-            <Message Id="DateTime_hour_invalid"       Text="Hour must have values 0-23! '{0}' "/>
-            <Message Id="DateTime_min_invalid"        Text="Minute must have values 0-59! '{0}' "/>
-            <Message Id="DateTime_second_invalid"     Text="Second must have values 0-60! '{0}' "/>
-            <Message Id="DateTime_tz_hh_invalid"      Text="Minute must have values 0-59! '{0}' "/>
+            <Message Id="XPath_FindSolution" Text="Find a solution"/>
+            <Message Id="DateTime_Assert_Buffer_Fail" Text="Buffer not yet initialized"/>
+            <Message Id="DateTime_dt_missingT"        Text="'T' is missing: '{0}'"/>
+            <Message Id="DateTime_gDay_invalid"       Text="Invalid gDay: '{0}'"/>
+            <Message Id="DateTime_gMth_invalid"       Text="Invalid gMonth: '{0}'"/>
+            <Message Id="DateTime_gMthDay_invalid"    Text="Invalid gMonthDay: '{0}'"/>
+            <Message Id="DateTime_dur_Start_dashP"    Text="Duration shall start with '-' or 'P': '{0}'"/>
+            <Message Id="DateTime_dur_noP"            Text="Duration shall always have 'P': '{0}'"/>
+            <Message Id="DateTime_dur_DashNotFirst"   Text="In duration '-' can only appear first: '{0}'"/>
+            <Message Id="DateTime_dur_inv_b4T"        Text="Duration has invalid text before 'T': '{0}'"/>
+            <Message Id="DateTime_dur_NoTimeAfterT"   Text="Duration has no time elements after 'T': '{0}'"/>
+            <Message Id="DateTime_dur_NoElementAtAll" Text="Duration must have at least one element: '{0}'"/>
+            <Message Id="DateTime_dur_inv_seconds"    Text="Duration must have at least one digit after '.': '{0}'"/>
+            <Message Id="DateTime_date_incomplete"    Text="Incomplete Date: '{0}'"/>
+            <Message Id="DateTime_date_invalid"       Text="Invalid Date: '{0}'"/>
+            <Message Id="DateTime_time_incomplete"    Text="Incomplete Time: '{0}'"/>
+            <Message Id="DateTime_time_invalid"       Text="Invalid Time: '{0}'"/>
+            <Message Id="DateTime_ms_noDigit"         Text="Expected fractional seconds after '.': '{0}'"/>
+            <Message Id="DateTime_ym_incomplete"      Text="Incomplete YearMonth: '{0}'"/>
+            <Message Id="DateTime_ym_invalid"         Text="Year separator is missing or misplaced: '{0}'"/>
+            <Message Id="DateTime_year_tooShort"      Text="Year must have 'CCYY' format: '{0}'"/>
+            <Message Id="DateTime_year_leadingZero"   Text="Invalid leading zero in year: '{0}'"/>
+            <Message Id="DateTime_ym_noMonth"         Text="No month in YearMonth: '{0}'"/>
+            <Message Id="DateTime_tz_noUTCsign"       Text="TimeZone is expected: '{0}'"/>
+            <Message Id="DateTime_tz_stuffAfterZ"     Text="Unexpected text after 'Z': '{0}'"/>
+            <Message Id="DateTime_tz_invalid"         Text="Invalid TimeZone: '{0}'"/>
+            <Message Id="DateTime_year_zero"          Text="Year 0000 is an illegal year value: '{0}'"/>
+            <Message Id="DateTime_mth_invalid"        Text="The month value must be between 1 and 12: '{0}'"/>
+            <Message Id="DateTime_day_invalid"        Text="The day value must be between 1 and {1}: '{0}'"/>
+            <Message Id="DateTime_hour_invalid"       Text="The hours value must be between 0 and 23: '{0}'"/>
+            <Message Id="DateTime_min_invalid"        Text="The minutes value must be between 0 and 59: '{0}'"/>
+            <Message Id="DateTime_second_invalid"     Text="The seconds value must be between 0 and 60: '{0}'"/>
+            <Message Id="DateTime_tz_hh_invalid"      Text="The minutes value must be between 0 and 59: '{0}'"/>
             <Message Id="PD_EmptyBase" Text="Particle Derivation Restriction: The derived complexType has content, while base is empty."/>
             <Message Id="PD_NSCompat1" Text="NSCompat: The namespace of '{0}' is not allowed by wildcard in base"/>
             <Message Id="PD_OccurRangeE" Text="The occurrence range of '{0}' is not a valid restriction of base element's range"/>
@@ -733,12 +733,12 @@
             <Message Id="XSer_Inv_checkFillBuffer_Size"  Text="Invalid checkFillBuffer size '{0}'"/>
             <Message Id="XSer_Inv_checkFlushBuffer_Size" Text="Invalid checkFlushBuffer size '{0}'"/>
             <Message Id="XSer_Inv_Null_Pointer"          Text="Invalid null pointer encountered '{0}'"/>
-            <Message Id="XSer_CreateObject_Fail"         Text="CreateObject fails "/>
+            <Message Id="XSer_CreateObject_Fail"         Text="CreateObject fails"/>
             <Message Id="XSer_ObjCount_UppBnd_Exceed"    Text="Object count '{0}' exceed upper boundary '{1}'"/>
             <Message Id="XSer_GrammarPool_Empty"         Text="Grammar Pool is empty"/>
             <Message Id="XSer_GrammarPool_NotEmpty"      Text="Grammar Pool is NOT empty"/>
             <Message Id="XSer_StringPool_NotEmpty"       Text="String Pool is NOT empty"/>
-            <Message Id="XSer_Storer_NewerThan_Loader"   Text="Storer Level '{0}' is newer than Loader Level'{1}' "/>
+            <Message Id="XSer_Storer_NewerThan_Loader"   Text="Storer Level '{0}' is newer than Loader Level'{1}'"/>
             <Message Id="VALUE_QName_Invalid2"           Text="Value '{0}' is not valid QName because the prefix is not defined"/>
         </FatalError>
     </MsgDomain>
