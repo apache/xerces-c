@@ -213,7 +213,7 @@ print STDERR "Successfully located $libxerces_name!!\n";
 
 $HANDLER_LIB = '$(INST_ARCHLIB)/auto/Handler/Handler$(LIB_EXT)';
 $TRANSCODER_LIB = '$(INST_ARCHLIB)/auto/Transcoder/Transcoder$(LIB_EXT)';
-$UTIL_LIB = "$SWIG_DIR/.libs/libutil.a";
+$UTIL_LIB = $SWIG_DIR . '/util/libutil$(LIB_EXT)';
 
 sub MY_postamble {
 qq[
@@ -271,12 +271,12 @@ if ($XERCES_DEVEL) {
     my $MAKE_HANDLER    = '	\$(MAKE) -C Handler static';
     my $MAKE_TRANSCODER = '	\$(MAKE) -C Transcoder static';
 
-    my $MAKE_UTIL       = '	\$(MAKE) -C ' . "$SWIG_DIR static";
+    my $MAKE_UTIL       = '	\$(MAKE) -C ' . "$SWIG_DIR";
     if ($^O eq 'MSWin32') {
       # nmake doesn't not honor '-C'
       $MAKE_HANDLER    =  '	cd Handler && \$(MAKE) static';
       $MAKE_TRANSCODER =  '	cd Transcoder && \$(MAKE) static';
-      $MAKE_UTIL       =  "	cd $SWIG_DIR" . ' && \$(MAKE) static';
+      $MAKE_UTIL       =  "	cd $SWIG_DIR" . ' && \$(MAKE)';
     }
 
     ### We no longer need to munge the C++ code thanks to SWIG improvements
