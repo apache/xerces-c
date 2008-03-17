@@ -86,7 +86,7 @@ Win32RCFormatter::nextMessage(  const  XMLCh* const             msgText
     while (*rawData)
     {
         // don't allow " or \ in the message
-        if(*rawData > 0xFF || strchr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]()',-+ &.;:<>?!|*=/#_", *rawData)==NULL)
+        if(*rawData >= 0x80 || strchr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]()',-+ &.;:<>?!|*=/#_", *rawData)==NULL)
         {
             isOnlyASCII=false;
             break;

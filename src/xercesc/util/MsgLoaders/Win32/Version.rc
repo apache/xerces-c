@@ -1,4 +1,4 @@
-// Microsoft Visual C++ generated resource script.
+//Microsoft Developer Studio generated resource script.
 //
 #include "resource.h"
 
@@ -22,6 +22,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
 
+#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -44,15 +45,18 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Dynamic linked library for Xerces-C"
-            VALUE "CompanyName", "Apache Software Foundation"
-            VALUE "FileDescription", "Shared Library for Xerces-C Version 3.0.0"
-            VALUE "FileVersion", "3, 0, 0"
-            VALUE "InternalName", "xerces-c_3_0.dll"
-            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2000 subject to licensing terms"
-            VALUE "OriginalFilename", "xerces-c_3_0.dll"
-            VALUE "ProductName", "Xerces-C Version 3.0.0"
-            VALUE "ProductVersion", "3, 0, 0"
+            VALUE "Comments", "Dynamic linked library for Xerces-C\0"
+            VALUE "CompanyName", "Apache Software Foundation\0"
+            VALUE "FileDescription", "Shared Library for Xerces-C Version 3.0.0\0"
+            VALUE "FileVersion", "3, 0, 0\0"
+            VALUE "InternalName", "xerces-c_3_0.dll\0"
+            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2000 subject to licensing terms\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "xerces-c_3_0.dll\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Xerces-C Version 3.0.0\0"
+            VALUE "ProductVersion", "3, 0, 0\0"
+            VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -61,6 +65,9 @@ BEGIN
     END
 END
 
+#endif    // !_MAC
+
+#if !defined(__BORLANDC__) || defined(XML_USE_WIN32_MSGLOADER)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -865,4 +872,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
+#endif // XML_USE_WIN32_MSGLOADER
 
