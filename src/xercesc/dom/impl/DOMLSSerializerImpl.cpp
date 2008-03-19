@@ -222,6 +222,7 @@ static const XMLCh  gNotation[] =
     chSpace,   chDoubleQuote, chNull
 };
 
+static const XMLByte  BOM_utf8[]    = {(XMLByte)0xEF, (XMLByte)0xBB, (XMLByte)0xBF, (XMLByte) 0};
 static const XMLByte  BOM_utf16be[] = {(XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
 static const XMLByte  BOM_utf16le[] = {(XMLByte)0xFF, (XMLByte)0xFE, (XMLByte) 0};
 static const XMLByte  BOM_ucs4be[]  = {(XMLByte)0x00, (XMLByte)0x00, (XMLByte)0xFE, (XMLByte)0xFF, (XMLByte) 0};
@@ -1639,7 +1640,12 @@ void DOMLSSerializerImpl::processBOM()
     if (!getFeature(BYTE_ORDER_MARK_ID))
         return;
 
-    if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16LEncodingString)  == 0) ||
+    if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF8EncodingString)  == 0) ||
+        (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF8EncodingString2) == 0)  )
+    {
+        fFormatter->writeBOM(BOM_utf8, 3);
+    }
+    else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16LEncodingString)  == 0) ||
         (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16LEncodingString2) == 0)  )
     {
         fFormatter->writeBOM(BOM_utf16le, 2);
