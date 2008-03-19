@@ -35,7 +35,6 @@
      <hidden   id="program-sax-&XercesC3Series;"           source="program-sax.xml"/>
      <hidden   id="program-sax2-&XercesC3Series;"          source="program-sax2.xml"/>
      <hidden   id="program-dom-&XercesC3Series;"           source="program-dom.xml"/>
-     <hidden   id="dom3-&XercesC3Series;"                  source="dom3.xml"/>
      <hidden   id="schema-&XercesC3Series;"                source="schema.xml"/>
      <hidden   id="program-others-&XercesC3Series;"        source="program-others.xml"/>
 

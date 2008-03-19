@@ -85,7 +85,7 @@
             	   DOM Level 3.0 Core Specification</jump>, W3C Recommendation 7 April 2004</li>
                <li><jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
             	   DOM Level 3.0 Load and Save Specification</jump>, W3C Recommendation 7 April 2004<br/>
-	               See <jump href="dom3-&XercesC3Series;.html">DOM Level 3 Support</jump> for detail.</li>
+	               See <jump href="program-dom-&XercesC3Series;.html#DOM3">DOM Level 3 Support</jump> for detail.</li>
                <li><jump href="http://www.w3.org/TR/2006/REC-xinclude-20061115/">
             	   XML Inclusions (XInclude) 1.0 (Second Edition)</jump>, W3C Recommendation 15 November 2006</li>
             </ul>

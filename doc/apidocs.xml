@@ -40,7 +40,7 @@
                    DOM Level 3.0 Core Specification</jump>, and
                    <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/">
                    DOM Level 3.0 Load and Save Specification</jump>, a W3C Recommendation of April 7, 2004
-                   See <jump href="dom3-&XercesC3Series;.html">DOM Level 3 Support</jump> for details.</li>
+                   See <jump href="program-dom-&XercesC3Series;.html#DOM3">DOM Level 3 Support</jump> for details.</li>
                </ul>
 
            <p>For a complete understanding of how the &XercesCName; APIs work,
@@ -49,8 +49,7 @@
 	    <p>See the <em><jump href="apiDocs-&XercesC3Series;/index.html">&XercesCName; API documentation</jump></em> for more details.</p>
 
 	    <note>The API documentation is automatically generated using
-		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump> and
-		<jump href="http://www.research.att.com/sw/tools/graphviz/">GraphViz</jump>.</note>
+		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump>.</note>
 
     </s2>
 </s1>

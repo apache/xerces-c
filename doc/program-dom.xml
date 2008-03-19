@@ -35,11 +35,39 @@
 
     <anchor name="DOM3"/>
     <s2 title="DOM Level 3 Support in &XercesCName;">
-      <p>The &XercesCName; &XercesC3Version; contains a partial implementation of the W3C
-         Document Object Model Level 3.  This implementation is experimental.    See the document
-         <jump href="dom3-&XercesC3Series;.html"> DOM Level 3 Support</jump> for details.
-      </p>
-    </s2>
+	    <p>The &XercesCName; &XercesC3Version; contains an implementation of the W3C DOM Level 3 as specified in </p>
+	    <ul>
+	      <li><jump href="http://www.w3.org/TR/DOM-Level-3-Core/">
+	          DOM Level 3.0 Core Specification</jump>, Version 1.0 W3C Recommendation 07 April 2004 and</li>
+	      <li> <jump href="http://www.w3.org/TR/DOM-Level-3-LS/">
+	          Document Object Model (DOM) Level 3 Load and Save Specification</jump>,
+	          Version 1.0 W3C Recommendation 07 April 2004</li>
+	    </ul>
+		<s3 title='Implementation of DOM Level 3 Core'>
+		    <p>The following are NOT implemented in &XercesCName; &XercesC3Version;.</p>
+			<ul>
+			    <li>
+			        <code>DOMError</code>: setRelatedException
+			    </li>
+			    <li>
+			        <code>DOMImplementation</code>: createLSParser(MODE_ASYNCHRONOUS)
+			    </li>
+			    <li>
+			        <code>DOMTypeInfo</code>: isDerivedFrom()
+			    </li>
+			</ul>
+		</s3>
+
+		<s3 title='Implementation of DOM Level 3 Load and Save'>
+		    <p>The following are NOT implemented in &XercesCName; &XercesC3Version;.</p>
+			<ul>
+			    <li>
+			        <code>DOMLSParser</code>: parseWithContext().
+			    </li>
+			</ul>
+
+		</s3>
+	</s2>
 
     <anchor name="UsingDOMAPI"/>
     <s2 title="Using DOM API">
