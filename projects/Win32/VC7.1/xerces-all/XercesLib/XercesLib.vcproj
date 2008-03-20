@@ -627,9 +627,7 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -637,9 +635,7 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -647,9 +643,7 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					Name="Static Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -657,9 +651,7 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					Name="Static Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -667,9 +659,7 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					Name="ICU Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>
@@ -677,9 +667,7 @@ copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
 					Name="ICU Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)
-"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"/>
 				</FileConfiguration>

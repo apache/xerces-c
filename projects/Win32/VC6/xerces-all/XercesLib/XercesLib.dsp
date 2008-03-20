@@ -868,8 +868,8 @@ InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
 InputName=Xerces_autoconf_config
 
 "$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
-	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	echo copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
+	copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
 	
 # End Custom Build
 
@@ -883,8 +883,8 @@ InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
 InputName=Xerces_autoconf_config
 
 "$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
-	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	echo copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
+	copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
 	
 # End Custom Build
 
@@ -898,8 +898,8 @@ InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
 InputName=Xerces_autoconf_config
 
 "$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
-	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	echo copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
+	copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
 	
 # End Custom Build
 
@@ -913,8 +913,8 @@ InputPath=..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp
 InputName=Xerces_autoconf_config
 
 "$(InputPath)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
-	copy $(InputDir)\$(InputName).msvc.hpp $(InputPath) 
+	echo copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
+	copy "$(InputDir)\$(InputName).msvc.hpp" "$(InputPath)" 
 	
 # End Custom Build
 
