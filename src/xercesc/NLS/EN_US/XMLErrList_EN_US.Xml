@@ -328,7 +328,7 @@
             <Message Id="GroupContentRestricted" Text="'{0}' is not allowed for the content of a '{1}' model group.  Only element, group, choice, sequence and any are allowed."/>
             <Message Id="UnknownBaseDatatype" Text="Unknown base type '{0}' for type '{1}'."/>
             <Message Id="NoContentForRef" Text="A &lt;{0}&gt; declaration that has a ref attribute, cannot have child content."/>
-            <Message Id="DatatypeError" Text="{1}"/>
+            <Message Id="DatatypeError" Text="{0}"/>
             <Message Id="ProhibitedAttributePresent" Text="Prohibited Attribute {0} is found."/>
             <Message Id="IllegalXMLSpace" Text="Illegal xml:space declaration."/>
             <Message Id="WrongTargetNamespace" Text="Schema in {0} has a different target namespace from the one specified in the instance document {1}."/>
@@ -609,22 +609,22 @@
             <Message Id="VALUE_NOTATION_Invalid" Text="NOTATION '{0}' must be a valid QName"/>
             <Message Id="VALUE_no_match_memberType" Text="Value '{0}' does not match any member types of the union"/>
             <Message Id="VALUE_URI_Malformed" Text="Value '{0}' is NOT a valid URI"/>
-            <Message Id="XMLNUM_emptyString" Text=" Empty string encountered."/>
-            <Message Id="XMLNUM_WSString" Text=" String contains whitespaces only."/>
-            <Message Id="XMLNUM_2ManyDecPoint" Text=" More than one decimal points encountered."/>
-            <Message Id="XMLNUM_Inv_chars" Text=" Invalid chars encountered."/>
-            <Message Id="XMLNUM_null_ptr" Text=" Null pointer encountered."/>
-            <Message Id="XMLNUM_URI_Component_Empty" Text=" Cannot construct URI with null/empty '{0}'"/>
-            <Message Id="XMLNUM_URI_Component_for_GenURI_Only" Text=" '{0}', '{1}' can only be set for a generic URI"/>
-            <Message Id="XMLNUM_URI_Component_Invalid_EscapeSequence" Text=" '{0}' contains invalid escape sequence '{1}'"/>
-            <Message Id="XMLNUM_URI_Component_Invalid_Char" Text=" '{0}' contains invalid char '{1}'"/>
-            <Message Id="XMLNUM_URI_Component_Set_Null" Text=" '{0}' can not be set to null"/>
-            <Message Id="XMLNUM_URI_Component_Not_Conformant" Text=" '{0}' is NOT conformant to '{1}'"/>
-            <Message Id="XMLNUM_URI_No_Scheme" Text=" No scheme found in URI"/>
-            <Message Id="XMLNUM_URI_NullHost" Text=" '{0}', '{1}' may not be specified if host is not specified"/>
-            <Message Id="XMLNUM_URI_NullPath" Text=" '{0}', '{1}' may not be specified if path is not specified"/>
-            <Message Id="XMLNUM_URI_PortNo_Invalid" Text=" Port number '{0}' must be in (0, 65535)"/>
-            <Message Id="XMLNUM_DBL_FLT_InvalidType" Text=" Type '{0}' is invalid: internal error"/>
+            <Message Id="XMLNUM_emptyString" Text="Empty string encountered."/>
+            <Message Id="XMLNUM_WSString" Text="String contains whitespaces only."/>
+            <Message Id="XMLNUM_2ManyDecPoint" Text="More than one decimal points encountered."/>
+            <Message Id="XMLNUM_Inv_chars" Text="Invalid characters encountered."/>
+            <Message Id="XMLNUM_null_ptr" Text="Null pointer encountered."/>
+            <Message Id="XMLNUM_URI_Component_Empty" Text="Cannot construct URI with null/empty '{0}'"/>
+            <Message Id="XMLNUM_URI_Component_for_GenURI_Only" Text="'{0}', '{1}' can only be set for a generic URI"/>
+            <Message Id="XMLNUM_URI_Component_Invalid_EscapeSequence" Text="'{0}' contains invalid escape sequence '{1}'"/>
+            <Message Id="XMLNUM_URI_Component_Invalid_Char" Text="'{0}' contains invalid char '{1}'"/>
+            <Message Id="XMLNUM_URI_Component_Set_Null" Text="'{0}' can not be set to null"/>
+            <Message Id="XMLNUM_URI_Component_Not_Conformant" Text="'{0}' is NOT conformant to '{1}'"/>
+            <Message Id="XMLNUM_URI_No_Scheme" Text="No scheme found in URI"/>
+            <Message Id="XMLNUM_URI_NullHost" Text="'{0}', '{1}' may not be specified if host is not specified"/>
+            <Message Id="XMLNUM_URI_NullPath" Text="'{0}', '{1}' may not be specified if path is not specified"/>
+            <Message Id="XMLNUM_URI_PortNo_Invalid" Text="Port number '{0}' must be in (0, 65535)"/>
+            <Message Id="XMLNUM_DBL_FLT_InvalidType" Text="Type '{0}' is invalid: internal error"/>
             <Message Id="Regex_Result_Not_Set" Text="A result is not set."/>
             <Message Id="Regex_CompactRangesError" Text="CompactRanges - Internal Error"/>
             <Message Id="Regex_MergeRangesTypeMismatch" Text="Merge Ranges - Mismatched type"/>
