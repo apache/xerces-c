@@ -315,7 +315,7 @@ $set 2
 29  '{0}' is not allowed for the content of a '{1}' model group.  Only element, group, choice, sequence and any are allowed.
 30  Unknown base type '{0}' for type '{1}'.
 31  A <{0}> declaration that has a ref attribute, cannot have child content.
-32  {1}
+32  {0}
 33  Prohibited Attribute {0} is found.
 34  Illegal xml:space declaration.
 35  Schema in {0} has a different target namespace from the one specified in the instance document {1}.
@@ -593,22 +593,22 @@ $set 3
 230  NOTATION '{0}' must be a valid QName
 231  Value '{0}' does not match any member types of the union
 232  Value '{0}' is NOT a valid URI
-233   Empty string encountered.
-234   String contains whitespaces only.
-235   More than one decimal points encountered.
-236   Invalid chars encountered.
-237   Null pointer encountered.
-238   Cannot construct URI with null/empty '{0}'
-239   '{0}', '{1}' can only be set for a generic URI
-240   '{0}' contains invalid escape sequence '{1}'
-241   '{0}' contains invalid char '{1}'
-242   '{0}' can not be set to null
-243   '{0}' is NOT conformant to '{1}'
-244   No scheme found in URI
-245   '{0}', '{1}' may not be specified if host is not specified
-246   '{0}', '{1}' may not be specified if path is not specified
-247   Port number '{0}' must be in (0, 65535)
-248   Type '{0}' is invalid: internal error
+233  Empty string encountered.
+234  String contains whitespaces only.
+235  More than one decimal points encountered.
+236  Invalid characters encountered.
+237  Null pointer encountered.
+238  Cannot construct URI with null/empty '{0}'
+239  '{0}', '{1}' can only be set for a generic URI
+240  '{0}' contains invalid escape sequence '{1}'
+241  '{0}' contains invalid char '{1}'
+242  '{0}' can not be set to null
+243  '{0}' is NOT conformant to '{1}'
+244  No scheme found in URI
+245  '{0}', '{1}' may not be specified if host is not specified
+246  '{0}', '{1}' may not be specified if path is not specified
+247  Port number '{0}' must be in (0, 65535)
+248  Type '{0}' is invalid: internal error
 249  A result is not set.
 250  CompactRanges - Internal Error
 251  Merge Ranges - Mismatched type
