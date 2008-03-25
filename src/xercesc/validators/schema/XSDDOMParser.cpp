@@ -136,6 +136,8 @@ void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
             fAnnotationBuf.append(fScanner->getURIText(namespaceContext->elementAt(j)->fURIId));
             fAnnotationBuf.append(chDoubleQuote);
             fAnnotationBuf.append(chSpace);
+
+            fURIs->addElement(prefId);
         }
     }
 
