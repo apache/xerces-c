@@ -35,6 +35,7 @@ CXX = @CXX@
 AR = @AR@
 RANLIB = @RANLIB@
 CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
 CXXFLAGS = @CXXFLAGS@
 LIBTOOL = @LIBTOOL@
 LDFLAGS = @LDFLAGS@
@@ -50,7 +51,7 @@ PKGDATA=$(ICU_PREFIX)/bin/pkgdata
 # Add -v if you want to see more verbose output.
 #
 PKGDATAOPTS=-d . -M '"CC=$(CC)" "CXX=$(CXX)" "AR=$(AR)" "RANLIB=$(RANLIB)" \
-"CPPFLAGS=$(CPPFLAGS)" "CXXFLAGS=$(CXXFLAGS)" "LDFLAGS=$(LDFLAGS)"'
+"CPPFLAGS=$(CPPFLAGS)" "CFLAGS=$(CFLAGS)" "CXXFLAGS=$(CXXFLAGS)" "LDFLAGS=$(LDFLAGS)"'
 
 # Resource shortname
 PKGNAME=xercesc_messages_$(INTERFACE_VER_U)
