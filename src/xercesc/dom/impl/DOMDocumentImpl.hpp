@@ -99,9 +99,11 @@ public:
 
     void                         setDocumentType(DOMDocumentType *doctype);
 
+public:
     // Add all functions that are pure virtual in DOMNODE
     DOMNODE_FUNCTIONS;
 
+public:
     // Add all functions that are pure virtual in DOMDocument
     virtual DOMAttr*             createAttribute(const XMLCh *name);
     virtual DOMCDATASection*     createCDATASection(const XMLCh *data);
@@ -269,17 +271,18 @@ public:
                                                  const XMLCh *namespaceURI,
                                                  const XMLCh *localName);
 
-private:
+protected:
     //Internal helper functions
     virtual DOMNode*             importNode(const DOMNode *source, bool deep, bool cloningNode);
 
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     DOMDocumentImpl(const DOMDocumentImpl &);
     DOMDocumentImpl & operator = (const DOMDocumentImpl &);
 
-private:
+protected:
     // -----------------------------------------------------------------------
     //  data
     // -----------------------------------------------------------------------

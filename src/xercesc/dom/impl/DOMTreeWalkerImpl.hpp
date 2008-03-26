@@ -37,7 +37,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class CDOM_EXPORT DOMTreeWalkerImpl : public DOMTreeWalker {
-    private:
+protected:
         // The whatToShow mask.
         unsigned long fWhatToShow;
 
@@ -53,7 +53,7 @@ class CDOM_EXPORT DOMTreeWalkerImpl : public DOMTreeWalker {
         // The expandEntity reference flag.
         bool fExpandEntityReferences;
 
-	public:
+public:
     // Implementation Note: No state is kept except the data above
     // (fWhatToShow, fNodeFilter, fCurrentNode, fRoot) such that
     // setters could be created for these data values and the

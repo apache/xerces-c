@@ -33,9 +33,10 @@ class DOMImplementation;
 
 class CDOM_EXPORT DOMImplementationListImpl: public DOMImplementationList
 {
-private:
+protected:
     RefVectorOf<DOMImplementation>   *fList;
 
+private:
     // Unused, and unimplemented constructors, operators, etc.
     DOMImplementationListImpl(const DOMImplementationListImpl & other);
     DOMImplementationListImpl & operator = (const DOMImplementationListImpl & other);

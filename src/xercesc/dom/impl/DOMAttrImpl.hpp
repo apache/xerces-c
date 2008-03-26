@@ -52,7 +52,7 @@ public:
     DOMParentNode      fParent;
     const XMLCh       *fName;
 
-private:
+protected:
     const DOMTypeInfoImpl *fSchemaType;
 
 public:
@@ -60,9 +60,11 @@ public:
     DOMAttrImpl(const DOMAttrImpl &other, bool deep=false);
     virtual ~DOMAttrImpl();
 
+public:
      // Add all functions that are pure virtual in DOMNODE
     DOMNODE_FUNCTIONS;
 
+public:
     virtual const XMLCh *       getName() const;
     virtual bool                getSpecified() const;
     virtual const XMLCh *       getValue() const;
@@ -86,9 +88,10 @@ public:
    // helper to remove this attr from from the id map if it is in there
    virtual void removeAttrFromIDNodeMap();
 
-private:
+protected:
     void getTextValue(DOMNode* node, XMLBuffer& buf) const;
 
+private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------    

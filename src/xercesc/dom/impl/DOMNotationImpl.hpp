@@ -57,9 +57,11 @@ public:
 
     virtual ~DOMNotationImpl();
 
-     // Declare all of the functions from DOMNode.
+public:
+    // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 
+public:
     //
     // The Public Identifier for this Notation. If no public identifier
     // was specified, this will be null.

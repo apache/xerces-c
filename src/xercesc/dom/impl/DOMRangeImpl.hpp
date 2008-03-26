@@ -46,7 +46,7 @@ class       DOMText;
 class       MemoryManager;
 
 class CDOM_EXPORT DOMRangeImpl: public DOMRange {
-private:
+protected:
     enum TraversalType {
         EXTRACT_CONTENTS = 1,
         CLONE_CONTENTS   = 2,
@@ -127,7 +127,7 @@ public:
     void updateRangeForInsertedText(DOMNode* node, XMLSize_t offset, XMLSize_t count);
     void updateRangeForDeletedNode(DOMNode* node);
 
-private:
+protected:
     //setter functions
     void        setStartContainer(const DOMNode* node);
     void        setStartOffset(XMLSize_t offset) ;
@@ -164,6 +164,7 @@ private:
     DOMNode*    traverseTextNode( DOMNode *n, bool isLeft, int how );
     DOMNode*    getSelectedNode( DOMNode *container, int offset );
 
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------

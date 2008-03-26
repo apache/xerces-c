@@ -67,9 +67,11 @@ public:
     DOMElementImpl(const DOMElementImpl &other, bool deep=false);
     virtual ~DOMElementImpl();
 
+public:
     // Declare functions from DOMNode.  They all must be implemented by this class
     DOMNODE_FUNCTIONS;
 
+public:
     // Functions introduced on Element...
     virtual const XMLCh*      getAttribute(const XMLCh *name) const;
     virtual DOMAttr*          getAttributeNode(const XMLCh *name) const;

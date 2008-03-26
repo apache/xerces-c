@@ -44,13 +44,11 @@ class CDOM_EXPORT DOMAttrMapImpl : public DOMNamedNodeMap
 protected:
     DOMNodeVector*    fNodes;
     DOMNode*          fOwnerNode;       // the node this map belongs to
+    bool              attrDefaults;
 
     virtual void	cloneContent(const DOMAttrMapImpl *srcmap);
 
     bool            readOnly();  // revisit.  Look at owner node read-only.
-
-private:
-    bool attrDefaults;
 
 public:
     DOMAttrMapImpl(DOMNode *ownerNod);

@@ -32,9 +32,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 class CDOM_EXPORT DOMStringListImpl: public XMemory,
                                      public DOMStringList
 {
-private:
+protected:
     RefVectorOf<XMLCh>   *fList;
 
+private:
     // Unused, and unimplemented constructors, operators, etc.
     DOMStringListImpl(const DOMStringListImpl & other);
     DOMStringListImpl & operator = (const DOMStringListImpl & other);

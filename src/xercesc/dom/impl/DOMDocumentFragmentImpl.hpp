@@ -40,19 +40,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class CDOM_EXPORT DOMDocumentFragmentImpl: public DOMDocumentFragment {
-private:
+protected:
     DOMNodeImpl     fNode;
     DOMParentNode   fParent;
 
-
-
 protected:
     DOMDocumentFragmentImpl(DOMDocument *);
-
-private:
     DOMDocumentFragmentImpl(const DOMDocumentFragmentImpl &other, bool deep);
     friend class DOMDocumentImpl;
 
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -61,6 +58,7 @@ private:
 public:
     virtual ~DOMDocumentFragmentImpl();
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 };

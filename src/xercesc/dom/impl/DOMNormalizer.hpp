@@ -104,6 +104,7 @@ private:
     DOMNormalizer ( const DOMNormalizer& toCopy);
     DOMNormalizer& operator= (const DOMNormalizer& other);
 
+protected:
     /**
      * Recursively normalizes a node
      */

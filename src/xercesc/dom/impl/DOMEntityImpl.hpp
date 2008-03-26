@@ -42,7 +42,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class    DOMEntityReference;
 
 class CDOM_EXPORT DOMEntityImpl: public DOMEntity {
-private:
+protected:
     DOMNodeImpl      fNode;
     DOMParentNode    fParent;
 
@@ -58,7 +58,8 @@ private:
     const XMLCh*          fXmlVersion;
     const XMLCh*          fBaseURI;
     bool                  fEntityRefNodeCloned;
-    // private helper function
+    
+    // helper function
     void	cloneEntityRefTree() const;
 
     friend class XercesDOMParser;
@@ -68,10 +69,11 @@ public:
     DOMEntityImpl(const DOMEntityImpl &other, bool deep=false);
     virtual ~DOMEntityImpl();
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 
-
+public:
     virtual const XMLCh *   getPublicId() const;
     virtual const XMLCh *   getSystemId() const;
     virtual const XMLCh *   getNotationName() const;

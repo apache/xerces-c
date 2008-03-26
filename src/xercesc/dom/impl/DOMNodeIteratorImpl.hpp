@@ -42,7 +42,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
-    private:
+    protected:
         //
         // Data
         //
@@ -109,7 +109,7 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         virtual void release();
         void removeNode (DOMNode* node);
 
-    private:
+    protected:
         DOMNode* matchNodeOrParent (DOMNode* node);
         DOMNode* nextNode (DOMNode* node, bool visitChildren);
         DOMNode* previousNode (DOMNode* node);

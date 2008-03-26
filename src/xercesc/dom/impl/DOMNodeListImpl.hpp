@@ -52,9 +52,10 @@ class DOMNode;
 
 class CDOM_EXPORT DOMNodeListImpl: public DOMNodeList
 {
-private:
+protected:
     DOMParentNode   *fNode;
 
+private:
     // Unused, and unimplemented constructors, operators, etc.
     DOMNodeListImpl();
     DOMNodeListImpl(const DOMNodeListImpl & other);

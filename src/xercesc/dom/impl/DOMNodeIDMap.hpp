@@ -53,7 +53,7 @@ public:
     DOMNodeIDMap(int initialSize, DOMDocument *doc);    // Create a new hash table, sized to hold "initialSize"
                                      //  Entries.  It will automatically grow if need be.
 
-    virtual ~DOMNodeIDMap();
+    ~DOMNodeIDMap();
 
 private:
     DOMNodeIDMap(const DOMNodeIDMap &other);   // No copy, assignement, comparison.
@@ -79,8 +79,6 @@ private:
     unsigned int  fMaxEntries;              // The max number of entries to use before
                                             //   growing the table.
     DOMDocument *fDoc;                      // The owning document.
-
-
 };
 
 XERCES_CPP_NAMESPACE_END

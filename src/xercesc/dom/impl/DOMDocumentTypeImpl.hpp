@@ -45,7 +45,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMNamedNodeMapImpl;
 
 class CDOM_EXPORT DOMDocumentTypeImpl: public DOMDocumentType {
-private:
+protected:
     DOMNodeImpl          fNode;
     DOMParentNode        fParent;
     DOMChildNode         fChild;
@@ -77,9 +77,11 @@ public:
     DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool heap, bool deep=false);
     virtual ~DOMDocumentTypeImpl();
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 
+public:
     virtual void setOwnerDocument(DOMDocument *doc);
     virtual DOMNamedNodeMap * getEntities() const;
     virtual const XMLCh *       getName() const;

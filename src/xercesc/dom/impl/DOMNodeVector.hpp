@@ -47,7 +47,7 @@ private:
     unsigned int   nextFreeSlot;
     void           init(DOMDocument *doc, unsigned int size);
     void           checkSpace();
-    
+
     // unimplemented
     DOMNodeVector ( const DOMNodeVector& toCopy);
     DOMNodeVector& operator= (const DOMNodeVector& other);

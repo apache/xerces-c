@@ -81,7 +81,7 @@ public:
     void setType(const XMLCh* type);
     void setRelatedData(void* relatedData);
 
-private :
+private:
     /* Unimplemented constructors and operators */
 
     /* Copy constructor */
@@ -90,6 +90,7 @@ private :
     /* Assignment operator */
     DOMErrorImpl& operator=(const DOMErrorImpl&);
 
+protected:
     // -----------------------------------------------------------------------
     //  Private data members
     //

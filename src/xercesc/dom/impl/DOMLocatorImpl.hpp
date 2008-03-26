@@ -84,6 +84,7 @@ private :
     /* Assignment operator */
     DOMLocatorImpl& operator=(const DOMLocatorImpl&);
 
+protected:
     // -----------------------------------------------------------------------
     //  Private data members
     //

@@ -63,10 +63,11 @@ public:
     // non-standard extension
     virtual bool            isIgnorableWhitespace() const;
 
+public:
     // Declare the functions coming from DOMNode.
     DOMNODE_FUNCTIONS;
 
-
+public:
     // All of the functions coming from DOMCharacterData
     virtual const XMLCh*    getData() const;
     virtual XMLSize_t       getLength() const;

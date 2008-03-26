@@ -53,10 +53,11 @@ public:
     DOMCommentImpl(const DOMCommentImpl &other, bool deep);
     virtual ~DOMCommentImpl();
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 
-
+public:
     // Functions from DOMCharacterData
     virtual void          appendData(const  XMLCh *data);
     virtual void          deleteData(XMLSize_t offset, XMLSize_t count);

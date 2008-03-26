@@ -122,7 +122,7 @@ public:
     static const unsigned short fDEFAULT_VALUES;
     
 
-private:
+protected:
     // implements a simple map between the name and its enum value
     DOMConfigurationFeature getFeatureFlag(const XMLCh* name) const;
 

@@ -80,7 +80,7 @@ public:
     virtual void setStringProperty(PSVIProperty prop, const XMLCh* value);
     virtual void setNumericProperty(PSVIProperty prop, int value);
   
-private:
+protected:
     int             fBitFields;
     const XMLCh*    fTypeName;
     const XMLCh*    fTypeNamespace;
@@ -88,7 +88,8 @@ private:
     const XMLCh*    fMemberTypeNamespace;
     const XMLCh*    fDefaultValue;
     const XMLCh*    fNormalizedValue;
-    
+
+private:    
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------

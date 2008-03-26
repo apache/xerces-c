@@ -53,12 +53,13 @@ public:
     virtual bool getIssueFatalErrorIfNotFound() const;
     virtual void release();
 
-private:
 
+private:
     /** unimplemented copy ctor and assignment operator */
     DOMLSInputImpl(const DOMLSInputImpl&);
     DOMLSInputImpl & operator = (const DOMLSInputImpl&);
 
+protected:
     // -----------------------------------------------------------------------
     //  Private data members
     //

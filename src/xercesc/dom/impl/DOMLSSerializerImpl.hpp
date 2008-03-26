@@ -93,6 +93,7 @@ private:
     DOMLSSerializerImpl(const DOMLSSerializerImpl&);
     DOMLSSerializerImpl & operator = (const DOMLSSerializerImpl&);
 
+protected:
     /** helper **/
     void                          processNode(const DOMNode* const);
 

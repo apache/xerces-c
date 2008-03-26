@@ -45,7 +45,7 @@ class    DocumentImpl;
 
 
 class CDOM_EXPORT DOMProcessingInstructionImpl: public DOMProcessingInstruction {
-private:
+protected:
     DOMNodeImpl   fNode;
     DOMChildNode  fChild;
     // use fCharacterData to store its data so that those character utitlites can be used
@@ -62,9 +62,11 @@ public:
                               bool deep=false);
     virtual ~DOMProcessingInstructionImpl();
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 
+public:
     virtual const XMLCh *getData() const;
     virtual const XMLCh *getTarget() const;
     virtual void setData(const XMLCh *arg);

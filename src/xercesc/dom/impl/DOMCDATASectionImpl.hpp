@@ -43,7 +43,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection {
-private:
+protected:
     DOMNodeImpl           fNode;
     DOMChildNode          fChild;
     DOMCharacterDataImpl  fCharacterData;
@@ -66,10 +66,11 @@ public:
     virtual bool         isIgnorableWhitespace() const;
 
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
 
-
+public:
     // Functions introduced by DOMCharacterData
     virtual const XMLCh* getData() const;
     virtual XMLSize_t    getLength() const;

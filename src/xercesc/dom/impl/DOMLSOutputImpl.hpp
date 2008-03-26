@@ -51,6 +51,7 @@ private:
     DOMLSOutputImpl(const DOMLSOutputImpl&);
     DOMLSOutputImpl & operator = (const DOMLSOutputImpl&);
 
+protected:
     // -----------------------------------------------------------------------
     //  Private data members
     //

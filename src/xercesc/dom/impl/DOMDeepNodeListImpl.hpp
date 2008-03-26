@@ -41,7 +41,7 @@ class DOMNode;
 
 
 class CDOM_EXPORT DOMDeepNodeListImpl: public DOMNodeList {
-private:
+protected:
     const DOMNode*   fRootNode;
     const XMLCh*     fTagName;
     bool             fMatchAll;
@@ -64,8 +64,10 @@ public:
     virtual DOMNode*     item(unsigned int index) const;
     DOMNode*             cacheItem(unsigned int index);
 
-private:
+protected:
     DOMNode*          nextMatchingElementAfter(DOMNode *current);
+    
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------

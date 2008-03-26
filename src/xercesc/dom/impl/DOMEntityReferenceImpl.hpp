@@ -43,7 +43,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT DOMEntityReferenceImpl: public DOMEntityReference
 {
-private:
+protected:
     DOMNodeImpl      fNode;
     DOMParentNode    fParent;
     DOMChildNode     fChild;
@@ -59,9 +59,11 @@ public:
     DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other, bool deep=false);
     virtual ~DOMEntityReferenceImpl();
 
+public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
-
+    
+public:
     virtual void setReadOnly(bool readOnly,bool deep);
 
 private:

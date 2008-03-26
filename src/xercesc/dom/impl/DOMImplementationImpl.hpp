@@ -47,8 +47,10 @@ private:
     DOMImplementationImpl(const DOMImplementationImpl &);
     DOMImplementationImpl & operator = (const DOMImplementationImpl &);
     friend class XMLInitializer;
+    
 protected:
     DOMImplementationImpl() {};
+    
 public:
     virtual ~DOMImplementationImpl() {};
     static DOMImplementationImpl*   getDOMImplementationImpl();
