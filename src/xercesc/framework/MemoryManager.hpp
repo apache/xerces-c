@@ -59,6 +59,11 @@ public:
       * This method is called to obtain the memory manager that should be
       * used to allocate memory used in exceptions. If the same memory
       * manager can be used, simply return 'this' from this function.
+      * Note, however, that if there is a possibility that an exception
+      * thrown can outlive the memory manager (for example, because the
+      * memory manager object is allocated on the stack or is managed by
+      * a stack-bound object), it is recommended that you return
+      * XMLPlatformUtils::fgMemoryManager.
       *
       * @return A pointer to the memory manager
       */
