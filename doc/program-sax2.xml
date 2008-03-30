@@ -473,7 +473,7 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             </table>
             <p/>
 
-            <anchor name="builder-HandleMultipleImports"/>
+            <anchor name="HandleMultipleImports"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validation/schema/handle-multiple-imports</em></th></tr>
                 <tr><th><em>true:</em></th><td> During schema validation allow multiple schemas with the same namespace
