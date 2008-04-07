@@ -56,7 +56,6 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/XMLUri.hpp>
-#include <xercesc/util/PSVIUni.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/internal/XSAXMLScanner.hpp>
@@ -1217,8 +1216,8 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
         return 0;
     }
     else if(!topLevel && !nameEmpty) {
-        reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDisallowed, 
-                          SchemaSymbols::fgATT_NAME, PSVIUni::fgLocal, childElem->getLocalName());
+        reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDisallowedLocal, 
+                          SchemaSymbols::fgATT_NAME, childElem->getLocalName());
         return 0;
     }
 

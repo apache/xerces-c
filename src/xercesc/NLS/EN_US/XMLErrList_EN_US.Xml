@@ -90,8 +90,10 @@
             <Message Id="IncludeNamespaceDifference" Text="Included schema '{0}' has a different targetNameSpace '{1}'"/>
             <Message Id="OnlyAnnotationExpected" Text="At most one &lt;annotation&gt; element is expected in the content."/>
             <Message Id="InvalidAttributeContent" Text="The content must be (annotation?, simpleType?) for attribute '{0}={1}'"/>
-            <Message Id="AttributeRequired" Text="Attribute '{0}' must appear in '{1}' '{2}' declarations"/>
-            <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in '{1}' '{2}' declarations"/>
+            <Message Id="AttributeRequiredGlobal" Text="Attribute '{0}' must appear in global &lt;{1}&gt; declarations"/>
+            <Message Id="AttributeRequiredLocal" Text="Attribute '{0}' must appear in local &lt;{1}&gt; declarations"/>
+            <Message Id="AttributeDisallowedGlobal" Text="Attribute '{0}' cannot appear in global &lt;{1}&gt; declarations"/>
+            <Message Id="AttributeDisallowedLocal" Text="Attribute '{0}' cannot appear in local &lt;{1}&gt; declarations"/>
             <Message Id="InvalidMin2MaxOccurs" Text="Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'"/>
             <Message Id="AnyAttributeContentError" Text="'anyAttribute' elements can contain at most one 'annotation' element in their children"/>
             <Message Id="NoNameGlobalElement" Text="Global &lt;{0}&gt; must have a name"/>

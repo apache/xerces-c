@@ -53,16 +53,6 @@ static const XMLCh fgUnbounded[] =
     chLatin_e, chLatin_d, chNull
 };
 
-static const XMLCh fgLocal[] =
-{
-    chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_l, chNull
-};
-
-static const XMLCh fgGlobal[] =
-{
-    chLatin_g, chLatin_l, chLatin_o, chLatin_b, chLatin_a, chLatin_l, chNull
-};
-
 // ---------------------------------------------------------------------------
 //  Static member data initialization
 // ---------------------------------------------------------------------------
@@ -198,7 +188,6 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         );
     }
 
-    const XMLCh*     contextStr = (isTopLevel) ? fgGlobal : fgLocal;
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
     unsigned int     attrCount = eltAttrs->getLength();
     XMLByte          attList[A_Count];
@@ -239,7 +228,8 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                 XMLString::equals(elemName, SchemaSymbols::fgELT_DOCUMENTATION)) {
 
                 schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
-                    XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
+                                          isTopLevel?XMLErrs::AttributeDisallowedGlobal:XMLErrs::AttributeDisallowedLocal, 
+                                          attName, elemName);
             }
             else if (nonXSAttList)
             {
@@ -263,7 +253,8 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         catch(...) {
 
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
-                XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
+                                      isTopLevel?XMLErrs::AttributeDisallowedGlobal:XMLErrs::AttributeDisallowedLocal, 
+                                      attName, elemName);
             bContinue=true;
         }
         if(bContinue)
@@ -283,7 +274,8 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         }
         else {
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
-                XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
+                                      isTopLevel?XMLErrs::AttributeDisallowedGlobal:XMLErrs::AttributeDisallowedLocal, 
+                                      attName, elemName);
         }
     }
 
@@ -293,8 +285,9 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
     for (unsigned int j=0; j < A_Count; j++) {
 
         if ((fgElemAttTable[elemContext][j] & Att_Required) && attList[j] == 0) {
-            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeRequired,
-                                      fAttNames[j], contextStr, elemName);
+            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, 
+                                      isTopLevel?XMLErrs::AttributeRequiredGlobal:XMLErrs::AttributeRequiredLocal, 
+                                      fAttNames[j], elemName);
         }
     }
 }
