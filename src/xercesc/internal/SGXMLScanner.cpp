@@ -1515,36 +1515,31 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         // switch grammar if the typeinfo has a different grammar (happens when there is xsi:type)
         XMLCh* typeName = typeinfo->getTypeName();
-        //anonymous used to have a name starting with #
-        //const XMLCh poundStr[] = {chPound, chNull};
-        //if (!XMLString::startsWith(typeName, poundStr)) {
-        if (!typeinfo->getAnonymous()) {        
-            const int comma = XMLString::indexOf(typeName, chComma);
-            if (comma > 0) {
-                XMLBuffer prefixBuf(comma+1, fMemoryManager);
-                prefixBuf.append(typeName, comma);
-                const XMLCh* uriStr = prefixBuf.getRawBuffer();
+        const int comma = XMLString::indexOf(typeName, chComma);
+        if (comma > 0) {
+            XMLBuffer prefixBuf(comma+1, fMemoryManager);
+            prefixBuf.append(typeName, comma);
+            const XMLCh* uriStr = prefixBuf.getRawBuffer();
 
-                bool errorCondition = !switchGrammar(uriStr) && fValidate;
-                if (errorCondition && !laxThisOne)
-                {
-                    fValidator->emitError
-                    (
-                        XMLValid::GrammarNotFound
-                        , prefixBuf.getRawBuffer()
-                    );
-                }
+            bool errorCondition = !switchGrammar(uriStr) && fValidate;
+            if (errorCondition && !laxThisOne)
+            {
+                fValidator->emitError
+                (
+                    XMLValid::GrammarNotFound
+                    , prefixBuf.getRawBuffer()
+                );
             }
-            else if (comma == 0) {
-                bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
-                if (errorCondition && !laxThisOne)
-                {
-                    fValidator->emitError
-                    (
-                        XMLValid::GrammarNotFound
-                        , XMLUni::fgZeroLenString
-                    );
-                }
+        }
+        else if (comma == 0) {
+            bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
+            if (errorCondition && !laxThisOne)
+            {
+                fValidator->emitError
+                (
+                    XMLValid::GrammarNotFound
+                    , XMLUni::fgZeroLenString
+                );
             }
         }
     }

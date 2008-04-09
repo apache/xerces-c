@@ -413,6 +413,22 @@
 			<current status="accepted" date="2008-02-25"/>
 		</schemaTest>
 	</testGroup>
+	<testGroup name="XERCESC-1776">
+		<annotation>
+			<documentation>Bug in schema processing (using the "xsd:extension" for an another file) since v2.8.0</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1776"/>
+		<schemaTest name="XERCESC-1776-1">
+			<schemaDocument xlink:href="./XERCESC-1776/smerf.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-04-09"/>
+		</schemaTest>
+		<instanceTest name="XERCESC-1776-2">
+			<instanceDocument xlink:href="./XERCESC-1776/smerf.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-04-09"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-1777">
 		<annotation>
 			<documentation>Restriction checking code resolves an element from a wrong schema grammar</documentation>
