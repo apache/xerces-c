@@ -1,9 +1,0 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
-
-<s1 title="Installation">
-    <s2 title="Window NT/98">
-        <p>This is a source release that has only been built and tested on Win32 to date.  Unzip the &XercesPZipFile; zip file and follow the build instructions in the file README.TXT.</p>
-    </s2>
-
-</s1>
