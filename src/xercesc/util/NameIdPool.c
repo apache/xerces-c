@@ -84,6 +84,7 @@ template <class TElem> NameIdPool<TElem>::~NameIdPool()
 template <class TElem> bool
 NameIdPool<TElem>::containsKey(const XMLCh* const key) const
 {
+    if (fIdCounter == 0) return false;
     return fBucketList->containsKey(key);
 }
 
@@ -105,12 +106,14 @@ template <class TElem> void NameIdPool<TElem>::removeAll()
 template <class TElem> TElem*
 NameIdPool<TElem>::getByKey(const XMLCh* const key)
 {
+    if (fIdCounter == 0) return 0;
     return fBucketList->get(key);
 }
 
 template <class TElem> const TElem*
 NameIdPool<TElem>::getByKey(const XMLCh* const key) const
 {
+    if (fIdCounter == 0) return 0;
     return fBucketList->get(key);
 }
 
@@ -147,7 +150,7 @@ template <class TElem>
 unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
 {
     // First see if the key exists already. If so, its an error
-    if(fBucketList->containsKey(elemToAdopt->getKey()))
+    if(containsKey(elemToAdopt->getKey()))
     {
         ThrowXMLwithMemMgr1
         (

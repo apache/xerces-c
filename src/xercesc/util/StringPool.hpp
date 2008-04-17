@@ -153,10 +153,7 @@ inline bool XMLStringPool::exists(const XMLCh* const newString) const
 
 inline bool XMLStringPool::exists(const unsigned int id) const
 {
-    if (!id || (id >= fCurId))
-        return false;
-
-    return true;
+    return (id > 0 && (id < fCurId));
 }
 
 inline const XMLCh* XMLStringPool::getValueForId(const unsigned int id) const
