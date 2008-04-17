@@ -624,19 +624,16 @@ inline void XMLReader::setXMLVersion(const XMLVersion version)
 // ---------------------------------------------------------------------------
 inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 {
-    XMLSize_t count = fCharIndex;
+    const XMLCh* cursor = &fCharBuf[fCharIndex], *start = cursor, *end = &fCharBuf[fCharsAvail];
 
-    while (fCharIndex < fCharsAvail)
-    {
-        if (!isPlainContentChar(fCharBuf[fCharIndex]))
-            break;
-        fCharIndex++;
-    }
+    while (cursor < end && isPlainContentChar(*cursor))
+        cursor++;
 
-    if (count != fCharIndex)
+    if (cursor != start)
     {
-        fCurCol    += (unsigned long)(fCharIndex - count);
-        dest.append(&fCharBuf[count], fCharIndex - count);
+        fCharIndex  = cursor - fCharBuf;
+        fCurCol    += (unsigned long)(cursor - start);
+        dest.append(start, cursor - start);
     }
 }
 
