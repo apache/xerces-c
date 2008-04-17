@@ -36,23 +36,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  NameIdPoolBucketElem: Constructors and Destructor
-// ---------------------------------------------------------------------------
-template <class TElem> NameIdPoolBucketElem<TElem>::
-NameIdPoolBucketElem(TElem* const                           value
-                    , NameIdPoolBucketElem<TElem>* const    next) :
-    fData(value)
-    , fNext(next)
-{
-}
-
-template <class TElem> NameIdPoolBucketElem<TElem>::~NameIdPoolBucketElem()
-{
-    // Nothing to do
-}
-
-
-// ---------------------------------------------------------------------------
 //  NameIdPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
@@ -64,18 +47,11 @@ NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
-    , fHashModulus(hashModulus)
 {
-    if (!fHashModulus)
+    if (!hashModulus)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, fMemoryManager);
 
-    // Allocate the bucket list and zero them
-    fBucketList = (NameIdPoolBucketElem<TElem>**) fMemoryManager->allocate
-    (
-        fHashModulus * sizeof(NameIdPoolBucketElem<TElem>*)
-    ); //new NameIdPoolBucketElem<TElem>*[fHashModulus];
-    memset(fBucketList, 0, sizeof(fBucketList[0]) * fHashModulus);
-
+    fBucketList = new (fMemoryManager) RefHashTableOf<TElem>(hashModulus, fMemoryManager);
     //
     //  Allocate the initial id pointers array. We don't have to zero them
     //  out since the fIdCounter value tells us which ones are valid. The
@@ -98,9 +74,7 @@ template <class TElem> NameIdPool<TElem>::~NameIdPool()
     //
     fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
 
-    // Remove all elements then delete the bucket list
-    removeAll();
-    fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
+    delete fBucketList;
 }
 
 
@@ -110,9 +84,7 @@ template <class TElem> NameIdPool<TElem>::~NameIdPool()
 template <class TElem> bool
 NameIdPool<TElem>::containsKey(const XMLCh* const key) const
 {
-    unsigned int hashVal;
-    const NameIdPoolBucketElem<TElem>* findIt = findBucketElem(key, hashVal);
-    return (findIt != 0);
+    return fBucketList->containsKey(key);
 }
 
 
@@ -120,27 +92,7 @@ template <class TElem> void NameIdPool<TElem>::removeAll()
 {
     if (fIdCounter == 0) return;
 
-    // Clean up the buckets first
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
-    {
-        NameIdPoolBucketElem<TElem>* curElem = fBucketList[buckInd];
-        NameIdPoolBucketElem<TElem>* nextElem;
-        while (curElem)
-        {
-            // Save the next element before we hose this one
-            nextElem = curElem->fNext;
-
-            delete curElem->fData;
-            // destructor is empty...
-            // curElem->~NameIdPoolBucketElem();
-            fMemoryManager->deallocate(curElem);
-
-            curElem = nextElem;
-        }
-
-        // Empty out the bucket
-        fBucketList[buckInd] = 0;
-    }
+    fBucketList->removeAll();
 
     // Reset the id counter
     fIdCounter = 0;
@@ -153,21 +105,13 @@ template <class TElem> void NameIdPool<TElem>::removeAll()
 template <class TElem> TElem*
 NameIdPool<TElem>::getByKey(const XMLCh* const key)
 {
-    unsigned int hashVal;
-    NameIdPoolBucketElem<TElem>* findIt = findBucketElem(key, hashVal);
-    if (!findIt)
-        return 0;
-    return findIt->fData;
+    return fBucketList->get(key);
 }
 
 template <class TElem> const TElem*
 NameIdPool<TElem>::getByKey(const XMLCh* const key) const
 {
-    unsigned int hashVal;
-    const NameIdPoolBucketElem<TElem>* findIt = findBucketElem(key, hashVal);
-    if (!findIt)
-        return 0;
-    return findIt->fData;
+    return fBucketList->get(key);
 }
 
 template <class TElem> TElem*
@@ -203,8 +147,7 @@ template <class TElem>
 unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
 {
     // First see if the key exists already. If so, its an error
-    unsigned int hashVal;
-    if (findBucketElem(elemToAdopt->getKey(), hashVal))
+    if(fBucketList->containsKey(elemToAdopt->getKey()))
     {
         ThrowXMLwithMemMgr1
         (
@@ -215,11 +158,7 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
         );
     }
 
-    // Create a new bucket element and add it to the appropriate list
-    NameIdPoolBucketElem<TElem>* newBucket =
-        new (fMemoryManager->allocate(sizeof(NameIdPoolBucketElem<TElem>)))
-        NameIdPoolBucketElem<TElem>(elemToAdopt,fBucketList[hashVal]);
-    fBucketList[hashVal] = newBucket;
+    fBucketList->put((void*)elemToAdopt->getKey(), elemToAdopt);
 
     //
     //  Give this new one the next available id and add to the pointer list.
@@ -254,52 +193,6 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
 
 
 // ---------------------------------------------------------------------------
-//  NameIdPool: Private methods
-// ---------------------------------------------------------------------------
-template <class TElem>
-NameIdPoolBucketElem<TElem>* NameIdPool<TElem>::
-findBucketElem(const XMLCh* const key, unsigned int& hashVal)
-{
-    // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus, fMemoryManager);
-
-    assert(hashVal < fHashModulus);        
-
-    // Search that bucket for the key
-    NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
-    while (curElem)
-    {
-        if (XMLString::equals(key, curElem->fData->getKey()))
-            return curElem;
-        curElem = curElem->fNext;
-    }
-    return 0;
-}
-
-template <class TElem>
-const NameIdPoolBucketElem<TElem>* NameIdPool<TElem>::
-findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
-{
-    // Hash the key
-    hashVal = XMLString::hash(key, fHashModulus, fMemoryManager);
-
-    assert(hashVal < fHashModulus);
-
-    // Search that bucket for the key
-    const NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
-    while (curElem)
-    {
-        if (XMLString::equals(key, curElem->fData->getKey()))
-            return curElem;
-
-        curElem = curElem->fNext;
-    }
-    return 0;
-}
-
-
-
-// ---------------------------------------------------------------------------
 //  NameIdPoolEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem> NameIdPoolEnumerator<TElem>::
@@ -311,7 +204,7 @@ NameIdPoolEnumerator(NameIdPool<TElem>* const toEnum
     , fToEnum(toEnum)
     , fMemoryManager(manager)
 {
-        Reset();
+    Reset();
 }
 
 template <class TElem> NameIdPoolEnumerator<TElem>::
