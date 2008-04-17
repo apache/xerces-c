@@ -57,7 +57,7 @@ template <class TElem> void ValueStackOf<TElem>::push(const TElem& toPush)
 
 template <class TElem> const TElem& ValueStackOf<TElem>::peek() const
 {
-    const int curSize = fVector.size();
+    const unsigned int curSize = fVector.size();
     if (curSize == 0)
         ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::Stack_EmptyStack, fVector.getMemoryManager());
 
@@ -66,7 +66,7 @@ template <class TElem> const TElem& ValueStackOf<TElem>::peek() const
 
 template <class TElem> TElem ValueStackOf<TElem>::pop()
 {
-    const int curSize = fVector.size();
+    const unsigned int curSize = fVector.size();
     if (curSize == 0)
         ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::Stack_EmptyStack, fVector.getMemoryManager());
 

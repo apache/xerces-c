@@ -147,12 +147,9 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
         {
             // Handle ASCII in groups instead of single character at a time.
             const XMLByte* srcPtr_save = srcPtr;
-            do
-            {
+            const XMLSize_t chunkSize = (srcEnd-srcPtr)<(outEnd-outPtr)?(srcEnd-srcPtr):(outEnd-outPtr);
+            for(XMLSize_t i=0;i<chunkSize && *srcPtr <= 127;++i)
                 *outPtr++ = XMLCh(*srcPtr++);
-            } while ( srcPtr != srcEnd &&
-                      outPtr != outEnd &&
-                      *srcPtr <= 127 );
             memset(sizePtr,1,srcPtr - srcPtr_save);
             sizePtr += srcPtr - srcPtr_save;
             if (srcPtr == srcEnd || outPtr == outEnd)

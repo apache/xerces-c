@@ -302,7 +302,7 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
     //  Map the prefix to its unique id, from the prefix string pool. If its
     //  not a valid prefix, then its a failure.
     //
-    unsigned int prefixId = fPrefixPool.getId(prefixToMap);
+    unsigned int prefixId = (!prefixToMap || !*prefixToMap)?fGlobalPoolId : fPrefixPool.getId(prefixToMap);
     if (!prefixId)
     {
         unknown = true;
