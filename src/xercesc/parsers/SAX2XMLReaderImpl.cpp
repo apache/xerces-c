@@ -79,6 +79,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fPrefixesStorage(0)
     , fPrefixes(0)
     , fPrefixCounts(0)
+    , fTempQName(0)
     , fDTDHandler(0)
     , fEntityResolver(0)
     , fXMLEntityResolver(0)
@@ -145,9 +146,10 @@ void SAX2XMLReaderImpl::initialize()
 	setDoSchema(true);
 	
     fPrefixesStorage = new (fMemoryManager) XMLStringPool(109, fMemoryManager) ;
-	fPrefixes    = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
-	fTempAttrVec  = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
-	fPrefixCounts = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
+	fPrefixes        = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
+	fTempAttrVec     = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
+	fPrefixCounts    = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
+    fTempQName       = new XMLBuffer(32, fMemoryManager);
 }
 
 
@@ -160,6 +162,7 @@ void SAX2XMLReaderImpl::cleanUp()
     delete fTempAttrVec;
     delete fPrefixCounts;
     delete fGrammarResolver;
+    delete fTempQName;
     // grammar pool must do this
     //delete fURIStringPool;
 }
@@ -693,42 +696,37 @@ startElement(   const   XMLElementDecl&         elemDecl
 
     if (fDocHandler)
     {
-        ArrayJanitor<XMLCh> janElemName(NULL);
-        XMLCh* elemQName = NULL;
+        const QName* qName=elemDecl.getElementName();
+        const XMLCh* baseName=qName->getLocalPart();
+        XMLCh* elemQName = 0;
         if(elemPrefix==0 || *elemPrefix==0)
-            elemQName=(XMLCh*)elemDecl.getBaseName();
-        else if(XMLString::equals(elemPrefix, elemDecl.getElementName()->getPrefix()))
-            elemQName=(XMLCh*)elemDecl.getElementName()->getRawName();
+            elemQName=(XMLCh*)baseName;
+        else if(XMLString::equals(elemPrefix, qName->getPrefix()))
+            elemQName=(XMLCh*)qName->getRawName();
         else
         {
-            XMLSize_t prefixLen=XMLString::stringLen(elemPrefix);
-            elemQName=(XMLCh*)fMemoryManager->allocate((prefixLen+1+XMLString::stringLen(elemDecl.getBaseName())+1)*sizeof(XMLCh));
-            XMLString::moveChars(elemQName, elemPrefix, prefixLen);
-            elemQName[prefixLen] = chColon;
-            XMLString::copyString(&elemQName[prefixLen+1], elemDecl.getBaseName());
-            janElemName.reset(elemQName, fMemoryManager);
+            fTempQName->set(elemPrefix);
+            fTempQName->append(chColon);
+            fTempQName->append(baseName);
+            elemQName=fTempQName->getRawBuffer();
         }
 
         if (getDoNamespaces())
         {
             unsigned int numPrefix = 0;
-            const XMLCh*   nsString = XMLUni::fgXMLNSString;
-            const XMLAttr* tempAttr = 0;
 
             if (!fNamespacePrefix)
-            {
                 fTempAttrVec->removeAllElements();
-            }
 
             for (unsigned int i = 0; i < attrCount; i++)
             {
                 const XMLCh*   nsPrefix = 0;
                 const XMLCh*   nsURI    = 0;
 
-                tempAttr = attrList.elementAt(i);
-                if (XMLString::equals(tempAttr->getQName(), nsString))
+                const XMLAttr* tempAttr = attrList.elementAt(i);
+                if (XMLString::equals(tempAttr->getQName(), XMLUni::fgXMLNSString))
                     nsURI = tempAttr->getValue();
-                if (XMLString::equals(tempAttr->getPrefix(), nsString))
+                if (XMLString::equals(tempAttr->getPrefix(), XMLUni::fgXMLNSString))
                 {
                     nsPrefix = tempAttr->getName();
                     nsURI = tempAttr->getValue();
@@ -761,7 +759,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 fDocHandler->startElement
                 (
                     fScanner->getURIText(elemURLId)
-                    , elemDecl.getBaseName()
+                    , baseName
                     , elemQName
                     , fAttrList
                 );
@@ -773,7 +771,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             if(fDocHandler)
             {
                 fDocHandler->startElement(XMLUni::fgZeroLenString,
-                                          elemDecl.getBaseName(),
+                                          baseName,
                                           elemQName,
                                           fAttrList);
             }
@@ -791,7 +789,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                     fDocHandler->endElement
                     (
                         fScanner->getURIText(elemURLId)
-                        , elemDecl.getBaseName()
+                        , baseName
                         , elemQName
                     );
                 }
@@ -809,7 +807,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 if(fDocHandler)
                 {
                     fDocHandler->endElement(XMLUni::fgZeroLenString,
-                                    elemDecl.getBaseName(),
+                                    baseName,
                                     elemQName);
                 }
             }
@@ -843,20 +841,19 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
     // Just map to the SAX document handler
     if (fDocHandler)
     {
-        ArrayJanitor<XMLCh> janElemName(NULL);
-        XMLCh* elemQName = NULL;
+        const QName* qName=elemDecl.getElementName();
+        const XMLCh* baseName=qName->getLocalPart();
+        XMLCh* elemQName = 0;
         if(elemPrefix==0 || *elemPrefix==0)
-            elemQName=(XMLCh*)elemDecl.getBaseName();
-        else if(XMLString::equals(elemPrefix, elemDecl.getElementName()->getPrefix()))
-            elemQName=(XMLCh*)elemDecl.getElementName()->getRawName();
+            elemQName=(XMLCh*)baseName;
+        else if(XMLString::equals(elemPrefix, qName->getPrefix()))
+            elemQName=(XMLCh*)qName->getRawName();
         else
         {
-            XMLSize_t prefixLen=XMLString::stringLen(elemPrefix);
-            elemQName=(XMLCh*)fMemoryManager->allocate((prefixLen+1+XMLString::stringLen(elemDecl.getBaseName())+1)*sizeof(XMLCh));
-            XMLString::moveChars(elemQName, elemPrefix, prefixLen);
-            elemQName[prefixLen] = chColon;
-            XMLString::copyString(&elemQName[prefixLen+1], elemDecl.getBaseName());
-            janElemName.reset(elemQName, fMemoryManager);
+            fTempQName->set(elemPrefix);
+            fTempQName->append(chColon);
+            fTempQName->append(baseName);
+            elemQName=fTempQName->getRawBuffer();
         }
 
         if (getDoNamespaces())
@@ -866,7 +863,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                 fDocHandler->endElement
                 (
                     fScanner->getURIText(uriId)
-                    , elemDecl.getBaseName()
+                    , baseName
                     , elemQName
                 );
             }
@@ -887,7 +884,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                 fDocHandler->endElement
                 (
                     XMLUni::fgZeroLenString,
-                    elemDecl.getBaseName(),
+                    baseName,
                     elemQName 
                 );
             }

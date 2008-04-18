@@ -116,8 +116,7 @@ ValueVectorOf<TElem>::operator=(const ValueVectorOf<TElem>& toAssign)
 template <class TElem> void ValueVectorOf<TElem>::addElement(const TElem& toAdd)
 {
     ensureExtraCapacity(1);
-    fElemList[fCurCount] = toAdd;
-    fCurCount++;
+    fElemList[fCurCount++] = toAdd;
 }
 
 template <class TElem> void ValueVectorOf<TElem>::
@@ -155,12 +154,6 @@ removeElementAt(const unsigned int removeAt)
 {
     if (removeAt >= fCurCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
-
-    if (removeAt == fCurCount-1)
-    {
-        fCurCount--;
-        return;
-    }
 
     // Copy down every element above remove point
     for (unsigned int index = removeAt; index < fCurCount-1; index++)
@@ -232,24 +225,24 @@ ensureExtraCapacity(const unsigned int length)
 {
     unsigned int newMax = fCurCount + length;
 
-    if (newMax <= fMaxCount)
-        return;
+    if (newMax > fMaxCount)
+    {
+        // Avoid too many reallocations by expanding by a percentage
+        unsigned int minNewMax = (unsigned int)((double)fCurCount * 1.25);
+        if (newMax < minNewMax)
+            newMax = minNewMax;
 
-    // Avoid too many reallocations by expanding by a percentage
-    unsigned int minNewMax = (unsigned int)((double)fCurCount * 1.25);
-    if (newMax < minNewMax)
-        newMax = minNewMax;
+        TElem* newList = (TElem*) fMemoryManager->allocate
+        (
+            newMax * sizeof(TElem)
+        ); //new TElem[newMax];
+        for (unsigned int index = 0; index < fCurCount; index++)
+            newList[index] = fElemList[index];
 
-    TElem* newList = (TElem*) fMemoryManager->allocate
-    (
-        newMax * sizeof(TElem)
-    ); //new TElem[newMax];
-    for (unsigned int index = 0; index < fCurCount; index++)
-        newList[index] = fElemList[index];
-
-    fMemoryManager->deallocate(fElemList); //delete [] fElemList;
-    fElemList = newList;
-    fMaxCount = newMax;
+        fMemoryManager->deallocate(fElemList); //delete [] fElemList;
+        fElemList = newList;
+        fMaxCount = newMax;
+    }
 }
 
 template <class TElem> const TElem* ValueVectorOf<TElem>::rawData() const

@@ -1652,6 +1652,7 @@ private :
     XMLStringPool*              fPrefixesStorage ;
     ValueStackOf<unsigned int>* fPrefixes ;
     ValueStackOf<unsigned int>* fPrefixCounts ;
+    XMLBuffer*                  fTempQName;
     DTDHandler*                 fDTDHandler;
     EntityResolver*             fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
