@@ -48,7 +48,7 @@ SAX2XMLReader * XMLReaderFactory::createXMLReader(  MemoryManager* const  manage
                                                   , XMLGrammarPool* const gramPool)
 {
     SAX2XMLReaderImpl* pImpl=new (manager) SAX2XMLReaderImpl(manager, gramPool);
-	return pImpl;
+    return pImpl;
 }
 
 
@@ -138,18 +138,18 @@ void SAX2XMLReaderImpl::initialize()
         fAdvDHListSize * sizeof(XMLDocumentHandler*)
     );//new XMLDocumentHandler*[fAdvDHListSize];
     memset(fAdvDHList, 0, sizeof(void*) * fAdvDHListSize);
-	
-	// SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
-	setDoNamespaces(true) ;
+    
+    // SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
+    setDoNamespaces(true) ;
 
-	// default: schema is on
-	setDoSchema(true);
-	
+    // default: schema is on
+    setDoSchema(true);
+    
     fPrefixesStorage = new (fMemoryManager) XMLStringPool(109, fMemoryManager) ;
-	fPrefixes        = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
-	fTempAttrVec     = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
-	fPrefixCounts    = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
-    fTempQName       = new XMLBuffer(32, fMemoryManager);
+    fPrefixes        = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
+    fTempAttrVec     = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
+    fPrefixCounts    = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
+    fTempQName       = new (fMemoryManager) XMLBuffer(32, fMemoryManager);
 }
 
 
@@ -264,12 +264,12 @@ bool SAX2XMLReaderImpl::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
 void SAX2XMLReaderImpl::setValidator(XMLValidator* valueToAdopt)
 {
     fValidator = valueToAdopt;
-	fScanner->setValidator(valueToAdopt);
+    fScanner->setValidator(valueToAdopt);
 }
 
 XMLValidator* SAX2XMLReaderImpl::getValidator() const
 {
-	return fScanner->getValidator();
+    return fScanner->getValidator();
 }
 
 // ---------------------------------------------------------------------------
@@ -282,7 +282,7 @@ int SAX2XMLReaderImpl::getErrorCount() const
 
 void SAX2XMLReaderImpl::setContentHandler(ContentHandler* const handler)
 {
-	fDocHandler = handler;
+    fDocHandler = handler;
     if (fDocHandler)
     {
         //
@@ -1256,7 +1256,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 
     if (fParseInProgress)
         throw SAXNotSupportedException("Feature modification is not supported during parse.", fMemoryManager);
-	
+    
     if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
     {
         setDoNamespaces(value);
@@ -1416,21 +1416,21 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 
 void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 {
-	if (fParseInProgress)
-		throw SAXNotSupportedException("Property modification is not supported during parse.", fMemoryManager);
+    if (fParseInProgress)
+        throw SAXNotSupportedException("Property modification is not supported during parse.", fMemoryManager);
 
-	if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
-	{
-		fScanner->setExternalSchemaLocation((XMLCh*)value);
-	}
-	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
-	{
-		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
-	}
-	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
-	{
-		fScanner->setSecurityManager((SecurityManager*)value);
-	}
+    if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
+    {
+        fScanner->setExternalSchemaLocation((XMLCh*)value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+    {
+        fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
+    {
+        fScanner->setSecurityManager((SecurityManager*)value);
+    }
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
     {
         XMLScanner* tempScanner = XMLScannerResolver::resolveScanner
