@@ -538,11 +538,11 @@ void IGXMLScanner::commonInit()
     );
     fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
     (
-        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, fMemoryManager
     );
     fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
     (
-        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, fMemoryManager
     );
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 

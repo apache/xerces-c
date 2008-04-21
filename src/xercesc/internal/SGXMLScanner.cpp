@@ -2018,7 +2018,7 @@ void SGXMLScanner::commonInit()
     );
     fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
     (
-        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, fMemoryManager
     );
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 

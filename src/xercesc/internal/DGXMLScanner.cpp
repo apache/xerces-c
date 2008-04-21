@@ -2253,7 +2253,7 @@ void DGXMLScanner::commonInit()
     );
     fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
     (
-        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, 0, fMemoryManager
     );
 
     if (fValidator)
