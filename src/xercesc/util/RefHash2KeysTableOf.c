@@ -42,16 +42,13 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
                                               , const bool           adoptElems
                                               , MemoryManager* const manager)
     : fMemoryManager(manager)
-	, fAdoptedElems(adoptElems)
+    , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
     , fCount(0)
     , fHash(0)
 {
     initialize(modulus);
-	
-	// create default hasher
-	fHash = new (fMemoryManager) HashXMLCh();
 }
 
 template <class TVal>
@@ -59,38 +56,35 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
                                               , const bool           adoptElems
                                               , HashBase*            hashBase
                                               , MemoryManager* const manager)
-	: fMemoryManager(manager)
+    : fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
     , fCount(0)
     , fHash(0)
 {
-	initialize(modulus);
-	// set hasher
-	fHash = hashBase;
+    initialize(modulus);
+    // set hasher
+    fHash = hashBase;
 }
 
 template <class TVal>
 RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus,
                                                MemoryManager* const manager)
-	: fMemoryManager(manager)
+    : fMemoryManager(manager)
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
     , fCount(0)
     , fHash(0)
 {
-	initialize(modulus);
-
-	// create default hasher
-	fHash = new (fMemoryManager) HashXMLCh();
+    initialize(modulus);
 }
 
 template <class TVal>
 void RefHash2KeysTableOf<TVal>::initialize(const unsigned int modulus)
 {
-	if (modulus == 0)
+    if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
@@ -107,7 +101,9 @@ template <class TVal> RefHash2KeysTableOf<TVal>::~RefHash2KeysTableOf()
 
     // Then delete the bucket list & hasher
     fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
-	delete fHash;
+    fBucketList = 0;
+    delete fHash;
+    fHash = 0;
 }
 
 
@@ -131,7 +127,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::
 removeKey(const void* const key1, const int key2)
 {
     // Hash the key
-    unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
+    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -143,7 +139,7 @@ removeKey(const void* const key1, const int key2)
 
     while (curElem)
     {
-        if (fHash->equals(key1, curElem->fKey1) && (key2==curElem->fKey2))
+        if((key2==curElem->fKey2) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
         {
             if (!lastElem)
             {
@@ -182,7 +178,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::
 removeKey(const void* const key1)
 {
     // Hash the key
-    unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
+    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -194,7 +190,7 @@ removeKey(const void* const key1)
 
     while (curElem)
     {
-        if (fHash->equals(key1, curElem->fKey1))
+        if(fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1))
         {
             if (!lastElem)
             {
@@ -270,7 +266,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::removeAll()
 template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void* const key1, void* key2)
 {
     // Hash the key
-    unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
+    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -283,7 +279,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
     while (curElem)
     {
         // if this element has the same primary key, remove it and add it using the new primary key
-        if (fHash->equals(key1, curElem->fKey1))
+        if(fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1))
         {
             if (!lastElem)
             {
@@ -304,8 +300,8 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
                 if (fAdoptedElems)
                     delete newBucket->fData;
                 newBucket->fData = curElem->fData;
-		        newBucket->fKey1 = key2;
-		        newBucket->fKey2 = curElem->fKey2;
+                newBucket->fKey1 = key2;
+                newBucket->fKey2 = curElem->fKey2;
             }
              else
             {
@@ -396,8 +392,8 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::put(void* key1, int key2, 
         if (fAdoptedElems)
             delete newBucket->fData;
         newBucket->fData = valueToAdopt;
-		newBucket->fKey1 = key1;
-		newBucket->fKey2 = key2;
+        newBucket->fKey1 = key1;
+        newBucket->fKey2 = key2;
     }
      else
     {
@@ -418,14 +414,14 @@ template <class TVal> RefHash2KeysTableBucketElem<TVal>* RefHash2KeysTableOf<TVa
 findBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-		if (key2==curElem->fKey2 && fHash->equals(key1, curElem->fKey1))
+        if((key2==curElem->fKey2) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
             return curElem;
 
         curElem = curElem->fNext;
@@ -437,14 +433,14 @@ template <class TVal> const RefHash2KeysTableBucketElem<TVal>* RefHash2KeysTable
 findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if (fHash->equals(key1, curElem->fKey1) && (key2==curElem->fKey2))
+        if((key2==curElem->fKey2) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
             return curElem;
 
         curElem = curElem->fNext;
@@ -480,7 +476,7 @@ rehash()
             // Save the next element before we detach this one
             RefHash2KeysTableBucketElem<TVal>* nextElem = curElem->fNext;
 
-            const unsigned int hashVal = fHash->getHashVal(curElem->fKey1, newMod, fMemoryManager);
+            const unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey1, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey1, newMod, fMemoryManager);
             assert(hashVal < newMod);
             
             RefHash2KeysTableBucketElem<TVal>* newHeadElem = newBucketList[hashVal];
@@ -514,7 +510,7 @@ template <class TVal> RefHash2KeysTableOfEnumerator<TVal>::
 RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
                               , const bool adopt
                               , MemoryManager* const manager)
-	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+    : fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
     , fMemoryManager(manager)
     , fLockPrimaryKey(0)
 {
@@ -590,7 +586,7 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::nextElementKey(v
 template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::Reset()
 {
     if(fLockPrimaryKey)
-        fCurHash=fToEnum->fHash->getHashVal(fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager);
+        fCurHash=fToEnum->fHash==0?XMLString::hash((const XMLCh*)fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager) : fToEnum->fHash->getHashVal(fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager);
     else
         fCurHash = (unsigned int)-1;
     fCurElem = 0;
@@ -616,7 +612,8 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::findNext()
             fCurElem = fToEnum->fBucketList[fCurHash];
         else
             fCurElem = fCurElem->fNext;
-        while (fCurElem && !fToEnum->fHash->equals(fLockPrimaryKey, fCurElem->fKey1) )
+        while (fCurElem && 
+               (fToEnum->fHash==0?!XMLString::equals((const XMLCh*)fLockPrimaryKey, (const XMLCh*)fCurElem->fKey1) : !fToEnum->fHash->equals(fLockPrimaryKey, fCurElem->fKey1)))
             fCurElem = fCurElem->fNext;
         // if we didn't found it, make so hasMoreElements() returns false
         if(!fCurElem)

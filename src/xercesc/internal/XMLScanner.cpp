@@ -1864,10 +1864,11 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
     //  is going to be. We turn on end of entity exceptions when we do this
     //  in order to catch the scenario where the current entity ended at
     //  the > of some markup.
-    XMLCh nextCh;
+    XMLCh nextCh=0;
 
+    XMLReader* curReader=fReaderMgr.getCurrentReader();
     // avoid setting up the ThrowEOEJanitor if we know that we have data in the current reader
-    if(fReaderMgr.getCurrentReader() && fReaderMgr.getCurrentReader()->charsLeftInBuffer()>0)
+    if(curReader && curReader->charsLeftInBuffer()>0)
         nextCh = fReaderMgr.peekNextChar();
     else
     {

@@ -45,28 +45,28 @@ ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
     , fHashModulus(modulus)
     , fHash(0)
 {
-	initialize(modulus);
-	// set hasher
-	fHash = hashBase;
+    initialize(modulus);
+    // set hasher
+    fHash = hashBase;
 }
 
 template <class TVal>
 ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
                                         , MemoryManager* const manager)
-	: fMemoryManager(manager)
+    : fMemoryManager(manager)
     , fBucketList(0)
     , fHashModulus(modulus)
     , fHash(0)
 {
-	initialize(modulus);
+    initialize(modulus);
 
-	// create default hasher
-	fHash = new (fMemoryManager) HashXMLCh();
+    // create default hasher
+    fHash = new (fMemoryManager) HashXMLCh();
 }
 
 template <class TVal> void ValueHashTableOf<TVal>::initialize(const unsigned int modulus)
 {
-	if (modulus == 0)
+    if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
@@ -83,7 +83,7 @@ template <class TVal> ValueHashTableOf<TVal>::~ValueHashTableOf()
 
     // Then delete the bucket list & hasher
     fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
-	delete fHash;
+    delete fHash;
 }
 
 
@@ -183,7 +183,7 @@ template <class TVal> void ValueHashTableOf<TVal>::put(void* key, const TVal& va
     if (newBucket)
     {
         newBucket->fData = valueToAdopt;
-		newBucket->fKey = key;
+        newBucket->fKey = key;
     }
      else
     {
@@ -210,7 +210,7 @@ findBucketElem(const void* const key, unsigned int& hashVal)
     ValueHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-		if (fHash->equals(key, curElem->fKey))
+        if (fHash->equals(key, curElem->fKey))
             return curElem;
 
         curElem = curElem->fNext;
@@ -269,7 +269,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
 
             // Delete the current element
             // delete curElem;
-			// destructor is empty...
+            // destructor is empty...
             // curElem->~ValueHashTableBucketElem();
             fMemoryManager->deallocate(curElem);                        
 
@@ -295,7 +295,7 @@ template <class TVal> ValueHashTableOfEnumerator<TVal>::
 ValueHashTableOfEnumerator(ValueHashTableOf<TVal>* const toEnum
                            , const bool adopt
                            , MemoryManager* const manager)
-	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum), fMemoryManager(manager)
+    : fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum), fMemoryManager(manager)
 {
     if (!toEnum)
         ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, manager);

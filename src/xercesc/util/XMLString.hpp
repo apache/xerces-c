@@ -270,14 +270,14 @@ public:
       */
     static bool equals
     (
-          const XMLCh* const    str1
-        , const XMLCh* const    str2
+          const XMLCh* str1
+        , const XMLCh* str2
     );
 
     static bool equals
     (
-          const char* const    str1
-        , const char* const    str2
+          const char* str1
+        , const char* str2
     );
 
 	/** Lexicographically compares <code>str1</code> and <code>str2</code>
@@ -1448,60 +1448,54 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 	return true;
 }
 
-inline bool XMLString::equals(   const XMLCh* const    str1
-                               , const XMLCh* const    str2)
+inline bool XMLString::equals(   const XMLCh* str1
+                               , const XMLCh* str2)
 {
     if(str1==str2)
         return true;
 
-    const XMLCh* psz1 = str1;
-    const XMLCh* psz2 = str2;
-
-    if (psz1 == 0 || psz2 == 0) {
-        if ((psz1 != 0 && *psz1) || (psz2 != 0 && *psz2))
+    if (str1 == 0 || str2 == 0) {
+        if ((str1 != 0 && *str1) || (str2 != 0 && *str2))
             return false;
         else
             return true;
     }
 
-    while (*psz1 == *psz2)
+    while (*str1 == *str2)
     {
         // If either has ended, then they both ended, so equal
-        if (!*psz1)
+        if (!*str1)
             return true;
 
         // Move upwards for the next round
-        psz1++;
-        psz2++;
+        str1++;
+        str2++;
     }
     return false;
 }
 
-inline bool XMLString::equals(   const char* const    str1
-                               , const char* const    str2)
+inline bool XMLString::equals(   const char* str1
+                               , const char* str2)
 {
     if(str1==str2)
         return true;
 
-    const char* psz1 = str1;
-    const char* psz2 = str2;
-
-    if (psz1 == 0 || psz2 == 0) {
-        if ((psz1 != 0 && *psz1) || (psz2 != 0 && *psz2))
+    if (str1 == 0 || str2 == 0) {
+        if ((str1 != 0 && *str1) || (str2 != 0 && *str2))
             return false;
         else
             return true;
     }
 
-    while (*psz1 == *psz2)
+    while (*str1 == *str2)
     {
         // If either has ended, then they both ended, so equal
-        if (!*psz1)
+        if (!*str1)
             return true;
 
         // Move upwards for the next round
-        psz1++;
-        psz2++;
+        str1++;
+        str2++;
     }
     return false;
 }

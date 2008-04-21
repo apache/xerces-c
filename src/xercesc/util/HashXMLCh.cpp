@@ -36,7 +36,7 @@ unsigned int HashXMLCh::getHashVal(const void *const key, unsigned int mod
 
 bool HashXMLCh::equals(const void *const key1, const void *const key2)
 {
-	return (XMLString::equals((XMLCh*)key1, (XMLCh*)key2)) ? true : false;
+	return XMLString::equals((const XMLCh*)key1, (const XMLCh*)key2);
 }
 
 XERCES_CPP_NAMESPACE_END

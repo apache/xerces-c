@@ -52,13 +52,6 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
 {
     initialize(modulus);
 
-    // create default hasher
-#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
-		 fHash = new HashXMLCh();
-#else
-    fHash = new (fMemoryManager) HashXMLCh();
-#endif
-
     //
     //  Allocate the initial id pointers array. We don't have to zero them
     //  out since the fIdCounter value tells us which ones are valid. The
@@ -76,7 +69,7 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
                                             , HashBase*          hashBase
                                             , const unsigned int initSize
                                             , MemoryManager* const manager) :
-	fMemoryManager(manager)
+    fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -104,7 +97,7 @@ template <class TVal>
 RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
                                             , const unsigned int initSize
                                             , MemoryManager* const manager) :
-	fMemoryManager(manager)
+    fMemoryManager(manager)
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -114,13 +107,6 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
     , fIdCounter(0)
 {
     initialize(modulus);
-
-    // create default hasher
-#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
-		 fHash = new HashXMLCh();
-#else
-    fHash = new (fMemoryManager) HashXMLCh();
-#endif    
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
@@ -135,7 +121,7 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
 
 template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const unsigned int modulus)
 {
-	if (modulus == 0)
+    if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
 
     // Allocate the bucket list and zero them
@@ -152,8 +138,11 @@ template <class TVal> RefHash3KeysIdPool<TVal>::~RefHash3KeysIdPool()
 
     // Then delete the bucket list & hasher & id pointers list
     fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
+    fIdPtrs = 0;
     fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
+    fBucketList = 0;
     delete fHash;
+    fHash = 0;
 }
 
 
@@ -290,7 +279,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
     //
     if (newBucket)
     {
-    	retId = newBucket->fData->getId();
+        retId = newBucket->fData->getId();
         if (fAdoptedElems)
             delete newBucket->fData;
         newBucket->fData = valueToAdopt;
@@ -312,28 +301,28 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
 #endif
         fBucketList[hashVal] = newBucket;    
 
-    	//
-    	//  Give this new one the next available id and add to the pointer list.
-    	//  Expand the list if that is now required.
-    	//
-    	if (fIdCounter + 1 == fIdPtrsCount)
-    	{
-        	// Create a new count 1.5 times larger and allocate a new array
-        	unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
-        	TVal** newArray = (TVal**) fMemoryManager->allocate
-        	(
-            	newCount * sizeof(TVal*)
-        	); //new TVal*[newCount];
+        //
+        //  Give this new one the next available id and add to the pointer list.
+        //  Expand the list if that is now required.
+        //
+        if (fIdCounter + 1 == fIdPtrsCount)
+        {
+            // Create a new count 1.5 times larger and allocate a new array
+            unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
+            TVal** newArray = (TVal**) fMemoryManager->allocate
+            (
+                newCount * sizeof(TVal*)
+            ); //new TVal*[newCount];
 
-        	// Copy over the old contents to the new array
-        	memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TVal*));
+            // Copy over the old contents to the new array
+            memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TVal*));
 
-        	// Ok, toss the old array and store the new data
-        	fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
-        	fIdPtrs = newArray;
-        	fIdPtrsCount = newCount;
-    	}
-    	retId = ++fIdCounter;
+            // Ok, toss the old array and store the new data
+            fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
+            fIdPtrs = newArray;
+            fIdPtrsCount = newCount;
+        }
+        retId = ++fIdCounter;
     }
     
     fIdPtrs[retId] = valueToAdopt;
@@ -352,14 +341,14 @@ template <class TVal> RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal
 findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-		if (key2==curElem->fKey2 && key3==curElem->fKey3 && fHash->equals(key1, curElem->fKey1))
+        if((key2==curElem->fKey2) && (key3==curElem->fKey3) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
             return curElem;
 
         curElem = curElem->fNext;
@@ -371,14 +360,14 @@ template <class TVal> const RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPoo
 findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if (fHash->equals(key1, curElem->fKey1) && (key2==curElem->fKey2) && (key3==curElem->fKey3))
+        if((key2==curElem->fKey2) && (key3==curElem->fKey3) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
             return curElem;
 
         curElem = curElem->fNext;
@@ -394,7 +383,7 @@ template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
 RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum
                              , const bool adopt
                              , MemoryManager* const manager)
-	: fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum), fMemoryManager(manager)
+    : fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum), fMemoryManager(manager)
 {
     if (!toEnum)
         ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, fMemoryManager);
