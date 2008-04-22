@@ -395,7 +395,11 @@ ifeq (${TRANSCODER},NATIVE)
 	ifeq (${PLATFORM},MACOSX)
 	    TRANSCODERMODULE=MacOSUnicodeConverter
 	else
-	    TRANSCODERMODULE=Iconv
+     ifeq (${PLATFORM},OS390) 
+        TRANSCODERMODULE=Iconv390 
+     else 
+        TRANSCODERMODULE=Iconv 
+     endif 
 	endif
 else
 	ifeq (${TRANSCODER},ICU)
