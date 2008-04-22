@@ -1451,53 +1451,35 @@ inline bool XMLString::validateRegion(const XMLCh* const str1,
 inline bool XMLString::equals(   const XMLCh* str1
                                , const XMLCh* str2)
 {
-    if(str1==str2)
+    if (str1 == str2)
         return true;
 
-    if (str1 == 0 || str2 == 0) {
-        if ((str1 != 0 && *str1) || (str2 != 0 && *str2))
+    if (str1 == 0 || str2 == 0)
+        return ((!str1 || !*str1) && (!str2 || !*str2));
+    
+    while (*str1)
+        if(*str1++ != *str2++)  // they are different (or str2 is shorter and we hit the NULL)
             return false;
-        else
-            return true;
-    }
 
-    while (*str1 == *str2)
-    {
-        // If either has ended, then they both ended, so equal
-        if (!*str1)
-            return true;
-
-        // Move upwards for the next round
-        str1++;
-        str2++;
-    }
-    return false;
+    // either both ended (and *str2 is 0 too), or str2 is longer
+    return (*str2==0);
 }
 
 inline bool XMLString::equals(   const char* str1
                                , const char* str2)
 {
-    if(str1==str2)
+    if (str1 == str2)
         return true;
 
-    if (str1 == 0 || str2 == 0) {
-        if ((str1 != 0 && *str1) || (str2 != 0 && *str2))
+    if (str1 == 0 || str2 == 0)
+        return ((!str1 || !*str1) && (!str2 || !*str2));
+
+    while (*str1)
+        if(*str1++ != *str2++)  // they are different (or str2 is shorter and we hit the NULL)
             return false;
-        else
-            return true;
-    }
 
-    while (*str1 == *str2)
-    {
-        // If either has ended, then they both ended, so equal
-        if (!*str1)
-            return true;
-
-        // Move upwards for the next round
-        str1++;
-        str2++;
-    }
-    return false;
+    // either both ended (and *str2 is 0 too), or str2 is longer
+    return (*str2==0);
 }
 
 inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)

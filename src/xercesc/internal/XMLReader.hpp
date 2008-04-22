@@ -624,16 +624,16 @@ inline void XMLReader::setXMLVersion(const XMLVersion version)
 // ---------------------------------------------------------------------------
 inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
 {
-    const XMLCh* cursor = &fCharBuf[fCharIndex], *start = cursor, *end = &fCharBuf[fCharsAvail];
+    const XMLSize_t chunkSize = fCharsAvail - fCharIndex;
+    const XMLCh* cursor = &fCharBuf[fCharIndex];
+    XMLSize_t count=0;
+    for(;count<chunkSize && (fgCharCharsTable[*cursor++] & gPlainContentCharMask) != 0;++count);    // yes, it's an empty loop
 
-    while (cursor < end && isPlainContentChar(*cursor))
-        cursor++;
-
-    if (cursor != start)
+    if (count!=0)
     {
-        fCharIndex  = cursor - fCharBuf;
-        fCurCol    += (unsigned long)(cursor - start);
-        dest.append(start, cursor - start);
+        dest.append(&fCharBuf[fCharIndex], count);
+        fCharIndex += count;
+        fCurCol    += (unsigned long)count;
     }
 }
 

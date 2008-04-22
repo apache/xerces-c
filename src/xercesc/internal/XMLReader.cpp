@@ -768,9 +768,8 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
                 continue;
             }
 
-            if (!isNCNameChar(fCharBuf[fCharIndex])) {
+            if ((fgCharCharsTable[fCharBuf[fCharIndex]] & gNCNameCharMask) == 0)
                 break;
-            }
 
             fCharIndex++;
         }
@@ -1798,8 +1797,9 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
     // 1. the two-character sequence #xD #xA
     // 2. the two-character sequence #xD #x85
     // 5. any #xD character that is not immediately followed by #xA or #x85.
-    if (curCh == chCR)
+    switch(curCh)
     {
+    case chCR:
         fCurCol = 1;
         fCurLine++;
 
@@ -1819,16 +1819,17 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
             }
             curCh = chLF;
         }
-    }
-    else if (curCh == chLF)                   
-    {
+        break;
+
+    case chLF:
         fCurCol = 1;
         fCurLine++;
-    }
+        break;
+
     // 3. the single character #x85
     // 4. the single character #x2028
-    else if (curCh == chNEL || curCh == chLineSeparator)
-    {
+    case chNEL:
+    case chLineSeparator:
         if (inDecl && fXMLVersion == XMLV1_1)
         {
 
@@ -1858,9 +1859,8 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
             fCurLine++;
             curCh = chLF;
         }
-    }
-    else
-    {
+        break;
+    default:
         fCurCol++;
     }
 }

@@ -155,7 +155,8 @@ public :
     void set (const XMLCh* const chars)
     {
         fIndex = 0;
-        append(chars);
+        if (chars != 0 && *chars != 0)
+            append(chars);
     }
 
     const XMLCh* getRawBuffer() const
@@ -173,7 +174,6 @@ public :
     void reset()
     {
         fIndex = 0;
-        fBuffer[0] = 0;
     }
 
     // -----------------------------------------------------------------------

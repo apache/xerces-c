@@ -1876,19 +1876,13 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
         nextCh = fReaderMgr.peekNextChar();
     }
 
-    //  Check for special chars. Start with the most
-    //  obvious end of file, which should be legal here at top level.
-    if (!nextCh)
-        return Token_EOF;
-
-
-    //  If it's not a '<' we must be in content.
+    //  If it's not a '<' we must be in content (unless it's a EOF)
     //
     //  This includes entity references '&' of some sort. These must
     //  be character data because that's the only place a reference can
     //  occur in content.
     if (nextCh != chOpenAngle)
-        return Token_CharData;
+        return nextCh?Token_CharData:Token_EOF;
 
     //  Ok it had to have been a '<' character. So get it out of the reader
     //  and store the reader number where we saw it, passing it back to the
@@ -1898,42 +1892,42 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
 
     //  Ok, so lets go through the things that it could be at this point which
     //  are all some form of markup.
-    nextCh = fReaderMgr.peekNextChar();
-
-    if (nextCh == chForwardSlash)
+    switch(fReaderMgr.peekNextChar())
     {
-        fReaderMgr.getNextChar();
-        return Token_EndTag;
-    }
-    else if (nextCh == chBang)
-    {
-        static const XMLCh gCDATAStr[] =
+    case chForwardSlash:
         {
-                chBang, chOpenSquare, chLatin_C, chLatin_D, chLatin_A
-            ,   chLatin_T, chLatin_A, chNull
-        };
-
-        static const XMLCh gCommentString[] =
+            fReaderMgr.getNextChar();
+            return Token_EndTag;
+        }
+    case chBang:
         {
-            chBang, chDash, chDash, chNull
-        };
+            static const XMLCh gCDATAStr[] =
+            {
+                    chBang, chOpenSquare, chLatin_C, chLatin_D, chLatin_A
+                ,   chLatin_T, chLatin_A, chNull
+            };
 
-        if (fReaderMgr.skippedString(gCDATAStr))
-            return Token_CData;
+            static const XMLCh gCommentString[] =
+            {
+                chBang, chDash, chDash, chNull
+            };
 
-        if (fReaderMgr.skippedString(gCommentString))
-            return Token_Comment;
+            if (fReaderMgr.skippedString(gCDATAStr))
+                return Token_CData;
 
-        emitError(XMLErrs::ExpectedCommentOrCDATA);
-        return Token_Unknown;
+            if (fReaderMgr.skippedString(gCommentString))
+                return Token_Comment;
+
+            emitError(XMLErrs::ExpectedCommentOrCDATA);
+            return Token_Unknown;
+        }
+    case chQuestion:
+        {
+            // It must be a PI
+            fReaderMgr.getNextChar();
+            return Token_PI;
+        }
     }
-    else if (nextCh == chQuestion)
-    {
-        // It must be a PI
-        fReaderMgr.getNextChar();
-        return Token_PI;
-    }
-
     //  Assume its an element name, so return with a start tag token. If it
     //  turns out not to be, then it will fail when it cannot get a valid tag.
     return Token_StartTag;
