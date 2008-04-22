@@ -1,10 +1,9 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * Copyright 1999-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -99,12 +98,12 @@ static const XMLByte gUnicodeToIBM037XlatTable[256] =
     ,   0x70, 0xDD, 0xDE, 0xDB, 0xDC, 0x8D, 0x8E, 0xDF
 };
 iconvconverter * converterList;
-XMLMutex  converterListMutex;
+XMLMutex*  converterListMutex = 0;
 
 iconvconverter * addConverter(const char* const EncodingName
                              ,XMLTransService::Codes& resValue)
 {
-    XMLMutexLock lockConverterlist(&converterListMutex);
+    XMLMutexLock lockConverterlist(converterListMutex);
     iconvconverter *tconv=converterList;
     while ( (tconv) &&
             (strcmp(tconv->name,EncodingName)) )
@@ -134,7 +133,7 @@ void removeConverter(iconvconverter* const converter)
     iconvconverter *pconv,*tconv;
     tconv = 0;
     if (converter) {
-      XMLMutexLock lockConverterlist(&converterListMutex);
+      XMLMutexLock lockConverterlist(converterListMutex);
       if (--converter->usecount==0) {
         tconv = converterList;
         pconv = (iconvconverter*)&converterList;
@@ -173,10 +172,12 @@ static unsigned int  getWideCharLength(const XMLCh* const src)
 // ---------------------------------------------------------------------------
 Iconv390TransService::Iconv390TransService()
 {
+ converterListMutex = new XMLMutex();
 }
 
 Iconv390TransService::~Iconv390TransService()
 {
+ delete converterListMutex;
 }
 
 
