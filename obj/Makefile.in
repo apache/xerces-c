@@ -238,6 +238,12 @@ ifeq (${LIBTYPE},shared)
 else # static
 	-rm -f ${FQ_A_NAME} ${FQ_A_DEPDOM}
 endif
+ifeq (${PLATFORM},OS390)
+	-rm -f ${LIBNAME}${VER}${OS390SIDEDECK}
+	-rm -f ${LIB}/${LIBNAME}${VER}${OS390SIDEDECK}
+	-rm -f ${LIBDEPDOM}${VER}${OS390SIDEDECK}
+	-rm -f ${LIB}/${LIBDEPDOM}${VER}${OS390SIDEDECK}
+endif
 	-rm -f *.map
 
 
