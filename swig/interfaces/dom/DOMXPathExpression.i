@@ -1,1 +1,0 @@
-%include "xercesc/dom/DOMXPathExpression.hpp"

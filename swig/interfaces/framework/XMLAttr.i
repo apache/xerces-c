@@ -1,1 +1,0 @@
-%include "xercesc/framework/XMLAttr.hpp"

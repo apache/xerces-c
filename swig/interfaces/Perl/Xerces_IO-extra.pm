@@ -1,1 +1,0 @@
-package XML::Xerces::IO;
