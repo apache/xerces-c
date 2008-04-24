@@ -35,8 +35,6 @@ AC_CONFIG_FILES([Makefile \
                  src/xercesc/util/MsgLoaders/ICU/resources/Makefile \
                  src/xercesc/util/MsgLoaders/MsgCatalog/Makefile \
                  tests/Makefile \
-                 swig/Makefile \
-                 swig/util/Makefile \
                  samples/Makefile])
 
 # Check the target system
