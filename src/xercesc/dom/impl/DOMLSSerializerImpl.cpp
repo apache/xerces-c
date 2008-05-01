@@ -814,38 +814,25 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 // check if the namespace for the current node is already defined
                 const XMLCh* prefix = nodeToWrite->getPrefix();
                 const XMLCh* uri = nodeToWrite->getNamespaceURI();
-                if(uri && uri[0])
+                if((uri && uri[0]) || ((prefix==0 || prefix[0]==0) && isDefaultNamespacePrefixDeclared()))
                 {
                     if(prefix==0 || prefix[0]==0)
                         prefix=XMLUni::fgZeroLenString;
-                    bool bPrefixDeclared=false;
-                    for(int i=fNamespaceStack->size()-1;i>=0;i--)
-                    {
-                        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
-                        const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
-                        if(thisUri)
-                        {
-                            // the prefix has been declared: check if it binds to the correct namespace, otherwise, redeclare it
-                            if(XMLString::equals(thisUri,nodeToWrite->getNamespaceURI()))
-                                bPrefixDeclared=true;
-                            break;
-                        }
-                    }
-                    if(!bPrefixDeclared)
+                    if(!isNamespaceBindingActive(prefix, uri))
                     {
                         if(namespaceMap==NULL)
                         {
                             namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
                             fNamespaceStack->addElement(namespaceMap);
                         }
-                        namespaceMap->put((void*)prefix,(XMLCh*)nodeToWrite->getNamespaceURI());
+                        namespaceMap->put((void*)prefix,(XMLCh*)uri);
                         *fFormatter  << XMLFormatter::NoEscapes
                                      << chSpace << XMLUni::fgXMLNSString;
                         if(!XMLString::equals(prefix,XMLUni::fgZeroLenString))
                             *fFormatter  << chColon << prefix;
                         *fFormatter  << chEqual << chDoubleQuote
                                      << XMLFormatter::AttrEscapes
-                                     << nodeToWrite->getNamespaceURI()
+                                     << uri
                                      << XMLFormatter::NoEscapes
                                      << chDoubleQuote;
                     }
@@ -908,32 +895,20 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                             const XMLCh* prefix = attribute->getPrefix();
                             if(prefix && prefix[0])
                             {
-                                bool bPrefixDeclared=false;
-                                for(int i=fNamespaceStack->size()-1;i>=0;i--)
-                                {
-                                    RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
-                                    const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
-                                    if(thisUri)
-                                    {
-                                        // the prefix has been declared: check if it binds to the correct namespace, otherwise, redeclare it
-                                        if(XMLString::equals(thisUri,attribute->getNamespaceURI()))
-                                            bPrefixDeclared=true;
-                                        break;
-                                    }
-                                }
-                                if(!bPrefixDeclared)
+                                const XMLCh* uri = attribute->getNamespaceURI();
+                                if(!isNamespaceBindingActive(prefix, uri))
                                 {
                                     if(namespaceMap==NULL)
                                     {
                                         namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
                                         fNamespaceStack->addElement(namespaceMap);
                                     }
-                                    namespaceMap->put((void*)prefix,(XMLCh*)attribute->getNamespaceURI());
+                                    namespaceMap->put((void*)prefix,(XMLCh*)uri);
                                     *fFormatter  << XMLFormatter::NoEscapes
                                                  << chSpace << XMLUni::fgXMLNSString << chColon << prefix
                                                  << chEqual << chDoubleQuote
                                                  << XMLFormatter::AttrEscapes
-                                                 << attribute->getNamespaceURI()
+                                                 << uri
                                                  << XMLFormatter::NoEscapes
                                                  << chDoubleQuote;
                                 }
@@ -1688,6 +1663,31 @@ void DOMLSSerializerImpl::processBOM()
 	    else
 			fFormatter->writeBOM(BOM_ucs4le, 4);
     }
+}
+
+bool DOMLSSerializerImpl::isDefaultNamespacePrefixDeclared() const
+{
+    for(int i=fNamespaceStack->size()-1;i>=0;i--)
+    {
+        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
+        const XMLCh* thisUri=curNamespaceMap->get((void*)XMLUni::fgZeroLenString);
+        if(thisUri)
+            return true;
+    }
+    return false;
+}
+
+bool DOMLSSerializerImpl::isNamespaceBindingActive(const XMLCh* prefix, const XMLCh* uri) const
+{
+    for(int i=fNamespaceStack->size()-1;i>=0;i--)
+    {
+        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
+        const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
+        // if the prefix has been declared, check if it binds to the correct namespace, otherwise, reports it isn't bound
+        if(thisUri)
+            return XMLString::equals(thisUri,uri);
+    }
+    return false;
 }
 
 XERCES_CPP_NAMESPACE_END

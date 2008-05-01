@@ -134,6 +134,8 @@ protected:
 
     void                          printNewLine();
     void                          setURCharRef();
+    bool                          isDefaultNamespacePrefixDeclared() const;
+    bool                          isNamespaceBindingActive(const XMLCh* prefix, const XMLCh* uri) const;
 
 
     void printIndent(unsigned int level);
