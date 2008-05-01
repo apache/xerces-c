@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/PSVIAttribute.hpp>
-#include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -36,6 +36,25 @@ XERCES_CPP_NAMESPACE_BEGIN
  * under what conditions it may be relied upon to have meaningful contents.
  */
 
+class XMLPARSER_EXPORT PSVIAttributeStorage : public XMemory
+{
+public:
+    PSVIAttributeStorage() :
+        fPSVIAttribute(0)
+      , fAttributeName(0)
+      , fAttributeNamespace(0)
+    {
+    }
+
+    ~PSVIAttributeStorage()
+    {
+        delete fPSVIAttribute;
+    }
+
+    PSVIAttribute* fPSVIAttribute;
+    const XMLCh*   fAttributeName;
+    const XMLCh*   fAttributeNamespace;
+};
 
 class XMLPARSER_EXPORT PSVIAttributeList : public XMemory
 {
@@ -153,47 +172,37 @@ private:
     //  handler to provide dynamically-need memory
     // fAttrList
     //  list of PSVIAttributes contained by this object
-    // fAttrNameList
-    //  list of the names of the initialized PSVIAttribute objects contained
-    //  in this listing
-    // fAttrNSList
-    //  list of the namespaces of the initialized PSVIAttribute objects contained
-    //  in this listing
     // fAttrPos
     //  current number of initialized PSVIAttributes in fAttrList
-    MemoryManager*                  fMemoryManager;    
-    RefVectorOf<PSVIAttribute>*     fAttrList;
-    RefArrayVectorOf<XMLCh>*        fAttrNameList;
-    RefArrayVectorOf<XMLCh>*        fAttrNSList;
-    unsigned int                    fAttrPos;
+    MemoryManager*                      fMemoryManager;    
+    RefVectorOf<PSVIAttributeStorage>*  fAttrList;
+    unsigned int                        fAttrPos;
 };
+
 inline PSVIAttributeList::~PSVIAttributeList() 
 {
     delete fAttrList;
-    delete fAttrNameList;
-    delete fAttrNSList;
 }
 
 inline PSVIAttribute *PSVIAttributeList::getPSVIAttributeToFill(
             const XMLCh *attrName
             , const XMLCh * attrNS)
 {
-    PSVIAttribute *retAttr = 0;
+    PSVIAttributeStorage* storage = 0;
     if(fAttrPos == fAttrList->size())
     {
-        retAttr = new (fMemoryManager)PSVIAttribute(fMemoryManager);
-        fAttrList->addElement(retAttr);
-        fAttrNameList->addElement((XMLCh *)attrName);
-        fAttrNSList->addElement((XMLCh *)attrNS);
+        storage = new (fMemoryManager) PSVIAttributeStorage();
+        storage->fPSVIAttribute = new (fMemoryManager) PSVIAttribute(fMemoryManager);
+        fAttrList->addElement(storage);
     }
     else
     {
-        retAttr = fAttrList->elementAt(fAttrPos);
-        fAttrNameList->setElementAt((XMLCh *)attrName, fAttrPos);
-        fAttrNSList->setElementAt((XMLCh *)attrNS, fAttrPos);
+        storage = fAttrList->elementAt(fAttrPos);
     }
+    storage->fAttributeName = attrName;
+    storage->fAttributeNamespace = attrNS;
     fAttrPos++;
-    return retAttr;
+    return storage->fPSVIAttribute;
 }
 
 inline void PSVIAttributeList::reset()
