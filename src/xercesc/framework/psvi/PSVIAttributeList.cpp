@@ -26,15 +26,11 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):  
-        fMemoryManager(manager)
-        , fAttrList(0)
-        , fAttrNameList(0)
-        , fAttrNSList(0)
-        , fAttrPos(0)
+    fMemoryManager(manager)
+  , fAttrList(0)
+  , fAttrPos(0)
 {
-    fAttrList= new (fMemoryManager) RefVectorOf<PSVIAttribute> (10, true, fMemoryManager);
-    fAttrNameList= new (fMemoryManager) RefArrayVectorOf<XMLCh> (10, false, fMemoryManager);
-    fAttrNSList= new (fMemoryManager) RefArrayVectorOf<XMLCh> (10, false, fMemoryManager);
+    fAttrList= new (fMemoryManager) RefVectorOf<PSVIAttributeStorage> (10, true, fMemoryManager);
 }
 
 /*
@@ -58,7 +54,7 @@ PSVIAttribute *PSVIAttributeList::getAttributePSVIAtIndex(const unsigned int ind
 {
     if(index >= fAttrPos)
         return 0;
-    return fAttrList->elementAt(index);
+    return fAttrList->elementAt(index)->fPSVIAttribute;
 }
 
 /*
@@ -74,7 +70,7 @@ const XMLCh *PSVIAttributeList::getAttributeNameAtIndex(const unsigned int index
     
     if(index >= fAttrPos)
         return 0;
-    return fAttrNameList->elementAt(index);
+    return fAttrList->elementAt(index)->fAttributeName;
 }
 
 /*
@@ -89,7 +85,7 @@ const XMLCh *PSVIAttributeList::getAttributeNamespaceAtIndex(const unsigned int 
 {
     if(index >= fAttrPos)
         return 0;
-    return fAttrNSList->elementAt(index);
+    return fAttrList->elementAt(index)->fAttributeNamespace;
 }
 
 /*
@@ -103,9 +99,10 @@ PSVIAttribute *PSVIAttributeList::getAttributePSVIByName(const XMLCh *attrName
                 , const XMLCh * attrNamespace)
 {
     for (unsigned int index=0; index < fAttrPos; index++) {
-        if (XMLString::equals(attrName,fAttrNameList->elementAt(index))
-                && XMLString::equals(attrNamespace,fAttrNSList->elementAt(index)))
-            return fAttrList->elementAt(index);
+        PSVIAttributeStorage* storage = fAttrList->elementAt(index);
+        if (XMLString::equals(attrName,storage->fAttributeName) && 
+            XMLString::equals(attrNamespace,storage->fAttributeNamespace))
+            return storage->fPSVIAttribute;
     }
     return 0;
 }
