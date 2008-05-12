@@ -746,21 +746,26 @@
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">
         <FatalError>
-<!--The following are DOMException error text, same order as DOMException::ExceptionCode enum -->
+<!--The following are DOMException error text, same order as DOMException::ExceptionCode enum; do not remove them unless the corresponding enum is also removed -->
 <!--DOMEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMExceptionCode enum -->
             <Message Id="DOMEXCEPTION_ERRX" Text="Just an index"/>
             <Message Id="INDEX_SIZE_ERR" Text="The index or size is negative, or greater than the allowed value"/>
+            <Message Id="DOMSTRING_SIZE_ERR" Text="The specified range of text does not fit into a DOMString"/>
             <Message Id="HIERARCHY_REQUEST_ERR" Text="An attempt was made to insert a node where it is not permitted"/>
             <Message Id="WRONG_DOCUMENT_ERR" Text="A node is used in a different document than the one that created it"/>
             <Message Id="INVALID_CHARACTER_ERR" Text="An invalid or illegal XML character is specified"/>
+            <Message Id="NO_DATA_ALLOWED_ERR" Text="The node does not support storing data"/>
             <Message Id="NO_MODIFICATION_ALLOWED_ERR" Text="An attempt is made to modify an object where modifications are not allowed"/>
             <Message Id="NOT_FOUND_ERR" Text="An attempt is made to reference a node in a context where it does not exist"/>
             <Message Id="NOT_SUPPORTED_ERR" Text="The implementation does not support the requested type of object or operation"/>
             <Message Id="INUSE_ATTRIBUTE_ERR" Text="An attempt is made to add an attribute that is already in use elsewhere"/>
-            <Message Id="INVALID_STATE_ERR " Text="An attempt is made to use an object that is not, or is no longer, usable."/>
+            <Message Id="INVALID_STATE_ERR" Text="An attempt is made to use an object that is not, or is no longer, usable"/>
+            <Message Id="SYNTAX_ERR" Text="An invalid or illegal string has been specified"/>
+            <Message Id="INVALID_MODIFICATION_ERR" Text="An attempt has been made to modify the type of the underlying object"/>
             <Message Id="NAMESPACE_ERR" Text="An attempt is made to create or change an object in a way which is incorrect with regard to namespaces"/>
-            <Message Id="INVALID_ACCESS_ERR" Text="An attempt is made to use an object that is not, or is no longer, usable"/>
+            <Message Id="INVALID_ACCESS_ERR" Text="The parameter or the requested operation is not supported by the underlying object"/>
             <Message Id="VALIDATION_ERR" Text="A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar"/>
+            <Message Id="TYPE_MISMATCH_ERR" Text="The type of an object is incompatible with the expected type of the parameter associated to the object"/>
 <!--The following are DOMRangeException error text, same order as DOMRangeException::RangeExceptionCode enum -->
 <!--DOMRANGEEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMRangeException::RangeExceptionCode enum -->
             <Message Id="DOMRANGEEXCEPTION_ERRX" Text="Just an index"/>
@@ -770,6 +775,7 @@
 <!--DOMLSEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMLSException::LSExceptionCode enum -->
             <Message Id="DOMLSEXCEPTION_ERRX" Text="Just an index"/>
             <Message Id="PARSE_ERR" Text="An attempt was made to load a document, or an XML Fragment, using DOMLSParser and the processing has been stopped"/>
+            <Message Id="SERIALIZE_ERR" Text="An attempt was made to serialize a DOMNode using DOMLSSerializer, and the processing has been stopped"/>
 <!--The following are DOMXPathException error text, same order as DOMXPathException::ExceptionCode enum -->
 <!--DOMXPATHEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMXPathException::ExceptionCode enum -->
             <Message Id="DOMXPATHEXCEPTION_ERRX" Text="Just an index"/>

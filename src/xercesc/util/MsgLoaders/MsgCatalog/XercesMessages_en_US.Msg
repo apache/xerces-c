@@ -731,29 +731,35 @@ $set 3
 $set 4
 2  Just an index
 3  The index or size is negative, or greater than the allowed value
-4  An attempt was made to insert a node where it is not permitted
-5  A node is used in a different document than the one that created it
-6  An invalid or illegal XML character is specified
-7  An attempt is made to modify an object where modifications are not allowed
-8  An attempt is made to reference a node in a context where it does not exist
-9  The implementation does not support the requested type of object or operation
-10  An attempt is made to add an attribute that is already in use elsewhere
-11  An attempt is made to use an object that is not, or is no longer, usable.
-12  An attempt is made to create or change an object in a way which is incorrect with regard to namespaces
+4  The specified range of text does not fit into a DOMString
+5  An attempt was made to insert a node where it is not permitted
+6  A node is used in a different document than the one that created it
+7  An invalid or illegal XML character is specified
+8  The node does not support storing data
+9  An attempt is made to modify an object where modifications are not allowed
+10  An attempt is made to reference a node in a context where it does not exist
+11  The implementation does not support the requested type of object or operation
+12  An attempt is made to add an attribute that is already in use elsewhere
 13  An attempt is made to use an object that is not, or is no longer, usable
-14  A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar
-15  Just an index
-16  The boundary-points of a Range do not meet specific requirements
-17  The container of a Range's boundary-point is set to a node of an invalid type or to a node with an ancestor of an invalid type
-18  Just an index
-19  An attempt was made to load a document, or an XML Fragment, using DOMLSParser and the processing has been stopped
+14  An invalid or illegal string has been specified
+15  An attempt has been made to modify the type of the underlying object
+16  An attempt is made to create or change an object in a way which is incorrect with regard to namespaces
+17  The parameter or the requested operation is not supported by the underlying object
+18  A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar
+19  The type of an object is incompatible with the expected type of the parameter associated to the object
 20  Just an index
-21  The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax
-22  The requested result type is not supported
-23  Nested CDATA sections
-24  Unrepresentable character data
-25  Unrecognized Node Type
-26  Parse may not be called while parsing
-27  Parsing has been aborted by the user
+21  The boundary-points of a Range do not meet specific requirements
+22  The container of a Range's boundary-point is set to a node of an invalid type or to a node with an ancestor of an invalid type
+23  Just an index
+24  An attempt was made to load a document, or an XML Fragment, using DOMLSParser and the processing has been stopped
+25  An attempt was made to serialize a DOMNode using DOMLSSerializer, and the processing has been stopped
+26  Just an index
+27  The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax
+28  The requested result type is not supported
+29  Nested CDATA sections
+30  Unrepresentable character data
+31  Unrecognized Node Type
+32  Parse may not be called while parsing
+33  Parsing has been aborted by the user
 
 
