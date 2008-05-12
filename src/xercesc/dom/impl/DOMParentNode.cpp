@@ -198,7 +198,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
               throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
         }
         while(newChild->hasChildNodes())     // Move
-            insertBefore(newChild->getFirstChild(),refChild);
+            castToNode(this)->insertBefore(newChild->getFirstChild(),refChild);
     }
 
     else if (!DOMDocumentImpl::isKidOK(castToNode(this), newChild))
