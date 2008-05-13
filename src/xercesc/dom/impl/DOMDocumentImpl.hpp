@@ -142,7 +142,7 @@ public:
     virtual void                 removeNodeIterator(DOMNodeIteratorImpl* nodeIterator); //non-standard api
 
     virtual const DOMXPathExpression*    createExpression(const XMLCh *expression, const DOMXPathNSResolver *resolver);
-    virtual const DOMXPathNSResolver*    createNSResolver(const DOMNode *nodeResolver);
+    virtual DOMXPathNSResolver*    createNSResolver(const DOMNode *nodeResolver);
     virtual void* evaluate(const XMLCh *expression, const DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
                            unsigned short type, void* result);
 

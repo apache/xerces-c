@@ -95,13 +95,28 @@ public:
      *
      * XPath2 implementations require a reverse lookup in the static context.
      * Look up the prefix associated with the namespace URI
-     * The XPath evaluator must never call this with a null or empty argument, 
-     * because the result of doing this is undefined.
      * @param URI of type XMLCh - The namespace to look for.
      * @return the associated prefix or null if none is found.
      */
     virtual const XMLCh*          lookupPrefix(const XMLCh* URI) const = 0;
 
+    /**
+     * Non-standard extension
+     *
+     * Associate the given namespace prefix to the namespace URI.
+     * @param prefix of type XMLCh - The namespace prefix to bind.
+     * @param URI of type XMLCh - The associated namespace URI.
+     */
+    virtual void addNamespaceBinding(const XMLCh* prefix, const XMLCh* uri) = 0;
+
+    /**
+     * Called to indicate that this object (and its associated children) is no longer in use
+     * and that the implementation may relinquish any resources associated with it and
+     * its associated children.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void release() = 0;
 
     //@}
 };
@@ -109,4 +124,5 @@ public:
 XERCES_CPP_NAMESPACE_END
 
 #endif
+
 

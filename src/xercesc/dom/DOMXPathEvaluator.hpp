@@ -114,11 +114,13 @@ public:
      * information available in the node's hierarchy at the time lookupNamespaceURI 
      * is called. also correctly resolving the implicit xml prefix.
      * @param nodeResolver of type <code>DOMNode</code> The node to be used as a context 
-     * for namespace resolution.
+     * for namespace resolution. If this parameter is null, an unpopulated
+     * <code>DOMXPathNSResolver</code> is returned, which can be populated using the
+     * Xerces-C extension <code>DOMXPathNSResolver::addNamespaceBinding()</code>.
      * @return <code>DOMXPathNSResolver</code> The object which resolves namespaces 
      * with respect to the definitions in scope for the specified node.
      */
-    virtual const DOMXPathNSResolver*    createNSResolver(const DOMNode *nodeResolver) = 0;
+    virtual DOMXPathNSResolver*    createNSResolver(const DOMNode *nodeResolver) = 0;
 
 
     /**

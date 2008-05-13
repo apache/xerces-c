@@ -427,9 +427,9 @@ const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh * expres
     return new (getMemoryManager()) DOMXPathExpressionImpl(expression, resolver, getMemoryManager());
 }
 
-const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(const DOMNode *nodeResolver)
+DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(const DOMNode *nodeResolver)
 {
-    return new (this) DOMXPathNSResolverImpl(nodeResolver);
+    return new (getMemoryManager()) DOMXPathNSResolverImpl(nodeResolver, getMemoryManager());
 }
 
 void* DOMDocumentImpl::evaluate(const XMLCh *expression, const DOMNode *contextNode, const DOMXPathNSResolver *resolver, 

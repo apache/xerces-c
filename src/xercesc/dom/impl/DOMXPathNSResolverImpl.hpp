@@ -23,25 +23,35 @@
 #define XERCESC_INCLUDE_GUARD_DOMXPATHNSRESOLVERIMPL_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/dom/DOMXPathNSResolver.hpp>
+#include <xercesc/util/KVStringPair.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMNode;
 
-class CDOM_EXPORT DOMXPathNSResolverImpl : public DOMXPathNSResolver
+class CDOM_EXPORT DOMXPathNSResolverImpl : public XMemory,
+                                           public DOMXPathNSResolver
 {
 public:
-    DOMXPathNSResolverImpl(const DOMNode *nodeResolver);
+    DOMXPathNSResolverImpl(const DOMNode* nodeResolver = 0, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     virtual const XMLCh*          lookupNamespaceURI(const XMLCh* prefix) const;
     virtual const XMLCh*          lookupPrefix(const XMLCh* URI) const;
+    virtual void                  addNamespaceBinding(const XMLCh* prefix, const XMLCh* uri);
+
+    virtual void                  release();
 
 protected:
+    RefHashTableOf<KVStringPair>  fNamespaceBindings;
     const DOMNode*                fResolverNode;
+    MemoryManager*                fManager;
 };
 
 XERCES_CPP_NAMESPACE_END
 
 #endif
+
 
