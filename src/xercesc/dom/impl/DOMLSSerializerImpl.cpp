@@ -1591,11 +1591,15 @@ void DOMLSSerializerImpl::printIndent(unsigned int level)
     {
         if (fLastWhiteSpaceInTextNode)
         {
-            level -= fLastWhiteSpaceInTextNode/2; // two chSpaces equals one indent level
+            unsigned int indentLevel = fLastWhiteSpaceInTextNode/2; // two chSpaces equals one indent level
             fLastWhiteSpaceInTextNode = 0;
             // if fLastWhiteSpaceInTextNode/2 is greater than level, then
             // it means too many spaces have been written to the
             // output stream and we can no longer indent properly
+            if(indentLevel < level)
+                level -= indentLevel;
+            else
+                level = 0;
         }
 
         for(unsigned int i = 0; i < level; i++)
