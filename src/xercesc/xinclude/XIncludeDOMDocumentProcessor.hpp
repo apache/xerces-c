@@ -41,15 +41,15 @@ class XMLEntityHandler;
 class XINCLUDE_EXPORT XIncludeDOMDocumentProcessor
 {
 public:
-	 /** Walk the supplied DOMDocument performing all XInclude's as encountered.
-	  *
+     /** Walk the supplied DOMDocument performing all XInclude's as encountered.
+      *
       * @param source A DOMDocument to parse, this document is not modified.
       * @param errorHandled An errorHandler to call back in case of problems
-	  *
+      *
       * @return a newly created DOMDocument containing the parsed and actioned
-	  * xinclude elements.
+      * xinclude elements.
       */
-	DOMDocument *doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver=NULL);
+    DOMDocument *doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver=NULL);
 };
 
 XERCES_CPP_NAMESPACE_END

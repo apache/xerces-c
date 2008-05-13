@@ -33,35 +33,35 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 DOMDocument *
 XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver /*=NULL*/){
-	XIncludeUtils xiu(errorHandler);
+    XIncludeUtils xiu(errorHandler);
 
-	DOMImplementation* impl = source->getImplementation();
-	DOMDocument *xincludedDocument = impl->createDocument();
-	
+    DOMImplementation* impl = source->getImplementation();
+    DOMDocument *xincludedDocument = impl->createDocument();
+    
     try
     {
-	    /* set up the declaration etc of the output document to match the source */
-	    xincludedDocument->setDocumentURI( source->getDocumentURI());
-	    xincludedDocument->setXmlStandalone( source->getXmlStandalone());
-	    xincludedDocument->setXmlVersion( source->getXmlVersion());
+        /* set up the declaration etc of the output document to match the source */
+        xincludedDocument->setDocumentURI( source->getDocumentURI());
+        xincludedDocument->setXmlStandalone( source->getXmlStandalone());
+        xincludedDocument->setXmlVersion( source->getXmlVersion());
 
-	    /* copy entire source document into the xincluded document. Xincluded document can
-	       then be modified in place */
-	    DOMNode *child = source->getFirstChild();
-	    for (; child != NULL; child = child->getNextSibling()){
-		    if (child->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE){
-			    /* I am simply ignoring these at the moment */
-			    continue;
-		    }
-		    DOMNode *newNode = xincludedDocument->importNode(child, true);
-		    xincludedDocument->appendChild(newNode);
-	    }
+        /* copy entire source document into the xincluded document. Xincluded document can
+           then be modified in place */
+        DOMNode *child = source->getFirstChild();
+        for (; child != NULL; child = child->getNextSibling()){
+            if (child->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE){
+                /* I am simply ignoring these at the moment */
+                continue;
+            }
+            DOMNode *newNode = xincludedDocument->importNode(child, true);
+            xincludedDocument->appendChild(newNode);
+        }
 
-	    DOMNode *docNode = xincludedDocument->getDocumentElement();
-	    /* parse and include the document node */
-	    xiu.parseDOMNodeDoingXInclude(docNode, xincludedDocument, entityResolver);
+        DOMNode *docNode = xincludedDocument->getDocumentElement();
+        /* parse and include the document node */
+        xiu.parseDOMNodeDoingXInclude(docNode, xincludedDocument, entityResolver);
 
-    	xincludedDocument->normalizeDocument();
+        xincludedDocument->normalizeDocument();
     }
     catch(const XMLErrs::Codes)
     {
@@ -74,7 +74,7 @@ XIncludeDOMDocumentProcessor::doXIncludeDOMProcess(const DOMDocument * const sou
         throw;
     }
 
-	return xincludedDocument;
+    return xincludedDocument;
 }
 
 XERCES_CPP_NAMESPACE_END

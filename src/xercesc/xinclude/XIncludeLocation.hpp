@@ -39,48 +39,48 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XINCLUDE_EXPORT XIncludeLocation
 {
 public:
-	 /** Create an XIncludeLocation, primed with the supplied href
-	  *
+     /** Create an XIncludeLocation, primed with the supplied href
+      *
       * @param href the initial URI value
-	  *
+      *
       * @return nothing
       */
-	XIncludeLocation(const XMLCh *href);
+    XIncludeLocation(const XMLCh *href);
 
-	 /** Destructor
-	  *
+     /** Destructor
+      *
       * @return nothing
       */
-	~XIncludeLocation();
+    ~XIncludeLocation();
 
-	 /** Prepend the supplied href to the current location and modify the current XIncludeLocation's
-	  * internal href field
-	  *
+     /** Prepend the supplied href to the current location and modify the current XIncludeLocation's
+      * internal href field
+      *
       * @param toPrepend the path to prepend
-	  *
+      *
       * @return the resultant compound URI
       */
-	const XMLCh *prependPath(const XMLCh *toPrepend);
+    const XMLCh *prependPath(const XMLCh *toPrepend);
 
-	 /** Get the current XIncludeLocation's compound URI location
-	  *
+     /** Get the current XIncludeLocation's compound URI location
+      *
       * @return the current URI
       */
-	const XMLCh *getLocation(){
-		return fHref;
-	};
+    const XMLCh *getLocation(){
+        return fHref;
+    };
 
-	 /** Get a pointer to the end of the protocol section of a URI
-	  *
+     /** Get a pointer to the end of the protocol section of a URI
+      *
       * @param URI a URI to strip the protocol from
-	  *
+      *
       * @return a pointer into the supplied URI immediately after the last character of the protocol section
-	  *			the pointer points to the first character after the protocol.
+      *            the pointer points to the first character after the protocol.
       */
-	static const XMLCh *findEndOfProtocol(const XMLCh *URI);
+    static const XMLCh *findEndOfProtocol(const XMLCh *URI);
 
 private:
-	const XMLCh *fHref;
+    const XMLCh *fHref;
 };
 
 XERCES_CPP_NAMESPACE_END
