@@ -24,10 +24,16 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMXPathNSResolverImpl::DOMXPathNSResolverImpl(const DOMNode *nodeResolver, MemoryManager* const manager) :
-    fNamespaceBindings(7, true, manager),
+    fNamespaceBindings(0),
     fResolverNode(nodeResolver),
     fManager(manager)
 {
+    fNamespaceBindings = new (fManager) RefHashTableOf<KVStringPair>(7, true, fManager);
+}
+
+DOMXPathNSResolverImpl::~DOMXPathNSResolverImpl()
+{
+    delete fNamespaceBindings;
 }
 
 const XMLCh* DOMXPathNSResolverImpl::lookupNamespaceURI(const XMLCh* prefix) const
@@ -35,7 +41,7 @@ const XMLCh* DOMXPathNSResolverImpl::lookupNamespaceURI(const XMLCh* prefix) con
     if(XMLString::equals(prefix, XMLUni::fgXMLString))
         return XMLUni::fgXMLURIName;
 
-    const KVStringPair *pair = fNamespaceBindings.get((void*)prefix);
+    const KVStringPair *pair = fNamespaceBindings->get((void*)prefix);
     if(pair) {
         if(*pair->getValue() == 0) return NULL;
         return pair->getValue();
@@ -52,7 +58,7 @@ const XMLCh* DOMXPathNSResolverImpl::lookupPrefix(const XMLCh* uri) const
     if(XMLString::equals(uri, XMLUni::fgXMLURIName))
         return XMLUni::fgXMLString;
 
-    RefHashTableOfEnumerator<KVStringPair> enumerator((RefHashTableOf<KVStringPair>*)&fNamespaceBindings);
+    RefHashTableOfEnumerator<KVStringPair> enumerator((RefHashTableOf<KVStringPair>*)fNamespaceBindings);
     while(enumerator.hasMoreElements()) {
         KVStringPair &pair = enumerator.nextElement();
         if(XMLString::equals(pair.getValue(), uri)) {
@@ -73,7 +79,7 @@ void DOMXPathNSResolverImpl::addNamespaceBinding(const XMLCh* prefix, const XMLC
 
     KVStringPair* pair = new (fManager) KVStringPair(prefix, uri, fManager);
 
-    fNamespaceBindings.put((void*)pair->getKey(), pair);
+    fNamespaceBindings->put((void*)pair->getKey(), pair);
 }
 
 void DOMXPathNSResolverImpl::release()

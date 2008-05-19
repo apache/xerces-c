@@ -37,6 +37,7 @@ class CDOM_EXPORT DOMXPathNSResolverImpl : public XMemory,
 {
 public:
     DOMXPathNSResolverImpl(const DOMNode* nodeResolver = 0, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ~DOMXPathNSResolverImpl();
 
     virtual const XMLCh*          lookupNamespaceURI(const XMLCh* prefix) const;
     virtual const XMLCh*          lookupPrefix(const XMLCh* URI) const;
@@ -45,7 +46,7 @@ public:
     virtual void                  release();
 
 protected:
-    RefHashTableOf<KVStringPair>  fNamespaceBindings;
+    RefHashTableOf<KVStringPair>* fNamespaceBindings;
     const DOMNode*                fResolverNode;
     MemoryManager*                fManager;
 };
