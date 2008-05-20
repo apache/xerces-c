@@ -209,6 +209,10 @@ private:
                       const bool toLax = false);
     void checkNSSubset(const ContentSpecNode* const derivedSpecNode,
                        const ContentSpecNode* const baseSpecNode);
+    bool checkNSSubsetChoiceRoot(const ContentSpecNode* const derivedSpecNode,
+                       const ContentSpecNode* const baseSpecNode);
+    bool checkNSSubsetChoice(const ContentSpecNode* const derivedSpecNode,
+                       const ContentSpecNode* const baseSpecNode);
     bool isWildCardEltSubset(const ContentSpecNode* const derivedSpecNode,
                              const ContentSpecNode* const baseSpecNode);
     void checkNSRecurseCheckCardinality(SchemaGrammar* const currentGrammar,

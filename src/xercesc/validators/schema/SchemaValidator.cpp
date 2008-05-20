@@ -1212,6 +1212,12 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
             case ContentSpecNode::All:
             case ContentSpecNode::Leaf:
                 {
+                    if (baseNodeType == ContentSpecNode::Any_NS_Choice) {
+                        if (checkNSSubsetChoiceRoot(curSpecNode, baseSpecNode)) {
+                            return;
+                        }
+                    }
+
                     ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_ForbiddenRes1, fMemoryManager);
                 }
             default:
@@ -1830,6 +1836,45 @@ void SchemaValidator::checkNSSubset(const ContentSpecNode* const derivedSpecNode
     if (!isWildCardEltSubset(derivedSpecNode, baseSpecNode)) {
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::PD_NSSubset2, fMemoryManager);
     }
+}
+
+bool SchemaValidator::checkNSSubsetChoiceRoot(const ContentSpecNode* const derivedSpecNode,
+                                    const ContentSpecNode* const baseSpecNode) {
+    bool found = false;       
+
+    if (baseSpecNode->getType() == ContentSpecNode::Any_NS_Choice) {
+        const ContentSpecNode* first = baseSpecNode->getFirst();
+        const ContentSpecNode* second = baseSpecNode->getSecond();
+
+        if (first) {
+            found = checkNSSubsetChoiceRoot(derivedSpecNode, first);
+            if (found) return true;
+        }
+        if (second) { 
+            found = checkNSSubsetChoiceRoot(derivedSpecNode, second);
+            if (found) return true;
+        }
+    }
+    else { // should be Any_NS
+        found = checkNSSubsetChoice(derivedSpecNode, baseSpecNode);
+    }
+
+    return found; 
+}
+
+bool SchemaValidator::checkNSSubsetChoice(const ContentSpecNode* const derivedSpecNode,
+                                    const ContentSpecNode* const baseSpecNode) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        return false;
+    }
+
+    if (!isWildCardEltSubset(derivedSpecNode, baseSpecNode)) {
+        return false;
+    }
+    return true;
 }
 
 bool
