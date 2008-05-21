@@ -252,6 +252,13 @@ public:
     );
 
     /**
+     *  This method will mark whether the entity is external.
+     *
+     *  @param  newName   The new value for the 'is external' flag.
+     */
+    void setIsExternal(bool value);
+
+    /**
      *  This method will set the notation name for this entity. By setting
      *  this, you are indicating that this is an unparsed external entity.
      *
@@ -373,6 +380,7 @@ private :
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
     XMLCh*          fBaseURI;
+    bool            fIsExternal;
     MemoryManager*  fMemoryManager;
 };
 
@@ -422,8 +430,7 @@ inline XMLSize_t XMLEntityDecl::getValueLen() const
 
 inline bool XMLEntityDecl::isExternal() const
 {
-    // If it has a system or public id, its external
-    return ((fPublicId != 0) || (fSystemId != 0));
+    return fIsExternal;
 }
 
 inline bool XMLEntityDecl::isUnparsed() const
@@ -443,6 +450,11 @@ inline MemoryManager* XMLEntityDecl::getMemoryManager() const
 inline void XMLEntityDecl::setId(const unsigned int newId)
 {
     fId = newId;
+}
+
+inline void XMLEntityDecl::setIsExternal(bool value)
+{
+    fIsExternal = value;
 }
 
 inline void XMLEntityDecl::setNotationName(const XMLCh* const newName)

@@ -131,9 +131,13 @@
 #define XERCES_VERSION_REVISION 0
 
 /***
- * data member added to XSAnnotation
+ *
+ * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 4   SchemaAttDef, SchemaElementDecl serialize fPSVIScope
+ * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 5   XercesStep serializes the axis as an int
+ * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 6   added fIsExternal to XMLEntityDecl
+ *
  ***/
-#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 5
+#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 6
 
 /** DO NOT MODIFY BELOW THIS LINE */
 

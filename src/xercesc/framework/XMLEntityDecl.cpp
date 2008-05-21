@@ -42,6 +42,7 @@ XMLEntityDecl::XMLEntityDecl(MemoryManager* const manager) :
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fIsExternal(false)
     , fMemoryManager(manager)
 {
 }
@@ -57,6 +58,7 @@ XMLEntityDecl::XMLEntityDecl(const XMLCh* const entName,
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fIsExternal(false)
     , fMemoryManager(manager)
 {
     fName = XMLString::replicate(entName, fMemoryManager);
@@ -75,6 +77,7 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fIsExternal(false)
     , fMemoryManager(manager)
 {
     CleanupType cleanup(this, &XMLEntityDecl::cleanUp);
@@ -105,6 +108,7 @@ XMLEntityDecl::XMLEntityDecl(const  XMLCh* const   entName
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fIsExternal(false)
     , fMemoryManager(manager)
 {
     CleanupType cleanup(this, &XMLEntityDecl::cleanUp);
@@ -177,17 +181,23 @@ void XMLEntityDecl::serialize(XSerializeEngine& serEng)
         serEng.writeString(fPublicId);
         serEng.writeString(fSystemId);
         serEng.writeString(fBaseURI);
+        serEng<<fIsExternal;
     }
     else
     {
         serEng>>fId;
-        serEng>>(unsigned long&)fValueLen;
+        unsigned long temp;
+        serEng>>temp;
+        fValueLen=temp;
         serEng.readString(fValue);
         serEng.readString(fName);
         serEng.readString(fNotationName);
         serEng.readString(fPublicId);
         serEng.readString(fSystemId);
         serEng.readString(fBaseURI);
+        // when fIsExternal has been added, XERCES_GRAMMAR_SERIALIZATION_LEVEL has been bumped to 6
+        if(serEng.getStorerLevel()>=6)
+            serEng>>fIsExternal;
     }
 }
 

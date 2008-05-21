@@ -2277,6 +2277,7 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
     if (!scanId(bbPubId.getBuffer(), bbSysId.getBuffer(), IDType_External))
         return false;
 
+    decl.setIsExternal(true);
     ReaderMgr::LastExtEntityInfo lastInfo;
     fReaderMgr->getLastExtEntityInfo(lastInfo);
 
