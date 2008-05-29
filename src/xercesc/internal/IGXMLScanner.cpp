@@ -1532,6 +1532,7 @@ void IGXMLScanner::scanDocTypeDecl()
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
             DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
             declDTD->setSystemId(sysId);
+            declDTD->setIsExternal(true);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
             // Mark this one as a throw at end
@@ -3148,6 +3149,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
     DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
     declDTD->setSystemId(src.getSystemId());
+    declDTD->setIsExternal(true);
     Janitor<DTDEntityDecl> janDecl(declDTD);
 
     // Mark this one as a throw at end
