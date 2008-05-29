@@ -698,8 +698,6 @@ util_headers = \
 	xercesc/util/XMLExceptMsgs.hpp \
 	xercesc/util/XMLFileMgr.hpp \
 	xercesc/util/XMLFloat.hpp \
-	xercesc/util/XMLHolder.hpp \
-	xercesc/util/XMLHolder.c \
 	xercesc/util/XMLIBM1047Transcoder.hpp \
 	xercesc/util/XMLIBM1140Transcoder.hpp \
 	xercesc/util/XMLInitializer.hpp \
