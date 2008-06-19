@@ -99,7 +99,7 @@ BMPattern::~BMPattern() {
 // ---------------------------------------------------------------------------
 //  BMPattern: matches methods
 // ---------------------------------------------------------------------------
-int BMPattern::matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit) {
+int BMPattern::matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit) const {
 
 	const XMLSize_t patternLen = XMLString::stringLen(fPattern);
 	// Uppercase Content

@@ -104,45 +104,57 @@ public:
     // -----------------------------------------------------------------------
     //  Matching methods
     // -----------------------------------------------------------------------
-    bool matches(const char* const matchString, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const char* const matchString, const XMLSize_t start,
-                 const XMLSize_t end, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const char* const matchString, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const char* const matchString, const XMLSize_t start,
-                 const XMLSize_t end, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    bool matches(const char* const matchString,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    bool matches(const char* const matchString, const XMLSize_t start, const XMLSize_t end,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    bool matches(const char* const matchString, Match* const pMatch,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    bool matches(const char* const matchString, const XMLSize_t start, const XMLSize_t end,
+                 Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
-    bool matches(const XMLCh* const matchString, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const XMLCh* const matchString, const XMLSize_t start,
-                 const XMLSize_t end, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const XMLCh* const matchString, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    bool matches(const XMLCh* const matchString, const XMLSize_t start,
-                 const XMLSize_t end, Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    bool matches(const XMLCh* const matchString,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    bool matches(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    bool matches(const XMLCh* const matchString, Match* const pMatch,
+                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    bool matches(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
+                 Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    void allMatches(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
+                    RefVectorOf<Match> *subEx, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
     // -----------------------------------------------------------------------
     //  Tokenize methods
     // -----------------------------------------------------------------------
     // Note: The caller owns the string vector that is returned, and is responsible
     //       for deleting it.
-    RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString);
-    RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString, const XMLSize_t start,
-                                      const XMLSize_t end);
+    RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString,
+                                      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString, const XMLSize_t start, const XMLSize_t end,
+                                      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
-    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString);
     RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString,
-                                      const XMLSize_t start, const XMLSize_t end);
+                                      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
+                                      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
     // -----------------------------------------------------------------------
     //  Replace methods
     // -----------------------------------------------------------------------
     // Note: The caller owns the XMLCh* that is returned, and is responsible for
     //       deleting it.
-    XMLCh *replace(const char* const matchString, const char* const replaceString);
     XMLCh *replace(const char* const matchString, const char* const replaceString,
-                   const XMLSize_t start, const XMLSize_t end);
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    XMLCh *replace(const char* const matchString, const char* const replaceString,
+                   const XMLSize_t start, const XMLSize_t end,
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
-    XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString);
     XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString,
-                   const XMLSize_t start, const XMLSize_t end);
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+    XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString,
+                   const XMLSize_t start, const XMLSize_t end,
+                   MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
     // -----------------------------------------------------------------------
     //  Static initialize and cleanup methods
@@ -182,7 +194,8 @@ private:
             Context& operator= (const Context& other);
             inline const XMLCh* getString() const { return fString; }
             void reset(const XMLCh* const string, const XMLSize_t stringLen,
-                       const XMLSize_t start, const XMLSize_t limit, const int noClosures);
+                       const XMLSize_t start, const XMLSize_t limit, const int noClosures,
+                       const unsigned int options);
             bool nextCh(XMLInt32& ch, XMLSize_t& offset, const short direction);
 
             bool           fAdoptMatch;
@@ -194,6 +207,7 @@ private:
             int*           fOffsets;
             Match*         fMatch;
             const XMLCh*   fString;
+            unsigned int   fOptions;
             MemoryManager* fMemoryManager;
     };
 
@@ -208,65 +222,53 @@ private:
     // -----------------------------------------------------------------------
     void prepare();
     int parseOptions(const XMLCh* const options);
-    wordType getWordType(const XMLCh* const target, const XMLSize_t begin,
-                               const XMLSize_t end, const XMLSize_t offset);
-    wordType getCharType(const XMLCh ch);
-    wordType getPreviousWordType(const XMLCh* const target,
-                                       const XMLSize_t start, const XMLSize_t end,
-                                       XMLSize_t offset);
+    wordType getWordType(Context* const context, const XMLCh* const target,
+                         const XMLSize_t begin, const XMLSize_t end,
+                         const XMLSize_t offset) const;
+    wordType getCharType(Context* const context, const XMLCh ch) const;
+    wordType getPreviousWordType(Context* const context, const XMLCh* const target,
+                                 const XMLSize_t start, const XMLSize_t end,
+                                 XMLSize_t offset) const;
 
     /**
       *    Matching helpers
       */
     int match(Context* const context, const Op* const operations, XMLSize_t offset,
-              const short direction);
-    bool matchIgnoreCase(const XMLInt32 ch1, const XMLInt32 ch2);
+              const short direction) const;
+    bool matchIgnoreCase(const XMLInt32 ch1, const XMLInt32 ch2) const;
 
     /**
       *    Helper methods used by match(Context* ...)
       */
     bool matchChar(Context* const context, const XMLInt32 ch, XMLSize_t& offset,
-                   const short direction, const bool ignoreCase);
-    bool matchDot(Context* const context, XMLSize_t& offset, const short direction);
+                   const short direction, const bool ignoreCase) const;
+    bool matchDot(Context* const context, XMLSize_t& offset, const short direction) const;
     bool matchRange(Context* const context, const Op* const op,
-                    XMLSize_t& offset, const short direction, const bool ignoreCase);
+                    XMLSize_t& offset, const short direction, const bool ignoreCase) const;
     bool matchAnchor(Context* const context, const XMLInt32 ch,
-                     const XMLSize_t offset);
+                     const XMLSize_t offset) const;
     bool matchBackReference(Context* const context, const XMLInt32 ch,
                             XMLSize_t& offset, const short direction,
-                            const bool ignoreCase);
+                            const bool ignoreCase) const;
     bool matchString(Context* const context, const XMLCh* const literal,
-                     XMLSize_t& offset, const short direction, const bool ignoreCase);
+                     XMLSize_t& offset, const short direction, const bool ignoreCase) const;
     int  matchUnion(Context* const context, const Op* const op, XMLSize_t offset,
-                    const short direction);
+                    const short direction) const;
     int matchCapture(Context* const context, const Op* const op, XMLSize_t offset,
-                     const short direction);
+                     const short direction) const;
     bool matchCondition(Context* const context, const Op* const op, XMLSize_t offset,
-                        const short direction);
+                        const short direction) const;
     int matchModifier(Context* const context, const Op* const op, XMLSize_t offset,
-                      const short direction);
+                      const short direction) const;
 
     /**
-     *    Tokenize helper
-     *
-     *    This overloaded tokenize is for internal use only. It provides a way to
-     *    keep track of the sub-expressions in each match of the pattern.
-     *
-     *    It is called by the other tokenize methods, and by the replace method.
-     *    The caller is responsible for the deletion of the returned
-     *    RefArrayVectorOf<XMLCh*>
-     */
-    RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString,
-                                      const XMLSize_t start, const XMLSize_t end,
-                                      RefVectorOf<Match> *subEx);
-    /**
      *    Replace helpers
-     *
-     *    Note: the caller owns the XMLCh* that is returned
      */
-    const XMLCh *subInExp(const XMLCh* const repString,
-                          const XMLCh* const origString,
-                          const Match* subEx);
+    void subInExp(const XMLCh* const repString,
+                  const XMLCh* const origString,
+                  const Match* subEx,
+                  XMLBuffer &result,
+                  MemoryManager* const manager) const;
     /**
      *    Converts a token tree into an operation tree
      */
@@ -302,10 +304,10 @@ private:
     XMLSize_t          fMinLength;
     unsigned int       fNoClosures;
     unsigned int       fOptions;
-    BMPattern*         fBMPattern;
+    const BMPattern*   fBMPattern;
     XMLCh*             fPattern;
     XMLCh*             fFixedString;
-    Op*                fOperations;
+    const Op*          fOperations;
     Token*             fTokenTree;
     RangeToken*        fFirstChar;
     static RangeToken* fWordRange;
@@ -574,40 +576,42 @@ private:
 
   inline int RegularExpression::matchModifier(Context* const context,
                                               const Op* const op, XMLSize_t offset,
-                                              const short direction)
+                                              const short direction) const
   {
       int saveOptions = fOptions;
-      fOptions |= (int) op->getData();
-      fOptions &= (int) ~op->getData2();
+      context->fOptions |= (int) op->getData();
+      context->fOptions &= (int) ~op->getData2();
 
       int ret = match(context, op->getChild(), offset, direction);
 
-      fOptions = saveOptions;
+      context->fOptions = saveOptions;
 
       return ret;
   }
 
-  inline RegularExpression::wordType RegularExpression::getWordType(const XMLCh* const target
+  inline RegularExpression::wordType RegularExpression::getWordType(Context* const context
+                                                                   , const XMLCh* const target
                                                                    , const XMLSize_t begin
                                                                    , const XMLSize_t end
-                                                                   , const XMLSize_t offset)
+                                                                   , const XMLSize_t offset) const
   {
       if (offset < begin || offset >= end)
           return wordTypeOther;
 
-      return getCharType(target[offset]);
+      return getCharType(context, target[offset]);
   }
 
   inline
-  RegularExpression::wordType RegularExpression::getPreviousWordType(const XMLCh* const target
+  RegularExpression::wordType RegularExpression::getPreviousWordType(Context* const context
+                                                                    , const XMLCh* const target
                                                                     , const XMLSize_t start
                                                                     , const XMLSize_t end
-                                                                    , XMLSize_t offset)
+                                                                    , XMLSize_t offset) const
   {
-      wordType ret = getWordType(target, start, end, --offset);
+      wordType ret = getWordType(context, target, start, end, --offset);
 
       while (ret == wordTypeIgnore) {
-          ret = getWordType(target, start, end, --offset);
+          ret = getWordType(context, target, start, end, --offset);
       }
 
       return ret;

@@ -100,7 +100,7 @@ public:
 	  *	This method will perform a match of the given content against a
 	  *	predefined pattern.
 	  */
-	int matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit);
+	int matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit) const;
 
 	//@}
 
