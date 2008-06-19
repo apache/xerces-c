@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,23 +38,34 @@ DOMXPathNSResolverImpl::~DOMXPathNSResolverImpl()
 
 const XMLCh* DOMXPathNSResolverImpl::lookupNamespaceURI(const XMLCh* prefix) const
 {
+    if(prefix == 0) prefix = XMLUni::fgZeroLenString;
+
     if(XMLString::equals(prefix, XMLUni::fgXMLString))
         return XMLUni::fgXMLURIName;
 
     const KVStringPair *pair = fNamespaceBindings->get((void*)prefix);
     if(pair) {
+
+        // An empty namespace URI indicated that this binding was removed
+        // by the user.
+        //
         if(*pair->getValue() == 0) return NULL;
+
         return pair->getValue();
     }
 
     if(fResolverNode)
-        return fResolverNode->lookupNamespaceURI(prefix);
+        return fResolverNode->lookupNamespaceURI(
+          *prefix == 0 ? 0 : prefix); // Expects 0 for default namespace.
 
     return NULL;
 }
 
 const XMLCh* DOMXPathNSResolverImpl::lookupPrefix(const XMLCh* uri) const
 {
+    if (uri == 0 || *uri == 0)
+        return 0;
+
     if(XMLString::equals(uri, XMLUni::fgXMLURIName))
         return XMLUni::fgXMLString;
 
@@ -67,9 +78,16 @@ const XMLCh* DOMXPathNSResolverImpl::lookupPrefix(const XMLCh* uri) const
     }
 
     if(fResolverNode)
-        return fResolverNode->lookupPrefix(uri);
+    {
+      const XMLCh* r = fResolverNode->lookupPrefix(uri);
 
-    return NULL;
+      if (r == 0 && fResolverNode->isDefaultNamespace(uri))
+        r = XMLUni::fgZeroLenString;
+
+      return r;
+    }
+
+    return 0;
 }
 
 void DOMXPathNSResolverImpl::addNamespaceBinding(const XMLCh* prefix, const XMLCh* uri)
