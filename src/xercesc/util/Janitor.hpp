@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -98,7 +98,7 @@ private :
     // -----------------------------------------------------------------------
 	ArrayJanitor();
     ArrayJanitor(const ArrayJanitor<T>& copy);
-    ArrayJanitor<T>& operator=(const ArrayJanitor<T>& copy);    
+    ArrayJanitor<T>& operator=(const ArrayJanitor<T>& copy);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -128,10 +128,12 @@ public  :
 
     ~JanitorMemFunCall();
 
-    // -----------------------------------------------------------------------
-    //  Public, non-virtual methods
-    // -----------------------------------------------------------------------
-	void release();
+    //  small amount of auto_ptr compatibility
+    T& operator*() const;
+    T* operator->() const;
+    T* get() const;
+    T* release();
+    void reset(T* p = 0);
 
 private :
     // -----------------------------------------------------------------------

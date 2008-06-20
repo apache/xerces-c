@@ -781,6 +781,7 @@
             <Message Id="DOMXPATHEXCEPTION_ERRX" Text="Just an index"/>
             <Message Id="INVALID_EXPRESSION_ERR" Text="The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax"/>
             <Message Id="TYPE_ERR" Text="The requested result type is not supported"/>
+	    <Message Id="NO_RESULT_ERR" Text="There is no current result in the result object"/>
 <!--The following are other messages related to DOM -->
 <!--Messages used by DOMLSSerializer -->
             <Message Id="Writer_NestedCDATA" Text="Nested CDATA sections"/>

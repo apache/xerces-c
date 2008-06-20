@@ -55,8 +55,8 @@ const XMLCh* DOMXPathNSResolverImpl::lookupNamespaceURI(const XMLCh* prefix) con
     }
 
     if(fResolverNode)
-        return fResolverNode->lookupNamespaceURI(
-          *prefix == 0 ? 0 : prefix); // Expects 0 for default namespace.
+      return fResolverNode->lookupNamespaceURI(
+        *prefix == 0 ? 0 : prefix); // Expects 0 for default namespace.
 
     return NULL;
 }

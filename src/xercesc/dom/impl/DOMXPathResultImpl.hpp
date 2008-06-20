@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,18 +35,22 @@ public:
     DOMXPathResultImpl(unsigned short type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~DOMXPathResultImpl();
 
-	virtual bool getBooleanValue() const;
-	virtual bool getInvalidIteratorState() const;
-	virtual double getNumberValue() const;
-	virtual short getResultType() const;
-	virtual const DOMNode *getSingleNodeValue() const;
-	virtual unsigned long getSnapshotLength() const;
-	virtual const XMLCh* getStringValue() const;
-	virtual const DOMNode* iterateNext() const;
-	virtual const DOMNode* snapshotItem(unsigned long index) const;
+    virtual short getResultType() const;
+    virtual const DOMTypeInfo *getTypeInfo() const;
+    virtual bool isNode() const;
+    virtual bool getBooleanValue() const;
+    virtual int getIntegerValue() const;
+    virtual double getNumberValue() const;
+    virtual const XMLCh* getStringValue() const;
+    virtual DOMNode* getNodeValue() const;
+    virtual bool iterateNext();
+    virtual bool getInvalidIteratorState() const;
+    virtual bool snapshotItem(XMLSize_t);
+    virtual XMLSize_t getSnapshotLength() const;
 
-    virtual void release() const;
+    virtual void release();
 
+public:
     void reset(unsigned short type);
     void addResult(DOMNode* node);
 
@@ -54,6 +58,7 @@ protected:
     unsigned short          fType;
     MemoryManager* const    fMemoryManager;
     RefVectorOf<DOMNode>*   fSnapshot;
+    XMLSize_t               fIndex;
 };
 
 XERCES_CPP_NAMESPACE_END

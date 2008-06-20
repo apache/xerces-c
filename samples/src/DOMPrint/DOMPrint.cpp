@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -502,16 +502,35 @@ int main(int argC, char* argV[])
             if(gXPathExpression!=NULL)
             {
                 XMLCh* xpathStr=XMLString::transcode(gXPathExpression);
+                DOMElement* root = doc->getDocumentElement();
                 try
                 {
-                    const DOMXPathNSResolver* resolver=doc->createNSResolver(doc->getDocumentElement());
-                    DOMXPathResult* result=(DOMXPathResult*)doc->evaluate(xpathStr, doc->getDocumentElement(), resolver, DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE, NULL);
-                    unsigned long nLength=result->getSnapshotLength();
-                    for(unsigned long i=0;i<nLength;i++)
-                        theSerializer->write(result->snapshotItem(i), theOutputDesc);
+                    DOMXPathNSResolver* resolver=doc->createNSResolver(root);
+                    DOMXPathResult* result=doc->evaluate(
+                      xpathStr,
+                      root,
+                      resolver,
+                      DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE,
+                      NULL);
+
+                    XMLSize_t nLength = result->getSnapshotLength();
+                    for(XMLSize_t i = 0; i < nLength; i++)
+                    {
+                      result->snapshotItem(i);
+                      theSerializer->write(result->getNodeValue(), theOutputDesc);
+                    }
+
                     result->release();
+                    resolver->release ();
                 }
                 catch(const DOMXPathException& e)
+                {
+                    XERCES_STD_QUALIFIER cerr << "An error occurred during processing of the XPath expression. Msg is:"
+                        << XERCES_STD_QUALIFIER endl
+                        << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+                    retval = 4;
+                }
+                catch(const DOMException& e)
                 {
                     XERCES_STD_QUALIFIER cerr << "An error occurred during processing of the XPath expression. Msg is:"
                         << XERCES_STD_QUALIFIER endl
@@ -573,4 +592,3 @@ int main(int argC, char* argV[])
 
     return retval;
 }
-

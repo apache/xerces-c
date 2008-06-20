@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,15 +39,21 @@ class CDOM_EXPORT DOMXPathExpressionImpl :  public XMemory,
                                             public DOMXPathExpression
 {
 public:
-    DOMXPathExpressionImpl(const XMLCh *expression, const DOMXPathNSResolver *resolver, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    DOMXPathExpressionImpl(const XMLCh *expression,
+                           const DOMXPathNSResolver *resolver,
+                           MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~DOMXPathExpressionImpl();
 
-    virtual void* evaluate(const DOMNode *contextNode, unsigned short type, void* result) const;
+    virtual DOMXPathResult* evaluate(const DOMNode *contextNode,
+                                     unsigned short type,
+                                     DOMXPathResult* result) const;
 
-    virtual void release() const;
+    virtual void release();
 
 protected:
-    bool testNode(XPathMatcher* matcher, DOMXPathResultImpl* result, DOMElement *node) const;
+    bool testNode(XPathMatcher* matcher,
+                  DOMXPathResultImpl* result,
+                  DOMElement *node) const;
     void cleanUp();
 
     XMLStringPool*              fStringPool;

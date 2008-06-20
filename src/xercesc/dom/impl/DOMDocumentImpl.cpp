@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,6 +49,7 @@
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -82,7 +83,7 @@ DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* cons
       fDOMConfiguration(0),
       fUserDataTableKeys(17, manager),
       fUserDataTable(0),
-      fCurrentBlock(0),      
+      fCurrentBlock(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fHeapAllocSize(kInitialHeapAllocSize),
@@ -92,12 +93,12 @@ DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* cons
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fNormalizer(0),      
+      fNormalizer(0),
       fRanges(0),
       fNodeIterators(0),
       fMemoryManager(manager),
       fDOMImplementation(domImpl),
-      fChanges(0),      
+      fChanges(0),
       errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
@@ -108,7 +109,7 @@ DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* cons
 DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
                                const XMLCh *qualifiedName,
                                DOMDocumentType *doctype,
-                               DOMImplementation* domImpl, 
+                               DOMImplementation* domImpl,
                                MemoryManager* const manager)
     : fNode(this),
       fParent(this),
@@ -121,7 +122,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDOMConfiguration(0),
       fUserDataTableKeys(17, manager),
       fUserDataTable(0),
-      fCurrentBlock(0),      
+      fCurrentBlock(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fHeapAllocSize(kInitialHeapAllocSize),
@@ -131,7 +132,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fNormalizer(0),      
+      fNormalizer(0),
       fRanges(0),
       fNodeIterators(0),
       fMemoryManager(manager),
@@ -422,7 +423,7 @@ void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
 }
 
 
-const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh * expression, const DOMXPathNSResolver *resolver)
+DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh * expression, const DOMXPathNSResolver *resolver)
 {
     return new (getMemoryManager()) DOMXPathExpressionImpl(expression, resolver, getMemoryManager());
 }
@@ -432,13 +433,16 @@ DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(const DOMNode *nodeResolve
     return new (getMemoryManager()) DOMXPathNSResolverImpl(nodeResolver, getMemoryManager());
 }
 
-void* DOMDocumentImpl::evaluate(const XMLCh *expression, const DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
-                           unsigned short type, void* result) 
+DOMXPathResult* DOMDocumentImpl::evaluate(const XMLCh *expression,
+                                          const DOMNode *contextNode,
+                                          const DOMXPathNSResolver *resolver,
+                                          unsigned short type,
+                                          DOMXPathResult* result)
 {
-    const DOMXPathExpression* expr=createExpression(expression, resolver);
-    result=expr->evaluate(contextNode, type, result);
-    expr->release();
-    return result;
+    JanitorMemFunCall<DOMXPathExpression> expr(
+      createExpression(expression, resolver),
+      &DOMXPathExpression::release);
+    return expr->evaluate(contextNode, type, result);
 }
 
 
@@ -730,8 +734,8 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
       }
       int p=parent->getNodeType();
       int ch = child->getNodeType();
-      return ((kidOK[p] & 1<<ch) != 0) || 
-             (p==DOMNode::DOCUMENT_NODE && ch==DOMNode::TEXT_NODE && 
+      return ((kidOK[p] & 1<<ch) != 0) ||
+             (p==DOMNode::DOCUMENT_NODE && ch==DOMNode::TEXT_NODE &&
               ((XMLString::equals(((DOMDocument*)parent)->getXmlVersion(), XMLUni::fgVersion1_1))?
                     XMLChar1_1::isAllSpaces(child->getNodeValue(), XMLString::stringLen(child->getNodeValue())):
                     XMLChar1_0::isAllSpaces(child->getNodeValue(), XMLString::stringLen(child->getNodeValue())))
@@ -824,7 +828,7 @@ void DOMDocumentImpl::setMemoryAllocationBlockSize(XMLSize_t size)
 }
 
 void *         DOMDocumentImpl::allocate(XMLSize_t amount)
-{	
+{
 	//	Align the request size so that suballocated blocks
 	//	beyond this one will be maintained at the same alignment.
 	amount = XMLPlatformUtils::alignPointerForNewBlockAllocation(amount);
@@ -840,7 +844,7 @@ void *         DOMDocumentImpl::allocate(XMLSize_t amount)
 		//	Try to allocate the block
         void* newBlock;
         newBlock = fMemoryManager->allocate((sizeOfHeader + amount) * sizeof(char)); //new char[amount + sizeOfHeader];
-        
+
 		//	Link it into the list beyond current block, as current block
 		//	is still being subdivided. If there is no current block
 		//	then track that we have no bytes to further divide.
@@ -855,7 +859,7 @@ void *         DOMDocumentImpl::allocate(XMLSize_t amount)
             fFreePtr = 0;
             fFreeBytesRemaining = 0;
         }
-		
+
         void *retPtr = (char *)newBlock + sizeOfHeader;
         return retPtr;
     }
@@ -872,7 +876,7 @@ void *         DOMDocumentImpl::allocate(XMLSize_t amount)
         // Get a new block from the system allocator.
         void* newBlock;
         newBlock = fMemoryManager->allocate(fHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
-        
+
         *(void **)newBlock = fCurrentBlock;
         fCurrentBlock = newBlock;
         fFreePtr = (char *)newBlock + sizeOfHeader;
@@ -886,7 +890,7 @@ void *         DOMDocumentImpl::allocate(XMLSize_t amount)
     void *retPtr = fFreePtr;
     fFreePtr += amount;
     fFreeBytesRemaining -= amount;
-	
+
     return retPtr;
 }
 
@@ -977,7 +981,7 @@ void DOMDocumentImpl::setXmlVersion(const XMLCh* version){
         fXmlVersion = XMLUni::fgVersion1_0;
     else if(XMLString::equals(version, XMLUni::fgVersion1_1))
         fXmlVersion = XMLUni::fgVersion1_1;
-    else 
+    else
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 }
 
@@ -1011,7 +1015,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* sourceNode) {
         // and would be delete when the original document is deleted
         return 0;
     }
-    // if the adopted node is already part of this document (i.e. the source and target document are the same), 
+    // if the adopted node is already part of this document (i.e. the source and target document are the same),
     // this method still has the effect of removing the source node from the child list of its parent, if any
     switch(sourceNode->getNodeType())
     {
@@ -1040,7 +1044,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode* sourceNode) {
 
 void DOMDocumentImpl::normalizeDocument() {
 
-    if(!fNormalizer) 
+    if(!fNormalizer)
         fNormalizer = new (fMemoryManager) DOMNormalizer(fMemoryManager);
 
     fNormalizer->normalizeDocument(this);
@@ -1146,8 +1150,8 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
         {
             DOMEntityReferenceImpl* newentityRef = (DOMEntityReferenceImpl*)createEntityReference(source->getNodeName());
             newnode=newentityRef;
-            // Only the EntityReference itself is copied, even if a deep import is requested, since the source and 
-            // destination documents might have defined the entity differently. 
+            // Only the EntityReference itself is copied, even if a deep import is requested, since the source and
+            // destination documents might have defined the entity differently.
             deep = false;
         }
         break;
@@ -1412,16 +1416,16 @@ void DOMDocumentImpl::release()
 void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
 {
     DOMNode *child = object->getFirstChild();
-    
+
     while( child != 0)
     {
-            
-         DOMNamedNodeMap *attrlist=child->getAttributes(); 
-    
-         if(attrlist!=0) 
-             for(unsigned int i=0;i<attrlist->getLength();++i) 
-                 releaseDocNotifyUserData(attrlist->item(i)); 
-            
+
+         DOMNamedNodeMap *attrlist=child->getAttributes();
+
+         if(attrlist!=0)
+             for(unsigned int i=0;i<attrlist->getLength();++i)
+                 releaseDocNotifyUserData(attrlist->item(i));
+
         releaseDocNotifyUserData(child);
         child = child->getNextSibling();
     }

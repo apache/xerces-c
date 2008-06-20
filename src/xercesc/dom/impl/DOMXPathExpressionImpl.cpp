@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,8 +31,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 class WrapperForXPathNSResolver : public XercesNamespaceResolver
 {
 public:
-    WrapperForXPathNSResolver(XMLStringPool* pool, const DOMXPathNSResolver *resolver, MemoryManager* const manager) : 
-      fStringPool(pool), 
+    WrapperForXPathNSResolver(XMLStringPool* pool, const DOMXPathNSResolver *resolver, MemoryManager* const manager) :
+      fStringPool(pool),
       fResolver(resolver),
       fMemoryManager(manager)
     {
@@ -105,25 +105,32 @@ DOMXPathExpressionImpl::~DOMXPathExpressionImpl()
     cleanUp();
 }
 
-void DOMXPathExpressionImpl::cleanUp() 
+void DOMXPathExpressionImpl::cleanUp()
 {
     XMLString::release(&fExpression, fMemoryManager);
     delete fParsedExpression;
     delete fStringPool;
 }
 
-void* DOMXPathExpressionImpl::evaluate(const DOMNode *contextNode, unsigned short type, void* result) const
+DOMXPathResult* DOMXPathExpressionImpl::evaluate(const DOMNode *contextNode,
+                                                 unsigned short type,
+                                                 DOMXPathResult* result) const
 {
-    if(type!=DOMXPathResult::FIRST_ORDERED_NODE_TYPE && type!=DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE && 
+    if(type!=DOMXPathResult::FIRST_ORDERED_NODE_TYPE && type!=DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE &&
        type!=DOMXPathResult::ANY_UNORDERED_NODE_TYPE && type!=DOMXPathResult::UNORDERED_NODE_SNAPSHOT_TYPE)
         throw DOMXPathException(DOMXPathException::TYPE_ERR, 0, fMemoryManager);
 
     if(contextNode==NULL || contextNode->getNodeType()!=DOMNode::ELEMENT_NODE)
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
 
+    JanitorMemFunCall<DOMXPathResultImpl> r_cleanup (
+      0, &DOMXPathResultImpl::release);
     DOMXPathResultImpl* r=(DOMXPathResultImpl*)result;
     if(r==NULL)
-        r=new (fMemoryManager) DOMXPathResultImpl(type, fMemoryManager);
+    {
+      r=new (fMemoryManager) DOMXPathResultImpl(type, fMemoryManager);
+      r_cleanup.reset (r);
+    }
     else
         r->reset(type);
 
@@ -150,7 +157,9 @@ void* DOMXPathExpressionImpl::evaluate(const DOMNode *contextNode, unsigned shor
         matcher.endElement(elemDecl, XMLUni::fgZeroLenString);
     }
     else
-        testNode(&matcher, r, (DOMElement*)contextNode); 
+        testNode(&matcher, r, (DOMElement*)contextNode);
+
+    r_cleanup.release ();
     return r;
 }
 
@@ -183,7 +192,7 @@ bool DOMXPathExpressionImpl::testNode(XPathMatcher* matcher, DOMXPathResultImpl*
             return true;    // abort navigation, we found one result
     }
 
-    if(nMatch==0 || nMatch==XPathMatcher::XP_MATCHED_D || nMatch==XPathMatcher::XP_MATCHED_DP) 
+    if(nMatch==0 || nMatch==XPathMatcher::XP_MATCHED_D || nMatch==XPathMatcher::XP_MATCHED_DP)
     {
         DOMNode* child=node->getFirstChild();
         while(child)
@@ -198,9 +207,9 @@ bool DOMXPathExpressionImpl::testNode(XPathMatcher* matcher, DOMXPathResultImpl*
     return false;
 }
 
-void DOMXPathExpressionImpl::release() const
+void DOMXPathExpressionImpl::release()
 {
-    DOMXPathExpressionImpl* me=(DOMXPathExpressionImpl*)this;
+    DOMXPathExpressionImpl* me = this;
     delete me;
 }
 

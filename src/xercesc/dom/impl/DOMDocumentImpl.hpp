@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -93,7 +93,7 @@ public:
     DOMDocumentImpl(const XMLCh*     namespaceURI,     //DOM Level 2
                     const XMLCh*     qualifiedName,
                     DOMDocumentType* doctype,
-                    DOMImplementation* domImpl, 
+                    DOMImplementation* domImpl,
                     MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~DOMDocumentImpl();
 
@@ -141,10 +141,14 @@ public:
     virtual void                 removeRange(DOMRangeImpl* range); //non-standard api
     virtual void                 removeNodeIterator(DOMNodeIteratorImpl* nodeIterator); //non-standard api
 
-    virtual const DOMXPathExpression*    createExpression(const XMLCh *expression, const DOMXPathNSResolver *resolver);
-    virtual DOMXPathNSResolver*    createNSResolver(const DOMNode *nodeResolver);
-    virtual void* evaluate(const XMLCh *expression, const DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
-                           unsigned short type, void* result);
+    virtual DOMXPathExpression* createExpression(const XMLCh *expression,
+                                                 const DOMXPathNSResolver *resolver);
+    virtual DOMXPathNSResolver* createNSResolver(const DOMNode *nodeResolver);
+    virtual DOMXPathResult* evaluate(const XMLCh *expression,
+                                     const DOMNode *contextNode,
+                                     const DOMXPathNSResolver *resolver,
+                                     unsigned short type,
+                                     DOMXPathResult* result);
 
 
     // Extension to be called by the Parser
@@ -293,7 +297,7 @@ protected:
     const XMLCh*          fXmlVersion;
     const XMLCh*          fDocumentURI;
     DOMConfiguration*     fDOMConfiguration;
-    
+
     XMLStringPool         fUserDataTableKeys;
     RefHash2KeysTableOf<DOMUserDataRecord>* fUserDataTable;
 

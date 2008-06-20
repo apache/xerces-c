@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -2727,7 +2727,7 @@ bool DOMTest::testDOMerrors(DOMDocument* document) {
         XMLCh xpathStr[100]; \
         XMLString::transcode(xpath,xpathStr,99); \
         DOMXPathResult* result=(DOMXPathResult*)document->evaluate(xpathStr, document->getDocumentElement(), NULL, DOMXPathResult::FIRST_ORDERED_NODE_TYPE, NULL); \
-        if(result->getSingleNodeValue() == NULL) {  \
+        if(result->getNodeValue() == NULL) {  \
             fprintf(stderr, "DOMDocument::evaluate does not work in line %i (single node not found)\n", line);  \
             OK = false; \
         }   \
@@ -4555,7 +4555,7 @@ bool DOMTest::testBaseURI(XercesDOMParser* parser) {
     }
     catch (const OutOfMemoryException&)
     {
-	    fprintf(stderr, "OutOfMemoryException.\n");        
+	    fprintf(stderr, "OutOfMemoryException.\n");
 	    return false;
     }
     catch (...) {
@@ -5126,14 +5126,14 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("123 456", "123 (\\d+\\s)*456", __LINE__);
     TEST_VALID_SCHEMA_REGEX("123 987 456", "123 (\\d+\\s)*456", __LINE__);
     TEST_VALID_SCHEMA_REGEX("123 987 567 456", "123 (\\d+\\s)*456", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("P0100Y02M", "P\\p{Nd}{4}Y\\p{Nd}{2}M", __LINE__);
     TEST_VALID_SCHEMA_REGEX("en-US", "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*", __LINE__);
 
     TEST_VALID_SCHEMA_REGEX("123-XX", "\\d{3}-[A-Z]{2}", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("01803", "[0-9]{5}(-[0-9]{4})?", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("_id1", "\\i\\c*", __LINE__);
     TEST_INVALID_SCHEMA_REGEX("0id", "\\i\\c*", __LINE__);
 
@@ -5142,7 +5142,7 @@ bool DOMTest::testRegex() {
     TEST_INVALID_SCHEMA_REGEX("ns:localname", "[\\i-[:]][\\c-[:]]*", __LINE__);
     TEST_INVALID_SCHEMA_REGEX("ns:", "[\\i-[:]][\\c-[:]]*", __LINE__);
     TEST_INVALID_SCHEMA_REGEX(":qq", "[\\i-[:]][\\c-[:]]*", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("900", "[\\-+]?[0-9]+", __LINE__);
     TEST_VALID_SCHEMA_REGEX("-900", "[\\-+]?[0-9]+", __LINE__);
     TEST_VALID_SCHEMA_REGEX("+900", "[\\-+]?[0-9]+", __LINE__);
@@ -5159,7 +5159,7 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("Chapter b", "Chapter\\s{0,2}\\w", __LINE__);
     TEST_VALID_SCHEMA_REGEX("Chapter\tb", "Chapter\\s{0,2}\\w", __LINE__);
     TEST_VALID_SCHEMA_REGEX("Chapter\nb", "Chapter\\s{0,2}\\w", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("abx", "(a|b)+x", __LINE__);
     TEST_VALID_SCHEMA_REGEX("bax", "(a|b)+x", __LINE__);
     TEST_VALID_SCHEMA_REGEX("bbx", "(a|b)+x", __LINE__);
@@ -5167,7 +5167,7 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("abax", "(a|b)+x", __LINE__);
     TEST_VALID_SCHEMA_REGEX("abbx", "(a|b)+x", __LINE__);
     TEST_VALID_SCHEMA_REGEX("bbax", "(a|b)+x", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("1x2abc", ".*abc.*", __LINE__);
     TEST_VALID_SCHEMA_REGEX("abc1x2", ".*abc.*", __LINE__);
     TEST_VALID_SCHEMA_REGEX("z3455abch00ray", ".*abc.*", __LINE__);
@@ -5177,9 +5177,9 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("abbbbx", "ab{2,4}x", __LINE__);
     TEST_INVALID_SCHEMA_REGEX("abx", "ab{2,4}x", __LINE__);
     TEST_INVALID_SCHEMA_REGEX("abbbbbx", "ab{2,4}x", __LINE__);
-    
+
     TEST_VALID_SCHEMA_REGEX("5 Bedford Street Boston , MA 15604-1536", "\\d{1,5}\\s([A-Z][a-z]{1,20}\\s){1}Street\\s([A-Z][a-z]{1,20}\\s){1},\\s[A-Z]{2}\\s15604-1536", __LINE__);
-    
+
     // from X3D schema
     TEST_VALID_SCHEMA_REGEX("0.5 0.2 1.0", "((((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))))?", __LINE__);
     TEST_VALID_SCHEMA_REGEX("5.0e-2 .2 1", "((((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))))?", __LINE__);
