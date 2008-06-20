@@ -777,6 +777,7 @@ root {
 		"Just an index" ,
 		"The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax" ,
 		"The requested result type is not supported" ,
+		"There is no current result in the result object" ,
 		"Nested CDATA sections" ,
 		"Unrepresentable character data" ,
 		"Unrecognized Node Type" ,

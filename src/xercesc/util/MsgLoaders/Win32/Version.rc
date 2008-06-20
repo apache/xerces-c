@@ -859,11 +859,12 @@ BEGIN
     24602             L"Just an index\x00"
     24603             L"The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax\x00"
     24604             L"The requested result type is not supported\x00"
-    24605             L"Nested CDATA sections\x00"
-    24606             L"Unrepresentable character data\x00"
-    24607             L"Unrecognized Node Type\x00"
-    24608             L"Parse may not be called while parsing\x00"
-    24609             L"Parsing has been aborted by the user\x00"
+    24605             L"There is no current result in the result object\x00"
+    24606             L"Nested CDATA sections\x00"
+    24607             L"Unrepresentable character data\x00"
+    24608             L"Unrecognized Node Type\x00"
+    24609             L"Parse may not be called while parsing\x00"
+    24610             L"Parsing has been aborted by the user\x00"
 END
 
 #endif    // English (U.S.) resources

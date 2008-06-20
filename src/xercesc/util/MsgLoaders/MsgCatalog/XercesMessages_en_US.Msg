@@ -756,10 +756,11 @@ $set 4
 26  Just an index
 27  The expression has a syntax error, or contains XPath features not supported by the XPath for XMLSchema syntax
 28  The requested result type is not supported
-29  Nested CDATA sections
-30  Unrepresentable character data
-31  Unrecognized Node Type
-32  Parse may not be called while parsing
-33  Parsing has been aborted by the user
+29  There is no current result in the result object
+30  Nested CDATA sections
+31  Unrepresentable character data
+32  Unrecognized Node Type
+33  Parse may not be called while parsing
+34  Parsing has been aborted by the user
 
 
