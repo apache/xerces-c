@@ -1114,6 +1114,12 @@
 				Name="NetAccessors"
 				Filter=".cpp,.hpp">
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp">
 				</File>
 				<File

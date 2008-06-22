@@ -2324,6 +2324,42 @@
 				Filter=".cpp,.hpp"
 				>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.cpp"
+					>
+					<FileConfiguration
+						Name="ICU Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Debug|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ICU Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp"
 					>
 					<FileConfiguration

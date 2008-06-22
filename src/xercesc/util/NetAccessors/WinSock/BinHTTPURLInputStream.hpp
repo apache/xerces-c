@@ -23,33 +23,26 @@
 #define XERCESC_INCLUDE_GUARD_BINHTTPURLINPUTSTREAM_HPP
 
 
-#include <xercesc/util/XMLURL.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/BinInputStream.hpp>
-#include <xercesc/util/XMLNetAccessor.hpp>
+#include <xercesc/util/NetAccessors/BinHTTPInputStreamCommon.hpp>
+
+#include <winsock2.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This class implements the BinInputStream interface specified by the XML
 // parser.
 //
-
-XERCES_CPP_NAMESPACE_BEGIN
-
-class XMLUTIL_EXPORT BinHTTPURLInputStream : public BinInputStream
+class XMLUTIL_EXPORT BinHTTPURLInputStream : public BinHTTPInputStreamCommon
 {
 public :
     BinHTTPURLInputStream(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     ~BinHTTPURLInputStream();
 
-    XMLFilePos curPos() const;
-    XMLSize_t readBytes
-    (
-                XMLByte* const  toFill
-        , const XMLSize_t       maxToRead
-    );
+    virtual bool send(const char *buf, XMLSize_t len);
+    virtual int receive(char *buf, XMLSize_t len);
 
 	static void Cleanup();
-
 
 private :
     // -----------------------------------------------------------------------
@@ -57,6 +50,7 @@ private :
     // -----------------------------------------------------------------------
     BinHTTPURLInputStream(const BinHTTPURLInputStream&);
     BinHTTPURLInputStream& operator=(const BinHTTPURLInputStream&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -64,34 +58,13 @@ private :
     //      The socket representing the connection to the remote file.
     //      We deliberately did not define the type to be SOCKET, so as to
     //      avoid bringing in any Windows header into this file.
-    //  fBytesProcessed
-    //      Its a rolling count of the number of bytes processed off this
-    //      input stream.
-    //  fBuffer
-    //      Holds the http header, plus the first part of the actual
-    //      data.  Filled at the time the stream is opened, data goes
-    //      out to user in response to readBytes().
-    //  fBufferPos, fBufferEnd
-    //      Pointers into fBuffer, showing start and end+1 of content
-    //      that readBytes must return.
     // -----------------------------------------------------------------------
-    MemoryManager*      fMemoryManager;
-    unsigned int        fSocketHandle;
-    XMLSize_t           fBytesProcessed;
-    char                fBuffer[4000];
-    char *              fBufferEnd;
-    char *              fBufferPos;
+    SOCKET              fSocketHandle;
+
     static bool         fInitialized;
 
     static void Initialize(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
-
 };
-
-
-inline XMLFilePos BinHTTPURLInputStream::curPos() const
-{
-    return fBytesProcessed;
-}
 
 XERCES_CPP_NAMESPACE_END
 

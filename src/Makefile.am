@@ -1034,11 +1034,13 @@ curl_sources = \
 
 sockets_headers = \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp \
-	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.hpp
+	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.hpp \
+	xercesc/util/NetAccessors/BinHTTPInputStreamCommon.hpp
 
 sockets_sources = \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.cpp \
-	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp
+	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp \
+	xercesc/util/NetAccessors/BinHTTPInputStreamCommon.cpp
 
 libwww_headers = \
 	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp \
@@ -1058,11 +1060,13 @@ cfurl_sources = \
 
 winsock_headers = \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.hpp \
-	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp
+	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp \
+	xercesc/util/NetAccessors/BinHTTPInputStreamCommon.hpp
 
 winsock_sources = \
 	xercesc/util/NetAccessors/WinSock/WinSockNetAccessor.cpp \
-	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp
+	xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.cpp \
+	xercesc/util/NetAccessors/BinHTTPInputStreamCommon.cpp
 
 
 msginmemory_headers = \

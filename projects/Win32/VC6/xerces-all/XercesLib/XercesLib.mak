@@ -248,6 +248,7 @@ CLEAN :
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
+	-@erase "$(INTDIR)\BinHTTPInputStreamCommon.obj"
 	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
@@ -372,6 +373,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
 	"$(INTDIR)\WinSockNetAccessor.obj" \
+	"$(INTDIR)\BinHTTPInputStreamCommon.obj" \
 	"$(INTDIR)\ASCIIRangeFactory.obj" \
 	"$(INTDIR)\BlockRangeFactory.obj" \
 	"$(INTDIR)\BMPattern.obj" \
@@ -894,6 +896,7 @@ CLEAN :
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
+	-@erase "$(INTDIR)\BinHTTPInputStreamCommon.obj"
 	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
@@ -1018,6 +1021,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
 	"$(INTDIR)\WinSockNetAccessor.obj" \
+	"$(INTDIR)\BinHTTPInputStreamCommon.obj" \
 	"$(INTDIR)\ASCIIRangeFactory.obj" \
 	"$(INTDIR)\BlockRangeFactory.obj" \
 	"$(INTDIR)\BMPattern.obj" \
@@ -1540,6 +1544,7 @@ CLEAN :
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
+	-@erase "$(INTDIR)\BinHTTPInputStreamCommon.obj"
 	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
@@ -1665,6 +1670,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
 	"$(INTDIR)\WinSockNetAccessor.obj" \
+	"$(INTDIR)\BinHTTPInputStreamCommon.obj" \
 	"$(INTDIR)\ASCIIRangeFactory.obj" \
 	"$(INTDIR)\BlockRangeFactory.obj" \
 	"$(INTDIR)\BMPattern.obj" \
@@ -2186,6 +2192,7 @@ CLEAN :
 	-@erase "$(INTDIR)\WindowsFileMgr.obj"
 	-@erase "$(INTDIR)\WindowsMutexMgr.obj"
 	-@erase "$(INTDIR)\WinSockNetAccessor.obj"
+	-@erase "$(INTDIR)\BinHTTPInputStreamCommon.obj"
 	-@erase "$(INTDIR)\Wrapper4DOMLSInput.obj"
 	-@erase "$(INTDIR)\Wrapper4InputSource.obj"
 	-@erase "$(INTDIR)\XercesAttGroupInfo.obj"
@@ -2311,6 +2318,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Win32TransService.obj" \
 	"$(INTDIR)\BinHTTPURLInputStream.obj" \
 	"$(INTDIR)\WinSockNetAccessor.obj" \
+	"$(INTDIR)\BinHTTPInputStreamCommon.obj" \
 	"$(INTDIR)\ASCIIRangeFactory.obj" \
 	"$(INTDIR)\BlockRangeFactory.obj" \
 	"$(INTDIR)\BMPattern.obj" \
@@ -2713,6 +2721,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.c
 "$(INTDIR)\WinSockNetAccessor.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.cpp
+
+"$(INTDIR)\BinHTTPInputStreamCommon.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\ASCIIRangeFactory.cpp
 

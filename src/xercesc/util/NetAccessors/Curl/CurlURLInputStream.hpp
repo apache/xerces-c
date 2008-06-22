@@ -45,13 +45,14 @@ public :
     CurlURLInputStream(const XMLURL&  urlSource, const XMLNetHTTPInfo* httpInfo=0);
     ~CurlURLInputStream();
 
-    XMLFilePos curPos() const;
-    XMLSize_t readBytes
+    virtual XMLFilePos curPos() const;
+    virtual XMLSize_t readBytes
     (
                 XMLByte* const  toFill
         , const XMLSize_t       maxToRead
     );
 
+    virtual const XMLCh *getContentType() const;
 
 private :
     // -----------------------------------------------------------------------
@@ -67,6 +68,13 @@ private :
     size_t writeCallback(			  char *buffer,
                                       size_t size,
                                       size_t nitems);
+    static size_t staticHeaderCallback(void *ptr,
+                                       size_t size,
+                                       size_t nmemb,
+                                       void *stream);
+    size_t headerCallback(             char *buffer,
+                                       size_t size,
+                                       size_t nitems);
 
 
     // -----------------------------------------------------------------------
@@ -105,6 +113,8 @@ private :
     XMLByte				fBuffer[CURL_MAX_WRITE_SIZE];
     XMLByte*			fBufferHeadPtr;
     XMLByte*			fBufferTailPtr;
+
+    XMLCh *             fContentType;
     
 }; // CurlURLInputStream
 

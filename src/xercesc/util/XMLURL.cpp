@@ -1130,10 +1130,13 @@ void XMLURL::parse(const XMLCh* const urlText)
     }
 
     // If we are at the end, then we are done now
-    if (!*srcPtr)
-	{
+    if (!*srcPtr) {
+        if(fHost) {
+            static const XMLCh slash[] = { chForwardSlash, chNull };
+            fPath = XMLString::replicate(slash, fMemoryManager);
+        }
         return;
-	}
+    }
 
     //
     //  Next is the path part. It can be absolute, i.e. starting with a
@@ -1404,10 +1407,13 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
     }
 
     // If we are at the end, then we are done now
-    if (!*srcPtr)
-	{
+    if (!*srcPtr) {
+        if(xmlURL.fHost) {
+            static const XMLCh slash[] = { chForwardSlash, chNull };
+            xmlURL.fPath = XMLString::replicate(slash, xmlURL.fMemoryManager);
+        }
         return true;
-	}
+    }
 
     //
     //  Next is the path part. It can be absolute, i.e. starting with a

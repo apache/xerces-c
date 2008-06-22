@@ -194,6 +194,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp
 # End Source File
 # Begin Source File

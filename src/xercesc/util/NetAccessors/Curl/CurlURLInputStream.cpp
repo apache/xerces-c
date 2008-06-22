@@ -54,6 +54,7 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
       , fDataAvailable(false)
       , fBufferHeadPtr(fBuffer)
       , fBufferTailPtr(fBuffer)
+      , fContentType(0)
 {
 	// Allocate the curl multi handle
 	fMulti = curl_multi_init();
@@ -70,6 +71,8 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
 	curl_easy_setopt(fEasy, CURLOPT_URL, fURL.get());
 	curl_easy_setopt(fEasy, CURLOPT_WRITEDATA, this);						// Pass this pointer to write function
 	curl_easy_setopt(fEasy, CURLOPT_WRITEFUNCTION, staticWriteCallback);	// Our static write function
+	curl_easy_setopt(fEasy, CURLOPT_WRITEHEADER, this);						// Pass this pointer to header function
+	curl_easy_setopt(fEasy, CURLOPT_HEADERFUNCTION, staticHeaderCallback);	// Our static header function
 	
 	// Add easy handle to the multi stack
 	curl_multi_add_handle(fMulti, fEasy);
@@ -86,6 +89,8 @@ CurlURLInputStream::~CurlURLInputStream()
 	
 	// Cleanup the multi handle
 	curl_multi_cleanup(fMulti);
+
+    if(fContentType) fMemoryManager->deallocate(fContentType);
 }
 
 
@@ -98,7 +103,10 @@ CurlURLInputStream::staticWriteCallback(char *buffer,
 	return ((CurlURLInputStream*)outstream)->writeCallback(buffer, size, nitems);
 }
 
-
+size_t CurlURLInputStream::staticHeaderCallback(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+    return ((CurlURLInputStream*)stream)->headerCallback((char*)ptr, size, nmemb);
+}
 
 size_t
 CurlURLInputStream::writeCallback(char *buffer,
@@ -140,6 +148,28 @@ CurlURLInputStream::writeCallback(char *buffer,
 	return totalConsumed;
 }
 
+size_t CurlURLInputStream::headerCallback(char *buffer, size_t size, size_t nitems)
+{
+    static const char *contentType = "Content-Type: ";
+    static const size_t contentTypeLen = strlen(contentType);
+
+    // Calculate the actual length of the buffer
+    size *= nitems;
+
+    if(size > contentTypeLen && strncmp(buffer, contentType, contentTypeLen) == 0) {
+        size_t valueLen = size - contentTypeLen;
+
+        char* value8 = (char*)fMemoryManager->allocate(valueLen + 1);
+        ArrayJanitor<char> janValue8(value8, fMemoryManager);
+
+        memcpy(value8, buffer + contentTypeLen, valueLen);
+        value8[valueLen] = 0;
+
+        fContentType = XMLString::transcode(value8, fMemoryManager);
+    }
+
+    return size;
+}
 
 XMLSize_t
 CurlURLInputStream::readBytes(XMLByte* const          toFill
@@ -245,6 +275,10 @@ CurlURLInputStream::readBytes(XMLByte* const          toFill
 	return fBytesRead;
 }
 
+const XMLCh *CurlURLInputStream::getContentType() const
+{
+    return fContentType;
+}
 
 XERCES_CPP_NAMESPACE_END
 
