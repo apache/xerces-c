@@ -26,6 +26,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
+#include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -177,7 +178,7 @@ protected :
      * \return The HTTP status code
      */
     int sendRequest(const XMLURL &url, const XMLNetHTTPInfo *httpInfo);
-    XMLCh *findHeader(const char *name) const;
+    XMLCh *findHeader(const char *name);
 
     virtual bool send(const char *buf, XMLSize_t len) = 0;
     /**

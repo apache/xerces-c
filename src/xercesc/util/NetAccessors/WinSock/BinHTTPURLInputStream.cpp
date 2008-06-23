@@ -20,6 +20,7 @@
  */
 
 
+#include <xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp>
 #include <windows.h>
 
 #ifdef WITH_IPV6
@@ -31,7 +32,6 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
-#include <xercesc/util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/Janitor.hpp>
@@ -466,7 +466,7 @@ bool BinHTTPURLInputStream::send(const char *buf, XMLSize_t len)
     int ret;
 
     while(done < len) {
-        ret = wrap_send(fSocketHandle, buf + done, len - done, 0);
+        ret = wrap_send(fSocketHandle, buf + done, (int)(len - done), 0);
         if(ret == SOCKET_ERROR) return false;
         done += ret;
     }
@@ -476,7 +476,7 @@ bool BinHTTPURLInputStream::send(const char *buf, XMLSize_t len)
 
 int BinHTTPURLInputStream::receive(char *buf, XMLSize_t len)
 {
-    int iLen = wrap_recv(fSocketHandle, buf, len, 0);
+    int iLen = wrap_recv(fSocketHandle, buf, (int)len, 0);
     if (iLen == SOCKET_ERROR) return -1;
     return iLen;
 }

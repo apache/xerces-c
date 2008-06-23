@@ -212,9 +212,9 @@ void BinHTTPInputStreamCommon::createHTTPRequest(const XMLURL &urlSource, const 
     buffer.append(CRLF);
 }
 
-XMLCh *BinHTTPInputStreamCommon::findHeader(const char *name) const
+XMLCh *BinHTTPInputStreamCommon::findHeader(const char *name)
 {
-    int len = strlen(name);
+    XMLSize_t len = strlen(name);
 
     char *p = strstr(fBuffer.getRawBuffer(), name);
     while(p != 0) {
@@ -318,7 +318,7 @@ const XMLCh *BinHTTPInputStreamCommon::getContentType() const
 {
     if(fContentType == 0) {
         // mutable
-        const_cast<XMLCh*&>(fContentType) = findHeader("Content-Type");
+        const_cast<XMLCh*&>(fContentType) = const_cast<BinHTTPInputStreamCommon*>(this)->findHeader("Content-Type");
     }
     return fContentType;
 }
