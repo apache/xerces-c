@@ -16,7 +16,7 @@
  */
 
 /*
- * $Id: XSTSHarnessHandlers.hpp 314887 2005-10-12 13:18:24Z cargilld $
+ * $Id$
  */
 
 

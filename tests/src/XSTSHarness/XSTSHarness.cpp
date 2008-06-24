@@ -135,13 +135,10 @@ int main(int argC, char* argV[])
     //  file. Catch any exceptions that might propogate out of it.
     //
     bool errorOccurred=false;
-    unsigned long duration;
+    const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
     try
     {
-        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         parser->parse(xmlFile);
-        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
-        duration = endMillis - startMillis;
     }
     catch (const OutOfMemoryException&)
     {
@@ -160,6 +157,8 @@ int main(int argC, char* argV[])
         XERCES_STD_QUALIFIER cout << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
         errorOccurred = true;
     }
+    const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+    unsigned long duration = endMillis - startMillis;
 
     if (handler->getSawErrors())
         errorOccurred = true;
