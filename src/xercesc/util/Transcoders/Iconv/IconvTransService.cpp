@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -177,7 +177,7 @@ bool IconvTransService::supportsSrcOfs() const
 XMLTranscoder*
 IconvTransService::makeNewXMLTranscoder(const   XMLCh* const
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            
+                                        , const unsigned int
                                         ,       MemoryManager* const)
 {
     //
@@ -227,7 +227,7 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
     for( unsigned int i = 0; i < size; ++len )
     {
         unsigned int retVal=::mblen( &srcText[i], MB_CUR_MAX );
-        if( -1 == retVal ) 
+        if( -1 == retVal )
             return 0;
         i += retVal;
     }
@@ -262,7 +262,9 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     wideCharBuf[wLent] = 0x00;
 
     const unsigned int retVal = ::wcstombs(NULL, wideCharBuf, 0);
-    manager->deallocate(allocatedArray);//delete [] allocatedArray;
+
+    if (allocatedArray)
+      manager->deallocate(allocatedArray);//delete [] allocatedArray;
 
     if (retVal == ~0)
         return 0;
@@ -351,7 +353,8 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode,
         const size_t neededLen = ::wcstombs(NULL, wideCharBuf, 0);
         if (neededLen == -1)
         {
-            manager->deallocate(allocatedArray);//delete [] allocatedArray;
+            if (allocatedArray)
+              manager->deallocate(allocatedArray);//delete [] allocatedArray;
             retVal = (char*) manager->allocate(sizeof(char)); //new char[1];
             retVal[0] = 0;
             return retVal;
@@ -360,7 +363,8 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode,
         retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char));//new char[neededLen + 1];
         ::wcstombs(retVal, wideCharBuf, neededLen);
         retVal[neededLen] = 0;
-        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+        if (allocatedArray)
+          manager->deallocate(allocatedArray);//delete [] allocatedArray;
     }
     else
     {
@@ -418,13 +422,15 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     size_t mblen = ::wcstombs(toFill, wideCharBuf, maxBytes);
     if (mblen == -1)
     {
-        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+        if (allocatedArray)
+          manager->deallocate(allocatedArray);//delete [] allocatedArray;
         return false;
     }
 
     // Cap it off just in case
     toFill[mblen] = 0;
-    manager->deallocate(allocatedArray);//delete [] allocatedArray;
+    if (allocatedArray)
+      manager->deallocate(allocatedArray);//delete [] allocatedArray;
     return true;
 }
 
@@ -508,7 +514,8 @@ XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode,
             retVal[i] = (XMLCh) wideCharBuf[i];
         }
         retVal[len] = 0x00;
-        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+        if (allocatedArray)
+          manager->deallocate(allocatedArray);//delete [] allocatedArray;
     }
     else
     {
@@ -556,7 +563,8 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
 
     if (::mbstowcs(wideCharBuf, toTranscode, maxChars) == -1)
     {
-        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+        if (allocatedArray)
+          manager->deallocate(allocatedArray);//delete [] allocatedArray;
         return false;
     }
 
@@ -565,7 +573,8 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         toFill[i] = (XMLCh) wideCharBuf[i];
     }
     toFill[len] = 0x00;
-    manager->deallocate(allocatedArray);//delete [] allocatedArray;
+    if (allocatedArray)
+      manager->deallocate(allocatedArray);//delete [] allocatedArray;
     return true;
 }
 
