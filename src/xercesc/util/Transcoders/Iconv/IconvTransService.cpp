@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -179,7 +179,7 @@ bool IconvTransService::supportsSrcOfs() const
 XMLTranscoder*
 IconvTransService::makeNewXMLTranscoder(const   XMLCh* const
                                         ,       XMLTransService::Codes& resValue
-                                        , const XMLSize_t            
+                                        , const XMLSize_t
                                         ,       MemoryManager* const)
 {
     //
@@ -239,7 +239,7 @@ XMLSize_t IconvLCPTranscoder::calcRequiredSize(const char* const srcText
 #else
         int l=::mblen( src, MB_CUR_MAX );
 #endif
-        if( l == TRANSCODING_ERROR ) 
+        if( l == TRANSCODING_ERROR )
             return 0;
         src += l;
     }
@@ -274,7 +274,9 @@ XMLSize_t IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     wideCharBuf[wLent] = 0x00;
 
     const XMLSize_t retVal = ::wcstombs(NULL, wideCharBuf, 0);
-    manager->deallocate(allocatedArray);//delete [] allocatedArray;
+
+    if (allocatedArray)
+      manager->deallocate(allocatedArray);
 
     if (retVal == ~0)
         return 0;
@@ -329,13 +331,17 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     size_t mblen = ::wcstombs(toFill, wideCharBuf, maxBytes);
     if (mblen == -1)
     {
-        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+        if (allocatedArray)
+          manager->deallocate(allocatedArray);
         return false;
     }
 
     // Cap it off just in case
     toFill[mblen] = 0;
-    manager->deallocate(allocatedArray);//delete [] allocatedArray;
+
+    if (allocatedArray)
+      manager->deallocate(allocatedArray);
+
     return true;
 }
 
@@ -377,7 +383,8 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
 
     if (::mbstowcs(wideCharBuf, toTranscode, maxChars) == -1)
     {
-        manager->deallocate(allocatedArray);//delete [] allocatedArray;
+        if (allocatedArray)
+          manager->deallocate(allocatedArray);
         return false;
     }
 
@@ -386,7 +393,10 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
         toFill[i] = (XMLCh) wideCharBuf[i];
     }
     toFill[len] = 0x00;
-    manager->deallocate(allocatedArray);//delete [] allocatedArray;
+
+    if (allocatedArray)
+      manager->deallocate(allocatedArray);
+
     return true;
 }
 
@@ -411,7 +421,7 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode,
     size_t resultSize = gTempBuffArraySize;
     char localBuffer[gTempBuffArraySize];
     char* resultString = localBuffer;
-    
+
 #if HAVE_WCSRTOMBS
     mbstate_t st;
     memset(&st, 0, sizeof(st));
