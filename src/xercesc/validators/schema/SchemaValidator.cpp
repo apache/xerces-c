@@ -1895,7 +1895,7 @@ SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNod
     //
     if (((derivedType & 0x0f) == ContentSpecNode::Any_Other) &&
         ((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
-        baseURI == derivedURI || baseURI == 1) {
+        (baseURI == derivedURI || baseURI == 1)) {
         return true;
     }
 
@@ -1907,7 +1907,7 @@ SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNod
         }
 
         if (((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
-            derivedURI == 1 || baseURI != derivedURI) {
+            (derivedURI == 1 || baseURI != derivedURI)) {
             return true;
         }
     }
