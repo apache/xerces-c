@@ -1890,9 +1890,11 @@ SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNod
     unsigned int baseURI = baseSpecNode->getElement()->getURI();
     unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
 
+    // Below we assume that empty string has id 1.
+    //
     if (((derivedType & 0x0f) == ContentSpecNode::Any_Other) &&
         ((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
-        baseURI == derivedURI) {
+        baseURI == derivedURI || baseURI == 1) {
         return true;
     }
 
@@ -1904,7 +1906,7 @@ SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNod
         }
 
         if (((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
-            baseURI != derivedURI) {
+            derivedURI == 1 || baseURI != derivedURI) {
             return true;
         }
     }

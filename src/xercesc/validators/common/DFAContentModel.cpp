@@ -205,7 +205,10 @@ DFAContentModel::validateContent( QName** const        children
                 }
                 else if ((type & 0x0f) == ContentSpecNode::Any_Other)
                 {
-                    if (inElem->getURI() != curElem->getURI()) {
+                    // Here we assume that empty string has id 1.
+	    	    //
+                    unsigned int uriId = curElem->getURI();
+                    if (uriId != 1 && uriId != inElem->getURI()) {
                         nextState = fTransTable[curState][elemIndex];
                         if (nextState != XMLContentModel::gInvalidTrans)
                             break;
@@ -303,7 +306,10 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_Other)
             {
-                if (inElem->getURI() != curElem->getURI())
+                // Here we assume that empty string has id 1.
+		//
+                unsigned int uriId = curElem->getURI();
+                if (uriId != 1 && uriId != inElem->getURI())
                 {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
@@ -1217,4 +1223,3 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
 }
 
 XERCES_CPP_NAMESPACE_END
-

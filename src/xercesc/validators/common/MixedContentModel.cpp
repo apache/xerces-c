@@ -178,8 +178,12 @@ MixedContentModel::validateContent( QName** const         children
                 if (inChild->getURI() != curChild->getURI())
                     return outIndex;
             }
-            else if (type == ContentSpecNode::Any_Other) {
-                if (inChild->getURI() == curChild->getURI())
+            else if (type == ContentSpecNode::Any_Other)
+            {
+                // Here we assume that empty string has id 1.
+		//
+                unsigned int uriId = curChild->getURI();
+                if (uriId == 1 || uriId == inChild->getURI())
                     return outIndex;
             }
 
@@ -225,8 +229,12 @@ MixedContentModel::validateContent( QName** const         children
                     if (inChild->getURI() == curChild->getURI())
                         break;
                 }
-                else if (type == ContentSpecNode::Any_Other) {
-                    if (inChild->getURI() != curChild->getURI())
+                else if (type == ContentSpecNode::Any_Other)
+                {
+                  // Here we assume that empty string has id 1.
+		  //
+                  unsigned int uriId = curChild->getURI();
+                  if (uriId != 1 && uriId != inChild->getURI())
                         break;
                 }
 
@@ -282,8 +290,12 @@ int MixedContentModel::validateContentSpecial(QName** const           children
                 if (inChild->getURI() != curChild->getURI())
                     return outIndex;
             }
-            else if (type == ContentSpecNode::Any_Other) {
-                if (inChild->getURI() == curChild->getURI())
+            else if (type == ContentSpecNode::Any_Other)
+            {
+              // Here we assume that empty string has id 1.
+              //
+              unsigned int uriId = curChild->getURI();
+              if (uriId == 1 || uriId == inChild->getURI())
                     return outIndex;
             }
 
@@ -320,8 +332,12 @@ int MixedContentModel::validateContentSpecial(QName** const           children
                     if (inChild->getURI() == curChild->getURI())
                         break;
                 }
-                else if (type == ContentSpecNode::Any_Other) {
-                    if (inChild->getURI() != curChild->getURI())
+                else if (type == ContentSpecNode::Any_Other)
+                {
+                  // Here we assume that empty string has id 1.
+                  //
+                  unsigned int uriId = curChild->getURI();
+                  if (uriId != 1 && uriId != inChild->getURI())
                         break;
                 }
 
@@ -388,4 +404,3 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
 }
 
 XERCES_CPP_NAMESPACE_END
-

@@ -215,8 +215,11 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
     // whether the uri is allowed directly by the wildcard
     unsigned int uriId = element->getURI();
 
+    // Here we assume that empty string has id 1.
+    //
     if ((!wother && uriId == wuri) ||
         (wother &&
+         uriId != 1 &&
          uriId != wuri &&
          uriId != XMLContentModel::gEOCFakeId &&
          uriId != XMLContentModel::gEpsilonFakeId &&
@@ -244,8 +247,11 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
     {
         unsigned int subUriId = subsElements->elementAt(i)->getElementName()->getURI();
 
+        // Here we assume that empty string has id 1.
+        //
         if ((!wother && subUriId == wuri) ||
             (wother &&
+             subUriId != 1 &&
              subUriId != wuri &&
              subUriId != XMLContentModel::gEOCFakeId &&
              subUriId != XMLContentModel::gEpsilonFakeId &&
@@ -263,4 +269,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file SubstitutionGroupComparator.cpp
   */
-
