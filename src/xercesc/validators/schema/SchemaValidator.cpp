@@ -1840,7 +1840,7 @@ void SchemaValidator::checkNSSubset(const ContentSpecNode* const derivedSpecNode
 
 bool SchemaValidator::checkNSSubsetChoiceRoot(const ContentSpecNode* const derivedSpecNode,
                                     const ContentSpecNode* const baseSpecNode) {
-    bool found = false;       
+    bool found = false;
 
     if (baseSpecNode->getType() == ContentSpecNode::Any_NS_Choice) {
         const ContentSpecNode* first = baseSpecNode->getFirst();
@@ -1850,7 +1850,7 @@ bool SchemaValidator::checkNSSubsetChoiceRoot(const ContentSpecNode* const deriv
             found = checkNSSubsetChoiceRoot(derivedSpecNode, first);
             if (found) return true;
         }
-        if (second) { 
+        if (second) {
             found = checkNSSubsetChoiceRoot(derivedSpecNode, second);
             if (found) return true;
         }
@@ -1859,7 +1859,7 @@ bool SchemaValidator::checkNSSubsetChoiceRoot(const ContentSpecNode* const deriv
         found = checkNSSubsetChoice(derivedSpecNode, baseSpecNode);
     }
 
-    return found; 
+    return found;
 }
 
 bool SchemaValidator::checkNSSubsetChoice(const ContentSpecNode* const derivedSpecNode,
@@ -1891,9 +1891,11 @@ SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNod
     unsigned int baseURI = baseSpecNode->getElement()->getURI();
     unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
 
+    // Below we assume that empty string has id 1.
+    //
     if (((derivedType & 0x0f) == ContentSpecNode::Any_Other) &&
         ((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
-        baseURI == derivedURI) {
+        baseURI == derivedURI || baseURI == 1) {
         return true;
     }
 
@@ -1905,7 +1907,7 @@ SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNod
         }
 
         if (((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
-            baseURI != derivedURI) {
+            derivedURI == 1 || baseURI != derivedURI) {
             return true;
         }
     }

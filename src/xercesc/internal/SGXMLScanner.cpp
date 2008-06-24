@@ -4683,7 +4683,7 @@ bool SGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
                 anyEncountered = true;
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_Other) {
-                if (uri != elementURI) {
+                if (uri != elementURI && elementURI != fEmptyNamespaceId) {
                     anyEncountered = true;
                 }
             }

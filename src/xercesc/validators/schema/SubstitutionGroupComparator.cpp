@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -123,12 +123,12 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     // {disallowed substitution}
     int devMethod = 0;
     int blockConstraint = exemplarBlockSet;
-        
+
     ComplexTypeInfo *exemplarComplexType = pElemDecl->getComplexTypeInfo();
     ComplexTypeInfo *tempType = aComplexType;;
 
     while (tempType != 0 &&
-        tempType != exemplarComplexType) 
+        tempType != exemplarComplexType)
     {
         devMethod |= tempType->getDerivedBy();
         tempType = tempType->getBaseComplexTypeInfo();
@@ -154,8 +154,11 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
     // whether the uri is allowed directly by the wildcard
     unsigned int uriId = element->getURI();
 
+    // Here we assume that empty string has id 1.
+    //
     if ((!wother && uriId == wuri) ||
         (wother &&
+         uriId != 1 &&
          uriId != wuri &&
          uriId != XMLContentModel::gEOCFakeId &&
          uriId != XMLContentModel::gEpsilonFakeId &&
@@ -183,8 +186,11 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
     {
         unsigned int subUriId = subsElements->elementAt(i)->getElementName()->getURI();
 
+        // Here we assume that empty string has id 1.
+        //
         if ((!wother && subUriId == wuri) ||
             (wother &&
+             subUriId != 1 &&
              subUriId != wuri &&
              subUriId != XMLContentModel::gEOCFakeId &&
              subUriId != XMLContentModel::gEpsilonFakeId &&
@@ -202,4 +208,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file SubstitutionGroupComparator.cpp
   */
-

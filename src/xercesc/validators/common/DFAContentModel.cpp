@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -205,7 +205,10 @@ DFAContentModel::validateContent( QName** const        children
                 }
                 else if ((type & 0x0f) == ContentSpecNode::Any_Other)
                 {
-                    if (inElem->getURI() != curElem->getURI()) {
+                    // Here we assume that empty string has id 1.
+	    	    //
+                    unsigned int uriId = curElem->getURI();
+                    if (uriId != 1 && uriId != inElem->getURI()) {
                         nextState = fTransTable[curState][elemIndex];
                         if (nextState != XMLContentModel::gInvalidTrans)
                             break;
@@ -303,7 +306,10 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_Other)
             {
-                if (inElem->getURI() != curElem->getURI())
+                // Here we assume that empty string has id 1.
+		//
+                unsigned int uriId = curElem->getURI();
+                if (uriId != 1 && uriId != inElem->getURI())
                 {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
@@ -537,7 +543,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
         for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
         {
-            const QName* leaf = fLeafList[leafIndex]->getElement();            
+            const QName* leaf = fLeafList[leafIndex]->getElement();
             if (fDTD) {
                 if (XMLString::equals(leaf->getRawName(), elementRawName)) {
                     fLeafSorter[fSortCount++] = leafIndex;
@@ -566,7 +572,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  have to expand though, it if does, the overhead will be somewhat ugly.
     //
     unsigned int curArraySize = fLeafCount * 4;
-    const CMStateSet** statesToDo = (const CMStateSet**) 
+    const CMStateSet** statesToDo = (const CMStateSet**)
         fMemoryManager->allocate
         (
             curArraySize * sizeof(const CMStateSet*)
@@ -778,7 +784,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     //  size by 50% and allocate new arrays.
                     //
                     const unsigned int newSize = (unsigned int)(curArraySize * 1.5);
-                    const CMStateSet** newToDo = (const CMStateSet**) 
+                    const CMStateSet** newToDo = (const CMStateSet**)
                         fMemoryManager->allocate
                         (
                             newSize * sizeof(const CMStateSet*)
@@ -1217,4 +1223,3 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
 }
 
 XERCES_CPP_NAMESPACE_END
-
