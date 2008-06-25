@@ -845,7 +845,7 @@ parser.setDoNamespaces(true);
             The DGXMLScanner handles XML documents with DOCTYPE information. It does not do any
             XMLSchema processing, which means that any schema specific attributes (e.g. schemaLocation),
             will be treated as normal element attributes. Setting schema grammar specific features/properties
-            will have no effect on its behavior (e.g. setDoSchema(true) is ignored).
+            will have no effect on its behavior (e.g. setDoSchema(true) and setLoadSchema(true) are ignored).
             </p>
 
 <source>

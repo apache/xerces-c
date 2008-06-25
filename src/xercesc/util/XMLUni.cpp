@@ -1026,6 +1026,21 @@ const XMLCh XMLUni::fgXercesSchemaFullChecking[] =
     ,   chLatin_e, chLatin_c, chLatin_k, chLatin_i, chLatin_n, chLatin_g, chNull
 };
 
+//Xerces: http://apache.org/xml/features/validating/load-schema
+const XMLCh XMLUni::fgXercesLoadSchema[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash
+    ,   chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_n, chLatin_g, chForwardSlash
+    ,   chLatin_l, chLatin_o, chLatin_a, chLatin_d, chDash
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a
+};
+
 //Xerces: http://apache.org/xml/features/validation/identity-constraint-checking
 const XMLCh XMLUni::fgXercesIdentityConstraintChecking[] =
 {

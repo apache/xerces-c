@@ -320,6 +320,11 @@ bool AbstractDOMParser::getLoadExternalDTD() const
     return fScanner->getLoadExternalDTD();
 }
 
+bool AbstractDOMParser::getLoadSchema() const
+{
+    return fScanner->getLoadSchema();
+}
+
 bool AbstractDOMParser::getCalculateSrcOfs() const
 {
     return fScanner->getCalculateSrcOfs();
@@ -446,6 +451,11 @@ void AbstractDOMParser::setSecurityManager(SecurityManager* const securityManage
 void AbstractDOMParser::setLoadExternalDTD(const bool newState)
 {
     fScanner->setLoadExternalDTD(newState);
+}
+
+void AbstractDOMParser::setLoadSchema(const bool newState)
+{
+    fScanner->setLoadSchema(newState);
 }
 
 void AbstractDOMParser::setCalculateSrcOfs(const bool newState)

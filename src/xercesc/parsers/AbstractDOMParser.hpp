@@ -348,6 +348,19 @@ public :
       */
     bool getLoadExternalDTD() const;
 
+    /** Get the 'Loading Schema' flag
+      *
+      * This method returns the state of the parser's loading schema
+      * flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         automatically load schemas that are not in the
+      *         grammar pool, false otherwise.
+      *
+      * @see #setLoadSchema
+      */
+    bool getLoadSchema() const;
+
     /** Get the 'create comment node' flag
       *
       * This method returns the flag that specifies whether the parser is
@@ -767,6 +780,23 @@ public :
       * @see #setValidationScheme
       */
     void setLoadExternalDTD(const bool newState);
+
+    /** Set the 'Loading Schema' flag
+      *
+      * This method allows users to enable or disable the loading of schemas.
+      * When set to false, the parser not attempt to load schemas beyond
+      * querying the grammar pool for them.
+      *
+      * The parser's default state is: true.
+      *
+      * @param newState The value specifying whether schemas should
+      *                 be loaded if they're not found in the grammar
+      *                 pool.
+      *
+      * @see #getLoadSchema
+      * @see #setDoSchema
+      */
+    void setLoadSchema(const bool newState);
 
      /** Set the 'create comment nodes' flag
       *

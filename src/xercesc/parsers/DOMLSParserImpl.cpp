@@ -121,6 +121,7 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
     fSupportedParameters->add(XMLUni::fgXercesSchemaFullChecking);
     fSupportedParameters->add(XMLUni::fgXercesUserAdoptsDOMDocument);
     fSupportedParameters->add(XMLUni::fgXercesLoadExternalDTD);
+    fSupportedParameters->add(XMLUni::fgXercesLoadSchema);
     fSupportedParameters->add(XMLUni::fgXercesContinueAfterFatalError);
     fSupportedParameters->add(XMLUni::fgXercesValidationErrorAsFatal);
     fSupportedParameters->add(XMLUni::fgXercesCacheGrammarFromParse);
@@ -344,6 +345,10 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
     {
         setLoadExternalDTD(state);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadSchema) == 0)
+    {
+        setLoadSchema(state);
+    }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
         setExitOnFirstFatalError(!state);
@@ -531,6 +536,10 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
     {
         return (void*)getLoadExternalDTD();
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadSchema) == 0)
+    {
+        return (void*)getLoadSchema();
+    }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
         return (void*)!getExitOnFirstFatalError();
@@ -647,6 +656,7 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaFullChecking) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadSchema) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesCacheGrammarFromParse) == 0 ||

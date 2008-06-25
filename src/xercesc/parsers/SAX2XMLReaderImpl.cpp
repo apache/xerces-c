@@ -1304,6 +1304,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setLoadExternalDTD(value);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadSchema) == 0)
+    {
+        fScanner->setLoadSchema(value);
+    }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
     {
         fScanner->setExitOnFirstFatal(!value);
@@ -1382,6 +1386,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->getIdentityConstraintChecking();
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadExternalDTD) == 0)
         return fScanner->getLoadExternalDTD();
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLoadSchema) == 0)
+        return fScanner->getLoadSchema();
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
         return !fScanner->getExitOnFirstFatal();
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)

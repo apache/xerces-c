@@ -265,6 +265,12 @@ public:
       *     false (default)
       *         Don't perform full XMLSchema checking
       *
+      * "http://apache.org/xml/features/validating/load-schema"
+      *     true (default)
+      *         Allow the parser to load schemas that are not in the grammar pool
+      *     false
+      *         Schemas that are not in the grammar pool are ignored
+      *
       * "http://apache.org/xml/features/dom/user-adopts-DOMDocument"
       *     true 
       *         The DOMDocument objects returned by <code>parse</code> will be owned by the caller

@@ -208,7 +208,8 @@ public :
     * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
-    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
+    * <br>http://apache.org/xml/features/validating/load-schema (default: true)
+    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)    
     * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
     * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)    
     *

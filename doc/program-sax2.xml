@@ -284,6 +284,21 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
             <p/>
 
+            <anchor name="load-schema"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/validating/load-schema</em></th></tr>
+                <tr><th><em>true:</em></th><td> Load the schema. </td></tr>
+                <tr><th><em>false:</em></th><td> Don't load the schema if it wasn't found in the grammar pool. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesLoadSchema </td></tr>
+                <tr><th><em>note:</em></th><td> This feature is ignored and no schemas are loaded if schema processing is disabled. </td></tr>
+                <tr><th><em>see:</em></th><td>
+                <link anchor="schema">http://apache.org/xml/features/validation/schema</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
             <anchor name="load-external-dtd"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/nonvalidating/load-external-dtd</em></th></tr>

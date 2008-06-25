@@ -267,6 +267,7 @@ public :
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
     SecurityManager* getSecurityManager() const;
     bool getLoadExternalDTD() const;
+    bool getLoadSchema() const;
     bool getNormalizeData() const;
     bool isCachingGrammarFromParse() const;
     bool isUsingCachedGrammarInParse() const;
@@ -374,6 +375,7 @@ public :
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
     void setSecurityManager(SecurityManager* const securityManager);
     void setLoadExternalDTD(const bool loadDTD);
+    void setLoadSchema(const bool loadSchema);
     void setNormalizeData(const bool normalizeData);
     void setCalculateSrcOfs(const bool newValue);
     void setParseSettings(XMLScanner* const refScanner);
@@ -694,6 +696,10 @@ protected:
     //  fLoadExternalDTD
     //      This flag indicates whether the external DTD be loaded or not
     //
+    //  fLoadSchema
+    //      This flag indicates whether the parser should attempt to load
+    //      schemas if they cannot be found in the grammar pool.
+    //
     //  fNormalizeData
     //      This flag indicates whether the parser should perform datatype
     //      normalization that is defined in the schema.
@@ -738,6 +744,7 @@ protected:
     bool                        fToCacheGrammar;
     bool                        fUseCachedGrammar;
     bool                        fLoadExternalDTD;
+    bool                        fLoadSchema;
     bool                        fNormalizeData;
     bool                        fGenerateSyntheticAnnotations;
     bool                        fValidateAnnotations;
@@ -1039,6 +1046,11 @@ inline bool XMLScanner::getLoadExternalDTD() const
     return fLoadExternalDTD;
 }
 
+inline bool XMLScanner::getLoadSchema() const
+{
+    return fLoadSchema;
+}
+
 inline bool XMLScanner::getNormalizeData() const
 {
     return fNormalizeData;
@@ -1254,6 +1266,11 @@ inline void XMLScanner::setSecurityManager(SecurityManager* const securityManage
 inline void XMLScanner::setLoadExternalDTD(const bool loadDTD)
 {
     fLoadExternalDTD = loadDTD;
+}
+
+inline void XMLScanner::setLoadSchema(const bool loadSchema)
+{
+    fLoadSchema = loadSchema;
 }
 
 inline void XMLScanner::setNormalizeData(const bool normalizeData)

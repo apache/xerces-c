@@ -312,6 +312,11 @@ bool SAXParser::getLoadExternalDTD() const
     return fScanner->getLoadExternalDTD();
 }
 
+bool SAXParser::getLoadSchema() const
+{
+    return fScanner->getLoadSchema();
+}
+
 bool SAXParser::isCachingGrammarFromParse() const
 {
     return fScanner->isCachingGrammarFromParse();
@@ -463,6 +468,11 @@ void SAXParser::setSecurityManager(SecurityManager* const securityManager)
 void SAXParser::setLoadExternalDTD(const bool newState)
 {
     fScanner->setLoadExternalDTD(newState);
+}
+
+void SAXParser::setLoadSchema(const bool newState)
+{
+    fScanner->setLoadSchema(newState);
 }
 
 void SAXParser::cacheGrammarFromParse(const bool newState)

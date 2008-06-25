@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -183,7 +183,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  boolean flag that lets us quickly below know which we are dealing
         //  with.
         const bool isNSAttr = (uriId == fXMLNSNamespaceId)
-                              
+
                               || XMLString::equals(suffPtr, XMLUni::fgXMLNSString)
                               || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI);
 
@@ -200,7 +200,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if(fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
             {
                 emitError
-                ( 
+                (
                     XMLErrs::AttrAlreadyUsedInSTag
                     , namePtr
                     , elemDecl->getFullName()
@@ -257,7 +257,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         ValueValidate = true;
                     }
                     else {
-                        otherXSI = true;                       
+                        otherXSI = true;
                     }
                 }
 
@@ -271,7 +271,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         namePtr
                         , curPair->getValue()
                         , normBuf
-                    );                    
+                    );
 
                     if (fValidate && attrValidator && ValueValidate)
                     {
@@ -283,13 +283,13 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             try
                             {
                                 if (tokenizeBuffer) {
-                                    XMLStringTokenizer tokenizer(normBuf.getRawBuffer(), fMemoryManager);                                    
-                                    while (tokenizer.hasMoreTokens()) {                                       
+                                    XMLStringTokenizer tokenizer(normBuf.getRawBuffer(), fMemoryManager);
+                                    while (tokenizer.hasMoreTokens()) {
                                         attrValidator->validate(
                                             tokenizer.nextToken(),
                                             theContext,
                                             fMemoryManager);
-                                    }                                  
+                                    }
                                 }
                                 else {
                                     attrValidator->validate(
@@ -307,7 +307,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                     if(getPSVIHandler())
                     {
-	                    psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
+	                    psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
 	                    XSSimpleTypeDefinition *validatingType = (attrValidator)
                             ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
                             : 0;
@@ -327,7 +327,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
             }
         }
-        
+
         if (!isNSAttr || fGrammarType == Grammar::DTDGrammarType || otherXSI)
         {
             // Some checking for attribute wild card first (for schema)
@@ -390,7 +390,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     if (getPSVIHandler())
                                     {
                                         attrValid = PSVIItem::VALIDITY_INVALID;
-                                    }                                
+                                    }
                                 }
                             }
                         }
@@ -424,9 +424,9 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  how the derived validator and its elements store attributes.
             else
             {
-                if(fGrammarType == Grammar::DTDGrammarType) 
+                if(fGrammarType == Grammar::DTDGrammarType)
                     attDef = ((DTDElementDecl *)elemDecl)->getAttDef ( namePtr);
-            } 
+            }
 
             // now need to prepare for duplicate detection
             if(attDef)
@@ -443,7 +443,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 else
                 {
                     emitError
-                    ( 
+                    (
                         XMLErrs::AttrAlreadyUsedInSTag
                         , attDef->getFullName()
                         , elemDecl->getFullName()
@@ -453,14 +453,14 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
             else
             {
-                if(fGrammarType == Grammar::DTDGrammarType) 
+                if(fGrammarType == Grammar::DTDGrammarType)
                 {
                     if(!fUndeclaredAttrRegistry->containsKey(namePtr))
                         fUndeclaredAttrRegistry->put((void *)namePtr, 0);
                     else
                     {
                         emitError
-                        ( 
+                        (
                             XMLErrs::AttrAlreadyUsedInSTag
                             , namePtr
                             , elemDecl->getFullName()
@@ -474,7 +474,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     else
                     {
                         emitError
-                        ( 
+                        (
                             XMLErrs::AttrAlreadyUsedInSTag
                             , namePtr
                             , elemDecl->getFullName()
@@ -493,7 +493,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     if(!laxThisOne && !skipThisOne)
                     {
                         fPSVIElemContext.fErrorOccurred = true;
-                    } 
+                    }
                     if(getPSVIHandler())
                     {
                         if(!laxThisOne && !skipThisOne)
@@ -641,7 +641,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             // now fill in the PSVIAttributes entry for this attribute:
             if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
 	        {
-	            psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
+	            psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
 	            SchemaAttDef *actualAttDef = 0;
 	            if(attDef)
 	                actualAttDef = (SchemaAttDef *)attDef;
@@ -708,10 +708,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  to the handler. We reuse its existing elements but expand it as
         //  required.
         XMLAttr* curAttr;
-        
+
         // check for duplicate namespace attributes:
-        // by checking for qualified names with the same local part and with prefixes 
-        // which have been bound to namespace names that are identical. 
+        // by checking for qualified names with the same local part and with prefixes
+        // which have been bound to namespace names that are identical.
         if (fGrammarType == Grammar::DTDGrammarType) {
             if (!toUseHashTable)
             {
@@ -720,7 +720,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     if (uriId == curAttr->getURIId() &&
                         XMLString::equals(suffPtr, curAttr->getName())) {
                         emitError
-                        ( 
+                        (
 
                          XMLErrs::AttrAlreadyUsedInSTag
                         , curAttr->getName()
@@ -734,15 +734,15 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if (fAttrDupChkRegistry->containsKey((void*)suffPtr, uriId))
                 {
                     emitError
-                        ( 
+                        (
                         XMLErrs::AttrAlreadyUsedInSTag
                         , suffPtr
                         , elemDecl->getFullName()
                         );
                 }
-            }  
+            }
         }
-        
+
         if (retCount >= curAttListSize)
         {
             curAttr = new (fMemoryManager) XMLAttr
@@ -778,7 +778,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         if(psviAttr)
             psviAttr->setValue(curAttr->getValue());
-            
+
         // Bump the count of attrs in the list
         retCount++;
     }
@@ -821,7 +821,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             XMLValid::RequiredAttrNotProvided
                             , curDef->getFullName()
                         );
-                        if(fGrammarType == Grammar::SchemaGrammarType) 
+                        if(fGrammarType == Grammar::SchemaGrammarType)
                         {
                             fPSVIElemContext.fErrorOccurred = true;
                         }
@@ -833,7 +833,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         {
                             // XML 1.0 Section 2.9
                             // Document is standalone, so attributes must not be defaulted.
-                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());                                                        
+                            fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());
                             if(fGrammarType == Grammar::SchemaGrammarType)
                             {
                                 fPSVIElemContext.fErrorOccurred = true;
@@ -893,7 +893,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         );
                         XSAttributeDeclaration *defAttrDecl = (XSAttributeDeclaration *)fModel->getXSObject((void *)curDef);
                         DatatypeValidator * attrDataType = ((SchemaAttDef *)curDef)->getDatatypeValidator();
-                        XSSimpleTypeDefinition *defAttrType = 
+                        XSSimpleTypeDefinition *defAttrType =
                             (XSSimpleTypeDefinition*)fModel->getXSObject(attrDataType);
                         // would have occurred during validation of default value
                         if(((SchemaValidator *)fValidator)->getErrorOccurred())
@@ -905,7 +905,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 , defAttrType
                                 , 0
                                 , curDef->getValue()
-                                , true 
+                                , true
                                 , defAttrDecl
                                 , 0
                             );
@@ -931,7 +931,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 , defAttrDecl
                                 , (defAttrMemberType)?((SchemaValidator *)fValidator)->getMostRecentAttrValidator():attrDataType
                             );
-                        } 
+                        }
                         defAttrToFill->setValue(curDef->getValue());
                     }
                 }
@@ -940,14 +940,14 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 //attribute is provided
                 // (schema) report error for PROHIBITED attrs that are present (V_TAGc)
-                if (defType == XMLAttDef::Prohibited && fValidate) 
+                if (defType == XMLAttDef::Prohibited && fValidate)
                 {
                     fValidator->emitError
                     (
                         XMLValid::ProhibitedAttributePresent
                         , curDef->getFullName()
                     );
-                    if(fGrammarType == Grammar::SchemaGrammarType) 
+                    if(fGrammarType == Grammar::SchemaGrammarType)
                     {
                         fPSVIElemContext.fErrorOccurred = true;
                         if (getPSVIHandler())
@@ -956,7 +956,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             // bad luck...
                             PSVIAttribute *prohibitedAttr = fPSVIAttrList->getAttributePSVIByName
                             (
-                                attQName->getLocalPart(), 
+                                attQName->getLocalPart(),
                                 fURIStringPool->getValueForId(attQName->getURI())
                             );
                             prohibitedAttr->updateValidity(PSVIItem::VALIDITY_INVALID);
@@ -1017,12 +1017,12 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
             //  escaped characters (which are indicated by a 0xFFFF value followed
             //  by the char that was escaped.)
             nextCh = *srcPtr;
-            
+
             // Do we have an escaped character ?
             if (nextCh == 0xFFFF)
             {
                 nextCh = *++srcPtr;
-            } 
+            }
             else if ( (nextCh <= 0x0D) && (nextCh == 0x09 || nextCh == 0x0A || nextCh == 0x0D) ) {
                 // Check Validity Constraint for Standalone document declaration
                 // XML 1.0, Section 2.9
@@ -1036,9 +1036,9 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
             }
             else if (nextCh == chOpenAngle) {
                 //  If its not escaped, then make sure its not a < character, which is
-                //  not allowed in attribute values.                                
+                //  not allowed in attribute values.
                 emitError(XMLErrs::BracketInAttrValue, attName);
-                retVal = false;                
+                retVal = false;
             }
 
             // Add this char to the target buffer
@@ -1060,10 +1060,10 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
             if (nextCh == 0xFFFF)
             {
                 nextCh = *++srcPtr;
-            } 
-            else if (nextCh == chOpenAngle) { 
+            }
+            else if (nextCh == chOpenAngle) {
                 //  If its not escaped, then make sure its not a < character, which is
-                //  not allowed in attribute values.                               
+                //  not allowed in attribute values.
                 emitError(XMLErrs::BracketInAttrValue, attName);
                 retVal = false;
             }
@@ -1113,7 +1113,7 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
             srcPtr++;
         }
     }
- 
+
     return retVal;
 }
 
@@ -1371,13 +1371,13 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fReaderMgr.pushReader(newReader, 0);
 
     // and reset security-related things if necessary:
-    if(fSecurityManager != 0) 
+    if(fSecurityManager != 0)
     {
         fEntityExpansionLimit = fSecurityManager->getEntityExpansionLimit();
         fEntityExpansionCount = 0;
     }
     fElemCount = 0;
-    if(fUIntPoolRowTotal >= 32) 
+    if(fUIntPoolRowTotal >= 32)
     { // 8 KB tied up with validating attributes...
         fAttDefRegistry->removeAll();
         recreateUIntPool();
@@ -1421,19 +1421,19 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
 
         // Get the character data opts for the current element
         XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
-        if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType) 
+        if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
         {
             // And see if the current element is a 'Children' style content model
             ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
-            if(currType) 
+            if(currType)
             {
-                SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();                 
-                if(modelType == SchemaElementDecl::Children || 
-                   modelType == SchemaElementDecl::ElementOnlyEmpty) 
+                SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();
+                if(modelType == SchemaElementDecl::Children ||
+                   modelType == SchemaElementDecl::ElementOnlyEmpty)
                     charOpts = XMLElementDecl::SpacesOk;
-                else if(modelType == SchemaElementDecl::Empty) 
-                    charOpts = XMLElementDecl::NoCharData; 
-            } 
+                else if(modelType == SchemaElementDecl::Empty)
+                    charOpts = XMLElementDecl::NoCharData;
+            }
         } else // DTD grammar
             charOpts = topElem->fThisElement->getCharDataOpts();
 
@@ -1441,12 +1441,12 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
         {
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
-            //if(fGrammarType == Grammar::SchemaGrammarType) 
+            //if(fGrammarType == Grammar::SchemaGrammarType)
             //{
               //  if (getPSVIHandler())
               //  {
-                    // REVISIT:                                   
-                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);                    
+                    // REVISIT:
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
               //  }
            // }
         }
@@ -1554,12 +1554,12 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
             else
             {
                 fValidator->emitError(XMLValid::NoCharDataInCM);
-                if(fGrammarType == Grammar::SchemaGrammarType) 
+                if(fGrammarType == Grammar::SchemaGrammarType)
                 {
                     if (getPSVIHandler())
                     {
-                        // REVISIT:                                   
-                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                    
+                        // REVISIT:
+                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
                     }
                 }
             }
@@ -1768,14 +1768,17 @@ void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
 
     Grammar* grammar = 0;
- 
+
     {
-        XMLSchemaDescriptionImpl    theSchemaDescription(uri, fMemoryManager);   
-        theSchemaDescription.setLocationHints(loc); 
+        XMLSchemaDescriptionImpl    theSchemaDescription(uri, fMemoryManager);
+        theSchemaDescription.setLocationHints(loc);
         grammar = fGrammarResolver->getGrammar(&theSchemaDescription);
     }
 
-    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
+    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType)
+    {
+      if (fLoadSchema)
+      {
         XSDDOMParser parser(0, fMemoryManager, 0);
 
         parser.setValidationScheme(XercesDOMParser::Val_Never);
@@ -1841,14 +1844,14 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     );
                 }
                 else
-                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
+                    ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
             }
             else
             {
                 if (fStandardUriConformant && urlTmp.hasInvalidChar())
                     ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
                 srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-            }        
+            }
         }
 
         // Put a janitor on the input source
@@ -1934,9 +1937,10 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 }
             }
         }
+      }
     }
-    else {
-
+    else
+    {
         //  Since we have seen a grammar, set our validation flag
         //  at this point if the validation scheme is auto
         if (fValScheme == Val_Auto && !fValidate) {
@@ -1962,6 +1966,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             fValidator->setGrammar(fGrammar);
         }
     }
+
     // fModel may need updating:
     if(getPSVIHandler())
         fModel = fGrammarResolver->getXSModel();
@@ -1970,7 +1975,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId
                                           ,const XMLCh* const pubId)
 {
-    //Normalize sysId 
+    //Normalize sysId
     XMLBufBid nnSys(&fBufMgr);
     XMLBuffer& normalizedSysId = nnSys.getBuffer();
     XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
@@ -2028,14 +2033,14 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId
                 );
             }
             else
-                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
         }
         else
         {
             if (fStandardUriConformant && urlTmp.hasInvalidChar())
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
             srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-        }        
+        }
     }
 
     return srcToFill;
@@ -2091,7 +2096,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);                   
+            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
             XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
             gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
             gramDesc->setLocationHints(src.getSystemId());
@@ -2524,19 +2529,19 @@ void IGXMLScanner::scanCDSection()
 
     // Get the character data opts for the current element
     XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
-    if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType) 
+    if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
     {
         // And see if the current element is a 'Children' style content model
         ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
-        if(currType) 
+        if(currType)
         {
-            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();             
+            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();
             if(modelType == SchemaElementDecl::Children ||
-               modelType == SchemaElementDecl::ElementOnlyEmpty) 
+               modelType == SchemaElementDecl::ElementOnlyEmpty)
                 charOpts = XMLElementDecl::SpacesOk;
-            else if(modelType == SchemaElementDecl::Empty) 
-                charOpts = XMLElementDecl::NoCharData; 
-        } 
+            else if(modelType == SchemaElementDecl::Empty)
+                charOpts = XMLElementDecl::NoCharData;
+        }
     } else // DTD grammar
         charOpts = topElem->fThisElement->getCharDataOpts();
 
@@ -2563,11 +2568,11 @@ void IGXMLScanner::scanCDSection()
                     // Error - standalone should have a value of "no" as whitespace detected in an
                     // element type with element content whose element declaration was external
                     fValidator->emitError(XMLValid::NoWSForStandalone);
-                    if(fGrammarType == Grammar::SchemaGrammarType) 
+                    if(fGrammarType == Grammar::SchemaGrammarType)
                     {
                         if (getPSVIHandler())
                         {
-                            // REVISIT:                                   
+                            // REVISIT:
                             // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
                         }
                     }
@@ -2610,7 +2615,7 @@ void IGXMLScanner::scanCDSection()
                         fValidator->emitError(XMLValid::NoCharDataInCM);
                         if (getPSVIHandler())
                         {
-                            // REVISIT:                                   
+                            // REVISIT:
                             // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
                         }
                     }
@@ -2894,19 +2899,19 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
 
                 // Get the character data opts for the current element
                 XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
-                if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType) 
+                if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
                 {
                     // And see if the current element is a 'Children' style content model
                     ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
-                    if(currType) 
+                    if(currType)
                     {
-                        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();                         
+                        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType();
                         if(modelType == SchemaElementDecl::Children ||
-                           modelType == SchemaElementDecl::ElementOnlyEmpty) 
+                           modelType == SchemaElementDecl::ElementOnlyEmpty)
                             charOpts = XMLElementDecl::SpacesOk;
-                        else if(modelType == SchemaElementDecl::Empty) 
-                            charOpts = XMLElementDecl::NoCharData; 
-                    } 
+                        else if(modelType == SchemaElementDecl::Empty)
+                            charOpts = XMLElementDecl::NoCharData;
+                    }
                 } else // DTD grammar
                     charOpts = topElem->fThisElement->getCharDataOpts();
 
@@ -2916,11 +2921,11 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                     // element type with element content whose element declaration was external
                     //
                     fValidator->emitError(XMLValid::NoWSForStandalone);
-                    if(fGrammarType == Grammar::SchemaGrammarType) 
+                    if(fGrammarType == Grammar::SchemaGrammarType)
                     {
                         if (getPSVIHandler())
                         {
-                            // REVISIT:                                   
+                            // REVISIT:
                             // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
                         }
                     }
@@ -2980,11 +2985,11 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
     bool validName = fDoNamespaces ? fReaderMgr.getQName(bbName.getBuffer(), &colonPosition) :
                                      fReaderMgr.getName(bbName.getBuffer());
     if (!validName)
-    {        
+    {
         if (bbName.isEmpty())
             emitError(XMLErrs::ExpectedEntityRefName);
         else
-            emitError(XMLErrs::InvalidEntityRefName, bbName.getRawBuffer());  
+            emitError(XMLErrs::InvalidEntityRefName, bbName.getRawBuffer());
         return EntityExp_Failed;
     }
 
@@ -3077,7 +3082,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
             XMLCh expLimStr[16];
             XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
             emitError
-            ( 
+            (
                 XMLErrs::EntityExpansionLimitExceeded
                 , expLimStr
             );
@@ -3135,7 +3140,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
             XMLCh expLimStr[16];
             XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
             emitError
-            ( 
+            (
                 XMLErrs::EntityExpansionLimitExceeded
                 , expLimStr
             );
