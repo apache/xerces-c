@@ -37,7 +37,6 @@
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

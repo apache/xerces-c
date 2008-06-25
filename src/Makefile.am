@@ -403,6 +403,7 @@ framework_headers = \
 	xercesc/framework/XMLFormatter.hpp \
 	xercesc/framework/XMLGrammarDescription.hpp \
 	xercesc/framework/XMLGrammarPool.hpp \
+	xercesc/framework/XMLGrammarPoolImpl.hpp \
 	xercesc/framework/XMLNotationDecl.hpp \
 	xercesc/framework/XMLPScanToken.hpp \
 	xercesc/framework/XMLRecognizer.hpp \
@@ -457,6 +458,7 @@ framework_sources = \
 	xercesc/framework/XMLEntityDecl.cpp \
 	xercesc/framework/XMLFormatter.cpp \
 	xercesc/framework/XMLGrammarDescription.cpp \
+	xercesc/framework/XMLGrammarPoolImpl.cpp \
 	xercesc/framework/XMLNotationDecl.cpp \
 	xercesc/framework/XMLRecognizer.cpp \
 	xercesc/framework/XMLRefInfo.cpp \
@@ -480,7 +482,6 @@ internal_headers = \
 	xercesc/internal/VecAttributesImpl.hpp \
 	xercesc/internal/VecAttrListImpl.hpp \
 	xercesc/internal/WFXMLScanner.hpp \
-	xercesc/internal/XMLGrammarPoolImpl.hpp \
 	xercesc/internal/XMLInternalErrorHandler.hpp \
 	xercesc/internal/XMLReader.hpp \
 	xercesc/internal/XMLScanner.hpp \
@@ -507,7 +508,6 @@ internal_sources = \
 	xercesc/internal/VecAttributesImpl.cpp \
 	xercesc/internal/VecAttrListImpl.cpp \
 	xercesc/internal/WFXMLScanner.cpp \
-	xercesc/internal/XMLGrammarPoolImpl.cpp \
 	xercesc/internal/XMLReader.cpp \
 	xercesc/internal/XMLScanner.cpp \
 	xercesc/internal/XMLScannerResolver.cpp \

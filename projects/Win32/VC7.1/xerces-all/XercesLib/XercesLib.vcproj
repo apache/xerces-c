@@ -1739,10 +1739,10 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLInternalErrorHandler.hpp">

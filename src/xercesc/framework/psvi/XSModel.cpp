@@ -21,7 +21,6 @@
 
 #include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/psvi/XSNamespaceItem.hpp>
-#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ public :
     // -----------------------------------------------------------------------
     //@{
 
-    XMLGrammarPoolImpl(MemoryManager* const memMgr);
+    XMLGrammarPoolImpl(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager);
 
     ~XMLGrammarPoolImpl();
     //@}
@@ -45,7 +45,7 @@ public :
     /** @name Implementation of Grammar Pool Interface */
     // -----------------------------------------------------------------------
     //@{
-   
+
     /**
       * cacheGrammar
       *
@@ -60,7 +60,7 @@ public :
 	  *
       */
     virtual bool           cacheGrammar(Grammar* const               gramToCache);
-    
+
 
     /**
       * retrieveGrammar
@@ -70,8 +70,8 @@ public :
 	  *
       */
     virtual Grammar*       retrieveGrammar(XMLGrammarDescription* const gramDesc);
-    
-        
+
+
     /**
       * orphanGrammar
       *
@@ -80,7 +80,7 @@ public :
       * @param nameSpaceKey: Key used to search for grammar in the grammar pool
 	  *
       */
-    virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey);  
+    virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey);
 
 
     /**
@@ -97,15 +97,15 @@ public :
       * @return true if the grammar pool was cleared. false if it did not.
       */
     virtual bool           clear();
-        
+
     /**
       * lockPool
       *
-	  * When this method is called by the application, the 
+	  * When this method is called by the application, the
       * grammar pool should stop adding new grammars to the cache.
       */
     virtual void           lockPool();
-    
+
     /**
       * unlockPool
       *
@@ -134,28 +134,28 @@ public :
       *
       */
     virtual SchemaGrammar*         createSchemaGrammar();
-                    
+
     /**
       * createDTDDescription
       *
-      */	
+      */
     virtual XMLDTDDescription*     createDTDDescription(const XMLCh* const systemId);
     /**
       * createSchemaDescription
       *
-      */		
+      */
     virtual XMLSchemaDescription*  createSchemaDescription(const XMLCh* const targetNamespace);
     //@}
-	
+
     // -----------------------------------------------------------------------
     /** @name  schema component model support */
-    // -----------------------------------------------------------------------                                                        
+    // -----------------------------------------------------------------------
     //@{
 
     /***
       * Return an XSModel derived from the components of all SchemaGrammars
       * in the grammar pool.  If the pool is locked, this should
-      * be a thread-safe operation.  
+      * be a thread-safe operation.
       *
       * NOTE: The function should NEVER return NULL.  If there are no grammars in
       *       the pool it should return an XSModel containing the Schema for Schema.
@@ -163,27 +163,27 @@ public :
       * Calling getXSModel() on an unlocked grammar pool may result in the
       * creation of a new XSModel with the old XSModel being deleted.
       * The bool parameter will indicate if the XSModel was changed.
-      *  
+      *
       * In this implementation, when the pool is not locked a new XSModel will be
       * computed each this time the pool is called if the pool has changed (and the
       * previous one will be destroyed at that time).  When the lockPool()
       * method is called, an XSModel will be generated and returned whenever this method is called
       * while the pool is in the locked state.  This will be destroyed if the unlockPool()
       * operation is called.  The XSModel will not be serialized,
-      * but will be recreated if a deserialized pool is in the 
+      * but will be recreated if a deserialized pool is in the
       * locked state.
-      *      
+      *
       */
     virtual XSModel *getXSModel(bool& XSModelWasChanged);
 
     // @}
     // -----------------------------------------------------------------------
     /** @name  Getter */
-    // -----------------------------------------------------------------------                                                        
+    // -----------------------------------------------------------------------
     //@{
 
     /**
-      * Return an XMLStringPool for use by validation routines.  
+      * Return an XMLStringPool for use by validation routines.
       * Implementations should not create a string pool on each call to this
       * method, but should maintain one string pool for all grammars
       * for which this pool is responsible.
@@ -200,12 +200,12 @@ public :
       *
       * Multiple serializations
       *
-      *    For multiple serializations, if the same file name is given, then the 
-      *    last result will be in the file (overwriting mode), if different file 
+      *    For multiple serializations, if the same file name is given, then the
+      *    last result will be in the file (overwriting mode), if different file
       *    names are given, then there are multiple data stores for each serialization.
       *
       * Multiple deserializations
-      * 
+      *
       *    Not supported
       *
       * Versioning
@@ -215,27 +215,27 @@ public :
       *
       * Clean up
       *
-      *    In the event of an exception thrown due to a corrupted data store during 
-      *    deserialization, this implementation may not be able to clean up all resources 
-      *    allocated, and therefore it is the client application's responsibility to 
+      *    In the event of an exception thrown due to a corrupted data store during
+      *    deserialization, this implementation may not be able to clean up all resources
+      *    allocated, and therefore it is the client application's responsibility to
       *    clean up those unreleased resources.
       *
       * Coupling of Grammars and StringPool
       *
-      *    This implementation assumes that StringPool shall always be 
+      *    This implementation assumes that StringPool shall always be
       *    serialized/deserialized together with the grammars. In the case that such a
-      *    coupling is not desired, client application can modify this behaviour by 
+      *    coupling is not desired, client application can modify this behaviour by
       *    either derivate from this imlementation and overwrite the serializeGrammars()
       *    and/or deserializeGrammars() to decouple grammars and string pool, or
       *    Once deserializeGrammars() is done, insert another StringPool through
       *    setStringPool().
       *
-      *    Client application shall be aware of the unpredicatable/undefined consequence 
+      *    Client application shall be aware of the unpredicatable/undefined consequence
       *    of this decoupling.
       */
 
-    virtual void     serializeGrammars(BinOutputStream* const); 
-    virtual void     deserializeGrammars(BinInputStream* const); 
+    virtual void     serializeGrammars(BinOutputStream* const);
+    virtual void     deserializeGrammars(BinInputStream* const);
 
 private:
 
@@ -254,7 +254,7 @@ private:
 
     // -----------------------------------------------------------------------
     //
-    // fGrammarRegistry: 
+    // fGrammarRegistry:
     //
 	//    container
     // fStringPool
@@ -266,7 +266,7 @@ private:
     //      whether the pool has been locked
     //
     // -----------------------------------------------------------------------
-    RefHashTableOf<Grammar>*            fGrammarRegistry; 
+    RefHashTableOf<Grammar>*            fGrammarRegistry;
     XMLStringPool*                      fStringPool;
     XMLSynchronizedStringPool*          fSynchronizedStringPool;
     XSModel*                            fXSModel;

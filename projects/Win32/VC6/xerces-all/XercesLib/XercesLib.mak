@@ -3636,7 +3636,7 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.cpp
 
 "$(INTDIR)\XMLGrammarPoolImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)

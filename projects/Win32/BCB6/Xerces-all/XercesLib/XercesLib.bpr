@@ -496,7 +496,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp" FORMNAME="" UNITNAME="VecAttributesImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp" FORMNAME="" UNITNAME="VecAttrListImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp" FORMNAME="" UNITNAME="WFXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp" FORMNAME="" UNITNAME="XMLGrammarPoolImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.cpp" FORMNAME="" UNITNAME="XMLGrammarPoolImpl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLReader.cpp" FORMNAME="" UNITNAME="XMLReader" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp" FORMNAME="" UNITNAME="XMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp" FORMNAME="" UNITNAME="XMLScannerResolver" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

@@ -1620,6 +1620,14 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarPool.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp
 # End Source File
 # Begin Source File
@@ -1781,14 +1789,6 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.hpp
 # End Source File
 # Begin Source File
 

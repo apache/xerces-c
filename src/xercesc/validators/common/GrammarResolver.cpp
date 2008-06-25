@@ -24,7 +24,7 @@
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
-#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/framework/XMLGrammarPoolImpl.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
