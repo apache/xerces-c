@@ -1606,10 +1606,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDeleterFor.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp"
 				>
 			</File>

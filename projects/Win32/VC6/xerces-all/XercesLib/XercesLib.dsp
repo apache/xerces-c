@@ -1019,10 +1019,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLDateTime.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\XMLDeleterFor.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp
 # End Source File
 # Begin Source File

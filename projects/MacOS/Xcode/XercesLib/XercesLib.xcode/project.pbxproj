@@ -1663,14 +1663,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		02058E92FF8AF8CD7F000001 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = XMLDeleterFor.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		02058E93FF8AF8CD7F000001 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;

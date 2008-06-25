@@ -688,8 +688,6 @@ util_headers = \
 	xercesc/util/XMLChar.hpp \
 	xercesc/util/XMLChTranscoder.hpp \
 	xercesc/util/XMLDateTime.hpp \
-	xercesc/util/XMLDeleterFor.hpp \
-	xercesc/util/XMLDeleterFor.c \
 	xercesc/util/XMLDOMMsg.hpp \
 	xercesc/util/XMLDouble.hpp \
 	xercesc/util/XMLEBCDICTranscoder.hpp \
