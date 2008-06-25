@@ -43,7 +43,7 @@
 #include <xercesc/dom/DOM.hpp>
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/framework/XMLGrammarPoolImpl.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 

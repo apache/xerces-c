@@ -25,7 +25,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
-#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/framework/XMLGrammarPoolImpl.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/psvi/XSElementDeclaration.hpp>
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>

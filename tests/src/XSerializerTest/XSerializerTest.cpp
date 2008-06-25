@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/framework/XMLGrammarPoolImpl.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
 #include <xercesc/internal/XSerializationException.hpp>
 #include <xercesc/internal/BinMemOutputStream.hpp>
