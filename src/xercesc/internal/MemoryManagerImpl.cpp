@@ -50,7 +50,8 @@ void* MemoryManagerImpl::allocate(size_t size)
 
 void MemoryManagerImpl::deallocate(void* p)
 {
-    ::operator delete(p);
+    if (p)
+        ::operator delete(p);
 }
 
 XERCES_CPP_NAMESPACE_END

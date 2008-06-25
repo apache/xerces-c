@@ -54,8 +54,10 @@ void MemoryMonitor::deallocate(void* p)
     // didn't allocate that memory--a segfault waiting to happen...
     assert(p == 0 || fHashTable->containsKey(p) != 0);
     if (p != 0)
+    {
         fHashTable->removeKey(p);
-    ::operator delete(p);
+        ::operator delete(p);
+    }
 }
 
 unsigned int MemoryMonitor::getTotalMemory()
