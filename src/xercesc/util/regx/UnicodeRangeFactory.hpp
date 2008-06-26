@@ -26,12 +26,28 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RangeFactory.hpp>
+#include <xercesc/util/regx/XMLUniCharacter.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT UnicodeRangeFactory: public RangeFactory {
 
 public:
+    // -----------------------------------------------------------------------
+    //  Public Constants
+    // -----------------------------------------------------------------------
+    // Unicode categories 
+    enum {
+        CHAR_LETTER      = XMLUniCharacter::FINAL_PUNCTUATION+1,
+        CHAR_MARK,
+        CHAR_NUMBER,
+        CHAR_SEPARATOR,
+        CHAR_OTHER,
+        CHAR_PUNCTUATION,
+        CHAR_SYMBOL,
+        UNICATEGSIZE
+    };
+
     // -----------------------------------------------------------------------
     //  Constructors and operators
     // -----------------------------------------------------------------------
@@ -41,25 +57,26 @@ public:
     // -----------------------------------------------------------------------
     //  Initialization methods
     // -----------------------------------------------------------------------
-	void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
+    void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
+
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    static unsigned short getUniCategory(const unsigned short type);
 
 protected:
     // -----------------------------------------------------------------------
     //  Private Helper methods
     // -----------------------------------------------------------------------
-	void buildRanges(RangeTokenMap *rangeTokMap = 0);
+    void buildRanges(RangeTokenMap *rangeTokMap = 0);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     UnicodeRangeFactory(const UnicodeRangeFactory&);
     UnicodeRangeFactory& operator=(const UnicodeRangeFactory&);
 
-    // -----------------------------------------------------------------------
-    //  Helper methods
-    // -----------------------------------------------------------------------
-    unsigned short getUniCategory(const unsigned short type);
 };
 
 XERCES_CPP_NAMESPACE_END
@@ -67,5 +84,5 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 /**
-  *	End file UnicodeRangeFactory.hpp
+  *    End file UnicodeRangeFactory.hpp
   */

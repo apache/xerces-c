@@ -28,6 +28,7 @@
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/RangeTokenMap.hpp>
+#include <xercesc/util/regx/UnicodeRangeFactory.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <string.h>
 
@@ -204,19 +205,27 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok , true);
 
     // Create word range
+    // \w = [#x0000-#x10FFFF]-[\p{P}\p{Z}\p{C}] (all characters except the set of "punctuation", "separator" and "other" characters) 
     tok = tokFactory->createRange();
-    tok->setRangeValues(wordRange, wordRangeLen);
-    janWordRange.orphan();
+    for(int i=0; i<=0xFFFF; i++)
+    {
+        unsigned short chType=UnicodeRangeFactory::getUniCategory(XMLUniCharacter::getType(i));
+        if(chType == UnicodeRangeFactory::CHAR_PUNCTUATION || 
+           chType == UnicodeRangeFactory::CHAR_SEPARATOR || 
+           chType == UnicodeRangeFactory::CHAR_OTHER)
+            tok->addRange(i, i);
+    }
     tok->sortRanges();
     tok->compactRanges();
     // Build the internal map.
     tok->createMap();
-    rangeTokMap->setRangeToken(fgXMLWord, tok);
+    rangeTokMap->setRangeToken(fgXMLWord, tok , true);
 
     tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
     // Build the internal map.
     tok->createMap();
-    rangeTokMap->setRangeToken(fgXMLWord, tok , true);
+    rangeTokMap->setRangeToken(fgXMLWord, tok);
+
 
     fRangesCreated = true;
 }

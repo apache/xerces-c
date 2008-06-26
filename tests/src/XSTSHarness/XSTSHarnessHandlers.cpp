@@ -399,6 +399,18 @@ void XSTSHarnessHandlers::printFile(XMLURL& url)
     while((nRead=stream->readBytes(buffer, 255)) >0)
     {
         buffer[nRead]=0;
+        // sending data containing \n\r to cout generates \n\n\r, so strip any \r
+        XMLSize_t idx=0;
+        while(true)
+        {
+            int cr=XMLString::indexOf((const char*)buffer, '\r', idx);
+            if(cr==-1)
+                break;
+            memmove(&buffer[cr], &buffer[cr+1], XMLString::stringLen((const char*)&buffer[cr+1])+1);
+            idx=cr;
+            if(buffer[idx]==0)
+                break;
+        }
         XERCES_STD_QUALIFIER cout << (const char*)buffer;
     }
     XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
