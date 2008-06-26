@@ -251,7 +251,7 @@ const XMLCh fgBlockNames[][50] =
     { chLatin_I, chLatin_s, chLatin_B, chLatin_y, chLatin_z, chLatin_a, chLatin_n, chLatin_t, chLatin_i, chLatin_n, chLatin_e,
       chLatin_M, chLatin_u, chLatin_s, chLatin_i, chLatin_c, chLatin_a, chLatin_l,
       chLatin_S, chLatin_y, chLatin_m, chLatin_b, chLatin_o, chLatin_l, chLatin_s, chNull },
-    { chLatin_M, chLatin_u, chLatin_s, chLatin_i, chLatin_c, chLatin_a, chLatin_l,
+    { chLatin_I, chLatin_s, chLatin_M, chLatin_u, chLatin_s, chLatin_i, chLatin_c, chLatin_a, chLatin_l,
       chLatin_S, chLatin_y, chLatin_m, chLatin_b, chLatin_o, chLatin_l, chLatin_s, chNull },
     { chLatin_I, chLatin_s, chLatin_M, chLatin_a, chLatin_t, chLatin_h, chLatin_e,
       chLatin_m, chLatin_a, chLatin_t, chLatin_i, chLatin_c, chLatin_a, chLatin_l,
