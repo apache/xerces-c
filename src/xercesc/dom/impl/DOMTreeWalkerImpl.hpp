@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class CDOM_EXPORT DOMTreeWalkerImpl : public DOMTreeWalker {
 protected:
         // The whatToShow mask.
-        unsigned long fWhatToShow;
+        DOMNodeFilter::ShowType fWhatToShow;
 
         // The NodeFilter reference.
         DOMNodeFilter* fNodeFilter;
@@ -62,7 +62,7 @@ public:
     /** Public constructor */
     DOMTreeWalkerImpl (
         DOMNode* root,
-        unsigned long whatToShow,
+        DOMNodeFilter::ShowType whatToShow,
         DOMNodeFilter* nodeFilter,
         bool expandEntityRef);
     DOMTreeWalkerImpl (const DOMTreeWalkerImpl& twi);
@@ -72,12 +72,12 @@ public:
     virtual DOMNode* getRoot ();
 
     // Return the whatToShow value.
-    virtual unsigned long  getWhatToShow ();
+    virtual DOMNodeFilter::ShowType  getWhatToShow ();
 
     // Return the NodeFilter.
     virtual DOMNodeFilter* getFilter ();
 
-	
+
     // Return the current DOMNode.
     virtual DOMNode* getCurrentNode ();
 
@@ -160,7 +160,7 @@ protected:
     // The node is accepted if it passes the whatToShow and the filter.
     short acceptNode (DOMNode* node);
 
-    		
+
 };
 
 XERCES_CPP_NAMESPACE_END

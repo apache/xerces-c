@@ -4874,9 +4874,9 @@ class ParserAborter : public DOMLSParserFilter
 public:
     ParserAborter() {}
 
-    virtual short acceptNode(DOMNode* ) { return DOMLSParserFilter::FILTER_INTERRUPT; }
-    virtual short startElement(DOMElement* ) { return DOMLSParserFilter::FILTER_INTERRUPT; }
-    virtual unsigned long getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
+    virtual FilterAction acceptNode(DOMNode* ) { return DOMLSParserFilter::FILTER_INTERRUPT; }
+    virtual FilterAction startElement(DOMElement* ) { return DOMLSParserFilter::FILTER_INTERRUPT; }
+    virtual DOMNodeFilter::ShowType getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
 };
 
 class ParserNester : public DOMLSParserFilter
@@ -4884,9 +4884,9 @@ class ParserNester : public DOMLSParserFilter
 public:
     ParserNester(DOMLSParser* parser, DOMLSInput* input) { m_parser=parser; m_input=input; }
 
-    virtual short acceptNode(DOMNode* ) { m_parser->parse(m_input); return DOMLSParserFilter::FILTER_ACCEPT;}
-    virtual short startElement(DOMElement* ) { return DOMLSParserFilter::FILTER_ACCEPT; }
-    virtual unsigned long getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
+    virtual FilterAction acceptNode(DOMNode* ) { m_parser->parse(m_input); return DOMLSParserFilter::FILTER_ACCEPT;}
+    virtual FilterAction startElement(DOMElement* ) { return DOMLSParserFilter::FILTER_ACCEPT; }
+    virtual DOMNodeFilter::ShowType getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
 
     DOMLSParser* m_parser;
     DOMLSInput* m_input;

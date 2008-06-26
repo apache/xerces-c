@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,8 +45,8 @@ public:
     void add(const XMLCh* impl);
 
     virtual ~DOMStringListImpl();
-    virtual const XMLCh* item(unsigned int index) const;
-    virtual unsigned int getLength() const;
+    virtual const XMLCh* item(XMLSize_t index) const;
+    virtual XMLSize_t    getLength() const;
     virtual bool         contains(const XMLCh* str) const;
     virtual void         release();
 };
@@ -54,5 +54,3 @@ public:
 XERCES_CPP_NAMESPACE_END
 
 #endif
-
-

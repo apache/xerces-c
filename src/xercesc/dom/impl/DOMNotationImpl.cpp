@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,11 +34,11 @@ DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
 }
 
 DOMNotationImpl::DOMNotationImpl(const DOMNotationImpl &other, bool /*deep*/)
-    : DOMNotation(other), 
-      fNode(other.fNode), 
-      fName(other.fName), 
+    : DOMNotation(other),
+      fNode(other.fNode),
+      fName(other.fName),
       fPublicId(other.fPublicId),
-      fSystemId(other.fSystemId), 
+      fSystemId(other.fSystemId),
       fBaseURI(other.fBaseURI)
 {
     fNode.setIsLeafNode(true);
@@ -63,7 +63,7 @@ const XMLCh * DOMNotationImpl::getNodeName() const {
 }
 
 
-short DOMNotationImpl::getNodeType() const {
+DOMNode::NodeType DOMNotationImpl::getNodeType() const {
     return DOMNode::NOTATION_NODE;
 }
 
@@ -177,5 +177,3 @@ const XMLCh* DOMNotationImpl::getBaseURI() const
 
 
 XERCES_CPP_NAMESPACE_END
-
-

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,7 +53,7 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMImplementationLS() {};
     //@}
 
@@ -87,7 +87,7 @@ public:
     //@{
     /**
      * Create a synchronous or an asynchronous <code>DOMLSParser</code>.
-     * @see createLSParser(const unsigned short mode, const XMLCh* const schemaType)
+     * @see createLSParser(const DOMImplementationLSMode mode, const XMLCh* const schemaType)
      * @since DOM Level 3
      *
      */
@@ -107,25 +107,25 @@ public:
     //  Factory create methods
     // -----------------------------------------------------------------------
     /**
-     * Create a new DOMLSParser. The newly constructed parser may then be configured 
-     * by means of its DOMConfiguration object, and used to parse documents by 
-     * means of its parse method. 
+     * Create a new DOMLSParser. The newly constructed parser may then be configured
+     * by means of its DOMConfiguration object, and used to parse documents by
+     * means of its parse method.
      *
-     * @param mode      The mode argument is either <code>MODE_SYNCHRONOUS</code> 
-     * or <code>MODE_ASYNCHRONOUS</code>, if mode is <code>MODE_SYNCHRONOUS</code> 
-     * then the <code>DOMLSParser</code> that is created will operate in synchronous 
-     * mode, if it's <code>MODE_ASYNCHRONOUS</code> then the <code>DOMLSParser</code> 
+     * @param mode      The mode argument is either <code>MODE_SYNCHRONOUS</code>
+     * or <code>MODE_ASYNCHRONOUS</code>, if mode is <code>MODE_SYNCHRONOUS</code>
+     * then the <code>DOMLSParser</code> that is created will operate in synchronous
+     * mode, if it's <code>MODE_ASYNCHRONOUS</code> then the <code>DOMLSParser</code>
      * that is created will operate in asynchronous mode.
-     * @param schemaType An absolute URI representing the type of the schema 
-     * language used during the load of a <code>DOMDocument</code> using the newly 
-     * created <code>DOMLSParser</code>. Note that no lexical checking is done on 
-     * the absolute URI. In order to create a <code>DOMLSParser</code> for any kind 
-     * of schema types (i.e. the <code>DOMLSParser</code> will be free to use any 
-     * schema found), use the value <code>NULL</code>. 
-     * <b>Note</b>: For W3C XML Schema [XML Schema Part 1], applications must use 
-     * the value "http://www.w3.org/2001/XMLSchema". For XML DTD [XML 1.0], 
-     * applications must use the value "http://www.w3.org/TR/REC-xml". 
-     * Other Schema languages are outside the scope of the W3C and therefore should 
+     * @param schemaType An absolute URI representing the type of the schema
+     * language used during the load of a <code>DOMDocument</code> using the newly
+     * created <code>DOMLSParser</code>. Note that no lexical checking is done on
+     * the absolute URI. In order to create a <code>DOMLSParser</code> for any kind
+     * of schema types (i.e. the <code>DOMLSParser</code> will be free to use any
+     * schema found), use the value <code>NULL</code>.
+     * <b>Note</b>: For W3C XML Schema [XML Schema Part 1], applications must use
+     * the value "http://www.w3.org/2001/XMLSchema". For XML DTD [XML 1.0],
+     * applications must use the value "http://www.w3.org/TR/REC-xml".
+     * Other Schema languages are outside the scope of the W3C and therefore should
      * recommend an absolute URI in order to use this method.
      * @param manager    Pointer to the memory manager to be used to allocate objects.
      * @param gramPool   The collection of cached grammers.
@@ -138,7 +138,7 @@ public:
      * @see DOMLSParser
      * @since DOM Level 3
      */
-    virtual DOMLSParser* createLSParser(const unsigned short   mode,
+    virtual DOMLSParser* createLSParser(const DOMImplementationLSMode mode,
                                         const XMLCh* const     schemaType,
                                         MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager,
                                         XMLGrammarPool*  const gramPool = 0) = 0;

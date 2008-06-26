@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,11 +47,11 @@ protected:
     bool             fMatchAll;
     int              fChanges;
     DOMNode*         fCurrentNode;
-    unsigned int     fCurrentIndexPlus1;
+    XMLSize_t        fCurrentIndexPlus1;
 
     //DOM Level 2
     const XMLCh*     fNamespaceURI;
-    bool		         fMatchAllURI;
+    bool	     fMatchAllURI;
     bool             fMatchURIandTagname; //match both namespaceURI and tagName
 
 public:
@@ -60,19 +60,19 @@ public:
 	                    const XMLCh *namespaceURI,
                        const XMLCh *localName);
     virtual          ~DOMDeepNodeListImpl();
-    virtual unsigned int getLength() const;
-    virtual DOMNode*     item(unsigned int index) const;
-    DOMNode*             cacheItem(unsigned int index);
+    virtual XMLSize_t    getLength() const;
+    virtual DOMNode*     item(XMLSize_t index) const;
+    DOMNode*             cacheItem(XMLSize_t index);
 
 protected:
     DOMNode*          nextMatchingElementAfter(DOMNode *current);
-    
+
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     DOMDeepNodeListImpl(const DOMDeepNodeListImpl &);
-    DOMDeepNodeListImpl & operator = (const DOMDeepNodeListImpl &);   
+    DOMDeepNodeListImpl & operator = (const DOMDeepNodeListImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

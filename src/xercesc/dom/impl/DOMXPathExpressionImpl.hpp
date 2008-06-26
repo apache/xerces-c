@@ -45,7 +45,7 @@ public:
     virtual ~DOMXPathExpressionImpl();
 
     virtual DOMXPathResult* evaluate(const DOMNode *contextNode,
-                                     unsigned short type,
+                                     DOMXPathResult::ResultType type,
                                      DOMXPathResult* result) const;
 
     virtual void release();

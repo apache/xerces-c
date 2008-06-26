@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,8 +29,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  * The <code>DOMStringList</code> interface provides the abstraction of an ordered
- * collection of strings, without defining or constraining how this collection 
- * is implemented. The items in the <code>DOMStringList</code> are accessible via 
+ * collection of strings, without defining or constraining how this collection
+ * is implemented. The items in the <code>DOMStringList</code> are accessible via
  * an integral index, starting from 0.
  */
 
@@ -40,7 +40,7 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMStringList() {};
     //@}
 
@@ -87,7 +87,7 @@ public:
      *   index.
      * @since DOM Level 3
      */
-    virtual const XMLCh *item(unsigned int index) const = 0;
+    virtual const XMLCh *item(XMLSize_t index) const = 0;
 
     /**
      * Returns the number of strings in the list.
@@ -96,7 +96,7 @@ public:
      *
      * @since DOM Level 3
      */
-    virtual unsigned int getLength() const = 0;
+    virtual XMLSize_t getLength() const = 0;
 
     /**
      * Test if a string is part of this DOMStringList
@@ -122,12 +122,10 @@ public:
      *
      */
     virtual void release() = 0;
-    //@}     
+    //@}
 
 };
 
 XERCES_CPP_NAMESPACE_END
 
 #endif
-
-

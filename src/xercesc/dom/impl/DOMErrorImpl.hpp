@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,21 +42,21 @@ public:
     //@{
 
     /** Constructors */
-    DOMErrorImpl(const short severity);
+    DOMErrorImpl(const ErrorSeverity severity);
 
     DOMErrorImpl
     (
-        const short severity
+        const ErrorSeverity severity
         , const XMLCh* const message
         , DOMLocator* const location
     );
 
     DOMErrorImpl
     (
-        const short severity
+        const ErrorSeverity severity
         , const XMLCh* type
         , const XMLCh* message
-        , void* relatedData 
+        , void* relatedData
     );
 
     /** Desctructor */
@@ -65,7 +65,7 @@ public:
     //@}
 
     // DOMError interface
-    virtual short getSeverity() const;
+    virtual ErrorSeverity getSeverity() const;
     virtual const XMLCh* getMessage() const;
     virtual DOMLocator* getLocation() const;
     virtual void* getRelatedException() const;
@@ -73,7 +73,7 @@ public:
     virtual void* getRelatedData() const;
 
     // Setters
-    void setSeverity(const short severity);
+    void setSeverity(const ErrorSeverity severity);
     void setMessage(const XMLCh* const message);
     void setLocation(DOMLocator* const location);
     void setAdoptLocation(const bool value);
@@ -113,18 +113,18 @@ protected:
     //      The data related to this error.
     //
     // -----------------------------------------------------------------------
-    bool         fAdoptLocation;
-    short        fSeverity;
-    const XMLCh* fMessage;
-    DOMLocator*  fLocation;
-    const XMLCh* fType;
-    void*        fRelatedData;
+    bool          fAdoptLocation;
+    ErrorSeverity fSeverity;
+    const XMLCh*  fMessage;
+    DOMLocator*   fLocation;
+    const XMLCh*  fType;
+    void*         fRelatedData;
 };
 
 // ---------------------------------------------------------------------------
 //  DOMErrorImpl: Getter methods
 // ---------------------------------------------------------------------------
-inline short DOMErrorImpl::getSeverity() const
+inline DOMError::ErrorSeverity DOMErrorImpl::getSeverity() const
 {
     return fSeverity;
 }
@@ -144,12 +144,12 @@ inline void* DOMErrorImpl::getRelatedException() const
     return 0;
 }
 
-inline const XMLCh* DOMErrorImpl::getType() const 
+inline const XMLCh* DOMErrorImpl::getType() const
 {
     return fType;
 }
 
-inline void* DOMErrorImpl::getRelatedData() const 
+inline void* DOMErrorImpl::getRelatedData() const
 {
     return fRelatedData;
 }
@@ -157,7 +157,7 @@ inline void* DOMErrorImpl::getRelatedData() const
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Setter methods
 // ---------------------------------------------------------------------------
-inline void DOMErrorImpl::setSeverity(const short severity)
+inline void DOMErrorImpl::setSeverity(const ErrorSeverity severity)
 {
     fSeverity = severity;
 }

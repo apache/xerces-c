@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,19 +39,19 @@ void DOMStringListImpl::add(const XMLCh* str) {
     fList->addElement((XMLCh*)str);
 }
 
-unsigned int DOMStringListImpl::getLength() const{
+XMLSize_t DOMStringListImpl::getLength() const{
     return fList->size();
 }
 
 
-const XMLCh* DOMStringListImpl::item(unsigned int index) const{
+const XMLCh* DOMStringListImpl::item(XMLSize_t index) const{
     if(index<fList->size())
         return fList->elementAt(index);
     return 0;
 }
 
 bool DOMStringListImpl::contains(const XMLCh* str) const{
-    for(unsigned int i=0;i<fList->size();i++)
+    for(XMLSize_t i=0;i<fList->size();i++)
         if(XMLString::equals(fList->elementAt(i), str))
             return true;
     return false;
@@ -62,5 +62,3 @@ void DOMStringListImpl::release() {
 }
 
 XERCES_CPP_NAMESPACE_END
-
-

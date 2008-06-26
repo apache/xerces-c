@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,23 +27,20 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 DOMRangeException::DOMRangeException()
 : DOMException()
-, code((RangeExceptionCode) 0)
 {
 }
 
 
-DOMRangeException::DOMRangeException(      RangeExceptionCode         exCode
-                                   ,       short                      messageCode
-                                   ,       MemoryManager*      const  memoryManager)
-: DOMException(exCode, messageCode?messageCode:XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+exCode, memoryManager)
-, code(exCode)
+DOMRangeException::DOMRangeException(short exCode,
+                                     short messageCode,
+                                     MemoryManager* const  memoryManager)
+: DOMException(exCode, messageCode?messageCode:XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+exCode-DOMRangeException::BAD_BOUNDARYPOINTS_ERR+1, memoryManager)
 {
 }
 
 
 DOMRangeException::DOMRangeException(const DOMRangeException &other)
 : DOMException(other)
-, code(other.code)
 {
 }
 
@@ -53,4 +50,3 @@ DOMRangeException::~DOMRangeException()
 }
 
 XERCES_CPP_NAMESPACE_END
-

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
         DOMImplementation() {};                                      // no plain constructor
     //@}
 
@@ -183,18 +183,18 @@ public:
     /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
-     * This method returns a specialized object which implements the specialized APIs 
+     * This method returns a specialized object which implements the specialized APIs
      * of the specified feature and version, as specified in DOM Features.
-     * This method also allow the implementation to provide specialized objects which 
+     * This method also allow the implementation to provide specialized objects which
      * do not support the <code>DOMImplementation</code> interface.
      *
      * @param feature The name of the feature requested (case-insensitive).
-     *        Note that any plus sign "+" prepended to the name of the feature will 
+     *        Note that any plus sign "+" prepended to the name of the feature will
      *        be ignored since it is not significant in the context of this method.
      * @param version This is the version number of the feature to test.
-     * @return Returns an object which implements the specialized APIs of the specified 
-     *         feature and version, if any, or null if there is no object which implements 
-     *         interfaces associated with that feature. 
+     * @return Returns an object which implements the specialized APIs of the specified
+     *         feature and version, if any, or null if there is no object which implements
+     *         interfaces associated with that feature.
      * @since DOM Level 3
      */
     virtual void* getFeature(const XMLCh* feature, const XMLCh* version) const = 0;
@@ -235,46 +235,11 @@ public:
      */
     static bool loadDOMExceptionMsg
     (
-        const   DOMException::ExceptionCode  msgToLoad
+          const   short  msgToLoad
         ,       XMLCh* const                 toFill
         , const XMLSize_t                    maxChars
     );
 
-    /**
-     * Non-standard extension
-     *
-     * Load the default error text message for DOMLSException.
-     * @param msgToLoad The DOM LSExceptionCode id to be processed
-     * @param toFill    The buffer that will hold the output on return. The
-     *         size of this buffer should at least be 'maxChars + 1'.
-     * @param maxChars  The maximum number of output characters that can be
-     *         accepted. If the result will not fit, it is an error.
-     * @return <code>true</code> if the message is successfully loaded
-     */
-    static bool loadDOMExceptionMsg
-    (
-        const   DOMLSException::LSExceptionCode msgToLoad
-        ,       XMLCh* const                    toFill
-        , const XMLSize_t                       maxChars
-    );
-
-    /**
-     * Non-standard extension
-     *
-     * Load the default error text message for DOMRangeException.
-     * @param msgToLoad The DOM RangeExceptionCode id to be processed
-     * @param toFill    The buffer that will hold the output on return. The
-     *         size of this buffer should at least be 'maxChars + 1'.
-     * @param maxChars  The maximum number of output characters that can be
-     *         accepted. If the result will not fit, it is an error.
-     * @return <code>true</code> if the message is successfully loaded
-     */
-    static bool loadDOMExceptionMsg
-    (
-        const   DOMRangeException::RangeExceptionCode  msgToLoad
-        ,       XMLCh* const                           toFill
-        , const XMLSize_t                              maxChars
-    );
     //@}
 
 };

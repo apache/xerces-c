@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -142,12 +142,12 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMNode() {}
     DOMNode(const DOMNode &) {}
     //@}
 
-private:    
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -249,7 +249,7 @@ public:
      * An enum value representing the type of the underlying object.
      * @since DOM Level 1
      */
-    virtual short           getNodeType() const = 0;
+    virtual NodeType            getNodeType() const = 0;
 
     /**
      * Gets the parent of this node.
@@ -726,8 +726,8 @@ public:
     virtual const XMLCh*      getBaseURI() const = 0;
 
     /**
-     * Compares the reference node, i.e. the node on which this method is being called, 
-     * with a node, i.e. the one passed as a parameter, with regard to their position 
+     * Compares the reference node, i.e. the node on which this method is being called,
+     * with a node, i.e. the one passed as a parameter, with regard to their position
      * in the document and according to the document order.
      *
      * @param other The node to compare against this node.
@@ -739,9 +739,9 @@ public:
 
     /**
      * This attribute returns the text content of this node and its
-     * descendants. No serialization is performed, the returned string 
-     * does not contain any markup. No whitespace normalization is 
-     * performed and the returned string does not contain the white 
+     * descendants. No serialization is performed, the returned string
+     * does not contain any markup. No whitespace normalization is
+     * performed and the returned string does not contain the white
      * spaces in element content.
      *
      * <br>The string returned is made of the text content of this node
@@ -774,27 +774,27 @@ public:
      * @exception DOMException
      *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
      *   fit in a <code>DOMString</code> variable on the implementation
-     *   platform.     
+     *   platform.
      * @see #setTextContent
      * @since DOM Level 3
      */
     virtual const XMLCh*      getTextContent() const = 0;
 
     /**
-     * This attribute removes any possible children this node may have and, if the 
-     * new string is not empty or null, replaced by a single <code>DOMText</code> 
-     * node containing the string this attribute is set to. No parsing is 
-     * performed, the input string is taken as pure textual content.  
+     * This attribute removes any possible children this node may have and, if the
+     * new string is not empty or null, replaced by a single <code>DOMText</code>
+     * node containing the string this attribute is set to. No parsing is
+     * performed, the input string is taken as pure textual content.
      *
      * @exception DOMException
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.     
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
      * @see #getTextContent
      * @since DOM Level 3
      */
     virtual void              setTextContent(const XMLCh* textContent) = 0;
 
     /**
-     * Look up the prefix associated to the given namespace URI, starting from this node. 
+     * Look up the prefix associated to the given namespace URI, starting from this node.
      * The default namespace declarations are ignored by this method.
      *
      * @param namespaceURI The namespace URI to look for.
@@ -867,7 +867,7 @@ public:
      *   INVALID_ACCESS_ERR: Raised if this Node has a parent and thus should not be released yet.
      */
     virtual void              release() = 0;
-    //@}     
+    //@}
 #if defined(XML_DOMREFCOUNT_EXPERIMENTAL)
     // -----------------------------------------------------------------------
     //  Non-standard Extension
@@ -920,4 +920,3 @@ public:
 XERCES_CPP_NAMESPACE_END
 
 #endif
-

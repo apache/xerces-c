@@ -40,17 +40,17 @@ DOMException::~DOMException()
 }
 
 DOMException::DOMException()
-:code((ExceptionCode) 0)
+:code(0)
 ,msg(0)
 ,fMemoryManager(0)
 ,fMsgOwned(false)
 {
 }
 
-DOMException::DOMException(      short                 exCode
-                         ,       short                 messageCode
-                         ,       MemoryManager* const  memoryManager)
-:code((ExceptionCode) exCode)
+DOMException::DOMException(short exCode,
+                           short messageCode,
+                           MemoryManager* const  memoryManager)
+:code(exCode)
 ,fMemoryManager(0)
 ,fMsgOwned(true)
 {
@@ -82,4 +82,3 @@ DOMException::DOMException(const DOMException &other)
 }
 
 XERCES_CPP_NAMESPACE_END
-

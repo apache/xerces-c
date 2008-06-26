@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,8 +54,8 @@ public:
      * @since DOM Level 2
      */
         enum RangeExceptionCode {
-                BAD_BOUNDARYPOINTS_ERR  = 1,
-                INVALID_NODE_TYPE_ERR   = 2
+                BAD_BOUNDARYPOINTS_ERR  = 111,
+                INVALID_NODE_TYPE_ERR   = 112
         };
     //@}
 
@@ -78,11 +78,9 @@ public:
       * @param messageCode    The string containing the error message
       * @param memoryManager  The memory manager used to (de)allocate memory
       */
-    DOMRangeException(
-                            RangeExceptionCode code
-                    ,       short              messageCode
-                    ,       MemoryManager*     const memoryManager
-                     );
+    DOMRangeException(short code,
+                      short messageCode,
+                      MemoryManager*     const memoryManager);
 
     /**
       * Copy constructor.
@@ -104,22 +102,6 @@ public:
     virtual ~DOMRangeException();
     //@}
 
-public:
-    // -----------------------------------------------------------------------
-    //  Class Types
-    // -----------------------------------------------------------------------
-    /** @name Public variables */
-    //@{
-	 /**
-	  * A code value, from the set defined by the RangeExceptionCode enum,
-     * indicating the type of error that occured.
-     *
-     * @since DOM Level 2
-	  */
-    RangeExceptionCode   code;
-
-    //@}
-
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
@@ -130,4 +112,3 @@ private:
 XERCES_CPP_NAMESPACE_END
 
 #endif
-

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,14 +66,14 @@ void DOMAttrMapImpl::cloneContent(const DOMAttrMapImpl *srcmap)
             fNodes->reset();
         else
         {
-            unsigned int size = srcmap->fNodes->size();
+            XMLSize_t size = srcmap->fNodes->size();
             if(size > 0) {
                 DOMDocumentImpl *doc = (DOMDocumentImpl*)fOwnerNode->getOwnerDocument();
                 fNodes = new (doc) DOMNodeVector(doc, size);
             }
         }
 
-        for (unsigned int i = 0; i < srcmap->fNodes->size(); i++)
+        for (XMLSize_t i = 0; i < srcmap->fNodes->size(); i++)
         {
             DOMNode *n = srcmap->fNodes->elementAt(i);
             DOMNode *clone = n->cloneNode(true);
@@ -98,8 +98,8 @@ void DOMAttrMapImpl::setReadOnly(bool readOnl, bool deep)
     // this->fReadOnly=readOnl;
     if(deep && fNodes!=0)
     {
-        unsigned int sz = fNodes->size();
-        for (unsigned int i=0; i<sz; ++i) {
+        XMLSize_t sz = fNodes->size();
+        for (XMLSize_t i=0; i<sz; ++i) {
             castToNodeImpl(fNodes->elementAt(i))->setReadOnly(readOnl, deep);
         }
     }
@@ -111,7 +111,6 @@ bool DOMAttrMapImpl::readOnly() {
 
 int DOMAttrMapImpl::findNamePoint(const XMLCh *name) const
 {
-
     // Binary search
     int i=0;
     if(fNodes!=0)
@@ -337,7 +336,7 @@ DOMNode *DOMAttrMapImpl::removeNamedItemNS(const XMLCh *namespaceURI, const XMLC
 
 // remove the name using index
 // avoid calling findNamePoint again if the index is already known
-DOMNode * DOMAttrMapImpl::removeNamedItemAt(unsigned int index)
+DOMNode * DOMAttrMapImpl::removeNamedItemAt(XMLSize_t index)
 {
     if (this->readOnly())
         throw DOMException(
@@ -432,12 +431,12 @@ void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
     }
 } // moveSpecifiedAttributes(AttributeMap):void
 
-unsigned int DOMAttrMapImpl::getLength() const
+XMLSize_t DOMAttrMapImpl::getLength() const
 {
     return (fNodes != 0) ? fNodes->size() : 0;
 }
 
-DOMNode * DOMAttrMapImpl::item(unsigned int index) const
+DOMNode * DOMAttrMapImpl::item(XMLSize_t index) const
 {
     return (fNodes != 0 && index < fNodes->size()) ?
         fNodes->elementAt(index) : 0;
@@ -445,4 +444,3 @@ DOMNode * DOMAttrMapImpl::item(unsigned int index) const
 
 
 XERCES_CPP_NAMESPACE_END
-

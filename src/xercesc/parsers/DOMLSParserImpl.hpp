@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ public :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       * @param manager    The memory manager to be used for memory allocations
-      * @param gramPool   Pointer to the grammar pool instance from 
+      * @param gramPool   Pointer to the grammar pool instance from
       *                   external application.
       *                   The parser does NOT own it.
       *
@@ -73,7 +73,7 @@ public :
     (
           XMLValidator* const   valToAdopt = 0
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-        , XMLGrammarPool* const gramPool = 0        
+        , XMLGrammarPool* const gramPool = 0
     );
 
     /**
@@ -159,7 +159,7 @@ public :
     (
         const   DOMLSInput*     source
         ,       DOMNode*        contextNode
-        , const unsigned short  action
+        , const ActionType      action
     );
 
     /**
@@ -232,7 +232,7 @@ public :
       * @see DOMLSInput#DOMLSInput
       */
     virtual Grammar* loadGrammar(const DOMLSInput* source,
-                             const short grammarType,
+                             const Grammar::GrammarType grammarType,
                              const bool toCache = false);
 
     /**
@@ -259,7 +259,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const XMLCh* const systemId,
-                             const short grammarType,
+                             const Grammar::GrammarType grammarType,
                              const bool toCache = false);
 
     /**
@@ -285,7 +285,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const char* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false);
 
     /**
@@ -331,19 +331,19 @@ public :
     // -----------------------------------------------------------------------
     /** @name Implementation of the DOMConfiguration interface. */
     //@{
-    /** 
-     * Set the value of a parameter. 
+    /**
+     * Set the value of a parameter.
      *
      * @param name The name of the parameter to set.
-     * @param value The new value or null if the user wishes to unset the 
-     * parameter. While the type of the value parameter is defined as 
+     * @param value The new value or null if the user wishes to unset the
+     * parameter. While the type of the value parameter is defined as
      * <code>DOMUserData</code>, the object type must match the type defined
-     * by the definition of the parameter. For example, if the parameter is 
+     * by the definition of the parameter. For example, if the parameter is
      * "error-handler", the value must be of type <code>DOMErrorHandler</code>
      *
-     * @exception DOMException (NOT_SUPPORTED_ERR) Raised when the 
+     * @exception DOMException (NOT_SUPPORTED_ERR) Raised when the
      * parameter name is recognized but the requested value cannot be set.
-     * @exception DOMException (NOT_FOUND_ERR) Raised when the 
+     * @exception DOMException (NOT_FOUND_ERR) Raised when the
      * parameter name is not recognized.
      *
      * @since DOM level 3
@@ -351,30 +351,30 @@ public :
     virtual void setParameter(const XMLCh* name, const void* value);
     virtual void setParameter(const XMLCh* name, bool value);
 
-    /** 
-     * Return the value of a parameter if known. 
+    /**
+     * Return the value of a parameter if known.
      *
      * @param name The name of the parameter.
-     * @return The current object associated with the specified parameter or 
-     * null if no object has been associated or if the parameter is not 
+     * @return The current object associated with the specified parameter or
+     * null if no object has been associated or if the parameter is not
      * supported.
      *
      * @exception DOMException (NOT_FOUND_ERR) Raised when the i
-     * boolean parameter 
+     * boolean parameter
      * name is not recognized.
      *
      * @since DOM level 3
-     **/    
+     **/
     virtual const void* getParameter(const XMLCh* name) const;
 
-    /** 
-     * Check if setting a parameter to a specific value is supported. 
+    /**
+     * Check if setting a parameter to a specific value is supported.
      *
      * @param name The name of the parameter to check.
      * @param value An object. if null, the returned value is true.
-     * @return true if the parameter could be successfully set to the specified 
-     * value, or false if the parameter is not recognized or the requested value 
-     * is not supported. This does not change the current value of the parameter 
+     * @return true if the parameter could be successfully set to the specified
+     * value, or false if the parameter is not recognized or the requested value
+     * is not supported. This does not change the current value of the parameter
      * itself.
      *
      * @since DOM level 3
@@ -383,8 +383,8 @@ public :
     virtual bool canSetParameter(const XMLCh* name, bool value) const;
 
     /**
-     * The list of the parameters supported by this DOMConfiguration object and 
-     * for which at least one value can be set by the application. 
+     * The list of the parameters supported by this DOMConfiguration object and
+     * for which at least one value can be set by the application.
      * Note that this list can also contain parameter names defined outside this specification.
      *
      * @return The list of parameters that can be used with setParameter/getParameter
@@ -504,7 +504,7 @@ public :
       *
       * This method allows a user installed entity handler to further
       * process any pointers to external entities. The applications can
-      * implement 'redirection' via this callback.  
+      * implement 'redirection' via this callback.
       *
       * @param resourceIdentifier An object containing the type of
       *        resource to be resolved and the associated data members
@@ -588,7 +588,7 @@ private :
     //
     //  fXMLEntityResolver
     //      The installed Xerces entity resolver, if any. Null if none.
-    // 
+    //
     //  fErrorHandler
     //      The installed DOM error handler, if any. Null if none.
     //
@@ -606,7 +606,7 @@ private :
     //  fSupportedParameters
     //      A list of the parameters that can be set, including the ones
     //      specific of Xerces
-	// 
+	//
     //-----------------------------------------------------------------------
     DOMLSResourceResolver*      fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;

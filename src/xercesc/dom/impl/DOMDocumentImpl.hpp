@@ -126,11 +126,11 @@ public:
     virtual DOMImplementation*   getImplementation() const;
     bool                         isXMLName(const XMLCh * s);
     virtual DOMNodeIterator*     createNodeIterator(DOMNode *root,
-                                                    unsigned long whatToShow,
+                                                    DOMNodeFilter::ShowType whatToShow,
                                                     DOMNodeFilter* filter,
                                                     bool entityReferenceExpansion);
     virtual DOMTreeWalker*       createTreeWalker(DOMNode *root,
-                                                  unsigned long whatToShow,
+                                                  DOMNodeFilter::ShowType whatToShow,
                                                   DOMNodeFilter* filter,
                                                   bool entityReferenceExpansion);
 
@@ -147,7 +147,7 @@ public:
     virtual DOMXPathResult* evaluate(const XMLCh *expression,
                                      const DOMNode *contextNode,
                                      const DOMXPathNSResolver *resolver,
-                                     unsigned short type,
+                                     DOMXPathResult::ResultType type,
                                      DOMXPathResult* result);
 
 
@@ -204,8 +204,8 @@ public:
                                                  const XMLCh *qualifiedName);
     virtual DOMElement*          createElementNS(const XMLCh *namespaceURI,
                                                  const XMLCh *qualifiedName,
-                                                 const unsigned long lineNo,
-                                                 const unsigned long columnNo);
+                                                 const XMLSize_t lineNo,
+                                                 const XMLSize_t columnNo);
     virtual DOMAttr*             createAttributeNS(const XMLCh *namespaceURI,
                                                    const XMLCh *qualifiedName);
     virtual DOMNodeList*         getElementsByTagNameNS(const XMLCh *namespaceURI,

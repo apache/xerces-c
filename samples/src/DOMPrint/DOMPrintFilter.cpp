@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,29 +25,30 @@
 
 static const XMLCh  element_person[]=
 {
-	chLatin_p, chLatin_e, chLatin_r, chLatin_s, chLatin_o, chLatin_n, chNull 
+	chLatin_p, chLatin_e, chLatin_r, chLatin_s, chLatin_o, chLatin_n, chNull
 };
 
 static const XMLCh  element_link[]=
 {
-	chLatin_l, chLatin_i, chLatin_n, chLatin_k, chNull 
+	chLatin_l, chLatin_i, chLatin_n, chLatin_k, chNull
 };
 
-DOMPrintFilter::DOMPrintFilter(unsigned long whatToShow)
+DOMPrintFilter::DOMPrintFilter(ShowType whatToShow)
 :fWhatToShow(whatToShow)
 {}
 
-short DOMPrintFilter::acceptNode(const DOMNode* node) const
+DOMNodeFilter::FilterAction DOMPrintFilter::
+acceptNode(const DOMNode* node) const
 {
 	//
-	// The DOMLSSerializer shall call getWhatToShow() before calling 
-	// acceptNode(), to show nodes which are supposed to be 
+	// The DOMLSSerializer shall call getWhatToShow() before calling
+	// acceptNode(), to show nodes which are supposed to be
 	// shown to this filter.
-	// 
-	// REVISIT: In case the DOMLSSerializer does not follow the protocol, 
+	//
+	// REVISIT: In case the DOMLSSerializer does not follow the protocol,
 	//          Shall the filter honour, or NOT, what it claims
 	//          it is interested in ?
-	// 
+	//
 	// The DOMLS specs does not specify that acceptNode() shall do
 	// this way, or not, so it is up the implementation,
 	// to skip the code below for the sake of performance ...
@@ -108,4 +109,3 @@ short DOMPrintFilter::acceptNode(const DOMNode* node) const
 
 	return DOMNodeFilter::FILTER_ACCEPT;
 }
-

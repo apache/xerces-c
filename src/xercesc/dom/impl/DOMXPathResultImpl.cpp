@@ -21,7 +21,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-DOMXPathResultImpl::DOMXPathResultImpl(unsigned short type,
+DOMXPathResultImpl::DOMXPathResultImpl(ResultType type,
                                        MemoryManager* const manager)
     : fType(type),
       fMemoryManager(manager),
@@ -37,7 +37,7 @@ DOMXPathResultImpl::~DOMXPathResultImpl()
 
 //
 //
-short DOMXPathResultImpl::getResultType() const
+DOMXPathResult::ResultType DOMXPathResultImpl::getResultType() const
 {
     return fType;
 }
@@ -123,7 +123,7 @@ void DOMXPathResultImpl::release()
 
 //
 //
-void DOMXPathResultImpl::reset(unsigned short type)
+void DOMXPathResultImpl::reset(ResultType type)
 {
     fType = type;
     fSnapshot->removeAllElements();

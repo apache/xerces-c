@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,8 +23,9 @@
 #if !defined(XERCESC_INCLUDE_GUARD_DOMLSPARSER_HPP)
 #define XERCESC_INCLUDE_GUARD_DOMLSPARSER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMConfiguration.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -34,7 +35,6 @@ class DOMLSInput;
 class DOMLSParserFilter;
 class DOMNode;
 class DOMDocument;
-class Grammar;
 
 /**
  * DOMLSParser provides an API for parsing XML documents and building the
@@ -51,11 +51,11 @@ protected :
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMLSParser() {};
     //@}
 
-private:    
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -87,28 +87,28 @@ public:
      * A set of possible actions for the parseWithContext method.
      *
      * <p><code>ACTION_APPEND_AS_CHILDREN</code>:
-     * Append the result of the parse operation as children of the context node. 
-     * For this action to work, the context node must be a <code>DOMElement</code> 
+     * Append the result of the parse operation as children of the context node.
+     * For this action to work, the context node must be a <code>DOMElement</code>
      * or a <code>DOMDocumentFragment</code>. </p>
      *
      * <p><code>ACTION_INSERT_AFTER</code>:
-     * Insert the result of the parse operation as the immediately following sibling 
-     * of the context node. For this action to work the context node's parent must 
+     * Insert the result of the parse operation as the immediately following sibling
+     * of the context node. For this action to work the context node's parent must
      * be a <code>DOMElement</code> or a <code>DOMDocumentFragment</code>. </p>
      *
      * <p><code>ACTION_INSERT_BEFORE</code>:
-     * Insert the result of the parse operation as the immediately preceding sibling 
-     * of the context node. For this action to work the context node's parent must 
+     * Insert the result of the parse operation as the immediately preceding sibling
+     * of the context node. For this action to work the context node's parent must
      * be a <code>DOMElement</code> or a <code>DOMDocumentFragment</code>. </p>
      *
      * <p><code>ACTION_REPLACE</code>:
-     * Replace the context node with the result of the parse operation. For this 
-     * action to work, the context node must have a parent, and the parent must be 
+     * Replace the context node with the result of the parse operation. For this
+     * action to work, the context node must have a parent, and the parent must be
      * a <code>DOMElement</code> or a <code>DOMDocumentFragment</code>. </p>
      *
      * <p><code>ACTION_REPLACE_CHILDREN</code>:
-     * Replace all the children of the context node with the result of the parse 
-     * operation. For this action to work, the context node must be a <code>DOMElement</code>, 
+     * Replace all the children of the context node with the result of the parse
+     * operation. For this action to work, the context node must be a <code>DOMElement</code>,
      * a <code>DOMDocument</code>, or a <code>DOMDocumentFragment</code>. </p>
      *
      * @see parseWithContext(...)
@@ -135,99 +135,99 @@ public:
     // -----------------------------------------------------------------------
 
     /**
-      * Get a pointer to the <code>DOMConfiguration</code> object used when parsing 
-      * an input source. 
-      * This <code>DOMConfiguration</code> is specific to the parse operation. 
-      * No parameter values from this <code>DOMConfiguration</code> object are passed 
-      * automatically to the <code>DOMConfiguration</code> object on the 
-      * <code>DOMDocument</code> that is created, or used, by the parse operation. 
-      * The DOM application is responsible for passing any needed parameter values 
-      * from this <code>DOMConfiguration</code> object to the <code>DOMConfiguration</code> 
+      * Get a pointer to the <code>DOMConfiguration</code> object used when parsing
+      * an input source.
+      * This <code>DOMConfiguration</code> is specific to the parse operation.
+      * No parameter values from this <code>DOMConfiguration</code> object are passed
+      * automatically to the <code>DOMConfiguration</code> object on the
+      * <code>DOMDocument</code> that is created, or used, by the parse operation.
+      * The DOM application is responsible for passing any needed parameter values
+      * from this <code>DOMConfiguration</code> object to the <code>DOMConfiguration</code>
       * object referenced by the <code>DOMDocument</code> object.
       *
       * In addition to the parameters recognized in on the <code>DOMConfiguration</code>
-      * interface defined in [DOM Level 3 Core], the <code>DOMConfiguration</code> objects 
-      * for <code>DOMLSParser</code> add or modify the following parameters: 
+      * interface defined in [DOM Level 3 Core], the <code>DOMConfiguration</code> objects
+      * for <code>DOMLSParser</code> add or modify the following parameters:
       *
-      * "charset-overrides-xml-encoding" 
+      * "charset-overrides-xml-encoding"
       *     true [optional] (default)
-      *         If a higher level protocol such as HTTP [IETF RFC 2616] provides an 
-      *         indication of the character encoding of the input stream being processed, 
-      *         that will override any encoding specified in the XML declaration or the 
-      *         Text declaration (see also section 4.3.3, "Character Encoding in Entities", 
+      *         If a higher level protocol such as HTTP [IETF RFC 2616] provides an
+      *         indication of the character encoding of the input stream being processed,
+      *         that will override any encoding specified in the XML declaration or the
+      *         Text declaration (see also section 4.3.3, "Character Encoding in Entities",
       *         in [XML 1.0]). Explicitly setting an encoding in the <code>DOMLSInput</code>
-      *          overrides any encoding from the protocol. 
+      *          overrides any encoding from the protocol.
       *     false [required]
-      *         The parser ignores any character set encoding information from higher-level 
-      *         protocols. 
+      *         The parser ignores any character set encoding information from higher-level
+      *         protocols.
       *
-      * "disallow-doctype" 
+      * "disallow-doctype"
       *     true [optional]
-      *         Throw a fatal "doctype-not-allowed" error if a doctype node is found while 
-      *         parsing the document. This is useful when dealing with things like SOAP 
-      *         envelopes where doctype nodes are not allowed. 
+      *         Throw a fatal "doctype-not-allowed" error if a doctype node is found while
+      *         parsing the document. This is useful when dealing with things like SOAP
+      *         envelopes where doctype nodes are not allowed.
       *     false [required] (default)
-      *         Allow doctype nodes in the document. 
+      *         Allow doctype nodes in the document.
       *
-      * "ignore-unknown-character-denormalizations" 
+      * "ignore-unknown-character-denormalizations"
       *     true [required] (default)
-      *         If, while verifying full normalization when [XML 1.1] is supported, a 
-      *         processor encounters characters for which it cannot determine the normalization 
-      *         properties, then the processor will ignore any possible denormalizations 
+      *         If, while verifying full normalization when [XML 1.1] is supported, a
+      *         processor encounters characters for which it cannot determine the normalization
+      *         properties, then the processor will ignore any possible denormalizations
       *         caused by these characters.
-      *         This parameter is ignored for [XML 1.0]. 
+      *         This parameter is ignored for [XML 1.0].
       *     false [optional]
-      *         Report an fatal "unknown-character-denormalization" error if a character 
-      *         is encountered for which the processor cannot determine the normalization 
-      *         properties. 
+      *         Report an fatal "unknown-character-denormalization" error if a character
+      *         is encountered for which the processor cannot determine the normalization
+      *         properties.
       *
-      * "infoset" 
-      *     See the definition of DOMConfiguration for a description of this parameter. 
-      *     Unlike in [DOM Level 3 Core], this parameter will default to true for DOMLSParser. 
+      * "infoset"
+      *     See the definition of DOMConfiguration for a description of this parameter.
+      *     Unlike in [DOM Level 3 Core], this parameter will default to true for DOMLSParser.
       *
-      * "namespaces" 
+      * "namespaces"
       *     true [required] (default)
-      *         Perform the namespace processing as defined in [XML Namespaces] and 
-      *         [XML Namespaces 1.1]. 
+      *         Perform the namespace processing as defined in [XML Namespaces] and
+      *         [XML Namespaces 1.1].
       *     false [optional]
-      *         Do not perform the namespace processing. 
+      *         Do not perform the namespace processing.
       *
       * "resource-resolver" [required]
-      *     A pointer to a DOMLSResourceResolver object, or NULL. If the value of this parameter 
-      *     is not null when an external resource (such as an external XML entity or an XML schema 
-      *     location) is encountered, the implementation will request that the DOMLSResourceResolver 
-      *     referenced in this parameter resolves the resource. 
+      *     A pointer to a DOMLSResourceResolver object, or NULL. If the value of this parameter
+      *     is not null when an external resource (such as an external XML entity or an XML schema
+      *     location) is encountered, the implementation will request that the DOMLSResourceResolver
+      *     referenced in this parameter resolves the resource.
       *
-      * "supported-media-types-only" 
+      * "supported-media-types-only"
       *     true [optional]
-      *         Check that the media type of the parsed resource is a supported media type. If 
-      *         an unsupported media type is encountered, a fatal error of type "unsupported-media-type" 
-      *         will be raised. The media types defined in [IETF RFC 3023] must always be accepted. 
+      *         Check that the media type of the parsed resource is a supported media type. If
+      *         an unsupported media type is encountered, a fatal error of type "unsupported-media-type"
+      *         will be raised. The media types defined in [IETF RFC 3023] must always be accepted.
       *     false [required] (default)
-      *         Accept any media type. 
+      *         Accept any media type.
       *
-      * "validate" 
-      *     See the definition of <code>DOMConfiguration</code> for a description of this parameter. 
-      *     Unlike in [DOM Level 3 Core], the processing of the internal subset is always accomplished, even 
-      *     if this parameter is set to false. 
+      * "validate"
+      *     See the definition of <code>DOMConfiguration</code> for a description of this parameter.
+      *     Unlike in [DOM Level 3 Core], the processing of the internal subset is always accomplished, even
+      *     if this parameter is set to false.
       *
-      * "validate-if-schema" 
-      *     See the definition of <code>DOMConfiguration</code> for a description of this parameter. 
-      *     Unlike in [DOM Level 3 Core], the processing of the internal subset is always accomplished, even 
-      *     if this parameter is set to false. 
+      * "validate-if-schema"
+      *     See the definition of <code>DOMConfiguration</code> for a description of this parameter.
+      *     Unlike in [DOM Level 3 Core], the processing of the internal subset is always accomplished, even
+      *     if this parameter is set to false.
       *
-      * "well-formed" 
-      *     See the definition of <code>DOMConfiguration</code> for a description of this parameter. 
-      *     Unlike in [DOM Level 3 Core], this parameter cannot be set to false. 
+      * "well-formed"
+      *     See the definition of <code>DOMConfiguration</code> for a description of this parameter.
+      *     Unlike in [DOM Level 3 Core], this parameter cannot be set to false.
       *
       * In addition to these, Xerces adds these non standard parameters:
-      * 
+      *
       * "http://apache.org/xml/properties/entity-resolver"
-      *     A pointer to a XMLEntityResolver object, or NULL. If the value of this parameter 
-      *     is not null when an external resource (such as an external XML entity or an XML schema 
+      *     A pointer to a XMLEntityResolver object, or NULL. If the value of this parameter
+      *     is not null when an external resource (such as an external XML entity or an XML schema
       *     location) is encountered, the implementation will request that the XMLEntityResolver
-      *     referenced in this parameter resolves the resource. 
-      * 
+      *     referenced in this parameter resolves the resource.
+      *
       * "http://apache.org/xml/properties/schema/external-schemaLocation"
       *     A string holding a set of [namespaceUri schemaLocation] entries that will be treated as
       *     the content of the attribute xsi:schemaLocation of the root element
@@ -254,13 +254,13 @@ public:
       *     resulting from the parse operation. For instance, "LS" or "Core"
       *
       * "http://apache.org/xml/features/validation/schema"
-      *     true 
+      *     true
       *         Enable XMLSchema validation (note that also namespace processing should be enabled)
       *     false (default)
       *         Don't perform XMLSchema validation
       *
       * "http://apache.org/xml/features/validation/schema-full-checking"
-      *     true 
+      *     true
       *         Turn on full XMLSchema checking (e.g. Unique Particle Attribution)
       *     false (default)
       *         Don't perform full XMLSchema checking
@@ -272,7 +272,7 @@ public:
       *         Schemas that are not in the grammar pool are ignored
       *
       * "http://apache.org/xml/features/dom/user-adopts-DOMDocument"
-      *     true 
+      *     true
       *         The DOMDocument objects returned by <code>parse</code> will be owned by the caller
       *     false (default)
       *         The DOMDocument objects returned by <code>parse</code> will be owned by this <code>DOMLSParser</code>
@@ -282,7 +282,7 @@ public:
       *     true (default)
       *         Allow the parser to load external DTDs
       *     false
-      *         References to external DTDs will be ignored 
+      *         References to external DTDs will be ignored
       *
       * "http://apache.org/xml/features/continue-after-fatal-error"
       *     true
@@ -297,7 +297,7 @@ public:
       *         has been specified)
       *     false (default)
       *         Validation errors are normal errors
-      * 
+      *
       * "http://apache.org/xml/features/validation/cache-grammarFromParse"
       *     true
       *         XMLSchemas referenced by an XML file are cached in order to be reused by other parse operations
@@ -309,7 +309,7 @@ public:
       *         During this parse operation, reuse the XMLSchemas found in the cache
       *     false (default)
       *         Don't reuse the XMLSchemas found in the cache
-      * 
+      *
       * "http://apache.org/xml/features/calculate-src-ofs"
       *     true
       *         During parsing update the position in the source stream
@@ -390,7 +390,7 @@ public:
     /**
       * Return whether the parser is asynchronous
       *
-      * @return <code>true</code> if the <code>DOMLSParser</code> is asynchronous, 
+      * @return <code>true</code> if the <code>DOMLSParser</code> is asynchronous,
       *         <code>false</code> if it is synchronous
       * @since DOM Level 3
       */
@@ -399,7 +399,7 @@ public:
     /**
       * Return whether the parser is busy parsing
       *
-      * @return <code>true</code> if the <code>DOMLSParser</code> is currently busy 
+      * @return <code>true</code> if the <code>DOMLSParser</code> is currently busy
       *         loading a document, otherwise <code>false</code>.
       * @since DOM Level 3
       */
@@ -412,11 +412,11 @@ public:
       * Set the application filter
       *
       * When the application provides a filter, the parser will call out to
-      * the filter at the completion of the construction of each <code>DOMElement</code> 
+      * the filter at the completion of the construction of each <code>DOMElement</code>
       * node. The filter implementation can choose to remove the element from the
-      * document being constructed or to terminate the parse early. 
-      * The filter is invoked after the operations requested by the DOMConfiguration 
-      * parameters have been applied. For example, if "validate" is set to true, 
+      * document being constructed or to terminate the parse early.
+      * The filter is invoked after the operations requested by the DOMConfiguration
+      * parameters have been applied. For example, if "validate" is set to true,
       * the validation is done before invoking the filter.
       *
       * <i>Any previously set filter is merely dropped, since the parser
@@ -434,24 +434,24 @@ public:
     //  Parsing methods
     // -----------------------------------------------------------------------
     /**
-      * Parse an XML document from a resource identified by a <code>DOMLSInput</code>. 
+      * Parse an XML document from a resource identified by a <code>DOMLSInput</code>.
       *
       * The parser owns the returned DOMDocument.  It will be deleted
       * when the parser is released.
       *
-      * @param source The <code>DOMLSInput</code> from which the source of the document 
+      * @param source The <code>DOMLSInput</code> from which the source of the document
       *               is to be read.
-      * @return If the <code>DOMLSParser</code> is a synchronous <code>DOMLSParser</code> 
-      *         the newly created and populated <code>DOMDocument</code> is returned. 
-      *         If the <code>DOMLSParser</code> is asynchronous then <code>NULL</code> 
-      *         is returned since the document object may not yet be constructed when 
+      * @return If the <code>DOMLSParser</code> is a synchronous <code>DOMLSParser</code>
+      *         the newly created and populated <code>DOMDocument</code> is returned.
+      *         If the <code>DOMLSParser</code> is asynchronous then <code>NULL</code>
+      *         is returned since the document object may not yet be constructed when
       *         this method returns.
       * @exception DOMException INVALID_STATE_ERR: Raised if the <code>DOMLSParser::busy</code>
       *                                            attribute is true.
-      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable 
-      *                                      to load the XML document. DOM applications should 
-      *                                      attach a <code>DOMErrorHandler</code> using the 
-      *                                      parameter "error-handler" if they wish to get details 
+      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable
+      *                                      to load the XML document. DOM applications should
+      *                                      attach a <code>DOMErrorHandler</code> using the
+      *                                      parameter "error-handler" if they wish to get details
       *                                      on the error.
       *
       * @see DOMLSInput#DOMLSInput
@@ -462,25 +462,25 @@ public:
     virtual DOMDocument* parse(const DOMLSInput* source) = 0;
 
     /**
-      * Parse an XML document from a location identified by a URI reference [IETF RFC 2396]. 
-      * If the URI contains a fragment identifier (see section 4.1 in [IETF RFC 2396]), 
-      * the behavior is not defined by this specification, future versions of this 
-      * specification may define the behavior. 
+      * Parse an XML document from a location identified by a URI reference [IETF RFC 2396].
+      * If the URI contains a fragment identifier (see section 4.1 in [IETF RFC 2396]),
+      * the behavior is not defined by this specification, future versions of this
+      * specification may define the behavior.
       *
       * The parser owns the returned DOMDocument.  It will be deleted
       * when the parser is released.
       *
       * @param uri The location of the XML document to be read (in Unicode)
-      * @return If the <code>DOMLSParser</code> is a synchronous <code>DOMLSParser</code> 
-      *         the newly created and populated <code>DOMDocument</code> is returned. 
-      *         If the <code>DOMLSParser</code> is asynchronous then <code>NULL</code> 
+      * @return If the <code>DOMLSParser</code> is a synchronous <code>DOMLSParser</code>
+      *         the newly created and populated <code>DOMDocument</code> is returned.
+      *         If the <code>DOMLSParser</code> is asynchronous then <code>NULL</code>
       *         is returned since the document object is not yet parsed when this method returns.
       * @exception DOMException INVALID_STATE_ERR: Raised if the <code>DOMLSParser::busy</code>
       *                                            attribute is true.
-      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable 
-      *                                      to load the XML document. DOM applications should 
-      *                                      attach a <code>DOMErrorHandler</code> using the 
-      *                                      parameter "error-handler" if they wish to get details 
+      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable
+      *                                      to load the XML document. DOM applications should
+      *                                      attach a <code>DOMErrorHandler</code> using the
+      *                                      parameter "error-handler" if they wish to get details
       *                                      on the error.
       *
       * @see #parse(DOMLSInput,...)
@@ -490,25 +490,25 @@ public:
     virtual DOMDocument* parseURI(const XMLCh* const uri) = 0;
 
     /**
-      * Parse an XML document from a location identified by a URI reference [IETF RFC 2396]. 
-      * If the URI contains a fragment identifier (see section 4.1 in [IETF RFC 2396]), 
-      * the behavior is not defined by this specification, future versions of this 
-      * specification may define the behavior. 
+      * Parse an XML document from a location identified by a URI reference [IETF RFC 2396].
+      * If the URI contains a fragment identifier (see section 4.1 in [IETF RFC 2396]),
+      * the behavior is not defined by this specification, future versions of this
+      * specification may define the behavior.
       *
       * The parser owns the returned DOMDocument.  It will be deleted
       * when the parser is released.
       *
       * @param uri The location of the XML document to be read (in the local code page)
-      * @return If the <code>DOMLSParser</code> is a synchronous <code>DOMLSParser</code> 
-      *         the newly created and populated <code>DOMDocument</code> is returned. 
-      *         If the <code>DOMLSParser</code> is asynchronous then <code>NULL</code> 
+      * @return If the <code>DOMLSParser</code> is a synchronous <code>DOMLSParser</code>
+      *         the newly created and populated <code>DOMDocument</code> is returned.
+      *         If the <code>DOMLSParser</code> is asynchronous then <code>NULL</code>
       *         is returned since the document object is not yet parsed when this method returns.
       * @exception DOMException INVALID_STATE_ERR: Raised if the <code>DOMLSParser::busy</code>
       *                                            attribute is true.
-      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable 
-      *                                      to load the XML document. DOM applications should 
-      *                                      attach a <code>DOMErrorHandler</code> using the 
-      *                                      parameter "error-handler" if they wish to get details 
+      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable
+      *                                      to load the XML document. DOM applications should
+      *                                      attach a <code>DOMErrorHandler</code> using the
+      *                                      parameter "error-handler" if they wish to get details
       *                                      on the error.
       *
       * @see #parse(DOMLSInput,...)
@@ -518,69 +518,69 @@ public:
     virtual DOMDocument* parseURI(const char* const uri) = 0;
 
     /**
-      * Parse an XML fragment from a resource identified by a <code>DOMLSInput</code> 
-      * and insert the content into an existing document at the position specified 
-      * with the context and action arguments. When parsing the input stream, the 
-      * context node (or its parent, depending on where the result will be inserted) 
-      * is used for resolving unbound namespace prefixes. The context node's 
-      * <code>ownerDocument</code> node (or the node itself if the node of type 
-      * <code>DOCUMENT_NODE</code>) is used to resolve default attributes and entity 
+      * Parse an XML fragment from a resource identified by a <code>DOMLSInput</code>
+      * and insert the content into an existing document at the position specified
+      * with the context and action arguments. When parsing the input stream, the
+      * context node (or its parent, depending on where the result will be inserted)
+      * is used for resolving unbound namespace prefixes. The context node's
+      * <code>ownerDocument</code> node (or the node itself if the node of type
+      * <code>DOCUMENT_NODE</code>) is used to resolve default attributes and entity
       * references.
-      * As the new data is inserted into the document, at least one mutation event 
+      * As the new data is inserted into the document, at least one mutation event
       * is fired per new immediate child or sibling of the context node.
-      * If the context node is a <code>DOMDocument</code> node and the action is 
-      * <code>ACTION_REPLACE_CHILDREN</code>, then the document that is passed as 
-      * the context node will be changed such that its <code>xmlEncoding</code>, 
-      * <code>documentURI</code>, <code>xmlVersion</code>, <code>inputEncoding</code>, 
-      * <code>xmlStandalone</code>, and all other such attributes are set to what they 
+      * If the context node is a <code>DOMDocument</code> node and the action is
+      * <code>ACTION_REPLACE_CHILDREN</code>, then the document that is passed as
+      * the context node will be changed such that its <code>xmlEncoding</code>,
+      * <code>documentURI</code>, <code>xmlVersion</code>, <code>inputEncoding</code>,
+      * <code>xmlStandalone</code>, and all other such attributes are set to what they
       * would be set to if the input source was parsed using <code>DOMLSParser::parse()</code>.
-      * This method is always synchronous, even if the <code>DOMLSParser</code> is 
+      * This method is always synchronous, even if the <code>DOMLSParser</code> is
       * asynchronous (<code>DOMLSParser::getAsync()</code> returns true).
-      * If an error occurs while parsing, the caller is notified through the <code>ErrorHandler</code> 
+      * If an error occurs while parsing, the caller is notified through the <code>ErrorHandler</code>
       * instance associated with the "error-handler" parameter of the <code>DOMConfiguration</code>.
-      * When calling <code>parseWithContext</code>, the values of the following configuration 
-      * parameters will be ignored and their default values will always be used instead: 
-      *   "validate", 
+      * When calling <code>parseWithContext</code>, the values of the following configuration
+      * parameters will be ignored and their default values will always be used instead:
+      *   "validate",
       *   "validate-if-schema"
-      *   "element-content-whitespace". 
-      * Other parameters will be treated normally, and the parser is expected to call 
-      * the <code>DOMLSParserFilter</code> just as if a whole document was parsed. 
+      *   "element-content-whitespace".
+      * Other parameters will be treated normally, and the parser is expected to call
+      * the <code>DOMLSParserFilter</code> just as if a whole document was parsed.
       *
-      * @param source The <code>DOMLSInput</code> from which the source document is 
-      *               to be read. The source document must be an XML fragment, i.e. 
-      *               anything except a complete XML document (except in the case where 
-      *               the context node of type <code>DOCUMENT_NODE</code>, and the action is 
-      *               <code>ACTION_REPLACE_CHILDREN</code>), a <code>DOCTYPE</code> 
-      *               (internal subset), entity declaration(s), notation declaration(s), 
+      * @param source The <code>DOMLSInput</code> from which the source document is
+      *               to be read. The source document must be an XML fragment, i.e.
+      *               anything except a complete XML document (except in the case where
+      *               the context node of type <code>DOCUMENT_NODE</code>, and the action is
+      *               <code>ACTION_REPLACE_CHILDREN</code>), a <code>DOCTYPE</code>
+      *               (internal subset), entity declaration(s), notation declaration(s),
       *               or XML or text declaration(s).
-      * @param contextNode The node that is used as the context for the data that is being 
-      *                    parsed. This node must be a <code>DOMDocument</code> node, a 
-      *                    <code>DOMDocumentFragment</code> node, or a node of a type that 
-      *                    is allowed as a child of an <code>DOMElement</code> node, e.g. 
+      * @param contextNode The node that is used as the context for the data that is being
+      *                    parsed. This node must be a <code>DOMDocument</code> node, a
+      *                    <code>DOMDocumentFragment</code> node, or a node of a type that
+      *                    is allowed as a child of an <code>DOMElement</code> node, e.g.
       *                    it cannot be an <code>DOMAttribute</code> node.
-      * @param action This parameter describes which action should be taken between the new 
-      *               set of nodes being inserted and the existing children of the context node. 
+      * @param action This parameter describes which action should be taken between the new
+      *               set of nodes being inserted and the existing children of the context node.
       *               The set of possible actions is defined in <code>ACTION_TYPES</code> above.
-      * @return Return the node that is the result of the parse operation. If the result is more 
+      * @return Return the node that is the result of the parse operation. If the result is more
       *         than one top-level node, the first one is returned.
       *
       * @exception DOMException
-      *     HIERARCHY_REQUEST_ERR: Raised if the content cannot replace, be inserted before, after, 
-      *                            or as a child of the context node (see also <code>DOMNode::insertBefore</code> 
+      *     HIERARCHY_REQUEST_ERR: Raised if the content cannot replace, be inserted before, after,
+      *                            or as a child of the context node (see also <code>DOMNode::insertBefore</code>
       *                            or <code>DOMNode::replaceChild</code> in [DOM Level 3 Core]).
-      *     NOT_SUPPORTED_ERR: Raised if the <code>DOMLSParser</code> doesn't support this method, 
-      *                        or if the context node is of type <code>DOMDocument</code> and the DOM 
-      *                        implementation doesn't support the replacement of the <code>DOMDocumentType</code> 
+      *     NOT_SUPPORTED_ERR: Raised if the <code>DOMLSParser</code> doesn't support this method,
+      *                        or if the context node is of type <code>DOMDocument</code> and the DOM
+      *                        implementation doesn't support the replacement of the <code>DOMDocumentType</code>
       *                        child or <code>DOMElement</code> child.
-      *     NO_MODIFICATION_ALLOWED_ERR: Raised if the context node is a read only node and the content 
-      *                                  is being appended to its child list, or if the parent node of 
-      *                                  the context node is read only node and the content is being 
+      *     NO_MODIFICATION_ALLOWED_ERR: Raised if the context node is a read only node and the content
+      *                                  is being appended to its child list, or if the parent node of
+      *                                  the context node is read only node and the content is being
       *                                  inserted in its child list.
       *     INVALID_STATE_ERR: Raised if the <code>DOMLSParser::getBusy()</code> returns true.
       *
-      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable to load 
-      *                                      the XML fragment. DOM applications should attach a 
-      *                                      <code>DOMErrorHandler</code> using the parameter "error-handler" 
+      * @exception DOMLSException PARSE_ERR: Raised if the <code>DOMLSParser</code> was unable to load
+      *                                      the XML fragment. DOM applications should attach a
+      *                                      <code>DOMErrorHandler</code> using the parameter "error-handler"
       *                                      if they wish to get details on the error.
       * @since DOM Level 3
       */
@@ -588,12 +588,12 @@ public:
     (
         const   DOMLSInput*     source
         ,       DOMNode*        contextNode
-        , const unsigned short  action
+        , const ActionType      action
     ) = 0;
 
     /**
-      * Abort the loading of the document that is currently being loaded by the <code>DOMLSParser</code>. 
-      * If the <code>DOMLSParser</code> is currently not busy, a call to this method does nothing. 
+      * Abort the loading of the document that is currently being loaded by the <code>DOMLSParser</code>.
+      * If the <code>DOMLSParser</code> is currently not busy, a call to this method does nothing.
       *
       * Note: invoking this method will remove the installed <code>DOMLSParserFilter</code> filter
       *
@@ -666,7 +666,7 @@ public:
       * @see DOMLSInput#DOMLSInput
       */
     virtual Grammar* loadGrammar(const DOMLSInput* source,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false) = 0;
 
     /**
@@ -693,7 +693,7 @@ public:
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const XMLCh* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false) = 0;
 
     /**
@@ -720,7 +720,7 @@ public:
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const char* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false) = 0;
 
     /**

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,8 +41,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT XSDElementNSImpl: public DOMElementNSImpl {
 protected:
-    unsigned long fLineNo;     //Line number
-    unsigned long fColumnNo;   //Column number
+    XMLSize_t fLineNo;     //Line number
+    XMLSize_t fColumnNo;   //Column number
 
 
 public:
@@ -50,19 +50,19 @@ public:
     XSDElementNSImpl(DOMDocument *ownerDoc, //DOM Level 2
 	                 const XMLCh *namespaceURI,
                      const XMLCh *qualifiedName,
-                     const unsigned long lineNo,
-                     const unsigned long columnNo);
+                     const XMLSize_t lineNo,
+                     const XMLSize_t columnNo);
     XSDElementNSImpl(const XSDElementNSImpl &other, bool deep=false);
 
     virtual DOMNode * cloneNode(bool deep) const;
 
-    unsigned long getLineNo() const   { return fLineNo;   }
-    unsigned long getColumnNo() const { return fColumnNo; }
+    XMLSize_t getLineNo() const   { return fLineNo;   }
+    XMLSize_t getColumnNo() const { return fColumnNo; }
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     XSDElementNSImpl& operator=(const XSDElementNSImpl&);
 };
 

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,8 +45,8 @@ public:
 
     DOMLocatorImpl
     (
-        const unsigned long lineNum
-        , const unsigned long columnNum
+          const XMLSize_t lineNum
+        , const XMLSize_t columnNum
         , DOMNode* const errorNode
         , const XMLCh* const uri
         , const XMLSSize_t offset = -1
@@ -59,16 +59,16 @@ public:
     //@}
 
     // DOMLocator interface
-    virtual unsigned long getLineNumber() const;
-    virtual unsigned long getColumnNumber() const;
+    virtual XMLSize_t getLineNumber() const;
+    virtual XMLSize_t getColumnNumber() const;
     virtual XMLFilePos getByteOffset() const;
     virtual XMLFilePos getUtf16Offset() const;
     virtual DOMNode* getRelatedNode() const;
     virtual const XMLCh* getURI() const;
 
     // Setter functions
-    void setLineNumber(const unsigned long lineNumber);
-    void setColumnNumber(const unsigned long columnNumber);
+    void setLineNumber(const XMLSize_t lineNumber);
+    void setColumnNumber(const XMLSize_t columnNumber);
     void setByteOffset(const XMLFilePos offset);
     void setUtf16Offset(const XMLFilePos offset);
     void setRelatedNode(DOMNode* const errorNode);
@@ -106,8 +106,8 @@ protected:
     //  fURI
     //      The uri where the error occured
     // -----------------------------------------------------------------------
-    unsigned long   fLineNum;
-    unsigned long   fColumnNum;
+    XMLSize_t       fLineNum;
+    XMLSize_t       fColumnNum;
     XMLFilePos      fByteOffset;
     XMLFilePos      fUtf16Offset;
     DOMNode*        fRelatedNode;
@@ -118,12 +118,12 @@ protected:
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned long DOMLocatorImpl::getLineNumber() const
+inline XMLSize_t DOMLocatorImpl::getLineNumber() const
 {
     return fLineNum;
 }
 
-inline unsigned long DOMLocatorImpl::getColumnNumber() const
+inline XMLSize_t DOMLocatorImpl::getColumnNumber() const
 {
     return fColumnNum;
 }
@@ -152,12 +152,12 @@ inline const XMLCh* DOMLocatorImpl::getURI() const
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Setter methods
 // ---------------------------------------------------------------------------
-inline void DOMLocatorImpl::setLineNumber(const unsigned long lineNumber)
+inline void DOMLocatorImpl::setLineNumber(const XMLSize_t lineNumber)
 {
     fLineNum = lineNumber;
 }
 
-inline void DOMLocatorImpl::setColumnNumber(const unsigned long columnNumber)
+inline void DOMLocatorImpl::setColumnNumber(const XMLSize_t columnNumber)
 {
     fColumnNum = columnNumber;
 }

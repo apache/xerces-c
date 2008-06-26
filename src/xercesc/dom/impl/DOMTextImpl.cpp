@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,7 +75,7 @@ const XMLCh * DOMTextImpl::getNodeName() const {
     return gtext;
 }
 
-short DOMTextImpl::getNodeType() const {
+DOMNode::NodeType DOMTextImpl::getNodeType() const {
     return DOMNode::TEXT_NODE;
 }
 
@@ -135,11 +135,11 @@ bool DOMTextImpl::getIsElementContentWhitespace() const
     return isIgnorableWhitespace();
 }
 
-const XMLCh* DOMTextImpl::getWholeText() const 
+const XMLCh* DOMTextImpl::getWholeText() const
 {
     DOMTreeWalker* pWalker=getOwnerDocument()->createTreeWalker(getOwnerDocument()->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
     pWalker->setCurrentNode((DOMNode*)this);
-    // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in 
+    // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
 	DOMNode* prevNode;
     while((prevNode=pWalker->previousNode())!=NULL)
@@ -167,7 +167,7 @@ DOMText* DOMTextImpl::replaceWholeText(const XMLCh* newText)
 {
     DOMTreeWalker* pWalker=getOwnerDocument()->createTreeWalker(getOwnerDocument()->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
     pWalker->setCurrentNode((DOMNode*)this);
-    // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in 
+    // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
     DOMNode* pFirstTextNode=this;
 	DOMNode* prevNode;
@@ -313,4 +313,3 @@ void DOMTextImpl::release()
           void              DOMTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); }
 
 XERCES_CPP_NAMESPACE_END
-

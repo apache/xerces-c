@@ -32,10 +32,10 @@ class CDOM_EXPORT DOMXPathResultImpl :  public XMemory,
                                         public DOMXPathResult
 {
 public:
-    DOMXPathResultImpl(unsigned short type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    DOMXPathResultImpl(ResultType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~DOMXPathResultImpl();
 
-    virtual short getResultType() const;
+    virtual ResultType getResultType() const;
     virtual const DOMTypeInfo *getTypeInfo() const;
     virtual bool isNode() const;
     virtual bool getBooleanValue() const;
@@ -51,11 +51,11 @@ public:
     virtual void release();
 
 public:
-    void reset(unsigned short type);
+    void reset(ResultType type);
     void addResult(DOMNode* node);
 
 protected:
-    unsigned short          fType;
+    ResultType              fType;
     MemoryManager* const    fMemoryManager;
     RefVectorOf<DOMNode>*   fSnapshot;
     XMLSize_t               fIndex;

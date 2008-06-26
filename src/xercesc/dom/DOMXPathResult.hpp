@@ -160,7 +160,7 @@ public:
      * and any items in the snapshot may have been altered, moved, or removed from
      * the document.
      */
-    enum resultType {
+    enum ResultType {
                 /* XPath 1.0 */
                 ANY_TYPE = 0,
                 NUMBER_TYPE = 1,
@@ -188,10 +188,10 @@ public:
 
     /**
      * Returns the result type of this result
-     * @return resultType
+     * @return ResultType
      * A code representing the type of this result, as defined by the type constants.
      */
-    virtual short getResultType() const = 0;
+    virtual ResultType getResultType() const = 0;
 
     /**
      * Returns the DOM type info of the current result node or value
@@ -214,7 +214,7 @@ public:
      * @return booleanValue of type boolean
      * The value of this boolean result.
      * @exception DOMXPathException
-     * TYPE_ERR: raised if resultType is not BOOLEAN_TYPE (XPath 1.0) or
+     * TYPE_ERR: raised if ResultType is not BOOLEAN_TYPE (XPath 1.0) or
      * if current result cannot be properly converted to boolean (XPath 2.0).
      * <br>
      * NO_RESULT_ERROR: raised if there is no current result in the result object (XPath 2.0).
@@ -241,7 +241,7 @@ public:
      * expression, then it is up to the definition of the binding to specify how
      * the XPath number is converted to the native binding number.
      * @exception DOMXPathException
-     * TYPE_ERR: raised if resultType is not NUMBER_TYPE (XPath 1.0) or
+     * TYPE_ERR: raised if ResultType is not NUMBER_TYPE (XPath 1.0) or
      * if current result cannot be properly converted to double (XPath 2.0).
      * <br>
      * NO_RESULT_ERROR: raised if there is no current result in the result object (XPath 2.0).
@@ -253,7 +253,7 @@ public:
      * @return stringValue
      * The value of this string result.
      * @exception DOMXPathException
-     * TYPE_ERR: raised if resultType is not STRING_TYPE (XPath 1.0) or
+     * TYPE_ERR: raised if ResultType is not STRING_TYPE (XPath 1.0) or
      * if current result cannot be properly converted to string (XPath 2.0).
      * <br>
      * NO_RESULT_ERROR: raised if there is no current result in the result object (XPath 2.0).
@@ -265,7 +265,7 @@ public:
      * @return nodeValue
      * The value of this node result, which may be null.
      * @exception DOMXPathException
-     * TYPE_ERR: raised if resultType is not ANY_UNORDERED_NODE_TYPE,
+     * TYPE_ERR: raised if ResultType is not ANY_UNORDERED_NODE_TYPE,
      * FIRST_ORDERED_NODE_TYPE, UNORDERED_NODE_ITERATOR_TYPE,
      * ORDERED_NODE_ITERATOR_TYPE, UNORDERED_NODE_SNAPSHOT_TYPE, or
      * ORDERED_NODE_SNAPSHOT_TYPE (XPath 1.0) or if current result is
@@ -282,8 +282,8 @@ public:
      * @return boolean True if the current result is the next item from the sequence
      * or false if there are no more items.
      * @exception XPathException
-     * TYPE_ERR: raised if resultType is not UNORDERED_NODE_ITERATOR_TYPE or
-     * ORDERED_NODE_ITERATOR_TYPE (XPath 1.0) or if resultType is not
+     * TYPE_ERR: raised if ResultType is not UNORDERED_NODE_ITERATOR_TYPE or
+     * ORDERED_NODE_ITERATOR_TYPE (XPath 1.0) or if ResultType is not
      * ITERATOR_RESULT_TYPE (XPath 2.0).
      * @exception DOMException
      * INVALID_STATE_ERR: The document has been mutated since the result was returned.
@@ -293,12 +293,12 @@ public:
     /**
      * Signifies that the iterator has become invalid.
      * @return invalidIteratorState
-     * True if resultType is UNORDERED_NODE_ITERATOR_TYPE or
+     * True if ResultType is UNORDERED_NODE_ITERATOR_TYPE or
      * ORDERED_NODE_ITERATOR_TYPE (XPath 1.0) or ITERATOR_RESULT_TYPE (XPath 2.0)
      * and the document has been modified since this result was returned.
      * @exception XPathException
-     * TYPE_ERR: raised if resultType is not UNORDERED_NODE_ITERATOR_TYPE or
-     * ORDERED_NODE_ITERATOR_TYPE (XPath 1.0) or if resultType is not
+     * TYPE_ERR: raised if ResultType is not UNORDERED_NODE_ITERATOR_TYPE or
+     * ORDERED_NODE_ITERATOR_TYPE (XPath 1.0) or if ResultType is not
      * ITERATOR_RESULT_TYPE (XPath 2.0).
      */
     virtual bool getInvalidIteratorState() const = 0;
@@ -312,8 +312,8 @@ public:
      * @return boolean True if the current result is the next item from the sequence
      * or false if there are no more items.
      * @exception XPathException
-     * TYPE_ERR: raised if resultType is not UNORDERED_NODE_SNAPSHOT_TYPE or
-     * ORDERED_NODE_SNAPSHOT_TYPE (XPath 1.0) or if resultType is not
+     * TYPE_ERR: raised if ResultType is not UNORDERED_NODE_SNAPSHOT_TYPE or
+     * ORDERED_NODE_SNAPSHOT_TYPE (XPath 1.0) or if ResultType is not
      * SNAPSHOT_RESULT_TYPE (XPath 2.0).
      */
     virtual bool snapshotItem(XMLSize_t) = 0;
@@ -323,8 +323,8 @@ public:
      * indices are 0 to snapshotLength-1 inclusive.
      * @return snapshotLength of type XMLSize_t
      * @exception XPathException
-     * TYPE_ERR: raised if resultType is not UNORDERED_NODE_SNAPSHOT_TYPE or
-     * ORDERED_NODE_SNAPSHOT_TYPE (XPath 1.0) or if resultType is not
+     * TYPE_ERR: raised if ResultType is not UNORDERED_NODE_SNAPSHOT_TYPE or
+     * ORDERED_NODE_SNAPSHOT_TYPE (XPath 1.0) or if ResultType is not
      * SNAPSHOT_RESULT_TYPE (XPath 2.0).
      */
     virtual XMLSize_t getSnapshotLength() const = 0;

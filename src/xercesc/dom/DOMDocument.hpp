@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMDocument() {};
     //@}
 
@@ -517,7 +517,7 @@ public:
     //@{
 
     /**
-     * An attribute specifying the encoding used for this document at the time of the parsing. 
+     * An attribute specifying the encoding used for this document at the time of the parsing.
      * This is <code>null</code> when it is not known, such as when the DOMDocument was created in memory.
      *
      * @since DOM Level 3
@@ -525,8 +525,8 @@ public:
     virtual const XMLCh*           getInputEncoding() const = 0;
 
     /**
-     * An attribute specifying, as part of the XML declaration, the encoding of this document. 
-     * This is <code>null</code> when unspecified or when it is not known, such as when the 
+     * An attribute specifying, as part of the XML declaration, the encoding of this document.
+     * This is <code>null</code> when unspecified or when it is not known, such as when the
      * DOMDocument was created in memory.
      *
      * @since DOM Level 3
@@ -534,7 +534,7 @@ public:
     virtual const XMLCh*           getXmlEncoding() const = 0;
 
     /**
-     * An attribute specifying, as part of the XML declaration, whether this document is standalone. 
+     * An attribute specifying, as part of the XML declaration, whether this document is standalone.
      * This is <code>false</code> when unspecified.
      *
      * @since DOM Level 3
@@ -721,7 +721,7 @@ public:
     /**
      * This method acts as if the document was going through a save and load
      * cycle, putting the document in a "normal" form. The actual result
-     * depends on the features being set. See <code>DOMConfiguration</code> for 
+     * depends on the features being set. See <code>DOMConfiguration</code> for
      * details.
      *
      * <br>Noticeably this method normalizes <code>DOMText</code> nodes, makes
@@ -733,9 +733,9 @@ public:
      * <br>Mutation events, when supported, are generated to reflect the
      * changes occuring on the document.
      * Note that this is a partial implementation. Not all the required features are implemented.
-     * Currently <code>DOMAttr</code> and <code>DOMText</code> nodes are normalized. 
+     * Currently <code>DOMAttr</code> and <code>DOMText</code> nodes are normalized.
      * Features to remove <code>DOMComment</code> and <code>DOMCDATASection</code> work.
-     * @since DOM Level 3 
+     * @since DOM Level 3
      *
      */
     virtual void                   normalizeDocument() = 0;
@@ -743,7 +743,7 @@ public:
 
     /**
      * The configuration used when DOMDocument::normalizeDocument is invoked.
-     * 
+     *
      * @return The <code>DOMConfiguration</code> from this <code>DOMDocument</code>
      *
      * @since DOM Level 3
@@ -806,10 +806,10 @@ public:
      *
      * @see createElementNS(const XMLCh *namespaceURI, const XMLCh *qualifiedName)
      */
-    virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
-                                                  const XMLCh *qualifiedName,
-                                                  const unsigned long lineNum,
-                                                  const unsigned long columnNum) = 0;
+    virtual DOMElement *createElementNS(const XMLCh *namespaceURI,
+                                        const XMLCh *qualifiedName,
+                                        const XMLSize_t lineNum,
+                                        const XMLSize_t columnNum) = 0;
     //@}
 
 };

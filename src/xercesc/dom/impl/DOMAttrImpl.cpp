@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ DOMAttrImpl::DOMAttrImpl(const DOMAttrImpl &other, bool /*deep*/)
     , fParent (other.fParent)
     , fName(other.fName)
     , fSchemaType(other.fSchemaType)
-{    
+{
     if (other.fNode.isSpecified())
         fNode.isSpecified(true);
     else
@@ -77,8 +77,7 @@ const XMLCh * DOMAttrImpl::getNodeName()  const{
     return fName;
 }
 
-
-short DOMAttrImpl::getNodeType() const {
+DOMNode::NodeType DOMAttrImpl::getNodeType() const {
     return DOMNode::ATTRIBUTE_NODE;
 }
 
@@ -297,7 +296,7 @@ const DOMTypeInfo *DOMAttrImpl::getSchemaTypeInfo() const
 }
 
 
-void DOMAttrImpl::setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo) 
+void DOMAttrImpl::setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo)
 {
     fSchemaType = typeInfo;
 }
@@ -314,7 +313,7 @@ void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
 {
     if(XMLString::equals(feature, XMLUni::fgXercescInterfacePSVITypeInfo))
         return (DOMPSVITypeInfo*)fSchemaType;
-    return fNode.getFeature(feature, version); 
+    return fNode.getFeature(feature, version);
 }
 
            DOMNode*         DOMAttrImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); }
@@ -352,4 +351,3 @@ void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
            const XMLCh*     DOMAttrImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
 
 XERCES_CPP_NAMESPACE_END
-

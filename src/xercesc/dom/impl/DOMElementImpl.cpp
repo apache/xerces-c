@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -118,7 +118,7 @@ const XMLCh * DOMElementImpl::getNodeName() const {
 }
 
 
-short DOMElementImpl::getNodeType() const {
+DOMNode::NodeType DOMElementImpl::getNodeType() const {
     return DOMNode::ELEMENT_NODE;
 }
 
@@ -237,7 +237,7 @@ void DOMElementImpl::setIdAttribute(const XMLCh* name, bool isId)
 
     DOMAttr *attr = getAttributeNode(name);
 
-    if (!attr) 
+    if (!attr)
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     if(isId)
@@ -254,7 +254,7 @@ void DOMElementImpl::setIdAttributeNS(const XMLCh* namespaceURI, const XMLCh* lo
 
     DOMAttr *attr = getAttributeNodeNS(namespaceURI, localName);
 
-    if (!attr) 
+    if (!attr)
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     if(isId)
@@ -274,10 +274,10 @@ void DOMElementImpl::setIdAttributeNode(const DOMAttr *idAttr, bool isId) {
     const XMLCh* localName = idAttr->getLocalName();
     if (localName)
         attr = getAttributeNodeNS(idAttr->getNamespaceURI(), idAttr->getLocalName());
-    else 
+    else
         attr = getAttributeNode(idAttr->getName());
-    
-    if(!attr) 
+
+    if(!attr)
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNodeMemoryManager);
 
     if(isId)
@@ -672,4 +672,3 @@ const DOMTypeInfo *DOMElementImpl::getSchemaTypeInfo() const
 }
 
 XERCES_CPP_NAMESPACE_END
-

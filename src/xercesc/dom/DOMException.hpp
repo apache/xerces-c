@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,52 +50,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 class MemoryManager;
 
 class CDOM_EXPORT DOMException  {
-public:
-    // -----------------------------------------------------------------------
-    //  Constructors
-    // -----------------------------------------------------------------------
-    /** @name Constructors */
-    //@{
-    /**
-      * Default constructor for DOMException.
-      *
-      */
-    DOMException();
-
-    /**
-      * Constructor which takes an error code and an optional message code.
-      *
-      * @param code           The error code which indicates the exception
-      * @param messageCode    The string containing the error message
-      * @param memoryManager  The memory manager used to (de)allocate memory
-      */
-    DOMException(
-                       short                 code
-               ,       short                 messageCode = 0
-               ,       MemoryManager* const  memoryManager = XMLPlatformUtils::fgMemoryManager
-                );
-
-    /**
-      * Copy constructor.
-      *
-      * @param other The object to be copied.
-      */
-    DOMException(const DOMException &other);
-
-    //@}
-
-    // -----------------------------------------------------------------------
-    //  Destructors
-    // -----------------------------------------------------------------------
-    /** @name Destructor. */
-    //@{
-	 /**
-	  * Destructor for DOMException.
-	  *
-	  */
-    virtual ~DOMException();
-    //@}
-
 public:
     // -----------------------------------------------------------------------
     //  Class Types
@@ -174,7 +128,7 @@ public:
      * and the operation would not be done.
      *
      * <p><code>TYPE_MISMATCH_ERR:</code>
-     * If the type of an object is incompatible with the expected type of 
+     * If the type of an object is incompatible with the expected type of
      * the parameter associated to the object, this exception would be raised.
      *
      * The above is since DOM Level 3
@@ -201,6 +155,52 @@ public:
         };
     //@}
 
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors
+    // -----------------------------------------------------------------------
+    /** @name Constructors */
+    //@{
+    /**
+      * Default constructor for DOMException.
+      *
+      */
+    DOMException();
+
+    /**
+      * Constructor which takes an error code and an optional message code.
+      *
+      * @param code           The error code which indicates the exception
+      * @param messageCode    The string containing the error message
+      * @param memoryManager  The memory manager used to (de)allocate memory
+      */
+    DOMException(short code,
+                 short messageCode = 0,
+                 MemoryManager* const  memoryManager = XMLPlatformUtils::fgMemoryManager);
+
+    /**
+      * Copy constructor.
+      *
+      * @param other The object to be copied.
+      */
+    DOMException(const DOMException &other);
+
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Destructors
+    // -----------------------------------------------------------------------
+    /** @name Destructor. */
+    //@{
+	 /**
+	  * Destructor for DOMException.
+	  *
+	  */
+    virtual ~DOMException();
+    //@}
+
+
+public:
     // -----------------------------------------------------------------------
     //  Getter
     // -----------------------------------------------------------------------
@@ -211,40 +211,39 @@ public:
     // -----------------------------------------------------------------------
     /** @name Public variables */
     //@{
-	 /**
-	  * A code value, from the set defined by the ExceptionCode enum,
+    /**
+     * A code value, from the set defined by the ExceptionCode enum,
      * indicating the type of error that occured.
      */
-    ExceptionCode   code;
+    short   code;
 
-	 /**
-	  * A string value.  Applications may use this field to hold an error
+    /**
+     * A string value.  Applications may use this field to hold an error
      *  message.  The field value is not set by the DOM implementation,
      *  meaning that the string will be empty when an exception is first
      *  thrown.
-	  */
+     */
     const XMLCh *msg;
     //@}
 
 protected:
-
     MemoryManager*  fMemoryManager;
 
 private:
 
-	 /**
-	  * A boolean value.  
-      *   If the message is provided by the applications, it is not 
+     /**
+      * A boolean value.
+      *   If the message is provided by the applications, it is not
       *   adopted.
       *   If the message is resolved by the DOM implementation, it is
       *   owned.
-	  */
+      */
     bool            fMsgOwned;
 
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     DOMException & operator = (const DOMException &);
 };
 
@@ -256,4 +255,3 @@ inline const XMLCh* DOMException::getMessage() const
 XERCES_CPP_NAMESPACE_END
 
 #endif
-

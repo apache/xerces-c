@@ -23,12 +23,12 @@
 #define XERCESC_INCLUDE_GUARD_DOMXPATHEVALUATOR_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/dom/DOMXPathResult.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMXPathNSResolver;
 class DOMXPathExpression;
-class DOMXPathResult;
 class DOMNode;
 
 /**
@@ -146,10 +146,9 @@ public:
      * the XPath expression into appropriate namespace URIs. If this is specified
      * as null, any namespace prefix within the expression will result in
      * <code>DOMException</code> being thrown with the code NAMESPACE_ERR.
-     * @param type of type unsigned short - If a specific type is specified, then
-     * the result will be returned as the corresponding type.
-     * For XPath 1.0 results, this must be one of the codes of the <code>DOMXPathResult</code>
-     * interface.
+     * @param result type - If a specific type is specified, then
+     * the result will be returned as the corresponding type. This must be one
+     * of the codes of the <code>DOMXPathResult</code> interface.
      * @param result of type DOMXPathResult* - The result specifies a specific result object
      * which may be reused and returned by this method. If this is specified as
      * null or the implementation does not reuse the specified result, a new result
@@ -170,7 +169,7 @@ public:
     virtual DOMXPathResult* evaluate(const XMLCh *expression,
                                      const DOMNode *contextNode,
                                      const DOMXPathNSResolver *resolver,
-                                     unsigned short type,
+                                     DOMXPathResult::ResultType type,
                                      DOMXPathResult* result) = 0;
 
     //@}

@@ -113,7 +113,7 @@ void DOMXPathExpressionImpl::cleanUp()
 }
 
 DOMXPathResult* DOMXPathExpressionImpl::evaluate(const DOMNode *contextNode,
-                                                 unsigned short type,
+                                                 DOMXPathResult::ResultType type,
                                                  DOMXPathResult* result) const
 {
     if(type!=DOMXPathResult::FIRST_ORDERED_NODE_TYPE && type!=DOMXPathResult::ORDERED_NODE_SNAPSHOT_TYPE &&

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,13 +90,13 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
 
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other,
                                          bool deep)
-    : DOMEntityReference(other), 
-      fNode(other.fNode), 
-      fParent(other.fParent), 
-      fChild(other.fChild), 
-      fName(other.fName), 
+    : DOMEntityReference(other),
+      fNode(other.fNode),
+      fParent(other.fParent),
+      fChild(other.fChild),
+      fName(other.fName),
       fBaseURI(other.fBaseURI)
-{    
+{
     if (deep)
         fParent.cloneChildren(&other);
     fNode.setReadOnly(true, true);
@@ -122,7 +122,7 @@ const XMLCh * DOMEntityReferenceImpl::getNodeName() const
 }
 
 
-short DOMEntityReferenceImpl::getNodeType() const {
+DOMNode::NodeType DOMEntityReferenceImpl::getNodeType() const {
     return DOMNode::ENTITY_REFERENCE_NODE;
 }
 
@@ -221,4 +221,3 @@ const XMLCh* DOMEntityReferenceImpl::getBaseURI() const
            void*            DOMEntityReferenceImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
 
 XERCES_CPP_NAMESPACE_END
-

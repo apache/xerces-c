@@ -479,7 +479,8 @@ void DOMNormalizer::error(const XMLErrs::Codes code, const DOMNode *node) const
                 // <TBD> Should probably load a default message here
         }
 
-        DOMErrorImpl domError(code, 0, errText, (void*)node);
+        DOMErrorImpl domError(
+          XMLErrs::DOMErrorType (code), 0, errText, (void*)node);
         bool toContinueProcess = true;
         try
         {
@@ -496,4 +497,3 @@ void DOMNormalizer::error(const XMLErrs::Codes code, const DOMNode *node) const
 
 
 XERCES_CPP_NAMESPACE_END
-

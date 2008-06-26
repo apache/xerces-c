@@ -187,42 +187,41 @@ DOMImplementation *DOMImplementation::getImplementation()
 
 bool DOMImplementation::loadDOMExceptionMsg
 (
-    const   DOMException::ExceptionCode  msgToLoad
+      const short                        msgToLoad
     ,       XMLCh* const                 toFill
     , const XMLSize_t                    maxChars
 )
 {
-    // load the text, the msgToLoad+XMLDOMMsgs::DOMEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
+  // Figure out which exception range this code is and load the corresponding
+  // message.
+  //
+  if (msgToLoad <= 50)
+  {
+    // DOMException
     return sMsgLoader->loadMsg(XMLDOMMsg::DOMEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
-}
-
-bool DOMImplementation::loadDOMExceptionMsg
-(
-    const   DOMLSException::LSExceptionCode  msgToLoad
-    ,       XMLCh* const                     toFill
-    , const XMLSize_t                        maxChars
-)
-{
-    // load the text, the msgToLoad+XMLDOMMsgs::DOMLSEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
+  }
+  else if (msgToLoad <= 80)
+  {
+    // DOMXPathException
+    return sMsgLoader->loadMsg(XMLDOMMsg::DOMXPATHEXCEPTION_ERRX+msgToLoad-DOMXPathException::INVALID_EXPRESSION_ERR+1, toFill, maxChars);
+  }
+  else if (msgToLoad <= 110)
+  {
+    // DOMXLSException
     return sMsgLoader->loadMsg(XMLDOMMsg::DOMLSEXCEPTION_ERRX+msgToLoad-DOMLSException::PARSE_ERR+1, toFill, maxChars);
-}
-
-bool DOMImplementation::loadDOMExceptionMsg
-(
-    const   DOMRangeException::RangeExceptionCode  msgToLoad
-    ,       XMLCh* const                           toFill
-    , const XMLSize_t                              maxChars
-)
-{
-    // load the text, the XMLDOMMsgs::DOMRANGEEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
-    return sMsgLoader->loadMsg(XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
+  }
+  else
+  {
+    // DOMRangeException
+    return sMsgLoader->loadMsg(XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+msgToLoad-DOMRangeException::BAD_BOUNDARYPOINTS_ERR+1, toFill, maxChars);
+  }
 }
 
 // ------------------------------------------------------------
 // DOMImplementationLS Virtual interface
 // ------------------------------------------------------------
 //Introduced in DOM Level 3
-DOMLSParser* DOMImplementationImpl::createLSParser( const unsigned short   mode,
+DOMLSParser* DOMImplementationImpl::createLSParser( const DOMImplementationLSMode   mode,
                                                     const XMLCh* const     /*schemaType*/,
                                                     MemoryManager* const  manager,
                                                     XMLGrammarPool* const gramPool)
@@ -290,4 +289,3 @@ DOMImplementationList* DOMImplementationImpl::getDOMImplementationList(const XML
 }
 
 XERCES_CPP_NAMESPACE_END
-

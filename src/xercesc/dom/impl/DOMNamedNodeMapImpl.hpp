@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,8 +57,8 @@ public:
     virtual DOMNamedNodeMapImpl *cloneMap(DOMNode *ownerNode);
     virtual void            setReadOnly(bool readOnly, bool deep);
 
-    virtual unsigned int    getLength() const;
-    virtual DOMNode*        item(unsigned int index) const;
+    virtual XMLSize_t       getLength() const;
+    virtual DOMNode*        item(XMLSize_t index) const;
     virtual DOMNode*        getNamedItem(const XMLCh *name) const;
     virtual DOMNode*        setNamedItem(DOMNode *arg);
     virtual DOMNode*        removeNamedItem(const XMLCh *name);
@@ -78,4 +78,3 @@ private:
 XERCES_CPP_NAMESPACE_END
 
 #endif
-

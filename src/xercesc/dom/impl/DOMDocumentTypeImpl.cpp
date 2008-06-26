@@ -242,7 +242,7 @@ const XMLCh * DOMDocumentTypeImpl::getNodeName() const
 }
 
 
-short DOMDocumentTypeImpl::getNodeType()  const {
+DOMNode::NodeType DOMDocumentTypeImpl::getNodeType()  const {
     return DOMNode::DOCUMENT_TYPE_NODE;
 }
 
@@ -531,4 +531,3 @@ void* DOMDocumentTypeImpl::getFeature(const XMLCh* feature, const XMLCh* version
 }
 
 XERCES_CPP_NAMESPACE_END
-

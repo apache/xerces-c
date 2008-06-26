@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,7 +69,7 @@ DOMDeepNodeListImpl::~DOMDeepNodeListImpl()
 {
 }
 
-unsigned int DOMDeepNodeListImpl::getLength() const
+XMLSize_t DOMDeepNodeListImpl::getLength() const
 {
     // Reset cache to beginning of list
     item(0);
@@ -80,7 +80,7 @@ unsigned int DOMDeepNodeListImpl::getLength() const
 }
 
 
-DOMNode *DOMDeepNodeListImpl::item(unsigned int index) const
+DOMNode *DOMDeepNodeListImpl::item(XMLSize_t index) const
 {
     return ((DOMDeepNodeListImpl*)this)->cacheItem(index);
 }
@@ -95,9 +95,9 @@ DOMNode *DOMDeepNodeListImpl::item(unsigned int index) const
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-DOMNode *DOMDeepNodeListImpl::cacheItem(unsigned int index)
+DOMNode *DOMDeepNodeListImpl::cacheItem(XMLSize_t index)
 {
-    unsigned int currentIndexPlus1 = fCurrentIndexPlus1;
+    XMLSize_t currentIndexPlus1 = fCurrentIndexPlus1;
     DOMNode *currentNode = fCurrentNode;
 
     if (castToParentImpl(fRootNode)->changes() != fChanges)
@@ -215,4 +215,3 @@ DOMNode *DOMDeepNodeListImpl::nextMatchingElementAfter(DOMNode *current)
 }
 
 XERCES_CPP_NAMESPACE_END
-

@@ -242,7 +242,7 @@ const XMLCh * DOMDocumentImpl::getNodeName() const {
 }
 
 
-short DOMDocumentImpl::getNodeType() const {
+DOMNode::NodeType DOMDocumentImpl::getNodeType() const {
     return DOMNode::DOCUMENT_NODE;
 }
 
@@ -383,7 +383,10 @@ DOMText *DOMDocumentImpl::createTextNode(const XMLCh *data)
 
 
 DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
-          DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
+  DOMNode *root,
+  DOMNodeFilter::ShowType whatToShow,
+  DOMNodeFilter* filter,
+  bool entityReferenceExpansion)
 {
     if (!root) {
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
@@ -436,7 +439,7 @@ DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(const DOMNode *nodeResolve
 DOMXPathResult* DOMDocumentImpl::evaluate(const XMLCh *expression,
                                           const DOMNode *contextNode,
                                           const DOMXPathNSResolver *resolver,
-                                          unsigned short type,
+                                          DOMXPathResult::ResultType type,
                                           DOMXPathResult* result)
 {
     JanitorMemFunCall<DOMXPathExpression> expr(
@@ -447,7 +450,11 @@ DOMXPathResult* DOMDocumentImpl::evaluate(const XMLCh *expression,
 
 
 
-DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
+DOMTreeWalker* DOMDocumentImpl::createTreeWalker (
+  DOMNode *root,
+  DOMNodeFilter::ShowType whatToShow,
+  DOMNodeFilter* filter,
+  bool entityReferenceExpansion)
 {
     if (!root) {
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
@@ -594,8 +601,8 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
 
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
                                               const XMLCh *qualifiedName,
-                                              const unsigned long lineNo,
-                                              const unsigned long columnNo)
+                                              const XMLSize_t lineNo,
+                                              const XMLSize_t columnNo)
 {
     if(!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());

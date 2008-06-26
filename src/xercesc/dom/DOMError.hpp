@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMError() {};
     //@}
 
@@ -79,19 +79,19 @@ public:
      * The severity of the error described by the <code>DOMError</code>.
      *
      * <p><code>DOM_SEVERITY_ERROR:</code>
-     * The severity of the error described by the <code>DOMError</code> is error. 
-     * A DOM_SEVERITY_ERROR may not cause the processing to stop if the error can 
+     * The severity of the error described by the <code>DOMError</code> is error.
+     * A DOM_SEVERITY_ERROR may not cause the processing to stop if the error can
      * be recovered, unless <code>DOMErrorHandler::handleError()</code> returns false.</p>
      *
      * <p><code>DOM_SEVERITY_FATAL_ERROR</code>
-     * The severity of the error described by the <code>DOMError</code> is fatal error. 
-     * A DOM_SEVERITY_FATAL_ERROR will cause the normal processing to stop. The return 
-     * value of <code>DOMErrorHandler::handleError()</code> is ignored unless the 
+     * The severity of the error described by the <code>DOMError</code> is fatal error.
+     * A DOM_SEVERITY_FATAL_ERROR will cause the normal processing to stop. The return
+     * value of <code>DOMErrorHandler::handleError()</code> is ignored unless the
      * implementation chooses to continue, in which case the behavior becomes undefined.</p>
      *
      * <p><code>DOM_SEVERITY_WARNING</code>
-     * The severity of the error described by the <code>DOMError</code> is warning. 
-     * A DOM_SEVERITY_WARNING will not cause the processing to stop, unless 
+     * The severity of the error described by the <code>DOMError</code> is warning.
+     * A DOM_SEVERITY_WARNING will not cause the processing to stop, unless
      * <code>DOMErrorHandler::handleError()</code> returns false.</p>
      *
      * @since DOM Level 3
@@ -119,7 +119,7 @@ public:
      * @see   setSeverity
      * @since DOM Level 3
      */
-    virtual short getSeverity() const = 0;
+    virtual ErrorSeverity getSeverity() const = 0;
 
     /**
      * Get the message describing the error that occured.
@@ -143,15 +143,15 @@ public:
     virtual void* getRelatedException() const = 0;
 
     /**
-     * A <code>XMLCh*</code> indicating which related data is expected in 
+     * A <code>XMLCh*</code> indicating which related data is expected in
      * relatedData. Users should refer to the specification of the error
      * in order to find its <code>XMLCh*</code> type and relatedData
      * definitions if any.
      *
-     * Note: As an example, <code>DOMDocument::normalizeDocument()</code> does generate 
-     * warnings when the "split-cdata-sections" parameter is in use. Therefore, the 
-     * method generates a DOM_SEVERITY_WARNING with type "cdata-sections-splitted" 
-     * and the first <code>DOMCDATASection</code> node in document order resulting from the split 
+     * Note: As an example, <code>DOMDocument::normalizeDocument()</code> does generate
+     * warnings when the "split-cdata-sections" parameter is in use. Therefore, the
+     * method generates a DOM_SEVERITY_WARNING with type "cdata-sections-splitted"
+     * and the first <code>DOMCDATASection</code> node in document order resulting from the split
      * is returned by the relatedData attribute.
      *
      * @since DOM Level 3

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,10 +36,10 @@ DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
      fRefEntity(0),
      fInputEncoding(0),
      fXmlEncoding(0),
-     fXmlVersion(0),     
+     fXmlVersion(0),
      fBaseURI(0),
      fEntityRefNodeCloned(false)
-{   
+{
     fName        = ((DOMDocumentImpl *)ownerDoc)->getPooledString(eName);
     fNode.setReadOnly(true, true);
 }
@@ -59,9 +59,9 @@ DOMEntityImpl::DOMEntityImpl(const DOMEntityImpl &other, bool deep)
       fXmlVersion(other.fXmlVersion),
       fBaseURI(other.fBaseURI),
       fEntityRefNodeCloned(false)
-{    
+{
     if (deep)
-        fParent.cloneChildren(&other);   
+        fParent.cloneChildren(&other);
     fNode.setReadOnly(true, true);
 }
 
@@ -83,7 +83,7 @@ const XMLCh * DOMEntityImpl::getNodeName() const {
 }
 
 
-short DOMEntityImpl::getNodeType() const {
+DOMNode::NodeType DOMEntityImpl::getNodeType() const {
     return DOMNode::ENTITY_NODE;
 }
 
@@ -293,4 +293,3 @@ void DOMEntityImpl::setXmlVersion(const XMLCh* version){
 }
 
 XERCES_CPP_NAMESPACE_END
-

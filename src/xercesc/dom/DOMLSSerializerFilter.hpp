@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMLSSerializerFilter() {};
     //@}
 
@@ -87,7 +87,7 @@ public:
      * Interface from <code>DOMNodeFilter</code>,
      * to be implemented by implementation (derived class)
      */
-    virtual short acceptNode(const DOMNode* node) const = 0;
+    virtual FilterAction acceptNode(const DOMNode* node) const = 0;
 
     /**
      * Tells the DOMLSSerializer what types of nodes to show to the filter.
@@ -98,34 +98,8 @@ public:
      * @return The constants of what types of nodes to show.
      * @since DOM Level 3
      */
-    virtual unsigned long getWhatToShow() const =0;
+    virtual ShowType getWhatToShow() const =0;
     //@}
-
-private:
-
-    // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //  fWhatToShow
-    //
-    //      The whatToShow mask.
-    //      Tells the DOMLSSerializer what types of nodes to show to the filter.
-    //      See NodeFilter for definition of the constants.
-    //      The constants
-    //      SHOW_ATTRIBUTE,
-    //      SHOW_DOCUMENT,
-    //      SHOW_DOCUMENT_TYPE,
-    //      SHOW_NOTATION, and
-    //      SHOW_DOCUMENT_FRAGMENT are meaningless here,
-    //      Entity nodes are not passed to the filter.
-    //
-    //      Those nodes will never be passed to a DOMLSSerializerFilter.
-    //
-    //   Derived class shall add this data member:
-    //
-    //   unsigned long fWhatToShow;
-    // -----------------------------------------------------------------------
-
 };
 
 XERCES_CPP_NAMESPACE_END

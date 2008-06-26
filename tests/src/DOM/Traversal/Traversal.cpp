@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,7 +78,7 @@ class  MyFilter : public DOMNodeFilter {
 public:
 
   MyFilter(short nodeType, bool reject=false) : DOMNodeFilter(), fNodeType(nodeType), fReject(reject) {};
-  virtual short acceptNode(const DOMNode* node) const;
+  virtual FilterAction acceptNode(const DOMNode* node) const;
 private:
     short fNodeType;
     bool fReject;
@@ -98,7 +98,7 @@ private:
         DOCUMENT_FRAGMENT_NODE = 11,
         NOTATION_NODE        = 12
 */
-short  MyFilter::acceptNode(const DOMNode* node) const {
+DOMNodeFilter::FilterAction  MyFilter::acceptNode(const DOMNode* node) const {
     if (fNodeType == 0)
         return  DOMNodeFilter::FILTER_ACCEPT;
 	if (node->getNodeType() ==  fNodeType) {
@@ -555,4 +555,3 @@ int  main()
     printf("Test Run Successfully\n");
     return 0;
 };
-

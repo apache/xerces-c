@@ -32,6 +32,24 @@ XERCES_CPP_NAMESPACE_BEGIN
 class CDOM_EXPORT DOMXPathException : public DOMException
 {
 public:
+    //@{
+    /**
+     * ExceptionCode
+     * <br>INVALID_EXPRESSION_ERR The expression has a syntax error or otherwise
+     * is not a legal expression according to the rules of the specific
+     * <code>DOMXPathEvaluator</code> or contains specialized extension functions
+     * or variables not supported by this implementation.
+     * <br>TYPE_ERR The expression cannot be converted to return the specified type.
+     * <br>NO_RESULT_ERROR There is no current result in the result object.
+     */
+	enum ExceptionCode {
+		INVALID_EXPRESSION_ERR = 51,
+		TYPE_ERR = 52,
+                NO_RESULT_ERROR = 53
+	};
+    //@}
+
+public:
     // -----------------------------------------------------------------------
     //  Constructors
     // -----------------------------------------------------------------------
@@ -50,10 +68,9 @@ public:
       * @param messageCode    The string containing the error message
       * @param memoryManager  The memory manager used to (de)allocate memory
       */
-    DOMXPathException( short                 code
-                     , short                 messageCode = 0
-                     , MemoryManager* const  memoryManager = XMLPlatformUtils::fgMemoryManager
-                     );
+    DOMXPathException(short code,
+                      short messageCode = 0,
+                      MemoryManager* const  memoryManager = XMLPlatformUtils::fgMemoryManager);
 
     /**
       * Copy constructor.
@@ -74,25 +91,6 @@ public:
 	  *
 	  */
     virtual ~DOMXPathException();
-    //@}
-
-public:
-
-    //@{
-    /**
-     * ExceptionCode
-     * <br>INVALID_EXPRESSION_ERR The expression has a syntax error or otherwise
-     * is not a legal expression according to the rules of the specific
-     * <code>DOMXPathEvaluator</code> or contains specialized extension functions
-     * or variables not supported by this implementation.
-     * <br>TYPE_ERR The expression cannot be converted to return the specified type.
-     * <br>NO_RESULT_ERROR There is no current result in the result object.
-     */
-	enum ExceptionCode {
-		INVALID_EXPRESSION_ERR = 51,
-		TYPE_ERR = 52,
-                NO_RESULT_ERROR = 53
-	};
     //@}
 
 private:

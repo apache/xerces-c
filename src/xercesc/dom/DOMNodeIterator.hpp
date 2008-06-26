@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,12 +48,12 @@ protected:
     //  Hidden constructors
     // -----------------------------------------------------------------------
     /** @name Hidden constructors */
-    //@{    
+    //@{
     DOMNodeIterator() {}
     DOMNodeIterator(const DOMNodeIterator &) {}
     //@}
 
-private:    
+private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -100,7 +100,7 @@ public:
      * @since DOM Level 2
      *
      */
-    virtual unsigned long      getWhatToShow() = 0;
+    virtual DOMNodeFilter::ShowType getWhatToShow() = 0;
 
     /**
      * The <code>DOMNodeFilter</code> used to screen nodes.
