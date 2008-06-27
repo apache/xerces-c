@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -94,8 +94,8 @@ public:
         const   XMLCh* const    message
         , const XMLCh* const    publicId
         , const XMLCh* const    systemId
-        , const unsigned long   lineNumber
-        , const unsigned long   columnNumber
+        , const XMLFileLoc   lineNumber
+        , const XMLFileLoc   columnNumber
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -135,7 +135,7 @@ public:
     *         if none is available.
     * @see Locator#getColumnNumber
     */
-    unsigned long getColumnNumber() const;
+    XMLFileLoc getColumnNumber() const;
   /**
     * The line number of the end of the text where the exception occurred.
     *
@@ -143,7 +143,7 @@ public:
     *         if none is available.
     * @see Locator#getLineNumber
     */
-    unsigned long getLineNumber() const;
+    XMLFileLoc getLineNumber() const;
   /**
     * Get the public identifier of the entity where the exception occurred.
     *
@@ -169,9 +169,9 @@ private:
     /* Data Members */
 
     /* The column in the source text where the error occured. */
-    unsigned long   fColumnNumber;
+    XMLFileLoc   fColumnNumber;
     /* The line in the source text where the error occured. */
-    unsigned long   fLineNumber;
+    XMLFileLoc   fLineNumber;
     /* The public id of the file where the error occured. */
     XMLCh*          fPublicId;
     /* The system id of the file where the error occured. */

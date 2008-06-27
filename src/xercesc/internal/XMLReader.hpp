@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -100,7 +100,7 @@ public:
 
     bool isXMLLetter(const XMLCh toCheck) const;
     bool isFirstNameChar(const XMLCh toCheck) const;
-    bool isNameChar(const XMLCh toCheck) const;    
+    bool isNameChar(const XMLCh toCheck) const;
     bool isPlainContentChar(const XMLCh toCheck) const;
     bool isSpecialStartTagChar(const XMLCh toCheck) const;
     bool isXMLChar(const XMLCh toCheck) const;
@@ -108,7 +108,7 @@ public:
     bool isControlChar(const XMLCh toCheck) const;
     bool isPublicIdChar(const XMLCh toCheck) const;
     bool isFirstNCNameChar(const XMLCh toCheck) const;
-    bool isNCNameChar(const XMLCh toCheck) const;    
+    bool isNCNameChar(const XMLCh toCheck) const;
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
@@ -189,9 +189,9 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned long getColumnNumber() const;
+    XMLFileLoc getColumnNumber() const;
     const XMLCh* getEncodingStr() const;
-    unsigned long getLineNumber() const;
+    XMLFileLoc getLineNumber() const;
     bool getNoMoreFlag() const;
     const XMLCh* getPublicId() const;
     unsigned int getReaderNum() const;
@@ -430,8 +430,8 @@ private:
     XMLSize_t                   fCharsAvail;
     unsigned char               fCharSizeBuf[kCharBufSize];
     unsigned int                fCharOfsBuf[kCharBufSize];
-    unsigned long               fCurCol;
-    unsigned long               fCurLine;
+    XMLFileLoc                  fCurCol;
+    XMLFileLoc                  fCurLine;
     XMLRecognizer::Encodings    fEncoding;
     XMLCh*                      fEncodingStr;
     bool                        fForcedEncoding;
@@ -486,7 +486,7 @@ inline bool XMLReader::isFirstNameChar(const XMLCh toCheck) const
 
 inline bool XMLReader::isFirstNCNameChar(const XMLCh toCheck) const
 {
-    return (((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0) 
+    return (((fgCharCharsTable[toCheck] & gFirstNameCharMask) != 0)
             && (toCheck != chColon));
 }
 
@@ -528,7 +528,7 @@ inline XMLSize_t XMLReader::charsLeftInBuffer() const
 // ---------------------------------------------------------------------------
 //  XMLReader: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned long XMLReader::getColumnNumber() const
+inline XMLFileLoc XMLReader::getColumnNumber() const
 {
     return fCurCol;
 }
@@ -538,7 +538,7 @@ inline const XMLCh* XMLReader::getEncodingStr() const
     return fEncodingStr;
 }
 
-inline unsigned long XMLReader::getLineNumber() const
+inline XMLFileLoc XMLReader::getLineNumber() const
 {
     return fCurLine;
 }
@@ -633,7 +633,7 @@ inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
     {
         dest.append(&fCharBuf[fCharIndex], count);
         fCharIndex += count;
-        fCurCol    += (unsigned long)count;
+        fCurCol    += (XMLFileLoc)count;
     }
 }
 

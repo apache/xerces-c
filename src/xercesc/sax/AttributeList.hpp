@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   * <code>
   * public void startElement (String name, AttributeList atts) {<br>
-  * &nbsp;for (int i = 0; i < atts.getLength(); i++) {<br>
+  * &nbsp;for (XMLSize_t i = 0; i < atts.getLength(); i++) {<br>
   * &nbsp;&nbsp;String name = atts.getName(i);<br>
   * &nbsp;&nbsp;String type = atts.getType(i);<br>
   * &nbsp;&nbsp;String value = atts.getValue(i);<br>
@@ -108,7 +108,7 @@ public:
     *
     * @return The number of attributes in the list.
     */
-    virtual unsigned int getLength() const = 0;
+    virtual XMLSize_t getLength() const = 0;
 
   /**
     * Return the name of an attribute in this list (by position).
@@ -126,7 +126,7 @@ public:
     *         if the index is out of range.
     * @see #getLength
     */
-    virtual const XMLCh* getName(const unsigned int index) const = 0;
+    virtual const XMLCh* getName(const XMLSize_t index) const = 0;
 
   /**
     * Return the type of an attribute in the list (by position).
@@ -149,7 +149,7 @@ public:
     * @see #getLength
     * @see #getType
     */
-    virtual const XMLCh* getType(const unsigned int index) const = 0;
+    virtual const XMLCh* getType(const XMLSize_t index) const = 0;
 
   /**
     * Return the value of an attribute in the list (by position).
@@ -164,13 +164,13 @@ public:
     * @see #getLength
     * @see #getValue
     */
-    virtual const XMLCh* getValue(const unsigned int index) const = 0;
+    virtual const XMLCh* getValue(const XMLSize_t index) const = 0;
 
   /**
     * Return the type of an attribute in the list (by name).
     *
     * The return value is the same as the return value for
-    * getType(int).
+    * getType(XMLSize_t).
     *
     * If the attribute name has a namespace prefix in the document,
     * the application must include the prefix here.
@@ -186,7 +186,7 @@ public:
     * Return the value of an attribute in the list (by name).
     *
     * The return value is the same as the return value for
-    * getValue(int).
+    * getValue(XMLSize_t).
     *
     * If the attribute name has a namespace prefix in the document,
     * the application must include the prefix here.
@@ -202,7 +202,7 @@ public:
     * Return the value of an attribute in the list (by name).
     *
     * The return value is the same as the return value for
-    * getValue(int).
+    * getValue(XMLSize_t).
     *
     * If the attribute name has a namespace prefix in the document,
     * the application must include the prefix here.

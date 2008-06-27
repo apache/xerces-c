@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,13 +48,13 @@ XSDDOMParser::XSDDOMParser( XMLValidator* const   valToAdopt
     , fInnerAnnotationDepth(-1)
     , fDepth(-1)
     , fUserErrorReporter(0)
-    , fUserEntityHandler(0)    
+    , fUserEntityHandler(0)
     , fURIs(0)
     , fAnnotationBuf(1023, manager)
 
 {
     fURIs = new (manager) ValueVectorOf<unsigned int>(16, manager);
-    fXSDErrorReporter.setErrorReporter(this);    
+    fXSDErrorReporter.setErrorReporter(this);
     setValidationScheme(XercesDOMParser::Val_Never);
     setDoNamespaces(true);
 }
@@ -97,7 +97,7 @@ void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
     for (unsigned int i=0; i < attrCount; i++) {
 
         const XMLAttr* oneAttrib = attrList.elementAt(i);
-        const XMLCh* attrValue = oneAttrib->getValue();        
+        const XMLCh* attrValue = oneAttrib->getValue();
 
         if (XMLString::equals(oneAttrib->getName(), XMLUni::fgXMLNSString))
             fURIs->addElement(fScanner->getPrefixId(XMLUni::fgZeroLenString));
@@ -238,7 +238,7 @@ void XSDDOMParser::startElement( const XMLElementDecl&       elemDecl
 
             fAnnotationDepth = fDepth;
             startAnnotation(elemDecl, attrList, attrCount);
-        } 
+        }
     }
     else if (fDepth == fAnnotationDepth+1)
     {
@@ -389,12 +389,12 @@ void XSDDOMParser::endElement( const XMLElementDecl& elemDecl
             fInnerAnnotationDepth = -1;
             endAnnotationElement(elemDecl, false);
 	    }
-        else if (fAnnotationDepth == fDepth) 
+        else if (fAnnotationDepth == fDepth)
         {
             fAnnotationDepth = -1;
             endAnnotationElement(elemDecl, true);
         }
-        else 
+        else
         {   // inside a child of annotation
             endAnnotationElement(elemDecl, false);
             fDepth--;
@@ -501,8 +501,8 @@ void XSDDOMParser::error(const   unsigned int                code
                          , const XMLCh* const                errorText
                          , const XMLCh* const                systemId
                          , const XMLCh* const                publicId
-                         , const unsigned long               lineNum
-                         , const unsigned long               colNum)
+                         , const XMLFileLoc                  lineNum
+                         , const XMLFileLoc                  colNum)
 {
     if (errType >= XMLErrorReporter::ErrType_Fatal)
         fSawFatal = true;

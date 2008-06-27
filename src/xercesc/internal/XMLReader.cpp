@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -111,7 +111,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fSource(source)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
-    , fCalculateSrcOfs(calculateSrcOfs)    
+    , fCalculateSrcOfs(calculateSrcOfs)
     , fSystemId(XMLString::replicate(sysId, manager))
     , fStream(streamToAdopt)
     , fSwapped(false)
@@ -192,7 +192,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fSource(source)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
-    , fCalculateSrcOfs(calculateSrcOfs)    
+    , fCalculateSrcOfs(calculateSrcOfs)
     , fSystemId(XMLString::replicate(sysId, manager))
     , fStream(streamToAdopt)
     , fSwapped(false)
@@ -366,7 +366,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fSource(source)
     , fSrcOfsBase(0)
     , fSrcOfsSupported(false)
-    , fCalculateSrcOfs(calculateSrcOfs)    
+    , fCalculateSrcOfs(calculateSrcOfs)
     , fSystemId(XMLString::replicate(sysId, manager))
     , fStream(streamToAdopt)
     , fSwapped(false)
@@ -461,7 +461,7 @@ XMLFilePos XMLReader::getSrcOffset() const
     }
 
     if( fCharIndex < fCharsAvail ) {
- 
+
         return (fSrcOfsBase + fCharOfsBuf[fCharIndex]);
     }
 
@@ -665,7 +665,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
                         break;
                     fCharIndex += 2;
 
-                } 
+                }
                 else
                 {
                     if (!isNameChar(fCharBuf[fCharIndex]))
@@ -687,7 +687,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
         // we have to copy the accepted character(s), and update column
         if (fCharIndex != charIndex_start)
         {
-            fCurCol += (unsigned long)(fCharIndex - charIndex_start);
+            fCurCol += (XMLFileLoc)(fCharIndex - charIndex_start);
             toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
         }
 
@@ -729,7 +729,7 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
             //  Lets check the first char for being a first name char. If not, then
             //  what's the point in living mannnn? Just give up now. We only do this
             //  if its a name and not a name token that they want.
-            if (fXMLVersion == XMLV1_1 
+            if (fXMLVersion == XMLV1_1
                 && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
                 // make sure one more char is in the buffer, the transcoder
                 // should put only a complete surrogate pair into the buffer
@@ -777,7 +777,7 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
         // we have to copy the accepted character(s), and update column
         if (fCharIndex != charIndex_start)
         {
-            fCurCol += (unsigned long)(fCharIndex - charIndex_start);
+            fCurCol += (XMLFileLoc)(fCharIndex - charIndex_start);
             toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
         }
 
@@ -966,8 +966,8 @@ bool XMLReader::skipIfQuote(XMLCh& chGotten)
 bool XMLReader::skipSpaces(bool& skippedSomething, bool inDecl)
 {
     // Remember the current line and column
-    unsigned long orgLine = fCurLine;
-    unsigned long orgCol  = fCurCol;
+    XMLFileLoc orgLine = fCurLine;
+    XMLFileLoc orgCol  = fCurCol;
 
     //  We enter a loop where we skip over spaces until we hit the end of
     //  this reader or a non-space value. The return indicates whether we
@@ -1110,7 +1110,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
     const XMLSize_t srcLen = XMLString::stringLen(toSkip);
     XMLSize_t charsLeft = charsLeftInBuffer();
 
-    if (srcLen <= fCharsAvail) {    
+    if (srcLen <= fCharsAvail) {
         //
         //  See if the current reader has enough chars to test against this
         //  string. If not, then ask it to reload its buffer. If that does not
@@ -1119,7 +1119,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
         //  NOTE: This works because strings never have to cross a reader! And
         //  a string to skip will never have a new line in it, so we will never
         //  miss adjusting the current line.
-        //        
+        //
         while (charsLeft < srcLen)
         {
             refreshCharBuffer();
@@ -1143,7 +1143,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
         //  source len to it.
         //
         fCharIndex += srcLen;
-    }    
+    }
     else {
         if (charsLeft == 0) {
             refreshCharBuffer();
@@ -1155,7 +1155,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
             return false;
 
         fCharIndex += charsLeft;
-    
+
         XMLSize_t offset = charsLeft;
         XMLSize_t remainingLen = srcLen - charsLeft;
 
@@ -1177,7 +1177,7 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
     }
 
     // Add the source length to the current column to get it back right
-    fCurCol += (unsigned long)srcLen;
+    fCurCol += (XMLFileLoc)srcLen;
 
     return true;
 }
@@ -1330,7 +1330,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
         if (newBaseEncoding == XMLRecognizer::OtherEncoding)
         {
             //
-            // We already know it's none of those non-endian special cases, 
+            // We already know it's none of those non-endian special cases,
             // so just replicate the new name and use it directly to create the transcoder
             //
             fMemoryManager->deallocate(fEncodingStr);
@@ -1658,7 +1658,7 @@ void XMLReader::doInitDecode()
         default :
             // It should never be anything else here
             fMemoryManager->deallocate(fPublicId);
-            fMemoryManager->deallocate(fEncodingStr);                    
+            fMemoryManager->deallocate(fEncodingStr);
             fMemoryManager->deallocate(fSystemId);
             ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Reader_BadAutoEncoding, fMemoryManager);
             break;
@@ -1672,7 +1672,7 @@ void XMLReader::doInitDecode()
     //
     if ((fType == Type_PE) && (fRefFrom == RefFrom_NonLiteral))
         fCharBuf[fCharsAvail++] = chSpace;
-    
+
     //  Calculate fCharOfsBuf buffer using the elements from fCharBufSize
     if (fCalculateSrcOfs)
     {
@@ -1724,7 +1724,7 @@ void XMLReader::refreshRawBuffer()
 //  trancoded character buffer. We transcode up to another maxChars chars
 //  from the
 //
-XMLSize_t 
+XMLSize_t
 XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
                             ,       unsigned char* const    charSizes
                             , const XMLSize_t               maxChars)
@@ -1775,13 +1775,13 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
  *
  * 2.11 End-of-Line Handling
  *
- *    XML parsed entities are often stored in computer files which, for editing 
- *    convenience, are organized into lines. These lines are typically separated 
+ *    XML parsed entities are often stored in computer files which, for editing
+ *    convenience, are organized into lines. These lines are typically separated
  *    by some combination of the characters CARRIAGE RETURN (#xD) and LINE FEED (#xA).
  *
- *    To simplify the tasks of applications, the XML processor MUST behave as if 
- *    it normalized all line breaks in external parsed entities (including the document 
- *    entity) on input, before parsing, by translating all of the following to a single 
+ *    To simplify the tasks of applications, the XML processor MUST behave as if
+ *    it normalized all line breaks in external parsed entities (including the document
+ *    entity) on input, before parsing, by translating all of the following to a single
  *    #xA character:
  *
  *  1. the two-character sequence #xD #xA
@@ -1811,7 +1811,7 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
         {
             if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
             {
-                if ( fCharBuf[fCharIndex] == chLF              || 
+                if ( fCharBuf[fCharIndex] == chLF              ||
                     ((fCharBuf[fCharIndex] == chNEL) && fNEL)  )
                 {
                     fCharIndex++;
@@ -1838,10 +1838,10 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
          *
          * 2.11 End-of-Line Handling
          *  ...
-         *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
-         *   until an entity's encoding declaration (if present) has been read. 
-         *   Therefore, it is a fatal error to use them within the XML declaration or 
-         *   text declaration. 
+         *   The characters #x85 and #x2028 cannot be reliably recognized and translated
+         *   until an entity's encoding declaration (if present) has been read.
+         *   Therefore, it is a fatal error to use them within the XML declaration or
+         *   text declaration.
          *
          ***/
             ThrowXMLwithMemMgr1

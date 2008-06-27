@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -138,13 +138,13 @@ void SAX2XMLReaderImpl::initialize()
         fAdvDHListSize * sizeof(XMLDocumentHandler*)
     );//new XMLDocumentHandler*[fAdvDHListSize];
     memset(fAdvDHList, 0, sizeof(void*) * fAdvDHListSize);
-    
+
     // SAX2 default is for namespaces (feature http://xml.org/sax/features/namespaces) to be on
     setDoNamespaces(true) ;
 
     // default: schema is on
     setDoSchema(true);
-    
+
     fPrefixesStorage = new (fMemoryManager) XMLStringPool(109, fMemoryManager) ;
     fPrefixes        = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
     fTempAttrVec     = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
@@ -335,10 +335,10 @@ void SAX2XMLReaderImpl::setPSVIHandler(PSVIHandler* const handler)
 {
     fPSVIHandler = handler;
     if (fPSVIHandler) {
-        fScanner->setPSVIHandler(fPSVIHandler);        
+        fScanner->setPSVIHandler(fPSVIHandler);
     }
     else {
-        fScanner->setPSVIHandler(0);       
+        fScanner->setPSVIHandler(0);
     }
 }
 
@@ -885,7 +885,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
                 (
                     XMLUni::fgZeroLenString,
                     baseName,
-                    elemQName 
+                    elemQName
                 );
             }
         }
@@ -1188,14 +1188,14 @@ InputSource* SAX2XMLReaderImpl::resolveEntity(XMLResourceIdentifier* resourceIde
     //  return a null pointer to cause the default resolution.
     //
     if (fEntityResolver)
-        return fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(), 
+        return fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(),
                                                 resourceIdentifier->getSystemId());
     if (fXMLEntityResolver)
         return fXMLEntityResolver->resolveEntity(resourceIdentifier);
 
     return 0;
 }
- 
+
 void SAX2XMLReaderImpl::startInputSource(const InputSource&)
 {
     // Nothing to do for this one
@@ -1217,8 +1217,8 @@ void SAX2XMLReaderImpl::error(  const   unsigned int
                         , const XMLCh* const                errorText
                         , const XMLCh* const                systemId
                         , const XMLCh* const                publicId
-                        , const unsigned long               lineNum
-                        , const unsigned long               colNum)
+                        , const XMLFileLoc                  lineNum
+                        , const XMLFileLoc                  colNum)
 {
     SAXParseException toThrow = SAXParseException
     (
@@ -1256,7 +1256,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 
     if (fParseInProgress)
         throw SAXNotSupportedException("Feature modification is not supported during parse.", fMemoryManager);
-    
+
     if (XMLString::compareIStringASCII(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
     {
         setDoNamespaces(value);
@@ -1614,4 +1614,3 @@ Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)
 
 
 XERCES_CPP_NAMESPACE_END
-

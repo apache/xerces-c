@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,10 +74,10 @@ public :
     /** The default constructor */
 	SAX2XMLReaderImpl(
                             MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-                          , XMLGrammarPool* const gramPool = 0 
+                          , XMLGrammarPool* const gramPool = 0
                           );
 
-    /** The destructor */	
+    /** The destructor */
 	~SAX2XMLReaderImpl() ;
    //@}
 
@@ -218,7 +218,7 @@ public :
     * @see DefaultHandler#DefaultHandler
     */
     virtual void setEntityResolver(EntityResolver* const resolver) ;
-    
+
   /** Set the entity resolver
     *
     * This method allows applications to install their own entity
@@ -279,9 +279,9 @@ public :
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
     * <br>http://apache.org/xml/features/validating/load-schema (default: true)
-    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)    
+    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
     * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
-    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)    
+    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)
     *
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).
@@ -393,7 +393,7 @@ public :
     (
         const   char* const     systemId
     ) ;
-	
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -1193,8 +1193,8 @@ public :
         , const XMLCh* const                errorText
         , const XMLCh* const                systemId
         , const XMLCh* const                publicId
-        , const unsigned long               lineNum
-        , const unsigned long               colNum
+        , const XMLFileLoc                  lineNum
+        , const XMLFileLoc                  colNum
     );
 
     /**
@@ -1261,7 +1261,7 @@ public :
       *
       * This method allows a user installed entity handler to further
       * process any pointers to external entities. The applications can
-      * implement 'redirection' via this callback.  
+      * implement 'redirection' via this callback.
       *
       * @param resourceIdentifier An object containing the type of
       *        resource to be resolved and the associated data members
@@ -1668,7 +1668,7 @@ private :
     XMLValidator*               fValidator;
     MemoryManager*              fMemoryManager;
     XMLGrammarPool*             fGrammarPool;
-	
+
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser
     // -----------------------------------------------------------------------

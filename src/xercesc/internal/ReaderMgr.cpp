@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -352,7 +352,7 @@ void ReaderMgr::cleanStackBackTo(const unsigned int readerNum)
 
 
 XMLReader* ReaderMgr::createReader( const   InputSource&        src
-                                    , const bool                
+                                    , const bool
                                     , const XMLReader::RefFrom  refFrom
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source
@@ -444,7 +444,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                                     , const bool                calcSrcOfs
                                     , const bool                disableDefaultEntityResolution)
 {
-    //Normalize sysId 
+    //Normalize sysId
     XMLBuffer normalizedSysId(1023, fMemoryManager);
     if(sysId)
         XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
@@ -493,7 +493,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
 
 // Keep this #if 0 block as it was exposing a threading problem on AIX.
 // Got rid of the problem by changing XMLURL to not throw malformedurl
-// exceptions.        
+// exceptions.
 #if 0
         try
         {
@@ -545,14 +545,14 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                 );
             }
             else
-                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
         }
         else
         {
             if (fStandardUriConformant && urlTmp.hasInvalidChar())
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
             srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-        }        
+        }
 #endif
     }
 
@@ -597,7 +597,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                                     , const bool                calcSrcOfs
                                     , const bool                disableDefaultEntityResolution)
 {
-    //Normalize sysId 
+    //Normalize sysId
     XMLBuffer normalizedSysId(1023, fMemoryManager);
     XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
     const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
@@ -664,14 +664,14 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                 );
             }
             else
-                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
+                ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
         }
         else
         {
             if (fStandardUriConformant && urlTmp.hasInvalidChar())
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);
             srcToFill = new (fMemoryManager) URLInputSource(urlTmp, fMemoryManager);
-        }        
+        }
     }
 
     // Put a janitor on the input source
@@ -950,7 +950,7 @@ const XMLCh* ReaderMgr::getSystemId() const
     return getLastExtEntity(theEntity)->getSystemId();
 }
 
-unsigned long ReaderMgr::getColumnNumber() const
+XMLFileLoc ReaderMgr::getColumnNumber() const
 {
     if (!fReaderStack && !fCurReader)
         return 0;
@@ -959,7 +959,7 @@ unsigned long ReaderMgr::getColumnNumber() const
     return getLastExtEntity(theEntity)->getColumnNumber();
 }
 
-unsigned long ReaderMgr::getLineNumber() const
+XMLFileLoc ReaderMgr::getLineNumber() const
 {
     if (!fReaderStack && !fCurReader)
         return 0;

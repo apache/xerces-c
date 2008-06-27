@@ -719,7 +719,7 @@ protected:
     //  fUIntPoolRow
     //      current row in fUIntPool
     //  fUIntPoolCol
-    //      current column i row
+    //      current column in row
     //  fUIntPoolRowTotal
     //      total number of rows in table
     //

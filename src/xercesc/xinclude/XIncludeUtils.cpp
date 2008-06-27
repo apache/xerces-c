@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ XIncludeUtils::~XIncludeUtils(){
 //   document. sourceNode is the current location in parsedDocument, and
 //   all xinclude manipulation is done in place (i.e. source is manipulated).
 // ---------------------------------------------------------------------------
-bool 
+bool
 XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver){
     int included = 0;
     if (sourceNode) {
@@ -59,7 +59,7 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
         for (DOMNode *child = sourceNode->getFirstChild(); child != NULL; child = child->getNextSibling()){
             children.addElement(child);
         }
-        
+
         if (sourceNode->getNodeType() == DOMNode::ELEMENT_NODE){
             if (isXIIncludeDOMNode(sourceNode)){
                 /* once we do an include on the source element, it is unsafe to do the include
@@ -78,7 +78,7 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
                 return false;
             }
         }
-        
+
         /* to have got here, we must not have found an xinclude element in the current element, so
            need to walk the entire child list parsing for each. An xinclude in  a
            node does not affect a peer, so we can simply parse each child in turn */
@@ -90,7 +90,7 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
 }
 
 // ---------------------------------------------------------------------------
-// utility func to extract a DOMNodes Base attr value if present 
+// utility func to extract a DOMNodes Base attr value if present
 // ---------------------------------------------------------------------------
 static const XMLCh *
 getBaseAttrValue(DOMNode *node){
@@ -116,7 +116,7 @@ getBaseAttrValue(DOMNode *node){
 }
 
 // ---------------------------------------------------------------------------
-//  This method assumes that currentNode is an xinclude element and parses 
+//  This method assumes that currentNode is an xinclude element and parses
 //   it accordingly, acting on what it finds.
 // ---------------------------------------------------------------------------
 bool
@@ -131,7 +131,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
     const XMLCh *acceptlanguage = NULL;
     DOMNode *includeParent = xincludeNode->getParentNode();
 
-    
+
     if(xincludeNode->hasAttributes()) {
         /* get all the attributes of the node */
         DOMNamedNodeMap *pAttributes = xincludeNode->getAttributes();
@@ -164,9 +164,9 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
         }
     }
     // 3.1 xi:include Element
-    // The children property of the xi:include element may include a single xi:fallback element; 
-    // the appearance of more than one xi:fallback element, an xi:include element, 
-    // or any other element from the XInclude namespace is a fatal error. 
+    // The children property of the xi:include element may include a single xi:fallback element;
+    // the appearance of more than one xi:fallback element, an xi:include element,
+    // or any other element from the XInclude namespace is a fatal error.
     DOMNode *child;
     DOMElement *fallback = NULL;
     for (child = xincludeNode->getFirstChild(); child != 0; child=child->getNextSibling()){
@@ -191,12 +191,12 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
 
     if (href == NULL){
         /* this is an unrecoverable error until we have xpointer support -
-           if there is an xpointer, the current document is assumed 
+           if there is an xpointer, the current document is assumed
            however, there is no xpointer support yet */
         XIncludeUtils::reportError(xincludeNode, XMLErrs::XIncludeNoHref,
             NULL, parsedDocument->getDocumentURI());
         return false;
-    } 
+    }
 
     /* set up the accept and accept-language values */
     if (accept != NULL){
@@ -226,7 +226,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
     }
 
     if (getBaseAttrValue(xincludeNode) != NULL){
-        relativeLocation.prependPath(getBaseAttrValue(xincludeNode));    
+        relativeLocation.prependPath(getBaseAttrValue(xincludeNode));
     }
 
     /*  Take the relevant action - we need to retrieve the target as a whole before
@@ -247,9 +247,9 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
             parse, parsedDocument->getDocumentURI());
         return false;
     }
-    
+
     if (includedDoc == NULL && includedText == NULL){
-        /* there was an error - this is now a resource error 
+        /* there was an error - this is now a resource error
            let's see if there is a fallback */
         XIncludeUtils::reportError(xincludeNode, XMLErrs::XIncludeIncludeFailedResourceError,
             hrefLoc.getLocation(), parsedDocument->getDocumentURI());
@@ -336,8 +336,8 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                                     // it's missing, add it
                                     parsedDocument->getDoctype()->getNotations()->setNamedItem(parsedDocument->importNode(notat, true));
                                 }
-                                else if(XMLString::equals(myNotation->getPublicId(), notat->getPublicId()) && 
-                                        XMLString::equals(myNotation->getSystemId(), notat->getSystemId()) && 
+                                else if(XMLString::equals(myNotation->getPublicId(), notat->getPublicId()) &&
+                                        XMLString::equals(myNotation->getSystemId(), notat->getSystemId()) &&
                                         XMLString::equals(myNotation->getBaseURI(), notat->getBaseURI()))
                                 {
                                     // it's duplicate, ignore it
@@ -361,8 +361,8 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                                     // it's missing, add it
                                     parsedDocument->getDoctype()->getEntities()->setNamedItem(parsedDocument->importNode(ent, true));
                                 }
-                                else if(XMLString::equals(myEnt->getPublicId(), ent->getPublicId()) && 
-                                        XMLString::equals(myEnt->getSystemId(), ent->getSystemId()) && 
+                                else if(XMLString::equals(myEnt->getPublicId(), ent->getPublicId()) &&
+                                        XMLString::equals(myEnt->getSystemId(), ent->getSystemId()) &&
                                         XMLString::equals(myEnt->getBaseURI(), ent->getBaseURI()))
                                 {
                                     // it's duplicate, ignore it
@@ -398,10 +398,10 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
 }
 
 DOMDocument *
-XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href, 
-                                    const XMLCh *relativeHref, 
-                                    DOMNode *includeNode, 
-                                    DOMDocument *parsedDocument, 
+XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href,
+                                    const XMLCh *relativeHref,
+                                    DOMNode *includeNode,
+                                    DOMDocument *parsedDocument,
                                     XMLEntityHandler* entityResolver){
     if (XIncludeUtils::isInCurrentInclusionHistoryStack(href)){
          /* including something back up the current history */
@@ -412,7 +412,7 @@ XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href,
 
     if (XMLString::equals(href, parsedDocument->getBaseURI())){
         /* trying to include itself */
-        XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCircularInclusionDocIncludesSelf, 
+        XIncludeUtils::reportError(parsedDocument, XMLErrs::XIncludeCircularInclusionDocIncludesSelf,
               href, href);
         return NULL;
     }
@@ -490,15 +490,15 @@ XIncludeUtils::doXIncludeXMLFileDOM(const XMLCh *href,
             }
         }
     }
-    return includedNode;                                                                                                                                                                                                                            
-}                                                                                                                                                                                                                                                      
+    return includedNode;
+}
 
-DOMText * 
-XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href, 
-                                     const XMLCh *relativeHref, 
-                                     const XMLCh *encoding, 
+DOMText *
+XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href,
+                                     const XMLCh *relativeHref,
+                                     const XMLCh *encoding,
                                      DOMNode *includeNode,
-                                     DOMDocument *parsedDocument, 
+                                     DOMDocument *parsedDocument,
                                      XMLEntityHandler* entityResolver){
     if (encoding == NULL)
         /* "UTF-8" is stipulated default by spec */
@@ -567,7 +567,7 @@ XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href,
     return parsedDocument->createTextNode(repository.getRawBuffer());
 }
 
-/*static*/ bool 
+/*static*/ bool
 XIncludeUtils::isXIIncludeDOMNode(DOMNode *node){
     const XMLCh *nodeName = node->getLocalName();
     const XMLCh *namespaceURI = node->getNamespaceURI();
@@ -583,26 +583,26 @@ XIncludeUtils::isXIFallbackDOMNode(DOMNode *node){
     return isXIFallbackElement(nodeName, namespaceURI);
 }
 
-/*static*/ bool 
+/*static*/ bool
 XIncludeUtils::isXIIncludeElement(const XMLCh *name, const XMLCh *namespaceURI){
     if (namespaceURI == NULL || name == NULL){
         /* no namespaces not supported */
         return false;
     }
-    if (XMLString::equals(name, fgXIIncludeQName) 
+    if (XMLString::equals(name, fgXIIncludeQName)
         && XMLString::equals(namespaceURI, fgXIIIncludeNamespaceURI)){
         return true;
     }
     return false;
 }
-    
-/*static*/ bool 
+
+/*static*/ bool
 XIncludeUtils::isXIFallbackElement(const XMLCh *name, const XMLCh *namespaceURI){
     if (namespaceURI == NULL || name == NULL){
         /* no namespaces not supported */
         return false;
     }
-    if (XMLString::equals(name, fgXIFallbackQName) 
+    if (XMLString::equals(name, fgXIFallbackQName)
         && XMLString::equals(namespaceURI, fgXIIIncludeNamespaceURI)){
         return true;
     }
@@ -617,7 +617,7 @@ XIncludeUtils::getEscapedHRefAttrValue(const XMLCh * /*hrefAttrValue*/, bool & /
 }
 
 /* 4.1.2 */
-bool 
+bool
 XIncludeUtils::setContentNegotiation(const XMLCh * /*acceptAttrValue*/, const XMLCh * /*acceptLangAttrValue*/){
     return false;
 }
@@ -629,7 +629,7 @@ XIncludeUtils::checkTextIsValidForInclude(XMLCh * /*includeChars*/){
 
 // ========================================================
 // the stack utilities are slightly convoluted debug versions, they
-// will be pared down for the release code 
+// will be pared down for the release code
 // ========================================================
 static XIncludeHistoryNode *
 getTopOfCurrentInclusionHistoryStack(XIncludeHistoryNode *head){
@@ -643,29 +643,29 @@ getTopOfCurrentInclusionHistoryStack(XIncludeHistoryNode *head){
     return historyCursor;
 }
 
-bool 
+bool
 XIncludeUtils::addDocumentURIToCurrentInclusionHistoryStack(const XMLCh *URItoAdd){
     XIncludeHistoryNode *newNode = (XIncludeHistoryNode *)XMLPlatformUtils::fgMemoryManager->allocate(sizeof(XIncludeHistoryNode));
     if (newNode == NULL){
         return false;
     }
     newNode->URI = XMLString::replicate(URItoAdd);
-    newNode->next = NULL; 
+    newNode->next = NULL;
 
     if (fIncludeHistoryHead == NULL){
         fIncludeHistoryHead = newNode;
-        return true;    
+        return true;
     }
     XIncludeHistoryNode *topNode = getTopOfCurrentInclusionHistoryStack(fIncludeHistoryHead);
     topNode->next = newNode;
     return true;
 }
 
-bool 
+bool
 XIncludeUtils::isInCurrentInclusionHistoryStack(const XMLCh *toFind){
     XIncludeHistoryNode *historyCursor = fIncludeHistoryHead;
     /* walk the list */
-    while (historyCursor != NULL){        
+    while (historyCursor != NULL){
         if (XMLString::equals(toFind, historyCursor->URI)){
             return true;
         }
@@ -680,14 +680,14 @@ XIncludeUtils::popFromCurrentInclusionHistoryStack(const XMLCh * /*toPop*/){
     XIncludeHistoryNode *penultimateCursor = historyCursor;
 
     if (fIncludeHistoryHead == NULL){
-        return NULL;    
+        return NULL;
     }
 
     while (historyCursor->next != NULL){
         penultimateCursor = historyCursor;
         historyCursor = historyCursor->next;
     }
-    
+
     if (penultimateCursor == fIncludeHistoryHead){
         historyCursor = fIncludeHistoryHead;
         fIncludeHistoryHead = NULL;
@@ -701,7 +701,7 @@ XIncludeUtils::popFromCurrentInclusionHistoryStack(const XMLCh * /*toPop*/){
     return NULL;
 }
 
-void 
+void
 XIncludeUtils::freeInclusionHistory(){
     XIncludeHistoryNode *historyCursor = XIncludeUtils::fIncludeHistoryHead;
     while (historyCursor != NULL){
@@ -713,7 +713,7 @@ XIncludeUtils::freeInclusionHistory(){
     XIncludeUtils::fIncludeHistoryHead = NULL;
 }
 
-bool 
+bool
 XIncludeUtils::reportError(const DOMNode* const    /*errorNode*/
                               , XMLErrs::Codes errorType
                               , const XMLCh*   const    errorMsg
@@ -724,8 +724,8 @@ XIncludeUtils::reportError(const DOMNode* const    /*errorNode*/
     const XMLCh* const                    systemId = href;
     const XMLCh* const                    publicId = href;
     /* TODO - look these up somehow? */
-    const unsigned long                 lineNum = 0;
-    const unsigned long                 colNum = 0;
+    const XMLFileLoc                 lineNum = 0;
+    const XMLFileLoc                 colNum = 0;
 
     if (fErrorReporter)
     {
@@ -746,7 +746,7 @@ XIncludeUtils::reportError(const DOMNode* const    /*errorNode*/
                     // <TBD> Probably should load a default msg here
             }
         }
-        
+
         fErrorReporter->error(errorType
                               , XMLUni::fgXMLErrDomain    //fgXMLErrDomain
                               , XMLErrs::errorType(errorType)
@@ -763,7 +763,7 @@ XIncludeUtils::reportError(const DOMNode* const    /*errorNode*/
     return toContinueProcess;
 }
 
-/* TODO - declared in this file for convenience, prob ought to be moved out to 
+/* TODO - declared in this file for convenience, prob ought to be moved out to
    util/XMLUni.cpp before releasing */
 const XMLCh XIncludeUtils::fgXIIncludeQName[] =
 {
@@ -800,7 +800,7 @@ const XMLCh XIncludeUtils::fgXIIncludeAcceptLanguageAttrName[] =
 };
 const XMLCh XIncludeUtils::fgXIIncludeParseAttrXMLValue[] =
 {
-    chLatin_x, chLatin_m, chLatin_l, chNull    
+    chLatin_x, chLatin_m, chLatin_l, chNull
 };
 const XMLCh XIncludeUtils::fgXIIncludeParseAttrTextValue[] =
 {
@@ -822,4 +822,3 @@ const XMLCh XIncludeUtils::fgXIBaseAttrName[] =
 };
 
 XERCES_CPP_NAMESPACE_END
-

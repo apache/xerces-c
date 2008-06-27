@@ -432,8 +432,8 @@ public :
         , const XMLCh* const                errorText
         , const XMLCh* const                systemId
         , const XMLCh* const                publicId
-        , const unsigned long               lineNum
-        , const unsigned long               colNum
+        , const XMLFileLoc                  lineNum
+        , const XMLFileLoc                  colNum
     );
 
     /** Reset any error data before a new parse

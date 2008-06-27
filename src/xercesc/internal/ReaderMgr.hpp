@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,7 +45,7 @@ class XMLScanner;
 //  talks to the reader manager, which handles the stack and popping off
 //  used up readers.
 // ---------------------------------------------------------------------------
-class XMLPARSER_EXPORT ReaderMgr :   public XMemory 
+class XMLPARSER_EXPORT ReaderMgr :   public XMemory
                                    , public Locator
 {
 public :
@@ -56,8 +56,8 @@ public :
     {
         const   XMLCh*          systemId;
         const   XMLCh*          publicId;
-                unsigned long   lineNumber;
-                unsigned long   colNumber;
+                XMLFileLoc      lineNumber;
+                XMLFileLoc      colNumber;
     };
 
 
@@ -185,8 +185,8 @@ public :
     // -----------------------------------------------------------------------
     virtual const XMLCh* getPublicId() const;
     virtual const XMLCh* getSystemId() const;
-    virtual unsigned long getLineNumber() const;
-    virtual unsigned long getColumnNumber() const;
+    virtual XMLFileLoc getLineNumber() const;
+    virtual XMLFileLoc getColumnNumber() const;
 
 
 private :
@@ -353,7 +353,7 @@ inline void ReaderMgr::skipToChar(const XMLCh toSkipTo)
     {
         // Get chars until we find the one to skip
         nextCh = getNextChar();
-	} 
+	}
     // Break out at end of input or the char to skip
 	while((nextCh != toSkipTo) && nextCh!=0);
 }
@@ -365,7 +365,7 @@ inline void ReaderMgr::skipPastChar(const XMLCh toSkipPast)
     {
         // Get chars until we find the one to skip
         nextCh = getNextChar();
-	} 
+	}
 	while((nextCh != toSkipPast) && nextCh!=0);
 }
 
@@ -412,7 +412,7 @@ public :
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     ThrowEOEJanitor(const ThrowEOEJanitor&);
     ThrowEOEJanitor& operator=(const ThrowEOEJanitor&);
 

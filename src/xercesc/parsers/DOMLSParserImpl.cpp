@@ -789,8 +789,8 @@ void DOMLSParserImpl::error( const   unsigned int                code
                             , const XMLCh* const                errorText
                             , const XMLCh* const                systemId
                             , const XMLCh* const
-                            , const unsigned long               lineNum
-                            , const unsigned long               colNum)
+                            , const XMLFileLoc                  lineNum
+                            , const XMLFileLoc                  colNum)
 {
     if (fErrorHandler) {
 

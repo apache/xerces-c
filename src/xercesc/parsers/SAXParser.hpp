@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ class PARSERS_EXPORT SAXParser :
     , public XMLDocumentHandler
     , public XMLErrorReporter
     , public XMLEntityHandler
-    , public DocTypeHandler    
+    , public DocTypeHandler
 {
 public :
     // -----------------------------------------------------------------------
@@ -111,7 +111,7 @@ public :
     (
           XMLValidator*   const valToAdopt = 0
         , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
-        , XMLGrammarPool* const gramPool = 0 
+        , XMLGrammarPool* const gramPool = 0
     );
 
     /**
@@ -349,14 +349,14 @@ public :
 
    /** Get the SecurityManager instance attached to this parser.
       *
-      * This method returns the security manager 
+      * This method returns the security manager
       * that was specified using setSecurityManager.
       *
-      * The SecurityManager instance must have been specified by the application; 
+      * The SecurityManager instance must have been specified by the application;
       * this should not be deleted until after the parser has been deleted (or
       * a new SecurityManager instance has been supplied to the parser).
-      * 
-      * @return a pointer to the SecurityManager instance 
+      *
+      * @return a pointer to the SecurityManager instance
       *         specified externally.  A null pointer is returned if nothing
       *         was specified externally.
       *
@@ -471,7 +471,7 @@ public :
     XMLFilePos getSrcOffset() const;
 
     /** Get the 'generate synthetic annotations' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         generate synthetic annotations, false otherwise.
       *         A synthetic XSAnnotation is created when a schema
@@ -484,7 +484,7 @@ public :
     bool getGenerateSyntheticAnnotations() const;
 
     /** Get the 'validate annotations' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         validate annotations, false otherwise.
       *
@@ -493,7 +493,7 @@ public :
     bool getValidateAnnotations() const;
 
     /** Get the 'ignore cached DTD grammar' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         ignore cached DTD, false otherwise.
       *
@@ -502,7 +502,7 @@ public :
     bool getIgnoreCachedDTD() const;
 
     /** Get the 'ignore annotations' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         ignore annotations, false otherwise.
       *
@@ -511,7 +511,7 @@ public :
     bool getIgnoreAnnotations() const;
 
     /** Get the 'disable default entity resolution' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         not perform default entity resolution, false otherwise.
       *
@@ -520,7 +520,7 @@ public :
     bool getDisableDefaultEntityResolution() const;
 
     /** Get the 'skip DTD validation' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         skip DTD validation, false otherwise.
       *
@@ -546,7 +546,7 @@ public :
     /** @name Setter methods */
     //@{
     /** set the 'generate synthetic annotations' flag
-      *    
+      *
       * @param newValue The value for specifying whether Synthetic Annotations
       *        should be generated or not.
       *        A synthetic XSAnnotation is created when a schema
@@ -558,7 +558,7 @@ public :
     void setGenerateSyntheticAnnotations(const bool newValue);
 
     /** set the 'validate annotations' flag
-      *    
+      *
       * @param newValue The value for specifying whether annotations
       *        should be validate or not.
       *
@@ -915,7 +915,7 @@ public :
       * parser will try to resolve the entity on its own.  When this option
       * is set to true, the parser will not attempt to resolve the entity
       * when the resolveEntity method returns NULL.
-      *    
+      *
       * The parser's default state is false
       *
       * @param newValue The state to set
@@ -926,7 +926,7 @@ public :
 
     /** Set the 'skip DTD validation' flag
       *
-      * This method gives users the option to skip DTD validation only when 
+      * This method gives users the option to skip DTD validation only when
       * schema validation is on (i.e. when performing validation,  we will
       * ignore the DTD, except for entities, when schema validation is enabled).
       *
@@ -1652,8 +1652,8 @@ public :
         , const XMLCh* const                errorText
         , const XMLCh* const                systemId
         , const XMLCh* const                publicId
-        , const unsigned long               lineNum
-        , const unsigned long               colNum
+        , const XMLFileLoc                  lineNum
+        , const XMLFileLoc                  colNum
     );
 
     /**
@@ -1720,7 +1720,7 @@ public :
       *
       * This method allows a user installed entity handler to further
       * process any pointers to external entities. The applications can
-      * implement 'redirection' via this callback.  
+      * implement 'redirection' via this callback.
       *
       * @param resourceIdentifier An object containing the type of
       *        resource to be resolved and the associated data members

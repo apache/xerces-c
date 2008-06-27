@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,10 +41,10 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the attribute list interface
     // -----------------------------------------------------------------------
-    virtual unsigned int getLength() const;
-    virtual const XMLCh* getName(const unsigned int index) const;
-    virtual const XMLCh* getType(const unsigned int index) const;
-    virtual const XMLCh* getValue(const unsigned int index) const;
+    virtual XMLSize_t getLength() const;
+    virtual const XMLCh* getName(const XMLSize_t index) const;
+    virtual const XMLCh* getType(const XMLSize_t index) const;
+    virtual const XMLCh* getValue(const XMLSize_t index) const;
     virtual const XMLCh* getType(const XMLCh* const name) const;
     virtual const XMLCh* getValue(const XMLCh* const name) const;
     virtual const XMLCh* getValue(const char* const name) const;
@@ -56,7 +56,7 @@ public :
     void setVector
     (
         const   RefVectorOf<XMLAttr>* const srcVec
-        , const unsigned int                count
+        , const XMLSize_t                   count
         , const bool                        adopt = false
     );
 
@@ -87,7 +87,7 @@ private :
     //      The vector that provides the backing for the list.
     // -----------------------------------------------------------------------
     bool                        fAdopt;
-    unsigned int                fCount;
+    XMLSize_t                   fCount;
     const RefVectorOf<XMLAttr>* fVector;
 };
 
