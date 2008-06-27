@@ -610,6 +610,24 @@ XSerializeEngine& XSerializeEngine::operator>>(bool& b)
     return *this; 
 }
 
+XSerializeEngine& XSerializeEngine::operator<<(unsigned long long t)
+{
+    checkAndFlushBuffer(sizeof(t));
+
+    memcpy(fBufCur, &t, sizeof(t));
+    fBufCur += sizeof(t);
+    return *this; 
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(unsigned long long& t)
+{
+    checkAndFillBuffer(sizeof(t));
+
+    memcpy(&t, fBufCur, sizeof(t));
+    fBufCur += sizeof(t); 
+    return *this; 
+}
+
 XSerializeEngine& XSerializeEngine::operator<<(char ch)
 { 
     return XSerializeEngine::operator<<((XMLByte)ch); 

@@ -80,11 +80,11 @@ MemoryManager* XMLString::fgMemoryManager = 0;
 // ---------------------------------------------------------------------------
 //  XMLString: Public static methods
 // ---------------------------------------------------------------------------
-void XMLString::binToText(  const   unsigned long   toFormat
-                            ,       char* const     toFill
-                            , const XMLSize_t       maxChars
-                            , const unsigned int    radix
-                            , MemoryManager* const  manager)
+void XMLString::binToText(  const   unsigned long long   toFormat
+                            ,       char* const          toFill
+                            , const XMLSize_t            maxChars
+                            , const unsigned int         radix
+                            , MemoryManager* const       manager)
 {
     static const char digitList[16] =
     {
@@ -107,7 +107,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
-    unsigned int tmpVal = toFormat;
+    unsigned long long tmpVal = toFormat;
 
     //
     //  Convert into a temp buffer that we know is large enough. This avoids
@@ -136,7 +136,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal & 0xFUL);
+            const unsigned long long charInd = (tmpVal & 0xFUL);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal >>= 4;
         }
@@ -145,7 +145,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal % radix);
+            const unsigned long long charInd = (tmpVal % radix);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal /= radix;
         }
@@ -170,14 +170,51 @@ void XMLString::binToText(  const   unsigned long   toFormat
     toFill[outIndex] = char(0);
 }
 
+void XMLString::binToText(  const   unsigned long   toFormat
+                            ,       char* const     toFill
+                            , const XMLSize_t       maxChars
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
+{
+    // Just call the unsigned long long version
+    binToText((unsigned long long)toFormat, toFill, maxChars, radix, manager);
+}
+
 void XMLString::binToText(  const   unsigned int    toFormat
                             ,       char* const     toFill
                             , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-    // Just call the unsigned long version
-    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
+    // Just call the unsigned long long version
+    binToText((unsigned long long)toFormat, toFill, maxChars, radix, manager);
+}
+
+void XMLString::binToText(  const   long long       toFormat
+                            ,       char* const     toFill
+                            , const XMLSize_t       maxChars
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
+{
+    //
+    //  If it's negative, then put a negative sign into the output and flip
+    //  the sign of the local temp value.
+    //
+    XMLSize_t startInd = 0;
+    unsigned long long actualVal;
+    if (toFormat < 0)
+    {
+        toFill[0] = '-';
+        startInd++;
+        actualVal = (unsigned long long)(toFormat * -1);
+    }
+     else
+    {
+        actualVal = (unsigned long long)(toFormat);
+    }
+
+    // And now call the unsigned long long version
+    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   long            toFormat
@@ -186,25 +223,8 @@ void XMLString::binToText(  const   long            toFormat
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-    //
-    //  If its negative, then put a negative sign into the output and flip
-    //  the sign of the local temp value.
-    //
-    XMLSize_t startInd = 0;
-    unsigned long actualVal;
-    if (toFormat < 0)
-    {
-        toFill[0] = '-';
-        startInd++;
-        actualVal = (unsigned long)(toFormat * -1);
-    }
-     else
-    {
-        actualVal = (unsigned long)(toFormat);
-    }
-
-    // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
+    // Just call the long long version
+    binToText((long long)toFormat, toFill, maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   int             toFormat
@@ -213,25 +233,8 @@ void XMLString::binToText(  const   int             toFormat
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-    //
-    //  If its negative, then put a negative sign into the output and flip
-    //  the sign of the local temp value.
-    //
-    XMLSize_t startInd = 0;
-    unsigned long actualVal;
-    if (toFormat < 0)
-    {
-        toFill[0] = '-';
-        startInd++;
-        actualVal = (unsigned long)(toFormat * -1);
-    }
-     else
-    {
-        actualVal = (unsigned long)(toFormat);
-    }
-
-    // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
+    // Just call the long long version
+    binToText((long long)toFormat, toFill, maxChars, radix, manager);
 }
 
 
@@ -713,11 +716,11 @@ bool XMLString::isHex(XMLCh const theChar)
 // ---------------------------------------------------------------------------
 //  Wide char versions of most of the string methods
 // ---------------------------------------------------------------------------
-void XMLString::binToText(  const   unsigned long   toFormat
-                            ,       XMLCh* const    toFill
-                            , const XMLSize_t       maxChars
-                            , const unsigned int    radix
-                            , MemoryManager* const  manager)
+void XMLString::binToText(  const   unsigned long long   toFormat
+                            ,       XMLCh* const         toFill
+                            , const XMLSize_t            maxChars
+                            , const unsigned int         radix
+                            , MemoryManager* const       manager)
 {
     static const XMLCh digitList[16] =
     {
@@ -741,7 +744,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
-    unsigned int tmpVal = toFormat;
+    unsigned long long tmpVal = toFormat;
 
     //
     //  Convert into a temp buffer that we know is large enough. This avoids
@@ -770,7 +773,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal & 0xFUL);
+            const unsigned long long charInd = (tmpVal & 0xFUL);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal >>= 4;
         }
@@ -779,7 +782,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal % radix);
+            const unsigned long long charInd = (tmpVal % radix);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal /= radix;
         }
@@ -804,14 +807,51 @@ void XMLString::binToText(  const   unsigned long   toFormat
     toFill[outIndex] = chNull;
 }
 
+void XMLString::binToText(  const   unsigned long   toFormat
+                            ,       XMLCh* const    toFill
+                            , const XMLSize_t       maxChars
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
+{
+        // Just call the unsigned long long version
+    binToText((unsigned long long)toFormat, toFill, maxChars, radix, manager);
+}
+
 void XMLString::binToText(  const   unsigned int    toFormat
                             ,       XMLCh* const    toFill
                             , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-    // Just call the unsigned long version
-    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
+    // Just call the unsigned long long version
+    binToText((unsigned long long)toFormat, toFill, maxChars, radix, manager);
+}
+
+void XMLString::binToText(  const   long long       toFormat
+                            ,       XMLCh* const    toFill
+                            , const XMLSize_t       maxChars
+                            , const unsigned int    radix
+                            , MemoryManager* const  manager)
+{
+    //
+    //  If its negative, then put a negative sign into the output and flip
+    //  the sign of the local temp value.
+    //
+    XMLSize_t startInd = 0;
+    unsigned long long actualVal;
+    if (toFormat < 0)
+    {
+        toFill[0] = chDash;
+        startInd++;
+        actualVal = (unsigned long long)(toFormat * -1);
+    }
+     else
+    {
+        actualVal = (unsigned long long)(toFormat);
+    }
+
+    // And now call the unsigned long long version
+    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   long            toFormat
@@ -820,25 +860,8 @@ void XMLString::binToText(  const   long            toFormat
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-    //
-    //  If its negative, then put a negative sign into the output and flip
-    //  the sign of the local temp value.
-    //
-    XMLSize_t startInd = 0;
-    unsigned long actualVal;
-    if (toFormat < 0)
-    {
-        toFill[0] = chDash;
-        startInd++;
-        actualVal = (unsigned long)(toFormat * -1);
-    }
-     else
-    {
-        actualVal = (unsigned long)(toFormat);
-    }
-
-    // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
+    // Just call the long long version
+    binToText((long long)toFormat, toFill, maxChars, radix, manager);
 }
 
 void XMLString::binToText(  const   int             toFormat
@@ -847,25 +870,8 @@ void XMLString::binToText(  const   int             toFormat
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-    //
-    //  If its negative, then put a negative sign into the output and flip
-    //  the sign of the local temp value.
-    //
-    XMLSize_t startInd = 0;
-    unsigned long actualVal;
-    if (toFormat < 0)
-    {
-        toFill[0] = chDash;
-        startInd++;
-        actualVal = (unsigned long)(toFormat * -1);
-    }
-     else
-    {
-        actualVal = (unsigned long)(toFormat);
-    }
-
-    // And now call the unsigned long version
-    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
+    // Just call the long long version
+    binToText((long long)toFormat, toFill, maxChars, radix, manager);
 }
 
 
@@ -910,7 +916,7 @@ int XMLString::compareIStringASCII(  const   XMLCh* const    str1
     XMLCh ch1;
     XMLCh ch2;
 
-    while (true) {
+    for (;;) {
         if (*psz1 >= chLatin_A && *psz1 <= chLatin_Z)
             ch1 = *psz1 - chLatin_A + chLatin_a;
         else
@@ -992,7 +998,7 @@ int XMLString::compareString(   const   XMLCh* const    str1
         }
     }
 
-    while (true)
+    for (;;)
     {
         // If an inequality, then return the difference
         if (*psz1 != *psz2)

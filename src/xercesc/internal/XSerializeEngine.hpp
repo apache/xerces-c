@@ -487,6 +487,7 @@ public:
            XSerializeEngine& operator<<(unsigned int);
            XSerializeEngine& operator<<(long);
            XSerializeEngine& operator<<(unsigned long);
+           XSerializeEngine& operator<<(unsigned long long);
            XSerializeEngine& operator<<(float);
            XSerializeEngine& operator<<(double);
            XSerializeEngine& operator<<(bool);
@@ -507,6 +508,7 @@ public:
            XSerializeEngine& operator>>(unsigned int&);
            XSerializeEngine& operator>>(long&);
            XSerializeEngine& operator>>(unsigned long&);
+           XSerializeEngine& operator>>(unsigned long long&);
            XSerializeEngine& operator>>(float&);
            XSerializeEngine& operator>>(double&);
            XSerializeEngine& operator>>(bool&);
