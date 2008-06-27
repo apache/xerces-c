@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   * <code>
   * public void startElement (String uri, String localpart, String qName, Attributes atts) {<br>
-  * &nbsp;for (int i = 0; i < atts.getLength(); i++) {<br>
+  * &nbsp;for (XMLSize_t i = 0; i < atts.getLength(); i++) {<br>
   * &nbsp;&nbsp;String Qname = atts.getQName(i);<br>
   * &nbsp;&nbsp;String URI   = atts.getURI(i)<br>
   * &nbsp;&nbsp;String local = atts.GetLocalName(i)<br>
@@ -110,7 +110,7 @@ public:
     *
     * @return The number of attributes in the list.
     */
-    virtual unsigned int getLength() const = 0;
+    virtual XMLSize_t getLength() const = 0;
 
   /**
     * Return the namespace URI of an attribute in this list (by position).
@@ -125,7 +125,7 @@ public:
     *         if the index is out of range.
     * @see #getLength
     */
-	virtual const XMLCh* getURI(const unsigned int index) const = 0;
+    virtual const XMLCh* getURI(const XMLSize_t index) const = 0;
 
   /**
     * Return the local name of an attribute in this list (by position).
@@ -140,7 +140,7 @@ public:
     *         if the index is out of range.
     * @see #getLength
     */
-    virtual const XMLCh* getLocalName(const unsigned int index) const = 0;
+    virtual const XMLCh* getLocalName(const XMLSize_t index) const = 0;
 
   /**
     * Return the qName of an attribute in this list (by position).
@@ -155,7 +155,7 @@ public:
     *         if the index is out of range.
     * @see #getLength
     */
-    virtual const XMLCh* getQName(const unsigned int index) const = 0;
+    virtual const XMLCh* getQName(const XMLSize_t index) const = 0;
 
   /**
     * Return the type of an attribute in the list (by position).
@@ -178,7 +178,7 @@ public:
     * @see #getLength
     * @see #getType
     */
-    virtual const XMLCh* getType(const unsigned int index) const = 0;
+    virtual const XMLCh* getType(const XMLSize_t index) const = 0;
 
   /**
     * Return the value of an attribute in the list (by position).
@@ -193,11 +193,25 @@ public:
     * @see #getLength
     * @see #getValue
     */
-    virtual const XMLCh* getValue(const unsigned int index) const = 0;
+    virtual const XMLCh* getValue(const XMLSize_t index) const = 0;
 
     ////////////////////////////////////////////////////////////////////
     // Name-based query.
     ////////////////////////////////////////////////////////////////////
+
+   /**
+     * Look up the index of an attribute by Namespace name. Non-standard
+     * extension.
+     *
+     * @param uri The Namespace URI, or the empty string if
+     *        the name has no Namespace URI.
+     * @param localPart The attribute's local name.
+     * @param index Reference to the variable where the index will be stored.
+     * @return true if the attribute is found and false otherwise.
+     */
+    virtual bool getIndex(const XMLCh* const uri,
+                          const XMLCh* const localPart,
+                          XMLSize_t& index) const = 0 ;
 
    /**
      * Look up the index of an attribute by Namespace name.
@@ -208,7 +222,19 @@ public:
      * @return The index of the attribute, or -1 if it does not
      *         appear in the list.
      */
-	virtual int getIndex(const XMLCh* const uri, const XMLCh* const localPart ) const = 0 ;
+    virtual int getIndex(const XMLCh* const uri,
+                         const XMLCh* const localPart ) const = 0 ;
+
+    /**
+     * Look up the index of an attribute by XML 1.0 qualified name.
+     * Non-standard extension.
+     *
+     * @param qName The qualified (prefixed) name.
+     * @param index Reference to the variable where the index will be stored.
+     * @return true if the attribute is found and false otherwise.
+     */
+    virtual bool getIndex(const XMLCh* const qName,
+                          XMLSize_t& index) const = 0 ;
 
    /**
      * Look up the index of an attribute by XML 1.0 qualified name.
@@ -217,7 +243,7 @@ public:
      * @return The index of the attribute, or -1 if it does not
      *         appear in the list.
      */
-	virtual int getIndex(const XMLCh* const qName ) const = 0 ;
+    virtual int getIndex(const XMLCh* const qName ) const = 0 ;
 
    /**
      * Look up an attribute's type by Namespace name.
@@ -231,7 +257,8 @@ public:
      *         attribute is not in the list or if Namespace
      *         processing is not being performed.
      */
-	virtual const XMLCh* getType(const XMLCh* const uri, const XMLCh* const localPart ) const = 0 ;
+    virtual const XMLCh* getType(const XMLCh* const uri,
+                                 const XMLCh* const localPart ) const = 0 ;
 
    /**
      * Look up an attribute's type by XML 1.0 qualified name.
@@ -256,7 +283,7 @@ public:
      * @return The attribute value as a string, or null if the
      *         attribute is not in the list.
      */
-	virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const = 0 ;
+    virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const = 0 ;
 
    /**
      * Look up an attribute's value by XML 1.0 qualified name.

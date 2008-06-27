@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -113,7 +113,7 @@ XMLValidator* SAX2XMLFilterImpl::getValidator() const
 // ---------------------------------------------------------------------------
 //  SAX2XMLReader Interface
 // ---------------------------------------------------------------------------
-int SAX2XMLFilterImpl::getErrorCount() const
+XMLSize_t SAX2XMLFilterImpl::getErrorCount() const
 {
     if(fParentReader)
         return fParentReader->getErrorCount();
@@ -224,7 +224,7 @@ void* SAX2XMLFilterImpl::getProperty(const XMLCh* const name) const
 //  SAX2XMLFilterImpl: Grammar preparsing
 // ---------------------------------------------------------------------------
 Grammar* SAX2XMLFilterImpl::loadGrammar(const char* const systemId,
-                                        const short grammarType,
+                                        const Grammar::GrammarType grammarType,
                                         const bool toCache)
 {
     if(fParentReader)
@@ -233,7 +233,7 @@ Grammar* SAX2XMLFilterImpl::loadGrammar(const char* const systemId,
 }
 
 Grammar* SAX2XMLFilterImpl::loadGrammar(const XMLCh* const systemId,
-                                        const short grammarType,
+                                        const Grammar::GrammarType grammarType,
                                         const bool toCache)
 {
     if(fParentReader)
@@ -242,7 +242,7 @@ Grammar* SAX2XMLFilterImpl::loadGrammar(const XMLCh* const systemId,
 }
 
 Grammar* SAX2XMLFilterImpl::loadGrammar(const InputSource& source,
-                                        const short grammarType,
+                                        const Grammar::GrammarType grammarType,
                                         const bool toCache)
 {
     if(fParentReader)
@@ -414,4 +414,3 @@ void SAX2XMLFilterImpl::resetErrors()
 }
 
 XERCES_CPP_NAMESPACE_END
-

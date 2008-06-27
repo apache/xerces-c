@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -37,7 +38,6 @@ class InputSource;
 class LexicalHandler;
 class DeclHandler;
 class XMLDocumentHandler;
-class Grammar;
 
 class SAX2_EXPORT SAX2XMLReader
 {
@@ -125,16 +125,16 @@ public:
       */
     virtual ErrorHandler* getErrorHandler() const = 0 ;
 
-	/**
-     * Query the current state of any feature in a SAX2 XMLReader.
-	  *
-	  * @param name The unique identifier (URI) of the feature being set.
-	  * @return The current state of the feature.
-     * @exception SAXNotRecognizedException If the requested feature is not known.
-	  */
-	virtual bool getFeature(const XMLCh* const name) const = 0;
+    /**
+      * Query the current state of any feature in a SAX2 XMLReader.
+      *
+      * @param name The unique identifier (URI) of the feature being set.
+      * @return The current state of the feature.
+      * @exception SAXNotRecognizedException If the requested feature is not known.
+      */
+    virtual bool getFeature(const XMLCh* const name) const = 0;
 
-	/**
+   /**
      * Query the current value of a property in a SAX2 XMLReader.
      *
      * The parser owns the returned pointer.  The memory allocated for
@@ -240,9 +240,9 @@ public:
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
     * <br>http://apache.org/xml/features/validating/load-schema (default: true)
-    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)    
+    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
     * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
-    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)   
+    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)
     *
     * @param name The unique identifier (URI) of the feature.
     * @param value The requested state of the feature (true or false).
@@ -354,7 +354,7 @@ public:
     (
         const   char* const     systemId
     ) = 0;
-	
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -441,7 +441,7 @@ public:
       * @return number of errors encountered during the latest
       *			parse operation.
       */
-    virtual int getErrorCount() const = 0 ;
+    virtual XMLSize_t getErrorCount() const = 0 ;
 
     /**
       * This method returns the state of the parser's
@@ -513,15 +513,15 @@ public:
     /** @name Setter Methods (Xerces-C specific) */
     //@{
     /**
-	  * This method is used to set a validator.
-	  *
-	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
-	  * deleted when the XMLReader is destroyed.</b>
-	  *
-	  * @param valueToAdopt A pointer to the validator that the reader should use.
-	  *
-	  */
-	virtual void setValidator(XMLValidator* valueToAdopt) = 0;
+      * This method is used to set a validator.
+      *
+      * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+      * deleted when the XMLReader is destroyed.</b>
+      *
+      * @param valueToAdopt A pointer to the validator that the reader should use.
+      *
+      */
+    virtual void setValidator(XMLValidator* valueToAdopt) = 0;
 
     /**
       * This method allows users to set the parser's behaviour when it
@@ -766,7 +766,7 @@ public:
       * @see InputSource#InputSource
       */
     virtual Grammar* loadGrammar(const InputSource& source,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false) = 0;
 
     /**
@@ -795,7 +795,7 @@ public:
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const XMLCh* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false) = 0;
 
     /**
@@ -823,7 +823,7 @@ public:
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const char* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false) = 0;
 
     /**
@@ -888,7 +888,7 @@ private :
 
 };
 
-inline void SAX2XMLReader::setInputBufferSize(const size_t /*bufferSize*/) 
+inline void SAX2XMLReader::setInputBufferSize(const size_t /*bufferSize*/)
 {
 }
 

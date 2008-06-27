@@ -275,7 +275,7 @@ XMLValidator* SAX2XMLReaderImpl::getValidator() const
 // ---------------------------------------------------------------------------
 //  SAX2XMLReader Interface
 // ---------------------------------------------------------------------------
-int SAX2XMLReaderImpl::getErrorCount() const
+XMLSize_t SAX2XMLReaderImpl::getErrorCount() const
 {
     return fScanner->getErrorCount();
 }
@@ -1515,7 +1515,7 @@ bool SAX2XMLReaderImpl::getDoSchema() const
 //  SAX2XMLReaderImpl: Grammar preparsing
 // ---------------------------------------------------------------------------
 Grammar* SAX2XMLReaderImpl::loadGrammar(const char* const systemId,
-                                        const short grammarType,
+                                        const Grammar::GrammarType grammarType,
                                         const bool toCache)
 {
     // Avoid multiple entrance
@@ -1541,7 +1541,7 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const char* const systemId,
 }
 
 Grammar* SAX2XMLReaderImpl::loadGrammar(const XMLCh* const systemId,
-                                        const short grammarType,
+                                        const Grammar::GrammarType grammarType,
                                         const bool toCache)
 {
     // Avoid multiple entrance
@@ -1567,7 +1567,7 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const XMLCh* const systemId,
 }
 
 Grammar* SAX2XMLReaderImpl::loadGrammar(const InputSource& source,
-                                        const short grammarType,
+                                        const Grammar::GrammarType grammarType,
                                         const bool toCache)
 {
     // Avoid multiple entrance

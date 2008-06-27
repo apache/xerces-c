@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,75 +38,94 @@ struct Attr
 class AttrList : public Attributes, public RefVectorOf<Attr>
 {
 public:
-    AttrList(unsigned count) : RefVectorOf<Attr>(count) {}
+    AttrList(XMLSize_t count) : RefVectorOf<Attr>(count) {}
 
-    virtual unsigned int getLength() const 
+    virtual XMLSize_t getLength() const
     {
         return size();
     }
 
-	virtual const XMLCh* getURI(const unsigned int index) const
+    virtual const XMLCh* getURI(const XMLSize_t index) const
     {
         return elementAt(index)->uri;
     }
-    virtual const XMLCh* getLocalName(const unsigned int index) const
+    virtual const XMLCh* getLocalName(const XMLSize_t index) const
     {
         return elementAt(index)->localPart;
     }
-    virtual const XMLCh* getQName(const unsigned int index) const
+    virtual const XMLCh* getQName(const XMLSize_t index) const
     {
         return elementAt(index)->qName;
     }
-    virtual const XMLCh* getType(const unsigned int index) const
+    virtual const XMLCh* getType(const XMLSize_t index) const
     {
         return elementAt(index)->attrType;
     }
-    virtual const XMLCh* getValue(const unsigned int index) const
+    virtual const XMLCh* getValue(const XMLSize_t index) const
     {
         return elementAt(index)->value;
     }
 
 
-	virtual int getIndex(const XMLCh* const uri, const XMLCh* const localPart ) const
+    virtual bool getIndex(const XMLCh* const uri,
+                          const XMLCh* const localPart,
+                          XMLSize_t& i) const
     {
-        for(unsigned int i=0;i<size();i++)
+        for(i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
-                return i;
-        return -1;
+                return true;
+        return false;
     }
-	virtual int getIndex(const XMLCh* const qName ) const
+
+    virtual int getIndex(const XMLCh* const uri, const XMLCh* const localPart ) const
     {
-        for(unsigned int i=0;i<size();i++)
-            if(XMLString::equals(elementAt(i)->qName,qName))
-                return i;
+        for(XMLSize_t i=0;i<size();i++)
+            if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
+                return (int)i;
         return -1;
     }
 
-	virtual const XMLCh* getType(const XMLCh* const uri, const XMLCh* const localPart ) const
+    virtual bool getIndex(const XMLCh* const qName, XMLSize_t& i) const
     {
-        for(unsigned int i=0;i<size();i++)
+        for(i=0;i<size();i++)
+            if(XMLString::equals(elementAt(i)->qName,qName))
+                return true;
+        return false;
+    }
+
+    virtual int getIndex(const XMLCh* const qName ) const
+    {
+        for(XMLSize_t i=0;i<size();i++)
+            if(XMLString::equals(elementAt(i)->qName,qName))
+                return (int)i;
+        return -1;
+    }
+
+    virtual const XMLCh* getType(const XMLCh* const uri, const XMLCh* const localPart ) const
+    {
+        for(XMLSize_t i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
                 return elementAt(i)->attrType;
         return NULL;
     }
     virtual const XMLCh* getType(const XMLCh* const qName) const
     {
-        for(unsigned int i=0;i<size();i++)
+        for(XMLSize_t i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->qName,qName))
                 return elementAt(i)->attrType;
         return NULL;
     }
 
-	virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const
+    virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const
     {
-        for(unsigned int i=0;i<size();i++)
+        for(XMLSize_t i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
                 return elementAt(i)->value;
         return NULL;
     }
     virtual const XMLCh* getValue(const XMLCh* const qName) const
     {
-        for(unsigned int i=0;i<size();i++)
+        for(XMLSize_t i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->qName,qName))
                 return elementAt(i)->value;
         return NULL;
@@ -130,14 +149,14 @@ SAX2SortAttributesFilter::~SAX2SortAttributesFilter()
 //  SAX2SortAttributesFilter: Overrides of the SAX2XMLFilter interface
 // ---------------------------------------------------------------------------
 void SAX2SortAttributesFilter::startElement(const   XMLCh* const    uri,
-									const   XMLCh* const    localname,
-									const   XMLCh* const    qname,
-                                    const   Attributes&		attributes)
+                                            const   XMLCh* const    localname,
+                                            const   XMLCh* const    qname,
+                                            const   Attributes&		attributes)
 {
     AttrList sortedList(attributes.getLength());
-    for(unsigned int i=0;i<attributes.getLength();i++)
+    for(XMLSize_t i=0;i<attributes.getLength();i++)
     {
-        unsigned int j;
+        XMLSize_t j;
         for(j=0;j<sortedList.getLength();j++)
         {
             if(XMLString::compareString(sortedList.elementAt(j)->qName,attributes.getQName(i))>=0)

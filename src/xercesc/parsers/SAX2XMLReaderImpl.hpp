@@ -481,7 +481,7 @@ public :
       * @return number of errors encountered during the latest
       *			parse operation.
       */
-    virtual int getErrorCount() const ;
+    virtual XMLSize_t getErrorCount() const ;
 
     /**
       * This method returns the state of the parser's
@@ -804,7 +804,7 @@ public :
       * @see InputSource#InputSource
       */
     virtual Grammar* loadGrammar(const InputSource& source,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false);
 
     /**
@@ -831,7 +831,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const XMLCh* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false);
 
     /**
@@ -857,7 +857,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     virtual Grammar* loadGrammar(const char* const systemId,
-                                 const short grammarType,
+                                 const Grammar::GrammarType grammarType,
                                  const bool toCache = false);
 
     /**
