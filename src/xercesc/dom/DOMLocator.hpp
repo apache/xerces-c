@@ -81,20 +81,20 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     /**
-     * Get the line number where the error occured, or -1 if there is
+     * Get the line number where the error occured, or 0 if there is
      * no line number available.
      *
      * @since DOM Level 3
      */
-    virtual XMLSize_t getLineNumber() const = 0;
+    virtual XMLFileLoc getLineNumber() const = 0;
 
     /**
-     * Get the column number where the error occured, or -1 if there
+     * Get the column number where the error occured, or 0 if there
      * is no column number available.
      *
      * @since DOM Level 3
      */
-    virtual XMLSize_t getColumnNumber() const = 0;
+    virtual XMLFileLoc getColumnNumber() const = 0;
 
     /**
      * Get the byte offset into the input source, or -1 if there is no byte offset available.

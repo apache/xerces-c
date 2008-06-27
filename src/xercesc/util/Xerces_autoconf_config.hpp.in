@@ -22,17 +22,21 @@
 //
 // There are two primary xerces configuration header files:
 //
-//	Xerces_autoconf_config.hpp	--  For configuration of items that must be accessable
-//									through public headers. This file has limited information
-//									and carefully works to avoid collision of macro names, etc.
+//	Xerces_autoconf_config.hpp
 //
-//									This file is included by XercesDefs.h. In the event
-//									of a non-configured platform, a similar header specific
-//									to the platform will be included instead.
+//      For configuration of items that must be accessable
+//	through public headers. This file has limited information
+//	and carefully works to avoid collision of macro names, etc.
 //
-//	config.h					--  Generalized autoconf header file, with much more
-//									information, used to supply configuration information
-//									for use in implementation files.
+//	This file is included by XercesDefs.h. In the event
+//	of a non-configured platform, a similar header specific
+//	to the platform will be included instead.
+//
+//	config.h					
+//
+//      Generalized autoconf header file, with much more
+//	information, used to supply configuration information
+//	for use in implementation files.
 //
 // For autoconf based builds, this header is configured from by the configure
 // script from the .in template file of the same name.
@@ -107,6 +111,10 @@ typedef XERCES_S32BIT_INT			XMLInt32;
 // ---------------------------------------------------------------------------
 typedef XERCES_U64BIT_INT			XMLFilePos;
 
+// ---------------------------------------------------------------------------
+//  XMLFileLoc is the type used to represent a file location (line/column).
+// ---------------------------------------------------------------------------
+typedef XERCES_U64BIT_INT			XMLFileLoc;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it is on in the build environment

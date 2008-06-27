@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,16 +25,20 @@
 //
 // There are two primary xerces configuration header files:
 //
-//	Xerces_autoconf_config.hpp	--  For configuration of items that must be accessable
-//									through public headers. This file has limited information
-//									and carefully works to avoid collision of macro names, etc.
+//	Xerces_autoconf_config.hpp
 //
-//									This file is included by XercesDefs.h.
-//									This version of the file is specific for Borland C++
-//									family of compilers
+//      For configuration of items that must be accessable
+//	through public headers. This file has limited information
+//	and carefully works to avoid collision of macro names, etc.
 //
-//	config.h					--  This file is not used with Borland C++; the macros
-//									it would specify are instead hardcoded in the makefiles
+//	This file is included by XercesDefs.h.
+//	This version of the file is specific for Borland C++
+//	family of compilers
+//
+//	config.h
+//
+//      This file is not used with Borland C++; the macros
+//	it would specify are instead hardcoded in the makefiles
 //
 
 #include <basetsd.h>
@@ -102,6 +106,10 @@ typedef XERCES_S32BIT_INT			XMLInt32;
 // ---------------------------------------------------------------------------
 typedef XERCES_U64BIT_INT			XMLFilePos;
 
+// ---------------------------------------------------------------------------
+//  XMLFileLoc is the type used to represent a file location (line/column).
+// ---------------------------------------------------------------------------
+typedef XERCES_U64BIT_INT			XMLFileLoc;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it is on in the build environment

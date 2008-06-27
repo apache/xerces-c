@@ -35,7 +35,6 @@
 #include "DOMElementImpl.hpp"
 #include "DOMErrorImpl.hpp"
 #include "DOMEntityReferenceImpl.hpp"
-#include "DOMLocatorImpl.hpp"
 #include "DOMNormalizer.hpp"
 #include "DOMTextImpl.hpp"
 

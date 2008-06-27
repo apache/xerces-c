@@ -45,8 +45,8 @@ public:
 
     DOMLocatorImpl
     (
-          const XMLSize_t lineNum
-        , const XMLSize_t columnNum
+          const XMLFileLoc lineNum
+        , const XMLFileLoc columnNum
         , DOMNode* const errorNode
         , const XMLCh* const uri
         , const XMLSSize_t offset = -1
@@ -59,16 +59,16 @@ public:
     //@}
 
     // DOMLocator interface
-    virtual XMLSize_t getLineNumber() const;
-    virtual XMLSize_t getColumnNumber() const;
+    virtual XMLFileLoc getLineNumber() const;
+    virtual XMLFileLoc getColumnNumber() const;
     virtual XMLFilePos getByteOffset() const;
     virtual XMLFilePos getUtf16Offset() const;
     virtual DOMNode* getRelatedNode() const;
     virtual const XMLCh* getURI() const;
 
     // Setter functions
-    void setLineNumber(const XMLSize_t lineNumber);
-    void setColumnNumber(const XMLSize_t columnNumber);
+    void setLineNumber(const XMLFileLoc lineNumber);
+    void setColumnNumber(const XMLFileLoc columnNumber);
     void setByteOffset(const XMLFilePos offset);
     void setUtf16Offset(const XMLFilePos offset);
     void setRelatedNode(DOMNode* const errorNode);
@@ -106,8 +106,8 @@ protected:
     //  fURI
     //      The uri where the error occured
     // -----------------------------------------------------------------------
-    XMLSize_t       fLineNum;
-    XMLSize_t       fColumnNum;
+    XMLFileLoc       fLineNum;
+    XMLFileLoc       fColumnNum;
     XMLFilePos      fByteOffset;
     XMLFilePos      fUtf16Offset;
     DOMNode*        fRelatedNode;
@@ -118,12 +118,12 @@ protected:
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Getter methods
 // ---------------------------------------------------------------------------
-inline XMLSize_t DOMLocatorImpl::getLineNumber() const
+inline XMLFileLoc DOMLocatorImpl::getLineNumber() const
 {
     return fLineNum;
 }
 
-inline XMLSize_t DOMLocatorImpl::getColumnNumber() const
+inline XMLFileLoc DOMLocatorImpl::getColumnNumber() const
 {
     return fColumnNum;
 }
@@ -152,12 +152,12 @@ inline const XMLCh* DOMLocatorImpl::getURI() const
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Setter methods
 // ---------------------------------------------------------------------------
-inline void DOMLocatorImpl::setLineNumber(const XMLSize_t lineNumber)
+inline void DOMLocatorImpl::setLineNumber(const XMLFileLoc lineNumber)
 {
     fLineNum = lineNumber;
 }
 
-inline void DOMLocatorImpl::setColumnNumber(const XMLSize_t columnNumber)
+inline void DOMLocatorImpl::setColumnNumber(const XMLFileLoc columnNumber)
 {
     fColumnNum = columnNumber;
 }

@@ -808,8 +808,8 @@ public:
      */
     virtual DOMElement *createElementNS(const XMLCh *namespaceURI,
                                         const XMLCh *qualifiedName,
-                                        const XMLSize_t lineNum,
-                                        const XMLSize_t columnNum) = 0;
+                                        const XMLFileLoc lineNum,
+                                        const XMLFileLoc columnNum) = 0;
     //@}
 
 };

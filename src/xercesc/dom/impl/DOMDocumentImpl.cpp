@@ -601,8 +601,8 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
 
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
                                               const XMLCh *qualifiedName,
-                                              const XMLSize_t lineNo,
-                                              const XMLSize_t columnNo)
+                                              const XMLFileLoc lineNo,
+                                              const XMLFileLoc columnNo)
 {
     if(!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
