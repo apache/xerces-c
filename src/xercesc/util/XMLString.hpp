@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -764,10 +764,10 @@ public:
     );
 
 
-    /** Tells if a string has any occurance of any character of another 
+    /** Tells if a string has any occurance of any character of another
       * string within itself
       * @param toSearch The string to be searched
-      * @param searchList The string from which characters to be searched for are drawn 
+      * @param searchList The string from which characters to be searched for are drawn
       * @return Returns the pointer to the location where the first occurrence of any
       * character from searchList is found,
       * else returns 0
@@ -778,10 +778,10 @@ public:
         , const XMLCh* const    searchList
     );
 
-    /** Tells if a string has any occurance of any character of another 
+    /** Tells if a string has any occurance of any character of another
       * string within itself
       * @param toSearch The string to be searched
-      * @param searchList The string from which characters to be searched for are drawn 
+      * @param searchList The string from which characters to be searched for are drawn
       * @return Returns the pointer to the location where the first occurrence of any
       * character from searchList is found,
       * else returns 0
@@ -887,7 +887,88 @@ public:
       */
     static void binToText
     (
-        const   unsigned long long  toFormat
+        const   unsigned int    toFormat
+        ,       char* const     toFill
+        , const XMLSize_t       maxChars
+        , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The number to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned int    toFormat
+        ,       XMLCh* const    toFill
+        , const XMLSize_t       maxChars
+        , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The number to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned long   toFormat
+        ,       char* const     toFill
+        , const XMLSize_t       maxChars
+        , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The number to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned long   toFormat
+        ,       XMLCh* const    toFill
+        , const XMLSize_t       maxChars
+        , const unsigned int    radix
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The number to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
+      * will be done
+      */
+    static void binToText
+    (
+        const   XMLUInt64           toFormat
         ,       char* const         toFill
         , const XMLSize_t           maxChars
         , const unsigned int        radix
@@ -907,12 +988,13 @@ public:
       */
     static void binToText
     (
-        const   unsigned long long  toFormat
+        const   XMLUInt64           toFormat
         ,       XMLCh* const        toFill
         , const XMLSize_t           maxChars
         , const unsigned int        radix
         , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
+#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 
     /** Converts binary data to a text string based a given radix
       *
@@ -927,7 +1009,7 @@ public:
       */
     static void binToText
     (
-        const   unsigned int    toFormat
+        const   int             toFormat
         ,       char* const     toFill
         , const XMLSize_t       maxChars
         , const unsigned int    radix
@@ -947,47 +1029,7 @@ public:
       */
     static void binToText
     (
-        const   unsigned int    toFormat
-        ,       XMLCh* const    toFill
-        , const XMLSize_t       maxChars
-        , const unsigned int    radix
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The number to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * @param manager The MemoryManager to use to allocate objects
-      * will be done
-      */
-    static void binToText
-    (
-        const   unsigned long   toFormat
-        ,       char* const     toFill
-        , const XMLSize_t       maxChars
-        , const unsigned int    radix
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The number to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * @param manager The MemoryManager to use to allocate objects
-      * will be done
-      */
-    static void binToText
-    (
-        const   unsigned long   toFormat
+        const   int             toFormat
         ,       XMLCh* const    toFill
         , const XMLSize_t       maxChars
         , const unsigned int    radix
@@ -1034,6 +1076,7 @@ public:
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The number to convert
@@ -1047,7 +1090,7 @@ public:
       */
     static void binToText
     (
-        const   long long       toFormat
+        const   XMLInt64        toFormat
         ,       char* const     toFill
         , const XMLSize_t       maxChars
         , const unsigned int    radix
@@ -1067,52 +1110,13 @@ public:
       */
     static void binToText
     (
-        const   long long       toFormat
+        const   XMLInt64        toFormat
         ,       XMLCh* const    toFill
         , const XMLSize_t       maxChars
         , const unsigned int    radix
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The number to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * @param manager The MemoryManager to use to allocate objects
-      * will be done
-      */
-    static void binToText
-    (
-        const   int             toFormat
-        ,       char* const     toFill
-        , const XMLSize_t       maxChars
-        , const unsigned int    radix
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The number to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * @param manager The MemoryManager to use to allocate objects
-      * will be done
-      */
-    static void binToText
-    (
-        const   int             toFormat
-        ,       XMLCh* const    toFill
-        , const XMLSize_t       maxChars
-        , const unsigned int    radix
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
-    );
+#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 
     /**
       * Converts a string of decimal chars to a binary value
@@ -1168,7 +1172,7 @@ public:
       * responsibility of the caller to delete it when not longer needed.
       * You can call XMLString::release to release this returned buffer.
       *
-      * @param toTranscode The string to be transcoded      
+      * @param toTranscode The string to be transcoded
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the transcoded string
       * @see   XMLString::release(XMLCh**, MemoryManager*)
@@ -1208,7 +1212,7 @@ public:
       * responsibility of the caller to delete it when not longer needed.
       * You can call XMLString::release to release this returned buffer.
       *
-      * @param toTranscode The string to be transcoded     
+      * @param toTranscode The string to be transcoded
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the transcoded string
       * @see   XMLString::release(char**, MemoryManager*)
@@ -1276,7 +1280,7 @@ public:
     static XMLCh* makeUName
     (
         const   XMLCh* const    pszURI
-        , const XMLCh* const    pszName      
+        , const XMLCh* const    pszName
     );
 
     /**
@@ -1368,7 +1372,7 @@ public:
 
 
     /** Remove character
-      * @param srcString The string 
+      * @param srcString The string
       * @param toRemove  The character needs to be removed from the string
       * @param dstBuffer The buffer containning the result
       */
@@ -1536,7 +1540,7 @@ inline bool XMLString::equals(   const XMLCh* str1
 
     if (str1 == 0 || str2 == 0)
         return ((!str1 || !*str1) && (!str2 || !*str2));
-    
+
     while (*str1)
         if(*str1++ != *str2++)  // they are different (or str2 is shorter and we hit the NULL)
             return false;
@@ -1570,7 +1574,7 @@ inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
 inline unsigned int XMLString::hash(   const   XMLCh* const    tohash
                                 , const unsigned int    hashModulus
                                 , MemoryManager* const)
-{  
+{
     assert(hashModulus);
 
     if (tohash == 0 || *tohash == 0)

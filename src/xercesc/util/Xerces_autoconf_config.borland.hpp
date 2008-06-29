@@ -54,7 +54,12 @@
 #define XERCES_U16BIT_INT   unsigned short
 #define XERCES_S32BIT_INT   INT32
 #define XERCES_U32BIT_INT   UINT32
+#define XERCES_U64BIT_INT   INT64
 #define XERCES_U64BIT_INT   UINT64
+
+#define XERCES_SIZEOF_INT   4
+#define XERCES_SIZEOF_LONG  4
+#define XERCES_SIZEOF_INT64 8
 
 #define XERCES_XMLCH_T      wchar_t
 
@@ -91,25 +96,28 @@ typedef XERCES_SSIZE_T				XMLSSize_t;
 typedef XERCES_XMLCH_T				XMLCh;
 
 // ---------------------------------------------------------------------------
-//  Define unsigned 16 and 32 bit integers
+//  Define unsigned 16, 32, and 64 bit integers
 // ---------------------------------------------------------------------------
 typedef XERCES_U16BIT_INT			XMLUInt16;
 typedef XERCES_U32BIT_INT			XMLUInt32;
+typedef XERCES_U64BIT_INT			XMLUInt64;
 
 // ---------------------------------------------------------------------------
-//  Define signed 32 bit integers
+//  Define signed 16, 32, and 64 bit integers
 // ---------------------------------------------------------------------------
+typedef XERCES_S16BIT_INT			XMLInt16;
 typedef XERCES_S32BIT_INT			XMLInt32;
+typedef XERCES_S64BIT_INT			XMLInt64;
 
 // ---------------------------------------------------------------------------
 //  XMLFilePos is the type used to represent a file position.
 // ---------------------------------------------------------------------------
-typedef XERCES_U64BIT_INT			XMLFilePos;
+typedef XMLUInt64			        XMLFilePos;
 
 // ---------------------------------------------------------------------------
 //  XMLFileLoc is the type used to represent a file location (line/column).
 // ---------------------------------------------------------------------------
-typedef XERCES_U64BIT_INT			XMLFileLoc;
+typedef XMLUInt64			        XMLFileLoc;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it is on in the build environment

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,9 +45,9 @@ class XMLUTIL_EXPORT XSerializeEngine
 public:
 
     enum { mode_Store
-         , mode_Load 
+         , mode_Load
     };
-    
+
 
     static const bool toReadBufferLen;
 
@@ -55,7 +55,7 @@ public:
 
     /***
       *
-      *  Destructor 
+      *  Destructor
       *
       ***/
     ~XSerializeEngine();
@@ -95,13 +95,13 @@ public:
       ***/
     XSerializeEngine(BinOutputStream*        outStream
                    , XMLGrammarPool* const   gramPool
-                   , XMLSize_t               bufSize = 8192 ); 
+                   , XMLSize_t               bufSize = 8192 );
 
     /***
       *
       *  When serialization, flush out the internal buffer
       *
-      *  Return: 
+      *  Return:
       *
       ***/
     void flush();
@@ -110,7 +110,7 @@ public:
       *
       *  Checking if the serialize engine is doing serialization(storing)
       *
-      *  Return: true, if it is 
+      *  Return: true, if it is
       *          false, otherwise
       *
       ***/
@@ -120,7 +120,7 @@ public:
       *
       *  Checking if the serialize engine is doing de-serialization(loading)
       *
-      *  Return: true, if it is 
+      *  Return: true, if it is
       *          false, otherwise
       *
       ***/
@@ -352,7 +352,7 @@ public:
        ***/
             inline void     readString(XMLCh*&        toRead
                                     , XMLSize_t&      bufferLen);
- 
+
      /***
        *
        *  Read a stream of XMLCh from the internal buffer.
@@ -403,7 +403,7 @@ public:
        ***/
             inline void       readString(XMLByte*&      toRead
                                        , XMLSize_t&     bufferLen);
- 
+
      /***
        *
        *  Read a stream of XMLByte from the internal buffer.
@@ -457,7 +457,7 @@ public:
       *  Param
       *    objectPtr:     the template object pointer newly instantiated
       *
-      *  Return:  
+      *  Return:
       *
       ***/
            void           registerObject(void* const templateObjectToRegister);
@@ -473,9 +473,9 @@ public:
 
     /***
       *
-      *  Insertion operators for 
+      *  Insertion operators for
       *     . basic Xerces data types
-      *     . built-in types 
+      *     . built-in types
       *
       ***/
            XSerializeEngine& operator<<(XMLByte);
@@ -487,16 +487,19 @@ public:
            XSerializeEngine& operator<<(unsigned int);
            XSerializeEngine& operator<<(long);
            XSerializeEngine& operator<<(unsigned long);
-           XSerializeEngine& operator<<(unsigned long long);
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+           XSerializeEngine& operator<<(XMLInt64);
+           XSerializeEngine& operator<<(XMLUInt64);
+#endif
            XSerializeEngine& operator<<(float);
            XSerializeEngine& operator<<(double);
            XSerializeEngine& operator<<(bool);
 
     /***
       *
-      *  Extraction operators for 
+      *  Extraction operators for
       *     . basic Xerces data types
-      *     . built-in types 
+      *     . built-in types
       *
       ***/
            XSerializeEngine& operator>>(XMLByte&);
@@ -508,7 +511,10 @@ public:
            XSerializeEngine& operator>>(unsigned int&);
            XSerializeEngine& operator>>(long&);
            XSerializeEngine& operator>>(unsigned long&);
-           XSerializeEngine& operator>>(unsigned long long&);
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+           XSerializeEngine& operator>>(XMLInt64&);
+           XSerializeEngine& operator>>(XMLUInt64&);
+#endif
            XSerializeEngine& operator>>(float&);
            XSerializeEngine& operator>>(double&);
            XSerializeEngine& operator>>(bool&);
@@ -518,17 +524,17 @@ public:
       *  Getters
       *
       ***/
-    inline 
-    XMLSize_t       getBufSize()    const; 
+    inline
+    XMLSize_t       getBufSize()    const;
 
-    inline 
-    XMLSize_t       getBufCur()     const; 
+    inline
+    XMLSize_t       getBufCur()     const;
 
-    inline 
-    XMLSize_t       getBufCurAccumulated()     const; 
+    inline
+    XMLSize_t       getBufCurAccumulated()     const;
 
-    inline 
-    unsigned long   getBufCount()    const; 
+    inline
+    unsigned long   getBufCount()    const;
 
     void                  trace(char*)     const;
 
@@ -555,9 +561,9 @@ private:
       ***/
            XSerializable* lookupLoadPool(XSerializedObjectId_t objectTag) const;
            void           addLoadPool(void* const objectPtr);
-   
+
     /***
-      *   
+      *
       *    Intenal Buffer Operations
       *
       ***/
@@ -574,7 +580,7 @@ private:
     inline void           resetBuffer();
 
     /***
-      *   
+      *
       *    Helper
       *
       ***/
@@ -606,17 +612,17 @@ private:
     // -------------------------------------------------------------------------------
     //  data
     //
-    //  fStoreLoad: 
+    //  fStoreLoad:
     //               Indicator: storing(serialization) or loading(de-serialization)
     //
     //  fStorerLevel:
-    //              The level of the serialize engine which created the binary 
+    //              The level of the serialize engine which created the binary
     //              stream that this serialize engine is loading
     //
     //              It is set by GrammarPool when loading
     //
     //  fGrammarPool:
-    //               Thw owning GrammarPool which instantiate this SerializeEngine 
+    //               Thw owning GrammarPool which instantiate this SerializeEngine
     //               instance
     //
     //  fInputStream:
@@ -624,14 +630,14 @@ private:
     //               by client application, not owned.
     //
     //  fOutputStream:
-    //               Binary stream to write to (serialization), provided 
+    //               Binary stream to write to (serialization), provided
     //               by client application, not owned.
     //
     //  fBufSize:
     //               The size of the internal buffer
     //
     //  fBufStart/fBufEnd:
-    //               
+    //
     //               The internal buffer.
     //  fBufEnd:
     //               one beyond the last valid cell
@@ -663,9 +669,9 @@ private:
     //buffer
     const XMLSize_t                        fBufSize;
 	XMLByte* const                         fBufStart;
-	XMLByte* const                         fBufEnd; 
+	XMLByte* const                         fBufEnd;
     XMLByte*                               fBufCur;
-    XMLByte*                               fBufLoadMax; 
+    XMLByte*                               fBufLoadMax;
 
 
 
@@ -678,7 +684,7 @@ private:
      *   value: XMLInteger*, owned
      *
      ***/
-    RefHashTableOf<XSerializedObjectId>*   fStorePool;  
+    RefHashTableOf<XSerializedObjectId>*   fStorePool;
 
     /***
      *   Vector for loading object, objects are NOT owned
@@ -687,7 +693,7 @@ private:
      *           XProtoType*
      *
      ***/
-    ValueVectorOf<void*>*                  fLoadPool;    
+    ValueVectorOf<void*>*                  fLoadPool;
 
     /***
      *   object counter
@@ -711,8 +717,8 @@ inline bool XSerializeEngine::isLoading() const
 inline XSerializeEngine& operator<<(XSerializeEngine&       serEng
                                   , XSerializable* const    serObj)
 {
-	serEng.write(serObj); 
-    return serEng; 
+	serEng.write(serObj);
+    return serEng;
 }
 
 inline void XSerializeEngine::ensureStoring() const
@@ -732,7 +738,7 @@ inline void XSerializeEngine::Assert(bool toEval
 {
     if (!toEval)
     {
-        ThrowXMLwithMemMgr(XSerializationException, toThrow, getMemoryManager());  
+        ThrowXMLwithMemMgr(XSerializationException, toThrow, getMemoryManager());
     }
 
 }
@@ -740,7 +746,7 @@ inline void XSerializeEngine::Assert(bool toEval
 inline void XSerializeEngine::readString(XMLCh*&        toRead
                                        , XMLSize_t&     bufferLen)
 {
-    XMLSize_t dummyDataLen;                
+    XMLSize_t dummyDataLen;
     readString(toRead, bufferLen, dummyDataLen);
 }
 
@@ -765,31 +771,31 @@ inline void XSerializeEngine::readString(XMLByte*&      toRead)
     readString(toRead, dummyBufferLen, dummyDataLen);
 }
 
-inline 
+inline
 XMLSize_t XSerializeEngine::getBufSize() const
 {
     return fBufSize;
 }
 
-inline 
+inline
 XMLSize_t XSerializeEngine::getBufCur() const
 {
     return (fBufCur-fBufStart);
 }
 
-inline 
+inline
 XMLSize_t XSerializeEngine::getBufCurAccumulated() const
 {
     return (fBufCount - (isStoring() ? 0: 1)) * fBufSize + (fBufCur-fBufStart);
 }
 
-inline 
+inline
 unsigned long XSerializeEngine::getBufCount() const
 {
     return fBufCount;
 }
 
-inline 
+inline
 unsigned short XSerializeEngine::getStorerLevel() const
 {
     return fStorerLevel;

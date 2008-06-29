@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ static const XSerializeEngine::XSerializedObjectId_t fgNullObjectTag  = 0;      
 static const XSerializeEngine::XSerializedObjectId_t fgNewClassTag    = 0xFFFFFFFF;  // indicating new class
 static const XSerializeEngine::XSerializedObjectId_t fgTemplateObjTag = 0xFFFFFFFE;  // indicating template object
 static const XSerializeEngine::XSerializedObjectId_t fgClassMask      = 0x80000000;  // indicates class tag
-static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFFFD;  
+static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFFFD;
 
 #define TEST_THROW_ARG1(condition, data, err_msg) \
 if (condition) \
@@ -111,7 +111,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
 ,fLoadPool( new (gramPool->getMemoryManager()) ValueVectorOf<void*>(29, gramPool->getMemoryManager(), false))
 ,fObjectCount(0)
 {
-    /*** 
+    /***
      *  initialize buffer from the inStream
      ***/
     fillBuffer();
@@ -151,7 +151,7 @@ void XSerializeEngine::flush()
 }
 
 // ---------------------------------------------------------------------------
-//  Storing 
+//  Storing
 // ---------------------------------------------------------------------------
 void XSerializeEngine::write(XSerializable* const objectToWrite)
 {
@@ -192,7 +192,7 @@ void XSerializeEngine::write(XProtoType* const protoType)
 	XSerializedObjectId_t objIndex = lookupStorePool((void*)protoType);
 
     if (objIndex)
-    {   
+    {
         //protoType seen in the store pool
         *this << (fgClassMask | objIndex);
 	}
@@ -208,7 +208,7 @@ void XSerializeEngine::write(XProtoType* const protoType)
 
 /***
  *
-***/ 
+***/
 void XSerializeEngine::write(const XMLCh* const toWrite
                            ,       XMLSize_t    writeLen)
 {
@@ -285,7 +285,7 @@ void XSerializeEngine::writeString(const XMLCh* const toWrite
                                  , const XMLSize_t    bufferLen
                                  , bool               toWriteBufLen)
 {
-    if (toWrite) 
+    if (toWrite)
     {
         if (toWriteBufLen)
             *this<<(unsigned long)bufferLen;
@@ -307,7 +307,7 @@ void XSerializeEngine::writeString(const XMLByte* const toWrite
                                  , bool                 toWriteBufLen)
 {
 
-    if (toWrite) 
+    if (toWrite)
     {
         if (toWriteBufLen)
             *this<<(unsigned long)bufferLen;
@@ -346,9 +346,9 @@ XSerializable* XSerializeEngine::read(XProtoType* const protoType)
 	{
 		// create the object from the prototype
 		objRet = protoType->fCreateObject(getMemoryManager());
-        Assert((objRet != 0), XMLExcepts::XSer_CreateObject_Fail);  
- 
-        // put it into load pool 
+        Assert((objRet != 0), XMLExcepts::XSer_CreateObject_Fail);
+
+        // put it into load pool
         addLoadPool(objRet);
 
         // de-serialize it
@@ -375,7 +375,7 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
 		*objectTagRet = obTag;
 		return false;
 	}
-    
+
 	if (obTag == fgNewClassTag)
 	{
         // what follows fgNewClassTag is the prototype object info
@@ -507,7 +507,7 @@ void XSerializeEngine::readString(XMLCh*&       toRead
     }
     else
     {
-        dataLen = bufferLen++;        
+        dataLen = bufferLen++;
     }
 
     toRead = (XMLCh*) getMemoryManager()->allocate(bufferLen * sizeof(XMLCh));
@@ -555,239 +555,259 @@ void XSerializeEngine::readString(XMLByte*&     toRead
 // ---------------------------------------------------------------------------
 
 XSerializeEngine& XSerializeEngine::operator<<(XMLCh xch)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(XMLCh)));
 
     alignBufCur(sizeof(XMLCh));
-    *(XMLCh*)fBufCur = xch; 
-    fBufCur += sizeof(XMLCh); 
-    return *this; 
+    *(XMLCh*)fBufCur = xch;
+    fBufCur += sizeof(XMLCh);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(XMLCh& xch)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(XMLCh)));
 
     alignBufCur(sizeof(XMLCh));
-    xch = *(XMLCh*)fBufCur; 
-    fBufCur += sizeof(XMLCh); 
-    return *this; 
+    xch = *(XMLCh*)fBufCur;
+    fBufCur += sizeof(XMLCh);
+    return *this;
 }
- 
+
 XSerializeEngine& XSerializeEngine::operator<<(XMLByte by)
-{ 
+{
     checkAndFlushBuffer(sizeof(XMLByte));
 
-    *(XMLByte*)fBufCur = by; 
-    fBufCur += sizeof(XMLByte); 
-    return *this; 
+    *(XMLByte*)fBufCur = by;
+    fBufCur += sizeof(XMLByte);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(XMLByte& by)
-{ 
+{
     checkAndFillBuffer(sizeof(XMLByte));
 
-    by = *(XMLByte*)fBufCur; 
-    fBufCur += sizeof(XMLByte); 
-    return *this; 
+    by = *(XMLByte*)fBufCur;
+    fBufCur += sizeof(XMLByte);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(bool b)
-{ 
+{
     checkAndFlushBuffer(sizeof(bool));
 
-    *(bool*)fBufCur = b; 
-    fBufCur += sizeof(bool); 
-    return *this; 
+    *(bool*)fBufCur = b;
+    fBufCur += sizeof(bool);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(bool& b)
-{ 
+{
     checkAndFillBuffer(sizeof(bool));
 
-    b = *(bool*)fBufCur; 
-    fBufCur += sizeof(bool); 
-    return *this; 
+    b = *(bool*)fBufCur;
+    fBufCur += sizeof(bool);
+    return *this;
 }
 
-XSerializeEngine& XSerializeEngine::operator<<(unsigned long long t)
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+XSerializeEngine& XSerializeEngine::operator<<(XMLInt64 t)
 {
     checkAndFlushBuffer(sizeof(t));
 
     memcpy(fBufCur, &t, sizeof(t));
     fBufCur += sizeof(t);
-    return *this; 
+    return *this;
 }
 
-XSerializeEngine& XSerializeEngine::operator>>(unsigned long long& t)
+XSerializeEngine& XSerializeEngine::operator>>(XMLInt64& t)
 {
     checkAndFillBuffer(sizeof(t));
 
     memcpy(&t, fBufCur, sizeof(t));
-    fBufCur += sizeof(t); 
-    return *this; 
+    fBufCur += sizeof(t);
+    return *this;
 }
 
+XSerializeEngine& XSerializeEngine::operator<<(XMLUInt64 t)
+{
+    checkAndFlushBuffer(sizeof(t));
+
+    memcpy(fBufCur, &t, sizeof(t));
+    fBufCur += sizeof(t);
+    return *this;
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(XMLUInt64& t)
+{
+    checkAndFillBuffer(sizeof(t));
+
+    memcpy(&t, fBufCur, sizeof(t));
+    fBufCur += sizeof(t);
+    return *this;
+}
+#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+
 XSerializeEngine& XSerializeEngine::operator<<(char ch)
-{ 
-    return XSerializeEngine::operator<<((XMLByte)ch); 
+{
+    return XSerializeEngine::operator<<((XMLByte)ch);
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(char& ch)
-{ 
-    return XSerializeEngine::operator>>((XMLByte&)ch); 
+{
+    return XSerializeEngine::operator>>((XMLByte&)ch);
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(short sh)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(short)));
 
     alignBufCur(sizeof(short));
-    *(short*)fBufCur = sh; 
-    fBufCur += sizeof(short); 
-    return *this; 
+    *(short*)fBufCur = sh;
+    fBufCur += sizeof(short);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(short& sh)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(short)));
 
     alignBufCur(sizeof(short));
-    sh = *(short*)fBufCur; 
-    fBufCur += sizeof(short); 
-    return *this; 
+    sh = *(short*)fBufCur;
+    fBufCur += sizeof(short);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(int i)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(int)));
 
     alignBufCur(sizeof(int));
-    *(int*)fBufCur = i; 
-    fBufCur += sizeof(int); 
-    return *this;     
+    *(int*)fBufCur = i;
+    fBufCur += sizeof(int);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(int& i)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(int)));
 
     alignBufCur(sizeof(int));
-    i = *(int*)fBufCur; 
-    fBufCur += sizeof(int); 
-    return *this; 
+    i = *(int*)fBufCur;
+    fBufCur += sizeof(int);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(unsigned int ui)
-{ 
+{
 
     checkAndFlushBuffer(calBytesNeeded(sizeof(unsigned int)));
 
     alignBufCur(sizeof(unsigned int));
-    *(unsigned int*)fBufCur = ui; 
-    fBufCur += sizeof(unsigned int); 
-    return *this; 
+    *(unsigned int*)fBufCur = ui;
+    fBufCur += sizeof(unsigned int);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(unsigned int& ui)
-{ 
+{
 
     checkAndFillBuffer(calBytesNeeded(sizeof(unsigned int)));
 
     alignBufCur(sizeof(unsigned int));
-    ui = *(unsigned int*)fBufCur; 
-    fBufCur += sizeof(unsigned int); 
-    return *this; 
+    ui = *(unsigned int*)fBufCur;
+    fBufCur += sizeof(unsigned int);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(long l)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(long)));
 
     alignBufCur(sizeof(long));
-    *(long*)fBufCur = l; 
-    fBufCur += sizeof(long); 
-    return *this; 
+    *(long*)fBufCur = l;
+    fBufCur += sizeof(long);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(long& l)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(long)));
 
     alignBufCur(sizeof(long));
-    l = *(long*)fBufCur; 
-    fBufCur += sizeof(long); 
-    return *this; 
+    l = *(long*)fBufCur;
+    fBufCur += sizeof(long);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(unsigned long ul)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(unsigned long)));
 
     alignBufCur(sizeof(unsigned long));
-    *(unsigned long*)fBufCur = ul; 
-    fBufCur += sizeof(unsigned long); 
-    return *this; 
+    *(unsigned long*)fBufCur = ul;
+    fBufCur += sizeof(unsigned long);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(unsigned long& ul)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(unsigned long)));
 
     alignBufCur(sizeof(unsigned long));
-    ul = *(unsigned long*)fBufCur; 
-    fBufCur += sizeof(unsigned long); 
-    return *this; 
+    ul = *(unsigned long*)fBufCur;
+    fBufCur += sizeof(unsigned long);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(float f)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(float)));
 
     alignBufCur(sizeof(float));
-    *(float*)fBufCur = *(float*)&f; 
-    fBufCur += sizeof(float); 
+    *(float*)fBufCur = *(float*)&f;
+    fBufCur += sizeof(float);
     return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(float& f)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(float)));
 
     alignBufCur(sizeof(float));
-    *(float*)&f = *(float*)fBufCur; 
-    fBufCur += sizeof(float); 
-    return *this; 
+    *(float*)&f = *(float*)fBufCur;
+    fBufCur += sizeof(float);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(double d)
-{ 
+{
     checkAndFlushBuffer(calBytesNeeded(sizeof(double)));
 
     alignBufCur(sizeof(double));
-    *(double*)fBufCur = *(double*)&d; 
-    fBufCur += sizeof(double); 
-    return *this; 
+    *(double*)fBufCur = *(double*)&d;
+    fBufCur += sizeof(double);
+    return *this;
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(double& d)
-{ 
+{
     checkAndFillBuffer(calBytesNeeded(sizeof(double)));
 
     alignBufCur(sizeof(double));
-    *(double*)&d = *(double*)fBufCur; 
-    fBufCur += sizeof(double); 
-    return *this; 
+    *(double*)&d = *(double*)fBufCur;
+    fBufCur += sizeof(double);
+    return *this;
 }
 
 // ---------------------------------------------------------------------------
 //  StorePool/LoadPool Opertions
 // ---------------------------------------------------------------------------
-XSerializeEngine::XSerializedObjectId_t 
+XSerializeEngine::XSerializedObjectId_t
 XSerializeEngine::lookupStorePool(void* const objToLookup) const
 {
     //0 indicating object is not in the StorePool
-    XSerializedObjectId* data = fStorePool->get(objToLookup);   
+    XSerializedObjectId* data = fStorePool->get(objToLookup);
     return (XSerializeEngine::XSerializedObjectId_t) (data ? data->getValue() : 0);
 
 }
@@ -855,15 +875,15 @@ void XSerializeEngine::pumpCount()
  *  Though client may need only miniBytesNeeded, we always request
  *  a full size reading from our inputStream.
  *
- *  Whatever possibly left in the buffer is abandoned, such as in 
- *  the case of CheckAndFillBuffer() 
+ *  Whatever possibly left in the buffer is abandoned, such as in
+ *  the case of CheckAndFillBuffer()
  *
  ***/
 void XSerializeEngine::fillBuffer()
 {
     ensureLoading();
     ensureLoadBuffer();
- 
+
     resetBuffer();
 
     XMLSize_t bytesRead = fInputStream->readBytes(fBufStart, fBufSize);
@@ -903,7 +923,7 @@ void XSerializeEngine::flushBuffer()
     ensureStoring();
     ensureStoreBuffer();
 
-    fOutputStream->writeBytes(fBufStart, fBufSize);   
+    fOutputStream->writeBytes(fBufStart, fBufSize);
     fBufCur = fBufStart;
 
     resetBuffer();
@@ -920,7 +940,7 @@ inline void XSerializeEngine::checkAndFlushBuffer(XMLSize_t bytesNeedToWrite)
                    )
 
     // fBufStart ... fBufCur ...fBufEnd
-    if ((fBufCur + bytesNeedToWrite) > fBufEnd) 
+    if ((fBufCur + bytesNeedToWrite) > fBufEnd)
         flushBuffer();
 }
 
@@ -997,7 +1017,7 @@ bool XSerializeEngine::needToStoreObject(void* const  templateObjectToWrite)
 
     XSerializedObjectId_t   objIndex = 0;
 
-	if (!templateObjectToWrite)  
+	if (!templateObjectToWrite)
 	{
 		*this << fgNullObjectTag; // null pointer
         return false;
@@ -1024,7 +1044,7 @@ bool XSerializeEngine::needToLoadObject(void**  templateObjectToRead)
 	XSerializedObjectId_t obTag;
 
     *this >> obTag;
-  
+
 	if (obTag == fgTemplateObjTag)
 	{
         /***
@@ -1103,4 +1123,3 @@ void XSerializeEngine::trace(char* /*funcName*/) const
 }
 
 XERCES_CPP_NAMESPACE_END
-
