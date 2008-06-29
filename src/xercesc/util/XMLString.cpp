@@ -294,7 +294,14 @@ void XMLString::binToText(  const   XMLInt64        toFormat
     {
         toFill[0] = '-';
         startInd++;
-        actualVal = (XMLUInt64)(toFormat * -1);
+        // Signed integers can represent one extra negative value
+        // compared to the positive values. If we simply do (v * -1)
+        // we will overflow on that extra value.
+        //
+        XMLInt64 v = toFormat;
+        v++;
+        actualVal = (XMLUInt64)(v * -1);
+        actualVal++;
     }
     else
         actualVal = (XMLUInt64)(toFormat);
@@ -324,7 +331,14 @@ void XMLString::binToText(  const   long            toFormat
     {
         toFill[0] = '-';
         startInd++;
-        actualVal = (unsigned long)(toFormat * -1);
+        // Signed integers can represent one extra negative value
+        // compared to the positive values. If we simply do (v * -1)
+        // we will overflow on that extra value.
+        //
+        long v = toFormat;
+        v++;
+        actualVal = (unsigned long)(v * -1);
+        actualVal++;
     }
      else
     {
@@ -1042,7 +1056,14 @@ void XMLString::binToText(  const   XMLInt64        toFormat
     {
         toFill[0] = chDash;
         startInd++;
-        actualVal = (XMLUInt64)(toFormat * -1);
+        // Signed integers can represent one extra negative value
+        // compared to the positive values. If we simply do (v * -1)
+        // we will overflow on that extra value.
+        //
+        XMLInt64 v = toFormat;
+        v++;
+        actualVal = (XMLUInt64)(v * -1);
+        actualVal++;
     }
      else
     {
@@ -1074,7 +1095,14 @@ void XMLString::binToText(  const   long            toFormat
     {
         toFill[0] = chDash;
         startInd++;
-        actualVal = (unsigned long)(toFormat * -1);
+        // Signed integers can represent one extra negative value
+        // compared to the positive values. If we simply do (v * -1)
+        // we will overflow on that extra value.
+        //
+        long v = toFormat;
+        v++;
+        actualVal = (unsigned long)(v * -1);
+        actualVal++;
     }
      else
     {
