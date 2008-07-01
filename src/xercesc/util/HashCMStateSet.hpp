@@ -62,14 +62,14 @@ inline HashCMStateSet::~HashCMStateSet()
 inline unsigned int HashCMStateSet::getHashVal(const void *const key, unsigned int mod
                                                , MemoryManager* const)
 {
-    const CMStateSet* const pkey = (const CMStateSet* const) key;
+    const CMStateSet* const pkey = (const CMStateSet*) key;
 	return ((pkey->hashCode()) % mod);
 }
 
 inline bool HashCMStateSet::equals(const void *const key1, const void *const key2)
 {
-    const CMStateSet* const pkey1 = (const CMStateSet* const) key1;
-    const CMStateSet* const pkey2 = (const CMStateSet* const) key2;
+    const CMStateSet* const pkey1 = (const CMStateSet*) key1;
+    const CMStateSet* const pkey2 = (const CMStateSet*) key2;
 
 	return (*pkey1==*pkey2);
 }

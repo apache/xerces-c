@@ -88,8 +88,8 @@ private:
 inline int XMLDouble::compareValues(const XMLDouble* const lValue
                                   , const XMLDouble* const rValue)
 {
-    return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
-                                                 (const XMLAbstractDoubleFloat* const) rValue 
+    return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat*) lValue,
+                                                 (const XMLAbstractDoubleFloat*) rValue 
                                                  , ((XMLAbstractDoubleFloat*)lValue)->getMemoryManager());
 }
 

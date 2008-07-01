@@ -149,35 +149,39 @@ RegularExpression::Context::Context(Context* src) :
     }
 }
 
-RegularExpression::Context& RegularExpression::Context::operator= (const RegularExpression::Context& other)
+RegularExpression::Context& RegularExpression::Context::operator=(const RegularExpression::Context& other)
 {
-    fStart=other.fStart;
-    fLimit=other.fLimit;
-    fLength=other.fLength;
-    fSize=other.fSize;
-    fStringMaxLen=other.fStringMaxLen;
-    fString=other.fString;
-    fOptions=other.fOptions;
-    if (fOffsets)
-        fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
-    fOffsets=0;
-    if (fAdoptMatch)
-        delete fMatch;
-    fMatch=0;
-    fAdoptMatch=false;
+    if (this != &other)
+    {
+        fStart=other.fStart;
+        fLimit=other.fLimit;
+        fLength=other.fLength;
+        fSize=other.fSize;
+        fStringMaxLen=other.fStringMaxLen;
+        fString=other.fString;
+        fOptions=other.fOptions;
+        if (fOffsets)
+            fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+        fOffsets=0;
+        if (fAdoptMatch)
+            delete fMatch;
+        fMatch=0;
+        fAdoptMatch=false;
 
-    fMemoryManager=other.fMemoryManager;
-    if(other.fOffsets)
-    {
-        fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
-        for (int i = 0; i< fSize; i++)
-            fOffsets[i] = other.fOffsets[i];
+        fMemoryManager=other.fMemoryManager;
+        if(other.fOffsets)
+        {
+            fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
+            for (int i = 0; i< fSize; i++)
+                fOffsets[i] = other.fOffsets[i];
+        }
+        if(other.fMatch)
+        {
+            fMatch=new Match(*other.fMatch);
+            fAdoptMatch=true;
+        }
     }
-    if(other.fMatch)
-    {
-        fMatch=new Match(*other.fMatch);
-        fAdoptMatch=true;
-    }
+
     return *this;
 }
 
@@ -753,7 +757,7 @@ void RegularExpression::allMatches(const XMLCh* const matchString, const XMLSize
     XMLSize_t matchStart = start;
     while(matchStart <= end) {
         XMLSize_t matchEnd = match(&context, fOperations, matchStart, 1);
-        if(matchEnd != -1) {
+        if(matchEnd != (XMLSize_t)-1) {
             context.fMatch->setStartPos(0, matchStart);
             context.fMatch->setEndPos(0, matchEnd);
 

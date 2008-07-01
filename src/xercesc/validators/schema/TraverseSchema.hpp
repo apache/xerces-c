@@ -510,7 +510,7 @@ private:
 
     void restoreSchemaInfo(SchemaInfo* const toRestore,
                            SchemaInfo::ListType const aListType = SchemaInfo::INCLUDE,
-                           const int saveScope = Grammar::TOP_LEVEL_SCOPE);
+                           const unsigned int saveScope = Grammar::TOP_LEVEL_SCOPE);
     void  popCurrentTypeNameStack();
 
     /**

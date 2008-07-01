@@ -1402,7 +1402,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // Create a new instance
     // -----------------------------------------------------------------------
     unsigned int previousCircularCheckIndex = fCircularCheckIndex;
-    int previousScope = fCurrentScope;
+    unsigned int previousScope = fCurrentScope;
 
     if (preProcessFlag) {
 
@@ -1629,7 +1629,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Process contents of global groups
     // ------------------------------------------------------------------
-    int saveScope = fCurrentScope;
+    unsigned int saveScope = fCurrentScope;
     Janitor<ContentSpecNode> specNode(0);
     XercesGroupInfo* saveGroupInfo = fCurrentGroupInfo;
 
@@ -4704,9 +4704,9 @@ bool TraverseSchema::retrieveNamespaceMapping(const DOMElement* const elem) {
 
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
     bool seenNS=false;
-    unsigned int attrCount = eltAttrs->getLength();
+    const XMLSize_t attrCount = eltAttrs->getLength();
 
-    for (unsigned int i = 0; i < attrCount; i++) {
+    for (XMLSize_t i = 0; i < attrCount; i++) {
 
         DOMNode* attribute = eltAttrs->item(i);
 
@@ -5089,7 +5089,7 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
 
         SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
         SchemaInfo* saveInfo = fSchemaInfo;
-        int                  saveScope = fCurrentScope;
+        unsigned int         saveScope = fCurrentScope;
 
         if (!XMLString::equals(uri, fTargetNSURIString) && (uri && *uri)) {
 
@@ -5381,7 +5381,7 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
     DatatypeValidator* dv = 0;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     SchemaInfo*          saveInfo = fSchemaInfo;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
 
     if (otherSchemaURI && *otherSchemaURI) {
 
@@ -5458,7 +5458,7 @@ TraverseSchema::getAttrDatatypeValidatorNS(const DOMElement* const elem,
     DatatypeValidator*   dv = getDatatypeValidator(typeURI, localPart);
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     SchemaInfo*          saveInfo = fSchemaInfo;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
 
     if (!XMLString::equals(typeURI, fTargetNSURIString)
         && (typeURI && *typeURI)) {
@@ -5521,7 +5521,7 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
     ComplexTypeInfo*     typeInfo = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
 
     fBuffer.set(typeURI);
     fBuffer.append(chComma);
@@ -5596,7 +5596,7 @@ TraverseSchema::getGlobalElemDecl(const DOMElement* const elem,
     SchemaElementDecl*   elemDecl = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
     unsigned int         uriId = fURIStringPool->addOrFind(nameURI);
 
     if (fSchemaInfo->getTargetNSURI() != (int) uriId)
@@ -5858,7 +5858,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
     SchemaInfo* saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     SchemaAttDef* refAttDef = 0;
-    int saveScope = fCurrentScope;
+    unsigned int saveScope = fCurrentScope;
 
     if (!XMLString::equals(uriStr, fTargetNSURIString)) {
 
@@ -6496,7 +6496,7 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
     ComplexTypeInfo*     baseComplexTypeInfo = 0;
     DatatypeValidator*   baseDTValidator = 0;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
 
     // check if the base type is from another schema
     if (!XMLString::equals(uriStr, fTargetNSURIString)) {
@@ -6941,7 +6941,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
 
 void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
                                        SchemaInfo::ListType const aListType,
-                                       const int saveScope) {
+                                       const unsigned int saveScope) {
 
 
     if (aListType == SchemaInfo::IMPORT) { // restore grammar info
@@ -7188,7 +7188,7 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
     XercesGroupInfo*     groupInfo = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
 
     //if from another target namespace
     if (!XMLString::equals(uriStr, fTargetNSURIString)) {
@@ -7288,7 +7288,7 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
     XercesAttGroupInfo*  attGroupInfo = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
-    int                  saveScope = fCurrentScope;
+    unsigned int         saveScope = fCurrentScope;
 
     if (!XMLString::equals(uriStr, fTargetNSURIString)) {
 
@@ -9096,7 +9096,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     // next is the namespaces on the elem
     DOMElement* currentElem = (DOMElement*) elem;
     DOMNamedNodeMap* eltAttrs;
-    unsigned int     attrCount;
+    XMLSize_t     attrCount;
     do {
         eltAttrs = currentElem->getAttributes();
         attrCount = eltAttrs->getLength();

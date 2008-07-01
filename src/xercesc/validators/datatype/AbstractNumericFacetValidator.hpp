@@ -105,13 +105,13 @@ public:
 // Getter methods
 // -----------------------------------------------------------------------
 
-    inline XMLNumber* const            getMaxInclusive() const;
+    inline XMLNumber*                  getMaxInclusive() const;
 
-    inline XMLNumber* const            getMaxExclusive() const;
+    inline XMLNumber*                  getMaxExclusive() const;
 
-    inline XMLNumber* const            getMinInclusive() const;
+    inline XMLNumber*                  getMinInclusive() const;
 
-    inline XMLNumber* const            getMinExclusive() const;
+    inline XMLNumber*                  getMinExclusive() const;
 
     inline RefVectorOf<XMLNumber>*     getEnumeration() const;
 
@@ -167,22 +167,22 @@ private:
 // Getter methods
 // -----------------------------------------------------------------------
 
-inline XMLNumber* const AbstractNumericFacetValidator::getMaxInclusive() const
+inline XMLNumber* AbstractNumericFacetValidator::getMaxInclusive() const
 {
     return fMaxInclusive;
 }
 
-inline XMLNumber* const AbstractNumericFacetValidator::getMaxExclusive() const
+inline XMLNumber* AbstractNumericFacetValidator::getMaxExclusive() const
 {
     return fMaxExclusive;
 }
 
-inline XMLNumber* const AbstractNumericFacetValidator::getMinInclusive() const
+inline XMLNumber* AbstractNumericFacetValidator::getMinInclusive() const
 {
     return fMinInclusive;
 }
 
-inline XMLNumber* const AbstractNumericFacetValidator::getMinExclusive() const
+inline XMLNumber* AbstractNumericFacetValidator::getMinExclusive() const
 {
     return fMinExclusive;
 }

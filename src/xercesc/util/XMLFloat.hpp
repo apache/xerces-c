@@ -87,8 +87,8 @@ private:
 inline int XMLFloat::compareValues(const XMLFloat* const lValue
                                  , const XMLFloat* const rValue)
 {
-    return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat* const) lValue,
-                                                 (const XMLAbstractDoubleFloat* const) rValue 
+    return XMLAbstractDoubleFloat::compareValues((const XMLAbstractDoubleFloat*) lValue,
+                                                 (const XMLAbstractDoubleFloat*) rValue 
                                                  , ((XMLAbstractDoubleFloat*)lValue)->getMemoryManager());
 }
 

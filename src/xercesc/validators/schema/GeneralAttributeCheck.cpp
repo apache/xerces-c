@@ -189,12 +189,12 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
     }
 
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
-    unsigned int     attrCount = eltAttrs->getLength();
+    const XMLSize_t  attrCount = eltAttrs->getLength();
     XMLByte          attList[A_Count];
 
     memset(attList, 0, sizeof(attList));
 
-    for (unsigned int i = 0; i < attrCount; i++) {
+    for (XMLSize_t i = 0; i < attrCount; i++) {
 
         DOMNode*     attribute = eltAttrs->item(i);
         const XMLCh* attName = attribute->getNodeName();

@@ -307,8 +307,6 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
     {
         return (-1) * compareSpecial(rValue, manager);
     }
-
-    return 0;
 }
 
 int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const specialValue                                         

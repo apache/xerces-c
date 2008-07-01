@@ -716,7 +716,7 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
     const XMLSize_t srcLen = strlen(srcStr);
 
     // Make sure the start index is within the XMLString bounds
-    if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
+    if (startIndex > endIndex || endIndex > srcLen)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     const XMLSize_t copySize = endIndex - startIndex;
@@ -1701,7 +1701,7 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
     // Make sure the start index is within the XMLString bounds
-    if ( startIndex < 0 || startIndex > endIndex || endIndex > srcStrLength)
+    if (startIndex > endIndex || endIndex > srcStrLength)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     const XMLSize_t copySize = endIndex - startIndex;

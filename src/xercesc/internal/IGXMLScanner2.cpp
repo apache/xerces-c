@@ -2320,174 +2320,174 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     bool    escaped;
     while (true)
     {
-    try
-    {
-        while(true)
+        try
         {
-            nextCh = fReaderMgr.getNextChar();
-
-            if (!nextCh)
-                ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
-
-            // Check for our ending quote in the same entity
-            if (nextCh == quoteCh)
+            while(true)
             {
-                if (curReader == fReaderMgr.getCurrentReaderNum())
-                    return true;
+                nextCh = fReaderMgr.getNextChar();
 
-                // Watch for spillover into a previous entity
-                if (curReader > fReaderMgr.getCurrentReaderNum())
+                if (!nextCh)
+                    ThrowXMLwithMemMgr(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF, fMemoryManager);
+
+                // Check for our ending quote in the same entity
+                if (nextCh == quoteCh)
                 {
-                    emitError(XMLErrs::PartialMarkupInEntity);
-                    return false;
+                    if (curReader == fReaderMgr.getCurrentReaderNum())
+                        return true;
+
+                    // Watch for spillover into a previous entity
+                    if (curReader > fReaderMgr.getCurrentReaderNum())
+                    {
+                        emitError(XMLErrs::PartialMarkupInEntity);
+                        return false;
+                    }
                 }
-            }
 
-            //  Check for an entity ref now, before we let it affect our
-            //  whitespace normalization logic below. We ignore the empty flag
-            //  in this one.
-            escaped = false;
-            if (nextCh == chAmpersand)
-            {
-                if (scanEntityRef(true, nextCh, secondCh, escaped) != EntityExp_Returned)
+                //  Check for an entity ref now, before we let it affect our
+                //  whitespace normalization logic below. We ignore the empty flag
+                //  in this one.
+                escaped = false;
+                if (nextCh == chAmpersand)
                 {
-                    gotLeadingSurrogate = false;
-                    continue;
+                    if (scanEntityRef(true, nextCh, secondCh, escaped) != EntityExp_Returned)
+                    {
+                        gotLeadingSurrogate = false;
+                        continue;
+                    }
                 }
-            }
-            else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
-            {
-                // Deal with surrogate pairs
-                //  Its a leading surrogate. If we already got one, then
-                //  issue an error, else set leading flag to make sure that
-                //  we look for a trailing next time.
-                if (gotLeadingSurrogate)
-                    emitError(XMLErrs::Expected2ndSurrogateChar);
-                 else
-                    gotLeadingSurrogate = true;
-            }
-            else
-            {
-                //  If its a trailing surrogate, make sure that we are
-                //  prepared for that. Else, its just a regular char so make
-                //  sure that we were not expected a trailing surrogate.
-                if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+                else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
                 {
-                    // Its trailing, so make sure we were expecting it
-                    if (!gotLeadingSurrogate)
-                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                    // Deal with surrogate pairs
+                    //  Its a leading surrogate. If we already got one, then
+                    //  issue an error, else set leading flag to make sure that
+                    //  we look for a trailing next time.
+                    if (gotLeadingSurrogate)
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
+                     else
+                        gotLeadingSurrogate = true;
                 }
                 else
                 {
-                    //  Its just a char, so make sure we were not expecting a
-                    //  trailing surrogate.
-                    if (gotLeadingSurrogate)
-                        emitError(XMLErrs::Expected2ndSurrogateChar);
-
-                    // Its got to at least be a valid XML character
-                    if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
+                    //  If its a trailing surrogate, make sure that we are
+                    //  prepared for that. Else, its just a regular char so make
+                    //  sure that we were not expected a trailing surrogate.
+                    if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
                     {
-                        XMLCh tmpBuf[9];
-                        XMLString::binToText
-                        (
-                            nextCh
-                            , tmpBuf
-                            , 8
-                            , 16
-                            , fMemoryManager
-                        );
-                        emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
-                    }
-                }
-                gotLeadingSurrogate = false;
-            }
-
-            //  If its not escaped, then make sure its not a < character, which
-            //  is not allowed in attribute values.
-            if (!escaped && (nextCh == chOpenAngle))
-                emitError(XMLErrs::BracketInAttrValue, attrName);
-
-            //  If the attribute is a CDATA type we do simple replacement of
-            //  tabs and new lines with spaces, if the character is not escaped
-            //  by way of a char ref.
-            //
-            //  Otherwise, we do the standard non-CDATA normalization of
-            //  compressing whitespace to single spaces and getting rid of leading
-            //  and trailing whitespace.
-            if (type == XMLAttDef::CData)
-            {
-                if (!escaped)
-                {
-                    if ((nextCh == 0x09) || (nextCh == 0x0A) || (nextCh == 0x0D))
-                    {
-                        // Check Validity Constraint for Standalone document declaration
-                        // XML 1.0, Section 2.9
-                        if (fStandalone && fValidate && isAttExternal)
-                        {
-                            // Can't have a standalone document declaration of "yes" if  attribute
-                            // values are subject to normalisation
-                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                        }
-                        nextCh = chSpace;
-                    }
-                }
-            }
-            else
-            {
-                if (curState == InWhitespace)
-                {
-                    if ((escaped && nextCh != chSpace) || !fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
-                    {
-                        if (firstNonWS)
-                            toFill.append(chSpace);
-                        curState = InContent;
-                        firstNonWS = true;
+                        // Its trailing, so make sure we were expecting it
+                        if (!gotLeadingSurrogate)
+                            emitError(XMLErrs::Unexpected2ndSurrogateChar);
                     }
                     else
                     {
-                        continue;
-                    }
-                }
-                else if (curState == InContent)
-                {
-                    if ((nextCh == chSpace) ||
-                        (fReaderMgr.getCurrentReader()->isWhitespace(nextCh) && !escaped))
-                    {
-                        curState = InWhitespace;
+                        //  Its just a char, so make sure we were not expecting a
+                        //  trailing surrogate.
+                        if (gotLeadingSurrogate)
+                            emitError(XMLErrs::Expected2ndSurrogateChar);
 
-                        // Check Validity Constraint for Standalone document declaration
-                        // XML 1.0, Section 2.9
-                        if (fStandalone && fValidate && isAttExternal)
+                        // Its got to at least be a valid XML character
+                        if (!fReaderMgr.getCurrentReader()->isXMLChar(nextCh))
                         {
-                            if (!firstNonWS || (nextCh != chSpace) || (fReaderMgr.lookingAtSpace()))
-                            {
-                                 // Can't have a standalone document declaration of "yes" if  attribute
-                                 // values are subject to normalisation
-                                 fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                            }
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                                , fMemoryManager
+                            );
+                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
                         }
-                        continue;
                     }
-                    firstNonWS = true;
+                    gotLeadingSurrogate = false;
                 }
-            }
 
-            // Else add it to the buffer
-            toFill.append(nextCh);
+                //  If its not escaped, then make sure its not a < character, which
+                //  is not allowed in attribute values.
+                if (!escaped && (nextCh == chOpenAngle))
+                    emitError(XMLErrs::BracketInAttrValue, attrName);
 
-            if (secondCh)
-            {
-                toFill.append(secondCh);
-                secondCh=0;
+                //  If the attribute is a CDATA type we do simple replacement of
+                //  tabs and new lines with spaces, if the character is not escaped
+                //  by way of a char ref.
+                //
+                //  Otherwise, we do the standard non-CDATA normalization of
+                //  compressing whitespace to single spaces and getting rid of leading
+                //  and trailing whitespace.
+                if (type == XMLAttDef::CData)
+                {
+                    if (!escaped)
+                    {
+                        if ((nextCh == 0x09) || (nextCh == 0x0A) || (nextCh == 0x0D))
+                        {
+                            // Check Validity Constraint for Standalone document declaration
+                            // XML 1.0, Section 2.9
+                            if (fStandalone && fValidate && isAttExternal)
+                            {
+                                // Can't have a standalone document declaration of "yes" if  attribute
+                                // values are subject to normalisation
+                                fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                            }
+                            nextCh = chSpace;
+                        }
+                    }
+                }
+                else
+                {
+                    if (curState == InWhitespace)
+                    {
+                        if ((escaped && nextCh != chSpace) || !fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
+                        {
+                            if (firstNonWS)
+                                toFill.append(chSpace);
+                            curState = InContent;
+                            firstNonWS = true;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else if (curState == InContent)
+                    {
+                        if ((nextCh == chSpace) ||
+                            (fReaderMgr.getCurrentReader()->isWhitespace(nextCh) && !escaped))
+                        {
+                            curState = InWhitespace;
+
+                            // Check Validity Constraint for Standalone document declaration
+                            // XML 1.0, Section 2.9
+                            if (fStandalone && fValidate && isAttExternal)
+                            {
+                                if (!firstNonWS || (nextCh != chSpace) || (fReaderMgr.lookingAtSpace()))
+                                {
+                                     // Can't have a standalone document declaration of "yes" if  attribute
+                                     // values are subject to normalisation
+                                     fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                                }
+                            }
+                            continue;
+                        }
+                        firstNonWS = true;
+                    }
+                }
+
+                // Else add it to the buffer
+                toFill.append(nextCh);
+
+                if (secondCh)
+                {
+                    toFill.append(secondCh);
+                    secondCh=0;
+                }
             }
         }
-    }
-    catch(const EndOfEntityException&)
-    {
-        // Just eat it and continue.
-        gotLeadingSurrogate = false;
-        escaped = false;
-    }
+        catch(const EndOfEntityException&)
+        {
+            // Just eat it and continue.
+            gotLeadingSurrogate = false;
+            escaped = false;
+        }
     }
     return true;
 }

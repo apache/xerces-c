@@ -92,8 +92,8 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XMLCh* const                      getCurrentSchemaURL() const;
-    const XMLCh* const                getTargetNSURIString() const;
+    XMLCh*                            getCurrentSchemaURL() const;
+    const XMLCh*                      getTargetNSURIString() const;
     const DOMElement*                 getRoot() const;
     bool                              getProcessed() const;
     int                               getBlockDefault() const;
@@ -205,12 +205,12 @@ inline NamespaceScope* SchemaInfo::getNamespaceScope() const {
     return fNamespaceScope;
 }
 
-inline XMLCh* const SchemaInfo::getCurrentSchemaURL() const {
+inline XMLCh* SchemaInfo::getCurrentSchemaURL() const {
 
     return fCurrentSchemaURL;
 }
 
-inline const XMLCh* const SchemaInfo::getTargetNSURIString() const {
+inline const XMLCh* SchemaInfo::getTargetNSURIString() const {
 
     return fTargetNSURIString;
 }
