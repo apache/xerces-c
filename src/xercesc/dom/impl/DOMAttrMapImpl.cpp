@@ -398,8 +398,8 @@ void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) 
             cloneContent(defaults);
         }
         else {
-            unsigned int dsize = defaults->getLength();
-            for (unsigned int n = 0; n < dsize; n++) {
+            XMLSize_t dsize = defaults->getLength();
+            for (XMLSize_t n = 0; n < dsize; n++) {
                 DOMAttr* attr = (DOMAttr*)defaults->item(n);
 
                 DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);

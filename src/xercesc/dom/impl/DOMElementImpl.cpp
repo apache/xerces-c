@@ -590,11 +590,11 @@ bool DOMElementImpl::isEqualNode(const DOMNode* arg) const
         DOMNamedNodeMap* map1 = getAttributes();
         DOMNamedNodeMap* map2 = arg->getAttributes();
 
-        unsigned int len = map1->getLength();
+        XMLSize_t len = map1->getLength();
         if (len != map2->getLength()) {
             return false;
         }
-        for (unsigned int i = 0; i < len; i++) {
+        for (XMLSize_t i = 0; i < len; i++) {
             DOMNode* n1 = map1->item(i);
             if (!n1->getLocalName()) { // DOM Level 1 Node
                 DOMNode* n2 = map2->getNamedItem(n1->getNodeName());

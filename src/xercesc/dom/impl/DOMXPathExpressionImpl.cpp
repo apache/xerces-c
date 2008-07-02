@@ -169,9 +169,9 @@ bool DOMXPathExpressionImpl::testNode(XPathMatcher* matcher, DOMXPathResultImpl*
     QName qName(node->getNodeName(), uriId, fMemoryManager);
     SchemaElementDecl elemDecl(&qName);
     DOMNamedNodeMap* attrMap=node->getAttributes();
-    unsigned int attrCount = attrMap->getLength();
+    XMLSize_t attrCount = attrMap->getLength();
     RefVectorOf<XMLAttr> attrList(attrCount, true, fMemoryManager);
-    for(unsigned int i=0;i<attrCount;i++)
+    for(XMLSize_t i=0;i<attrCount;i++)
     {
         DOMAttr* attr=(DOMAttr*)attrMap->item(i);
         attrList.addElement(new (fMemoryManager) XMLAttr(fStringPool->addOrFind(attr->getNamespaceURI()),

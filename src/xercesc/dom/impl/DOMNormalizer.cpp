@@ -181,9 +181,9 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
 void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
     DOMAttrMapImpl *attrMap = ele->fAttributes;
 
-    unsigned int len = attrMap->getLength();
+    XMLSize_t len = attrMap->getLength();
     //get the ns info from the attrs
-    for(unsigned int i = 0; i < len; i++) {
+    for(XMLSize_t i = 0; i < len; i++) {
         DOMAttr *at = (DOMAttr*)attrMap->item(i);
 
         //normalize the attr whatever happens
@@ -234,7 +234,7 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
     len = attrMap->getLength();
 
     // hp aCC complains this i is a redefinition of the i on line 283
-    for(unsigned int j = 0; j < len; j++) {
+    for(XMLSize_t j = 0; j < len; j++) {
         DOMAttr *at = (DOMAttr*)attrMap->item(j);
         const XMLCh *uri = at->getNamespaceURI();
         const XMLCh* prefix = at->getPrefix();

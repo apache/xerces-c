@@ -479,9 +479,9 @@ const XMLCh* DOMNodeImpl::lookupPrefix(const XMLCh* const namespaceURI, DOMEleme
         DOMNamedNodeMap *nodeMap = thisNode->getAttributes();
 
         if(nodeMap != 0) {
-            unsigned int length = nodeMap->getLength();
+            XMLSize_t length = nodeMap->getLength();
 
-            for (unsigned int i = 0;i < length;i++) {
+            for (XMLSize_t i = 0;i < length;i++) {
                 DOMNode *attr = nodeMap->item(i);
                 const XMLCh* attrPrefix = attr->getPrefix();
                 const XMLCh* value = attr->getNodeValue();
@@ -530,8 +530,8 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
         if (thisNode->hasAttributes()) {
             DOMNamedNodeMap *nodeMap = thisNode->getAttributes();
             if(nodeMap != 0) {
-                unsigned int length = nodeMap->getLength();
-                for (unsigned int i = 0;i < length;i++) {
+                XMLSize_t length = nodeMap->getLength();
+                for (XMLSize_t i = 0;i < length;i++) {
                     DOMNode *attr = nodeMap->item(i);
                     const XMLCh *attrPrefix = attr->getPrefix();
                     const XMLCh *value = attr->getNodeValue();

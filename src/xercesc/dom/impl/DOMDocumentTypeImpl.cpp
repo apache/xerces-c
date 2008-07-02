@@ -466,11 +466,11 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
         DOMNamedNodeMap* map1 = getNotations();
         DOMNamedNodeMap* map2 = argDT->getNotations();
 
-        unsigned int len = map1->getLength();
+        XMLSize_t len = map1->getLength();
         if (len != map2->getLength()) {
             return false;
         }
-        for (unsigned int i = 0; i < len; i++) {
+        for (XMLSize_t i = 0; i < len; i++) {
             DOMNode* n1 = map1->item(i);
             DOMNode* n2 = map2->getNamedItem(n1->getNodeName());
             if (!n2 || !n1->isEqualNode(n2)) {
@@ -491,11 +491,11 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
         DOMNamedNodeMap* map1 = getEntities();
         DOMNamedNodeMap* map2 = argDT->getEntities();
 
-        unsigned int len = map1->getLength();
+        XMLSize_t len = map1->getLength();
         if (len != map2->getLength()) {
             return false;
         }
-        for (unsigned int i = 0; i < len; i++) {
+        for (XMLSize_t i = 0; i < len; i++) {
             DOMNode* n1 = map1->item(i);
             DOMNode* n2 = map2->getNamedItem(n1->getNodeName());
             if (!n2 || !n1->isEqualNode(n2)) {
