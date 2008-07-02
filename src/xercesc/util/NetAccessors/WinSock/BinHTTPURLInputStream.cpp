@@ -78,37 +78,37 @@ static LPFN_INET_ADDR gWSinet_addr = NULL;
 
 static u_short wrap_htons(u_short hostshort)
 {
-	return (*gWShtons)(hostshort);
+    return (*gWShtons)(hostshort);
 }
 
 static SOCKET wrap_socket(int af,int type,int protocol)
 {
-	return (*gWSsocket)(af,type,protocol);
+    return (*gWSsocket)(af,type,protocol);
 }
 
 static int wrap_connect(SOCKET s,const struct sockaddr* name,int namelen)
 {
-	return (*gWSconnect)(s,name,namelen);
+    return (*gWSconnect)(s,name,namelen);
 }
 
 static int wrap_send(SOCKET s,const char* buf,int len,int flags)
 {
-	return (*gWSsend)(s,buf,len,flags);
+    return (*gWSsend)(s,buf,len,flags);
 }
 
 static int wrap_recv(SOCKET s,char* buf,int len,int flags)
 {
-	return (*gWSrecv)(s,buf,len,flags);
+    return (*gWSrecv)(s,buf,len,flags);
 }
 
 static int wrap_shutdown(SOCKET s,int how)
 {
-	return (*gWSshutdown)(s,how);
+    return (*gWSshutdown)(s,how);
 }
 
 static int wrap_closesocket(SOCKET socket)
 {
-	return (*gWSclosesocket)(socket);
+    return (*gWSclosesocket)(socket);
 }
 
 #ifdef WITH_IPV6
@@ -124,17 +124,17 @@ static void wrap_freeaddrinfo(struct addrinfo* ai)
 #else
 static struct hostent* wrap_gethostbyname(const char* name)
 {
-	return (*gWSgethostbyname)(name);
+    return (*gWSgethostbyname)(name);
 }
 
 static struct hostent* wrap_gethostbyaddr(const char* addr,int len,int type)
 {
-	return (*gWSgethostbyaddr)(addr,len,type);
+    return (*gWSgethostbyaddr)(addr,len,type);
 }
 
 static unsigned long wrap_inet_addr(const char* cp)
 {
-	return (*gWSinet_addr)(cp);
+    return (*gWSinet_addr)(cp);
 }
 
 #endif
@@ -150,7 +150,7 @@ public:
     ~SocketJanitor() { reset(); }
 
     SOCKET* get() const { return fData; }
-    SOCKET* release() {	SOCKET* p = fData; fData = 0; return p; }
+    SOCKET* release() {    SOCKET* p = fData; fData = 0; return p; }
 
     void reset(SOCKET* p = 0)
     {
@@ -308,13 +308,6 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     }
 
     //
-    //  Constants in ASCII to send/check in the HTTP request/response
-    //
-
-    static const char *CRLF2X = "\r\n\r\n";
-    static const char *LF2X = "\n\n";
-
-    //
     // Pull all of the parts of the URL out of th urlSource object, and transcode them
     //   and transcode them back to ASCII.
     //
@@ -332,45 +325,45 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         //
 
 #ifdef WITH_IPV6
-		struct addrinfo hints, *res, *ai;
+        struct addrinfo hints, *res, *ai;
 
         CharBuffer portBuffer(10, memoryManager);
         portBuffer.appendDecimalNumber(url.getPortNum());
 
-		memset(&hints, 0, sizeof(struct addrinfo));
-		hints.ai_family = PF_UNSPEC;
-		hints.ai_socktype = SOCK_STREAM;
-		int n = wrap_getaddrinfo(hostNameAsCharStar,portBuffer.getRawBuffer(),&hints, &res);
-		if(n<0)
-		{
-			hints.ai_flags = AI_NUMERICHOST;
-			n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
-			if(n<0)
-				ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, memoryManager);
-		}
+        memset(&hints, 0, sizeof(struct addrinfo));
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        int n = wrap_getaddrinfo(hostNameAsCharStar,portBuffer.getRawBuffer(),&hints, &res);
+        if(n<0)
+        {
+            hints.ai_flags = AI_NUMERICHOST;
+            n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
+            if(n<0)
+                ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, memoryManager);
+        }
         janSock.reset();
-		for (ai = res; ai != NULL; ai = ai->ai_next) {
-			// Open a socket with the correct address family for this address.
-			fSocket = wrap_socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-			if (fSocket == INVALID_SOCKET)
-				continue;
-			if (wrap_connect(fSocket, ai->ai_addr, (int)ai->ai_addrlen) == SOCKET_ERROR)
-			{
-				wrap_freeaddrinfo(res);
-				// Call WSAGetLastError() to get the error number.
-				ThrowXMLwithMemMgr1(NetAccessorException,
-						 XMLExcepts::NetAcc_ConnSocket, url.getURLText(), memoryManager);
-			}
-			break;
-		}
-		wrap_freeaddrinfo(res);
-		if (fSocket == INVALID_SOCKET)
-		{
-			// Call WSAGetLastError() to get the error number.
-			ThrowXMLwithMemMgr1(NetAccessorException,
-					 XMLExcepts::NetAcc_CreateSocket, url.getURLText(), memoryManager);
-		}
-		janSock.reset(&fSocket);
+        for (ai = res; ai != NULL; ai = ai->ai_next) {
+            // Open a socket with the correct address family for this address.
+            fSocketHandle = wrap_socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+            if (fSocketHandle == INVALID_SOCKET)
+                continue;
+            if (wrap_connect(fSocketHandle, ai->ai_addr, (int)ai->ai_addrlen) == SOCKET_ERROR)
+            {
+                wrap_freeaddrinfo(res);
+                // Call WSAGetLastError() to get the error number.
+                ThrowXMLwithMemMgr1(NetAccessorException,
+                         XMLExcepts::NetAcc_ConnSocket, url.getURLText(), memoryManager);
+            }
+            break;
+        }
+        wrap_freeaddrinfo(res);
+        if (fSocketHandle == INVALID_SOCKET)
+        {
+            // Call WSAGetLastError() to get the error number.
+            ThrowXMLwithMemMgr1(NetAccessorException,
+                     XMLExcepts::NetAcc_CreateSocket, url.getURLText(), memoryManager);
+        }
+        janSock.reset(&fSocketHandle);
 #else
         struct hostent*     hostEntPtr = 0;
         struct sockaddr_in  sa;
