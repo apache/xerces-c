@@ -24,7 +24,6 @@
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
-#include <windows.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -100,13 +99,6 @@ private :
     //
     //      This map is shared unsynchronized among all threads of the process,
     //      which is cool since it will be read only once its initialized.
-
-
-
-    static bool isAlias(const   HKEY            encodingKey
-                    ,       char* const     aliasBuf = 0
-                    , const unsigned int    nameBufSz = 0);
-
 
     RefHashTableOf<CPMapEntry>    *fCPMap;
 };

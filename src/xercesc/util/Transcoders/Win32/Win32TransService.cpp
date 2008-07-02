@@ -50,7 +50,7 @@ static const XMLCh gMyServiceId[] =
 
 
 #if !HAVE_WCSUPR
-void wcsupr(LPWSTR str)
+void _wcsupr(LPWSTR str)
 {
     int nLen=XMLString::stringLen(str);
     ::LCMapStringW( GetThreadLocale(), LCMAP_UPPERCASE, str, nLen, str, nLen);
@@ -58,7 +58,7 @@ void wcsupr(LPWSTR str)
 #endif
 
 #if !HAVE_WCSLWR
-void wcslwr(LPWSTR str)
+void _wcslwr(LPWSTR str)
 {
     int nLen=XMLString::stringLen(str);
     ::LCMapStringW( GetThreadLocale(), LCMAP_LOWERCASE, str, nLen, str, nLen);
@@ -66,7 +66,7 @@ void wcslwr(LPWSTR str)
 #endif
 
 #if !HAVE_WCSNICMP
-int wcsnicmp(LPCWSTR comp1, LPCWSTR comp2, unsigned int nLen)
+int _wcsnicmp(LPCWSTR comp1, LPCWSTR comp2, unsigned int nLen)
 {
     unsigned int len = XMLString::stringLen( comp1);
     unsigned int otherLen = XMLString::stringLen( comp2);
@@ -123,15 +123,34 @@ int wcsnicmp(LPCWSTR comp1, LPCWSTR comp2, unsigned int nLen)
 #endif
 
 #if !HAVE_WCSICMP
-int wcsicmp(LPCWSTR comp1, LPCWSTR comp2)
+int _wcsicmp(LPCWSTR comp1, LPCWSTR comp2)
 {
     unsigned int len = XMLString::stringLen( comp1);
     unsigned int otherLen = XMLString::stringLen( comp2);
     // Must compare terminating NUL to return difference if one string is shorter than the other.
     unsigned int maxChars = ( len > otherLen ) ? otherLen : len;
-    return wcsnicmp(comp1, comp2, maxChars+1);
+    return _wcsnicmp(comp1, comp2, maxChars+1);
 }
 #endif
+
+// it's a local function (instead of a static function) so that we are not 
+// forced to include <windows.h> in the header
+bool isAlias(const   HKEY            encodingKey
+             ,       char* const     aliasBuf = 0
+             , const unsigned int    nameBufSz = 0)
+{
+    unsigned long theType;
+    unsigned long theSize = nameBufSz;
+    return (::RegQueryValueExA
+    (
+        encodingKey
+        , "AliasForCharset"
+        , 0
+        , &theType
+        , (unsigned char*)aliasBuf
+        , &theSize
+    ) == ERROR_SUCCESS);
+}
 
 // ---------------------------------------------------------------------------
 //  This is the simple CPMapEntry class. It just contains an encoding name
@@ -212,7 +231,7 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
         //  Upper case it because we are using a hash table and need to be
         //  sure that we find all case combinations.
         //
-        wcsupr(fEncodingName);
+        _wcsupr(fEncodingName);
   }
 }
 
@@ -228,7 +247,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
     //  Upper case it because we are using a hash table and need to be
     //  sure that we find all case combinations.
     //
-    wcsupr(fEncodingName);
+    _wcsupr(fEncodingName);
 }
 
 CPMapEntry::~CPMapEntry()
@@ -437,7 +456,7 @@ Win32TransService::Win32TransService()
                 );//new XMLCh[targetLen + 1];
                 ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, -1, (LPWSTR)uniAlias, targetLen);
                 uniAlias[targetLen] = 0;
-                wcsupr(uniAlias);
+                _wcsupr(uniAlias);
 
                 // Look up the alias name
                 CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
@@ -452,14 +471,14 @@ Win32TransService::Win32TransService()
                         );//new XMLCh[targetLen + 1];
                         ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, nameBuf, -1, (LPWSTR)uniName, targetLen);
                         uniName[targetLen] = 0;
-                        wcsupr(uniName);
+                        _wcsupr(uniName);
 
                         //
                         //  If the name is actually different, then take it.
                         //  Otherwise, don't take it. They map aliases that are
                         //  just different case.
                         //
-                        if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
+						if (!XMLString::equals(uniName, aliasedEntry->getEncodingName()))
                         {
                             CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getIEEncoding());
                             fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
@@ -493,7 +512,7 @@ Win32TransService::~Win32TransService()
 int Win32TransService::compareIString(  const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2)
 {
-    return wcsicmp(comp1, comp2);
+    return _wcsicmp(comp1, comp2);
 }
 
 
@@ -501,7 +520,7 @@ int Win32TransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
                                         , const XMLSize_t       maxChars)
 {
-    return wcsnicmp(comp1, comp2, maxChars);
+    return _wcsnicmp(comp1, comp2, maxChars);
 }
 
 
@@ -530,31 +549,13 @@ bool Win32TransService::supportsSrcOfs() const
 
 void Win32TransService::upperCase(XMLCh* const toUpperCase)
 {
-    wcsupr(toUpperCase);
+    _wcsupr(toUpperCase);
 }
 
 void Win32TransService::lowerCase(XMLCh* const toLowerCase)
 {
-    wcslwr(toLowerCase);
+    _wcslwr(toLowerCase);
 }
-
-bool Win32TransService::isAlias(const   HKEY            encodingKey
-                    ,       char* const     aliasBuf
-                    , const unsigned int    nameBufSz )
-{
-    unsigned long theType;
-    unsigned long theSize = nameBufSz;
-    return (::RegQueryValueExA
-    (
-        encodingKey
-        , "AliasForCharset"
-        , 0
-        , &theType
-        , (unsigned char*)aliasBuf
-        , &theSize
-    ) == ERROR_SUCCESS);
-}
-
 
 XMLTranscoder*
 Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
@@ -570,7 +571,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     //  table and we store them all in upper case.
     //
     XMLString::copyNString(upEncoding, encodingName, upLen);
-    wcsupr(upEncoding);
+    _wcsupr(upEncoding);
 
     // Now to try to find this guy in the CP map
     CPMapEntry* theEntry = fCPMap->get(upEncoding);
