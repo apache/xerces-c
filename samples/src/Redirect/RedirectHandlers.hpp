@@ -84,8 +84,8 @@ public:
     void fatalError(const SAXParseException& exc);
 
 
-#if 0
-    // This is the old resolveEntity interface
+    // This is the SAX2 resolveEntity interface.  This is inherited from
+    // EntityResolver.
     // -----------------------------------------------------------------------
     //  Handlers for the SAX EntityResolver interface
     // -----------------------------------------------------------------------
@@ -94,7 +94,7 @@ public:
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
     );
-#endif
+
     // -----------------------------------------------------------------------
     //  Handlers for the XMLEntityResolver interface
     // -----------------------------------------------------------------------

@@ -1019,7 +1019,6 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
     catch (const NumberFormatException&)
     {
         status = st_FOCA0002;
-        return 0;
     }
 
     return 0;

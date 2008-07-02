@@ -171,7 +171,7 @@ private:
 // Getter methods
 // -----------------------------------------------------------------------
 
-    inline const XMLCh* const   getContent() const;
+    inline const XMLCh*         getContent() const;
 
 // -----------------------------------------------------------------------
 // Setter methods
@@ -199,7 +199,7 @@ private:
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
-inline const XMLCh* const ListDatatypeValidator::getContent() const
+inline const XMLCh* ListDatatypeValidator::getContent() const
 {
     return fContent;
 }
