@@ -741,7 +741,10 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         const int bytesStored = ::WideCharToMultiByte
         (
             fIECP
-            , WC_COMPOSITECHECK | WC_SEPCHARS | WC_NO_BEST_FIT_CHARS
+            , WC_COMPOSITECHECK | WC_SEPCHARS 
+#ifdef WC_NO_BEST_FIT_CHARS
+            | WC_NO_BEST_FIT_CHARS
+#endif
             , srcPtr
             , 1
             , (char*)outPtr
@@ -814,7 +817,10 @@ bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck)
     const unsigned int bytesStored = ::WideCharToMultiByte
     (
         fIECP
-        , WC_COMPOSITECHECK | WC_SEPCHARS | WC_NO_BEST_FIT_CHARS
+        , WC_COMPOSITECHECK | WC_SEPCHARS 
+#ifdef WC_NO_BEST_FIT_CHARS
+        | WC_NO_BEST_FIT_CHARS
+#endif
         , srcBuf
         , srcCount
         , tmpBuf
