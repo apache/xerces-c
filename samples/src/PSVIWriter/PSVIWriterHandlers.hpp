@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -70,26 +70,26 @@ public:
 		type = XMLString::replicate(pType);
 		value = XMLString::replicate(pValue);
 	}
-	
+
 	~AttrInfo() {
 		XMLString::release((XMLCh**)&uri);
 		XMLString::release((XMLCh**)&name);
 		XMLString::release((XMLCh**)&type);
 		XMLString::release((XMLCh**)&value);
 	}
-	
+
 	const XMLCh* getUri() const {
-		return uri;	
+		return uri;
 	}
-	
+
 	const XMLCh* getLocalName() const {
 		return name;
 	}
-	
+
 	const XMLCh* getType() const {
 		return type;
 	}
-		
+
 	const XMLCh* getValue() const {
 		return value;
 	}
@@ -108,14 +108,14 @@ public:
     // -----------------------------------------------------------------------
     PSVIWriterHandlers(XMLFormatter* outputFormatter, XMLFormatter* errorFormatter = NULL);
     ~PSVIWriterHandlers();
-    
+
     friend class PSVIAdvancedHandler;
     // -----------------------------------------------------------------------
     //  Convenience Utility
     // -----------------------------------------------------------------------
 	void resetPSVIFormatter(XMLFormatter* outputFormatter);
     void resetDocument();
-	
+
     // -----------------------------------------------------------------------
     //  Handlers for the SAX ContentHandler interface
     // -----------------------------------------------------------------------
@@ -139,18 +139,18 @@ public:
     void error(const SAXParseException& exc);
     void fatalError(const SAXParseException& exc);
     void resetErrors();
-    
+
     // -----------------------------------------------------------------------
     //  Handlers for the PSVIHandler interface
     // -----------------------------------------------------------------------
-	
-	void handleAttributesPSVI( const XMLCh* const localName, 
-								const XMLCh* const uri, 
+
+	void handleAttributesPSVI( const XMLCh* const localName,
+								const XMLCh* const uri,
 								PSVIAttributeList* psviAttributes );
-	void handleElementPSVI(	const XMLCh* const localName, 
+	void handleElementPSVI(	const XMLCh* const localName,
                                 const XMLCh* const uri,
                                 PSVIElement* elementInfo );
-	void handlePartialElementPSVI( const XMLCh* const localName, 
+	void handlePartialElementPSVI( const XMLCh* const localName,
                                    const XMLCh* const uri,
                                    PSVIElement* elementInfo );
 private:
@@ -171,41 +171,41 @@ private:
     void processSchemaDocuments(XSNamespaceItem* namespaceItem);
     void processSchemaAnnotations(XSAnnotationList* annotations);
     void processSchemaErrorCode(StringList* errors);
-    
+
     void processTypeDefinition(XSTypeDefinition* type);
     void processComplexTypeDefinition(XSComplexTypeDefinition* complexType);
     void processSimpleTypeDefinition(XSSimpleTypeDefinition* simpleType);
     void processModelGroupDefinition(XSModelGroupDefinition* modelGroup);
     void processAttributeGroupDefinition(XSAttributeGroupDefinition* attributeGroup);
-    
+
     void processElementDeclaration(XSElementDeclaration* element);
     void processAttributeDeclaration(XSAttributeDeclaration* attribute);
     void processNotationDeclaration(XSNotationDeclaration* notation);
-    
+
     void processAnnotations(XSAnnotationList* annotations);
     void processAttributeUses(XSAttributeUseList* attributeUses);
     void processFacets(XSFacetList* facets, XSMultiValueFacetList* multiFacets);
     void processFundamentalFacets(XSSimpleTypeDefinition* facets);
     void processMemberTypeDefinitions(XSSimpleTypeDefinitionList* memberTypes);
-    
+
     void processAnnotation(XSAnnotation* annotation);
     void processDOMElement(const XMLCh* const encloseName, DOMElement* rootElem, const XMLCh* const elementName);
     void processDOMAttributes(DOMNamedNodeMap* attrs);
     void processWildcard(XSWildcard* wildcard);
     void processModelGroup(XSModelGroup* modelGroup);
     void processParticle(XSParticle* particle);
-    
+
     void processAttributeWildcard(XSWildcard* wildcard);
     void processScope(XSComplexTypeDefinition* enclosingCTD, short scope);
     void processValueConstraint(XSConstants::VALUE_CONSTRAINT ConstraintType, const XMLCh* constraintValue);
-    
+
     void processIdentityConstraintDefinition(XSNamedMap<XSIDCDefinition>* identityConstraint);
     void processFields(StringList* fields);
     void processXPath(const XMLCh* xpath);
-    
+
     void processChildren();
     void processChildrenEnd();
-    
+
     void processTypeDefinitionOrRef(const XMLCh* enclose, XSTypeDefinition* type);
 	void processSimpleTypeDefinitionOrRef(XSSimpleTypeDefinition* type);
     void processAttributeDeclarationOrRef(XSAttributeDeclaration* attrDecl);
@@ -214,7 +214,7 @@ private:
     void processAttributeDeclarationRef(const XMLCh* enclose, XSAttributeDeclaration* attrDecl);
     void processElementDeclarationRef(const XMLCh* enclose, XSElementDeclaration* elemDecl);
     void sendReference(const XMLCh* elementName, XSObject* obj);
-    
+
     void sendElementEmpty(const XMLCh* const elementName);
 	void sendElementValueInt(const XMLCh* const elementName, int value);
     void sendElementValue(const XMLCh* const elementName, const XMLCh* const value);
@@ -223,7 +223,7 @@ private:
 	void sendIndentedElement(const XMLCh* const elementName);
     void sendIndentedElementWithID(const XMLCh* const elementName, XSObject* obj);	//adds the ID to the attribute list before sending
     void sendUnindentedElement(const XMLCh* const elementName);
-    
+
     void writeOpen(const XMLCh* const elementName);
 	void writeOpen(const XMLCh* const elementName, const StringList* const attrs);
 	void writeClose(const XMLCh* const elementName);
@@ -248,36 +248,36 @@ private:
     const XMLCh* translateFacet(XSSimpleTypeDefinition::FACET facetKind);
     const XMLCh* translateComponentType(XSConstants::COMPONENT_TYPE type);
     const XMLCh* translateBool(bool flag);
-    
+
     XMLCh* createID(XSObject* obj);
     const XMLCh* getIdName(XSObject* obj);
     void incIndent();
     void decIndent();
-    
-protected:    
+
+protected:
 	XMLFormatter* fFormatter;
 	XMLFormatter* fErrorFormatter;
-	
+
 	StringList* fAttrList;
     XMLCh* fTempResult;
     XMLCh* fIndentChars;
     XMLCh* fBaseUri;
-    
+
     unsigned int fIndent;
     unsigned int fIndentCap;
     unsigned int fAnonNum;
-    
+
 	RefHashTableOf<XMLCh>* fIdMap;
     RefVectorOf<XSObject>* fDefinedIds;
     RefArrayVectorOf<XMLCh>* fIdNames;
     RefArrayVectorOf<XMLCh>* fObjectLocations;
-    
+
 	RefHashTableOf<XMLCh>* fPrefixMap;
     RefArrayVectorOf<XMLCh>* fNamespaces;
-    
+
 	ValueVectorOf<unsigned int>* fNSAttributes;  //REVISIT  dont need if NSAttrs in different object
 	ValueStackOf<bool>* fElementChildren;
-		
+
 	RefVectorOf<AttrInfo>* fAttributesInfo;
 };
 
@@ -291,19 +291,18 @@ public:
     void endDocument() {}
     void endElement(const XMLElementDecl&, const unsigned int, const bool, const XMLCh* const) {}
     void endEntityReference(const   XMLEntityDecl&) {}
-   
+
     void ignorableWhitespace(const XMLCh* const, const XMLSize_t, const bool) {}
 
     void resetDocument() {}
     void startDocument() {}
     void startElement(const XMLElementDecl&, const unsigned int, const XMLCh* const, const RefVectorOf<XMLAttr>&
-                     ,const unsigned int, const bool, const bool) {}
+                     ,const XMLSize_t, const bool, const bool) {}
     void startEntityReference(const XMLEntityDecl&) {};
 
-    void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr);    
+    void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr);
 private:
     PSVIWriterHandlers* fWriterHandler;
 };
 
 #endif
-

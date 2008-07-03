@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -320,14 +320,14 @@ public :
 
    /** Get the SecurityManager instance attached to this parser.
       *
-      * This method returns the security manager 
+      * This method returns the security manager
       * that was specified using setSecurityManager.
       *
-      * The SecurityManager instance must have been specified by the application; 
+      * The SecurityManager instance must have been specified by the application;
       * this should not be deleted until after the parser has been deleted (or
       * a new SecurityManager instance has been supplied to the parser).
-      * 
-      * @return a pointer to the SecurityManager instance 
+      *
+      * @return a pointer to the SecurityManager instance
       *         specified externally.  A null pointer is returned if nothing
       *         was specified externally.
       *
@@ -415,7 +415,7 @@ public :
     /** Get the 'associate schema info' flag
       *
       * This method returns the flag that specifies whether
-      * the parser is storing schema informations in the element 
+      * the parser is storing schema informations in the element
       * and attribute nodes in the DOM tree being produced.
       *
       * @return  The state of the associate schema info flag.
@@ -435,7 +435,7 @@ public :
     bool getDoXInclude() const;
 
     /** Get the 'generate synthetic annotations' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         generate synthetic annotations, false otherwise.
       *         A synthetic XSAnnotation is created when a schema
@@ -448,7 +448,7 @@ public :
     bool getGenerateSyntheticAnnotations() const;
 
     /** Get the 'validate annotations' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         validate annotations, false otherwise.
       *
@@ -457,7 +457,7 @@ public :
     bool getValidateAnnotations() const;
 
     /** Get the 'ignore annotations' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         ignore annotations, false otherwise.
       *
@@ -466,7 +466,7 @@ public :
     bool getIgnoreAnnotations() const;
 
     /** Get the 'disable default entity resolution' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         not perform default entity resolution, false otherwise.
       *
@@ -475,7 +475,7 @@ public :
     bool getDisableDefaultEntityResolution() const;
 
     /** Get the 'skip DTD validation' flag
-      *    
+      *
       * @return true, if the parser is currently configured to
       *         skip DTD validation, false otherwise.
       *
@@ -501,7 +501,7 @@ public :
     /** @name Setter methods */
     //@{
     /** set the 'generate synthetic annotations' flag
-      *    
+      *
       * @param newValue The value for specifying whether Synthetic Annotations
       *        should be generated or not.
       *         A synthetic XSAnnotation is created when a schema
@@ -514,7 +514,7 @@ public :
     void setGenerateSyntheticAnnotations(const bool newValue);
 
     /** set the 'validlate annotations' flag
-      *    
+      *
       * @param newValue The value for specifying whether Annotations
       *        should be validated or not.
       *
@@ -677,7 +677,7 @@ public :
       * This method allows users to enable or disable the parser's identity
       * constraint checks.
       *
-      * <p>By default, the parser does identity constraint checks. 
+      * <p>By default, the parser does identity constraint checks.
       *    The default value is true.</p>
       *
       * @param newState The value specifying whether the parser should
@@ -866,8 +866,8 @@ public :
 
     /** Set the 'associate schema info' flag
       *
-      * This method allows users to specify whether 
-      * the parser should store schema informations in the element 
+      * This method allows users to specify whether
+      * the parser should store schema informations in the element
       * and attribute nodes in the DOM tree being produced.
       *
       * @param newValue The state to set
@@ -877,7 +877,7 @@ public :
 
     /** Set the 'do XInclude' flag
       *
-      * This method allows users to specify whether 
+      * This method allows users to specify whether
       * the parser should process XInclude nodes
       * in the DOM tree being produced.
       *
@@ -904,7 +904,7 @@ public :
       * parser will try to resolve the entity on its own.  When this option
       * is set to true, the parser will not attempt to resolve the entity
       * when the resolveEntity method returns NULL.
-      *    
+      *
       * The parser's default state is false
       *
       * @param newValue The state to set
@@ -915,7 +915,7 @@ public :
 
     /** Set the 'skip DTD validation' flag
       *
-      * This method gives users the option to skip DTD validation only when 
+      * This method gives users the option to skip DTD validation only when
       * schema validation is on (i.e. when performing validation,  we will
       * ignore the DTD, except for entities, when schema validation is enabled).
       *
@@ -1155,7 +1155,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the PSVIHandler interface.
     // -----------------------------------------------------------------------
-    
+
     /** @name Implementation of the PSVIHandler interface. */
     //@{
 
@@ -1171,14 +1171,14 @@ public :
       */
     virtual void handleElementPSVI
     (
-        const   XMLCh* const            localName 
+        const   XMLCh* const            localName
         , const XMLCh* const            uri
         ,       PSVIElement *           elementInfo
     );
 
     virtual void handlePartialElementPSVI
     (
-        const   XMLCh* const            localName 
+        const   XMLCh* const            localName
         , const XMLCh* const            uri
         ,       PSVIElement *           elementInfo
     );
@@ -1187,7 +1187,7 @@ public :
       * application.  This callback will be made on *all*
       * elements; on elements with no attributes, the final parameter will
       * be null.
-      * @param  localName The name of the element upon which start tag 
+      * @param  localName The name of the element upon which start tag
       *          these attributes were encountered.
       * @param  uri       The namespace to which the element is bound
       * @param  psviAttributes   Object containing the attributes' PSVI properties
@@ -1195,7 +1195,7 @@ public :
       */
     virtual void handleAttributesPSVI
     (
-        const   XMLCh* const            localName 
+        const   XMLCh* const            localName
         , const XMLCh* const            uri
         ,       PSVIAttributeList *     psviAttributes
     );
@@ -1373,7 +1373,7 @@ public :
         , const unsigned int            urlId
         , const XMLCh* const            elemPrefix
         , const RefVectorOf<XMLAttr>&   attrList
-        , const unsigned int            attrCount
+        , const XMLSize_t               attrCount
         , const bool                    isEmpty
         , const bool                    isRoot
     );
@@ -1521,7 +1521,7 @@ protected :
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
       *
-      * @param gramPool   Pointer to the grammar pool instance from 
+      * @param gramPool   Pointer to the grammar pool instance from
       *                   external application (through derivatives).
       *                   The parser does NOT own it.
       *
@@ -1815,8 +1815,8 @@ inline void AbstractDOMParser::setCreateCommentNodes(const bool create)
 
 inline void AbstractDOMParser::useImplementation(const XMLCh* const implementationFeatures)
 {
-    fMemoryManager->deallocate(fImplementationFeatures); 
-    fImplementationFeatures = XMLString::replicate(implementationFeatures, fMemoryManager); 
+    fMemoryManager->deallocate(fImplementationFeatures);
+    fImplementationFeatures = XMLString::replicate(implementationFeatures, fMemoryManager);
 }
 
 inline void AbstractDOMParser::setDoXInclude(const bool newState)
@@ -1853,6 +1853,3 @@ inline void AbstractDOMParser::setParseInProgress(const bool toSet)
 XERCES_CPP_NAMESPACE_END
 
 #endif
-
-
-

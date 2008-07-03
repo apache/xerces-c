@@ -686,7 +686,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 , const unsigned int            elemURLId
                 , const XMLCh* const            elemPrefix
                 , const RefVectorOf<XMLAttr>&   attrList
-                , const unsigned int            attrCount
+                , const XMLSize_t               attrCount
                 , const bool                    isEmpty
                 , const bool                    isRoot)
 {

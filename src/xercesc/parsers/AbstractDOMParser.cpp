@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -365,7 +365,7 @@ void AbstractDOMParser::setPSVIHandler(PSVIHandler* const handler)
         fScanner->setPSVIHandler(this);
     }
     else if(!fCreateSchemaInfo) {
-        fScanner->setPSVIHandler(0);        
+        fScanner->setPSVIHandler(0);
     }
 }
 
@@ -549,7 +549,7 @@ void AbstractDOMParser::parse(const InputSource& source)
         resetInProgress.release();
 
         throw;
-    }    
+    }
 }
 
 void AbstractDOMParser::parse(const XMLCh* const systemId)
@@ -577,7 +577,7 @@ void AbstractDOMParser::parse(const XMLCh* const systemId)
         resetInProgress.release();
 
         throw;
-    }    
+    }
 }
 
 void AbstractDOMParser::parse(const char* const systemId)
@@ -592,7 +592,7 @@ void AbstractDOMParser::parse(const char* const systemId)
     {
         fParseInProgress = true;
         fScanner->scanDocument(systemId);
-        
+
         if (fDoXInclude && getErrorCount()==0){
 		    DOMDocument *doc = getDocument();
             // after XInclude, the document must be normalized
@@ -605,7 +605,7 @@ void AbstractDOMParser::parse(const char* const systemId)
         resetInProgress.release();
 
         throw;
-    }    
+    }
 }
 
 
@@ -668,7 +668,7 @@ void AbstractDOMParser::parseReset(XMLPScanToken& token)
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Implementation of PSVIHandler interface
 // ---------------------------------------------------------------------------
-void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localName 
+void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localName
                                         , const XMLCh* const            uri
                                         ,       PSVIElement *           elementInfo)
 {
@@ -682,9 +682,9 @@ void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localNam
         {
             typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, elementInfo->getTypeDefinition()->getTypeCategory());
             typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, elementInfo->getTypeDefinition()->getAnonymous());
-            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace, 
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace,
                 fDocument->getPooledString(elementInfo->getTypeDefinition()->getNamespace()));
-            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name, 
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name,
                 fDocument->getPooledString(elementInfo->getTypeDefinition()->getName()));
         }
         else if(elementInfo->getValidity()==PSVIItem::VALIDITY_VALID)
@@ -698,9 +698,9 @@ void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localNam
         if(elementInfo->getMemberTypeDefinition())
         {
             typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Anonymous, elementInfo->getMemberTypeDefinition()->getAnonymous());
-            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace, 
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace,
                 fDocument->getPooledString(elementInfo->getMemberTypeDefinition()->getNamespace()));
-            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name, 
+            typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name,
                 fDocument->getPooledString(elementInfo->getMemberTypeDefinition()->getName()));
         }
         if(elementInfo->getElementDeclaration())
@@ -714,7 +714,7 @@ void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localNam
         fPSVIHandler->handleElementPSVI(localName, uri, elementInfo);
 }
 
-void AbstractDOMParser::handlePartialElementPSVI(const XMLCh* const            localName 
+void AbstractDOMParser::handlePartialElementPSVI(const XMLCh* const            localName
                                                , const XMLCh* const            uri
                                                ,       PSVIElement *           elementInfo)
 {
@@ -722,7 +722,7 @@ void AbstractDOMParser::handlePartialElementPSVI(const XMLCh* const            l
         fPSVIHandler->handlePartialElementPSVI(localName, uri, elementInfo);
 }
 
-void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            localName 
+void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            localName
                                             , const XMLCh* const            uri
                                             ,       PSVIAttributeList *     psviAttributes)
 {
@@ -741,9 +741,9 @@ void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            loca
                 {
                     typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, XSTypeDefinition::SIMPLE_TYPE);
                     typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous, attrInfo->getTypeDefinition()->getAnonymous());
-                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace, 
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Namespace,
                         fDocument->getPooledString(attrInfo->getTypeDefinition()->getNamespace()));
-                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name, 
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Name,
                         fDocument->getPooledString(attrInfo->getTypeDefinition()->getName()));
                 }
                 else if(attrInfo->getValidity()==PSVIItem::VALIDITY_VALID)
@@ -757,9 +757,9 @@ void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            loca
                 if(attrInfo->getMemberTypeDefinition())
                 {
                     typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Anonymous, attrInfo->getMemberTypeDefinition()->getAnonymous());
-                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace, 
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Namespace,
                         fDocument->getPooledString(attrInfo->getMemberTypeDefinition()->getNamespace()));
-                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name, 
+                    typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Member_Type_Definition_Name,
                         fDocument->getPooledString(attrInfo->getMemberTypeDefinition()->getName()));
                 }
                 typeInfo->setStringProperty(DOMPSVITypeInfo::PSVI_Schema_Default, fDocument->getPooledString(attrInfo->getSchemaDefault()));
@@ -927,7 +927,7 @@ void AbstractDOMParser::startDocument()
 {
     if(fImplementationFeatures == 0)
         fDocument = (DOMDocumentImpl *)DOMImplementation::getImplementation()->createDocument(fMemoryManager);
-    else 
+    else
         fDocument = (DOMDocumentImpl *)DOMImplementationRegistry::getDOMImplementation(fImplementationFeatures)->createDocument(fMemoryManager);
 
     // Just set the document as the current parent and current node
@@ -955,7 +955,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                              , const unsigned int            urlId
                              , const XMLCh* const            elemPrefix
                              , const RefVectorOf<XMLAttr>&   attrList
-                             , const unsigned int            attrCount
+                             , const XMLSize_t               attrCount
                              , const bool                    isEmpty
                              , const bool                    isRoot)
 {
@@ -984,10 +984,10 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                 elemQName.append(elemDecl.getBaseName());
                 elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
             }
-            else { 
+            else {
                 elem = createElementNSNode(namespaceURI, elemDecl.getBaseName());
             }
-        } 
+        }
         else {
             elem = createElementNSNode(namespaceURI, elemDecl.getBaseName());
         }
@@ -1007,9 +1007,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
         //            right size up front.
         if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
             unsigned int attrURIId = oneAttrib -> getURIId();
-            namespaceURI = 0;            
+            namespaceURI = 0;
             if (XMLString::equals(oneAttrib -> getName(), XMLUni::fgXMLNSString)) {   //for xmlns=...
-                attrURIId = fScanner->getXMLNSNamespaceId();                
+                attrURIId = fScanner->getXMLNSNamespaceId();
             }
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                 namespaceURI = fScanner->getURIText(attrURIId);   //get namespaceURI
@@ -1060,7 +1060,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
     // set up the default attributes
 	if (defAttrs != 0)
-	{		
+	{
         XMLAttDef* attr = 0;
 
         DOMAttrImpl * insertAttr = 0;
@@ -1172,7 +1172,7 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
     if (fCreateEntityReferenceNodes == true)    {
         DOMEntityReference *er = fDocument->createEntityReferenceByParser(entName);
 
-        //set the readOnly flag to false before appending node, will be reset 
+        //set the readOnly flag to false before appending node, will be reset
         // in endEntityReference
         DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
         erImpl->setReadOnly(false, true);
@@ -1221,7 +1221,7 @@ void AbstractDOMParser::attDef
     , const DTDAttDef&          attDef
     , const bool
 )
-{	
+{
     if (fDocumentType->isIntSubsetReading())
     {
         if (elemDecl.hasAttDefs())
@@ -1374,7 +1374,7 @@ void AbstractDOMParser::doctypePI
         fInternalSubset.append(data);
         fInternalSubset.append(chQuestion);
         fInternalSubset.append(chCloseAngle);
-    }	
+    }
 }
 
 
@@ -1430,7 +1430,7 @@ void AbstractDOMParser::endAttList
 	// DOM spec regarding creating element nodes & removing attributes with default values
 	// see DocumentTypeImpl
 	if (elemDecl.hasAttDefs())
-	{		
+	{
         XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
         XMLAttDef* attr = 0;
 
@@ -1685,4 +1685,3 @@ void AbstractDOMParser::TextDecl
 }
 
 XERCES_CPP_NAMESPACE_END
-

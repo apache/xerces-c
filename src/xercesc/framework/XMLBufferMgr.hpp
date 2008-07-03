@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,11 +60,11 @@ public :
     XMLBuffer& bidOnBuffer();
     void releaseBuffer(XMLBuffer& toRelease);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getBufferCount() const;
-    unsigned int getAvailableBufferCount() const;
+    XMLSize_t getBufferCount() const;
+    XMLSize_t getAvailableBufferCount() const;
 
 private :
     // -----------------------------------------------------------------------
@@ -83,20 +83,20 @@ private :
     //      The list of pointers to buffers that are loaned out. There will
     //      never be a lot of them, so a flat list is good enough.
     // -----------------------------------------------------------------------
-    unsigned int    fBufCount;
+    XMLSize_t       fBufCount;
     MemoryManager*  fMemoryManager;
     XMLBuffer**     fBufList;
 };
 
-inline unsigned int XMLBufferMgr::getBufferCount() const
+inline XMLSize_t XMLBufferMgr::getBufferCount() const
 {
     return fBufCount;
 }
 
-inline unsigned int XMLBufferMgr::getAvailableBufferCount() const
+inline XMLSize_t XMLBufferMgr::getAvailableBufferCount() const
 {
-    unsigned available = fBufCount;
-    for (unsigned int index = 0; index < fBufCount && fBufList[index]; index++)
+    XMLSize_t available = fBufCount;
+    for (XMLSize_t index = 0; index < fBufCount && fBufList[index]; index++)
     {
         if (fBufList[index]->getInUse())
             --available;

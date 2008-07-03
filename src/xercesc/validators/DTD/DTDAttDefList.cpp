@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ bool DTDAttDefList::isEmpty() const
 }
 
 
-XMLAttDef* DTDAttDefList::findAttDef(const  unsigned long
+XMLAttDef* DTDAttDefList::findAttDef(const  unsigned int
                                     , const XMLCh* const    attName)
 {
     // We don't use the URI, so we just look up the name
@@ -71,7 +71,7 @@ XMLAttDef* DTDAttDefList::findAttDef(const  unsigned long
 
 
 const XMLAttDef*
-DTDAttDefList::findAttDef(  const   unsigned long
+DTDAttDefList::findAttDef(  const   unsigned int
                             , const XMLCh* const    attName) const
 {
     // We don't use the URI, so we just look up the name
@@ -98,7 +98,7 @@ DTDAttDefList::findAttDef(  const   XMLCh* const
 /**
  * return total number of attributes in this list
  */
-unsigned int DTDAttDefList::getAttDefCount() const
+XMLSize_t DTDAttDefList::getAttDefCount() const
 {
     return fCount;
 }
@@ -106,7 +106,7 @@ unsigned int DTDAttDefList::getAttDefCount() const
 /**
  * return attribute at the index-th position in the list.
  */
-XMLAttDef &DTDAttDefList::getAttDef(unsigned int index) 
+XMLAttDef &DTDAttDefList::getAttDef(XMLSize_t index)
 {
     if(index >= fCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
@@ -116,7 +116,7 @@ XMLAttDef &DTDAttDefList::getAttDef(unsigned int index)
 /**
  * return attribute at the index-th position in the list.
  */
-const XMLAttDef &DTDAttDefList::getAttDef(unsigned int index) const 
+const XMLAttDef &DTDAttDefList::getAttDef(XMLSize_t index) const
 {
     if(index >= fCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
@@ -138,7 +138,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Serialize RefHashTableOf<DTDAttDef>           
+         * Serialize RefHashTableOf<DTDAttDef>
          *
          ***/
         XTemplateSerializer::storeObject(fList, serEng);
@@ -150,7 +150,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Deserialize RefHashTableOf<DTDAttDef>           
+         * Deserialize RefHashTableOf<DTDAttDef>
          *
          ***/
         XTemplateSerializer::loadObject(&fList, 29, true, serEng);
@@ -160,7 +160,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
         {
              fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(fList, false, getMemoryManager());
         }
-        if(fSize) 
+        if(fSize)
         {
             (getMemoryManager())->deallocate(fArray);
             fArray = (DTDAttDef **)((getMemoryManager())->allocate( sizeof(DTDAttDef*) * fSize));
@@ -174,7 +174,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
 
 }
 
-	
+
 DTDAttDefList::DTDAttDefList(MemoryManager* const manager)
 : XMLAttDefList(manager)
 ,fEnum(0)
@@ -186,4 +186,3 @@ DTDAttDefList::DTDAttDefList(MemoryManager* const manager)
 }
 
 XERCES_CPP_NAMESPACE_END
-

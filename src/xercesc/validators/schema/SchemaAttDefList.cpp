@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,29 +63,29 @@ bool SchemaAttDefList::isEmpty() const
 }
 
 
-XMLAttDef* SchemaAttDefList::findAttDef(const  unsigned long   uriID
+XMLAttDef* SchemaAttDefList::findAttDef(const  unsigned int uriID
                                     , const XMLCh* const    attName)
 {
    const int colonInd = XMLString::indexOf(attName, chColon);
- 
+
    // An index of 0 is really an error, but the QName class doesn't check for
    // that case either...
    const XMLCh* const localPart = colonInd >= 0 ? attName + colonInd + 1 : attName;
- 
+
    return fList->get((void*)localPart, uriID);
 }
 
 
 const XMLAttDef*
-SchemaAttDefList::findAttDef(  const   unsigned long   uriID
+SchemaAttDefList::findAttDef( const   unsigned int   uriID
                             , const XMLCh* const    attName) const
 {
    const int colonInd = XMLString::indexOf(attName, chColon);
- 
+
    // An index of 0 is really an error, but the QName class doesn't check for
    // that case either...
    const XMLCh* const localPart = colonInd >= 0 ? attName + colonInd + 1 : attName;
- 
+
    return fList->get((void*)localPart, uriID);
 }
 
@@ -111,7 +111,7 @@ SchemaAttDefList::findAttDef( const   XMLCh* const
 /**
  * return total number of attributes in this list
  */
-unsigned int SchemaAttDefList::getAttDefCount() const
+XMLSize_t SchemaAttDefList::getAttDefCount() const
 {
     return fCount;
 }
@@ -119,7 +119,7 @@ unsigned int SchemaAttDefList::getAttDefCount() const
 /**
  * return attribute at the index-th position in the list.
  */
-XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index) 
+XMLAttDef &SchemaAttDefList::getAttDef(XMLSize_t index)
 {
     if(index >= fCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
@@ -129,7 +129,7 @@ XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index)
 /**
  * return attribute at the index-th position in the list.
  */
-const XMLAttDef &SchemaAttDefList::getAttDef(unsigned int index) const 
+const XMLAttDef &SchemaAttDefList::getAttDef(XMLSize_t index) const
 {
     if(index >= fCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex, getMemoryManager());
@@ -163,7 +163,7 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
     {
         /***
          *
-         * Deserialize RefHash2KeysTableOf<SchemaAttDef>           
+         * Deserialize RefHash2KeysTableOf<SchemaAttDef>
          *
          ***/
         XTemplateSerializer::loadObject(&fList, 29, true, serEng);
@@ -174,7 +174,7 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
         {
             fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList, false, getMemoryManager());
         }
-        if(fSize) 
+        if(fSize)
         {
             (getMemoryManager())->deallocate(fArray);
             fArray = (SchemaAttDef **)((getMemoryManager())->allocate( sizeof(SchemaAttDef*) * fSize));
@@ -199,4 +199,3 @@ SchemaAttDefList::SchemaAttDefList(MemoryManager* const manager)
 }
 
 XERCES_CPP_NAMESPACE_END
-

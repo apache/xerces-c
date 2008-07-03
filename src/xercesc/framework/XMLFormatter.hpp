@@ -359,7 +359,7 @@ private :
                               const XMLCh *  stdRef);
 
     void writeCharRef(const XMLCh &toWrite);
-    void writeCharRef(unsigned long toWrite);
+    void writeCharRef(XMLSize_t toWrite);
 
     bool inEscapeList(const XMLFormatter::EscapeFlags escStyle
                     , const XMLCh                     toCheck);
