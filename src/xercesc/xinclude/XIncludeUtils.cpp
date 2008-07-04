@@ -52,7 +52,6 @@ XIncludeUtils::~XIncludeUtils(){
 // ---------------------------------------------------------------------------
 bool
 XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver){
-    bool included = false;
     if (sourceNode) {
         /* create the list of child elements here, since it gets changed during the parse */
         RefVectorOf<DOMNode> children(10, false);
@@ -86,7 +85,7 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
             parseDOMNodeDoingXInclude(children.elementAt(i), parsedDocument, entityResolver);
         }
     }
-    return included;
+    return false;
 }
 
 // ---------------------------------------------------------------------------
