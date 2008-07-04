@@ -295,7 +295,7 @@ bool AbstractDOMParser::getIdentityConstraintChecking() const
     return fScanner->getIdentityConstraintChecking();
 }
 
-int AbstractDOMParser::getErrorCount() const
+XMLSize_t AbstractDOMParser::getErrorCount() const
 {
     return fScanner->getErrorCount();
 }
@@ -728,7 +728,7 @@ void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            loca
 {
     if(fCreateSchemaInfo)
     {
-        for (unsigned int index=0; index < psviAttributes->getLength(); index++) {
+        for (XMLSize_t index=0; index < psviAttributes->getLength(); index++) {
             XERCES_CPP_NAMESPACE_QUALIFIER PSVIAttribute *attrInfo=psviAttributes->getAttributePSVIAtIndex(index);
             XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* pAttrNode=fCurrentNode->getAttributes()->getNamedItemNS(psviAttributes->getAttributeNamespaceAtIndex(index),
                                                                                                             psviAttributes->getAttributeNameAtIndex(index));
@@ -998,7 +998,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
         elem = fDocument->createElement(elemDecl.getFullName());
         elemImpl = (DOMElementImpl *) elem;
     }
-    for (unsigned int index = 0; index < attrCount; ++index) {
+    for (XMLSize_t index = 0; index < attrCount; ++index) {
         const XMLAttr* oneAttrib = attrList.elementAt(index);
         DOMAttrImpl *attr = 0;
         DOMNode* remAttr = 0;
@@ -1065,7 +1065,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
         DOMAttrImpl * insertAttr = 0;
 
-        for(unsigned int i=0; i<defAttrs->getAttDefCount(); i++)
+        for(XMLSize_t i=0; i<defAttrs->getAttDefCount(); i++)
         {
             attr = &defAttrs->getAttDef(i);
 
@@ -1438,7 +1438,7 @@ void AbstractDOMParser::endAttList
         DOMElement     *elem  = fDocument->createElement(elemDecl.getFullName());
         DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
 
-        for(unsigned int i=0; i<defAttrs->getAttDefCount(); i++)
+        for(XMLSize_t i=0; i<defAttrs->getAttDefCount(); i++)
         {
             attr = &defAttrs->getAttDef(i);
             if (attr->getValue() != 0)

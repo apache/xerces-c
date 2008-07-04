@@ -986,7 +986,7 @@ void DOMLSParserImpl::docCharacters(const XMLCh* const    chars
     AbstractDOMParser::docCharacters(chars, length, cdataSection);
     if(fFilter)
     {
-        long whatToShow=fFilter->getWhatToShow();
+        DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(cdataSection && (whatToShow & DOMNodeFilter::SHOW_CDATA_SECTION) ||
            !cdataSection && (whatToShow & DOMNodeFilter::SHOW_TEXT))
         {
@@ -1010,7 +1010,7 @@ void DOMLSParserImpl::docComment(const XMLCh* const  comment)
     AbstractDOMParser::docComment(comment);
     if(fFilter)
     {
-        long whatToShow=fFilter->getWhatToShow();
+        DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(whatToShow & DOMNodeFilter::SHOW_COMMENT)
         {
             DOMLSParserFilter::FilterAction action =
@@ -1034,7 +1034,7 @@ void DOMLSParserImpl::docPI(const XMLCh* const    target
     AbstractDOMParser::docPI(target, data);
     if(fFilter)
     {
-        long whatToShow=fFilter->getWhatToShow();
+        DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(whatToShow & DOMNodeFilter::SHOW_PROCESSING_INSTRUCTION)
         {
             DOMLSParserFilter::FilterAction action =
@@ -1062,7 +1062,7 @@ void DOMLSParserImpl::endElement(const XMLElementDecl& elemDecl
     AbstractDOMParser::endElement(elemDecl, urlId, isRoot, elemPrefix);
     if(fFilter)
     {
-        long whatToShow=fFilter->getWhatToShow();
+        DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(whatToShow & DOMNodeFilter::SHOW_ELEMENT)
         {
             DOMLSParserFilter::FilterAction action =

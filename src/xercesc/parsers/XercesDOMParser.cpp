@@ -244,7 +244,7 @@ typedef JanitorMemFunCall<XercesDOMParser>  ResetParseType;
 //  XercesDOMParser: Grammar preparsing methods
 // ---------------------------------------------------------------------------
 Grammar* XercesDOMParser::loadGrammar(const char* const systemId,
-                                      const short grammarType,
+                                      const Grammar::GrammarType grammarType,
                                       const bool toCache)
 {
     // Avoid multiple entrance
@@ -273,7 +273,7 @@ Grammar* XercesDOMParser::loadGrammar(const char* const systemId,
 }
 
 Grammar* XercesDOMParser::loadGrammar(const XMLCh* const systemId,
-                                      const short grammarType,
+                                      const Grammar::GrammarType grammarType,
                                       const bool toCache)
 {
     // Avoid multiple entrance
@@ -302,7 +302,7 @@ Grammar* XercesDOMParser::loadGrammar(const XMLCh* const systemId,
 }
 
 Grammar* XercesDOMParser::loadGrammar(const InputSource& source,
-                                      const short grammarType,
+                                      const Grammar::GrammarType grammarType,
                                       const bool toCache)
 {
     // Avoid multiple entrance

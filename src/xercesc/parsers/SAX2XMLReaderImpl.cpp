@@ -146,9 +146,9 @@ void SAX2XMLReaderImpl::initialize()
     setDoSchema(true);
 
     fPrefixesStorage = new (fMemoryManager) XMLStringPool(109, fMemoryManager) ;
-    fPrefixes        = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
+    fPrefixes        = new (fMemoryManager) ValueStackOf<XMLSize_t> (30, fMemoryManager) ;
     fTempAttrVec     = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
-    fPrefixCounts    = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
+    fPrefixCounts    = new (fMemoryManager) ValueStackOf<XMLSize_t>(10, fMemoryManager) ;
     fTempQName       = new (fMemoryManager) XMLBuffer(32, fMemoryManager);
 }
 
@@ -176,7 +176,7 @@ void SAX2XMLReaderImpl::installAdvDocHandler(XMLDocumentHandler* const toInstall
     if (fAdvDHCount == fAdvDHListSize)
     {
         // Calc a new size and allocate the new temp buffer
-        const unsigned int newSize = (unsigned int)(fAdvDHListSize * 1.5);
+        const XMLSize_t newSize = (XMLSize_t)(fAdvDHListSize * 1.5);
         XMLDocumentHandler** newList = (XMLDocumentHandler**) fMemoryManager->allocate
         (
             newSize * sizeof(XMLDocumentHandler*)
@@ -218,7 +218,7 @@ bool SAX2XMLReaderImpl::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
     //  Search the array until we find this handler. If we find a null entry
     //  first, we can stop there before the list is kept contiguous.
     //
-    unsigned int index;
+    XMLSize_t index;
     for (index = 0; index < fAdvDHCount; index++)
     {
         //
@@ -538,7 +538,7 @@ void SAX2XMLReaderImpl::docCharacters(  const   XMLCh* const    chars
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docCharacters(chars, length, cdataSection);
 }
 
@@ -557,7 +557,7 @@ void SAX2XMLReaderImpl::docComment(const XMLCh* const commentText)
     //  OK, if there are any installed advanced handlers,
     // then let's call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docComment(commentText);
 }
 
@@ -571,7 +571,7 @@ void SAX2XMLReaderImpl::XMLDecl( const  XMLCh* const    versionStr
     // SAX has no way to report this event. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->XMLDecl( versionStr,
                                     encodingStr,
                                     standaloneStr,
@@ -590,7 +590,7 @@ void SAX2XMLReaderImpl::docPI(  const   XMLCh* const    target
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docPI(target, data);
 }
 
@@ -604,7 +604,7 @@ void SAX2XMLReaderImpl::endDocument()
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->endDocument();
 }
 
@@ -619,7 +619,7 @@ void SAX2XMLReaderImpl::endEntityReference(const XMLEntityDecl& entityDecl)
     //  SAX has no way to report this event. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->endEntityReference(entityDecl);
 }
 
@@ -640,7 +640,7 @@ void SAX2XMLReaderImpl::ignorableWhitespace(const   XMLCh* const    chars
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->ignorableWhitespace(chars, length, cdataSection);
 }
 
@@ -651,7 +651,7 @@ void SAX2XMLReaderImpl::resetDocument()
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->resetDocument();
 
     // Make sure our element depth flag gets set back to zero
@@ -676,7 +676,7 @@ void SAX2XMLReaderImpl::startDocument()
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->startDocument();
 }
 
@@ -713,12 +713,12 @@ startElement(   const   XMLElementDecl&         elemDecl
 
         if (getDoNamespaces())
         {
-            unsigned int numPrefix = 0;
+            XMLSize_t numPrefix = 0;
 
             if (!fNamespacePrefix)
                 fTempAttrVec->removeAllElements();
 
-            for (unsigned int i = 0; i < attrCount; i++)
+            for (XMLSize_t i = 0; i < attrCount; i++)
             {
                 const XMLCh*   nsPrefix = 0;
                 const XMLCh*   nsURI    = 0;
@@ -742,7 +742,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                         nsPrefix = XMLUni::fgZeroLenString;
                     if(fDocHandler)
                         fDocHandler->startPrefixMapping(nsPrefix, nsURI);
-                    unsigned int nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);
+                    XMLSize_t nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);
                     fPrefixes->push(nPrefixId) ;
                     numPrefix++;
                 }
@@ -794,10 +794,10 @@ startElement(   const   XMLElementDecl&         elemDecl
                     );
                 }
 
-                unsigned int numPrefix = fPrefixCounts->pop();
-                for (unsigned int i = 0; i < numPrefix; ++i)
+                XMLSize_t numPrefix = fPrefixCounts->pop();
+                for (XMLSize_t i = 0; i < numPrefix; ++i)
                 {
-                    unsigned int nPrefixId = fPrefixes->pop() ;
+                    XMLSize_t nPrefixId = fPrefixes->pop() ;
                     if(fDocHandler)
                         fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
                 }
@@ -818,7 +818,7 @@ startElement(   const   XMLElementDecl&         elemDecl
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
     {
         fAdvDHList[index]->startElement
         (
@@ -869,10 +869,10 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
             }
 
             // get the prefixes back so that we can call endPrefixMapping()
-            unsigned int numPrefix = fPrefixCounts->pop();
-            for (unsigned int i = 0; i < numPrefix; i++)
+            XMLSize_t numPrefix = fPrefixCounts->pop();
+            for (XMLSize_t i = 0; i < numPrefix; i++)
             {
-                unsigned int nPrefixId = fPrefixes->pop() ;
+                XMLSize_t nPrefixId = fPrefixes->pop() ;
                 if(fDocHandler)
                     fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
             }
@@ -895,7 +895,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->endElement(elemDecl, uriId, isRoot, elemPrefix);
 
     //
@@ -915,7 +915,7 @@ void SAX2XMLReaderImpl::startEntityReference(const XMLEntityDecl& entityDecl)
     //  SAX has no way to report this. But, If there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->startEntityReference(entityDecl);
 }
 

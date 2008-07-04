@@ -24,13 +24,13 @@
 
 
 #include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
 class EntityResolver;
 class ErrorHandler;
-class Grammar;
 class XMLEntityResolver;
 class XMLResourceIdentifier;
 
@@ -540,7 +540,7 @@ public :
       * @see InputSource#InputSource
       */
     Grammar* loadGrammar(const InputSource& source,
-                         const short grammarType,
+                         const Grammar::GrammarType grammarType,
                          const bool toCache = false);
 
     /**
@@ -569,7 +569,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     Grammar* loadGrammar(const XMLCh* const systemId,
-                         const short grammarType,
+                         const Grammar::GrammarType grammarType,
                          const bool toCache = false);
 
     /**
@@ -597,7 +597,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     Grammar* loadGrammar(const char* const systemId,
-                         const short grammarType,
+                         const Grammar::GrammarType grammarType,
                          const bool toCache = false);
 
     /**

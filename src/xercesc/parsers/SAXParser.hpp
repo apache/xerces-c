@@ -30,7 +30,9 @@
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/SecurityManager.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -40,7 +42,6 @@ class EntityResolver;
 class XMLPScanToken;
 class XMLScanner;
 class XMLValidator;
-class Grammar;
 class GrammarResolver;
 class XMLGrammarPool;
 class XMLEntityResolver;
@@ -1182,7 +1183,7 @@ public :
       * @see InputSource#InputSource
       */
     Grammar* loadGrammar(const InputSource& source,
-                         const short grammarType,
+                         const Grammar::GrammarType grammarType,
                          const bool toCache = false);
 
     /**
@@ -1211,7 +1212,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     Grammar* loadGrammar(const XMLCh* const systemId,
-                         const short grammarType,
+                         const Grammar::GrammarType grammarType,
                          const bool toCache = false);
 
     /**
@@ -1239,7 +1240,7 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       */
     Grammar* loadGrammar(const char* const systemId,
-                         const short grammarType,
+                         const Grammar::GrammarType grammarType,
                          const bool toCache = false);
 
     /**
@@ -2087,9 +2088,9 @@ private:
     //
     // -----------------------------------------------------------------------
     bool                 fParseInProgress;
-    unsigned int         fElemDepth;
-    unsigned int         fAdvDHCount;
-    unsigned int         fAdvDHListSize;
+    XMLSize_t            fElemDepth;
+    XMLSize_t            fAdvDHCount;
+    XMLSize_t            fAdvDHListSize;
     VecAttrListImpl      fAttrList;
     DocumentHandler*     fDocHandler;
     DTDHandler*          fDTDHandler;

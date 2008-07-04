@@ -142,7 +142,7 @@ void SAXParser::installAdvDocHandler(XMLDocumentHandler* const toInstall)
     if (fAdvDHCount == fAdvDHListSize)
     {
         // Calc a new size and allocate the new temp buffer
-        const unsigned int newSize = (unsigned int)(fAdvDHListSize * 1.5);
+        const XMLSize_t newSize = (XMLSize_t)(fAdvDHListSize * 1.5);
         XMLDocumentHandler** newList = (XMLDocumentHandler**) fMemoryManager->allocate
         (
             newSize * sizeof(XMLDocumentHandler*)
@@ -184,7 +184,7 @@ bool SAXParser::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
     //  Search the array until we find this handler. If we find a null entry
     //  first, we can stop there before the list is kept contiguous.
     //
-    unsigned int index;
+    XMLSize_t index;
     for (index = 0; index < fAdvDHCount; index++)
     {
         //
@@ -774,7 +774,7 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docCharacters(chars, length, cdataSection);
 }
 
@@ -785,7 +785,7 @@ void SAXParser::docComment(const XMLCh* const commentText)
     //  SAX has no way to report this. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docComment(commentText);
 }
 
@@ -800,7 +800,7 @@ void SAXParser::XMLDecl( const  XMLCh* const    versionStr
     //  SAX has no way to report this. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->XMLDecl( versionStr,
                                     encodingStr,
                                     standaloneStr,
@@ -819,7 +819,7 @@ void SAXParser::docPI(  const   XMLCh* const    target
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->docPI(target, data);
 }
 
@@ -833,7 +833,7 @@ void SAXParser::endDocument()
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->endDocument();
 }
 
@@ -867,7 +867,7 @@ void SAXParser::endElement( const   XMLElementDecl& elemDecl
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->endElement(elemDecl, uriId, isRoot, elemPrefix);
 
     //
@@ -885,7 +885,7 @@ void SAXParser::endEntityReference(const XMLEntityDecl& entityDecl)
     //  SAX has no way to report this event. But, if there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->endEntityReference(entityDecl);
 }
 
@@ -906,7 +906,7 @@ void SAXParser::ignorableWhitespace(const   XMLCh* const    chars
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->ignorableWhitespace(chars, length, cdataSection);
 }
 
@@ -921,7 +921,7 @@ void SAXParser::resetDocument()
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->resetDocument();
 
     // Make sure our element depth flag gets set back to zero
@@ -941,7 +941,7 @@ void SAXParser::startDocument()
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->startDocument();
 }
 
@@ -997,7 +997,7 @@ startElement(   const   XMLElementDecl&         elemDecl
     //  If there are any installed advanced handlers, then lets call them
     //  with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
     {
         fAdvDHList[index]->startElement
         (
@@ -1019,7 +1019,7 @@ void SAXParser::startEntityReference(const XMLEntityDecl& entityDecl)
     //  SAX has no way to report this. But, If there are any installed
     //  advanced handlers, then lets call them with this info.
     //
-    for (unsigned int index = 0; index < fAdvDHCount; index++)
+    for (XMLSize_t index = 0; index < fAdvDHCount; index++)
         fAdvDHList[index]->startEntityReference(entityDecl);
 }
 
@@ -1250,7 +1250,7 @@ void SAXParser::startInputSource(const InputSource&)
 //  SAXParser: Grammar preparsing methods
 // ---------------------------------------------------------------------------
 Grammar* SAXParser::loadGrammar(const char* const systemId,
-                                const short grammarType,
+                                const Grammar::GrammarType grammarType,
                                 const bool toCache)
 {
     // Avoid multiple entrance
@@ -1276,7 +1276,7 @@ Grammar* SAXParser::loadGrammar(const char* const systemId,
 }
 
 Grammar* SAXParser::loadGrammar(const XMLCh* const systemId,
-                                const short grammarType,
+                                const Grammar::GrammarType grammarType,
                                 const bool toCache)
 {
     // Avoid multiple entrance
@@ -1302,7 +1302,7 @@ Grammar* SAXParser::loadGrammar(const XMLCh* const systemId,
 }
 
 Grammar* SAXParser::loadGrammar(const InputSource& source,
-                                const short grammarType,
+                                const Grammar::GrammarType grammarType,
                                 const bool toCache)
 {
     // Avoid multiple entrance

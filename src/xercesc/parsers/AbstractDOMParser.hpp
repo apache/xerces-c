@@ -213,7 +213,7 @@ public :
       *			parse operation.
       *
       */
-    int getErrorCount() const;
+    XMLSize_t getErrorCount() const;
 
     /** Get the 'do namespaces' flag
       *
