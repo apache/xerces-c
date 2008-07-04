@@ -22,6 +22,7 @@
 #if !defined(XERCESC_INCLUDE_GUARD_XMLEXCEPTION_HPP)
 #define XERCESC_INCLUDE_GUARD_XMLEXCEPTION_HPP
 
+#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLUni.hpp>
@@ -59,14 +60,14 @@ public:
     XMLExcepts::Codes getCode() const;
     const XMLCh* getMessage() const;
     const char* getSrcFile() const;
-    unsigned int getSrcLine() const;
+    XMLFileLoc getSrcLine() const;
     XMLErrorReporter::ErrTypes getErrorType() const;
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setPosition(const char* const file, const unsigned int line);
+    void setPosition(const char* const file, const XMLFileLoc line);
 
 
     // -----------------------------------------------------------------------
@@ -79,7 +80,7 @@ public:
     //          of IE 5.0.
     // -----------------------------------------------------------------------
     XMLException();
-    XMLException(const char* const srcFile, const unsigned int srcLine, MemoryManager* const memoryManager = 0);
+    XMLException(const char* const srcFile, const XMLFileLoc srcLine, MemoryManager* const memoryManager = 0);
     XMLException(const XMLException& toCopy);
     XMLException& operator=(const XMLException& toAssign);
 
@@ -126,7 +127,7 @@ private :
     // -----------------------------------------------------------------------
     XMLExcepts::Codes       fCode;
     char*                   fSrcFile;
-    unsigned int            fSrcLine;
+    XMLFileLoc              fSrcLine;
     XMLCh*                  fMsg;
 
 protected:
@@ -153,7 +154,7 @@ inline const char* XMLException::getSrcFile() const
     return fSrcFile;
 }
 
-inline unsigned int XMLException::getSrcLine() const
+inline XMLFileLoc XMLException::getSrcLine() const
 {
     return fSrcLine;
 }
@@ -180,7 +181,7 @@ class expKeyword theType : public XMLException \
 public: \
  \
     theType(const   char* const         srcFile \
-            , const unsigned int        srcLine \
+            , const XMLFileLoc          srcLine \
             , const XMLExcepts::Codes toThrow \
             , MemoryManager*            memoryManager = 0) : \
         XMLException(srcFile, srcLine, memoryManager) \
@@ -195,7 +196,7 @@ public: \
     } \
   \
     theType(const   char* const         srcFile \
-            , const unsigned int        srcLine \
+            , const XMLFileLoc          srcLine \
             , const XMLExcepts::Codes   toThrow \
             , const XMLCh* const        text1 \
             , const XMLCh* const        text2 = 0 \
@@ -208,7 +209,7 @@ public: \
     } \
  \
     theType(const   char* const         srcFile \
-            , const unsigned int        srcLine \
+            , const XMLFileLoc          srcLine \
             , const XMLExcepts::Codes   toThrow \
             , const char* const         text1 \
             , const char* const         text2 = 0 \

@@ -69,7 +69,7 @@ XMLException::~XMLException()
 // ---------------------------------------------------------------------------
 //  XMLException: Setter methods
 // ---------------------------------------------------------------------------
-void XMLException::setPosition(const char* const file, const unsigned int line)
+void XMLException::setPosition(const char* const file, const XMLFileLoc line)
 {
     fSrcLine = line;
 	fMemoryManager->deallocate(fSrcFile);
@@ -93,7 +93,7 @@ XMLException::XMLException() :
 
 
 XMLException::XMLException( const   char* const     srcFile
-                            , const unsigned int    srcLine
+                            , const XMLFileLoc      srcLine
                             , MemoryManager* const  memoryManager) :
 
     fCode(XMLExcepts::NoError)

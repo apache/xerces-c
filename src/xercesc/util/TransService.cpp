@@ -57,7 +57,7 @@ void XMLInitializer::initializeTransService()
 {
     XMLTransService::gMappings = new RefHashTableOf<ENameMap>(103);
     XMLTransService::gMappingsRecognizer = new RefVectorOf<ENameMap>(
-      XMLRecognizer::Encodings_Count);
+      (XMLSize_t)XMLRecognizer::Encodings_Count);
 }
 
 void XMLInitializer::terminateTransService()
@@ -208,7 +208,7 @@ void XMLTransService::initTransService()
     //
     //  A stupid way to increment the fCurCount inside the RefVectorOf
     //
-    for (unsigned int i = 0; i < XMLRecognizer::Encodings_Count; i++)
+    for (XMLSize_t i = 0; i < (XMLSize_t)XMLRecognizer::Encodings_Count; i++)
         gMappingsRecognizer->addElement(0);
 
     //

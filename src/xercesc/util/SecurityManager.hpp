@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   * prohibitive amounts of system resources.  Applications can
   * attach instances of this class to parsers that they've
   * created, via the
-  * http://apache.org/xml/properties/security-manager property.  
+  * http://apache.org/xml/properties/security-manager property.
   * </p>
   *
   * <p> Defaults will be provided for all known security holes.
@@ -58,12 +58,12 @@ public:
     //@{
     /** Default constructor */
     SecurityManager()
-        : fEntityExpansionLimit(ENTITY_EXPANSION_LIMIT)
-    {        
+        : fEntityExpansionLimit((XMLSize_t)ENTITY_EXPANSION_LIMIT)
+    {
     }
 
     /** Destructor */
-    virtual ~SecurityManager(){};   
+    virtual ~SecurityManager(){};
     //@}
 
     /** @name The Security Manager */
@@ -80,7 +80,7 @@ public:
     * @param newLimit  the new entity expansion limit
     *
     */
-    virtual void setEntityExpansionLimit(unsigned int newLimit) 
+    virtual void setEntityExpansionLimit(XMLSize_t newLimit)
     {
         fEntityExpansionLimit = newLimit;
     }
@@ -92,21 +92,21 @@ public:
     * @return   the current setting of the entity expansion limit
     *
     */
-    virtual unsigned int getEntityExpansionLimit() const
-    { 
+    virtual XMLSize_t getEntityExpansionLimit() const
+    {
         return fEntityExpansionLimit;
     }
     //@}
 
 protected:
-    unsigned int fEntityExpansionLimit;
+    XMLSize_t fEntityExpansionLimit;
 
 private:
 
     /* Unimplemented Constructors and operators */
     /* Copy constructor */
     SecurityManager(const SecurityManager&);
-    
+
     /** Assignment operator */
     SecurityManager& operator=(const SecurityManager&);
 };
