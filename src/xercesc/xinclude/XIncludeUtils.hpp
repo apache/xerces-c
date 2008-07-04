@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ typedef struct XIncludeHistoryNode{
 /**
   * Class implementing all the utility functions required by an XInclude parser.
   *
-  * This class is designed primarily for internal use. This class implements 
+  * This class is designed primarily for internal use. This class implements
   * utility methods to be called by an XInclude parser. It is intended to encapsulate
   * the actual processing and recognition of XInclude components.
   */
@@ -80,10 +80,10 @@ private:
       * @return a newly created DOMDocument containing the parsed and actioned
       * href, or NULL if the document could not be loaded.
       */
-    DOMDocument *doXIncludeXMLFileDOM(const XMLCh *href, 
+    DOMDocument *doXIncludeXMLFileDOM(const XMLCh *href,
         const XMLCh *relativeHref,
         DOMNode *xincludeNode,
-        DOMDocument *parsedDocument, 
+        DOMDocument *parsedDocument,
         XMLEntityHandler* entityResolver);
 
      /** Parse an XInclude text file into a DOMText node.
@@ -96,11 +96,11 @@ private:
       * @return a newly created DOMText containing the parsed and actioned
       * href, or NULL if the document could not be loaded.
       */
-    DOMText *doXIncludeTEXTFileDOM(const XMLCh *href, 
+    DOMText *doXIncludeTEXTFileDOM(const XMLCh *href,
         const XMLCh *relativeHref,
-        const XMLCh *encoding,  
+        const XMLCh *encoding,
         DOMNode *xincludeNode,
-        DOMDocument *parsedDocument, 
+        DOMDocument *parsedDocument,
         XMLEntityHandler* entityResolver);
 
      /** Detect whether the supplied details are correct for an xi:include element
@@ -156,15 +156,15 @@ private:
       *
       * @param hrefAttrValue the href to parse and escape.
       * @param needsDeallocating set to true if the return value needs deallocating
-      * by the caller after use, false if the value returned is the same as the 
+      * by the caller after use, false if the value returned is the same as the
       * hrefAttrValue passed in.
       *
-      * @return an escaped version of hrefAttrValue or hrefAttrValue itself if 
+      * @return an escaped version of hrefAttrValue or hrefAttrValue itself if
       * hrefAttrValue contains only valid characters.
       */
     /* 4.1.1 */
     const XMLCh *getEscapedHRefAttrValue(const XMLCh *hrefAttrValue, bool &needsDeallocating);
-    
+
      /** Set the accept and accept-lang parameters on HTTP requests generated while
       * XIncluding.
       *
@@ -196,7 +196,7 @@ private:
       */
     bool addDocumentURIToCurrentInclusionHistoryStack(const XMLCh *URItoAdd);
 
-     /** Check the XInclude InclusionHistoryStack to see if the supplied URI 
+     /** Check the XInclude InclusionHistoryStack to see if the supplied URI
       * has already been included. This is used to ensure that circular inclusion
       * chains are detected and that the inclusion mechanism does not get stuck in
       * a loop.
@@ -231,7 +231,7 @@ private:
       * @param href The URI of the document being parsed.
       *
       * @return true if the errorHandler requests continuation of parsing despite error
-      * false if the errorHandler requests parsing end on encountering error, or it 
+      * false if the errorHandler requests parsing end on encountering error, or it
       * there is no error handler.
       */
     bool reportError(const DOMNode* const errorNode
@@ -244,9 +244,9 @@ public:
     static const XMLCh fgXIBaseAttrName[];
 private:
     XIncludeHistoryNode *fIncludeHistoryHead;
-    long fErrorCount;
+    XMLSize_t fErrorCount;
     XMLErrorReporter *fErrorReporter;
-    static const XMLCh fgXIIncludeQName[];            
+    static const XMLCh fgXIIncludeQName[];
     static const XMLCh fgXIFallbackQName[];
     static const XMLCh fgXIIncludeHREFAttrName[];
     static const XMLCh fgXIIncludeParseAttrName[];

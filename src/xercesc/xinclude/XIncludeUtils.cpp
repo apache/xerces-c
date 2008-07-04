@@ -52,7 +52,7 @@ XIncludeUtils::~XIncludeUtils(){
 // ---------------------------------------------------------------------------
 bool
 XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parsedDocument, XMLEntityHandler* entityResolver){
-    int included = 0;
+    bool included = false;
     if (sourceNode) {
         /* create the list of child elements here, since it gets changed during the parse */
         RefVectorOf<DOMNode> children(10, false);
@@ -82,11 +82,11 @@ XIncludeUtils::parseDOMNodeDoingXInclude(DOMNode *sourceNode, DOMDocument *parse
         /* to have got here, we must not have found an xinclude element in the current element, so
            need to walk the entire child list parsing for each. An xinclude in  a
            node does not affect a peer, so we can simply parse each child in turn */
-        for (unsigned int i = 0; i < children.size(); i++){
+        for (XMLSize_t i = 0; i < children.size(); i++){
             parseDOMNodeDoingXInclude(children.elementAt(i), parsedDocument, entityResolver);
         }
     }
-    return (included)?true:false;
+    return included;
 }
 
 // ---------------------------------------------------------------------------
@@ -539,7 +539,7 @@ XIncludeUtils::doXIncludeTEXTFileDOM(const XMLCh *href,
         return NULL;
     }
     Janitor<BinInputStream> janStream(stream);
-    const int maxToRead=16*1024;
+    const XMLSize_t maxToRead=16*1024;
     XMLByte* buffer=(XMLByte*)XMLPlatformUtils::fgMemoryManager->allocate(maxToRead * sizeof(XMLByte));
     if(buffer==NULL)
         throw OutOfMemoryException();
