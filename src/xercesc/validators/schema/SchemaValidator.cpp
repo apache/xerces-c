@@ -1063,7 +1063,7 @@ void SchemaValidator::checkRefElementConsistency(SchemaGrammar* const currentGra
 
             if (subsElements) {
 
-                unsigned subsElemSize = subsElements->size();
+                unsigned int subsElemSize = subsElements->size();
 
                 for (unsigned int j=0; j < subsElemSize; j++) {
 
@@ -1966,7 +1966,7 @@ SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
     );//new bool[baseCount];
     ArrayJanitor<bool> janFoundIt(foundIt, fMemoryManager);
 
-    for (unsigned k=0; k < baseCount; k++) {
+    for (unsigned int k=0; k < baseCount; k++) {
         foundIt[k] = false;
     }
 

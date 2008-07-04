@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -218,7 +218,7 @@ void BitSet::xorWith(const BitSet& other)
 unsigned int BitSet::hash(const unsigned int hashModulus) const
 {
     const unsigned char* pBytes = (const unsigned char*)fBits;
-    const int unsigned len = fUnitLen * sizeof(unsigned long);
+    const unsigned int len = fUnitLen * sizeof(unsigned long);
 
     unsigned int  hashVal = 0;
     for (unsigned int index = 0; index < len; index++)

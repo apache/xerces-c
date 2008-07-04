@@ -1219,7 +1219,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         // no element decl.  The other uses in this scope will only
         // be encountered if there continues to be no element decl--which
         // implies that this will have been initialized correctly.
-        unsigned orgGrammarUri = uriId;
+        unsigned int orgGrammarUri = uriId;
         if (!elemDecl && ( orgGrammarUri = fURIStringPool->getId(original_uriStr)) != uriId) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
@@ -1322,7 +1322,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         // no element decl.  The other uses in this scope will only
         // be encountered if there continues to be no element decl--which
         // implies that this will have been initialized correctly.
-        unsigned orgGrammarUri = fEmptyNamespaceId;
+        unsigned int orgGrammarUri = fEmptyNamespaceId;
         if (!elemDecl && (orgGrammarUri = fURIStringPool->getId(original_uriStr)) != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
             bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
