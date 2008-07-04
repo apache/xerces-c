@@ -135,9 +135,10 @@
  * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 4   SchemaAttDef, SchemaElementDecl serialize fPSVIScope
  * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 5   XercesStep serializes the axis as an int
  * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 6   added fIsExternal to XMLEntityDecl
+ * XERCES_GRAMMAR_SERIALIZATION_LEVEL = 7   size of line/column fields has changed
  *
  ***/
-#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 6
+#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 7
 
 /** DO NOT MODIFY BELOW THIS LINE */
 
