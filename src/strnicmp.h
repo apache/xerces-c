@@ -22,11 +22,13 @@
 #ifndef STRNICMP_H
 #define STRNICMP_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
+extern int strnicmp(const char* str1, const char* str2, size_t count);
 
 #ifdef __cplusplus
 }

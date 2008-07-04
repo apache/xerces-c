@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-extern int stricmp(const char* const str1, const char* const  str2);
+extern int stricmp(const char* str1, const char* str2);
 
 #ifdef __cplusplus
 }

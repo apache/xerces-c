@@ -29,7 +29,7 @@
 #	include <strings.h>
 #endif
 
-int stricmp(const char* const str1, const char* const  str2) 
+int stricmp(const char* str1, const char* str2) 
 {
 #if HAVE_STRCASECMP
 	return strcasecmp(str1, str2);

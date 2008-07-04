@@ -29,7 +29,7 @@
 #	include <strings.h>
 #endif
 
-int strnicmp(const char* const str1, const char* const  str2, const unsigned int count)
+int strnicmp(const char* str1, const char* str2, size_t count)
 {
 #if HAVE_STRNCASECMP
 	return (count == 0) ? 0 : strncasecmp( str1, str2, count);
