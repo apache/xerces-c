@@ -33,7 +33,7 @@ MemoryManager* MemoryManagerImpl::getExceptionMemoryManager()
   return this;
 }
 
-void* MemoryManagerImpl::allocate(size_t size)
+void* MemoryManagerImpl::allocate(XMLSize_t size)
 {
     void* memptr;
     try {

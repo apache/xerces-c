@@ -164,7 +164,7 @@ PosixFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer
 
     while (byteCount > 0)
     {
-        size_t bytesWritten = fwrite(buffer, sizeof(XMLByte), byteCount, (FILE*)f);
+        XMLSize_t bytesWritten = fwrite(buffer, sizeof(XMLByte), byteCount, (FILE*)f);
 
         if (ferror((FILE*)f))
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);

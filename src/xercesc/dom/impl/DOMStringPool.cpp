@@ -54,7 +54,7 @@ static DOMStringPoolEntry *createSPE(const XMLCh *str, DOMDocumentImpl *doc)
     //  Compute size to allocate.  Note that there's 1 char of string declared in the
     //       struct, so we don't need to add one again to account for the trailing null.
     //
-    size_t sizeToAllocate = sizeof(DOMStringPoolEntry) + XMLString::stringLen(str)*sizeof(XMLCh);
+    XMLSize_t sizeToAllocate = sizeof(DOMStringPoolEntry) + XMLString::stringLen(str)*sizeof(XMLCh);
     DOMStringPoolEntry *newSPE = (DOMStringPoolEntry *)doc->allocate(sizeToAllocate);
     newSPE->fNext = 0;
     XMLCh * nonConstStr = (XMLCh *)newSPE->fString;

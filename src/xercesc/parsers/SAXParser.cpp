@@ -518,7 +518,7 @@ void SAXParser::useScanner(const XMLCh* const scannerName)
     }
 }
 
-void SAXParser::setInputBufferSize(const size_t bufferSize)
+void SAXParser::setInputBufferSize(const XMLSize_t bufferSize)
 {
     fScanner->setInputBufferSize(bufferSize);
 }

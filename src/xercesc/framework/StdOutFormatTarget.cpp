@@ -39,12 +39,7 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
                                   , const XMLSize_t       count
                                   , XMLFormatter* const)
 {
-    // Surprisingly, Solaris was the only platform on which
-    // required the char* cast to print out the string correctly.
-    // Without the cast, it was printing the pointer value in hex.
-    // Quite annoying, considering every other platform printed
-    // the string with the explicit cast to char* below.
-    fwrite(toWrite, sizeof(XMLByte), (size_t)count, stdout);
+    fwrite(toWrite, sizeof(XMLByte), count, stdout);
     fflush(stdout);
 }
 

@@ -841,7 +841,7 @@ public:
       *
       * @param bufferSize The maximum input buffer size
       */
-    virtual void setInputBufferSize(const size_t bufferSize);
+    virtual void setInputBufferSize(const XMLSize_t bufferSize);
 
     //@}
 
@@ -888,7 +888,7 @@ private :
 
 };
 
-inline void SAX2XMLReader::setInputBufferSize(const size_t /*bufferSize*/)
+inline void SAX2XMLReader::setInputBufferSize(const XMLSize_t /*bufferSize*/)
 {
 }
 

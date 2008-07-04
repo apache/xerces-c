@@ -807,7 +807,7 @@ int             DOMDocumentImpl::changes() const{
 XMLCh * DOMDocumentImpl::cloneString(const XMLCh *src)
 {
     if (!src) return 0;
-    size_t   len = XMLString::stringLen(src);
+    XMLSize_t len = XMLString::stringLen(src);
     len = (len + 1) * sizeof(XMLCh);
     len = (len % 4) + len;
     XMLCh *newStr = (XMLCh *)this->allocate(len);
@@ -846,7 +846,7 @@ void *         DOMDocumentImpl::allocate(XMLSize_t amount)
     if (amount > kMaxSubAllocationSize)
     {
 		//	The size of the header we add to our raw blocks
-		size_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
+	XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
 
 		//	Try to allocate the block
         void* newBlock;
@@ -878,7 +878,7 @@ void *         DOMDocumentImpl::allocate(XMLSize_t amount)
         // Request doesn't fit in the current block.
 
 		// The size of the header we add to our raw blocks
-		size_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
+	XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
 
         // Get a new block from the system allocator.
         void* newBlock;

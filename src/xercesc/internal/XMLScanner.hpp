@@ -380,7 +380,7 @@ public :
     void setCalculateSrcOfs(const bool newValue);
     void setParseSettings(XMLScanner* const refScanner);
     void setStandardUriConformant(const bool newValue);
-    void setInputBufferSize(const size_t bufferSize);
+    void setInputBufferSize(const XMLSize_t bufferSize);
 
     void setGenerateSyntheticAnnotations(const bool newValue);
     void setValidateAnnotations(const bool newValue);
@@ -727,7 +727,7 @@ protected:
     //      Pluggable memory manager for dynamic allocation/deallocation.
     //
     // -----------------------------------------------------------------------
-    size_t                      fBufferSize;
+    XMLSize_t                   fBufferSize;
     bool                        fStandardUriConformant;
     bool                        fCalculateSrcOfs;
     bool                        fDoNamespaces;
@@ -1309,7 +1309,7 @@ inline void XMLScanner::setValidateAnnotations(const bool newValue)
     fValidateAnnotations = newValue;
 }
 
-inline void XMLScanner::setInputBufferSize(const size_t bufferSize)
+inline void XMLScanner::setInputBufferSize(const XMLSize_t bufferSize)
 {
     fBufferSize = bufferSize;
     fCDataBuf.setFullHandler(this, fBufferSize);
@@ -1386,4 +1386,3 @@ inline Grammar::GrammarType XMLScanner::getCurrentGrammarType() const
 XERCES_CPP_NAMESPACE_END
 
 #endif
-

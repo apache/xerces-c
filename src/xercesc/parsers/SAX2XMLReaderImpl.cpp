@@ -1602,7 +1602,7 @@ void SAX2XMLReaderImpl::resetCachedGrammarPool()
     fGrammarResolver->resetCachedGrammar();
 }
 
-void SAX2XMLReaderImpl::setInputBufferSize(const size_t bufferSize)
+void SAX2XMLReaderImpl::setInputBufferSize(const XMLSize_t bufferSize)
 {
     fScanner->setInputBufferSize(bufferSize);
 }

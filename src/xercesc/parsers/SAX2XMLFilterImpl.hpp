@@ -810,7 +810,7 @@ public :
       *
       * @param bufferSize The maximum input buffer size
       */
-    void setInputBufferSize(const size_t bufferSize);
+    void setInputBufferSize(const XMLSize_t bufferSize);
 
     //@}
 

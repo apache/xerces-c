@@ -598,11 +598,11 @@ private:
                                 , const XMLExcepts::Codes toThrow)  const;
 
 
-    inline size_t          calBytesNeeded(size_t)  const;
+    inline XMLSize_t       calBytesNeeded(XMLSize_t)  const;
 
-    inline size_t          alignAdjust(size_t)     const;
+    inline XMLSize_t       alignAdjust(XMLSize_t)     const;
 
-    inline void            alignBufCur(size_t);
+    inline void            alignBufCur(XMLSize_t);
 
     // Make XTemplateSerializer friend of XSerializeEngine so that
     // we can call lookupStorePool and lookupLoadPool in the case of

@@ -646,7 +646,7 @@ public :
       * The results of this function may be altered by defining
       * XML_PLATFORM_NEW_BLOCK_ALIGNMENT.
       */
-    static inline size_t alignPointerForNewBlockAllocation(size_t ptrSize);
+    static inline XMLSize_t alignPointerForNewBlockAllocation(XMLSize_t ptrSize);
 
 private :
     // -----------------------------------------------------------------------
@@ -724,7 +724,7 @@ MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 //  to ensure that returned blocks are properly aligned.
 //  Note that, although this will take a pointer and return the position
 //  at which it should be placed for correct alignment, in our code
-//  we normally use size_t parameters to discover what the alignment
+//  we normally use XMLSize_t parameters to discover what the alignment
 //  of header blocks should be.  Thus, if this is to be
 //  used for the former purpose, to make compilers happy
 //  some casting will be necessary - neilg.
@@ -738,21 +738,21 @@ MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 //        If a platform requires absolutely no alignment, a value
 //        of 1 should be specified ("align pointers on 1 byte boundaries").
 //
-inline size_t
-XMLPlatformUtils::alignPointerForNewBlockAllocation(size_t ptrSize)
+inline XMLSize_t
+XMLPlatformUtils::alignPointerForNewBlockAllocation(XMLSize_t ptrSize)
 {
     //    Macro XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be defined
     //    as needed to dictate alignment requirements on a
     //    per-architecture basis. In the absense of that we
     //    take an educated guess.
 #ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
-    static const size_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
+    static const XMLSize_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
 #else
-    static const size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
+    static const XMLSize_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
 #endif
 
     //    Calculate current alignment of pointer
-    size_t current = ptrSize % alignment;
+    XMLSize_t current = ptrSize % alignment;
 
     //    Adjust pointer alignment as needed
     return (current == 0)

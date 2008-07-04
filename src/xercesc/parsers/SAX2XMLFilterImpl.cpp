@@ -256,7 +256,7 @@ void SAX2XMLFilterImpl::resetCachedGrammarPool()
         fParentReader->resetCachedGrammarPool();
 }
 
-void SAX2XMLFilterImpl::setInputBufferSize(const size_t bufferSize)
+void SAX2XMLFilterImpl::setInputBufferSize(const XMLSize_t bufferSize)
 {
     if(fParentReader)
         fParentReader->setInputBufferSize(bufferSize);
