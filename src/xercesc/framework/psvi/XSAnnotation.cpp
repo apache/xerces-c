@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,7 +68,7 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
     XercesDOMParser *parser = new (fMemoryManager) XercesDOMParser(0, fMemoryManager);
     parser->setDoNamespaces(true);
     parser->setValidationScheme(XercesDOMParser::Val_Never);
-    
+
     DOMDocument* futureOwner = (targetType == W3C_DOM_ELEMENT) ?
         ((DOMElement*)node)->getOwnerDocument() :
         (DOMDocument*)node;
@@ -85,7 +85,7 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
     memBufIS->setCopyBufToStream(false);
 
     try
-    {        
+    {
         parser->parse(*memBufIS);
     }
     catch (const XMLException&)
@@ -102,12 +102,12 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
 
 
 void XSAnnotation::writeAnnotation(ContentHandler* handler)
-{   
+{
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader(fMemoryManager);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
     parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
     parser->setContentHandler(handler);
-    
+
     MemBufInputSource* memBufIS = new (fMemoryManager) MemBufInputSource
     (
         (const XMLByte*)fContents
@@ -120,7 +120,7 @@ void XSAnnotation::writeAnnotation(ContentHandler* handler)
     memBufIS->setCopyBufToStream(false);
 
     try
-    {        
+    {
         parser->parse(*memBufIS);
     }
     catch (const XMLException&)
@@ -155,7 +155,7 @@ void XSAnnotation::setSystemId(const XMLCh* const systemId)
 
     if (systemId)
         fSystemId = XMLString::replicate(systemId, fMemoryManager);
-    
+
 }
 
 /***
@@ -172,19 +172,32 @@ void XSAnnotation::serialize(XSerializeEngine& serEng)
         serEng.writeString(fContents);
         serEng<<fNext;
         serEng.writeString(fSystemId);
+
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
         serEng<<fLine;
         serEng<<fCol;
+#else
+        serEng<<(unsigned long)fLine;
+        serEng<<(unsigned long)fCol;
+#endif
     }
     else
     {
         serEng.readString(fContents);
         serEng>>fNext;
         serEng.readString(fSystemId);
+
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
         serEng>>fLine;
         serEng>>fCol;
+#else
+        unsigned long tmp;
+        serEng>>tmp;
+        fLine = tmp;
+        serEng>>tmp;
+        fCol = tmp;
+#endif
     }
 }
 
 XERCES_CPP_NAMESPACE_END
-
-

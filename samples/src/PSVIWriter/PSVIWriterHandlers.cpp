@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,27 +45,27 @@ static const XMLCh fgChar[] = { chSpace, chLatin_C, chLatin_h, chLatin_a, chLati
 static const XMLCh fgLine[] = { chSpace, chLatin_L, chLatin_i, chLatin_n, chLatin_e, chNull }; // line
 static const XMLCh fgError[] = { chLatin_E, chLatin_r, chLatin_r, chLatin_o, chLatin_r, chNull }; //Error
 static const XMLCh fgAtFile[] = { // at file
-	chSpace, chLatin_a, chLatin_t, chSpace, chLatin_f, chLatin_i, chLatin_l, chLatin_e, chNull 
+	chSpace, chLatin_a, chLatin_t, chSpace, chLatin_f, chLatin_i, chLatin_l, chLatin_e, chNull
 };
 static const XMLCh fgFatalError[] = { //Fatal Error
-	chLatin_F, chLatin_a, chLatin_t, chLatin_a, chLatin_l, chSpace, 
-	chLatin_E, chLatin_r, chLatin_r, chLatin_o, chLatin_r, chNull 
+	chLatin_F, chLatin_a, chLatin_t, chLatin_a, chLatin_l, chSpace,
+	chLatin_E, chLatin_r, chLatin_r, chLatin_o, chLatin_r, chNull
 };
 static const XMLCh fgMessage[] = { //Message
-	chLatin_M, chLatin_e, chLatin_s, chLatin_s, chLatin_a, chLatin_g, chLatin_e, chNull 
+	chLatin_M, chLatin_e, chLatin_s, chLatin_s, chLatin_a, chLatin_g, chLatin_e, chNull
 };
 static const XMLCh fgXsiNil[] = { //xsi:nil
-	chLatin_x, chLatin_s, chLatin_i, chColon, chLatin_n, chLatin_i, chLatin_l, chNull 
+	chLatin_x, chLatin_s, chLatin_i, chColon, chLatin_n, chLatin_i, chLatin_l, chNull
 };
 static const XMLCh fgWarning[] = { //Warning
-	chLatin_W, chLatin_a, chLatin_r, chLatin_n, chLatin_i, chLatin_n, chLatin_g, chNull 
+	chLatin_W, chLatin_a, chLatin_r, chLatin_n, chLatin_i, chLatin_n, chLatin_g, chNull
 };
 static const XMLCh gXmlnsColonXsi[] = { //xmlns:xsi
-	chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chColon, chLatin_x, chLatin_s, 
+	chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chColon, chLatin_x, chLatin_s,
 	chLatin_i, chNull
 };
 static const XMLCh gXmlnsColonPsv[] = { //xmlns:psv
-	chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chColon, chLatin_p, chLatin_s, 
+	chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chColon, chLatin_p, chLatin_s,
 	chLatin_v, chNull
 };
 
@@ -89,9 +89,9 @@ static const XMLCh gDataValue[] = { chLatin_d, chLatin_a, chLatin_t, chLatin_a, 
 static const XMLCh gCommentStart[] = { chOpenAngle, chBang, chDash, chDash, chLF, chNull};
 static const XMLCh gCommentEnd[] = { chDash, chDash, chCloseAngle, chLF, chNull};
 
-static const XMLCh gPartialElementPSVI[] = 
-{ chLatin_p, chLatin_a, chLatin_r, chLatin_t, chLatin_i, chLatin_t, chLatin_i, chLatin_a, chLatin_l, 
-  chLatin_E, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t, 
+static const XMLCh gPartialElementPSVI[] =
+{ chLatin_p, chLatin_a, chLatin_r, chLatin_t, chLatin_i, chLatin_t, chLatin_i, chLatin_a, chLatin_l,
+  chLatin_E, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t,
   chLatin_P, chLatin_S, chLatin_V, chLatin_I, chNull };
 
 // ---------------------------------------------------------------------------
@@ -101,29 +101,29 @@ PSVIWriterHandlers::PSVIWriterHandlers(XMLFormatter* outputFormatter, XMLFormatt
 		PSVIHandler(), DefaultHandler() {
 	fFormatter = outputFormatter;
 	fErrorFormatter = (errorFormatter != NULL) ? errorFormatter : outputFormatter;
-	
+
 	fAttrList = new StringList(8, false);
 	fTempResult = new XMLCh[51];
     fIndentChars = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate(101*sizeof(XMLCh));
 	fBaseUri = 0;
-	
+
 	XMLString::copyString(fIndentChars, XMLUni::fgZeroLenString);
-	
+
 	fIndent = 0;
 	fIndentCap = 100;
 	fAnonNum = 1000;
-	
+
 	fIdMap = new RefHashTableOf<XMLCh>(101, false);
 	fDefinedIds = new RefVectorOf<XSObject>(25, false);
 	fIdNames = new RefArrayVectorOf<XMLCh>(25, true);
 	fObjectLocations = new RefArrayVectorOf<XMLCh>(25, true);
-	
+
 	fPrefixMap = new RefHashTableOf<XMLCh>(5, false);
 	fNamespaces = new RefArrayVectorOf<XMLCh>(5, false);
-	
+
 	fNSAttributes = new ValueVectorOf<unsigned int>(15);
 	fElementChildren = new ValueStackOf<bool>(20);
-	
+
 
 	fAttributesInfo = new RefVectorOf<AttrInfo>(8, true);
 }
@@ -134,18 +134,18 @@ PSVIWriterHandlers::~PSVIWriterHandlers() {
 	delete fAttrList;
 	delete[] fTempResult;
 	XMLPlatformUtils::fgMemoryManager->deallocate(fIndentChars);
-	
+
 	delete fIdMap;
 	delete fDefinedIds;
 	delete fIdNames;
 	delete fObjectLocations;
-	
+
 	delete fPrefixMap;
 	delete fNamespaces;
-	
+
 	delete fNSAttributes;
 	delete fElementChildren;
-	
+
 	delete fAttributesInfo;
 
 }
@@ -155,7 +155,7 @@ PSVIWriterHandlers::~PSVIWriterHandlers() {
 // -----------------------------------------------------------------------
 
 void PSVIWriterHandlers::resetPSVIFormatter(XMLFormatter* outputFormatter) {
-	fFormatter = outputFormatter;	
+	fFormatter = outputFormatter;
 }
 
 void PSVIWriterHandlers::resetDocument() {
@@ -163,15 +163,15 @@ void PSVIWriterHandlers::resetDocument() {
 	fIndent = 0;
 	fAnonNum = 1000;
 	XMLString::copyString(fIndentChars, XMLUni::fgZeroLenString);
-	
+
 	if (fBaseUri != NULL)
 		XMLString::release(&fBaseUri);
-	
+
 	fIdMap->removeAll();
 	fDefinedIds->removeAllElements();
 	fIdNames->removeAllElements();
 	fObjectLocations->removeAllElements();
-	
+
 	fPrefixMap->removeAll();
 	fNamespaces->removeAllElements();
 
@@ -198,8 +198,8 @@ void PSVIWriterHandlers::startElement(	const XMLCh* const /* uri */,
 	}
 }
 
-void PSVIWriterHandlers::endElement(	const XMLCh* const /* uri */, 
-										const XMLCh* const /* localname */, 
+void PSVIWriterHandlers::endElement(	const XMLCh* const /* uri */,
+										const XMLCh* const /* localname */,
 										const XMLCh* const /* qname */) {
 }
 
@@ -211,8 +211,8 @@ void PSVIWriterHandlers::startDocument() {
 	fAttrList->addElement((XMLCh*)PSVIUni::fgNamespacePsvi);
 	fAttrList->addElement((XMLCh*)XMLUni::fgXMLNSString);
 	fAttrList->addElement((XMLCh*)PSVIUni::fgNamespaceInfoset);
-	
-	writeOpen(PSVIUni::fgDocument, fAttrList);	
+
+	writeOpen(PSVIUni::fgDocument, fAttrList);
 	incIndent();
 	fElementChildren->push(false);
 }
@@ -238,7 +238,7 @@ void PSVIWriterHandlers::characters(	const XMLCh* const chars,
 
 void PSVIWriterHandlers::ignorableWhitespace(	const XMLCh* const /* chars */,
 												const XMLSize_t    /* length */) {
-	//ignore it  
+	//ignore it
 }
 
 void PSVIWriterHandlers::comment(const XMLCh* const chars, const XMLSize_t /* length */) {
@@ -248,7 +248,7 @@ void PSVIWriterHandlers::comment(const XMLCh* const chars, const XMLSize_t /* le
 	sendUnindentedElement(PSVIUni::fgComment);
 }
 
-void PSVIWriterHandlers::processingInstruction(	const XMLCh* const target, 
+void PSVIWriterHandlers::processingInstruction(	const XMLCh* const target,
 												const XMLCh* const data) {
 	processChildren();
 	sendIndentedElement(PSVIUni::fgProcessingInstruction);
@@ -297,8 +297,13 @@ InputSource* PSVIWriterHandlers::resolveEntity(const XMLCh* const, const XMLCh* 
 void PSVIWriterHandlers::error(const SAXParseException& e) {
 	XMLCh* temp1 = new XMLCh[10];
 	XMLCh* temp2 = new XMLCh[10];
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 	XMLString::binToText(e.getLineNumber(), temp1, 9, 10);
 	XMLString::binToText(e.getColumnNumber(), temp2, 9, 10);
+#else
+        XMLString::binToText((unsigned long)e.getLineNumber(), temp1, 9, 10);
+	XMLString::binToText((unsigned long)e.getColumnNumber(), temp2, 9, 10);
+#endif
 	*fErrorFormatter << fgError << fgAtFile << chSpace << e.getSystemId()
 		<< chComma << fgLine << chSpace << temp1
 		<< chComma << fgChar << chSpace << temp2
@@ -310,8 +315,13 @@ void PSVIWriterHandlers::error(const SAXParseException& e) {
 void PSVIWriterHandlers::fatalError(const SAXParseException& e) {
 	XMLCh* temp1 = new XMLCh[10];
 	XMLCh* temp2 = new XMLCh[10];
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 	XMLString::binToText(e.getLineNumber(), temp1, 9, 10);
 	XMLString::binToText(e.getColumnNumber(), temp2, 9, 10);
+#else
+        XMLString::binToText((unsigned long)e.getLineNumber(), temp1, 9, 10);
+	XMLString::binToText((unsigned long)e.getColumnNumber(), temp2, 9, 10);
+#endif
 	*fErrorFormatter << fgFatalError << fgAtFile << chSpace << e.getSystemId()
 		<< chComma << fgLine << chSpace << temp1
 		<< chComma << fgChar << chSpace << temp2
@@ -324,8 +334,13 @@ void PSVIWriterHandlers::fatalError(const SAXParseException& e) {
 void PSVIWriterHandlers::warning(const SAXParseException& e) {
 	XMLCh* temp1 = new XMLCh[10];
 	XMLCh* temp2 = new XMLCh[10];
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 	XMLString::binToText(e.getLineNumber(), temp1, 9, 10);
 	XMLString::binToText(e.getColumnNumber(), temp2, 9, 10);
+#else
+        XMLString::binToText((unsigned long)e.getLineNumber(), temp1, 9, 10);
+	XMLString::binToText((unsigned long)e.getColumnNumber(), temp2, 9, 10);
+#endif
 	*fErrorFormatter << fgWarning << fgAtFile << chSpace << e.getSystemId()
 		<< chComma << fgLine << chSpace << temp1
 		<< chComma << fgChar << chSpace << temp2
@@ -335,15 +350,15 @@ void PSVIWriterHandlers::warning(const SAXParseException& e) {
 }
 
 void PSVIWriterHandlers::resetErrors()
-{   
+{
 }
 
 // ---------------------------------------------------------------------------
 //  PSVIWriterHandlers: Overrides of the PSVIHandler interface
 // ---------------------------------------------------------------------------
 
-void PSVIWriterHandlers::handleAttributesPSVI(	const XMLCh* const localName, 
-												const XMLCh* const uri, 
+void PSVIWriterHandlers::handleAttributesPSVI(	const XMLCh* const localName,
+												const XMLCh* const uri,
 												PSVIAttributeList* psviAttributes ) {
 
 	processChildren();
@@ -357,7 +372,7 @@ void PSVIWriterHandlers::handleAttributesPSVI(	const XMLCh* const localName,
 	sendElementValue(PSVIUni::fgBaseURI, fBaseUri);
 }
 
-void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const /* localName */, 
+void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const /* localName */,
 											const XMLCh* const /* uri */,
 											PSVIElement* elementInfo ) {
 
@@ -405,10 +420,10 @@ void PSVIWriterHandlers::handleElementPSVI(	const XMLCh* const /* localName */,
  *  </partialElementPSVI>
  *
  ***/
-void 
-PSVIWriterHandlers::handlePartialElementPSVI( const XMLCh*       const /* localName */, 
+void
+PSVIWriterHandlers::handlePartialElementPSVI( const XMLCh*       const /* localName */,
                                               const XMLCh*       const /* uri */,
-                                                    PSVIElement*       elementInfo ) 
+                                                    PSVIElement*       elementInfo )
 {
 
     writeString(gCommentStart);
@@ -470,7 +485,7 @@ void PSVIWriterHandlers::processAttributes(PSVIAttributeList* psviAttributes, co
 			sendElementValue(PSVIUni::fgPrefix, fPrefixMap->get(attributesInfo->elementAt(i)->getUri()));
 			sendElementValue(PSVIUni::fgNormalizedValue, attributesInfo->elementAt(i)->getValue());
 			if (psviAttributes!=NULL && psviAttributes->getAttributePSVIAtIndex(i)!=NULL) {
-				sendElementValue(PSVIUni::fgSpecified, 
+				sendElementValue(PSVIUni::fgSpecified,
 					translateBool(!(psviAttributes->getAttributePSVIAtIndex(i)->getIsSchemaSpecified())));
 			} else //the desired value is !schemaSpecified
 				sendElementValue(PSVIUni::fgSpecified, PSVIUni::fgUnknown);
@@ -502,7 +517,7 @@ void PSVIWriterHandlers::processNamespaceAttributes(PSVIAttributeList* psviAttri
 			sendElementValue(PSVIUni::fgPrefix, XMLUni::fgXMLNSString);
 			sendElementValue(PSVIUni::fgNormalizedValue, attributes->elementAt(ind)->getValue());
 			if (psviAttributes!=NULL) {
-				sendElementValue(PSVIUni::fgSpecified, 
+				sendElementValue(PSVIUni::fgSpecified,
 					translateBool(
 						psviAttributes->getAttributePSVIByName(
 							attributes->elementAt(ind)->getLocalName(),
@@ -564,7 +579,7 @@ void PSVIWriterHandlers::processSchemaInformation(XSModel* model) {
 		sendIndentedElement(PSVIUni::fgSchemaInformation);
 		XSNamespaceItemList* namespaceItems = model->getNamespaceItems();
 		for (unsigned int i=0; i < namespaceItems->size(); i++) {
-			processNamespaceItem(namespaceItems->elementAt(i));	
+			processNamespaceItem(namespaceItems->elementAt(i));
 		}
 		sendUnindentedElement(PSVIUni::fgSchemaInformation);
 	}
@@ -627,7 +642,7 @@ void PSVIWriterHandlers::processSchemaDocuments(XSNamespaceItem* namespaceItem) 
 
 void PSVIWriterHandlers::processSchemaAnnotations(XSAnnotationList* annotations) {
 	if (annotations == NULL || annotations->size()==0) {
-		sendElementEmpty(PSVIUni::fgSchemaAnnotations);	
+		sendElementEmpty(PSVIUni::fgSchemaAnnotations);
 	} else {
 		sendIndentedElement(PSVIUni::fgSchemaAnnotations);
 		for (unsigned int i = 0; i < annotations->size(); i++) {
@@ -663,7 +678,7 @@ void PSVIWriterHandlers::processComplexTypeDefinition(XSComplexTypeDefinition* c
 	sendElementValue(PSVIUni::fgAbstract, translateBool(complexType->getAbstract()));
 	processAttributeUses(complexType->getAttributeUses());
 	processAttributeWildcard(complexType->getAttributeWildcard());
-	
+
 	sendIndentedElement(PSVIUni::fgContentType);
 	sendElementValue(PSVIUni::fgVariety, translateComplexContentType(complexType->getContentType()));
 	if (complexType->getSimpleType()==NULL) {
@@ -673,7 +688,7 @@ void PSVIWriterHandlers::processComplexTypeDefinition(XSComplexTypeDefinition* c
 	}
 	processParticle(complexType->getParticle());
 	sendUnindentedElement(PSVIUni::fgContentType);
-	sendElementValue(PSVIUni::fgProhibitedSubstitutions, 
+	sendElementValue(PSVIUni::fgProhibitedSubstitutions,
 		translateBlockOrFinal(complexType->getProhibitedSubstitutions()));
 	processAnnotations(complexType->getAnnotations());
 	sendUnindentedElement(PSVIUni::fgComplexTypeDefinition);
@@ -736,11 +751,11 @@ void PSVIWriterHandlers::processElementDeclaration(XSElementDeclaration* element
 		processValueConstraint(element->getConstraintType(), element->getConstraintValue());
 		sendElementValue(PSVIUni::fgNillable, translateBool(element->getNillable()));
 		processIdentityConstraintDefinition(element->getIdentityConstraints());
-		processElementDeclarationRef(PSVIUni::fgSubstitutionGroupAffiliation, 
+		processElementDeclarationRef(PSVIUni::fgSubstitutionGroupAffiliation,
 			element->getSubstitutionGroupAffiliation());
-		sendElementValue(PSVIUni::fgSubstitutionGroupExclusions, 
+		sendElementValue(PSVIUni::fgSubstitutionGroupExclusions,
 			translateBlockOrFinal(element->getSubstitutionGroupExclusions()));
-		sendElementValue(PSVIUni::fgDisallowedSubstitutions, 
+		sendElementValue(PSVIUni::fgDisallowedSubstitutions,
 			translateBlockOrFinal(element->getDisallowedSubstitutions()));
 		sendElementValue(PSVIUni::fgAbstract, translateBool(element->getAbstract()));
 		processAnnotation(element->getAnnotation());
@@ -801,7 +816,7 @@ void PSVIWriterHandlers::processAttributeUses(XSAttributeUseList* attributeUses)
 			attrUse = attributeUses->elementAt(i);
 			sendIndentedElement(PSVIUni::fgAttributeUse);
 			sendElementValue(PSVIUni::fgRequired, translateBool(attrUse->getRequired()));
-			processAttributeDeclarationOrRef(attrUse->getAttrDeclaration()); 
+			processAttributeDeclarationOrRef(attrUse->getAttrDeclaration());
 			processValueConstraint(attrUse->getConstraintType(), attrUse->getConstraintValue());
 			sendUnindentedElement(PSVIUni::fgAttributeUse);
 		}
@@ -811,7 +826,7 @@ void PSVIWriterHandlers::processAttributeUses(XSAttributeUseList* attributeUses)
 
 void PSVIWriterHandlers::processFacets(XSFacetList* facets, XSMultiValueFacetList* multiFacets) {
 	if (facets == NULL && multiFacets == NULL) {
-		sendElementEmpty(PSVIUni::fgFacets);	
+		sendElementEmpty(PSVIUni::fgFacets);
 	} else {
 		sendIndentedElement(PSVIUni::fgFacets);
 		if (facets != NULL) {
@@ -822,7 +837,7 @@ void PSVIWriterHandlers::processFacets(XSFacetList* facets, XSMultiValueFacetLis
 				sendElementValue(PSVIUni::fgFacetFixed, translateBool(facet->isFixed()));
 				processAnnotation(facet->getAnnotation());
 				sendUnindentedElement(translateFacet(facet->getFacetKind()));
-			}	
+			}
 		}
 		if (multiFacets != NULL) {
 			for (unsigned int multiFacetCount = 0; multiFacetCount < multiFacets->size(); multiFacetCount++) {
@@ -835,7 +850,7 @@ void PSVIWriterHandlers::processFacets(XSFacetList* facets, XSMultiValueFacetLis
 				sendElementValue(PSVIUni::fgFacetFixed, translateBool(multiFacet->isFixed()));
 				processAnnotations(multiFacet->getAnnotations());
 				sendUnindentedElement(translateFacet(multiFacet->getFacetKind()));
-			}	
+			}
 		}
 		sendUnindentedElement(PSVIUni::fgFacets);
 	}
@@ -942,15 +957,15 @@ void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 	}
 	if (firstFlag)
 		writeEmpty(PSVIUni::fgAttributes);
-	else 
+	else
 		sendUnindentedElement(PSVIUni::fgAttributes);
-	
+
 	//now for namespace attributes
 	if (fNSAttributes->size()==0) {
 		writeEmpty(PSVIUni::fgNamespaceAttributes);
 	} else {
 		sendIndentedElement(PSVIUni::fgNamespaceAttributes);
-		for (unsigned int NScount = 0; NScount < fNSAttributes->size(); NScount++) {	
+		for (unsigned int NScount = 0; NScount < fNSAttributes->size(); NScount++) {
 			DOMAttr* attr = (DOMAttr*)attrs->item(fNSAttributes->elementAt(NScount));
 			sendIndentedElement(PSVIUni::fgAttribute);
 			sendElementValue(PSVIUni::fgNamespaceName, XMLUni::fgXMLNSURIName);
@@ -981,11 +996,11 @@ void PSVIWriterHandlers::processWildcard(XSWildcard* wildcard) {
 				sendElementValueList(PSVIUni::fgNamespaces, wildcard->getNsConstraintList());
 			} else {  //NSCONSTRAINT_NOT
 				sendElementValue(PSVIUni::fgVariety, PSVIUni::fgNot);
-				sendElementValueList(PSVIUni::fgNamespaces, wildcard->getNsConstraintList());	
+				sendElementValueList(PSVIUni::fgNamespaces, wildcard->getNsConstraintList());
 			}
 		}
 		sendUnindentedElement(PSVIUni::fgNamespaceConstraint);
-		sendElementValue(PSVIUni::fgProcessContents, 
+		sendElementValue(PSVIUni::fgProcessContents,
 			translateProcessContents(wildcard->getProcessContents()));
 		processAnnotation(wildcard->getAnnotation());
 		sendUnindentedElement(PSVIUni::fgWildcard);
@@ -1000,7 +1015,7 @@ void PSVIWriterHandlers::processModelGroup(XSModelGroup* modelGroup) {
 		sendElementValue(PSVIUni::fgCompositor, translateCompositor(modelGroup->getCompositor()));
 		sendIndentedElement(PSVIUni::fgParticles);
 		for (unsigned int i=0; i < modelGroup->getParticles()->size(); i++) {
-			processParticle(modelGroup->getParticles()->elementAt(i));	
+			processParticle(modelGroup->getParticles()->elementAt(i));
 		}
 		sendUnindentedElement(PSVIUni::fgParticles);
 		processAnnotation(modelGroup->getAnnotation());
@@ -1016,7 +1031,7 @@ void PSVIWriterHandlers::processParticle(XSParticle* particle) {
 		sendElementValueInt(PSVIUni::fgMinOccurs, particle->getMinOccurs());
 		if (particle->getMaxOccursUnbounded()) {
 			sendElementValue(PSVIUni::fgMaxOccurs, PSVIUni::fgUnbounded);
-		} else { 
+		} else {
 			sendElementValueInt(PSVIUni::fgMaxOccurs,particle->getMaxOccurs());
 		}
 		sendIndentedElement(PSVIUni::fgTerm);
@@ -1121,9 +1136,9 @@ void PSVIWriterHandlers::processChildren() {
 
 void PSVIWriterHandlers::processChildrenEnd() {
 	if (fElementChildren->pop()) {
-		sendUnindentedElement(PSVIUni::fgChildren);	
+		sendUnindentedElement(PSVIUni::fgChildren);
 	} else {
-		writeEmpty(PSVIUni::fgChildren);	
+		writeEmpty(PSVIUni::fgChildren);
 	}
 }
 
@@ -1278,12 +1293,12 @@ void PSVIWriterHandlers::sendUnindentedElement(const XMLCh* const elementName) {
 }
 
 void PSVIWriterHandlers::writeOpen(const XMLCh* const elementName) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName << gAngleFeed;
 }
 
 void PSVIWriterHandlers::writeOpen(const XMLCh* const elementName, const StringList* const attrs) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName ;
 	for (unsigned int i=0; i < attrs->size(); i+=2 ) {
 		*fFormatter
@@ -1296,31 +1311,31 @@ void PSVIWriterHandlers::writeOpen(const XMLCh* const elementName, const StringL
 }
 
 void PSVIWriterHandlers::writeClose(const XMLCh* const elementName) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << gAngleSlash << elementName << gAngleFeed;
 }
 
 void PSVIWriterHandlers::writeValue(const XMLCh* const elementName, const XMLCh* const value) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName << chCloseAngle
 		<< XMLFormatter::CharEscapes << value
 		<< XMLFormatter::NoEscapes << gAngleSlash << elementName <<	gAngleFeed ;
 }
 
 void PSVIWriterHandlers::writeValue(const XMLCh* const elementName, const StringList* const values) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName << chCloseAngle;
 	for (unsigned int i=0; i < values->size(); i++) {
-		*fFormatter 
+		*fFormatter
 			<< XMLFormatter::CharEscapes << values->elementAt(i) << chSpace;
 	}
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << gAngleSlash << elementName <<	gAngleFeed ;
 }
 
 void PSVIWriterHandlers::writeEmpty(const XMLCh* const elementName, const StringList* const attrs) {
-	*fFormatter 
-		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName ; 
+	*fFormatter
+		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName ;
 	for (unsigned int i=0; i < attrs->size(); i+=2 ) {
 		*fFormatter
 			<< XMLFormatter::NoEscapes << chSpace << attrs->elementAt(i) << gEqualsQuote
@@ -1332,12 +1347,12 @@ void PSVIWriterHandlers::writeEmpty(const XMLCh* const elementName, const String
 }
 
 void PSVIWriterHandlers::writeEmpty(const XMLCh* const elementName) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << chOpenAngle << elementName << gSlashAngleFeed ;
 }
 
 void PSVIWriterHandlers::writeString(const XMLCh* const string) {
-	*fFormatter 
+	*fFormatter
 		<< XMLFormatter::NoEscapes << fIndentChars << string;
 }
 
@@ -1366,7 +1381,7 @@ const XMLCh* PSVIWriterHandlers::translateValueConstraint(XSConstants::VALUE_CON
 }
 
 const XMLCh* PSVIWriterHandlers::translateBlockOrFinal(short val) {
-	XMLString::copyString(fTempResult, XMLUni::fgZeroLenString); 
+	XMLString::copyString(fTempResult, XMLUni::fgZeroLenString);
 	if ((val & XSConstants::DERIVATION_EXTENSION) != 0) {
 		XMLString::catString(fTempResult, PSVIUni::fgExtension);
 	}
@@ -1583,7 +1598,7 @@ const XMLCh* PSVIWriterHandlers::translateBool(bool flag) {
 XMLCh* PSVIWriterHandlers::createID(XSObject* obj) {
 	const XMLCh* objPrefix = fPrefixMap->get(obj->getNamespace());
 	XMLCh* result = new XMLCh[100];
-	
+
 	if (XMLString::equals(obj->getNamespace(), PSVIUni::fgNamespaceXmlSchema)) {
 			XMLString::copyString(result, obj->getName());
 	} else {
@@ -1598,7 +1613,7 @@ XMLCh* PSVIWriterHandlers::createID(XSObject* obj) {
 			XMLString::copyString(result, translateComponentType(obj->getType()));
 		}
 		XMLString::catString(result, period);
-		
+
 		if (obj->getType()==XSConstants::TYPE_DEFINITION && ((XSTypeDefinition*)obj)->getAnonymous()) {
 			const XMLCh anon[] = { chLatin_a, chLatin_n, chLatin_o, chLatin_n, chUnderscore, chNull };
 			XMLString::catString(result, anon);
@@ -1656,7 +1671,7 @@ void PSVIWriterHandlers::decIndent() {
  ***/
 void PSVIWriterHandlers::formDateTime(XSValue* obj)
 {
-    
+
     char buffer[1024];
     memset(buffer, 0, sizeof buffer);
     sprintf(buffer, "%d-%d-%dT%d:%d:%f", obj->fData.fValue.f_datetime.f_year
@@ -1664,7 +1679,7 @@ void PSVIWriterHandlers::formDateTime(XSValue* obj)
                                        , obj->fData.fValue.f_datetime.f_day
                                        , obj->fData.fValue.f_datetime.f_hour
                                        , obj->fData.fValue.f_datetime.f_min
-                                       , obj->fData.fValue.f_datetime.f_second 
+                                       , obj->fData.fValue.f_datetime.f_second
                                        + obj->fData.fValue.f_datetime.f_milisec);
 
     XMLCh *value = XMLString::transcode(buffer);
@@ -1694,7 +1709,7 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         incIndent();
 
         switch (obj->fData.f_datatype)
-        { 
+        {
         case XSValue::dt_boolean:
             {
                 writeValue(gDataType, SchemaSymbols::fgDT_BOOLEAN);
@@ -1937,13 +1952,13 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
         writeClose(gActualValue);
         decIndent();
         writeString(gCommentEnd);
-   
+
     	delete obj;
- 	}    	
+ 	}
 }
 
 void PSVIAdvancedHandler::XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr)
-{    
+{
     if (encodingStr && *encodingStr)
         fWriterHandler->sendElementValue(PSVIUni::fgCharacterEncodingScheme, encodingStr);
     else
@@ -1952,5 +1967,5 @@ void PSVIAdvancedHandler::XMLDecl(const XMLCh* const versionStr, const XMLCh* co
         fWriterHandler->sendElementValue(PSVIUni::fgStandalone, standaloneStr);
 	else
         fWriterHandler->sendElementEmpty(PSVIUni::fgStandalone);
-	fWriterHandler->sendElementValue(PSVIUni::fgVersion, versionStr);        
+	fWriterHandler->sendElementValue(PSVIUni::fgVersion, versionStr);
 }
