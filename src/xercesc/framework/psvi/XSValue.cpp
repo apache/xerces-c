@@ -650,7 +650,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
     switch (datatype) {
         case XSValue::dt_boolean:
             {
-                unsigned int i = 0;
+                XMLSize_t i = 0;
                 XMLCh* tmpStrValue = XMLString::replicate(content, manager);
                 ArrayJanitor<XMLCh> janTmpName(tmpStrValue, manager);
                 XMLString::trim(tmpStrValue);
@@ -1687,5 +1687,3 @@ bool XSValue::getActualNumericValue(const XMLCh*  const content
 }
 
 XERCES_CPP_NAMESPACE_END
-
-

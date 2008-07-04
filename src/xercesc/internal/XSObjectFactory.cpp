@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -112,16 +112,18 @@ XSObjectFactory::createModelGroupParticle(const ContentSpecNode* const rootNode,
             buildChoiceSequenceParticles(rootNode->getSecond(), particleList, xsModel);
         }
 
+        int m = rootNode->getMaxOccurs();
         XSParticle* groupParticle = new (fMemoryManager) XSParticle
         (
             XSParticle::TERM_MODELGROUP
             , xsModel
             , modelGroup
-            , rootNode->getMinOccurs()
-            , rootNode->getMaxOccurs()
+            , (XMLSize_t)rootNode->getMinOccurs()
+            , (XMLSize_t)m
+            , m == -1
             , fMemoryManager
         );
-    
+
         return groupParticle;
     }
     else
@@ -205,13 +207,15 @@ XSObjectFactory::createElementParticle(const ContentSpecNode* const rootNode,
 
         if (xsElemDecl)
         {
+            int m = rootNode->getMaxOccurs();
             XSParticle* particle = new (fMemoryManager) XSParticle
             (
                 XSParticle::TERM_ELEMENT
                 , xsModel
                 , xsElemDecl
-                , rootNode->getMinOccurs()
-                , rootNode->getMaxOccurs()
+                , (XMLSize_t)rootNode->getMinOccurs()
+                , (XMLSize_t)m
+                , m == -1
                 , fMemoryManager
             );
 
@@ -229,13 +233,15 @@ XSObjectFactory::createWildcardParticle(const ContentSpecNode* const rootNode,
     XSWildcard* xsWildcard = createXSWildcard(rootNode, xsModel);
     if (xsWildcard)
     {
+        int m = rootNode->getMaxOccurs();
         XSParticle* particle = new (fMemoryManager) XSParticle
         (
             XSParticle::TERM_WILDCARD
             , xsModel
             , xsWildcard
-            , rootNode->getMinOccurs()
-            , rootNode->getMaxOccurs()
+            , (XMLSize_t)rootNode->getMinOccurs()
+            , (XMLSize_t)m
+            , m == -1
             , fMemoryManager
         );
 
@@ -306,7 +312,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
         bool primitiveTypeSelf = false;
 
         //REVISIT: the getFixed method is protected so added friend XSObjectFactory
-        //         to DatatypeValidator class... 
+        //         to DatatypeValidator class...
         DatatypeValidator::ValidatorType dvType = validator->getType();
         DatatypeValidator* baseDV = validator->getBaseValidator();
 
@@ -321,7 +327,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
                 for (unsigned int i=0; i<size; i++)
                     memberTypes->addElement(addOrFind(membersDV->elementAt(i), xsModel));
             }
-            
+
             if (baseDV)
             {
                 baseType = addOrFind(baseDV, xsModel);
@@ -334,7 +340,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
                     , SchemaSymbols::fgURI_SCHEMAFORSCHEMA
                 );
             }
-        } 
+        }
         else if (dvType == DatatypeValidator::List)
         {
             typeVariety = XSSimpleTypeDefinition::VARIETY_LIST;
@@ -372,7 +378,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
         }
         else
         {
-            baseType = xsModel->getTypeDefinition(SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);            
+            baseType = xsModel->getTypeDefinition(SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         }
 
         xsObj = new (fMemoryManager) XSSimpleTypeDefinition
@@ -427,7 +433,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         unsigned int count = elemDecl->getIdentityConstraintCount();
         if (count)
         {
-            //REVISIT: size of hash table....   
+            //REVISIT: size of hash table....
             icMap = new (fMemoryManager) XSNamedMap<XSIDCDefinition>
             (
                 count
@@ -437,7 +443,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
                 , fMemoryManager
             );
 
-            for (unsigned int i = 0; i < count; i++) 
+            for (unsigned int i = 0; i < count; i++)
             {
                 XSIDCDefinition* icDef = addOrFind
                 (
@@ -514,13 +520,13 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
         if ((typeInfo->getContentType() == SchemaElementDecl::Simple) &&
             (typeInfo->getDatatypeValidator()))
             xsSimpleType = addOrFind(typeInfo->getDatatypeValidator(), xsModel);
-        
+
         unsigned int attCount=0;
         if (typeInfo->hasAttDefs())
         {
             SchemaAttDefList& attDefList = (SchemaAttDefList&) typeInfo->getAttDefList();
             attCount = attDefList.getAttDefCount();
-            xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);            
+            xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);
             // create list now put fill it in after we put complextype into map
             // otherwise we may encounter an infinite loop: complextype needs to
             // addorfind attdef, which does an addorfind on the enclosingCTdefintion.
@@ -558,7 +564,7 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
 
         if (isAnyType)
             xsObj->setBaseType(xsObj);
-       
+
         if (typeInfo->hasAttDefs())
         {
             // now create the xsattributedeclarations...
@@ -610,7 +616,7 @@ XSIDCDefinition* XSObjectFactory::addOrFind(IdentityConstraint* const ic,
         StringList*      stringList = 0;
         unsigned int     fieldCount = ic->getFieldCount();
 
-        if (fieldCount) 
+        if (fieldCount)
         {
             stringList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(
                 fieldCount, true, fMemoryManager);
@@ -751,7 +757,7 @@ XSObjectFactory::createXSAttGroupDefinition(XercesAttGroupInfo* const attGroupIn
     if (attCount)
     {
         xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);
-        for (unsigned int i=0; i < attCount; i++) 
+        for (unsigned int i=0; i < attCount; i++)
         {
             SchemaAttDef* attDef = attGroupInfo->attributeAt(i);
             XSAttributeDeclaration* xsAttDecl = 0;
@@ -769,7 +775,7 @@ XSObjectFactory::createXSAttGroupDefinition(XercesAttGroupInfo* const attGroupIn
             }
         }
     }
-    
+
     if (attGroupInfo->getCompleteWildCard())
         xsWildcard = createXSWildcard(attGroupInfo->getCompleteWildCard(), xsModel);
 
@@ -920,7 +926,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
                 patternList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(
                     tokenizer.countTokens(), true, fMemoryManager
                 );
-                
+
                 while (tokenizer.hasMoreTokens())
                     patternList->addElement(XMLString::replicate(tokenizer.nextToken(), fMemoryManager));
 
@@ -952,7 +958,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
             fDeleteVector->addElement(xsFacet);
             xsFacetList->addElement(xsFacet);
             definedFacets |= facetType;
-            if (isFixed) 
+            if (isFixed)
                 fixedFacets |= facetType;
         }
     }
@@ -1014,7 +1020,7 @@ void XSObjectFactory::processAttUse(SchemaAttDef* const attDef,
 {
     bool isRequired = false;
     XSConstants::VALUE_CONSTRAINT constraintType = XSConstants::VALUE_CONSTRAINT_NONE;
-    
+
     if (attDef->getDefaultType() == XMLAttDef::Default)
     {
         constraintType = XSConstants::VALUE_CONSTRAINT_DEFAULT;
