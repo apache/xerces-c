@@ -41,7 +41,7 @@ MemoryManager* MemoryMonitor::getExceptionMemoryManager()
   return this;
 }
 
-void* MemoryMonitor::allocate(size_t size)
+void* MemoryMonitor::allocate(XMLSize_t size)
 {
     void *key = ::operator new(size);
     fHashTable->put(key, (unsigned int)size);

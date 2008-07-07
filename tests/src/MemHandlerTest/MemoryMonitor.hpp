@@ -90,7 +90,7 @@ public:
       *
       * @return A pointer to the allocated memory
       */
-    virtual void* allocate(size_t size);
+    virtual void* allocate(XMLSize_t size);
 
     /**
       * This method deallocates memory
