@@ -455,6 +455,187 @@ private :
     XMLLCPTranscoder& operator=(const XMLLCPTranscoder&);
 };
 
+//
+// This class can be used to transcode to a target encoding. It manages the
+// memory allocated for the transcode in an exception safe manner, automatically
+// deleting it when the class goes out of scope.
+//
+class XMLUTIL_EXPORT TranscodeToStr
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Public constructors and destructor
+    // -----------------------------------------------------------------------
+
+    /** Converts from the internal XMLCh* encoding to the specified encoding
+      *
+      * @param in       the null terminated source buffer to be transcoded
+      * @param encoding the name of the encoding to transcode to
+      * @param manager  the memory manager to use
+      */
+    TranscodeToStr(const XMLCh *in, const char *encoding,
+                   MemoryManager *manager = XMLPlatformUtils::fgMemoryManager);
+
+    /** Converts from the internal XMLCh* encoding to the specified encoding
+      *
+      * @param in       the source buffer to be transcoded
+      * @param length   the length of the source buffer
+      * @param encoding the name of the encoding to transcode to
+      * @param manager  the memory manager to use
+      */
+    TranscodeToStr(const XMLCh *in, XMLSize_t length, const char *encoding,
+                   MemoryManager *manager = XMLPlatformUtils::fgMemoryManager);
+
+    /** Converts from the internal XMLCh* encoding to the specified encoding
+      *
+      * @param in       the null terminated source buffer to be transcoded
+      * @param trans    the transcoder to use
+      * @param manager  the memory manager to use
+      */
+    TranscodeToStr(const XMLCh *in, XMLTranscoder* trans,
+                   MemoryManager *manager = XMLPlatformUtils::fgMemoryManager);
+
+    /** Converts from the internal XMLCh* encoding to the specified encoding
+      *
+      * @param in       the source buffer to be transcoded
+      * @param length   the length of the source buffer
+      * @param trans    the transcoder to use
+      * @param manager  the memory manager to use
+      */
+    TranscodeToStr(const XMLCh *in, XMLSize_t length, XMLTranscoder* trans,
+                   MemoryManager *manager = XMLPlatformUtils::fgMemoryManager);
+
+    ~TranscodeToStr();
+
+    /** @name Getter methods */
+    //@{
+
+    /** Returns the transcoded, null terminated string
+      * @return the transcoded string
+      */
+    const XMLByte *str() const;
+
+    /** Returns the transcoded, null terminated string - adopting
+      * the memory allocated to it from the TranscodeToStr object
+      * @return the transcoded string
+      */
+    XMLByte *adopt();
+
+    /** Returns the length of the transcoded string in bytes. The length
+      * does not include the null terminator.
+      * @return the length of the transcoded string in bytes
+      */
+    XMLSize_t length () const;
+
+	//@}
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    TranscodeToStr(const TranscodeToStr &);
+    TranscodeToStr &operator=(const TranscodeToStr &);
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* trans);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fString
+    //      The transcoded string
+    //
+    //  fBytesWritten
+    //      The length of the transcoded string in bytes
+    // -----------------------------------------------------------------------
+    XMLByte *fString;
+    XMLSize_t fBytesWritten;
+    MemoryManager *fMemoryManager;
+};
+
+//
+// This class can be used to transcode from a source encoding. It manages the
+// memory allocated for the transcode in an exception safe manner, automatically
+// deleting it when the class goes out of scope.
+//
+class XMLUTIL_EXPORT TranscodeFromStr
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Public constructors and destructor
+    // -----------------------------------------------------------------------
+
+    /** Converts from the specified encoding to the internal XMLCh* encoding
+      *
+      * @param in       the source buffer to be transcoded
+      * @param length   the length of the source buffer
+      * @param encoding the name of the encoding to transcode to
+      * @param manager  the memory manager to use
+      */
+    TranscodeFromStr(const XMLByte *data, XMLSize_t length, const char *encoding,
+                     MemoryManager *manager = XMLPlatformUtils::fgMemoryManager);
+
+    /** Converts from the specified encoding to the internal XMLCh* encoding
+      *
+      * @param in       the source buffer to be transcoded
+      * @param length   the length of the source buffer
+      * @param trans    the transcoder to use
+      * @param manager  the memory manager to use
+      */
+    TranscodeFromStr(const XMLByte *data, XMLSize_t length, XMLTranscoder *trans,
+                     MemoryManager *manager = XMLPlatformUtils::fgMemoryManager);
+
+    ~TranscodeFromStr();
+
+    /** @name Getter methods */
+    //@{
+
+    /** Returns the transcoded, null terminated string
+      * @return the transcoded string
+      */
+    const XMLCh *str() const;
+
+    /** Returns the transcoded, null terminated string - adopting
+      * the memory allocated to it from the TranscodeFromStr object
+      * @return the transcoded string
+      */
+    XMLCh *adopt();
+
+    /** Returns the length of the transcoded string in characters. The length
+      * does not include the null terminator.
+      * @return the length of the transcoded string in characters
+      */
+    XMLSize_t length() const;
+
+	//@}
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    TranscodeFromStr(const TranscodeFromStr &);
+    TranscodeFromStr &operator=(const TranscodeFromStr &);
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void transcode(const XMLByte *in, XMLSize_t length, XMLTranscoder *trans);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fString
+    //      The transcoded string
+    //
+    //  fBytesWritten
+    //      The length of the transcoded string in characters
+    // -----------------------------------------------------------------------
+    XMLCh *fString;
+    XMLSize_t fCharsWritten;
+    MemoryManager *fMemoryManager;
+};
 
 // ---------------------------------------------------------------------------
 //  XMLTranscoder: Getter methods
@@ -475,6 +656,46 @@ inline XMLSize_t XMLTranscoder::getBlockSize() const
 inline const XMLCh* XMLTranscoder::getEncodingName() const
 {
     return fEncodingName;
+}
+
+// ---------------------------------------------------------------------------
+//  TranscodeToStr: Getter methods
+// ---------------------------------------------------------------------------
+inline const XMLByte *TranscodeToStr::str() const
+{
+    return fString;
+}
+
+inline XMLByte *TranscodeToStr::adopt()
+{
+    XMLByte *tmp = fString;
+    fString = 0;
+    return tmp;
+}
+
+inline XMLSize_t TranscodeToStr::length () const
+{
+    return fBytesWritten;
+}
+
+// ---------------------------------------------------------------------------
+//  TranscodeFromStr: Getter methods
+// ---------------------------------------------------------------------------
+inline const XMLCh *TranscodeFromStr::str() const
+{
+    return fString;
+}
+
+inline XMLCh *TranscodeFromStr::adopt()
+{
+    XMLCh *tmp = fString;
+    fString = 0;
+    return tmp;
+}
+
+inline XMLSize_t TranscodeFromStr::length() const
+{
+    return fCharsWritten;
 }
 
 XERCES_CPP_NAMESPACE_END

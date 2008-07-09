@@ -42,64 +42,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class TranscodeStr
-{
-public:
-    TranscodeStr(const XMLCh *in, XMLTranscoder* trans,
-                 MemoryManager *manager = XMLPlatformUtils::fgMemoryManager)
-        : fString(0),
-          fBytesWritten(0),
-          fMemoryManager(manager)
-    {
-        if(in) {
-            XMLSize_t len = XMLString::stringLen(in) + 1;
-
-            XMLSize_t allocSize = len * sizeof(XMLCh);
-            fString = (unsigned char*)fMemoryManager->allocate(allocSize);
-
-            XMLSize_t charsRead;
-
-            XMLSize_t charsDone = 0;
-
-            while(true) {
-                fBytesWritten += trans->transcodeTo(in + charsDone, len - charsDone,
-                                                    fString + fBytesWritten, allocSize - fBytesWritten,
-                                                    charsRead, XMLTranscoder::UnRep_Throw);
-                charsDone += charsRead;
-
-                if(charsDone == len) break;
-
-                allocSize *= 2;
-                unsigned char *newBuf = (unsigned char*)fMemoryManager->allocate(allocSize);
-                memcpy(newBuf, fString, fBytesWritten);
-                fMemoryManager->deallocate(fString);
-                fString = newBuf;
-            }
-        }
-    }
-
-    ~TranscodeStr()
-    {
-        if(fString)
-            fMemoryManager->deallocate(fString);
-    }
-
-    const unsigned char *str() const
-    {
-        return fString;
-    }
-
-    XMLSize_t len() const
-    {
-        return fBytesWritten;
-    }
-
-private:
-    unsigned char *fString;
-    XMLSize_t fBytesWritten;
-    MemoryManager *fMemoryManager;
-};
-
 BinHTTPInputStreamCommon::BinHTTPInputStreamCommon(MemoryManager *manager)
       : fBytesProcessed(0)
       , fBuffer(1023, manager)
@@ -132,10 +74,10 @@ void BinHTTPInputStreamCommon::createHTTPRequest(const XMLURL &urlSource, const 
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize, fMemoryManager);
     Janitor<XMLTranscoder> janTrans(trans);
 
-    TranscodeStr hostName(urlSource.getHost(), trans, fMemoryManager);
-    TranscodeStr path(urlSource.getPath(), trans, fMemoryManager);
-    TranscodeStr fragment(urlSource.getFragment(), trans, fMemoryManager);
-    TranscodeStr query(urlSource.getQuery(), trans, fMemoryManager);
+    TranscodeToStr hostName(urlSource.getHost(), trans, fMemoryManager);
+    TranscodeToStr path(urlSource.getPath(), trans, fMemoryManager);
+    TranscodeToStr fragment(urlSource.getFragment(), trans, fMemoryManager);
+    TranscodeToStr query(urlSource.getQuery(), trans, fMemoryManager);
 
     // Build up the http GET command to send to the server.
     // To do:  We should really support http 1.1.  This implementation
@@ -185,10 +127,10 @@ void BinHTTPInputStreamCommon::createHTTPRequest(const XMLURL &urlSource, const 
         userPassBuf.append(chColon);
         userPassBuf.append(password);
 
-        TranscodeStr userPass(userPassBuf.getRawBuffer(), trans, fMemoryManager);
+        TranscodeToStr userPass(userPassBuf.getRawBuffer(), trans, fMemoryManager);
 
         XMLSize_t len;
-        XMLByte* encodedData = Base64::encode((XMLByte*)userPass.str(), userPass.len() - 1, &len, fMemoryManager);
+        XMLByte* encodedData = Base64::encode(userPass.str(), userPass.length(), &len, fMemoryManager);
         ArrayJanitor<XMLByte> janBuf2(encodedData, fMemoryManager);
 
         if(encodedData) {
@@ -229,12 +171,9 @@ XMLCh *BinHTTPInputStreamCommon::findHeader(const char *name)
                 for(endP = p; *endP != 0; ++endP);
             }
 
-            char tmp = *endP;
-            *endP = 0;
-
-            XMLCh *value = XMLString::transcode(p, fMemoryManager);
-            *endP = tmp;
-            return value;
+            // Transcode from iso-8859-1
+            TranscodeFromStr value((XMLByte*)p, endP - p, "ISO8859-1", fMemoryManager);
+            return value.adopt();
         }
 
         p = strstr(p + 1, name);

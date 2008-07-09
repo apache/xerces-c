@@ -536,4 +536,184 @@ XMLLCPTranscoder::~XMLLCPTranscoder()
 {
 }
 
+// ---------------------------------------------------------------------------
+//  TranscodeToStr: Public constructors and destructor
+// ---------------------------------------------------------------------------
+TranscodeToStr::TranscodeToStr(const XMLCh *in, const char *encoding,
+                               MemoryManager *manager)
+    : fString(0),
+      fBytesWritten(0),
+      fMemoryManager(manager)
+{
+    XMLTransService::Codes failReason;
+    const XMLSize_t blockSize = 2048;
+
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, blockSize, fMemoryManager);
+    Janitor<XMLTranscoder> janTrans(trans);
+
+    transcode(in, XMLString::stringLen(in), trans);
+}
+
+TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLSize_t length, const char *encoding,
+                               MemoryManager *manager)
+    : fString(0),
+      fBytesWritten(0),
+      fMemoryManager(manager)
+{
+    XMLTransService::Codes failReason;
+    const XMLSize_t blockSize = 2048;
+
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, blockSize, fMemoryManager);
+    Janitor<XMLTranscoder> janTrans(trans);
+
+    transcode(in, length, trans);
+}
+
+TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLTranscoder* trans,
+                               MemoryManager *manager)
+    : fString(0),
+      fBytesWritten(0),
+      fMemoryManager(manager)
+{
+    transcode(in, XMLString::stringLen(in), trans);
+}
+
+TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLSize_t length, XMLTranscoder* trans,
+                               MemoryManager *manager)
+    : fString(0),
+      fBytesWritten(0),
+      fMemoryManager(manager)
+{
+    transcode(in, length, trans);
+}
+
+TranscodeToStr::~TranscodeToStr()
+{
+    if(fString)
+        fMemoryManager->deallocate(fString);
+}
+
+// ---------------------------------------------------------------------------
+//  TranscodeToStr: Private helper methods
+// ---------------------------------------------------------------------------
+void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* trans)
+{
+    if(!in) return;
+
+    XMLSize_t allocSize = len * sizeof(XMLCh);
+    fString = (XMLByte*)fMemoryManager->allocate(allocSize);
+
+    XMLSize_t charsRead;
+    XMLSize_t charsDone = 0;
+
+    while(true) {
+        fBytesWritten += trans->transcodeTo(in + charsDone, len - charsDone,
+                                            fString + fBytesWritten, allocSize - fBytesWritten,
+                                            charsRead, XMLTranscoder::UnRep_Throw);
+        charsDone += charsRead;
+
+        if(charsDone == len) break;
+
+        allocSize *= 2;
+        XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
+        memcpy(newBuf, fString, fBytesWritten);
+        fMemoryManager->deallocate(fString);
+        fString = newBuf;
+    }
+
+    // null terminate
+    if(fBytesWritten > (allocSize - 4)) {
+        allocSize = fBytesWritten + 4;
+        XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
+        memcpy(newBuf, fString, fBytesWritten);
+        fMemoryManager->deallocate(fString);
+        fString = newBuf;
+    }
+    fString[fBytesWritten + 0] = 0;
+    fString[fBytesWritten + 1] = 0;
+    fString[fBytesWritten + 2] = 0;
+    fString[fBytesWritten + 3] = 0;
+}
+
+// ---------------------------------------------------------------------------
+//  TranscodeFromStr: Public constructors and destructor
+// ---------------------------------------------------------------------------
+TranscodeFromStr::TranscodeFromStr(const XMLByte *data, XMLSize_t length, const char *encoding,
+                                   MemoryManager *manager)
+    : fString(0),
+      fCharsWritten(0),
+      fMemoryManager(manager)
+{
+    XMLTransService::Codes failReason;
+    const XMLSize_t blockSize = 2048;
+
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, blockSize, fMemoryManager);
+    Janitor<XMLTranscoder> janTrans(trans);
+
+    transcode(data, length, trans);
+}
+
+TranscodeFromStr::TranscodeFromStr(const XMLByte *data, XMLSize_t length, XMLTranscoder *trans,
+                                   MemoryManager *manager)
+    : fString(0),
+      fCharsWritten(0),
+      fMemoryManager(manager)
+{
+    transcode(data, length, trans);
+}
+
+TranscodeFromStr::~TranscodeFromStr()
+{
+    if(fString)
+        fMemoryManager->deallocate(fString);
+}
+
+// ---------------------------------------------------------------------------
+//  TranscodeFromStr: Private helper methods
+// ---------------------------------------------------------------------------
+void TranscodeFromStr::transcode(const XMLByte *in, XMLSize_t length, XMLTranscoder *trans)
+{
+    if(!in) return;
+
+    XMLSize_t allocSize = length;
+    fString = (XMLCh*)fMemoryManager->allocate(allocSize * sizeof(XMLCh));
+
+    XMLSize_t csSize = length;
+    ArrayJanitor<unsigned char> charSizes((unsigned char*)fMemoryManager->allocate(csSize * sizeof(unsigned char)),
+                                          fMemoryManager);
+
+    XMLSize_t bytesRead;
+    XMLSize_t bytesDone = 0;
+
+    while(true) {
+        fCharsWritten += trans->transcodeFrom(in + bytesDone, length - bytesDone,
+                                              fString + fCharsWritten, allocSize - fCharsWritten,
+                                              bytesRead, charSizes.get());
+        bytesDone += bytesRead;
+        if(bytesDone == length) break;
+
+        allocSize *= 2;
+        XMLCh *newBuf = (XMLCh*)fMemoryManager->allocate(allocSize);
+        memcpy(newBuf, fString, fCharsWritten);
+        fMemoryManager->deallocate(fString);
+        fString = newBuf;
+
+        if((allocSize - fCharsWritten) > csSize) {
+            csSize = allocSize - fCharsWritten;
+            charSizes.reset((unsigned char*)fMemoryManager->allocate(csSize * sizeof(unsigned char)),
+                            fMemoryManager);
+        }
+    }
+
+    // null terminate
+    if(fCharsWritten == allocSize) {
+        allocSize += sizeof(XMLCh);
+        XMLCh *newBuf = (XMLCh*)fMemoryManager->allocate(allocSize);
+        memcpy(newBuf, fString, fCharsWritten);
+        fMemoryManager->deallocate(fString);
+        fString = newBuf;
+    }
+    fString[fCharsWritten] = 0;
+}
+
 XERCES_CPP_NAMESPACE_END

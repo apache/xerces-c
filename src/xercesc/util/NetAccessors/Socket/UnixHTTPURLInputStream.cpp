@@ -204,7 +204,6 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
 
         if(status == 200) {
             // HTTP 200 OK response means we're done.
-            // We're done
             break;
         }
         // a 3xx response means there was an HTTP redirect

@@ -68,14 +68,16 @@ private :
     size_t writeCallback(			  char *buffer,
                                       size_t size,
                                       size_t nitems);
-    static size_t staticHeaderCallback(void *ptr,
-                                       size_t size,
-                                       size_t nmemb,
-                                       void *stream);
-    size_t headerCallback(             char *buffer,
-                                       size_t size,
-                                       size_t nitems);
 
+    static size_t staticReadCallback(char *buffer,
+                                     size_t size,
+                                     size_t nitems,
+                                     void *stream);
+    size_t readCallback(             char *buffer,
+                                     size_t size,
+                                     size_t nitems);
+
+    bool readMore(int *runningHandles);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -100,7 +102,6 @@ private :
     MemoryManager*      fMemoryManager;
     
     XMLURL				fURLSource;
-    ArrayJanitor<char>	fURL;
     
     unsigned long       fTotalBytesRead;
     XMLByte*			fWritePtr;
@@ -113,6 +114,10 @@ private :
     XMLByte				fBuffer[CURL_MAX_WRITE_SIZE];
     XMLByte*			fBufferHeadPtr;
     XMLByte*			fBufferTailPtr;
+
+    // Upload data
+    const char*         fPayload;
+    XMLSize_t           fPayloadLen;
 
     XMLCh *             fContentType;
     
