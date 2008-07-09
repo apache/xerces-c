@@ -1966,9 +1966,8 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
-    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
+    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0)
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
-    }
     if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
     {
         fAnnotation = generateSyntheticAnnotation(elem, fNonXSAttList);
@@ -2943,6 +2942,15 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
         return 0;
     }
 
+    if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
+                          SchemaSymbols::fgELT_NOTATION, name);
+        return 0;
+    }
+
+    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0)
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
+
     if (fNotationRegistry->containsKey(name, fTargetNSURI)) {
         return name;
     }
@@ -3163,7 +3171,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
     DatatypeValidator* baseValidator = 0;
     DatatypeValidator* newDV = 0;
-    const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_BASE);
+    const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_BASE, true);
 
     fAttributeCheck.checkAttributes(
         contentElem, GeneralAttributeCheck::E_Restriction, this, false, fNonXSAttList
@@ -3272,13 +3280,11 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                 if(bContinue)
                     continue;
 
-                // REVISIT
-                // check for annotation content - we are not checking whether the
-                // return is empty or not. If not empty we should report an error
                 fAttributeCheck.checkAttributes(
                     content, scope, this, false, fNonXSAttList
                 );
-                checkContent(rootElem, XUtil::getFirstChildElement(content), true);
+                if (checkContent(rootElem, XUtil::getFirstChildElement(content), true) != 0)
+                    reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
 
                 const XMLCh* attValue = content->getAttribute(SchemaSymbols::fgATT_VALUE);
                 if (janFacets.get() == 0) {
@@ -3703,7 +3709,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Handle the base type name
     // -----------------------------------------------------------------------
-    const XMLCh* baseName = getElementAttValue(simpleContent, SchemaSymbols::fgATT_BASE);
+    const XMLCh* baseName = getElementAttValue(simpleContent, SchemaSymbols::fgATT_BASE, true);
 
     if (!baseName || !*baseName) {
 
@@ -4100,7 +4106,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Handle the base type name
     // -----------------------------------------------------------------------
-    const XMLCh* baseName = getElementAttValue(complexContent, SchemaSymbols::fgATT_BASE);
+    const XMLCh* baseName = getElementAttValue(complexContent, SchemaSymbols::fgATT_BASE, true);
 
     if (!baseName || !*baseName) {
 
@@ -4437,7 +4443,7 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
     // Verify that key reference "refer" attribute is valid
     // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
-    const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER);
+    const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER, true);
 
     if ((!name || !*name) || (!refer || !*refer)) {
         return;
@@ -4541,7 +4547,8 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     fAttributeCheck.checkAttributes(
         elem, GeneralAttributeCheck::E_Selector, this, false, fNonXSAttList
     );
-    checkContent(icElem, XUtil::getFirstChildElement(elem), true);
+    if (checkContent(icElem, XUtil::getFirstChildElement(elem), true) != 0)
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
     if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
     {
         fAnnotation = generateSyntheticAnnotation(elem, fNonXSAttList);
@@ -4631,7 +4638,8 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             fAttributeCheck.checkAttributes(
                 elem, GeneralAttributeCheck::E_Field, this, false, fNonXSAttList
             );
-            checkContent(icElem, XUtil::getFirstChildElement(elem), true);
+            if (checkContent(icElem, XUtil::getFirstChildElement(elem), true) != 0)
+                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
             if (fScanner->getGenerateSyntheticAnnotations() && !fAnnotation && fNonXSAttList->size())
             {
                 fAnnotation = generateSyntheticAnnotation(elem, fNonXSAttList);
@@ -8322,7 +8330,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
             return false;
         }
 
-        baseTypeName = getElementAttValue(grandKid, SchemaSymbols::fgATT_BASE);
+        baseTypeName = getElementAttValue(grandKid, SchemaSymbols::fgATT_BASE, true);
         const XMLCh* prefix = getPrefix(baseTypeName);
         const XMLCh* localPart = getLocalPart(baseTypeName);
         const XMLCh* uriStr = resolvePrefixToURI(grandKid, prefix);
@@ -8379,7 +8387,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
                     return false;
                 }
 
-                baseTypeName = getElementAttValue(greatGrandKid, SchemaSymbols::fgATT_BASE);
+                baseTypeName = getElementAttValue(greatGrandKid, SchemaSymbols::fgATT_BASE, true);
                 const XMLCh* prefix = getPrefix(baseTypeName);
                 const XMLCh* localPart = getLocalPart(baseTypeName);
                 const XMLCh* uriStr = resolvePrefixToURI(greatGrandKid, prefix);
