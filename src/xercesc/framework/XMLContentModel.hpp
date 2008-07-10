@@ -78,21 +78,23 @@ public:
     // -----------------------------------------------------------------------
     //  The virtual content model interface provided by derived classes
     // -----------------------------------------------------------------------
-	virtual int validateContent
+	virtual bool validateContent
     (
         QName** const         children
-      , const unsigned int    childCount
-      , const unsigned int    emptyNamespaceId
+      , unsigned int          childCount
+      , unsigned int          emptyNamespaceId
+      , unsigned int*         indexFailingChild
       , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     ) const = 0;
 
-	virtual int validateContentSpecial
+	virtual bool validateContentSpecial
     (
         QName** const           children
-      , const unsigned int      childCount
-      , const unsigned int      emptyNamespaceId
+      , unsigned int            childCount
+      , unsigned int            emptyNamespaceId
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
+      , unsigned int*           indexFailingChild
       , MemoryManager*    const manager = XMLPlatformUtils::fgMemoryManager
     ) const =0;
 
@@ -109,8 +111,8 @@ public:
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()
 	  const = 0;
 
-    virtual unsigned int getNextState(const unsigned int currentState,
-                                      const unsigned int elementIndex) const = 0;
+    virtual unsigned int getNextState(unsigned int currentState,
+                                      unsigned int elementIndex) const = 0;
 
 protected :
     // -----------------------------------------------------------------------

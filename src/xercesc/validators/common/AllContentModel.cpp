@@ -104,16 +104,17 @@ AllContentModel::~AllContentModel()
 //must agree with
 //the order and number of child elements specified in the model.
 //
-int
+bool
 AllContentModel::validateContent( QName** const         children
-                                , const unsigned int    childCount
-                                , const unsigned int
+                                , unsigned int          childCount
+                                , unsigned int
+                                , unsigned int*         indexFailingChild
                                 , MemoryManager*    const manager) const
 {
     // If <all> had minOccurs of zero and there are
     // no children to validate, trivially validate
     if (childCount == 0 && (fHasOptionalContent || !fNumRequired))
-        return -1;
+        return true;
 
     // keep track of the required element seen
     unsigned int numRequiredSeen = 0;
@@ -148,7 +149,8 @@ AllContentModel::validateContent( QName** const         children
                     // If this element was seen already, indicate an error was
                     // found at the duplicate index.
                     if (elementSeen[inIndex]) {
-                        return outIndex;
+                        *indexFailingChild=outIndex;
+                        return false;
                     }
                     else
                         elementSeen[inIndex] = true;
@@ -162,7 +164,8 @@ AllContentModel::validateContent( QName** const         children
 
             // We did not find this one, so the validation failed
             if (inIndex == fCount) {
-                return outIndex;
+                *indexFailingChild=outIndex;
+                return false;
             }
 
         }
@@ -170,25 +173,27 @@ AllContentModel::validateContent( QName** const         children
 
     // Were all the required elements of the <all> encountered?
     if (numRequiredSeen != fNumRequired) {
-        return childCount;
+        *indexFailingChild=childCount;
+        return false;
     }
 
     // Everything seems to be ok, so return success
-    return -1;
+    return true;
 }
 
 
-int AllContentModel::validateContentSpecial(QName** const           children
-                                          , const unsigned int      childCount
-                                          , const unsigned int
+bool AllContentModel::validateContentSpecial(QName** const          children
+                                          , unsigned int            childCount
+                                          , unsigned int
                                           , GrammarResolver*  const pGrammarResolver
                                           , XMLStringPool*    const pStringPool
+                                          , unsigned int*           indexFailingChild
                                           , MemoryManager*    const manager) const
 {
     // If <all> had minOccurs of zero and there are
     // no children to validate, trivially validate
     if (childCount == 0 && (fHasOptionalContent || !fNumRequired))
-        return -1;
+        return true;
 
     // keep track of the required element seen
     unsigned int numRequiredSeen = 0;
@@ -224,7 +229,8 @@ int AllContentModel::validateContentSpecial(QName** const           children
                     // If this element was seen already, indicate an error was
                     // found at the duplicate index.
                     if (elementSeen[inIndex]) {
-                        return outIndex;
+                        *indexFailingChild=outIndex;
+                        return false;
                     }
                     else
                         elementSeen[inIndex] = true;
@@ -238,7 +244,8 @@ int AllContentModel::validateContentSpecial(QName** const           children
 
             // We did not find this one, so the validation failed
             if (inIndex == fCount) {
-                return outIndex;
+                *indexFailingChild=outIndex;
+                return false;
             }
 
         }
@@ -246,11 +253,12 @@ int AllContentModel::validateContentSpecial(QName** const           children
 
     // Were all the required elements of the <all> encountered?
     if (numRequiredSeen != fNumRequired) {
-        return childCount;
+        *indexFailingChild=childCount;
+        return false;
     }
 
     // Everything seems to be ok, so return success
-    return -1;
+    return true;
 
 }
 
@@ -317,7 +325,8 @@ AllContentModel::buildChildList(ContentSpecNode* const       curNode
 
         // Recurse on the left and right nodes
         buildChildList(leftNode, toFill, toOptional);
-        buildChildList(rightNode, toFill, toOptional);
+        if(rightNode)
+            buildChildList(rightNode, toFill, toOptional);
     }
     else if (curType == ContentSpecNode::Leaf)
     {

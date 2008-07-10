@@ -72,21 +72,23 @@ public:
     // -----------------------------------------------------------------------
     //  Implementation of the virtual content model interface
     // -----------------------------------------------------------------------
-    virtual int validateContent
+    virtual bool validateContent
     (
         QName** const         children
-      , const unsigned int    childCount
-      , const unsigned int    emptyNamespaceId
+      , unsigned int          childCount
+      , unsigned int          emptyNamespaceId
+      , unsigned int*         indexFailingChild
       , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     ) const;
 
-    virtual int validateContentSpecial
+    virtual bool validateContentSpecial
     (
         QName** const           children
-      , const unsigned int      childCount
-      , const unsigned int      emptyNamespaceId
+      , unsigned int            childCount
+      , unsigned int            emptyNamespaceId
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
+      , unsigned int*           indexFailingChild
       , MemoryManager*    const manager = XMLPlatformUtils::fgMemoryManager
     ) const;
 
@@ -102,8 +104,8 @@ public:
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
-    virtual unsigned int getNextState(const unsigned int currentState,
-                                      const unsigned int elementIndex) const;
+    virtual unsigned int getNextState(unsigned int currentState,
+                                      unsigned int elementIndex) const;
 
 private :
     // -----------------------------------------------------------------------
@@ -205,29 +207,29 @@ private :
     //  fIsMixed
     //      DFA ContentModel with mixed PCDATA.
     // -----------------------------------------------------------------------
-    QName**                 fElemMap;
-    ContentSpecNode::NodeTypes  *fElemMapType;
-    unsigned int            fElemMapSize;
-    bool                    fEmptyOk;
-    unsigned int            fEOCPos;
-    bool*                   fFinalStateFlags;
-    CMStateSet**            fFollowList;
-    CMNode*                 fHeadNode;
-    unsigned int            fLeafCount;
-    CMLeaf**                fLeafList;
-    ContentSpecNode::NodeTypes  *fLeafListType;
-    unsigned int**          fTransTable;
-    unsigned int            fTransTableSize;
-    bool                    fDTD;
-    bool                    fIsMixed;
-    ContentLeafNameTypeVector *fLeafNameTypeVector;
-    MemoryManager*             fMemoryManager;
+    QName**                     fElemMap;
+    ContentSpecNode::NodeTypes* fElemMapType;
+    unsigned int                fElemMapSize;
+    bool                        fEmptyOk;
+    unsigned int                fEOCPos;
+    bool*                       fFinalStateFlags;
+    CMStateSet**                fFollowList;
+    CMNode*                     fHeadNode;
+    unsigned int                fLeafCount;
+    CMLeaf**                    fLeafList;
+    ContentSpecNode::NodeTypes* fLeafListType;
+    unsigned int**              fTransTable;
+    unsigned int                fTransTableSize;
+    bool                        fDTD;
+    bool                        fIsMixed;
+    ContentLeafNameTypeVector * fLeafNameTypeVector;
+    MemoryManager*              fMemoryManager;
 };
 
 
 inline unsigned int
-DFAContentModel::getNextState(const unsigned int currentState,
-                              const unsigned int elementIndex) const {
+DFAContentModel::getNextState(unsigned int currentState,
+                              unsigned int elementIndex) const {
 
     if (currentState == XMLContentModel::gInvalidTrans) {
         return XMLContentModel::gInvalidTrans;

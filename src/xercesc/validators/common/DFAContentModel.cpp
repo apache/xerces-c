@@ -120,17 +120,18 @@ DFAContentModel::~DFAContentModel()
     fMemoryManager->deallocate(fElemMapType); //delete [] fElemMapType;
     fMemoryManager->deallocate(fLeafListType); //delete [] fLeafListType;
 
-	delete fLeafNameTypeVector;
+    delete fLeafNameTypeVector;
 }
 
 
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Implementation of the ContentModel virtual interface
 // ---------------------------------------------------------------------------
-int
+bool
 DFAContentModel::validateContent( QName** const        children
-                                , const unsigned int   childCount
-                                , const unsigned int
+                                , unsigned int         childCount
+                                , unsigned int
+                                , unsigned int*        indexFailingChild
                                 , MemoryManager*    const) const
 {
     //
@@ -140,8 +141,11 @@ DFAContentModel::validateContent( QName** const        children
     //
     if (!childCount)
     {
-        // success -1
-        return fEmptyOk ? -1 : 0;
+        // success 
+        if(fEmptyOk)
+            return true;
+        *indexFailingChild=0;
+        return false;
     }
 
     //
@@ -206,7 +210,7 @@ DFAContentModel::validateContent( QName** const        children
                 else if ((type & 0x0f) == ContentSpecNode::Any_Other)
                 {
                     // Here we assume that empty string has id 1.
-	    	    //
+                //
                     unsigned int uriId = curElem->getURI();
                     if (uriId != 1 && uriId != inElem->getURI()) {
                         nextState = fTransTable[curState][elemIndex];
@@ -219,11 +223,17 @@ DFAContentModel::validateContent( QName** const        children
 
         // If "nextState" is -1, we found a match, but the transition is invalid
         if (nextState == XMLContentModel::gInvalidTrans)
-            return childIndex;
+        {
+            *indexFailingChild=childIndex;
+            return false;
+        }
 
         // If we didn't find it, then obviously not valid
         if (elemIndex == fElemMapSize)
-            return childIndex;
+        {
+            *indexFailingChild=childIndex;
+            return false;
+        }
 
         curState = nextState;
         nextState = 0;
@@ -236,24 +246,33 @@ DFAContentModel::validateContent( QName** const        children
     //  our ending state is a final state.
     //
     if (!fFinalStateFlags[curState])
-        return childIndex;
+    {
+        *indexFailingChild=childIndex;
+        return false;
+    }
 
     //success
-    return -1;
+    return true;
 }
 
-int DFAContentModel::validateContentSpecial(QName** const          children
-                                            , const unsigned int      childCount
-                                            , const unsigned int
+bool DFAContentModel::validateContentSpecial(QName** const          children
+                                            , unsigned int          childCount
+                                            , unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool
+                                            , unsigned int*         indexFailingChild
                                             , MemoryManager*    const) const
 {
 
     SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
 
     if (childCount == 0)
-        return fEmptyOk ? -1 : 0;
+    {
+        if(fEmptyOk)
+            return true;
+        *indexFailingChild=0;
+        return false;
+    }
 
     //
     //  Lets loop through the children in the array and move our way
@@ -293,7 +312,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             {
                 nextState = fTransTable[curState][elemIndex];
                 if (nextState != XMLContentModel::gInvalidTrans)
-                        break;
+                    break;
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_NS)
             {
@@ -307,7 +326,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             else if ((type & 0x0f) == ContentSpecNode::Any_Other)
             {
                 // Here we assume that empty string has id 1.
-		//
+                //
                 unsigned int uriId = curElem->getURI();
                 if (uriId != 1 && uriId != inElem->getURI())
                 {
@@ -320,11 +339,17 @@ int DFAContentModel::validateContentSpecial(QName** const          children
 
         // If "nextState" is -1, we found a match, but the transition is invalid
         if (nextState == XMLContentModel::gInvalidTrans)
-            return childIndex;
+        {
+            *indexFailingChild=childIndex;
+            return false;
+        }
 
         // If we didn't find it, then obviously not valid
         if (elemIndex == fElemMapSize)
-            return childIndex;
+        {
+            *indexFailingChild=childIndex;
+            return false;
+        }
 
         curState = nextState;
         nextState = 0;
@@ -337,10 +362,13 @@ int DFAContentModel::validateContentSpecial(QName** const          children
     //  our ending state is a final state.
     //
     if (!fFinalStateFlags[curState])
-        return childIndex;
+    {
+        *indexFailingChild=childIndex;
+        return false;
+    }
 
     //success
-    return -1;
+    return true;
 }
 
 
@@ -350,7 +378,6 @@ int DFAContentModel::validateContentSpecial(QName** const          children
 void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 {
     unsigned int index;
-
 
     //
     //  The first step we need to take is to rewrite the content model using
@@ -572,10 +599,10 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  have to expand though, it if does, the overhead will be somewhat ugly.
     //
     unsigned int curArraySize = fLeafCount * 4;
-    const CMStateSet** statesToDo = (const CMStateSet**)
+    CMStateSet** statesToDo = (CMStateSet**)
         fMemoryManager->allocate
         (
-            curArraySize * sizeof(const CMStateSet*)
+            curArraySize * sizeof(CMStateSet*)
         ); //new const CMStateSet*[curArraySize];
     fFinalStateFlags = (bool*) fMemoryManager->allocate
     (
@@ -590,7 +617,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  Ok we start with the initial set as the first pos set of the head node
     //  (which is the seq node that holds the content model and the EOC node.)
     //
-    const CMStateSet* setT = new (fMemoryManager) CMStateSet(fHeadNode->getFirstPos());
+    CMStateSet* setT = new (fMemoryManager) CMStateSet(fHeadNode->getFirstPos());
 
     //
     //  Init our two state flags. Basically the unmarked state counter is
@@ -614,11 +641,9 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
     // the stateTable is an auxiliary means to fast
     // identification of new state created (instead
-    // of squential loop statesToDo to find out),
+    // of sequential loop statesToDo to find out),
     // while the role that statesToDo plays remain unchanged.
     //
-    // TODO: in the future, we may change the 29 to something
-    //       derived from curArraySize.
     RefHashTableOf<XMLInteger> *stateTable =
         new (fMemoryManager) RefHashTableOf<XMLInteger>
         (
@@ -738,7 +763,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 }
                 ***/
 
-                XMLInteger *stateObj = (XMLInteger*) (stateTable->get(newSet));
+                XMLInteger *stateObj = stateTable->get(newSet);
                 unsigned int stateIndex = (stateObj == 0 ? curState : stateObj->intValue());
 
                 // If we did not find it, then add it
@@ -784,10 +809,10 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     //  size by 50% and allocate new arrays.
                     //
                     const unsigned int newSize = (unsigned int)(curArraySize * 1.5);
-                    const CMStateSet** newToDo = (const CMStateSet**)
+                    CMStateSet** newToDo = (CMStateSet**)
                         fMemoryManager->allocate
                         (
-                            newSize * sizeof(const CMStateSet*)
+                            newSize * sizeof(CMStateSet*)
                         ); //new const CMStateSet*[newSize];
                     bool* newFinalFlags = (bool*) fMemoryManager->allocate
                     (
@@ -859,7 +884,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     delete stateTable;
 
     for (index = 0; index < curState; index++)
-        delete (CMStateSet*)statesToDo[index];
+        delete statesToDo[index];
     fMemoryManager->deallocate(statesToDo); //delete [] statesToDo;
 
     for (index = 0; index < fLeafCount; index++)
@@ -990,7 +1015,7 @@ void DFAContentModel::calcFollowList(CMNode* const curNode)
         }
     }
      else if (curType == ContentSpecNode::ZeroOrMore ||
-		      curType == ContentSpecNode::OneOrMore   )
+              curType == ContentSpecNode::OneOrMore   )
     {
         // Recurse first
         calcFollowList(((CMUnaryOp*)curNode)->getChild());
@@ -1119,7 +1144,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
 ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
 {
    //later change it to return the data member
-	return fLeafNameTypeVector;
+    return fLeafNameTypeVector;
 }
 
 void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pGrammar,
@@ -1150,19 +1175,18 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     // Unique Particle Attribution
     // store the conflict results between any two elements in fElemMap
     // XMLContentModel::gInvalidTrans: not compared; 0: no conflict; 1: conflict
-    unsigned int** fConflictTable = (unsigned int**) fMemoryManager->allocate
+    XMLByte** conflictTable = (XMLByte**) fMemoryManager->allocate
     (
-        fElemMapSize * sizeof(unsigned int*)
+        fElemMapSize * sizeof(XMLByte*) 
     ); //new unsigned int*[fElemMapSize];
 
     // initialize the conflict table
     for (j = 0; j < fElemMapSize; j++) {
-        fConflictTable[j] = (unsigned int*) fMemoryManager->allocate
+        conflictTable[j] = (XMLByte*) fMemoryManager->allocate
         (
-            fElemMapSize * sizeof(unsigned int)
+            fElemMapSize * sizeof(XMLByte)
         ); //new unsigned int[fElemMapSize];
-        for (k = j+1; k < fElemMapSize; k++)
-            fConflictTable[j][k] = XMLContentModel::gInvalidTrans;
+        memset(conflictTable[j], 0, fElemMapSize*sizeof(XMLByte));
     }
 
     // for each state, check whether it has overlap transitions
@@ -1171,7 +1195,7 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
             for (k = j+1; k < fElemMapSize; k++) {
                 if (fTransTable[i][j] != XMLContentModel::gInvalidTrans &&
                     fTransTable[i][k] != XMLContentModel::gInvalidTrans &&
-                    fConflictTable[j][k] == XMLContentModel::gInvalidTrans) {
+                    conflictTable[j][k] == 0) {
 
                     // If this is text in a Schema mixed content model, skip it.
                     if ( fIsMixed &&
@@ -1185,7 +1209,7 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                                         fElemMapType[k],
                                                         fElemMap[k],
                                                         &comparator)) {
-                       fConflictTable[j][k] = 1;
+                       conflictTable[j][k] = 1;
 
                        XMLBuffer buf1(1023, fMemoryManager);
                        if (((fElemMapType[j] & 0x0f) == ContentSpecNode::Any) ||
@@ -1211,15 +1235,15 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                              buf2.getRawBuffer());
                     }
                     else
-                       fConflictTable[j][k] = 0;
+                       conflictTable[j][k] = -1;
                 }
             }
         }
     }
 
     for (i = 0; i < fElemMapSize; i++)
-        fMemoryManager->deallocate(fConflictTable[i]); //delete [] fConflictTable[i];
-    fMemoryManager->deallocate(fConflictTable); //delete [] fConflictTable;
+        fMemoryManager->deallocate(conflictTable[i]); //delete [] conflictTable[i];
+    fMemoryManager->deallocate(conflictTable); //delete [] conflictTable;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -57,11 +57,12 @@ public:
     // -----------------------------------------------------------------------
     //  Implementation of the XMLValidator interface
     // -----------------------------------------------------------------------
-    virtual int checkContent
+    virtual bool checkContent
     (
         XMLElementDecl* const   elemDecl
         , QName** const         children
-        , const unsigned int    childCount
+        , unsigned int          childCount
+        , unsigned int*         indexFailingChild
     );
 
     virtual void faultInAttr

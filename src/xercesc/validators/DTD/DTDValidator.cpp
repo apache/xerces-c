@@ -51,9 +51,10 @@ DTDValidator::~DTDValidator()
 // ---------------------------------------------------------------------------
 //  DTDValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-int DTDValidator::checkContent(XMLElementDecl* const elemDecl
-                              , QName** const        children
-                              , const unsigned int   childCount)
+bool DTDValidator::checkContent(XMLElementDecl* const elemDecl
+                              , QName** const         children
+                              , unsigned int          childCount
+                              , unsigned int*         indexFailingChild)
 {
     //
     //  Look up the element id in our element decl pool. This will get us
@@ -75,7 +76,10 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
         //  we return 0 as the index of the first bad child.
         //
         if (childCount)
-            return 0;
+        {
+            *indexFailingChild=0;
+            return false;
+        }
     }
      else if (modelType == DTDElementDecl::Any)
     {
@@ -88,7 +92,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
         const XMLContentModel* elemCM = elemDecl->getContentModel();
 
         // Ask it to validate and return its return
-        return elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId(), getScanner()->getMemoryManager());
+        return elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId(), indexFailingChild, getScanner()->getMemoryManager());
     }
      else
     {
@@ -96,7 +100,7 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
     }
 
     // Went ok, so return success
-    return -1;
+    return true;
 }
 
 

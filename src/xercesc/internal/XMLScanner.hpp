@@ -754,8 +754,8 @@ protected:
     bool                        fSkipDTDValidation;
     bool                        fHandleMultipleImports;
     int                         fErrorCount;
-    unsigned int                fEntityExpansionLimit;
-    unsigned int                fEntityExpansionCount;
+    XMLSize_t                   fEntityExpansionLimit;
+    XMLSize_t                   fEntityExpansionCount;
     unsigned int                fEmptyNamespaceId;
     unsigned int                fUnknownNamespaceId;
     unsigned int                fXMLNamespaceId;

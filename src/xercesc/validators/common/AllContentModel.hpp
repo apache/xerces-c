@@ -57,28 +57,30 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the ContentModel virtual interface
     // -----------------------------------------------------------------------
-    virtual int validateContent
+    virtual bool validateContent
     (
         QName** const         children
-      , const unsigned int    childCount
-      , const unsigned int    emptyNamespaceId
+      , unsigned int          childCount
+      , unsigned int          emptyNamespaceId
+      , unsigned int*         indexFailingChild
       , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     )   const;
 
-	virtual int validateContentSpecial
+	virtual bool validateContentSpecial
     (
-        QName** const         children
-      , const unsigned int    childCount
-      , const unsigned int    emptyNamespaceId
+        QName** const           children
+      , unsigned int            childCount
+      , unsigned int            emptyNamespaceId
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
+      , unsigned int*           indexFailingChild
       , MemoryManager*    const manager = XMLPlatformUtils::fgMemoryManager
     ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
-    virtual unsigned int getNextState(const unsigned int currentState,
-                                      const unsigned int elementIndex) const;
+    virtual unsigned int getNextState(unsigned int currentState,
+                                      unsigned int elementIndex) const;
 
     virtual void checkUniqueParticleAttribution
     (
@@ -144,8 +146,8 @@ inline ContentLeafNameTypeVector* AllContentModel::getContentLeafNameTypeVector(
 }
 
 inline unsigned int
-AllContentModel::getNextState(const unsigned int,
-                              const unsigned int) const {
+AllContentModel::getNextState(unsigned int,
+                              unsigned int) const {
 
     return XMLContentModel::gInvalidTrans;
 }

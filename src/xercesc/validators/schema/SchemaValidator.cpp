@@ -77,9 +77,10 @@ SchemaValidator::~SchemaValidator()
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
-                                 , QName** const         children
-                                 , const unsigned int    childCount)
+bool SchemaValidator::checkContent (XMLElementDecl* const elemDecl
+                                 , QName** const          children
+                                 , unsigned int           childCount
+                                 , unsigned int*          indexFailingChild)
 {
     fErrorOccurred = false;
     fElemIsSpecified = false;
@@ -111,7 +112,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         //
         if (childCount) {
             fErrorOccurred = true;
-            return 0;
+            *indexFailingChild=0;
+            return false;
         }
     }
     else if ((modelType == SchemaElementDecl::Mixed_Simple)
@@ -135,17 +137,18 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
 
             // Ask it to validate and return its return
             unsigned int emptyNS = getScanner()->getEmptyNamespaceId();
-            int result = elemCM->validateContent(children, childCount, emptyNS, getScanner()->getMemoryManager());
-            if (result != -1) {
+            bool result = elemCM->validateContent(children, childCount, emptyNS, indexFailingChild, getScanner()->getMemoryManager());
+            if (!result) {
                 result = elemCM->validateContentSpecial(children
                                                       , childCount
                                                       , emptyNS
                                                       , fGrammarResolver
                                                       , fGrammarResolver->getStringPool()
+                                                      , indexFailingChild
 													  , getScanner()->getMemoryManager());
             }
 
-            if(result != -1) {
+            if(!result) {
                 fErrorOccurred = true;
             }
 
@@ -308,7 +311,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     fCurrentDatatypeValidator = 0;
 
     // Went ok, so return success
-    return -1;
+    return true;
 }
 
 void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)   const

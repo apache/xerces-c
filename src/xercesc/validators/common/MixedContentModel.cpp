@@ -138,10 +138,11 @@ bool MixedContentModel::hasDups() const
 //must agree with
 //the order and number of child elements specified in the model.
 //
-int
+bool
 MixedContentModel::validateContent( QName** const         children
-                                  , const unsigned int    childCount
-                                  , const unsigned int
+                                  , unsigned int          childCount
+                                  , unsigned int
+                                  , unsigned int*         indexFailingChild
                                   , MemoryManager*    const) const
 {
     // must match order
@@ -162,13 +163,15 @@ MixedContentModel::validateContent( QName** const         children
             if (type == ContentSpecNode::Leaf) {
                 if (fDTD) {
                     if (!XMLString::equals(inChild->getRawName(), curChild->getRawName())) {
-                        return outIndex;
+                        *indexFailingChild=outIndex;
+                        return false;
                     }
                 }
                 else {
                     if ((inChild->getURI() != curChild->getURI()) ||
                         (!XMLString::equals(inChild->getLocalPart(), curChild->getLocalPart()))) {
-                        return outIndex;
+                        *indexFailingChild=outIndex;
+                        return false;
                     }
                 }
             }
@@ -176,15 +179,21 @@ MixedContentModel::validateContent( QName** const         children
             }
             else if (type == ContentSpecNode::Any_NS) {
                 if (inChild->getURI() != curChild->getURI())
-                    return outIndex;
+                {
+                    *indexFailingChild=outIndex;
+                    return false;
+                }
             }
             else if (type == ContentSpecNode::Any_Other)
             {
                 // Here we assume that empty string has id 1.
-		//
+                //
                 unsigned int uriId = curChild->getURI();
                 if (uriId == 1 || uriId == inChild->getURI())
-                    return outIndex;
+                {
+                    *indexFailingChild=outIndex;
+                    return false;
+                }
             }
 
             // advance index
@@ -231,11 +240,11 @@ MixedContentModel::validateContent( QName** const         children
                 }
                 else if (type == ContentSpecNode::Any_Other)
                 {
-                  // Here we assume that empty string has id 1.
-		  //
-                  unsigned int uriId = curChild->getURI();
-                  if (uriId != 1 && uriId != inChild->getURI())
-                    break;
+                    // Here we assume that empty string has id 1.
+                    //
+                    unsigned int uriId = curChild->getURI();
+                    if (uriId != 1 && uriId != inChild->getURI())
+                        break;
                 }
 
                 // REVISIT: What about checking for multiple ANY matches?
@@ -245,21 +254,24 @@ MixedContentModel::validateContent( QName** const         children
             }
             // We did not find this one, so the validation failed
             if (inIndex == fCount)
-                return outIndex;
+            {
+                *indexFailingChild=outIndex;
+                return false;
+            }
         }
     }
 
     // Everything seems to be in order, so return success
-    // success
-    return -1;
+    return true;
 }
 
 
-int MixedContentModel::validateContentSpecial(QName** const           children
-                                            , const unsigned int      childCount
-                                            , const unsigned int
+bool MixedContentModel::validateContentSpecial(QName** const          children
+                                            , unsigned int            childCount
+                                            , unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool
+                                            , unsigned int*           indexFailingChild
                                             , MemoryManager*    const) const
 {
 
@@ -282,21 +294,30 @@ int MixedContentModel::validateContentSpecial(QName** const           children
 
             if (type == ContentSpecNode::Leaf) {
                 if ( !comparator.isEquivalentTo(curChild, inChild))
-                    return outIndex;
+                {
+                    *indexFailingChild=outIndex;
+                    return false;
+                }
             }
             else if (type == ContentSpecNode::Any) {
             }
             else if (type == ContentSpecNode::Any_NS) {
                 if (inChild->getURI() != curChild->getURI())
-                    return outIndex;
+                {
+                    *indexFailingChild=outIndex;
+                    return false;
+                }
             }
             else if (type == ContentSpecNode::Any_Other)
             {
-              // Here we assume that empty string has id 1.
-              //
-              unsigned int uriId = curChild->getURI();
-              if (uriId == 1 || uriId == inChild->getURI())
-                return outIndex;
+                // Here we assume that empty string has id 1.
+                //
+                unsigned int uriId = curChild->getURI();
+                if (uriId == 1 || uriId == inChild->getURI())
+                {
+                    *indexFailingChild=outIndex;
+                    return false;
+                }
             }
 
             // advance index
@@ -348,13 +369,15 @@ int MixedContentModel::validateContentSpecial(QName** const           children
             }
             // We did not find this one, so the validation failed
             if (inIndex == fCount)
-                return outIndex;
+            {
+                *indexFailingChild=outIndex;
+                return false;
+            }
         }
     }
 
     // Everything seems to be in order, so return success
-    // success
-    return -1;
+    return true;
 }
 
 // ---------------------------------------------------------------------------

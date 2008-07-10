@@ -94,12 +94,18 @@ public:
       *
       * @param  childCount  The number of elements in the childIds array. It can
       *                     be zero if the element had none.
+      *
+      * @param  indexFailingChild  On return, it will contain the index of the 
+      *                            children failing validation, if the retun value
+      *                            is false
+      *
       */
-    virtual int checkContent
+    virtual bool checkContent
     (
         XMLElementDecl* const   elemDecl
         , QName** const         children
-        , const unsigned int    childCount
+        , unsigned int          childCount
+        , unsigned int*         indexFailingChild
     ) = 0;
 
     /**

@@ -916,14 +916,16 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     DatatypeValidator* psviMemberType = 0;
     if (fValidate)
     {
-        int res = fValidator->checkContent
+        unsigned int failure;
+        bool res = fValidator->checkContent
         (
             topElem->fThisElement
             , topElem->fChildren
             , topElem->fChildCount
+            , &failure
         );
 
-        if (res >= 0)
+        if (!res)
         {
             //  One of the elements is not valid for the content. NOTE that
             //  if no children were provided but the content model requires
@@ -938,7 +940,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
                     , topElem->fThisElement->getFormattedContentModel()
                 );
             }
-            else if ((unsigned int)res >= topElem->fChildCount)
+            else if (failure >= topElem->fChildCount)
             {
                 fValidator->emitError
                 (
@@ -951,7 +953,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
                 fValidator->emitError
                 (
                     XMLValid::ElementNotValidForContent
-                    , topElem->fChildren[res]->getRawName()
+                    , topElem->fChildren[failure]->getRawName()
                     , topElem->fThisElement->getFormattedContentModel()
                 );
             }
@@ -1665,8 +1667,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            const int res = fValidator->checkContent(elemDecl, 0, 0);
-            if (res >= 0)
+            unsigned int failure;
+            bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
+            if (!res)
             {
                 // REVISIT:  in the case of xsi:type, this may
                 // return the wrong string...
