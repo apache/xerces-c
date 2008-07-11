@@ -136,7 +136,7 @@
             <Message Id="ForbiddenDerivationByExtension" Text="derivation by extension is forbidden by either base type '{0}' or globally"/>
             <Message Id="BaseNotComplexType" Text="base type specified in complexContent definition must be a complex type"/>
             <Message Id="ImportNamespaceDifference" Text="imported schema '{0}' has different target namespace '{1}'; expected '{2}'"/>
-            <Message Id="DeclarationNoSchemaLocation" Text="schemaLocation attribute must be specified in element '{0}'"/>
+            <Message Id="DeclarationNoSchemaLocation" Text="'schemaLocation' attribute must be specified in element '{0}'"/>
             <Message Id="IncludeNamespaceDifference" Text="included schema '{0}' has different target namespace '{1}'"/>
             <Message Id="OnlyAnnotationExpected" Text="at most one annotation is allowed"/>
             <Message Id="InvalidAttributeContent" Text="content of attribute '{0}' must match (annotation?, simpleType?)"/>
@@ -171,7 +171,7 @@
             <Message Id="DuplicateAttInDerivation" Text="attribute '{0}' is already defined in base"/>
             <Message Id="NotExpressibleWildCardIntersection" Text="intensional intersection of attribute wildcards must be expressible"/>
             <Message Id="BadAttDerivation_1" Text="base type does not have any attributes"/>
-            <Message Id="BadAttDerivation_2" Text="attribute '{0}' has incomaptible use value in the base"/>
+            <Message Id="BadAttDerivation_2" Text="attribute '{0}' has incompatible use value in the base"/>
             <Message Id="BadAttDerivation_3" Text="type of attribute '{0}' must be derived by restriction from type of the corresponding attribute in the base"/>
             <Message Id="BadAttDerivation_4" Text="attribute '{0}' does not have a fixed value or has a different fixed value from that of the base"/>
             <Message Id="BadAttDerivation_5" Text="attribute '{0}' has invalid target namespace with respect to the base wildcard constraint or base has no wildcard"/>
@@ -212,14 +212,14 @@
             <Message Id="ELTSchemaNS" Text="element '{0}' must be from the XML Schema namespace"/>
             <Message Id="InvalidAttTNS" Text="target namespace of attribute '{0}' cannot be http://www.w3.org/2001/XMLSchema-instance"/>
             <Message Id="NSDeclInvalid" Text="invalid namespace declaration"/>
-            <Message Id="DOMLevel1Node" Text="namespace fixup cannot be performed on DOM Level 1 node"/>
+            <Message Id="DOMLevel1Node" Text="namespace fix-up cannot be performed on DOM Level 1 node"/>
         </Error>
         <FatalError>
             <Message Id="EntityExpansionLimitExceeded" Text= "parser has encountered more than '{0}' entity expansions in the document; this is the limit imposed by the application"/>
             <Message Id="ExpectedCommentOrCDATA" Text="expected comment or CDATA section"/>
             <Message Id="ExpectedAttrName" Text="attribute name expected"/>
             <Message Id="ExpectedNotationName" Text="notation name expected"/>
-            <Message Id="NoRepInMixed" Text="illegale repetition of elements in mixed content model"/>
+            <Message Id="NoRepInMixed" Text="illegal repetition of elements in mixed content model"/>
             <Message Id="ExpectedDefAttrDecl" Text="default attribute declaration expected"/>
             <Message Id="ExpectedEqSign" Text="equal sign expected"/>
             <Message Id="ExpectedElementName" Text="element name expected"/>
@@ -666,7 +666,7 @@
             <Message Id="XMLNUM_2ManyDecPoint" Text="more than one decimal point encountered"/>
             <Message Id="XMLNUM_Inv_chars" Text="invalid character encountered"/>
             <Message Id="XMLNUM_null_ptr" Text="NULL pointer encountered"/>
-            <Message Id="XMLNUM_URI_Component_Empty" Text="unable ot construct URI with NULL/empty {0}"/>
+            <Message Id="XMLNUM_URI_Component_Empty" Text="unable to construct URI with NULL/empty {0}"/>
             <Message Id="XMLNUM_URI_Component_for_GenURI_Only" Text="{0} '{1}' can only be set for a generic URI"/>
             <Message Id="XMLNUM_URI_Component_Invalid_EscapeSequence" Text="{0} contains invalid escape sequence '{1}'"/>
             <Message Id="XMLNUM_URI_Component_Invalid_Char" Text="{0} contains invalid character '{1}'"/>
