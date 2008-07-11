@@ -307,8 +307,8 @@ enumMessages(   const   DOMElement*             srcElem
         //  we use the id as the enum name.
         //
 
-        if (XMLString::stringLen(msgText) > 128) {
-            wprintf(L"Message text %s is too long, 128 character limit\n\n", xmlStrToPrintable(msgText));            
+        if (XMLString::stringLen(msgText) >= 128) {
+            wprintf(L"Message text '%s' is too long (%d chars), 128 character limit\n\n", xmlStrToPrintable(msgText),XMLString::stringLen(msgText));            
             throw ErrReturn_SrcFmtError;
         }
 
@@ -854,7 +854,6 @@ int Xlat_main(int argC, XMLCh** argV)
             // And call the termination method
             if(srcDoc)
                 delete srcDoc;
-            XMLPlatformUtils::Terminate();
             return retVal;
         }
 

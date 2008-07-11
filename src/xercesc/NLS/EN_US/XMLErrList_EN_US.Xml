@@ -166,7 +166,7 @@
             <Message Id="MinMaxOnGroupChild" Text="top-level compositor in a group must not have 'minOccurs' or 'maxOccurs' attribute"/>
             <Message Id="DeclarationNotFound" Text="{0} '{1}:{2}' not found"/>
             <Message Id="AllContentLimited" Text="group with the all compositor must only appear as content type of a complex type"/>
-            <Message Id="BadMinMaxAllCT" Text="group with the all compositor which constitutes the content type of a complex type must have both minOccurs and maxOccurs equal 1"/>
+            <Message Id="BadMinMaxAllCT" Text="group with the all compositor constituting the content type of a complex type must have both minOccurs and maxOccurs equal 1"/>
             <Message Id="BadMinMaxAllElem" Text="element declaration in the all compositor must have minOccurs and maxOccurs equal 0 or 1"/>
             <Message Id="DuplicateAttInDerivation" Text="attribute '{0}' is already defined in base"/>
             <Message Id="NotExpressibleWildCardIntersection" Text="intensional intersection of attribute wildcards must be expressible"/>
@@ -177,7 +177,7 @@
             <Message Id="BadAttDerivation_5" Text="attribute '{0}' has invalid target namespace with respect to the base wildcard constraint or base has no wildcard"/>
             <Message Id="BadAttDerivation_6" Text="attribute wildcard is present in the derived type but not in the base"/>
             <Message Id="BadAttDerivation_7" Text="attribute wildcard in the derived type is not a valid subset of that in the base"/>
-            <Message Id="BadAttDerivation_8" Text="attribute '{0}' cannot have different use value in the derived type if the corresponding base attribute use value is 'prohibited'"/>
+            <Message Id="BadAttDerivation_8" Text="attribute '{0}' cannot have different use value in the derived type if the base attribute use value is 'prohibited'"/>
             <Message Id="BadAttDerivation_9" Text="attribute wildcard in the derived type must be identical to or stricter than the one in the base"/>
             <Message Id="AllContentError" Text="unexpected '{0}' in the content of the all compositor; only elements are allowed"/>
             <Message Id="RedefineNamespaceDifference" Text="redefined schema '{0}' has a different target namespace '{1}'"/>
