@@ -2316,7 +2316,6 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     if (badContent) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttributeContent,
-                          (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
                           (name) ? name : ref);
     }
 
@@ -2325,8 +2324,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         if (fixedVal) {
 
             fixedVal = 0;
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue,
-                              (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue,                             
                               (name) ? name : ref);
         }
 
@@ -2335,7 +2333,6 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
             useVal = 0;
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotOptionalDefaultAttValue,
-                              (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
                               (name) ? name : ref);
         }
     }
@@ -2346,7 +2343,6 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         // Check ref representation OK - 3.2.3::3.2
         if (attForm || dvType || (simpleType != 0)) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeRefContentError,
-                              (name) ? SchemaSymbols::fgATT_NAME : SchemaSymbols::fgATT_REF,
                               (name) ? name : ref);
         }
 
@@ -2545,8 +2541,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     }
 
     if (ofTypeID && valueToCheck) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3,
-                         SchemaSymbols::fgATT_NAME, name);
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3, name);
     }
 
     // check for multiple attributes with type derived from ID
@@ -6028,8 +6023,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                 if (attDV) {
 
                     if (attDV->getType() == DatatypeValidator::ID) {
-                        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3,
-                                          SchemaSymbols::fgATT_REF, refName);
+                        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect3, refName);
                     }
                     else {
                         try {

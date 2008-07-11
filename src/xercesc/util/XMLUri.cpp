@@ -122,13 +122,13 @@ static const int BUF_LEN = 64;
 //
 static const XMLCh errMsg_SCHEME[] =
 {
-    chLatin_S, chLatin_c, chLatin_h, chLatin_e,
+    chLatin_s, chLatin_c, chLatin_h, chLatin_e,
     chLatin_m, chLatin_e, chNull
 };
 
 static const XMLCh errMsg_SCHEMESPART[] =
 {
-    chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_e,
+    chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_e,
     chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f,
     chLatin_i, chLatin_c, chLatin_P, chLatin_a, chLatin_r, chLatin_t,
     chNull
@@ -136,24 +136,24 @@ static const XMLCh errMsg_SCHEMESPART[] =
 
 static const XMLCh errMsg_PARAMS[] =
 {
-    chLatin_P, chLatin_a, chLatin_r, chLatin_a, chLatin_m,
+    chLatin_p, chLatin_a, chLatin_r, chLatin_a, chLatin_m,
     chLatin_e, chLatin_t, chLatin_e, chLatin_r, chLatin_s, chNull
 };
 
 static const XMLCh errMsg_USERINFO[] =
 {
-    chLatin_U, chLatin_s, chLatin_e, chLatin_r,
+    chLatin_u, chLatin_s, chLatin_e, chLatin_r,
     chLatin_i, chLatin_n, chLatin_f, chLatin_o, chNull
 };
 
 static const XMLCh errMsg_HOST[] =
 {
-    chLatin_H, chLatin_o, chLatin_s, chLatin_t, chNull
+    chLatin_h, chLatin_o, chLatin_s, chLatin_t, chNull
 };
 
 static const XMLCh errMsg_PORT[] =
 {
-    chLatin_P, chLatin_o, chLatin_r, chLatin_t, chNull
+    chLatin_p, chLatin_o, chLatin_r, chLatin_t, chNull
 };
 
 static const XMLCh errMsg_REGNAME[] =
@@ -164,17 +164,17 @@ static const XMLCh errMsg_REGNAME[] =
 
 static const XMLCh errMsg_PATH[] =
 {
-    chLatin_P, chLatin_a, chLatin_t, chLatin_h, chNull
+    chLatin_p, chLatin_a, chLatin_t, chLatin_h, chNull
 };
 
 static const XMLCh errMsg_QUERY[] =
 {
-    chLatin_Q, chLatin_u, chLatin_e, chLatin_r, chLatin_y, chNull
+    chLatin_q, chLatin_u, chLatin_e, chLatin_r, chLatin_y, chNull
 };
 
 static const XMLCh errMsg_FRAGMENT[] =
 {
-    chLatin_F, chLatin_r, chLatin_a, chLatin_g,
+    chLatin_f, chLatin_r, chLatin_a, chLatin_g,
     chLatin_m, chLatin_e, chLatin_n, chLatin_t, chNull
 };
 
