@@ -67,6 +67,8 @@ private:
     // Note: The name of each function should be in the form
     // initialize<class-name>.
     //
+    // Note: In some cases order of initialization is important.
+    //
 
     //
     // Initialize

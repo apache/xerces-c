@@ -36,10 +36,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-static DOMDocument*       sDocument = 0;
+static DOMDocument* sDocument = 0;
+static XMLMutex*    sDocumentMutex = 0;
 
 void XMLInitializer::initializeDOMDocumentTypeImpl()
 {
+    sDocumentMutex = new XMLMutex(XMLPlatformUtils::fgMemoryManager);
+
     static const XMLCh gCoreStr[] = { chLatin_C, chLatin_o, chLatin_r, chLatin_e, chNull };
     DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(gCoreStr);
     sDocument = impl->createDocument(); // document type object (DTD).
@@ -49,6 +52,9 @@ void XMLInitializer::terminateDOMDocumentTypeImpl()
 {
     sDocument->release();
     sDocument = 0;
+
+    delete sDocumentMutex;
+    sDocumentMutex = 0;
 }
 
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
@@ -66,13 +72,16 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     fIntSubsetReading(false),
     fIsCreatedFromHeap(heap)
 {
-    if (ownerDoc) {
+    if (ownerDoc)
+    {
         fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(dtName);
         fEntities = new (ownerDoc) DOMNamedNodeMapImpl(this);
         fNotations= new (ownerDoc) DOMNamedNodeMapImpl(this);
         fElements = new (ownerDoc) DOMNamedNodeMapImpl(this);
     }
-    else {
+    else
+    {
+        XMLMutexLock lock(sDocumentMutex);
         DOMDocument* doc = sDocument;
         fName = ((DOMDocumentImpl *)doc)->getPooledString(dtName);
         fEntities = new (doc) DOMNamedNodeMapImpl(this);
@@ -135,7 +144,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
             XMLPlatformUtils::fgMemoryManager->deallocate(newName);//delete[] newName;
     }
 
-    if (ownerDoc) {
+    if (ownerDoc)
+    {
         DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
         fPublicId = docImpl->cloneString(pubId);
         fSystemId = docImpl->cloneString(sysId);
@@ -144,7 +154,9 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         fNotations= new (ownerDoc) DOMNamedNodeMapImpl(this);
         fElements = new (ownerDoc) DOMNamedNodeMapImpl(this);
     }
-    else {
+    else
+    {
+        XMLMutexLock lock(sDocumentMutex);
         DOMDocument* doc = sDocument;
         fPublicId = ((DOMDocumentImpl*) doc)->cloneString(pubId);
         fSystemId = ((DOMDocumentImpl*) doc)->cloneString(sysId);
@@ -197,7 +209,10 @@ DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
     if (castToNodeImpl(this)->getOwnerDocument())
         newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMMemoryManager::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
     else
+    {
+        XMLMutexLock lock(sDocumentMutex);
         newNode = new (sDocument, DOMMemoryManager::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
+    }
 
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
@@ -324,6 +339,7 @@ void DOMDocumentTypeImpl::setPublicId(const XMLCh *value)
     if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
         fPublicId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
     else {
+        XMLMutexLock lock(sDocumentMutex);
         fPublicId = ((DOMDocumentImpl *)sDocument)->cloneString(value);
     }
 }
@@ -333,6 +349,7 @@ void DOMDocumentTypeImpl::setSystemId(const XMLCh *value)
     if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
         fSystemId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
     else {
+        XMLMutexLock lock(sDocumentMutex);
         fSystemId = ((DOMDocumentImpl *)sDocument)->cloneString(value);
     }
 }
@@ -342,6 +359,7 @@ void DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
     if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
         fInternalSubset = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
     else {
+        XMLMutexLock lock(sDocumentMutex);
         fInternalSubset = ((DOMDocumentImpl *)sDocument)->cloneString(value);
     }
 }
