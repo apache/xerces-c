@@ -170,12 +170,11 @@ private:
     //  Private helper methods
     // -----------------------------------------------------------------------
     void faultInAttDefList() const;
-    XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
-    XMLContentModel* makeContentModel(const bool checkUPA = false);
-    XMLContentModel* buildContentModel(ContentSpecNode* const specNode);
+    bool useRepeatingLeafNodes(ContentSpecNode* particle);
+    XMLContentModel* makeContentModel(bool checkUPA = false);
     XMLCh* formatContentModel () const ;
-    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs);
-    ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, const bool checkUPA = false);
+    ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, int minOccurs, int maxOccurs, bool bAllowCompactSyntax);
+    ContentSpecNode* convertContentSpecTree(ContentSpecNode* const curNode, bool checkUPA, bool bAllowCompactSyntax);
     void resizeContentSpecOrgURI();
 
     // -----------------------------------------------------------------------

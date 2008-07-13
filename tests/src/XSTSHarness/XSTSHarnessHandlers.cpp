@@ -134,22 +134,12 @@ void XSTSHarnessHandlers::startElement(const XMLCh* const uri
             fCurrentTest.fXSDName.setURL(dummy);
             StrX x(attrs.getValue(szNAME));
             const char* groupName=x.localForm();
-            if(XMLString::equals(groupName,"elemJ003") ||
-               XMLString::equals(groupName,"elemJ011") ||
-               XMLString::equals(groupName,"mgEa005") ||
-               XMLString::equals(groupName,"mgG014") ||
-               XMLString::equals(groupName,"mgHa005") ||
-               XMLString::equals(groupName,"mgJ014") ||
+            if(XMLString::equals(groupName,"addB194") ||
+               XMLString::equals(groupName,"isDefault072") ||     // this fails because of an access violation
                XMLString::equals(groupName,"particlesA012") ||
                XMLString::equals(groupName,"particlesA013") ||
                XMLString::equals(groupName,"particlesA014") ||
                XMLString::equals(groupName,"particlesA015") ||
-               XMLString::equals(groupName,"particlesIe003") ||
-               XMLString::equals(groupName,"particlesJb003") ||
-               XMLString::equals(groupName,"particlesJd003") ||
-               XMLString::equals(groupName,"particlesJf003") ||
-               XMLString::equals(groupName,"particlesJk003") ||
-               XMLString::equals(groupName,"particlesR005") ||
                XMLString::equals(groupName,"particlesZ033_c") ||
                XMLString::equals(groupName,"particlesZ033_d") ||
                XMLString::equals(groupName,"particlesZ033_e") ||
@@ -159,8 +149,6 @@ void XSTSHarnessHandlers::startElement(const XMLCh* const uri
                XMLString::equals(groupName,"particlesZ036_b1") ||
                XMLString::equals(groupName,"particlesZ036_b2") ||
                XMLString::equals(groupName,"particlesZ036_c") ||
-               XMLString::equals(groupName,"addB194") ||
-               XMLString::equals(groupName,"isDefault072") ||     // this fails because of an access violation
                XMLString::equals(groupName,"wildB011") ||
                XMLString::equals(groupName,"wildB019") ||
                XMLString::equals(groupName,"wildG032") )

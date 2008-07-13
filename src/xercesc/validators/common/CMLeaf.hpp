@@ -61,6 +61,7 @@ public :
     const QName* getElement() const;
     unsigned int getPosition() const;
 
+    virtual bool isRepeatableLeaf() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -71,8 +72,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of public CMNode virtual interface
     // -----------------------------------------------------------------------
-    bool isNullable() const;
-
+    virtual bool isNullable() const;
 
 protected :
     // -----------------------------------------------------------------------
@@ -190,6 +190,10 @@ inline unsigned int CMLeaf::getPosition() const
     return fPosition;
 }
 
+inline bool CMLeaf::isRepeatableLeaf() const
+{
+    return false;
+}
 
 // ---------------------------------------------------------------------------
 //  Setter methods

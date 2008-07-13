@@ -51,15 +51,16 @@ public :
         , Any_Other
         , Any_NS = 8
         , All = 9
-        , Any_NS_Choice = 20
-        , ModelGroupSequence = 21
-        , Any_Lax = 22
-        , Any_Other_Lax = 23
-        , Any_NS_Lax = 24
-        , ModelGroupChoice = 36
-        , Any_Skip = 38
-        , Any_Other_Skip = 39
-        , Any_NS_Skip = 40
+        , Loop = 10
+        , Any_NS_Choice = 20            // 16 + 4 (Choice)
+        , ModelGroupSequence = 21       // 16 + 5 (Sequence)
+        , Any_Lax = 22                  // 16 + 6 (Any)
+        , Any_Other_Lax = 23            // 16 + 7 (Any_Other)
+        , Any_NS_Lax = 24               // 16 + 8 (Any_NS)
+        , ModelGroupChoice = 36         // 32 + 4 (Choice)
+        , Any_Skip = 38                 // 32 + 6 (Any)
+        , Any_Other_Skip = 39           // 32 + 7 (Any_Other)
+        , Any_NS_Skip = 40              // 32 + 8 (Any_NS)
 
         , UnknownType = -1
     };

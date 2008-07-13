@@ -799,6 +799,7 @@ validators_headers = \
 	xercesc/validators/common/CMAny.hpp \
 	xercesc/validators/common/CMBinaryOp.hpp \
 	xercesc/validators/common/CMLeaf.hpp \
+	xercesc/validators/common/CMRepeatingLeaf.hpp \
 	xercesc/validators/common/CMNode.hpp \
 	xercesc/validators/common/CMStateSet.hpp \
 	xercesc/validators/common/CMUnaryOp.hpp \

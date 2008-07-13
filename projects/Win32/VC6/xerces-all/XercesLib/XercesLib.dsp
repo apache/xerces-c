@@ -2019,6 +2019,10 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMLeaf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMRepeatingLeaf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMNode.hpp
 # End Source File
 # Begin Source File

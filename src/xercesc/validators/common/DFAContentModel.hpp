@@ -31,6 +31,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class ContentSpecNode;
 class CMLeaf;
+class CMRepeatingLeaf;
 class CMNode;
 class CMStateSet;
 
@@ -130,6 +131,16 @@ private :
     );
 
 
+    class Occurence : public XMemory
+    {
+    public:
+        Occurence(int minOcc, int maxOcc, int eltIndex);
+
+        int minOccurs;
+        int maxOccurs;
+        int elemIndex;
+    };
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -201,6 +212,10 @@ private :
     //      fTransTableSize is the number of valid entries in the transition
     //      table, and in the other related tables such as fFinalStateFlags.
     //
+    //  fCountingStates
+    //      This is the table holding the minOccurs/maxOccurs for elements
+    //      that can be repeated a finite number of times.
+    //
     //  fDTD
     //      Boolean to allow DTDs to validate even with namespace support.
     //
@@ -220,6 +235,7 @@ private :
     ContentSpecNode::NodeTypes* fLeafListType;
     unsigned int**              fTransTable;
     unsigned int                fTransTableSize;
+    Occurence**                 fCountingStates;
     bool                        fDTD;
     bool                        fIsMixed;
     ContentLeafNameTypeVector * fLeafNameTypeVector;
@@ -240,6 +256,14 @@ DFAContentModel::getNextState(unsigned int currentState,
     }
 
     return fTransTable[currentState][elementIndex];
+}
+
+inline
+DFAContentModel::Occurence::Occurence(int minOcc, int maxOcc, int eltIndex)
+{
+    minOccurs = minOcc;
+    maxOccurs = maxOcc;
+    elemIndex = eltIndex;
 }
 
 XERCES_CPP_NAMESPACE_END

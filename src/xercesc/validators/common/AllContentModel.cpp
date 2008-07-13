@@ -346,6 +346,31 @@ AllContentModel::buildChildList(ContentSpecNode* const       curNode
         toFill.addElement(leftNode->getElement());
         toOptional.addElement(true);
     }
+    // only allow ZeroOrMore when it's the father of a Loop
+    else if (curType == ContentSpecNode::ZeroOrMore &&
+             curNode->getFirst()!=0 &&
+             curNode->getFirst()->getType()==ContentSpecNode::Loop)
+    {
+        ContentSpecNode* leftNode = curNode->getFirst();
+        buildChildList(leftNode, toFill, toOptional);
+    }
+    else if (curType == ContentSpecNode::Loop)
+    {
+        // At leaf, add the element to list of elements permitted in the all
+        int i;
+        for(i=0;i<curNode->getMinOccurs();i++)
+        {
+            toFill.addElement(curNode->getElement());
+            toOptional.addElement(false);
+            fNumRequired++;
+        }
+        if(curNode->getMaxOccurs()!=-1)
+            for(i=0;i<(curNode->getMaxOccurs() - curNode->getMinOccurs());i++)
+            {
+                toFill.addElement(curNode->getElement());
+                toOptional.addElement(true);
+            }
+    }
     else
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
 }

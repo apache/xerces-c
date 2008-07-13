@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="XercesLib"
 	ProjectGUID="{152CE948-F659-4206-A50A-1D2B9658EF96}"
 	RootNamespace="XercesLib"
@@ -2502,6 +2502,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\util\regx\UniCharTable.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\regx\UnicodeRangeFactory.cpp"
 					>
 				</File>
@@ -3340,6 +3344,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\common\CMNode.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\common\CMRepeatingLeaf.hpp"
 					>
 				</File>
 				<File

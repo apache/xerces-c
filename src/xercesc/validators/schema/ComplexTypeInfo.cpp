@@ -288,10 +288,39 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     return newValue;
 }
 
-XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA)
+bool ComplexTypeInfo::useRepeatingLeafNodes(ContentSpecNode* particle) 
+{
+    int maxOccurs = particle->getMaxOccurs();
+    int minOccurs = particle->getMinOccurs();
+    ContentSpecNode::NodeTypes type = particle->getType();
+    
+    if (((type & 0x0f) == ContentSpecNode::Choice) ||  ((type & 0x0f) == ContentSpecNode::Sequence))
+    {
+        if (minOccurs != 1 || maxOccurs != 1) {
+            if(particle->getFirst()!=0 && particle->getSecond()==0)
+            {
+                ContentSpecNode* particle2 = particle->getFirst();
+                ContentSpecNode::NodeTypes type2 = particle2->getType();
+                return (((type2 == ContentSpecNode::Leaf) ||
+                        ((type2 & 0x0f) == ContentSpecNode::Any) || 
+                        ((type2 & 0x0f) == ContentSpecNode::Any_Other) ||
+                        ((type2 & 0x0f) == ContentSpecNode::Any_NS)) &&
+                        particle2->getMinOccurs() == 1 &&
+                        particle2->getMaxOccurs() == 1);
+            }
+            return (particle->getFirst()==0 && particle->getSecond()==0);
+        }
+        if(particle->getFirst()!=0 && !useRepeatingLeafNodes(particle->getFirst()))
+            return false;
+        if(particle->getSecond()!=0 && !useRepeatingLeafNodes(particle->getSecond()))
+            return false;
+    }
+    return true;
+}
+
+XMLContentModel* ComplexTypeInfo::makeContentModel(bool checkUPA)
 {
     ContentSpecNode* aSpecNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
-    XMLContentModel* retModel = 0;
 
     if (checkUPA) {
         fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
@@ -300,15 +329,10 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA)
         ); //new unsigned int[fContentSpecOrgURISize];
     }
 
-    aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
-    retModel = buildContentModel(aSpecNode);
+    aSpecNode = convertContentSpecTree(aSpecNode, checkUPA, useRepeatingLeafNodes(aSpecNode));
 
-    delete aSpecNode;
-    return retModel;
-}
+    Janitor<ContentSpecNode> janSpecNode(aSpecNode);
 
-XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpecNode)
-{
     XMLContentModel* cmRet = 0;
     if (fContentType == SchemaElementDecl::Simple ||
         fContentType == SchemaElementDecl::ElementOnlyEmpty) {
@@ -322,12 +346,11 @@ XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpec
         //
         cmRet = new (fMemoryManager) MixedContentModel(false, aSpecNode, false, fMemoryManager);
     }
-    else if (fContentType == SchemaElementDecl::Mixed_Complex) {
-
-            cmRet = createChildModel(aSpecNode, true);
-    }
-    else if (fContentType == SchemaElementDecl::Children)
+    else if (fContentType == SchemaElementDecl::Mixed_Complex ||
+             fContentType == SchemaElementDecl::Children) 
     {
+        bool isMixed = (fContentType == SchemaElementDecl::Mixed_Complex);
+
         //
         //  This method will create an optimal model for the complexity
         //  of the element's defined model. If its simple, it will create
@@ -335,7 +358,111 @@ XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpec
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-         cmRet = createChildModel(aSpecNode, false);
+        if(!aSpecNode)
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
+
+        ContentSpecNode::NodeTypes specType = aSpecNode->getType();
+        //
+        //  Do a sanity check that the node is does not have a PCDATA id. Since,
+        //  if it was, it should have already gotten taken by the Mixed model.
+        //
+        if (aSpecNode->getElement() && aSpecNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoPCDATAHere, fMemoryManager);
+
+        //
+        //  According to the type of node, we will create the correct type of
+        //  content model.
+        //
+        if (((specType & 0x0f) == ContentSpecNode::Any) ||
+           ((specType & 0x0f) == ContentSpecNode::Any_Other) ||
+           ((specType & 0x0f) == ContentSpecNode::Any_NS) ||
+           specType == ContentSpecNode::Loop) {
+           // let fall through to build a DFAContentModel
+        }
+        else if (isMixed)
+        {
+            if (specType == ContentSpecNode::All) {
+                // All the nodes under an ALL must be additional ALL nodes and
+                // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
+                // We collapse the ELEMENTs into a single vector.
+                cmRet = new (fMemoryManager) AllContentModel(aSpecNode, true, fMemoryManager);
+            }
+            else if (specType == ContentSpecNode::ZeroOrOne) {
+                // An ALL node can appear under a ZERO_OR_ONE node.
+                if (aSpecNode->getFirst()->getType() == ContentSpecNode::All) {
+                    cmRet = new (fMemoryManager) AllContentModel(aSpecNode->getFirst(), true, fMemoryManager);
+                }
+            }
+
+            // otherwise, let fall through to build a DFAContentModel
+        }
+         else if (specType == ContentSpecNode::Leaf)
+        {
+            // Create a simple content model
+            cmRet = new (fMemoryManager) SimpleContentModel
+            (
+                false
+                , aSpecNode->getElement()
+                , 0
+                , ContentSpecNode::Leaf
+                , fMemoryManager
+            );
+        }
+         else if (((specType & 0x0f) == ContentSpecNode::Choice)
+              ||  ((specType & 0x0f) == ContentSpecNode::Sequence))
+        {
+            //
+            //  Lets see if both of the children are leafs. If so, then it has to
+            //  be a simple content model
+            //
+            if ((aSpecNode->getFirst()->getType() == ContentSpecNode::Leaf)
+            &&  (aSpecNode->getSecond())
+            &&  (aSpecNode->getSecond()->getType() == ContentSpecNode::Leaf))
+            {
+                cmRet = new (fMemoryManager) SimpleContentModel
+                (
+                    false
+                    , aSpecNode->getFirst()->getElement()
+                    , aSpecNode->getSecond()->getElement()
+                    , specType
+                    , fMemoryManager
+                );
+            }
+        }
+         else if ((specType == ContentSpecNode::OneOrMore)
+              ||  (specType == ContentSpecNode::ZeroOrMore)
+              ||  (specType == ContentSpecNode::ZeroOrOne))
+        {
+            //
+            //  Its a repetition, so see if its one child is a leaf. If so its a
+            //  repetition of a single element, so we can do a simple content
+            //  model for that.
+            //
+            if (aSpecNode->getFirst()->getType() == ContentSpecNode::Leaf)
+            {
+                cmRet = new (fMemoryManager) SimpleContentModel
+                (
+                    false
+                    , aSpecNode->getFirst()->getElement()
+                    , 0
+                    , specType
+                    , fMemoryManager
+                );
+            }
+            else if (aSpecNode->getFirst()->getType() == ContentSpecNode::All)
+                cmRet = new (fMemoryManager) AllContentModel(aSpecNode->getFirst(), false, fMemoryManager);
+
+        }
+        else if (specType == ContentSpecNode::All)
+            cmRet = new (fMemoryManager) AllContentModel(aSpecNode, false, fMemoryManager);
+        else
+        {
+            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
+        }
+
+        // Its not any simple type of content, so create a DFA based content model
+        if(cmRet==0)
+            cmRet = new (fMemoryManager) DFAContentModel(false, aSpecNode, isMixed, fMemoryManager);
     }
      else
     {
@@ -348,119 +475,11 @@ XMLContentModel* ComplexTypeInfo::buildContentModel(ContentSpecNode* const aSpec
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, const bool isMixed)
-{
-    if(!specNode)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
-
-    ContentSpecNode::NodeTypes specType = specNode->getType();
-    //
-    //  Do a sanity check that the node is does not have a PCDATA id. Since,
-    //  if it was, it should have already gotten taken by the Mixed model.
-    //
-    if (specNode->getElement()) {
-        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-            ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_NoPCDATAHere, fMemoryManager);
-    }
-
-    //
-    //  According to the type of node, we will create the correct type of
-    //  content model.
-    //
-    if (((specType & 0x0f) == ContentSpecNode::Any) ||
-       ((specType & 0x0f) == ContentSpecNode::Any_Other) ||
-       ((specType & 0x0f) == ContentSpecNode::Any_NS)) {
-       // let fall through to build a DFAContentModel
-    }
-    else if (isMixed)
-    {
-        if (specType == ContentSpecNode::All) {
-            // All the nodes under an ALL must be additional ALL nodes and
-            // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
-            // We collapse the ELEMENTs into a single vector.
-            return new (fMemoryManager) AllContentModel(specNode, true, fMemoryManager);
-        }
-        else if (specType == ContentSpecNode::ZeroOrOne) {
-            // An ALL node can appear under a ZERO_OR_ONE node.
-            if (specNode->getFirst()->getType() == ContentSpecNode::All) {
-                return new (fMemoryManager) AllContentModel(specNode->getFirst(), true, fMemoryManager);
-            }
-        }
-
-        // otherwise, let fall through to build a DFAContentModel
-    }
-     else if (specType == ContentSpecNode::Leaf)
-    {
-        // Create a simple content model
-        return new (fMemoryManager) SimpleContentModel
-        (
-            false
-            , specNode->getElement()
-            , 0
-            , ContentSpecNode::Leaf
-            , fMemoryManager
-        );
-    }
-     else if (((specType & 0x0f) == ContentSpecNode::Choice)
-          ||  ((specType & 0x0f) == ContentSpecNode::Sequence))
-    {
-        //
-        //  Lets see if both of the children are leafs. If so, then it has to
-        //  be a simple content model
-        //
-        if ((specNode->getFirst()->getType() == ContentSpecNode::Leaf)
-        &&  (specNode->getSecond())
-        &&  (specNode->getSecond()->getType() == ContentSpecNode::Leaf))
-        {
-            return new (fMemoryManager) SimpleContentModel
-            (
-                false
-                , specNode->getFirst()->getElement()
-                , specNode->getSecond()->getElement()
-                , specType
-                , fMemoryManager
-            );
-        }
-    }
-     else if ((specType == ContentSpecNode::OneOrMore)
-          ||  (specType == ContentSpecNode::ZeroOrMore)
-          ||  (specType == ContentSpecNode::ZeroOrOne))
-    {
-        //
-        //  Its a repetition, so see if its one child is a leaf. If so its a
-        //  repetition of a single element, so we can do a simple content
-        //  model for that.
-        //
-        if (specNode->getFirst()->getType() == ContentSpecNode::Leaf)
-        {
-            return new (fMemoryManager) SimpleContentModel
-            (
-                false
-                , specNode->getFirst()->getElement()
-                , 0
-                , specType
-                , fMemoryManager
-            );
-        }
-        else if (specNode->getFirst()->getType() == ContentSpecNode::All)
-            return new (fMemoryManager) AllContentModel(specNode->getFirst(), false, fMemoryManager);
-
-    }
-    else if (specType == ContentSpecNode::All)
-        return new (fMemoryManager) AllContentModel(specNode, false, fMemoryManager);
-
-    else
-    {
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
-    }
-
-    // Its not any simple type of content, so create a DFA based content model
-    return new (fMemoryManager) DFAContentModel(false, specNode, isMixed, fMemoryManager);
-}
 
 ContentSpecNode*
 ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
-                                        const bool checkUPA) {
+                                        bool checkUPA,
+                                        bool bAllowCompactSyntax) {
 
     if (!curNode)
         return 0;
@@ -490,19 +509,19 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
         || (curType & 0x0f) == ContentSpecNode::Any_NS
         || curType == ContentSpecNode::Leaf)
     {
-        retNode =  expandContentModel(curNode, minOccurs, maxOccurs);
+        retNode =  expandContentModel(curNode, minOccurs, maxOccurs, bAllowCompactSyntax);
     }
     else if (((curType & 0x0f) == ContentSpecNode::Choice)
         ||   (curType == ContentSpecNode::All)
         ||   ((curType & 0x0f) == ContentSpecNode::Sequence))
     {
         ContentSpecNode* childNode = curNode->getFirst();
-        ContentSpecNode* leftNode = convertContentSpecTree(childNode, checkUPA);
+        ContentSpecNode* leftNode = convertContentSpecTree(childNode, checkUPA, bAllowCompactSyntax);
         ContentSpecNode* rightNode = curNode->getSecond();
 
         if (!rightNode) {
 
-            retNode = expandContentModel(leftNode, minOccurs, maxOccurs);
+            retNode = expandContentModel(leftNode, minOccurs, maxOccurs, bAllowCompactSyntax);
             curNode->setAdoptFirst(false);
             delete curNode;
             return retNode;
@@ -516,7 +535,7 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
         }
 
         childNode = rightNode;
-        rightNode =  convertContentSpecTree(childNode, checkUPA);
+        rightNode =  convertContentSpecTree(childNode, checkUPA, bAllowCompactSyntax);
 
         if (rightNode != childNode) {
 
@@ -525,15 +544,16 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
             curNode->setAdoptSecond(true);
         }
 
-        retNode =  expandContentModel(curNode, minOccurs, maxOccurs);
+        retNode =  expandContentModel(curNode, minOccurs, maxOccurs, bAllowCompactSyntax);
     }
 
     return retNode;
 }
 
 ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const specNode,
-                                                     const int minOccurs,
-                                                     const int maxOccurs)
+                                                     int minOccurs,
+                                                     int maxOccurs,
+                                                     bool bAllowCompactSyntax)
 {
     if (!specNode) {
         return 0;
@@ -578,6 +598,43 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
             , fMemoryManager
         );
     }
+    // if what is being repeated is a leaf avoid expanding the tree
+    else if(bAllowCompactSyntax && saveNode->getType()==ContentSpecNode::Leaf)
+    {
+        retNode = new (fMemoryManager) ContentSpecNode
+        (
+            ContentSpecNode::Loop
+            , retNode
+            , 0
+            , false
+            , true
+            , fMemoryManager
+        );
+        retNode->setMinOccurs(minOccurs);
+        retNode->setMaxOccurs(maxOccurs);
+        
+        if(minOccurs==0)
+            retNode = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::ZeroOrMore
+                , retNode
+                , 0
+                , true
+                , true
+                , fMemoryManager
+            );
+        else
+            retNode = new (fMemoryManager) ContentSpecNode
+            (
+                ContentSpecNode::OneOrMore
+                , retNode
+                , 0
+                , true
+                , true
+                , fMemoryManager
+            );
+
+    }
     else if (maxOccurs == -1) {
 
         retNode = new (fMemoryManager) ContentSpecNode
@@ -590,7 +647,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
             , fMemoryManager
         );
 
-        for (int i=0; i < (int)(minOccurs-1); i++) {
+        for (int i=0; i < (minOccurs-1); i++) {
             retNode = new (fMemoryManager) ContentSpecNode
             (
                 ContentSpecNode::Sequence
@@ -618,7 +675,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
 
             retNode = optional;
 
-            for (int i=0; i < (int)(maxOccurs-minOccurs-1); i++) {
+            for (int i=0; i < (maxOccurs-1); i++) {
                 retNode = new (fMemoryManager) ContentSpecNode
                 (
                     ContentSpecNode::Sequence
@@ -644,7 +701,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                     , fMemoryManager
                 );
 
-                for (int i=1; i < (int)(minOccurs-1); i++) {
+                for (int i=1; i < (minOccurs-1); i++) {
                     retNode = new (fMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::Sequence
@@ -686,7 +743,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                     retNode = new (fMemoryManager) ContentSpecNode
                     (
                         ContentSpecNode::Sequence
-					    , retNode
+                        , retNode
                         , optional
                         , true
                         , false

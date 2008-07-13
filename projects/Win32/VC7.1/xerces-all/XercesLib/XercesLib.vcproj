@@ -1904,6 +1904,9 @@
 					RelativePath="..\..\..\..\..\src\xercesc\validators\common\CMLeaf.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\common\CMRepeatingLeaf.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\common\CMNode.hpp">
 				</File>
 				<File

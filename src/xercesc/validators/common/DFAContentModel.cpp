@@ -30,6 +30,7 @@
 #include <xercesc/validators/common/CMAny.hpp>
 #include <xercesc/validators/common/CMBinaryOp.hpp>
 #include <xercesc/validators/common/CMLeaf.hpp>
+#include <xercesc/validators/common/CMRepeatingLeaf.hpp>
 #include <xercesc/validators/common/CMUnaryOp.hpp>
 #include <xercesc/validators/common/DFAContentModel.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
@@ -64,6 +65,7 @@ DFAContentModel::DFAContentModel( const bool             dtd
     , fLeafListType(0)
     , fTransTable(0)
     , fTransTableSize(0)
+    , fCountingStates(0)
     , fDTD(dtd)
     , fIsMixed(false)
     , fLeafNameTypeVector(0)
@@ -91,6 +93,7 @@ DFAContentModel::DFAContentModel( const bool             dtd
     , fLeafListType(0)
     , fTransTable(0)
     , fTransTableSize(0)
+    , fCountingStates(0)
     , fDTD(dtd)
     , fIsMixed(isMixed)
     , fLeafNameTypeVector(0)
@@ -108,10 +111,17 @@ DFAContentModel::~DFAContentModel()
     //
     fMemoryManager->deallocate(fFinalStateFlags); //delete [] fFinalStateFlags;
 
-    unsigned index;
+    unsigned int index;
     for (index = 0; index < fTransTableSize; index++)
         fMemoryManager->deallocate(fTransTable[index]); //delete [] fTransTable[index];
     fMemoryManager->deallocate(fTransTable); //delete [] fTransTable;
+
+    if(fCountingStates)
+    {
+        for (unsigned int j = 0; j < fTransTableSize; ++j)
+            delete fCountingStates[j];
+        fMemoryManager->deallocate(fCountingStates);
+    }
 
     for (index = 0; index < fLeafCount; index++)
         delete fElemMap[index];
@@ -155,6 +165,7 @@ DFAContentModel::validateContent( QName** const        children
     //
     unsigned int curState = 0;
     unsigned int nextState = 0;
+    unsigned int loopCount = 0;
     unsigned int childIndex = 0;
     for (; childIndex < childCount; childIndex++)
     {
@@ -210,7 +221,7 @@ DFAContentModel::validateContent( QName** const        children
                 else if ((type & 0x0f) == ContentSpecNode::Any_Other)
                 {
                     // Here we assume that empty string has id 1.
-                //
+                    //
                     unsigned int uriId = curElem->getURI();
                     if (uriId != 1 && uriId != inElem->getURI()) {
                         nextState = fTransTable[curState][elemIndex];
@@ -235,6 +246,41 @@ DFAContentModel::validateContent( QName** const        children
             return false;
         }
 
+        if (fCountingStates != 0) {
+            Occurence* o = fCountingStates[curState];
+            if (o != 0) {
+                if (curState == nextState) {
+                    if (++loopCount > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
+                        *indexFailingChild=childIndex;
+                        return false;
+                    }  
+                }
+                else if (loopCount < (unsigned int)o->minOccurs) {
+                    // not enough loops on the current state.
+                    *indexFailingChild=childIndex;
+                    return false;
+                }
+                else {
+                    // Exiting a counting state. If we're entering a new
+                    // counting state, reset the counter.
+                    o = fCountingStates[nextState];
+                    if (o != 0) {
+                        loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
+                    }
+                }
+            }
+            else {
+                o = fCountingStates[nextState];
+                if (o != 0) {
+                    // Entering a new counting state. Reset the counter.
+                    // If we've already seen one instance of the looping
+                    // particle set the counter to 1, otherwise set it 
+                    // to 0.
+                    loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
+                }
+            }
+        }
+
         curState = nextState;
         nextState = 0;
 
@@ -249,6 +295,16 @@ DFAContentModel::validateContent( QName** const        children
     {
         *indexFailingChild=childIndex;
         return false;
+    }
+
+    // verify if we exited before the minOccurs was satisfied
+    if (fCountingStates != 0) {
+        Occurence* o = fCountingStates[curState];
+        if (o != 0 && loopCount < (unsigned int)o->minOccurs) {
+            // not enough loops on the current state to be considered final.
+            *indexFailingChild=childIndex;
+            return false;
+        }
     }
 
     //success
@@ -280,6 +336,7 @@ bool DFAContentModel::validateContentSpecial(QName** const          children
     //  an element index to a state index.
     //
     unsigned int curState = 0;
+    unsigned int loopCount = 0;
     unsigned int nextState = 0;
     unsigned int childIndex = 0;
     for (; childIndex < childCount; childIndex++)
@@ -351,6 +408,41 @@ bool DFAContentModel::validateContentSpecial(QName** const          children
             return false;
         }
 
+        if (fCountingStates != 0) {
+            Occurence* o = fCountingStates[curState];
+            if (o != 0) {
+                if (curState == nextState) {
+                    if (++loopCount > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
+                        *indexFailingChild=childIndex;
+                        return false;
+                    }  
+                }
+                else if (loopCount < (unsigned int)o->minOccurs) {
+                    // not enough loops on the current state.
+                    *indexFailingChild=childIndex;
+                    return false;
+                }
+                else {
+                    // Exiting a counting state. If we're entering a new
+                    // counting state, reset the counter.
+                    o = fCountingStates[nextState];
+                    if (o != 0) {
+                        loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
+                    }
+                }
+            }
+            else {
+                o = fCountingStates[nextState];
+                if (o != 0) {
+                    // Entering a new counting state. Reset the counter.
+                    // If we've already seen one instance of the looping
+                    // particle set the counter to 1, otherwise set it 
+                    // to 0.
+                    loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
+                }
+            }
+        }
+
         curState = nextState;
         nextState = 0;
 
@@ -365,6 +457,18 @@ bool DFAContentModel::validateContentSpecial(QName** const          children
     {
         *indexFailingChild=childIndex;
         return false;
+    }
+
+    // verify if we exited before the minOccurs was satisfied
+    if (fCountingStates != 0) {
+        Occurence* o = fCountingStates[curState];
+        if (o != 0) {
+            if (loopCount < (unsigned int)o->minOccurs) {
+                // not enough loops on the current state.
+                *indexFailingChild=childIndex;
+                return false;
+            }
+        }
     }
 
     //success
@@ -499,7 +603,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     ); //new ContentSpecNode::NodeTypes[fLeafCount];
     fElemMapSize = 0;
 
-
+    Occurence** elemOccurenceMap=0;
     for (unsigned int outIndex = 0; outIndex < fLeafCount; outIndex++)
     {
         fElemMap[outIndex] = new (fMemoryManager) QName(fMemoryManager);
@@ -509,7 +613,8 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 fLeafNameTypeVector = new (fMemoryManager) ContentLeafNameTypeVector(fMemoryManager);
 
         // Get the current leaf's element index
-        const QName* element = fLeafList[outIndex]->getElement();
+        CMLeaf* leaf=fLeafList[outIndex];
+        const QName* element = leaf->getElement();
         const XMLCh* elementRawName = 0;
         if (fDTD && element)
             elementRawName = element->getRawName();
@@ -538,6 +643,14 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         if (inIndex == fElemMapSize)
         {
             fElemMap[fElemMapSize]->setValues(*element);
+            if(leaf->isRepeatableLeaf())
+            {
+                if (elemOccurenceMap == 0) {
+                    elemOccurenceMap = (Occurence**)fMemoryManager->allocate(fLeafCount*sizeof(Occurence*));
+                    memset(elemOccurenceMap, 0, fLeafCount*sizeof(Occurence*));
+                }
+                elemOccurenceMap[fElemMapSize] = new (fMemoryManager) Occurence(((CMRepeatingLeaf*)leaf)->getMinOccurs(), ((CMRepeatingLeaf*)leaf)->getMaxOccurs(), fElemMapSize);
+            }
             fElemMapType[fElemMapSize] = fLeafListType[outIndex];
             ++fElemMapSize;
         }
@@ -850,6 +963,31 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     // Store the current state count in the trans table size
     fTransTableSize = curState;
 
+    //
+    // Fill in the occurence information for each looping state 
+    // if we're using counters.
+    //
+    if (elemOccurenceMap != 0) {
+        fCountingStates = (Occurence**)fMemoryManager->allocate(fTransTableSize*sizeof(Occurence));
+        memset(fCountingStates, 0, fTransTableSize*sizeof(Occurence*));
+        for (unsigned int i = 0; i < fTransTableSize; ++i) {
+            unsigned int * transitions = fTransTable[i];
+            for (unsigned int j = 0; j < fElemMapSize; ++j) {
+                if (i == transitions[j]) {
+                    Occurence* old=elemOccurenceMap[j];
+                    if(old!=0)
+                        fCountingStates[i] = new (fMemoryManager) Occurence(old->minOccurs, old->maxOccurs, old->elemIndex);
+                    break;
+                }
+            }
+        }
+        for (unsigned int j = 0; j < fLeafCount; ++j) {
+            if(elemOccurenceMap[j]!=0)
+                delete elemOccurenceMap[j];
+        }
+        fMemoryManager->deallocate(elemOccurenceMap);
+    }
+
     // If the last temp set was not stored, then clean it up
     if (newSet)
         delete newSet;
@@ -927,6 +1065,23 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         retNode = new (fMemoryManager) CMLeaf
         (
             curNode->getElement()
+            , fLeafCount++
+            , fMemoryManager
+        );
+    }
+    else if (curType == ContentSpecNode::Loop)
+    {
+        //
+        //  Create a new leaf node, and pass it the current leaf count, which
+        //  is its DFA state position. Bump the leaf count after storing it.
+        //  This makes the positions zero based since we store first and then
+        //  increment.
+        //
+        retNode = new (fMemoryManager) CMRepeatingLeaf
+        (
+            curNode->getFirst()->getElement()
+            , curNode->getMinOccurs()
+            , curNode->getMaxOccurs()
             , fLeafCount++
             , fMemoryManager
         );
@@ -1110,11 +1265,12 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
     }
     else if (curType == ContentSpecNode::Leaf)
     {
+        CMLeaf* leaf=(CMLeaf*)nodeCur;
         //
         //  Put this node in the leaf list at the current index if its
         //  a non-epsilon leaf.
         //
-        if (((CMLeaf*)nodeCur)->getElement()->getURI() != XMLContentModel::gEpsilonFakeId)
+        if (leaf->getElement()->getURI() != XMLContentModel::gEpsilonFakeId)
         {
             //
             // fLeafList make its own copy of the CMLeaf, so that
@@ -1122,12 +1278,22 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
             // will NOT delete the nodeCur --twice--,
             // thuse to make delete the owner of the nodeCur possible.
             //
-            fLeafList[newIndex] = new (fMemoryManager) CMLeaf
-            (
-                ((CMLeaf*)nodeCur)->getElement()
-                , ((CMLeaf*)nodeCur)->getPosition()
-                , fMemoryManager
-            );
+            if(leaf->isRepeatableLeaf())
+                fLeafList[newIndex] = new (fMemoryManager) CMRepeatingLeaf
+                (
+                    leaf->getElement()
+                    , ((CMRepeatingLeaf*)leaf)->getMinOccurs()
+                    , ((CMRepeatingLeaf*)leaf)->getMaxOccurs()
+                    , leaf->getPosition()
+                    , fMemoryManager
+                );
+            else
+                fLeafList[newIndex] = new (fMemoryManager) CMLeaf
+                (
+                    leaf->getElement()
+                    , leaf->getPosition()
+                    , fMemoryManager
+                );
             fLeafListType[newIndex] = ContentSpecNode::Leaf;
             ++newIndex;
         }
@@ -1209,6 +1375,18 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                                         fElemMapType[k],
                                                         fElemMap[k],
                                                         &comparator)) {
+                        if (fCountingStates != 0) {
+                            Occurence* o = fCountingStates[i];
+                            // If "i" is a counting state and exactly one of the transitions
+                            // loops back to "i" then the two particles do not overlap if
+                            // minOccurs == maxOccurs.
+                            if (o != 0 && 
+                                ((fTransTable[i][j] == i) ^ (fTransTable[i][k] == i)) && 
+                                o->minOccurs == o->maxOccurs) {
+                                conflictTable[j][k] = -1;
+                                continue;
+                            }
+                        }
                        conflictTable[j][k] = 1;
 
                        XMLBuffer buf1(1023, fMemoryManager);
