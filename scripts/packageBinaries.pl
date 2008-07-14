@@ -800,7 +800,7 @@ if ( ($platform =~ m/AIX/i)      ||
     if ($opt_m eq "iconv") {$cfg_m = "--enable-msgloader-iconv"; }
 
     $cfg_n = "";
-    if ($opt_n eq "fileonly") {$cfg_n = "--disable-netaccessor-socket --disable-netaccessor-curl --disable-netaccessor-libwww --disable-netaccessor-cfurl"; }
+    if ($opt_n eq "fileonly") {$cfg_n = "--disable-netaccessor-socket --disable-netaccessor-curl --disable-netaccessor-cfurl"; }
     if ($opt_n eq "socket")   {$cfg_n = "--enable-netaccessor-socket"; }
 
     $cfg_t = "";
@@ -1008,7 +1008,6 @@ sub populateInclude() {
         util/MutexManagers
         util/NetAccessors
         util/NetAccessors/Curl
-        util/NetAccessors/libWWW
         util/NetAccessors/MacOSURLAccess
         util/NetAccessors/MacOSURLAccessCF
         util/NetAccessors/Socket

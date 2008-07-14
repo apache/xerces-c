@@ -76,9 +76,6 @@
 #if XERCES_USE_NETACCESSOR_SOCKET
 #	include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
-#if XERCES_USE_NETACCESSOR_LIBWWW
-#	include <xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp>
-#endif
 #if XERCES_USE_NETACCESSOR_CFURL
 #	include <xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp>
 #endif
@@ -378,8 +375,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 		na = new CurlNetAccessor();
 #elif defined (XERCES_USE_NETACCESSOR_SOCKET)
 		na = new SocketNetAccessor();
-#elif defined (XERCES_USE_NETACCESSOR_LIBWWW)
-		na = new LibWWWNetAccessor();
 #elif defined (XERCES_USE_NETACCESSOR_CFURL)
 		na = new MacOSURLAccessCF();
 #elif defined (XERCES_USE_NETACCESSOR_WINSOCK)

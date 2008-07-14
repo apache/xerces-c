@@ -111,7 +111,7 @@ options are:  -s &lt;source_directory&gt;
               -c &lt;C compiler name&gt; (e.g. gcc or xlc_r)
               -x &lt;C++ compiler name&gt; (e.g. g++ or xlC_r)
               -m &lt;message loader&gt; can be 'inmem', 'icu' or 'iconv'
-              -n &lt;net accessor&gt; can be 'fileonly' or 'libwww'
+              -n &lt;net accessor&gt; can be 'fileonly' or 'libcurl'
               -t &lt;transcoder&gt; can be 'icu' or 'native'
               -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on HP-11)
               -h to get help on these commands

@@ -164,7 +164,6 @@
 	<p>Net Accessor (used to read data from HTTP sources):</p>
 		<ol>
 			<li><code>--enable-netaccessor-curl</code> Uses curl</li>
-			<li><code>--enable-netaccessor-libwww</code> Uses W3C's libWWW</li>
 			<li><code>--enable-netaccessor-socket</code> Uses plain BSD sockets</li>
 			<li><code>--enable-netaccessor-cfurl</code> Uses cfurl (Mac-only)</li>
 			<li><code>--enable-netaccessor-winsock</code> Uses WinSock (Windows-only, either Cygwin or MinGW)</li>
@@ -221,9 +220,7 @@ checking for g++... g++
 checking for gcc... gcc
 [..snip..]
 checking for libcurl...
-checking for libwww...
 checking whether we can support the libcurl-based NetAccessor... no
-checking whether we can support the libwww-based NetAccessor... no
 checking whether we can support the sockets-based NetAccessor... yes
 checking for which NetAccessor to use (choices: -socket-)... socket
 checking for icu... /usr/local

@@ -72,19 +72,11 @@ endif
 if XERCES_USE_NETACCESSOR_SOCKET
 libxerces_c_la_SOURCES += ${sockets_sources}
 nobase_libxerces_c_la_HEADERS += ${sockets_headers}
-AM_CPPFLAGS += -I${CURL_PREFIX}/include/curl
-endif
-
-if XERCES_USE_NETACCESSOR_LIBWWW
-libxerces_c_la_SOURCES += ${libwww_sources}
-nobase_libxerces_c_la_HEADERS += ${libwww_headers}
-AM_CPPFLAGS += -I${LIBWWW_PREFIX}/include/w3c-libwww
 endif
 
 if XERCES_USE_NETACCESSOR_CFURL
 libxerces_c_la_SOURCES += ${cfurl_sources}
 nobase_libxerces_c_la_HEADERS += ${cfurl_headers}
-AM_CPPFLAGS += -I${LIBWWW_PREFIX}/include/w3c-libwww
 endif
 
 if XERCES_USE_NETACCESSOR_WINSOCK
@@ -1041,15 +1033,7 @@ sockets_sources = \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.cpp \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp \
 	xercesc/util/NetAccessors/BinHTTPInputStreamCommon.cpp
-
-libwww_headers = \
-	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.hpp \
-	xercesc/util/NetAccessors/libWWW/BinURLInputStream.hpp
-
-libwww_sources = \
-	xercesc/util/NetAccessors/libWWW/LibWWWNetAccessor.cpp \
-	xercesc/util/NetAccessors/libWWW/BinURLInputStream.cpp
-
+	
 cfurl_headers = \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.hpp

@@ -30,7 +30,6 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	AC_CHECK_LIB([nsl], [gethostbyname])
 
         XERCES_CURL_PREFIX
-        XERCES_LIBWWW_PREFIX
 
 	######################################################
 	# Test for availability of each netaccessor on this host.
@@ -54,23 +53,6 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		[na_list="$na_list -$list_add-"; AC_MSG_RESULT(yes)],
 		[AC_MSG_RESULT(no)]
 	)
-
-	AC_REQUIRE([XERCES_LIBWWW_PREFIX])
-	AC_MSG_CHECKING([whether we can support the libwww-based NetAccessor])
-	list_add=
-	AS_IF([test x"$xerces_cv_libwww_prefix" != x], [
-		AC_ARG_ENABLE([netaccessor-libwww],
-			AS_HELP_STRING([--enable-netaccessor-libwww],
-				[Enable libwww-based NetAccessor support]),
-			[AS_IF([test x"$enableval" = xyes],
-				[list_add=LIBWWW])],
-			[list_add=libwww])
-	])
-	AS_IF([test x"$list_add" != x],
-		[na_list="$na_list -$list_add-"; AC_MSG_RESULT(yes)],
-		[AC_MSG_RESULT(no)]
-	)
-
 
 	AC_MSG_CHECKING([whether we can support the sockets-based NetAccessor])
 	list_add=
@@ -168,14 +150,6 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 			XERCES_LINK_DARWIN_FRAMEWORK([CoreServices])
 			break
 			;;
-
-		*-libwww-*)
-			netaccessor=libwww
-			AC_DEFINE([XERCES_USE_NETACCESSOR_LIBWWW], 1, [Define to use the libwww NetAccessor])
-			LIBS="${LIBS} `${xerces_cv_libwww_prefix}/bin/libwww-config --prefix=${xerces_cv_libwww_prefix} --libs`"
-			break
-			;;
-
 		*)
 			AS_IF([test $i -eq 2], [
 				AC_MSG_RESULT([none available; there will be no network access!!!])
@@ -200,7 +174,6 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	AM_CONDITIONAL([XERCES_USE_NETACCESSOR_CFURL],		[test x"$netaccessor" = xcfurl])
 	AM_CONDITIONAL([XERCES_USE_NETACCESSOR_WINSOCK],	[test x"$netaccessor" = xwinsock])
 	AM_CONDITIONAL([XERCES_USE_NETACCESSOR_SOCKET],		[test x"$netaccessor" = xsocket])
-	AM_CONDITIONAL([XERCES_USE_NETACCESSOR_LIBWWW],		[test x"$netaccessor" = xlibwww])
 
 	]
 )
