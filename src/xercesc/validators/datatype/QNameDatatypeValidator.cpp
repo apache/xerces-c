@@ -172,8 +172,8 @@ void QNameDatatypeValidator::checkContent( const XMLCh*             const conten
 
         XMLCh* enumPrefix;
         XMLCh* enumLocalName;
-        int i=0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i=0;
+        XMLSize_t enumLength = getEnumeration()->size();
         bool foundURIId = false;
         const XMLCh* normURI = 0;
 		// The +=2 is because the enumeration has prefix:localname as one entry followed
@@ -234,8 +234,8 @@ void QNameDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
     if ( ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0) &&
         (getEnumeration() !=0))
     {
-        int i = 0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i = 0;
+        XMLSize_t enumLength = getEnumeration()->size();
 		// The +=2 is because the enumeration has prefix:localname as one entry followed
 		// by the URI string for the prefix as the next entry.
         for ( ; i < enumLength; i+=2)

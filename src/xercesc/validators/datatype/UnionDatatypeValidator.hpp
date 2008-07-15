@@ -278,9 +278,9 @@ inline bool UnionDatatypeValidator::isAtomic() const {
         return false;
     }
 
-    unsigned int memberSize = fMemberTypeValidators->size();
+    XMLSize_t memberSize = fMemberTypeValidators->size();
 
-    for (unsigned int i=0; i < memberSize; i++) {
+    for (XMLSize_t i=0; i < memberSize; i++) {
         if (!fMemberTypeValidators->elementAt(i)->isAtomic()) {
             return false;
         }
@@ -296,9 +296,9 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
     }
 
     if (fMemberTypeValidators) {
-        unsigned int memberSize = fMemberTypeValidators->size();
+        XMLSize_t memberSize = fMemberTypeValidators->size();
 
-        for (unsigned int i=0; i < memberSize; i++) {
+        for (XMLSize_t i=0; i < memberSize; i++) {
             if ((fMemberTypeValidators->elementAt(i)->getType() == DatatypeValidator::Union) &&
                 (fMemberTypeValidators->elementAt(i) == toCheck))
                 return false;

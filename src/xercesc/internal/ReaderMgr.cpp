@@ -330,7 +330,7 @@ bool ReaderMgr::atEOF() const
 //  entities have been incorrectly left on the stack due to syntax errors.
 //  It just cleans back the stack, and sends no entity events.
 //
-void ReaderMgr::cleanStackBackTo(const unsigned int readerNum)
+void ReaderMgr::cleanStackBackTo(const XMLSize_t readerNum)
 {
     //
     //  Just start popping readers until we find the one with the indicated
@@ -780,7 +780,7 @@ XMLEntityDecl* ReaderMgr::getCurrentEntity()
 }
 
 
-unsigned int ReaderMgr::getReaderDepth() const
+XMLSize_t ReaderMgr::getReaderDepth() const
 {
     // If the stack doesn't exist, its obviously zero
     if (!fEntityStack)
@@ -791,7 +791,7 @@ unsigned int ReaderMgr::getReaderDepth() const
     //  reader. So if there is no current reader and none on the stack,
     //  its zero, else its some non-zero value.
     //
-    unsigned int retVal = fEntityStack->size();
+    XMLSize_t retVal = fEntityStack->size();
     if (fCurReader)
         retVal++;
     return retVal;
@@ -858,9 +858,9 @@ bool ReaderMgr::pushReader(         XMLReader* const        reader
     //
     if (entity && fEntityStack)
     {
-        const unsigned int count = fEntityStack->size();
+        const XMLSize_t count = fEntityStack->size();
         const XMLCh* const theName = entity->getName();
-        for (unsigned int index = 0; index < count; index++)
+        for (XMLSize_t index = 0; index < count; index++)
         {
             const XMLEntityDecl* curDecl = fEntityStack->elementAt(index);
             if (curDecl)
@@ -992,7 +992,7 @@ ReaderMgr::getLastExtEntity(const XMLEntityDecl*& itsEntity) const
     const XMLEntityDecl* curEntity = fCurEntity;
     if (curEntity && !curEntity->isExternal())
     {
-        unsigned int index = fReaderStack->size();
+        XMLSize_t index = fReaderStack->size();
         if (index)
         {
             while (true)
@@ -1043,7 +1043,7 @@ bool ReaderMgr::popReader()
     //
     XMLEntityDecl* prevEntity = fCurEntity;
     const bool prevReaderThrowAtEnd = fCurReader->getThrowAtEnd();
-    const unsigned int readerNum = fCurReader->getReaderNum();
+    const XMLSize_t readerNum = fCurReader->getReaderNum();
 
     //
     //  Delete the current reader and pop a new reader and entity off

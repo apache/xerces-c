@@ -61,8 +61,8 @@ public:
     (
         XMLElementDecl* const   elemDecl
         , QName** const         children
-        , unsigned int          childCount
-        , unsigned int*         indexFailingChild
+        , XMLSize_t             childCount
+        , XMLSize_t*            indexFailingChild
     );
 
     virtual void faultInAttr

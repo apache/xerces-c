@@ -84,7 +84,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    void scanRawAttrListforNameSpaces(int attCount);
+    void scanRawAttrListforNameSpaces(XMLSize_t attCount);
     void switchGrammar(const XMLCh* const newGrammarNameSpace, bool laxValidate);
 };
 

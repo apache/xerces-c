@@ -90,12 +90,12 @@ bool IdentityConstraint::operator ==(const IdentityConstraint& other) const {
     if (*fSelector != *(other.fSelector))
         return false;
 
-    unsigned int fieldCount = fFields->size();
+    XMLSize_t fieldCount = fFields->size();
 
     if (fieldCount != other.fFields->size())
         return false;
 
-    for (unsigned int i = 0; i < fieldCount; i++) {
+    for (XMLSize_t i = 0; i < fieldCount; i++) {
         if (*(fFields->elementAt(i)) != *(other.fFields->elementAt(i)))
             return false;
     }

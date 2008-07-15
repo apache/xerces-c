@@ -498,7 +498,7 @@ int Xlat_main(int argC, XMLCh** argV)
             //  Loop through them and look for the domains that we know are
             //  supposed to be there.
             //
-            const unsigned int count = msgSetList->getLength();
+            const XMLSize_t count = msgSetList->getLength();
 
             //
             // Normalize locale string

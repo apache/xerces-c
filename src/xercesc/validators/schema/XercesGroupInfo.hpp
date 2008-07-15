@@ -65,10 +65,10 @@ public:
     // -----------------------------------------------------------------------
     bool                     getCheckElementConsistency() const;
     unsigned int             getScope() const;
-    unsigned int             elementCount() const;
+    XMLSize_t                elementCount() const;
     ContentSpecNode*         getContentSpec() const;
-    SchemaElementDecl*       elementAt(const unsigned int index);
-    const SchemaElementDecl* elementAt(const unsigned int index) const;
+    SchemaElementDecl*       elementAt(const XMLSize_t index);
+    const SchemaElementDecl* elementAt(const XMLSize_t index) const;
     XSDLocator*              getLocator() const;
     XercesGroupInfo*         getBaseGroup() const;
     unsigned int             getNameId() const;
@@ -118,7 +118,7 @@ inline unsigned int XercesGroupInfo::getScope() const {
     return fScope;
 }
 
-inline unsigned int XercesGroupInfo::elementCount() const {
+inline XMLSize_t XercesGroupInfo::elementCount() const {
 
     return fElements->size();
 }
@@ -129,13 +129,13 @@ inline ContentSpecNode* XercesGroupInfo::getContentSpec() const {
 }
 
 inline SchemaElementDecl*
-XercesGroupInfo::elementAt(const unsigned int index) {
+XercesGroupInfo::elementAt(const XMLSize_t index) {
 
     return fElements->elementAt(index);
 }
 
 inline const SchemaElementDecl*
-XercesGroupInfo::elementAt(const unsigned int index) const {
+XercesGroupInfo::elementAt(const XMLSize_t index) const {
 
     return fElements->elementAt(index);
 }

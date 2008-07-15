@@ -1066,14 +1066,14 @@ const DOMNode* DOMRangeImpl::commonAncestorOf(const DOMNode* pointA, const DOMNo
         endV.addElement(node);
     }
 
-    int s = startV.size()-1;
-    int e = endV.size()-1;
+    XMLSize_t s = startV.size();
+    XMLSize_t e = endV.size();
 
     DOMNode* commonAncestor = 0;
 
-    while (s>=0 && e>=0) {
-        if (startV.elementAt(s) == endV.elementAt(e)) {
-            commonAncestor = startV.elementAt(s);
+    while (s>0 && e>0) {
+        if (startV.elementAt(s-1) == endV.elementAt(e-1)) {
+            commonAncestor = startV.elementAt(s-1);
         }
         else  break;
         --s;

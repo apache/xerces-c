@@ -42,9 +42,9 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    int size() const;
+    XMLSize_t size() const;
 	int getReferenceNo() const;
-    Token* getChild(const int index) const;
+    Token* getChild(const XMLSize_t index) const;
     Token* getConditionToken() const;
 
 private:
@@ -67,7 +67,7 @@ private:
 // ---------------------------------------------------------------------------
 //  ConditionToken: getter methods
 // ---------------------------------------------------------------------------
-inline int ConditionToken::size() const {
+inline XMLSize_t ConditionToken::size() const {
 
     return fNoToken == 0 ? 1 : 2;
 }
@@ -77,9 +77,9 @@ inline int ConditionToken::getReferenceNo() const {
     return fRefNo;
 }
 
-inline Token* ConditionToken::getChild(const int index) const {
+inline Token* ConditionToken::getChild(const XMLSize_t index) const {
 
-    if (index < 0 || index > 1)
+    if (index > 1)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidChildIndex, fMemoryManager);
 
     if (index == 0)

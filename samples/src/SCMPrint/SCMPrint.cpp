@@ -407,7 +407,7 @@ void processElements(XSNamedMap<XSObject> *xsElements)
         XERCES_STD_QUALIFIER cout << "no elements\n\n"  << XERCES_STD_QUALIFIER endl;
         return;
     }    
-    for (unsigned i=0; i < xsElements->getLength(); i++) {
+    for (XMLSize_t i=0; i < xsElements->getLength(); i++) {
         XSElementDeclaration *xsElement = (XSElementDeclaration *)xsElements->item(i);
         printBasic(xsElement, "Element");
         
@@ -544,7 +544,7 @@ void processTypeDefinitions(XSNamedMap<XSObject> *xsTypeDefs)
 {
     if (!xsTypeDefs) return;
     
-    for (unsigned i=0; i < xsTypeDefs->getLength(); i++) {
+    for (XMLSize_t i=0; i < xsTypeDefs->getLength(); i++) {
         XSTypeDefinition *xsTypeDef = (XSTypeDefinition *)xsTypeDefs->item(i);
         
         printBasic(xsTypeDef, "Type Definition");

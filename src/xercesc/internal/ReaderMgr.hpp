@@ -103,7 +103,7 @@ public :
     // -----------------------------------------------------------------------
     //  Control methods
     // -----------------------------------------------------------------------
-    void cleanStackBackTo(const unsigned int readerNum);
+    void cleanStackBackTo(const XMLSize_t readerNum);
     XMLReader* createReader
     (
         const   InputSource&        src
@@ -165,8 +165,8 @@ public :
     XMLEntityDecl* getCurrentEntity();
     const XMLReader* getCurrentReader() const;
     XMLReader* getCurrentReader();
-    unsigned int getCurrentReaderNum() const;
-    unsigned int getReaderDepth() const;
+    XMLSize_t getCurrentReaderNum() const;
+    XMLSize_t getReaderDepth() const;
     void getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const;
     XMLFilePos getSrcOffset() const;
     bool getThrowEOE() const;
@@ -267,7 +267,7 @@ private :
 //  do because some of the compilers we have to support are too stupid to
 //  understand out of order inlines!
 // ---------------------------------------------------------------------------
-inline unsigned int ReaderMgr::getCurrentReaderNum() const
+inline XMLSize_t ReaderMgr::getCurrentReaderNum() const
 {
     return fCurReader->getReaderNum();
 }

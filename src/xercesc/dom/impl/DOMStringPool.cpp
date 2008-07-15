@@ -64,7 +64,7 @@ static DOMStringPoolEntry *createSPE(const XMLCh *str, DOMDocumentImpl *doc)
 
 
 
-DOMStringPool::DOMStringPool(int hashTableSize, DOMDocumentImpl *doc)
+DOMStringPool::DOMStringPool(XMLSize_t hashTableSize, DOMDocumentImpl *doc)
 :   fDoc(doc)
 ,   fHashTableSize(hashTableSize)
 {
@@ -73,7 +73,7 @@ DOMStringPool::DOMStringPool(int hashTableSize, DOMDocumentImpl *doc)
     //fHashTable = new (fDoc) DOMStringPoolEntry *[hashTableSize];
     void* p = doc->allocate(sizeof(DOMStringPoolEntry*) * hashTableSize);
     fHashTable = (DOMStringPoolEntry**) p;
-    for (int i=0; i<fHashTableSize; i++)
+    for (XMLSize_t i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
 }
 
@@ -90,7 +90,7 @@ const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
     DOMStringPoolEntry    **pspe;
     DOMStringPoolEntry    *spe;
 
-    int    inHash     = XMLString::hash(in, fHashTableSize, fDoc->getMemoryManager());
+    XMLSize_t inHash = XMLString::hash(in, fHashTableSize, fDoc->getMemoryManager());
     pspe = &fHashTable[inHash];
     while (*pspe != 0)
     {

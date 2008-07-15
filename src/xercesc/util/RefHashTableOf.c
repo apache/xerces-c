@@ -39,7 +39,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefHashTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal>
-RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
+RefHashTableOf<TVal>::RefHashTableOf( const XMLSize_t modulus
                                     , const bool adoptElems
                                     , MemoryManager* const manager)
 
@@ -56,7 +56,7 @@ RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
 }
 
 template <class TVal>
-RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
+RefHashTableOf<TVal>::RefHashTableOf( const XMLSize_t modulus
                                     , const bool adoptElems
                                     , HashBase* hashBase
                                     , MemoryManager* const manager)
@@ -75,7 +75,7 @@ RefHashTableOf<TVal>::RefHashTableOf( const unsigned int modulus
 }
 
 template <class TVal>
-RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus
+RefHashTableOf<TVal>::RefHashTableOf(const XMLSize_t modulus
                                      , MemoryManager* const manager)
 
     : fMemoryManager(manager)
@@ -89,7 +89,7 @@ RefHashTableOf<TVal>::RefHashTableOf(const unsigned int modulus
     initialize(modulus);
 }
 
-template <class TVal> void RefHashTableOf<TVal>::initialize(const unsigned int modulus)
+template <class TVal> void RefHashTableOf<TVal>::initialize(const XMLSize_t modulus)
 {
     if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
@@ -99,7 +99,7 @@ template <class TVal> void RefHashTableOf<TVal>::initialize(const unsigned int m
     (
         fHashModulus * sizeof(RefHashTableBucketElem<TVal>*)
     ); //new RefHashTableBucketElem<TVal>*[fHashModulus];
-    for (unsigned int index = 0; index < fHashModulus; index++)
+    for (XMLSize_t index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 }
 
@@ -120,7 +120,7 @@ template <class TVal> bool RefHashTableOf<TVal>::isEmpty() const
 template <class TVal> bool RefHashTableOf<TVal>::
 containsKey(const void* const key) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const RefHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     return (findIt != 0);
 }
@@ -129,7 +129,7 @@ template <class TVal> void RefHashTableOf<TVal>::
 removeKey(const void* const key)
 {
     // Hash the key
-    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -187,7 +187,7 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
         return;
 
     // Clean up the buckets first
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
+    for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
         // Get the bucket list head for this entry
         RefHashTableBucketElem<TVal>* curElem = fBucketList[buckInd];
@@ -228,7 +228,7 @@ orphanKey(const void* const key)
 {
     // Hash the key
     TVal* retVal = 0;
-    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -329,7 +329,7 @@ template <class TVal> void RefHashTableOf<TVal>::transferElement(const void* con
 // ---------------------------------------------------------------------------
 template <class TVal> TVal* RefHashTableOf<TVal>::get(const void* const key)
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     RefHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     if (!findIt)
         return 0;
@@ -339,7 +339,7 @@ template <class TVal> TVal* RefHashTableOf<TVal>::get(const void* const key)
 template <class TVal> const TVal* RefHashTableOf<TVal>::
 get(const void* const key) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const RefHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     if (!findIt)
         return 0;
@@ -353,13 +353,13 @@ MemoryManager* RefHashTableOf<TVal>::getMemoryManager() const
 }
 
 template <class TVal>
-unsigned int RefHashTableOf<TVal>::getHashModulus() const
+XMLSize_t RefHashTableOf<TVal>::getHashModulus() const
 {
     return fHashModulus;
 }
 
 template <class TVal>
-unsigned int RefHashTableOf<TVal>::getCount() const
+XMLSize_t RefHashTableOf<TVal>::getCount() const
 {
     return fCount;
 }
@@ -379,14 +379,14 @@ void RefHashTableOf<TVal>::setAdoptElements(const bool aValue)
 template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valueToAdopt)
 {
     // Apply 0.75 load factor to find threshold.
-    unsigned int threshold = fHashModulus * 3 / 4;
+    XMLSize_t threshold = fHashModulus * 3 / 4;
     
     // If we've grown too big, expand the table and rehash.
     if (fCount >= threshold)
         rehash();
 
     // First see if the key exists already
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     RefHashTableBucketElem<TVal>* newBucket = findBucketElem(key, hashVal);
 
     //
@@ -418,7 +418,7 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
 // ---------------------------------------------------------------------------
 template <class TVal> void RefHashTableOf<TVal>::rehash()
 {
-    const unsigned int newMod = (fHashModulus * 2) + 1;
+    const XMLSize_t newMod = (fHashModulus * 2) + 1;
 
     RefHashTableBucketElem<TVal>** newBucketList =
         (RefHashTableBucketElem<TVal>**) fMemoryManager->allocate
@@ -434,7 +434,7 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
     
     
     // Rehash all existing entries.
-    for (unsigned int index = 0; index < fHashModulus; index++)
+    for (XMLSize_t index = 0; index < fHashModulus; index++)
     {
         // Get the bucket list head for this entry
         RefHashTableBucketElem<TVal>* curElem = fBucketList[index];
@@ -444,7 +444,7 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
             // Save the next element before we detach this one
             RefHashTableBucketElem<TVal>* const nextElem = curElem->fNext;
 
-            const unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey, newMod, fMemoryManager);
+            const XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey, newMod, fMemoryManager);
             assert(hashVal < newMod);
 
             RefHashTableBucketElem<TVal>* const newHeadElem = newBucketList[hashVal];
@@ -470,7 +470,7 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
 }
 
 template <class TVal> RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
-findBucketElem(const void* const key, unsigned int& hashVal)
+findBucketElem(const void* const key, XMLSize_t& hashVal)
 {
     // Hash the key
     hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
@@ -489,7 +489,7 @@ findBucketElem(const void* const key, unsigned int& hashVal)
 }
 
 template <class TVal> const RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
-findBucketElem(const void* const key, unsigned int& hashVal) const
+findBucketElem(const void* const key, XMLSize_t& hashVal) const
 {
     // Hash the key
     hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
@@ -597,7 +597,7 @@ template <class TVal> void* RefHashTableOfEnumerator<TVal>::nextElementKey()
 
 template <class TVal> void RefHashTableOfEnumerator<TVal>::Reset()
 {
-    fCurHash = (unsigned int)-1;
+    fCurHash = (XMLSize_t)-1;
     fCurElem = 0;
     findNext();
 }

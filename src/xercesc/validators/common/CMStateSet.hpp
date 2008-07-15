@@ -267,7 +267,7 @@ public :
         }
     }
 
-    int hashCode() const
+    XMLSize_t hashCode() const
     {
         if (fBitCount < 65)
         {
@@ -275,9 +275,9 @@ public :
         }
         else
         {
-            int hash = 0;
-            for (int index = fByteCount - 1; index >= 0; index--)
-                hash = fByteArray[index] + hash * 31;
+            XMLSize_t hash = 0;
+            for (XMLSize_t index = fByteCount; index > 0; index--)
+                hash = fByteArray[index-1] + hash * 31;
             return hash;
         }
 

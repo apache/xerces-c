@@ -41,8 +41,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	Token* getChild(const int index) const;
-	int    size() const;
+	Token* getChild(const XMLSize_t index) const;
+	XMLSize_t size() const;
 
 private:
 	// -----------------------------------------------------------------------
@@ -62,12 +62,12 @@ private:
 // ---------------------------------------------------------------------------
 //  StringToken: getter methods
 // ---------------------------------------------------------------------------
-inline int ConcatToken::size() const {
+inline XMLSize_t ConcatToken::size() const {
 
 	return 2;
 }
 
-inline Token* ConcatToken::getChild(const int index) const {
+inline Token* ConcatToken::getChild(const XMLSize_t index) const {
 
 	return index == 0 ? fChild1 : fChild2;
 }

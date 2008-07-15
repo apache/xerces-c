@@ -110,7 +110,7 @@ private:
     //  Data
     // -----------------------------------------------------------------------
     bool                        fDoReportError;
-    int                         fValuesCount;
+    XMLSize_t                   fValuesCount;
     IdentityConstraint*         fIdentityConstraint;
     FieldValueMap               fValues;
     RefVectorOf<FieldValueMap>* fValueTuples;

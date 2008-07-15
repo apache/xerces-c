@@ -1651,7 +1651,7 @@ private :
     ContentHandler*		fDocHandler ;
     RefVectorOf<XMLAttr>*       fTempAttrVec ;
     XMLStringPool*              fPrefixesStorage ;
-    ValueStackOf<XMLSize_t>*    fPrefixes ;
+    ValueStackOf<unsigned int>* fPrefixes ;
     ValueStackOf<XMLSize_t>*    fPrefixCounts ;
     XMLBuffer*                  fTempQName;
     DTDHandler*                 fDTDHandler;

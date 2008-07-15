@@ -194,7 +194,7 @@ public:
     XMLFileLoc getLineNumber() const;
     bool getNoMoreFlag() const;
     const XMLCh* getPublicId() const;
-    unsigned int getReaderNum() const;
+    XMLSize_t getReaderNum() const;
     RefFrom getRefFrom() const;
     Sources getSource() const;
     XMLFilePos getSrcOffset() const;
@@ -210,7 +210,7 @@ public:
     (
         const   XMLCh* const    newEncoding
     );
-    void setReaderNum(const unsigned int newNum);
+    void setReaderNum(const XMLSize_t newNum);
     void setThrowAtEnd(const bool newValue);
     void setXMLVersion(const XMLVersion version);
 
@@ -440,7 +440,7 @@ private:
     XMLSize_t                   fRawBufIndex;
     XMLByte                     fRawByteBuf[kRawBufSize];
     XMLSize_t                   fRawBytesAvail;
-    unsigned int                fReaderNum;
+    XMLSize_t                   fReaderNum;
     RefFrom                     fRefFrom;
     bool                        fSentTrailingSpace;
     Sources                     fSource;
@@ -553,7 +553,7 @@ inline const XMLCh* XMLReader::getPublicId() const
     return fPublicId;
 }
 
-inline unsigned int XMLReader::getReaderNum() const
+inline XMLSize_t XMLReader::getReaderNum() const
 {
     return fReaderNum;
 }
@@ -586,7 +586,7 @@ inline XMLReader::Types XMLReader::getType() const
 // ---------------------------------------------------------------------------
 //  XMLReader: Setter methods
 // ---------------------------------------------------------------------------
-inline void XMLReader::setReaderNum(const unsigned int newNum)
+inline void XMLReader::setReaderNum(const XMLSize_t newNum)
 {
     fReaderNum = newNum;
 }

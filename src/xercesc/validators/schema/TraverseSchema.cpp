@@ -279,15 +279,15 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
 
         fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
 
-        unsigned int icListSize = fIC_Elements->size();
+        XMLSize_t icListSize = fIC_Elements->size();
 
-        for (unsigned int i=0; i < icListSize; i++) {
+        for (XMLSize_t i=0; i < icListSize; i++) {
 
             SchemaElementDecl* curElem = fIC_Elements->elementAt(i);
             ValueVectorOf<DOMElement*>* icNodes =  fIC_NodeListNS->get(curElem);
-            unsigned int icNodesSize = icNodes->size();
+            XMLSize_t icNodesSize = icNodes->size();
 
-            for (unsigned int j = 0; j < icNodesSize; j++) {
+            for (XMLSize_t j = 0; j < icNodesSize; j++) {
                 traverseKeyRef(icNodes->elementAt(j), curElem);
             }
         }
@@ -506,7 +506,7 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
     {
         XSAnnotation* theAnnotation = 0;
 
-        unsigned int nonXSAttSize = nonXSAttList->size();
+        XMLSize_t nonXSAttSize = nonXSAttList->size();
 
         if (nonXSAttSize)
         {
@@ -519,7 +519,7 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
             // set annotation element
             fBuffer.set(contents, annotTokenStart + 10);
 
-            for (unsigned int i=0; i<nonXSAttSize; i++)
+            for (XMLSize_t i=0; i<nonXSAttSize; i++)
             {
                 DOMNode* attNode = nonXSAttList->elementAt(i);
 
@@ -1401,7 +1401,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // -----------------------------------------------------------------------
     // Create a new instance
     // -----------------------------------------------------------------------
-    unsigned int previousCircularCheckIndex = fCircularCheckIndex;
+    XMLSize_t previousCircularCheckIndex = fCircularCheckIndex;
     unsigned int previousScope = fCurrentScope;
 
     if (preProcessFlag) {
@@ -1682,7 +1682,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Set groupInfo and pop group name from stack
     // ------------------------------------------------------------------
-    unsigned int stackSize = fCurrentGroupStack->size();
+    XMLSize_t stackSize = fCurrentGroupStack->size();
 
     if (stackSize != 0) {
         fCurrentGroupStack->removeElementAt(stackSize - 1);
@@ -1897,13 +1897,13 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     // calculate complete wildcard if necessary
     if (attGroupInfo)
     {
-        unsigned int anyAttCount = attGroupInfo->anyAttributeCount();
+        XMLSize_t anyAttCount = attGroupInfo->anyAttributeCount();
         if (anyAttCount && !attGroupInfo->getCompleteWildCard())
         {
             SchemaAttDef* attGroupWildCard =  new (fGrammarPoolMemoryManager)
                 SchemaAttDef(attGroupInfo->anyAttributeAt(0));
 
-            for (unsigned int k= 1; k < anyAttCount; k++)
+            for (XMLSize_t k= 1; k < anyAttCount; k++)
                 attWildCardIntersection(attGroupWildCard, attGroupInfo->anyAttributeAt(k));
 
             attGroupInfo->setCompleteWildCard(attGroupWildCard);
@@ -4924,9 +4924,9 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
     if (recursingAnonTypes) {
 
         ValueVectorOf<const XMLCh*>* recursingTypeNames = fSchemaInfo->getRecursingTypeNames();
-        unsigned int recurseSize = recursingAnonTypes->size();
+        XMLSize_t recurseSize = recursingAnonTypes->size();
 
-        for (unsigned int i=0; i < recurseSize; i++) {
+        for (XMLSize_t i=0; i < recurseSize; i++) {
             traverseComplexTypeDecl(recursingAnonTypes->elementAt(i), false,
                                     recursingTypeNames->elementAt(i));
         }
@@ -6703,7 +6703,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
     // Handle wild card/any attribute
     // -------------------------------------------------------------
     int derivedBy = typeInfo->getDerivedBy();
-    unsigned int attGroupListSize = attGroupList.size();
+    XMLSize_t attGroupListSize = attGroupList.size();
 
     if (attGroupListSize) {
 
@@ -6712,10 +6712,10 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
         XMLAttDef::DefAttTypes defAttType = XMLAttDef::Default;
         bool defAttTypeSet = false;
 
-        for (unsigned int i=0; i < attGroupListSize; i++) {
+        for (XMLSize_t i=0; i < attGroupListSize; i++) {
 
             attGroupInfo = attGroupList.elementAt(i);
-            unsigned int anyAttCount = attGroupInfo->anyAttributeCount();
+            XMLSize_t anyAttCount = attGroupInfo->anyAttributeCount();
 
             if (anyAttCount) {
 
@@ -7124,8 +7124,8 @@ TraverseSchema::buildValidSubstitutionListF(const DOMElement* const elem,
             fValidSubstitutionGroups->put((void*) subsElemName, subsElemURI, validSubs);
         }
 
-        unsigned int elemSize = validSubsElements->size();
-        for (unsigned int i=0; i<elemSize; i++) {
+        XMLSize_t elemSize = validSubsElements->size();
+        for (XMLSize_t i=0; i<elemSize; i++) {
 
             SchemaElementDecl* chainElem = validSubsElements->elementAt(i);
 
@@ -7377,14 +7377,14 @@ void TraverseSchema::processElements(const DOMElement* const elem,
 
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
-    unsigned int elemCount = baseTypeInfo->elementCount();
+    XMLSize_t elemCount = baseTypeInfo->elementCount();
 
     if (elemCount) {
 
         int newTypeScope = newTypeInfo->getScopeDefined();
         int schemaURI = fURIStringPool->addOrFind(SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
 
-        for (unsigned int i=0; i < elemCount; i++) {
+        for (XMLSize_t i=0; i < elemCount; i++) {
 
             SchemaGrammar*     aGrammar = fSchemaGrammar;
             SchemaElementDecl* elemDecl = baseTypeInfo->elementAt(i);
@@ -7430,10 +7430,10 @@ void TraverseSchema::processElements(const DOMElement* const elem,
 {
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
-    unsigned int elemCount = fromGroup->elementCount();
+    XMLSize_t elemCount = fromGroup->elementCount();
     int newScope = typeInfo->getScopeDefined();
 
-    for (unsigned int i = 0; i < elemCount; i++) {
+    for (XMLSize_t i = 0; i < elemCount; i++) {
 
         SchemaElementDecl* elemDecl = fromGroup->elementAt(i);
         unsigned int elemScope = elemDecl->getEnclosingScope();
@@ -7472,13 +7472,13 @@ void TraverseSchema::copyGroupElements(const DOMElement* const elem,
                                        XercesGroupInfo* const toGroup,
                                        ComplexTypeInfo* const typeInfo) {
 
-    unsigned int elemCount = fromGroup->elementCount();
+    XMLSize_t elemCount = fromGroup->elementCount();
     int newScope = (typeInfo) ? typeInfo->getScopeDefined() : 0;
 
     if (typeInfo)
         fromGroup->setCheckElementConsistency(false);
 
-    for (unsigned int i = 0; i < elemCount; i++) {
+    for (XMLSize_t i = 0; i < elemCount; i++) {
 
         SchemaElementDecl*       elemDecl = fromGroup->elementAt(i);
 
@@ -7522,9 +7522,9 @@ void TraverseSchema::copyAttGroupAttributes(const DOMElement* const elem,
                                             XercesAttGroupInfo* const toAttGroup,
                                             ComplexTypeInfo* const typeInfo) {
 
-    unsigned int attCount = fromAttGroup->attributeCount();
+    XMLSize_t attCount = fromAttGroup->attributeCount();
 
-    for (unsigned int i=0; i < attCount; i++) {
+    for (XMLSize_t i=0; i < attCount; i++) {
 
         SchemaAttDef* attDef = fromAttGroup->attributeAt(i);
         QName* attName = attDef->getAttName();
@@ -7584,9 +7584,9 @@ void TraverseSchema::copyAttGroupAttributes(const DOMElement* const elem,
     }
 
     if (toAttGroup) {
-        unsigned int anyAttCount = fromAttGroup->anyAttributeCount();
+        XMLSize_t anyAttCount = fromAttGroup->anyAttributeCount();
 
-        for (unsigned int j=0; j < anyAttCount; j++) {
+        for (XMLSize_t j=0; j < anyAttCount; j++) {
             toAttGroup->addAnyAttDef(fromAttGroup->anyAttributeAt(j), true);
         }
     }
@@ -7631,14 +7631,14 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
             compareURI = compareWildCard->getAttName()->getURI();
         }
 
-        unsigned int listSize = (nameURIList) ? nameURIList->size() : 0;
+        XMLSize_t listSize = (nameURIList) ? nameURIList->size() : 0;
 
         if (listSize) {
 
             bool                        found = false;
             ValueVectorOf<unsigned int> tmpURIList(listSize, fGrammarPoolMemoryManager);
 
-            for (unsigned int i=0; i < listSize; i++) {
+            for (XMLSize_t i=0; i < listSize; i++) {
 
                 unsigned int nameURI = nameURIList->elementAt(i);
 
@@ -7669,13 +7669,13 @@ TraverseSchema::attWildCardIntersection(SchemaAttDef* const resultWildCard,
 
         ValueVectorOf<unsigned int>* uriListR = resultWildCard->getNamespaceList();
         ValueVectorOf<unsigned int>* uriListC = compareWildCard->getNamespaceList();
-        unsigned int listSize = (uriListC) ? uriListC->size() : 0;
+        XMLSize_t listSize = (uriListC) ? uriListC->size() : 0;
 
         if (listSize) {
 
             ValueVectorOf<unsigned int> tmpURIList(listSize, fGrammarPoolMemoryManager);
 
-            for (unsigned int i=0; i < listSize; i++) {
+            for (XMLSize_t i=0; i < listSize; i++) {
 
                 unsigned int uriName = uriListC->elementAt(i);
 
@@ -7742,7 +7742,7 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
 
         ValueVectorOf<unsigned int>* uriListR = resultWildCard->getNamespaceList();
         ValueVectorOf<unsigned int>* uriListC = compareWildCard->getNamespaceList();
-        unsigned int listSizeC = (uriListC) ? uriListC->size() : 0;
+        XMLSize_t listSizeC = (uriListC) ? uriListC->size() : 0;
 
         if (listSizeC) {
 
@@ -7754,7 +7754,7 @@ TraverseSchema::attWildCardUnion(SchemaAttDef* const resultWildCard,
 
             ValueVectorOf<unsigned int> tmpURIList(*uriListR);
 
-            for (unsigned int i = 0; i < listSizeC; i++) {
+            for (XMLSize_t i = 0; i < listSizeC; i++) {
 
                 unsigned int uriName = uriListC->elementAt(i);
 
@@ -7958,10 +7958,10 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
                                           const XercesAttGroupInfo* const baseAttGrpInfo,
                                           const XercesAttGroupInfo* const childAttGrpInfo) {
 
-    unsigned int baseAttCount = baseAttGrpInfo->attributeCount();
-    unsigned int baseAnyAttCount = baseAttGrpInfo->anyAttributeCount();
-    unsigned int childAttCount = childAttGrpInfo->attributeCount();
-    unsigned int childAnyAttCount = childAttGrpInfo->anyAttributeCount();
+    XMLSize_t baseAttCount = baseAttGrpInfo->attributeCount();
+    XMLSize_t baseAnyAttCount = baseAttGrpInfo->anyAttributeCount();
+    XMLSize_t childAttCount = childAttGrpInfo->attributeCount();
+    XMLSize_t childAnyAttCount = childAttGrpInfo->anyAttributeCount();
 
     if ((childAttCount || childAnyAttCount) && (!baseAttCount && !baseAnyAttCount)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_1);
@@ -7969,7 +7969,7 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
 
     const SchemaAttDef* baseAttWildCard = (baseAnyAttCount) ? baseAttGrpInfo->anyAttributeAt(0) : 0;
 
-    for (unsigned int i=0; i<childAttCount; i++) {
+    for (XMLSize_t i=0; i<childAttCount; i++) {
 
         const SchemaAttDef* childAttDef = childAttGrpInfo->attributeAt(i);
         QName* childAttName = childAttDef->getAttName();
@@ -8101,9 +8101,9 @@ bool TraverseSchema::isWildCardSubset(const SchemaAttDef* const baseAttWildCard,
         if (baseWildCardType == XMLAttDef::Any_List) {
 
             ValueVectorOf<unsigned int>* baseURIList = baseAttWildCard->getNamespaceList();
-            unsigned int childListSize = (childURIList) ? childURIList->size() : 0;
+            XMLSize_t childListSize = (childURIList) ? childURIList->size() : 0;
 
-            for (unsigned int i=0; i<childListSize; i++) {
+            for (XMLSize_t i=0; i<childListSize; i++) {
                 if (!baseURIList->containsElement(childURIList->elementAt(i))) {
                     return false;
                 }
@@ -9080,9 +9080,9 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     fBuffer.append(SchemaSymbols::fgELT_ANNOTATION);
 
     // next is the nonXSAttList names & values
-    unsigned int nonXSAttSize = nonXSAttList->size();
+    XMLSize_t nonXSAttSize = nonXSAttList->size();
 
-    for (unsigned int i=0; i<nonXSAttSize; i++)
+    for (XMLSize_t i=0; i<nonXSAttSize; i++)
     {
         DOMNode* attNode = nonXSAttList->elementAt(i);
 

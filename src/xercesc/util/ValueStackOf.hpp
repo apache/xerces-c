@@ -42,7 +42,7 @@ public :
     // -----------------------------------------------------------------------
     ValueStackOf
     (
-          const unsigned int fInitCapacity
+          const XMLSize_t fInitCapacity
           , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
           , const bool toCallDestructor = false
     );
@@ -62,8 +62,8 @@ public :
     //  Getter methods
     // -----------------------------------------------------------------------
     bool empty();
-    unsigned int curCapacity();
-    unsigned int size();
+    XMLSize_t curCapacity();
+    XMLSize_t size();
 
 
 private :
@@ -141,7 +141,7 @@ private :
     //      inside of it.
     // -----------------------------------------------------------------------
     bool                    fAdopted;
-    unsigned int            fCurIndex;
+    XMLSize_t               fCurIndex;
     ValueVectorOf<TElem>*   fVector;
     ValueStackOf<TElem>*    fToEnum;
 };

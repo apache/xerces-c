@@ -118,9 +118,9 @@ private :
     void commonInit();
     void cleanUp();
 
-    unsigned int buildAttList
+    XMLSize_t buildAttList
     (
-        const unsigned int                attCount
+        const XMLSize_t                     attCount
         ,       XMLElementDecl*             elemDecl
         ,       RefVectorOf<XMLAttr>&       toFill
     );
@@ -135,7 +135,7 @@ private :
         , const XMLCh* const attrLocalName
         , const XMLCh* const attrValue
     );
-    void scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount, XMLElementDecl* elemDecl);
+    void scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, XMLSize_t attCount, XMLElementDecl* elemDecl);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods

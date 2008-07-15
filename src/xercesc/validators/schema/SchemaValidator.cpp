@@ -79,8 +79,8 @@ SchemaValidator::~SchemaValidator()
 // ---------------------------------------------------------------------------
 bool SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                                  , QName** const          children
-                                 , unsigned int           childCount
-                                 , unsigned int*          indexFailingChild)
+                                 , XMLSize_t              childCount
+                                 , XMLSize_t*             indexFailingChild)
 {
     fErrorOccurred = false;
     fElemIsSpecified = false;
@@ -1038,11 +1038,11 @@ void SchemaValidator::checkRefElementConsistency(SchemaGrammar* const currentGra
                                                  const ComplexTypeInfo* const curTypeInfo,
                                                  const XercesGroupInfo* const curGroup) {
 
-    unsigned int elemCount = (curTypeInfo) ? curTypeInfo->elementCount() : curGroup->elementCount();
+    XMLSize_t elemCount = (curTypeInfo) ? curTypeInfo->elementCount() : curGroup->elementCount();
     int elemScope = (curTypeInfo) ? curTypeInfo->getScopeDefined() : curGroup->getScope();
     XSDLocator* typeInfoLocator = (curTypeInfo) ? curTypeInfo->getLocator() : curGroup->getLocator();
 
-    for (unsigned int i=0; i < elemCount; i++) {
+    for (XMLSize_t i=0; i < elemCount; i++) {
 
         const SchemaElementDecl* elemDecl = (curTypeInfo) ? curTypeInfo->elementAt(i) : curGroup->elementAt(i);
 
@@ -1066,9 +1066,9 @@ void SchemaValidator::checkRefElementConsistency(SchemaGrammar* const currentGra
 
             if (subsElements) {
 
-                unsigned int subsElemSize = subsElements->size();
+                XMLSize_t subsElemSize = subsElements->size();
 
-                for (unsigned int j=0; j < subsElemSize; j++) {
+                for (XMLSize_t j=0; j < subsElemSize; j++) {
 
                     SchemaElementDecl* subsElem = subsElements->elementAt(j);
                     const XMLCh* subsElemName = subsElem->getBaseName();
@@ -1598,19 +1598,19 @@ SchemaValidator::checkICRestriction(const SchemaElementDecl* const derivedElemDe
                                    const XMLCh* const baseElemName) {
 
     // REVIST - need to get more clarification
-    unsigned int derivedICCount = derivedElemDecl->getIdentityConstraintCount();
-    unsigned int baseICCount = baseElemDecl->getIdentityConstraintCount();
+    XMLSize_t derivedICCount = derivedElemDecl->getIdentityConstraintCount();
+    XMLSize_t baseICCount = baseElemDecl->getIdentityConstraintCount();
 
     if (derivedICCount > baseICCount) {
         ThrowXMLwithMemMgr2(RuntimeException, XMLExcepts::PD_NameTypeOK6, derivedElemName, baseElemName, fMemoryManager);
     }
 
-    for (unsigned int i=0; i < derivedICCount; i++) {
+    for (XMLSize_t i=0; i < derivedICCount; i++) {
 
         bool found = false;
         IdentityConstraint* ic= derivedElemDecl->getIdentityConstraintAt(i);
 
-        for (unsigned int j=0; j < baseICCount; j++) {
+        for (XMLSize_t j=0; j < baseICCount; j++) {
             if (*ic == *(baseElemDecl->getIdentityConstraintAt(j))) {
 
                 found = true;
@@ -1704,13 +1704,13 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
 
     // check for mapping of children
     XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
-    unsigned int count2= baseNodes->size();
-    unsigned int current = 0;
+    XMLSize_t count2= baseNodes->size();
+    XMLSize_t current = 0;
 
     {
         bool matched = false;
 
-        for (unsigned int j = current; j < count2; j++) {
+        for (XMLSize_t j = current; j < count2; j++) {
 
             ContentSpecNode* baseNode = baseNodes->elementAt(j);
             current++;
@@ -1741,7 +1741,7 @@ SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
     // Now, see if there are some elements in the base we didn't match up
     // in case of Sequence or All
     if (!toLax && codeToThrow == XMLExcepts::NoError) {
-        for (unsigned int j = current; j < count2; j++) {
+        for (XMLSize_t j = current; j < count2; j++) {
             if (baseNodes->elementAt(j)->getMinTotalRange() * baseSpecNode->getMinOccurs()) { //!emptiable
                 codeToThrow =  XMLExcepts::PD_Recurse2;
                 break;
@@ -1772,15 +1772,15 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
 
     // check for mapping of children
     XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
-    unsigned int count1= derivedNodes->size();
-    unsigned int count2= baseNodes->size();
-    unsigned int current = 0;
+    XMLSize_t count1= derivedNodes->size();
+    XMLSize_t count2= baseNodes->size();
+    XMLSize_t current = 0;
 
-    for (unsigned int i=0; i<count1; i++) {
+    for (XMLSize_t i=0; i<count1; i++) {
 
         bool matched = false;
 
-        for (unsigned int j = current; j < count2; j++) {
+        for (XMLSize_t j = current; j < count2; j++) {
 
             ContentSpecNode* baseNode = baseNodes->elementAt(j);
             current++;
@@ -1813,7 +1813,7 @@ SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
     // Now, see if there are some elements in the base we didn't match up
     // in case of Sequence or All
     if (!toLax && codeToThrow == XMLExcepts::NoError) {
-        for (unsigned int j = current; j < count2; j++) {
+        for (XMLSize_t j = current; j < count2; j++) {
             if (baseNodes->elementAt(j)->getMinTotalRange()) { //!emptiable
                 codeToThrow =  XMLExcepts::PD_Recurse2;
                 break;
@@ -1937,9 +1937,9 @@ SchemaValidator::checkNSRecurseCheckCardinality(SchemaGrammar* const currentGram
     }
 
     // Check that each member of the group is a valid restriction of the wildcard
-    unsigned int nodesCount = derivedNodes->size();
+    XMLSize_t nodesCount = derivedNodes->size();
 
-    for (unsigned int i = 0; i < nodesCount; i++) {
+    for (XMLSize_t i = 0; i < nodesCount; i++) {
         checkParticleDerivationOk(currentGrammar, derivedNodes->elementAt(i), derivedScope, baseSpecNode, -1, 0, false);
     }
 }
@@ -1961,25 +1961,25 @@ SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
     }
 
     XMLExcepts::Codes  codeToThrow = XMLExcepts::NoError;
-    unsigned int       derivedCount= derivedNodes->size();
-    unsigned int       baseCount = baseNodes->size();
+    XMLSize_t          derivedCount= derivedNodes->size();
+    XMLSize_t          baseCount = baseNodes->size();
     bool*              foundIt = (bool*) fMemoryManager->allocate
     (
         baseCount * sizeof(bool)
     );//new bool[baseCount];
     ArrayJanitor<bool> janFoundIt(foundIt, fMemoryManager);
 
-    for (unsigned int k=0; k < baseCount; k++) {
+    for (XMLSize_t k=0; k < baseCount; k++) {
         foundIt[k] = false;
     }
 
     // check for mapping of children
-    for (unsigned int i = 0; i < derivedCount; i++) {
+    for (XMLSize_t i = 0; i < derivedCount; i++) {
 
         ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
         bool matched = false;
 
-        for (unsigned int j = 0; j < baseCount; j++) {
+        for (XMLSize_t j = 0; j < baseCount; j++) {
 
             try {
 
@@ -2008,7 +2008,7 @@ SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
 
     // For all unmapped particles in base, check to see it it's emptiable or not
     if (codeToThrow == XMLExcepts::NoError) {
-        for (unsigned int j=0; j < baseCount; j++) {
+        for (XMLSize_t j=0; j < baseCount; j++) {
             if (!foundIt[j] && baseNodes->elementAt(j)->getMinTotalRange()) {
 
 	            codeToThrow = XMLExcepts::PD_RecurseUnordered;
@@ -2033,8 +2033,8 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
                                 const ComplexTypeInfo* const baseInfo) {
 
     // check Occurrence ranges
-    int derivedCount = derivedNodes->size();
-    int baseCount = baseNodes->size();
+    XMLSize_t derivedCount = derivedNodes->size();
+    XMLSize_t baseCount = baseNodes->size();
     int derivedMin = derivedSpecNode->getMinOccurs() * derivedCount;
     int derivedMax = derivedSpecNode->getMaxOccurs();
 
@@ -2048,12 +2048,12 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
     }
 
     // check for mapping of children
-    for (int i = 0; i < derivedCount; i++) {
+    for (XMLSize_t i = 0; i < derivedCount; i++) {
 
         ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
         bool matched = false;
 
-        for (int j = 0; j < baseCount && !matched; j++) {
+        for (XMLSize_t j = 0; j < baseCount && !matched; j++) {
 
             try {
 

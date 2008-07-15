@@ -76,7 +76,7 @@ public:
 	// backwards compatability - default hasher is HashXMLCh
     ValueHashTableOf
     (
-          const unsigned int   modulus
+          const XMLSize_t      modulus
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
@@ -84,7 +84,7 @@ public:
 	// may delete the hasher of a different hashtable if both use the same hasher.
     ValueHashTableOf
     (
-          const unsigned int   modulus
+          const XMLSize_t      modulus
         , HashBase*            hashBase
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -129,10 +129,11 @@ private:
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal);
-    const ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
-    void removeBucketElem(const void* const key, unsigned int& hashVal);
-	void initialize(const unsigned int modulus);
+    ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, XMLSize_t& hashVal);
+    const ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, XMLSize_t& hashVal) const;
+    void removeBucketElem(const void* const key, XMLSize_t& hashVal);
+	void initialize(const XMLSize_t modulus);
+	void rehash();
 
 
     // -----------------------------------------------------------------------
@@ -151,7 +152,9 @@ private:
     // -----------------------------------------------------------------------
     MemoryManager*                   fMemoryManager;
     ValueHashTableBucketElem<TVal>** fBucketList;
-    unsigned int                     fHashModulus;
+    XMLSize_t                        fHashModulus;
+    XMLSize_t                        fInitialModulus;
+    XMLSize_t                        fCount;
 	HashBase*                        fHash;
 };
 
@@ -219,7 +222,7 @@ private :
     // -----------------------------------------------------------------------
     bool                            fAdopted;
     ValueHashTableBucketElem<TVal>* fCurElem;
-    unsigned int                    fCurHash;
+    XMLSize_t                       fCurHash;
     ValueHashTableOf<TVal>*         fToEnum;
     MemoryManager* const            fMemoryManager;
 };

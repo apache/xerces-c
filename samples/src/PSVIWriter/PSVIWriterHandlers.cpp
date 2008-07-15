@@ -186,7 +186,7 @@ void PSVIWriterHandlers::startElement(	const XMLCh* const /* uri */,
 										const XMLCh* const /* qname */,
 										const Attributes& attrs) {
 	fAttributesInfo->removeAllElements();
-	for (unsigned int i=0; i<attrs.getLength(); i++) {
+	for (XMLSize_t i=0; i<attrs.getLength(); i++) {
 		fAttributesInfo->addElement(
 			new AttrInfo(
 				attrs.getURI(i),
@@ -599,27 +599,27 @@ void PSVIWriterHandlers::processNamespaceItem(XSNamespaceItem* namespaceItem) {
 void PSVIWriterHandlers::processSchemaComponents(XSNamespaceItem* namespaceItem) {
 	sendIndentedElement(PSVIUni::fgSchemaComponents);
 	XSNamedMap<XSTypeDefinition>* types = (XSNamedMap<XSTypeDefinition>*)(namespaceItem->getComponents(XSConstants::TYPE_DEFINITION));
-	for (unsigned int typeCount = 0; typeCount < types->getLength(); typeCount++) {
+	for (XMLSize_t typeCount = 0; typeCount < types->getLength(); typeCount++) {
 		processTypeDefinition(types->item(typeCount));
 	}
 	XSNamedMap<XSAttributeDeclaration>* attributes = (XSNamedMap<XSAttributeDeclaration>*)namespaceItem->getComponents(XSConstants::ATTRIBUTE_DECLARATION);
-	for (unsigned int attrCount = 0; attrCount < attributes->getLength(); attrCount++) {
+	for (XMLSize_t attrCount = 0; attrCount < attributes->getLength(); attrCount++) {
 		processAttributeDeclaration(attributes->item(attrCount));
 	}
 	XSNamedMap<XSElementDeclaration>* elements = (XSNamedMap<XSElementDeclaration>*)namespaceItem->getComponents(XSConstants::ELEMENT_DECLARATION);
-	for (unsigned int elemCount = 0; elemCount < elements->getLength(); elemCount++) {
+	for (XMLSize_t elemCount = 0; elemCount < elements->getLength(); elemCount++) {
 		processElementDeclaration(elements->item(elemCount));
 	}
 	XSNamedMap<XSAttributeGroupDefinition>* attrGroups = (XSNamedMap<XSAttributeGroupDefinition>*)namespaceItem->getComponents(XSConstants::ATTRIBUTE_GROUP_DEFINITION);
-	for (unsigned int attrGroupCount = 0; attrGroupCount < attrGroups->getLength(); attrGroupCount++) {
+	for (XMLSize_t attrGroupCount = 0; attrGroupCount < attrGroups->getLength(); attrGroupCount++) {
 		processAttributeGroupDefinition(attrGroups->item(attrGroupCount));
 	}
 	XSNamedMap<XSModelGroupDefinition>* modelGroups = (XSNamedMap<XSModelGroupDefinition>*)namespaceItem->getComponents(XSConstants::MODEL_GROUP_DEFINITION);
-	for (unsigned int modelGroupCount = 0; modelGroupCount < modelGroups->getLength(); modelGroupCount++) {
+	for (XMLSize_t modelGroupCount = 0; modelGroupCount < modelGroups->getLength(); modelGroupCount++) {
 		processModelGroupDefinition(modelGroups->item(modelGroupCount));
 	}
 	XSNamedMap<XSNotationDeclaration>* notations = (XSNamedMap<XSNotationDeclaration>*)namespaceItem->getComponents(XSConstants::NOTATION_DECLARATION);
-	for (unsigned int notationCount = 0; notationCount < notations->getLength(); notationCount++) {
+	for (XMLSize_t notationCount = 0; notationCount < notations->getLength(); notationCount++) {
 		processNotationDeclaration(notations->item(notationCount));
 	}
 	sendUnindentedElement(PSVIUni::fgSchemaComponents);
@@ -914,7 +914,7 @@ void PSVIWriterHandlers::processDOMElement(const XMLCh* const encloseName, DOMEl
 		sendElementEmpty(encloseName);
 	} else {
 		sendIndentedElement(encloseName);
-		for (unsigned int i=0; i < elems->getLength(); i++) {
+		for (XMLSize_t i=0; i < elems->getLength(); i++) {
 			DOMElement* elem = (DOMElement*)elems->item(i);
 			sendIndentedElement(PSVIUni::fgElement);
 			sendElementValue(PSVIUni::fgNamespaceName, elem->getNamespaceURI());
@@ -935,7 +935,7 @@ void PSVIWriterHandlers::processDOMElement(const XMLCh* const encloseName, DOMEl
 void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 	fNSAttributes->removeAllElements();
 	bool firstFlag = true;
-	for (unsigned int count=0; count < attrs->getLength(); count++) {
+	for (XMLSize_t count=0; count < attrs->getLength(); count++) {
 		DOMAttr* attr = (DOMAttr*)attrs->item(count);
         if (XMLString::equals(attr->getNamespaceURI(), XMLUni::fgXMLNSURIName)) {
 			fNSAttributes->addElement(count);
@@ -1094,7 +1094,7 @@ void PSVIWriterHandlers::processIdentityConstraintDefinition(XSNamedMap<XSIDCDef
 		sendElementEmpty(PSVIUni::fgIdentityConstraintDefinitions);
 	} else {
 		sendIndentedElement(PSVIUni::fgIdentityConstraintDefinitions);
-		for (unsigned int i=0; i < idConstraint->getLength(); i++) {
+		for (XMLSize_t i=0; i < idConstraint->getLength(); i++) {
 			XSIDCDefinition* constraint = idConstraint->item(i);
 			sendIndentedElementWithID(PSVIUni::fgIdentityConstraintDefinition, (XSObject*) constraint);
 			sendElementValue(PSVIUni::fgName, constraint->getName());

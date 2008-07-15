@@ -82,7 +82,7 @@ DOMElement* XSDDOMParser::createElementNSNode(const XMLCh *namespaceURI,
 
 void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
                                   , const RefVectorOf<XMLAttr>& attrList
-                                  , const unsigned int          attrCount)
+                                  , const XMLSize_t             attrCount)
 {
     fAnnotationBuf.append(chOpenAngle);
 	fAnnotationBuf.append(elemDecl.getFullName());
@@ -94,7 +94,7 @@ void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
     // optimized for simplicity and the case that not many
     // namespaces are declared on this annotation...
     fURIs->removeAllElements();
-    for (unsigned int i=0; i < attrCount; i++) {
+    for (XMLSize_t i=0; i < attrCount; i++) {
 
         const XMLAttr* oneAttrib = attrList.elementAt(i);
         const XMLCh* attrValue = oneAttrib->getValue();
@@ -115,7 +115,7 @@ void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
     // now we have to look through currently in-scope namespaces to see what
     // wasn't declared here
     ValueVectorOf<PrefMapElem*>* namespaceContext = fScanner->getNamespaceContext();
-    for (unsigned int j=0; j < namespaceContext->size(); j++)
+    for (XMLSize_t j=0; j < namespaceContext->size(); j++)
     {
         unsigned int prefId = namespaceContext->elementAt(j)->fPrefId;
 
@@ -147,13 +147,13 @@ void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
 
 void XSDDOMParser::startAnnotationElement( const XMLElementDecl&       elemDecl
                                          , const RefVectorOf<XMLAttr>& attrList
-                                         , const unsigned int          attrCount)
+                                         , const XMLSize_t             attrCount)
 {
     fAnnotationBuf.append(chOpenAngle);
     fAnnotationBuf.append(elemDecl.getFullName());
     //fAnnotationBuf.append(chSpace);
 
-    for(unsigned int i=0; i < attrCount; i++) {
+    for(XMLSize_t i=0; i < attrCount; i++) {
 
         const XMLAttr* oneAttr = attrList.elementAt(i);
         fAnnotationBuf.append(chSpace);

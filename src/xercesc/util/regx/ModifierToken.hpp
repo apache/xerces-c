@@ -41,10 +41,10 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    int size() const;
+    XMLSize_t size() const;
 	int getOptions() const;
 	int getOptionsMask() const;
-    Token* getChild(const int index) const;
+    Token* getChild(const XMLSize_t index) const;
 
 private:
 	// -----------------------------------------------------------------------
@@ -65,7 +65,7 @@ private:
 // ---------------------------------------------------------------------------
 //  ModifierToken: getter methods
 // ---------------------------------------------------------------------------
-inline int ModifierToken::size() const {
+inline XMLSize_t ModifierToken::size() const {
 
     return 1;
 }
@@ -80,7 +80,7 @@ inline int ModifierToken::getOptionsMask() const {
     return fOptionsMask;
 }
 
-inline Token* ModifierToken::getChild(const int) const {
+inline Token* ModifierToken::getChild(const XMLSize_t) const {
 
     return fChild;
 }

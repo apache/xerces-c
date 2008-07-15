@@ -33,7 +33,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefArrayOf: Contructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
-RefArrayOf<TElem>::RefArrayOf(const unsigned int size,
+RefArrayOf<TElem>::RefArrayOf(const XMLSize_t size,
                               MemoryManager* const manager) :
 
     fSize(size)
@@ -41,13 +41,13 @@ RefArrayOf<TElem>::RefArrayOf(const unsigned int size,
     , fMemoryManager(manager)
 {
     fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
         fArray[index] = 0;
 }
 
 template <class TElem>
 RefArrayOf<TElem>::RefArrayOf(TElem* values[],
-                              const unsigned int size,
+                              const XMLSize_t size,
                               MemoryManager* const manager) :
 
     fSize(size)
@@ -55,7 +55,7 @@ RefArrayOf<TElem>::RefArrayOf(TElem* values[],
     , fMemoryManager(manager)
 {
     fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
         fArray[index] = values[index];
 }
 
@@ -67,7 +67,7 @@ RefArrayOf(const RefArrayOf<TElem>& source) :
     , fMemoryManager(source.fMemoryManager)
 {
     fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
         fArray[index] = source.fArray[index];
 }
 
@@ -81,7 +81,7 @@ template <class TElem> RefArrayOf<TElem>::~RefArrayOf()
 //  RefArrayOf: Public operators
 // ---------------------------------------------------------------------------
 template <class TElem> TElem*& RefArrayOf<TElem>::
-operator[](const unsigned int index)
+operator[](const XMLSize_t index)
 {
     if (index >= fSize)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
@@ -89,7 +89,7 @@ operator[](const unsigned int index)
 }
 
 template <class TElem> const TElem* RefArrayOf<TElem>::
-operator[](const unsigned int index) const
+operator[](const XMLSize_t index) const
 {
     if (index >= fSize)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
@@ -111,7 +111,7 @@ operator=(const RefArrayOf<TElem>& toAssign)
     }
 
     // Copy over the source elements
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
         fArray[index] = toAssign.fArray[index];
 
     return *this;
@@ -126,7 +126,7 @@ operator==(const RefArrayOf<TElem>& toCompare) const
     if (fSize != toCompare.fSize)
         return false;
 
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
     {
         if (fArray[index] != toCompare.fArray[index])
             return false;
@@ -144,17 +144,17 @@ operator!=(const RefArrayOf<TElem>& toCompare) const
 // ---------------------------------------------------------------------------
 //  RefArrayOf: Copy operations
 // ---------------------------------------------------------------------------
-template <class TElem> unsigned int RefArrayOf<TElem>::
+template <class TElem> XMLSize_t RefArrayOf<TElem>::
 copyFrom(const RefArrayOf<TElem>& srcArray)
 {
     //
     //  Copy over as many of the source elements as will fit into
     //  this array.
     //
-    const unsigned int count = fSize < srcArray.fSize ?
+    const XMLSize_t count = fSize < srcArray.fSize ?
                                     fSize : srcArray.fSize;
 
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
         fArray[index] = srcArray.fArray[index];
 
     return count;
@@ -164,7 +164,7 @@ copyFrom(const RefArrayOf<TElem>& srcArray)
 // ---------------------------------------------------------------------------
 //  RefArrayOf: Getter methods
 // ---------------------------------------------------------------------------
-template <class TElem> unsigned int RefArrayOf<TElem>::length() const
+template <class TElem> XMLSize_t RefArrayOf<TElem>::length() const
 {
     return fSize;
 }
@@ -178,7 +178,7 @@ template <class TElem> TElem** RefArrayOf<TElem>::rawData() const
 // ---------------------------------------------------------------------------
 //  RefArrayOf: Element management methods
 // ---------------------------------------------------------------------------
-template <class TElem> void RefArrayOf<TElem>::deleteAt(const unsigned int index)
+template <class TElem> void RefArrayOf<TElem>::deleteAt(const XMLSize_t index)
 {
     if (index >= fSize)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex, fMemoryManager);
@@ -189,14 +189,14 @@ template <class TElem> void RefArrayOf<TElem>::deleteAt(const unsigned int index
 
 template <class TElem> void RefArrayOf<TElem>::deleteAllElements()
 {
-    for (unsigned int index = 0; index < fSize; index++)
+    for (XMLSize_t index = 0; index < fSize; index++)
     {
         delete fArray[index];
         fArray[index] = 0;
     }
 }
 
-template <class TElem> void RefArrayOf<TElem>::resize(const unsigned int newSize)
+template <class TElem> void RefArrayOf<TElem>::resize(const XMLSize_t newSize)
 {
     if (newSize == fSize)
         return;
@@ -211,7 +211,7 @@ template <class TElem> void RefArrayOf<TElem>::resize(const unsigned int newSize
     );//new TElem*[newSize];
 
     // Copy the existing values
-    unsigned int index = 0;
+    XMLSize_t index = 0;
     for (; index < fSize; index++)
         newArray[index] = fArray[index];
 

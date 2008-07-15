@@ -99,15 +99,15 @@ public :
     struct StackElem : public XMemory
     {
         XMLElementDecl*     fThisElement;
-        unsigned int        fReaderNum;
+        XMLSize_t           fReaderNum;
 
-        unsigned int        fChildCapacity;
-        unsigned int        fChildCount;
+        XMLSize_t           fChildCapacity;
+        XMLSize_t           fChildCount;
         QName**             fChildren;
 
         PrefMapElem*        fMap;
-        unsigned int        fMapCapacity;
-        unsigned int        fMapCount;
+        XMLSize_t           fMapCapacity;
+        XMLSize_t           fMapCount;
 
         bool                fValidationFlag;
         bool                fCommentOrPISeen;
@@ -139,16 +139,16 @@ public :
     //  Stack access
     // -----------------------------------------------------------------------
     unsigned int addLevel();
-    unsigned int addLevel(XMLElementDecl* const toSet, const unsigned int readerNum);
+    unsigned int addLevel(XMLElementDecl* const toSet, const XMLSize_t readerNum);
     const StackElem* popTop();
 
 
     // -----------------------------------------------------------------------
     //  Stack top access
     // -----------------------------------------------------------------------
-    unsigned int addChild(QName* const child, const bool toParent);
+    XMLSize_t addChild(QName* const child, const bool toParent);
     const StackElem* topElement() const;
-    void setElement(XMLElementDecl* const toSet, const unsigned int readerNum);
+    void setElement(XMLElementDecl* const toSet, const XMLSize_t readerNum);
 
     void setValidationFlag(bool validationFlag);
     bool getValidationFlag();
@@ -264,7 +264,7 @@ private :
     unsigned int                 fGlobalPoolId;
     XMLStringPool                fPrefixPool;
     StackElem**                  fStack;
-    unsigned int                 fStackCapacity;
+    XMLSize_t                    fStackCapacity;
     unsigned int                 fStackTop;
     unsigned int                 fUnknownNamespaceId;
     unsigned int                 fXMLNamespaceId;

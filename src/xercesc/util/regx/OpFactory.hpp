@@ -67,7 +67,7 @@ public:
 	CharOp* createCharOp(XMLInt32 data);
 	CharOp* createAnchorOp(XMLInt32 data);
 	CharOp* createCaptureOp(int number, const Op* const next);
-	UnionOp* createUnionOp(int size);
+	UnionOp* createUnionOp(XMLSize_t size);
 	ChildOp* createClosureOp(int id);
 	ChildOp* createNonGreedyClosureOp();
 	ChildOp* createQuestionOp(bool nonGreedy);

@@ -271,7 +271,7 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
-    unsigned int orgReader;
+    XMLSize_t orgReader;
     XMLTokens curToken;
 
     ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
@@ -479,7 +479,7 @@ bool DGXMLScanner::scanContent()
                 //  Sense what the next top level token is. According to what
                 //  this tells us, we will call something to handle that kind
                 //  of thing.
-                unsigned int orgReader;
+                XMLSize_t orgReader;
                 const XMLTokens curToken = senseNextToken(orgReader);
 
                 //  Handle character data and end of file specially. Char data
@@ -686,7 +686,7 @@ void DGXMLScanner::scanEndTag(bool& gotData)
                );
        }
 
-        unsigned int failure;
+        XMLSize_t failure;
         bool res = fValidator->checkContent
         (
             topElem->fThisElement
@@ -1180,8 +1180,8 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
 
     //  We loop until we either see a /> or >, handling attribute/value
     //  pairs until we get there.
-    unsigned int    attCount = 0;
-    unsigned int    curAttListSize = fAttrList->size();
+    XMLSize_t    attCount = 0;
+    XMLSize_t    curAttListSize = fAttrList->size();
     wasAdded = false;
 
     fElemCount++;
@@ -1488,7 +1488,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            unsigned int failure;
+            XMLSize_t failure;
             bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
             if (!res)
             {
@@ -1631,8 +1631,8 @@ bool DGXMLScanner::scanStartTagNS(bool& gotData)
 
     //  We loop until we either see a /> or >, handling attribute/value
     //  pairs until we get there.
-    unsigned int    attCount = 0;
-    unsigned int    curAttListSize = fAttrList->size();
+    XMLSize_t    attCount = 0;
+    XMLSize_t    curAttListSize = fAttrList->size();
     wasAdded = false;
 
     fElemCount++;
@@ -1948,7 +1948,7 @@ bool DGXMLScanner::scanStartTagNS(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            unsigned int failure;
+            XMLSize_t failure;
             bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
             if (!res)
             {
@@ -2289,8 +2289,8 @@ void DGXMLScanner::cleanUp()
 //  which have not been normalized. And we get the element declaration from
 //  which we will get any defaulted or fixed attribute defs and add those
 //  in as well.
-unsigned int
-DGXMLScanner::buildAttList(const unsigned int           attCount
+XMLSize_t
+DGXMLScanner::buildAttList(const XMLSize_t              attCount
                           ,       XMLElementDecl*       elemDecl
                           ,       RefVectorOf<XMLAttr>& toFill)
 {
@@ -2306,11 +2306,11 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
         return 0;
 
     // Keep up with how many attrs we end up with total
-    unsigned int retCount = attCount;
+    XMLSize_t retCount = attCount;
 
     //  And get the current size of the output vector. This lets us use
     //  existing elements until we fill it, then start adding new ones.
-    const unsigned int curAttListSize = toFill.size();
+    const XMLSize_t curAttListSize = toFill.size();
 
     //  Ok, so lets get an enumerator for the attributes of this element
     //  and run through them for well formedness and validity checks. But
@@ -2319,7 +2319,7 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
     if (hasDefs)
     {
         XMLAttDefList& attDefList = elemDecl->getAttDefList();
-        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
+        for(XMLSize_t i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
             XMLAttDef& curDef = attDefList.getAttDef(i);
@@ -2724,11 +2724,11 @@ void DGXMLScanner::updateNSMap(const    XMLCh* const attrPrefix
     );
 }
 
-void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount, 
+void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, XMLSize_t attCount, 
                                                 XMLElementDecl*       elemDecl)
 {
     // Map prefixes to uris
-    for (unsigned int i=0; i < fAttrNSList->size(); i++) {
+    for (XMLSize_t i=0; i < fAttrNSList->size(); i++) {
         XMLAttr* providedAttr = fAttrNSList->elementAt(i);
         providedAttr->setURIId(
             resolvePrefix(providedAttr->getPrefix(), ElemStack::Mode_Attribute)
@@ -2740,8 +2740,8 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
      // Decide if to use hash table to do duplicate checking
     bool toUseHashTable = false;
 
-	setAttrDupChkRegistry((unsigned int&)attCount, toUseHashTable);
-    for (int index = 0; index < attCount; index++)
+	setAttrDupChkRegistry(attCount, toUseHashTable);
+    for (XMLSize_t index = 0; index < attCount; index++)
     {
         // check for duplicate namespace attributes:
         // by checking for qualified names with the same local part and with prefixes 
@@ -2750,7 +2750,7 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
         if (!toUseHashTable)
         {
             XMLAttr* loopAttr;
-            for (int attrIndex=0; attrIndex < index; attrIndex++) {
+            for (XMLSize_t attrIndex=0; attrIndex < index; attrIndex++) {
                 loopAttr = theAttrList->elementAt(attrIndex);
                 if (loopAttr->getURIId() == curAttr->getURIId() &&
                     XMLString::equals(loopAttr->getName(), curAttr->getName())) {
@@ -2878,7 +2878,7 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
 
     //  We have to get the current reader because we have to ignore closing
     //  quotes until we hit the same reader again.
-    const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr.getCurrentReaderNum();
 
     // Get attribute def - to check to see if it's declared externally or not
     bool  isAttExternal = (attDef)
@@ -3453,7 +3453,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
     escaped = false;
 
     // We have to insure that its all in one entity
-    const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr.getCurrentReaderNum();
 
     //  If the next char is a pound, then its a character reference and we
     //  need to expand it always.

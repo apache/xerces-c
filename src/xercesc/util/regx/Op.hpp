@@ -77,12 +77,12 @@ public:
             const Op*    getNextOp() const;
     virtual XMLInt32     getData() const;
     virtual XMLInt32     getData2() const;
-    virtual int          getSize() const;
+    virtual XMLSize_t    getSize() const;
     virtual int          getRefNo() const;
     virtual const Op*    getConditionFlow() const;
     virtual const Op*    getYesFlow() const;
     virtual const Op*    getNoFlow() const;
-    virtual const Op*    elementAt(int index) const;
+    virtual const Op*    elementAt(XMLSize_t index) const;
     virtual const Op*    getChild() const;
     virtual const Token* getToken() const;
     virtual const XMLCh* getLiteral() const;
@@ -152,15 +152,15 @@ public:
 	// -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	UnionOp(const opType type, const int size,
+	UnionOp(const opType type, const XMLSize_t size,
             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	~UnionOp() { delete fBranches; }
 
 	// -----------------------------------------------------------------------
 	// Getter functions
 	// -----------------------------------------------------------------------
-	int getSize() const;
-	const Op* elementAt(int index) const;
+	XMLSize_t getSize() const;
+	const Op* elementAt(XMLSize_t index) const;
 
 	// -----------------------------------------------------------------------
 	// Setter functions

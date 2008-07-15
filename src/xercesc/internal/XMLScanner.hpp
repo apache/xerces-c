@@ -484,7 +484,7 @@ protected:
     void checkInternalDTD(bool hasExtSubset, const XMLCh* const sysId, const XMLCh* const pubId);
     void checkIDRefs();
     bool isLegalToken(const XMLPScanToken& toCheck);
-    XMLTokens senseNextToken(unsigned int& orgReader);
+    XMLTokens senseNextToken(XMLSize_t& orgReader);
     void initValidator(XMLValidator* theValidator);
     inline void resetValidationContext();
     unsigned int *getNewUIntPtr();
@@ -494,7 +494,7 @@ protected:
     inline
     void setAttrDupChkRegistry
          (
-            const unsigned int &attrNumber
+            const XMLSize_t    &attrNumber
           ,       bool         &toUseHashTable
          );
 
@@ -1355,7 +1355,7 @@ inline void XMLScanner::resetValidationContext()
     fEntityDeclPoolRetrieved = false;
 }
 
-inline void XMLScanner::setAttrDupChkRegistry(const unsigned int &attrNumber
+inline void XMLScanner::setAttrDupChkRegistry(const XMLSize_t    &attrNumber
                                             ,       bool         &toUseHashTable)
 {
    // once the attribute exceed 100, we use hash table to check duplication

@@ -148,9 +148,9 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
                                          const int initialDepth) {
 
     // initialize value stores for unique fields
-    unsigned int icCount = elemDecl->getIdentityConstraintCount();
+    XMLSize_t icCount = elemDecl->getIdentityConstraintCount();
 
-    for (unsigned int i=0; i<icCount; i++) {
+    for (XMLSize_t i=0; i<icCount; i++) {
 
         IdentityConstraint* ic = elemDecl->getIdentityConstraintAt(i);
         ValueStore* valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);

@@ -133,7 +133,7 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
         );
         if(!fElemNonDeclPool)
             fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
-        const unsigned int elemId = fElemNonDeclPool->put(retVal);
+        const XMLSize_t elemId = fElemNonDeclPool->put(retVal);
         retVal->setId(elemId);
         wasAdded = true;
     }

@@ -287,7 +287,7 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
       *
       * @return The element decl id of this element declaration.
       */
-    unsigned int getId() const;
+    XMLSize_t getId() const;
 
     /** Indicate whether this element type has been declared yet
       *
@@ -383,7 +383,7 @@ class XMLPARSER_EXPORT XMLElementDecl : public XSerializable, public XMemory
       * by the grammar which created this object, and will provide this
       * decl object with a unique id within the parse event that created it.
       */
-    void setId(const unsigned int newId);
+    void setId(const XMLSize_t newId);
 
 
     /** Set the element decl to indicate external declaration
@@ -462,7 +462,7 @@ private :
     MemoryManager*      fMemoryManager;
     QName*              fElementName;
     CreateReasons       fCreateReason;
-    unsigned int        fId;
+    XMLSize_t           fId;
     bool                fExternalElement;
 };
 
@@ -505,7 +505,7 @@ inline XMLElementDecl::CreateReasons XMLElementDecl::getCreateReason() const
     return fCreateReason;
 }
 
-inline unsigned int XMLElementDecl::getId() const
+inline XMLSize_t XMLElementDecl::getId() const
 {
     return fId;
 }
@@ -536,7 +536,7 @@ XMLElementDecl::setCreateReason(const XMLElementDecl::CreateReasons newReason)
     fCreateReason = newReason;
 }
 
-inline void XMLElementDecl::setId(const unsigned int newId)
+inline void XMLElementDecl::setId(const XMLSize_t newId)
 {
     fId = newId;
 }

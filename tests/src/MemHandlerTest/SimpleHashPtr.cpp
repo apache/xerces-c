@@ -29,9 +29,9 @@ SimpleHashPtr::~SimpleHashPtr()
 {
 }
 
-unsigned int SimpleHashPtr::getHashVal(const void *const key, unsigned int mod)
+XMLSize_t SimpleHashPtr::getHashVal(const void *const key, XMLSize_t mod)
 {
- return (unsigned int)((XMLSize_t)key % mod);
+ return ((XMLSize_t)key % mod);
 }
 
 bool SimpleHashPtr::equals(const void *const key1, const void *const key2)

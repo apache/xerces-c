@@ -282,13 +282,13 @@ private:
     (
         const   XMLElementDecl&         elemDecl
         , const RefVectorOf<XMLAttr>&   attrList
-        , const unsigned int            attrCount
+        , const XMLSize_t               attrCount
     );
     void startAnnotationElement
     (
         const   XMLElementDecl&         elemDecl
         , const RefVectorOf<XMLAttr>&   attrList
-        , const unsigned int            attrCount
+        , const XMLSize_t               attrCount
     );
     void endAnnotationElement
     (

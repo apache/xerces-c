@@ -164,26 +164,21 @@ bool XMLChar1_0::isValidQName(const   XMLCh* const    toCheck
 {
     if (count == 0)
         return false;
-
-    XMLSize_t length = count;
-    int colonPos = XMLString::indexOf(toCheck, chColon);
-    if ((colonPos == 0) ||         // ":abcd"
-        (colonPos == ((int)length)-1))    // "abcd:"
+    XMLSize_t colonPos=0;
+    // don't use XMLString::indexOf, we must stop after 'count' chars
+    while(colonPos<count && toCheck[colonPos]!=chColon)
+        colonPos++;
+    if ((colonPos == 0) ||        // ":abcd"
+        (colonPos+1 == count))    // "abcd:"
         return false;
 
-    //
-    // prefix
-    //
-    if (colonPos != -1)
+    if(colonPos != count)
     {
-        if (isValidNCName(toCheck, colonPos) == false)
-            return false;
+        // prefix & local part
+        return isValidNCName(toCheck, colonPos) && 
+               isValidNCName(toCheck+colonPos+1, count-colonPos-1);
     }
-
-    //
-    // LocalPart
-    //
-    return isValidNCName(toCheck+colonPos+1, length-colonPos-1);
+    return isValidNCName(toCheck, count);
 }
 
 //

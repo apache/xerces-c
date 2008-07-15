@@ -37,9 +37,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefHash3KeysIdPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal>
-RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
+RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
                                             , const bool         adoptElems
-                                            , const unsigned int initSize
+                                            , const XMLSize_t    initSize
                                             , MemoryManager* const manager) :
     fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
@@ -64,10 +64,10 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
 }
 
 template <class TVal>
-RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
+RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
                                             , const bool         adoptElems
                                             , HashBase*          hashBase
-                                            , const unsigned int initSize
+                                            , const XMLSize_t    initSize
                                             , MemoryManager* const manager) :
     fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
@@ -94,8 +94,8 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
 }
 
 template <class TVal>
-RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
-                                            , const unsigned int initSize
+RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
+                                            , const XMLSize_t    initSize
                                             , MemoryManager* const manager) :
     fMemoryManager(manager)
     , fAdoptedElems(true)
@@ -119,7 +119,7 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const unsigned int modulus)
+template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const XMLSize_t modulus)
 {
     if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
@@ -152,7 +152,7 @@ template <class TVal> RefHash3KeysIdPool<TVal>::~RefHash3KeysIdPool()
 template <class TVal> bool RefHash3KeysIdPool<TVal>::isEmpty() const
 {
     // Just check the bucket list for non-empty elements
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
+    for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
         if (fBucketList[buckInd] != 0)
             return false;
@@ -163,7 +163,7 @@ template <class TVal> bool RefHash3KeysIdPool<TVal>::isEmpty() const
 template <class TVal> bool RefHash3KeysIdPool<TVal>::
 containsKey(const void* const key1, const int key2, const int key3) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const RefHash3KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, key3, hashVal);
     return (findIt != 0);
 }
@@ -173,7 +173,7 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::removeAll()
     if (fIdCounter == 0) return;
 
     // Clean up the buckets first
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
+    for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
         // Get the bucket list head for this entry
         RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[buckInd];
@@ -213,7 +213,7 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::removeAll()
 template <class TVal> TVal*
 RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const int key3)
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     RefHash3KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, key3, hashVal);
     if (!findIt)
         return 0;
@@ -223,7 +223,7 @@ RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const
 template <class TVal> const TVal*
 RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const int key3) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const RefHash3KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, key3, hashVal);
     if (!findIt)
         return 0;
@@ -257,7 +257,7 @@ MemoryManager* RefHash3KeysIdPool<TVal>::getMemoryManager() const
 }
 
 template <class TVal>
-unsigned int RefHash3KeysIdPool<TVal>::getHashModulus() const
+XMLSize_t RefHash3KeysIdPool<TVal>::getHashModulus() const
 {
     return fHashModulus;
 }
@@ -265,12 +265,12 @@ unsigned int RefHash3KeysIdPool<TVal>::getHashModulus() const
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Putters
 // ---------------------------------------------------------------------------
-template <class TVal> unsigned int
+template <class TVal> XMLSize_t
 RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueToAdopt)
 {
     // First see if the key exists already
-    unsigned int hashVal;
-    unsigned int retId;
+    XMLSize_t hashVal;
+    XMLSize_t retId;
     RefHash3KeysTableBucketElem<TVal>* newBucket = findBucketElem(key1, key2, key3, hashVal);
 
     //
@@ -308,7 +308,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
         if (fIdCounter + 1 == fIdPtrsCount)
         {
             // Create a new count 1.5 times larger and allocate a new array
-            unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
+            XMLSize_t newCount = (XMLSize_t)(fIdPtrsCount * 1.5);
             TVal** newArray = (TVal**) fMemoryManager->allocate
             (
                 newCount * sizeof(TVal*)
@@ -338,7 +338,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
 //  RefHash3KeysIdPool: Private methods
 // ---------------------------------------------------------------------------
 template <class TVal> RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal>::
-findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal)
+findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal)
 {
     // Hash the key
     hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
@@ -357,7 +357,7 @@ findBucketElem(const void* const key1, const int key2, const int key3, unsigned 
 }
 
 template <class TVal> const RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal>::
-findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal) const
+findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal) const
 {
     // Hash the key
     hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
@@ -444,14 +444,14 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::Reset()
 
 }
 
-template <class TVal> int RefHash3KeysIdPoolEnumerator<TVal>::size() const
+template <class TVal> XMLSize_t RefHash3KeysIdPoolEnumerator<TVal>::size() const
 {
     return fToEnum->fIdCounter;
 }
 
 template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::resetKey()
 {
-    fCurHash = (unsigned int)-1;
+    fCurHash = (XMLSize_t)-1;
     fCurElem = 0;
     findNext();
 }

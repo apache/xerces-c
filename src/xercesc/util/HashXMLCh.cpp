@@ -28,7 +28,7 @@ HashXMLCh::~HashXMLCh()
 {
 }
 
-unsigned int HashXMLCh::getHashVal(const void *const key, unsigned int mod
+XMLSize_t HashXMLCh::getHashVal(const void *const key, XMLSize_t mod
                                    , MemoryManager* const manager)
 {
 	return XMLString::hash((XMLCh*)key, mod, manager);

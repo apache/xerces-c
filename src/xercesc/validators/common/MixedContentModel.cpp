@@ -79,7 +79,7 @@ MixedContentModel::MixedContentModel(const bool             dtd
     (
         fCount * sizeof(ContentSpecNode::NodeTypes)
     ); //new ContentSpecNode::NodeTypes[fCount];
-    for (unsigned int index = 0; index < fCount; index++) {
+    for (XMLSize_t index = 0; index < fCount; index++) {
         fChildren[index] = new (fMemoryManager) QName(*children.elementAt(index));
         fChildTypes[index] = childTypes.elementAt(index);
     }
@@ -87,7 +87,7 @@ MixedContentModel::MixedContentModel(const bool             dtd
 
 MixedContentModel::~MixedContentModel()
 {
-    for (unsigned int index = 0; index < fCount; index++) {
+    for (XMLSize_t index = 0; index < fCount; index++) {
         delete fChildren[index];
     }
     fMemoryManager->deallocate(fChildren); //delete [] fChildren;
@@ -104,10 +104,10 @@ bool MixedContentModel::hasDups() const
     if (fCount == 1)
         return false;
 
-    for (unsigned int index = 0; index < fCount; index++)
+    for (XMLSize_t index = 0; index < fCount; index++)
     {
         const QName* curVal = fChildren[index];
-        for (unsigned int iIndex = 0; iIndex < fCount; iIndex++)
+        for (XMLSize_t iIndex = 0; iIndex < fCount; iIndex++)
         {
             if (iIndex == index)
                 continue;
@@ -140,9 +140,9 @@ bool MixedContentModel::hasDups() const
 //
 bool
 MixedContentModel::validateContent( QName** const         children
-                                  , unsigned int          childCount
+                                  , XMLSize_t             childCount
                                   , unsigned int
-                                  , unsigned int*         indexFailingChild
+                                  , XMLSize_t*            indexFailingChild
                                   , MemoryManager*    const) const
 {
     // must match order
@@ -267,11 +267,11 @@ MixedContentModel::validateContent( QName** const         children
 
 
 bool MixedContentModel::validateContentSpecial(QName** const          children
-                                            , unsigned int            childCount
+                                            , XMLSize_t               childCount
                                             , unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool
-                                            , unsigned int*           indexFailingChild
+                                            , XMLSize_t*              indexFailingChild
                                             , MemoryManager*    const) const
 {
 

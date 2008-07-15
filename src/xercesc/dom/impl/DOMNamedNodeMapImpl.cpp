@@ -96,7 +96,7 @@ DOMNode * DOMNamedNodeMapImpl::item(XMLSize_t index) const
 
 DOMNode * DOMNamedNodeMapImpl::getNamedItem(const XMLCh *name) const
 {
-    unsigned int hash=XMLString::hash(name,MAP_SIZE);
+    XMLSize_t hash=XMLString::hash(name,MAP_SIZE);
     if(fBuckets[hash]==0)
         return 0;
 
@@ -125,7 +125,7 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
         throw DOMException(
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
-    unsigned int hash=XMLString::hash(name,MAP_SIZE);
+    XMLSize_t hash=XMLString::hash(name,MAP_SIZE);
     if(fBuckets[hash]==0)
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
@@ -171,7 +171,7 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItem(DOMNode * arg)
     argImpl->isOwned(true);
 
     const XMLCh* name=arg->getNodeName();
-    unsigned int hash=XMLString::hash(name,MAP_SIZE);
+    XMLSize_t hash=XMLString::hash(name,MAP_SIZE);
     if(fBuckets[hash]==0)
         fBuckets[hash] = new (doc) DOMNodeVector(doc, 3);
 

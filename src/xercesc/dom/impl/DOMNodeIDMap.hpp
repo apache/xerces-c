@@ -50,7 +50,7 @@ class DOMDocument;
 class DOMNodeIDMap {
 public:
 
-    DOMNodeIDMap(int initialSize, DOMDocument *doc);    // Create a new hash table, sized to hold "initialSize"
+    DOMNodeIDMap(XMLSize_t initialSize, DOMDocument *doc);    // Create a new hash table, sized to hold "initialSize"
                                      //  Entries.  It will automatically grow if need be.
 
     ~DOMNodeIDMap();
@@ -71,12 +71,12 @@ private:
 
 private:
     DOMAttr      **fTable;
-    unsigned int   fSizeIndex;              // Index of the current table size in the
+    XMLSize_t      fSizeIndex;              // Index of the current table size in the
                                             //   array of possible table sizes.
-	unsigned int   fSize;                   // The current size of the table array
+	XMLSize_t      fSize;                   // The current size of the table array
                                             //   (number of slots, not bytes.)
-    unsigned int  fNumEntries;              // The number of entries used.
-    unsigned int  fMaxEntries;              // The max number of entries to use before
+    XMLSize_t      fNumEntries;              // The number of entries used.
+    XMLSize_t      fMaxEntries;              // The max number of entries to use before
                                             //   growing the table.
     DOMDocument *fDoc;                      // The owning document.
 };

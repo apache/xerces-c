@@ -65,11 +65,11 @@ public:
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
 	// backwards compatability - default hasher is SimpleHasPtrh
-    SimpleValueHashTableOf(const unsigned int modulus);
+    SimpleValueHashTableOf(const XMLSize_t modulus);
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
 	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
 	// may delete the hasher of a different hashtable if both use the same hasher.
-    SimpleValueHashTableOf(const unsigned int modulus, SimpleHashPtr* hashBase);
+    SimpleValueHashTableOf(const XMLSize_t modulus, SimpleHashPtr* hashBase);
     ~SimpleValueHashTableOf();
 
 
@@ -106,10 +106,10 @@ private:
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal);
-    const ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
-    void removeBucketElem(const void* const key, unsigned int& hashVal);
-	void initialize(const unsigned int modulus);
+    ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, XMLSize_t& hashVal);
+    const ValueHashTableBucketElem<TVal>* findBucketElem(const void* const key, XMLSize_t& hashVal) const;
+    void removeBucketElem(const void* const key, XMLSize_t& hashVal);
+	void initialize(const XMLSize_t modulus);
 
 
     // -----------------------------------------------------------------------
@@ -127,8 +127,8 @@ private:
 	//      The hasher for the key data type.
     // -----------------------------------------------------------------------
     ValueHashTableBucketElem<TVal>** fBucketList;
-    unsigned int                    fHashModulus;
-	SimpleHashPtr*                       fHash;
+    XMLSize_t                        fHashModulus;
+	SimpleHashPtr*                   fHash;
 };
 
 
@@ -182,7 +182,7 @@ private :
     // -----------------------------------------------------------------------
     bool                            fAdopted;
     ValueHashTableBucketElem<TVal>* fCurElem;
-    unsigned int                    fCurHash;
+    XMLSize_t                       fCurHash;
     SimpleValueHashTableOf<TVal>*   fToEnum;
 
 };
@@ -196,7 +196,7 @@ private :
 // ---------------------------------------------------------------------------
 //  ValueHashTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> SimpleValueHashTableOf<TVal>::SimpleValueHashTableOf(const unsigned int modulus
+template <class TVal> SimpleValueHashTableOf<TVal>::SimpleValueHashTableOf(const XMLSize_t modulus
             , SimpleHashPtr* hashBase)
 	: fBucketList(0), fHashModulus(modulus)
 {
@@ -205,7 +205,7 @@ template <class TVal> SimpleValueHashTableOf<TVal>::SimpleValueHashTableOf(const
 	fHash = hashBase;
 }
 
-template <class TVal> SimpleValueHashTableOf<TVal>::SimpleValueHashTableOf(const unsigned int modulus)
+template <class TVal> SimpleValueHashTableOf<TVal>::SimpleValueHashTableOf(const XMLSize_t modulus)
 	: fBucketList(0), fHashModulus(modulus)
 {
 	initialize(modulus);
@@ -214,14 +214,14 @@ template <class TVal> SimpleValueHashTableOf<TVal>::SimpleValueHashTableOf(const
 	fHash = new HashXMLCh();
 }
 
-template <class TVal> void SimpleValueHashTableOf<TVal>::initialize(const unsigned int modulus)
+template <class TVal> void SimpleValueHashTableOf<TVal>::initialize(const XMLSize_t modulus)
 {
 	if (modulus == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
     fBucketList = new ValueHashTableBucketElem<TVal>*[fHashModulus];
-    for (unsigned int index = 0; index < fHashModulus; index++)
+    for (XMLSize_t index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 }
 
@@ -241,7 +241,7 @@ template <class TVal> SimpleValueHashTableOf<TVal>::~SimpleValueHashTableOf()
 template <class TVal> bool SimpleValueHashTableOf<TVal>::isEmpty() const
 {
     // Just check the bucket list for non-empty elements
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
+    for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
         if (fBucketList[buckInd] != 0)
             return false;
@@ -252,7 +252,7 @@ template <class TVal> bool SimpleValueHashTableOf<TVal>::isEmpty() const
 template <class TVal> bool SimpleValueHashTableOf<TVal>::
 containsKey(const void* const key) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const ValueHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     return (findIt != 0);
 }
@@ -260,14 +260,14 @@ containsKey(const void* const key) const
 template <class TVal> void SimpleValueHashTableOf<TVal>::
 removeKey(const void* const key)
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     removeBucketElem(key, hashVal);
 }
 
 template <class TVal> void SimpleValueHashTableOf<TVal>::removeAll()
 {
     // Clean up the buckets first
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
+    for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
         // Get the bucket list head for this entry
         ValueHashTableBucketElem<TVal>* curElem = fBucketList[buckInd];
@@ -293,7 +293,7 @@ template <class TVal> void SimpleValueHashTableOf<TVal>::removeAll()
 // ---------------------------------------------------------------------------
 template <class TVal> TVal& SimpleValueHashTableOf<TVal>::get(const void* const key)
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     ValueHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     if (!findIt)
         ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
@@ -304,7 +304,7 @@ template <class TVal> TVal& SimpleValueHashTableOf<TVal>::get(const void* const 
 template <class TVal> const TVal& SimpleValueHashTableOf<TVal>::
 get(const void* const key) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const ValueHashTableBucketElem<TVal>* findIt = findBucketElem(key, hashVal);
     if (!findIt)
         ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
@@ -319,7 +319,7 @@ get(const void* const key) const
 template <class TVal> void SimpleValueHashTableOf<TVal>::put(void* key, const TVal& valueToAdopt)
 {
     // First see if the key exists already
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     ValueHashTableBucketElem<TVal>* newBucket = findBucketElem(key, hashVal);
 
     //
@@ -344,7 +344,7 @@ template <class TVal> void SimpleValueHashTableOf<TVal>::put(void* key, const TV
 //  SimpleValueHashTableOf: Private methods
 // ---------------------------------------------------------------------------
 template <class TVal> ValueHashTableBucketElem<TVal>* SimpleValueHashTableOf<TVal>::
-findBucketElem(const void* const key, unsigned int& hashVal)
+findBucketElem(const void* const key, XMLSize_t& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus);
@@ -364,7 +364,7 @@ findBucketElem(const void* const key, unsigned int& hashVal)
 }
 
 template <class TVal> const ValueHashTableBucketElem<TVal>* SimpleValueHashTableOf<TVal>::
-findBucketElem(const void* const key, unsigned int& hashVal) const
+findBucketElem(const void* const key, XMLSize_t& hashVal) const
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus);
@@ -385,7 +385,7 @@ findBucketElem(const void* const key, unsigned int& hashVal) const
 
 
 template <class TVal> void SimpleValueHashTableOf<TVal>::
-removeBucketElem(const void* const key, unsigned int& hashVal)
+removeBucketElem(const void* const key, XMLSize_t& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus);
@@ -437,7 +437,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
 // ---------------------------------------------------------------------------
 template <class TVal> ValueHashTableOfEnumerator<TVal>::
 ValueHashTableOfEnumerator(SimpleValueHashTableOf<TVal>* const toEnum, const bool adopt)
-	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+	: fAdopted(adopt), fCurElem(0), fCurHash((XMLSize_t)-1), fToEnum(toEnum)
 {
     if (!toEnum)
         ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
@@ -492,7 +492,7 @@ template <class TVal> TVal& ValueHashTableOfEnumerator<TVal>::nextElement()
 
 template <class TVal> void ValueHashTableOfEnumerator<TVal>::Reset()
 {
-    fCurHash = (unsigned int)-1;
+    fCurHash = (XMLSize_t)-1;
     fCurElem = 0;
     findNext();
 }

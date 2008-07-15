@@ -309,7 +309,7 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
-    unsigned int orgReader;
+    XMLSize_t orgReader;
     XMLTokens curToken;
 
     ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
@@ -578,7 +578,7 @@ void IGXMLScanner::cleanUp()
 //  This method is called from scanStartTag() to handle the very raw initial
 //  scan of the attributes. It just fills in the passed collection with
 //  key/value pairs for each attribute. No processing is done on them at all.
-unsigned int
+XMLSize_t
 IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                           ,       RefVectorOf<KVStringPair>&  toFill
                           ,       bool&                       isEmpty)
@@ -586,8 +586,8 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
     //  Keep up with how many attributes we've seen so far, and how many
     //  elements are available in the vector. This way we can reuse old
     //  elements until we run out and then expand it.
-    unsigned int attCount = 0;
-    unsigned int curVecSize = toFill.size();
+    XMLSize_t attCount = 0;
+    XMLSize_t curVecSize = toFill.size();
 
     // Assume it is not empty
     isEmpty = false;
@@ -828,7 +828,7 @@ bool IGXMLScanner::scanContent()
                 //  Sense what the next top level token is. According to what
                 //  this tells us, we will call something to handle that kind
                 //  of thing.
-                unsigned int orgReader;
+                XMLSize_t orgReader;
                 const XMLTokens curToken = senseNextToken(orgReader);
 
                 //  Handle character data and end of file specially. Char data
@@ -1073,7 +1073,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
                , topElem->fThisElement->getFullName()
                );
        }
-        unsigned int failure;
+        XMLSize_t failure;
         bool res = fValidator->checkContent
         (
             topElem->fThisElement
@@ -1664,8 +1664,8 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
 
     //  We loop until we either see a /> or >, handling attribute/value
     //  pairs until we get there.
-    unsigned int    attCount = 0;
-    unsigned int    curAttListSize = fAttrList->size();
+    XMLSize_t    attCount = 0;
+    XMLSize_t    curAttListSize = fAttrList->size();
     wasAdded = false;
 
     fElemCount++;
@@ -2055,7 +2055,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            unsigned int failure;
+            XMLSize_t failure;
             bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
             if (!res)
             {
@@ -2141,7 +2141,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  normalization of them at all, since we don't know yet what type they
     //  might be (since we need the element decl in order to do that.)
     bool isEmpty;
-    unsigned int attCount = rawAttrScan
+    XMLSize_t attCount = rawAttrScan
     (
         fQNameBuf.getRawBuffer()
         , *fRawAttrList
@@ -2677,7 +2677,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            unsigned int failure;
+            XMLSize_t failure;
             bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
             if (!res)
             {

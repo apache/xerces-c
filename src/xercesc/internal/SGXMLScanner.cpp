@@ -303,7 +303,7 @@ bool SGXMLScanner::scanNext(XMLPScanToken& token)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Scan_BadPScanToken, fMemoryManager);
 
     // Find the next token and remember the reader id
-    unsigned int orgReader;
+    XMLSize_t orgReader;
     XMLTokens curToken;
 
     ReaderMgrResetType  resetReaderMgr(&fReaderMgr, &ReaderMgr::reset);
@@ -491,7 +491,7 @@ bool SGXMLScanner::scanNext(XMLPScanToken& token)
 //  This method is called from scanStartTag() to handle the very raw initial
 //  scan of the attributes. It just fills in the passed collection with
 //  key/value pairs for each attribute. No processing is done on them at all.
-unsigned int
+XMLSize_t
 SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                           ,       RefVectorOf<KVStringPair>&  toFill
                           ,       bool&                       isEmpty)
@@ -499,8 +499,8 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
     //  Keep up with how many attributes we've seen so far, and how many
     //  elements are available in the vector. This way we can reuse old
     //  elements until we run out and then expand it.
-    unsigned int attCount = 0;
-    unsigned int curVecSize = toFill.size();
+    XMLSize_t attCount = 0;
+    XMLSize_t curVecSize = toFill.size();
 
     // Assume it is not empty
     isEmpty = false;
@@ -740,7 +740,7 @@ bool SGXMLScanner::scanContent()
                 //  Sense what the next top level token is. According to what
                 //  this tells us, we will call something to handle that kind
                 //  of thing.
-                unsigned int orgReader;
+                XMLSize_t orgReader;
                 const XMLTokens curToken = senseNextToken(orgReader);
 
                 //  Handle character data and end of file specially. Char data
@@ -917,7 +917,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     DatatypeValidator* psviMemberType = 0;
     if (fValidate)
     {
-        unsigned int failure;
+        XMLSize_t failure;
         bool res = fValidator->checkContent
         (
             topElem->fThisElement
@@ -1105,7 +1105,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  might be (since we need the element decl in order to do that.)
     const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
     bool isEmpty;
-    unsigned int attCount = rawAttrScan
+    XMLSize_t attCount = rawAttrScan
     (
         qnameRawBuf
         , *fRawAttrList
@@ -1668,7 +1668,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            unsigned int failure;
+            XMLSize_t failure;
             bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
             if (!res)
             {
@@ -2104,9 +2104,9 @@ void SGXMLScanner::resizeRawAttrColonList() {
 //  which have not been normalized. And we get the element declaration from
 //  which we will get any defaulted or fixed attribute defs and add those
 //  in as well.
-unsigned int
+XMLSize_t
 SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
-                          , const unsigned int                attCount
+                          , const XMLSize_t                   attCount
                           ,       XMLElementDecl*             elemDecl
                           ,       RefVectorOf<XMLAttr>&       toFill)
 {
@@ -2137,11 +2137,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         return 0;
 
     // Keep up with how many attrs we end up with total
-    unsigned int retCount = 0;
+    XMLSize_t retCount = 0;
 
     //  And get the current size of the output vector. This lets us use
     //  existing elements until we fill it, then start adding new ones.
-    const unsigned int curAttListSize = toFill.size();
+    const XMLSize_t curAttListSize = toFill.size();
 
     //  We need a buffer into which raw scanned attribute values will be
     //  normalized.
@@ -2150,7 +2150,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
     //  Loop through our explicitly provided attributes, which are in the raw
     //  scanned form, and build up XMLAttr objects.
-    unsigned int index;
+    XMLSize_t index;
     for (index = 0; index < attCount; index++)
     {
         PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
@@ -3522,13 +3522,13 @@ void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     );
 }
 
-void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
+void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
 {
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
     //  When we find one, send it off to be used to update the element stack's
     //  namespace mappings.
-    int index;
+    XMLSize_t index;
     for (index = 0; index < attCount; index++)
     {
         // each attribute has the prefix:suffix="value"
@@ -3618,11 +3618,11 @@ void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
     BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr, fMemoryManager);
     Janitor<BaseRefVectorOf<XMLCh> > janLoc(schemaLocation);
 
-    unsigned int size = schemaLocation->size();
+    XMLSize_t size = schemaLocation->size();
     if (size % 2 != 0 ) {
         emitError(XMLErrs::BadSchemaLocation);
     } else {
-        for(unsigned int i=0; i<size; i=i+2) {
+        for(XMLSize_t i=0; i<size; i=i+2) {
             resolveSchemaGrammar(schemaLocation->elementAt(i+1), schemaLocation->elementAt(i));
         }
     }
@@ -3995,7 +3995,7 @@ bool SGXMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& to
 
     //  We have to get the current reader because we have to ignore closing
     //  quotes until we hit the same reader again.
-    const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr.getCurrentReaderNum();
 
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
@@ -4549,7 +4549,7 @@ SGXMLScanner::scanEntityRef(  const   bool
     escaped = false;
 
     // We have to insure that its all in one entity
-    const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr.getCurrentReaderNum();
 
     //  If the next char is a pound, then its a character reference and we
     //  need to expand it always.
@@ -4665,8 +4665,8 @@ bool SGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
     SubstitutionGroupComparator comparator(fGrammarResolver, fURIStringPool);
 
     if (cv) {
-        unsigned int i = 0;
-        unsigned int leafCount = cv->getLeafCount();
+        XMLSize_t i = 0;
+        XMLSize_t leafCount = cv->getLeafCount();
 
         for (; i < leafCount; i++) {
 
@@ -4758,10 +4758,10 @@ bool SGXMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned in
     }
     else if (wildCardType == XMLAttDef::Any_List) {
         ValueVectorOf<unsigned int>* nameURIList = attWildCard->getNamespaceList();
-        unsigned int listSize = (nameURIList) ? nameURIList->size() : 0;
+        XMLSize_t listSize = (nameURIList) ? nameURIList->size() : 0;
 
         if (listSize) {
-            for (unsigned int i=0; i < listSize; i++) {
+            for (XMLSize_t i=0; i < listSize; i++) {
                 if (nameURIList->elementAt(i) == uriId)
                     anyEncountered = true;
             }

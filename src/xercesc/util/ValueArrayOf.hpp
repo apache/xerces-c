@@ -38,13 +38,13 @@ public :
     // -----------------------------------------------------------------------
     ValueArrayOf
     (
-           const unsigned int   size
+           const XMLSize_t      size
          , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 	ValueArrayOf
     (
           const TElem*         values
-        , const unsigned int   size
+        , const XMLSize_t      size
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 	ValueArrayOf(const ValueArrayOf<TElem>& source);
@@ -54,8 +54,8 @@ public :
     // -----------------------------------------------------------------------
     //  Public operators
     // -----------------------------------------------------------------------
-	TElem& operator[](const unsigned int index);
-	const TElem& operator[](const unsigned int index) const;
+	TElem& operator[](const XMLSize_t index);
+	const TElem& operator[](const XMLSize_t index) const;
 	ValueArrayOf<TElem>& operator=(const ValueArrayOf<TElem>& toAssign);
 	bool operator==(const ValueArrayOf<TElem>& toCompare) const;
 	bool operator!=(const ValueArrayOf<TElem>& toCompare) const;
@@ -64,27 +64,27 @@ public :
     // -----------------------------------------------------------------------
     //  Copy operations
     // -----------------------------------------------------------------------
-    unsigned int copyFrom(const ValueArrayOf<TElem>& srcArray);
+    XMLSize_t copyFrom(const ValueArrayOf<TElem>& srcArray);
 
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	unsigned int length() const;
+	XMLSize_t length() const;
 	TElem* rawData() const;
 
 
     // -----------------------------------------------------------------------
     //  Miscellaneous methods
     // -----------------------------------------------------------------------
-    void resize(const unsigned int newSize);
+    void resize(const XMLSize_t newSize);
 
 
 private :
     // -----------------------------------------------------------------------
     //  Data members
     // -----------------------------------------------------------------------
-	unsigned int    fSize;
+	XMLSize_t       fSize;
 	TElem*          fArray;
     MemoryManager*  fMemoryManager;
 };
@@ -137,7 +137,7 @@ private :
     //      The value array being enumerated.
     // -----------------------------------------------------------------------
     bool                    fAdopted;
-    unsigned int            fCurIndex;
+    XMLSize_t               fCurIndex;
     ValueArrayOf<TElem>*    fToEnum;
 };
 

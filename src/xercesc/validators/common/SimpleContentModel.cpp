@@ -41,16 +41,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 //
 bool
 SimpleContentModel::validateContent(QName** const       children
-                                  , unsigned int        childCount
+                                  , XMLSize_t           childCount
                                   , unsigned int
-                                  , unsigned int*       indexFailingChild
+                                  , XMLSize_t*          indexFailingChild
                                   , MemoryManager*    const) const
 {
     //
     //  According to the type of operation, we do the correct type of
     //  content check.
     //
-    unsigned int index;
+    XMLSize_t index;
     switch(fOp & 0x0f)
     {
         case ContentSpecNode::Leaf :
@@ -266,11 +266,11 @@ SimpleContentModel::validateContent(QName** const       children
 }
 
 bool SimpleContentModel::validateContentSpecial(QName** const         children
-                                            , unsigned int            childCount
+                                            , XMLSize_t               childCount
                                             , unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool
-                                            , unsigned int*           indexFailingChild
+                                            , XMLSize_t*              indexFailingChild
                                             , MemoryManager*    const) const
 {
 

@@ -70,7 +70,7 @@ public:
         ,       bool&           wasAdded
     ) ;
 
-    virtual unsigned int getElemId
+    virtual XMLSize_t getElemId
     (
         const   unsigned int    uriId
         , const XMLCh* const    baseName
@@ -126,13 +126,13 @@ public:
         , const bool            notDeclared = false
     );
 
-    virtual unsigned int putElemDecl
+    virtual XMLSize_t putElemDecl
     (
         XMLElementDecl* const elemDecl
         , const bool          notDeclared = false
     )   ;
 
-    virtual unsigned int putNotationDecl
+    virtual XMLSize_t putNotationDecl
     (
         XMLNotationDecl* const notationDecl
     )   const;
@@ -293,7 +293,7 @@ inline const XMLCh* DTDGrammar::getTargetNamespace() const {
 }
 
 // Element Decl
-inline unsigned int DTDGrammar::getElemId (const   unsigned int
+inline XMLSize_t DTDGrammar::getElemId (const   unsigned int
                                               , const XMLCh* const
                                               , const XMLCh* const    qName
                                               , unsigned int) const
@@ -346,7 +346,7 @@ inline XMLElementDecl* DTDGrammar::getElemDecl(const unsigned int elemId)
     return fElemDeclPool->getById(elemId);
 }
 
-inline unsigned int
+inline XMLSize_t
 DTDGrammar::putElemDecl(XMLElementDecl* const elemDecl,
                         const bool notDeclared)
 {
@@ -371,7 +371,7 @@ inline XMLNotationDecl* DTDGrammar::getNotationDecl(const XMLCh* const notName)
     return fNotationDeclPool->getByKey(notName);
 }
 
-inline unsigned int DTDGrammar::putNotationDecl(XMLNotationDecl* const notationDecl)   const
+inline XMLSize_t DTDGrammar::putNotationDecl(XMLNotationDecl* const notationDecl)   const
 {
     return fNotationDeclPool->put(notationDecl);
 }

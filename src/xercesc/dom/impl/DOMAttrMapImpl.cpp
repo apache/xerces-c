@@ -380,11 +380,11 @@ DOMNode * DOMAttrMapImpl::removeNamedItemAt(XMLSize_t index)
 void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) {
 
     // remove any existing default
-    int nsize = (int)getLength();
-    for (int i = nsize - 1; i >= 0; i--) {
-        DOMAttr* attr = (DOMAttr*)item(i);
+    XMLSize_t nsize = getLength();
+    for (XMLSize_t i = nsize; i > 0; i--) {
+        DOMAttr* attr = (DOMAttr*)item(i-1);
         if (!attr->getSpecified()) {
-            removeNamedItemAt(i);
+            removeNamedItemAt(i-1);
         }
     }
 
@@ -416,12 +416,12 @@ void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) 
  * Move specified attributes from the given map to this one
  */
 void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
-    int nsize = (int)srcmap->getLength();
+    XMLSize_t nsize = srcmap->getLength();
 
-    for (int i = nsize - 1; i >= 0; i--) {
-        DOMAttr* attr = (DOMAttr*)srcmap->item(i);
+    for (XMLSize_t i = nsize; i > 0; i--) {
+        DOMAttr* attr = (DOMAttr*)srcmap->item(i-1);
         if (attr->getSpecified()) {
-            srcmap->removeNamedItemAt(i);
+            srcmap->removeNamedItemAt(i-1);
         }
 
         if (attr->getLocalName())

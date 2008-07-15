@@ -60,9 +60,9 @@ XMLSize_t Token::getMinLength() const {
 	case T_CONCAT:
         {
             XMLSize_t sum = 0;
-            unsigned int childSize = size();
+            XMLSize_t childSize = size();
 
-            for (unsigned int i=0; i<childSize; i++) {
+            for (XMLSize_t i=0; i<childSize; i++) {
                 sum += getChild(i)->getMinLength();
             }
             return sum;
@@ -70,14 +70,14 @@ XMLSize_t Token::getMinLength() const {
 	case T_CONDITION:
 	case T_UNION:
         {
-			unsigned int childSize = size();
+			XMLSize_t childSize = size();
 
             if (childSize == 0) {
                 return 0;
             }
 			XMLSize_t ret = getChild(0)->getMinLength();
 
-            for (unsigned int i=1; i < childSize; i++) {
+            for (XMLSize_t i=1; i < childSize; i++) {
 
                 XMLSize_t min = getChild(i)->getMinLength();
                 if (min < ret)
@@ -128,9 +128,9 @@ int Token::getMaxLength() const {
 	case T_CONCAT:
         {
             int sum = 0;
-            unsigned int childSize = size();
+            XMLSize_t childSize = size();
 
-            for (unsigned int i=0; i<childSize; i++) {
+            for (XMLSize_t i=0; i<childSize; i++) {
 
                 int val = getChild(i)->getMaxLength();
 
@@ -144,14 +144,14 @@ int Token::getMaxLength() const {
     case T_CONDITION:
     case T_UNION:
         {
-            unsigned int childSize = size();
+            XMLSize_t childSize = size();
 
 			if (childSize == 0)
                 return 0;
 
             int ret = getChild(0)->getMaxLength();
 
-            for (unsigned i = 1; ret > 0 && i < childSize; i++) {
+            for (XMLSize_t i = 1; ret > 0 && i < childSize; i++) {
 
                 int max = getChild(i)->getMaxLength();
 
@@ -212,7 +212,7 @@ Token::firstCharacterOptions Token::analyzeFirstCharacter(RangeToken* const rang
 	case T_CONCAT:
 		{
 			firstCharacterOptions ret = FC_CONTINUE;
-			for (int i=0; i<size(); i++) {
+			for (XMLSize_t i=0; i<size(); i++) {
 
 				Token* tok = getChild(i);
 				if (tok
@@ -224,14 +224,14 @@ Token::firstCharacterOptions Token::analyzeFirstCharacter(RangeToken* const rang
 		}
 	case T_UNION:
 		{
-			unsigned int childSize = size();
+			XMLSize_t childSize = size();
             if (childSize == 0)
                 return FC_CONTINUE;
 
             firstCharacterOptions ret = FC_CONTINUE;
 			bool hasEmpty = false;
 
-			for (unsigned int i=0; i < childSize; i++) {
+			for (XMLSize_t i=0; i < childSize; i++) {
 
                 ret = getChild(i)->analyzeFirstCharacter(rangeTok, options, tokFactory);
 
@@ -377,7 +377,7 @@ Token* Token::findFixedString(int options, int& outOptions) {
             Token* prevTok = 0;
             int prevOptions = 0;
 
-            for (int i=0; i<size(); i++) {
+            for (XMLSize_t i=0; i<size(); i++) {
 
                 Token* tok = getChild(i)->findFixedString(options, outOptions);
 

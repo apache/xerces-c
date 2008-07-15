@@ -70,7 +70,7 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     virtual short getType() const = 0;
-    int           getFieldCount() const;
+    XMLSize_t     getFieldCount() const;
     XMLCh*        getIdentityConstraintName() const;
     XMLCh*        getElementName() const;
     IC_Selector*  getSelector() const;
@@ -86,8 +86,8 @@ public:
     //  Access methods
     // -----------------------------------------------------------------------
     void addField(IC_Field* const field);
-    const IC_Field* getFieldAt(const unsigned int index) const;
-    IC_Field* getFieldAt(const unsigned int index);
+    const IC_Field* getFieldAt(const XMLSize_t index) const;
+    IC_Field* getFieldAt(const XMLSize_t index);
 
     /***
      * Support for Serialization/De-serialization
@@ -146,7 +146,7 @@ private:
 // ---------------------------------------------------------------------------
 //  IdentityConstraint: Getter methods
 // ---------------------------------------------------------------------------
-inline int IdentityConstraint::getFieldCount() const {
+inline XMLSize_t IdentityConstraint::getFieldCount() const {
 
     if (fFields) {
         return fFields->size();
@@ -195,7 +195,7 @@ inline void IdentityConstraint::addField(IC_Field* const field) {
     fFields->addElement(field);
 }
 
-inline const IC_Field* IdentityConstraint::getFieldAt(const unsigned int index) const {
+inline const IC_Field* IdentityConstraint::getFieldAt(const XMLSize_t index) const {
 
     if (fFields) {
         return (fFields->elementAt(index));
@@ -204,7 +204,7 @@ inline const IC_Field* IdentityConstraint::getFieldAt(const unsigned int index) 
     return 0;
 }
 
-inline IC_Field* IdentityConstraint::getFieldAt(const unsigned int index) {
+inline IC_Field* IdentityConstraint::getFieldAt(const XMLSize_t index) {
 
     if (fFields) {
         return (fFields->elementAt(index));

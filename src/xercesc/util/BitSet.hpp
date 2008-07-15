@@ -33,7 +33,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    BitSet( const unsigned int size
+    BitSet( const XMLSize_t size
           , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     BitSet(const BitSet& toCopy);
     ~BitSet();
@@ -50,16 +50,16 @@ public:
     // -----------------------------------------------------------------------
     bool allAreCleared() const;
     bool allAreSet() const;
-    unsigned int size() const;
-    bool get(const unsigned int index) const;
+    XMLSize_t size() const;
+    bool get(const XMLSize_t index) const;
 
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void clear(const unsigned int index);
+    void clear(const XMLSize_t index);
     void clearAll();
-    void set(const unsigned int index);
+    void set(const XMLSize_t index);
 
 
     // -----------------------------------------------------------------------
@@ -73,7 +73,7 @@ public:
     // -----------------------------------------------------------------------
     //  Miscellaneous
     // -----------------------------------------------------------------------
-    unsigned int hash(const unsigned int hashModulus) const;
+    XMLSize_t hash(const XMLSize_t hashModulus) const;
 
 
 private :
@@ -85,7 +85,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    void ensureCapacity(const unsigned int bits);
+    void ensureCapacity(const XMLSize_t bits);
 
 
     // -----------------------------------------------------------------------
@@ -99,7 +99,7 @@ private :
     // -----------------------------------------------------------------------
     MemoryManager*  fMemoryManager;
     unsigned long*  fBits;
-    unsigned int    fUnitLen;
+    XMLSize_t       fUnitLen;
 };
 
 XERCES_CPP_NAMESPACE_END

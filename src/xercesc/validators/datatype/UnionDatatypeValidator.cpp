@@ -175,8 +175,8 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
         if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
             (getEnumeration() !=0))
         {
-            int i = 0;
-            int enumLength = getEnumeration()->size();
+            XMLSize_t i = 0;
+            XMLSize_t enumLength = getEnumeration()->size();
             try
             {
                 for ( ; i < enumLength; i++)
@@ -306,12 +306,12 @@ void UnionDatatypeValidator::checkContent(const XMLCh*             const content
         //
         RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();
         RefArrayVectorOf<XMLCh>* tmpEnum = getEnumeration();
-        unsigned int memberTypeNumber = memberDTV->size();
-        unsigned int enumLength = tmpEnum->size();
+        XMLSize_t memberTypeNumber = memberDTV->size();
+        XMLSize_t enumLength = tmpEnum->size();
 
-        for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
+        for ( XMLSize_t memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
         {
-            for ( unsigned int enumIndex = 0; enumIndex < enumLength; ++enumIndex)
+            for ( XMLSize_t enumIndex = 0; enumIndex < enumLength; ++enumIndex)
             {
                 try
                 {
@@ -339,9 +339,9 @@ int UnionDatatypeValidator::compare(const XMLCh* const lValue
                                   , MemoryManager* const manager)
 {
     RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();
-    unsigned int memberTypeNumber = memberDTV->size();
+    XMLSize_t memberTypeNumber = memberDTV->size();
 
-    for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
+    for ( XMLSize_t memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
     {
         if (memberDTV->elementAt(memberIndex)->compare(lValue, rValue, manager) ==0)
             return  0;

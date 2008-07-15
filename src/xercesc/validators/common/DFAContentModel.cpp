@@ -139,9 +139,9 @@ DFAContentModel::~DFAContentModel()
 // ---------------------------------------------------------------------------
 bool
 DFAContentModel::validateContent( QName** const        children
-                                , unsigned int         childCount
+                                , XMLSize_t            childCount
                                 , unsigned int
-                                , unsigned int*        indexFailingChild
+                                , XMLSize_t*           indexFailingChild
                                 , MemoryManager*    const) const
 {
     //
@@ -311,12 +311,12 @@ DFAContentModel::validateContent( QName** const        children
     return true;
 }
 
-bool DFAContentModel::validateContentSpecial(QName** const          children
-                                            , unsigned int          childCount
+bool DFAContentModel::validateContentSpecial(QName** const            children
+                                            , XMLSize_t               childCount
                                             , unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool
-                                            , unsigned int*         indexFailingChild
+                                            , XMLSize_t*              indexFailingChild
                                             , MemoryManager*    const) const
 {
 

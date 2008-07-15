@@ -180,9 +180,9 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
         return false;
 
     // then check whether there exists one element that is allowed by the wildcard
-    int size = subsElements->size();
+    XMLSize_t size = subsElements->size();
 
-    for (int i = 0; i < size; i++)
+    for (XMLSize_t i = 0; i < size; i++)
     {
         unsigned int subUriId = subsElements->elementAt(i)->getElementName()->getURI();
 

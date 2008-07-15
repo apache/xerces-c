@@ -233,7 +233,7 @@ public:
       *
       * @return The pool id of this attribute type.
       */
-    unsigned int getId() const;
+    XMLSize_t getId() const;
 
     /** Get the type of this attribute
       *
@@ -313,7 +313,7 @@ public:
       *
       * @param  newId The new pool id to set.
       */
-    void setId(const unsigned int newId);
+    void setId(const XMLSize_t newId);
 
     /** Set the type of this attribute type.
       *
@@ -439,7 +439,7 @@ private :
     AttTypes        fType;
     CreateReasons   fCreateReason;   
     bool            fExternalAttribute;
-    unsigned int    fId;
+    XMLSize_t       fId;
     XMLCh*          fValue;
     XMLCh*          fEnumeration;
     MemoryManager*  fMemoryManager;
@@ -459,7 +459,7 @@ inline const XMLCh* XMLAttDef::getEnumeration() const
     return fEnumeration;
 }
 
-inline unsigned int XMLAttDef::getId() const
+inline XMLSize_t XMLAttDef::getId() const
 {
     return fId;
 }
@@ -505,7 +505,7 @@ inline void XMLAttDef::setEnumeration(const XMLCh* const newValue)
     fEnumeration = XMLString::replicate(newValue, fMemoryManager);
 }
 
-inline void XMLAttDef::setId(const unsigned int newId)
+inline void XMLAttDef::setId(const XMLSize_t newId)
 {
     fId = newId;
 }

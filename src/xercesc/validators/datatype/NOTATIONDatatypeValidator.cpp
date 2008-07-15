@@ -121,8 +121,8 @@ void NOTATIONDatatypeValidator::checkContent( const XMLCh*             const con
         ArrayJanitor<XMLCh>  jan(normContent, manager);
         normalizeContent(normContent, manager);
 
-        int i=0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i=0;
+        XMLSize_t enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
             if (XMLString::equals(normContent, getEnumeration()->elementAt(i)))

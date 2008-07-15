@@ -45,7 +45,7 @@ public:
       * @param key the key to be hashed
 	  * @param mod the modulus the hasher should use
       */
-	virtual unsigned int getHashVal(const void *const key, unsigned int mod
+	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
 
 	/**

@@ -38,7 +38,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefHash2KeysTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal>
-RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const XMLSize_t      modulus
                                               , const bool           adoptElems
                                               , MemoryManager* const manager)
     : fMemoryManager(manager)
@@ -52,7 +52,7 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
 }
 
 template <class TVal>
-RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const XMLSize_t      modulus
                                               , const bool           adoptElems
                                               , HashBase*            hashBase
                                               , MemoryManager* const manager)
@@ -69,7 +69,7 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int   modulus
 }
 
 template <class TVal>
-RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus,
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const XMLSize_t      modulus,
                                                MemoryManager* const manager)
     : fMemoryManager(manager)
     , fAdoptedElems(true)
@@ -82,7 +82,7 @@ RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus,
 }
 
 template <class TVal>
-void RefHash2KeysTableOf<TVal>::initialize(const unsigned int modulus)
+void RefHash2KeysTableOf<TVal>::initialize(const XMLSize_t modulus)
 {
     if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
@@ -118,7 +118,7 @@ template <class TVal> bool RefHash2KeysTableOf<TVal>::isEmpty() const
 template <class TVal> bool RefHash2KeysTableOf<TVal>::
 containsKey(const void* const key1, const int key2) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const RefHash2KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, hashVal);
     return (findIt != 0);
 }
@@ -127,7 +127,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::
 removeKey(const void* const key1, const int key2)
 {
     // Hash the key
-    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -178,7 +178,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::
 removeKey(const void* const key1)
 {
     // Hash the key
-    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -232,7 +232,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::removeAll()
         return;
 
     // Clean up the buckets first
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
+    for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
         // Get the bucket list head for this entry
         RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[buckInd];
@@ -266,7 +266,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::removeAll()
 template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void* const key1, void* key2)
 {
     // Hash the key
-    unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
     assert(hashVal < fHashModulus);
 
     //
@@ -293,7 +293,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
             }
 
             // this code comes from put(), but it doesn't update fCount
-            unsigned int hashVal2;
+            XMLSize_t hashVal2;
             RefHash2KeysTableBucketElem<TVal>* newBucket = findBucketElem(key2, curElem->fKey2, hashVal2);
             if (newBucket)
             {
@@ -338,7 +338,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
 // ---------------------------------------------------------------------------
 template <class TVal> TVal* RefHash2KeysTableOf<TVal>::get(const void* const key1, const int key2)
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     RefHash2KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, hashVal);
     if (!findIt)
         return 0;
@@ -348,7 +348,7 @@ template <class TVal> TVal* RefHash2KeysTableOf<TVal>::get(const void* const key
 template <class TVal> const TVal* RefHash2KeysTableOf<TVal>::
 get(const void* const key1, const int key2) const
 {
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     const RefHash2KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, hashVal);
     if (!findIt)
         return 0;
@@ -362,7 +362,7 @@ MemoryManager* RefHash2KeysTableOf<TVal>::getMemoryManager() const
 }
 
 template <class TVal>
-unsigned int RefHash2KeysTableOf<TVal>::getHashModulus() const
+XMLSize_t RefHash2KeysTableOf<TVal>::getHashModulus() const
 {
     return fHashModulus;
 }
@@ -373,14 +373,14 @@ unsigned int RefHash2KeysTableOf<TVal>::getHashModulus() const
 template <class TVal> void RefHash2KeysTableOf<TVal>::put(void* key1, int key2, TVal* const valueToAdopt)
 {
     // Apply 4 load factor to find threshold.
-    unsigned int threshold = fHashModulus * 4;
+    XMLSize_t threshold = fHashModulus * 4;
     
     // If we've grown too big, expand the table and rehash.
     if (fCount >= threshold)
         rehash();
 
     // First see if the key exists already
-    unsigned int hashVal;
+    XMLSize_t hashVal;
     RefHash2KeysTableBucketElem<TVal>* newBucket = findBucketElem(key1, key2, hashVal);
 
     //
@@ -411,7 +411,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::put(void* key1, int key2, 
 //  RefHash2KeysTableOf: Private methods
 // ---------------------------------------------------------------------------
 template <class TVal> RefHash2KeysTableBucketElem<TVal>* RefHash2KeysTableOf<TVal>::
-findBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
+findBucketElem(const void* const key1, const int key2, XMLSize_t& hashVal)
 {
     // Hash the key
     hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
@@ -430,7 +430,7 @@ findBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 }
 
 template <class TVal> const RefHash2KeysTableBucketElem<TVal>* RefHash2KeysTableOf<TVal>::
-findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) const
+findBucketElem(const void* const key1, const int key2, XMLSize_t& hashVal) const
 {
     // Hash the key
     hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
@@ -452,7 +452,7 @@ findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) co
 template <class TVal> void RefHash2KeysTableOf<TVal>::
 rehash()
 {
-    const unsigned int newMod = (fHashModulus * 8)+1;
+    const XMLSize_t newMod = (fHashModulus * 8)+1;
 
     RefHash2KeysTableBucketElem<TVal>** newBucketList =
         (RefHash2KeysTableBucketElem<TVal>**) fMemoryManager->allocate
@@ -467,7 +467,7 @@ rehash()
     memset(newBucketList, 0, newMod * sizeof(newBucketList[0]));
 
     // Rehash all existing entries.
-    for (unsigned int index = 0; index < fHashModulus; index++)
+    for (XMLSize_t index = 0; index < fHashModulus; index++)
     {
         // Get the bucket list head for this entry
         RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[index];
@@ -476,7 +476,7 @@ rehash()
             // Save the next element before we detach this one
             RefHash2KeysTableBucketElem<TVal>* nextElem = curElem->fNext;
 
-            const unsigned int hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey1, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey1, newMod, fMemoryManager);
+            const XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey1, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey1, newMod, fMemoryManager);
             assert(hashVal < newMod);
             
             RefHash2KeysTableBucketElem<TVal>* newHeadElem = newBucketList[hashVal];
@@ -588,7 +588,7 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::Reset()
     if(fLockPrimaryKey)
         fCurHash=fToEnum->fHash==0?XMLString::hash((const XMLCh*)fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager) : fToEnum->fHash->getHashVal(fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager);
     else
-        fCurHash = (unsigned int)-1;
+        fCurHash = (XMLSize_t)-1;
     fCurElem = 0;
     findNext();
 }

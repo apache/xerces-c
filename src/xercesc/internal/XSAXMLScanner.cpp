@@ -112,7 +112,7 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
     //  this element and let him validate it.
     if (fValidate)
     {
-        unsigned int failure;
+        XMLSize_t failure;
         bool res = fValidator->checkContent
         (
             topElem->fThisElement
@@ -224,7 +224,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     //  might be (since we need the element decl in order to do that.)
     const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
     bool isEmpty;
-    unsigned int attCount = rawAttrScan(qnameRawBuf, *fRawAttrList, isEmpty);
+    XMLSize_t attCount = rawAttrScan(qnameRawBuf, *fRawAttrList, isEmpty);
 
     // save the contentleafname and currentscope before addlevel, for later use
     ContentLeafNameTypeVector* cv = 0;
@@ -458,7 +458,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            unsigned int failure;
+            XMLSize_t failure;
             bool res = fValidator->checkContent(elemDecl, 0, 0, &failure);
             if (!res)
             {
@@ -607,13 +607,13 @@ void XSAXMLScanner::scanReset(const InputSource& src)
 }
 
 
-void XSAXMLScanner::scanRawAttrListforNameSpaces(int attCount)
+void XSAXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
 {
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
     //  When we find one, send it off to be used to update the element stack's
     //  namespace mappings.
-    int index = 0;
+    XMLSize_t index = 0;
     for (index = 0; index < attCount; index++)
     {
         // each attribute has the prefix:suffix="value"

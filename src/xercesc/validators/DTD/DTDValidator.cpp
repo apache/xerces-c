@@ -53,8 +53,8 @@ DTDValidator::~DTDValidator()
 // ---------------------------------------------------------------------------
 bool DTDValidator::checkContent(XMLElementDecl* const elemDecl
                               , QName** const         children
-                              , unsigned int          childCount
-                              , unsigned int*         indexFailingChild)
+                              , XMLSize_t             childCount
+                              , XMLSize_t*         indexFailingChild)
 {
     //
     //  Look up the element id in our element decl pool. This will get us

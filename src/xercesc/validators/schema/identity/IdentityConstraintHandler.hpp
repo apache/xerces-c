@@ -57,7 +57,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    inline  int          getMatcherCount() const;
+    inline  XMLSize_t    getMatcherCount() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -81,7 +81,7 @@ public:
                              , const unsigned int                 uriId
                              , const XMLCh*                 const elemPrefix
                              , const RefVectorOf<XMLAttr>&        attrList
-                             , const unsigned int                 attrCount
+                             , const XMLSize_t                    attrCount
                                );
 
             void         reset();
@@ -143,7 +143,7 @@ void  IdentityConstraintHandler::endDocument()
 }
 
 inline
-int  IdentityConstraintHandler::getMatcherCount() const
+XMLSize_t IdentityConstraintHandler::getMatcherCount() const
 {
     return fMatcherStack->getMatcherCount();
 }

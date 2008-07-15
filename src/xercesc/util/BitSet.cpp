@@ -38,15 +38,15 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  kGrowBy
 //      The minimum allocation units to grow the buffer by.
 // ---------------------------------------------------------------------------
-const unsigned int  kBitsPerUnit    = 32;
-const unsigned int  kGrowBy         = 1;
+const XMLSize_t kBitsPerUnit    = 32;
+const XMLSize_t kGrowBy         = 1;
 
 
 
 // ---------------------------------------------------------------------------
 //  BitSet: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BitSet::BitSet( const unsigned int size
+BitSet::BitSet( const XMLSize_t size
               , MemoryManager* const manager) :
 
     fMemoryManager(manager)
@@ -66,7 +66,7 @@ BitSet::BitSet(const BitSet& toCopy) :
     (
         fUnitLen * sizeof(unsigned long)
     ); //new unsigned long[fUnitLen];
-    for (unsigned int i = 0; i < fUnitLen; i++)
+    for (XMLSize_t i = 0; i < fUnitLen; i++)
         fBits[i] = toCopy.fBits[i];
 }
 
@@ -87,7 +87,7 @@ bool BitSet::equals(const BitSet& other) const
     if (fUnitLen != other.fUnitLen)
         return false;
 
-    for (unsigned int i = 0; i < fUnitLen; i++)
+    for (XMLSize_t i = 0; i < fUnitLen; i++)
     {
         if (fBits[i] != other.fBits[i])
             return false;
@@ -99,10 +99,10 @@ bool BitSet::equals(const BitSet& other) const
 // ---------------------------------------------------------------------------
 //  BitSet: Getter methods
 // ---------------------------------------------------------------------------
-bool BitSet::get(const unsigned int index) const
+bool BitSet::get(const XMLSize_t index) const
 {
-    const unsigned int unitOfBit = (index / kBitsPerUnit);
-    const unsigned int bitWithinUnit = index % kBitsPerUnit;
+    const XMLSize_t unitOfBit = (index / kBitsPerUnit);
+    const XMLSize_t bitWithinUnit = index % kBitsPerUnit;
 
     //
     //  If the index is beyond our size, don't actually expand. Just return
@@ -118,7 +118,7 @@ bool BitSet::get(const unsigned int index) const
 }
 
 
-unsigned int BitSet::size() const
+XMLSize_t BitSet::size() const
 {
     return fUnitLen * kBitsPerUnit;
 }
@@ -130,7 +130,7 @@ unsigned int BitSet::size() const
 // ---------------------------------------------------------------------------
 bool BitSet::allAreCleared() const
 {
-    for (unsigned int index = 0; index < fUnitLen; index++)
+    for (XMLSize_t index = 0; index < fUnitLen; index++)
     {
         if (fBits[index])
             return false;
@@ -140,7 +140,7 @@ bool BitSet::allAreCleared() const
 
 bool BitSet::allAreSet() const
 {
-    for (unsigned int index = 0; index < fUnitLen; index++)
+    for (XMLSize_t index = 0; index < fUnitLen; index++)
     {
         if (fBits[index] != 0xFFFFFFFF)
             return false;
@@ -151,27 +151,27 @@ bool BitSet::allAreSet() const
 void BitSet::clearAll()
 {
     // Just zero out all the units
-    for (unsigned int index = 0; index < fUnitLen; index++)
+    for (XMLSize_t index = 0; index < fUnitLen; index++)
         fBits[index] = 0;
 }
 
-void BitSet::clear(const unsigned int index)
+void BitSet::clear(const XMLSize_t index)
 {
     ensureCapacity(index+1);
 
-    const int unitOfBit = (index / kBitsPerUnit);
-    const int bitWithinUnit = index % kBitsPerUnit;
+    const XMLSize_t unitOfBit = (index / kBitsPerUnit);
+    const XMLSize_t bitWithinUnit = index % kBitsPerUnit;
 
     fBits[unitOfBit] &= ~(1UL << bitWithinUnit);
 }
 
 
-void BitSet::set(const unsigned int index)
+void BitSet::set(const XMLSize_t index)
 {
     ensureCapacity(index+1);
 
-    const int unitOfBit = (index / kBitsPerUnit);
-    const int bitWithinUnit = index % kBitsPerUnit;
+    const XMLSize_t unitOfBit = (index / kBitsPerUnit);
+    const XMLSize_t bitWithinUnit = index % kBitsPerUnit;
 
     fBits[unitOfBit] |= (1UL << bitWithinUnit);
 }
@@ -186,7 +186,7 @@ void BitSet::andWith(const BitSet& other)
     if (fUnitLen < other.fUnitLen)
         ensureCapacity(other.fUnitLen * kBitsPerUnit);
 
-    for (unsigned int index = 0; index < other.fUnitLen; index++)
+    for (XMLSize_t index = 0; index < other.fUnitLen; index++)
         fBits[index] &= other.fBits[index];
 }
 
@@ -196,7 +196,7 @@ void BitSet::orWith(const BitSet& other)
     if (fUnitLen < other.fUnitLen)
         ensureCapacity(other.fUnitLen * kBitsPerUnit);
 
-    for (unsigned int index = 0; index < other.fUnitLen; index++)
+    for (XMLSize_t index = 0; index < other.fUnitLen; index++)
         fBits[index] |= other.fBits[index];
 }
 
@@ -206,7 +206,7 @@ void BitSet::xorWith(const BitSet& other)
     if (fUnitLen < other.fUnitLen)
         ensureCapacity(other.fUnitLen * kBitsPerUnit);
 
-    for (unsigned int index = 0; index < other.fUnitLen; index++)
+    for (XMLSize_t index = 0; index < other.fUnitLen; index++)
         fBits[index] ^= other.fBits[index];
 }
 
@@ -215,13 +215,13 @@ void BitSet::xorWith(const BitSet& other)
 // ---------------------------------------------------------------------------
 //  BitSet: Miscellaneous methods
 // ---------------------------------------------------------------------------
-unsigned int BitSet::hash(const unsigned int hashModulus) const
+XMLSize_t BitSet::hash(const XMLSize_t hashModulus) const
 {
     const unsigned char* pBytes = (const unsigned char*)fBits;
-    const unsigned int len = fUnitLen * sizeof(unsigned long);
+    const XMLSize_t len = fUnitLen * sizeof(unsigned long);
 
-    unsigned int  hashVal = 0;
-    for (unsigned int index = 0; index < len; index++)
+    XMLSize_t hashVal = 0;
+    for (XMLSize_t index = 0; index < len; index++)
     {
         hashVal <<= 1;
         hashVal ^= *pBytes;
@@ -234,14 +234,14 @@ unsigned int BitSet::hash(const unsigned int hashModulus) const
 // ---------------------------------------------------------------------------
 //  BitSet: Private methods
 // ---------------------------------------------------------------------------
-void BitSet::ensureCapacity(const unsigned int size)
+void BitSet::ensureCapacity(const XMLSize_t size)
 {
     // If we have enough space, do nothing
     if(fUnitLen * kBitsPerUnit >= size)
         return;
 
     // Calculate the units required to hold the passed bit count.
-    unsigned int unitsNeeded = size / kBitsPerUnit;
+    XMLSize_t unitsNeeded = size / kBitsPerUnit;
     if (size % kBitsPerUnit)
         unitsNeeded++;
 
@@ -255,7 +255,7 @@ void BitSet::ensureCapacity(const unsigned int size)
         unitsNeeded * sizeof(unsigned long)
     ); //new unsigned long[unitsNeeded];
 
-    unsigned int index;
+    XMLSize_t index;
     for (index = 0; index < fUnitLen; index++)
         newBits[index] = fBits[index];
 

@@ -341,8 +341,8 @@ void DecimalDatatypeValidator::setEnumeration(MemoryManager* const manager)
     if (!fStrEnumeration)
         return;
 
-    int i = 0;
-    int enumLength = fStrEnumeration->size();
+    XMLSize_t i = 0;
+    XMLSize_t enumLength = fStrEnumeration->size();
 
     DecimalDatatypeValidator *numBase = (DecimalDatatypeValidator*) getBaseValidator();
     if (numBase)
@@ -420,8 +420,8 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         
     if (getEnumeration())
     {
-        int i=0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i=0;
+        XMLSize_t enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
             if (compareValues(compareData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )

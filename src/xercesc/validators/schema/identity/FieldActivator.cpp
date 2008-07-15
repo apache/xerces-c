@@ -100,9 +100,9 @@ XPathMatcher* FieldActivator::activateField(IC_Field* const field, const int ini
 void FieldActivator::startValueScopeFor(const IdentityConstraint* const ic,
                                         const int initialDepth) {
 
-    unsigned int fieldCount = ic->getFieldCount();
+    XMLSize_t fieldCount = ic->getFieldCount();
 
-    for(unsigned int i=0; i<fieldCount; i++) {
+    for(XMLSize_t i=0; i<fieldCount; i++) {
 
         const IC_Field* field = ic->getFieldAt(i);
         ValueStore* valueStore = fValueStoreCache->getValueStoreFor(field, initialDepth);

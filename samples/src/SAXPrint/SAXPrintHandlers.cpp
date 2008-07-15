@@ -207,8 +207,8 @@ void SAXPrintHandlers::startElement(const   XMLCh* const    name
     fFormatter  << XMLFormatter::NoEscapes
                 << chOpenAngle << name;
 
-    unsigned int len = attributes.getLength();
-    for (unsigned int index = 0; index < len; index++)
+    XMLSize_t len = attributes.getLength();
+    for (XMLSize_t index = 0; index < len; index++)
     {
         //
         //  Again the name has to be completely representable. But the

@@ -53,13 +53,13 @@ FieldValueMap::FieldValueMap(const FieldValueMap& other)
 
         try {
 
-                unsigned int valuesSize = other.fValues->size();
+                XMLSize_t valuesSize = other.fValues->size();
 
                 fFields = new (fMemoryManager) ValueVectorOf<IC_Field*>(*(other.fFields));
                 fValidators = new (fMemoryManager) ValueVectorOf<DatatypeValidator*>(*(other.fValidators));
                 fValues = new (fMemoryManager) RefArrayVectorOf<XMLCh>(other.fFields->curCapacity(), true, fMemoryManager);
 
-                for (unsigned int i=0; i<valuesSize; i++) {
+                for (XMLSize_t i=0; i<valuesSize; i++) {
                     fValues->addElement(XMLString::replicate(other.fValues->elementAt(i), fMemoryManager));
                 }
         }
@@ -92,20 +92,21 @@ void FieldValueMap::cleanUp()
 // ---------------------------------------------------------------------------
 //  FieldValueMap: Helper methods
 // ---------------------------------------------------------------------------
-int FieldValueMap::indexOf(const IC_Field* const key) const {
+bool FieldValueMap::indexOf(const IC_Field* const key, XMLSize_t& location) const {
 
     if (fFields) {
 
-        unsigned int fieldSize = fFields->size();
+        XMLSize_t fieldSize = fFields->size();
 
-        for (unsigned int i=0; i < fieldSize; i++) {
+        for (XMLSize_t i=0; i < fieldSize; i++) {
             if (fFields->elementAt(i) == key) {
-                return i;
+                location=i;
+                return true;
             }
         }
     }
 
-    return -1;
+    return false;
 }
 
 XERCES_CPP_NAMESPACE_END

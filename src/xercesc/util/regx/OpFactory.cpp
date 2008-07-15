@@ -79,7 +79,7 @@ CharOp* OpFactory::createCaptureOp(int number, const Op* const next) {
 	return tmpOp;
 }
 
-UnionOp* OpFactory::createUnionOp(int size) {
+UnionOp* OpFactory::createUnionOp(XMLSize_t size) {
 
 	UnionOp* tmpOp = new (fMemoryManager) UnionOp(Op::O_UNION, size, fMemoryManager);
 

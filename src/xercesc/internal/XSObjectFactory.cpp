@@ -320,11 +320,11 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
         {
             typeVariety = XSSimpleTypeDefinition::VARIETY_UNION;
             RefVectorOf<DatatypeValidator>* membersDV = ((UnionDatatypeValidator*)validator)->getMemberTypeValidators();
-            unsigned int size = membersDV->size();
+            XMLSize_t size = membersDV->size();
             if (size)
             {
                 memberTypes = new (fMemoryManager) RefVectorOf<XSSimpleTypeDefinition>(size, false, fMemoryManager);
-                for (unsigned int i=0; i<size; i++)
+                for (XMLSize_t i=0; i<size; i++)
                     memberTypes->addElement(addOrFind(membersDV->elementAt(i), xsModel));
             }
 
@@ -430,7 +430,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         if (!elemDecl->getComplexTypeInfo() && elemDecl->getDatatypeValidator())
             xsType = addOrFind(elemDecl->getDatatypeValidator(), xsModel);
 
-        unsigned int count = elemDecl->getIdentityConstraintCount();
+        XMLSize_t count = elemDecl->getIdentityConstraintCount();
         if (count)
         {
             //REVISIT: size of hash table....
@@ -443,7 +443,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
                 , fMemoryManager
             );
 
-            for (unsigned int i = 0; i < count; i++)
+            for (XMLSize_t i = 0; i < count; i++)
             {
                 XSIDCDefinition* icDef = addOrFind
                 (
@@ -521,7 +521,7 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
             (typeInfo->getDatatypeValidator()))
             xsSimpleType = addOrFind(typeInfo->getDatatypeValidator(), xsModel);
 
-        unsigned int attCount=0;
+        XMLSize_t attCount=0;
         if (typeInfo->hasAttDefs())
         {
             SchemaAttDefList& attDefList = (SchemaAttDefList&) typeInfo->getAttDefList();
@@ -592,8 +592,8 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
         }
 
         // process local elements
-        unsigned int elemCount = typeInfo->elementCount();
-        for (unsigned int j=0; j<elemCount; j++)
+        XMLSize_t elemCount = typeInfo->elementCount();
+        for (XMLSize_t j=0; j<elemCount; j++)
         {
             SchemaElementDecl* elemDecl = typeInfo->elementAt(j);
 
@@ -614,14 +614,14 @@ XSIDCDefinition* XSObjectFactory::addOrFind(IdentityConstraint* const ic,
     {
         XSIDCDefinition* keyIC = 0;
         StringList*      stringList = 0;
-        unsigned int     fieldCount = ic->getFieldCount();
+        XMLSize_t        fieldCount = ic->getFieldCount();
 
         if (fieldCount)
         {
             stringList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(
                 fieldCount, true, fMemoryManager);
 
-            for(unsigned int i=0; i<fieldCount; i++)
+            for(XMLSize_t i=0; i<fieldCount; i++)
             {
                 XMLCh* expr = XMLString::replicate
                 (
@@ -733,8 +733,8 @@ XSObjectFactory::createXSModelGroupDefinition(XercesGroupInfo* const groupInfo,
     fDeleteVector->addElement(xsObj);
 
     // process local elements
-    unsigned int elemCount = groupInfo->elementCount();
-    for (unsigned int j=0; j<elemCount; j++)
+    XMLSize_t elemCount = groupInfo->elementCount();
+    for (XMLSize_t j=0; j<elemCount; j++)
     {
         SchemaElementDecl* elemDecl = groupInfo->elementAt(j);
 
@@ -752,12 +752,12 @@ XSObjectFactory::createXSAttGroupDefinition(XercesAttGroupInfo* const attGroupIn
 {
     XSAttributeUseList* xsAttList = 0;
     XSWildcard*         xsWildcard = 0;
-    unsigned int        attCount = attGroupInfo->attributeCount();
+    XMLSize_t           attCount = attGroupInfo->attributeCount();
 
     if (attCount)
     {
         xsAttList = new (fMemoryManager) RefVectorOf<XSAttributeUse>(attCount, false, fMemoryManager);
-        for (unsigned int i=0; i < attCount; i++)
+        for (XMLSize_t i=0; i < attCount; i++)
         {
             SchemaAttDef* attDef = attGroupInfo->attributeAt(i);
             XSAttributeDeclaration* xsAttDecl = 0;

@@ -160,7 +160,7 @@ public:
       * Gets the pool id of this entity. Validators maintain all decls in
       * pools, from which they can be quickly extracted via id.
       */
-    unsigned int getId() const;
+    XMLSize_t getId() const;
 
     /**
       * Returns a const pointer to the name of this entity decl. This name
@@ -305,7 +305,7 @@ public:
     //@}
 
     /* For internal use only */
-    void setId(const unsigned int newId);
+    void setId(const XMLSize_t newId);
 
 
     // -----------------------------------------------------------------------
@@ -372,7 +372,7 @@ private :
     //      The base URI of the entity.   According to XML InfoSet, such value
     //      is the URI where it is declared (NOT referenced).
     // -----------------------------------------------------------------------
-    unsigned int    fId;
+    XMLSize_t       fId;
     XMLSize_t       fValueLen;
     XMLCh*          fValue;
     XMLCh*          fName;
@@ -388,7 +388,7 @@ private :
 // ---------------------------------------------------------------------------
 //  XMLEntityDecl: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int XMLEntityDecl::getId() const
+inline XMLSize_t XMLEntityDecl::getId() const
 {
     return fId;
 }
@@ -447,7 +447,7 @@ inline MemoryManager* XMLEntityDecl::getMemoryManager() const
 // ---------------------------------------------------------------------------
 //  XMLEntityDecl: Setter methods
 // ---------------------------------------------------------------------------
-inline void XMLEntityDecl::setId(const unsigned int newId)
+inline void XMLEntityDecl::setId(const XMLSize_t newId)
 {
     fId = newId;
 }

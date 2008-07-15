@@ -433,7 +433,7 @@ void DOMBasicTests()
         TASSERT(textLength == 5);
 
         DOMNodeList*      nl = tx->getChildNodes();
-        unsigned int nodeListLen = nl->getLength();
+        XMLSize_t nodeListLen = nl->getLength();
         TASSERT(nodeListLen == 0);
 
         nl = el->getChildNodes();
@@ -458,7 +458,7 @@ void DOMBasicTests()
         nl = doc->getChildNodes();    // Should be non-null, but empty
 
         TASSERT(nl != 0);
-        unsigned int len = nl->getLength();
+        XMLSize_t len = nl->getLength();
         TASSERT(len == 0);
 
         DOMElement* el = doc->createElement(X("NodeList01"));

@@ -81,7 +81,7 @@ public :
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getElemId() const;
+    XMLSize_t getElemId() const;
     QName* getAttName() const;
     DatatypeValidator* getDatatypeValidator() const;
     ValueVectorOf<unsigned int>* getNamespaceList() const;
@@ -92,7 +92,7 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setElemId(const unsigned int newId);
+    void setElemId(const XMLSize_t newId);
     void setAttName
     (
         const XMLCh* const        prefix
@@ -144,7 +144,7 @@ private :
     //      declaration, and will be helpful when we build the XSModel (i.e
     //      easy access the XSAnnotation object).
     // -----------------------------------------------------------------------
-    unsigned int                 fElemId;
+    XMLSize_t                    fElemId;
 
     PSVIDefs::PSVIScope          fPSVIScope;
 
@@ -158,7 +158,7 @@ private :
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int SchemaAttDef::getElemId() const
+inline XMLSize_t SchemaAttDef::getElemId() const
 {
     return fElemId;
 }
@@ -197,7 +197,7 @@ inline PSVIDefs::PSVIScope SchemaAttDef::getPSVIScope() const
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaAttDef::setElemId(const unsigned int newId)
+inline void SchemaAttDef::setElemId(const XMLSize_t newId)
 {
     fElemId = newId;
 }

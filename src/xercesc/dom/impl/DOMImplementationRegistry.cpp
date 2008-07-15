@@ -61,7 +61,7 @@ DOMImplementation *DOMImplementationRegistry::getDOMImplementation(const XMLCh* 
 
     XMLMutexLock lock(gDOMImplSrcVectorMutex);
 
-    unsigned int len = gDOMImplSrcVector->size();
+    XMLSize_t len = gDOMImplSrcVector->size();
 
     // Put our defined source there
     if (len == 0) {
@@ -70,7 +70,7 @@ DOMImplementation *DOMImplementationRegistry::getDOMImplementation(const XMLCh* 
         len = gDOMImplSrcVector->size();
     }
 
-    for (unsigned int i = len; i > 0; i--) {
+    for (XMLSize_t i = len; i > 0; i--) {
         DOMImplementationSource* source = gDOMImplSrcVector->elementAt(i-1);
         DOMImplementation* impl = source->getDOMImplementation(features);
         if (impl)
@@ -86,7 +86,7 @@ DOMImplementationList* DOMImplementationRegistry::getDOMImplementationList(const
 
     XMLMutexLock lock(gDOMImplSrcVectorMutex);
 
-    unsigned int len = gDOMImplSrcVector->size();
+    XMLSize_t len = gDOMImplSrcVector->size();
 
     // Put our defined source there
     if (len == 0)
@@ -94,7 +94,7 @@ DOMImplementationList* DOMImplementationRegistry::getDOMImplementationList(const
 
     len = gDOMImplSrcVector->size();
 
-    for (unsigned int i = len; i > 0; i--) {
+    for (XMLSize_t i = len; i > 0; i--) {
         DOMImplementationSource* source = gDOMImplSrcVector->elementAt(i-1);
         DOMImplementationList* oneList = source->getDOMImplementationList(features);
         XMLSize_t oneListLen=oneList->getLength();

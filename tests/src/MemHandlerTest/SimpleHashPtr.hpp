@@ -17,6 +17,7 @@
 #if !defined(SIMPLEHASHPTR_HPP)
 #define SIMPLEHASHPTR_HPP
 
+#include <xercesc/util/XercesDefs.hpp>
 
 /**
  * this is just a copy of the HashPtr class that doesn't rely on the
@@ -28,7 +29,7 @@ class SimpleHashPtr
 public:
 	SimpleHashPtr();
 	virtual ~SimpleHashPtr();
-	virtual unsigned int getHashVal(const void *const key, unsigned int mod);
+	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod);
 	virtual bool equals(const void *const key1, const void *const key2);
 
 };

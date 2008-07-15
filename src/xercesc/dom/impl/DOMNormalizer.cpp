@@ -108,7 +108,7 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
         else {
             //this is done in namespace fixup so no need to do it if namespace is on
             if(attrMap) {
-                for(unsigned int i = 0; i < attrMap->getLength(); i++) {
+                for(XMLSize_t i = 0; i < attrMap->getLength(); i++) {
                     attrMap->item(i)->normalize();
                 }
             }
@@ -340,7 +340,7 @@ const XMLCh* DOMNormalizer::addCustomNamespaceDecl(const XMLCh* uri, DOMElementI
     return element->getAttributeNodeNS(XMLUni::fgXMLNSURIName, preBuf.getRawBuffer())->getLocalName();
 }
 
-int DOMNormalizer::InScopeNamespaces::size() {
+XMLSize_t DOMNormalizer::InScopeNamespaces::size() {
     return fScopes->size();
 }
 
@@ -356,7 +356,7 @@ DOMNormalizer::InScopeNamespaces::~InScopeNamespaces() {
 
 void DOMNormalizer::InScopeNamespaces::addOrChangeBinding(const XMLCh *prefix, const XMLCh *uri,
                                                           MemoryManager* const manager) {
-    unsigned int s = fScopes->size();
+    XMLSize_t s = fScopes->size();
 
     if(!s)
         addScope(manager);

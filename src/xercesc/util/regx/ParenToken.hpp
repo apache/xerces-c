@@ -41,9 +41,9 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    int size() const;
+    XMLSize_t size() const;
 	int getNoParen() const;
-    Token* getChild(const int index) const;
+    Token* getChild(const XMLSize_t index) const;
 
 private:
 	// -----------------------------------------------------------------------
@@ -63,7 +63,7 @@ private:
 // ---------------------------------------------------------------------------
 //  ParenToken: getter methods
 // ---------------------------------------------------------------------------
-inline int ParenToken::size() const {
+inline XMLSize_t ParenToken::size() const {
 
     return 1;
 }
@@ -73,7 +73,7 @@ inline int ParenToken::getNoParen() const {
     return fNoParen;
 }
 
-inline Token* ParenToken::getChild(const int) const {
+inline Token* ParenToken::getChild(const XMLSize_t) const {
 
     return fChild;
 }

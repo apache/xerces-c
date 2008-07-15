@@ -138,8 +138,8 @@ public :
     //  IC methods
     // -----------------------------------------------------------------------
     void addIdentityConstraint(IdentityConstraint* const ic);
-    unsigned int getIdentityConstraintCount() const;
-    IdentityConstraint* getIdentityConstraintAt(unsigned int index) const;
+    XMLSize_t getIdentityConstraintCount() const;
+    IdentityConstraint* getIdentityConstraintAt(XMLSize_t index) const;
 
     /***
      * Support for Serialization/De-serialization
@@ -414,7 +414,7 @@ SchemaElementDecl::addIdentityConstraint(IdentityConstraint* const ic) {
     fIdentityConstraints->addElement(ic);
 }
 
-inline unsigned int SchemaElementDecl::getIdentityConstraintCount() const {
+inline XMLSize_t SchemaElementDecl::getIdentityConstraintCount() const {
 
     if (fIdentityConstraints) {
         return fIdentityConstraints->size();
@@ -424,7 +424,7 @@ inline unsigned int SchemaElementDecl::getIdentityConstraintCount() const {
 }
 
 inline IdentityConstraint*
-SchemaElementDecl::getIdentityConstraintAt(unsigned int index) const {
+SchemaElementDecl::getIdentityConstraintAt(XMLSize_t index) const {
 
     if (fIdentityConstraints) {
         return fIdentityConstraints->elementAt(index);

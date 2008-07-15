@@ -30,12 +30,12 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-static const int gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a few more.
+static const XMLSize_t gPrimes[] = {997, 9973, 99991, 999983, 0 };  // To do - add a few more.
 
 static const float gMaxFill = 0.8f;   // The maximum fraction of the total
                                     // table entries to consume before exanding.
 
-DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
+DOMNodeIDMap::DOMNodeIDMap(XMLSize_t initialSize, DOMDocument *doc)
 : fNumEntries(0)
 , fDoc(doc)
 {
@@ -51,11 +51,11 @@ DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
     }
 
     fSize = gPrimes[fSizeIndex];    
-    fMaxEntries = (unsigned int)(float(fSize) * gMaxFill);
+    fMaxEntries = (XMLSize_t)(float(fSize) * gMaxFill);
 
     //fTable = new (fDoc) DOMAttr*[fSize];
     fTable = (DOMAttr**) ((DOMDocumentImpl *)fDoc)->allocate(sizeof(DOMAttr*) * fSize);
-    unsigned int i;
+    XMLSize_t i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
 }
@@ -86,9 +86,9 @@ void DOMNodeIDMap::add(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    unsigned int initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
 	initalHash++;
-	unsigned int currentHash = initalHash;
+	XMLSize_t currentHash = initalHash;
 
 	//
 	// Loop looking for an empty slot for this ID.
@@ -119,9 +119,9 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    unsigned int initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
 	initalHash++;
-	unsigned int currentHash = initalHash;
+	XMLSize_t currentHash = initalHash;
 
 	//
 	// Loop looking for a slot pointing to an attr with this id.
@@ -152,9 +152,9 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
     //
     //  Get the hashcode for the supplied string.
     //
-	unsigned int initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
+	XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
 	initalHash++;
-	unsigned int currentHash = initalHash;
+	XMLSize_t currentHash = initalHash;
 
 	//
 	// Loop looking for a slot pointing to an attr with this id.
@@ -182,7 +182,7 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
 void DOMNodeIDMap::growTable()
 {
     DOMAttr     **oldTable = fTable;
-    unsigned int oldSize  = fSize;
+    XMLSize_t oldSize  = fSize;
 
     //
     //  Figure the new table size.
@@ -205,11 +205,11 @@ void DOMNodeIDMap::growTable()
     //
     //fTable = new (fDoc) DOMAttr *[fSize];
     fTable = (DOMAttr**) ((DOMDocumentImpl *)fDoc)->allocate(sizeof(DOMAttr*) * fSize);
-    unsigned int i;
+    XMLSize_t i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
 
-    fMaxEntries = (unsigned int)(float(fSize) * gMaxFill);
+    fMaxEntries = (XMLSize_t)(float(fSize) * gMaxFill);
 
     //
     // Move entries over from the old table to the new one.

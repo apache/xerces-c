@@ -36,7 +36,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructor
     // -----------------------------------------------------------------------
-    RefVectorOf(const unsigned int maxElems,
+    RefVectorOf(const XMLSize_t maxElems,
                 const bool adoptElems = true,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 

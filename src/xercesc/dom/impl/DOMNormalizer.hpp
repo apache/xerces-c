@@ -80,7 +80,7 @@ class DOMNormalizer : public XMemory {
         const XMLCh* getOrDeclarePrefix(const XMLCh* uri);
         const XMLCh* getPrefix(const XMLCh* uri) const;
         const XMLCh* getUri(const XMLCh* prefix) const;
-        int size();
+        XMLSize_t size();
 
     private:
         RefVectorOf<Scope> *fScopes;

@@ -78,13 +78,13 @@ public:
 	// backwards compatability - default hasher is HashXMLCh
     RefHashTableOf
     (
-        const unsigned int modulus
+        const XMLSize_t modulus
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 	// backwards compatability - default hasher is HashXMLCh
     RefHashTableOf
     (
-        const unsigned int modulus
+        const XMLSize_t modulus
         , const bool adoptElems
         , MemoryManager* const manager =  XMLPlatformUtils::fgMemoryManager
     );
@@ -93,7 +93,7 @@ public:
 	// may delete the hasher of a different hashtable if both use the same hasher.
     RefHashTableOf
     (
-        const unsigned int modulus
+        const XMLSize_t modulus
         , const bool adoptElems
         , HashBase* hashBase
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
@@ -119,8 +119,8 @@ public:
     TVal* get(const void* const key);
     const TVal* get(const void* const key) const;
     MemoryManager* getMemoryManager() const;   
-    unsigned int   getHashModulus()   const;
-    unsigned int   getCount() const;
+    XMLSize_t      getHashModulus()   const;
+    XMLSize_t      getCount() const;
 
     // -----------------------------------------------------------------------
     //  Setters
@@ -150,9 +150,9 @@ private:
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal);
-    const RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
-    void initialize(const unsigned int modulus);
+    RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, XMLSize_t& hashVal);
+    const RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, XMLSize_t& hashVal) const;
+    void initialize(const XMLSize_t modulus);
     void rehash();
 
 
@@ -178,9 +178,9 @@ private:
     MemoryManager*                 fMemoryManager;
     bool                           fAdoptedElems;
     RefHashTableBucketElem<TVal>** fBucketList;
-    unsigned int                   fHashModulus;
-    unsigned int                   fInitialModulus;
-    unsigned int                   fCount;
+    XMLSize_t                      fHashModulus;
+    XMLSize_t                      fInitialModulus;
+    XMLSize_t                      fCount;
     HashBase*                      fHash;
 };
 
@@ -246,7 +246,7 @@ private :
     // -----------------------------------------------------------------------
     bool                                  fAdopted;
     RefHashTableBucketElem<TVal>*         fCurElem;
-    unsigned int                          fCurHash;
+    XMLSize_t                             fCurHash;
     RefHashTableOf<TVal>*                 fToEnum;
     MemoryManager* const                  fMemoryManager;
 };

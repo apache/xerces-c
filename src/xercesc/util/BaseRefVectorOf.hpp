@@ -44,7 +44,7 @@ public :
     // -----------------------------------------------------------------------
     BaseRefVectorOf
     (
-          const unsigned int maxElems
+          const XMLSize_t maxElems
         , const bool adoptElems = true
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -55,11 +55,11 @@ public :
     //  Element management
     // -----------------------------------------------------------------------
     void addElement(TElem* const toAdd);
-    virtual void setElementAt(TElem* const toSet, const unsigned int setAt);
-    void insertElementAt(TElem* const toInsert, const unsigned int insertAt);
-    TElem* orphanElementAt(const unsigned int orphanAt);
+    virtual void setElementAt(TElem* const toSet, const XMLSize_t setAt);
+    void insertElementAt(TElem* const toInsert, const XMLSize_t insertAt);
+    TElem* orphanElementAt(const XMLSize_t orphanAt);
     virtual void removeAllElements();
-    virtual void removeElementAt(const unsigned int removeAt);
+    virtual void removeElementAt(const XMLSize_t removeAt);
     virtual void removeLastElement();
     bool containsElement(const TElem* const toCheck);
     virtual void cleanup();
@@ -69,17 +69,17 @@ public :
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int curCapacity() const;
-    const TElem* elementAt(const unsigned int getAt) const;
-    TElem* elementAt(const unsigned int getAt);
-    unsigned int size() const;
+    XMLSize_t curCapacity() const;
+    const TElem* elementAt(const XMLSize_t getAt) const;
+    TElem* elementAt(const XMLSize_t getAt);
+    XMLSize_t size() const;
     MemoryManager* getMemoryManager() const;
 
 
     // -----------------------------------------------------------------------
     //  Miscellaneous
     // -----------------------------------------------------------------------
-    void ensureExtraCapacity(const unsigned int length);
+    void ensureExtraCapacity(const XMLSize_t length);
 
 private:
     // -----------------------------------------------------------------------
@@ -93,8 +93,8 @@ protected:
     //  Data members
     // -----------------------------------------------------------------------
     bool            fAdoptedElems;
-    unsigned int    fCurCount;
-    unsigned int    fMaxCount;
+    XMLSize_t       fCurCount;
+    XMLSize_t       fMaxCount;
     TElem**         fElemList;
     MemoryManager*  fMemoryManager;
 };
@@ -145,7 +145,7 @@ private :
     //      The reference vector being enumerated.
     // -----------------------------------------------------------------------
     bool                fAdopted;
-    unsigned int        fCurIndex;
+    XMLSize_t           fCurIndex;
     BaseRefVectorOf<TElem>*    fToEnum;
 };
 

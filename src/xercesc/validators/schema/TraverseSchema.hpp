@@ -729,7 +729,7 @@ private:
     unsigned int                                   fCurrentScope;
     unsigned int                                   fScopeCount;
     unsigned int                                   fAnonXSTypeCount;
-    unsigned int                                   fCircularCheckIndex;
+    XMLSize_t                                      fCircularCheckIndex;
     const XMLCh*                                   fTargetNSURIString;
     DatatypeValidatorFactory*                      fDatatypeRegistry;
     GrammarResolver*                               fGrammarResolver;
@@ -889,7 +889,7 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix) {
 
 inline void TraverseSchema::popCurrentTypeNameStack() {
 
-    unsigned int stackSize = fCurrentTypeNameStack->size();
+    XMLSize_t stackSize = fCurrentTypeNameStack->size();
 
     if (stackSize != 0) {
         fCurrentTypeNameStack->removeElementAt(stackSize - 1);

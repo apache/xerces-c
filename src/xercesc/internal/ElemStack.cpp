@@ -125,7 +125,7 @@ unsigned int ElemStack::addLevel()
 
 
 unsigned int
-ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
+ElemStack::addLevel(XMLElementDecl* const toSet, const XMLSize_t readerNum)
 {
     // See if we need to expand the stack
     if (fStackTop == fStackCapacity)
@@ -175,7 +175,7 @@ const ElemStack::StackElem* ElemStack::popTop()
 
 
 void
-ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
+ElemStack::setElement(XMLElementDecl* const toSet, const XMLSize_t readerNum)
 {
     if (!fStackTop)
         ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
@@ -188,7 +188,7 @@ ElemStack::setElement(XMLElementDecl* const toSet, const unsigned int readerNum)
 // ---------------------------------------------------------------------------
 //  ElemStack: Stack top access
 // ---------------------------------------------------------------------------
-unsigned int ElemStack::addChild(QName* const child, const bool toParent)
+XMLSize_t ElemStack::addChild(QName* const child, const bool toParent)
 {
     if (!fStackTop)
         ThrowXMLwithMemMgr(EmptyStackException, XMLExcepts::ElemStack_EmptyStack, fMemoryManager);
@@ -421,14 +421,14 @@ void ElemStack::reset(  const   unsigned int    emptyId
 void ElemStack::expandMap(StackElem* const toExpand)
 {
     // For convenience get the old map size
-    const unsigned int oldCap = toExpand->fMapCapacity;
+    const XMLSize_t oldCap = toExpand->fMapCapacity;
 
     //
     //  Expand the capacity by 25%, or initialize it to 16 if its currently
     //  empty. Then allocate a new temp buffer.
     //
-    const unsigned int newCapacity = oldCap ?
-                                     (unsigned int)(oldCap * 1.25) : 16;
+    const XMLSize_t  newCapacity = oldCap ?
+                                     (XMLSize_t )(oldCap * 1.25) : 16;
     PrefMapElem* newMap = (PrefMapElem*) fMemoryManager->allocate
     (
         newCapacity * sizeof(PrefMapElem)
@@ -450,7 +450,7 @@ void ElemStack::expandMap(StackElem* const toExpand)
 void ElemStack::expandStack()
 {
     // Expand the capacity by 25% and allocate a new buffer
-    const unsigned int newCapacity = (unsigned int)(fStackCapacity * 1.25);
+    const XMLSize_t newCapacity = (XMLSize_t)(fStackCapacity * 1.25);
     StackElem** newStack = (StackElem**) fMemoryManager->allocate
     (
         newCapacity * sizeof(StackElem*)

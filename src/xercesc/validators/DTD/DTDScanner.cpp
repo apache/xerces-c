@@ -309,7 +309,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             //  to get back to here if we get an exception out of the
             //  ext subset scan.
             //
-            const unsigned int readerNum = fReaderMgr->getCurrentReaderNum();
+            const XMLSize_t readerNum = fReaderMgr->getCurrentReaderNum();
             try
             {
                 scanExtSubsetDecl(false, false);
@@ -563,7 +563,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
             bool ok = false;
             if (decl->getType() == XMLAttDef::Enumeration) {
                 BaseRefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration(), fMemoryManager);
-                int size = enumVector->size();
+                XMLSize_t size = enumVector->size();
                 ok = (size == 1 &&
                      (XMLString::equals(enumVector->elementAt(0), fgDefault) ||
                       XMLString::equals(enumVector->elementAt(0), fgPreserve))) ||
@@ -758,7 +758,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
     //  We have to get the current reader because we have to ignore closing
     //  quotes until we hit the same reader again.
     //
-    const unsigned int curReader = fReaderMgr->getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr->getCurrentReaderNum();
 
     //
     //  Loop until we get the attribute value. Note that we use a double
@@ -1042,7 +1042,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     checkForPERef(false, true);
 
     // We have to check entity nesting here
-    unsigned int curReader;
+    XMLSize_t curReader;
 
     //
     //  We know that the caller just saw an opening parenthesis, so we need
@@ -1523,7 +1523,7 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
     }
 
     // Get the current reader id, so we can test for partial markup
-    const unsigned int curReader = fReaderMgr->getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr->getCurrentReaderNum();
 
     // We could have a PE ref here, but don't require space
     checkForPERef(false, true);
@@ -1904,7 +1904,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
     secondCh = 0;
 
     // We have to insure its all done in a single entity
-    const unsigned int curReader = fReaderMgr->getCurrentReaderNum();
+    const XMLSize_t curReader = fReaderMgr->getCurrentReaderNum();
 
     //
     //  If the next char is a pound, then its a character reference and we
@@ -2089,7 +2089,7 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill)
     XMLBuffer& nameBuf = bbName.getBuffer();
 
     // Remember the current reader
-    const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+    const XMLSize_t orgReader = fReaderMgr->getCurrentReaderNum();
 
     //
     //  Loop until we see the ending quote character, handling any references
@@ -2474,7 +2474,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
     }
 
     // Get the current reader number
-    const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+    const XMLSize_t orgReader = fReaderMgr->getCurrentReaderNum();
 
     //
     //  Loop until we hit the end of the external subset entity. Note that
@@ -2500,7 +2500,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
                 {
                     // Get the reader we started this on
                     // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
-                    const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+                    const XMLSize_t orgReader = fReaderMgr->getCurrentReaderNum();
                     bool wasInPE = (fReaderMgr->getCurrentReader()->getType() == XMLReader::Type_PE);
 
                     //
@@ -2940,7 +2940,7 @@ bool DTDScanner::scanInternalSubset()
         {
             // Remember this reader before we start the scan, for checking
             // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
-            const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+            const XMLSize_t orgReader = fReaderMgr->getCurrentReaderNum();
             bool wasInPE = (fReaderMgr->getCurrentReader()->getType() == XMLReader::Type_PE);
 
             // And scan this markup
@@ -3077,7 +3077,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                     fScanner->emitError(XMLErrs::ExpectedINCLUDEBracket);
 
                 // Get the reader we started this on
-                const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+                const XMLSize_t orgReader = fReaderMgr->getCurrentReaderNum();
 
                 checkForPERef(false, true);
 
@@ -3104,7 +3104,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                     fScanner->emitError(XMLErrs::ExpectedINCLUDEBracket);
 
                 // Get the reader we started this on
-                const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+                const XMLSize_t orgReader = fReaderMgr->getCurrentReaderNum();
 
                 // And scan over the ignored part
                 scanIgnoredSection();

@@ -123,7 +123,7 @@ void XPathMatcher::init(XercesXPath* const xpath) {
                 fLocationPathSize * sizeof(int)
             );//new int[fLocationPathSize];
 
-            for(unsigned int i=0; i < fLocationPathSize; i++) {
+            for(XMLSize_t i=0; i < fLocationPathSize; i++) {
                 fStepIndexes->addElement(new (fMemoryManager) ValueStackOf<int>(8, fMemoryManager));
             }
         }
@@ -136,7 +136,7 @@ void XPathMatcher::init(XercesXPath* const xpath) {
 // ---------------------------------------------------------------------------
 void XPathMatcher::startDocumentFragment() {
 
-    for(unsigned int i = 0; i < fLocationPathSize; i++) {
+    for(XMLSize_t i = 0; i < fLocationPathSize; i++) {
 
         fStepIndexes->elementAt(i)->removeAllElements();
         fCurrentStep[i] = 0;
@@ -149,9 +149,9 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
                                 const unsigned int urlId,
                                 const XMLCh* const elemPrefix,
 								const RefVectorOf<XMLAttr>& attrList,
-                                const unsigned int attrCount) {
+                                const XMLSize_t attrCount) {
 
-    for (int i = 0; i < (int) fLocationPathSize; i++) {
+    for (XMLSize_t i = 0; i < fLocationPathSize; i++) {
 
         // push context
         int startStep = fCurrentStep[i];
@@ -169,7 +169,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
         // consume self::node() steps
         XercesLocationPath* locPath = fLocationPaths->elementAt(i);
-        int stepSize = locPath->getStepSize();
+        XMLSize_t stepSize = locPath->getStepSize();
 
         while (fCurrentStep[i] < stepSize &&
                locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::AxisType_SELF) {
@@ -244,7 +244,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
                 XercesNodeTest* nodeTest = locPath->getStep(fCurrentStep[i])->getNodeTest();
 
-                for (unsigned int attrIndex = 0; attrIndex < attrCount; attrIndex++) {
+                for (XMLSize_t attrIndex = 0; attrIndex < attrCount; attrIndex++) {
 
                     const XMLAttr* curDef = attrList.elementAt(attrIndex);
 
@@ -255,7 +255,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
                         if (fCurrentStep[i] == stepSize) {
 
                             fMatched[i] = XP_MATCHED_A;
-                            int j=0;
+                            XMLSize_t j=0;
 
                             for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
 
@@ -288,7 +288,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
                               const XMLCh* const elemContent) {
 
-    for(int i = 0; i < (int) fLocationPathSize; i++) {
+    for(XMLSize_t i = 0; i < fLocationPathSize; i++) {
 
         // go back a step
         fCurrentStep[i] = fStepIndexes->elementAt(i)->pop();
@@ -300,7 +300,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
         // signal match, if appropriate
         else {
 
-            int j=0;
+            XMLSize_t j=0;
             for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
 
             if ((j < i) || (fMatched[j] == 0)) {
@@ -327,7 +327,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
 int XPathMatcher::isMatched() {
 
     // xpath has been matched if any one of the members of the union have matched.
-    for (int i=0; i < (int) fLocationPathSize; i++) {
+    for (XMLSize_t i=0; i < fLocationPathSize; i++) {
         if (((fMatched[i] & XP_MATCHED) == XP_MATCHED)
             && ((fMatched[i] & XP_MATCHED_DP) != XP_MATCHED_DP))
             return fMatched[i];

@@ -61,7 +61,7 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
                                    const unsigned int urlId,
                                    const XMLCh* const elemPrefix,
                                    const RefVectorOf<XMLAttr>& attrList,
-                                   const unsigned int attrCount) {
+                                   const XMLSize_t attrCount) {
 
     XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
     fElementDepth++;
@@ -72,12 +72,12 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
         || ((matched & XP_MATCHED_D) == XP_MATCHED_D)) {
 
         IdentityConstraint* ic = fSelector->getIdentityConstraint();
-        int count = ic->getFieldCount();
+        XMLSize_t count = ic->getFieldCount();
 
         fMatchedDepth = fElementDepth;
         fFieldActivator->startValueScopeFor(ic, fInitialDepth);
 
-        for (int i = 0; i < count; i++) {
+        for (XMLSize_t i = 0; i < count; i++) {
 
             XPathMatcher* matcher = fFieldActivator->activateField(ic->getFieldAt(i), fInitialDepth);
             matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);

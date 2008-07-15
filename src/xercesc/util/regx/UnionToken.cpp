@@ -81,7 +81,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
         return;
     }
 
-    unsigned int childrenSize = fChildren->size();
+    XMLSize_t childrenSize = fChildren->size();
     if (childrenSize == 0) {
 
         fChildren->addElement(child);

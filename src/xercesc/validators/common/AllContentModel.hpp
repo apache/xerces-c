@@ -60,27 +60,27 @@ public :
     virtual bool validateContent
     (
         QName** const         children
-      , unsigned int          childCount
+      , XMLSize_t             childCount
       , unsigned int          emptyNamespaceId
-      , unsigned int*         indexFailingChild
+      , XMLSize_t*            indexFailingChild
       , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     )   const;
 
 	virtual bool validateContentSpecial
     (
         QName** const           children
-      , unsigned int            childCount
+      , XMLSize_t               childCount
       , unsigned int            emptyNamespaceId
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
-      , unsigned int*           indexFailingChild
+      , XMLSize_t*              indexFailingChild
       , MemoryManager*    const manager = XMLPlatformUtils::fgMemoryManager
     ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
     virtual unsigned int getNextState(unsigned int currentState,
-                                      unsigned int elementIndex) const;
+                                      XMLSize_t    elementIndex) const;
 
     virtual void checkUniqueParticleAttribution
     (
@@ -132,7 +132,7 @@ private :
     //      AllContentModel with mixed PCDATA.
     // -----------------------------------------------------------------------
     MemoryManager* fMemoryManager;
-    unsigned int    fCount;
+    XMLSize_t       fCount;
     QName**         fChildren;
     bool*           fChildOptional;
     unsigned int    fNumRequired;
@@ -147,7 +147,7 @@ inline ContentLeafNameTypeVector* AllContentModel::getContentLeafNameTypeVector(
 
 inline unsigned int
 AllContentModel::getNextState(unsigned int,
-                              unsigned int) const {
+                              XMLSize_t) const {
 
     return XMLContentModel::gInvalidTrans;
 }

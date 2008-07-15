@@ -81,20 +81,20 @@ public:
 	virtual bool validateContent
     (
         QName** const         children
-      , unsigned int          childCount
+      , XMLSize_t             childCount
       , unsigned int          emptyNamespaceId
-      , unsigned int*         indexFailingChild
+      , XMLSize_t*            indexFailingChild
       , MemoryManager*  const manager = XMLPlatformUtils::fgMemoryManager
     ) const = 0;
 
 	virtual bool validateContentSpecial
     (
         QName** const           children
-      , unsigned int            childCount
+      , XMLSize_t               childCount
       , unsigned int            emptyNamespaceId
       , GrammarResolver*  const pGrammarResolver
       , XMLStringPool*    const pStringPool
-      , unsigned int*           indexFailingChild
+      , XMLSize_t*              indexFailingChild
       , MemoryManager*    const manager = XMLPlatformUtils::fgMemoryManager
     ) const =0;
 
@@ -112,7 +112,7 @@ public:
 	  const = 0;
 
     virtual unsigned int getNextState(unsigned int currentState,
-                                      unsigned int elementIndex) const = 0;
+                                      XMLSize_t    elementIndex) const = 0;
 
 protected :
     // -----------------------------------------------------------------------

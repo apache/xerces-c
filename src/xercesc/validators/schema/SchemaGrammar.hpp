@@ -87,7 +87,7 @@ public:
         ,       bool&           wasAdded
     ) ;
 
-    virtual unsigned int getElemId
+    virtual XMLSize_t getElemId
     (
         const   unsigned int    uriId
         , const XMLCh* const    baseName
@@ -143,13 +143,13 @@ public:
         , const bool            notDeclared = false
     );
 
-    virtual unsigned int putElemDecl
+    virtual XMLSize_t putElemDecl
     (
         XMLElementDecl* const elemDecl
         , const bool          notDeclared = false
     )   ;
 
-    virtual unsigned int putNotationDecl
+    virtual XMLSize_t putNotationDecl
     (
         XMLNotationDecl* const notationDecl
     )   const;
@@ -188,7 +188,7 @@ public:
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
-    unsigned int putGroupElemDecl
+    XMLSize_t putGroupElemDecl
     (
         XMLElementDecl* const elemDecl
     )   const;
@@ -468,7 +468,7 @@ inline const XMLCh* SchemaGrammar::getTargetNamespace() const {
 }
 
 // Element Decl
-inline unsigned int SchemaGrammar::getElemId (const   unsigned int  uriId
+inline XMLSize_t SchemaGrammar::getElemId (const   unsigned int  uriId
                                               , const XMLCh* const    baseName
                                               , const XMLCh* const
                                               , unsigned int          scope ) const
@@ -546,7 +546,7 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
     return decl;
 }
 
-inline unsigned int
+inline XMLSize_t
 SchemaGrammar::putElemDecl(XMLElementDecl* const elemDecl,
                            const bool notDeclared) 
 {
@@ -560,7 +560,7 @@ SchemaGrammar::putElemDecl(XMLElementDecl* const elemDecl,
     return fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
 }
 
-inline unsigned int SchemaGrammar::putGroupElemDecl (XMLElementDecl* const elemDecl)   const
+inline XMLSize_t SchemaGrammar::putGroupElemDecl (XMLElementDecl* const elemDecl)   const
 {
     return fGroupElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), ((SchemaElementDecl* )elemDecl)->getEnclosingScope(), (SchemaElementDecl*) elemDecl);
 }
@@ -576,7 +576,7 @@ inline XMLNotationDecl* SchemaGrammar::getNotationDecl(const XMLCh* const notNam
     return fNotationDeclPool->getByKey(notName);
 }
 
-inline unsigned int SchemaGrammar::putNotationDecl(XMLNotationDecl* const notationDecl)   const
+inline XMLSize_t SchemaGrammar::putNotationDecl(XMLNotationDecl* const notationDecl)   const
 {
     return fNotationDeclPool->put(notationDecl);
 }

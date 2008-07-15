@@ -50,7 +50,7 @@ class   DOMDocumentImpl;
 class DOMStringPool
 {
 public:
-    DOMStringPool(int  hashTableSize, DOMDocumentImpl *doc);
+    DOMStringPool(XMLSize_t hashTableSize, DOMDocumentImpl *doc);
     ~DOMStringPool();
 
     const XMLCh *getPooledString(const XMLCh *in);
@@ -63,7 +63,7 @@ private:
 
     DOMDocumentImpl     *fDoc;
     DOMStringPoolEntry **fHashTable;
-    int                 fHashTableSize;
+    XMLSize_t            fHashTableSize;
 
 };
 

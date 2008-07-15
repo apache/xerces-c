@@ -1861,7 +1861,7 @@ bool XMLScanner::isLegalToken(const XMLPScanToken& toCheck)
 //  in the input stream. It will return an enumerated value that indicates
 //  what it believes the next XML level token must be. It will eat as many
 //  chars are required to figure out what is next.
-XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
+XMLScanner::XMLTokens XMLScanner::senseNextToken(XMLSize_t& orgReader)
 {
     //  Get the next character and use it to guesstimate what the next token
     //  is going to be. We turn on end of entity exceptions when we do this

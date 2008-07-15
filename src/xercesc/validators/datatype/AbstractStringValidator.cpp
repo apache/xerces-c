@@ -36,8 +36,8 @@ static const int BUF_LEN = 64;
 #define  REPORT_FACET_ERROR(val1, val2, except_code, manager)    \
     XMLCh value1[BUF_LEN+1]; \
     XMLCh value2[BUF_LEN+1]; \
-   XMLString::binToText(val1, value1, BUF_LEN, 10, manager);     \
-   XMLString::binToText(val2, value2, BUF_LEN, 10, manager);     \
+   XMLString::binToText((unsigned long)val1, value1, BUF_LEN, 10, manager);     \
+   XMLString::binToText((unsigned long)val2, value2, BUF_LEN, 10, manager);     \
    ThrowXMLwithMemMgr2(InvalidDatatypeFacetException             \
            , except_code                                \
            , value1                                     \
@@ -47,8 +47,8 @@ static const int BUF_LEN = 64;
 #define  REPORT_VALUE_ERROR(data, val1, val2, except_code, manager)      \
     XMLCh value1[BUF_LEN+1]; \
     XMLCh value2[BUF_LEN+1]; \
-   XMLString::binToText(val1, value1, BUF_LEN, 10, manager);             \
-   XMLString::binToText(val2, value2, BUF_LEN, 10, manager);             \
+   XMLString::binToText((unsigned long)val1, value1, BUF_LEN, 10, manager);             \
+   XMLString::binToText((unsigned long)val2, value2, BUF_LEN, 10, manager);             \
    ThrowXMLwithMemMgr3(InvalidDatatypeValueException                     \
            , except_code                                        \
            , data                                               \
@@ -247,8 +247,8 @@ void AbstractStringValidator::inspectFacet(MemoryManager* const manager)
     if ((thisFacetsDefined & (DatatypeValidator::FACET_MINLENGTH
         |DatatypeValidator::FACET_MAXLENGTH)) != 0)
     {
-        int thisMinLength = getMinLength();
-        int thisMaxLength = getMaxLength();
+        XMLSize_t thisMinLength = getMinLength();
+        XMLSize_t thisMaxLength = getMaxLength();
         if ( thisMinLength > thisMaxLength )
         {
             REPORT_FACET_ERROR(thisMaxLength
@@ -278,13 +278,13 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
 
     int baseFacetsDefined = pBaseValidator->getFacetsDefined();
 
-    int thisLength    = getLength();
-    int thisMinLength = getMinLength();
-    int thisMaxLength = getMaxLength();
+    XMLSize_t thisLength    = getLength();
+    XMLSize_t thisMinLength = getMinLength();
+    XMLSize_t thisMaxLength = getMaxLength();
 
-    int baseLength    = pBaseValidator->getLength();
-    int baseMinLength = pBaseValidator->getMinLength();
-    int baseMaxLength = pBaseValidator->getMaxLength();
+    XMLSize_t baseLength    = pBaseValidator->getLength();
+    XMLSize_t baseMinLength = pBaseValidator->getMinLength();
+    XMLSize_t baseMaxLength = pBaseValidator->getMaxLength();
     int baseFixed     = pBaseValidator->getFixed();
 
     /***
@@ -451,8 +451,8 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
     if ( ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0) &&
         (getEnumeration() !=0))
     {
-        int i = 0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i = 0;
+        XMLSize_t enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
             // ask parent do a complete check
@@ -585,7 +585,7 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         return;
 
     checkValueSpace(content, manager);
-    unsigned int length = getLength(content, manager);
+    int length = getLength(content, manager);
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (length > getMaxLength()))
@@ -624,8 +624,8 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         ArrayJanitor<XMLCh>  jan(normContent, manager);
         normalizeContent(normContent, manager);
 
-        int i=0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i=0;
+        XMLSize_t enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
             if (XMLString::equals(normContent, getEnumeration()->elementAt(i)))
@@ -664,16 +664,16 @@ void AbstractStringValidator::normalizeEnumeration(MemoryManager* const manager)
     }
     else if ( whiteSpace == DatatypeValidator::REPLACE )
     {
-        int enumLength = getEnumeration()->size();
-        for ( int i=0; i < enumLength; i++)
+        XMLSize_t enumLength = getEnumeration()->size();
+        for ( XMLSize_t i=0; i < enumLength; i++)
         {
             XMLString::replaceWS(getEnumeration()->elementAt(i), manager);
         }
     }
     else if ( whiteSpace == DatatypeValidator::COLLAPSE )
     {
-        int enumLength = getEnumeration()->size();
-        for ( int i=0; i < enumLength; i++)
+        XMLSize_t enumLength = getEnumeration()->size();
+        for ( XMLSize_t i=0; i < enumLength; i++)
         {
             XMLString::collapseWS(getEnumeration()->elementAt(i), manager);
         }                

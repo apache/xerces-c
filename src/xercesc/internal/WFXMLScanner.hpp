@@ -149,7 +149,7 @@ private :
     unsigned int                       fElementIndex;
     RefVectorOf<XMLElementDecl>*       fElements;
     ValueHashTableOf<XMLCh>*           fEntityTable;
-    ValueVectorOf<unsigned int>*       fAttrNameHashList;
+    ValueVectorOf<XMLSize_t>*          fAttrNameHashList;
     ValueVectorOf<XMLAttr*>*           fAttrNSList;
     RefHashTableOf<XMLElementDecl>*    fElementLookup;  
 };

@@ -109,17 +109,17 @@ protected:
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
-    unsigned int buildAttList
+    XMLSize_t buildAttList
     (
         const   RefVectorOf<KVStringPair>&  providedAttrs
-        , const unsigned int                attCount
+        , const XMLSize_t                   attCount
         ,       XMLElementDecl*             elemDecl
         ,       RefVectorOf<XMLAttr>&       toFill
     );
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,
                               const unsigned int parentElemDepth);
-    unsigned int rawAttrScan
+    XMLSize_t rawAttrScan
     (
         const   XMLCh* const                elemName
         ,       RefVectorOf<KVStringPair>&  toFill
@@ -258,7 +258,7 @@ private :
         ,       XMLBuffer&          uriBufToFill
         , const ElemStack::MapModes mode
     );
-    void scanRawAttrListforNameSpaces(int attCount);
+    void scanRawAttrListforNameSpaces(XMLSize_t attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);

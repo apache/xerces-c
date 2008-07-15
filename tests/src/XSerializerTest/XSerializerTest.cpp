@@ -324,7 +324,7 @@ static void parseCase(const char* const xmlFile)
 
     BinInputStream*  myIn  = new BinMemInputStream(
                                                    ((BinMemOutputStream*)myOut)->getRawBuffer()
-                                                 , ((BinMemOutputStream*)myOut)->getSize()
+                                                 , (XMLSize_t)((BinMemOutputStream*)myOut)->getSize()
                                                  , BinMemInputStream::BufOpt_Reference
                                                   );
     Janitor<BinInputStream> janIn(myIn);

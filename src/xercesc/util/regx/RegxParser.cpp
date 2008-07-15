@@ -109,8 +109,8 @@ Token* RegxParser::parse(const XMLCh* const regxStr, const int options) {
 
     if (fReferences != 0) {
 
-		unsigned int refSize = fReferences->size();
-        for (unsigned int i = 0; i < refSize; i++) {
+		XMLSize_t refSize = fReferences->size();
+        for (XMLSize_t i = 0; i < refSize; i++) {
 
 			if (fNoGroups <= fReferences->elementAt(i)->fReferenceNo) {
                 ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Parse2, fMemoryManager);

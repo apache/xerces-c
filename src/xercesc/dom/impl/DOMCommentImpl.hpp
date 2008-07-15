@@ -62,7 +62,7 @@ public:
     virtual void          appendData(const  XMLCh *data);
     virtual void          deleteData(XMLSize_t offset, XMLSize_t count);
     virtual const XMLCh * getData() const;
-    virtual XMLSize_t  getLength() const;
+    virtual XMLSize_t     getLength() const;
     virtual void          insertData(XMLSize_t offset, const XMLCh * data);
     virtual void          replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh * data);
     virtual void          setData(const XMLCh * arg);

@@ -89,7 +89,7 @@ AllContentModel::AllContentModel( ContentSpecNode* const parentContentSpec
 
 AllContentModel::~AllContentModel()
 {
-    for (unsigned int index = 0; index < fCount; index++)
+    for (XMLSize_t index = 0; index < fCount; index++)
         delete fChildren[index];
     fMemoryManager->deallocate(fChildren); //delete [] fChildren;
     fMemoryManager->deallocate(fChildOptional); //delete [] fChildOptional;
@@ -106,9 +106,9 @@ AllContentModel::~AllContentModel()
 //
 bool
 AllContentModel::validateContent( QName** const         children
-                                , unsigned int          childCount
+                                , XMLSize_t             childCount
                                 , unsigned int
-                                , unsigned int*         indexFailingChild
+                                , XMLSize_t*            indexFailingChild
                                 , MemoryManager*    const manager) const
 {
     // If <all> had minOccurs of zero and there are
@@ -117,7 +117,7 @@ AllContentModel::validateContent( QName** const         children
         return true;
 
     // keep track of the required element seen
-    unsigned int numRequiredSeen = 0;
+    XMLSize_t numRequiredSeen = 0;
 
     if(childCount > 0)
     {        
@@ -127,10 +127,10 @@ AllContentModel::validateContent( QName** const         children
         const ArrayJanitor<bool> jan(elementSeen, manager);
 
         // initialize the array
-        for (unsigned int i = 0; i < fCount; i++)
+        for (XMLSize_t i = 0; i < fCount; i++)
             elementSeen[i] = false;
 
-        for (unsigned int outIndex = 0; outIndex < childCount; outIndex++) {
+        for (XMLSize_t outIndex = 0; outIndex < childCount; outIndex++) {
             // Get the current child out of the source index
             const QName* curChild = children[outIndex];
 
@@ -139,7 +139,7 @@ AllContentModel::validateContent( QName** const         children
                 continue;
 
             // And try to find it in our list
-            unsigned int inIndex = 0;
+            XMLSize_t inIndex = 0;
             for (; inIndex < fCount; inIndex++)
             {
                 const QName* inChild = fChildren[inIndex];
@@ -183,11 +183,11 @@ AllContentModel::validateContent( QName** const         children
 
 
 bool AllContentModel::validateContentSpecial(QName** const          children
-                                          , unsigned int            childCount
+                                          , XMLSize_t               childCount
                                           , unsigned int
                                           , GrammarResolver*  const pGrammarResolver
                                           , XMLStringPool*    const pStringPool
-                                          , unsigned int*           indexFailingChild
+                                          , XMLSize_t*              indexFailingChild
                                           , MemoryManager*    const manager) const
 {
     // If <all> had minOccurs of zero and there are
@@ -196,7 +196,7 @@ bool AllContentModel::validateContentSpecial(QName** const          children
         return true;
 
     // keep track of the required element seen
-    unsigned int numRequiredSeen = 0;
+    XMLSize_t numRequiredSeen = 0;
 
     if(childCount > 0)
     {
@@ -208,10 +208,10 @@ bool AllContentModel::validateContentSpecial(QName** const          children
         const ArrayJanitor<bool> jan(elementSeen, manager);
 
         // initialize the array
-        for (unsigned int i = 0; i < fCount; i++)
+        for (XMLSize_t i = 0; i < fCount; i++)
             elementSeen[i] = false;
 
-        for (unsigned int outIndex = 0; outIndex < childCount; outIndex++) {
+        for (XMLSize_t outIndex = 0; outIndex < childCount; outIndex++) {
             // Get the current child out of the source index
             QName* const curChild = children[outIndex];
 
@@ -220,7 +220,7 @@ bool AllContentModel::validateContentSpecial(QName** const          children
                 continue;
 
             // And try to find it in our list
-            unsigned int inIndex = 0;
+            XMLSize_t inIndex = 0;
             for (; inIndex < fCount; inIndex++)
             {
                 QName* const inChild = fChildren[inIndex];
@@ -274,7 +274,7 @@ void AllContentModel::checkUniqueParticleAttribution
 {
     SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
 
-    unsigned int i, j;
+    XMLSize_t i, j;
 
     // rename back
     for (i = 0; i < fCount; i++) {

@@ -96,7 +96,7 @@ public:
         ,       bool&           wasAdded
     ) = 0;
 
-    virtual unsigned int getElemId
+    virtual XMLSize_t getElemId
     (
         const   unsigned int    uriId
         , const XMLCh* const    baseName
@@ -154,13 +154,13 @@ public:
         , const bool            notDeclared = false
     ) = 0;
 
-    virtual unsigned int putElemDecl
+    virtual XMLSize_t putElemDecl
     (
         XMLElementDecl* const elemDecl
         , const bool          notDeclared = false
     )   = 0;
 
-    virtual unsigned int putNotationDecl
+    virtual XMLSize_t putNotationDecl
     (
         XMLNotationDecl* const notationDecl
     )   const=0;

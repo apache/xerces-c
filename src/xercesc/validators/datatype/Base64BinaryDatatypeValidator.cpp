@@ -90,8 +90,8 @@ int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content
 void Base64BinaryDatatypeValidator::normalizeEnumeration(MemoryManager* const manager)
 {
 
-    int enumLength = getEnumeration()->size();
-    for ( int i=0; i < enumLength; i++)
+    XMLSize_t enumLength = getEnumeration()->size();
+    for ( XMLSize_t i=0; i < enumLength; i++)
     {
         XMLString::removeWS(getEnumeration()->elementAt(i), manager);
     }

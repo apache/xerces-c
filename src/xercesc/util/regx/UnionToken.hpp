@@ -42,8 +42,8 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    int size() const;
-    Token* getChild(const int index) const;
+    XMLSize_t size() const;
+    Token* getChild(const XMLSize_t index) const;
 
 	// -----------------------------------------------------------------------
     //  Children manipulation methods
@@ -72,12 +72,12 @@ private:
 // ---------------------------------------------------------------------------
 //  UnionToken: getter methods
 // ---------------------------------------------------------------------------
-inline int UnionToken::size() const {
+inline XMLSize_t UnionToken::size() const {
 
     return fChildren == 0 ? 0 : fChildren->size();
 }
 
-inline Token* UnionToken::getChild(const int index) const {
+inline Token* UnionToken::getChild(const XMLSize_t index) const {
 
     return fChildren->elementAt(index);
 }

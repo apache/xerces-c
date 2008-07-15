@@ -40,7 +40,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefStackOf(const unsigned int initElems,
+    RefStackOf(const XMLSize_t initElems,
                const bool adoptElems = true,
                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~RefStackOf();
@@ -49,8 +49,8 @@ public :
     // -----------------------------------------------------------------------
     //  Element management methods
     // -----------------------------------------------------------------------
-    const TElem* elementAt(const unsigned int index) const;
-    TElem* popAt(const unsigned int index);
+    const TElem* elementAt(const XMLSize_t index) const;
+    TElem* popAt(const XMLSize_t index);
     void push(TElem* const toPush);
     const TElem* peek() const;
     TElem* pop();
@@ -61,8 +61,8 @@ public :
     //  Getter methods
     // -----------------------------------------------------------------------
     bool empty();
-    unsigned int curCapacity();
-    unsigned int size();
+    XMLSize_t curCapacity();
+    XMLSize_t size();
 
 
 private :
@@ -138,7 +138,7 @@ private :
     //      inside of it.
     // -----------------------------------------------------------------------
     bool                fAdopted;
-    unsigned int        fCurIndex;
+    XMLSize_t           fCurIndex;
     RefVectorOf<TElem>* fVector;
     RefStackOf<TElem>*  fToEnum;
 };

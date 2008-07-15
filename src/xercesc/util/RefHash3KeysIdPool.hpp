@@ -91,17 +91,17 @@ public:
     // backwards compatability - default hasher is HashXMLCh
     RefHash3KeysIdPool
     (
-          const unsigned int   modulus
-        , const unsigned int   initSize = 128
+          const XMLSize_t     modulus
+        , const XMLSize_t     initSize = 128
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     // backwards compatability - default hasher is HashXMLCh
     RefHash3KeysIdPool
     (
-          const unsigned int   modulus
+          const XMLSize_t      modulus
         , const bool           adoptElems
-        , const unsigned int   initSize = 128
+        , const XMLSize_t      initSize = 128
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -110,10 +110,10 @@ public:
     // may delete the hasher of a different hashtable if both use the same hasher.
     RefHash3KeysIdPool
     (
-          const unsigned int   modulus
+          const XMLSize_t      modulus
         , const bool           adoptElems
         , HashBase* hashBase
-        , const unsigned int initSize = 128
+        , const XMLSize_t      initSize = 128
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -137,12 +137,12 @@ public:
     const TVal* getById(const unsigned int elemId) const;
 
     MemoryManager* getMemoryManager() const;
-    unsigned int   getHashModulus()   const;
+    XMLSize_t      getHashModulus()   const;
 
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-	unsigned int put(void* key1, int key2, int key3, TVal* const valueToAdopt);
+	XMLSize_t put(void* key1, int key2, int key3, TVal* const valueToAdopt);
 
 
 private :
@@ -161,9 +161,9 @@ private:
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------
-    RefHash3KeysTableBucketElem<TVal>* findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal);
-    const RefHash3KeysTableBucketElem<TVal>* findBucketElem(const void* const key1, const int key2, const int key3, unsigned int& hashVal) const;
-    void initialize(const unsigned int modulus);
+    RefHash3KeysTableBucketElem<TVal>* findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal);
+    const RefHash3KeysTableBucketElem<TVal>* findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal) const;
+    void initialize(const XMLSize_t modulus);
 
 
     // -----------------------------------------------------------------------
@@ -202,11 +202,11 @@ private:
     MemoryManager*                      fMemoryManager;
     bool                                fAdoptedElems;
     RefHash3KeysTableBucketElem<TVal>** fBucketList;
-    unsigned int                        fHashModulus;
+    XMLSize_t                           fHashModulus;
     HashBase*                           fHash;
     TVal**                              fIdPtrs;
-    unsigned int                        fIdPtrsCount;
-    unsigned int                        fIdCounter;
+    XMLSize_t                           fIdPtrsCount;
+    XMLSize_t                          fIdCounter;
 };
 
 
@@ -233,7 +233,7 @@ public :
     bool hasMoreElements() const;
     TVal& nextElement();
     void Reset();
-    int  size() const;
+    XMLSize_t size() const;
 
     // -----------------------------------------------------------------------
     //  New interface
@@ -268,10 +268,10 @@ private :
     //      The name id pool that is being enumerated.
     // -----------------------------------------------------------------------
     bool                                fAdoptedElems;
-    unsigned int                        fCurIndex;
+    XMLSize_t                           fCurIndex;
     RefHash3KeysIdPool<TVal>*           fToEnum;
     RefHash3KeysTableBucketElem<TVal>*  fCurElem;
-    unsigned int                        fCurHash;
+    XMLSize_t                           fCurHash;
     MemoryManager* const                fMemoryManager;
 };
 

@@ -137,7 +137,7 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
         );
         if(!fElemNonDeclPool)
             fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
-        const unsigned int elemId = fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
+        const XMLSize_t elemId = fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal);
         retVal->setId(elemId);
         wasAdded = true;
     }

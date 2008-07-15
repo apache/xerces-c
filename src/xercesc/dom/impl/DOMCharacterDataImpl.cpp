@@ -77,9 +77,9 @@ void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            unsigned int sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (unsigned int i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->receiveReplacedText((DOMNode*)node);
                 }
             }
@@ -150,9 +150,9 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            unsigned int sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (unsigned int i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateRangeForDeletedText( (DOMNode*)node, offset, count);
                 }
             }
@@ -218,9 +218,9 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            unsigned int sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (unsigned int i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateRangeForInsertedText( (DOMNode*)node, offset, datLen);
                 }
             }

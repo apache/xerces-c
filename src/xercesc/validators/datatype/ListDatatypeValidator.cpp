@@ -86,8 +86,8 @@ int ListDatatypeValidator::compare(const XMLCh*     const lValue
     BaseRefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janr(rVector);
 
-    int lNumberOfTokens = lVector->size();
-    int rNumberOfTokens = rVector->size();
+    XMLSize_t lNumberOfTokens = lVector->size();
+    XMLSize_t rNumberOfTokens = rVector->size();
 
     if (lNumberOfTokens < rNumberOfTokens)
         return -1;
@@ -95,7 +95,7 @@ int ListDatatypeValidator::compare(const XMLCh*     const lValue
         return 1;
     else
     { //compare each token
-        for ( int i = 0; i < lNumberOfTokens; i++)
+        for ( XMLSize_t i = 0; i < lNumberOfTokens; i++)
         {
             int returnValue = theItemTypeDTV->compare(lVector->elementAt(i), rVector->elementAt(i), manager);
             if (returnValue != 0)
@@ -168,7 +168,7 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     if (asBase)
         return;
 
-    unsigned int tokenNumber = tokenVector->size();
+    XMLSize_t tokenNumber = tokenVector->size();
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (tokenNumber > getMaxLength()))
@@ -221,8 +221,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
     {
-        int i;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i;
+        XMLSize_t enumLength = getEnumeration()->size();
 
         for ( i = 0; i < enumLength; i++)
         {
@@ -292,7 +292,7 @@ int ListDatatypeValidator::getLength(const XMLCh* const content
     BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
 
-    return tokenVector->size();
+    return (int)tokenVector->size();
 }
 
 void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
@@ -313,8 +313,8 @@ void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
         if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
              (getEnumeration() !=0)                                              )
         {
-            int i;
-            int enumLength = getEnumeration()->size();
+            XMLSize_t i;
+            XMLSize_t enumLength = getEnumeration()->size();
             try
             {
                 for ( i = 0; i < enumLength; i++)
@@ -322,11 +322,11 @@ void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)
                     // ask the itemType for a complete check
                     BaseRefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i), manager);
                     Janitor<BaseRefVectorOf<XMLCh> >    jan(tempList);
-                    int tokenNumber = tempList->size();
+                    XMLSize_t tokenNumber = tempList->size();
 
                     try
                     {
-                        for ( int j = 0; j < tokenNumber; j++)
+                        for ( XMLSize_t j = 0; j < tokenNumber; j++)
                             getBaseValidator()->validate(tempList->elementAt(j), (ValidationContext*)0, manager);
                     }
                     catch(const OutOfMemoryException&)

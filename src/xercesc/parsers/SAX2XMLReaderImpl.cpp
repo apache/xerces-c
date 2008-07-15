@@ -146,7 +146,7 @@ void SAX2XMLReaderImpl::initialize()
     setDoSchema(true);
 
     fPrefixesStorage = new (fMemoryManager) XMLStringPool(109, fMemoryManager) ;
-    fPrefixes        = new (fMemoryManager) ValueStackOf<XMLSize_t> (30, fMemoryManager) ;
+    fPrefixes        = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
     fTempAttrVec     = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
     fPrefixCounts    = new (fMemoryManager) ValueStackOf<XMLSize_t>(10, fMemoryManager) ;
     fTempQName       = new (fMemoryManager) XMLBuffer(32, fMemoryManager);
@@ -742,7 +742,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                         nsPrefix = XMLUni::fgZeroLenString;
                     if(fDocHandler)
                         fDocHandler->startPrefixMapping(nsPrefix, nsURI);
-                    XMLSize_t nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);
+                    unsigned int nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);
                     fPrefixes->push(nPrefixId) ;
                     numPrefix++;
                 }
@@ -797,7 +797,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 XMLSize_t numPrefix = fPrefixCounts->pop();
                 for (XMLSize_t i = 0; i < numPrefix; ++i)
                 {
-                    XMLSize_t nPrefixId = fPrefixes->pop() ;
+                    unsigned int nPrefixId = fPrefixes->pop() ;
                     if(fDocHandler)
                         fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
                 }
@@ -872,7 +872,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
             XMLSize_t numPrefix = fPrefixCounts->pop();
             for (XMLSize_t i = 0; i < numPrefix; i++)
             {
-                XMLSize_t nPrefixId = fPrefixes->pop() ;
+                unsigned int nPrefixId = fPrefixes->pop() ;
                 if(fDocHandler)
                     fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
             }

@@ -413,9 +413,9 @@ NodeIterators* DOMDocumentImpl::getNodeIterators() const
 void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
 {
     if (fNodeIterators != 0) {
-        unsigned int sz = fNodeIterators->size();
+        XMLSize_t sz = fNodeIterators->size();
         if (sz !=0) {
-            for (unsigned int i =0; i<sz; i++) {
+            for (XMLSize_t i =0; i<sz; i++) {
                 if (fNodeIterators->elementAt(i) == nodeIterator) {
                     fNodeIterators->removeElementAt(i);
                     break;
@@ -687,9 +687,9 @@ Ranges* DOMDocumentImpl::getRanges() const
 void DOMDocumentImpl::removeRange(DOMRangeImpl* range)
 {
     if (fRanges != 0) {
-        unsigned int sz = fRanges->size();
+        XMLSize_t sz = fRanges->size();
         if (sz !=0) {
-            for (unsigned int i =0; i<sz; i++) {
+            for (XMLSize_t i =0; i<sz; i++) {
                 if (fRanges->elementAt(i) == range) {
                     fRanges->removeElementAt(i);
                     break;
@@ -1097,7 +1097,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             }
             DOMNamedNodeMap *srcattr=source->getAttributes();
             if(srcattr!=0)
-                for(unsigned int i=0;i<srcattr->getLength();++i)
+                for(XMLSize_t i=0;i<srcattr->getLength();++i)
                 {
                     DOMAttr *attr = (DOMAttr *) srcattr->item(i);
                     if (attr -> getSpecified() || cloningDoc) { // not a default attribute or we are in the process of cloning the elements from inside a DOMDocumentType
@@ -1197,14 +1197,14 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             DOMNamedNodeMap *smap = srcdoctype->getEntities();
             DOMNamedNodeMap *tmap = newdoctype->getEntities();
             if(smap != 0) {
-                for(unsigned int i = 0; i < smap->getLength(); i++) {
+                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
                     tmap->setNamedItem(importNode(smap->item(i), true, cloningDoc));
                 }
             }
             smap = srcdoctype->getNotations();
             tmap = newdoctype->getNotations();
             if (smap != 0) {
-                for(unsigned int i = 0; i < smap->getLength(); i++) {
+                for(XMLSize_t i = 0; i < smap->getLength(); i++) {
                     tmap->setNamedItem(importNode(smap->item(i), true, cloningDoc));
                 }
             }
@@ -1222,7 +1222,7 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
                     smap = docTypeImpl->getElements();
                     tmap = newdoctype->getElements();
                     if (smap != 0) {
-                        for(unsigned int i = 0; i < smap->getLength(); i++) {
+                        for(XMLSize_t i = 0; i < smap->getLength(); i++) {
                             tmap->setNamedItem(importNode(smap->item(i), true, cloningDoc));
                         }
                     }
@@ -1432,7 +1432,7 @@ void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
          DOMNamedNodeMap *attrlist=child->getAttributes();
 
          if(attrlist!=0)
-             for(unsigned int i=0;i<attrlist->getLength();++i)
+             for(XMLSize_t i=0;i<attrlist->getLength();++i)
                  releaseDocNotifyUserData(attrlist->item(i));
 
         releaseDocNotifyUserData(child);
@@ -1466,7 +1466,7 @@ DOMBuffer* DOMDocumentImpl::popBuffer(XMLSize_t nMinSize)
     if (!fRecycleBufferPtr || fRecycleBufferPtr->empty())
         return 0;
 
-    for(unsigned int index=fRecycleBufferPtr->size()-1;index>0;index--)
+    for(XMLSize_t index=fRecycleBufferPtr->size()-1;index>0;index--)
         if(fRecycleBufferPtr->elementAt(index)->getCapacity()>=nMinSize)
             return fRecycleBufferPtr->popAt(index);
     // if we didn't find a buffer big enough, get the last one

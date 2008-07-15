@@ -107,7 +107,7 @@ public:
                       const unsigned int urlId,
                       const XMLCh* const elemPrefix,
 		              const RefVectorOf<XMLAttr>& attrList,
-                      const unsigned int attrCount);
+                      const XMLSize_t attrCount);
     void endElement(const XMLElementDecl& elemDecl,
                     const XMLCh* const elemContent);
 

@@ -1682,7 +1682,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     }
     //  printf("This node's partially deleted data is: " + charData->getData());
 
-    unsigned int length = 10;
+    XMLSize_t length = 10;
     if (!(length == charData->getLength()))
     {
         fprintf(stderr, "Warning!!! DOMCharacterData's 'getLength' failed to work properly!\n");
@@ -2197,8 +2197,8 @@ bool DOMTest::testDocument(DOMDocument* document)
 
     XMLString::transcode("*", tempStr, 3999);
     DOMNodeList* docElements = document->getElementsByTagName(tempStr);
-    unsigned int docSize = docElements->getLength();
-    unsigned int i;
+    XMLSize_t docSize = docElements->getLength();
+    XMLSize_t i;
     for (i = 0; i < docSize; i++)
     {
         DOMNode*  n = (DOMNode*) docElements->item(i);
@@ -2871,8 +2871,8 @@ bool DOMTest::testElement(DOMDocument* document)
     if (rem2)
         rem2->release();
     nodeMap = element->getAttributes();
-    unsigned int size = nodeMap->getLength();
-    unsigned int k;
+    XMLSize_t size = nodeMap->getLength();
+    XMLSize_t k;
     for (k = 0; k < size; k++)
     {
         DOMNode*  n = (DOMNode) nodeMap->item(k);
@@ -2889,7 +2889,7 @@ bool DOMTest::testElement(DOMDocument* document)
 #endif
 
     nodeMap = element->getAttributes();
-    unsigned int size = nodeMap->getLength();
+    XMLSize_t size = nodeMap->getLength();
     if (size != 2)
     {
         fprintf(stderr, "DOMElement* Tests Failure 001\n");
@@ -2929,8 +2929,8 @@ bool DOMTest::testElement(DOMDocument* document)
 
     XMLString::transcode("*",tempStr, 3999);
     DOMNodeList* docElements = document->getElementsByTagName(tempStr);
-    unsigned int docSize = docElements->getLength();
-    unsigned int i;
+    XMLSize_t docSize = docElements->getLength();
+    XMLSize_t i;
     for (i = 0; i < docSize; i++)
     {
         DOMNode*  n = docElements->item(i);
@@ -2953,8 +2953,8 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMNode*  abc16 = document->getElementsByTagName(tempStr)->item(0); // element2 gets DOMElement* test BodyLevel31
     element2 = (DOMElement*) abc16;
     DOMNodeList* text = ((DOMNode*  &) element2)->getChildNodes();
-    int textSize = text->getLength();
-    int j;
+    XMLSize_t textSize = text->getLength();
+    XMLSize_t j;
     static bool firstTime = true;
     if (firstTime)
     {

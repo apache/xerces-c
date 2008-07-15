@@ -70,9 +70,10 @@ void ValueStore::addValue(FieldActivator* const fieldActivator,
     }
 
     // do we even know this field?
-    int index = fValues.indexOf(field);
+    XMLSize_t index;
+    bool bFound = fValues.indexOf(field, index);
 
-    if (index == -1) {
+    if (!bFound) {
 
         if (fDoReportError) {
            fScanner->getValidator()->emitError(XMLValid::IC_UnknownField);
@@ -89,7 +90,7 @@ void ValueStore::addValue(FieldActivator* const fieldActivator,
 
     fValues.put(field, dv, value);
 
-    if (fValuesCount == (int) fValues.size()) {
+    if (fValuesCount == fValues.size()) {
 
         // is this value as a group duplicated?
         if (contains(&fValues)) {
@@ -111,9 +112,9 @@ void ValueStore::append(const ValueStore* const other) {
         return;
     }
 
-    unsigned int tupleSize = other->fValueTuples->size();
+    XMLSize_t tupleSize = other->fValueTuples->size();
 
-    for (unsigned int i=0; i<tupleSize; i++) {
+    for (XMLSize_t i=0; i<tupleSize; i++) {
 
 	    FieldValueMap* valueMap = other->fValueTuples->elementAt(i);
 
@@ -132,9 +133,9 @@ void ValueStore::startValueScope() {
 
     fValuesCount = 0;
 
-    int count = fIdentityConstraint->getFieldCount();
+    XMLSize_t count = fIdentityConstraint->getFieldCount();
 
-    for (int i = 0; i < count; i++) {
+    for (XMLSize_t i = 0; i < count; i++) {
         fValues.put(fIdentityConstraint->getFieldAt(i), 0, 0);
     }
 }
@@ -166,10 +167,10 @@ bool ValueStore::contains(const FieldValueMap* const other) {
 
     if (fValueTuples) {
 
-        unsigned int otherSize = other->size();
-        unsigned int tupleSize = fValueTuples->size();
+        XMLSize_t otherSize = other->size();
+        XMLSize_t tupleSize = fValueTuples->size();
 
-        for (unsigned int i=0; i<tupleSize; i++) {
+        for (XMLSize_t i=0; i<tupleSize; i++) {
 
             FieldValueMap* valueMap = fValueTuples->elementAt(i);
 
@@ -177,7 +178,7 @@ bool ValueStore::contains(const FieldValueMap* const other) {
 
                 bool matchFound = true;
 
-                for (unsigned int j=0; j<otherSize; j++) {
+                for (XMLSize_t j=0; j<otherSize; j++) {
                     if (!isDuplicateOf(valueMap->getDatatypeValidatorAt(j), valueMap->getValueAt(j),
                                        other->getDatatypeValidatorAt(j), other->getValueAt(j))) {
                         matchFound = false;
@@ -256,9 +257,9 @@ void ValueStore::endDocumentFragment(ValueStoreCache* const valueStoreCache) {
             return;
         }
 
-        unsigned int count = (fValueTuples) ? fValueTuples->size() : 0;
+        XMLSize_t count = (fValueTuples) ? fValueTuples->size() : 0;
 
-        for (unsigned int i = 0; i < count; i++) {
+        for (XMLSize_t i = 0; i < count; i++) {
 
             FieldValueMap* valueMap = fValueTuples->elementAt(i);
 

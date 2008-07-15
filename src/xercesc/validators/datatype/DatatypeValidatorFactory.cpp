@@ -802,7 +802,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         datatypeValidator->setTypeName(typeName);
 
         // Set PSVI information for Ordered, Numeric, Bounded & Finite
-        unsigned int valSize = validators->size();
+        XMLSize_t valSize = validators->size();
         if (valSize)
         {
             DatatypeValidator::ValidatorType ancestorId = getPrimitiveDV(validators->elementAt(0)->getType());
@@ -816,7 +816,7 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
             bool allBounded = true;
             bool allFinite  = true;
 
-            for(unsigned int i = 0 ; (i < valSize) && (commonAnc || allOrderedFalse || allNumeric || allBounded || allFinite); i++)
+            for(XMLSize_t i = 0 ; (i < valSize) && (commonAnc || allOrderedFalse || allNumeric || allBounded || allFinite); i++)
             {
                 // for the other member types, check whether the value is false
                 // and whether they have the same ancestor as the first one

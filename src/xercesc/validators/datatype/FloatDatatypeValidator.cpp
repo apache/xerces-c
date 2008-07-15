@@ -128,8 +128,8 @@ void  FloatDatatypeValidator::setEnumeration(MemoryManager* const manager)
     if (!fStrEnumeration)
         return;
 
-    int i = 0;
-    int enumLength = fStrEnumeration->size();
+    XMLSize_t i = 0;
+    XMLSize_t enumLength = fStrEnumeration->size();
 
     FloatDatatypeValidator *numBase = (FloatDatatypeValidator*) getBaseValidator();
     if (numBase)
@@ -207,8 +207,8 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
 
     if (getEnumeration() != 0)
     {
-        int i=0;
-        int enumLength = getEnumeration()->size();
+        XMLSize_t i=0;
+        XMLSize_t enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
             if (compareValues(theData, (XMLFloat*) getEnumeration()->elementAt(i))==0)

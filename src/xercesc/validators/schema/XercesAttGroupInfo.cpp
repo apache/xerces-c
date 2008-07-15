@@ -70,11 +70,11 @@ bool XercesAttGroupInfo::containsAttribute(const XMLCh* const name,
 
     if (fAttributes) {
 
-        unsigned int attCount = fAttributes->size();
+        XMLSize_t attCount = fAttributes->size();
 
         if (attCount) {
 
-            for (unsigned int i=0; i < attCount; i++) {
+            for (XMLSize_t i=0; i < attCount; i++) {
 
                 QName* attName = fAttributes->elementAt(i)->getAttName();
 
@@ -99,9 +99,9 @@ const SchemaAttDef* XercesAttGroupInfo::getAttDef(const XMLCh* const baseName,
     if (!fAttributes)
         return 0;
 
-    unsigned int attSize = fAttributes->size();
+    XMLSize_t attSize = fAttributes->size();
 
-    for (unsigned int i=0; i<attSize; i++) {
+    for (XMLSize_t i=0; i<attSize; i++) {
 
         const SchemaAttDef* attDef = fAttributes->elementAt(i);
         QName* attName = attDef->getAttName();

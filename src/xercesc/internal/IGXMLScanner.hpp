@@ -129,10 +129,10 @@ private :
     void commonInit();
     void cleanUp();
 
-    unsigned int buildAttList
+    XMLSize_t buildAttList
     (
         const   RefVectorOf<KVStringPair>&  providedAttrs
-        , const unsigned int                attCount
+        , const XMLSize_t                   attCount
         ,       XMLElementDecl*             elemDecl
         ,       RefVectorOf<XMLAttr>&       toFill
     );
@@ -171,7 +171,7 @@ private :
         , const XMLCh* const    attrValue
         , const int             colonPosition
     );
-    void scanRawAttrListforNameSpaces(int attCount);
+    void scanRawAttrListforNameSpaces(XMLSize_t attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
@@ -202,7 +202,7 @@ private :
         const   XMLCh* const    attrName
         ,       XMLBuffer&      toFill
     );
-    unsigned int rawAttrScan
+    XMLSize_t rawAttrScan
     (
         const   XMLCh* const                elemName
         ,       RefVectorOf<KVStringPair>&  toFill

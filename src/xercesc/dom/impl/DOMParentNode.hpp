@@ -75,7 +75,6 @@ public:
     DOMNodeList* getChildNodes() const;
     DOMNode*     getFirstChild() const;
     DOMNode*     getLastChild() const;
-    unsigned int getLength() const;
     bool         hasChildNodes() const;
     DOMNode*     insertBefore(DOMNode *newChild, DOMNode *refChild);
     DOMNode*     item(unsigned int index) const;

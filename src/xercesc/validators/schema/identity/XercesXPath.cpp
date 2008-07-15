@@ -240,12 +240,12 @@ XercesLocationPath::XercesLocationPath(RefVectorOf<XercesStep>* const steps)
 // ---------------------------------------------------------------------------
 bool XercesLocationPath::operator==(const XercesLocationPath& other) const {
 
-    unsigned int stepsSize = fSteps->size();
+    XMLSize_t stepsSize = fSteps->size();
 
     if (stepsSize != other.fSteps->size())
         return false;
 
-    for (unsigned int i=0; i < stepsSize; i++) {
+    for (XMLSize_t i=0; i < stepsSize; i++) {
         if (*(fSteps->elementAt(i)) != *(other.fSteps->elementAt(i)))
             return false;
     }
@@ -334,12 +334,12 @@ XercesXPath::~XercesXPath() {
 // ---------------------------------------------------------------------------
 bool XercesXPath::operator==(const XercesXPath& other) const {
 
-    unsigned int locPathSize = fLocationPaths->size();
+    XMLSize_t locPathSize = fLocationPaths->size();
 
     if (locPathSize != other.fLocationPaths->size())
         return false;
 
-    for (unsigned int i=0; i < locPathSize; i++) {
+    for (XMLSize_t i=0; i < locPathSize; i++) {
         if (*(fLocationPaths->elementAt(i)) != *(other.fLocationPaths->elementAt(i)))
             return false;
     }
@@ -364,12 +364,12 @@ void XercesXPath::cleanUp() {
 void XercesXPath::checkForSelectedAttributes() {
 
     // verify that an attribute is not selected
-    unsigned int locSize = (fLocationPaths) ? fLocationPaths->size() : 0;
+    XMLSize_t locSize = (fLocationPaths) ? fLocationPaths->size() : 0;
 
-    for (unsigned int i = 0; i < locSize; i++) {
+    for (XMLSize_t i = 0; i < locSize; i++) {
 
         XercesLocationPath* locPath = fLocationPaths->elementAt(i);
-        unsigned int stepSize = locPath->getStepSize();
+        XMLSize_t stepSize = locPath->getStepSize();
 
         if (stepSize) {
             if (locPath->getStep(stepSize - 1)->getAxisType() == XercesStep::AxisType_ATTRIBUTE) {
@@ -394,7 +394,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_TokenNotSupported, fMemoryManager);
 
     bool                              firstTokenOfLocationPath=true;
-    unsigned int                      tokenCount = tokens.size();
+    XMLSize_t                         tokenCount = tokens.size();
     RefVectorOf<XercesStep>*          stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16, true, fMemoryManager);
     Janitor<RefVectorOf<XercesStep> > janSteps(stepsVector);
 
@@ -402,7 +402,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         fLocationPaths = new (fMemoryManager) RefVectorOf<XercesLocationPath>(8, true, fMemoryManager);
     }
 
-    for (unsigned int i = 0; i < tokenCount; i++) {
+    for (XMLSize_t i = 0; i < tokenCount; i++) {
 
         int  aToken = tokens.elementAt(i);
         bool isNamespace=false;
@@ -414,7 +414,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                     ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoUnionAtStart, fMemoryManager);
                 }
 
-                int stepsSize = stepsVector->size();
+                XMLSize_t stepsSize = stepsVector->size();
 
                 if (stepsSize == 0) {
                     ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoMultipleUnion, fMemoryManager);
@@ -632,7 +632,7 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         }
     }
 
-    int stepsSize = stepsVector->size();
+    XMLSize_t stepsSize = stepsVector->size();
 
     if (stepsSize == 0) {
         if (!fLocationPaths || fLocationPaths->size() == 0) {

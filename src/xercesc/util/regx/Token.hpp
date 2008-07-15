@@ -89,8 +89,8 @@ public:
 	tokType              getTokenType() const;
 	XMLSize_t            getMinLength() const;
     int                  getMaxLength() const;
-	virtual Token*       getChild(const int index) const;
-	virtual int          size() const;
+	virtual Token*       getChild(const XMLSize_t index) const;
+	virtual XMLSize_t    size() const;
     virtual int          getMin() const;
     virtual int          getMax() const;
     virtual int          getNoParen() const;
@@ -157,12 +157,12 @@ inline Token::tokType Token::getTokenType() const {
 	return fTokenType;
 }
 
-inline int Token::size() const {
+inline XMLSize_t Token::size() const {
 
 	return 0;
 }
 
-inline Token* Token::getChild(const int) const {
+inline Token* Token::getChild(const XMLSize_t) const {
 
 	return 0;
 }

@@ -36,7 +36,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructor
     // -----------------------------------------------------------------------
-    RefArrayVectorOf( const unsigned int   maxElems
+    RefArrayVectorOf( const XMLSize_t      maxElems
                     , const bool           adoptElems = true
                     , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
@@ -48,9 +48,9 @@ public :
     // -----------------------------------------------------------------------
     //  Element management
     // -----------------------------------------------------------------------
-    void setElementAt(TElem* const toSet, const unsigned int setAt);
+    void setElementAt(TElem* const toSet, const XMLSize_t setAt);
     void removeAllElements();
-    void removeElementAt(const unsigned int removeAt);
+    void removeElementAt(const XMLSize_t removeAt);
     void removeLastElement();
     void cleanup();
 private:

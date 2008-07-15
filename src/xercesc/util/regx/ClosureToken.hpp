@@ -41,10 +41,10 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	int size() const;
+	XMLSize_t size() const;
 	int getMin() const;
 	int getMax() const;
-	Token* getChild(const int index) const;
+	Token* getChild(const XMLSize_t index) const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -71,7 +71,7 @@ private:
 // ---------------------------------------------------------------------------
 //  ClosureToken: getter methods
 // ---------------------------------------------------------------------------
-inline int ClosureToken::size() const {
+inline XMLSize_t ClosureToken::size() const {
 
 	return 1;
 }
@@ -87,7 +87,7 @@ inline int ClosureToken::getMin() const {
 	return fMin;
 }
 
-inline Token* ClosureToken::getChild(const int) const {
+inline Token* ClosureToken::getChild(const XMLSize_t) const {
 
 	return fChild;
 }

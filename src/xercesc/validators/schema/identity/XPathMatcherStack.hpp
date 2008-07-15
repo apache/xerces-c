@@ -42,9 +42,9 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    XPathMatcher* getMatcherAt(const unsigned int index) const;
-    unsigned int  getMatcherCount() const;
-    unsigned int  size() const;
+    XPathMatcher* getMatcherAt(const XMLSize_t index) const;
+    XMLSize_t     getMatcherCount() const;
+    XMLSize_t     size() const;
 
 	// -----------------------------------------------------------------------
     //  Access methods
@@ -85,18 +85,18 @@ private:
 // ---------------------------------------------------------------------------
 //  XPathMatcherStack: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int XPathMatcherStack::size() const {
+inline XMLSize_t XPathMatcherStack::size() const {
 
     return fContextStack->size();
 }
 
-inline unsigned int XPathMatcherStack::getMatcherCount() const {
+inline XMLSize_t XPathMatcherStack::getMatcherCount() const {
 
     return fMatchersCount;
 }
 
 inline XPathMatcher*
-XPathMatcherStack::getMatcherAt(const unsigned int index) const {
+XPathMatcherStack::getMatcherAt(const XMLSize_t index) const {
 
     return fMatchers->elementAt(index);
 }

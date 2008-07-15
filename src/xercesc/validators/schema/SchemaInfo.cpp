@@ -121,9 +121,9 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
 
     if (child == 0) {
 
-        unsigned int listSize = (fIncludeInfoList) ? fIncludeInfoList->size() : 0;
+        XMLSize_t listSize = (fIncludeInfoList) ? fIncludeInfoList->size() : 0;
 
-        for (unsigned int i=0; i < listSize; i++) {
+        for (XMLSize_t i=0; i < listSize; i++) {
 
             currentInfo = fIncludeInfoList->elementAt(i);
 
@@ -229,9 +229,9 @@ void SchemaInfo::updateImportingInfo(SchemaInfo* const importingInfo) {
         fImportingInfoList->addElement(importingInfo);
     }
 
-    unsigned int listSize = importingInfo->fImportingInfoList->size();
+    XMLSize_t listSize = importingInfo->fImportingInfoList->size();
 
-    for (unsigned int i=0; i < listSize; i++) {
+    for (XMLSize_t i=0; i < listSize; i++) {
 
         SchemaInfo* tmpInfo = importingInfo->fImportingInfoList->elementAt(i);
 

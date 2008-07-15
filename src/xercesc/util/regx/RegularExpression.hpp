@@ -426,10 +426,10 @@ private:
                                              Op* const next,
                                              const bool reverse) {
 
-      int tokSize = token->size();
+      XMLSize_t tokSize = token->size();
       UnionOp* uniOp = fOpFactory.createUnionOp(tokSize);
 
-      for (int i=0; i<tokSize; i++) {
+      for (XMLSize_t i=0; i<tokSize; i++) {
 
           uniOp->addElement(compile(token->getChild(i), next, reverse));
       }
@@ -482,17 +482,17 @@ private:
                                               const bool reverse) {
 
       Op* ret = next;
-      int tokSize = token->size();
+      XMLSize_t tokSize = token->size();
 
       if (!reverse) {
 
-          for (int i= tokSize - 1; i>=0; i--) {
-              ret = compile(token->getChild(i), ret, false);
+          for (XMLSize_t i= tokSize; i>0; i--) {
+              ret = compile(token->getChild(i-1), ret, false);
           }
       }
       else {
 
-          for (int i= 0; i< tokSize; i++) {
+          for (XMLSize_t i= 0; i< tokSize; i++) {
               ret = compile(token->getChild(i), ret, true);
           }
       }

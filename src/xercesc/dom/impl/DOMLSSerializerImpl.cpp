@@ -1671,9 +1671,9 @@ void DOMLSSerializerImpl::processBOM()
 
 bool DOMLSSerializerImpl::isDefaultNamespacePrefixDeclared() const
 {
-    for(int i=fNamespaceStack->size()-1;i>=0;i--)
+    for(XMLSize_t i=fNamespaceStack->size();i>0;i--)
     {
-        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
+        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i-1);
         const XMLCh* thisUri=curNamespaceMap->get((void*)XMLUni::fgZeroLenString);
         if(thisUri)
             return true;
@@ -1683,9 +1683,9 @@ bool DOMLSSerializerImpl::isDefaultNamespacePrefixDeclared() const
 
 bool DOMLSSerializerImpl::isNamespaceBindingActive(const XMLCh* prefix, const XMLCh* uri) const
 {
-    for(int i=fNamespaceStack->size()-1;i>=0;i--)
+    for(XMLSize_t i=fNamespaceStack->size();i>0;i--)
     {
-        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i);
+        RefHashTableOf<XMLCh>* curNamespaceMap=fNamespaceStack->elementAt(i-1);
         const XMLCh* thisUri=curNamespaceMap->get((void*)prefix);
         // if the prefix has been declared, check if it binds to the correct namespace, otherwise, reports it isn't bound
         if(thisUri)

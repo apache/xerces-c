@@ -40,7 +40,7 @@ class XMLUTIL_EXPORT HashCMStateSet : public HashBase
 public:
 	HashCMStateSet();
 	virtual ~HashCMStateSet();
-	virtual unsigned int getHashVal(const void *const key, unsigned int mod
+	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	virtual bool equals(const void *const key1, const void *const key2);
 private:
@@ -59,7 +59,7 @@ inline HashCMStateSet::~HashCMStateSet()
 {
 }
 
-inline unsigned int HashCMStateSet::getHashVal(const void *const key, unsigned int mod
+inline XMLSize_t HashCMStateSet::getHashVal(const void *const key, XMLSize_t mod
                                                , MemoryManager* const)
 {
     const CMStateSet* const pkey = (const CMStateSet*) key;

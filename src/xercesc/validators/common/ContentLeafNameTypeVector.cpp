@@ -45,7 +45,7 @@ ContentLeafNameTypeVector::ContentLeafNameTypeVector
 (
       QName** const                     names
     , ContentSpecNode::NodeTypes* const types
-    , const unsigned int                count
+    , const XMLSize_t                   count
     , MemoryManager* const              manager
 )
 : fMemoryManager(manager)
@@ -72,7 +72,7 @@ ContentLeafNameTypeVector::ContentLeafNameTypeVector
     fLeafCount=toCopy.getLeafCount();
     init(fLeafCount);
 
-    for (unsigned int i=0; i<this->fLeafCount; i++)
+    for (XMLSize_t i=0; i<this->fLeafCount; i++)
     {
         fLeafNames[i] = toCopy.getLeafNameAt(i);
         fLeafTypes[i] = toCopy.getLeafTypeAt(i);
@@ -91,13 +91,13 @@ void ContentLeafNameTypeVector::setValues
     (
          QName** const                      names
        , ContentSpecNode::NodeTypes* const  types
-       , const unsigned int                 count
+       , const XMLSize_t                    count
     )
 {
     cleanUp();
     init(count);
 
-    for (unsigned int i=0; i<count; i++)
+    for (XMLSize_t i=0; i<count; i++)
     {
         fLeafNames[i] = names[i];
         fLeafTypes[i] = types[i];
@@ -107,7 +107,7 @@ void ContentLeafNameTypeVector::setValues
 // ---------------------------------------------------------------------------
 //  ContentLeafNameTypeVector: Getter methods
 // ---------------------------------------------------------------------------
-QName* ContentLeafNameTypeVector::getLeafNameAt(const unsigned int pos) const
+QName* ContentLeafNameTypeVector::getLeafNameAt(const XMLSize_t pos) const
 {
     if (pos >= fLeafCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
@@ -116,7 +116,7 @@ QName* ContentLeafNameTypeVector::getLeafNameAt(const unsigned int pos) const
 }
 
 ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
-       (const unsigned int pos) const
+       (const XMLSize_t pos) const
 {
     if (pos >= fLeafCount)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex, fMemoryManager);
@@ -124,7 +124,7 @@ ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
 	return fLeafTypes[pos];
 }
 
-unsigned int ContentLeafNameTypeVector::getLeafCount() const
+XMLSize_t ContentLeafNameTypeVector::getLeafCount() const
 {
 	return fLeafCount;
 }

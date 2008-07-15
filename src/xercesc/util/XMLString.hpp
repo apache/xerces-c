@@ -415,10 +415,10 @@ public:
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
-    static unsigned int hash
+    static XMLSize_t hash
     (
         const   char* const     toHash
-        , const unsigned int    hashModulus
+        , const XMLSize_t       hashModulus
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -429,10 +429,10 @@ public:
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
-    static unsigned int hash
+    static XMLSize_t hash
     (
         const   XMLCh* const    toHash
-        , const unsigned int    hashModulus
+        , const XMLSize_t       hashModulus
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -445,11 +445,11 @@ public:
       * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
-    static unsigned int hashN
+    static XMLSize_t hashN
     (
         const   XMLCh* const    toHash
         , const XMLSize_t       numChars
-        , const unsigned int    hashModulus
+        , const XMLSize_t       hashModulus
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -1571,8 +1571,8 @@ inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
     return XMLString::lastIndexOf(ch, toSearch, stringLen(toSearch));
 }
 
-inline unsigned int XMLString::hash(   const   XMLCh* const    tohash
-                                , const unsigned int    hashModulus
+inline XMLSize_t XMLString::hash(   const   XMLCh* const   tohash
+                                , const XMLSize_t          hashModulus
                                 , MemoryManager* const)
 {
     assert(hashModulus);
@@ -1581,10 +1581,10 @@ inline unsigned int XMLString::hash(   const   XMLCh* const    tohash
         return 0;
 
     const XMLCh* curCh = tohash;
-    unsigned int hashVal = (unsigned int)(*curCh++);
+    XMLSize_t hashVal = (XMLSize_t)(*curCh++);
 
     while (*curCh)
-        hashVal = (hashVal * 38) + (hashVal >> 24) + (unsigned int)(*curCh++);
+        hashVal = (hashVal * 38) + (hashVal >> 24) + (XMLSize_t)(*curCh++);
 
     // Divide by modulus
     return hashVal % hashModulus;

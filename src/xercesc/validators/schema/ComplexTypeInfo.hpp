@@ -75,7 +75,7 @@ public:
     unsigned int             getScopeDefined() const;
     unsigned int             getElementId() const;
     int                      getContentType() const;
-    unsigned int             elementCount() const;
+    XMLSize_t                elementCount() const;
     XMLCh*                   getTypeName() const;
     DatatypeValidator*       getBaseDatatypeValidator() const;
     DatatypeValidator*       getDatatypeValidator() const;
@@ -88,8 +88,8 @@ public:
     SchemaAttDef*            getAttDef(const XMLCh* const baseName,
                                        const int uriId);
     XMLAttDefList&           getAttDefList() const;
-    const SchemaElementDecl* elementAt(const unsigned int index) const;
-    SchemaElementDecl*       elementAt(const unsigned int index);
+    const SchemaElementDecl* elementAt(const XMLSize_t index) const;
+    SchemaElementDecl*       elementAt(const XMLSize_t index);
     XMLContentModel*         getContentModel(const bool checkUPA = false);
     const XMLCh*             getFormattedContentModel ()   const;
     XSDLocator*              getLocator() const;
@@ -270,7 +270,7 @@ inline int ComplexTypeInfo::getContentType() const {
     return fContentType;
 }
 
-inline unsigned int ComplexTypeInfo::elementCount() const {
+inline XMLSize_t ComplexTypeInfo::elementCount() const {
 
     if (fElements) {
         return fElements->size();
@@ -326,7 +326,7 @@ inline SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
 }
 
 inline SchemaElementDecl*
-ComplexTypeInfo::elementAt(const unsigned int index) {
+ComplexTypeInfo::elementAt(const XMLSize_t index) {
 
     if (!fElements) {
         return 0; // REVISIT - need to throw an exception
@@ -336,7 +336,7 @@ ComplexTypeInfo::elementAt(const unsigned int index) {
 }
 
 inline const SchemaElementDecl*
-ComplexTypeInfo::elementAt(const unsigned int index) const {
+ComplexTypeInfo::elementAt(const XMLSize_t index) const {
 
     if (!fElements) {
         return 0; // REVISIT - need to throw an exception

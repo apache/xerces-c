@@ -415,8 +415,8 @@ int main(int argc, char ** argv) {
     XMLCh tempStr[4000];
     XMLString::transcode("testFile", tempStr, 3999);
     DOMNodeList* list = fileListDoc->getElementsByTagName(tempStr);
-    unsigned int i;
-    unsigned int numFiles = list->getLength();
+    XMLSize_t i;
+    XMLSize_t numFiles = list->getLength();
     for (i=0; i<numFiles; i++)
     {
         ++gTestsRun;

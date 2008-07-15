@@ -835,7 +835,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
     XMLBuffer result(1023, manager);
     int tokStart = start;
 
-    unsigned int i = 0;
+    XMLSize_t i = 0;
     for(; i < subEx->size(); ++i) {
         Match *match = subEx->elementAt(i);
         int matchStart = match->getStartPos(0);
@@ -1538,11 +1538,11 @@ int RegularExpression::matchUnion(Context* const context,
                                    const Op* const op, XMLSize_t offset,
                                    const short direction) const
 {
-    unsigned int opSize = op->getSize();
+    XMLSize_t opSize = op->getSize();
 
     Context bestResultContext;
     int bestResult=-1;
-    for(unsigned int i=0; i < opSize; i++) {
+    for(XMLSize_t i=0; i < opSize; i++) {
         Context tmpContext(context);
         int ret = match(&tmpContext, op->elementAt(i), offset, direction);
         if (ret >= 0 && (XMLSize_t)ret <= context->fLimit && ret>bestResult)

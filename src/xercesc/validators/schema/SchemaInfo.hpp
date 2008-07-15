@@ -336,14 +336,14 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
             //both owned so when it was deleted it crashed.
 			if (toAdd->fIncludeInfoList) {
 			   if (toAdd->fIncludeInfoList != fIncludeInfoList) {
-                   unsigned int size = toAdd->fIncludeInfoList->size();
-                   for (unsigned int i=0; i<size; i++) {
+                   XMLSize_t size = toAdd->fIncludeInfoList->size();
+                   for (XMLSize_t i=0; i<size; i++) {
                        if (!fIncludeInfoList->containsElement(toAdd->fIncludeInfoList->elementAt(i))) {
                             fIncludeInfoList->addElement(toAdd->fIncludeInfoList->elementAt(i));
                        }
                    }
                    size = fIncludeInfoList->size();
-                   for (unsigned int j=0; j<size; j++) {
+                   for (XMLSize_t j=0; j<size; j++) {
                        if (!toAdd->fIncludeInfoList->containsElement(fIncludeInfoList->elementAt(j))) {
                             toAdd->fIncludeInfoList->addElement(fIncludeInfoList->elementAt(j));
                        }
@@ -359,10 +359,10 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
 
 inline SchemaInfo* SchemaInfo::getImportInfo(const unsigned int namespaceURI) const {
 
-    unsigned int importSize = (fImportedInfoList) ? fImportedInfoList->size() : 0;
+    XMLSize_t importSize = (fImportedInfoList) ? fImportedInfoList->size() : 0;
     SchemaInfo* currInfo = 0;
 
-    for (unsigned int i=0; i < importSize; i++) {
+    for (XMLSize_t i=0; i < importSize; i++) {
 
         currInfo = fImportedInfoList->elementAt(i);
 
@@ -393,9 +393,9 @@ inline bool SchemaInfo::containsInfo(const SchemaInfo* const toCheck,
 
 inline bool SchemaInfo::circularImportExist(const unsigned int namespaceURI) {
 
-    unsigned int importSize = fImportingInfoList->size();
+    XMLSize_t importSize = fImportingInfoList->size();
 
-    for (unsigned int i=0; i < importSize; i++) {
+    for (XMLSize_t i=0; i < importSize; i++) {
         if (fImportingInfoList->elementAt(i)->getTargetNSURI() == (int) namespaceURI) {
             return true;
         }

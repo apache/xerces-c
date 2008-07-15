@@ -40,7 +40,7 @@ Op::Op(const Op::opType type, MemoryManager* const manager)
 // ---------------------------------------------------------------------------
 //  Op: Getter methods
 // ---------------------------------------------------------------------------
-int Op::getSize() const {
+XMLSize_t Op::getSize() const {
 
 	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
@@ -64,7 +64,7 @@ int Op::getRefNo() const {
     return 0; // for compilers that complain about no return value
 }
 
-const Op* Op::elementAt(int) const {
+const Op* Op::elementAt(XMLSize_t) const {
 
 	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
@@ -127,7 +127,7 @@ XMLInt32 CharOp::getData() const {
 // ---------------------------------------------------------------------------
 //  UnionOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-UnionOp::UnionOp(const Op::opType type, const int size, MemoryManager* const manager)
+UnionOp::UnionOp(const Op::opType type, const XMLSize_t size, MemoryManager* const manager)
     : Op(type, manager)
       , fBranches(new (manager) RefVectorOf<Op> (size, false, manager)) {
 
@@ -136,12 +136,12 @@ UnionOp::UnionOp(const Op::opType type, const int size, MemoryManager* const man
 // ---------------------------------------------------------------------------
 //  UnionOp: Getter/Setter methods
 // ---------------------------------------------------------------------------
-int UnionOp::getSize() const {
+XMLSize_t UnionOp::getSize() const {
 
 	return fBranches->size();
 }
 
-const Op* UnionOp::elementAt(int index) const {
+const Op* UnionOp::elementAt(XMLSize_t index) const {
 
 	return fBranches->elementAt(index);
 }

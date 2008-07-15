@@ -435,19 +435,19 @@ void XMLString::cut(        XMLCh* const    toCutFrom
 }
 
 
-unsigned int XMLString::hash(   const   char* const     tohash
-                                , const unsigned int    hashModulus
-                                , MemoryManager* const)
+XMLSize_t XMLString::hash(   const   char* const    tohash
+                            , const XMLSize_t       hashModulus
+                            , MemoryManager* const)
 {
     assert(hashModulus);
 
-    unsigned int hashVal = 0;
+    XMLSize_t hashVal = 0;
     if (tohash) {
         const char* curCh = tohash;
         while (*curCh)
         {
-            unsigned int top = hashVal >> 24;
-            hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
+            XMLSize_t top = hashVal >> 24;
+            hashVal += (hashVal * 37) + top + (XMLSize_t)(*curCh);
             curCh++;
         }
     }
@@ -1404,24 +1404,21 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 }
 
 
-unsigned int XMLString::hashN(  const   XMLCh* const    tohash
-                                , const XMLSize_t       n
-                                , const unsigned int    hashModulus
-                                , MemoryManager* const)
+XMLSize_t XMLString::hashN(  const   XMLCh* const   tohash
+                            , const XMLSize_t       n
+                            , const XMLSize_t       hashModulus
+                            , MemoryManager* const)
 {
     assert(hashModulus);
 
-    unsigned int hashVal = 0;
-    if (tohash) {
-        const XMLCh* curCh = tohash;
-        int i = (int)n;
-        while (i--)
-        {
-            unsigned int top = hashVal >> 24;
-            hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
-            curCh++;
-        }
-    }
+    if (tohash == 0 || *tohash == 0)
+        return 0;
+
+    const XMLCh* curCh = tohash;
+    XMLSize_t hashVal = (XMLSize_t)(*curCh++);
+
+    for(XMLSize_t i=0;i<n;i++)
+        hashVal = (hashVal * 38) + (hashVal >> 24) + (XMLSize_t)(*curCh++);
 
     // Divide by modulus
     return hashVal % hashModulus;

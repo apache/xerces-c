@@ -27,10 +27,10 @@ HashPtr::~HashPtr()
 {
 }
 
-unsigned int HashPtr::getHashVal(const void *const key, unsigned int mod
+XMLSize_t HashPtr::getHashVal(const void *const key, XMLSize_t mod
                                  , MemoryManager* const)
 {
- return (unsigned int)(((XMLSize_t)key) % mod);
+ return (((XMLSize_t)key) % mod);
 }
 
 bool HashPtr::equals(const void *const key1, const void *const key2)

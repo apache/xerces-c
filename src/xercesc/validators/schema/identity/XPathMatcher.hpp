@@ -81,7 +81,7 @@ public:
                               const unsigned int urlId,
                               const XMLCh* const elemPrefix,
                               const RefVectorOf<XMLAttr>& attrList,
-                              const unsigned int attrCount);
+                              const XMLSize_t attrCount);
     virtual void endElement(const XMLElementDecl& elemDecl,
                             const XMLCh* const elemContent);
 
@@ -147,7 +147,7 @@ private:
     //      selectors.
     //
     // -----------------------------------------------------------------------
-    unsigned int                     fLocationPathSize;
+    XMLSize_t                        fLocationPathSize;
     int*                             fMatched;
     int*                             fNoMatchDepth;
     int*                             fCurrentStep;

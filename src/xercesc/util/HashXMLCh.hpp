@@ -39,7 +39,7 @@ class XMLUTIL_EXPORT HashXMLCh : public HashBase
 public:
 	HashXMLCh();
 	virtual ~HashXMLCh();
-	virtual unsigned int getHashVal(const void *const key, unsigned int mod
+	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	virtual bool equals(const void *const key1, const void *const key2);
 private:

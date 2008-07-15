@@ -239,7 +239,7 @@ private:
     XMLScanner*                     fScanner;
     NameIdPool<DTDEntityDecl>*      fPEntityDeclPool;
     unsigned int                    fEmptyNamespaceId;
-    unsigned int                    fDocTypeReaderId;
+    XMLSize_t                       fDocTypeReaderId;
 };
 
 

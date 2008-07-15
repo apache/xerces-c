@@ -33,7 +33,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  RefVectorOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
-RefVectorOf<TElem>::RefVectorOf(const unsigned int maxElems,
+RefVectorOf<TElem>::RefVectorOf(const XMLSize_t maxElems,
                                 const bool adoptElems,
                                 MemoryManager* const manager)
     : BaseRefVectorOf<TElem>(maxElems, adoptElems, manager)
@@ -44,8 +44,8 @@ template <class TElem> RefVectorOf<TElem>::~RefVectorOf()
 {
     if (this->fAdoptedElems)
     {
-       for (unsigned int index = 0; index < this->fCurCount; index++)
-        delete this->fElemList[index];
+        for (XMLSize_t index = 0; index < this->fCurCount; index++)
+            delete this->fElemList[index];
     }
     this->fMemoryManager->deallocate(this->fElemList);//delete [] this->fElemList;
 }

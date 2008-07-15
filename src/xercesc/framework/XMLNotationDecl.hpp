@@ -67,7 +67,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getId() const;
+    XMLSize_t getId() const;
     const XMLCh* getName() const;
     const XMLCh* getPublicId() const;
     const XMLCh* getSystemId() const;
@@ -79,7 +79,7 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setId(const unsigned int newId);
+    void setId(const XMLSize_t newId);
     void setName
     (
         const   XMLCh* const    notName
@@ -132,7 +132,7 @@ private :
     //  fBaseURI
     //      The text of the notation's base URI
     // -----------------------------------------------------------------------
-    unsigned int    fId;
+    XMLSize_t       fId;
     unsigned int    fNameSpaceId;
 	XMLCh*          fName;
     XMLCh*          fPublicId;
@@ -145,7 +145,7 @@ private :
 // -----------------------------------------------------------------------
 //  Getter methods
 // -----------------------------------------------------------------------
-inline unsigned int XMLNotationDecl::getId() const
+inline XMLSize_t XMLNotationDecl::getId() const
 {
     return fId;
 }
@@ -183,7 +183,7 @@ inline MemoryManager* XMLNotationDecl::getMemoryManager() const
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
-inline void XMLNotationDecl::setId(const unsigned int newId)
+inline void XMLNotationDecl::setId(const XMLSize_t newId)
 {
     fId = newId;
 }

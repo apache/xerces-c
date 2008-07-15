@@ -167,9 +167,9 @@ public:
     // -----------------------------------------------------------------------
     //  Access methods
     // -----------------------------------------------------------------------
-    unsigned int getStepSize() const;
+    XMLSize_t getStepSize() const;
     void addStep(XercesStep* const aStep);
-    XercesStep* getStep(const unsigned int index) const;
+    XercesStep* getStep(const XMLSize_t index) const;
 
     /***
      * Support for Serialization/De-serialization
@@ -447,7 +447,7 @@ private:
 // ---------------------------------------------------------------------------
 //  XercesLocationPath: Access methods
 // ---------------------------------------------------------------------------
-inline unsigned int XercesLocationPath::getStepSize() const {
+inline XMLSize_t XercesLocationPath::getStepSize() const {
 
     if (fSteps)
         return fSteps->size();
@@ -460,7 +460,7 @@ inline void XercesLocationPath::addStep(XercesStep* const aStep) {
     fSteps->addElement(aStep);
 }
 
-inline XercesStep* XercesLocationPath::getStep(const unsigned int index) const {
+inline XercesStep* XercesLocationPath::getStep(const XMLSize_t index) const {
 
     if (fSteps)
         return fSteps->elementAt(index);
