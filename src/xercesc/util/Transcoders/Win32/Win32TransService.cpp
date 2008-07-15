@@ -35,7 +35,6 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include "Win32TransService.hpp"
-#include <windows.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -270,6 +269,8 @@ unsigned int CPMapEntry::getIEEncoding() const
 }
 
 
+static bool onXPOrLater = false;
+
 
 //---------------------------------------------------------------------------
 //
@@ -283,6 +284,18 @@ unsigned int CPMapEntry::getIEEncoding() const
 // ---------------------------------------------------------------------------
 Win32TransService::Win32TransService()
 {
+    // Figure out if we are on XP or later and save that flag for later use.
+    // We need this because of certain code page conversion calls.
+    OSVERSIONINFO   OSVer;
+    OSVer.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    ::GetVersionEx(&OSVer);
+
+    if ((OSVer.dwPlatformId == VER_PLATFORM_WIN32_NT) &&
+        ((OSVer.dwMajorVersion == 5) && (OSVer.dwMinorVersion > 0)))
+    {
+        onXPOrLater = true;
+    }
+
     fCPMap = new RefHashTableOf<CPMapEntry>(109);
 
     //
@@ -497,7 +510,6 @@ Win32TransService::Win32TransService()
 
     // And close the main key handle
     ::RegCloseKey(charsetKey);
-
 }
 
 Win32TransService::~Win32TransService()
@@ -607,6 +619,42 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 //---------------------------------------------------------------------------
 
 
+inline DWORD
+getFlagsValue(
+            UINT    idCP,
+            DWORD   desiredFlags)
+{
+    if (idCP == 50220 ||
+        idCP == 50227 ||
+        (idCP >= 57002 &&
+         idCP <= 57011))
+    {
+        // These code pages do not support any
+        // flag options.
+        return 0;
+    }
+    else if (idCP == 65001)
+    {
+        // UTF-8 only supports MB_ERR_INVALID_CHARS on
+        // versions of Windows since XP
+        if (!onXPOrLater)
+        {
+            return 0;
+        }
+        else
+        {
+            return desiredFlags & MB_ERR_INVALID_CHARS ?
+                        MB_ERR_INVALID_CHARS : 0;
+        }
+    }
+    else
+    {
+        return desiredFlags;
+    }
+}
+
+
+
 // ---------------------------------------------------------------------------
 //  Win32Transcoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -617,7 +665,24 @@ Win32Transcoder::Win32Transcoder(const  XMLCh* const   encodingName
 
     XMLTranscoder(encodingName, blockSize, manager)
     , fIECP(ieCP)
+    , fUsedDef(FALSE)
+    , fPtrUsedDef(0)
+    , fFromFlags(getFlagsValue(ieCP, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS))
+#if defined(WC_NO_BEST_FIT_CHARS)
+    , fToFlags(getFlagsValue(ieCP, WC_COMPOSITECHECK | WC_SEPCHARS | WC_NO_BEST_FIT_CHARS))
+#else
+    , fToFlags(getFlagsValue(ieCP, WC_COMPOSITECHECK | WC_SEPCHARS))
+#endif
 {
+    // Some code pages require that MultiByteToWideChar and WideCharToMultiByte
+    // be passed 0 for their second parameters (dwFlags).  If that's the case,
+    // it's also necessary to pass null pointers for the last two parameters
+    // to WideCharToMultiByte.  This is apparently because it's impossible to
+    // determine whether or not a substitution (replacement) character was used.
+    if (fToFlags)
+    {
+        fPtrUsedDef = &fUsedDef;
+    }
 }
 
 Win32Transcoder::~Win32Transcoder()
@@ -659,7 +724,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         unsigned char toEat = ::IsDBCSLeadByteEx(fIECP, *inPtr) ?
                                     2 : 1;
 
-        // Make sure a whol char is in the source
+        // Make sure a whole char is in the source
         if (inPtr + toEat > inEnd)
             break;
 
@@ -667,7 +732,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         const unsigned int converted = ::MultiByteToWideChar
         (
             fIECP
-            , MB_PRECOMPOSED | MB_ERR_INVALID_CHARS
+            , fFromFlags
             , (const char*)inPtr
             , toEat
             , outPtr
@@ -733,7 +798,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
     //  conversion API is too dumb to tell us how many chars it converted if
     //  it couldn't do the whole source.
     //
-    BOOL usedDef;
+    fUsedDef = FALSE;
     while ((outPtr < outEnd) && (srcPtr < srcEnd))
     {
         //
@@ -741,16 +806,13 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         const int bytesStored = ::WideCharToMultiByte
         (
             fIECP
-            , WC_COMPOSITECHECK | WC_SEPCHARS 
-#ifdef WC_NO_BEST_FIT_CHARS
-            | WC_NO_BEST_FIT_CHARS
-#endif
+            , fToFlags
             , srcPtr
             , 1
             , (char*)outPtr
             , (int)(outEnd - outPtr)
             , 0
-            , &usedDef
+            , fPtrUsedDef
         );
 
         // If we didn't transcode anything, then we are done
@@ -761,7 +823,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         //  If the defaault char was used and the options indicate that
         //  this isn't allowed, then throw.
         //
-        if (usedDef && (options == UnRep_Throw))
+        if (fUsedDef && (options == UnRep_Throw))
         {
             XMLCh tmpBuf[17];
             XMLString::binToText((unsigned int)*srcPtr, tmpBuf, 16, 16, getMemoryManager());
@@ -813,23 +875,21 @@ bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck)
     //
     char tmpBuf[64];
 
-    BOOL usedDef;
+    fUsedDef = FALSE;
+
     const unsigned int bytesStored = ::WideCharToMultiByte
     (
         fIECP
-        , WC_COMPOSITECHECK | WC_SEPCHARS 
-#ifdef WC_NO_BEST_FIT_CHARS
-        | WC_NO_BEST_FIT_CHARS
-#endif
+        , fToFlags
         , srcBuf
         , srcCount
         , tmpBuf
         , 64
         , 0
-        , &usedDef
+        , fPtrUsedDef
     );
 
-    if (!bytesStored || usedDef)
+    if (!bytesStored || fUsedDef)
         return false;
 
     return true;
@@ -993,6 +1053,3 @@ bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
 
 XERCES_CPP_NAMESPACE_END
-
-
-
