@@ -151,7 +151,7 @@ DFAContentModel::validateContent( QName** const        children
     //
     if (!childCount)
     {
-        // success 
+        // success
         if(fEmptyOk)
             return true;
         *indexFailingChild=0;
@@ -253,7 +253,7 @@ DFAContentModel::validateContent( QName** const        children
                     if (++loopCount > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
                         *indexFailingChild=childIndex;
                         return false;
-                    }  
+                    }
                 }
                 else if (loopCount < (unsigned int)o->minOccurs) {
                     // not enough loops on the current state.
@@ -274,7 +274,7 @@ DFAContentModel::validateContent( QName** const        children
                 if (o != 0) {
                     // Entering a new counting state. Reset the counter.
                     // If we've already seen one instance of the looping
-                    // particle set the counter to 1, otherwise set it 
+                    // particle set the counter to 1, otherwise set it
                     // to 0.
                     loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
                 }
@@ -415,7 +415,7 @@ bool DFAContentModel::validateContentSpecial(QName** const          children
                     if (++loopCount > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
                         *indexFailingChild=childIndex;
                         return false;
-                    }  
+                    }
                 }
                 else if (loopCount < (unsigned int)o->minOccurs) {
                     // not enough loops on the current state.
@@ -436,7 +436,7 @@ bool DFAContentModel::validateContentSpecial(QName** const          children
                 if (o != 0) {
                     // Entering a new counting state. Reset the counter.
                     // If we've already seen one instance of the looping
-                    // particle set the counter to 1, otherwise set it 
+                    // particle set the counter to 1, otherwise set it
                     // to 0.
                     loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
                 }
@@ -964,7 +964,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     fTransTableSize = curState;
 
     //
-    // Fill in the occurence information for each looping state 
+    // Fill in the occurence information for each looping state
     // if we're using counters.
     //
     if (elemOccurenceMap != 0) {
@@ -1341,18 +1341,18 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     // Unique Particle Attribution
     // store the conflict results between any two elements in fElemMap
     // XMLContentModel::gInvalidTrans: not compared; 0: no conflict; 1: conflict
-    XMLByte** conflictTable = (XMLByte**) fMemoryManager->allocate
+    unsigned int** conflictTable = (unsigned int**) fMemoryManager->allocate
     (
-        fElemMapSize * sizeof(XMLByte*) 
-    ); //new unsigned int*[fElemMapSize];
+        fElemMapSize * sizeof(unsigned int*)
+    );
 
     // initialize the conflict table
     for (j = 0; j < fElemMapSize; j++) {
-        conflictTable[j] = (XMLByte*) fMemoryManager->allocate
+        conflictTable[j] = (unsigned int*) fMemoryManager->allocate
         (
-            fElemMapSize * sizeof(XMLByte)
-        ); //new unsigned int[fElemMapSize];
-        memset(conflictTable[j], 0, fElemMapSize*sizeof(XMLByte));
+            fElemMapSize * sizeof(unsigned int)
+        );
+        memset(conflictTable[j], 0, fElemMapSize*sizeof(unsigned int));
     }
 
     // for each state, check whether it has overlap transitions
@@ -1380,10 +1380,10 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                             // If "i" is a counting state and exactly one of the transitions
                             // loops back to "i" then the two particles do not overlap if
                             // minOccurs == maxOccurs.
-                            if (o != 0 && 
-                                ((fTransTable[i][j] == i) ^ (fTransTable[i][k] == i)) && 
+                            if (o != 0 &&
+                                ((fTransTable[i][j] == i) ^ (fTransTable[i][k] == i)) &&
                                 o->minOccurs == o->maxOccurs) {
-                                conflictTable[j][k] = -1;
+                                conflictTable[j][k] = XMLContentModel::gInvalidTrans;
                                 continue;
                             }
                         }
@@ -1413,15 +1413,15 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                              buf2.getRawBuffer());
                     }
                     else
-                       conflictTable[j][k] = -1;
+                        conflictTable[j][k] = XMLContentModel::gInvalidTrans;
                 }
             }
         }
     }
 
     for (i = 0; i < fElemMapSize; i++)
-        fMemoryManager->deallocate(conflictTable[i]); //delete [] conflictTable[i];
-    fMemoryManager->deallocate(conflictTable); //delete [] conflictTable;
+        fMemoryManager->deallocate(conflictTable[i]);
+    fMemoryManager->deallocate(conflictTable);
 }
 
 XERCES_CPP_NAMESPACE_END
