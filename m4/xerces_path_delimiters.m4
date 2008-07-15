@@ -17,7 +17,7 @@ AC_DEFUN([XERCES_PATH_DELIMITERS],
 		path_delims=/
 		
 		case $host_os in
-		msdos* | windows* | cygwin* | mingw*)
+		msdos* | windows* | mingw*)
 			AC_DEFINE([XERCES_PATH_DELIMITER_BACKSLASH], 1, [Define to use backslash as an extra path delimiter character])
 			path_delims="${path_delims}\\"
 			;;

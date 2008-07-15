@@ -17,7 +17,7 @@ AC_DEFUN([XERCES_FILEMGR_SELECTION],
 	
 	# Platform specific checks
 	case $host_os in
-	windows* | cygwin* | mingw*)
+	windows* | mingw*)
 		filemgr=Windows;
 		AC_DEFINE([XERCES_USE_FILEMGR_WINDOWS], 1, [Define to use the Windows file mgr])
 		;;

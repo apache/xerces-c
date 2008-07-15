@@ -95,7 +95,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 			[AC_MSG_RESULT(no)]
 		)
 		;;
-	windows* | cygwin* | mingw*)
+	windows* | mingw*)
 		AC_MSG_CHECKING([whether we can support the Windows Transcoder])
 		AC_ARG_ENABLE([transcoder-windows],
 			AS_HELP_STRING([--enable-transcoder-windows],

@@ -88,7 +88,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 			[AC_MSG_RESULT(no)]
 		)
 		;;
-	windows* | mingw* | cygwin*)
+	windows* | mingw*)
 		list_add=
 		no_winsock=false
 		AC_CHECK_HEADERS([winsock2.h], [], [no_winsock=true])
