@@ -253,7 +253,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     //  that will be used internally by the XMLString class. If we cannot
     //  create one, then call the panic method.
     //
-    XMLLCPTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
+    XMLLCPTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder(fgMemoryManager);
     if (!defXCode)
         panic(PanicHandler::Panic_NoDefTranscoder);
     XMLString::initString(defXCode, fgMemoryManager);
@@ -433,15 +433,15 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 	XMLTransService* tc = 0;
 
 	#if defined   (XERCES_USE_TRANSCODER_ICU)
-		tc = new ICUTransService;
+		tc = new ICUTransService(fgMemoryManager);
 	#elif defined (XERCES_USE_TRANSCODER_GNUICONV)
-		tc = new IconvGNUTransService;
+		tc = new IconvGNUTransService(fgMemoryManager);
 	#elif defined (XERCES_USE_TRANSCODER_ICONV)
-		tc = new IconvTransService;
+		tc = new IconvTransService(fgMemoryManager);
 	#elif defined (XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER)
-		tc = new MacOSUnicodeConverter;
+		tc = new MacOSUnicodeConverter(fgMemoryManager);
 	#elif defined (XERCES_USE_TRANSCODER_WINDOWS)
-		tc = new Win32TransService;
+		tc = new Win32TransService(fgMemoryManager);
 	#else
 		#error No Transcoder configured for platform! You must configure it.
 	#endif

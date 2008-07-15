@@ -36,7 +36,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ICUTransService();
+    ICUTransService(MemoryManager* manager);
     ~ICUTransService();
 
 
@@ -58,7 +58,7 @@ public :
 
     virtual const XMLCh* getId() const;
 
-    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder(MemoryManager* manager);
 
     virtual bool supportsSrcOfs() const;
 

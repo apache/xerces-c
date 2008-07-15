@@ -161,18 +161,19 @@ static XMLSize_t getWideCharLength(const XMLCh* const src)
 // ports collection). The following is a wrapper around the iconv().
 //----------------------------------------------------------------------------
 
-IconvGNUWrapper::IconvGNUWrapper ()
+IconvGNUWrapper::IconvGNUWrapper (MemoryManager* manager)
     : fUChSize(0), fUBO(LITTLE_ENDIAN),
-      fCDTo((iconv_t)-1), fCDFrom((iconv_t)-1)
+      fCDTo((iconv_t)-1), fCDFrom((iconv_t)-1), fMutex(manager)
 {
 }
 
 IconvGNUWrapper::IconvGNUWrapper ( iconv_t    cd_from,
                iconv_t    cd_to,
                size_t    uchsize,
-               unsigned int    ubo )
+               unsigned int    ubo,
+               MemoryManager* manager)
     : fUChSize(uchsize), fUBO(ubo),
-      fCDTo(cd_to), fCDFrom(cd_from)
+      fCDTo(cd_to), fCDFrom(cd_from), fMutex(manager)
 {
     if (fCDFrom == (iconv_t) -1 || fCDTo == (iconv_t) -1) {
         XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
@@ -383,8 +384,8 @@ size_t    IconvGNUWrapper::iconvTo ( const char    *fromPtr,
 //  IconvGNUTransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
 
-IconvGNUTransService::IconvGNUTransService()
-    : IconvGNUWrapper(), fUnicodeCP(0)
+IconvGNUTransService::IconvGNUTransService(MemoryManager* manager)
+    : IconvGNUWrapper(manager), fUnicodeCP(0)
 {
     // Try to obtain local (host) characterset from the setlocale
     // and through the environment. Do not call setlocale(LC_*, "")!
@@ -546,9 +547,9 @@ const XMLCh* IconvGNUTransService::getId() const
     return gMyServiceId;
 }
 
-XMLLCPTranscoder* IconvGNUTransService::makeNewLCPTranscoder()
+XMLLCPTranscoder* IconvGNUTransService::makeNewLCPTranscoder(MemoryManager* manager)
 {
-    return new IconvGNULCPTranscoder (cdFrom(), cdTo(), uChSize(), UBO());
+    return new (manager) IconvGNULCPTranscoder (cdFrom(), cdTo(), uChSize(), UBO(), manager);
 }
 
 bool IconvGNUTransService::supportsSrcOfs() const
@@ -942,8 +943,9 @@ bool IconvGNULCPTranscoder::transcode(const   char* const    toTranscode
 IconvGNULCPTranscoder::IconvGNULCPTranscoder (iconv_t        cd_from,
                         iconv_t        cd_to,
                         size_t        uchsize,
-                        unsigned int    ubo)
-    : IconvGNUWrapper (cd_from, cd_to, uchsize, ubo)
+                        unsigned int    ubo,
+                        MemoryManager* manager)
+    : IconvGNUWrapper (cd_from, cd_to, uchsize, ubo, manager)
 {
 }
 
@@ -965,7 +967,7 @@ IconvGNUTranscoder::IconvGNUTranscoder (const    XMLCh* const    encodingName
                       , MemoryManager* const manager
     )
     : XMLTranscoder(encodingName, blockSize, manager)
-    , IconvGNUWrapper (cd_from, cd_to, uchsize, ubo)
+    , IconvGNUWrapper (cd_from, cd_to, uchsize, ubo, manager)
 {
 }
 
@@ -1114,4 +1116,5 @@ bool IconvGNUTranscoder::canTranscodeTo
 }
 
 XERCES_CPP_NAMESPACE_END
+
 

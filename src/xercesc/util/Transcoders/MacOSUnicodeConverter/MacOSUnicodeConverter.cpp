@@ -88,7 +88,7 @@ const XMLCh MacOSUnicodeConverter::fgMacLCPEncodingName[] =
 // ---------------------------------------------------------------------------
 //  MacOSUnicodeConverter: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MacOSUnicodeConverter::MacOSUnicodeConverter()
+MacOSUnicodeConverter::MacOSUnicodeConverter(MemoryManager* manager)
   : fCollator(NULL)
 {
 	//	Test for presense of unicode collation functions
@@ -255,11 +255,10 @@ MacOSUnicodeConverter::discoverLCPEncoding()
 }
 
 
-XMLLCPTranscoder* MacOSUnicodeConverter::makeNewLCPTranscoder()
+XMLLCPTranscoder* MacOSUnicodeConverter::makeNewLCPTranscoder(MemoryManager* manager)
 {
 	XMLLCPTranscoder* result = NULL;
 	OSStatus status = noErr;
-    MemoryManager* manager = XMLPlatformUtils::fgMemoryManager;
 	
 	//  Discover the text encoding to use for the LCP
 	TextEncoding lcpTextEncoding = discoverLCPEncoding();
@@ -275,7 +274,7 @@ XMLLCPTranscoder* MacOSUnicodeConverter::makeNewLCPTranscoder()
     {
         //  Pass the XMLTranscoder over to the LPC transcoder
         if (resValue == XMLTransService::Ok)
-            result = new MacOSLCPTranscoder(xmlTrans, manager);
+            result = new (manager) MacOSLCPTranscoder(xmlTrans, manager);
         else
             delete xmlTrans;
     }

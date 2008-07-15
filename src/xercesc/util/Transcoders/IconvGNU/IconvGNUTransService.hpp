@@ -44,7 +44,8 @@ public:
       iconv_t		cd_from,
       iconv_t		cd_to,
       size_t		uchsize,
-      unsigned int	ubo
+      unsigned int	ubo,
+      MemoryManager* manager
     );
     virtual ~IconvGNUWrapper();
 
@@ -109,8 +110,8 @@ protected:
 
 protected:
 
-    // Hidden default constructor
-    IconvGNUWrapper();
+    // Hidden constructor
+    IconvGNUWrapper(MemoryManager* manager);
 
     // Private data accessors
     inline void	setCDTo (iconv_t cd) { fCDTo = cd; }
@@ -158,7 +159,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    IconvGNUTransService();
+    IconvGNUTransService(MemoryManager* manager);
     ~IconvGNUTransService();
 
 
@@ -180,7 +181,7 @@ public :
 
     virtual const XMLCh* getId() const;
 
-    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder(MemoryManager* manager);
 
     virtual bool supportsSrcOfs() const;
 
@@ -295,7 +296,8 @@ public :
       iconv_t		from,
       iconv_t		to,
       size_t		uchsize,
-      unsigned int	ubo
+      unsigned int	ubo,
+      MemoryManager* manager
     );
 
 protected:
@@ -353,4 +355,5 @@ private :
 XERCES_CPP_NAMESPACE_END
 
 #endif /* ICONVGNUTRANSSERVICE */
+
 

@@ -136,7 +136,7 @@ static XMLCh* convertToXMLCh( const UChar* const toConvert,
 // ---------------------------------------------------------------------------
 //  ICUTransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ICUTransService::ICUTransService()
+ICUTransService::ICUTransService(MemoryManager* manager)
 {
 #if (U_ICU_VERSION_MAJOR_NUM > 2 || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >= 6))
     UErrorCode errorCode=U_ZERO_ERROR;
@@ -281,7 +281,7 @@ const XMLCh* ICUTransService::getId() const
     return gMyServiceId;
 }
 
-XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
+XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder(MemoryManager* manager)
 {
     //
     //  Try to create a default converter. If it fails, return a null
@@ -294,7 +294,7 @@ XMLLCPTranscoder* ICUTransService::makeNewLCPTranscoder()
         return 0;
 
     // That went ok, so create an ICU LCP transcoder wrapper and return it
-    return new ICULCPTranscoder(converter);
+    return new (manager) ICULCPTranscoder(converter);
 }
 
 

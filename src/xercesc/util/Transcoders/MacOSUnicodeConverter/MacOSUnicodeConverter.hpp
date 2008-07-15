@@ -68,7 +68,7 @@ public :
 
     virtual const XMLCh* getId() const;
 
-    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder(MemoryManager* manager);
 
     virtual bool supportsSrcOfs() const;
 
@@ -79,7 +79,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    MacOSUnicodeConverter();
+    MacOSUnicodeConverter(MemoryManager* manager);
 
     // -----------------------------------------------------------------------
     //  Protected virtual methods

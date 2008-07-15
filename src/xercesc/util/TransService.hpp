@@ -121,7 +121,12 @@ public :
 
     virtual const XMLCh* getId() const = 0;
 
-    virtual XMLLCPTranscoder* makeNewLCPTranscoder() = 0;
+    // -----------------------------------------------------------------------
+    //	Create a new transcoder for the local code page.
+    //
+    //  @param manager The memory manager to use.
+    // -----------------------------------------------------------------------
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder(MemoryManager* manager) = 0;
 
     virtual bool supportsSrcOfs() const = 0;
 

@@ -22,6 +22,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XML88591Transcoder.hpp>
 #include <xercesc/util/XMLASCIITranscoder.hpp>
 #include <xercesc/util/XMLChTranscoder.hpp>

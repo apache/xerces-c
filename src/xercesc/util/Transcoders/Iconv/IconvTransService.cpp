@@ -89,7 +89,7 @@ static unsigned int getWideCharLength(const XMLCh* const src)
 // ---------------------------------------------------------------------------
 //  IconvTransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
-IconvTransService::IconvTransService()
+IconvTransService::IconvTransService(MemoryManager* /* manager */)
 {
 }
 
@@ -161,10 +161,10 @@ const XMLCh* IconvTransService::getId() const
     return gMyServiceId;
 }
 
-XMLLCPTranscoder* IconvTransService::makeNewLCPTranscoder()
+XMLLCPTranscoder* IconvTransService::makeNewLCPTranscoder(MemoryManager* manager)
 {
     // Just allocate a new transcoder of our type
-    return new IconvLCPTranscoder;
+    return new (manager) IconvLCPTranscoder;
 }
 
 bool IconvTransService::supportsSrcOfs() const

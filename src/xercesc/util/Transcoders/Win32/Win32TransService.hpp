@@ -43,7 +43,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    Win32TransService();
+    Win32TransService(MemoryManager* manager);
     virtual ~Win32TransService();
 
 
@@ -65,7 +65,7 @@ public :
 
     virtual const XMLCh* getId() const;
 
-    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder(MemoryManager* manager);
 
     virtual bool supportsSrcOfs() const;
 
@@ -102,6 +102,7 @@ private :
     //      which is cool since it will be read only once its initialized.
 
     RefHashTableOf<CPMapEntry>    *fCPMap;
+    MemoryManager*  fManager;
 };
 
 
@@ -267,6 +268,8 @@ private :
     // -----------------------------------------------------------------------
     Win32LCPTranscoder(const Win32LCPTranscoder&);
     Win32LCPTranscoder& operator=(const Win32LCPTranscoder&);
+
+    MemoryManager*  fManager;
 };
 
 XERCES_CPP_NAMESPACE_END

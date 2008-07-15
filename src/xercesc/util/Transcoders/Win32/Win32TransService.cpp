@@ -165,12 +165,14 @@ public :
     (
         const   XMLCh* const    encodingName
         , const unsigned int    ieId
+        , MemoryManager*        manager
     );
 
     CPMapEntry
     (
         const   char* const     encodingName
         , const unsigned int    ieId
+        , MemoryManager*        manager
     );
 
     ~CPMapEntry();
@@ -205,21 +207,24 @@ private :
     // -----------------------------------------------------------------------
     XMLCh*          fEncodingName;
     unsigned int    fIEId;
+    MemoryManager*  fManager;
 };
 
 // ---------------------------------------------------------------------------
 //  CPMapEntry: Constructors and Destructor
 // ---------------------------------------------------------------------------
 CPMapEntry::CPMapEntry( const   char* const     encodingName
-                        , const unsigned int    ieId) :
+                        , const unsigned int    ieId
+                        , MemoryManager*        manager) :
     fEncodingName(0)
     , fIEId(ieId)
+    , fManager(manager)
 {
     // Transcode the name to Unicode and store that copy
     int targetLen=::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, encodingName, -1, NULL, 0);
     if(targetLen!=0)
     {
-        fEncodingName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        fEncodingName = (XMLCh*) fManager->allocate
         (
             (targetLen + 1) * sizeof(XMLCh)
         );//new XMLCh[targetLen + 1];
@@ -235,12 +240,14 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
 }
 
 CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
-                        , const unsigned int    ieId) :
+                        , const unsigned int    ieId
+                        , MemoryManager*        manager) :
 
     fEncodingName(0)
     , fIEId(ieId)
+    , fManager(manager)
 {
-    fEncodingName = XMLString::replicate(encodingName, XMLPlatformUtils::fgMemoryManager);
+    fEncodingName = XMLString::replicate(encodingName, fManager);
 
     //
     //  Upper case it because we are using a hash table and need to be
@@ -251,7 +258,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
 
 CPMapEntry::~CPMapEntry()
 {
-    XMLPlatformUtils::fgMemoryManager->deallocate(fEncodingName);//delete [] fEncodingName;
+    fManager->deallocate(fEncodingName);//delete [] fEncodingName;
 }
 
 
@@ -282,7 +289,9 @@ static bool onXPOrLater = false;
 // ---------------------------------------------------------------------------
 //  Win32TransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
-Win32TransService::Win32TransService()
+Win32TransService::Win32TransService(MemoryManager* manager) :
+    fCPMap(NULL)
+    , fManager(manager)
 {
     // Figure out if we are on XP or later and save that flag for later use.
     // We need this because of certain code page conversion calls.
@@ -409,7 +418,7 @@ Win32TransService::Win32TransService()
                     continue;
                 }
 
-                CPMapEntry* newEntry = new CPMapEntry(nameBuf, IEId);
+                CPMapEntry* newEntry = new (fManager) CPMapEntry(nameBuf, IEId, fManager);
                 fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
             }
         }
@@ -463,7 +472,7 @@ Win32TransService::Win32TransService()
             int targetLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, -1, NULL, 0);
             if(targetLen!=0)
             {
-                XMLCh* uniAlias = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                XMLCh* uniAlias = (XMLCh*) fManager->allocate
                 (
                     (targetLen + 1) * sizeof(XMLCh)
                 );//new XMLCh[targetLen + 1];
@@ -478,7 +487,7 @@ Win32TransService::Win32TransService()
                     int targetLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, nameBuf, -1, NULL, 0);
                     if(targetLen!=0)
                     {
-                        XMLCh* uniName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                        XMLCh* uniName = (XMLCh*) fManager->allocate
                         (
                             (targetLen + 1) * sizeof(XMLCh)
                         );//new XMLCh[targetLen + 1];
@@ -493,14 +502,14 @@ Win32TransService::Win32TransService()
                         //
 						if (!XMLString::equals(uniName, aliasedEntry->getEncodingName()))
                         {
-                            CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getIEEncoding());
+                            CPMapEntry* newEntry = new (fManager) CPMapEntry(uniName, aliasedEntry->getIEEncoding(), fManager);
                             fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
                         }
 
-                        XMLPlatformUtils::fgMemoryManager->deallocate(uniName);//delete [] uniName;
+                        fManager->deallocate(uniName);//delete [] uniName;
                     }
                 }
-                XMLPlatformUtils::fgMemoryManager->deallocate(uniAlias);//delete [] uniAlias;
+                fManager->deallocate(uniAlias);//delete [] uniAlias;
             }
         }
 
@@ -541,10 +550,10 @@ const XMLCh* Win32TransService::getId() const
     return gMyServiceId;
 }
 
-XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
+XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder(MemoryManager* manager)
 {
     // Just allocate a new LCP transcoder of our type
-    return new Win32LCPTranscoder;
+    return new (manager) Win32LCPTranscoder;
 }
 
 
