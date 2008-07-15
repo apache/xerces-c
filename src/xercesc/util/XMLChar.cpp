@@ -43,6 +43,9 @@ bool XMLChar1_0::enableNEL = false;
 bool XMLChar1_0::isAllSpaces(const   XMLCh* const    toCheck
                             , const XMLSize_t        count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     while (curCh < endPtr)
@@ -61,6 +64,9 @@ bool XMLChar1_0::isAllSpaces(const   XMLCh* const    toCheck
 bool XMLChar1_0::containsWhiteSpace(const   XMLCh* const    toCheck
                                    , const XMLSize_t        count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     while (curCh < endPtr)
@@ -74,6 +80,9 @@ bool XMLChar1_0::containsWhiteSpace(const   XMLCh* const    toCheck
 bool XMLChar1_0::isValidNCName(const   XMLCh* const    toCheck
                                , const XMLSize_t       count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     if (*curCh== chColon || !(fgCharCharsTable1_0[*curCh++] & gFirstNameCharMask))
@@ -90,6 +99,9 @@ bool XMLChar1_0::isValidNCName(const   XMLCh* const    toCheck
 bool XMLChar1_0::isValidNmtoken(const   XMLCh*       const    toCheck
                               , const   XMLSize_t             count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
 
@@ -104,6 +116,9 @@ bool XMLChar1_0::isValidNmtoken(const   XMLCh*       const    toCheck
 bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck
                             , const XMLSize_t        count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     if (!(fgCharCharsTable1_0[*curCh++] & gFirstNameCharMask))
@@ -147,6 +162,9 @@ bool XMLChar1_0::isValidName(const   XMLCh* const    toCheck)
 bool XMLChar1_0::isValidQName(const   XMLCh* const    toCheck
                             , const XMLSize_t         count)
 {
+    if (count == 0)
+        return false;
+
     XMLSize_t length = count;
     int colonPos = XMLString::indexOf(toCheck, chColon);
     if ((colonPos == 0) ||         // ":abcd"
@@ -169,7 +187,7 @@ bool XMLChar1_0::isValidQName(const   XMLCh* const    toCheck
 }
 
 //
-//  This one is not called terribly often, so its done manually in order
+//  This one is not called terribly often, so it's done manually in order
 //  give up more bits in the character characteristics table for more often
 //  used characteristics.
 //
@@ -182,7 +200,7 @@ bool XMLChar1_0::isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2)
         while (*curTable)
         {
             //
-            //  If the test char is less than the low range, then its never
+            //  If the test char is less than the low range, then it's never
             //  going to match any other range, so break out. But we have to
             //  run up to the range terminator first.
             //
@@ -195,7 +213,7 @@ bool XMLChar1_0::isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2)
                 break;
             }
 
-            // If its less than or equal to the top of the range, then a match
+            // If it's less than or equal to the top of the range, then a match
             if (toCheck <= *curTable++)
                 return true;
         }
@@ -4338,6 +4356,9 @@ XMLByte XMLChar1_0::fgCharCharsTable1_0[0x10000] =
 bool XMLChar1_1::isAllSpaces(const   XMLCh* const    toCheck
                             , const XMLSize_t        count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     while (curCh < endPtr)
@@ -4356,6 +4377,9 @@ bool XMLChar1_1::isAllSpaces(const   XMLCh* const    toCheck
 bool XMLChar1_1::containsWhiteSpace(const   XMLCh* const    toCheck
                                     , const XMLSize_t       count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     while (curCh < endPtr)
@@ -4370,6 +4394,9 @@ bool XMLChar1_1::containsWhiteSpace(const   XMLCh* const    toCheck
 bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
                                , const XMLSize_t       count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
 
@@ -4390,7 +4417,7 @@ bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
         // Deal with surrogate pairs
         if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            //  Its a leading surrogate. If we already got one, then
+            //  It's a leading surrogate. If we already got one, then
             //  issue an error, else set leading flag to make sure that
             //  we look for a trailing next time.
             if (nextCh > 0xDB7F || gotLeadingSurrogate)
@@ -4402,23 +4429,23 @@ bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
         }
         else
         {
-            //  If its a trailing surrogate, make sure that we are
-            //  prepared for that. Else, its just a regular char so make
+            //  If it's a trailing surrogate, make sure that we are
+            //  prepared for that. Else, it's just a regular char so make
             //  sure that we were not expected a trailing surrogate.
             if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
             {
-                // Its trailing, so make sure we were expecting it
+                // It's trailing, so make sure we were expecting it
                 if (!gotLeadingSurrogate)
                     return false;
             }
             else
             {
-                //  Its just a char, so make sure we were not expecting a
+                //  It's just a char, so make sure we were not expecting a
                 //  trailing surrogate.
                 if (gotLeadingSurrogate) {
                     return false;
                 }
-                // Its got to at least be a valid XML character
+                // It's got to at least be a valid XML character
                 else if (!(fgCharCharsTable1_1[nextCh] & gNCNameCharMask))
                 {
                     return false;
@@ -4433,6 +4460,9 @@ bool XMLChar1_1::isValidNCName(const   XMLCh* const    toCheck
 bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
                               , const   XMLSize_t              count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
     XMLCh nextCh;
@@ -4445,7 +4475,7 @@ bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
         // Deal with surrogate pairs
         if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            //  Its a leading surrogate. If we already got one, then
+            //  It's a leading surrogate. If we already got one, then
             //  issue an error, else set leading flag to make sure that
             //  we look for a trailing next time.
             if (nextCh > 0xDB7F || gotLeadingSurrogate)
@@ -4457,23 +4487,23 @@ bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
         }
         else
         {
-            //  If its a trailing surrogate, make sure that we are
-            //  prepared for that. Else, its just a regular char so make
+            //  If it's a trailing surrogate, make sure that we are
+            //  prepared for that. Else, it's just a regular char so make
             //  sure that we were not expected a trailing surrogate.
             if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
             {
-                // Its trailing, so make sure we were expecting it
+                // It's trailing, so make sure we were expecting it
                 if (!gotLeadingSurrogate)
                     return false;
             }
             else
             {
-                //  Its just a char, so make sure we were not expecting a
+                //  It's just a char, so make sure we were not expecting a
                 //  trailing surrogate.
                 if (gotLeadingSurrogate) {
                     return false;
                 }
-                // Its got to at least be a valid XML character
+                // It's got to at least be a valid XML character
                 else if (!(fgCharCharsTable1_1[nextCh] & gNameCharMask))
                 {
                     return false;
@@ -4488,6 +4518,9 @@ bool XMLChar1_1::isValidNmtoken(const   XMLCh*        const    toCheck
 bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
                             , const XMLSize_t        count)
 {
+    if (count == 0)
+        return false;
+
     const XMLCh* curCh = toCheck;
     const XMLCh* endPtr = toCheck + count;
 
@@ -4508,7 +4541,7 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
         // Deal with surrogate pairs
         if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            //  Its a leading surrogate. If we already got one, then
+            //  It's a leading surrogate. If we already got one, then
             //  issue an error, else set leading flag to make sure that
             //  we look for a trailing next time.
             if (nextCh > 0xDB7F || gotLeadingSurrogate)
@@ -4520,23 +4553,23 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck
         }
         else
         {
-            //  If its a trailing surrogate, make sure that we are
-            //  prepared for that. Else, its just a regular char so make
+            //  If it's a trailing surrogate, make sure that we are
+            //  prepared for that. Else, it's just a regular char so make
             //  sure that we were not expected a trailing surrogate.
             if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
             {
-                // Its trailing, so make sure we were expecting it
+                // It's trailing, so make sure we were expecting it
                 if (!gotLeadingSurrogate)
                     return false;
             }
             else
             {
-                //  Its just a char, so make sure we were not expecting a
+                //  It's just a char, so make sure we were not expecting a
                 //  trailing surrogate.
                 if (gotLeadingSurrogate) {
                     return false;
                 }
-                // Its got to at least be a valid XML character
+                // It's got to at least be a valid XML character
                 else if (!(fgCharCharsTable1_1[nextCh] & gNameCharMask))
                 {
                     return false;
@@ -4575,7 +4608,7 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck)
         // Deal with surrogate pairs
         if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            //  Its a leading surrogate. If we already got one, then
+            //  It's a leading surrogate. If we already got one, then
             //  issue an error, else set leading flag to make sure that
             //  we look for a trailing next time.
             if (nextCh > 0xDB7F || gotLeadingSurrogate)
@@ -4589,24 +4622,24 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck)
         }
         else
         {
-            //  If its a trailing surrogate, make sure that we are
-            //  prepared for that. Else, its just a regular char so make
+            //  If it's a trailing surrogate, make sure that we are
+            //  prepared for that. Else, it's just a regular char so make
             //  sure that we were not expected a trailing surrogate.
            if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
            {
-                // Its trailing, so make sure we were expecting it
+                // It's trailing, so make sure we were expecting it
                 if (!gotLeadingSurrogate)
                     return false;
             }
             else
             {
-                //  Its just a char, so make sure we were not expecting a
+                //  It's just a char, so make sure we were not expecting a
                 //  trailing surrogate.
                 if (gotLeadingSurrogate)
 				{
                     return false;
                 }
-                // Its got to at least be a valid XML character
+                // It's got to at least be a valid XML character
                 else if (!(fgCharCharsTable1_1[nextCh] & gNameCharMask))
                 {
                     return false;
@@ -4629,6 +4662,9 @@ bool XMLChar1_1::isValidName(const   XMLCh* const    toCheck)
 bool XMLChar1_1::isValidQName(const   XMLCh* const    toCheck
                             , const XMLSize_t         count)
 {
+    if (count == 0)
+        return false;
+
     XMLSize_t length = count;
     int colonPos = XMLString::indexOf(toCheck, chColon);
     if ((colonPos == 0) ||         // ":abcd"
@@ -4652,7 +4688,7 @@ bool XMLChar1_1::isValidQName(const   XMLCh* const    toCheck
 
 
 //
-//  This one is not called terribly often, so its done manually in order
+//  This one is not called terribly often, so it's done manually in order
 //  give up more bits in the character characteristics table for more often
 //  used characteristics.
 //
@@ -4665,7 +4701,7 @@ bool XMLChar1_1::isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2)
         while (*curTable)
         {
             //
-            //  If the test char is less than the low range, then its never
+            //  If the test char is less than the low range, then it's never
             //  going to match any other range, so break out. But we have to
             //  run up to the range terminator first.
             //
@@ -4678,7 +4714,7 @@ bool XMLChar1_1::isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2)
                 break;
             }
 
-            // If its less than or equal to the top of the range, then a match
+            // If it's less than or equal to the top of the range, then a match
             if (toCheck <= *curTable++)
                 return true;
         }
@@ -8803,7 +8839,7 @@ XMLByte XMLChar1_1::fgCharCharsTable1_1[0x10000] =
 // ---------------------------------------------------------------------------
 
 //
-//  This code will set up the character flags table. Its defined out since
+//  This code will set up the character flags table. It's defined out since
 //  this table is now written out and hard coded (at the bottom of this
 //  file) into the code itself. This code is retained in case there is
 //  any need to recreate it later.
@@ -8890,7 +8926,7 @@ static void initCharFlagTable()
     //  designed to sense special case characters in the most important
     //  processing loops of the parser. They allow us to do a quick
     //  check for a special case and get to the common case with minimal
-    //  overhead when its not. Since the special case chars are a tiny
+    //  overhead when it's not. Since the special case chars are a tiny
     //  fraction of the chars, this is a good optimization.
     //
     //  We do the special chars for the start tag processing, which
@@ -8987,7 +9023,7 @@ static void initCharFlagTable1_1()
     //  designed to sense special case characters in the most important
     //  processing loops of the parser. They allow us to do a quick
     //  check for a special case and get to the common case with minimal
-    //  overhead when its not. Since the special case chars are a tiny
+    //  overhead when it's not. Since the special case chars are a tiny
     //  fraction of the chars, this is a good optimization.
     //
     //  We do the special chars for the start tag processing, which
