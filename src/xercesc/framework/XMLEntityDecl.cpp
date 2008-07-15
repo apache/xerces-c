@@ -195,9 +195,7 @@ void XMLEntityDecl::serialize(XSerializeEngine& serEng)
         serEng.readString(fPublicId);
         serEng.readString(fSystemId);
         serEng.readString(fBaseURI);
-        // when fIsExternal has been added, XERCES_GRAMMAR_SERIALIZATION_LEVEL has been bumped to 6
-        if(serEng.getStorerLevel()>=6)
-            serEng>>fIsExternal;
+        serEng>>fIsExternal;
     }
 }
 

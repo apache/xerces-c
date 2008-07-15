@@ -165,7 +165,7 @@ public:
       *  Return: level
       *
       ***/
-    inline unsigned short getStorerLevel() const;
+    inline unsigned int getStorerLevel() const;
 
     /***
       *
@@ -658,7 +658,7 @@ private:
     //  fMapCount:
     // -------------------------------------------------------------------------------
     const short                            fStoreLoad;
-    short                                  fStorerLevel;
+    unsigned int                           fStorerLevel;
 
     XMLGrammarPool*  const                 fGrammarPool;
     BinInputStream*  const                 fInputStream;
@@ -796,7 +796,7 @@ unsigned long XSerializeEngine::getBufCount() const
 }
 
 inline
-unsigned short XSerializeEngine::getStorerLevel() const
+unsigned int XSerializeEngine::getStorerLevel() const
 {
     return fStorerLevel;
 }

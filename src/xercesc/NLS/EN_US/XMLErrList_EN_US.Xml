@@ -790,7 +790,7 @@
             <Message Id="XSer_GrammarPool_Empty"         Text="grammar pool is empty"/>
             <Message Id="XSer_GrammarPool_NotEmpty"      Text="grammar pool is not empty"/>
             <Message Id="XSer_StringPool_NotEmpty"       Text="string pool is not empty"/>
-            <Message Id="XSer_Storer_NewerThan_Loader"   Text="storer level '{0}' is newer than loader level '{1}'"/>
+            <Message Id="XSer_Storer_Loader_Mismatch"    Text="storer level '{0}' does not match loader level '{1}'"/>
             <Message Id="VALUE_QName_Invalid2"           Text="undefined prefix in QName value '{0}'"/>
         </FatalError>
     </MsgDomain>

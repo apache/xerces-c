@@ -302,11 +302,11 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
         //version information
         unsigned int  StorerLevel;
         serEng>>StorerLevel;
-        serEng.fStorerLevel = (short)StorerLevel;
+        serEng.fStorerLevel = StorerLevel;
 
-        //if the storer level is after the loader level
-        //the loader shall not read the data any more
-        if (StorerLevel > (unsigned int) XERCES_GRAMMAR_SERIALIZATION_LEVEL)
+        // The storer level must match the loader level.
+        //
+        if (StorerLevel != (unsigned int)XERCES_GRAMMAR_SERIALIZATION_LEVEL)
         {
             XMLCh     StorerLevelChar[5];
             XMLCh     LoaderLevelChar[5];
@@ -314,7 +314,7 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
             XMLString::binToText(XERCES_GRAMMAR_SERIALIZATION_LEVEL,   LoaderLevelChar,   4, 10, memMgr);
 
             ThrowXMLwithMemMgr2(XSerializationException
-                    , XMLExcepts::XSer_Storer_NewerThan_Loader
+                    , XMLExcepts::XSer_Storer_Loader_Mismatch
                     , StorerLevelChar
                     , LoaderLevelChar
                     , memMgr);

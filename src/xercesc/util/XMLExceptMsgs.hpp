@@ -375,7 +375,7 @@ public :
       , XSer_GrammarPool_Empty             = 359
       , XSer_GrammarPool_NotEmpty          = 360
       , XSer_StringPool_NotEmpty           = 361
-      , XSer_Storer_NewerThan_Loader       = 362
+      , XSer_Storer_Loader_Mismatch        = 362
       , VALUE_QName_Invalid2               = 363
       , F_HighBounds                       = 364
       , E_LowBounds                        = 365
