@@ -467,4 +467,36 @@
 			<current status="accepted" date="2008-06-24"/>
 		</instanceTest>
 	</testGroup>
+	<testGroup name="XERCESC-1817-1">
+		<annotation>
+			<documentation>Regression - Schema Error for valid Substition Group</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1817"/>
+		<schemaTest name="XERCESC-1817-1-1">
+			<schemaDocument xlink:href="./XERCESC-1817/test.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-07-15"/>
+		</schemaTest>
+                <instanceTest name="XERCESC-1817-1-2">
+			<instanceDocument xlink:href="./XERCESC-1817/test.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-07-15"/>
+		</instanceTest>
+	</testGroup>
+	<testGroup name="XERCESC-1817-2">
+		<annotation>
+			<documentation>Regression - Schema Error for valid Substition Group</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1817"/>
+		<schemaTest name="XERCESC-1817-2-1">
+			<schemaDocument xlink:href="./XERCESC-1817/test2.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-07-15"/>
+		</schemaTest>
+                <instanceTest name="XERCESC-1817-2-2">
+			<instanceDocument xlink:href="./XERCESC-1817/test2.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2008-07-15"/>
+		</instanceTest>
+	</testGroup>
 </testSet>
