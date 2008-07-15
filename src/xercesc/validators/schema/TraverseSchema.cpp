@@ -3335,7 +3335,6 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                         // Code was just comparing the string of prefix:localname
                         // and if the schema and instance document had different
                         // prefixes with the same URI string then we were giving an error.
-                        const XMLCh* localPart = getLocalPart(attValue);
                         const XMLCh* prefix = getPrefix(attValue);
                         const XMLCh* uriStr = (prefix && *prefix) ? resolvePrefixToURI(content, prefix) : fTargetNSURIString;
 
@@ -6710,7 +6709,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
         SchemaAttDef* completeWildCard = 0;
         Janitor<SchemaAttDef> janCompleteWildCard(0);
-        XMLAttDef::DefAttTypes defAttType;
+        XMLAttDef::DefAttTypes defAttType = XMLAttDef::Default;
         bool defAttTypeSet = false;
 
         for (unsigned int i=0; i < attGroupListSize; i++) {
@@ -9102,7 +9101,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     do {
         eltAttrs = currentElem->getAttributes();
         attrCount = eltAttrs->getLength();
-        for (unsigned int j = 0; j < attrCount; j++)
+        for (XMLSize_t j = 0; j < attrCount; j++)
         {
             DOMNode*     attribute = eltAttrs->item(j);
             const XMLCh* attName = attribute->getNodeName();

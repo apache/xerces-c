@@ -97,13 +97,6 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
       fSocket(0)
 {
     //
-    //  Constants in ASCII to send/check in the HTTP request/response
-    //
-
-    static const char *CRLF2X = "\r\n\r\n";
-    static const char *LF2X = "\n\n";
-
-    //
     //  Convert the hostName to the platform's code page for gethostbyname and
     //  inet_addr functions.
     //

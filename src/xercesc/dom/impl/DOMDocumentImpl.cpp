@@ -1395,6 +1395,8 @@ DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, cons
             return ((DOMElementImpl*)n)->rename(namespaceURI, name);
         case ATTRIBUTE_NODE:
             return ((DOMAttrImpl*)n)->rename(namespaceURI, name);
+        default:
+            break;
     }
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 

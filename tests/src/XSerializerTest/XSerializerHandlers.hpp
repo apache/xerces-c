@@ -43,12 +43,12 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getElementCount() const
+    XMLSize_t getElementCount() const
     {
         return fElementCount;
     }
 
-    unsigned int getAttrCount() const
+    XMLSize_t getAttrCount() const
     {
         return fAttrCount;
     }
@@ -102,9 +102,9 @@ private:
     //      This is set by the error handlers, and is queryable later to
     //      see if any errors occured.
     // -----------------------------------------------------------------------
-    unsigned int    fAttrCount;
+    XMLSize_t       fAttrCount;
     XMLSize_t       fCharacterCount;
-    unsigned int    fElementCount;
+    XMLSize_t       fElementCount;
     XMLSize_t       fSpaceCount;
     bool            fSawErrors;
 };

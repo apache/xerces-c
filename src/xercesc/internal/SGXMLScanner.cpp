@@ -34,6 +34,7 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/psvi/PSVIElement.hpp>
 #include <xercesc/framework/psvi/PSVIHandler.hpp>
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
@@ -2207,7 +2208,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         //  If its not a special case namespace attr of some sort, then we
         //  do normal checking and processing.
-        XMLAttDef::AttTypes attType;
+        XMLAttDef::AttTypes attType = XMLAttDef::CData;
         DatatypeValidator *attrValidator = 0;
         PSVIAttribute *psviAttr = 0;
         bool otherXSI = false;
@@ -2281,8 +2282,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if (!otherXSI) {
                     fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
 
-                    // Just normalize as CDATA
-                    attType = XMLAttDef::CData;
                     normalizeAttRawValue
                     (
                         namePtr
@@ -2608,7 +2607,10 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
 
                 // Save the type for later use
-                attType = (attDef)?attDef->getType():XMLAttDef::CData;
+                if (attDef)
+                {
+                    attType = attDef->getType();
+                }
             }
 
             // now fill in the PSVIAttributes entry for this attribute:

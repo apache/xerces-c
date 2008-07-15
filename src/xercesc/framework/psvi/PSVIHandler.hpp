@@ -22,10 +22,12 @@
 #if !defined(XERCESC_INCLUDE_GUARD_PSVIHANDLER_HPP)
 #define XERCESC_INCLUDE_GUARD_PSVIHANDLER_HPP
 
-#include <xercesc/framework/psvi/PSVIElement.hpp>
-#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+
+class PSVIElement;
+class PSVIAttributeList;
 
 
 /**

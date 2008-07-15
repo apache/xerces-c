@@ -1919,9 +1919,9 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key1;
+            void*       key1;
             int        key2;           
-            e.nextElementKey((void*&)key1, key2);
+            e.nextElementKey(key1, key2);
 
             SchemaAttDef* data = objToStore->get(key1, key2);
             serEng<<data;
@@ -2017,11 +2017,11 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
 
         while (e.hasMoreElements())
         {
-            XMLCh*     key1;
+            void*      key1;
             int        key2;
             
-            e.nextElementKey((void*&)key1, key2);
-            serEng.writeString(key1);
+            e.nextElementKey(key1, key2);
+            serEng.writeString((const XMLCh*)key1);
             serEng<<key2;
 
             ElemVector* data = objToStore->get(key1, key2);
@@ -2135,14 +2135,14 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
       
         serEng<<e.size();
 
-        XMLCh* strkey;
+        void*  strkey;
         int    key1;
         int    key2;
         /* Update to store key2 separately as for the putGroupElemDecl the key is not the
            enclosing scope but another value. */
         while (e.hasMoreKeys())
         {                       
-            e.nextElementKey((void*&)strkey, key1, key2);
+            e.nextElementKey(strkey, key1, key2);
             serEng<<key2;
             SchemaElementDecl* data = objToStore->getByKey(strkey, key1, key2);
             serEng<<data;

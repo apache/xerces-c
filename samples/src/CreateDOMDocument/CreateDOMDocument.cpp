@@ -171,7 +171,7 @@ int main(int argC, char*[])
                // Now count the number of elements in the above DOM tree.
                //
 
-               unsigned int elementCount = doc->getElementsByTagName(X("*"))->getLength();
+               const XMLSize_t elementCount = doc->getElementsByTagName(X("*"))->getLength();
                XERCES_STD_QUALIFIER cout << "The tree just created contains: " << elementCount
                     << " elements." << XERCES_STD_QUALIFIER endl;
 
@@ -203,4 +203,3 @@ int main(int argC, char*[])
    XMLPlatformUtils::Terminate();
    return errorCode;
 }
-

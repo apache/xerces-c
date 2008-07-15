@@ -172,6 +172,8 @@ DOMNode * DOMNormalizer::normalizeNode(DOMNode *node) const {
             }
         }
     }
+    default:
+        break;
     }
 
     return 0;

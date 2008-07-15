@@ -40,18 +40,17 @@ DOMNodeVector::DOMNodeVector(DOMDocument *doc)
 	init(doc, 10);
 }
 
-DOMNodeVector::DOMNodeVector(DOMDocument *doc, unsigned int size) {
+DOMNodeVector::DOMNodeVector(DOMDocument *doc, XMLSize_t size) {
 	init(doc, size);
 }
 
 
-void DOMNodeVector::init(DOMDocument *doc, unsigned int size) {
+void DOMNodeVector::init(DOMDocument *doc, XMLSize_t size) {
     assert(size > 0);
     //data = new (doc) DOMNode *[size];
     data = (DOMNode**) ((DOMDocumentImpl *)doc)->allocate(sizeof(DOMNode*) * size);
     assert(data != 0);
-    unsigned int i;
-    for (i=0; i<size; i++)
+    for (XMLSize_t i=0; i<size; i++)
         data[i] = 0;
     allocatedSize = size;
     nextFreeSlot = 0;
@@ -71,16 +70,16 @@ void DOMNodeVector::addElement(DOMNode *elem) {
 
 void DOMNodeVector::checkSpace() {
     if (nextFreeSlot == allocatedSize) {
-        unsigned int grow = allocatedSize/2;
+        XMLSize_t grow = allocatedSize/2;
         if (grow < 10) grow = 10;
-        unsigned int newAllocatedSize = allocatedSize + grow;
+        const XMLSize_t newAllocatedSize = allocatedSize + grow;
         DOMDocument *doc = data[0]->getOwnerDocument();
 
         //DOMNode **newData = new (doc) DOMNode *[newAllocatedSize];
         DOMNode **newData = (DOMNode**) ((DOMDocumentImpl *)doc)->allocate(sizeof(DOMNode*) * newAllocatedSize);
 
         assert(newData != 0);
-        for (unsigned int i=0; i<allocatedSize; i++) {
+        for (XMLSize_t i=0; i<allocatedSize; i++) {
             newData[i] = data[i];
         }
         // delete [] data;  // revisit.  Can't delete!  Recycle?
@@ -90,13 +89,12 @@ void DOMNodeVector::checkSpace() {
 }
 
 
-void DOMNodeVector::insertElementAt(DOMNode *elem, unsigned int index) {
-	unsigned int i;
+void DOMNodeVector::insertElementAt(DOMNode *elem, XMLSize_t index) {
 
 	assert(index <= nextFreeSlot);
 
 	checkSpace();
-	for (i=nextFreeSlot; i>index; --i) {
+	for (XMLSize_t i=nextFreeSlot; i>index; --i) {
 		data[i] = data[i-1];
 	}
 	data[index] = elem;
@@ -105,9 +103,9 @@ void DOMNodeVector::insertElementAt(DOMNode *elem, unsigned int index) {
 }
 
 
-void DOMNodeVector::removeElementAt(unsigned int index) {
+void DOMNodeVector::removeElementAt(XMLSize_t index) {
 	assert(index < nextFreeSlot);
-	for (unsigned int i=index; i<nextFreeSlot-1; ++i) {
+	for (XMLSize_t i=index; i<nextFreeSlot-1; ++i) {
 		data[i] = data[i+1];
 	}
 	--nextFreeSlot;
@@ -117,7 +115,7 @@ void DOMNodeVector::reset() {
 	nextFreeSlot = 0;
 }
 
-void DOMNodeVector::setElementAt(DOMNode *elem, unsigned int index) {
+void DOMNodeVector::setElementAt(DOMNode *elem, XMLSize_t index) {
 	assert(index < nextFreeSlot);
 	data[index] = elem;
 }

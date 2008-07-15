@@ -190,7 +190,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         //  If its not a special case namespace attr of some sort, then we
         //  do normal checking and processing.
-        XMLAttDef::AttTypes attType;
+        XMLAttDef::AttTypes attType = XMLAttDef::CData;
         DatatypeValidator *attrValidator = 0;
         PSVIAttribute *psviAttr = 0;
         bool otherXSI = false;
@@ -264,8 +264,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if (!otherXSI) {
                     fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
 
-                    // Just normalize as CDATA
-                    attType = XMLAttDef::CData;
                     normalizeAttRawValue
                     (
                         namePtr
@@ -635,7 +633,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
 
                 // Save the type for later use
-                attType = (attDef)?attDef->getType():XMLAttDef::CData;
+                if (attDef)
+                {
+                    attType = attDef->getType();
+                }
             }
 
             // now fill in the PSVIAttributes entry for this attribute:

@@ -210,8 +210,8 @@ int DOMAttrMapImpl::findNamePoint(const XMLCh *namespaceURI,
     // In addition, to get this to work with fNodes without any namespace
     // (namespaceURI and localNames are both 0) we then use the nodeName
     // as a secondary key.
-    unsigned int i, len = fNodes -> size();
-    for (i = 0; i < len; ++i) {
+    const XMLSize_t len = fNodes -> size();
+    for (XMLSize_t i = 0; i < len; ++i) {
         DOMNode *node = fNodes -> elementAt(i);
         const XMLCh * nNamespaceURI = node->getNamespaceURI();
         const XMLCh * nLocalName = node->getLocalName();
@@ -221,7 +221,7 @@ int DOMAttrMapImpl::findNamePoint(const XMLCh *namespaceURI,
             if (XMLString::equals(localName, nLocalName)
                 ||
                 (nLocalName == 0 && XMLString::equals(localName, node->getNodeName())))
-                return i;
+                return (int)i;
         }
     }
     return -1;	//not found

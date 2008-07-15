@@ -1822,6 +1822,8 @@ bool RegularExpression::doTokenOverlap(const Op* op, Token* token)
                 }
                 break;
             }
+        default:
+            break;
         }
         return true;
     }
@@ -1843,6 +1845,8 @@ bool RegularExpression::doTokenOverlap(const Op* op, Token* token)
         case Token::T_RANGE:
         case Token::T_NRANGE:
             return ((RangeToken*)token)->match(ch);
+        default:
+            break;
         }
     }
     // in any other case, there is the chance that they overlap

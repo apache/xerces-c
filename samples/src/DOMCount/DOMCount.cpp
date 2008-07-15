@@ -96,10 +96,10 @@ static int countChildElements(DOMNode *n, bool printOutEncounteredEles)
                 if(n->hasAttributes()) {
                     // get all the attributes of the node
                     DOMNamedNodeMap *pAttributes = n->getAttributes();
-                    unsigned int nSize = pAttributes->getLength();
+                    const XMLSize_t nSize = pAttributes->getLength();
                     XERCES_STD_QUALIFIER cout <<"\tAttributes" << XERCES_STD_QUALIFIER endl;
                     XERCES_STD_QUALIFIER cout <<"\t----------" << XERCES_STD_QUALIFIER endl;
-                    for(unsigned int i=0;i<nSize;++i) {
+                    for(XMLSize_t i=0;i<nSize;++i) {
                         DOMAttr *pAttributeNode = (DOMAttr*) pAttributes->item(i);
                         // get attribute name
                         char *name = XMLString::transcode(pAttributeNode->getName());

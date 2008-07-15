@@ -780,7 +780,11 @@ Token* RegxParser::parseFactor() {
             return processBacksolidus_lt();
         case chCloseAngle:
             return processBacksolidus_gt();
+        default:
+            break;
 		}
+    default:
+        break;
     }
 
 	Token* tok = parseAtom();
@@ -861,6 +865,8 @@ Token* RegxParser::parseFactor() {
             tok->setMax(max);
             processNext();
 		}
+        break;
+    default:
         break;
 	}
 

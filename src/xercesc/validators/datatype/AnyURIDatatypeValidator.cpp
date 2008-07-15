@@ -126,8 +126,6 @@ void AnyURIDatatypeValidator::encode(const XMLCh* const content, const XMLSize_t
         false, false, false, false, false, false, false, false, false, false, false, true , true , true , true , true   /* 0x7B:'{', 0x7C:'|', 0x7D:'}', 0x7E:'~', 0x7F:DEL */
     };
 
-    int bufferIndex = 0;
-
     // For each character in content
     XMLSize_t i;
     for (i = 0; i < len; i++)
