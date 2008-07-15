@@ -1339,20 +1339,20 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
     }
 
     // Unique Particle Attribution
-    // store the conflict results between any two elements in fElemMap
-    // XMLContentModel::gInvalidTrans: not compared; 0: no conflict; 1: conflict
-    unsigned int** conflictTable = (unsigned int**) fMemoryManager->allocate
+    // Store the conflict results between any two elements in fElemMap
+    // 0 - not yet tested, 1 - conflict, (-1) - no conflict
+    signed char** conflictTable = (signed char**) fMemoryManager->allocate
     (
-        fElemMapSize * sizeof(unsigned int*)
+        fElemMapSize * sizeof(signed char*)
     );
 
     // initialize the conflict table
     for (j = 0; j < fElemMapSize; j++) {
-        conflictTable[j] = (unsigned int*) fMemoryManager->allocate
+        conflictTable[j] = (signed char*) fMemoryManager->allocate
         (
-            fElemMapSize * sizeof(unsigned int)
+            fElemMapSize * sizeof(signed char)
         );
-        memset(conflictTable[j], 0, fElemMapSize*sizeof(unsigned int));
+        memset(conflictTable[j], 0, fElemMapSize*sizeof(signed char));
     }
 
     // for each state, check whether it has overlap transitions
@@ -1383,7 +1383,7 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                             if (o != 0 &&
                                 ((fTransTable[i][j] == i) ^ (fTransTable[i][k] == i)) &&
                                 o->minOccurs == o->maxOccurs) {
-                                conflictTable[j][k] = XMLContentModel::gInvalidTrans;
+                                conflictTable[j][k] = -1;
                                 continue;
                             }
                         }
@@ -1413,7 +1413,7 @@ void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                              buf2.getRawBuffer());
                     }
                     else
-                        conflictTable[j][k] = XMLContentModel::gInvalidTrans;
+                        conflictTable[j][k] = -1;
                 }
             }
         }
