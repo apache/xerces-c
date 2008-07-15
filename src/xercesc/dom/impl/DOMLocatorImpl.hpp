@@ -49,8 +49,8 @@ public:
         , const XMLFileLoc columnNum
         , DOMNode* const errorNode
         , const XMLCh* const uri
-        , const XMLSSize_t offset = -1
-        , const XMLSSize_t utf16Offset = -1
+        , const XMLFilePos offset = ~(XMLFilePos(0))
+        , const XMLFilePos utf16Offset = ~(XMLFilePos(0))
     );
 
     /** Desctructor */

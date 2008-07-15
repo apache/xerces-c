@@ -155,7 +155,7 @@ inline void* DOMErrorImpl::getRelatedData() const
 }
 
 // ---------------------------------------------------------------------------
-//  DOMLocatorImpl: Setter methods
+//  DOMErrorImpl: Setter methods
 // ---------------------------------------------------------------------------
 inline void DOMErrorImpl::setSeverity(const ErrorSeverity severity)
 {

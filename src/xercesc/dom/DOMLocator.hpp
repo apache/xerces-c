@@ -97,14 +97,16 @@ public:
     virtual XMLFileLoc getColumnNumber() const = 0;
 
     /**
-     * Get the byte offset into the input source, or -1 if there is no byte offset available.
+     * Get the byte offset into the input source, or ~(XMLFilePos(0)) if
+     * there is no byte offset available.
      *
      * @since DOM Level 3
      */
     virtual XMLFilePos getByteOffset() const = 0;
 
     /**
-     * Get the UTF-16 offset into the input source, or -1 if there is no UTF-16 offset available.
+     * Get the UTF-16 offset into the input source, or ~(XMLFilePos(0)) if
+     * there is no UTF-16 offset available.
      *
      * @since DOM Level 3
      */
