@@ -724,7 +724,7 @@ $set 3
 359  grammar pool is empty
 360  grammar pool is not empty
 361  string pool is not empty
-362  storer level '{0}' is newer than loader level '{1}'
+362  storer level '{0}' does not match loader level '{1}'
 363  undefined prefix in QName value '{0}'
 
 

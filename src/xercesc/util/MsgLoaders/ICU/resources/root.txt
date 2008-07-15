@@ -741,7 +741,7 @@ root {
 		"grammar pool is empty" ,
 		"grammar pool is not empty" ,
 		"string pool is not empty" ,
-		"storer level '{0}' is newer than loader level '{1}'" ,
+		"storer level '{0}' does not match loader level '{1}'" ,
 		"undefined prefix in QName value '{0}'" ,
 		"F_ End " ,
 		} 

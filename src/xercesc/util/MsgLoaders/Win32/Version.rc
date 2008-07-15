@@ -827,7 +827,7 @@ BEGIN
     8551              L"grammar pool is empty\x00"
     8552              L"grammar pool is not empty\x00"
     8553              L"string pool is not empty\x00"
-    8554              L"storer level '{0}' is newer than loader level '{1}'\x00"
+    8554              L"storer level '{0}' does not match loader level '{1}'\x00"
     8555              L"undefined prefix in QName value '{0}'\x00"
 END
 STRINGTABLE DISCARDABLE
