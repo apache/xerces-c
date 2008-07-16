@@ -82,7 +82,7 @@ static void usage()
              "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
              "    -s          Disable schema processing. Defaults to on.\n"
              "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
-             "    -sa         Print the attributes in alfabetic order. Defaults to off.\n"
+             "    -sa         Print the attributes in alphabetic order. Defaults to off.\n"
              "    -?          Show this help.\n\n"
              "  * = Default if not provided explicitly.\n\n"
              "The parser has intrinsic support for the following encodings:\n"
