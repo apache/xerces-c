@@ -274,7 +274,7 @@ template <class TElem> void NameIdPoolEnumerator<TElem>::Reset()
     fCurIndex = fToEnum->fIdCounter ? 1:0;
 }
 
-template <class TElem> int NameIdPoolEnumerator<TElem>::size() const
+template <class TElem> unsigned int NameIdPoolEnumerator<TElem>::size() const
 {
     return fToEnum->fIdCounter;
 }

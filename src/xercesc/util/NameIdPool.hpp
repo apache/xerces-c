@@ -180,7 +180,7 @@ public :
     bool hasMoreElements() const;
     TElem& nextElement();
     void Reset();
-    int  size()  const;
+    unsigned int  size()  const;
 
 private :
     // -----------------------------------------------------------------------
