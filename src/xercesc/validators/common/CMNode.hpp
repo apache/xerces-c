@@ -22,6 +22,8 @@
 #if !defined(XERCESC_INCLUDE_GUARD_CMNODE_HPP)
 #define XERCESC_INCLUDE_GUARD_CMNODE_HPP
 
+#include <limits.h>
+
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 

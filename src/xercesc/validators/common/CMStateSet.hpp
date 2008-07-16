@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -249,7 +249,7 @@ class CMStateSetEnumerator : public XMemory
 public:
     CMStateSetEnumerator(const CMStateSet* toEnum) :
       fToEnum(toEnum),
-      fIndexCount((XMLSize_t)-1),
+      fIndexCount((unsigned int)-1),
       fLastValue(0),
       fByteArrayCursor(0)
     {
@@ -281,7 +281,7 @@ public:
 private:
     void findNext()
     {
-        unsigned int nOffset=((fIndexCount==(XMLSize_t)-1)?0:(fIndexCount/32)+1), i;
+        unsigned int nOffset=((fIndexCount==(unsigned int)-1)?0:(fIndexCount/32)+1), i;
         for(i=nOffset;i<fToEnum->fArraySize;i++)
         {
             if(fToEnum->fBitArray[i]!=0)
