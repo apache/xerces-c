@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -118,7 +118,7 @@ public:
     // -----------------------------------------------------------------------
     TVal* get(const void* const key);
     const TVal* get(const void* const key) const;
-    MemoryManager* getMemoryManager() const;   
+    MemoryManager* getMemoryManager() const;
     XMLSize_t      getHashModulus()   const;
     XMLSize_t      getCount() const;
 
@@ -237,8 +237,8 @@ private :
     //      This is the current bucket bucket element that we are on.
     //
     //  fCurHash
-    //      The is the current hash buck that we are working on. Once we hit
-    //      the end of the bucket that fCurElem is in, then we have to start
+    //      The current hash buck that we are working on. Once we hit the
+    //      end of the bucket that fCurElem is in, then we have to start
     //      working this one up to the next non-empty bucket.
     //
     //  fToEnum
@@ -258,4 +258,3 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 #endif
-

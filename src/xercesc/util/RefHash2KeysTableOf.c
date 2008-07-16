@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -160,7 +160,7 @@ removeKey(const void* const key1, const int key2)
             // delete curElem;
             // destructor is empty...
             // curElem->~RefHash2KeysTableBucketElem();
-            fMemoryManager->deallocate(curElem);            
+            fMemoryManager->deallocate(curElem);
             fCount--;
             return;
         }
@@ -312,7 +312,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
             }
 
             RefHash2KeysTableBucketElem<TVal>* elemToDelete = curElem;
-            
+
             // Update just curElem; lastElem must stay the same
             curElem = curElem->fNext;
 
@@ -374,7 +374,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::put(void* key1, int key2, 
 {
     // Apply 4 load factor to find threshold.
     XMLSize_t threshold = fHashModulus * 4;
-    
+
     // If we've grown too big, expand the table and rehash.
     if (fCount >= threshold)
         rehash();
@@ -478,17 +478,17 @@ rehash()
 
             const XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey1, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey1, newMod, fMemoryManager);
             assert(hashVal < newMod);
-            
+
             RefHash2KeysTableBucketElem<TVal>* newHeadElem = newBucketList[hashVal];
-            
+
             // Insert at the start of this bucket's list.
             curElem->fNext = newHeadElem;
             newBucketList[hashVal] = curElem;
-            
+
             curElem = nextElem;
         }
     }
-            
+
     RefHash2KeysTableBucketElem<TVal>** const oldBucketList = fBucketList;
 
     // Everything is OK at this point, so update the
@@ -498,7 +498,7 @@ rehash()
 
     // Delete the old bucket list.
     fMemoryManager->deallocate(oldBucketList);//delete[] oldBucketList;
-    
+
 }
 
 
@@ -510,7 +510,7 @@ template <class TVal> RefHash2KeysTableOfEnumerator<TVal>::
 RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
                               , const bool adopt
                               , MemoryManager* const manager)
-    : fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+    : fAdopted(adopt), fCurElem(0), fCurHash((XMLSize_t)-1), fToEnum(toEnum)
     , fMemoryManager(manager)
     , fLockPrimaryKey(0)
 {
@@ -521,8 +521,8 @@ RefHash2KeysTableOfEnumerator(RefHash2KeysTableOf<TVal>* const toEnum
     //  Find the next available bucket element in the hash table. If it
     //  comes back zero, that just means the table is empty.
     //
-    //  Note that the -1 in the current hash tells it to start from the
-    //  beginning.
+    //  Note that the -1 in the current hash tells it to start
+    //  from the beginning.
     //
     findNext();
 }
@@ -589,6 +589,7 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::Reset()
         fCurHash=fToEnum->fHash==0?XMLString::hash((const XMLCh*)fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager) : fToEnum->fHash->getHashVal(fLockPrimaryKey, fToEnum->fHashModulus, fMemoryManager);
     else
         fCurHash = (XMLSize_t)-1;
+
     fCurElem = 0;
     findNext();
 }
@@ -612,7 +613,7 @@ template <class TVal> void RefHash2KeysTableOfEnumerator<TVal>::findNext()
             fCurElem = fToEnum->fBucketList[fCurHash];
         else
             fCurElem = fCurElem->fNext;
-        while (fCurElem && 
+        while (fCurElem &&
                (fToEnum->fHash==0?!XMLString::equals((const XMLCh*)fLockPrimaryKey, (const XMLCh*)fCurElem->fKey1) : !fToEnum->fHash->equals(fLockPrimaryKey, fCurElem->fKey1)))
             fCurElem = fCurElem->fNext;
         // if we didn't found it, make so hasMoreElements() returns false

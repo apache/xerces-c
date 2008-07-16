@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -165,7 +165,7 @@ removeKey(const void* const key)
              // delete curElem;
             // destructor doesn't do anything...
             // curElem->~RefHashTableBucketElem();
-            fMemoryManager->deallocate(curElem);            
+            fMemoryManager->deallocate(curElem);
 
             fCount--;
 
@@ -208,7 +208,7 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
              // delete curElem;
             // destructor doesn't do anything...
             // curElem->~RefHashTableBucketElem();
-            fMemoryManager->deallocate(curElem);            
+            fMemoryManager->deallocate(curElem);
             curElem = nextElem;
         }
 
@@ -259,7 +259,7 @@ orphanKey(const void* const key)
             // delete curElem;
             // destructor doesn't do anything...
             // curElem->~RefHashTableBucketElem();
-            fMemoryManager->deallocate(curElem);            
+            fMemoryManager->deallocate(curElem);
             break;
         }
 
@@ -380,7 +380,7 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
 {
     // Apply 0.75 load factor to find threshold.
     XMLSize_t threshold = fHashModulus * 3 / 4;
-    
+
     // If we've grown too big, expand the table and rehash.
     if (fCount >= threshold)
         rehash();
@@ -405,7 +405,7 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
         //newBucket = new (fMemoryManager) RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         newBucket =
              new (fMemoryManager->allocate(sizeof(RefHashTableBucketElem<TVal>)))
-             RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);        
+             RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
         fCount++;
     }
@@ -431,8 +431,8 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
     ArrayJanitor<RefHashTableBucketElem<TVal>*>  guard(newBucketList, fMemoryManager);
 
     memset(newBucketList, 0, newMod * sizeof(newBucketList[0]));
-    
-    
+
+
     // Rehash all existing entries.
     for (XMLSize_t index = 0; index < fHashModulus; index++)
     {
@@ -466,7 +466,7 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
 
     // Delete the old bucket list.
     fMemoryManager->deallocate(oldBucketList);//delete[] oldBucketList;
-    
+
 }
 
 template <class TVal> RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
@@ -515,7 +515,7 @@ template <class TVal> RefHashTableOfEnumerator<TVal>::
 RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum
                          , const bool adopt
                          , MemoryManager* const manager)
-    : fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
+    : fAdopted(adopt), fCurElem(0), fCurHash((XMLSize_t)-1), fToEnum(toEnum)
     , fMemoryManager(manager)
 {
     if (!toEnum)
@@ -525,8 +525,8 @@ RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum
     //  Find the next available bucket element in the hash table. If it
     //  comes back zero, that just means the table is empty.
     //
-    //  Note that the -1 in the current hash tells it to start from the
-    //  beginning.
+    //  Note that the -1 in the current hash tells it to start
+    //  from the beginning.
     //
     findNext();
 }
