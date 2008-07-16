@@ -121,15 +121,9 @@ private :
     //  Private helper methods
     // -----------------------------------------------------------------------
     void buildDFA(ContentSpecNode* const curNode);
-    CMNode* buildSyntaxTree(ContentSpecNode* const curNode);
-    void calcFollowList(CMNode* const curNode);
+    CMNode* buildSyntaxTree(ContentSpecNode* const curNode, unsigned int& curIndex);
     unsigned int* makeDefStateList() const;
-    int postTreeBuildInit
-    (
-                CMNode* const   nodeCur
-        , const unsigned int    curIndex
-    );
-
+    unsigned int countLeafNodes(ContentSpecNode* const curNode);
 
     class Occurence : public XMemory
     {

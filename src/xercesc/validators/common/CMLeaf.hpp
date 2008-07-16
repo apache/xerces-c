@@ -40,16 +40,18 @@ public :
     // -----------------------------------------------------------------------
     CMLeaf
     (
-          QName* const         element
-        , const unsigned int   position
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          QName* const          element
+        , unsigned int          position
+        , unsigned int          maxStates
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     CMLeaf
     (
-          QName* const         element
-        , const unsigned int   position
-        , const bool           adopt
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+          QName* const          element
+        , unsigned int          position
+        , bool                  adopt
+        , unsigned int          maxStates
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
     ~CMLeaf();
 
@@ -72,7 +74,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of public CMNode virtual interface
     // -----------------------------------------------------------------------
-    virtual bool isNullable() const;
+    virtual void orphanChild();
 
 protected :
     // -----------------------------------------------------------------------
@@ -112,10 +114,11 @@ private :
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
-inline CMLeaf::CMLeaf(       QName* const         element
-                     , const unsigned int         position
-                     ,       MemoryManager* const manager) :
-    CMNode(ContentSpecNode::Leaf, manager)
+inline CMLeaf::CMLeaf( QName* const         element
+                     , unsigned int         position
+                     , unsigned int         maxStates
+                     , MemoryManager* const manager) :
+    CMNode(ContentSpecNode::Leaf, maxStates, manager)
     , fElement(0)
     , fPosition(position)
     , fAdopt(false)
@@ -136,13 +139,16 @@ inline CMLeaf::CMLeaf(       QName* const         element
     {
         fElement = element;
     }
+    // Leaf nodes are never nullable unless its an epsilon node
+    fIsNullable=(fPosition == epsilonNode);
 }
 
-inline CMLeaf::CMLeaf(       QName* const         element
-                     , const unsigned int         position
-                     , const bool                 adopt
-                     ,       MemoryManager* const manager) :
-    CMNode(ContentSpecNode::Leaf, manager)
+inline CMLeaf::CMLeaf( QName* const         element
+                     , unsigned int         position
+                     , bool                 adopt
+                     , unsigned int         maxStates
+                     , MemoryManager* const manager) :
+    CMNode(ContentSpecNode::Leaf, maxStates, manager)
     , fElement(0)
     , fPosition(position)
     , fAdopt(adopt)
@@ -163,6 +169,8 @@ inline CMLeaf::CMLeaf(       QName* const         element
     {
         fElement = element;
     }
+    // Leaf nodes are never nullable unless its an epsilon node
+    fIsNullable=(fPosition == epsilonNode);
 }
 
 inline CMLeaf::~CMLeaf()
@@ -207,12 +215,9 @@ inline void CMLeaf::setPosition(const unsigned int newPosition)
 // ---------------------------------------------------------------------------
 //  Implementation of public CMNode virtual interface
 // ---------------------------------------------------------------------------
-inline bool CMLeaf::isNullable() const
+inline void CMLeaf::orphanChild()
 {
-    // Leaf nodes are never nullable unless its an epsilon node
-    return (fPosition == epsilonNode);
 }
-
 
 // ---------------------------------------------------------------------------
 //  Implementation of protected CMNode virtual interface

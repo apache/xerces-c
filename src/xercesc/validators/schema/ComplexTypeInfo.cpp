@@ -599,7 +599,11 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         );
     }
     // if what is being repeated is a leaf avoid expanding the tree
-    else if(bAllowCompactSyntax && saveNode->getType()==ContentSpecNode::Leaf)
+    else if(bAllowCompactSyntax && 
+        (saveNode->getType()==ContentSpecNode::Leaf || 
+        (saveNode->getType() & 0x0f)==ContentSpecNode::Any ||
+        (saveNode->getType() & 0x0f)==ContentSpecNode::Any_Other ||
+        (saveNode->getType() & 0x0f)==ContentSpecNode::Any_NS))
     {
         retNode = new (fMemoryManager) ContentSpecNode
         (

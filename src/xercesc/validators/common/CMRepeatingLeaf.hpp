@@ -41,7 +41,8 @@ public :
           QName* const         element
         , int                  minOccurs
         , int                  maxOccurs
-        , const unsigned int   position
+        , unsigned int         position
+        , unsigned int         maxStates
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     CMRepeatingLeaf
@@ -49,8 +50,9 @@ public :
           QName* const         element
         , int                  minOccurs
         , int                  maxOccurs
-        , const unsigned int   position
-        , const bool           adopt
+        , unsigned int         position
+        , bool                 adopt
+        , unsigned int         maxStates
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -89,9 +91,10 @@ private :
 inline CMRepeatingLeaf::CMRepeatingLeaf(   QName* const               element
                                          , int                        minOccurs
                                          , int                        maxOccurs
-                                         , const unsigned int         position
+                                         , unsigned int               position
+                                         , unsigned int               maxStates
                                          ,       MemoryManager* const manager) :
-    CMLeaf(element, position, manager)
+    CMLeaf(element, position, maxStates, manager)
     , fMinOccurs(minOccurs)
     , fMaxOccurs(maxOccurs)
 {
@@ -100,10 +103,11 @@ inline CMRepeatingLeaf::CMRepeatingLeaf(   QName* const               element
 inline CMRepeatingLeaf::CMRepeatingLeaf(   QName* const               element
                                          , int                        minOccurs
                                          , int                        maxOccurs
-                                         , const unsigned int         position
-                                         , const bool                 adopt
+                                         , unsigned int               position
+                                         , bool                       adopt
+                                         , unsigned int               maxStates
                                          ,       MemoryManager* const manager) :
-    CMLeaf(element, position, adopt, manager)
+    CMLeaf(element, position, adopt, maxStates, manager)
     , fMinOccurs(minOccurs)
     , fMaxOccurs(maxOccurs)
 {

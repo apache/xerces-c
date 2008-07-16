@@ -32,11 +32,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  CMUnaryOp: Constructors and Destructor
 // ---------------------------------------------------------------------------
-CMAny::CMAny( const ContentSpecNode::NodeTypes type
-            , const unsigned int               URI
-            , const unsigned int               position
-            ,       MemoryManager* const       manager) :
-       CMNode(type, manager)
+CMAny::CMAny( ContentSpecNode::NodeTypes type
+            , unsigned int               URI
+            , unsigned int               position
+            , unsigned int               maxStates
+            ,       MemoryManager* const manager) :
+       CMNode(type, maxStates, manager)
      , fURI(URI)
      , fPosition(position)
 {
@@ -47,7 +48,8 @@ CMAny::CMAny( const ContentSpecNode::NodeTypes type
         ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::CM_NotValidSpecTypeForNode,
                             "CMAny", manager);
     }
-
+    // Leaf nodes are never nullable unless its an epsilon node
+    fIsNullable=(fPosition == epsilonNode);
 }
 
 CMAny::~CMAny()
@@ -78,10 +80,8 @@ void CMAny::setPosition(const unsigned int newPosition)
 // ---------------------------------------------------------------------------
 //  Implementation of public CMNode virtual interface
 // ---------------------------------------------------------------------------
-bool CMAny::isNullable() const
+void CMAny::orphanChild()
 {
-    // Leaf nodes are never nullable unless its an epsilon node
-    return (fPosition == epsilonNode);
 }
 
 // ---------------------------------------------------------------------------

@@ -671,59 +671,17 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  DFA state position and count the number of such leafs, which is left
     //  in the fLeafCount member.
     //
-    CMLeaf* nodeEOC = new (fMemoryManager) CMLeaf
-    (
-        new (fMemoryManager) QName
-        (
-            XMLUni::fgZeroLenString
-            , XMLUni::fgZeroLenString
-            , XMLContentModel::gEOCFakeId
-            , fMemoryManager
-        )
-        , CMNode::epsilonNode
-        , true
-        , fMemoryManager
-    );
-    CMNode* nodeOrgContent = buildSyntaxTree(curNode);
-    fHeadNode = new (fMemoryManager) CMBinaryOp
-    (
-        ContentSpecNode::Sequence
-        , nodeOrgContent
-        , nodeEOC
-        , fMemoryManager
-    );
+    fLeafCount=countLeafNodes(curNode);
+    fEOCPos = fLeafCount++;
 
-    //
-    //  And handle specially the EOC node, which also must be numbered and
-    //  counted as a non-epsilon leaf node. It could not be handled in the
-    //  above tree build because it was created before all that started. We
-    //  save the EOC position since its used during the DFA building loop.
-    //
-    fEOCPos = fLeafCount;
-    nodeEOC->setPosition(fLeafCount++);
-
-    //
-    //  Ok, so now we have to iterate the new tree and do a little more work
-    //  now that we know the leaf count. One thing we need to do is to
-    //  calculate the first and last position sets of each node. This is
-    //  cached away in each of the nodes.
-    //
-    //  Along the way we also set the leaf count in each node as the maximum
-    //  state count. They must know this in order to create their first/last
-    //  position sets.
-    //
-    //  We also need to build an array of references to the non-epsilon
-    //  leaf nodes. Since we iterate here the same way as we did during the
-    //  initial tree build (which built their position numbers, we will put
-    //  them in the array according to their position values.
+    //  We need to build an array of references to the non-epsilon
+    //  leaf nodes. We will put them in the array according to their position values
     //
     fLeafList = (CMLeaf**) fMemoryManager->allocate(fLeafCount*sizeof(CMLeaf*)); //new CMLeaf*[fLeafCount];
     fLeafListType = (ContentSpecNode::NodeTypes*) fMemoryManager->allocate
     (
         fLeafCount * sizeof(ContentSpecNode::NodeTypes)
     ); //new ContentSpecNode::NodeTypes[fLeafCount];
-    postTreeBuildInit(fHeadNode, 0);
-
     //
     //  And, moving onward... We now need to build the follow position sets
     //  for all the nodes. So we allocate an array of pointers to state sets,
@@ -735,8 +693,18 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     ); //new CMStateSet*[fLeafCount];
     for (index = 0; index < fLeafCount; index++)
         fFollowList[index] = new (fMemoryManager) CMStateSet(fLeafCount, fMemoryManager);
-    calcFollowList(fHeadNode);
 
+    //  The buildSyntaxTree function will recursively iterate over the ContentSpecNode
+    //  and build the CMNode hierarchy; it will also put every leaf node in the fLeafList
+    //  array, then calculate the first and last position sets of each node. This is
+    //  cached away in each of the nodes.
+    //
+    //  Along the way we also set the leaf count in each node as the maximum
+    //  state count. They must know this in order to create their first/last
+    //  position sets.
+    //
+    unsigned int counter=0;
+    CMNode* nodeOrgContent = buildSyntaxTree(curNode, counter);
     //
     //  Check to see whether this content model can handle an empty content,
     //  which is something we need to optimize by looking now before we
@@ -746,6 +714,64 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  is nullable, then its true.
     //
     fEmptyOk = nodeOrgContent->isNullable();
+
+    //
+    //  And handle specially the EOC node, which also must be numbered and
+    //  counted as a non-epsilon leaf node. It could not be handled in the
+    //  above tree build because it was created before all that started. We
+    //  save the EOC position since its used during the DFA building loop.
+    //
+    CMLeaf* nodeEOC = new (fMemoryManager) CMLeaf
+    (
+        new (fMemoryManager) QName
+        (
+            XMLUni::fgZeroLenString
+            , XMLUni::fgZeroLenString
+            , XMLContentModel::gEOCFakeId
+            , fMemoryManager
+        )
+        , fEOCPos
+        , true
+        , fLeafCount
+        , fMemoryManager
+    );
+    fHeadNode = new (fMemoryManager) CMBinaryOp
+    (
+        ContentSpecNode::Sequence
+        , nodeOrgContent
+        , nodeEOC
+        , fLeafCount
+        , fMemoryManager
+    );
+
+    //  Put also the final EOC node in the leaf array
+    fLeafList[counter] = new (fMemoryManager) CMLeaf
+    (
+        nodeEOC->getElement()
+        , nodeEOC->getPosition()
+        , fLeafCount
+        , fMemoryManager
+    );
+    fLeafListType[counter] = ContentSpecNode::Leaf;
+
+    //
+    //  Now handle our top level. We use our left child's last pos set and our
+    //  right child's first pos set, so get them now for convenience.
+    //
+    const CMStateSet& last  = nodeOrgContent->getLastPos();
+    const CMStateSet& first = nodeEOC->getFirstPos();
+
+    //
+    //  Now, for every position which is in our left child's last set
+    //  add all of the states in our right child's first set to the
+    //  follow set for that position.
+    //
+    CMStateSetEnumerator enumLast(&last);
+    while(enumLast.hasMoreElements())
+    {
+        XMLSize_t index=enumLast.nextElement();
+        *fFollowList[index] |= first;
+    }
 
     //
     //  And finally the big push... Now we build the DFA using all the states
@@ -832,7 +858,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
      * We are *assuming* that each element appears in at least one leaf.
      **/
     // don't forget to delete it
-
+#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
     int *fLeafSorter = (int*) fMemoryManager->allocate
     (
         (fLeafCount + fElemMapSize) * sizeof(int)
@@ -864,6 +890,42 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         }
         fLeafSorter[fSortCount++] = -1;
     }
+#endif
+
+    // instead of using a single array with -1 to separate elements, use a bidimensional map
+    unsigned int** fLeafSorter = (unsigned int**)fMemoryManager->allocate(fElemMapSize * sizeof(unsigned int*));
+    unsigned int* tmpSorter = (unsigned int*)fMemoryManager->allocate(fLeafCount * sizeof(unsigned int));
+    for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
+    {
+        const QName* element = fElemMap[elemIndex];
+        const XMLCh* elementRawName = 0;
+        if (fDTD && element)
+            elementRawName = element->getRawName();
+
+        unsigned int fSortCount=0;
+        for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
+        {
+            const QName* leaf = fLeafList[leafIndex]->getElement();
+            if (fDTD) {
+                if (XMLString::equals(leaf->getRawName(), elementRawName)) {
+                    tmpSorter[fSortCount++] = leafIndex;
+                }
+            }
+            else {
+                if ((fElemMapType[elemIndex] == fLeafListType[leafIndex]) &&
+                    (leaf->getURI() == element->getURI()) &&
+                    (XMLString::equals(leaf->getLocalPart(), element->getLocalPart()))) {
+                      tmpSorter[fSortCount++] = leafIndex;
+                }
+            }
+        }
+
+        fLeafSorter[elemIndex]=(unsigned int*)fMemoryManager->allocate((fSortCount+1) * sizeof(unsigned int));
+        fLeafSorter[elemIndex][0]=fSortCount;
+        for (unsigned int index=0;index<fSortCount;index++)
+            fLeafSorter[elemIndex][index+1]=tmpSorter[index];
+    }
+    fMemoryManager->deallocate(tmpSorter);
 
     //
     //  Next lets create some arrays, some that that hold transient info
@@ -896,6 +958,18 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  (which is the seq node that holds the content model and the EOC node.)
     //
     CMStateSet* setT = new (fMemoryManager) CMStateSet(fHeadNode->getFirstPos());
+
+    //
+    // Note on memory leak: Bugzilla#2707:
+    // ===================================
+    // The CMBinary, pointed to by fHeadNode, shall be released by
+    // deleted by itself.
+    //
+    // fLeafList[] maintains its **OWN** copy of CMLeaf to avoid double deletion
+    // of CMLeaf.
+    //
+
+    delete fHeadNode;
 
     //
     //  Init our two state flags. Basically the unmarked state counter is
@@ -1004,6 +1078,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             } // for leafIndex
 #endif
 
+#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
             // Optimization(Jan, 2001)
             int leafIndex = fLeafSorter[sorterIndex++];
 
@@ -1021,6 +1096,40 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 }
                 leafIndex = fLeafSorter[sorterIndex++];
             } // while (leafIndex != -1)
+#endif
+
+            unsigned int* fLeafIndexes=fLeafSorter[elemIndex];
+            unsigned int fNumItems=fLeafIndexes[0];
+            if(fNumItems!=0)
+            {
+                CMStateSetEnumerator enumBits(setT);
+                while(enumBits.hasMoreElements())
+                {
+                    unsigned int bitIndex=enumBits.nextElement();
+                    // Check if this leaf index (DFA position) is in the current set
+                    // (using binary search: the indexes are sorted)
+                    unsigned int first=1,last=fNumItems,i;
+                    while(first<=last)
+                    {
+                        i=(first+last)/2;
+                        if(fLeafIndexes[i]>bitIndex)
+                            last=i-1;
+                        else if(fLeafIndexes[i]<bitIndex)
+                            first=i+1;
+                        else
+                        {
+                            //  found!
+                            //
+                            //  If this leaf is the current input symbol, then we
+                            //  want to add its follow list to the set of states to
+                            //  transition to from the current state.
+                            //
+                            *newSet |= *fFollowList[bitIndex];
+                            break;
+                        }
+                    }
+                }
+            }
 
             //
             //  If this new set is not empty, then see if its in the list
@@ -1162,19 +1271,6 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  DFA build.
     //
 
-    //
-    // Note on memory leak: Bugzilla#2707:
-    // ===================================
-    // The CMBinary, pointed to by fHeadNode, shall be released by
-    // deleted by itself.
-    //
-    // Change has been made to postTreeBuildInit() such that fLeafList[]
-    // would maintain its **OWN** copy of CMLeaf to avoid double deletion
-    // of CMLeaf.
-    //
-
-    delete fHeadNode;
-
     for (index = 0; index < fLeafCount; index++)
         delete fFollowList[index];
     fMemoryManager->deallocate(fFollowList); //delete [] fFollowList;
@@ -1194,12 +1290,63 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         delete fLeafList[index];
     fMemoryManager->deallocate(fLeafList); //delete [] fLeafList;
 
+#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
     fMemoryManager->deallocate(fLeafSorter); //delete [] fLeafSorter;
-
+#endif
+    for (index=0; index < fElemMapSize; index++)
+        fMemoryManager->deallocate(fLeafSorter[index]);
+    fMemoryManager->deallocate(fLeafSorter);
 }
 
+unsigned int DFAContentModel::countLeafNodes(ContentSpecNode* const curNode)
+{
+    unsigned int count = 0;
 
-CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
+    // Get the spec type of the passed node
+    const ContentSpecNode::NodeTypes curType = curNode->getType();
+
+    if ((curType & 0x0f) == ContentSpecNode::Any
+        || (curType & 0x0f) == ContentSpecNode::Any_Other
+        || (curType & 0x0f) == ContentSpecNode::Any_NS
+        || curType == ContentSpecNode::Leaf
+        || curType == ContentSpecNode::Loop)
+    {
+        count++;
+    }
+    else
+    {
+        //
+        //  Its not a leaf, so we have to recurse its left and maybe right
+        //  nodes. Save both values before we recurse and trash the node.
+        //
+        ContentSpecNode* leftNode = curNode->getFirst();
+        ContentSpecNode* rightNode = curNode->getSecond();
+
+        // Detect if we have a deep tree that can be analyzed using a loop instead of recursion
+        unsigned int nLoopCount=0;
+        ContentSpecNode* cursor=curNode;
+        while(cursor->getType()==ContentSpecNode::Sequence && cursor->getFirst() && cursor->getFirst()->getSecond()==rightNode)
+        {
+            nLoopCount++;
+            cursor=cursor->getFirst();
+        }
+        if(nLoopCount!=0)
+        {
+            count += countLeafNodes(cursor);
+            for(unsigned int i=0;i<nLoopCount;i++)
+                count += countLeafNodes(rightNode);
+            return count;
+        }
+        if(leftNode)
+            count+=countLeafNodes(leftNode);
+        if(rightNode)
+            count+=countLeafNodes(rightNode);
+    }
+    return count;
+}
+
+CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode
+                                         , unsigned int&        curIndex)
 {
     // Initialize a return node pointer
     CMNode* retNode = 0;
@@ -1215,9 +1362,25 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         (
             curType
             , curNode->getElement()->getURI()
-            , fLeafCount++
+            , curIndex
+            , fLeafCount
             , fMemoryManager
         );
+        fLeafList[curIndex] = new (fMemoryManager) CMLeaf
+        (
+            new (fMemoryManager) QName
+            (
+                XMLUni::fgZeroLenString
+                , XMLUni::fgZeroLenString
+                , curNode->getElement()->getURI()
+                , fMemoryManager
+            )
+            , curIndex
+            , true
+            , fMemoryManager
+        );
+        fLeafListType[curIndex] = curType;
+        ++curIndex;
     }
     else if (curType == ContentSpecNode::Leaf)
     {
@@ -1230,9 +1393,20 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         retNode = new (fMemoryManager) CMLeaf
         (
             curNode->getElement()
-            , fLeafCount++
+            , curIndex
+            , fLeafCount
             , fMemoryManager
         );
+        CMLeaf* leaf=(CMLeaf*)retNode;
+        fLeafList[curIndex] = new (fMemoryManager) CMLeaf
+        (
+            curNode->getElement()
+            , curIndex
+            , fLeafCount
+            , fMemoryManager
+        );
+        fLeafListType[curIndex] = ContentSpecNode::Leaf;
+        ++curIndex;
     }
     else if (curType == ContentSpecNode::Loop)
     {
@@ -1247,9 +1421,22 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
             curNode->getFirst()->getElement()
             , curNode->getMinOccurs()
             , curNode->getMaxOccurs()
-            , fLeafCount++
+            , curIndex
+            , fLeafCount
             , fMemoryManager
         );
+        CMLeaf* leaf=(CMLeaf*)retNode;
+        fLeafList[curIndex] = new (fMemoryManager) CMRepeatingLeaf
+        (
+            curNode->getFirst()->getElement()
+            , curNode->getMinOccurs()
+            , curNode->getMaxOccurs()
+            , curIndex
+            , fLeafCount
+            , fMemoryManager
+        );
+        fLeafListType[curIndex] = curNode->getFirst()->getType();
+        ++curIndex;
     }
      else
     {
@@ -1260,6 +1447,50 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
         ContentSpecNode* leftNode = curNode->getFirst();
         ContentSpecNode* rightNode = curNode->getSecond();
 
+        // Detect if we have a deep tree that can be analyzed using a loop instead of recursion
+        unsigned int nLoopCount=0;
+        ContentSpecNode* cursor=curNode;
+        while(cursor->getType()==ContentSpecNode::Sequence && cursor->getFirst() && cursor->getFirst()->getSecond()==rightNode)
+        {
+            nLoopCount++;
+            cursor=cursor->getFirst();
+        }
+        if(nLoopCount!=0)
+        {
+            retNode = buildSyntaxTree(cursor, curIndex);
+            for(unsigned int i=0;i<nLoopCount;i++)
+            {
+                CMNode* newRight = buildSyntaxTree(rightNode, curIndex);
+                //
+                //  Now handle our level. We use our left child's last pos set and our
+                //  right child's first pos set, so get them now for convenience.
+                //
+                const CMStateSet& last  = retNode->getLastPos();
+                const CMStateSet& first = newRight->getFirstPos();
+
+                //
+                //  Now, for every position which is in our left child's last set
+                //  add all of the states in our right child's first set to the
+                //  follow set for that position.
+                //
+                CMStateSetEnumerator enumLast(&last);
+                while(enumLast.hasMoreElements())
+                {
+                    XMLSize_t index=enumLast.nextElement();
+                    *fFollowList[index] |= first;
+                }
+                retNode = new (fMemoryManager) CMBinaryOp
+                (
+                    ContentSpecNode::Sequence
+                    , retNode
+                    , newRight
+                    , fLeafCount
+                    , fMemoryManager
+                );
+            }
+            return retNode;
+        }
+
         if (((curType & 0x0f) == ContentSpecNode::Choice)
         ||   ((curType & 0x0f) == ContentSpecNode::Sequence))
         {
@@ -1268,13 +1499,35 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
             //  two created sub nodes as its children. The node type is the
             //  same type as the source.
             //
-            CMNode* newLeft = buildSyntaxTree(leftNode);
-            CMNode* newRight = buildSyntaxTree(rightNode);
+            CMNode* newLeft = buildSyntaxTree(leftNode, curIndex);
+            CMNode* newRight = buildSyntaxTree(rightNode, curIndex);
+            if(((curType & 0x0f) == ContentSpecNode::Sequence))
+            {
+                //
+                //  Now handle our level. We use our left child's last pos set and our
+                //  right child's first pos set, so get them now for convenience.
+                //
+                const CMStateSet& last  = newLeft->getLastPos();
+                const CMStateSet& first = newRight->getFirstPos();
+
+                //
+                //  Now, for every position which is in our left child's last set
+                //  add all of the states in our right child's first set to the
+                //  follow set for that position.
+                //
+                CMStateSetEnumerator enumLast(&last);
+                while(enumLast.hasMoreElements())
+                {
+                    XMLSize_t index=enumLast.nextElement();
+                    *fFollowList[index] |= first;
+                }
+            }
             retNode = new (fMemoryManager) CMBinaryOp
             (
                 curType
                 , newLeft
                 , newRight
+                , fLeafCount
                 , fMemoryManager
             );
         }
@@ -1282,11 +1535,35 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
                || curType == ContentSpecNode::ZeroOrOne
                || curType == ContentSpecNode::OneOrMore)
         {
+            CMNode* newChild = buildSyntaxTree(leftNode, curIndex);
+            if (curType == ContentSpecNode::ZeroOrMore
+               || curType == ContentSpecNode::OneOrMore)
+            {
+                //
+                //  Now handle our level. We use our own first and last position
+                //  sets, so get them up front.
+                //
+                const CMStateSet& first = newChild->getFirstPos();
+                const CMStateSet& last  = newChild->getLastPos();
+
+                //
+                //  For every position which is in our last position set, add all
+                //  of our first position states to the follow set for that
+                //  position.
+                //
+                CMStateSetEnumerator enumLast(&last);
+                while(enumLast.hasMoreElements())
+                {
+                    XMLSize_t index=enumLast.nextElement();
+                    *fFollowList[index] |= first;
+                }
+            }
             // This one is fine as is, just change to our form
             retNode = new (fMemoryManager) CMUnaryOp
             (
                 curType
-                , buildSyntaxTree(leftNode)
+                , newChild
+                , fLeafCount
                 , fMemoryManager
             );
         }
@@ -1295,76 +1572,12 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode)
             ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
         }
     }
+    // fault in the first and last pos, then delete it children
+    retNode->getFirstPos();
+    retNode->getLastPos();
+    retNode->orphanChild();
     return retNode;
 }
-
-
-void DFAContentModel::calcFollowList(CMNode* const curNode)
-{
-    // Get the spec type of the passed node
-    const ContentSpecNode::NodeTypes curType = curNode->getType();
-
-    if ((curType & 0x0f) == ContentSpecNode::Choice)
-    {
-        // Just recurse
-        calcFollowList(((CMBinaryOp*)curNode)->getLeft());
-        calcFollowList(((CMBinaryOp*)curNode)->getRight());
-    }
-    else if ((curType & 0x0f) == ContentSpecNode::Sequence)
-    {
-        // Recurse before we process this node
-        calcFollowList(((CMBinaryOp*)curNode)->getLeft());
-        calcFollowList(((CMBinaryOp*)curNode)->getRight());
-
-        //
-        //  Now handle our level. We use our left child's last pos set and our
-        //  right child's first pos set, so get them now for convenience.
-        //
-        const CMStateSet& last  = ((CMBinaryOp*)curNode)->getLeft()->getLastPos();
-        const CMStateSet& first = ((CMBinaryOp*)curNode)->getRight()->getFirstPos();
-
-        //
-        //  Now, for every position which is in our left child's last set
-        //  add all of the states in our right child's first set to the
-        //  follow set for that position.
-        //
-        for (unsigned int index = 0; index < fLeafCount; index++)
-        {
-            if (last.getBit(index))
-                *fFollowList[index] |= first;
-        }
-    }
-     else if (curType == ContentSpecNode::ZeroOrMore ||
-              curType == ContentSpecNode::OneOrMore   )
-    {
-        // Recurse first
-        calcFollowList(((CMUnaryOp*)curNode)->getChild());
-
-        //
-        //  Now handle our level. We use our own first and last position
-        //  sets, so get them up front.
-        //
-        const CMStateSet& first = curNode->getFirstPos();
-        const CMStateSet& last  = curNode->getLastPos();
-
-        //
-        //  For every position which is in our last position set, add all
-        //  of our first position states to the follow set for that
-        //  position.
-        //
-        for (unsigned int index = 0; index < fLeafCount; index++)
-        {
-            if (last.getBit(index))
-                *fFollowList[index] |= first;
-        }
-    }
-     else if (curType == ContentSpecNode::ZeroOrOne)
-    {
-        // Recurse only
-        calcFollowList(((CMUnaryOp*)curNode)->getChild());
-    }
-}
-
 
 //
 //  gInvalidTrans is used to represent bad transitions in the transition table
@@ -1381,96 +1594,6 @@ unsigned int* DFAContentModel::makeDefStateList() const
         retArray[index] = XMLContentModel::gInvalidTrans;
     return retArray;
 }
-
-
-int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
-                                        , const unsigned int    curIndex)
-{
-    // Set the maximum states on this node
-    nodeCur->setMaxStates(fLeafCount);
-
-    // Get the spec type of the passed node
-    const ContentSpecNode::NodeTypes curType = nodeCur->getType();
-
-    // Get a copy of the index we can modify
-    unsigned int newIndex = curIndex;
-
-    // Recurse as required
-    if ( ((curType & 0x0f) == ContentSpecNode::Any)       ||
-         ((curType & 0x0f) == ContentSpecNode::Any_NS) ||
-         ((curType & 0x0f) == ContentSpecNode::Any_Other)  )
-    {
-        fLeafList[newIndex] = new (fMemoryManager) CMLeaf
-        (
-            new (fMemoryManager) QName
-            (
-                XMLUni::fgZeroLenString
-                , XMLUni::fgZeroLenString
-                , ((CMAny*) nodeCur)->getURI()
-                , fMemoryManager
-            )
-            , ((CMAny*)nodeCur)->getPosition()
-            , true
-            , fMemoryManager
-        );
-        fLeafListType[newIndex] = curType;
-        ++newIndex;
-    }
-    else if (((curType & 0x0f) == ContentSpecNode::Choice)
-         ||  ((curType & 0x0f) == ContentSpecNode::Sequence))
-    {
-        newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getLeft(), newIndex);
-        newIndex = postTreeBuildInit(((CMBinaryOp*)nodeCur)->getRight(), newIndex);
-    }
-    else if (curType == ContentSpecNode::ZeroOrMore ||
-             curType == ContentSpecNode::ZeroOrOne  ||
-             curType == ContentSpecNode::OneOrMore)
-    {
-        newIndex = postTreeBuildInit(((CMUnaryOp*)nodeCur)->getChild(), newIndex);
-    }
-    else if (curType == ContentSpecNode::Leaf)
-    {
-        CMLeaf* leaf=(CMLeaf*)nodeCur;
-        //
-        //  Put this node in the leaf list at the current index if its
-        //  a non-epsilon leaf.
-        //
-        if (leaf->getElement()->getURI() != XMLContentModel::gEpsilonFakeId)
-        {
-            //
-            // fLeafList make its own copy of the CMLeaf, so that
-            // delete[] fLeafList and delete the owner of the nodeCur
-            // will NOT delete the nodeCur --twice--,
-            // thuse to make delete the owner of the nodeCur possible.
-            //
-            if(leaf->isRepeatableLeaf())
-                fLeafList[newIndex] = new (fMemoryManager) CMRepeatingLeaf
-                (
-                    leaf->getElement()
-                    , ((CMRepeatingLeaf*)leaf)->getMinOccurs()
-                    , ((CMRepeatingLeaf*)leaf)->getMaxOccurs()
-                    , leaf->getPosition()
-                    , fMemoryManager
-                );
-            else
-                fLeafList[newIndex] = new (fMemoryManager) CMLeaf
-                (
-                    leaf->getElement()
-                    , leaf->getPosition()
-                    , fMemoryManager
-                );
-            fLeafListType[newIndex] = ContentSpecNode::Leaf;
-            ++newIndex;
-        }
-    }
-    else
-    {
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
-    }
-    return newIndex;
-}
-
-
 
 ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
 {

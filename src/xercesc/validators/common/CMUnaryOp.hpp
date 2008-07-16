@@ -37,9 +37,10 @@ public :
     // -----------------------------------------------------------------------
     CMUnaryOp
     (
-          const ContentSpecNode::NodeTypes type
-        ,       CMNode* const              nodeToAdopt
-        ,       MemoryManager* const       manager = XMLPlatformUtils::fgMemoryManager
+          ContentSpecNode::NodeTypes    type
+        , CMNode* const                 nodeToAdopt
+        , unsigned int                  maxStates
+        , MemoryManager* const          manager = XMLPlatformUtils::fgMemoryManager
     );
     ~CMUnaryOp();
 
@@ -54,7 +55,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the public CMNode virtual interface
     // -----------------------------------------------------------------------
-    bool isNullable() const;
+    virtual void orphanChild();
 
 
 protected :

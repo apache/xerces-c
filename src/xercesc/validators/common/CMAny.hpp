@@ -36,10 +36,11 @@ public :
     // -----------------------------------------------------------------------
     CMAny
     (
-        const   ContentSpecNode::NodeTypes type
-        , const unsigned int               URI
-        , const unsigned int               position
-        ,       MemoryManager* const       manager = XMLPlatformUtils::fgMemoryManager
+        ContentSpecNode::NodeTypes      type
+        , unsigned int                  URI
+        , unsigned int                  position
+        , unsigned int                  maxStates
+        ,       MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
     ~CMAny();
 
@@ -58,7 +59,7 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of the public CMNode virtual interface
     // -----------------------------------------------------------------------
-    bool isNullable() const;
+    virtual void orphanChild();
 
 
 protected :
