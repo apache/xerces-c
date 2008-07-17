@@ -343,8 +343,19 @@ int UnionDatatypeValidator::compare(const XMLCh* const lValue
 
     for ( XMLSize_t memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
     {
-        if (memberDTV->elementAt(memberIndex)->compare(lValue, rValue, manager) ==0)
-            return  0;
+        // 'compare' can throw exceptions when the datatype is not valid, or just 
+        // return -1; so attempt to validate both values to get the right validator
+        try
+        {
+            memberDTV->elementAt(memberIndex)->validate(lValue, 0, manager);                       
+            memberDTV->elementAt(memberIndex)->validate(rValue, 0, manager);                       
+            if (memberDTV->elementAt(memberIndex)->compare(lValue, rValue, manager) ==0)
+                return  0;
+        }
+        catch (XMLException&)
+        {
+            //absorbed
+        }
     }
 
     //REVISIT: what does it mean for UNION1 to be <less than> or <greater than> UNION2 ?
