@@ -115,6 +115,7 @@ int main(int argC, char* argV[])
     //
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
+    parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
 
     const char* xmlFile = argV[argInd];
     //

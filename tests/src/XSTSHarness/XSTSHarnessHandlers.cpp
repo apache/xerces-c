@@ -131,7 +131,7 @@ void XSTSHarnessHandlers::startElement(const XMLCh* const uri
             fCurrentTest.fSpecReference.setURL(urlW3C);
             fCurrentTest.fTestName[0]=0;
             fCurrentTest.fXMLName.setURL(dummy);
-            fCurrentTest.fXSDName.setURL(dummy);
+            fCurrentTest.fXSDNames.removeAllElements();
             StrX x(attrs.getValue(szNAME));
             const char* groupName=x.localForm();
             if(XMLString::equals(groupName,"isDefault072") ||     // this fails because of an access violation
@@ -166,7 +166,7 @@ void XSTSHarnessHandlers::startElement(const XMLCh* const uri
         }
         else if(XMLString::equals(localname, szSchemaDocument))
         {
-            fCurrentTest.fXSDName.setURL(fBaseURL, attrs.getValue(szXLINK, szHREF));
+            fCurrentTest.fXSDNames.addElement(new XMLURL(fBaseURL, attrs.getValue(szXLINK, szHREF)));
         }
         else if(XMLString::equals(localname, szInstanceDocument))
         {
@@ -204,8 +204,11 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             try
             {
                 fErrorHandler.resetErrors();
-                Grammar* grammar=fParser->loadGrammar(fCurrentTest.fXSDName.getURLText(), Grammar::SchemaGrammarType, true);
-                success=(grammar!=NULL);
+                for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                {
+                    Grammar* grammar=fParser->loadGrammar(fCurrentTest.fXSDNames.elementAt(i)->getURLText(), Grammar::SchemaGrammarType, true);
+                    success=(success && (grammar!=NULL));
+                }
             }
             catch (const OutOfMemoryException&)
             {
@@ -231,7 +234,8 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                 // skip the rest of the group, as we had problems with the schema itself
                 fCurrentTest.fSkipped=true;
                 fFailures++;
-                printFile(fCurrentTest.fXSDName);
+                for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                    printFile(*fCurrentTest.fXSDNames.elementAt(i));
             }
             else
             {
@@ -243,7 +247,8 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                         fCurrentTest.fSkipped=true;
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
-                        printFile(fCurrentTest.fXSDName);
+                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                            printFile(*fCurrentTest.fXSDNames.elementAt(i));
                     }
                 }
                 else
@@ -255,7 +260,8 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
                         XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
-                        printFile(fCurrentTest.fXSDName);
+                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                            printFile(*fCurrentTest.fXSDNames.elementAt(i));
                     }
                 }
             }
@@ -297,7 +303,8 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             if(fatalFailure)
             {
                 fFailures++;
-                printFile(fCurrentTest.fXSDName);
+                for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                    printFile(*fCurrentTest.fXSDNames.elementAt(i));
                 printFile(fCurrentTest.fXMLName);
             }
             else
@@ -308,7 +315,8 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                     {
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
-                        printFile(fCurrentTest.fXSDName);
+                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                            printFile(*fCurrentTest.fXSDNames.elementAt(i));
                         printFile(fCurrentTest.fXMLName);
                     }
                 }
@@ -319,7 +327,8 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
                         XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
-                        printFile(fCurrentTest.fXSDName);
+                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                            printFile(*fCurrentTest.fXSDNames.elementAt(i));
                         printFile(fCurrentTest.fXMLName);
                     }
                 }

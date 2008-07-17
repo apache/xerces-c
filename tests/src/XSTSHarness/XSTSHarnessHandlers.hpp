@@ -27,6 +27,7 @@
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/util/XMLURL.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -71,11 +72,20 @@ typedef enum
     valid
 } ValidityOutcome;
 
-struct XSTSTest
+class XSTSTest
 {
+public:
+    XSTSTest() :
+      fXSDNames(1) 
+    {
+        fTestName[0]=0;
+        fExpectedResult=unknown;
+        fSkipped=false;
+    }
+
     XMLCh           fTestName[256];
-    XMLURL          fXSDName, 
-                    fXMLName;
+    RefVectorOf<XMLURL> fXSDNames;
+    XMLURL          fXMLName;
     ValidityOutcome fExpectedResult;
     XMLURL          fSpecReference;
     bool            fSkipped;
