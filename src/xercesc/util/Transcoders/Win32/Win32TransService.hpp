@@ -186,9 +186,39 @@ private :
     //
     //  fWinCP
     //      This is the windows code page for this encoding.
+    //
+    //  fUsedDef
+    //      A flag passed into the conversions routines that is set to
+    //      TRUE when a default character was substituted for the actual
+    //      character.
+    //
+    //  fPtrUsedDef
+    //      A pointer to fUsedDef or a null pointer if the code page does not
+    //      support the parameter that returns whether or not a default
+    //      character was substituted.
+    //
+    //  fFromFlags
+    //      These are the flags passed to MultiByteToWideChar.  For some
+    //      code pages, this must be 0.  See the documentation of the function
+    //      for more details.
+    //
+    //  fToFlags
+    //      These are the flags passed to WideCharToMultiByte.  For some
+    //      code pages, this must be 0.  See the documentation of the function
+    //      for more details.
+    //
     // -----------------------------------------------------------------------
-    unsigned int    fIECP;
-    unsigned int    fWinCP;
+    UINT    fIECP;
+
+    UINT    fWinCP;
+
+    BOOL    fUsedDef;
+
+    BOOL*   fPtrUsedDef;
+
+    DWORD   fFromFlags;
+
+    DWORD   fToFlags;
 };
 
 
