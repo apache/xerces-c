@@ -208,7 +208,7 @@ Options:
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
     -s          Disable schema processing. Defaults to on.
                 NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.
-    -sa         Print the attributes in alfabetic order. Defaults to off.
+    -sa         Print the attributes in alphabetic order. Defaults to off.
     -?          Show this help.
 
   * = Default if not provided explicitly.
