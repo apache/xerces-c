@@ -1262,21 +1262,22 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             }
             if(!elemDecl) {
                 // still not found in specified uri
-                // try emptyNamesapce see if element should be un-qualified.
-                elemDecl = fGrammar->getElemDecl
+                // try emptyNamespace see if element should be un-qualified.
+                // Use a temp variable until we decide this is the case
+                XMLElementDecl* tempElemDecl = fGrammar->getElemDecl
                            (
                                fEmptyNamespaceId
                                , nameRawBuf
                                , qnameRawBuf
                                , currentScope
                            );
-                bool errorCondition = elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn;
-                if (errorCondition && fValidate) {
+                if (tempElemDecl && tempElemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
                     fValidator->emitError
                     (
                         XMLValid::ElementNotUnQualified
-                        , elemDecl->getFullName()
+                        , qnameRawBuf
                     );
+                    elemDecl = tempElemDecl;
                 }
             }
         }
@@ -1375,19 +1376,21 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     );
                 }
 
-                elemDecl = fGrammar->getElemDecl
+                // Use a temp variable until we decide this is the case
+                XMLElementDecl* tempElemDecl = fGrammar->getElemDecl
                            (
                                orgGrammarUri
                                , nameRawBuf
                                , qnameRawBuf
                                , currentScope
                            );
-                if (elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
+                if (tempElemDecl && tempElemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
                     fValidator->emitError
                     (
                         XMLValid::ElementNotQualified
-                        , elemDecl->getFullName()
+                        , qnameRawBuf
                     );
+                    elemDecl=tempElemDecl;
                 }
             }
         }
