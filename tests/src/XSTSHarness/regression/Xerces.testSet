@@ -536,4 +536,36 @@
       <current status="accepted" date="2008-07-17"/>
     </instanceTest>
   </testGroup>
+  <testGroup name="XERCESC-1822-1">
+    <annotation>
+      <documentation>Regression with handling of ANY</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1822"/>
+    <schemaTest name="XERCESC-1822-1-1">
+      <schemaDocument xlink:href="./XERCESC-1822/m3_10v39.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2008-07-17"/>
+    </schemaTest>
+    <instanceTest name="XERCESC-1822-1-2">
+      <instanceDocument xlink:href="./XERCESC-1822/m3_10v39.xml"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2008-07-17"/>
+    </instanceTest>
+  </testGroup>
+  <testGroup name="XERCESC-1822-2">
+    <annotation>
+      <documentation>Regression with handling of ANY</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1822"/>
+    <schemaTest name="XERCESC-1822-2-1">
+      <schemaDocument xlink:href="./XERCESC-1822/m3_10v44.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2008-07-17"/>
+    </schemaTest>
+    <instanceTest name="XERCESC-1822-2-2">
+      <instanceDocument xlink:href="./XERCESC-1822/m3_10v44.xml"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2008-07-17"/>
+    </instanceTest>
+  </testGroup>
 </testSet>

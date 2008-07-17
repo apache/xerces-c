@@ -412,6 +412,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     }
 
     fElemState[elemDepth] = 0;
+    fElemLoopState[elemDepth] = 0;
     fElemStack.setCurrentGrammar(fGrammar);
 
     //  If this is the first element and we are validating, check the root

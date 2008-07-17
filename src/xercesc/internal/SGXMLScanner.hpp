@@ -166,6 +166,7 @@ protected:
     //      This flag indicates a schema has been seen.
     //
     //  fElemState
+    //  fElemLoopState
     //  fElemStateSize
     //      Stores an element next state from DFA content model - used for
     //      wildcard validation
@@ -190,6 +191,7 @@ protected:
     Grammar::GrammarType                    fGrammarType;
     unsigned int                            fElemStateSize;
     unsigned int*                           fElemState;
+    unsigned int*                           fElemLoopState;
     XMLBuffer                               fContent;
     ValueHashTableOf<XMLCh>*                fEntityTable;
     RefVectorOf<KVStringPair>*              fRawAttrList;

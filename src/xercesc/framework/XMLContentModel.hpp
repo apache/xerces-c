@@ -32,6 +32,7 @@ class GrammarResolver;
 class XMLStringPool;
 class XMLValidator;
 class SchemaGrammar;
+class SubstitutionGroupComparator;
 
 /**
  *  This class defines the abstract interface for all content models. All
@@ -113,6 +114,14 @@ public:
 
     virtual unsigned int getNextState(unsigned int currentState,
                                       XMLSize_t    elementIndex) const = 0;
+
+    virtual bool handleRepetitions( const QName* const curElem,
+                                    unsigned int curState,
+                                    unsigned int currentLoop,
+                                    unsigned int& nextState,
+                                    unsigned int& nextLoop,
+                                    XMLSize_t elementIndex,
+                                    SubstitutionGroupComparator * comparator) const = 0;
 
 protected :
     // -----------------------------------------------------------------------

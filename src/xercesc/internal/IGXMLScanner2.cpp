@@ -3218,6 +3218,7 @@ bool IGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
     bool laxThisOne = false;
     unsigned int elementURI = element->getURI();
     unsigned int currState = fElemState[parentElemDepth];
+    unsigned int currLoop = fElemLoopState[parentElemDepth];
 
     if (currState == XMLContentModel::gInvalidTrans) {
         return laxThisOne;
@@ -3228,13 +3229,12 @@ bool IGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
     if (cv) {
         XMLSize_t i = 0;
         XMLSize_t leafCount = cv->getLeafCount();
+        unsigned int nextState = 0;
 
         for (; i < leafCount; i++) {
 
             QName* fElemMap = cv->getLeafNameAt(i);
             unsigned int uri = fElemMap->getURI();
-            unsigned int nextState;
-            bool anyEncountered = false;
             ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
 
             if (type == ContentSpecNode::Leaf) {
@@ -3244,52 +3244,62 @@ bool IGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
 
                     nextState = cm->getNextState(currState, i);
 
-                    if (nextState != XMLContentModel::gInvalidTrans) {
-                        fElemState[parentElemDepth] = nextState;
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
-                    }
                 }
             } else if ((type & 0x0f) == ContentSpecNode::Any) {
-                anyEncountered = true;
+                nextState = cm->getNextState(currState, i);
+                if (nextState != XMLContentModel::gInvalidTrans)
+                    break;
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_Other) {
                 if (uri != elementURI && elementURI != fEmptyNamespaceId) {
-                    anyEncountered = true;
+                    nextState = cm->getNextState(currState, i);
+                    if (nextState != XMLContentModel::gInvalidTrans)
+                        break;
                 }
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_NS) {
                 if (uri == elementURI) {
-                    anyEncountered = true;
+                    nextState = cm->getNextState(currState, i);
+                    if (nextState != XMLContentModel::gInvalidTrans)
+                        break;
                 }
             }
 
-            if (anyEncountered) {
-
-                nextState = cm->getNextState(currState, i);
-                if (nextState != XMLContentModel::gInvalidTrans) {
-                    fElemState[parentElemDepth] = nextState;
-
-                    if (type == ContentSpecNode::Any_Skip ||
-                        type == ContentSpecNode::Any_NS_Skip ||
-                        type == ContentSpecNode::Any_Other_Skip) {
-                        skipThisOne = true;
-                    }
-                    else if (type == ContentSpecNode::Any_Lax ||
-                             type == ContentSpecNode::Any_NS_Lax ||
-                             type == ContentSpecNode::Any_Other_Lax) {
-                        laxThisOne = true;
-                    }
-
-                    break;
-                }
-            }
         } // for
 
         if (i == leafCount) { // no match
             fElemState[parentElemDepth] = XMLContentModel::gInvalidTrans;
+            fElemLoopState[parentElemDepth] = 0;
             return laxThisOne;
         }
 
+        unsigned int nextLoop = 0;
+        if(!cm->handleRepetitions(element, currState, currLoop, nextState, nextLoop, i, &comparator)) {
+            fElemState[parentElemDepth] = XMLContentModel::gInvalidTrans;
+            fElemLoopState[parentElemDepth] = 0;
+            return laxThisOne;
+        }
+
+        ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
+        if ((type & 0x0f) == ContentSpecNode::Any ||
+            (type & 0x0f) == ContentSpecNode::Any_Other ||
+            (type & 0x0f) == ContentSpecNode::Any_NS) 
+        {
+            if (type == ContentSpecNode::Any_Skip ||
+                type == ContentSpecNode::Any_NS_Skip ||
+                type == ContentSpecNode::Any_Other_Skip) {
+                skipThisOne = true;
+            }
+            else if (type == ContentSpecNode::Any_Lax ||
+                     type == ContentSpecNode::Any_NS_Lax ||
+                     type == ContentSpecNode::Any_Other_Lax) {
+                laxThisOne = true;
+            }
+        }
+        fElemState[parentElemDepth] = nextState;
+        fElemLoopState[parentElemDepth] = nextLoop;
     } // if
 
     if (skipThisOne) {

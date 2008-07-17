@@ -93,6 +93,14 @@ public :
     virtual unsigned int getNextState(unsigned int currentState,
                                       XMLSize_t    elementIndex) const;
 
+    virtual bool handleRepetitions( const QName* const curElem,
+                                    unsigned int curState,
+                                    unsigned int currentLoop,
+                                    unsigned int& nextState,
+                                    unsigned int& nextLoop,
+                                    XMLSize_t elementIndex,
+                                    SubstitutionGroupComparator * comparator) const;
+
     virtual void checkUniqueParticleAttribution
     (
         SchemaGrammar*    const pGrammar
@@ -161,6 +169,18 @@ MixedContentModel::getNextState(unsigned int,
                                 XMLSize_t) const {
 
     return XMLContentModel::gInvalidTrans;
+}
+
+inline bool
+MixedContentModel::handleRepetitions( const QName* const curElem,
+                                    unsigned int curState,
+                                    unsigned int currentLoop,
+                                    unsigned int& nextState,
+                                    unsigned int& nextLoop,
+                                    XMLSize_t elementIndex,
+                                    SubstitutionGroupComparator * comparator) const
+{
+    return true;
 }
 
 inline void MixedContentModel::checkUniqueParticleAttribution

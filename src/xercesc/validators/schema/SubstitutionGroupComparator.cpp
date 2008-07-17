@@ -34,8 +34,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
-                                               , QName* const exemplar)
+bool SubstitutionGroupComparator::isEquivalentTo(const QName* const anElement
+                                               , const QName* const exemplar)
 {
     if (!anElement && !exemplar)
         return true;

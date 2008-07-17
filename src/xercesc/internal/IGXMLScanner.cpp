@@ -66,6 +66,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemLoopState(0)
     , fContent(1023, manager)
     , fRawAttrList(0)
     , fRawAttrColonListSize(32)
@@ -117,6 +118,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemLoopState(0)
     , fContent(1023, manager)
     , fRawAttrList(0)
     , fRawAttrColonListSize(32)
@@ -510,6 +512,10 @@ void IGXMLScanner::commonInit()
     (
         fElemStateSize * sizeof(unsigned int)
     ); //new unsigned int[fElemStateSize];
+    fElemLoopState = (unsigned int*) fMemoryManager->allocate
+    (
+        fElemStateSize * sizeof(unsigned int)
+    ); //new unsigned int[fElemStateSize];
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
@@ -555,6 +561,7 @@ void IGXMLScanner::commonInit()
 void IGXMLScanner::cleanUp()
 {
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
+    fMemoryManager->deallocate(fElemLoopState); //delete [] fElemLoopState;
     delete fRawAttrList;
     fMemoryManager->deallocate(fRawAttrColonList);
     delete fDTDValidator;
@@ -2554,6 +2561,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         }
 
         fElemState[elemDepth] = 0;
+        fElemLoopState[elemDepth] = 0;
     }
 
     fElemStack.setCurrentGrammar(fGrammar);
@@ -2920,18 +2928,27 @@ void IGXMLScanner::resizeElemState() {
     (
         newSize * sizeof(unsigned int)
     ); //new unsigned int[newSize];
+    unsigned int* newElemLoopState = (unsigned int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(unsigned int)
+    ); //new unsigned int[newSize];
 
     // Copy the existing values
     unsigned int index = 0;
     for (; index < fElemStateSize; index++)
+    {
         newElemState[index] = fElemState[index];
+        newElemLoopState[index] = fElemLoopState[index];
+    }
 
     for (; index < newSize; index++)
-        newElemState[index] = 0;
+        newElemLoopState[index] = newElemState[index] = 0;        
 
     // Delete the old array and udpate our members
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
+    fMemoryManager->deallocate(fElemLoopState); //delete [] fElemState;
     fElemState = newElemState;
+    fElemLoopState = newElemLoopState;
     fElemStateSize = newSize;
 }
 

@@ -255,6 +255,7 @@ private :
     //      This flag indicates a schema has been seen.
     //
     //  fElemState
+    //  fElemLoopState
     //  fElemStateSize
     //      Stores an element next state from DFA content model - used for
     //      wildcard validation
@@ -283,6 +284,7 @@ private :
     Grammar::GrammarType                    fGrammarType;
     unsigned int                            fElemStateSize;
     unsigned int*                           fElemState;
+    unsigned int*                           fElemLoopState;
     XMLBuffer                               fContent;
     RefVectorOf<KVStringPair>*              fRawAttrList;
     unsigned int                            fRawAttrColonListSize;

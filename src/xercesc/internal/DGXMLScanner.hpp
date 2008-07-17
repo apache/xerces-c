@@ -167,11 +167,6 @@ private :
     //  fDTDValidator
     //      The DTD validator instance.
     //
-    //  fElemState
-    //  fElemStateSize
-    //      Stores an element next state from DFA content model - used for
-    //      wildcard validation
-    //
     // fDTDElemNonDeclPool
     //     registry of "faulted-in" DTD element decls
     // fElemCount

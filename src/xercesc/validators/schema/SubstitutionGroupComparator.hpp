@@ -69,8 +69,8 @@ public:
 	   *
 	   * @param  exeplar     QName of the head element in the group
 	   */
-    bool isEquivalentTo(QName* const anElement
-                       , QName* const exemplar);
+    bool isEquivalentTo(const QName* const anElement
+                      , const QName* const exemplar);
 	 //@}
 
     /*

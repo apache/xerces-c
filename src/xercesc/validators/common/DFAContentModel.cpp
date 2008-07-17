@@ -246,128 +246,15 @@ DFAContentModel::validateContent( QName** const        children
             return false;
         }
 
-        if (fCountingStates != 0) {
-            Occurence* o = fCountingStates[curState];
-            if (o != 0) {
-                if (curState == nextState) {
-                    if (++loopCount > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
-
-                        // It's likely that we looped too many times on the current state
-                        // however it's possible that we actually matched another particle
-                        // which allows the same name.
-                        //
-                        // Consider:
-                        //
-                        // <xs:sequence>
-                        //  <xs:element name="foo" type="xs:string" minOccurs="3" maxOccurs="3"/>
-                        //  <xs:element name="foo" type="xs:string" fixed="bar"/>
-                        // </xs:sequence>
-                        //
-                        // and
-                        //
-                        // <xs:sequence>
-                        //  <xs:element name="foo" type="xs:string" minOccurs="3" maxOccurs="3"/>
-                        //  <xs:any namespace="##any" processContents="skip"/>
-                        // </xs:sequence>
-                        //
-                        // In the DFA there will be two transitions from the current state which 
-                        // allow "foo". Note that this is not a UPA violation. The ambiguity of which
-                        // transition to take is resolved by the current value of the counter. Since 
-                        // we've already seen enough instances of the first "foo" perhaps there is
-                        // another element declaration or wildcard deeper in the element map which
-                        // matches.
-                        unsigned int tempNextState = 0;
-                        
-                        while (++elemIndex < fElemMapSize) {
-                            const QName* inElem  = fElemMap[elemIndex];
-                            if (fDTD) {
-                                if (XMLString::equals(inElem->getRawName(), curElemRawName)) {
-                                    tempNextState = fTransTable[curState][elemIndex];
-                                    if (tempNextState != XMLContentModel::gInvalidTrans)
-                                        break;
-                                }
-                            }
-                            else {
-                                ContentSpecNode::NodeTypes type = fElemMapType[elemIndex] ;
-                                if (type == ContentSpecNode::Leaf) {
-                                    if ((inElem->getURI() == curElem->getURI()) &&
-                                    (XMLString::equals(inElem->getLocalPart(), curElem->getLocalPart()))) {
-                                        tempNextState = fTransTable[curState][elemIndex];
-                                        if (tempNextState != XMLContentModel::gInvalidTrans)
-                                            break;
-                                    }
-                                }
-                                else if ((type & 0x0f)== ContentSpecNode::Any)
-                                {
-                                    tempNextState = fTransTable[curState][elemIndex];
-                                    if (tempNextState != XMLContentModel::gInvalidTrans)
-                                        break;
-                                }
-                                else if ((type & 0x0f) == ContentSpecNode::Any_NS)
-                                {
-                                    if (inElem->getURI() == curElem->getURI())
-                                    {
-                                        tempNextState = fTransTable[curState][elemIndex];
-                                        if (tempNextState != XMLContentModel::gInvalidTrans)
-                                            break;
-                                    }
-                                }
-                                else if ((type & 0x0f) == ContentSpecNode::Any_Other)
-                                {
-                                    // Here we assume that empty string has id 1.
-                                    //
-                                    unsigned int uriId = curElem->getURI();
-                                    if (uriId != 1 && uriId != inElem->getURI()) {
-                                        tempNextState = fTransTable[curState][elemIndex];
-                                        if (tempNextState != XMLContentModel::gInvalidTrans)
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // if we still can't find a match, report the error
-                        if (elemIndex == fElemMapSize) {
-                            *indexFailingChild=childIndex;
-                            return false;
-                        }
-                        
-                        // if we found a match, set the next state and reset the 
-                        // counter if the next state is a counting state.
-                        nextState = tempNextState;
-                        Occurence* o = fCountingStates[nextState];
-                        if (o != 0) {
-                            loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
-                        }
-                    }
-                }
-                else if (loopCount < (unsigned int)o->minOccurs) {
-                    // not enough loops on the current state.
-                    *indexFailingChild=childIndex;
-                    return false;
-                }
-                else {
-                    // Exiting a counting state. If we're entering a new
-                    // counting state, reset the counter.
-                    o = fCountingStates[nextState];
-                    if (o != 0) {
-                        loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
-                    }
-                }
-            }
-            else {
-                o = fCountingStates[nextState];
-                if (o != 0) {
-                    // Entering a new counting state. Reset the counter.
-                    // If we've already seen one instance of the looping
-                    // particle set the counter to 1, otherwise set it
-                    // to 0.
-                    loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
-                }
-            }
+        unsigned int nextLoop = 0;
+        if(!handleRepetitions(curElem, curState, loopCount, nextState, nextLoop, elemIndex, 0)) 
+        {
+            *indexFailingChild=childIndex;
+            return false;
         }
 
         curState = nextState;
+        loopCount = nextLoop;
         nextState = 0;
 
     }//for childIndex
@@ -494,121 +381,15 @@ bool DFAContentModel::validateContentSpecial(QName** const            children
             return false;
         }
 
-        if (fCountingStates != 0) {
-            Occurence* o = fCountingStates[curState];
-            if (o != 0) {
-                if (curState == nextState) {
-                    if (++loopCount > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
-                        // It's likely that we looped too many times on the current state
-                        // however it's possible that we actually matched another particle
-                        // which allows the same name.
-                        //
-                        // Consider:
-                        //
-                        // <xs:sequence>
-                        //  <xs:element name="foo" type="xs:string" minOccurs="3" maxOccurs="3"/>
-                        //  <xs:element name="foo" type="xs:string" fixed="bar"/>
-                        // </xs:sequence>
-                        //
-                        // and
-                        //
-                        // <xs:sequence>
-                        //  <xs:element name="foo" type="xs:string" minOccurs="3" maxOccurs="3"/>
-                        //  <xs:any namespace="##any" processContents="skip"/>
-                        // </xs:sequence>
-                        //
-                        // In the DFA there will be two transitions from the current state which 
-                        // allow "foo". Note that this is not a UPA violation. The ambiguity of which
-                        // transition to take is resolved by the current value of the counter. Since 
-                        // we've already seen enough instances of the first "foo" perhaps there is
-                        // another element declaration or wildcard deeper in the element map which
-                        // matches.
-                        unsigned int tempNextState = 0;
-                        
-                        while (++elemIndex < fElemMapSize) {
-                            QName* inElem  = fElemMap[elemIndex];
-                            ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
-                            if (type == ContentSpecNode::Leaf)
-                            {
-                                if (comparator.isEquivalentTo(curElem, inElem) )
-                                {
-                                    tempNextState = fTransTable[curState][elemIndex];
-                                    if (tempNextState != XMLContentModel::gInvalidTrans)
-                                        break;
-                                }
-
-                            }
-                            else if ((type & 0x0f)== ContentSpecNode::Any)
-                            {
-                                tempNextState = fTransTable[curState][elemIndex];
-                                if (tempNextState != XMLContentModel::gInvalidTrans)
-                                    break;
-                            }
-                            else if ((type & 0x0f) == ContentSpecNode::Any_NS)
-                            {
-                                if (inElem->getURI() == curElem->getURI())
-                                {
-                                    tempNextState = fTransTable[curState][elemIndex];
-                                    if (tempNextState != XMLContentModel::gInvalidTrans)
-                                        break;
-                                }
-                            }
-                            else if ((type & 0x0f) == ContentSpecNode::Any_Other)
-                            {
-                                // Here we assume that empty string has id 1.
-                                //
-                                unsigned int uriId = curElem->getURI();
-                                if (uriId != 1 && uriId != inElem->getURI())
-                                {
-                                    tempNextState = fTransTable[curState][elemIndex];
-                                    if (tempNextState != XMLContentModel::gInvalidTrans)
-                                        break;
-                                }
-                            }
-                        }
-                        
-                        // if we still can't find a match, report the error
-                        if (elemIndex == fElemMapSize) {
-                            *indexFailingChild=childIndex;
-                            return false;
-                        }
-                        
-                        // if we found a match, set the next state and reset the 
-                        // counter if the next state is a counting state.
-                        nextState = tempNextState;
-                        Occurence* o = fCountingStates[nextState];
-                        if (o != 0) {
-                            loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
-                        }
-                    }
-                }
-                else if (loopCount < (unsigned int)o->minOccurs) {
-                    // not enough loops on the current state.
-                    *indexFailingChild=childIndex;
-                    return false;
-                }
-                else {
-                    // Exiting a counting state. If we're entering a new
-                    // counting state, reset the counter.
-                    o = fCountingStates[nextState];
-                    if (o != 0) {
-                        loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
-                    }
-                }
-            }
-            else {
-                o = fCountingStates[nextState];
-                if (o != 0) {
-                    // Entering a new counting state. Reset the counter.
-                    // If we've already seen one instance of the looping
-                    // particle set the counter to 1, otherwise set it
-                    // to 0.
-                    loopCount = (elemIndex == o->elemIndex) ? 1 : 0;
-                }
-            }
+        unsigned int nextLoop = 0;
+        if(!handleRepetitions(curElem, curState, loopCount, nextState, nextLoop, elemIndex, &comparator)) 
+        {
+            *indexFailingChild=childIndex;
+            return false;
         }
 
         curState = nextState;
+        loopCount = nextLoop;
         nextState = 0;
 
     }//for childIndex
@@ -640,6 +421,144 @@ bool DFAContentModel::validateContentSpecial(QName** const            children
     return true;
 }
 
+bool DFAContentModel::handleRepetitions(const QName* const curElem,
+                                        unsigned int curState,
+                                        unsigned int currentLoop,
+                                        unsigned int& nextState,
+                                        unsigned int& nextLoop,
+                                        XMLSize_t elemIndex,
+                                        SubstitutionGroupComparator * comparator) const
+{
+    nextLoop = 0;
+    if (fCountingStates != 0) {
+        nextLoop = currentLoop;
+        Occurence* o = fCountingStates[curState];
+        if (o != 0) {
+            if (curState == nextState) {
+                if (++nextLoop > (unsigned int)o->maxOccurs && o->maxOccurs != -1) {
+                    // It's likely that we looped too many times on the current state
+                    // however it's possible that we actually matched another particle
+                    // which allows the same name.
+                    //
+                    // Consider:
+                    //
+                    // <xs:sequence>
+                    //  <xs:element name="foo" type="xs:string" minOccurs="3" maxOccurs="3"/>
+                    //  <xs:element name="foo" type="xs:string" fixed="bar"/>
+                    // </xs:sequence>
+                    //
+                    // and
+                    //
+                    // <xs:sequence>
+                    //  <xs:element name="foo" type="xs:string" minOccurs="3" maxOccurs="3"/>
+                    //  <xs:any namespace="##any" processContents="skip"/>
+                    // </xs:sequence>
+                    //
+                    // In the DFA there will be two transitions from the current state which 
+                    // allow "foo". Note that this is not a UPA violation. The ambiguity of which
+                    // transition to take is resolved by the current value of the counter. Since 
+                    // we've already seen enough instances of the first "foo" perhaps there is
+                    // another element declaration or wildcard deeper in the element map which
+                    // matches.
+                    unsigned int tempNextState = 0;
+                    
+                    while (++elemIndex < fElemMapSize) {
+                        QName* inElem  = fElemMap[elemIndex];
+                        ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
+                        if (type == ContentSpecNode::Leaf)
+                        {
+                            if(comparator!=0) {
+                                if (comparator->isEquivalentTo(curElem, inElem) )
+                                {
+                                    tempNextState = fTransTable[curState][elemIndex];
+                                    if (tempNextState != XMLContentModel::gInvalidTrans)
+                                        break;
+                                }
+                            }
+                            else if (fDTD) {
+                                if (XMLString::equals(inElem->getRawName(), curElem->getRawName())) {
+                                    tempNextState = fTransTable[curState][elemIndex];
+                                    if (tempNextState != XMLContentModel::gInvalidTrans)
+                                        break;
+                                }
+                            }
+                            else {
+                                if ((inElem->getURI() == curElem->getURI()) &&
+                                (XMLString::equals(inElem->getLocalPart(), curElem->getLocalPart()))) {
+                                    tempNextState = fTransTable[curState][elemIndex];
+                                    if (tempNextState != XMLContentModel::gInvalidTrans)
+                                        break;
+                                }
+                            }
+                        }
+                        else if ((type & 0x0f)== ContentSpecNode::Any)
+                        {
+                            tempNextState = fTransTable[curState][elemIndex];
+                            if (tempNextState != XMLContentModel::gInvalidTrans)
+                                break;
+                        }
+                        else if ((type & 0x0f) == ContentSpecNode::Any_NS)
+                        {
+                            if (inElem->getURI() == curElem->getURI())
+                            {
+                                tempNextState = fTransTable[curState][elemIndex];
+                                if (tempNextState != XMLContentModel::gInvalidTrans)
+                                    break;
+                            }
+                        }
+                        else if ((type & 0x0f) == ContentSpecNode::Any_Other)
+                        {
+                            // Here we assume that empty string has id 1.
+                            //
+                            unsigned int uriId = curElem->getURI();
+                            if (uriId != 1 && uriId != inElem->getURI())
+                            {
+                                tempNextState = fTransTable[curState][elemIndex];
+                                if (tempNextState != XMLContentModel::gInvalidTrans)
+                                    break;
+                            }
+                        }
+                    }
+                    
+                    // if we still can't find a match, report the error
+                    if (elemIndex == fElemMapSize)
+                        return false;
+                    
+                    // if we found a match, set the next state and reset the 
+                    // counter if the next state is a counting state.
+                    nextState = tempNextState;
+                    Occurence* o = fCountingStates[nextState];
+                    if (o != 0) {
+                        nextLoop = (elemIndex == o->elemIndex) ? 1 : 0;
+                    }
+                }
+            }
+            else if (nextLoop < (unsigned int)o->minOccurs) {
+                // not enough loops on the current state.
+                return false;
+            }
+            else {
+                // Exiting a counting state. If we're entering a new
+                // counting state, reset the counter.
+                o = fCountingStates[nextState];
+                if (o != 0) {
+                    nextLoop = (elemIndex == o->elemIndex) ? 1 : 0;
+                }
+            }
+        }
+        else {
+            o = fCountingStates[nextState];
+            if (o != 0) {
+                // Entering a new counting state. Reset the counter.
+                // If we've already seen one instance of the looping
+                // particle set the counter to 1, otherwise set it
+                // to 0.
+                nextLoop = (elemIndex == o->elemIndex) ? 1 : 0;
+            }
+        }
+    }
+    return true;
+}
 
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Private helper methods

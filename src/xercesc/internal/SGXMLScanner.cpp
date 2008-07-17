@@ -73,6 +73,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemLoopState(0)
     , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
@@ -121,6 +122,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
+    , fElemLoopState(0)
     , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
@@ -1557,6 +1559,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     }
 
     fElemState[elemDepth] = 0;
+    fElemLoopState[elemDepth] = 0;
     fElemStack.setCurrentGrammar(fGrammar);
 
     //  If this is the first element and we are validating, check the root
@@ -1994,6 +1997,10 @@ void SGXMLScanner::commonInit()
     (
         fElemStateSize * sizeof(unsigned int)
     ); //new unsigned int[fElemStateSize];
+    fElemLoopState = (unsigned int*) fMemoryManager->allocate
+    (
+        fElemStateSize * sizeof(unsigned int)
+    ); //new unsigned int[fElemStateSize];
 
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
@@ -2043,6 +2050,7 @@ void SGXMLScanner::commonInit()
 void SGXMLScanner::cleanUp()
 {
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
+    fMemoryManager->deallocate(fElemLoopState); //delete [] fElemLoopState;
     delete fSchemaGrammar;
     delete fEntityTable;
     delete fRawAttrList;
@@ -2067,18 +2075,27 @@ void SGXMLScanner::resizeElemState() {
     (
         newSize * sizeof(unsigned int)
     ); //new unsigned int[newSize];
+    unsigned int* newElemLoopState = (unsigned int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(unsigned int)
+    ); //new unsigned int[newSize];
 
     // Copy the existing values
     unsigned int index = 0;
     for (; index < fElemStateSize; index++)
+    {
         newElemState[index] = fElemState[index];
+        newElemLoopState[index] = fElemLoopState[index];
+    }
 
     for (; index < newSize; index++)
-        newElemState[index] = 0;
+        newElemLoopState[index] = newElemState[index] = 0;
 
     // Delete the old array and udpate our members
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
+    fMemoryManager->deallocate(fElemLoopState); //delete [] fElemLoopState;
     fElemState = newElemState;
+    fElemLoopState = newElemLoopState;
     fElemStateSize = newSize;
 }
 
@@ -4660,6 +4677,7 @@ bool SGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
     bool laxThisOne = false;
     unsigned int elementURI = element->getURI();
     unsigned int currState = fElemState[parentElemDepth];
+    unsigned int currLoop = fElemLoopState[parentElemDepth];
 
     if (currState == XMLContentModel::gInvalidTrans) {
         return laxThisOne;
@@ -4670,13 +4688,12 @@ bool SGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
     if (cv) {
         XMLSize_t i = 0;
         XMLSize_t leafCount = cv->getLeafCount();
+        unsigned int nextState = 0;
 
         for (; i < leafCount; i++) {
 
             QName* fElemMap = cv->getLeafNameAt(i);
             unsigned int uri = fElemMap->getURI();
-            unsigned int nextState;
-            bool anyEncountered = false;
             ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
 
             if (type == ContentSpecNode::Leaf) {
@@ -4686,52 +4703,55 @@ bool SGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
 
                     nextState = cm->getNextState(currState, i);
 
-                    if (nextState != XMLContentModel::gInvalidTrans) {
-                        fElemState[parentElemDepth] = nextState;
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
-                    }
                 }
             } else if ((type & 0x0f) == ContentSpecNode::Any) {
-                anyEncountered = true;
+                nextState = cm->getNextState(currState, i);
+                if (nextState != XMLContentModel::gInvalidTrans)
+                    break;
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_Other) {
                 if (uri != elementURI && elementURI != fEmptyNamespaceId) {
-                    anyEncountered = true;
+                    nextState = cm->getNextState(currState, i);
+                    if (nextState != XMLContentModel::gInvalidTrans)
+                        break;
                 }
             }
             else if ((type & 0x0f) == ContentSpecNode::Any_NS) {
                 if (uri == elementURI) {
-                    anyEncountered = true;
+                    nextState = cm->getNextState(currState, i);
+                    if (nextState != XMLContentModel::gInvalidTrans)
+                        break;
                 }
             }
 
-            if (anyEncountered) {
-
-                nextState = cm->getNextState(currState, i);
-                if (nextState != XMLContentModel::gInvalidTrans) {
-                    fElemState[parentElemDepth] = nextState;
-
-                    if (type == ContentSpecNode::Any_Skip ||
-                        type == ContentSpecNode::Any_NS_Skip ||
-                        type == ContentSpecNode::Any_Other_Skip) {
-                        skipThisOne = true;
-                    }
-                    else if (type == ContentSpecNode::Any_Lax ||
-                             type == ContentSpecNode::Any_NS_Lax ||
-                             type == ContentSpecNode::Any_Other_Lax) {
-                        laxThisOne = true;
-                    }
-
-                    break;
-                }
-            }
         } // for
 
         if (i == leafCount) { // no match
             fElemState[parentElemDepth] = XMLContentModel::gInvalidTrans;
+            fElemLoopState[parentElemDepth] = 0;
             return laxThisOne;
         }
 
+        ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
+        if ((type & 0x0f) == ContentSpecNode::Any ||
+            (type & 0x0f) == ContentSpecNode::Any_Other ||
+            (type & 0x0f) == ContentSpecNode::Any_NS) 
+        {
+            if (type == ContentSpecNode::Any_Skip ||
+                type == ContentSpecNode::Any_NS_Skip ||
+                type == ContentSpecNode::Any_Other_Skip) {
+                skipThisOne = true;
+            }
+            else if (type == ContentSpecNode::Any_Lax ||
+                     type == ContentSpecNode::Any_NS_Lax ||
+                     type == ContentSpecNode::Any_Other_Lax) {
+                laxThisOne = true;
+            }
+        }
+        fElemState[parentElemDepth] = nextState;
+        fElemLoopState[parentElemDepth] = currLoop;
     } // if
 
     if (skipThisOne) {
