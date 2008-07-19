@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -177,7 +177,7 @@ template <class TVal> void ValueHashTableOf<TVal>::put(void* key, const TVal& va
 {
     // Apply 0.75 load factor to find threshold.
     XMLSize_t threshold = fHashModulus * 3 / 4;
-    
+
     // If we've grown too big, expand the table and rehash.
     if (fCount >= threshold)
         rehash();
@@ -197,7 +197,7 @@ template <class TVal> void ValueHashTableOf<TVal>::put(void* key, const TVal& va
     }
      else
     {
-        newBucket =            
+        newBucket =
             new (fMemoryManager->allocate(sizeof(ValueHashTableBucketElem<TVal>)))
             ValueHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
@@ -225,8 +225,8 @@ template <class TVal> void ValueHashTableOf<TVal>::rehash()
     ArrayJanitor<ValueHashTableBucketElem<TVal>*>  guard(newBucketList, fMemoryManager);
 
     memset(newBucketList, 0, newMod * sizeof(newBucketList[0]));
-    
-    
+
+
     // Rehash all existing entries.
     for (XMLSize_t index = 0; index < fHashModulus; index++)
     {
@@ -238,7 +238,7 @@ template <class TVal> void ValueHashTableOf<TVal>::rehash()
             // Save the next element before we detach this one
             ValueHashTableBucketElem<TVal>* const nextElem = curElem->fNext;
 
-            const XMLSize_t hashVal = fHash->getHashVal(curElem->fKey, newMod, fMemoryManager);
+            const XMLSize_t hashVal = fHash->getHashVal(curElem->fKey, newMod);
             assert(hashVal < newMod);
 
             ValueHashTableBucketElem<TVal>* const newHeadElem = newBucketList[hashVal];
@@ -260,14 +260,14 @@ template <class TVal> void ValueHashTableOf<TVal>::rehash()
 
     // Delete the old bucket list.
     fMemoryManager->deallocate(oldBucketList);//delete[] oldBucketList;
-    
+
 }
 
 template <class TVal> ValueHashTableBucketElem<TVal>* ValueHashTableOf<TVal>::
 findBucketElem(const void* const key, XMLSize_t& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    hashVal = fHash->getHashVal(key, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
@@ -286,7 +286,7 @@ template <class TVal> const ValueHashTableBucketElem<TVal>* ValueHashTableOf<TVa
 findBucketElem(const void* const key, XMLSize_t& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    hashVal = fHash->getHashVal(key, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
@@ -335,7 +335,7 @@ removeBucketElem(const void* const key, XMLSize_t& hashVal)
             // delete curElem;
             // destructor is empty...
             // curElem->~ValueHashTableBucketElem();
-            fMemoryManager->deallocate(curElem);                        
+            fMemoryManager->deallocate(curElem);
 
             fCount--;
 

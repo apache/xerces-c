@@ -436,11 +436,8 @@ void XMLString::cut(        XMLCh* const    toCutFrom
 
 
 XMLSize_t XMLString::hash(   const   char* const    tohash
-                            , const XMLSize_t       hashModulus
-                            , MemoryManager* const)
+                            , const XMLSize_t       hashModulus)
 {
-    assert(hashModulus);
-
     XMLSize_t hashVal = 0;
     if (tohash) {
         const char* curCh = tohash;
@@ -1406,11 +1403,8 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 
 XMLSize_t XMLString::hashN(  const   XMLCh* const   tohash
                             , const XMLSize_t       n
-                            , const XMLSize_t       hashModulus
-                            , MemoryManager* const)
+                            , const XMLSize_t       hashModulus)
 {
-    assert(hashModulus);
-
     if (tohash == 0 || *tohash == 0)
         return 0;
 

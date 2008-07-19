@@ -412,28 +412,24 @@ public:
       *
       * @param toHash The string to hash
       * @param hashModulus The divisor to be used for hashing
-      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
     static XMLSize_t hash
     (
         const   char* const     toHash
         , const XMLSize_t       hashModulus
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Hashes a string given a modulus
       *
       * @param toHash The string to hash
       * @param hashModulus The divisor to be used for hashing
-      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
     static XMLSize_t hash
     (
         const   XMLCh* const    toHash
         , const XMLSize_t       hashModulus
-        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Hashes a string given a modulus taking a maximum number of characters
@@ -450,7 +446,6 @@ public:
         const   XMLCh* const    toHash
         , const XMLSize_t       numChars
         , const XMLSize_t       hashModulus
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     //@}
@@ -1571,12 +1566,9 @@ inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
     return XMLString::lastIndexOf(ch, toSearch, stringLen(toSearch));
 }
 
-inline XMLSize_t XMLString::hash(   const   XMLCh* const   tohash
-                                , const XMLSize_t          hashModulus
-                                , MemoryManager* const)
+inline XMLSize_t XMLString::hash(const   XMLCh* const   tohash
+                                , const XMLSize_t          hashModulus)
 {
-    assert(hashModulus);
-
     if (tohash == 0 || *tohash == 0)
         return 0;
 

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -299,7 +299,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
             new (fMemoryManager->allocate(sizeof(RefHash3KeysTableBucketElem<TVal>)))
             RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
 #endif
-        fBucketList[hashVal] = newBucket;    
+        fBucketList[hashVal] = newBucket;
 
         //
         //  Give this new one the next available id and add to the pointer list.
@@ -324,7 +324,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
         }
         retId = ++fIdCounter;
     }
-    
+
     fIdPtrs[retId] = valueToAdopt;
 
     // Set the id on the passed element
@@ -341,7 +341,7 @@ template <class TVal> RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal
 findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal)
 {
     // Hash the key
-    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus) : fHash->getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
@@ -360,7 +360,7 @@ template <class TVal> const RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPoo
 findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal) const
 {
     // Hash the key
-    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus, fMemoryManager) : fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus) : fHash->getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
@@ -406,7 +406,7 @@ RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal>& toCopy) :
     , fCurIndex(toCopy.fCurIndex)
     , fToEnum(toCopy.fToEnum)
     , fCurElem(toCopy.fCurElem)
-    , fCurHash(toCopy.fCurHash)    
+    , fCurHash(toCopy.fCurHash)
     , fMemoryManager(toCopy.fMemoryManager)
 {
 }

@@ -909,7 +909,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
 
             //  See if this attribute is declared more than one for this element.
             const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer();
-            XMLSize_t attNameHash = XMLString::hash(attNameRawBuf, 109, fMemoryManager);
+            XMLSize_t attNameHash = XMLString::hash(attNameRawBuf, 109);
 
             if (attCount) {
 
@@ -1244,7 +1244,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
 
             //  See if this attribute is declared more than one for this element.
             const XMLCh* attNameRawBuf = fAttNameBuf.getRawBuffer();
-            XMLSize_t attNameHash = XMLString::hash(attNameRawBuf, 109, fMemoryManager);
+            XMLSize_t attNameHash = XMLString::hash(attNameRawBuf, 109);
             if (attCount) {
 
                 for (XMLSize_t k=0; k < attCount; k++) {

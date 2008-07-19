@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -119,7 +119,7 @@ DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool( const XMLSize_t modulus
     fHash = new HashPtr();
 #else
     fHash = new (fMemoryManager) HashPtr();
-#endif    
+#endif
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
@@ -370,7 +370,7 @@ template <class TVal> DOMDeepNodeListPoolTableBucketElem<TVal>* DOMDeepNodeListP
 findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal)
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash->getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
@@ -405,9 +405,9 @@ template <class TVal> const DOMDeepNodeListPoolTableBucketElem<TVal>* DOMDeepNod
 findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal) const
 {
     // Hash the key
-    hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
+    hashVal = fHash->getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
-    
+
     // Search that bucket for the key
     const DOMDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
@@ -436,4 +436,3 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
 }
 
 XERCES_CPP_NAMESPACE_END
-

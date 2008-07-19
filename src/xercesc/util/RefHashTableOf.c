@@ -129,7 +129,7 @@ template <class TVal> void RefHashTableOf<TVal>::
 removeKey(const void* const key)
 {
     // Hash the key
-    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus) : fHash->getHashVal(key, fHashModulus);
     assert(hashVal < fHashModulus);
 
     //
@@ -228,7 +228,7 @@ orphanKey(const void* const key)
 {
     // Hash the key
     TVal* retVal = 0;
-    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus) : fHash->getHashVal(key, fHashModulus);
     assert(hashVal < fHashModulus);
 
     //
@@ -444,7 +444,7 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
             // Save the next element before we detach this one
             RefHashTableBucketElem<TVal>* const nextElem = curElem->fNext;
 
-            const XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey, newMod, fMemoryManager) : fHash->getHashVal(curElem->fKey, newMod, fMemoryManager);
+            const XMLSize_t hashVal = fHash==0?XMLString::hash((const XMLCh*)curElem->fKey, newMod) : fHash->getHashVal(curElem->fKey, newMod);
             assert(hashVal < newMod);
 
             RefHashTableBucketElem<TVal>* const newHeadElem = newBucketList[hashVal];
@@ -473,7 +473,7 @@ template <class TVal> RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
 findBucketElem(const void* const key, XMLSize_t& hashVal)
 {
     // Hash the key
-    hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus) : fHash->getHashVal(key, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
@@ -492,7 +492,7 @@ template <class TVal> const RefHashTableBucketElem<TVal>* RefHashTableOf<TVal>::
 findBucketElem(const void* const key, XMLSize_t& hashVal) const
 {
     // Hash the key
-    hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus, fMemoryManager) : fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    hashVal = fHash==0?XMLString::hash((const XMLCh*)key, fHashModulus) : fHash->getHashVal(key, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key

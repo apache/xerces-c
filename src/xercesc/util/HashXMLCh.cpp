@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,10 +28,9 @@ HashXMLCh::~HashXMLCh()
 {
 }
 
-XMLSize_t HashXMLCh::getHashVal(const void *const key, XMLSize_t mod
-                                   , MemoryManager* const manager)
+XMLSize_t HashXMLCh::getHashVal(const void *const key, XMLSize_t mod)
 {
-	return XMLString::hash((XMLCh*)key, mod, manager);
+	return XMLString::hash((XMLCh*)key, mod);
 }
 
 bool HashXMLCh::equals(const void *const key1, const void *const key2)

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ DOMNodeIDMap::DOMNodeIDMap(XMLSize_t initialSize, DOMDocument *doc)
         }
     }
 
-    fSize = gPrimes[fSizeIndex];    
+    fSize = gPrimes[fSizeIndex];
     fMaxEntries = (XMLSize_t)(float(fSize) * gMaxFill);
 
     //fTable = new (fDoc) DOMAttr*[fSize];
@@ -78,7 +78,8 @@ void DOMNodeIDMap::add(DOMAttr *attr)
 	//
 	if (fNumEntries >= fMaxEntries)
 		growTable();
-    fNumEntries++;
+
+        fNumEntries++;
 
 	//
 	// Hash the value string from the ID attribute being added to the table
@@ -86,7 +87,7 @@ void DOMNodeIDMap::add(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
+        XMLSize_t initalHash = XMLString::hash(id, fSize-1);
 	initalHash++;
 	XMLSize_t currentHash = initalHash;
 
@@ -119,7 +120,7 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
 	//      An initial hash of zero would cause the rehash to fail.
 	//
 	const XMLCh *id=attr->getValue();
-    XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
+        XMLSize_t initalHash = XMLString::hash(id, fSize-1);
 	initalHash++;
 	XMLSize_t currentHash = initalHash;
 
@@ -152,7 +153,7 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
     //
     //  Get the hashcode for the supplied string.
     //
-	XMLSize_t initalHash = XMLString::hash(id, fSize-1, ((DOMDocumentImpl *)fDoc)->getMemoryManager());
+    XMLSize_t initalHash = XMLString::hash(id, fSize-1);
 	initalHash++;
 	XMLSize_t currentHash = initalHash;
 
@@ -227,5 +228,3 @@ void DOMNodeIDMap::growTable()
 
 
 XERCES_CPP_NAMESPACE_END
-
-

@@ -39,8 +39,7 @@ class XMLUTIL_EXPORT HashPtr : public HashBase
 public:
 	HashPtr();
 	virtual ~HashPtr();
-	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod);
 	virtual bool equals(const void *const key1, const void *const key2);
 private:
     // -----------------------------------------------------------------------

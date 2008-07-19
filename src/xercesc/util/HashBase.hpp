@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,25 +38,24 @@ class XMLUTIL_EXPORT HashBase : public XMemory
 {
 
 public:
-	
-	/**
+
+    /**
       * Returns a hash value based on the key
       *
       * @param key the key to be hashed
-	  * @param mod the modulus the hasher should use
+      * @param mod the modulus the hasher should use
       */
-	virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) = 0;
+  virtual XMLSize_t getHashVal(const void *const key, XMLSize_t mod) = 0;
 
-	/**
+    /**
       * Compares two keys and determines if they are semantically equal
       *
       * @param key1 the first key to be compared
-	  * @param key2 the second key to be compared
-	  *
-	  * @return true if they are equal
+      * @param key2 the second key to be compared
+      *
+      * @return true if they are equal
       */
-	virtual bool equals(const void *const key1, const void *const key2) = 0;
+  virtual bool equals(const void *const key1, const void *const key2) = 0;
 
     virtual ~HashBase() {};
 
@@ -67,7 +66,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     HashBase(const HashBase&);
-    HashBase& operator=(const HashBase&);    
+    HashBase& operator=(const HashBase&);
 };
 
 XERCES_CPP_NAMESPACE_END
