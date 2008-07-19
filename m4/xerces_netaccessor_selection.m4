@@ -15,7 +15,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	network=yes
 	AC_ARG_ENABLE(
 	  [network],
-	  AS_HELP_STRING([--disable-network], [Disable network support]),
+	  AS_HELP_STRING([--disable-network], [Disable network support (enabled by default)]),
 	  [AS_IF([test x"$enableval" = xno], [network=no])])
 
 	# If network is disabled we don't need to check any of the

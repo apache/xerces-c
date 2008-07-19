@@ -13,8 +13,8 @@ dnl $Id$
 AC_DEFUN([XERCES_NO_THREADS],
 	[
 	AC_ARG_ENABLE([threads],
-		AS_HELP_STRING([--enable-threads],
-			[Enable Threading (default)]),
+		AS_HELP_STRING([--disable-threads],
+			[Disable threads (enabled by default)]),
 		[AS_IF([test x"$enableval" = xno],
 			[xerces_cv_no_threads=yes])],
 		[xerces_cv_no_threads=no])
