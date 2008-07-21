@@ -961,17 +961,8 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     if (!*value)
         return;
 
-    enum States
-    {
-        InWhitespace
-        , InContent
-    };
-
-    States curState = InContent;
-
     //  Loop through the chars of the source value and normalize it
     //  according to the whitespace facet
-    bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
     XMLReader* fCurReader = getReaderMgr()->getCurrentReader();
@@ -982,47 +973,51 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         toFill.append(chSpace);
     }
 
-    while (*srcPtr)
+    if (wsFacet == DatatypeValidator::REPLACE)
     {
-        nextCh = *srcPtr;
-        if (wsFacet == DatatypeValidator::REPLACE)
+        while (*srcPtr)
         {
+            nextCh = *srcPtr++;
             if (fCurReader->isWhitespace(nextCh))
                 nextCh = chSpace;
+            // Add this char to the target buffer
+            toFill.append(nextCh);
         }
-        else // COLLAPSE case
+    }
+    else // COLLAPSE
+    {
+        enum States
         {
-            if (curState == InWhitespace)
-            {
-                if (!fCurReader->isWhitespace(nextCh))
-                {
-                    if (firstNonWS)
-                        toFill.append(chSpace);
-                    curState = InContent;
-                    firstNonWS = true;
-                }
-                else
-                {
-                    srcPtr++;
-                    continue;
-                }
-            }
-            else if (curState == InContent)
+            InWhitespace
+            , InContent
+        };
+
+        bool firstNonWS = false;
+        States curState = InContent;
+        while (*srcPtr)
+        {
+            nextCh = *srcPtr++;
+            if (curState == InContent)
             {
                 if (fCurReader->isWhitespace(nextCh))
                 {
                     curState = InWhitespace;
-                    srcPtr++;
                     continue;
                 }
                 firstNonWS = true;
             }
+            else if (curState == InWhitespace)
+            {
+                if (fCurReader->isWhitespace(nextCh))
+                    continue;
+                if (firstNonWS)
+                    toFill.append(chSpace);
+                curState = InContent;
+                firstNonWS = true;
+            }
+            // Add this char to the target buffer
+            toFill.append(nextCh);
         }
-        // Add this char to the target buffer
-        toFill.append(nextCh);
-
-        // And move up to the next character in the source
-        srcPtr++;
     }
     if (fCurReader->isWhitespace(*(srcPtr-1)))
         fTrailing = true;
