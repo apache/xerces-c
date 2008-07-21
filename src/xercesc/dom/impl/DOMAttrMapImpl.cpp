@@ -189,7 +189,7 @@ DOMNode *DOMAttrMapImpl::setNamedItem(DOMNode *arg)
         fNodes->insertElementAt(arg,i);
     }
     if (previous != 0) {
-        castToNodeImpl(previous)->fOwnerNode = fOwnerNode->getOwnerDocument();
+        castToNodeImpl(previous)->fOwnerNode = doc;
         castToNodeImpl(previous)->isOwned(false);
     }
 
@@ -264,7 +264,7 @@ DOMNode *DOMAttrMapImpl::setNamedItemNS(DOMNode* arg)
         fNodes->insertElementAt(arg,i);
     }
     if (previous != 0) {
-        castToNodeImpl(previous)->fOwnerNode = fOwnerNode->getOwnerDocument();
+        castToNodeImpl(previous)->fOwnerNode = doc;
         castToNodeImpl(previous)->isOwned(false);
     }
 

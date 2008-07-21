@@ -34,7 +34,7 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          const XMLCh *entityName)
     : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
 {
-    fName = ((DOMDocumentImpl *)getOwnerDocument())->getPooledString(entityName);
+    fName = ((DOMDocumentImpl*)fParent.fOwnerDocument)->getPooledString(entityName);
     // EntityReference behaves as a read-only node, since its contents
     // reflect the Entity it refers to -- but see setNodeName().
     //retrieve the corresponding entity content
@@ -63,7 +63,7 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          bool cloneChild)
     : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
 {
-    fName = ((DOMDocumentImpl *)getOwnerDocument())->getPooledString(entityName);
+    fName = ((DOMDocumentImpl*)fParent.fOwnerDocument)->getPooledString(entityName);
     // EntityReference behaves as a read-only node, since its contents
     // reflect the Entity it refers to -- but see setNodeName().
     //retrieve the corresponding entity content
@@ -110,7 +110,7 @@ DOMEntityReferenceImpl::~DOMEntityReferenceImpl()
 
 DOMNode *DOMEntityReferenceImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(*this, deep);
+    DOMNode* newNode = new (fParent.fOwnerDocument, DOMMemoryManager::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -148,7 +148,7 @@ void DOMEntityReferenceImpl::setNodeValue(const XMLCh *x)
 */
 void DOMEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
-    if(((DOMDocumentImpl *)getOwnerDocument())->getErrorChecking() && readOnl==false)
+    if(((DOMDocumentImpl *)fParent.fOwnerDocument)->getErrorChecking() && readOnl==false)
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
     fNode.setReadOnly(readOnl,deep);
 }
@@ -159,7 +159,7 @@ void DOMEntityReferenceImpl::release()
     if (fNode.isOwned() && !fNode.isToBeReleased())
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();

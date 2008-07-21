@@ -129,13 +129,15 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
     if(fBuckets[hash]==0)
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMNamedNodeMapMemoryManager);
 
+    DOMDocument *doc = fOwnerNode->getOwnerDocument();
+
     XMLSize_t i = 0;
     XMLSize_t size = fBuckets[hash]->size();
     for (i = 0; i < size; ++i) {
         DOMNode *n=fBuckets[hash]->elementAt(i);
         if(XMLString::equals(name,n->getNodeName())) {
             fBuckets[hash]->removeElementAt(i);
-            castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
+            castToNodeImpl(n)->fOwnerNode = doc;
             castToNodeImpl(n)->isOwned(false);
             return n;
         }
@@ -181,7 +183,7 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItem(DOMNode * arg)
         DOMNode *n=fBuckets[hash]->elementAt(i);
         if(XMLString::equals(name,n->getNodeName())) {
             fBuckets[hash]->setElementAt(arg,i);
-            castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
+            castToNodeImpl(n)->fOwnerNode = doc;
             castToNodeImpl(n)->isOwned(false);
             return n;
         }
@@ -280,7 +282,7 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItemNS(DOMNode *arg)
                     ||
                     (nLocalName == 0 && XMLString::equals(localName, n->getNodeName()))) {
                     fBuckets[index]->setElementAt(arg,i);
-                    castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
+                    castToNodeImpl(n)->fOwnerNode = doc;
                     castToNodeImpl(n)->isOwned(false);
                     return n;
                 }
@@ -310,6 +312,7 @@ DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
         if(fBuckets[index]==0)
             continue;
 
+        DOMDocument *doc = fOwnerNode->getOwnerDocument();
         XMLSize_t i = 0;
         XMLSize_t size = fBuckets[index]->size();
         for (i = 0; i < size; ++i) {
@@ -323,7 +326,7 @@ DOMNode *DOMNamedNodeMapImpl::removeNamedItemNS(const XMLCh *namespaceURI,
                     ||
                     (nLocalName == 0 && XMLString::equals(localName, n->getNodeName()))) {
                     fBuckets[index]->removeElementAt(i);
-                    castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
+                    castToNodeImpl(n)->fOwnerNode = doc;
                     castToNodeImpl(n)->isOwned(false);
                     return n;
                 }

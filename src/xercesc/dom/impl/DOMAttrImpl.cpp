@@ -53,7 +53,7 @@ DOMAttrImpl::DOMAttrImpl(const DOMAttrImpl &other, bool /*deep*/)
     if (other.fNode.isIdAttr())
     {
         fNode.isIdAttr(true);
-        DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+        DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
         doc->getNodeIDMap()->add(this);
     }
 
@@ -67,7 +67,7 @@ DOMAttrImpl::~DOMAttrImpl() {
 
 DOMNode * DOMAttrImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (this->getOwnerDocument(), DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(*this, deep);
+    DOMNode* newNode = new (fParent.fOwnerDocument, DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -124,11 +124,13 @@ const XMLCh * DOMAttrImpl::getValue() const
     // In such case, we have to visit each child to retrieve the text
     //
 
-    XMLBuffer buf(1023, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
+    DOMDocumentImpl* doc = (DOMDocumentImpl*)fParent.fOwnerDocument;
+
+    XMLBuffer buf(1023, doc->getMemoryManager());
     for (node = fParent.fFirstChild; node != 0; node = castToChildImpl(node)->nextSibling)
         getTextValue(node, buf);
 
-    return (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(buf.getRawBuffer());
+    return doc->getPooledString(buf.getRawBuffer());
 }
 
 void DOMAttrImpl::getTextValue(DOMNode* node, XMLBuffer& buf) const
@@ -172,7 +174,7 @@ void DOMAttrImpl::setValue(const XMLCh *val)
     //    then put it back in with the new name.  For now, we don't worry
     //    about what happens if the new name conflicts
     //
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     if (fNode.isIdAttr())
         doc->getNodeIDMap()->remove(this);
 
@@ -223,7 +225,7 @@ void DOMAttrImpl::release()
     if (fNode.isOwned() && !fNode.isToBeReleased())
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*)fParent.fOwnerDocument;
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
@@ -244,7 +246,7 @@ bool DOMAttrImpl::isId() const {
 DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 {
     DOMElement* el = getOwnerElement();
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*)fParent.fOwnerDocument;
 
     if (el)
         el->removeAttributeNode(this);

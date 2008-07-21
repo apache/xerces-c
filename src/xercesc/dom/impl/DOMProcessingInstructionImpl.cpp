@@ -132,9 +132,10 @@ DOMProcessingInstruction *DOMProcessingInstructionImpl::splitText(XMLSize_t offs
     if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0,  GetDOMNodeMemoryManager);
 
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)getOwnerDocument();
     DOMProcessingInstruction *newText =
-                getOwnerDocument()->createProcessingInstruction(fTarget,
-                        this->substringData(offset, len - offset));
+      doc->createProcessingInstruction(
+        fTarget, this->substringData(offset, len - offset));
 
     DOMNode *parent = getParentNode();
     if (parent != 0)
@@ -142,8 +143,8 @@ DOMProcessingInstruction *DOMProcessingInstructionImpl::splitText(XMLSize_t offs
 
     fCharacterData.fDataBuf->chop(offset);
 
-    if (this->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+    if (doc != 0) {
+        Ranges* ranges = doc->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {

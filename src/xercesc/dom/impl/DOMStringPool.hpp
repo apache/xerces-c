@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,38 +35,23 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
-struct  DOMStringPoolEntry;
 class   DOMDocumentImpl;
 
 //
-// DOMStringPool is a hash table of XMLCh* Strings.
-//  Each DOM Document maintains a DOMStringPool containing a XMLCh* String
-//  for each Element tag name and Attribute Name that has been added
-//  to the document.  When creating additional elements or attributes,
-//  if the name has been seen before, the already existing string
-//  will be reused.
+//  DStringPoolEntry - one of these structs is allocated for each
+//                      XMLCh String in the pool.  Each slot in the
+//                      hash table array itself is a pointer to the head
+//                      of a singly-linked list of these structs.
 //
-class DOMStringPool
+//                      Although this struct is delcared with a string length of one,
+//                      the factory method allocates enough storage to hold the full
+//                      string length.
+//
+struct DOMStringPoolEntry
 {
-public:
-    DOMStringPool(XMLSize_t hashTableSize, DOMDocumentImpl *doc);
-    ~DOMStringPool();
-
-    const XMLCh *getPooledString(const XMLCh *in);
-
-
-private:
-    DOMStringPool(const DOMStringPool &other);      // Copy constructor and assignment
-    DOMStringPool& operator = (const DOMStringPool &other); //  of DOMStringPool are not supported.
-
-
-    DOMDocumentImpl     *fDoc;
-    DOMStringPoolEntry **fHashTable;
-    XMLSize_t            fHashTableSize;
-
+    DOMStringPoolEntry    *fNext;
+    XMLCh                 fString[1];
 };
-
 
 //
 // DOMBuffer is a lightweight text buffer

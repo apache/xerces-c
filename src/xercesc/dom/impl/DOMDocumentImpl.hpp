@@ -40,6 +40,7 @@
 #include <xercesc/dom/DOMUserDataHandler.hpp>
 #include <xercesc/dom/DOMMemoryManager.hpp>
 #include "DOMNodeImpl.hpp"
+#include "DOMStringPool.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMDeepNodeListPool.hpp"
 
@@ -67,7 +68,6 @@ class DOMNodeFilterImpl;
 class DOMImplementation;
 class DOMNodeIDMap;
 class DOMRangeImpl;
-class DOMStringPool;
 class DOMBuffer;
 class MemoryManager;
 class XPathNSResolver;
@@ -80,7 +80,6 @@ typedef RefStackOf<DOMNode>               DOMNodePtr;
 
 class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMMemoryManager, public DOMDocument {
 public:
-
     // -----------------------------------------------------------------------
     //  data
     // -----------------------------------------------------------------------
@@ -335,7 +334,10 @@ protected:
     // Other data
     DOMDocumentType*      fDocType;
     DOMElement*           fDocElement;
-    DOMStringPool*        fNamePool;
+
+    DOMStringPoolEntry**  fNameTable;
+    XMLSize_t             fNameTableSize;
+
     DOMNormalizer*        fNormalizer;
     Ranges*               fRanges;
     NodeIterators*        fNodeIterators;
@@ -350,6 +352,38 @@ protected:
 inline MemoryManager* DOMDocumentImpl::getMemoryManager() const
 {
     return fMemoryManager;
+}
+
+inline const XMLCh*  DOMDocumentImpl::getPooledString(const XMLCh *in)
+{
+  if (in == 0)
+    return 0;
+
+  DOMStringPoolEntry    **pspe;
+  DOMStringPoolEntry    *spe;
+
+  XMLSize_t inHash = XMLString::hash(in, fNameTableSize);
+  pspe = &fNameTable[inHash];
+  while (*pspe != 0)
+  {
+    if (XMLString::equals((*pspe)->fString, in))
+      return (*pspe)->fString;
+    pspe = &((*pspe)->fNext);
+  }
+
+  // This string hasn't been seen before.  Add it to the pool.
+  //
+
+  // Compute size to allocate.  Note that there's 1 char of string
+  // declared in the struct, so we don't need to add one again to
+  // account for the trailing null.
+  //
+  XMLSize_t sizeToAllocate = sizeof(DOMStringPoolEntry) + XMLString::stringLen(in)*sizeof(XMLCh);
+  *pspe = spe = (DOMStringPoolEntry *)allocate(sizeToAllocate);
+  spe->fNext = 0;
+  XMLString::copyString((XMLCh*)spe->fString, in);
+
+  return spe->fString;
 }
 
 XERCES_CPP_NAMESPACE_END

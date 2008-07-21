@@ -95,9 +95,9 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
     if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)getOwnerDocument();
     DOMText *newText =
-                getOwnerDocument()->createCDATASection(
-                        this->substringData(offset, len - offset));
+      doc->createCDATASection(this->substringData(offset, len - offset));
 
     DOMNode *parent = getParentNode();
     if (parent != 0)
@@ -105,8 +105,8 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 
     fCharacterData.fDataBuf->chop(offset);
 
-    if (this->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+    if (doc != 0) {
+        Ranges* ranges = doc->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {
@@ -128,7 +128,8 @@ bool DOMCDATASectionImpl::getIsElementContentWhitespace() const
 
 const XMLCh* DOMCDATASectionImpl::getWholeText() const
 {
-    DOMTreeWalker* pWalker=getOwnerDocument()->createTreeWalker(getOwnerDocument()->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
+    DOMDocument *doc = getOwnerDocument();
+    DOMTreeWalker* pWalker=doc->createTreeWalker(doc->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
     pWalker->setCurrentNode((DOMNode*)this);
     // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
@@ -156,7 +157,8 @@ const XMLCh* DOMCDATASectionImpl::getWholeText() const
 
 DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh* newText)
 {
-    DOMTreeWalker* pWalker=getOwnerDocument()->createTreeWalker(getOwnerDocument()->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
+    DOMDocument *doc = getOwnerDocument();
+    DOMTreeWalker* pWalker=doc->createTreeWalker(doc->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
     pWalker->setCurrentNode((DOMNode*)this);
     // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
@@ -177,7 +179,7 @@ DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh* newText)
             break;
         if(nextNode->getNodeType()==ENTITY_REFERENCE_NODE)
         {
-            DOMTreeWalker* pInnerWalker=getOwnerDocument()->createTreeWalker(nextNode, DOMNodeFilter::SHOW_ALL, NULL, true);
+            DOMTreeWalker* pInnerWalker=doc->createTreeWalker(nextNode, DOMNodeFilter::SHOW_ALL, NULL, true);
             while(pInnerWalker->nextNode())
             {
                 short nodeType=pInnerWalker->getCurrentNode()->getNodeType();
@@ -199,9 +201,9 @@ DOMText* DOMCDATASectionImpl::replaceWholeText(const XMLCh* newText)
         else
         {
             if(getNodeType()==TEXT_NODE)
-                retVal=getOwnerDocument()->createTextNode(newText);
+                retVal=doc->createTextNode(newText);
             else
-                retVal=getOwnerDocument()->createCDATASection(newText);
+                retVal=doc->createCDATASection(newText);
             pFirstTextNode->getParentNode()->insertBefore(retVal, pFirstTextNode);
         }
     }

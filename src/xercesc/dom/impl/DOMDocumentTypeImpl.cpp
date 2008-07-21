@@ -206,8 +206,9 @@ DOMDocumentTypeImpl::~DOMDocumentTypeImpl()
 DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
 {
     DOMNode* newNode = 0;
-    if (castToNodeImpl(this)->getOwnerDocument())
-        newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMMemoryManager::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
+    DOMDocument* doc = castToNodeImpl(this)->getOwnerDocument();
+    if (doc != 0)
+        newNode = new (doc, DOMMemoryManager::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
     else
     {
         XMLMutexLock lock(sDocumentMutex);
@@ -336,8 +337,9 @@ void DOMDocumentTypeImpl::setPublicId(const XMLCh *value)
     if (value == 0)
         return;
 
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        fPublicId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
+    DOMDocumentImpl* doc = (DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument();
+    if (doc != 0)
+        fPublicId = doc->cloneString(value);
     else {
         XMLMutexLock lock(sDocumentMutex);
         fPublicId = ((DOMDocumentImpl *)sDocument)->cloneString(value);
@@ -346,8 +348,9 @@ void DOMDocumentTypeImpl::setPublicId(const XMLCh *value)
 
 void DOMDocumentTypeImpl::setSystemId(const XMLCh *value)
 {
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        fSystemId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
+    DOMDocumentImpl* doc = (DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument();
+    if (doc != 0)
+        fSystemId = doc->cloneString(value);
     else {
         XMLMutexLock lock(sDocumentMutex);
         fSystemId = ((DOMDocumentImpl *)sDocument)->cloneString(value);
@@ -356,8 +359,9 @@ void DOMDocumentTypeImpl::setSystemId(const XMLCh *value)
 
 void DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
 {
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        fInternalSubset = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
+    DOMDocumentImpl* doc = (DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument();
+    if (doc != 0)
+        fInternalSubset = doc->cloneString(value);
     else {
         XMLMutexLock lock(sDocumentMutex);
         fInternalSubset = ((DOMDocumentImpl *)sDocument)->cloneString(value);

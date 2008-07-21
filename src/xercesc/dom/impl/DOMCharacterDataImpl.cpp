@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,8 +74,9 @@ void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
     fDataBuf->set(value);
 
-    if (node->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)node->getOwnerDocument();
+    if (doc != 0) {
+        Ranges* ranges = doc->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {
@@ -147,8 +148,9 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     //   the old string (may be shared)
     //   It just hangs around, possibly orphaned.
 
-    if (node->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)node->getOwnerDocument();
+    if (doc != 0) {
+        Ranges* ranges = doc->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {
@@ -215,8 +217,9 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     if (newLen >= 3999)
         XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
 
-    if (node->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)node->getOwnerDocument();
+    if (doc != 0) {
+        Ranges* ranges = doc->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {
@@ -267,11 +270,12 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)node->getOwnerDocument();
 
     XMLCh* newString;
     XMLCh temp[4000];
     if (len >= 3999)
-        newString = (XMLCh*) ((DOMDocumentImpl *)node->getOwnerDocument())->getMemoryManager()->allocate
+      newString = (XMLCh*) doc->getMemoryManager()->allocate
         (
             (len + 1) * sizeof(XMLCh)
         );//new XMLCh[len+1];
@@ -281,10 +285,10 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     XMLString::copyNString(newString, fDataBuf->getRawBuffer()+offset, count);
     newString[count] = chNull;
 
-    const XMLCh* retString = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
+    const XMLCh* retString = doc->getPooledString(newString);
 
     if (len >= 3999)
-        ((DOMDocumentImpl *)node->getOwnerDocument())->getMemoryManager()->deallocate(newString);//delete[] newString;
+      doc->getMemoryManager()->deallocate(newString);//delete[] newString;
 
     return retString;
 
@@ -296,4 +300,3 @@ void DOMCharacterDataImpl::releaseBuffer() {
 }
 
 XERCES_CPP_NAMESPACE_END
-

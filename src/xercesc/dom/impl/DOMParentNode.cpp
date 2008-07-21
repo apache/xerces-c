@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 DOMParentNode::DOMParentNode(DOMDocument *ownerDoc)
     : fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(this)
-{    
+{
 }
 
 // This only makes a shallow copy, cloneChildren must also be called for a
@@ -49,15 +49,13 @@ DOMParentNode::DOMParentNode(const DOMParentNode &other)  :
 
 void DOMParentNode::changed()
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
-    doc->changed();
+  ((DOMDocumentImpl*)fOwnerDocument)->changed();
 }
 
 
 int DOMParentNode::changes() const
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
-    return doc->changes();
+    return ((DOMDocumentImpl*)fOwnerDocument)->changes();
 }
 
 
@@ -166,7 +164,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     if (refChild!=0 && refChild->getParentNode() != castToNode(this))
         throw DOMException(DOMException::NOT_FOUND_ERR,0, GetDOMParentNodeMemoryManager);
 
-    // if the new node has to be placed before itself, we don't have to do anything 
+    // if the new node has to be placed before itself, we don't have to do anything
     // (even worse, we would crash if we continue, as we assume they are two distinct nodes)
     if (refChild!=0 && newChild->isSameNode(refChild))
         return newChild;
@@ -254,8 +252,8 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
 
     changed();
 
-    if (this->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+    if (fOwnerDocument != 0) {
+        Ranges* ranges = ((DOMDocumentImpl*)fOwnerDocument)->getRanges();
         if ( ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {
@@ -280,9 +278,9 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
     if (oldChild == 0 || oldChild->getParentNode() != castToNode(this))
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMParentNodeMemoryManager);
 
-    if (this->getOwnerDocument() !=  0  ) {
+    if (fOwnerDocument !=  0) {
         //notify iterators
-        NodeIterators* nodeIterators = ((DOMDocumentImpl *)this->getOwnerDocument())->getNodeIterators();
+        NodeIterators* nodeIterators = ((DOMDocumentImpl*)fOwnerDocument)->getNodeIterators();
         if (nodeIterators != 0) {
             XMLSize_t sz = nodeIterators->size();
             if (sz != 0) {
@@ -294,7 +292,7 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
         }
 
         //fix other ranges for change before deleting the node
-        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+        Ranges* ranges = ((DOMDocumentImpl*)fOwnerDocument)->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {
@@ -466,4 +464,3 @@ void DOMParentNode::release()
 
 
 XERCES_CPP_NAMESPACE_END
-

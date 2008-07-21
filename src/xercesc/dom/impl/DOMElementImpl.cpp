@@ -60,8 +60,8 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 
 DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
     : DOMElement(other),
-      fNode(other.getOwnerDocument()),
-      fParent(other.getOwnerDocument()),
+      fNode (other.fParent.fOwnerDocument),
+      fParent (other.fParent.fOwnerDocument),
       fAttributes(0),
       fDefaultAttributes(0)
 {
@@ -84,14 +84,14 @@ DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
         setupDefaultAttributes();
 
     if (!fDefaultAttributes)
-        fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
+        fDefaultAttributes = new (fParent.fOwnerDocument) DOMAttrMapImpl(this);
 
     if (!fAttributes) {
         if (!fDefaultAttributes) {
-            fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
+            fAttributes = new (fParent.fOwnerDocument) DOMAttrMapImpl(this);
         }
         else {
-            fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, fDefaultAttributes);
+            fAttributes = new (fParent.fOwnerDocument) DOMAttrMapImpl(this, fDefaultAttributes);
         }
     }
 
@@ -105,7 +105,7 @@ DOMElementImpl::~DOMElementImpl()
 
 DOMNode *DOMElementImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ELEMENT_OBJECT) DOMElementImpl(*this, deep);
+    DOMNode* newNode = new (fParent.fOwnerDocument, DOMMemoryManager::ELEMENT_OBJECT) DOMElementImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -150,7 +150,7 @@ DOMNamedNodeMap *DOMElementImpl::getAttributes() const
 
 DOMNodeList *DOMElementImpl::getElementsByTagName(const XMLCh *tagname) const
 {
-    DOMDocumentImpl *docImpl = (DOMDocumentImpl *)getOwnerDocument();
+    DOMDocumentImpl *docImpl = (DOMDocumentImpl *)fParent.fOwnerDocument;
     return docImpl->getDeepNodeList(this,tagname);
 }
 
@@ -222,7 +222,7 @@ void DOMElementImpl::setAttribute(const XMLCh *nam, const XMLCh *val)
     DOMAttr* newAttr = getAttributeNode(nam);
     if (!newAttr)
     {
-        newAttr = this->fNode.getOwnerDocument()->createAttribute(nam);
+        newAttr = fParent.fOwnerDocument->createAttribute(nam);
         fAttributes->setNamedItem(newAttr);
     }
 
@@ -341,7 +341,7 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
     DOMAttr* newAttr = getAttributeNodeNS(fNamespaceURI, qualifiedName+index);
     if (!newAttr)
     {
-        newAttr = this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
+        newAttr = fParent.fOwnerDocument->createAttributeNS(fNamespaceURI, qualifiedName);
         fAttributes->setNamedItemNS(newAttr);
     }
 
@@ -378,7 +378,7 @@ DOMAttr *DOMElementImpl::setAttributeNodeNS(DOMAttr *newAttr)
         throw DOMException(
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
-    if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
+    if (newAttr -> getOwnerDocument() != fParent.fOwnerDocument)
         throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNodeMemoryManager);
 
     // This will throw INUSE if necessary
@@ -391,7 +391,7 @@ DOMAttr *DOMElementImpl::setAttributeNodeNS(DOMAttr *newAttr)
 DOMNodeList *DOMElementImpl::getElementsByTagNameNS(const XMLCh *namespaceURI,
     const XMLCh *localName) const
 {
-    DOMDocumentImpl *docImpl = (DOMDocumentImpl *)getOwnerDocument();
+    DOMDocumentImpl *docImpl = (DOMDocumentImpl *)fParent.fOwnerDocument;
     return docImpl->getDeepNodeList(this, namespaceURI, localName);
 }
 
@@ -424,7 +424,7 @@ DOMAttrMapImpl *DOMElementImpl::getDefaultAttributes() const
 // initially set up the default attribute information based on doctype information
 void DOMElementImpl::setupDefaultAttributes()
 {
-    DOMDocument *tmpdoc = getOwnerDocument();
+    DOMDocument *tmpdoc = fParent.fOwnerDocument;
     if ((fNode.fOwnerNode == 0) || (tmpdoc == 0) || (tmpdoc->getDoctype() == 0))
         return;
 
@@ -432,7 +432,7 @@ void DOMElementImpl::setupDefaultAttributes()
     DOMAttrMapImpl* defAttrs = (eldef == 0) ? 0 : (DOMAttrMapImpl *)(eldef->getAttributes());
 
     if (defAttrs)
-        fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, defAttrs);
+        fDefaultAttributes = new (tmpdoc) DOMAttrMapImpl(this, defAttrs);
 }
 
 DOMAttr * DOMElementImpl::setDefaultAttributeNode(DOMAttr *newAttr)
@@ -459,7 +459,7 @@ DOMAttr *DOMElementImpl::setDefaultAttributeNodeNS(DOMAttr *newAttr)
         throw DOMException(
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMNodeMemoryManager);
 
-    if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
+    if (newAttr -> getOwnerDocument() != fParent.fOwnerDocument)
         throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0, GetDOMNodeMemoryManager);
 
     // This will throw INUSE if necessary
@@ -474,7 +474,7 @@ void DOMElementImpl::release()
     if (fNode.isOwned() && !fNode.isToBeReleased())
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
@@ -509,9 +509,10 @@ const XMLCh* DOMElementImpl::getBaseURI() const
                 if(baseURI)
                 {
                     try {
-                        XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                        XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
-                        uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
+                      DOMDocumentImpl* doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
+                      XMLUri temp(baseURI, doc->getMemoryManager());
+                      XMLUri temp2(&temp, uri, doc->getMemoryManager());
+                      uri = doc->cloneString(temp2.getUriText());
                     }
                     catch(const OutOfMemoryException&)
                     {
@@ -617,7 +618,7 @@ bool DOMElementImpl::isEqualNode(const DOMNode* arg) const
 
 DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 {
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
 
     if (!namespaceURI || !*namespaceURI) {
         fName = doc->getPooledString(name);

@@ -54,7 +54,7 @@ XSDElementNSImpl::XSDElementNSImpl(const XSDElementNSImpl &other, bool deep) :
 }
 
 DOMNode * XSDElementNSImpl::cloneNode(bool deep) const {
-    DOMNode* newNode = new (getOwnerDocument()) XSDElementNSImpl(*this, deep);
+    DOMNode* newNode = new (fParent.fOwnerDocument) XSDElementNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
 }
 
 DOMNode * DOMElementNSImpl::cloneNode(bool deep) const {
-    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ELEMENT_NS_OBJECT) DOMElementNSImpl(*this, deep);
+    DOMNode* newNode = new (fParent.fOwnerDocument, DOMMemoryManager::ELEMENT_NS_OBJECT) DOMElementNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -93,7 +93,9 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
         return;
     }
 
-    if(!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(prefix))
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
+
+    if(!doc->isXMLName(prefix))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, GetDOMNodeMemoryManager);
 
     const XMLCh * xml      = DOMNodeImpl::getXmlString();
@@ -108,7 +110,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
         throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
     }
 
-    this-> fPrefix = ((DOMDocumentImpl *)this->getOwnerDocument())->getPooledString(prefix);
+    this-> fPrefix = doc->getPooledString(prefix);
 
     XMLSize_t prefixLen = XMLString::stringLen(prefix);
     XMLSize_t newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
@@ -116,7 +118,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
     XMLCh *newName;
     XMLCh temp[4000];
     if (newQualifiedNameLen >= 3999)
-        newName = (XMLCh*) ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager()->allocate
+      newName = (XMLCh*) doc->getMemoryManager()->allocate
         (
             newQualifiedNameLen * sizeof(XMLCh)
         );//new XMLCh[newQualifiedNameLen];
@@ -128,11 +130,10 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
     newName[prefixLen] = chColon;
     XMLString::copyString(&newName[prefixLen+1], fLocalName);
 
-    fName = ((DOMDocumentImpl *)this->getOwnerDocument())->
-                                           getPooledString(newName);
+    fName = doc->getPooledString(newName);
 
     if (newQualifiedNameLen >= 3999)
-        ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager()->deallocate(newName);//delete[] newName;
+        doc->getMemoryManager()->deallocate(newName);//delete[] newName;
 
 }
 
@@ -141,7 +142,7 @@ void DOMElementNSImpl::release()
     if (fNode.isOwned() && !fNode.isToBeReleased())
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
@@ -166,7 +167,7 @@ DOMNode* DOMElementNSImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
                                const XMLCh *qualifiedName)
 {
-    DOMDocumentImpl* ownerDoc = (DOMDocumentImpl *) getOwnerDocument();
+    DOMDocumentImpl* ownerDoc = (DOMDocumentImpl *) fParent.fOwnerDocument;
     this->fName = ownerDoc->getPooledString(qualifiedName);
 
     int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
@@ -196,7 +197,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
             ownerDoc->getMemoryManager()->deallocate(newName);//delete[] newName;
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
-        if (!((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fPrefix) || !((DOMDocumentImpl *)this->getOwnerDocument())->isXMLName(fLocalName))
+        if (!ownerDoc->isXMLName(fPrefix) || !ownerDoc->isXMLName(fLocalName))
             throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
     }
 
@@ -212,12 +213,12 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
 
 const DOMTypeInfo *DOMElementNSImpl::getSchemaTypeInfo() const
 {
-    if(!fSchemaType) 
+    if(!fSchemaType)
         return &DOMTypeInfoImpl::g_DtdValidatedElement;
     return fSchemaType;
 }
 
-void DOMElementNSImpl::setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo) 
+void DOMElementNSImpl::setSchemaTypeInfo(const DOMTypeInfoImpl* typeInfo)
 {
     fSchemaType = typeInfo;
 }
@@ -238,4 +239,3 @@ void* DOMElementNSImpl::getFeature(const XMLCh* feature, const XMLCh* version) c
 }
 
 XERCES_CPP_NAMESPACE_END
-

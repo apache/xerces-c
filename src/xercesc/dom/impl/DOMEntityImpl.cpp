@@ -72,7 +72,7 @@ DOMEntityImpl::~DOMEntityImpl() {
 
 DOMNode *DOMEntityImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument(), DOMMemoryManager::ENTITY_OBJECT) DOMEntityImpl(*this, deep);
+    DOMNode* newNode = new (fParent.fOwnerDocument, DOMMemoryManager::ENTITY_OBJECT) DOMEntityImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -119,28 +119,28 @@ void DOMEntityImpl::setNodeValue(const XMLCh *arg)
 
 void DOMEntityImpl::setNotationName(const XMLCh *arg)
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     fNotationName = doc->cloneString(arg);
 }
 
 
 void DOMEntityImpl::setPublicId(const XMLCh *arg)
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     fPublicId = doc->cloneString(arg);
 }
 
 
 void DOMEntityImpl::setSystemId(const XMLCh *arg)
 {
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     fSystemId = doc->cloneString(arg);
 }
 
 
 void DOMEntityImpl::setBaseURI(const XMLCh* baseURI) {
     if (baseURI && *baseURI) {
-        XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)getOwnerDocument())->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
+        XMLCh* temp = (XMLCh*) ((DOMDocumentImpl *)fParent.fOwnerDocument)->allocate((XMLString::stringLen(baseURI) + 9)*sizeof(XMLCh));
         XMLString::fixURI(baseURI, temp);
         fBaseURI = temp;
     }
@@ -214,7 +214,7 @@ void DOMEntityImpl::release()
     if (fNode.isOwned() && !fNode.isToBeReleased())
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 
-    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
@@ -270,7 +270,7 @@ const XMLCh* DOMEntityImpl::getInputEncoding() const {
 }
 
 void DOMEntityImpl::setInputEncoding(const XMLCh* actualEncoding){
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     fInputEncoding = doc->cloneString(actualEncoding);
 }
 
@@ -279,7 +279,7 @@ const XMLCh* DOMEntityImpl::getXmlEncoding() const {
 }
 
 void DOMEntityImpl::setXmlEncoding(const XMLCh* encoding){
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     fXmlEncoding = doc->cloneString(encoding);
 }
 
@@ -288,7 +288,7 @@ const XMLCh* DOMEntityImpl::getXmlVersion() const {
 }
 
 void DOMEntityImpl::setXmlVersion(const XMLCh* version){
-    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)fParent.fOwnerDocument;
     fXmlVersion = doc->cloneString(version);
 }
 

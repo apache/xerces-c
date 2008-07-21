@@ -101,9 +101,9 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
     if (offset > len)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0, GetDOMNodeMemoryManager);
 
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)getOwnerDocument();
     DOMComment *newText =
-                getOwnerDocument()->createComment(
-                        this->substringData(offset, len - offset));
+      doc->createComment(this->substringData(offset, len - offset));
 
     DOMNode *parent = getParentNode();
     if (parent != 0)
@@ -111,8 +111,8 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
 
     fCharacterData.fDataBuf->chop(offset);
 
-    if (this->getOwnerDocument() != 0) {
-        Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
+    if (doc != 0) {
+        Ranges* ranges = doc->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
             if (sz != 0) {

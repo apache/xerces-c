@@ -58,10 +58,12 @@ DOMDeepNodeListImpl::DOMDeepNodeListImpl(const DOMNode *rootNode,
     , fMatchAllURI(false)
     , fMatchURIandTagname(true)
 {
-    fTagName = ((DOMDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(localName);
+    DOMDocumentImpl* doc = (DOMDocumentImpl *)castToNodeImpl(rootNode)->getOwnerDocument();
+
+    fTagName = doc->getPooledString(localName);
     fMatchAll = XMLString::equals(fTagName, kAstr);
     fMatchAllURI = XMLString::equals(namespaceURI, kAstr);
-    fNamespaceURI = ((DOMDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument()))->getPooledString(namespaceURI);
+    fNamespaceURI = doc->getPooledString(namespaceURI);
 }
 
 

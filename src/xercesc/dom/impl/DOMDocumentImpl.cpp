@@ -36,7 +36,6 @@
 #include "DOMNotationImpl.hpp"
 #include "DOMProcessingInstructionImpl.hpp"
 #include "DOMTextImpl.hpp"
-#include "DOMStringPool.hpp"
 #include "DOMTreeWalkerImpl.hpp"
 #include "DOMNodeIteratorImpl.hpp"
 #include "DOMNodeIDMap.hpp"
@@ -59,7 +58,6 @@ static const XMLSize_t kMaxHeapAllocSize     = 0x20000;
 static const XMLSize_t kMaxSubAllocationSize =  0x1000;  // Any request for more bytes
                                                          // than this will be handled by
                                                          // allocating directly with system.
-
 
 //
 //   Constructors.   Warning - be very careful with the ordering of initialization
@@ -92,7 +90,7 @@ DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* cons
       fNodeListPool(0),
       fDocType(0),
       fDocElement(0),
-      fNamePool(0),
+      fNameTableSize(257),
       fNormalizer(0),
       fRanges(0),
       fNodeIterators(0),
@@ -101,7 +99,10 @@ DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* cons
       fChanges(0),
       errorChecking(true)
 {
-    fNamePool    = new (this) DOMStringPool(257, this);
+    fNameTable = (DOMStringPoolEntry**)allocate (
+      sizeof (DOMStringPoolEntry*) * fNameTableSize);
+    for (XMLSize_t i = 0; i < fNameTableSize; i++)
+      fNameTable[i] = 0;
 }
 
 
@@ -131,7 +132,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fNodeListPool(0),
       fDocType(0),
       fDocElement(0),
-      fNamePool(0),
+      fNameTableSize(257),
       fNormalizer(0),
       fRanges(0),
       fNodeIterators(0),
@@ -140,7 +141,11 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fChanges(0),
       errorChecking(true)
 {
-    fNamePool    = new (this) DOMStringPool(257, this);
+    fNameTable = (DOMStringPoolEntry**)allocate (
+      sizeof (DOMStringPoolEntry*) * fNameTableSize);
+    for (XMLSize_t i = 0; i < fNameTableSize; i++)
+      fNameTable[i] = 0;
+
     try {
         setDocumentType(doctype);
 
@@ -167,7 +172,9 @@ void DOMDocumentImpl::setDocumentType(DOMDocumentType *doctype)
     // New doctypes can be created either with the factory methods on DOMImplementation, in
     //   which case ownerDocument will be 0, or with methods on DocumentImpl, in which case
     //   ownerDocument will be set, but the DocType won't yet be a child of the document.
-    if (doctype->getOwnerDocument() != 0 && doctype->getOwnerDocument() != this)
+    //
+    DOMDocument* doc = doctype->getOwnerDocument();
+    if (doc != 0 && doc != this)
         throw DOMException(    //one doctype can belong to only one DOMDocumentImpl
         DOMException::WRONG_DOCUMENT_ERR, 0, getMemoryManager());
 
@@ -813,13 +820,6 @@ XMLCh * DOMDocumentImpl::cloneString(const XMLCh *src)
     XMLCh *newStr = (XMLCh *)this->allocate(len);
     XMLString::copyString(newStr, src);
     return newStr;
-}
-
-
-const XMLCh *  DOMDocumentImpl::getPooledString(const XMLCh *src)
-{
-    if (!src) return 0;
-    else return this->fNamePool->getPooledString(src);
 }
 
 XMLSize_t DOMDocumentImpl::getMemoryAllocationBlockSize() const
