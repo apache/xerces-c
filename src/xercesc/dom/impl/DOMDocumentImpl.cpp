@@ -54,8 +54,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // The chunk size to allocate from the system allocator.
 static const XMLSize_t kInitialHeapAllocSize =  0x4000;
-static const XMLSize_t kMaxHeapAllocSize     = 0x20000;
-static const XMLSize_t kMaxSubAllocationSize =  0x1000;  // Any request for more bytes
+static const XMLSize_t kMaxHeapAllocSize     = 0x80000;
+static const XMLSize_t kMaxSubAllocationSize =  0x0100;  // Any request for more bytes
                                                          // than this will be handled by
                                                          // allocating directly with system.
 
@@ -834,80 +834,80 @@ void DOMDocumentImpl::setMemoryAllocationBlockSize(XMLSize_t size)
         fHeapAllocSize=size;
 }
 
-void *         DOMDocumentImpl::allocate(XMLSize_t amount)
+void* DOMDocumentImpl::allocate(XMLSize_t amount)
 {
-	//	Align the request size so that suballocated blocks
-	//	beyond this one will be maintained at the same alignment.
-	amount = XMLPlatformUtils::alignPointerForNewBlockAllocation(amount);
+  //	Align the request size so that suballocated blocks
+  //	beyond this one will be maintained at the same alignment.
+  amount = XMLPlatformUtils::alignPointerForNewBlockAllocation(amount);
 
-    // If the request is for a largish block, hand it off to the system
-    //   allocator.  The block still must be linked into the list of
-    //   allocated blocks so that it will be deleted when the time comes.
-    if (amount > kMaxSubAllocationSize)
+  // If the request is for a largish block, hand it off to the system
+  //   allocator.  The block still must be linked into the list of
+  //   allocated blocks so that it will be deleted when the time comes.
+  if (amount > kMaxSubAllocationSize)
+  {
+    //	The size of the header we add to our raw blocks
+    XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
+
+    //	Try to allocate the block
+    void* newBlock;
+    newBlock = fMemoryManager->allocate(sizeOfHeader + amount);
+
+    //	Link it into the list beyond current block, as current block
+    //	is still being subdivided. If there is no current block
+    //	then track that we have no bytes to further divide.
+    if (fCurrentBlock)
     {
-		//	The size of the header we add to our raw blocks
-	XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
-
-		//	Try to allocate the block
-        void* newBlock;
-        newBlock = fMemoryManager->allocate((sizeOfHeader + amount) * sizeof(char)); //new char[amount + sizeOfHeader];
-
-		//	Link it into the list beyond current block, as current block
-		//	is still being subdivided. If there is no current block
-		//	then track that we have no bytes to further divide.
-        if (fCurrentBlock)
-        {
-            *(void **)newBlock = *(void **)fCurrentBlock;
-            *(void **)fCurrentBlock = newBlock;
-        }
-        else
-        {
-            fCurrentBlock = newBlock;
-            fFreePtr = 0;
-            fFreeBytesRemaining = 0;
-        }
-
-        void *retPtr = (char *)newBlock + sizeOfHeader;
-        return retPtr;
+      *(void **)newBlock = *(void **)fCurrentBlock;
+      *(void **)fCurrentBlock = newBlock;
+    }
+    else
+    {
+      *(void **)newBlock = 0;
+      fCurrentBlock = newBlock;
+      fFreePtr = 0;
+      fFreeBytesRemaining = 0;
     }
 
-    //	It's a normal (sub-allocatable) request.
-	//	Are we out of room in our current block?
-	if (amount > fFreeBytesRemaining)
-    {
-        // Request doesn't fit in the current block.
-
-		// The size of the header we add to our raw blocks
-	XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
-
-        // Get a new block from the system allocator.
-        void* newBlock;
-        newBlock = fMemoryManager->allocate(fHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
-
-        *(void **)newBlock = fCurrentBlock;
-        fCurrentBlock = newBlock;
-        fFreePtr = (char *)newBlock + sizeOfHeader;
-        fFreeBytesRemaining = fHeapAllocSize - sizeOfHeader;
-
-        if(fHeapAllocSize<kMaxHeapAllocSize)
-            fHeapAllocSize*=2;
-    }
-
-	//	Subdivide the request off current block
-    void *retPtr = fFreePtr;
-    fFreePtr += amount;
-    fFreeBytesRemaining -= amount;
-
+    void *retPtr = (char*)newBlock + sizeOfHeader;
     return retPtr;
+  }
+
+  //	It's a normal (sub-allocatable) request.
+  //	Are we out of room in our current block?
+  if (amount > fFreeBytesRemaining)
+  {
+    // Request doesn't fit in the current block.
+    // The size of the header we add to our raw blocks
+    XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
+
+    // Get a new block from the system allocator.
+    void* newBlock;
+    newBlock = fMemoryManager->allocate(fHeapAllocSize);
+
+    *(void **)newBlock = fCurrentBlock;
+    fCurrentBlock = newBlock;
+    fFreePtr = (char *)newBlock + sizeOfHeader;
+    fFreeBytesRemaining = fHeapAllocSize - sizeOfHeader;
+
+    if(fHeapAllocSize<kMaxHeapAllocSize)
+      fHeapAllocSize*=2;
+  }
+
+  //	Subdivide the request off current block
+  void *retPtr = fFreePtr;
+  fFreePtr += amount;
+  fFreeBytesRemaining -= amount;
+
+  return retPtr;
 }
 
 
-void    DOMDocumentImpl::deleteHeap()
+void DOMDocumentImpl::deleteHeap()
 {
     while (fCurrentBlock != 0)
     {
         void *nextBlock = *(void **)fCurrentBlock;
-        fMemoryManager->deallocate(fCurrentBlock); //delete [] (char*) fCurrentBlock;
+        fMemoryManager->deallocate(fCurrentBlock);
         fCurrentBlock = nextBlock;
     }
 }
