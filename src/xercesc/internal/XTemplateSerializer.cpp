@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,12 +58,12 @@ public:
     // -----------------------------------------------------------------------
     inline void getKeys(const XMLCh*&, int&, int&) const;
            void print() const;
-    
+
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     KeySet(const KeySet&);
-    KeySet& operator=(const KeySet&); 
+    KeySet& operator=(const KeySet&);
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -74,7 +74,7 @@ public:
     const int             fIntKey2;
           MemoryManager*  fMemoryManager;
 
-};    
+};
 
 KeySet::KeySet(const XMLCh* const         strKey
              , const int                  intKey1
@@ -91,7 +91,7 @@ KeySet::~KeySet()
 {
 }
 
-inline 
+inline
 void KeySet::getKeys(const XMLCh*& strKey, int& intKey1, int& intKey2) const
 {
     strKey  = fStrKey;
@@ -110,7 +110,7 @@ static int compareKeySet(const void* keyl, const void* keyr)
 {
     const KeySet* pairl=*(const KeySet**)keyl;
     const KeySet* pairr=*(const KeySet**)keyr;
-        
+
     const XMLCh* strKeyl   = 0;
     int          intKeyl_1 = 0;
     int          intKeyl_2 = 0;
@@ -120,13 +120,13 @@ static int compareKeySet(const void* keyl, const void* keyr)
     int          intKeyr_1 = 0;
     int          intKeyr_2 = 0;
     pairr->getKeys(strKeyr, intKeyr_1, intKeyr_2);
-                        
+
     int compareValue = XMLString::compareString(strKeyl, strKeyr);
-    
+
     if (compareValue !=0)
         return compareValue;
 
-    compareValue = intKeyl_1 - intKeyr_1;      
+    compareValue = intKeyl_1 - intKeyr_1;
     if (compareValue !=0)
         return compareValue;
 
@@ -160,7 +160,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     SortArray(const SortArray&);
-    SortArray& operator=(const SortArray&); 
+    SortArray& operator=(const SortArray&);
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -191,7 +191,7 @@ SortArray::~SortArray()
     fMemoryManager->deallocate(fElemList);
 }
 
-inline 
+inline
 const KeySet* SortArray::elementAt(const XMLSize_t index) const
 {
     assert(index < fCur);
@@ -256,7 +256,7 @@ void  SortArray::dump() const
  *   SchemaElementDecl*
  *   unsigned int
  *
- ***********************************************************/   
+ ***********************************************************/
 void XTemplateSerializer::storeObject(ValueVectorOf<SchemaElementDecl*>* const objToStore
                                     , XSerializeEngine&                        serEng)
 {
@@ -266,7 +266,7 @@ void XTemplateSerializer::storeObject(ValueVectorOf<SchemaElementDecl*>* const o
         serEng<<vectorSize;
 
         for ( XMLSize_t i = 0; i < vectorSize; i++)
-        {            
+        {
             SchemaElementDecl*& data = objToStore->elementAt(i);
             serEng<<data;
         }
@@ -285,7 +285,7 @@ void XTemplateSerializer::loadObject(ValueVectorOf<SchemaElementDecl*>**       o
             if (initSize < 0)
                 initSize = 16;
 
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              ValueVectorOf<SchemaElementDecl*>(
                                                                initSize
                                                              , serEng.getMemoryManager()
@@ -316,7 +316,7 @@ void XTemplateSerializer::storeObject(ValueVectorOf<unsigned int>* const objToSt
         serEng<<vectorSize;
 
         for (XMLSize_t i = 0; i < vectorSize; i++)
-        {            
+        {
             unsigned int& data = objToStore->elementAt(i);
             serEng<<data;
         }
@@ -335,7 +335,7 @@ void XTemplateSerializer::loadObject(ValueVectorOf<unsigned int>**       objToLo
             if (initSize < 0)
                 initSize = 16;
 
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              ValueVectorOf<unsigned int>(
                                                          initSize
                                                        , serEng.getMemoryManager()
@@ -375,11 +375,11 @@ void XTemplateSerializer::storeObject(RefArrayVectorOf<XMLCh>* const objToStore
         serEng<<vectorSize;
 
         for (XMLSize_t i = 0; i < vectorSize; i++)
-        {            
+        {
             serEng.writeString(objToStore->elementAt(i));
         }
     }
-    
+
 }
 
 void XTemplateSerializer::loadObject(RefArrayVectorOf<XMLCh>**  objToLoad
@@ -395,7 +395,7 @@ void XTemplateSerializer::loadObject(RefArrayVectorOf<XMLCh>**  objToLoad
             if (initSize < 0)
                 initSize = 16;
 
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefArrayVectorOf<XMLCh>(
                                                      initSize
                                                    , toAdopt
@@ -481,7 +481,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<SchemaAttDef>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             SchemaAttDef* data;
             serEng>>data;
             (*objToLoad)->addElement(data);
@@ -537,7 +537,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<SchemaElementDecl>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             SchemaElementDecl* data;
             serEng>>data;
             (*objToLoad)->addElement(data);
@@ -590,7 +590,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<ContentSpecNode>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             ContentSpecNode* data;
             serEng>>data;
             (*objToLoad)->addElement(data);
@@ -643,7 +643,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<IC_Field>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             IC_Field* data;
             serEng>>data;
             (*objToLoad)->addElement(data);
@@ -696,7 +696,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<DatatypeValidator>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             DatatypeValidator*  data;
             data = DatatypeValidator::loadDV(serEng);
             (*objToLoad)->addElement(data);
@@ -707,7 +707,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<DatatypeValidator>** objToLoad
 
 void XTemplateSerializer::storeObject(RefVectorOf<IdentityConstraint>* const objToStore
                                     , XSerializeEngine&                       serEng)
-{ 
+{
 
     if (serEng.needToStoreObject(objToStore))
     {
@@ -749,7 +749,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<IdentityConstraint>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             IdentityConstraint*  data;
             data = IdentityConstraint::loadIC(serEng);
             (*objToLoad)->addElement(data);
@@ -760,7 +760,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<IdentityConstraint>** objToLoad
 
 void XTemplateSerializer::storeObject(RefVectorOf<XMLNumber>* const objToStore
                                     , XSerializeEngine&             serEng)
-{ 
+{
 
     if (serEng.needToStoreObject(objToStore))
     {
@@ -803,7 +803,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XMLNumber>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             XMLNumber*  data;
             data = XMLNumber::loadNumber(numType , serEng);
             (*objToLoad)->addElement(data);
@@ -814,7 +814,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XMLNumber>** objToLoad
 
 void XTemplateSerializer::storeObject(RefVectorOf<XercesLocationPath>* const objToStore
                                     , XSerializeEngine&                      serEng)
-{ 
+{
 
     if (serEng.needToStoreObject(objToStore))
     {
@@ -856,7 +856,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesLocationPath>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             XercesLocationPath*  data;
             serEng>>data;
             (*objToLoad)->addElement(data);
@@ -867,7 +867,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesLocationPath>** objToLoad
 
 void XTemplateSerializer::storeObject(RefVectorOf<XercesStep>* const objToStore
                                     , XSerializeEngine&              serEng)
-{ 
+{
 
     if (serEng.needToStoreObject(objToStore))
     {
@@ -909,7 +909,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesStep>** objToLoad
         XMLSize_t vectorLength = 0;
         serEng>>vectorLength;
         for (XMLSize_t i = 0 ; i < vectorLength; i++)
-        {            
+        {
             XercesStep*  data;
             serEng>>data;
             (*objToLoad)->addElement(data);
@@ -935,7 +935,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesStep>** objToLoad
  *
  ***********************************************************/
 void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToStore
-                                    , XSerializeEngine&                    serEng)                                          
+                                    , XSerializeEngine&                    serEng)
 {
 
     if (serEng.needToStoreObject(objToStore))
@@ -943,7 +943,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<KVStringPair> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -977,7 +977,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToS
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<KVStringPair>** objToLoad
-                                   , int                            
+                                   , int
                                    , bool                           toAdopt
                                    , XSerializeEngine&              serEng)
 {
@@ -989,7 +989,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<KVStringPair>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<KVStringPair>(
                                                           hashModulus
                                                         , toAdopt
@@ -1006,21 +1006,21 @@ void XTemplateSerializer::loadObject(RefHashTableOf<KVStringPair>** objToLoad
         {
             KVStringPair*  data;
             serEng>>data;
-            
-            (*objToLoad)->put((void*)data->getKey(), data);        
+
+            (*objToLoad)->put((void*)data->getKey(), data);
         }
     }
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStore
-                                    , XSerializeEngine&                serEng)                                          
+                                    , XSerializeEngine&                serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XMLAttDef> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1054,7 +1054,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLAttDef>* const objToStor
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<XMLAttDef>** objToLoad
-                                   , int                         
+                                   , int
                                    , bool                        toAdopt
                                    , XSerializeEngine&           serEng)
 {
@@ -1067,7 +1067,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLAttDef>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<XMLAttDef>(
                                                        hashModulus
                                                      , toAdopt
@@ -1089,21 +1089,21 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLAttDef>** objToLoad
             //XMLAttDef*  data;
             SchemaAttDef*  data;
             serEng>>data;
-            
-            (*objToLoad)->put((void*)data->getAttName()->getLocalPart(), data);        
+
+            (*objToLoad)->put((void*)data->getAttName()->getLocalPart(), data);
         }
     }
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStore
-                                    , XSerializeEngine&                serEng)                                          
+                                    , XSerializeEngine&                serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<DTDAttDef> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1137,7 +1137,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DTDAttDef>* const objToStor
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<DTDAttDef>** objToLoad
-                                   , int                         
+                                   , int
                                    , bool                        toAdopt
                                    , XSerializeEngine&           serEng)
 {
@@ -1150,7 +1150,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DTDAttDef>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<DTDAttDef>(
                                                        hashModulus
                                                      , toAdopt
@@ -1167,21 +1167,21 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DTDAttDef>** objToLoad
         {
             DTDAttDef*  data;
             serEng>>data;
-            
-            (*objToLoad)->put((void*)data->getFullName(), data);        
+
+            (*objToLoad)->put((void*)data->getFullName(), data);
         }
     }
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const objToStore
-                                    , XSerializeEngine&                      serEng)                                          
+                                    , XSerializeEngine&                      serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<ComplexTypeInfo> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1215,7 +1215,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<ComplexTypeInfo>* const obj
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<ComplexTypeInfo>** objToLoad
-                                   , int                               
+                                   , int
                                    , bool                              toAdopt
                                    , XSerializeEngine&                 serEng)
 {
@@ -1226,7 +1226,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<ComplexTypeInfo>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<ComplexTypeInfo>(
                                                              hashModulus
                                                            , toAdopt
@@ -1250,14 +1250,14 @@ void XTemplateSerializer::loadObject(RefHashTableOf<ComplexTypeInfo>** objToLoad
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const objToStore
-                                    , XSerializeEngine&                      serEng)                                          
+                                    , XSerializeEngine&                      serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XercesGroupInfo> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1286,11 +1286,11 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
 #else
         while (e.hasMoreElements())
         {
-            XMLCh*       key = (XMLCh*) e.nextElementKey();           
+            XMLCh*       key = (XMLCh*) e.nextElementKey();
             unsigned int id  = serEng.getStringPool()->getId(key);
-                        
-           // key = StringPool->getValueForId(XercesGroupInfo::getNameSpaceId()) 
-           //     + chComma 
+
+           // key = StringPool->getValueForId(XercesGroupInfo::getNameSpaceId())
+           //     + chComma
            //     + StringPool->getValueForId(XercesGroupInfo::getNameId())
            //
            // and the key is guranteed in the StringPool
@@ -1298,7 +1298,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
            //
            //  if (id == 0)
            //  {
-           //      throw exception 
+           //      throw exception
            //   }
            //
 
@@ -1312,7 +1312,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesGroupInfo>* const obj
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<XercesGroupInfo>** objToLoad
-                                   , int                               
+                                   , int
                                    , bool                              toAdopt
                                    , XSerializeEngine&                 serEng)
 {
@@ -1323,7 +1323,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesGroupInfo>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<XercesGroupInfo>(
                                                              hashModulus
                                                            , toAdopt
@@ -1342,7 +1342,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesGroupInfo>** objToLoad
             serEng>>id;
 
             XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(id);
-            
+
             XercesGroupInfo*  data;
             serEng>>data;
 
@@ -1352,7 +1352,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesGroupInfo>** objToLoad
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const objToStore
-                                    , XSerializeEngine&                         serEng)                                          
+                                    , XSerializeEngine&                         serEng)
 {
 
     if (serEng.needToStoreObject(objToStore))
@@ -1361,7 +1361,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XercesAttGroupInfo> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1387,7 +1387,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
 #else
         while (e.hasMoreElements())
         {
-            XercesAttGroupInfo* data = objToStore->get(e.nextElementKey());            
+            XercesAttGroupInfo* data = objToStore->get(e.nextElementKey());
             serEng<<data;
         }
 #endif
@@ -1395,7 +1395,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XercesAttGroupInfo>* const 
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<XercesAttGroupInfo>** objToLoad
-                                   , int                                  
+                                   , int
                                    , bool                                 toAdopt
                                    , XSerializeEngine&                    serEng)
 {
@@ -1406,7 +1406,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesAttGroupInfo>** objToL
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<XercesAttGroupInfo>(
                                                                 hashModulus
                                                               , toAdopt
@@ -1424,21 +1424,21 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XercesAttGroupInfo>** objToL
             XercesAttGroupInfo*  data;
             serEng>>data;
 
-            XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(data->getNameId());          
+            XMLCh* key = (XMLCh*) serEng.getStringPool()->getValueForId(data->getNameId());
             (*objToLoad)->put((void*)key, data);
         }
     }
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToStore
-                                    , XSerializeEngine&                 serEng)                                          
+                                    , XSerializeEngine&                 serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<XMLRefInfo> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1477,7 +1477,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XMLRefInfo>* const objToSto
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<XMLRefInfo>** objToLoad
-                                   , int                          
+                                   , int
                                    , bool                         toAdopt
                                    , XSerializeEngine&            serEng)
 {
@@ -1488,7 +1488,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLRefInfo>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<XMLRefInfo>(
                                                         hashModulus
                                                       , toAdopt
@@ -1515,7 +1515,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XMLRefInfo>** objToLoad
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const objToStore
-                                    , XSerializeEngine&                        serEng)                                          
+                                    , XSerializeEngine&                        serEng)
 {
 
     if (serEng.needToStoreObject(objToStore))
@@ -1524,7 +1524,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<DatatypeValidator> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1566,7 +1566,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<DatatypeValidator>* const o
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLoad
-                                   , int                                 
+                                   , int
                                    , bool                                toAdopt
                                    , XSerializeEngine&                   serEng)
 {
@@ -1577,7 +1577,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<DatatypeValidator>(
                                                                hashModulus
                                                              , toAdopt
@@ -1591,7 +1591,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
         serEng>>itemNumber;
 
         for (XMLSize_t itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {           
+        {
             DatatypeValidator*  data;
             data = DatatypeValidator::loadDV(serEng);
 
@@ -1612,14 +1612,14 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
             XMLString::moveChars(&typeKey[uriLen+1], typeLocal, localLen+1);
             typeKey[uriLen + localLen + 1] = chNull;
             ArrayJanitor<XMLCh> janName(typeKey, serEng.getMemoryManager());
-            
+
             /*
              * get the string from string pool
              *
              *  to do:
              ***/
-            unsigned int id = serEng.getStringPool()->getId(typeKey);   
-            XMLCh* refKey = (XMLCh*) serEng.getStringPool()->getValueForId(id);      
+            unsigned int id = serEng.getStringPool()->getId(typeKey);
+            XMLCh* refKey = (XMLCh*) serEng.getStringPool()->getValueForId(id);
 
             (*objToLoad)->put((void*)refKey, data);
         }
@@ -1627,14 +1627,14 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
 }
 
 void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
-                                    , XSerializeEngine&              serEng)                                          
+                                    , XSerializeEngine&              serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
         RefHashTableOfEnumerator<Grammar> e(objToStore, false, objToStore->getMemoryManager());
-        XMLSize_t itemNumber = 0;        
+        XMLSize_t itemNumber = 0;
 
         while (e.hasMoreElements())
         {
@@ -1669,7 +1669,7 @@ void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
 }
 
 void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
-                                   , int                       
+                                   , int
                                    , bool                      toAdopt
                                    , XSerializeEngine&         serEng)
 {
@@ -1680,7 +1680,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHashTableOf<Grammar>(
                                                      hashModulus
                                                    , toAdopt
@@ -1705,14 +1705,14 @@ void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
 }
 
 
-void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToStore
+void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation, PtrHasher>* const objToStore
                                     , XSerializeEngine&              serEng)
 {
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
 
-        RefHashTableOfEnumerator<XSAnnotation> e(objToStore, false, objToStore->getMemoryManager());
+        RefHashTableOfEnumerator<XSAnnotation, PtrHasher> e(objToStore, false, objToStore->getMemoryManager());
 
 #ifdef XERCES_DEBUG_SORT_GRAMMAR
         //get the total item number
@@ -1790,8 +1790,8 @@ void XTemplateSerializer::storeObject(RefHashTableOf<XSAnnotation>* const objToS
     }
 }
 
-void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
-                                   , int                            
+void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation, PtrHasher>** objToLoad
+                                   , int
                                    , bool                           toAdopt
                                    , XSerializeEngine&              serEng)
 {
@@ -1803,10 +1803,9 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
         if (!*objToLoad)
         {
             *objToLoad = new (serEng.getMemoryManager())
-                              RefHashTableOf<XSAnnotation>(
+                              RefHashTableOf<XSAnnotation, PtrHasher>(
                               hashModulus
                             , toAdopt
-                            , new (serEng.getMemoryManager()) HashPtr()
                             , serEng.getMemoryManager()
                               );
         }
@@ -1824,17 +1823,17 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
             for (itemIndex = 0; itemIndex < itemNumber; itemIndex++)
             {
                 serEng>>keyId;
-                key = serEng.lookupLoadPool(keyId);                
-                serEng>>data;                       
-                (*objToLoad)->put(key, data);                   
+                key = serEng.lookupLoadPool(keyId);
+                serEng>>data;
+                (*objToLoad)->put(key, data);
             }
         }
         else {
             for (itemIndex = 0; itemIndex < itemNumber; itemIndex++)
             {
                 serEng>>keyId;
-                key = serEng.lookupLoadPool(keyId);                
-                serEng>>data;                            
+                key = serEng.lookupLoadPool(keyId);
+                serEng>>data;
                 delete data;
             }
         }
@@ -1851,7 +1850,7 @@ void XTemplateSerializer::loadObject(RefHashTableOf<XSAnnotation>** objToLoad
  ***********************************************************/
 void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const objToStore
                                     , XSerializeEngine&                        serEng)
-{ 
+{
     if (serEng.needToStoreObject(objToStore))
     {
         serEng<<objToStore->getHashModulus();
@@ -1887,7 +1886,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
         while (e.hasMoreElements())
         {
             void*       key1;
-            int        key2;           
+            int        key2;
             e.nextElementKey(key1, key2);
 
             SchemaAttDef* data = objToStore->get(key1, key2);
@@ -1900,7 +1899,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
 }
 
 void XTemplateSerializer::loadObject(RefHash2KeysTableOf<SchemaAttDef>** objToLoad
-                                   , int                                 
+                                   , int
                                    , bool                                toAdopt
                                    , XSerializeEngine&                   serEng)
 {
@@ -1925,14 +1924,14 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<SchemaAttDef>** objToLo
         serEng>>itemNumber;
 
         for (XMLSize_t itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {               
+        {
             SchemaAttDef*  data;
             serEng>>data;
 
             XMLCh* key1 = data->getAttName()->getLocalPart();
             int    key2 = data->getAttName()->getURI();
             //key2==data->getId()
-            (*objToLoad)->put((void*)key1, key2, data);        
+            (*objToLoad)->put((void*)key1, key2, data);
 
         }
 
@@ -1982,7 +1981,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
         {
             void*      key1;
             int        key2;
-            
+
             e.nextElementKey(key1, key2);
             serEng.writeString((const XMLCh*)key1);
             serEng<<key2;
@@ -1997,7 +1996,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<ElemVector>* const obj
 }
 
 void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objToLoad
-                                   , int                                     
+                                   , int
                                    , bool                                    toAdopt
                                    , XSerializeEngine&                       serEng)
 {
@@ -2022,7 +2021,7 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
         serEng>>itemNumber;
 
         for (XMLSize_t itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {               
+        {
             XMLCh*      key1;
             serEng.readString(key1);
 
@@ -2040,20 +2039,20 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
              *  susbititutionGroupElem matches the (key1,key2)
              *
              ***/
-            
+
             // bool FOUND=false;
 
             XMLSize_t vectorSize = data->size();
             for ( XMLSize_t i = 0; i < vectorSize; i++)
-            {            
+            {
                 SchemaElementDecl*& elem   = data->elementAt(i);
                 SchemaElementDecl*  subElem = elem->getSubstitutionGroupElem();
                 XMLCh* elemName = subElem->getBaseName();
                 int    uri      = subElem->getURI();
-                if (XMLString::equals(elemName, key1) && 
+                if (XMLString::equals(elemName, key1) &&
                     (uri == key2)                       )
                 {
-                    //release the temp 
+                    //release the temp
                     serEng.getMemoryManager()->deallocate(key1);
                     key1 = elemName;
                     //FOUND=true;
@@ -2068,7 +2067,7 @@ void XTemplateSerializer::loadObject(RefHash2KeysTableOf<ElemVector>**      objT
              * }
              ***/
 
-            (*objToLoad)->put((void*)key1, key2, data);        
+            (*objToLoad)->put((void*)key1, key2, data);
 
         }
 
@@ -2100,7 +2099,7 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
         /* Update to store key2 separately as for the putGroupElemDecl the key is not the
            enclosing scope but another value. */
         while (e.hasMoreKeys())
-        {                       
+        {
             e.nextElementKey(strkey, key1, key2);
             serEng<<key2;
             SchemaElementDecl* data = objToStore->getByKey(strkey, key1, key2);
@@ -2111,7 +2110,7 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
 }
 
 void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** objToLoad
-                                   , int                                     
+                                   , int
                                    , bool                                    toAdopt
                                    , int                                     initSize2
                                    , XSerializeEngine&                       serEng)
@@ -2123,7 +2122,7 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
 
         if (!*objToLoad)
         {
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              RefHash3KeysIdPool<SchemaElementDecl>(
                                                                    hashModulus
                                                                  , toAdopt
@@ -2139,23 +2138,23 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
         int scopeKey;
         SchemaElementDecl*  elemDecl;
         for (XMLSize_t itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {                                                   
+        {
             serEng>>scopeKey;
             serEng>>elemDecl;
-            
+
            (*objToLoad)->put(elemDecl->getBaseName()
                             , elemDecl->getURI()
                             , scopeKey
                             , elemDecl);
         }
-   
+
     }
 
 }
 
 /**********************************************************
  *
- * NameIdPool             
+ * NameIdPool
  *    no NameIdPool::nextElementKey()
  *
  *   DTDElementDecl
@@ -2208,7 +2207,7 @@ void XTemplateSerializer::loadObject(NameIdPool<DTDElementDecl>** objToLoad
         serEng>>itemNumber;
 
         for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {               
+        {
             DTDElementDecl*  data = new (serEng.getMemoryManager())
                                     DTDElementDecl(serEng.getMemoryManager());
             data->serialize(serEng);
@@ -2246,7 +2245,7 @@ void XTemplateSerializer::loadObject(NameIdPool<DTDEntityDecl>** objToLoad
             if (initSize < 0)
                 initSize = 16;
 
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              NameIdPool<DTDEntityDecl>(
                                                        initSize
                                                      , initSize2
@@ -2260,8 +2259,8 @@ void XTemplateSerializer::loadObject(NameIdPool<DTDEntityDecl>** objToLoad
         serEng>>itemNumber;
 
         for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {               
-            DTDEntityDecl*  data = new (serEng.getMemoryManager()) 
+        {
+            DTDEntityDecl*  data = new (serEng.getMemoryManager())
                                    DTDEntityDecl(serEng.getMemoryManager());
             data->serialize(serEng);
             (*objToLoad)->put(data);
@@ -2299,7 +2298,7 @@ void XTemplateSerializer::loadObject(NameIdPool<XMLNotationDecl>** objToLoad
             if (initSize < 0)
                 initSize = 16;
 
-            *objToLoad = new (serEng.getMemoryManager()) 
+            *objToLoad = new (serEng.getMemoryManager())
                              NameIdPool<XMLNotationDecl>(
                                                          initSize
                                                        , initSize2
@@ -2313,8 +2312,8 @@ void XTemplateSerializer::loadObject(NameIdPool<XMLNotationDecl>** objToLoad
         serEng>>itemNumber;
 
         for (unsigned int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {               
-            XMLNotationDecl*  data = new (serEng.getMemoryManager()) 
+        {
+            XMLNotationDecl*  data = new (serEng.getMemoryManager())
                                      XMLNotationDecl(serEng.getMemoryManager());
             data->serialize(serEng);
             (*objToLoad)->put(data);
@@ -2323,4 +2322,3 @@ void XTemplateSerializer::loadObject(NameIdPool<XMLNotationDecl>** objToLoad
 }
 
 XERCES_CPP_NAMESPACE_END
-

@@ -58,7 +58,6 @@
 #include <xercesc/util/XMLInitializer.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
-#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -124,7 +123,7 @@ const XMLCh fgP1M[] =
 //  DatatypeValidatorFactory: Static member data
 // ---------------------------------------------------------------------------
 RefHashTableOf<DatatypeValidator>* DatatypeValidatorFactory::fBuiltInRegistry = 0;
-RefHashTableOf<XMLCanRepGroup>*    DatatypeValidatorFactory::fCanRepRegistry = 0;
+RefHashTableOf<XMLCanRepGroup, PtrHasher>* DatatypeValidatorFactory::fCanRepRegistry = 0;
 
 void XMLInitializer::initializeDatatypeValidatorFactory()
 {
@@ -533,7 +532,7 @@ void DatatypeValidatorFactory::initCanRepRegistory()
       * key:  dv
       * data: XMLCanRepGroup
       ***/
-     fCanRepRegistry  = new RefHashTableOf<XMLCanRepGroup>(29, true, new HashPtr() );
+     fCanRepRegistry  = new RefHashTableOf<XMLCanRepGroup, PtrHasher>(29, true);
 
      fCanRepRegistry->put((void*) getDatatypeValidator(SchemaSymbols::fgDT_DECIMAL),
                         new  XMLCanRepGroup(XMLCanRepGroup::Decimal));
@@ -899,4 +898,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file DatatypeValidatorFactory.cpp
   */
-

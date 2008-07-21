@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -230,11 +230,11 @@ public:
     XSAnnotation* getAnnotation();
     const XSAnnotation* getAnnotation() const;
 
-    /** 
+    /**
       * Get annotation hash table, to enumerate through them
       */
-    RefHashTableOf<XSAnnotation>*  getAnnotations();
-    const RefHashTableOf<XSAnnotation>*  getAnnotations() const;
+    RefHashTableOf<XSAnnotation, PtrHasher>*  getAnnotations();
+    const RefHashTableOf<XSAnnotation, PtrHasher>*  getAnnotations() const;
 
     /***
      * Support for Serialization/De-serialization
@@ -307,20 +307,20 @@ private:
     //  fGramDesc: adopted
     //
     // -----------------------------------------------------------------------
-    XMLCh*                                 fTargetNamespace;
-    RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
-    RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
-    RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
-    NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
-    RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
-    RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
-    RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
-    RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
-    RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
-    ValidationContext*                     fValidationContext;
-    MemoryManager*                         fMemoryManager;
-    XMLSchemaDescription*                  fGramDesc;
-    RefHashTableOf<XSAnnotation>*          fAnnotations;
+    XMLCh*                                   fTargetNamespace;
+    RefHash3KeysIdPool<SchemaElementDecl>*   fElemDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>*   fElemNonDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>*   fGroupElemDeclPool;
+    NameIdPool<XMLNotationDecl>*             fNotationDeclPool;
+    RefHashTableOf<XMLAttDef>*               fAttributeDeclRegistry;
+    RefHashTableOf<ComplexTypeInfo>*         fComplexTypeRegistry;
+    RefHashTableOf<XercesGroupInfo>*         fGroupInfoRegistry;
+    RefHashTableOf<XercesAttGroupInfo>*      fAttGroupInfoRegistry;
+    RefHash2KeysTableOf<ElemVector>*         fValidSubstitutionGroups;
+    ValidationContext*                       fValidationContext;
+    MemoryManager*                           fMemoryManager;
+    XMLSchemaDescription*                    fGramDesc;
+    RefHashTableOf<XSAnnotation, PtrHasher>* fAnnotations;
 
     bool                                   fValidated;
     DatatypeValidatorFactory               fDatatypeRegistry;
@@ -406,12 +406,12 @@ inline const XSAnnotation* SchemaGrammar::getAnnotation() const
     return fAnnotations->get(this);
 }
 
-inline RefHashTableOf<XSAnnotation>* SchemaGrammar::getAnnotations()
+inline RefHashTableOf<XSAnnotation, PtrHasher>* SchemaGrammar::getAnnotations()
 {
     return fAnnotations;
 }
 
-inline const RefHashTableOf<XSAnnotation>* SchemaGrammar::getAnnotations() const
+inline const RefHashTableOf<XSAnnotation, PtrHasher>* SchemaGrammar::getAnnotations() const
 {
     return fAnnotations;
 }
@@ -548,7 +548,7 @@ inline XMLElementDecl* SchemaGrammar::getElemDecl(const unsigned int elemId)
 
 inline XMLSize_t
 SchemaGrammar::putElemDecl(XMLElementDecl* const elemDecl,
-                           const bool notDeclared) 
+                           const bool notDeclared)
 {
     if (notDeclared)
     {

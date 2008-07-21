@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -183,7 +183,7 @@ private:
     const XMLCh*        traverseNotationDecl(const DOMElement* const childElem,
                                              const XMLCh* const name,
                                              const XMLCh* const uriStr);
-    ContentSpecNode*    traverseChoiceSequence(const DOMElement* const elemDecl,                                               
+    ContentSpecNode*    traverseChoiceSequence(const DOMElement* const elemDecl,
                                                const int modelGroupType,
                                                bool& hasChildren);
     ContentSpecNode*    traverseAny(const DOMElement* const anyDecl);
@@ -390,7 +390,7 @@ private:
       * the type is a complex type
       */
     ComplexTypeInfo* getElementComplexTypeInfo(const DOMElement* const elem,
-                                               const XMLCh* const typeStr,                                               
+                                               const XMLCh* const typeStr,
                                                const XMLCh* const otherSchemaURI);
 
     /**
@@ -436,7 +436,7 @@ private:
                                     const bool toTrim = false);
 
     /* return minOccurs */
-    int checkMinMax(ContentSpecNode* const specNode,    
+    int checkMinMax(ContentSpecNode* const specNode,
                      const DOMElement* const elem,
                      const int allContext = Not_All_Context);
 
@@ -446,8 +446,8 @@ private:
     void processComplexContent(const DOMElement* const elem,
                                const XMLCh* const typeName,
                                const DOMElement* const childElem,
-                               ComplexTypeInfo* const typeInfo,                               
-                               const XMLCh* const baseLocalPart,                               
+                               ComplexTypeInfo* const typeInfo,
+                               const XMLCh* const baseLocalPart,
                                const bool isMixed,
                                const bool isBaseAnyType = false);
 
@@ -486,7 +486,7 @@ private:
       * Process attributes of a complex type
       */
     void processAttributes(const DOMElement* const elem,
-                           const DOMElement* const attElem,                           
+                           const DOMElement* const attElem,
                            ComplexTypeInfo* const typeInfo,
                            const bool isBaseAnyType = false);
 
@@ -745,7 +745,7 @@ private:
     RefHashTableOf<XercesGroupInfo>*               fGroupRegistry;
     RefHashTableOf<XercesAttGroupInfo>*            fAttGroupRegistry;
     RefHashTableOf<ElemVector>*                    fIC_ElementsNS;
-    RefHashTableOf<SchemaInfo>*                    fPreprocessedNodes;
+    RefHashTableOf<SchemaInfo, PtrHasher>*         fPreprocessedNodes;
     SchemaInfo*                                    fSchemaInfo;
     XercesGroupInfo*                               fCurrentGroupInfo;
     XercesAttGroupInfo*                            fCurrentAttGroupInfo;
@@ -756,7 +756,7 @@ private:
     ValueVectorOf<const DOMElement*>*              fDeclStack;
     ValueVectorOf<unsigned int>**                  fGlobalDeclarations;
     ValueVectorOf<DOMNode*>*                       fNonXSAttList;
-    RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
+    RefHashTableOf<ValueVectorOf<DOMElement*>, PtrHasher>* fIC_NodeListNS;
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*                    fRedefineComponents;
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
@@ -923,4 +923,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file TraverseSchema.hpp
   */
-

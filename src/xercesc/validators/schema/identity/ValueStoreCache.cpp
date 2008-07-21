@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,11 +78,10 @@ void ValueStoreCache::startDocument() {
 void ValueStoreCache::startElement() {
 
     fGlobalMapStack->push(fGlobalICMap);
-    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>
+    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore, PtrHasher>
     (
         13
         , false
-        , new (fMemoryManager) HashPtr()
         , fMemoryManager
     );
 }
@@ -93,8 +92,8 @@ void ValueStoreCache::endElement() {
         return; // must be an invalid doc!
     }
 
-    RefHashTableOf<ValueStore>* oldMap = fGlobalMapStack->pop();
-    RefHashTableOfEnumerator<ValueStore> mapEnum(oldMap, false, fMemoryManager);
+    RefHashTableOf<ValueStore, PtrHasher>* oldMap = fGlobalMapStack->pop();
+    RefHashTableOfEnumerator<ValueStore, PtrHasher> mapEnum(oldMap, false, fMemoryManager);
 //    Janitor<RefHashTableOf<ValueStore> > janMap(oldMap);
 
     while (mapEnum.hasMoreElements()) {
@@ -127,11 +126,10 @@ void ValueStoreCache::cleanUp() {
 void ValueStoreCache::init() {
 
     fValueStores = new (fMemoryManager) RefVectorOf<ValueStore>(8, true, fMemoryManager);
-    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore>
+    fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore, PtrHasher>
     (
         13
         , false
-        , new (fMemoryManager) HashPtr()
         , fMemoryManager
     );
     fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore>
@@ -141,7 +139,7 @@ void ValueStoreCache::init() {
         , new (fMemoryManager) HashPtr()
         , fMemoryManager
     );
-    fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore> >(8, true, fMemoryManager);
+    fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore, PtrHasher> >(8, true, fMemoryManager);
 }
 
 void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
@@ -183,4 +181,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file ValueStoreCache.cpp
   */
-

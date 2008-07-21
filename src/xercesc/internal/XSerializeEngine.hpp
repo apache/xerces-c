@@ -684,7 +684,7 @@ private:
      *   value: XMLInteger*, owned
      *
      ***/
-    RefHashTableOf<XSerializedObjectId>*   fStorePool;
+    RefHashTableOf<XSerializedObjectId, PtrHasher>*   fStorePool;
 
     /***
      *   Vector for loading object, objects are NOT owned

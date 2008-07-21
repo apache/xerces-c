@@ -44,6 +44,21 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+struct CMStateSetHasher
+{
+  XMLSize_t getHashVal(const void *const key, XMLSize_t mod)
+  {
+    const CMStateSet* const pkey = (const CMStateSet*) key;
+    return ((pkey->hashCode()) % mod);
+  }
+
+  bool equals(const void *const key1, const void *const key2)
+  {
+    const CMStateSet* const pkey1 = (const CMStateSet*) key1;
+    const CMStateSet* const pkey2 = (const CMStateSet*) key2;
+    return (*pkey1==*pkey2);
+  }
+};
 
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
@@ -247,7 +262,7 @@ DFAContentModel::validateContent( QName** const        children
         }
 
         unsigned int nextLoop = 0;
-        if(!handleRepetitions(curElem, curState, loopCount, nextState, nextLoop, elemIndex, 0)) 
+        if(!handleRepetitions(curElem, curState, loopCount, nextState, nextLoop, elemIndex, 0))
         {
             *indexFailingChild=childIndex;
             return false;
@@ -382,7 +397,7 @@ bool DFAContentModel::validateContentSpecial(QName** const            children
         }
 
         unsigned int nextLoop = 0;
-        if(!handleRepetitions(curElem, curState, loopCount, nextState, nextLoop, elemIndex, &comparator)) 
+        if(!handleRepetitions(curElem, curState, loopCount, nextState, nextLoop, elemIndex, &comparator))
         {
             *indexFailingChild=childIndex;
             return false;
@@ -454,14 +469,14 @@ bool DFAContentModel::handleRepetitions(const QName* const curElem,
                     //  <xs:any namespace="##any" processContents="skip"/>
                     // </xs:sequence>
                     //
-                    // In the DFA there will be two transitions from the current state which 
+                    // In the DFA there will be two transitions from the current state which
                     // allow "foo". Note that this is not a UPA violation. The ambiguity of which
-                    // transition to take is resolved by the current value of the counter. Since 
+                    // transition to take is resolved by the current value of the counter. Since
                     // we've already seen enough instances of the first "foo" perhaps there is
                     // another element declaration or wildcard deeper in the element map which
                     // matches.
                     unsigned int tempNextState = 0;
-                    
+
                     while (++elemIndex < fElemMapSize) {
                         QName* inElem  = fElemMap[elemIndex];
                         ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
@@ -519,12 +534,12 @@ bool DFAContentModel::handleRepetitions(const QName* const curElem,
                             }
                         }
                     }
-                    
+
                     // if we still can't find a match, report the error
                     if (elemIndex == fElemMapSize)
                         return false;
-                    
-                    // if we found a match, set the next state and reset the 
+
+                    // if we found a match, set the next state and reset the
                     // counter if the next state is a counting state.
                     nextState = tempNextState;
                     Occurence* o = fCountingStates[nextState];
@@ -915,12 +930,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     // of sequential loop statesToDo to find out),
     // while the role that statesToDo plays remain unchanged.
     //
-    RefHashTableOf<XMLInteger> *stateTable =
-        new (fMemoryManager) RefHashTableOf<XMLInteger>
+    RefHashTableOf<XMLInteger, CMStateSetHasher> *stateTable =
+        new (fMemoryManager) RefHashTableOf<XMLInteger, CMStateSetHasher>
         (
             curArraySize
             , true
-            , new (fMemoryManager) HashCMStateSet()
             , fMemoryManager
         );
     //stateTable->put((CMStateSet*)setT, new (fMemoryManager) XMLInteger(0));

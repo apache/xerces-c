@@ -136,7 +136,7 @@ private :
     //
     // -----------------------------------------------------------------------
     MemoryManager*                  fMemoryManager;
-    RefHashTableOf<TElem>*          fBucketList;
+    RefHashTableOf<TElem>           fBucketList;
     TElem**                         fIdPtrs;
     unsigned int                    fIdPtrsCount;
     unsigned int                    fIdCounter;

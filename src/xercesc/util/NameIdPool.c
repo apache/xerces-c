@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
                              , const unsigned int initSize
                              , MemoryManager* const manager) :
     fMemoryManager(manager)
-    , fBucketList(0)
+    , fBucketList(hashModulus, manager)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
@@ -51,7 +51,6 @@ NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
     if (!hashModulus)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, fMemoryManager);
 
-    fBucketList = new (fMemoryManager) RefHashTableOf<TElem>(hashModulus, fMemoryManager);
     //
     //  Allocate the initial id pointers array. We don't have to zero them
     //  out since the fIdCounter value tells us which ones are valid. The
@@ -62,7 +61,7 @@ NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
     fIdPtrs = (TElem**) fMemoryManager->allocate
     (
         fIdPtrsCount * sizeof(TElem*)
-    ); //new TElem*[fIdPtrsCount];
+    );
     fIdPtrs[0] = 0;
 }
 
@@ -73,19 +72,18 @@ template <class TElem> NameIdPool<TElem>::~NameIdPool()
     //  up when we clean the bucket lists.
     //
     fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
-
-    delete fBucketList;
 }
 
 
 // ---------------------------------------------------------------------------
 //  NameIdPool: Element management
 // ---------------------------------------------------------------------------
-template <class TElem> bool
-NameIdPool<TElem>::containsKey(const XMLCh* const key) const
+template <class TElem>
+inline bool NameIdPool<TElem>::
+containsKey(const XMLCh* const key) const
 {
     if (fIdCounter == 0) return false;
-    return fBucketList->containsKey(key);
+    return fBucketList.containsKey(key);
 }
 
 
@@ -93,7 +91,7 @@ template <class TElem> void NameIdPool<TElem>::removeAll()
 {
     if (fIdCounter == 0) return;
 
-    fBucketList->removeAll();
+    fBucketList.removeAll();
 
     // Reset the id counter
     fIdCounter = 0;
@@ -103,22 +101,25 @@ template <class TElem> void NameIdPool<TElem>::removeAll()
 // ---------------------------------------------------------------------------
 //  NameIdPool: Getters
 // ---------------------------------------------------------------------------
-template <class TElem> TElem*
-NameIdPool<TElem>::getByKey(const XMLCh* const key)
+template <class TElem>
+inline TElem* NameIdPool<TElem>::
+getByKey(const XMLCh* const key)
 {
     if (fIdCounter == 0) return 0;
-    return fBucketList->get(key);
+    return fBucketList.get(key);
 }
 
-template <class TElem> const TElem*
-NameIdPool<TElem>::getByKey(const XMLCh* const key) const
+template <class TElem>
+inline const TElem* NameIdPool<TElem>::
+getByKey(const XMLCh* const key) const
 {
     if (fIdCounter == 0) return 0;
-    return fBucketList->get(key);
+    return fBucketList.get(key);
 }
 
-template <class TElem> TElem*
-NameIdPool<TElem>::getById(const unsigned int elemId)
+template <class TElem>
+inline TElem* NameIdPool<TElem>::
+getById(const unsigned int elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -128,7 +129,8 @@ NameIdPool<TElem>::getById(const unsigned int elemId)
 }
 
 template <class TElem>
-const TElem* NameIdPool<TElem>::getById(const unsigned int elemId) const
+inline const TElem* NameIdPool<TElem>::
+getById(const unsigned int elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -138,7 +140,7 @@ const TElem* NameIdPool<TElem>::getById(const unsigned int elemId) const
 }
 
 template <class TElem>
-MemoryManager* NameIdPool<TElem>::getMemoryManager() const
+inline MemoryManager* NameIdPool<TElem>::getMemoryManager() const
 {
     return fMemoryManager;
 }
@@ -161,7 +163,7 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
         );
     }
 
-    fBucketList->put((void*)elemToAdopt->getKey(), elemToAdopt);
+    fBucketList.put((void*)elemToAdopt->getKey(), elemToAdopt);
 
     //
     //  Give this new one the next available id and add to the pointer list.

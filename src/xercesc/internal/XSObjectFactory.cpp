@@ -67,8 +67,8 @@ XSObjectFactory::XSObjectFactory(MemoryManager* const manager)
     , fDeleteVector(0)
 {
     fDeleteVector = new (manager) RefVectorOf<XSObject>(20, true, manager);
-    fXercesToXSMap = new (manager) RefHashTableOf<XSObject> (
-        109, false, new (manager) HashPtr(), manager);
+    fXercesToXSMap = new (manager) RefHashTableOf<XSObject, PtrHasher> (
+        109, false, manager);
 }
 
 XSObjectFactory::~XSObjectFactory()

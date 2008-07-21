@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,9 +82,9 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
         fGramDesc = new (fMemoryManager) XMLSchemaDescriptionImpl(XMLUni::fgXMLNSURIName, fMemoryManager);
 
         // Create annotation table
-        fAnnotations = new (fMemoryManager) RefHashTableOf<XSAnnotation>
+        fAnnotations = new (fMemoryManager) RefHashTableOf<XSAnnotation, PtrHasher>
         (
-            29, true, new (fMemoryManager) HashPtr(), fMemoryManager
+            29, true, fMemoryManager
         );
 
         //
@@ -169,7 +169,7 @@ XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
         if(!fElemNonDeclPool)
             fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
         retVal->setId(fElemNonDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal));
-    } else 
+    } else
     {
         retVal->setId(fElemDeclPool->put((void*)retVal->getBaseName(), uriId, scope, retVal));
     }
@@ -211,7 +211,7 @@ void SchemaGrammar::cleanUp()
 
 void SchemaGrammar::setGrammarDescription(XMLGrammarDescription* gramDesc)
 {
-    if ((!gramDesc) || 
+    if ((!gramDesc) ||
         (gramDesc->getGrammarType() != Grammar::SchemaGrammarType))
         return;
 
@@ -233,7 +233,7 @@ void SchemaGrammar::putAnnotation(void* key, XSAnnotation* const annotation)
 void SchemaGrammar::addAnnotation(XSAnnotation* const annotation)
 {
     XSAnnotation* lAnnot = fAnnotations->get(this);
-	
+
     if (lAnnot)
         lAnnot->setNext(annotation);
     else
@@ -273,8 +273,8 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         /***
          * Serialize NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
          ***/
-        XTemplateSerializer::storeObject(fNotationDeclPool, serEng);        
-    
+        XTemplateSerializer::storeObject(fNotationDeclPool, serEng);
+
         /***
          *
          * Serialize RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
@@ -289,7 +289,7 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::storeObject(fComplexTypeRegistry, serEng);
         XTemplateSerializer::storeObject(fGroupInfoRegistry, serEng);
         XTemplateSerializer::storeObject(fAttGroupInfoRegistry, serEng);
-       
+
         /***
          * Serialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
          ***/
@@ -326,8 +326,8 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         /***
          * Deserialize NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
          ***/
-        XTemplateSerializer::loadObject(&fNotationDeclPool, 109, 128, serEng);        
-    
+        XTemplateSerializer::loadObject(&fNotationDeclPool, 109, 128, serEng);
+
         /***
          *
          * Deserialize RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
@@ -342,7 +342,7 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::loadObject(&fComplexTypeRegistry, 29, true, serEng);
         XTemplateSerializer::loadObject(&fGroupInfoRegistry, 13, true, serEng);
         XTemplateSerializer::loadObject(&fAttGroupInfoRegistry, 13, true, serEng);
-       
+
         /***
          * Deserialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
          ***/

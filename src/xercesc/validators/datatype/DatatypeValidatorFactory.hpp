@@ -232,7 +232,7 @@ private:
     // -----------------------------------------------------------------------
     XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XERCES_CPP_NAMESPACE_QUALIFIER DatatypeValidator>*        fUserDefinedRegistry;
     static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
-    static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XMLCanRepGroup>*    fCanRepRegistry;
+    static XERCES_CPP_NAMESPACE_QUALIFIER RefHashTableOf<XMLCanRepGroup, PtrHasher>*    fCanRepRegistry;
     XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager* const fMemoryManager;
 
     friend class XPath2ContextImpl;
@@ -283,4 +283,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file DatatypeValidatorFactory.hpp
   */
-

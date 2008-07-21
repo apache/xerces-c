@@ -132,7 +132,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fBufEnd(fBufStart+bufSize)
 ,fBufCur(fBufStart)
 ,fBufLoadMax(0)
-,fStorePool( new (gramPool->getMemoryManager()) RefHashTableOf<XSerializedObjectId>(29, true, new (gramPool->getMemoryManager()) HashPtr(), gramPool->getMemoryManager()) )
+,fStorePool( new (gramPool->getMemoryManager()) RefHashTableOf<XSerializedObjectId, PtrHasher>(29, true, gramPool->getMemoryManager()) )
 ,fLoadPool(0)
 ,fObjectCount(0)
 {

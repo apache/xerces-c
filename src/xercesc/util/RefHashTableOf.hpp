@@ -34,70 +34,98 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// Default hasher for keys that are const XMLCh*.
+//
+struct StringHasher
+{
+  XMLSize_t getHashVal(const void* key, XMLSize_t mod) const
+  {
+    return XMLString::hash ((const XMLCh*)key, mod);
+  }
+
+  bool equals(const void *const key1, const void *const key2) const
+  {
+    return XMLString::equals ((const XMLCh*)key1, (const XMLCh*)key2);
+  }
+};
+
+// Some common hashers.
+//
+struct PtrHasher
+{
+  XMLSize_t getHashVal(const void* key, XMLSize_t mod) const
+  {
+    return ((XMLSize_t)key) % mod;
+  }
+
+  bool equals(const void *const key1, const void *const key2) const
+  {
+    return key1 == key2;
+  }
+};
+
 //
 //  Forward declare the enumerator so he can be our friend. Can you say
 //  friend? Sure...
 //
-template <class TVal> class RefHashTableOfEnumerator;
-template <class TVal> struct RefHashTableBucketElem;
-
+template <class TVal, class THasher = StringHasher>
+class RefHashTableOfEnumerator;
 
 //
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct RefHashTableBucketElem
+template <class TVal>
+struct RefHashTableBucketElem
 {
-    RefHashTableBucketElem(void* key, TVal* const value, RefHashTableBucketElem<TVal>* next)
-		: fData(value), fNext(next), fKey(key)
-        {
-        }
+  RefHashTableBucketElem(void* key, TVal* const value, RefHashTableBucketElem<TVal>* next)
+      : fData(value), fNext(next), fKey(key)
+  {
+  }
 
-    RefHashTableBucketElem(){};
-    ~RefHashTableBucketElem(){};
+  RefHashTableBucketElem(){};
+  ~RefHashTableBucketElem(){};
 
-    TVal*                           fData;
-    RefHashTableBucketElem<TVal>*   fNext;
-	void*							fKey;
+  TVal*                           fData;
+  RefHashTableBucketElem<TVal>*   fNext;
+  void*                           fKey;
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    RefHashTableBucketElem(const RefHashTableBucketElem<TVal>&);
-    RefHashTableBucketElem<TVal>& operator=(const RefHashTableBucketElem<TVal>&);
+  RefHashTableBucketElem(const RefHashTableBucketElem<TVal>&);
+  RefHashTableBucketElem<TVal>& operator=(const RefHashTableBucketElem<TVal>&);
 };
 
 
-template <class TVal> class RefHashTableOf : public XMemory
+template <class TVal, class THasher = StringHasher>
+class RefHashTableOf : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-	// backwards compatability - default hasher is HashXMLCh
-    RefHashTableOf
-    (
-        const XMLSize_t modulus
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
-    );
-	// backwards compatability - default hasher is HashXMLCh
-    RefHashTableOf
-    (
-        const XMLSize_t modulus
-        , const bool adoptElems
-        , MemoryManager* const manager =  XMLPlatformUtils::fgMemoryManager
-    );
-	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
-	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
-	// may delete the hasher of a different hashtable if both use the same hasher.
-    RefHashTableOf
-    (
-        const XMLSize_t modulus
-        , const bool adoptElems
-        , HashBase* hashBase
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
-    );
+    RefHashTableOf(
+      const XMLSize_t modulus,
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    RefHashTableOf(
+      const XMLSize_t modulus,
+      const THasher& hasher,
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    RefHashTableOf(
+      const XMLSize_t modulus,
+      const bool adoptElems,
+      MemoryManager* const manager =  XMLPlatformUtils::fgMemoryManager);
+
+    RefHashTableOf(
+      const XMLSize_t modulus,
+      const bool adoptElems,
+      const THasher& hasher,
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
     ~RefHashTableOf();
 
 
@@ -109,7 +137,7 @@ public:
     void removeKey(const void* const key);
     void removeAll();
     void cleanup();
-    void reinitialize(HashBase* hashBase);
+    void reinitialize(const THasher& hasher);
     void transferElement(const void* const key1, void* key2);
     TVal* orphanKey(const void* const key);
 
@@ -131,21 +159,21 @@ public:
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-	void put(void* key, TVal* const valueToAdopt);
+    void put(void* key, TVal* const valueToAdopt);
 
 
 private :
     // -----------------------------------------------------------------------
     //  Declare our friends
     // -----------------------------------------------------------------------
-    friend class RefHashTableOfEnumerator<TVal>;
+    friend class RefHashTableOfEnumerator<TVal, THasher>;
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    RefHashTableOf(const RefHashTableOf<TVal>&);
-    RefHashTableOf<TVal>& operator=(const RefHashTableOf<TVal>&);
+    RefHashTableOf(const RefHashTableOf<TVal, THasher>&);
+    RefHashTableOf<TVal, THasher>& operator=(const RefHashTableOf<TVal, THasher>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -181,7 +209,7 @@ private:
     XMLSize_t                      fHashModulus;
     XMLSize_t                      fInitialModulus;
     XMLSize_t                      fCount;
-    HashBase*                      fHash;
+    THasher                        fHasher;
 };
 
 
@@ -190,18 +218,19 @@ private:
 //  An enumerator for a value array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TVal> class RefHashTableOfEnumerator : public XMLEnumerator<TVal>, public XMemory
+template <class TVal, class THasher>
+class RefHashTableOfEnumerator : public XMLEnumerator<TVal>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum
+    RefHashTableOfEnumerator(RefHashTableOf<TVal, THasher>* const toEnum
         , const bool adopt = false
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHashTableOfEnumerator();
 
-    RefHashTableOfEnumerator(const RefHashTableOfEnumerator<TVal>&);
+    RefHashTableOfEnumerator(const RefHashTableOfEnumerator<TVal, THasher>&);
     // -----------------------------------------------------------------------
     //  Enum interface
     // -----------------------------------------------------------------------
@@ -218,7 +247,8 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    RefHashTableOfEnumerator<TVal>& operator=(const RefHashTableOfEnumerator<TVal>&);
+    RefHashTableOfEnumerator<TVal, THasher>&
+    operator=(const RefHashTableOfEnumerator<TVal, THasher>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -247,7 +277,7 @@ private :
     bool                                  fAdopted;
     RefHashTableBucketElem<TVal>*         fCurElem;
     XMLSize_t                             fCurHash;
-    RefHashTableOf<TVal>*                 fToEnum;
+    RefHashTableOf<TVal, THasher>*        fToEnum;
     MemoryManager* const                  fMemoryManager;
 };
 

@@ -2026,9 +2026,9 @@ void SGXMLScanner::commonInit()
     fEntityTable->put((void*) XMLUni::fgQuot, chDoubleQuote);
     fEntityTable->put((void*) XMLUni::fgApos, chSingleQuote);
     fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
-    fAttDefRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
+    fAttDefRegistry = new (fMemoryManager) RefHashTableOf<unsigned int, PtrHasher>
     (
-        131, false, new (fMemoryManager)HashPtr(), fMemoryManager
+        131, false, fMemoryManager
     );
     fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
     (
@@ -4737,7 +4737,7 @@ bool SGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
         ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
         if ((type & 0x0f) == ContentSpecNode::Any ||
             (type & 0x0f) == ContentSpecNode::Any_Other ||
-            (type & 0x0f) == ContentSpecNode::Any_NS) 
+            (type & 0x0f) == ContentSpecNode::Any_NS)
         {
             if (type == ContentSpecNode::Any_Skip ||
                 type == ContentSpecNode::Any_NS_Skip ||

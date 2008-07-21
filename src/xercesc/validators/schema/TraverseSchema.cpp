@@ -2324,7 +2324,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         if (fixedVal) {
 
             fixedVal = 0;
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue,                             
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue,
                               (name) ? name : ref);
         }
 
@@ -8725,11 +8725,10 @@ void TraverseSchema::init() {
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(4, fMemoryManager);
     fNotationRegistry = new (fMemoryManager) RefHash2KeysTableOf<XMLCh>(13, (bool) false, fMemoryManager);
     fSchemaInfoList = new (fMemoryManager) RefHash2KeysTableOf<SchemaInfo>(29, fMemoryManager);
-    fPreprocessedNodes = new (fMemoryManager) RefHashTableOf<SchemaInfo>
+    fPreprocessedNodes = new (fMemoryManager) RefHashTableOf<SchemaInfo, PtrHasher>
     (
         29
         , false
-        , new (fMemoryManager) HashPtr()
         , fMemoryManager
     );
     fLocator = new (fMemoryManager) XSDLocator();
@@ -8843,7 +8842,7 @@ void TraverseSchema::processElemDeclIC(DOMElement* const icElem,
         if (!fIC_ElementsNS) {
 
             fIC_ElementsNS = new (fMemoryManager) RefHashTableOf<ElemVector>(13, fMemoryManager);
-            fIC_NodeListNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<DOMElement*> >(29, true, new (fMemoryManager) HashPtr(), fMemoryManager);
+            fIC_NodeListNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<DOMElement*>, PtrHasher>(29, true, fMemoryManager);
         }
 
         if (fIC_ElementsNS->containsKey(fTargetNSURIString))
@@ -9175,7 +9174,7 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
 void TraverseSchema::validateAnnotations() {
 
     MemoryManager  *memMgr = fMemoryManager;
-    RefHashTableOfEnumerator<XSAnnotation> xsAnnotationEnum = RefHashTableOfEnumerator<XSAnnotation> (fSchemaGrammar->getAnnotations(), false, memMgr);
+    RefHashTableOfEnumerator<XSAnnotation, PtrHasher> xsAnnotationEnum = RefHashTableOfEnumerator<XSAnnotation, PtrHasher> (fSchemaGrammar->getAnnotations(), false, memMgr);
     XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
     XSAnnotation* nextAnnot;
 
