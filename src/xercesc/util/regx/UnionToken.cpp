@@ -69,11 +69,10 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     }
 
     Token::tokType childType = child->getTokenType();
-    unsigned int   childSize = child->size();
-
     if (childType == T_CONCAT) {
 
-        for (unsigned int i = 0; i < childSize; i++) {
+        XMLSize_t childSize = child->size();
+        for (XMLSize_t i = 0; i < childSize; i++) {
 
             addChild(child->getChild(i), tokFactory);
         }
