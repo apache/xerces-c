@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -80,7 +80,7 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
       fDOMConfiguration(0),
       fUserDataTableKeys(17, manager),
       fUserDataTable(0),
-      fCurrentBlock(0),      
+      fCurrentBlock(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fHeapAllocSize(kInitialHeapAllocSize),
@@ -90,11 +90,11 @@ DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fNormalizer(0),      
+      fNormalizer(0),
       fRanges(0),
       fNodeIterators(0),
       fMemoryManager(manager),
-      fChanges(0),      
+      fChanges(0),
       errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
@@ -117,7 +117,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDOMConfiguration(0),
       fUserDataTableKeys(17, manager),
       fUserDataTable(0),
-      fCurrentBlock(0),      
+      fCurrentBlock(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fHeapAllocSize(kInitialHeapAllocSize),
@@ -127,7 +127,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fNormalizer(0),      
+      fNormalizer(0),
       fRanges(0),
       fNodeIterators(0),
       fMemoryManager(manager),
@@ -430,8 +430,8 @@ const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *)
     return 0;
 }
 
-void* DOMDocumentImpl::evaluate(const XMLCh *, DOMNode *, const DOMXPathNSResolver *, 
-                           unsigned short, void* ) 
+void* DOMDocumentImpl::evaluate(const XMLCh *, DOMNode *, const DOMXPathNSResolver *,
+                           unsigned short, void* )
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     return 0;
@@ -724,8 +724,8 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
       }
       int p=parent->getNodeType();
       int ch = child->getNodeType();
-      return ((kidOK[p] & 1<<ch) != 0) || 
-             (p==DOMNode::DOCUMENT_NODE && ch==DOMNode::TEXT_NODE && 
+      return ((kidOK[p] & 1<<ch) != 0) ||
+             (p==DOMNode::DOCUMENT_NODE && ch==DOMNode::TEXT_NODE &&
               ((XMLString::equals(((DOMDocument*)parent)->getVersion(), XMLUni::fgVersion1_1))?
                     XMLChar1_1::isAllSpaces(child->getNodeValue(), XMLString::stringLen(child->getNodeValue())):
                     XMLChar1_0::isAllSpaces(child->getNodeValue(), XMLString::stringLen(child->getNodeValue())))
@@ -809,7 +809,7 @@ const XMLCh *  DOMDocumentImpl::getPooledString(const XMLCh *src)
 }
 
 void *         DOMDocumentImpl::allocate(size_t amount)
-{	
+{
 	//	Align the request size so that suballocated blocks
 	//	beyond this one will be maintained at the same alignment.
 	amount = XMLPlatformUtils::alignPointerForNewBlockAllocation(amount);
@@ -825,7 +825,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
 		//	Try to allocate the block
         void* newBlock;
         newBlock = fMemoryManager->allocate((sizeOfHeader + amount) * sizeof(char)); //new char[amount + sizeOfHeader];
-        
+
 		//	Link it into the list beyond current block, as current block
 		//	is still being subdivided. If there is no current block
 		//	then track that we have no bytes to further divide.
@@ -837,10 +837,11 @@ void *         DOMDocumentImpl::allocate(size_t amount)
         else
         {
             fCurrentBlock = newBlock;
+            *(void **)newBlock = 0;
             fFreePtr = 0;
             fFreeBytesRemaining = 0;
         }
-		
+
         void *retPtr = (char *)newBlock + sizeOfHeader;
         return retPtr;
     }
@@ -857,7 +858,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
         // Get a new block from the system allocator.
         void* newBlock;
         newBlock = fMemoryManager->allocate(fHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
-        
+
         *(void **)newBlock = fCurrentBlock;
         fCurrentBlock = newBlock;
         fFreePtr = (char *)newBlock + sizeOfHeader;
@@ -871,7 +872,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
     void *retPtr = fFreePtr;
     fFreePtr += amount;
     fFreeBytesRemaining -= amount;
-	
+
     return retPtr;
 }
 
@@ -990,7 +991,7 @@ DOMNode* DOMDocumentImpl::adoptNode(DOMNode*) {
 
 void DOMDocumentImpl::normalizeDocument() {
 
-    if(!fNormalizer) 
+    if(!fNormalizer)
         fNormalizer = new (fMemoryManager) DOMNormalizer(fMemoryManager);
 
     fNormalizer->normalizeDocument(this);
@@ -1370,16 +1371,16 @@ void DOMDocumentImpl::release()
 void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
 {
     DOMNode *child = object->getFirstChild();
-    
+
     while( child != 0)
     {
-            
-         DOMNamedNodeMap *attrlist=child->getAttributes(); 
-    
-         if(attrlist!=0) 
-             for(XMLSize_t i=0;i<attrlist->getLength();++i) 
-                 releaseDocNotifyUserData(attrlist->item(i)); 
-            
+
+         DOMNamedNodeMap *attrlist=child->getAttributes();
+
+         if(attrlist!=0)
+             for(XMLSize_t i=0;i<attrlist->getLength();++i)
+                 releaseDocNotifyUserData(attrlist->item(i));
+
         releaseDocNotifyUserData(child);
         child = child->getNextSibling();
     }
