@@ -157,7 +157,8 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
     // Find the content type
     char *contentType8 = 0;
     curl_easy_getinfo(fEasy, CURLINFO_CONTENT_TYPE, &contentType8);
-    fContentType = TranscodeFromStr((XMLByte*)contentType8, XMLString::stringLen(contentType8), "ISO8859-1", fMemoryManager).adopt();
+    if(contentType8)
+        fContentType = TranscodeFromStr((XMLByte*)contentType8, XMLString::stringLen(contentType8), "ISO8859-1", fMemoryManager).adopt();
 }
 
 
