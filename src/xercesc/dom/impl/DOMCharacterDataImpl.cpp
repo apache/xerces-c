@@ -47,8 +47,10 @@ DOMCharacterDataImpl(DOMDocument *doc, const XMLCh* dat, XMLSize_t len)
     fDoc = (DOMDocumentImpl*)doc;
 
     fDataBuf = fDoc->popBuffer(len+1);
+
     if (!fDataBuf)
         fDataBuf = new (fDoc) DOMBuffer(fDoc, len+15);
+
     fDataBuf->set(dat, len);
 }
 

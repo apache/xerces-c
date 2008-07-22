@@ -53,7 +53,7 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
         fAttributes = new (docImpl) DOMAttrMapImpl(this);
     }
     else {
-        fAttributes = new (docImpl) DOMAttrMapImpl(this, fDefaultAttributes);
+      fAttributes = new (docImpl) DOMAttrMapImpl(this, fDefaultAttributes);
     }
 }
 

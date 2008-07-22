@@ -72,11 +72,11 @@ public :
     // -----------------------------------------------------------------------
     //  Buffer Management
     // -----------------------------------------------------------------------
-    void append
-    (
-        const   XMLCh* const    chars
-        , const XMLSize_t       count = 0
-    );
+    void append (const XMLCh* const chars);
+    void append (const XMLCh* const chars, const XMLSize_t count);
+
+    void set (const XMLCh* const chars);
+    void set (const XMLCh* const chars, const XMLSize_t count);
 
     const XMLCh* getRawBuffer() const
     {
@@ -89,12 +89,6 @@ public :
         fIndex = 0;
         fBuffer[0] = 0;
     }
-
-    void set
-    (
-        const   XMLCh* const    chars
-        , const XMLSize_t       count = 0
-    );
 
     void chop
     (
@@ -155,6 +149,62 @@ private :
     DOMBuffer(const DOMBuffer &);
     DOMBuffer & operator = (const DOMBuffer &);
 };
+
+inline void DOMBuffer::
+append (const XMLCh* const chars)
+{
+  XMLSize_t count = XMLString::stringLen(chars);
+  if (fIndex + count >= fCapacity)
+    expandCapacity(count);
+
+  memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
+  fIndex += count;
+
+  // Keep it null terminated
+  fBuffer[fIndex] = 0;
+}
+
+inline void DOMBuffer::
+append (const XMLCh* const chars, const XMLSize_t count)
+{
+  if (fIndex + count >= fCapacity)
+    expandCapacity(count);
+
+  memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
+  fIndex += count;
+
+  // Keep it null terminated
+  fBuffer[fIndex] = 0;
+}
+
+inline void DOMBuffer::
+set (const XMLCh* const chars)
+{
+  XMLSize_t count = XMLString::stringLen(chars);
+  fIndex = 0;
+  if (count >= fCapacity)
+    expandCapacity(count);
+
+  memcpy(fBuffer, chars, count * sizeof(XMLCh));
+  fIndex = count;
+
+  // Keep it null terminated
+  fBuffer[fIndex] = 0;
+}
+
+inline void DOMBuffer::
+set (const XMLCh* const chars, const XMLSize_t count)
+{
+  fIndex = 0;
+  if (count >= fCapacity)
+    expandCapacity(count);
+
+  memcpy(fBuffer, chars, count * sizeof(XMLCh));
+  fIndex = count;
+
+  // Keep it null terminated
+  fBuffer[fIndex] = 0;
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -365,7 +365,6 @@ void XSDDOMParser::startElement( const XMLElementDecl&       elemDecl
     }
 
     fCurrentParent->appendChild(elem);
-    fNodeStack->push(fCurrentParent);
     fCurrentParent = elem;
     fCurrentNode = elem;
     fWithinElement = true;
@@ -402,12 +401,13 @@ void XSDDOMParser::endElement( const XMLElementDecl& elemDecl
         }
     }
 
-	fDepth--;
+    fDepth--;
     fCurrentNode   = fCurrentParent;
-    fCurrentParent = fNodeStack->pop();
+    fCurrentParent = fCurrentNode->getParentNode ();
 
-    // If we've hit the end of content, clear the flag
-    if (fNodeStack->empty())
+    // If we've hit the end of content, clear the flag.
+    //
+    if (fCurrentParent == fDocument)
         fWithinElement = false;
 }
 

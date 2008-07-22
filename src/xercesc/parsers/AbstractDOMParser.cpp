@@ -97,7 +97,6 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
 , fCurrentNode(0)
 , fCurrentEntity(0)
 , fDocument(0)
-, fNodeStack(0)
 , fDocumentType(0)
 , fDocumentVector(0)
 , fGrammarResolver(0)
@@ -149,7 +148,6 @@ void AbstractDOMParser::initialize()
     fScanner->setDocTypeHandler(this);
     fScanner->setURIStringPool(fURIStringPool);
 
-    fNodeStack = new (fMemoryManager) ValueStackOf<DOMNode*>(64, fMemoryManager);
     this->reset();
 }
 
@@ -161,7 +159,6 @@ void AbstractDOMParser::cleanUp()
     if (!fDocumentAdoptedByUser && fDocument)
         fDocument->release();
 
-    delete fNodeStack;
     delete fScanner;
     delete fGrammarResolver;
     // grammar pool *always* owns this
@@ -193,7 +190,6 @@ void AbstractDOMParser::reset()
     fCurrentEntity   = 0;
     fWithinElement   = false;
     fDocumentAdoptedByUser = false;
-    fNodeStack->removeAllElements();
     fInternalSubset.reset();
 }
 
@@ -834,16 +830,16 @@ void AbstractDOMParser::docPI(  const   XMLCh* const    target
 
 void AbstractDOMParser::endEntityReference(const XMLEntityDecl&)
 {
-    if (!fCreateEntityReferenceNodes) return;
+    if (!fCreateEntityReferenceNodes)
+      return;
 
     DOMEntityReferenceImpl *erImpl = 0;
 
     if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE)
         erImpl = (DOMEntityReferenceImpl *) fCurrentParent;
 
-    fCurrentParent = fNodeStack->pop();
-
     fCurrentNode   = fCurrentParent;
+    fCurrentParent = fCurrentNode->getParentNode ();
 
     if (erImpl)
         erImpl->setReadOnly(true, true);
@@ -856,17 +852,18 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
                            , const XMLCh* const)
 {
     fCurrentNode   = fCurrentParent;
-    fCurrentParent = fNodeStack->pop();
+    fCurrentParent = fCurrentNode->getParentNode ();
 
-    // If we've hit the end of content, clear the flag
-    if (fNodeStack->empty())
+    // If we've hit the end of content, clear the flag.
+    //
+    if (fCurrentParent == fDocument)
         fWithinElement = false;
 
     if(fDoXInclude && XIncludeUtils::isXIIncludeDOMNode(fCurrentNode)
         || (XIncludeUtils::isXIFallbackDOMNode(fCurrentNode) && !XMLString::equals(fCurrentParent->getNamespaceURI(), XIncludeUtils::fgXIIIncludeNamespaceURI)))
     {
     	XIncludeUtils xiu((XMLErrorReporter *) this);
-	    /* process the XInclude node, then update the fCurrentNode with the new content*/
+	    // process the XInclude node, then update the fCurrentNode with the new content
 	    if(xiu.parseDOMNodeDoingXInclude(fCurrentNode, fDocument, getScanner()->getEntityHandler()))
             fCurrentNode = fCurrentParent->getLastChild();
     }
@@ -1164,7 +1161,6 @@ void AbstractDOMParser::startElement(const XMLElementDecl&   elemDecl
     else
       fCurrentParent->appendChild (elem);
 
-    fNodeStack->push(fCurrentParent);
     fCurrentParent = elem;
     fCurrentNode = elem;
     fWithinElement = true;
@@ -1197,7 +1193,6 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 
         castToParentImpl (fCurrentParent)->appendChildFast (er);
 
-        fNodeStack->push(fCurrentParent);
         fCurrentParent = er;
         fCurrentNode = er;
 

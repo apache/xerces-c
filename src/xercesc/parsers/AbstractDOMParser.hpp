@@ -1690,9 +1690,6 @@ protected:
     //      for use in creating the DOMDocument used during parse. If this is
     //      null then the default DOMImplementation is used
     //
-    //  fNodeStack
-    //      Used to track previous parent nodes during nested element events.
-    //
     //  fParseInProgress
     //      Used to prevent multiple entrance to the parser while its doing
     //      a parse.
@@ -1747,7 +1744,6 @@ protected:
     DOMNode*                      fCurrentNode;
     DOMEntityImpl*                fCurrentEntity;
     DOMDocumentImpl*              fDocument;
-    ValueStackOf<DOMNode*>*       fNodeStack;
     DOMDocumentTypeImpl*          fDocumentType;
     RefVectorOf<DOMDocumentImpl>* fDocumentVector;
     GrammarResolver*              fGrammarResolver;

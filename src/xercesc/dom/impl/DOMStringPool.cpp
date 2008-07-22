@@ -27,10 +27,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// -----------------------------------------------------------------------
-//  DOMBuffer: Constructors
-// -----------------------------------------------------------------------
-DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
+DOMBuffer::
+DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
     fBuffer(0)
     , fIndex(0)
     , fCapacity(capacity)
@@ -42,39 +40,6 @@ DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
     // Keep it null terminated
     fBuffer[0] = XMLCh(0);
 }
-
-// ---------------------------------------------------------------------------
-//  DOMBuffer: Buffer management
-// ---------------------------------------------------------------------------
-void DOMBuffer::append(const XMLCh* const chars, const XMLSize_t count)
-{
-    XMLSize_t actualCount = count;
-    if (!count)
-        actualCount = XMLString::stringLen(chars);
-    if (fIndex + actualCount >= fCapacity)
-        expandCapacity(actualCount);
-    memcpy(&fBuffer[fIndex], chars, actualCount * sizeof(XMLCh));
-    fIndex += actualCount;
-
-    // Keep it null terminated
-    fBuffer[fIndex] = 0;
-}
-
-void DOMBuffer::set(const XMLCh* const chars, const XMLSize_t count)
-{
-    XMLSize_t actualCount = count;
-    if (!count)
-        actualCount = XMLString::stringLen(chars);
-    fIndex = 0;
-    if (fIndex + actualCount >= fCapacity)
-        expandCapacity(actualCount);
-    memcpy(fBuffer, chars, actualCount * sizeof(XMLCh));
-    fIndex = actualCount;
-
-    // Keep it null terminated
-    fBuffer[fIndex] = 0;
-}
-
 
 // ---------------------------------------------------------------------------
 //  DOMBuffer: Private helper methods

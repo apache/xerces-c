@@ -22,8 +22,6 @@
 #if !defined(XERCESC_INCLUDE_GUARD_REFHASHTABLEOF_HPP)
 #define XERCESC_INCLUDE_GUARD_REFHASHTABLEOF_HPP
 
-
-#include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
