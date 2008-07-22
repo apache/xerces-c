@@ -31,34 +31,34 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT CharToken : public Token {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	CharToken(const tokType tkType, const XMLInt32 ch
+    CharToken(const tokType tkType, const XMLInt32 ch
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~CharToken();
+    ~CharToken();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	XMLInt32 getChar() const;
+    XMLInt32 getChar() const;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Match methods
     // -----------------------------------------------------------------------
-	bool match(const XMLInt32 ch);
+    bool match(const XMLInt32 ch);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     CharToken(const CharToken&);
     CharToken& operator=(const CharToken&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
-	XMLInt32 fCharData;
+    // -----------------------------------------------------------------------
+    XMLInt32 fCharData;
 };
 
 
@@ -67,7 +67,7 @@ private:
 // ---------------------------------------------------------------------------
 inline XMLInt32 CharToken::getChar() const {
 
-	return fCharData;
+    return fCharData;
 }
 
 
@@ -76,7 +76,7 @@ inline XMLInt32 CharToken::getChar() const {
 // ---------------------------------------------------------------------------
 inline bool CharToken::match(const XMLInt32 ch){
 
-	return ch == fCharData;
+    return ch == fCharData;
 }
 
 XERCES_CPP_NAMESPACE_END

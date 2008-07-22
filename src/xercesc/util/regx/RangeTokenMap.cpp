@@ -113,7 +113,7 @@ RangeTokenMap::~RangeTokenMap() {
 //  RangeTokenMap: Getter methods
 // ---------------------------------------------------------------------------
 RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
-								    const bool complement) {
+                                    const bool complement) {
 
     if (!fTokenRegistry->containsKey(keyword))
         return 0;
@@ -145,7 +145,7 @@ RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
                     rangeTok = elemMap->getRangeToken();
                     if (rangeTok)
                     {
-                        rangeTok = (RangeToken*) RangeToken::complementRanges(rangeTok, fTokenFactory, fTokenRegistry->getMemoryManager());
+                        rangeTok = RangeToken::complementRanges(rangeTok, fTokenFactory, fTokenRegistry->getMemoryManager());
                         elemMap->setRangeToken(rangeTok , complement);
                     }
                 }
@@ -174,23 +174,23 @@ void RangeTokenMap::addRangeMap(const XMLCh* const categoryName,
 void RangeTokenMap::addKeywordMap(const XMLCh* const keyword,
                                  const XMLCh* const categoryName) {
 
-	unsigned int categId = fCategories->getId(categoryName);
+    unsigned int categId = fCategories->getId(categoryName);
 
-	if (categId == 0) {
-		ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_InvalidCategoryName, categoryName, fTokenRegistry->getMemoryManager());
-	}
+    if (categId == 0) {
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_InvalidCategoryName, categoryName, fTokenRegistry->getMemoryManager());
+    }
 
     if (fTokenRegistry->containsKey(keyword)) {
 
         RangeTokenElemMap* elemMap = fTokenRegistry->get(keyword);
 
-		if (elemMap->getCategoryId() != categId)
-			elemMap->setCategoryId(categId);
+        if (elemMap->getCategoryId() != categId)
+            elemMap->setCategoryId(categId);
 
-		return;
-	}
+        return;
+    }
 
-	fTokenRegistry->put((void*) keyword, new RangeTokenElemMap(categId));
+    fTokenRegistry->put((void*) keyword, new RangeTokenElemMap(categId));
 }
 
 // ---------------------------------------------------------------------------
@@ -199,12 +199,12 @@ void RangeTokenMap::addKeywordMap(const XMLCh* const keyword,
 void RangeTokenMap::setRangeToken(const XMLCh* const keyword,
                                   RangeToken* const tok,const bool complement) {
 
-	if (fTokenRegistry->containsKey(keyword)) {
+    if (fTokenRegistry->containsKey(keyword)) {
         fTokenRegistry->get(keyword)->setRangeToken(tok, complement);
     }
     else {
-		ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_KeywordNotFound, keyword, fTokenRegistry->getMemoryManager());
-	}
+        ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Regex_KeywordNotFound, keyword, fTokenRegistry->getMemoryManager());
+    }
 }
 
 

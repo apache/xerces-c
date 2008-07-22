@@ -46,5 +46,5 @@ ClosureToken::~ClosureToken() {
 XERCES_CPP_NAMESPACE_END
 
 /**
-  *	End of file ClosureToken.cpp
+  *    End of file ClosureToken.cpp
   */

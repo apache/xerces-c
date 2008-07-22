@@ -24,7 +24,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #if HAVE_CONFIG_H
-#	include <config.h>
+#    include <config.h>
 #endif
 
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
@@ -43,9 +43,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 unsigned short XMLUniCharacter::getType(const XMLCh ch) {
 
 #if XERCES_USE_TRANSCODER_ICU
-	return (unsigned short) u_charType(ch);
+    return (unsigned short) u_charType(ch);
 #else
-	return (unsigned short) fgUniCharsTable[ch];
+    return (unsigned short) fgUniCharsTable[ch];
 #endif
 }
 

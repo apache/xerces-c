@@ -119,7 +119,7 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     ranges[XMLUniCharacter::UNASSIGNED]->addRange(0x10000, Token::UTF16_MAX);
 
     for (int k=0; k < UNICATEGSIZE; k++) {
-        tok = (RangeToken*) RangeToken::complementRanges(ranges[k], tokFactory);
+        tok = RangeToken::complementRanges(ranges[k], tokFactory);
         // build the internal map.
         tok->createMap();
         rangeTokMap->setRangeToken(uniCategNames[k], ranges[k]);
@@ -158,13 +158,13 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsWord, tok);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsWord, tok , true);
 
     // Create assigned range
-    tok = (RangeToken*)RangeToken::complementRanges(
+    tok = RangeToken::complementRanges(
                 ranges[XMLUniCharacter::UNASSIGNED],
                 tokFactory,
                 tokFactory->getMemoryManager());
@@ -181,7 +181,7 @@ void UnicodeRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsSpace, tok);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgUniIsSpace, tok , true);

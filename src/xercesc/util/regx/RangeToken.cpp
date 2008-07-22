@@ -23,7 +23,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #if HAVE_CONFIG_H
-#	include <config.h>
+#    include <config.h>
 #endif
 
 #include <assert.h>
@@ -723,7 +723,7 @@ void RangeToken::intersectRanges(RangeToken* const tok) {
   * for RANGE: Creates complement.
   * for NRANGE: Creates the same meaning RANGE.
   */
-Token* RangeToken::complementRanges(RangeToken* const tok,
+RangeToken* RangeToken::complementRanges(RangeToken* const tok,
                                     TokenFactory* const tokFactory,
                                     MemoryManager* const manager) {
 

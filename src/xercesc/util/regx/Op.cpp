@@ -42,67 +42,43 @@ Op::Op(const Op::opType type, MemoryManager* const manager)
 // ---------------------------------------------------------------------------
 XMLSize_t Op::getSize() const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 XMLInt32 Op::getData() const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 XMLInt32 Op::getData2() const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
-    return 0; // for compilers that complain about no return value
-}
-
-int Op::getRefNo() const {
-
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::elementAt(XMLSize_t) const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
 const Op* Op::getChild() const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
-const Op* Op::getConditionFlow() const {
-
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
-    return 0; // for compilers that complain about no return value
-}
-
-const Op* Op::getYesFlow() const {
-
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
-    return 0; // for compilers that complain about no return value
-}
-
-const Op* Op::getNoFlow() const {
-
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
-    return 0; // for compilers that complain about no return value
-}
-	
 const XMLCh* Op::getLiteral() const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
-	
+    
 const Token* Op::getToken() const {
 
-	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
+    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value
 }
 
@@ -121,7 +97,7 @@ CharOp::CharOp(const Op::opType type, const XMLInt32 charData
 // ---------------------------------------------------------------------------
 XMLInt32 CharOp::getData() const {
 
-	return fCharData;
+    return fCharData;
 }
 
 // ---------------------------------------------------------------------------
@@ -138,17 +114,17 @@ UnionOp::UnionOp(const Op::opType type, const XMLSize_t size, MemoryManager* con
 // ---------------------------------------------------------------------------
 XMLSize_t UnionOp::getSize() const {
 
-	return fBranches->size();
+    return fBranches->size();
 }
 
 const Op* UnionOp::elementAt(XMLSize_t index) const {
 
-	return fBranches->elementAt(index);
+    return fBranches->elementAt(index);
 }
 
 void UnionOp::addElement(Op* const op) {
 
-	fBranches->addElement(op);
+    fBranches->addElement(op);
 }
 
 // ---------------------------------------------------------------------------
@@ -165,12 +141,12 @@ ChildOp::ChildOp(const Op::opType type, MemoryManager* const manager)
 // ---------------------------------------------------------------------------
 const Op* ChildOp::getChild() const {
 
-	return fChild;
+    return fChild;
 }
 
 void ChildOp::setChild(const Op* const child) {
 
-	fChild = child;
+    fChild = child;
 }
 
 // ---------------------------------------------------------------------------
@@ -189,12 +165,12 @@ ModifierOp::ModifierOp(const Op::opType type, const XMLInt32 v1, const XMLInt32 
 // ---------------------------------------------------------------------------
 XMLInt32 ModifierOp::getData() const {
 
-	return fVal1;
+    return fVal1;
 }
 
 XMLInt32 ModifierOp::getData2() const {
 
-	return fVal2;
+    return fVal2;
 }
 
 // ---------------------------------------------------------------------------
@@ -211,7 +187,7 @@ RangeOp::RangeOp(const Op::opType type, const Token* const token, MemoryManager*
 // ---------------------------------------------------------------------------
 const Token* RangeOp::getToken() const {
 
-	return fToken;
+    return fToken;
 }
 
 
@@ -230,44 +206,7 @@ StringOp::StringOp(const Op::opType type, const XMLCh* const literal
 // ---------------------------------------------------------------------------
 const XMLCh* StringOp::getLiteral() const {
 
-	return fLiteral;
-}
-
-// ---------------------------------------------------------------------------
-//  ConditionOp: Constructors and Destuctors
-// ---------------------------------------------------------------------------
-ConditionOp::ConditionOp(const Op::opType type, const int refNo,
-                         const Op* const condFlow, const Op* const yesFlow,
-                         const Op* const noFlow, MemoryManager* const manager)
-    : Op (type, manager)
-      , fRefNo(refNo)
-      , fConditionOp(condFlow)
-      , fYesOp(yesFlow)
-      , fNoOp(noFlow) {
-
-}
-
-// ---------------------------------------------------------------------------
-//  ConditionOp: Getter methods
-// ---------------------------------------------------------------------------
-int ConditionOp::getRefNo() const {
-	
-	return fRefNo;
-}
-
-const Op* ConditionOp::getConditionFlow() const {
-
-	return fConditionOp;
-}
-
-const Op* ConditionOp::getYesFlow() const {
-
-	return fYesOp;
-}
-
-const Op* ConditionOp::getNoFlow() const {
-
-	return fNoOp;
+    return fLiteral;
 }
 
 XERCES_CPP_NAMESPACE_END

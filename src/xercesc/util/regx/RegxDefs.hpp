@@ -73,7 +73,7 @@ static const XMLCh fgXMLNameChar[] =
 {
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_i, chLatin_s, chLatin_N,
     chLatin_a, chLatin_m, chLatin_e, chLatin_C, chLatin_h, chLatin_a,
-	chLatin_r, chNull
+    chLatin_r, chNull
 };
 
 static const XMLCh fgXMLInitialNameChar[] =
@@ -166,7 +166,7 @@ static const XMLCh fgUniIsPunct[] =
 
 static const XMLCh fgUniIsSpace[] =
 {
-	chLatin_I, chLatin_s, chLatin_S, chLatin_p, chLatin_a, chLatin_c,
+    chLatin_I, chLatin_s, chLatin_S, chLatin_p, chLatin_a, chLatin_c,
     chLatin_e, chNull
 };
 

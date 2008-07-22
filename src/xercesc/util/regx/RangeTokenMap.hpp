@@ -48,14 +48,14 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	unsigned int getCategoryId() const;
-	RangeToken*  getRangeToken(const bool complement = false) const;
+    unsigned int getCategoryId() const;
+    RangeToken*  getRangeToken(const bool complement = false) const;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-	void setRangeToken(RangeToken* const tok, const bool complement = false);
-	void setCategoryId(const unsigned int categId);
+    void setRangeToken(RangeToken* const tok, const bool complement = false);
+    void setCategoryId(const unsigned int categId);
 
 private:
     // -----------------------------------------------------------------------
@@ -86,7 +86,7 @@ public:
     // -----------------------------------------------------------------------
     //  Instance methods
     // -----------------------------------------------------------------------
-	static RangeTokenMap* instance();
+    static RangeTokenMap* instance();
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -118,10 +118,10 @@ protected:
 
      RefHashTableOf<RangeTokenElemMap>* getTokenRegistry() const;
      RefHashTableOf<RangeFactory>* getRangeMap() const;
-	 XMLStringPool* getCategories() const;
+     XMLStringPool* getCategories() const;
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeTokenMap(const RangeTokenMap&);
@@ -137,7 +137,7 @@ private:
     void initializeRegistry();
     void buildTokenRanges();
     void cleanUp();
-	friend class TokenFactory;
+    friend class TokenFactory;
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -180,7 +180,7 @@ inline unsigned int RangeTokenElemMap::getCategoryId() const {
 
 inline RangeToken* RangeTokenElemMap::getRangeToken(const bool complement) const {
 
-	return complement ? fNRange : fRange;
+    return complement ? fNRange : fRange;
 }
 
 // ---------------------------------------------------------------------------
@@ -196,7 +196,7 @@ inline void RangeTokenElemMap::setRangeToken(RangeToken* const tok,
 
     if (complement)
         fNRange = tok;
-	else
+    else
         fRange = tok;
 }
 
@@ -228,5 +228,5 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 /**
-  *	End file RangeToken.hpp
+  *    End file RangeToken.hpp
   */

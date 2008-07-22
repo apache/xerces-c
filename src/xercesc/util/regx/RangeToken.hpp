@@ -72,7 +72,7 @@ public:
     void compactRanges();
     void subtractRanges(RangeToken* const tok);
     void intersectRanges(RangeToken* const tok);
-    static Token* complementRanges(RangeToken* const tok,
+    static RangeToken* complementRanges(RangeToken* const tok,
                                    TokenFactory* const tokFactory,
                                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 

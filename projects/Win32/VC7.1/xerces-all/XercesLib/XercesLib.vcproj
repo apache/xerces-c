@@ -1169,22 +1169,10 @@
 					RelativePath="..\..\..\..\..\src\xercesc\util\regx\ConcatToken.hpp">
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\regx\ConditionToken.cpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\regx\ConditionToken.hpp">
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\regx\Match.cpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\regx\Match.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\regx\ModifierToken.cpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\regx\ModifierToken.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\regx\Op.cpp">

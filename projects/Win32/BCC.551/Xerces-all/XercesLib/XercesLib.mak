@@ -18,9 +18,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\CharToken.obj \
     $(TARGETPATH)\obj\ClosureToken.obj \
     $(TARGETPATH)\obj\ConcatToken.obj \
-    $(TARGETPATH)\obj\ConditionToken.obj \
     $(TARGETPATH)\obj\Match.obj \
-    $(TARGETPATH)\obj\ModifierToken.obj \
     $(TARGETPATH)\obj\Op.obj \
     $(TARGETPATH)\obj\OpFactory.obj \
     $(TARGETPATH)\obj\ParenToken.obj \

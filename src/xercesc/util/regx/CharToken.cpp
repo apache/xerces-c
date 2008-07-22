@@ -44,5 +44,5 @@ CharToken::~CharToken() {
 XERCES_CPP_NAMESPACE_END
 
 /**
-  *	End of file CharToken.cpp
+  *    End of file CharToken.cpp
   */

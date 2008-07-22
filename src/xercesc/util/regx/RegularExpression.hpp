@@ -31,8 +31,6 @@
 #include <xercesc/util/regx/Op.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/BMPattern.hpp>
-#include <xercesc/util/regx/ModifierToken.hpp>
-#include <xercesc/util/regx/ConditionToken.hpp>
 #include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/regx/RegxUtil.hpp>
 
@@ -45,50 +43,132 @@ class RangeToken;
 class Match;
 class RegxParser;
 
+/**
+ * The RegularExpression class represents a parsed executable regular expression.
+ * This class is thread safe. Two similar regular expression syntaxes are
+ * supported:
+ *
+ * <ol>
+ * <li><a href="http://www.w3.org/TR/xpath-functions/#regex-syntax">The XPath 2.0 / XQuery regular expression syntax.</a>
+ * <li><a href="http://www.w3.org/TR/xmlschema-2/#regexs">The XML Schema regular expression syntax.</a></li>
+ * </ol>
+ * 
+ * XPath 2.0 regular expression syntax is used unless the "X" option is specified during construction.
+ *
+ * Options can be specified during construction to change the way that the regular expression is handled.
+ * Options are specified by a string consisting of any number of the following characters:
+ *
+ * <table border='1'>
+ * <tr>
+ * <th>Character</th>
+ * <th>Meaning</th>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>i</td>
+ * <td valign='top' rowspan='1' colspan='1'><a href="http://www.w3.org/TR/xpath-functions/#flags">
+ * Ignore case</a> when matching the regular expression.</td>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>m</td>
+ * <td valign='top' rowspan='1' colspan='1'><a href="http://www.w3.org/TR/xpath-functions/#flags">
+ * Multi-line mode</a>. The meta characters "^" and "$" will match the beginning and end of lines.</td>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>s</td>
+ * <td valign='top' rowspan='1' colspan='1'><a href="http://www.w3.org/TR/xpath-functions/#flags">
+ * Single-line mode</a>. The meta character "." will match a newline character.</td>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>x</td>
+ * <td valign='top' rowspan='1' colspan='1'>Allow extended comments.</td>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>F</td>
+ * <td valign='top' rowspan='1' colspan='1'>Prohibit the fixed string optimization.</td>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>H</td>
+ * <td valign='top' rowspan='1' colspan='1'>Prohibit the head character optimization.</td>
+ * </tr>
+ * <tr>
+ * <td valign='top' rowspan='1' colspan='1'>X</td>
+ * <td valign='top' rowspan='1' colspan='1'>Parse the regular expression according to the
+ * <a href="http://www.w3.org/TR/xmlschema-2/#regexs">XML Schema regular expression syntax</a>.</td>
+ * </tr>
+ * </table>
+ */
 class XMLUTIL_EXPORT RegularExpression : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
+
+    /** @name Constructors and destructor */
+    //@{
+
+    /** Parses the given regular expression.
+      *
+      * @param pattern the regular expression in the local code page
+      * @param manager the memory manager to use
+      */
     RegularExpression
     (
         const char* const pattern
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
+    /** Parses the given regular expression using the options specified.
+      *
+      * @param pattern the regular expression in the local code page
+      * @param options the options string in the local code page
+      * @param manager the memory manager to use
+      */
     RegularExpression
     (
         const char* const pattern
         , const char* const options
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
+    /** Parses the given regular expression.
+      *
+      * @param pattern the regular expression
+      * @param manager the memory manager to use
+      */
     RegularExpression
     (
         const XMLCh* const pattern
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
+    /** Parses the given regular expression using the options specified.
+      *
+      * @param pattern the regular expression
+      * @param options the options string
+      * @param manager the memory manager to use
+      */
     RegularExpression
     (
         const XMLCh* const pattern
         , const XMLCh* const options
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
     virtual ~RegularExpression();
+
+    //@}
 
     // -----------------------------------------------------------------------
     //  Public Constants
     // -----------------------------------------------------------------------
-    static const unsigned int   MARK_PARENS;
     static const unsigned int   IGNORE_CASE;
     static const unsigned int   SINGLE_LINE;
     static const unsigned int   MULTIPLE_LINE;
     static const unsigned int   EXTENDED_COMMENT;
-    static const unsigned int   USE_UNICODE_CATEGORY;
-    static const unsigned int   UNICODE_WORD_BOUNDARY;
     static const unsigned int   PROHIBIT_HEAD_CHARACTER_OPTIMIZATION;
     static const unsigned int   PROHIBIT_FIXED_STRING_OPTIMIZATION;
     static const unsigned int   XMLSCHEMA_MODE;
-    static const unsigned int   SPECIAL_COMMA;
     typedef enum
     {
         wordTypeIgnore = 0,
@@ -99,73 +179,296 @@ public:
     // -----------------------------------------------------------------------
     //  Public Helper methods
     // -----------------------------------------------------------------------
+
+    /** @name Public helper methods */
+    //@{
+
     static int getOptionValue(const XMLCh ch);
+    static bool isSet(const int options, const int flag);
+
+    //@}
 
     // -----------------------------------------------------------------------
     //  Matching methods
     // -----------------------------------------------------------------------
+
+    /** @name Matching methods */
+    //@{
+
+    /** Tries to match the given null terminated string against the regular expression, returning
+      * true if successful.
+      *
+      * @param matchString the string to match in the local code page
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const char* const matchString,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given string between the specified start and end offsets
+      * against the regular expression, returning true if successful.
+      *
+      * @param matchString the string to match in the local code page
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const char* const matchString, const XMLSize_t start, const XMLSize_t end,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given null terminated string against the regular expression, returning
+      * true if successful.
+      *
+      * @param matchString the string to match in the local code page
+      * @param pMatch      a Match object, which will be populated with the offsets for the
+      * regular expression match and sub-matches.
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const char* const matchString, Match* const pMatch,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given string between the specified start and end offsets
+      * against the regular expression, returning true if successful.
+      *
+      * @param matchString the string to match in the local code page
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param pMatch      a Match object, which will be populated with the offsets for the
+      * regular expression match and sub-matches.
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const char* const matchString, const XMLSize_t start, const XMLSize_t end,
                  Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
+    /** Tries to match the given null terminated string against the regular expression, returning
+      * true if successful.
+      *
+      * @param matchString the string to match
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const XMLCh* const matchString,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given string between the specified start and end offsets
+      * against the regular expression, returning true if successful.
+      *
+      * @param matchString the string to match
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given null terminated string against the regular expression, returning
+      * true if successful.
+      *
+      * @param matchString the string to match
+      * @param pMatch      a Match object, which will be populated with the offsets for the
+      * regular expression match and sub-matches.
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const XMLCh* const matchString, Match* const pMatch,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given string between the specified start and end offsets
+      * against the regular expression, returning true if successful.
+      *
+      * @param matchString the string to match
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param pMatch      a Match object, which will be populated with the offsets for the
+      * regular expression match and sub-matches.
+      * @param manager     the memory manager to use
+      *
+      * @return Whether the string matched the regular expression or not.
+      */
     bool matches(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
                  Match* const pMatch, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tries to match the given string between the specified start and end offsets
+      * against the regular expression. The subEx vector is populated with the details
+      * for every non-overlapping occurrence of a match in the string.
+      *
+      * @param matchString the string to match
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param subEx       a RefVectorOf Match objects, populated with the offsets for the
+      * regular expression match and sub-matches.
+      * @param manager     the memory manager to use
+      */
     void allMatches(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
                     RefVectorOf<Match> *subEx, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    //@}
 
     // -----------------------------------------------------------------------
     //  Tokenize methods
     // -----------------------------------------------------------------------
     // Note: The caller owns the string vector that is returned, and is responsible
     //       for deleting it.
+
+    /** @name Tokenize methods */
+    //@{
+
+    /** Tokenizes the null terminated string according to the regular expression, returning
+      * the parts of the string that do not match the regular expression.
+      *
+      * @param matchString the string to match in the local code page
+      * @param manager     the memory manager to use
+      *
+      * @return A RefArrayVectorOf sub-strings that do not match the regular expression allocated using the
+      * given MemoryManager. The caller owns the string vector that is returned, and is responsible for
+      * deleting it.
+      */
     RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString,
                                       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tokenizes the string between the specified start and end offsets according to the regular
+      * expression, returning the parts of the string that do not match the regular expression.
+      *
+      * @param matchString the string to match in the local code page
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param manager     the memory manager to use
+      *
+      * @return A RefArrayVectorOf sub-strings that do not match the regular expression allocated using the
+      * given MemoryManager. The caller owns the string vector that is returned, and is responsible for
+      * deleting it.
+      */
     RefArrayVectorOf<XMLCh> *tokenize(const char* const matchString, const XMLSize_t start, const XMLSize_t end,
                                       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
+    /** Tokenizes the null terminated string according to the regular expression, returning
+      * the parts of the string that do not match the regular expression.
+      *
+      * @param matchString the string to match
+      * @param manager     the memory manager to use
+      *
+      * @return A RefArrayVectorOf sub-strings that do not match the regular expression allocated using the
+      * given MemoryManager. The caller owns the string vector that is returned, and is responsible for
+      * deleting it.
+      */
     RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString,
                                       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Tokenizes the string between the specified start and end offsets according to the regular
+      * expression, returning the parts of the string that do not match the regular expression.
+      *
+      * @param matchString the string to match
+      * @param start       the offset of the start of the string
+      * @param end         the offset of the end of the string
+      * @param manager     the memory manager to use
+      *
+      * @return A RefArrayVectorOf sub-strings that do not match the regular expression allocated using the
+      * given MemoryManager. The caller owns the string vector that is returned, and is responsible for
+      * deleting it.
+      */
     RefArrayVectorOf<XMLCh> *tokenize(const XMLCh* const matchString, const XMLSize_t start, const XMLSize_t end,
                                       MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    //@}
 
     // -----------------------------------------------------------------------
     //  Replace methods
     // -----------------------------------------------------------------------
     // Note: The caller owns the XMLCh* that is returned, and is responsible for
     //       deleting it.
+
+    /** @name Replace methods */
+    //@{
+
+    /** Performs a search and replace on the given null terminated string, replacing
+      * any substring that matches the regular expression with a string derived from
+      * the <a href="http://www.w3.org/TR/xpath-functions/#func-replace">replacement string</a>.
+      *
+      * @param matchString   the string to match in the local code page
+      * @param replaceString the string to replace in the local code page
+      * @param manager       the memory manager to use
+      *
+      * @return The resulting string allocated using the given MemoryManager. The caller owns the string
+      * that is returned, and is responsible for deleting it.
+      */
     XMLCh *replace(const char* const matchString, const char* const replaceString,
                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Performs a search and replace on the given string between the specified start and end offsets, replacing
+      * any substring that matches the regular expression with a string derived from
+      * the <a href="http://www.w3.org/TR/xpath-functions/#func-replace">replacement string</a>.
+      *
+      * @param matchString   the string to match in the local code page
+      * @param replaceString the string to replace in the local code page
+      * @param start         the offset of the start of the string
+      * @param end           the offset of the end of the string
+      * @param manager       the memory manager to use
+      *
+      * @return The resulting string allocated using the given MemoryManager. The caller owns the string
+      * that is returned, and is responsible for deleting it.
+      */
     XMLCh *replace(const char* const matchString, const char* const replaceString,
                    const XMLSize_t start, const XMLSize_t end,
                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
 
+    /** Performs a search and replace on the given null terminated string, replacing
+      * any substring that matches the regular expression with a string derived from
+      * the <a href="http://www.w3.org/TR/xpath-functions/#func-replace">replacement string</a>.
+      *
+      * @param matchString   the string to match
+      * @param replaceString the string to replace
+      * @param manager       the memory manager to use
+      *
+      * @return The resulting string allocated using the given MemoryManager. The caller owns the string
+      * that is returned, and is responsible for deleting it.
+      */
     XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString,
                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    /** Performs a search and replace on the given string between the specified start and end offsets, replacing
+      * any substring that matches the regular expression with a string derived from
+      * the <a href="http://www.w3.org/TR/xpath-functions/#func-replace">replacement string</a>.
+      *
+      * @param matchString   the string to match
+      * @param replaceString the string to replace
+      * @param start         the offset of the start of the string
+      * @param end           the offset of the end of the string
+      * @param manager       the memory manager to use
+      *
+      * @return The resulting string allocated using the given MemoryManager. The caller owns the string
+      * that is returned, and is responsible for deleting it.
+      */
     XMLCh *replace(const XMLCh* const matchString, const XMLCh* const replaceString,
                    const XMLSize_t start, const XMLSize_t end,
                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) const;
+
+    //@}
 
     // -----------------------------------------------------------------------
     //  Static initialize and cleanup methods
     // -----------------------------------------------------------------------
+
+    /** @name Static initilize and cleanup methods */
+    //@{
+
     static void
     staticInitialize(MemoryManager*  memoryManager);
 
     static void
     staticCleanup();
 
-    static bool isSet(const int options, const int flag);
+    //@}
 
 protected:
     virtual RegxParser* getRegexParser(const int options, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -180,9 +483,8 @@ protected:
     // -----------------------------------------------------------------------
     void setPattern(const XMLCh* const pattern, const XMLCh* const options=0);
 
-private:
     // -----------------------------------------------------------------------
-    //  Private data types
+    //  Protected data types
     // -----------------------------------------------------------------------
     class XMLUTIL_EXPORT Context : public XMemory
     {
@@ -196,7 +498,7 @@ private:
             void reset(const XMLCh* const string, const XMLSize_t stringLen,
                        const XMLSize_t start, const XMLSize_t limit, const int noClosures,
                        const unsigned int options);
-            bool nextCh(XMLInt32& ch, XMLSize_t& offset, const short direction);
+            bool nextCh(XMLInt32& ch, XMLSize_t& offset);
 
             bool           fAdoptMatch;
             XMLSize_t      fStart;
@@ -218,48 +520,33 @@ private:
     RegularExpression& operator=(const RegularExpression&);
 
     // -----------------------------------------------------------------------
-    //  Private Helper methods
+    //  Protected Helper methods
     // -----------------------------------------------------------------------
     void prepare();
     int parseOptions(const XMLCh* const options);
-    wordType getWordType(Context* const context, const XMLCh* const target,
-                         const XMLSize_t begin, const XMLSize_t end,
-                         const XMLSize_t offset) const;
-    wordType getCharType(Context* const context, const XMLCh ch) const;
-    wordType getPreviousWordType(Context* const context, const XMLCh* const target,
-                                 const XMLSize_t start, const XMLSize_t end,
-                                 XMLSize_t offset) const;
 
     /**
       *    Matching helpers
       */
-    int match(Context* const context, const Op* const operations, XMLSize_t offset,
-              const short direction) const;
+    int match(Context* const context, const Op* const operations, XMLSize_t offset) const;
     bool matchIgnoreCase(const XMLInt32 ch1, const XMLInt32 ch2) const;
 
     /**
       *    Helper methods used by match(Context* ...)
       */
     bool matchChar(Context* const context, const XMLInt32 ch, XMLSize_t& offset,
-                   const short direction, const bool ignoreCase) const;
-    bool matchDot(Context* const context, XMLSize_t& offset, const short direction) const;
+                   const bool ignoreCase) const;
+    bool matchDot(Context* const context, XMLSize_t& offset) const;
     bool matchRange(Context* const context, const Op* const op,
-                    XMLSize_t& offset, const short direction, const bool ignoreCase) const;
+                    XMLSize_t& offset, const bool ignoreCase) const;
     bool matchAnchor(Context* const context, const XMLInt32 ch,
                      const XMLSize_t offset) const;
     bool matchBackReference(Context* const context, const XMLInt32 ch,
-                            XMLSize_t& offset, const short direction,
-                            const bool ignoreCase) const;
+                            XMLSize_t& offset, const bool ignoreCase) const;
     bool matchString(Context* const context, const XMLCh* const literal,
-                     XMLSize_t& offset, const short direction, const bool ignoreCase) const;
-    int  matchUnion(Context* const context, const Op* const op, XMLSize_t offset,
-                    const short direction) const;
-    int matchCapture(Context* const context, const Op* const op, XMLSize_t offset,
-                     const short direction) const;
-    bool matchCondition(Context* const context, const Op* const op, XMLSize_t offset,
-                        const short direction) const;
-    int matchModifier(Context* const context, const Op* const op, XMLSize_t offset,
-                      const short direction) const;
+                     XMLSize_t& offset, const bool ignoreCase) const;
+    int  matchUnion(Context* const context, const Op* const op, XMLSize_t offset) const;
+    int matchCapture(Context* const context, const Op* const op, XMLSize_t offset) const;
 
     /**
      *    Replace helpers
@@ -282,12 +569,8 @@ private:
                       const Token::tokType tkType);
     Op* compileUnion(const Token* const token, Op* const next,
                      const bool reverse);
-    Op* compileCondition(const Token* const token, Op* const next,
-                         const bool reverse);
     Op* compileParenthesis(const Token* const token, Op* const next,
                            const bool reverse);
-    Op* compileLook(const Token* const token, const Op* const next,
-                    const bool reverse, const Token::tokType tkType);
     Op* compileConcat(const Token* const token, Op* const next,
                       const bool reverse);
     Op* compileClosure(const Token* const token, Op* const next,
@@ -296,7 +579,7 @@ private:
     bool doTokenOverlap(const Op* op, Token* token);
 
     // -----------------------------------------------------------------------
-    //  Private data members
+    //  Protected data members
     // -----------------------------------------------------------------------
     bool               fHasBackReferences;
     bool               fFixedStringOnly;
@@ -343,43 +626,6 @@ private:
   inline bool RegularExpression::isSet(const int options, const int flag) {
 
       return (options & flag) == flag;
-  }
-
-  inline Op* RegularExpression::compileLook(const Token* const token,
-                                            const Op* const next,
-                                            const bool reverse,
-                                            const Token::tokType tkType) {
-
-      Op*    ret = 0;
-      Op*    result = compile(token->getChild(0), 0, reverse);
-
-      switch(tkType) {
-      case Token::T_LOOKAHEAD:
-          ret = fOpFactory.createLookOp(Op::O_LOOKAHEAD, next, result);
-          break;
-      case Token::T_NEGATIVELOOKAHEAD:
-          ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKAHEAD, next, result);
-          break;
-      case Token::T_LOOKBEHIND:
-          ret = fOpFactory.createLookOp(Op::O_LOOKBEHIND, next, result);
-          break;
-      case Token::T_NEGATIVELOOKBEHIND:
-          ret = fOpFactory.createLookOp(Op::O_NEGATIVELOOKBEHIND, next, result);
-          break;
-      case Token::T_INDEPENDENT:
-          ret = fOpFactory.createIndependentOp(next, result);
-          break;
-      case Token::T_MODIFIERGROUP:
-          ret = fOpFactory.createModifierOp(next, result,
-                                     ((const ModifierToken *) token)->getOptions(),
-                                     ((const ModifierToken *) token)->getOptionsMask());
-          break;
-      default:
-          break;
-      }
-
-
-      return ret;
   }
 
   inline Op* RegularExpression::compileSingle(const Token* const token,
@@ -435,22 +681,6 @@ private:
       }
 
       return uniOp;
-  }
-
-
-  inline Op* RegularExpression::compileCondition(const Token* const token,
-                                                 Op* const next,
-                                                 const bool reverse) {
-
-      Token* condTok = ((const ConditionToken*) token)->getConditionToken();
-      Token* yesTok  = token->getChild(0);
-      Token* noTok   = token->getChild(1);
-      int    refNo   = token->getReferenceNo();
-      Op*    condOp  = (condTok == 0) ? 0 : compile(condTok, 0, reverse);
-      Op*    yesOp   = compile(yesTok, next, reverse);
-      Op*    noOp    = (noTok == 0) ? 0 : compile(noTok, next, reverse);
-
-      return fOpFactory.createConditionOp(next, refNo, condOp, yesOp, noOp);
   }
 
 
@@ -569,49 +799,6 @@ private:
           for (int i=0; i< min; i++) {
               ret = compile(childTok, ret, reverse);
           }
-      }
-
-      return ret;
-  }
-
-  inline int RegularExpression::matchModifier(Context* const context,
-                                              const Op* const op, XMLSize_t offset,
-                                              const short direction) const
-  {
-      int saveOptions = fOptions;
-      context->fOptions |= (int) op->getData();
-      context->fOptions &= (int) ~op->getData2();
-
-      int ret = match(context, op->getChild(), offset, direction);
-
-      context->fOptions = saveOptions;
-
-      return ret;
-  }
-
-  inline RegularExpression::wordType RegularExpression::getWordType(Context* const context
-                                                                   , const XMLCh* const target
-                                                                   , const XMLSize_t begin
-                                                                   , const XMLSize_t end
-                                                                   , const XMLSize_t offset) const
-  {
-      if (offset < begin || offset >= end)
-          return wordTypeOther;
-
-      return getCharType(context, target[offset]);
-  }
-
-  inline
-  RegularExpression::wordType RegularExpression::getPreviousWordType(Context* const context
-                                                                    , const XMLCh* const target
-                                                                    , const XMLSize_t start
-                                                                    , const XMLSize_t end
-                                                                    , XMLSize_t offset) const
-  {
-      wordType ret = getWordType(context, target, start, end, --offset);
-
-      while (ret == wordTypeIgnore) {
-          ret = getWordType(context, target, start, end, --offset);
       }
 
       return ret;

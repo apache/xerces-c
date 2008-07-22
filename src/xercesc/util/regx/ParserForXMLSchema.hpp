@@ -51,49 +51,22 @@ protected:
     // -----------------------------------------------------------------------
     //  Parsing/Processing methods
     // -----------------------------------------------------------------------
-    XMLInt32    processCInCharacterClass(RangeToken* const tok,
-                                         const XMLInt32 ch);
     Token*      processCaret();
     Token*      processDollar();
-	Token*		processLook(const Token::tokType tkType);
-    Token*      processBacksolidus_A();
-    Token*      processBacksolidus_Z();
-    Token*      processBacksolidus_z();
-    Token*      processBacksolidus_b();
-    Token*      processBacksolidus_B();
-    Token*      processBacksolidus_c();
-    Token*      processBacksolidus_C();
-    Token*      processBacksolidus_i();
-    Token*      processBacksolidus_I();
-    Token*      processBacksolidus_g();
-    Token*      processBacksolidus_X();
-    Token*      processBacksolidus_lt();
-    Token*      processBacksolidus_gt();
     Token*      processStar(Token* const tok);
     Token*      processPlus(Token* const tok);
-	Token*      processQuestion(Token* const tok);
-	Token*      processParen();
-	Token*      processParen2();
-	Token*      processCondition();
-	Token*      processModifiers();
-	Token*      processIndependent();
-	Token*      processBackReference();
-	RangeToken* parseCharacterClass(const bool useNRange);
-	RangeToken* parseSetOperations();
-
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-	Token* getTokenForShorthand(const XMLInt32 ch);
+    Token*      processQuestion(Token* const tok);
+    Token*      processParen();
+    Token*      processBackReference();
 
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
     bool checkQuestion(const XMLSize_t off);
-	XMLInt32 decodeEscaped();
+    XMLInt32 decodeEscaped();
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ParserForXMLSchema(const ParserForXMLSchema&);
@@ -101,7 +74,7 @@ private:
 
     // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 };
 
 XERCES_CPP_NAMESPACE_END

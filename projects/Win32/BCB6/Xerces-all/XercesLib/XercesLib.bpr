@@ -18,9 +18,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\CharToken.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ClosureToken.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ConcatToken.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ConditionToken.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\Match.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\ModifierToken.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\Op.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\OpFactory.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ParenToken.obj
@@ -389,9 +387,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\CharToken.cpp" FORMNAME="" UNITNAME="CharToken" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\ClosureToken.cpp" FORMNAME="" UNITNAME="ClosureToken" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\ConcatToken.cpp" FORMNAME="" UNITNAME="ConcatToken" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\ConditionToken.cpp" FORMNAME="" UNITNAME="ConditionToken" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\Match.cpp" FORMNAME="" UNITNAME="Match" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\ModifierToken.cpp" FORMNAME="" UNITNAME="ModifierToken" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\Op.cpp" FORMNAME="" UNITNAME="Op" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\OpFactory.cpp" FORMNAME="" UNITNAME="OpFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\regx\ParenToken.cpp" FORMNAME="" UNITNAME="ParenToken" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

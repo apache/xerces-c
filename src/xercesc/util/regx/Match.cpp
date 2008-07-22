@@ -60,7 +60,7 @@ Match& Match::operator=(const Match& toAssign) {
 
 Match::~Match() {
 
-	cleanUp();
+    cleanUp();
 }
 
 // ---------------------------------------------------------------------------
@@ -68,21 +68,21 @@ Match::~Match() {
 // ---------------------------------------------------------------------------
 void Match::setNoGroups(const int n) {
 
-	if (fNoGroups <= 0 || fPositionsSize < n) {
+    if (fNoGroups <= 0 || fPositionsSize < n) {
 
-		cleanUp();
-		fPositionsSize = n;
-		fStartPositions = (int*) fMemoryManager->allocate(n * sizeof(int));//new int[n];
-		fEndPositions = (int*) fMemoryManager->allocate(n * sizeof(int));//new int[n];
-	}
+        cleanUp();
+        fPositionsSize = n;
+        fStartPositions = (int*) fMemoryManager->allocate(n * sizeof(int));//new int[n];
+        fEndPositions = (int*) fMemoryManager->allocate(n * sizeof(int));//new int[n];
+    }
 
-	fNoGroups = n;
+    fNoGroups = n;
 
-	for (int i=0; i< fPositionsSize; i++) {
+    for (int i=0; i< fPositionsSize; i++) {
 
-		fStartPositions[i] = -1;
-		fEndPositions[i] = -1;
-	}
+        fStartPositions[i] = -1;
+        fEndPositions[i] = -1;
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -106,11 +106,11 @@ void Match::initialize(const Match &toCopy){
 
 void Match::cleanUp() {
 
-	fMemoryManager->deallocate(fStartPositions);//delete [] fStartPositions;
-	fMemoryManager->deallocate(fEndPositions);//delete [] fEndPositions;
+    fMemoryManager->deallocate(fStartPositions);//delete [] fStartPositions;
+    fMemoryManager->deallocate(fEndPositions);//delete [] fEndPositions;
 
-	fStartPositions = 0;
-	fEndPositions = 0;
+    fStartPositions = 0;
+    fEndPositions = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

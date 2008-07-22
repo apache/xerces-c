@@ -32,38 +32,38 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT StringToken : public Token {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	StringToken(const tokType tkType,
+    StringToken(const tokType tkType,
                 const XMLCh* const literal,
                 const int refNo,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~StringToken();
+    ~StringToken();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	int getReferenceNo() const;
-	const XMLCh* getString() const;
+    int getReferenceNo() const;
+    const XMLCh* getString() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-	void setString(const XMLCh* const literal);
+    void setString(const XMLCh* const literal);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     StringToken(const StringToken&);
     StringToken& operator=(const StringToken&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
-	int    fRefNo;
-	XMLCh* fString;
+    // -----------------------------------------------------------------------
+    int    fRefNo;
+    XMLCh* fString;
     MemoryManager* fMemoryManager;
 };
 
@@ -73,12 +73,12 @@ private:
 // ---------------------------------------------------------------------------
 inline int StringToken::getReferenceNo() const {
 
-	return fRefNo;
+    return fRefNo;
 }
 
 inline const XMLCh* StringToken::getString() const {
 
-	return fString;
+    return fString;
 }
 
 // ---------------------------------------------------------------------------
@@ -86,9 +86,9 @@ inline const XMLCh* StringToken::getString() const {
 // ---------------------------------------------------------------------------
 inline void StringToken::setString(const XMLCh* const literal) {
 
-	fMemoryManager->deallocate(fString);//delete [] fString;
+    fMemoryManager->deallocate(fString);//delete [] fString;
     fString = 0;
-	fString = XMLString::replicate(literal, fMemoryManager);
+    fString = XMLString::replicate(literal, fMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

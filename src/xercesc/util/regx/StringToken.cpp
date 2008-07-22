@@ -44,11 +44,11 @@ StringToken::StringToken(const Token::tokType tkType,
 
 StringToken::~StringToken() {
 
-	fMemoryManager->deallocate(fString);//delete [] fString;
+    fMemoryManager->deallocate(fString);//delete [] fString;
 }
 
 XERCES_CPP_NAMESPACE_END
 
 /**
-  *	End of file StringToken.cpp
+  *    End of file StringToken.cpp
   */

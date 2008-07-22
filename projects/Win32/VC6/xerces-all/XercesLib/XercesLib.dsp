@@ -270,27 +270,11 @@ SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConcatToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConditionToken.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConditionToken.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\Match.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\Match.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\regx\ModifierToken.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\regx\ModifierToken.hpp
 # End Source File
 # Begin Source File
 

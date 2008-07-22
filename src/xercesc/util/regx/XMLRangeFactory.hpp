@@ -41,16 +41,16 @@ public:
     // -----------------------------------------------------------------------
     //  Initialization methods
     // -----------------------------------------------------------------------
-	void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
+    void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
 
 protected:
     // -----------------------------------------------------------------------
     //  Protected Helper methods
     // -----------------------------------------------------------------------
-	void buildRanges(RangeTokenMap *rangeTokMap = 0);
+    void buildRanges(RangeTokenMap *rangeTokMap = 0);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLRangeFactory(const XMLRangeFactory&);
@@ -62,5 +62,5 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 /**
-  *	End file XMLRangeFactory.hpp
+  *    End file XMLRangeFactory.hpp
   */

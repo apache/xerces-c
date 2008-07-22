@@ -37,9 +37,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class RangeToken;
 class CharToken;
 class ClosureToken;
-class ConditionToken;
 class ConcatToken;
-class ModifierToken;
 class ParenToken;
 class StringToken;
 class UnionToken;
@@ -48,7 +46,7 @@ class XMLUTIL_EXPORT TokenFactory : public XMemory
 {
 
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Constructors and destructors
     // -----------------------------------------------------------------------
     TokenFactory(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -59,7 +57,6 @@ public:
     // -----------------------------------------------------------------------
     Token* createToken(const Token::tokType tkType);
 
-    ParenToken* createLook(const Token::tokType tkType, Token* const token);
     ParenToken* createParenthesis(Token* const token, const int noGroups);
     ClosureToken* createClosure(Token* const token, bool isNonGreedy = false);
     ConcatToken* createConcat(Token* const token1, Token* const token2);
@@ -68,13 +65,9 @@ public:
     CharToken* createChar(const XMLUInt32 ch, const bool isAnchor = false);
     StringToken* createBackReference(const int refNo);
     StringToken* createString(const XMLCh* const literal);
-    ModifierToken* createModifierGroup(Token* const child,
-                                       const int add, const int mask);
-    ConditionToken* createCondition(const int refNo, Token* const condition,
-                                    Token* const yesFlow, Token* const noFlow);
 
 
-	//static void printUnicode();
+    //static void printUnicode();
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -85,18 +78,8 @@ public:
      */
     RangeToken* getRange(const XMLCh* const name,const bool complement=false);
     Token* getLineBegin();
-	Token* getLineBegin2();
     Token* getLineEnd();
-    Token* getStringBegin();
-    Token* getStringEnd();
-    Token* getStringEnd2();
-    Token* getWordEdge();
-    Token* getNotWordEdge();
-    Token* getWordBegin();
-    Token* getWordEnd();
     Token* getDot();
-	Token* getCombiningCharacterSequence();
-	Token* getGraphemePattern();
     MemoryManager* getMemoryManager() const;
 
     static RangeToken* staticGetRange(const XMLCh* const name,const bool complement=false);
@@ -104,7 +87,7 @@ public:
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitTokenFactoryMutex();
+    static void reinitTokenFactoryMutex();
 
 private:
     // -----------------------------------------------------------------------
@@ -119,25 +102,15 @@ private:
     //  fRangeInitialized
     //      Indicates whether we have initialized the RangeFactory instance or
     //      not
-	//		
+    //        
     //  fToken
     //      Contains user created Token objects. Used for memory cleanup.
     // -----------------------------------------------------------------------
     RefVectorOf<Token>* fTokens;
     Token*              fEmpty;
     Token*              fLineBegin;
-    Token*              fLineBegin2;
     Token*              fLineEnd;
-    Token*              fStringBegin;
-    Token*              fStringEnd;
-    Token*              fStringEnd2;
-    Token*              fWordEdge;
-    Token*              fNotWordEdge;
-    Token*              fWordEnd;
-    Token*              fWordBegin;
     Token*              fDot;
-    Token*              fCombiningChar;
-    Token*              fGrapheme;
     MemoryManager*      fMemoryManager;
 };
 
@@ -156,6 +129,6 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 /**
-  *	End file TokenFactory
+  *    End file TokenFactory
   */
 

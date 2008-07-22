@@ -46,5 +46,5 @@ ParenToken::~ParenToken() {
 XERCES_CPP_NAMESPACE_END
 
 /**
-  *	End of file ParenToken.cpp
+  *    End of file ParenToken.cpp
   */

@@ -338,7 +338,7 @@ void BlockRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
         // Build the internal map.
         tok->createMap();
         rangeTokMap->setRangeToken(fgBlockNames[i], tok);
-        tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+        tok = RangeToken::complementRanges(tok, tokFactory);
         // Build the internal map.
         tok->createMap();
         rangeTokMap->setRangeToken(fgBlockNames[i], tok , true);
@@ -355,7 +355,7 @@ void BlockRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
     if (fKeywordsInitialized)
         return;
 
-	for (int i=0; i< BLOCKNAMESIZE; i++) {
+    for (int i=0; i< BLOCKNAMESIZE; i++) {
         rangeTokMap->addKeywordMap(fgBlockNames[i], fgBlockCategory);
     }
 

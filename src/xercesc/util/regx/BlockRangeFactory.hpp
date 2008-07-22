@@ -41,16 +41,16 @@ public:
     // -----------------------------------------------------------------------
     //  Initialization methods
     // -----------------------------------------------------------------------
-	void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
+    void initializeKeywordMap(RangeTokenMap *rangeTokMap = 0);
 
 protected:
     // -----------------------------------------------------------------------
     //  Private Helper methods
     // -----------------------------------------------------------------------
-	void buildRanges(RangeTokenMap *rangeTokMap = 0);
+    void buildRanges(RangeTokenMap *rangeTokMap = 0);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     BlockRangeFactory(const BlockRangeFactory&);
@@ -62,5 +62,5 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 /**
-  *	End file BlockRangeFactory.hpp
+  *    End file BlockRangeFactory.hpp
   */

@@ -31,31 +31,31 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ConcatToken : public Token {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ConcatToken(Token* const tok1, Token* const tok2
+    ConcatToken(Token* const tok1, Token* const tok2
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~ConcatToken();
+    ~ConcatToken();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	Token* getChild(const XMLSize_t index) const;
-	XMLSize_t size() const;
+    Token* getChild(const XMLSize_t index) const;
+    XMLSize_t size() const;
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ConcatToken(const ConcatToken&);
     ConcatToken& operator=(const ConcatToken&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
-	Token* fChild1;
-	Token* fChild2;
+    // -----------------------------------------------------------------------
+    Token* fChild1;
+    Token* fChild2;
 };
 
 
@@ -64,12 +64,12 @@ private:
 // ---------------------------------------------------------------------------
 inline XMLSize_t ConcatToken::size() const {
 
-	return 2;
+    return 2;
 }
 
 inline Token* ConcatToken::getChild(const XMLSize_t index) const {
 
-	return index == 0 ? fChild1 : fChild2;
+    return index == 0 ? fChild1 : fChild2;
 }
 
 XERCES_CPP_NAMESPACE_END

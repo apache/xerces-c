@@ -31,40 +31,40 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ClosureToken : public Token {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ClosureToken(const tokType tkType, Token* const tok
+    ClosureToken(const tokType tkType, Token* const tok
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~ClosureToken();
+    ~ClosureToken();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	XMLSize_t size() const;
-	int getMin() const;
-	int getMax() const;
-	Token* getChild(const XMLSize_t index) const;
+    XMLSize_t size() const;
+    int getMin() const;
+    int getMax() const;
+    Token* getChild(const XMLSize_t index) const;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-	void setMin(const int minVal);
-	void setMax(const int maxVal);
+    void setMin(const int minVal);
+    void setMax(const int maxVal);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ClosureToken(const ClosureToken&);
     ClosureToken& operator=(const ClosureToken&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
-	int    fMin;
-	int    fMax;
-	Token* fChild;
+    // -----------------------------------------------------------------------
+    int    fMin;
+    int    fMax;
+    Token* fChild;
 };
 
 
@@ -73,23 +73,23 @@ private:
 // ---------------------------------------------------------------------------
 inline XMLSize_t ClosureToken::size() const {
 
-	return 1;
+    return 1;
 }
 
 
 inline int ClosureToken::getMax() const {
 
-	return fMax;
+    return fMax;
 }
 
 inline int ClosureToken::getMin() const {
 
-	return fMin;
+    return fMin;
 }
 
 inline Token* ClosureToken::getChild(const XMLSize_t) const {
 
-	return fChild;
+    return fChild;
 }
 
 // ---------------------------------------------------------------------------
@@ -97,12 +97,12 @@ inline Token* ClosureToken::getChild(const XMLSize_t) const {
 // ---------------------------------------------------------------------------
 inline void ClosureToken::setMax(const int maxVal) {
 
-	fMax = maxVal;
+    fMax = maxVal;
 }
 
 inline void ClosureToken::setMin(const int minVal) {
 
-	fMin = minVal;
+    fMin = minVal;
 }
 
 XERCES_CPP_NAMESPACE_END

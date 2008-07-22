@@ -71,7 +71,6 @@ CLEAN :
 	-@erase "$(INTDIR)\CMUnaryOp.obj"
 	-@erase "$(INTDIR)\ComplexTypeInfo.obj"
 	-@erase "$(INTDIR)\ConcatToken.obj"
-	-@erase "$(INTDIR)\ConditionToken.obj"
 	-@erase "$(INTDIR)\ContentLeafNameTypeVector.obj"
 	-@erase "$(INTDIR)\ContentSpecNode.obj"
 	-@erase "$(INTDIR)\DatatypeValidator.obj"
@@ -176,7 +175,6 @@ CLEAN :
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
-	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
 	-@erase "$(INTDIR)\MonthDayDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Mutexes.obj"
@@ -380,9 +378,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\CharToken.obj" \
 	"$(INTDIR)\ClosureToken.obj" \
 	"$(INTDIR)\ConcatToken.obj" \
-	"$(INTDIR)\ConditionToken.obj" \
 	"$(INTDIR)\Match.obj" \
-	"$(INTDIR)\ModifierToken.obj" \
 	"$(INTDIR)\Op.obj" \
 	"$(INTDIR)\OpFactory.obj" \
 	"$(INTDIR)\ParenToken.obj" \
@@ -718,7 +714,6 @@ CLEAN :
 	-@erase "$(INTDIR)\CMUnaryOp.obj"
 	-@erase "$(INTDIR)\ComplexTypeInfo.obj"
 	-@erase "$(INTDIR)\ConcatToken.obj"
-	-@erase "$(INTDIR)\ConditionToken.obj"
 	-@erase "$(INTDIR)\ContentLeafNameTypeVector.obj"
 	-@erase "$(INTDIR)\ContentSpecNode.obj"
 	-@erase "$(INTDIR)\DatatypeValidator.obj"
@@ -823,7 +818,6 @@ CLEAN :
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
-	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
 	-@erase "$(INTDIR)\MonthDayDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Mutexes.obj"
@@ -1028,9 +1022,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\CharToken.obj" \
 	"$(INTDIR)\ClosureToken.obj" \
 	"$(INTDIR)\ConcatToken.obj" \
-	"$(INTDIR)\ConditionToken.obj" \
 	"$(INTDIR)\Match.obj" \
-	"$(INTDIR)\ModifierToken.obj" \
 	"$(INTDIR)\Op.obj" \
 	"$(INTDIR)\OpFactory.obj" \
 	"$(INTDIR)\ParenToken.obj" \
@@ -1366,7 +1358,6 @@ CLEAN :
 	-@erase "$(INTDIR)\CMUnaryOp.obj"
 	-@erase "$(INTDIR)\ComplexTypeInfo.obj"
 	-@erase "$(INTDIR)\ConcatToken.obj"
-	-@erase "$(INTDIR)\ConditionToken.obj"
 	-@erase "$(INTDIR)\ContentLeafNameTypeVector.obj"
 	-@erase "$(INTDIR)\ContentSpecNode.obj"
 	-@erase "$(INTDIR)\DatatypeValidator.obj"
@@ -1471,7 +1462,6 @@ CLEAN :
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
-	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
 	-@erase "$(INTDIR)\MonthDayDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Mutexes.obj"
@@ -1677,9 +1667,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\CharToken.obj" \
 	"$(INTDIR)\ClosureToken.obj" \
 	"$(INTDIR)\ConcatToken.obj" \
-	"$(INTDIR)\ConditionToken.obj" \
 	"$(INTDIR)\Match.obj" \
-	"$(INTDIR)\ModifierToken.obj" \
 	"$(INTDIR)\Op.obj" \
 	"$(INTDIR)\OpFactory.obj" \
 	"$(INTDIR)\ParenToken.obj" \
@@ -2015,7 +2003,6 @@ CLEAN :
 	-@erase "$(INTDIR)\CMUnaryOp.obj"
 	-@erase "$(INTDIR)\ComplexTypeInfo.obj"
 	-@erase "$(INTDIR)\ConcatToken.obj"
-	-@erase "$(INTDIR)\ConditionToken.obj"
 	-@erase "$(INTDIR)\ContentLeafNameTypeVector.obj"
 	-@erase "$(INTDIR)\ContentSpecNode.obj"
 	-@erase "$(INTDIR)\DatatypeValidator.obj"
@@ -2120,7 +2107,6 @@ CLEAN :
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
-	-@erase "$(INTDIR)\ModifierToken.obj"
 	-@erase "$(INTDIR)\MonthDatatypeValidator.obj"
 	-@erase "$(INTDIR)\MonthDayDatatypeValidator.obj"
 	-@erase "$(INTDIR)\Mutexes.obj"
@@ -2325,9 +2311,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\CharToken.obj" \
 	"$(INTDIR)\ClosureToken.obj" \
 	"$(INTDIR)\ConcatToken.obj" \
-	"$(INTDIR)\ConditionToken.obj" \
 	"$(INTDIR)\Match.obj" \
-	"$(INTDIR)\ModifierToken.obj" \
 	"$(INTDIR)\Op.obj" \
 	"$(INTDIR)\OpFactory.obj" \
 	"$(INTDIR)\ParenToken.obj" \
@@ -2762,21 +2746,9 @@ SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConcatToken.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConditionToken.cpp
-
-"$(INTDIR)\ConditionToken.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\..\..\..\src\xercesc\util\regx\Match.cpp
 
 "$(INTDIR)\Match.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\..\..\src\xercesc\util\regx\ModifierToken.cpp
-
-"$(INTDIR)\ModifierToken.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

@@ -625,9 +625,7 @@ util_headers = \
 	xercesc/util/regx/CharToken.hpp \
 	xercesc/util/regx/ClosureToken.hpp \
 	xercesc/util/regx/ConcatToken.hpp \
-	xercesc/util/regx/ConditionToken.hpp \
 	xercesc/util/regx/Match.hpp \
-	xercesc/util/regx/ModifierToken.hpp \
 	xercesc/util/regx/Op.hpp \
 	xercesc/util/regx/OpFactory.hpp \
 	xercesc/util/regx/ParenToken.hpp \
@@ -733,9 +731,7 @@ util_sources = \
 	xercesc/util/regx/CharToken.cpp \
 	xercesc/util/regx/ClosureToken.cpp \
 	xercesc/util/regx/ConcatToken.cpp \
-	xercesc/util/regx/ConditionToken.cpp \
 	xercesc/util/regx/Match.cpp \
-	xercesc/util/regx/ModifierToken.cpp \
 	xercesc/util/regx/Op.cpp \
 	xercesc/util/regx/OpFactory.cpp \
 	xercesc/util/regx/ParenToken.cpp \
@@ -1033,7 +1029,7 @@ sockets_sources = \
 	xercesc/util/NetAccessors/Socket/SocketNetAccessor.cpp \
 	xercesc/util/NetAccessors/Socket/UnixHTTPURLInputStream.cpp \
 	xercesc/util/NetAccessors/BinHTTPInputStreamCommon.cpp
-	
+
 cfurl_headers = \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp \
 	xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.hpp

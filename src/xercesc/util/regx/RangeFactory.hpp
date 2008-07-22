@@ -73,7 +73,7 @@ protected:
     bool fKeywordsInitialized;
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeFactory(const RangeFactory&);
@@ -85,5 +85,5 @@ XERCES_CPP_NAMESPACE_END
 #endif
 
 /**
-  *	End file RangeFactory.hpp
+  *    End file RangeFactory.hpp
   */

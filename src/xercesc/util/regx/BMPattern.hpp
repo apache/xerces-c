@@ -33,44 +33,44 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XMLUTIL_EXPORT BMPattern : public XMemory
 {
 public:
-	// -----------------------------------------------------------------------
-	//  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	/** @name Constructors */
+    //  Public Constructors and Destructor
+    // -----------------------------------------------------------------------
+    /** @name Constructors */
     //@{
 
-	/**
+    /**
       * This is the onstructor which takes the pattern information. A default
       * shift table size is used.
       *
       * @param  pattern     The pattern to match against.
       *
       * @param  ignoreCase  A flag to indicate whether to ignore case
-	  *						matching or not.
+      *                        matching or not.
       *
       * @param  manager     The configurable memory manager
       */
-	BMPattern
+    BMPattern
     (
         const XMLCh* const pattern
         , bool ignoreCase
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-	/**
+    /**
       * This is the constructor which takes all of the information
       * required to construct a BM pattern object.
       *
       * @param  pattern     The pattern to match against.
       *
-	  * @param	tableSize	Indicates the size of the shift table.
-	  *
+      * @param    tableSize    Indicates the size of the shift table.
+      *
       * @param  ignoreCase  A flag to indicate whether to ignore case
-	  *						matching or not.
+      *                        matching or not.
       *
       * @param  manager     The configurable memory manager
       */
-	BMPattern
+    BMPattern
     (
         const XMLCh* const pattern
         , int tableSize
@@ -78,31 +78,31 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-	//@}
+    //@}
 
-	/** @name Destructor. */
+    /** @name Destructor. */
     //@{
 
-	/**
-	  * Destructor of BMPattern
-	  */
-	~BMPattern();
+    /**
+      * Destructor of BMPattern
+      */
+    ~BMPattern();
 
-	//@}
+    //@}
 
-	// -----------------------------------------------------------------------
-	// Matching functions
-	// -----------------------------------------------------------------------
-	/** @name Matching Functions */
-	//@{
+    // -----------------------------------------------------------------------
+    // Matching functions
+    // -----------------------------------------------------------------------
+    /** @name Matching Functions */
+    //@{
 
-	/**
-	  *	This method will perform a match of the given content against a
-	  *	predefined pattern.
-	  */
-	int matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit) const;
+    /**
+      *    This method will perform a match of the given content against a
+      *    predefined pattern.
+      */
+    int matches(const XMLCh* const content, XMLSize_t start, XMLSize_t limit) const;
 
-	//@}
+    //@}
 
 private :
     // -----------------------------------------------------------------------
@@ -112,38 +112,38 @@ private :
     BMPattern(const BMPattern&);
     BMPattern& operator=(const BMPattern&);
 
-		// -----------------------------------------------------------------------
-	// This method will perform a case insensitive match
-	// -----------------------------------------------------------------------
-	bool matchesIgnoreCase(const XMLCh ch1, const XMLCh ch2);
+        // -----------------------------------------------------------------------
+    // This method will perform a case insensitive match
+    // -----------------------------------------------------------------------
+    bool matchesIgnoreCase(const XMLCh ch1, const XMLCh ch2);
 
-	// -----------------------------------------------------------------------
-	// Initialize/Clean up methods
-	// -----------------------------------------------------------------------
-	void initialize();
-	void cleanUp();
+    // -----------------------------------------------------------------------
+    // Initialize/Clean up methods
+    // -----------------------------------------------------------------------
+    void initialize();
+    void cleanUp();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fPattern
-	//	fUppercasePattern
+    //    fUppercasePattern
     //      This is the pattern to match against, and its upper case form.
-	//		
+    //        
     //  fIgnoreCase
     //      This is an indicator whether cases should be ignored during
-	//		matching.
+    //        matching.
     //
     //  fShiftTable
-	//	fShiftTableLen
+    //    fShiftTableLen
     //      This is a table of offsets for shifting purposes used by the BM
-	//		search algorithm, and its length.
+    //        search algorithm, and its length.
     // -----------------------------------------------------------------------
-	bool           fIgnoreCase;
-	unsigned int   fShiftTableLen;
-	XMLSize_t*     fShiftTable;
-	XMLCh*         fPattern;
-	XMLCh*         fUppercasePattern;
+    bool           fIgnoreCase;
+    unsigned int   fShiftTableLen;
+    XMLSize_t*     fShiftTable;
+    XMLCh*         fPattern;
+    XMLCh*         fUppercasePattern;
     MemoryManager* fMemoryManager; 
 };
 

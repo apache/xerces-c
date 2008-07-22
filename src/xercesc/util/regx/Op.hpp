@@ -55,14 +55,7 @@ public:
         O_NONGREEDYQUESTION         = 12,
         O_UNION                     = 13,
         O_CAPTURE                   = 15,
-        O_BACKREFERENCE             = 16,
-        O_LOOKAHEAD                 = 20,
-        O_NEGATIVELOOKAHEAD         = 21,
-        O_LOOKBEHIND                = 22,
-        O_NEGATIVELOOKBEHIND        = 23,
-        O_INDEPENDENT               = 24,
-        O_MODIFIER                  = 25,
-        O_CONDITION                 = 26
+        O_BACKREFERENCE             = 16
     } opType;
 
     // -----------------------------------------------------------------------
@@ -78,10 +71,6 @@ public:
     virtual XMLInt32     getData() const;
     virtual XMLInt32     getData2() const;
     virtual XMLSize_t    getSize() const;
-    virtual int          getRefNo() const;
-    virtual const Op*    getConditionFlow() const;
-    virtual const Op*    getYesFlow() const;
-    virtual const Op*    getNoFlow() const;
     virtual const Op*    elementAt(XMLSize_t index) const;
     virtual const Op*    getChild() const;
     virtual const Token* getToken() const;
@@ -125,20 +114,20 @@ private:
 
 class XMLUTIL_EXPORT CharOp: public Op {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	CharOp(const opType type, const XMLInt32 charData, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~CharOp() {}
+    CharOp(const opType type, const XMLInt32 charData, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ~CharOp() {}
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	XMLInt32 getData() const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+    XMLInt32 getData() const;
 
 private:
-	// Private data members
-	XMLInt32 fCharData;
+    // Private data members
+    XMLInt32 fCharData;
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -149,27 +138,27 @@ private:
 
 class XMLUTIL_EXPORT UnionOp : public Op {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	UnionOp(const opType type, const XMLSize_t size,
+    UnionOp(const opType type, const XMLSize_t size,
             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~UnionOp() { delete fBranches; }
+    ~UnionOp() { delete fBranches; }
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	XMLSize_t getSize() const;
-	const Op* elementAt(XMLSize_t index) const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+    XMLSize_t getSize() const;
+    const Op* elementAt(XMLSize_t index) const;
 
-	// -----------------------------------------------------------------------
-	// Setter functions
-	// -----------------------------------------------------------------------
-	void addElement(Op* const op);
+    // -----------------------------------------------------------------------
+    // Setter functions
+    // -----------------------------------------------------------------------
+    void addElement(Op* const op);
 
 private:
-	// Private Data memebers
-	RefVectorOf<Op>* fBranches;
+    // Private Data memebers
+    RefVectorOf<Op>* fBranches;
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -181,25 +170,25 @@ private:
 
 class XMLUTIL_EXPORT ChildOp: public Op {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ChildOp(const opType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~ChildOp() {}
+    ChildOp(const opType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ~ChildOp() {}
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	const Op* getChild() const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+    const Op* getChild() const;
 
-	// -----------------------------------------------------------------------
-	// Setter functions
-	// -----------------------------------------------------------------------
-	void setChild(const Op* const child);
+    // -----------------------------------------------------------------------
+    // Setter functions
+    // -----------------------------------------------------------------------
+    void setChild(const Op* const child);
 
 private:
-	// Private data members
-	const Op* fChild;
+    // Private data members
+    const Op* fChild;
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -210,22 +199,22 @@ private:
 
 class XMLUTIL_EXPORT ModifierOp: public ChildOp {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ModifierOp(const opType type, const XMLInt32 v1, const XMLInt32 v2, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~ModifierOp() {}
+    ModifierOp(const opType type, const XMLInt32 v1, const XMLInt32 v2, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ~ModifierOp() {}
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	XMLInt32 getData() const;
-	XMLInt32 getData2() const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+    XMLInt32 getData() const;
+    XMLInt32 getData2() const;
 
 private:
-	// Private data members
-	XMLInt32 fVal1;
-	XMLInt32 fVal2;
+    // Private data members
+    XMLInt32 fVal1;
+    XMLInt32 fVal2;
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -236,20 +225,20 @@ private:
 
 class XMLUTIL_EXPORT RangeOp: public Op {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RangeOp(const opType type, const Token* const token, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~RangeOp() {}
+    RangeOp(const opType type, const Token* const token, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ~RangeOp() {}
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	const Token* getToken() const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+    const Token* getToken() const;
 
 private:
-	// Private data members
-	const Token* fToken;
+    // Private data members
+    const Token* fToken;
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -260,20 +249,20 @@ private:
 
 class XMLUTIL_EXPORT StringOp: public Op {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	StringOp(const opType type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~StringOp() { fMemoryManager->deallocate(fLiteral);}
+    StringOp(const opType type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    ~StringOp() { fMemoryManager->deallocate(fLiteral);}
 
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	const XMLCh* getLiteral() const;
+    // -----------------------------------------------------------------------
+    // Getter functions
+    // -----------------------------------------------------------------------
+    const XMLCh* getLiteral() const;
 
 private:
-	// Private data members
-	XMLCh* fLiteral;
+    // Private data members
+    XMLCh* fLiteral;
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -282,49 +271,17 @@ private:
     StringOp& operator=(const StringOp&);
 };
 
-class XMLUTIL_EXPORT ConditionOp: public Op {
-public:
-	// -----------------------------------------------------------------------
-    //  Public Constructors and Destructor
-    // -----------------------------------------------------------------------
-	ConditionOp(const opType type, const int refNo,
-				const Op* const condFlow, const Op* const yesFlow,
-				const Op* const noFlow, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-	~ConditionOp() {}
-
-	// -----------------------------------------------------------------------
-	// Getter functions
-	// -----------------------------------------------------------------------
-	int			getRefNo() const;
-	const Op*	getConditionFlow() const;
-	const Op*	getYesFlow() const;
-	const Op*	getNoFlow() const;
-	
-private:
-	// Private data members
-	int fRefNo;
-	const Op* fConditionOp;
-	const Op* fYesOp;
-	const Op* fNoOp;
-
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    ConditionOp(const ConditionOp&);
-    ConditionOp& operator=(const ConditionOp&);
-};
-
 // ---------------------------------------------------------------------------
 //  Op: getter methods
 // ---------------------------------------------------------------------------
 inline Op::opType Op::getOpType() const {
 
-	return fOpType;
+    return fOpType;
 }
 
 inline const Op* Op::getNextOp() const {
 
-	return fNextOp;
+    return fNextOp;
 }
 
 // ---------------------------------------------------------------------------
@@ -332,12 +289,12 @@ inline const Op* Op::getNextOp() const {
 // ---------------------------------------------------------------------------
 inline void Op::setOpType(const Op::opType type) {
 
-	fOpType = type;
+    fOpType = type;
 }
 
 inline void Op::setNextOp(const Op* const nextOp) {
-	
-	fNextOp = nextOp;
+    
+    fNextOp = nextOp;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -29,8 +29,6 @@
 #include <xercesc/util/regx/CharToken.hpp>
 #include <xercesc/util/regx/ClosureToken.hpp>
 #include <xercesc/util/regx/ConcatToken.hpp>
-#include <xercesc/util/regx/ConditionToken.hpp>
-#include <xercesc/util/regx/ModifierToken.hpp>
 #include <xercesc/util/regx/ParenToken.hpp>
 #include <xercesc/util/regx/StringToken.hpp>
 #include <xercesc/util/regx/UnionToken.hpp>

@@ -31,32 +31,32 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLUTIL_EXPORT ParenToken : public Token {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	ParenToken(const tokType tkType, Token* const tok,
+    ParenToken(const tokType tkType, Token* const tok,
                const int noParen, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~ParenToken();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     XMLSize_t size() const;
-	int getNoParen() const;
+    int getNoParen() const;
     Token* getChild(const XMLSize_t index) const;
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ParenToken(const ParenToken&);
     ParenToken& operator=(const ParenToken&);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
-	int    fNoParen;
-	Token* fChild;
+    // -----------------------------------------------------------------------
+    int    fNoParen;
+    Token* fChild;
 };
 
 

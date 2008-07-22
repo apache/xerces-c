@@ -108,7 +108,7 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLSpace, tok);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // Build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLSpace, tok , true);
@@ -127,7 +127,7 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLDigit, tok);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // Build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLDigit, tok , true);
@@ -174,7 +174,7 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLNameChar, tok);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // Build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLNameChar, tok , true);
@@ -199,7 +199,7 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // Build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok , true);
@@ -221,7 +221,7 @@ void XMLRangeFactory::buildRanges(RangeTokenMap *rangeTokMap) {
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLWord, tok , true);
 
-    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    tok = RangeToken::complementRanges(tok, tokFactory);
     // Build the internal map.
     tok->createMap();
     rangeTokMap->setRangeToken(fgXMLWord, tok);
