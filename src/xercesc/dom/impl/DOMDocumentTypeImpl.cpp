@@ -117,8 +117,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         // we have to make sure the qualifiedName has correct prefix and localName
         // although we don't really to store them separately
         XMLCh* newName;
-        XMLCh temp[4000];
-        if (index >= 3999)
+        XMLCh temp[256];
+        if (index >= 255)
             newName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
             (
                 (XMLString::stringLen(qualifiedName)+1) * sizeof(XMLCh)
@@ -140,7 +140,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                 throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
         }
 
-        if (index >= 3999)
+        if (index >= 255)
             XMLPlatformUtils::fgMemoryManager->deallocate(newName);//delete[] newName;
     }
 

@@ -1506,6 +1506,28 @@ public :
 
     //@}
 
+protected:
+    // DOM node creation hooks. Override them if you are using your own
+    // DOM node types.
+    //
+    virtual DOMCDATASection* createCDATASection (const XMLCh*, XMLSize_t);
+    virtual DOMText* createText (const XMLCh*, XMLSize_t);
+
+    virtual DOMElement* createElement (const XMLCh* name);
+    virtual DOMElement* createElementNS (const XMLCh* namespaceURI,
+                                         const XMLCh* elemPrefix,
+                                         const XMLCh* localName,
+                                         const XMLCh* qName);
+
+    virtual DOMAttr* createAttr (const XMLCh* name);
+    virtual DOMAttr* createAttrNS (const XMLCh* namespaceURI,
+                                   const XMLCh* elemPrefix,
+                                   const XMLCh* localName,
+                                   const XMLCh* qName);
+
+
+
+
 protected :
     // -----------------------------------------------------------------------
     //  Protected Constructor Methods
@@ -1611,9 +1633,6 @@ protected :
     // -----------------------------------------------------------------------
     /** @name Protected helper methods */
     //@{
-    virtual DOMElement* createElementNSNode(const XMLCh *fNamespaceURI,
-                                              const XMLCh *qualifiedName);
-
     void resetPool();
 
     /**

@@ -1401,24 +1401,6 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 }
 
 
-XMLSize_t XMLString::hashN(  const   XMLCh* const   tohash
-                            , const XMLSize_t       n
-                            , const XMLSize_t       hashModulus)
-{
-    if (tohash == 0 || *tohash == 0)
-        return 0;
-
-    const XMLCh* curCh = tohash;
-    XMLSize_t hashVal = (XMLSize_t)(*curCh++);
-
-    for(XMLSize_t i=0;i<n;i++)
-        hashVal = (hashVal * 38) + (hashVal >> 24) + (XMLSize_t)(*curCh++);
-
-    // Divide by modulus
-    return hashVal % hashModulus;
-}
-
-
 int XMLString::indexOf(const XMLCh* const toSearch, const XMLCh ch)
 {
     if (toSearch)

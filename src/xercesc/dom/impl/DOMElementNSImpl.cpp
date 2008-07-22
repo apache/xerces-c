@@ -41,12 +41,44 @@ DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
 
 //Introduced in DOM Level 2
 DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc,
-                             const XMLCh *namespaceURI,
-                             const XMLCh *qualifiedName) :
+                                   const XMLCh *namespaceURI,
+                                   const XMLCh *qualifiedName) :
     DOMElementImpl(ownerDoc, qualifiedName)
 {
-    setName(namespaceURI, qualifiedName);
-    this->fSchemaType = 0;
+  setName(namespaceURI, qualifiedName);
+  this->fSchemaType = 0;
+}
+
+DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc,
+                                   const XMLCh *namespaceURI,
+                                   const XMLCh *prefix,
+                                   const XMLCh *localName,
+                                   const XMLCh *qualifiedName)
+    : DOMElementImpl(ownerDoc, qualifiedName)
+{
+  this->fSchemaType = 0;
+
+  DOMDocumentImpl* docImpl = (DOMDocumentImpl*)fParent.fOwnerDocument;
+
+  if (prefix == 0 || *prefix == 0)
+  {
+    fPrefix = 0;
+    fLocalName = fName;
+  }
+  else
+  {
+    fPrefix = docImpl->getPooledString(prefix);
+    fLocalName = docImpl->getPooledString(localName);
+  }
+
+  // DOM Level 3: namespace URI is never empty string.
+  //
+  const XMLCh * URI = DOMNodeImpl::mapPrefix (
+    fPrefix,
+    (!namespaceURI || !*namespaceURI) ? 0 : namespaceURI,
+    DOMNode::ELEMENT_NODE);
+
+  fNamespaceURI = (URI == 0) ? 0 : docImpl->getPooledString(URI);
 }
 
 DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
@@ -116,8 +148,8 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
     XMLSize_t newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
 
     XMLCh *newName;
-    XMLCh temp[4000];
-    if (newQualifiedNameLen >= 3999)
+    XMLCh temp[256];
+    if (newQualifiedNameLen >= 255)
       newName = (XMLCh*) doc->getMemoryManager()->allocate
         (
             newQualifiedNameLen * sizeof(XMLCh)
@@ -132,7 +164,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 
     fName = doc->getPooledString(newName);
 
-    if (newQualifiedNameLen >= 3999)
+    if (newQualifiedNameLen >= 255)
         doc->getMemoryManager()->deallocate(newName);//delete[] newName;
 
 }
@@ -174,41 +206,32 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
     if (index < 0)
         throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
-    if (index == 0) {	//qualifiedName contains no ':'
-        this -> fPrefix = 0;
-        this -> fLocalName = this -> fName;
-    } else {	//0 < index < this->name.length()-1
-        XMLCh* newName;
-        XMLCh temp[4000];
-        if (index >= 3999)
-            newName = (XMLCh*) ownerDoc->getMemoryManager()->allocate
-            (
-                (XMLString::stringLen(qualifiedName) + 1) * sizeof(XMLCh)
-            );//new XMLCh[XMLString::stringLen(qualifiedName)+1];
-        else
-            newName = temp;
-
-        XMLString::copyNString(newName, fName, index);
-        newName[index] = chNull;
-        this-> fPrefix = ownerDoc->getPooledString(newName);
-        this -> fLocalName = ownerDoc->getPooledString(fName+index+1);
-
-        if (index >= 3999)
-            ownerDoc->getMemoryManager()->deallocate(newName);//delete[] newName;
+    if (index == 0)
+    {
+        //qualifiedName contains no ':'
+        //
+        fPrefix = 0;
+        fLocalName = fName;
+    }
+    else
+    {	//0 < index < this->name.length()-1
+        //
+        fPrefix = ownerDoc->getPooledNString(qualifiedName, index);
+        fLocalName = ownerDoc->getPooledString(fName+index+1);
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
         if (!ownerDoc->isXMLName(fPrefix) || !ownerDoc->isXMLName(fLocalName))
-            throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
+          throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
     }
 
     // DOM Level 3: namespace URI is never empty string.
-    const XMLCh * URI = DOMNodeImpl::mapPrefix
-        (
-            fPrefix,
-            (!namespaceURI || !*namespaceURI) ? 0 : namespaceURI,
-            DOMNode::ELEMENT_NODE
-        );
-    this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
+    //
+    const XMLCh * URI = DOMNodeImpl::mapPrefix (
+      fPrefix,
+      (!namespaceURI || !*namespaceURI) ? 0 : namespaceURI,
+      DOMNode::ELEMENT_NODE);
+
+    fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
 }
 
 const DOMTypeInfo *DOMElementNSImpl::getSchemaTypeInfo() const

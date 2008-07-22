@@ -20,12 +20,12 @@
  * $Id$
  */
 
+#include "DOMCasts.hpp"
+#include "DOMNodeImpl.hpp"
+#include "DOMNodeVector.hpp"
 #include "DOMAttrMapImpl.hpp"
 #include "DOMAttrImpl.hpp"
-#include "DOMNodeImpl.hpp"
 #include "DOMElementImpl.hpp"
-#include "DOMCasts.hpp"
-#include "DOMNodeVector.hpp"
 
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/dom/DOMException.hpp>
@@ -442,5 +442,53 @@ DOMNode * DOMAttrMapImpl::item(XMLSize_t index) const
         fNodes->elementAt(index) : 0;
 }
 
+void DOMAttrMapImpl::setNamedItemFast(DOMNode *arg)
+{
+    DOMNodeImpl *argImpl = castToNodeImpl(arg);
+
+    argImpl->fOwnerNode = fOwnerNode;
+    argImpl->isOwned(true);
+    int i = findNamePoint(arg->getNodeName());
+
+    if(i >= 0)
+      fNodes->setElementAt(arg, i);
+    else
+    {
+      i= -1 -i;
+      fNodes->insertElementAt(arg, i);
+    }
+}
+
+void DOMAttrMapImpl::setNamedItemNSFast(DOMNode* arg)
+{
+    DOMNodeImpl *argImpl = castToNodeImpl(arg);
+
+    argImpl->fOwnerNode = fOwnerNode;
+    argImpl->isOwned(true);
+    int i=findNamePoint(arg->getNamespaceURI(), arg->getLocalName());
+
+    if(i >= 0)
+    {
+        fNodes->setElementAt(arg,i);
+    }
+    else
+    {
+        i = findNamePoint(arg->getNodeName());
+
+        if (i < 0)
+          i = -1 - i;
+
+        fNodes->insertElementAt(arg,i);
+    }
+}
+
+void DOMAttrMapImpl::reserve (XMLSize_t n)
+{
+  if (fNodes == 0)
+  {
+    DOMDocumentImpl* doc = (DOMDocumentImpl*)fOwnerNode->getOwnerDocument();
+    fNodes = new (doc) DOMNodeVector(doc, n);
+  }
+}
 
 XERCES_CPP_NAMESPACE_END

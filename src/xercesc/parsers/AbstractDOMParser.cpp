@@ -44,8 +44,9 @@
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/impl/DOMAttrImpl.hpp>
+#include <xercesc/dom/impl/DOMAttrNSImpl.hpp>
 #include <xercesc/dom/impl/DOMTypeInfoImpl.hpp>
-#include <xercesc/dom/DOMCDATASection.hpp>
+#include <xercesc/dom/impl/DOMCDATASectionImpl.hpp>
 #include <xercesc/dom/DOMComment.hpp>
 #include <xercesc/dom/impl/DOMTextImpl.hpp>
 #include <xercesc/dom/impl/DOMDocumentImpl.hpp>
@@ -785,17 +786,9 @@ void AbstractDOMParser::docCharacters(  const   XMLCh* const    chars
     if (!fWithinElement)
         return;
 
-    // revisit.  Is it really safe to null-terminate here?
-    //                Does the scanner do it already?
-    //                If scanner goes up to the very end of an unterminated
-    //                buffer, we may be stepping on something bad here.
-    //           Probably best to modify the scanner to null terminate.
-    XMLCh savedChar = chars[length];
-    XMLCh *ncChars  = (XMLCh *)chars;   // cast off const
-    ncChars[length] = 0;
     if (cdataSection == true)
     {
-        DOMCDATASection *node = fDocument->createCDATASection(chars);
+        DOMCDATASection *node = createCDATASection (chars, length);
         castToParentImpl (fCurrentParent)->appendChildFast (node);
         fCurrentNode = node;
     }
@@ -803,18 +796,16 @@ void AbstractDOMParser::docCharacters(  const   XMLCh* const    chars
     {
         if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
         {
-            DOMText *node = (DOMText *)fCurrentNode;
-            node->appendData(chars);
+            DOMTextImpl *node = (DOMTextImpl*)fCurrentNode;
+            node->appendData(chars, length);
         }
         else
         {
-            DOMText *node = fDocument->createTextNode(chars);
+            DOMText *node = createText (chars, length);
             castToParentImpl (fCurrentParent)->appendChildFast (node);
             fCurrentNode = node;
         }
     }
-    ncChars[length] = savedChar;
-    return;
 }
 
 
@@ -951,7 +942,7 @@ void AbstractDOMParser::endDocument()
 }
 
 
-void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
+void AbstractDOMParser::startElement(const XMLElementDecl&   elemDecl
                              , const unsigned int            urlId
                              , const XMLCh* const            elemPrefix
                              , const RefVectorOf<XMLAttr>&   attrList
@@ -962,68 +953,93 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     DOMElement     *elem;
     DOMElementImpl *elemImpl;
     const XMLCh* namespaceURI = 0;
+    bool doNamespaces = fScanner->getDoNamespaces();
 
-    //get the list for use in the loop
-    XMLAttDefList* defAttrs = 0;
-    if(elemDecl.hasAttDefs()) {
-        defAttrs = &elemDecl.getAttDefList();
-    }
-
-    if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
+    // Create the element name. Here we are going to bypass the
+    // DOMDocument::createElement() interface and instantiate the
+    // required types directly in order to avoid name checking
+    // overhead.
+    //
+    if (doNamespaces)
+    {
+        //DOM Level 2, doNamespaces on
+        //
+        const XMLCh* localName = elemDecl.getBaseName();
 
         if (urlId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
 
             namespaceURI = fScanner->getURIText(urlId); //get namespaceURI
 
-            if (elemPrefix && *elemPrefix) {
-
+            if (elemPrefix && *elemPrefix)
+            {
                 XMLBufBid elemQName(&fBufMgr);
 
                 elemQName.set(elemPrefix);
                 elemQName.append(chColon);
-                elemQName.append(elemDecl.getBaseName());
-                elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
-            }
-            else {
-                elem = createElementNSNode(namespaceURI, elemDecl.getBaseName());
-            }
-        }
-        else {
-            elem = createElementNSNode(namespaceURI, elemDecl.getBaseName());
-        }
+                elemQName.append(localName);
 
-        elemImpl = (DOMElementImpl *) elem;
+                elem = createElementNS (
+                  namespaceURI, elemPrefix, localName, elemQName.getRawBuffer());
+            }
+            else
+              elem = createElementNS (namespaceURI, 0, localName, localName);
+        }
+        else
+          elem = createElementNS (namespaceURI, 0, localName, localName);
     }
-    else {    //DOM Level 1
-        elem = fDocument->createElement(elemDecl.getFullName());
-        elemImpl = (DOMElementImpl *) elem;
+    else
+    {   //DOM Level 1
+        elem = createElement (elemDecl.getFullName());
     }
-    for (XMLSize_t index = 0; index < attrCount; ++index) {
+
+    elemImpl = (DOMElementImpl *) elem;
+
+    if (attrCount)
+    {
+      unsigned int xmlnsNSId = fScanner->getXMLNSNamespaceId();
+      unsigned int emptyNSId = fScanner->getEmptyNamespaceId();
+
+      DOMAttrMapImpl* map = elemImpl->fAttributes;
+      map->reserve (attrCount);
+
+      for (XMLSize_t index = 0; index < attrCount; ++index)
+      {
         const XMLAttr* oneAttrib = attrList.elementAt(index);
         DOMAttrImpl *attr = 0;
-        DOMNode* remAttr = 0;
 
-        //  revisit.  Optimize to init the named node map to the
-        //            right size up front.
-        if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
-            unsigned int attrURIId = oneAttrib -> getURIId();
+        if (doNamespaces)
+        {
+            //DOM Level 2, doNamespaces on
+            //
+            unsigned int attrURIId = oneAttrib->getURIId();
+            const XMLCh* localName = oneAttrib->getName();
             namespaceURI = 0;
-            if (XMLString::equals(oneAttrib -> getName(), XMLUni::fgXMLNSString)) {   //for xmlns=...
-                attrURIId = fScanner->getXMLNSNamespaceId();
+
+            if (XMLString::equals(localName, XMLUni::fgXMLNSString))
+            {
+                // xmlns=...
+                attrURIId = xmlnsNSId;
             }
-            if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
-                namespaceURI = fScanner->getURIText(attrURIId);   //get namespaceURI
+            if (attrURIId != emptyNSId)
+            {
+                //TagName has a prefix
+                namespaceURI = fScanner->getURIText(attrURIId);
             }
-            attr = (DOMAttrImpl *)fDocument->createAttributeNS(namespaceURI, oneAttrib->getQName());
-            remAttr = elemImpl->setAttributeNodeNS(attr);
+
+            attr = (DOMAttrImpl*) createAttrNS (namespaceURI,
+                                                oneAttrib->getPrefix (),
+                                                localName,
+                                                oneAttrib->getQName());
+
+            map->setNamedItemNSFast(attr);
         }
-        else {
-            attr = (DOMAttrImpl *)fDocument->createAttribute(oneAttrib->getName());
-            remAttr = elemImpl->setAttributeNode(attr);
+        else
+        {
+            attr = (DOMAttrImpl*) createAttr (oneAttrib->getName());
+            map->setNamedItemFast(attr);
         }
-        attr->setValue(oneAttrib -> getValue());
-        if (remAttr)
-            remAttr->release();
+
+        attr->setValueFast(oneAttrib->getValue());
 
         // Attributes of type ID.  If this is one, add it to the hashtable of IDs
         //   that is constructed for use by GetElementByID().
@@ -1056,13 +1072,15 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             default:                        attr->setSchemaTypeInfo(&DOMTypeInfoImpl::g_DtdNotValidatedAttribute); break;
             }
         }
+      }
     }
 
-    // set up the default attributes
-	if (defAttrs != 0)
-	{
+    //Set up the default attributes if any.
+    //
+    if (elemDecl.hasAttDefs())
+    {
+        XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
         XMLAttDef* attr = 0;
-
         DOMAttrImpl * insertAttr = 0;
 
         for(XMLSize_t i=0; i<defAttrs->getAttDefCount(); i++)
@@ -1074,12 +1092,12 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             ||  (defType == XMLAttDef::Fixed))
             {
 
-                if (fScanner->getDoNamespaces())
+                if (doNamespaces)
                 {
                     // DOM Level 2 wants all namespace declaration attributes
                     // to be bound to "http://www.w3.org/2000/xmlns/"
                     // So as long as the XML parser doesn't do it, it needs to
-                    // done here.
+                    // be done here.
                     const XMLCh* qualifiedName = attr->getFullName();
                     XMLBufBid bbPrefixQName(&fBufMgr);
                     XMLBuffer& prefixBuf = bbPrefixQName.getBuffer();
@@ -1112,7 +1130,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                 //need to do this before the get as otherwise we overwrite any value in the attr
                 if (attr->getValue() != 0)
                 {
-                    insertAttr->setValue(attr->getValue());
+                    insertAttr->setValueFast(attr->getValue());
                     insertAttr->setSpecified(false);
                 }
 
@@ -1207,12 +1225,6 @@ void AbstractDOMParser::XMLDecl(const   XMLCh* const version
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Helper methods
 // ---------------------------------------------------------------------------
-DOMElement* AbstractDOMParser::createElementNSNode(const XMLCh *namespaceURI,
-                                                   const XMLCh *qualifiedName)
-{
-    return fDocument->createElementNS(namespaceURI, qualifiedName);
-}
-
 
 //doctypehandler interfaces
 void AbstractDOMParser::attDef
@@ -1437,13 +1449,14 @@ void AbstractDOMParser::endAttList
         DOMAttrImpl * insertAttr = 0;
         DOMElement     *elem  = fDocument->createElement(elemDecl.getFullName());
         DOMElementImpl *elemImpl = (DOMElementImpl *) elem;
+        bool doNamespaces = fScanner->getDoNamespaces();
 
         for(XMLSize_t i=0; i<defAttrs->getAttDefCount(); i++)
         {
             attr = &defAttrs->getAttDef(i);
             if (attr->getValue() != 0)
             {
-                if (fScanner->getDoNamespaces())
+                if (doNamespaces)
                 {
                     // DOM Level 2 wants all namespace declaration attributes
                     // to be bound to "http://www.w3.org/2000/xmlns/"
@@ -1504,7 +1517,7 @@ void AbstractDOMParser::endAttList
                         remAttr->release();
                 }
 
-                insertAttr->setValue(attr->getValue());
+                insertAttr->setValueFast(attr->getValue());
                 insertAttr->setSpecified(false);
             }
         }
@@ -1682,6 +1695,64 @@ void AbstractDOMParser::TextDecl
         fCurrentEntity->setXmlVersion(versionStr);
         fCurrentEntity->setXmlEncoding(encodingStr);
     }
+}
+
+DOMCDATASection* AbstractDOMParser::
+createCDATASection (const XMLCh* s, XMLSize_t n)
+{
+  return new (fDocument, DOMMemoryManager::CDATA_SECTION_OBJECT)
+    DOMCDATASectionImpl(fDocument, s, n);
+}
+
+
+DOMText* AbstractDOMParser::
+createText (const XMLCh* s, XMLSize_t n)
+{
+  return new (fDocument, DOMMemoryManager::TEXT_OBJECT)
+    DOMTextImpl(fDocument, s, n);
+}
+
+
+DOMElement* AbstractDOMParser::
+createElement (const XMLCh* name)
+{
+  return new (fDocument, DOMMemoryManager::ELEMENT_OBJECT)
+    DOMElementImpl(fDocument, name);
+}
+
+DOMElement* AbstractDOMParser::
+createElementNS (const XMLCh* namespaceURI,
+                 const XMLCh* elemPrefix,
+                 const XMLCh* localName,
+                 const XMLCh* qName)
+{
+  return new (fDocument, DOMMemoryManager::ELEMENT_NS_OBJECT)
+    DOMElementNSImpl (fDocument,
+                      namespaceURI,
+                      elemPrefix,
+                      localName,
+                      qName);
+}
+
+DOMAttr* AbstractDOMParser::
+createAttr (const XMLCh* name)
+{
+  return new (fDocument, DOMMemoryManager::ATTR_OBJECT)
+    DOMAttrImpl(fDocument, name);
+}
+
+DOMAttr* AbstractDOMParser::
+createAttrNS (const XMLCh* namespaceURI,
+              const XMLCh* elemPrefix,
+              const XMLCh* localName,
+              const XMLCh* qName)
+{
+  return new (fDocument, DOMMemoryManager::ATTR_NS_OBJECT)
+    DOMAttrNSImpl (fDocument,
+                   namespaceURI,
+                   elemPrefix,
+                   localName,
+                   qName);
 }
 
 XERCES_CPP_NAMESPACE_END

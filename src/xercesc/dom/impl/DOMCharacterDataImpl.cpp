@@ -31,8 +31,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
- : fDataBuf(0)
- , fDoc(0)
 {
     fDoc = (DOMDocumentImpl*)doc;
 
@@ -43,10 +41,18 @@ DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
     fDataBuf->set(dat, len);
 }
 
+DOMCharacterDataImpl::
+DOMCharacterDataImpl(DOMDocument *doc, const XMLCh* dat, XMLSize_t len)
+{
+    fDoc = (DOMDocumentImpl*)doc;
+
+    fDataBuf = fDoc->popBuffer(len+1);
+    if (!fDataBuf)
+        fDataBuf = new (fDoc) DOMBuffer(fDoc, len+15);
+    fDataBuf->set(dat, len);
+}
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(const DOMCharacterDataImpl &other)
- : fDataBuf(0)
- , fDoc(0)
 {
     fDoc = (DOMDocumentImpl*)other.fDoc;
 
@@ -98,6 +104,14 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
     fDataBuf->append(dat);
 }
 
+void DOMCharacterDataImpl::appendData(const DOMNode *node, const  XMLCh *dat, XMLSize_t n)
+{
+  if(castToNodeImpl(node)->isReadOnly())
+        throw DOMException(
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
+
+  fDataBuf->append(dat, n);
+}
 
 void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count)
 {
@@ -127,8 +141,8 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     XMLSize_t newLen = len - count;
 
     XMLCh* newString;
-    XMLCh temp[4000];
-    if (newLen >= 3999)
+    XMLCh temp[4096];
+    if (newLen >= 4095)
         newString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
         (
             (newLen+1) * sizeof(XMLCh)
@@ -141,7 +155,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
 
     fDataBuf->set(newString);
 
-    if (newLen >= 3999)
+    if (newLen >= 4095)
         XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
 
     // We don't delete the old string (doesn't work), or alter
@@ -199,8 +213,8 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     XMLSize_t newLen = len + datLen;
 
     XMLCh* newString;
-    XMLCh temp[4000];
-    if (newLen >= 3999)
+    XMLCh temp[4096];
+    if (newLen >= 4095)
         newString = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
         (
             (newLen + 1) * sizeof(XMLCh)
@@ -214,7 +228,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
 
     fDataBuf->set(newString);
 
-    if (newLen >= 3999)
+    if (newLen >= 4095)
         XMLPlatformUtils::fgMemoryManager->deallocate(newString);//delete[] newString;
 
     DOMDocumentImpl *doc = (DOMDocumentImpl *)node->getOwnerDocument();
@@ -273,8 +287,8 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     DOMDocumentImpl *doc = (DOMDocumentImpl *)node->getOwnerDocument();
 
     XMLCh* newString;
-    XMLCh temp[4000];
-    if (len >= 3999)
+    XMLCh temp[4096];
+    if (len >= 4095)
       newString = (XMLCh*) doc->getMemoryManager()->allocate
         (
             (len + 1) * sizeof(XMLCh)
@@ -287,7 +301,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
 
     const XMLCh* retString = doc->getPooledString(newString);
 
-    if (len >= 3999)
+    if (len >= 4095)
       doc->getMemoryManager()->deallocate(newString);//delete[] newString;
 
     return retString;

@@ -39,6 +39,12 @@ DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc,
     fNode.setIsLeafNode(true);
 }
 
+DOMCDATASectionImpl::
+DOMCDATASectionImpl(DOMDocument *ownerDoc, const XMLCh* data, XMLSize_t n)
+    : fNode(ownerDoc), fCharacterData(ownerDoc, data, n)
+{
+    fNode.setIsLeafNode(true);
+}
 
 DOMCDATASectionImpl::DOMCDATASectionImpl(const DOMCDATASectionImpl &other, bool /*deep*/)
     : DOMCDATASection(other),

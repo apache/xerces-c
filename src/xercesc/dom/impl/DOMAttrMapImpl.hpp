@@ -36,8 +36,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class DOMNodeVector;
 class DOMNode;
+class DOMNodeVector;
 
 class CDOM_EXPORT DOMAttrMapImpl : public DOMNamedNodeMap
 {
@@ -46,9 +46,9 @@ protected:
     DOMNode*          fOwnerNode;       // the node this map belongs to
     bool              attrDefaults;
 
-    virtual void	cloneContent(const DOMAttrMapImpl *srcmap);
+    virtual void      cloneContent(const DOMAttrMapImpl *srcmap);
 
-    bool            readOnly();  // revisit.  Look at owner node read-only.
+    bool              readOnly();  // revisit.  Look at owner node read-only.
 
 public:
     DOMAttrMapImpl(DOMNode *ownerNod);
@@ -81,6 +81,18 @@ public:
 	                                        const XMLCh *localName) const;
     virtual DOMNode*        setNamedItemNS(DOMNode *arg);
     virtual DOMNode*        removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName);
+
+    // Fast versions of the above functions which bypass validity checks.
+    // It also assumes that fNode is not 0 (call reserve) and that there
+    // is no previous node with this name. These are used in parsing.
+    //
+    void setNamedItemFast(DOMNode *arg);
+    void setNamedItemNSFast(DOMNode *arg);
+
+    // Tries to reserve space for the specified number of elements.
+    // Currently only works on newly-created instances (fNodes == 0).
+    //
+    void reserve (XMLSize_t);
 
     void reconcileDefaultAttributes(const DOMAttrMapImpl* defaults);
     void moveSpecifiedAttributes(DOMAttrMapImpl* srcmap);

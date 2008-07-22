@@ -36,6 +36,7 @@
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/util/StringPool.hpp>
 #include <xercesc/util/KeyRefPair.hpp>
+#include <xercesc/util/XMLChar.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
 #include <xercesc/dom/DOMMemoryManager.hpp>
@@ -258,7 +259,8 @@ public:
     //                               a document, and is not recovered until the
     //                               document itself is deleted.
     //
-    const XMLCh*                 getPooledString(const XMLCh *src);
+    const XMLCh*                 getPooledString(const XMLCh*);
+    const XMLCh*                 getPooledNString(const XMLCh*, XMLSize_t);
     void                         deleteHeap();
     void                         releaseDocNotifyUserData(DOMNode* object);
     void                         releaseBuffer(DOMBuffer* buffer);
@@ -384,6 +386,59 @@ inline const XMLCh*  DOMDocumentImpl::getPooledString(const XMLCh *in)
   XMLString::copyString((XMLCh*)spe->fString, in);
 
   return spe->fString;
+}
+
+inline const XMLCh* DOMDocumentImpl::
+getPooledNString(const XMLCh *in, XMLSize_t n)
+{
+  if (in == 0)
+    return 0;
+
+  DOMStringPoolEntry    **pspe;
+  DOMStringPoolEntry    *spe;
+
+  XMLSize_t inHash = XMLString::hashN(in, n, fNameTableSize);
+  pspe = &fNameTable[inHash];
+  while (*pspe != 0)
+  {
+    if (XMLString::equalsN((*pspe)->fString, in, n))
+      return (*pspe)->fString;
+    pspe = &((*pspe)->fNext);
+  }
+
+  // This string hasn't been seen before.  Add it to the pool.
+  //
+
+  // Compute size to allocate.  Note that there's 1 char of string
+  // declared in the struct, so we don't need to add one again to
+  // account for the trailing null.
+  //
+  XMLSize_t sizeToAllocate = sizeof(DOMStringPoolEntry) + n*sizeof(XMLCh);
+  *pspe = spe = (DOMStringPoolEntry *)allocate(sizeToAllocate);
+  spe->fNext = 0;
+  XMLString::copyNString((XMLCh*)spe->fString, in, n);
+
+  return spe->fString;
+}
+
+inline int DOMDocumentImpl::indexofQualifiedName(const XMLCh* name)
+{
+  int i = 0;
+  int colon = -1;
+  int colon_count = 0;
+  for (; *name != 0; ++i, ++name)
+  {
+    if (*name == chColon)
+    {
+      ++colon_count;
+      colon = i;
+    }
+  }
+
+  if (i == 0 || colon == 0 || colon == (i - 1) || colon_count > 1)
+    return -1;
+
+  return colon != -1 ? colon : 0;
 }
 
 XERCES_CPP_NAMESPACE_END

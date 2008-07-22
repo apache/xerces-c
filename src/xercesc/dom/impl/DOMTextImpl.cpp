@@ -49,6 +49,13 @@ DOMTextImpl::DOMTextImpl(DOMDocument *ownerDoc, const XMLCh *dat)
     fNode.setIsLeafNode(true);
 }
 
+DOMTextImpl::
+DOMTextImpl(DOMDocument *ownerDoc, const XMLCh* dat, XMLSize_t n)
+    : fNode(ownerDoc), fCharacterData(ownerDoc, dat, n)
+{
+    fNode.setIsLeafNode(true);
+}
+
 DOMTextImpl::DOMTextImpl(const DOMTextImpl &other, bool)
     : DOMText(other)
     , fNode(other.fNode)
@@ -313,5 +320,7 @@ void DOMTextImpl::release()
                                                                                  {fCharacterData.replaceData(this, offset, count, arg);}
           void              DOMTextImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);}
           void              DOMTextImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); }
+
+          void              DOMTextImpl::appendData(const XMLCh *arg, XMLSize_t n) {fCharacterData.appendData(this, arg, n);}
 
 XERCES_CPP_NAMESPACE_END

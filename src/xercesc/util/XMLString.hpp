@@ -274,10 +274,42 @@ public:
         , const XMLCh* str2
     );
 
+    /** compares <code>str1</code> and <code>str2</code>
+      *
+      * @param str1 string to compare
+      * @param str2 string to compare
+      * @param n number of characters to compare
+      * @return true if two strings are equal, false if not
+      *  If one string is null, while the other is zero-length string,
+      *  it is considered as equal.
+      */
+    static bool equalsN
+    (
+          const XMLCh* str1
+        , const XMLCh* str2
+        , XMLSize_t n
+    );
+
     static bool equals
     (
           const char* str1
         , const char* str2
+    );
+
+    /** compares <code>str1</code> and <code>str2</code>
+      *
+      * @param str1 string to compare
+      * @param str2 string to compare
+      * @param n number of characters to compare
+      * @return true if two strings are equal, false if not
+      *  If one string is null, while the other is zero-length string,
+      *  it is considered as equal.
+      */
+    static bool equalsN
+    (
+          const char* str1
+        , const char* str2
+        , XMLSize_t n
     );
 
 	/** Lexicographically compares <code>str1</code> and <code>str2</code>
@@ -1544,6 +1576,23 @@ inline bool XMLString::equals(   const XMLCh* str1
     return (*str2==0);
 }
 
+inline bool XMLString::equalsN(const XMLCh* str1,
+                               const XMLCh* str2,
+                               XMLSize_t n)
+{
+    if (str1 == str2 || n == 0)
+      return true;
+
+    if (str1 == 0 || str2 == 0)
+        return ((!str1 || !*str1) && (!str2 || !*str2));
+
+    for (; n != 0 && *str1 && *str2; --n, ++str1, ++str2)
+      if(*str1 != *str2)
+        break;
+
+    return n == 0 || *str1 == *str2; // either equal or both ended premat.
+}
+
 inline bool XMLString::equals(   const char* str1
                                , const char* str2)
 {
@@ -1559,6 +1608,23 @@ inline bool XMLString::equals(   const char* str1
 
     // either both ended (and *str2 is 0 too), or str2 is longer
     return (*str2==0);
+}
+
+inline bool XMLString::equalsN(const char* str1,
+                               const char* str2,
+                               XMLSize_t n)
+{
+    if (str1 == str2 || n == 0)
+      return true;
+
+    if (str1 == 0 || str2 == 0)
+        return ((!str1 || !*str1) && (!str2 || !*str2));
+
+    for (; n != 0 && *str1 && *str2; --n, ++str1, ++str2)
+      if(*str1 != *str2)
+        break;
+
+    return n == 0 || *str1 == *str2; // either equal or both ended premat.
 }
 
 inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
@@ -1580,6 +1646,23 @@ inline XMLSize_t XMLString::hash(const   XMLCh* const   tohash
 
     // Divide by modulus
     return hashVal % hashModulus;
+}
+
+inline XMLSize_t XMLString::hashN(const   XMLCh* const   tohash
+                                  , const XMLSize_t       n
+                                  , const XMLSize_t       hashModulus)
+{
+  if (tohash == 0 || n == 0)
+    return 0;
+
+  const XMLCh* curCh = tohash;
+  XMLSize_t hashVal = (XMLSize_t)(*curCh++);
+
+  for(XMLSize_t i=0;i<n;i++)
+    hashVal = (hashVal * 38) + (hashVal >> 24) + (XMLSize_t)(*curCh++);
+
+  // Divide by modulus
+  return hashVal % hashModulus;
 }
 
 XERCES_CPP_NAMESPACE_END

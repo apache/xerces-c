@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,8 +49,18 @@ protected:
 public:
     DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *name);
     DOMElementNSImpl(DOMDocument *ownerDoc, //DOM Level 2
-	const XMLCh *namespaceURI, const XMLCh *qualifiedName);
+                     const XMLCh *namespaceURI,
+                     const XMLCh *qualifiedName);
     DOMElementNSImpl(const DOMElementNSImpl &other, bool deep=false);
+
+    // Fast construction without any checks for name validity. Used in
+    // parsing.
+    //
+    DOMElementNSImpl(DOMDocument *ownerDoc,
+                     const XMLCh *namespaceURI,
+                     const XMLCh *prefix,        // Null or empty - no prefix.
+                     const XMLCh *localName,
+                     const XMLCh *qualifiedName);
 
     virtual DOMNode * cloneNode(bool deep) const;
     virtual bool isSupported(const XMLCh *feature, const XMLCh *version) const;
@@ -76,7 +86,7 @@ public:
 private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
-    // -----------------------------------------------------------------------    
+    // -----------------------------------------------------------------------
     DOMElementNSImpl & operator = (const DOMElementNSImpl &);
 };
 

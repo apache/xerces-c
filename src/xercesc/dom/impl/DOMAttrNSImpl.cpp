@@ -47,6 +47,38 @@ DOMAttrImpl(ownerDoc, qualifiedName)
     setName(namespaceURI, qualifiedName);
 }
 
+DOMAttrNSImpl::
+DOMAttrNSImpl(DOMDocument *ownerDoc,
+              const XMLCh *namespaceURI,
+              const XMLCh *prefix,
+              const XMLCh *localName,
+              const XMLCh *qualifiedName)
+    : DOMAttrImpl(ownerDoc, qualifiedName)
+{
+  DOMDocumentImpl* docImpl = (DOMDocumentImpl*)fParent.fOwnerDocument;
+
+  if (prefix == 0 || *prefix == 0)
+  {
+    fPrefix = 0;
+    fLocalName = fName;
+  }
+  else
+  {
+    fPrefix = docImpl->getPooledString(prefix);
+    fLocalName = docImpl->getPooledString(localName);
+  }
+
+  // DOM Level 3: namespace URI is never empty string.
+  //
+  const XMLCh * URI = DOMNodeImpl::mapPrefix
+    (
+      fPrefix,
+      (!namespaceURI || !*namespaceURI) ? 0 : namespaceURI,
+      DOMNode::ATTRIBUTE_NODE
+    );
+  this -> fNamespaceURI = (URI == 0) ? 0 : docImpl->getPooledString(URI);
+}
+
 DOMAttrNSImpl::DOMAttrNSImpl(const DOMAttrNSImpl &other, bool deep) :
 DOMAttrImpl(other, deep)
 {
@@ -116,8 +148,8 @@ void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
     XMLSize_t prefixLen = XMLString::stringLen(prefix);
     XMLSize_t newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
     XMLCh* newName;
-    XMLCh temp[4000];
-    if (newQualifiedNameLen >= 3999)
+    XMLCh temp[256];
+    if (newQualifiedNameLen >= 255)
         newName = (XMLCh*) doc->getMemoryManager()->allocate
         (
             newQualifiedNameLen * sizeof(XMLCh)
@@ -132,7 +164,7 @@ void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
 
     fName = doc->getPooledString(newName);
 
-    if (newQualifiedNameLen >= 3999)
+    if (newQualifiedNameLen >= 255)
       doc->getMemoryManager()->deallocate(newName);//delete[] newName;
 
 }
@@ -181,32 +213,20 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
         throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
     bool xmlnsAlone = false;	//true if attribute name is "xmlns"
-    if (index == 0) {	//qualifiedName contains no ':'
+    if (index == 0)
+    {	//qualifiedName contains no ':'
         if (XMLString::equals(this->fName, xmlns)) {
             if (!XMLString::equals(namespaceURI, xmlnsURI))
                 throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
             xmlnsAlone = true;
         }
-        this -> fPrefix = 0;
-        this -> fLocalName = this -> fName;
-    } else {	//0 < index < this->name.length()-1
-        XMLCh* newName;
-        XMLCh temp[4000];
-        if (index >= 3999)
-            newName = (XMLCh*) ownerDoc->getMemoryManager()->allocate
-            (
-                (XMLString::stringLen(qualifiedName) + 1) * sizeof(XMLCh)
-            );//new XMLCh[XMLString::stringLen(qualifiedName)+1];
-        else
-            newName = temp;
-
-        XMLString::copyNString(newName, fName, index);
-        newName[index] = chNull;
-        this-> fPrefix = ownerDoc->getPooledString(newName);
-        this -> fLocalName = ownerDoc->getPooledString(fName+index+1);
-
-        if (index >= 3999)
-          ownerDoc->getMemoryManager()->deallocate(newName);//delete[] newName;
+        fPrefix = 0;
+        fLocalName = fName;
+    }
+    else
+    {
+        fPrefix = ownerDoc->getPooledNString(fName, index);
+        fLocalName = ownerDoc->getPooledString(fName+index+1);
 
         // Before we carry on, we should check if the prefix or localName are valid XMLName
         if (!ownerDoc->isXMLName(fPrefix) || !ownerDoc->isXMLName(fLocalName))

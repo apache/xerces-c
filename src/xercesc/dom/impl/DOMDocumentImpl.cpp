@@ -45,7 +45,6 @@
 #include "DOMXPathNSResolverImpl.hpp"
 
 #include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/util/XMLChar.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/Janitor.hpp>
@@ -598,11 +597,11 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep)
 
 
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
-    const XMLCh *qualifiedName)
+                                             const XMLCh *qualifiedName)
 {
     if(!qualifiedName || !isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0, getMemoryManager());
-    //XMLCh * pooledTagName = this->fNamePool->getPooledString(qualifiedName);
+
     return new (this, DOMMemoryManager::ELEMENT_NS_OBJECT) DOMElementNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
@@ -647,31 +646,10 @@ DOMElement *DOMDocumentImpl::getElementById(const XMLCh *elementId) const
     return theAttr->getOwnerElement();
 }
 
-
-//Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
-//Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd" or "abcd:".
-int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
-{
-    XMLSize_t qNameLen = XMLString::stringLen(qName);
-    int index = -1, count = 0;
-    for (XMLSize_t i = 0; i < qNameLen; ++i) {
-        if (qName[i] == chColon) {
-            index = (int)i;
-            ++count;    //number of ':' found
-        }
-    }
-
-    if (qNameLen == 0 || count > 1 || index == 0 || index == ((int)qNameLen)-1)
-        return -1;
-    return count == 0 ? 0 : index;
-}
-
-
-const XMLCh*     DOMDocumentImpl::getBaseURI() const
+const XMLCh* DOMDocumentImpl::getBaseURI() const
 {
 	  return fDocumentURI;
 }
-
 
 DOMRange* DOMDocumentImpl::createRange()
 {

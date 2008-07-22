@@ -174,7 +174,7 @@ public:
     QName* getAttName() const;
 
     /**
-      * This method gets a const pointer tot he name of the attribute. The
+      * This method gets a const pointer to the name of the attribute. The
       * form of this name is defined by the validator in use.
       */
     const XMLCh* getName() const;

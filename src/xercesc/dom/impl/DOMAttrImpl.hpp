@@ -88,6 +88,15 @@ public:
    // helper to remove this attr from from the id map if it is in there
    virtual void removeAttrFromIDNodeMap();
 
+public:
+    // Set attribute value fast. Assumptions:
+    //
+    // - node is not read-only
+    // - no ID management is performed
+    // - this attribute does not have a value
+    //
+    virtual void setValueFast (const XMLCh * value);
+
 protected:
     void getTextValue(DOMNode* node, XMLBuffer& buf) const;
 

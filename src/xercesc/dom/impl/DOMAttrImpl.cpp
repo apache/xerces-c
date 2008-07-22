@@ -196,6 +196,13 @@ void DOMAttrImpl::setValue(const XMLCh *val)
 
 }
 
+void DOMAttrImpl::setValueFast(const XMLCh *val)
+{
+    if (val != 0)
+      fParent.appendChildFast(fParent.fOwnerDocument->createTextNode(val));
+
+    fNode.isSpecified (true);
+}
 
 
 

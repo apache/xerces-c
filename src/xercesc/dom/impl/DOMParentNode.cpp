@@ -386,8 +386,6 @@ DOMNode * DOMParentNode::appendChildFast(DOMNode *newChild)
         newChild_ci->previousSibling = newChild;
     }
 
-    changed();
-
     return newChild;
 }
 
