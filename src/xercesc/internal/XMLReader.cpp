@@ -750,10 +750,14 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
             }
         }
 
-        while (fCharIndex < fCharsAvail) {
-            //  Check the current char and take it if its a name char. Else
+        while(true)
+        {
+            //  Check the current char and take it if it's a name char. Else
             //  break out.
-            if ( (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
+            for (;(fCharIndex < fCharsAvail) && ((fgCharCharsTable[fCharBuf[fCharIndex]] & gNCNameCharMask) != 0);fCharIndex++);
+
+            // if it isn't a NameChar, it could be a surrogate
+            if ( (fCharIndex < fCharsAvail) && (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
             {
                 // make sure one more char is in the buffer, the transcoder
                 // should put only a complete surrogate pair into the buffer
@@ -767,11 +771,7 @@ bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
                 fCharIndex += 2;
                 continue;
             }
-
-            if ((fgCharCharsTable[fCharBuf[fCharIndex]] & gNCNameCharMask) == 0)
-                break;
-
-            fCharIndex++;
+            break;
         }
 
         // we have to copy the accepted character(s), and update column
