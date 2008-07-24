@@ -121,7 +121,7 @@ PSVIWriterHandlers::PSVIWriterHandlers(XMLFormatter* outputFormatter, XMLFormatt
 	fPrefixMap = new RefHashTableOf<XMLCh>(5, false);
 	fNamespaces = new RefArrayVectorOf<XMLCh>(5, false);
 
-	fNSAttributes = new ValueVectorOf<unsigned int>(15);
+	fNSAttributes = new ValueVectorOf<XMLSize_t>(15);
 	fElementChildren = new ValueStackOf<bool>(20);
 
 
@@ -469,7 +469,7 @@ PSVIWriterHandlers::handlePartialElementPSVI( const XMLCh*       const /* localN
 void PSVIWriterHandlers::processAttributes(PSVIAttributeList* psviAttributes, const RefVectorOf<AttrInfo>* attributesInfo) {
 	fNSAttributes->removeAllElements();  //will store the indecies of namespace attributes
 	bool firstFlag = true;
-	for (unsigned int i = 0; i < attributesInfo->size(); i++) {
+	for (XMLSize_t i = 0; i < attributesInfo->size(); i++) {
 		if (attributesInfo->elementAt(i)->getUri() == XMLUni::fgXMLNSURIName) {
 			fNSAttributes->addElement(i);
 		} else {
@@ -508,8 +508,8 @@ void PSVIWriterHandlers::processNamespaceAttributes(PSVIAttributeList* psviAttri
 		writeEmpty(PSVIUni::fgNamespaceAttributes);
 	} else {
 		sendIndentedElement(PSVIUni::fgNamespaceAttributes);
-		int ind;
-		for (unsigned int count = 0; count < fNSAttributes->size(); count++) {
+		XMLSize_t ind;
+		for (XMLSize_t count = 0; count < fNSAttributes->size(); count++) {
 			ind = fNSAttributes->elementAt(count);
 			sendIndentedElement(PSVIUni::fgAttribute);
 			sendElementValue(PSVIUni::fgNamespaceName, XMLUni::fgXMLNSURIName);
@@ -965,7 +965,7 @@ void PSVIWriterHandlers::processDOMAttributes(DOMNamedNodeMap* attrs) {
 		writeEmpty(PSVIUni::fgNamespaceAttributes);
 	} else {
 		sendIndentedElement(PSVIUni::fgNamespaceAttributes);
-		for (unsigned int NScount = 0; NScount < fNSAttributes->size(); NScount++) {
+		for (XMLSize_t NScount = 0; NScount < fNSAttributes->size(); NScount++) {
 			DOMAttr* attr = (DOMAttr*)attrs->item(fNSAttributes->elementAt(NScount));
 			sendIndentedElement(PSVIUni::fgAttribute);
 			sendElementValue(PSVIUni::fgNamespaceName, XMLUni::fgXMLNSURIName);

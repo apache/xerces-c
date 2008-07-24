@@ -44,12 +44,12 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    unsigned int getElementCount()
+    XMLSize_t getElementCount()
     {
         return fElementCount;
     }
 
-    unsigned int getAttrCount()
+    XMLSize_t getAttrCount()
     {
         return fAttrCount;
     }
@@ -94,8 +94,8 @@ private:
     //      These are just counters that are run upwards based on the input
     //      from the document handlers.
     // -----------------------------------------------------------------------
-    unsigned int    fAttrCount;
+    XMLSize_t       fAttrCount;
     XMLSize_t       fCharacterCount;
-    unsigned int    fElementCount;
+    XMLSize_t       fElementCount;
     XMLSize_t       fSpaceCount;
 };

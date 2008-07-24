@@ -275,7 +275,7 @@ protected:
 	RefHashTableOf<XMLCh>* fPrefixMap;
     RefArrayVectorOf<XMLCh>* fNamespaces;
 
-	ValueVectorOf<unsigned int>* fNSAttributes;  //REVISIT  dont need if NSAttrs in different object
+	ValueVectorOf<XMLSize_t>* fNSAttributes;  //REVISIT  dont need if NSAttrs in different object
 	ValueStackOf<bool>* fElementChildren;
 
 	RefVectorOf<AttrInfo>* fAttributesInfo;
