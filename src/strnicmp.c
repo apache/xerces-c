@@ -22,10 +22,10 @@
 #include "strnicmp.h"
 #include "config.h"
 
-#if HAVE_STRING
+#if HAVE_STRING_H
 #	include <string.h>
 #endif
-#if HAVE_STRINGS
+#if HAVE_STRINGS_H
 #	include <strings.h>
 #endif
 
