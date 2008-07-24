@@ -4762,7 +4762,7 @@ bool DOMTest::testBaseURI(XercesDOMParser* parser) {
 }
 
 bool DOMTest::testWholeText(XercesDOMParser* parser) {
-	char* sXml="<?xml version='1.0'?>"
+	const char* sXml="<?xml version='1.0'?>"
 				"<!DOCTYPE root["
                 "<!ENTITY ent1 'Dallas. &ent3; #5668'>"
                 "<!ENTITY ent2 '1900 Dallas Road<![CDATA[ (East) ]]>'>"
@@ -4893,7 +4893,7 @@ public:
 };
 
 bool DOMTest::testLSExceptions() {
-	char* sXml="<?xml version='1.0'?>"
+	const char* sXml="<?xml version='1.0'?>"
 				"<!DOCTYPE root["
                 "<!ENTITY ent1 'Dallas. &ent3; #5668'>"
                 "<!ENTITY ent2 '1900 Dallas Road<![CDATA[ (East) ]]>'>"

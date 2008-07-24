@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,83 +69,83 @@ static const XMLCh* getDataTypeString(const XSValue::DataType dt)
     case XSValue::dt_float:
         return SchemaSymbols::fgDT_FLOAT;
     case XSValue::dt_double:
-        return SchemaSymbols::fgDT_DOUBLE;      
+        return SchemaSymbols::fgDT_DOUBLE;
     case XSValue::dt_duration:
-        return SchemaSymbols::fgDT_DURATION;  
+        return SchemaSymbols::fgDT_DURATION;
     case XSValue::dt_dateTime:
-        return SchemaSymbols::fgDT_DATETIME;   
+        return SchemaSymbols::fgDT_DATETIME;
     case XSValue::dt_time:
-        return SchemaSymbols::fgDT_TIME;      
+        return SchemaSymbols::fgDT_TIME;
     case XSValue::dt_date:
-        return SchemaSymbols::fgDT_DATE; 
+        return SchemaSymbols::fgDT_DATE;
     case XSValue::dt_gYearMonth:
-        return SchemaSymbols::fgDT_YEARMONTH; 
+        return SchemaSymbols::fgDT_YEARMONTH;
     case XSValue::dt_gYear:
-        return SchemaSymbols::fgDT_YEAR; 
+        return SchemaSymbols::fgDT_YEAR;
     case XSValue::dt_gMonthDay:
-        return SchemaSymbols::fgDT_MONTHDAY;  
+        return SchemaSymbols::fgDT_MONTHDAY;
     case XSValue::dt_gDay:
-        return SchemaSymbols::fgDT_DAY;   
+        return SchemaSymbols::fgDT_DAY;
     case XSValue::dt_gMonth:
-        return SchemaSymbols::fgDT_MONTH;  
+        return SchemaSymbols::fgDT_MONTH;
     case XSValue::dt_hexBinary:
-        return SchemaSymbols::fgDT_HEXBINARY; 
+        return SchemaSymbols::fgDT_HEXBINARY;
     case XSValue::dt_base64Binary:
-        return SchemaSymbols::fgDT_BASE64BINARY; 
+        return SchemaSymbols::fgDT_BASE64BINARY;
     case XSValue::dt_anyURI:
-        return SchemaSymbols::fgDT_ANYURI;   
+        return SchemaSymbols::fgDT_ANYURI;
     case XSValue::dt_QName:
-        return SchemaSymbols::fgDT_QNAME; 
+        return SchemaSymbols::fgDT_QNAME;
     case XSValue::dt_NOTATION:
-        return XMLUni::fgNotationString;   
+        return XMLUni::fgNotationString;
     case XSValue::dt_normalizedString:
-        return SchemaSymbols::fgDT_NORMALIZEDSTRING; 
+        return SchemaSymbols::fgDT_NORMALIZEDSTRING;
     case XSValue::dt_token:
-        return SchemaSymbols::fgDT_TOKEN;         
+        return SchemaSymbols::fgDT_TOKEN;
     case XSValue::dt_language:
-        return SchemaSymbols::fgDT_LANGUAGE;    
+        return SchemaSymbols::fgDT_LANGUAGE;
     case XSValue::dt_NMTOKEN:
-        return XMLUni::fgNmTokenString;       
+        return XMLUni::fgNmTokenString;
     case XSValue::dt_NMTOKENS:
-        return XMLUni::fgNmTokensString;   
+        return XMLUni::fgNmTokensString;
     case XSValue::dt_Name:
-        return SchemaSymbols::fgDT_NAME;     
+        return SchemaSymbols::fgDT_NAME;
     case XSValue::dt_NCName:
-        return SchemaSymbols::fgDT_NCNAME;  
+        return SchemaSymbols::fgDT_NCNAME;
     case XSValue::dt_ID:
-        return XMLUni::fgIDString; 
+        return XMLUni::fgIDString;
     case XSValue::dt_IDREF:
-        return XMLUni::fgIDRefString;   
+        return XMLUni::fgIDRefString;
     case XSValue::dt_IDREFS:
-        return XMLUni::fgIDRefsString; 
+        return XMLUni::fgIDRefsString;
     case XSValue::dt_ENTITY:
-        return XMLUni::fgEntityString; 
+        return XMLUni::fgEntityString;
     case XSValue::dt_ENTITIES:
-        return XMLUni::fgEntitiesString;  
+        return XMLUni::fgEntitiesString;
     case XSValue::dt_integer:
-        return SchemaSymbols::fgDT_INTEGER;  
+        return SchemaSymbols::fgDT_INTEGER;
     case XSValue::dt_nonPositiveInteger:
-        return SchemaSymbols::fgDT_NONPOSITIVEINTEGER; 
+        return SchemaSymbols::fgDT_NONPOSITIVEINTEGER;
     case XSValue::dt_negativeInteger:
         return SchemaSymbols::fgDT_NEGATIVEINTEGER;
     case XSValue::dt_long:
-        return SchemaSymbols::fgDT_LONG; 
+        return SchemaSymbols::fgDT_LONG;
     case XSValue::dt_int:
-        return SchemaSymbols::fgDT_INT;  
+        return SchemaSymbols::fgDT_INT;
     case XSValue::dt_short:
-        return SchemaSymbols::fgDT_SHORT; 
+        return SchemaSymbols::fgDT_SHORT;
     case XSValue::dt_byte:
-        return SchemaSymbols::fgDT_BYTE;  
+        return SchemaSymbols::fgDT_BYTE;
     case XSValue::dt_nonNegativeInteger:
         return SchemaSymbols::fgDT_NONNEGATIVEINTEGER;
     case XSValue::dt_unsignedLong:
-        return SchemaSymbols::fgDT_ULONG; 
+        return SchemaSymbols::fgDT_ULONG;
     case XSValue::dt_unsignedInt:
         return SchemaSymbols::fgDT_UINT;
     case XSValue::dt_unsignedShort:
-        return SchemaSymbols::fgDT_USHORT;  
+        return SchemaSymbols::fgDT_USHORT;
     case XSValue::dt_unsignedByte:
-        return SchemaSymbols::fgDT_UBYTE;     
+        return SchemaSymbols::fgDT_UBYTE;
     case XSValue::dt_positiveInteger:
         return SchemaSymbols::fgDT_POSITIVEINTEGER;
     default:
@@ -157,7 +157,7 @@ static bool compareActualValue( const XSValue::DataType             datatype
                               , const XSValue::XSValue_Data         actValue
                               , const XSValue::XSValue_Data         expValue)
 {
-    switch (datatype) {                        
+    switch (datatype) {
         case XSValue::dt_boolean:
             if (actValue.fValue.f_bool == expValue.fValue.f_bool)
                 return true;
@@ -185,8 +185,8 @@ static bool compareActualValue( const XSValue::DataType             datatype
                 printf("ACTVALUE_TEST Unexpected XSValue enum for datatype %s, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
                         actValue.fValue.f_doubleType.f_doubleEnum, expValue.fValue.f_doubleType.f_doubleEnum);
                 return false;
-            }        
-        case XSValue::dt_float:   
+            }
+        case XSValue::dt_float:
             if (actValue.fValue.f_floatType.f_floatEnum == XSValue::DoubleFloatType_Normal) {
                 if (fabs(actValue.fValue.f_float - expValue.fValue.f_float) < fabs(actValue.fValue.f_float)/1000)
                     return true;
@@ -200,15 +200,15 @@ static bool compareActualValue( const XSValue::DataType             datatype
                 printf("ACTVALUE_TEST Unexpected XSValue enum for datatype %s, got %d expected %d\n", StrX(getDataTypeString(datatype)).localForm(),
                         actValue.fValue.f_floatType.f_floatEnum, expValue.fValue.f_floatType.f_floatEnum);
                 return false;
-            }                     
+            }
         case XSValue::dt_duration:
         case XSValue::dt_dateTime:
-        case XSValue::dt_time:            
-        case XSValue::dt_date:            
-        case XSValue::dt_gYearMonth:           
-        case XSValue::dt_gYear:            
-        case XSValue::dt_gMonthDay:           
-        case XSValue::dt_gDay:            
+        case XSValue::dt_time:
+        case XSValue::dt_date:
+        case XSValue::dt_gYearMonth:
+        case XSValue::dt_gYear:
+        case XSValue::dt_gMonthDay:
+        case XSValue::dt_gDay:
         case XSValue::dt_gMonth:
             if (actValue.fValue.f_datetime.f_year   == expValue.fValue.f_datetime.f_year   &&
                 actValue.fValue.f_datetime.f_month  == expValue.fValue.f_datetime.f_month  &&
@@ -218,23 +218,23 @@ static bool compareActualValue( const XSValue::DataType             datatype
                 actValue.fValue.f_datetime.f_second == expValue.fValue.f_datetime.f_second &&
                 (fabs(actValue.fValue.f_datetime.f_milisec  - expValue.fValue.f_datetime.f_milisec) < 0.01))
                 return true;
-            printf("ACTVALUE_TEST Unexpected %s XSValue\n", StrX(getDataTypeString(datatype)).localForm());                    
+            printf("ACTVALUE_TEST Unexpected %s XSValue\n", StrX(getDataTypeString(datatype)).localForm());
             printf(" Actual year = %d, month = %d, day = %d, hour = %d, min = %d, second = %d, milisec = %f\n",
                 actValue.fValue.f_datetime.f_year, actValue.fValue.f_datetime.f_month, actValue.fValue.f_datetime.f_day,
                 actValue.fValue.f_datetime.f_hour, actValue.fValue.f_datetime.f_min, actValue.fValue.f_datetime.f_second, actValue.fValue.f_datetime.f_milisec);
             printf(" Expect year = %d, month = %d, day = %d, hour = %d, min = %d, second = %d, milisec = %f\n",
                 expValue.fValue.f_datetime.f_year, expValue.fValue.f_datetime.f_month, expValue.fValue.f_datetime.f_day,
                 expValue.fValue.f_datetime.f_hour, expValue.fValue.f_datetime.f_min, expValue.fValue.f_datetime.f_second, expValue.fValue.f_datetime.f_milisec);
-            return false;  
-                   
+            return false;
+
         case XSValue::dt_hexBinary:
             // in the tests in this file the hexBinary data is always 2 long...
             if (actValue.fValue.f_byteVal[0] == expValue.fValue.f_byteVal[0] &&
-                actValue.fValue.f_byteVal[1] == expValue.fValue.f_byteVal[1]) 
+                actValue.fValue.f_byteVal[1] == expValue.fValue.f_byteVal[1])
                 return true;
             printf("ACTVALUE_TEST Unexpected hexBinary value\n");
             printf(" Actual Value = %x:%x\n",actValue.fValue.f_byteVal[0],actValue.fValue.f_byteVal[1]);
-            printf(" Expect Value = %x:%x\n",expValue.fValue.f_byteVal[0],expValue.fValue.f_byteVal[1]);    
+            printf(" Expect Value = %x:%x\n",expValue.fValue.f_byteVal[0],expValue.fValue.f_byteVal[1]);
             return false;
 
         case XSValue::dt_base64Binary:
@@ -249,7 +249,7 @@ static bool compareActualValue( const XSValue::DataType             datatype
                     {
                         printf("ACTVALUE_TEST Unexpected base64Binary value for byte %d\n", i);
                         printf(" Actual Value = %x\n",actValue.fValue.f_byteVal[i]);
-                        printf(" Expect Value = %x\n",expValue.fValue.f_byteVal[i]);    
+                        printf(" Expect Value = %x\n",expValue.fValue.f_byteVal[i]);
                         return false;
                     }
                 }
@@ -257,34 +257,34 @@ static bool compareActualValue( const XSValue::DataType             datatype
             }
 
         case XSValue::dt_string:
-        case XSValue::dt_anyURI:            
-        case XSValue::dt_QName:           
-        case XSValue::dt_NOTATION:          
-        case XSValue::dt_normalizedString:            
-        case XSValue::dt_token:            
-        case XSValue::dt_language:            
-        case XSValue::dt_NMTOKEN:            
-        case XSValue::dt_NMTOKENS:            
-        case XSValue::dt_Name:            
-        case XSValue::dt_NCName:            
-        case XSValue::dt_ID:            
-        case XSValue::dt_IDREF:           
-        case XSValue::dt_IDREFS:            
-        case XSValue::dt_ENTITY:           
+        case XSValue::dt_anyURI:
+        case XSValue::dt_QName:
+        case XSValue::dt_NOTATION:
+        case XSValue::dt_normalizedString:
+        case XSValue::dt_token:
+        case XSValue::dt_language:
+        case XSValue::dt_NMTOKEN:
+        case XSValue::dt_NMTOKENS:
+        case XSValue::dt_Name:
+        case XSValue::dt_NCName:
+        case XSValue::dt_ID:
+        case XSValue::dt_IDREF:
+        case XSValue::dt_IDREFS:
+        case XSValue::dt_ENTITY:
         case XSValue::dt_ENTITIES:
             printf("ACTVALUE_TEST no Actual Value for datatype %s\n", StrX(getDataTypeString(datatype)).localForm());
             return false;
 
         case XSValue::dt_integer:
         case XSValue::dt_nonPositiveInteger:
-        case XSValue::dt_negativeInteger:            
-        case XSValue::dt_long:            
+        case XSValue::dt_negativeInteger:
+        case XSValue::dt_long:
             if (actValue.fValue.f_long == expValue.fValue.f_long)
                 return true;
             printf("ACTVALUE_TEST Unexpected %s XSValue, got %ld expected %ld\n", StrX(getDataTypeString(datatype)).localForm(),
                     actValue.fValue.f_long, expValue.fValue.f_long);
             return false;
-                                       
+
         case XSValue::dt_int:
             if (actValue.fValue.f_int == expValue.fValue.f_int)
                 return true;
@@ -302,7 +302,7 @@ static bool compareActualValue( const XSValue::DataType             datatype
                 return true;
             printf("ACTVALUE_TEST Unexpected dt_byte XSValue, got %d expected %d\n",
                     actValue.fValue.f_char, expValue.fValue.f_char);
-            return false; 
+            return false;
         case XSValue::dt_nonNegativeInteger:
         case XSValue::dt_unsignedLong:
         case XSValue::dt_positiveInteger:
@@ -310,7 +310,7 @@ static bool compareActualValue( const XSValue::DataType             datatype
                 return true;
             printf("ACTVALUE_TEST Unexpected %s XSValue, got %lu expected %lu\n", StrX(getDataTypeString(datatype)).localForm(),
                     actValue.fValue.f_ulong, expValue.fValue.f_ulong);
-            return false;                    
+            return false;
         case XSValue::dt_unsignedInt:
             if (actValue.fValue.f_uint == expValue.fValue.f_uint)
                 return true;
@@ -322,13 +322,13 @@ static bool compareActualValue( const XSValue::DataType             datatype
                 return true;
             printf("ACTVALUE_TEST Unexpected dt_unsignedShort XSValue, got %d expected %d\n",
                     actValue.fValue.f_ushort, expValue.fValue.f_ushort);
-            return false; 
+            return false;
         case XSValue::dt_unsignedByte:
             if (actValue.fValue.f_uchar == expValue.fValue.f_uchar)
                 return true;
             printf("ACTVALUE_TEST Unexpected dt_unsignedByte XSValue, got %d expected %d\n",
                     actValue.fValue.f_uchar, expValue.fValue.f_uchar);
-            return false;           
+            return false;
         default:
             printf("ACTVALUE_TEST Unexpected datatype\n");
             return false;
@@ -336,10 +336,10 @@ static bool compareActualValue( const XSValue::DataType             datatype
 }
 
 
-static char* getStatusString(const XSValue::Status status)
+static const char* getStatusString(const XSValue::Status status)
 {
     switch (status)
-    { 
+    {
     case XSValue::st_Init:
         return "st_Init";
         break;
@@ -377,7 +377,7 @@ static char* getStatusString(const XSValue::Status status)
         return "st_UnknownType";
         break;
     }
-   
+
 }
 
 /**
@@ -407,11 +407,11 @@ void VALIDATE_TEST( const char*                  const  data
                 data, StrX(getDataTypeString(datatype)).localForm(), expRetValid);
         errSeen = true;
     }
-    else 
+    else
     {
-        if (!expRetValid             && 
-             expStatus != DONT_CARE  && 
-             expStatus != myStatus ) 
+        if (!expRetValid             &&
+             expStatus != DONT_CARE  &&
+             expStatus != myStatus )
         {
             printf("VALIDATE_TEST Context Diff, data=<%s> datatype=<%s>, expStatus=<%s>, actStatus=<%s>\n",
                     data, StrX(getDataTypeString(datatype)).localForm(), getStatusString(expStatus), getStatusString(myStatus));
@@ -469,23 +469,23 @@ void ACTVALUE_TEST(  const char*                  const  data
                                                  , XSValue::ver_10
                                                  , toValidate
                                                  , XMLPlatformUtils::fgMemoryManager);
-    if (actRetValue) 
+    if (actRetValue)
     {
-        if (!expRetValue) 
+        if (!expRetValue)
         {
             printf("ACTVALUE_TEST XSValue returned: data=<%s>, datatype=<%s>\n",
                     data, StrX(getDataTypeString(datatype)).localForm());
             errSeen = true;
-        }      
+        }
         else if (!compareActualValue(datatype, actRetValue->fData, expValue))
         {
             errSeen = true;
-        } 
-        delete actRetValue;       
+        }
+        delete actRetValue;
     }
-    else 
+    else
     {
-        if (expRetValue) 
+        if (expRetValue)
         {
             printf("ACTVALUE_TEST No XSValue returned, data=<%s>, datatype=<%s>\n" ,
                     data, StrX(getDataTypeString(datatype)).localForm());
@@ -494,7 +494,7 @@ void ACTVALUE_TEST(  const char*                  const  data
         else
         {
             if (expStatus != DONT_CARE  &&
-                expStatus != myStatus    ) 
+                expStatus != myStatus    )
             {
                 printf("ACTVALUE_TEST Context Diff, data=<%s>, datatype=<%s>, expStatus=<%s>, actStatus=<%s>\n" ,
                        data, StrX(getDataTypeString(datatype)).localForm(), getStatusString(expStatus), getStatusString(myStatus));
@@ -579,7 +579,7 @@ void CANREP_TEST(const char*                  const  data
         {
             char* actRetCanRep_inchar = XMLString::transcode(actRetCanRep);
 
-            if (!XMLString::equals(actRetCanRep_inchar, toCompare)) 
+            if (!XMLString::equals(actRetCanRep_inchar, toCompare))
             {
                 printf("CANREP_TEST CanRep Diff , data=<%s>, datatype=<%s>, actCanRep=<%s>, toCompare=<%s>\n" ,
                     data, StrX(getDataTypeString(datatype)).localForm(), actRetCanRep_inchar, toCompare);
@@ -589,9 +589,9 @@ void CANREP_TEST(const char*                  const  data
             XMLPlatformUtils::fgMemoryManager->deallocate(actRetCanRep);
             XMLString::release(&actRetCanRep_inchar);
         }
-    }                                                                                 
-    else 
-    {                                                                            
+    }
+    else
+    {
         if (expRetCanRep)
         {
             printf("CANREP_TEST No CanRep returned, data=<%s>, datatype=<%s>\n" ,
@@ -608,7 +608,7 @@ void CANREP_TEST(const char*                  const  data
                 errSeen = true;
             }
         }
-    }                                                                                 
+    }
 }
 #else
 #define CANREP_TEST(data, datatype, toValidate, expRetCanRep, toCompare, expStatus)   \
@@ -661,7 +661,7 @@ void CANREP_TEST(const char*                  const  data
             }                                                                         \
         }                                                                             \
     }                                                                                 \
-}    
+}
 #endif
 
 #ifdef _DEBUG
@@ -712,7 +712,7 @@ void  testNoActVal(const char*                  const  data
 
     if (ret_Status != expStatus)
     {
-        printf("testNoActVal fails, data=<%s> retStatus=<%s> expStatus=<%s>\n", 
+        printf("testNoActVal fails, data=<%s> retStatus=<%s> expStatus=<%s>\n",
                 data
               , getStatusString(ret_Status)
               , getStatusString(expStatus));
@@ -738,7 +738,7 @@ void  testNoCanRep(const char*                  const  data
 
     if (ret_Status != expStatus)
     {
-        printf("testNoCanRep fails, data=<%s> retStatus=<%s> expStatus=<%s>\n", 
+        printf("testNoCanRep fails, data=<%s> retStatus=<%s> expStatus=<%s>\n",
                 data
               , getStatusString(ret_Status)
               , getStatusString(expStatus));
@@ -751,7 +751,7 @@ void  testNoCanRep(const char*                  const  data
  ***/
 void test_dt_decimal()
 {
-    const XSValue::DataType dt = XSValue::dt_decimal; 
+    const XSValue::DataType dt = XSValue::dt_decimal;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="  1234.567  \n";
@@ -780,16 +780,16 @@ void test_dt_decimal()
     XSValue::XSValue_Data act_v_ran32_v_2; act_v_ran32_v_2.fValue.f_double = (double)999.4294967295;
     //XSValue::XSValue_Data act_v_ran32_iv_1;="4294967296.999";
     //XSValue::XSValue_Data act_v_ran32_iv_2;="999.4294967296";
-   
+
 /***
  * 3.2.3.2 Canonical representation
  *
- * The canonical representation for decimal is defined by prohibiting certain options from the Lexical 
- * representation (3.2.3.1). Specifically, 
- * 1. the preceding optional "+" sign is prohibited. 
- * 2. The decimal point is required. 
- * 3. Leading and trailing zeroes are prohibited subject to the following: 
- *       there must be at least one digit to the right and 
+ * The canonical representation for decimal is defined by prohibiting certain options from the Lexical
+ * representation (3.2.3.1). Specifically,
+ * 1. the preceding optional "+" sign is prohibited.
+ * 2. The decimal point is required.
+ * 3. Leading and trailing zeroes are prohibited subject to the following:
+ *       there must be at least one digit to the right and
  *       to the left of the decimal point which may be a zero.
  ***/
 
@@ -807,18 +807,18 @@ void test_dt_decimal()
     const char data_canrep_6[]="0.12345";
     const char data_rawstr_7[]="123.00";
     const char data_canrep_7[]="123.0";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid       n/a   
+     *            range  invalid       n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -839,21 +839,21 @@ void test_dt_decimal()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -862,7 +862,7 @@ void test_dt_decimal()
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if SIZEOF_LONG == 8
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         //ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
         //ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0001);
@@ -884,15 +884,15 @@ void test_dt_decimal()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
-     *          range  invalid          n/a                  
+     *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -924,15 +924,15 @@ void test_dt_decimal()
 }
 
 /***
-  * FLT_EPSILON 1.192092896e-07F 
-  * FLT_MIN 1.175494351e-38F 
-  * FLT_MAX 3.402823466e+38F 
+  * FLT_EPSILON 1.192092896e-07F
+  * FLT_MIN 1.175494351e-38F
+  * FLT_MAX 3.402823466e+38F
 ***/
 
 void test_dt_float()
 {
 
-    const XSValue::DataType dt = XSValue::dt_float; 
+    const XSValue::DataType dt = XSValue::dt_float;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="  1234.e+10  \n";
@@ -952,7 +952,7 @@ void test_dt_float()
     const char lex_v_ran_iv_3[]="+1.175494351e-39";
     const char lex_v_ran_iv_4[]="-1.175494351e-39";
 
-    XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_float = (float)0.0; 
+    XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_float = (float)0.0;
     lex_iv_ran_v_1.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_PosINF;
     XSValue::XSValue_Data lex_iv_ran_v_2; lex_iv_ran_v_2.fValue.f_float = (float)0.0;
     lex_iv_ran_v_2.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_NegINF;
@@ -972,13 +972,13 @@ void test_dt_float()
 /***
  * 3.2.4.2 Canonical representation
  *
- * The canonical representation for float is defined by prohibiting certain options from the Lexical 
- * representation (3.2.4.1). 
- * Specifically, 
- * 1. the exponent must be indicated by "E". 
- * 2. Leading zeroes and the preceding optional "+" sign are prohibited in the exponent. 
- * 3. For the mantissa, the preceding optional "+" sign is prohibited and the decimal point is required. 
- *    Leading and trailing zeroes are prohibited subject to the following: 
+ * The canonical representation for float is defined by prohibiting certain options from the Lexical
+ * representation (3.2.4.1).
+ * Specifically,
+ * 1. the exponent must be indicated by "E".
+ * 2. Leading zeroes and the preceding optional "+" sign are prohibited in the exponent.
+ * 3. For the mantissa, the preceding optional "+" sign is prohibited and the decimal point is required.
+ *    Leading and trailing zeroes are prohibited subject to the following:
  *    number representations must be normalized such that there is a single digit to the left of the decimal point
  *    and at least a single digit to the right of the decimal point.
  *
@@ -995,17 +995,17 @@ void test_dt_float()
     const char data_rawstr_5[]="00100.23e2";
     const char data_canrep_5[]="1.0023E4";
 
-    /***    
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, range valid
@@ -1032,17 +1032,17 @@ void test_dt_float()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
@@ -1078,15 +1078,15 @@ void test_dt_float()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                            XMLCh          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -1120,16 +1120,16 @@ void test_dt_float()
 /***
 DBL_EPSILON 2.2204460492503131e-016
 DBL_MAX 1.7976931348623158e+308
-DBL_MIN 2.2250738585072014e-308 
+DBL_MIN 2.2250738585072014e-308
 ***/
 void test_dt_double()
 {
 
-    const XSValue::DataType dt = XSValue::dt_double; 
+    const XSValue::DataType dt = XSValue::dt_double;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="   1234.e+10   \n";
-    const char lex_v_ran_v_1[]="+1.7976931348623158e+308";    
+    const char lex_v_ran_v_1[]="+1.7976931348623158e+308";
     const char lex_v_ran_v_2[]="-1.7976931348623158e+308";
     const char lex_v_ran_v_3[]="+2.2250738585072014e-308";
     const char lex_v_ran_v_4[]="-2.2250738585072014e-308";
@@ -1153,7 +1153,7 @@ void test_dt_double()
     const char lex_v_ran_iv_3_canrep[]="0";    // "2.2250738585072014E-329";
     const char lex_v_ran_iv_4_canrep[]="0";    // "-2.2250738585072014E-329";
 
-    XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_double = (double)0.0; 
+    XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_double = (double)0.0;
     lex_iv_ran_v_1.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_PosINF;
     XSValue::XSValue_Data lex_iv_ran_v_2; lex_iv_ran_v_2.fValue.f_double = (double)0.0;
     lex_iv_ran_v_2.fValue.f_doubleType.f_doubleEnum = XSValue::DoubleFloatType_NegINF;
@@ -1168,13 +1168,13 @@ void test_dt_double()
 /***
  * 3.2.5.2 Canonical representation
  *
- * The canonical representation for float is defined by prohibiting certain options from the Lexical 
- * representation (3.2.5.1). 
- * Specifically, 
- * 1. the exponent must be indicated by "E". 
- * 2. Leading zeroes and the preceding optional "+" sign are prohibited in the exponent. 
- * 3. For the mantissa, the preceding optional "+" sign is prohibited and the decimal point is required. 
- *    Leading and trailing zeroes are prohibited subject to the following: 
+ * The canonical representation for float is defined by prohibiting certain options from the Lexical
+ * representation (3.2.5.1).
+ * Specifically,
+ * 1. the exponent must be indicated by "E".
+ * 2. Leading zeroes and the preceding optional "+" sign are prohibited in the exponent.
+ * 3. For the mantissa, the preceding optional "+" sign is prohibited and the decimal point is required.
+ *    Leading and trailing zeroes are prohibited subject to the following:
  *    number representations must be normalized such that there is a single digit to the left of the decimal point
  *    and at least a single digit to the right of the decimal point.
  *
@@ -1191,17 +1191,17 @@ void test_dt_double()
     const char data_rawstr_5[]="00100.23e2";
     const char data_canrep_5[]="1.0023E4";
 
-    /***    
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, range valid
@@ -1212,7 +1212,7 @@ void test_dt_double()
     VALIDATE_TEST(lex_v_ran_v_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
 
     // lexical valid, range invalid however XML4C converts to INF / ZERO
-    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_TRUE, DONT_CARE);    
+    VALIDATE_TEST(lex_v_ran_iv_1 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran_iv_2 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran_iv_3 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
     VALIDATE_TEST(lex_v_ran_iv_4 , dt, EXP_RET_VALID_TRUE, DONT_CARE);
@@ -1228,17 +1228,17 @@ void test_dt_double()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
@@ -1255,7 +1255,7 @@ void test_dt_double()
         ACTVALUE_TEST(lex_v_ran_v_3,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_3);
         ACTVALUE_TEST(lex_v_ran_v_4,  dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, act_v_ran_v_4);
 
-        // lexical valid, range invalid        
+        // lexical valid, range invalid
         ACTVALUE_TEST(lex_v_ran_iv_1, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_1);
         ACTVALUE_TEST(lex_v_ran_iv_2, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_2);
         ACTVALUE_TEST(lex_v_ran_iv_3, dt, toValidate, EXP_RET_VALUE_TRUE, DONT_CARE, lex_iv_ran_v_3);
@@ -1274,15 +1274,15 @@ void test_dt_double()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                            XMLCh          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -1314,15 +1314,15 @@ void test_dt_double()
 }
 
 /***
- *  9223372036854775807 
+ *  9223372036854775807
  * -9223372036854775808
- *  2147483647 
+ *  2147483647
  * -2147483648
  ***/
 
 void test_dt_integer()
 {
-    const XSValue::DataType dt = XSValue::dt_integer; 
+    const XSValue::DataType dt = XSValue::dt_integer;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="   1234    \n";
@@ -1355,9 +1355,9 @@ void test_dt_integer()
 /***
  * 3.3.13.2 Canonical representation
  *
- * The canonical representation for integer is defined by prohibiting certain options from the Lexical 
- * representation (3.3.13.1). Specifically, 
- * 1. the preceding optional "+" sign is prohibited and 
+ * The canonical representation for integer is defined by prohibiting certain options from the Lexical
+ * representation (3.3.13.1). Specifically,
+ * 1. the preceding optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
  *
  ***/
@@ -1366,18 +1366,18 @@ void test_dt_integer()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid       n/a   
+     *            range  invalid       n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -1398,21 +1398,21 @@ void test_dt_integer()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -1421,7 +1421,7 @@ void test_dt_integer()
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if SIZEOF_LONG == 8
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
@@ -1443,15 +1443,15 @@ void test_dt_integer()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
-     *          range  invalid          n/a                  
+     *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -1479,7 +1479,7 @@ void test_dt_integer()
 
 void test_dt_nonPositiveInteger()
 {
-    const XSValue::DataType dt = XSValue::dt_nonPositiveInteger; 
+    const XSValue::DataType dt = XSValue::dt_nonPositiveInteger;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="    -1234   \n";
@@ -1507,8 +1507,8 @@ void test_dt_nonPositiveInteger()
 /***
  * 3.3.14.2 Canonical representation
  *
- * The canonical representation for nonPositiveInteger is defined by prohibiting certain options from the 
- * Lexical representation (3.3.14.1). Specifically, 
+ * The canonical representation for nonPositiveInteger is defined by prohibiting certain options from the
+ * Lexical representation (3.3.14.1). Specifically,
  * 1. the sign must be omitted for token "0" and
  * 2. leading zeroes are prohibited.
  *
@@ -1518,18 +1518,18 @@ void test_dt_nonPositiveInteger()
     const char data_canrep_1[]="0";
     const char data_rawstr_2[]="-00012345";
     const char data_canrep_2[]="-12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid       n/a   
+     *            range  invalid       n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -1550,21 +1550,21 @@ void test_dt_nonPositiveInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -1591,15 +1591,15 @@ void test_dt_nonPositiveInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
-     *          range  invalid          n/a                  
+     *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -1625,7 +1625,7 @@ void test_dt_nonPositiveInteger()
 
 void test_dt_negativeInteger()
 {
-    const XSValue::DataType dt = XSValue::dt_negativeInteger; 
+    const XSValue::DataType dt = XSValue::dt_negativeInteger;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="    -1234    \n";
@@ -1653,26 +1653,26 @@ void test_dt_negativeInteger()
 /***
  * 3.3.15.2 Canonical representation
  *
- * The canonical representation for negativeInteger is defined by prohibiting certain options 
- * from the Lexical representation (3.3.15.1). Specifically, 
+ * The canonical representation for negativeInteger is defined by prohibiting certain options
+ * from the Lexical representation (3.3.15.1). Specifically,
  * 1. leading zeroes are prohibited.
  *
  ***/
 
     const char data_rawstr_1[]="    -00012345    \n";
     const char data_canrep_1[]="-12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid       n/a   
+     *            range  invalid       n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -1693,21 +1693,21 @@ void test_dt_negativeInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -1734,15 +1734,15 @@ void test_dt_negativeInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
-     *          range  invalid          n/a                  
+     *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -1767,7 +1767,7 @@ void test_dt_negativeInteger()
 
 void test_dt_long()
 {
-    const XSValue::DataType dt = XSValue::dt_long; 
+    const XSValue::DataType dt = XSValue::dt_long;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="    1234    \n";
@@ -1800,9 +1800,9 @@ void test_dt_long()
 /***
  * 3.3.16.2 Canonical representation
  *
- * The canonical representation for long is defined by prohibiting certain options from the 
- * Lexical representation (3.3.16.1). Specifically, 
- * 1. the the optional "+" sign is prohibited and 
+ * The canonical representation for long is defined by prohibiting certain options from the
+ * Lexical representation (3.3.16.1). Specifically,
+ * 1. the the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
 
  ***/
@@ -1811,18 +1811,18 @@ void test_dt_long()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -1845,21 +1845,21 @@ void test_dt_long()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -1868,7 +1868,7 @@ void test_dt_long()
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if SIZEOF_LONG == 8
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
@@ -1890,15 +1890,15 @@ void test_dt_long()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -1932,7 +1932,7 @@ void test_dt_long()
 
 void test_dt_int()
 {
-    const XSValue::DataType dt = XSValue::dt_int; 
+    const XSValue::DataType dt = XSValue::dt_int;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="    1234     \n";
@@ -1942,7 +1942,7 @@ void test_dt_int()
     const char lex_v_ran_iv_1[]="+2147483648";
     const char lex_v_ran_iv_2[]="-2147483649";
 
-    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_int = (int)1234;    
+    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_int = (int)1234;
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_int = (int)+2147483647;
     XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_int = (int)-2147483648;
 
@@ -1957,9 +1957,9 @@ void test_dt_int()
 /***
  * 3.3.17.2 Canonical representation
  *
- * The canonical representation for int is defined by prohibiting certain options from the 
- * Lexical representation (3.3.17.1). Specifically, 
- * 1. the the optional "+" sign is prohibited and 
+ * The canonical representation for int is defined by prohibiting certain options from the
+ * Lexical representation (3.3.17.1). Specifically,
+ * 1. the the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
  *
  ***/
@@ -1968,18 +1968,18 @@ void test_dt_int()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -2002,21 +2002,21 @@ void test_dt_int()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2040,15 +2040,15 @@ void test_dt_int()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -2080,12 +2080,12 @@ void test_dt_int()
     CANREP_TEST(lex_v_ran_iv_2, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_2_canrep, DONT_CARE);
 }
 
-// 32767 
+// 32767
 // -32768
 
 void test_dt_short()
 {
-    const XSValue::DataType dt = XSValue::dt_short; 
+    const XSValue::DataType dt = XSValue::dt_short;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="    1234    \n";
@@ -2095,7 +2095,7 @@ void test_dt_short()
     const char lex_v_ran_iv_1[]="+32768";
     const char lex_v_ran_iv_2[]="-32769";
 
-    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_short = (short)1234;    
+    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_short = (short)1234;
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_short = (short)+32767;
     XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_short = (short)-32768;
 
@@ -2111,9 +2111,9 @@ void test_dt_short()
  *
  * 3.3.18.2 Canonical representation
  *
- * The canonical representation for short is defined by prohibiting certain options from the 
- * Lexical representation (3.3.18.1). Specifically, 
- * 1. the the optional "+" sign is prohibited and 
+ * The canonical representation for short is defined by prohibiting certain options from the
+ * Lexical representation (3.3.18.1). Specifically,
+ * 1. the the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
  *
  ***/
@@ -2122,18 +2122,18 @@ void test_dt_short()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -2156,21 +2156,21 @@ void test_dt_short()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2194,15 +2194,15 @@ void test_dt_short()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -2234,12 +2234,12 @@ void test_dt_short()
     CANREP_TEST(lex_v_ran_iv_2, dt, false, EXP_RET_CANREP_TRUE,  lex_v_ran_iv_2_canrep, DONT_CARE);
 }
 
-//127 
+//127
 //-128
 
 void test_dt_byte()
 {
-    const XSValue::DataType dt = XSValue::dt_byte; 
+    const XSValue::DataType dt = XSValue::dt_byte;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="   12   \n";
@@ -2249,7 +2249,7 @@ void test_dt_byte()
     const char lex_v_ran_iv_1[]="+128";
     const char lex_v_ran_iv_2[]="-129";
 
-    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_char = (char)12;    
+    XSValue::XSValue_Data act_v_ran_v_0;   act_v_ran_v_0.fValue.f_char = (char)12;
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_char = (char)+127;
     XSValue::XSValue_Data act_v_ran_v_2;   act_v_ran_v_2.fValue.f_char = (char)-128;
 
@@ -2265,29 +2265,29 @@ void test_dt_byte()
  *
  * 3.3.19.2 Canonical representation
  *
- * The canonical representation for byte is defined by prohibiting certain options from the 
- * Lexical representation (3.3.19.1). Specifically, 
- * 1. the the optional "+" sign is prohibited and 
+ * The canonical representation for byte is defined by prohibiting certain options from the
+ * Lexical representation (3.3.19.1). Specifically,
+ * 1. the the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
  *
  ***/
-  
+
     const char data_rawstr_1[]="   +123   \n";
     const char data_canrep_1[]="123";
     const char data_rawstr_2[]="000123";
     const char data_canrep_2[]="123";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -2310,21 +2310,21 @@ void test_dt_byte()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2348,15 +2348,15 @@ void test_dt_byte()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -2390,7 +2390,7 @@ void test_dt_byte()
 
 void test_dt_nonNegativeInteger()
 {
-    const XSValue::DataType dt = XSValue::dt_nonNegativeInteger; 
+    const XSValue::DataType dt = XSValue::dt_nonNegativeInteger;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="   1234   \n";
@@ -2402,7 +2402,7 @@ void test_dt_nonNegativeInteger()
     const char lex_v_ran32_v_2[]="4294967295";
     const char lex_v_ran32_iv_2[]="4294967296";
 
-    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;
 #if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)+18446744073709551615;
 #endif
@@ -2418,9 +2418,9 @@ void test_dt_nonNegativeInteger()
 /***
  * 3.3.20.2 Canonical representation
  *
- * The canonical representation for nonNegativeInteger is defined by prohibiting certain options from the 
- * Lexical representation (3.3.20.1). Specifically, 
- * 1. the the optional "+" sign is prohibited and 
+ * The canonical representation for nonNegativeInteger is defined by prohibiting certain options from the
+ * Lexical representation (3.3.20.1). Specifically,
+ * 1. the the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
  *
  ***/
@@ -2429,18 +2429,18 @@ void test_dt_nonNegativeInteger()
     const char data_canrep_1[]="0";
     const char data_rawstr_2[]="+00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid       n/a   
+     *            range  invalid       n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -2461,21 +2461,21 @@ void test_dt_nonNegativeInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2502,15 +2502,15 @@ void test_dt_nonNegativeInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
-     *          range  invalid          n/a                  
+     *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -2538,7 +2538,7 @@ void test_dt_nonNegativeInteger()
 // 4294967295
 void test_dt_unsignedLong()
 {
-    const XSValue::DataType dt = XSValue::dt_unsignedLong; 
+    const XSValue::DataType dt = XSValue::dt_unsignedLong;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="    1234   \n";
@@ -2552,7 +2552,7 @@ void test_dt_unsignedLong()
     const char lex_v_ran32_iv_1[]="4294967296";
     const char lex_v_ran32_iv_2[]="-1";
 
-    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;
 #if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_1;  act_v_ran64_v_1.fValue.f_ulong = (unsigned long)+18446744073709551615;
     XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)0;
@@ -2571,9 +2571,9 @@ void test_dt_unsignedLong()
 /***
  * 3.3.16.2 Canonical representation
  *
- * The canonical representation for long is defined by prohibiting certain options from the 
- * Lexical representation (3.3.16.1). Specifically, 
- * 1. the the optional "+" sign is prohibited and 
+ * The canonical representation for long is defined by prohibiting certain options from the
+ * Lexical representation (3.3.16.1). Specifically,
+ * 1. the the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
 
  ***/
@@ -2582,18 +2582,18 @@ void test_dt_unsignedLong()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -2616,21 +2616,21 @@ void test_dt_unsignedLong()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2639,7 +2639,7 @@ void test_dt_unsignedLong()
         ACTVALUE_TEST(lex_v_ran_v_1,    dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran_v_1);
 
 #if SIZEOF_LONG == 8
-        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1); 
+        ACTVALUE_TEST(lex_v_ran64_v_1 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_v_2 , dt, toValidate, EXP_RET_VALUE_TRUE,  DONT_CARE, act_v_ran64_v_2);
         ACTVALUE_TEST(lex_v_ran64_iv_1, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0003, act_v_ran64_v_1);
         ACTVALUE_TEST(lex_v_ran64_iv_2, dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_FOCA0002, act_v_ran64_v_1);
@@ -2661,15 +2661,15 @@ void test_dt_unsignedLong()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -2704,7 +2704,7 @@ void test_dt_unsignedLong()
 //4294967295
 void test_dt_unsignedInt()
 {
-    const XSValue::DataType dt = XSValue::dt_unsignedInt; 
+    const XSValue::DataType dt = XSValue::dt_unsignedInt;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="   1234   \n";
@@ -2714,10 +2714,10 @@ void test_dt_unsignedInt()
     const char lex_v_ran_iv_1[]="4294967296";
     const char lex_v_ran_iv_2[]="-1";
 
-    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_uint = (unsigned int)1234;    
+    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_uint = (unsigned int)1234;
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_uint = (unsigned int)+4294967295;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_uint = (unsigned int)0;
-   
+
     const char lex_v_ran_v_1_canrep[]="4294967295";
     const char lex_v_ran_v_2_canrep[]="0";
     const char lex_v_ran_iv_1_canrep[]="4294967296";
@@ -2729,8 +2729,8 @@ void test_dt_unsignedInt()
 /***
  * 3.3.22.2 Canonical representation
  *
- * The canonical representation for unsignedInt is defined by prohibiting certain options from the 
- * Lexical representation (3.3.22.1). Specifically, 
+ * The canonical representation for unsignedInt is defined by prohibiting certain options from the
+ * Lexical representation (3.3.22.1). Specifically,
  * leading zeroes are prohibited.
  *
  ***/
@@ -2739,18 +2739,18 @@ void test_dt_unsignedInt()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -2773,21 +2773,21 @@ void test_dt_unsignedInt()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2811,15 +2811,15 @@ void test_dt_unsignedInt()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -2854,7 +2854,7 @@ void test_dt_unsignedInt()
 //65535
 void test_dt_unsignedShort()
 {
-    const XSValue::DataType dt = XSValue::dt_unsignedShort; 
+    const XSValue::DataType dt = XSValue::dt_unsignedShort;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="    1234  \n";
@@ -2864,10 +2864,10 @@ void test_dt_unsignedShort()
     const char lex_v_ran_iv_1[]="+65536";
     const char lex_v_ran_iv_2[]="-1";
 
-    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_ushort = (unsigned short)1234;    
+    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_ushort = (unsigned short)1234;
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_ushort = (unsigned short)+65535;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_ushort = (unsigned short)0;
-   
+
     const char lex_v_ran_v_1_canrep[]="65535";
     const char lex_v_ran_v_2_canrep[]="0";
     const char lex_v_ran_iv_1_canrep[]="65536";
@@ -2879,8 +2879,8 @@ void test_dt_unsignedShort()
 /***
  * 3.3.23.2 Canonical representation
  *
- * The canonical representation for unsignedShort is defined by prohibiting certain options from the 
- * Lexical representation (3.3.23.1). Specifically, 
+ * The canonical representation for unsignedShort is defined by prohibiting certain options from the
+ * Lexical representation (3.3.23.1). Specifically,
  * 1. the leading zeroes are prohibited.
  *
  ***/
@@ -2889,18 +2889,18 @@ void test_dt_unsignedShort()
     const char data_canrep_1[]="12345";
     const char data_rawstr_2[]="00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -2923,21 +2923,21 @@ void test_dt_unsignedShort()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -2961,15 +2961,15 @@ void test_dt_unsignedShort()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -3004,7 +3004,7 @@ void test_dt_unsignedShort()
 // 255
 void test_dt_unsignedByte()
 {
-    const XSValue::DataType dt = XSValue::dt_unsignedByte; 
+    const XSValue::DataType dt = XSValue::dt_unsignedByte;
     bool  toValidate = true;
 
     const char lex_v_ran_v_0[]="   123   \n";
@@ -3014,7 +3014,7 @@ void test_dt_unsignedByte()
     const char lex_v_ran_iv_1[]="+256";
     const char lex_v_ran_iv_2[]="-1";
 
-    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_uchar = (unsigned char)123;    
+    XSValue::XSValue_Data act_v_ran_v_0;  act_v_ran_v_0.fValue.f_uchar = (unsigned char)123;
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_uchar = (unsigned char)+255;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_uchar = (unsigned char)0;
 
@@ -3029,8 +3029,8 @@ void test_dt_unsignedByte()
 /***
  * 3.3.24.2 Canonical representation
  *
- * The canonical representation for unsignedByte is defined by prohibiting certain options from the 
- * Lexical representation (3.3.24.1). Specifically, 
+ * The canonical representation for unsignedByte is defined by prohibiting certain options from the
+ * Lexical representation (3.3.24.1). Specifically,
  * 1. leading zeroes are prohibited.
  *
  ***/
@@ -3039,18 +3039,18 @@ void test_dt_unsignedByte()
     const char data_canrep_1[]="123";
     const char data_rawstr_2[]="000123";
     const char data_canrep_2[]="123";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid                         false           st_FOCA0002   
+     *            range  invalid                         false           st_FOCA0002
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid, valid range
@@ -3073,21 +3073,21 @@ void test_dt_unsignedByte()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3111,15 +3111,15 @@ void test_dt_unsignedByte()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
      *          range  invalid                              0            st_FOCA0002
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid                            XMLCh         n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -3153,7 +3153,7 @@ void test_dt_unsignedByte()
 
 void test_dt_positiveInteger()
 {
-    const XSValue::DataType dt = XSValue::dt_positiveInteger; 
+    const XSValue::DataType dt = XSValue::dt_positiveInteger;
     bool  toValidate = true;
 
     const char lex_v_ran_v_1[]="   1234   \n";
@@ -3165,7 +3165,7 @@ void test_dt_positiveInteger()
     const char lex_v_ran32_v_2[]="4294967295";
     const char lex_v_ran32_iv_2[]="4294967296";
 
-    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;    
+    XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;
 #if SIZEOF_LONG == 8
     XSValue::XSValue_Data act_v_ran64_v_2;  act_v_ran64_v_2.fValue.f_ulong = (unsigned long)+18446744073709551615;
 #endif
@@ -3178,11 +3178,11 @@ void test_dt_positiveInteger()
     const char lex_iv_2[]="1234b56";
 
 /***
- * 3.3.25.2 Canonical representation 
+ * 3.3.25.2 Canonical representation
  *
- * The canonical representation for positiveInteger is defined by prohibiting certain options from the 
- * Lexical representation (3.3.25.1). Specifically, 
- * 1. the optional "+" sign is prohibited and 
+ * The canonical representation for positiveInteger is defined by prohibiting certain options from the
+ * Lexical representation (3.3.25.1). Specifically,
+ * 1. the optional "+" sign is prohibited and
  * 2. leading zeroes are prohibited.
  *
  ***/
@@ -3191,18 +3191,18 @@ void test_dt_positiveInteger()
     const char data_canrep_1[]="1";
     const char data_rawstr_2[]="+00012345";
     const char data_canrep_2[]="12345";
-   
-    /***    
+
+    /***
      *
      * validate
      * ---------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *    lexical valid          
+     *    lexical valid
      *            range  valid                           true              n/a
-     *            range  invalid       n/a   
+     *            range  invalid       n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -3223,21 +3223,21 @@ void test_dt_positiveInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XSValue         n/a
-     *          range  invalid                              0            st_Unpresentable                  
+     *          range  invalid                              0            st_Unpresentable
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3264,15 +3264,15 @@ void test_dt_positiveInteger()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
-     *  lexical valid          
+     *  =============
+     *  lexical valid
      *          range  valid                              XMLCh          n/a
-     *          range  invalid          n/a                  
+     *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
-     *  lexical valid          
+     *  ==============
+     *  lexical valid
      *          range  valid                              XMLCh         n/a
      *          range  invalid          n/a
      *  lexical invalid                                     0            st_FOCA0002
@@ -3298,7 +3298,7 @@ void test_dt_positiveInteger()
 
 void test_dt_boolean()
 {
-    const XSValue::DataType dt = XSValue::dt_boolean; 
+    const XSValue::DataType dt = XSValue::dt_boolean;
     bool  toValidate = true;
 
     const char lex_v_1[]="  1  \n";
@@ -3324,8 +3324,8 @@ void test_dt_boolean()
  * The canonical representation for boolean is the set of literals {true, false}.
  *
  ***/
-  
-    /***    
+
+    /***
      *
      * validate
      * ---------
@@ -3333,7 +3333,7 @@ void test_dt_boolean()
      *                             ----------------------------------------------
      *    lexical valid                                  true              n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -3352,17 +3352,17 @@ void test_dt_boolean()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *  lexical valid                                    XSValue         n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *  lexical valid                                    XSValue         n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3386,12 +3386,12 @@ void test_dt_boolean()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *  lexical valid                                    XMLCh            n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *  lexical valid                                    XMLCh            n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
@@ -3416,7 +3416,7 @@ void test_dt_boolean()
 
 void test_dt_hexBinary()
 {
-    const XSValue::DataType dt = XSValue::dt_hexBinary; 
+    const XSValue::DataType dt = XSValue::dt_hexBinary;
     bool  toValidate = true;
 
     const char lex_v_1[]="   0fb7  \n";
@@ -3425,14 +3425,14 @@ void test_dt_hexBinary()
     const char lex_iv_1[]="0gb7";
     const char lex_iv_2[]="123";
 
-    XSValue::XSValue_Data act_v_ran_v_1;  
+    XSValue::XSValue_Data act_v_ran_v_1;
     XSValue::XSValue_Data act_v_ran_v_2;
     act_v_ran_v_1.fValue.f_byteVal = new XMLByte[2];
     act_v_ran_v_1.fValue.f_byteVal[0] = 0xf;
-    act_v_ran_v_1.fValue.f_byteVal[1] = 0xb7;    
+    act_v_ran_v_1.fValue.f_byteVal[1] = 0xb7;
     act_v_ran_v_2.fValue.f_byteVal = new XMLByte[2];
     act_v_ran_v_2.fValue.f_byteVal[0] = 0x12;
-    act_v_ran_v_2.fValue.f_byteVal[1] = 0x34;    
+    act_v_ran_v_2.fValue.f_byteVal[1] = 0x34;
 
     const char lex_v_1_canrep[]="0FB7";
     const char lex_v_2_canrep[]="1234";
@@ -3440,13 +3440,13 @@ void test_dt_hexBinary()
 /***
  * 3.2.15.2 Canonical Rrepresentation
  *
- * The canonical representation for hexBinary is defined by prohibiting certain options from the 
- * Lexical Representation (3.2.15.1). Specifically, 
+ * The canonical representation for hexBinary is defined by prohibiting certain options from the
+ * Lexical Representation (3.2.15.1). Specifically,
  * 1. the lower case hexadecimal digits ([a-f]) are not allowed.
  *
  ***/
-  
-    /***    
+
+    /***
      *
      * validate
      * ---------
@@ -3454,7 +3454,7 @@ void test_dt_hexBinary()
      *                             ----------------------------------------------
      *    lexical valid                                  true              n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -3472,17 +3472,17 @@ void test_dt_hexBinary()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *  lexical valid                                    XSValue         n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *  lexical valid                                    XSValue         n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3503,14 +3503,14 @@ void test_dt_hexBinary()
      * ---------------------------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *  
+     *
      *  validation on
-     *  ============= 
+     *  =============
      *  lexical valid                                    XMLCh            n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *  lexical valid                                    XMLCh            n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
@@ -3534,7 +3534,7 @@ void test_dt_hexBinary()
 
 void test_dt_base64Binary()
 {
-    const XSValue::DataType dt = XSValue::dt_base64Binary; 
+    const XSValue::DataType dt = XSValue::dt_base64Binary;
     bool  toValidate = true;
 
     const char lex_v_1[]="  134x cv56 gui0   \n";
@@ -3562,17 +3562,17 @@ void test_dt_base64Binary()
     act_v_ran_v_2.fValue.f_byteVal[0] = 0xc3;
     act_v_ran_v_2.fValue.f_byteVal[1] = 0x1b;
     act_v_ran_v_2.fValue.f_byteVal[2] = 0x73;
-    act_v_ran_v_2.fValue.f_byteVal[3] = 0xf1;  
+    act_v_ran_v_2.fValue.f_byteVal[3] = 0xf1;
     act_v_ran_v_2.fValue.f_byteVal[4] = 0xee;
     act_v_ran_v_2.fValue.f_byteVal[5] = 0x24;
     act_v_ran_v_2.fValue.f_byteVal[6] = 0;
     act_v_ran_v_2.fValue.f_byteVal[7] = 0;
-    act_v_ran_v_2.fValue.f_byteVal[8] = 0;    
+    act_v_ran_v_2.fValue.f_byteVal[8] = 0;
 
     const char lex_v_1_canrep[]="134xcv56gui0";
     const char lex_v_2_canrep[]="wxtz8e4k";
- 
-    /***    
+
+    /***
      *
      * validate
      * ---------
@@ -3580,7 +3580,7 @@ void test_dt_base64Binary()
      *                             ----------------------------------------------
      *    lexical valid                                  true              n/a
      *    lexical invalid                                false           st_FOCA0002
-     * 
+     *
      ***/
 
     // lexical valid
@@ -3598,17 +3598,17 @@ void test_dt_base64Binary()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *  lexical valid                                    XSValue         n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *  lexical valid                                    XSValue         n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3629,14 +3629,14 @@ void test_dt_base64Binary()
      * ---------------------------
      *                             availability        return value      context
      *                             ----------------------------------------------
-     *  
+     *
      *  validation on
-     *  ============= 
+     *  =============
      *  lexical valid                                    XMLCh            n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *  lexical valid                                    XMLCh            n/a
      *  lexical invalid                                     0            st_FOCA0002
      *
@@ -3660,7 +3660,7 @@ void test_dt_base64Binary()
 
 void test_dt_duration()
 {
-    const XSValue::DataType dt = XSValue::dt_duration; 
+    const XSValue::DataType dt = XSValue::dt_duration;
     bool  toValidate = true;
 
     const char v_1[]="   P1Y1M1DT1H1M1S   \n";
@@ -3697,7 +3697,7 @@ void test_dt_duration()
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
     act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -3705,7 +3705,7 @@ void test_dt_duration()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -3725,17 +3725,17 @@ void test_dt_duration()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3760,12 +3760,12 @@ void test_dt_duration()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -3782,11 +3782,11 @@ void test_dt_duration()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
         CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -3795,7 +3795,7 @@ void test_dt_duration()
 
 void test_dt_date()
 {
-    const XSValue::DataType dt = XSValue::dt_date; 
+    const XSValue::DataType dt = XSValue::dt_date;
     bool  toValidate = true;
 
     const char v_1[]="   1991-05-31   \n";
@@ -3806,10 +3806,10 @@ void test_dt_date()
     const char iv_2[]="2001-02-29";
     const char iv_3[]="2001-06-31";
 
-    XSValue::XSValue_Data act_v_ran_v_1;     
-    XSValue::XSValue_Data act_v_ran_v_2;  
-    XSValue::XSValue_Data act_v_ran_v_3;  
-     
+    XSValue::XSValue_Data act_v_ran_v_1;
+    XSValue::XSValue_Data act_v_ran_v_2;
+    XSValue::XSValue_Data act_v_ran_v_3;
+
     const char v_1_canrep[]="1991-05-31";
     const char v_2_canrep[]="9999-06-30Z";
     const char v_3_canrep[]="99991-07-30-10:00";
@@ -3819,18 +3819,18 @@ void test_dt_date()
      *    1 yyyy-mm-dd         yyyy-mm-dd          yyyy-mm-dd
      *    2 yyyy-mm-ddZ        yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
      *    3 yyyy-mm-dd+00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
-     *    4 yyyy-mm-dd+00:01   YYYY-MM-DCT23:59Z   yyyy-mm-dd+00:01              
-     *    5 yyyy-mm-dd+12:00   YYYY-MM-DCT12:00Z   yyyy-mm-dd+12:00    
-     *    6 yyyy-mm-dd+12:01   YYYY-MM-DCT11:59Z   YYYY-MM-DC-11:59 
-     *    7 yyyy-mm-dd+14:00   YYYY-MM-DCT10:00Z   YYYY-MM-DC-10:00 
+     *    4 yyyy-mm-dd+00:01   YYYY-MM-DCT23:59Z   yyyy-mm-dd+00:01
+     *    5 yyyy-mm-dd+12:00   YYYY-MM-DCT12:00Z   yyyy-mm-dd+12:00
+     *    6 yyyy-mm-dd+12:01   YYYY-MM-DCT11:59Z   YYYY-MM-DC-11:59
+     *    7 yyyy-mm-dd+14:00   YYYY-MM-DCT10:00Z   YYYY-MM-DC-10:00
      *    8 yyyy-mm-dd-00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
-     *    9 yyyy-mm-dd-00:01   yyyy-mm-ddT00:01Z   yyyy-mm-dd-00:01 
+     *    9 yyyy-mm-dd-00:01   yyyy-mm-ddT00:01Z   yyyy-mm-dd-00:01
      *   11 yyyy-mm-dd-11:59   yyyy-mm-ddT11:59Z   YYYY-MM-DD-11:59
-     *   10 yyyy-mm-dd-12:00   yyyy-mm-ddT12:00Z   YYYY-MM-DD+12:00      
+     *   10 yyyy-mm-dd-12:00   yyyy-mm-ddT12:00Z   YYYY-MM-DD+12:00
      *   12 yyyy-mm-dd-14:00   yyyy-mm-ddT14:00Z   YYYY-MM-DD+10:00
      */
 
-    const char c_1[] = " 1993-05-31  ";       const char r_1[] = "1993-05-31";    
+    const char c_1[] = " 1993-05-31  ";       const char r_1[] = "1993-05-31";
     const char c_2[] = " 1993-05-31Z  ";      const char r_2[] = "1993-05-31Z";
     const char c_3[] = " 1993-05-31+00:00 ";  const char r_3[] = "1993-05-31Z";
     const char c_4[] = " 1993-05-31+00:01 ";  const char r_4[] = "1993-05-31+00:01";
@@ -3865,9 +3865,9 @@ void test_dt_date()
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
-    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;    
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -3875,7 +3875,7 @@ void test_dt_date()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -3895,17 +3895,17 @@ void test_dt_date()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -3930,12 +3930,12 @@ void test_dt_date()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -3949,20 +3949,20 @@ void test_dt_date()
         //  valid
         CANREP_TEST(v_1,  dt, toValidate, EXP_RET_CANREP_TRUE, v_1_canrep, DONT_CARE);
         CANREP_TEST(v_2,  dt, toValidate, EXP_RET_CANREP_TRUE, v_2_canrep, DONT_CARE);
-        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);       
+        CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_TRUE, v_3_canrep, DONT_CARE);
 
-        CANREP_TEST(c_1,  dt, toValidate, EXP_RET_CANREP_TRUE, r_1, DONT_CARE);    
-        CANREP_TEST(c_2,  dt, toValidate, EXP_RET_CANREP_TRUE, r_2, DONT_CARE);    
-        CANREP_TEST(c_3,  dt, toValidate, EXP_RET_CANREP_TRUE, r_3, DONT_CARE);    
-        CANREP_TEST(c_4,  dt, toValidate, EXP_RET_CANREP_TRUE, r_4, DONT_CARE);    
-        CANREP_TEST(c_5,  dt, toValidate, EXP_RET_CANREP_TRUE, r_5, DONT_CARE);    
-        CANREP_TEST(c_6,  dt, toValidate, EXP_RET_CANREP_TRUE, r_6, DONT_CARE);    
-        CANREP_TEST(c_7,  dt, toValidate, EXP_RET_CANREP_TRUE, r_7, DONT_CARE);    
-        CANREP_TEST(c_8,  dt, toValidate, EXP_RET_CANREP_TRUE, r_8, DONT_CARE);    
-        CANREP_TEST(c_9,  dt, toValidate, EXP_RET_CANREP_TRUE, r_9, DONT_CARE);    
-        CANREP_TEST(c_a,  dt, toValidate, EXP_RET_CANREP_TRUE, r_a, DONT_CARE);    
-        CANREP_TEST(c_b,  dt, toValidate, EXP_RET_CANREP_TRUE, r_b, DONT_CARE);    
-        CANREP_TEST(c_c,  dt, toValidate, EXP_RET_CANREP_TRUE, r_c, DONT_CARE);   
+        CANREP_TEST(c_1,  dt, toValidate, EXP_RET_CANREP_TRUE, r_1, DONT_CARE);
+        CANREP_TEST(c_2,  dt, toValidate, EXP_RET_CANREP_TRUE, r_2, DONT_CARE);
+        CANREP_TEST(c_3,  dt, toValidate, EXP_RET_CANREP_TRUE, r_3, DONT_CARE);
+        CANREP_TEST(c_4,  dt, toValidate, EXP_RET_CANREP_TRUE, r_4, DONT_CARE);
+        CANREP_TEST(c_5,  dt, toValidate, EXP_RET_CANREP_TRUE, r_5, DONT_CARE);
+        CANREP_TEST(c_6,  dt, toValidate, EXP_RET_CANREP_TRUE, r_6, DONT_CARE);
+        CANREP_TEST(c_7,  dt, toValidate, EXP_RET_CANREP_TRUE, r_7, DONT_CARE);
+        CANREP_TEST(c_8,  dt, toValidate, EXP_RET_CANREP_TRUE, r_8, DONT_CARE);
+        CANREP_TEST(c_9,  dt, toValidate, EXP_RET_CANREP_TRUE, r_9, DONT_CARE);
+        CANREP_TEST(c_a,  dt, toValidate, EXP_RET_CANREP_TRUE, r_a, DONT_CARE);
+        CANREP_TEST(c_b,  dt, toValidate, EXP_RET_CANREP_TRUE, r_b, DONT_CARE);
+        CANREP_TEST(c_c,  dt, toValidate, EXP_RET_CANREP_TRUE, r_c, DONT_CARE);
 
         //  invalid
         CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_FOCA0002);
@@ -3975,7 +3975,7 @@ void test_dt_date()
 
 void test_dt_gYearMonth()
 {
-    const XSValue::DataType dt = XSValue::dt_gYearMonth; 
+    const XSValue::DataType dt = XSValue::dt_gYearMonth;
     bool  toValidate = true;
 
     const char v_1[]="   20000-02   \n";
@@ -3989,7 +3989,7 @@ void test_dt_gYearMonth()
     XSValue::XSValue_Data act_v_ran_v_1;
     XSValue::XSValue_Data act_v_ran_v_2;
     XSValue::XSValue_Data act_v_ran_v_3;
-    
+
     act_v_ran_v_1.fValue.f_datetime.f_year    = 20000;
     act_v_ran_v_1.fValue.f_datetime.f_month   = 02;
     act_v_ran_v_1.fValue.f_datetime.f_day     = 0;
@@ -4012,8 +4012,8 @@ void test_dt_gYearMonth()
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
-    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
-    /***    
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
+    /***
      *
      * validate
      * ---------
@@ -4021,7 +4021,7 @@ void test_dt_gYearMonth()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4041,17 +4041,17 @@ void test_dt_gYearMonth()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4076,12 +4076,12 @@ void test_dt_gYearMonth()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -4098,11 +4098,11 @@ void test_dt_gYearMonth()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4111,7 +4111,7 @@ void test_dt_gYearMonth()
 
 void test_dt_gYear()
 {
-    const XSValue::DataType dt = XSValue::dt_gYear; 
+    const XSValue::DataType dt = XSValue::dt_gYear;
     bool  toValidate = true;
 
     const char v_1[]="   0001-14:00  \n";
@@ -4148,9 +4148,9 @@ void test_dt_gYear()
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
-    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -4158,7 +4158,7 @@ void test_dt_gYear()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4178,17 +4178,17 @@ void test_dt_gYear()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4213,12 +4213,12 @@ void test_dt_gYear()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -4235,11 +4235,11 @@ void test_dt_gYear()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4248,7 +4248,7 @@ void test_dt_gYear()
 
 void test_dt_gMonthDay()
 {
-    const XSValue::DataType dt = XSValue::dt_gMonthDay; 
+    const XSValue::DataType dt = XSValue::dt_gMonthDay;
     bool  toValidate = true;
 
     const char v_1[]="   --01-31+00:01   \n";
@@ -4285,8 +4285,8 @@ void test_dt_gMonthDay()
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
-    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
-    /***    
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
+    /***
      *
      * validate
      * ---------
@@ -4294,7 +4294,7 @@ void test_dt_gMonthDay()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4314,17 +4314,17 @@ void test_dt_gMonthDay()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4349,12 +4349,12 @@ void test_dt_gMonthDay()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -4371,11 +4371,11 @@ void test_dt_gMonthDay()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4384,7 +4384,7 @@ void test_dt_gMonthDay()
 
 void test_dt_gDay()
 {
-    const XSValue::DataType dt = XSValue::dt_gDay; 
+    const XSValue::DataType dt = XSValue::dt_gDay;
     bool  toValidate = true;
 
     const char v_1[]="   ---31+01:30   \n";
@@ -4421,9 +4421,9 @@ void test_dt_gDay()
     act_v_ran_v_3.fValue.f_datetime.f_hour    = 0;
     act_v_ran_v_3.fValue.f_datetime.f_min     = 0;
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
-    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;  
+    act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -4431,7 +4431,7 @@ void test_dt_gDay()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4451,17 +4451,17 @@ void test_dt_gDay()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4486,12 +4486,12 @@ void test_dt_gDay()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -4508,11 +4508,11 @@ void test_dt_gDay()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4521,7 +4521,7 @@ void test_dt_gDay()
 
 void test_dt_gMonth()
 {
-    const XSValue::DataType dt = XSValue::dt_gMonth; 
+    const XSValue::DataType dt = XSValue::dt_gMonth;
     bool  toValidate = true;
 
     const char v_1[]="   --02+10:10   \n";
@@ -4560,7 +4560,7 @@ void test_dt_gMonth()
     act_v_ran_v_3.fValue.f_datetime.f_second  = 0;
     act_v_ran_v_3.fValue.f_datetime.f_milisec = 0;
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -4568,7 +4568,7 @@ void test_dt_gMonth()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4588,17 +4588,17 @@ void test_dt_gMonth()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4623,12 +4623,12 @@ void test_dt_gMonth()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -4645,11 +4645,11 @@ void test_dt_gMonth()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3, dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
 
     }
@@ -4658,7 +4658,7 @@ void test_dt_gMonth()
 
 void test_dt_dateTime()
 {
-    const XSValue::DataType dt = XSValue::dt_dateTime; 
+    const XSValue::DataType dt = XSValue::dt_dateTime;
     bool  toValidate = true;
 
     const char v_1[]="   2000-12-31T23:59:59.00389  \n";
@@ -4707,15 +4707,15 @@ void test_dt_dateTime()
  * E2-41
  *
  *  3.2.7.2 Canonical representation
- * 
- *  Except for trailing fractional zero digits in the seconds representation, 
- *  '24:00:00' time representations, and timezone (for timezoned values), 
- *  the mapping from literals to values is one-to-one. Where there is more 
- *  than one possible representation, the canonical representation is as follows: 
- *  redundant trailing zero digits in fractional-second literals are prohibited. 
+ *
+ *  Except for trailing fractional zero digits in the seconds representation,
+ *  '24:00:00' time representations, and timezone (for timezoned values),
+ *  the mapping from literals to values is one-to-one. Where there is more
+ *  than one possible representation, the canonical representation is as follows:
+ *  redundant trailing zero digits in fractional-second literals are prohibited.
  *  An hour representation of '24' is prohibited. Timezoned values are canonically
- *  represented by appending 'Z' to the nontimezoned representation. (All 
- *  timezoned dateTime values are UTC.) 
+ *  represented by appending 'Z' to the nontimezoned representation. (All
+ *  timezoned dateTime values are UTC.)
  *
  *  .'24:00:00' -> '00:00:00'
  *  .milisecond: trailing zeros removed
@@ -4723,7 +4723,7 @@ void test_dt_dateTime()
  *
  ***/
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -4731,7 +4731,7 @@ void test_dt_dateTime()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4753,17 +4753,17 @@ void test_dt_dateTime()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4790,12 +4790,12 @@ void test_dt_dateTime()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            n/a
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            n/a
      *   invalid                                          0              st_FOCA0002
      *
@@ -4824,7 +4824,7 @@ void test_dt_dateTime()
 
 void test_dt_time()
 {
-    const XSValue::DataType dt = XSValue::dt_time; 
+    const XSValue::DataType dt = XSValue::dt_time;
     bool  toValidate = true;
 
     const char v_1[]="   23:59:59.38900Z   \n";
@@ -4871,17 +4871,17 @@ void test_dt_time()
 /***
  * 3.2.8.2 Canonical representation
  *
- * The canonical representation for time is defined by prohibiting certain options 
- * from the Lexical representation (3.2.8.1). Specifically, 
- * 1. either the time zone must be omitted or, 
- * 2. if present, the time zone must be Coordinated Universal Time (UTC) 
- *    indicated by a "Z". 
+ * The canonical representation for time is defined by prohibiting certain options
+ * from the Lexical representation (3.2.8.1). Specifically,
+ * 1. either the time zone must be omitted or,
+ * 2. if present, the time zone must be Coordinated Universal Time (UTC)
+ *    indicated by a "Z".
  * 3. Additionally, the canonical representation for midnight is 00:00:00.
  *
  ***/
 
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -4889,7 +4889,7 @@ void test_dt_time()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -4911,17 +4911,17 @@ void test_dt_time()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XSValue         n/a
      *   invalid                                           0            st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -4948,12 +4948,12 @@ void test_dt_time()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                          XMLCh            n/a
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                          XMLCh            n/a
      *   invalid                                          0              st_FOCA0002
      *
@@ -4981,13 +4981,13 @@ void test_dt_time()
 
 void test_dt_string()
 {
-    const XSValue::DataType dt = XSValue::dt_string; 
+    const XSValue::DataType dt = XSValue::dt_string;
     bool  toValidate = true;
 
     const char v_1[]="mystring";
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -4995,7 +4995,7 @@ void test_dt_string()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                     n/a             false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5010,17 +5010,17 @@ void test_dt_string()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             n/a
      *   invalid                      n/a                  0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             n/a
      *   invalid                      n/a                  0             st_FOCA0002
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5040,12 +5040,12 @@ void test_dt_string()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              n/a
      *   invalid                       n/a                0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              n/a
      *   invalid                       n/a                0              st_FOCA0002
      *
@@ -5067,7 +5067,7 @@ void test_dt_string()
 
 void test_dt_anyURI()
 {
-    const XSValue::DataType dt = XSValue::dt_anyURI; 
+    const XSValue::DataType dt = XSValue::dt_anyURI;
     bool  toValidate = true;
 
     const char v_1[]="  http://www.schemaTest.org/IBMd3_2_17v01  \n";
@@ -5082,7 +5082,7 @@ void test_dt_anyURI()
     const char iv_2[]=">////1.2.3.4.";
     const char iv_3[]="<///www.ibm.9om";
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -5090,7 +5090,7 @@ void test_dt_anyURI()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5110,17 +5110,17 @@ void test_dt_anyURI()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5132,7 +5132,7 @@ void test_dt_anyURI()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
@@ -5149,12 +5149,12 @@ void test_dt_anyURI()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5171,11 +5171,11 @@ void test_dt_anyURI()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
     }
 
@@ -5183,7 +5183,7 @@ void test_dt_anyURI()
 
 void test_dt_QName()
 {
-    const XSValue::DataType dt = XSValue::dt_QName; 
+    const XSValue::DataType dt = XSValue::dt_QName;
     bool  toValidate = true;
 
     const char v_1[]="   Ant:Eater  \n";
@@ -5193,12 +5193,12 @@ void test_dt_QName()
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
-    
+
     const char iv_1[]="Three:Two:One";
     const char iv_2[]=":my";
     const char iv_3[]="+name";
 
-    /***    
+    /***
      *
      * validate
      * ---------
@@ -5206,7 +5206,7 @@ void test_dt_QName()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                                     false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5226,17 +5226,17 @@ void test_dt_QName()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5248,7 +5248,7 @@ void test_dt_QName()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoActVal), act_v_ran_v_1);
@@ -5265,12 +5265,12 @@ void test_dt_QName()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5287,11 +5287,11 @@ void test_dt_QName()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate? XSValue::st_FOCA0002: XSValue::st_NoCanRep));
     }
 
@@ -5299,15 +5299,15 @@ void test_dt_QName()
 
 void test_dt_NOTATION()
 {
-    const XSValue::DataType dt = XSValue::dt_NOTATION; 
+    const XSValue::DataType dt = XSValue::dt_NOTATION;
     bool  toValidate = true;
 
     const char v_1[]="   http://www.ibm.com/test:notation1  \n";
     const char iv_1[]="invaliduri:notation2";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
-     
-    /***    
+
+    /***
      *
      * validate
      * ---------
@@ -5315,7 +5315,7 @@ void test_dt_NOTATION()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5331,17 +5331,17 @@ void test_dt_NOTATION()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                         n/a               0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                         n/a               0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5363,12 +5363,12 @@ void test_dt_NOTATION()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                            n/a           0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                            n/a           0              st_NoCanRep
      *
@@ -5390,21 +5390,21 @@ void test_dt_NOTATION()
 
 void test_dt_normalizedString()
 {
-    const XSValue::DataType dt = XSValue::dt_normalizedString; 
+    const XSValue::DataType dt = XSValue::dt_normalizedString;
     bool  toValidate = true;
-	
+
     const char v_1[]="4+4=8";
     const char v_2[]="a  b";
     const char v_3[]="someChars=*_-";
-    
+
     const char iv_1[]="a\tb";
     const char iv_2[]="a\nb";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
-    
-    /***    
+
+    /***
      *
      * validate
      * ---------
@@ -5412,7 +5412,7 @@ void test_dt_normalizedString()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5431,17 +5431,17 @@ void test_dt_normalizedString()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5453,7 +5453,7 @@ void test_dt_normalizedString()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_2);
@@ -5468,12 +5468,12 @@ void test_dt_normalizedString()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5490,9 +5490,9 @@ void test_dt_normalizedString()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5501,9 +5501,9 @@ void test_dt_normalizedString()
 
 void test_dt_token()
 {
-    const XSValue::DataType dt = XSValue::dt_token; 
+    const XSValue::DataType dt = XSValue::dt_token;
     bool  toValidate = true;
-	
+
     const char v_1[]="4+4=8";
     const char v_2[]="Number2";
     const char v_3[]="someChars=*_-";
@@ -5511,12 +5511,12 @@ void test_dt_token()
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
-    
+
     const char iv_1[]="a\tb";
     const char iv_2[]="a\nb";
     const char iv_3[]="a  b";
-    
-    /***    
+
+    /***
      *
      * validate
      * ---------
@@ -5524,7 +5524,7 @@ void test_dt_token()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5544,17 +5544,17 @@ void test_dt_token()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5566,7 +5566,7 @@ void test_dt_token()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
@@ -5583,12 +5583,12 @@ void test_dt_token()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5605,11 +5605,11 @@ void test_dt_token()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5618,21 +5618,21 @@ void test_dt_token()
 
 void test_dt_language()
 {
-    const XSValue::DataType dt = XSValue::dt_language; 
+    const XSValue::DataType dt = XSValue::dt_language;
     bool  toValidate = true;
-	
+
     const char v_1[]="en-AT";
     const char v_2[]="ja";
     const char v_3[]="uk-GB";
-    
+
     const char iv_1[]="ja_JP";
     const char iv_2[]="en+US";
     const char iv_3[]="12-en";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
-    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
-    /***    
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+    /***
      *
      * validate
      * ---------
@@ -5640,7 +5640,7 @@ void test_dt_language()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5660,17 +5660,17 @@ void test_dt_language()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5682,7 +5682,7 @@ void test_dt_language()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
@@ -5699,12 +5699,12 @@ void test_dt_language()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5721,9 +5721,9 @@ void test_dt_language()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
         CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
@@ -5734,21 +5734,21 @@ void test_dt_language()
 
 void test_dt_NMTOKEN()
 {
-    const XSValue::DataType dt = XSValue::dt_NMTOKEN; 
+    const XSValue::DataType dt = XSValue::dt_NMTOKEN;
     bool  toValidate = true;
-  
+
     const char v_1[]="Four:-_.";
     const char v_2[]="Zeerochert";
     const char v_3[]="007";
-    
+
     const char iv_1[]="#board";
     const char iv_2[]="@com";
     const char iv_3[]=";abc";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
-    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
-    /***    
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+    /***
      *
      * validate
      * ---------
@@ -5756,7 +5756,7 @@ void test_dt_NMTOKEN()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5776,17 +5776,17 @@ void test_dt_NMTOKEN()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5798,7 +5798,7 @@ void test_dt_NMTOKEN()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_2);
@@ -5815,12 +5815,12 @@ void test_dt_NMTOKEN()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5837,11 +5837,11 @@ void test_dt_NMTOKEN()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5850,22 +5850,22 @@ void test_dt_NMTOKEN()
 
 void test_dt_NMTOKENS()
 {
-    const XSValue::DataType dt = XSValue::dt_NMTOKENS; 
+    const XSValue::DataType dt = XSValue::dt_NMTOKENS;
     bool  toValidate = true;
-  
+
     const char v_1[]="name1 name2 name3 ";
     const char v_2[]="Zeerochert total number";
     const char v_3[]="007 009 123";
-    
+
     const char iv_1[]="#board";
     const char iv_2[]="@com";
     const char iv_3[]=";abc";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
-    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
-    
-    /***    
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+
+    /***
      *
      * validate
      * ---------
@@ -5873,7 +5873,7 @@ void test_dt_NMTOKENS()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -5893,17 +5893,17 @@ void test_dt_NMTOKENS()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -5915,7 +5915,7 @@ void test_dt_NMTOKENS()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
@@ -5932,12 +5932,12 @@ void test_dt_NMTOKENS()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -5954,11 +5954,11 @@ void test_dt_NMTOKENS()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -5967,22 +5967,22 @@ void test_dt_NMTOKENS()
 
 void test_dt_Name()
 {
-    const XSValue::DataType dt = XSValue::dt_Name; 
+    const XSValue::DataType dt = XSValue::dt_Name;
     bool  toValidate = true;
-  
+
     const char v_1[]="Four:-_.";
     const char v_2[]="_Zeerochert";
     const char v_3[]=":007";
-    
+
     const char iv_1[]="9name";
     const char iv_2[]="-name";
     const char iv_3[]=".name";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
-    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
-    
-    /***    
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+
+    /***
      *
      * validate
      * ---------
@@ -5990,7 +5990,7 @@ void test_dt_Name()
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -6010,17 +6010,17 @@ void test_dt_Name()
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -6032,7 +6032,7 @@ void test_dt_Name()
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_1);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_2);
@@ -6049,12 +6049,12 @@ void test_dt_Name()
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -6071,11 +6071,11 @@ void test_dt_Name()
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -6085,19 +6085,19 @@ void test_dt_Name()
 void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
 {
     bool  toValidate = true;
-  
+
     const char v_1[]="Four-_.";
     const char v_2[]="_Zeerochert";
     const char v_3[]="L007";
-    
+
     const char iv_1[]=":Four-_.";
     const char iv_2[]="_Zeerochert:";
     const char iv_3[]="0:07";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
-    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;   
-    /***    
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+    /***
      *
      * validate
      * ---------
@@ -6105,7 +6105,7 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -6125,17 +6125,17 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -6147,7 +6147,7 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
@@ -6164,12 +6164,12 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -6186,11 +6186,11 @@ void test_dt_NCName_ID_IDREF_ENTITY(XSValue::DataType dt)
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -6204,15 +6204,15 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
     const char v_1[]="Four-_. Five Seven";
     const char v_2[]="_Zeerochert _Hundere Bye";
     const char v_3[]="L007 L009 L008";
-    
+
     const char iv_1[]=":Four-_.";
     const char iv_2[]="_Zeerochert:";
     const char iv_3[]="0:07";
 
     XSValue::XSValue_Data act_v_ran_v_1;  act_v_ran_v_1.fValue.f_strVal = 0;
     XSValue::XSValue_Data act_v_ran_v_2;  act_v_ran_v_2.fValue.f_strVal = 0;
-    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;    
-    /***    
+    XSValue::XSValue_Data act_v_ran_v_3;  act_v_ran_v_3.fValue.f_strVal = 0;
+    /***
      *
      * validate
      * ---------
@@ -6220,7 +6220,7 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
      *                             ----------------------------------------------
      *     valid                                       true              n/a
      *     invalid                      n/a            false             st_FOCA0002
-     * 
+     *
      ***/
 
     //  valid
@@ -6240,17 +6240,17 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
      *                             availability        return value      context
      *                             ----------------------------------------------
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                             0             st_NoActVal
      *   invalid                                           0             st_NoActVal
      *
      ***/
-   
+
     for (int i = 0; i < 2; i++)
     {
         //validation on/off
@@ -6262,7 +6262,7 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
         ACTVALUE_TEST(v_3,  dt, toValidate, EXP_RET_VALUE_FALSE, XSValue::st_NoActVal, act_v_ran_v_3);
 
         //  invalid
-        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE, 
+        ACTVALUE_TEST(iv_1,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
         ACTVALUE_TEST(iv_2,  dt, toValidate, EXP_RET_VALUE_FALSE,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoActVal), act_v_ran_v_1);
@@ -6279,12 +6279,12 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
      *                             ----------------------------------------------
      *
      *  validation on
-     *  ============= 
+     *  =============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_FOCA0002
      *
      *  validation off
-     *  ============== 
+     *  ==============
      *   valid                                            0              st_NoCanRep
      *   invalid                                          0              st_NoCanRep
      *
@@ -6301,11 +6301,11 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
         CANREP_TEST(v_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, XSValue::st_NoCanRep);
 
         //  invalid
-        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_1,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_2,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
-        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string, 
+        CANREP_TEST(iv_3,  dt, toValidate, EXP_RET_CANREP_FALSE, null_string,
             (toValidate ? XSValue::st_FOCA0002 : XSValue::st_NoCanRep));
 
     }
@@ -6381,7 +6381,7 @@ dt_decimal  canRep      st_FOCA0002  n.a.	        n.a.
         testNoActVal(d2, XSValue::dt_decimal, XSValue::st_FOCA0001);
     }
 
-/***    
+/***
 dt_float    canRep	st_FOCA0002	st_FOCA0002	n.a.
 	        actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6400,7 +6400,7 @@ dt_float    canRep	st_FOCA0002	st_FOCA0002	n.a.
 
     }
 
-/***				
+/***
 dt_double	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	        actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6419,7 +6419,7 @@ dt_double	canRep	st_FOCA0002	st_FOCA0002	n.a.
 
     }
 
-/***				
+/***
 dt_integer 	canRep	st_FOCA0002	n.a.	n.a.
         	actVal	st_FOCA0002	n.a.	st_FOCA0003
 ***/
@@ -6438,7 +6438,7 @@ dt_integer 	canRep	st_FOCA0002	n.a.	n.a.
         testNoActVal(d4, XSValue::dt_integer, XSValue::st_FOCA0002);
     }
 
-/***				
+/***
 dt_negativeInteger canRep	st_FOCA0002	st_FOCA0002	n.a.
 	               actVal	st_FOCA0002	st_FOCA0002	st_FOCA0003
 ***/
@@ -6457,11 +6457,11 @@ dt_negativeInteger canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d3, XSValue::dt_negativeInteger, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_negativeInteger, XSValue::st_FOCA0002);
     }
-    
-/***    
+
+/***
 dt_nonPositiveInteger	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	                    actVal	st_FOCA0002	st_FOCA0002	st_FOCA0003
-***/	
+***/
     {
         const char d1[]="1";
         const char d2[]="-2147483649";
@@ -6476,11 +6476,11 @@ dt_nonPositiveInteger	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d2, XSValue::dt_nonPositiveInteger, XSValue::st_FOCA0003);
         testNoActVal(d3, XSValue::dt_nonPositiveInteger, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_nonPositiveInteger, XSValue::st_FOCA0002);
-    }      
+    }
 /***
 dt_nonNegativeInteger   	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	                        actVal	st_FOCA0002	st_FOCA0002	st_FOCA0003
-***/	
+***/
     {
         const char d1[]="-1";
         const char d2[]="+2147483649";
@@ -6495,7 +6495,7 @@ dt_nonNegativeInteger   	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d2, XSValue::dt_nonNegativeInteger, XSValue::st_FOCA0003);
         testNoActVal(d3, XSValue::dt_nonNegativeInteger, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_nonNegativeInteger, XSValue::st_FOCA0002);
-    }      
+    }
 
 /***
 dt_positiveInteger    	canRep	st_FOCA0002	st_FOCA0002	n.a.
@@ -6517,7 +6517,7 @@ dt_positiveInteger    	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d4, XSValue::dt_positiveInteger, XSValue::st_FOCA0002);
     }
 
-/***				
+/***
 dt_long   canRep	st_FOCA0002	st_FOCA0002	n.a.
 	      actVal	st_FOCA0002	st_FOCA0002	st_FOCA0003.
 ***/
@@ -6539,8 +6539,8 @@ dt_long   canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d3, XSValue::dt_long, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_long, XSValue::st_FOCA0002);
     }
-    
-/***    
+
+/***
 dt_int	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	    actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6561,7 +6561,7 @@ dt_int	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d4, XSValue::dt_int, XSValue::st_FOCA0002);
     }
 
-/***				
+/***
 dt_short	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	        actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6581,8 +6581,8 @@ dt_short	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d3, XSValue::dt_short, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_short, XSValue::st_FOCA0002);
     }
-    
-/***    
+
+/***
 dt_byte	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	    actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6603,7 +6603,7 @@ dt_byte	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d4, XSValue::dt_byte, XSValue::st_FOCA0002);
     }
 
-/***				
+/***
 dt_unsignedLong	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6626,7 +6626,7 @@ dt_unsignedLong	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d4, XSValue::dt_unsignedLong, XSValue::st_FOCA0002);
     }
 
-/***    
+/***
 dt_unsignedInt	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	            actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6646,8 +6646,8 @@ dt_unsignedInt	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d3, XSValue::dt_unsignedInt, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_unsignedInt, XSValue::st_FOCA0002);
     }
-    
-/***    
+
+/***
 dt_unsignedShort	canRep	st_FOCA0002	st_FOCA0002	n.a.
                 	actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6666,8 +6666,8 @@ dt_unsignedShort	canRep	st_FOCA0002	st_FOCA0002	n.a.
         testNoActVal(d2, XSValue::dt_unsignedShort, XSValue::st_FOCA0002);
         testNoActVal(d3, XSValue::dt_unsignedShort, XSValue::st_FOCA0002);
         testNoActVal(d4, XSValue::dt_unsignedShort, XSValue::st_FOCA0002);
-    }	
-/***    
+    }
+/***
 dt_unsignedByte	canRep	st_FOCA0002	st_FOCA0002	n.a.
 	actVal	st_FOCA0002	st_FOCA0002	n.a.
 ***/
@@ -6693,7 +6693,7 @@ dt_unsignedByte	canRep	st_FOCA0002	st_FOCA0002	n.a.
 // ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
-int main(int, char* )
+int main()
 {
 
     // Initialize the XML4C system
@@ -6708,9 +6708,9 @@ int main(int, char* )
         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
             << msg << XERCES_STD_QUALIFIER endl;
         return 1;
-    }    
+    }
 
-    test_dt_string();              
+    test_dt_string();
     test_dt_boolean();
     test_dt_decimal();
     test_dt_float();
@@ -6734,13 +6734,13 @@ int main(int, char* )
     test_dt_language();
     test_dt_NMTOKEN();
     test_dt_NMTOKENS();
-    test_dt_Name();    
+    test_dt_Name();
     test_dt_NCName_ID_IDREF_ENTITY(XSValue::dt_NCName);
     test_dt_NCName_ID_IDREF_ENTITY(XSValue::dt_ID);
     test_dt_NCName_ID_IDREF_ENTITY(XSValue::dt_IDREF);
     test_dt_IDREFS_ENTITIES(XSValue::dt_IDREFS);
     test_dt_NCName_ID_IDREF_ENTITY(XSValue::dt_ENTITY);
-    test_dt_IDREFS_ENTITIES(XSValue::dt_ENTITIES);   
+    test_dt_IDREFS_ENTITIES(XSValue::dt_ENTITIES);
     test_dt_integer();
     test_dt_nonPositiveInteger();
     test_dt_negativeInteger();
