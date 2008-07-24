@@ -58,12 +58,26 @@
 #define XERCES_U16BIT_INT   unsigned short
 #define XERCES_S32BIT_INT   INT32
 #define XERCES_U32BIT_INT   UINT32
-#define XERCES_S64BIT_INT   INT64
-#define XERCES_U64BIT_INT   UINT64
+
+// While VC6 has 64-bit int, there is no support in the libraries
+// (e.g., iostream). So we are going to stick to  32-bit ints.
+//
+#if (_MSC_VER >= 1300)
+#  define XERCES_S64BIT_INT   INT64
+#  define XERCES_U64BIT_INT   UINT64
+#else
+#  define XERCES_S64BIT_INT   INT32
+#  define XERCES_U64BIT_INT   UINT32
+#endif
 
 #define XERCES_SIZEOF_INT   4
 #define XERCES_SIZEOF_LONG  4
-#define XERCES_SIZEOF_INT64 8
+
+#if (_MSC_VER >= 1300)
+#  define XERCES_SIZEOF_INT64 8
+#else
+#  define XERCES_SIZEOF_INT64 4
+#endif
 
 #ifdef _NATIVE_WCHAR_T_DEFINED
 #define XERCES_XMLCH_T      wchar_t
