@@ -16,7 +16,7 @@
  */
 
 /*
- * $Id: HashBase.hpp 678144 2008-07-19 12:08:55Z borisk $
+ * $Id$
  */
 
 #if !defined(XERCESC_INCLUDE_GUARD_HASHERS_HPP)

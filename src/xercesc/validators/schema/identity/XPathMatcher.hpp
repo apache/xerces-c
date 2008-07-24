@@ -70,7 +70,7 @@ public:
     /**
       * Returns true if XPath has been matched.
       */
-    int isMatched();
+    unsigned char isMatched();
     virtual int getInitialDepth() const;
 
     // -----------------------------------------------------------------------
@@ -147,14 +147,14 @@ private:
     //      selectors.
     //
     // -----------------------------------------------------------------------
-    XMLSize_t                        fLocationPathSize;
-    int*                             fMatched;
-    int*                             fNoMatchDepth;
-    int*                             fCurrentStep;
-    RefVectorOf<ValueStackOf<int> >* fStepIndexes;
-    RefVectorOf<XercesLocationPath>* fLocationPaths;
-    IdentityConstraint*              fIdentityConstraint;
-    MemoryManager*                   fMemoryManager;
+    XMLSize_t                               fLocationPathSize;
+    unsigned char*                          fMatched;
+    XMLSize_t*                              fNoMatchDepth;
+    XMLSize_t*                              fCurrentStep;
+    RefVectorOf<ValueStackOf<XMLSize_t> >*  fStepIndexes;
+    RefVectorOf<XercesLocationPath>*        fLocationPaths;
+    IdentityConstraint*                     fIdentityConstraint;
+    MemoryManager*                          fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

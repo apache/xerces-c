@@ -67,7 +67,7 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
     fElementDepth++;
 
     // activate the fields, if selector is matched
-    int matched = isMatched();
+    unsigned char matched = isMatched();
     if ((fMatchedDepth == -1 && ((matched & XP_MATCHED) == XP_MATCHED))
         || ((matched & XP_MATCHED_D) == XP_MATCHED_D)) {
 

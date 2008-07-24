@@ -109,22 +109,22 @@ void XPathMatcher::init(XercesXPath* const xpath) {
 
         if (fLocationPathSize) {
 
-            fStepIndexes = new (fMemoryManager) RefVectorOf<ValueStackOf<int> >(fLocationPathSize, true, fMemoryManager);
-            fCurrentStep = (int*) fMemoryManager->allocate
+            fStepIndexes = new (fMemoryManager) RefVectorOf<ValueStackOf<XMLSize_t> >(fLocationPathSize, true, fMemoryManager);
+            fCurrentStep = (XMLSize_t*) fMemoryManager->allocate
             (
-                fLocationPathSize * sizeof(int)
+                fLocationPathSize * sizeof(XMLSize_t)
             );//new int[fLocationPathSize];
-            fNoMatchDepth = (int*) fMemoryManager->allocate
+            fNoMatchDepth = (XMLSize_t*) fMemoryManager->allocate
             (
-                fLocationPathSize * sizeof(int)
+                fLocationPathSize * sizeof(XMLSize_t)
             );//new int[fLocationPathSize];
-            fMatched = (int*) fMemoryManager->allocate
+            fMatched = (unsigned char*) fMemoryManager->allocate
             (
-                fLocationPathSize * sizeof(int)
+                fLocationPathSize * sizeof(unsigned char)
             );//new int[fLocationPathSize];
 
             for(XMLSize_t i=0; i < fLocationPathSize; i++) {
-                fStepIndexes->addElement(new (fMemoryManager) ValueStackOf<int>(8, fMemoryManager));
+                fStepIndexes->addElement(new (fMemoryManager) ValueStackOf<XMLSize_t>(8, fMemoryManager));
             }
         }
     }
@@ -154,7 +154,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
     for (XMLSize_t i = 0; i < fLocationPathSize; i++) {
 
         // push context
-        int startStep = fCurrentStep[i];
+        XMLSize_t startStep = fCurrentStep[i];
         fStepIndexes->elementAt(i)->push(startStep);
 
         // try next xpath, if not matching
@@ -186,7 +186,7 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
         // step do its thing; if it fails, we reset ourselves
         // to look at this step for next time we're called.
         // so first consume all descendants:
-        int descendantStep = fCurrentStep[i];
+        XMLSize_t descendantStep = fCurrentStep[i];
 
         while (fCurrentStep[i] < stepSize &&
                locPath->getStep(fCurrentStep[i])->getAxisType() == XercesStep::AxisType_DESCENDANT) {
@@ -324,7 +324,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
 // ---------------------------------------------------------------------------
 //  XPathMatcher: Match methods
 // ---------------------------------------------------------------------------
-int XPathMatcher::isMatched() {
+unsigned char XPathMatcher::isMatched() {
 
     // xpath has been matched if any one of the members of the union have matched.
     for (XMLSize_t i=0; i < fLocationPathSize; i++) {

@@ -184,7 +184,7 @@ bool DOMXPathExpressionImpl::testNode(XPathMatcher* matcher, DOMXPathResultImpl*
                                                          true));
     }
     matcher->startElement(elemDecl, uriId, node->getPrefix(), attrList, attrCount);
-    int nMatch=matcher->isMatched();
+    unsigned char nMatch=matcher->isMatched();
     if(nMatch!=0 && nMatch!=XPathMatcher::XP_MATCHED_DP)
     {
         result->addResult(node);
