@@ -487,13 +487,17 @@ public:
            XSerializeEngine& operator<<(unsigned int);
            XSerializeEngine& operator<<(long);
            XSerializeEngine& operator<<(unsigned long);
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-           XSerializeEngine& operator<<(XMLInt64);
-           XSerializeEngine& operator<<(XMLUInt64);
-#endif
            XSerializeEngine& operator<<(float);
            XSerializeEngine& operator<<(double);
            XSerializeEngine& operator<<(bool);
+
+    // These cannot be done as operators since on some platforms they
+    // may collide with int/long types.
+    //
+    void writeSize (XMLSize_t);
+    void writeInt64 (XMLInt64);
+    void writeUInt64 (XMLUInt64);
+
 
     /***
       *
@@ -511,13 +515,13 @@ public:
            XSerializeEngine& operator>>(unsigned int&);
            XSerializeEngine& operator>>(long&);
            XSerializeEngine& operator>>(unsigned long&);
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-           XSerializeEngine& operator>>(XMLInt64&);
-           XSerializeEngine& operator>>(XMLUInt64&);
-#endif
            XSerializeEngine& operator>>(float&);
            XSerializeEngine& operator>>(double&);
            XSerializeEngine& operator>>(bool&);
+
+    void readSize (XMLSize_t&);
+    void readInt64 (XMLInt64&);
+    void readUInt64 (XMLUInt64&);
 
     /***
       *

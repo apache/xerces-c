@@ -610,43 +610,53 @@ XSerializeEngine& XSerializeEngine::operator>>(bool& b)
     return *this;
 }
 
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-XSerializeEngine& XSerializeEngine::operator<<(XMLInt64 t)
+void XSerializeEngine::writeSize (XMLSize_t t)
 {
-    checkAndFlushBuffer(sizeof(t));
+  checkAndFlushBuffer(sizeof(t));
 
-    memcpy(fBufCur, &t, sizeof(t));
-    fBufCur += sizeof(t);
-    return *this;
+  memcpy(fBufCur, &t, sizeof(t));
+  fBufCur += sizeof(t);
 }
 
-XSerializeEngine& XSerializeEngine::operator>>(XMLInt64& t)
+void XSerializeEngine::writeInt64 (XMLInt64 t)
 {
-    checkAndFillBuffer(sizeof(t));
+  checkAndFlushBuffer(sizeof(t));
 
-    memcpy(&t, fBufCur, sizeof(t));
-    fBufCur += sizeof(t);
-    return *this;
+  memcpy(fBufCur, &t, sizeof(t));
+  fBufCur += sizeof(t);
 }
 
-XSerializeEngine& XSerializeEngine::operator<<(XMLUInt64 t)
+void XSerializeEngine::writeUInt64 (XMLUInt64 t)
 {
-    checkAndFlushBuffer(sizeof(t));
+  checkAndFlushBuffer(sizeof(t));
 
-    memcpy(fBufCur, &t, sizeof(t));
-    fBufCur += sizeof(t);
-    return *this;
+  memcpy(fBufCur, &t, sizeof(t));
+  fBufCur += sizeof(t);
 }
 
-XSerializeEngine& XSerializeEngine::operator>>(XMLUInt64& t)
+void XSerializeEngine::readSize (XMLSize_t& t)
 {
-    checkAndFillBuffer(sizeof(t));
+  checkAndFillBuffer(sizeof(t));
 
-    memcpy(&t, fBufCur, sizeof(t));
-    fBufCur += sizeof(t);
-    return *this;
+  memcpy(&t, fBufCur, sizeof(t));
+  fBufCur += sizeof(t);
 }
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+
+void XSerializeEngine::readInt64 (XMLInt64& t)
+{
+  checkAndFillBuffer(sizeof(t));
+
+  memcpy(&t, fBufCur, sizeof(t));
+  fBufCur += sizeof(t);
+}
+
+void XSerializeEngine::readUInt64 (XMLUInt64& t)
+{
+  checkAndFillBuffer(sizeof(t));
+
+  memcpy(&t, fBufCur, sizeof(t));
+  fBufCur += sizeof(t);
+}
 
 XSerializeEngine& XSerializeEngine::operator<<(char ch)
 {

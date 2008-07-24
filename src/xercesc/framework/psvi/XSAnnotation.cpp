@@ -173,13 +173,8 @@ void XSAnnotation::serialize(XSerializeEngine& serEng)
         serEng<<fNext;
         serEng.writeString(fSystemId);
 
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-        serEng<<fLine;
-        serEng<<fCol;
-#else
-        serEng<<(unsigned long)fLine;
-        serEng<<(unsigned long)fCol;
-#endif
+        serEng.writeUInt64 (fLine);
+        serEng.writeUInt64 (fCol);
     }
     else
     {
@@ -187,16 +182,8 @@ void XSAnnotation::serialize(XSerializeEngine& serEng)
         serEng>>fNext;
         serEng.readString(fSystemId);
 
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-        serEng>>fLine;
-        serEng>>fCol;
-#else
-        unsigned long tmp;
-        serEng>>tmp;
-        fLine = tmp;
-        serEng>>tmp;
-        fCol = tmp;
-#endif
+        serEng.readUInt64 (fLine);
+        serEng.readUInt64 (fCol);
     }
 }
 
