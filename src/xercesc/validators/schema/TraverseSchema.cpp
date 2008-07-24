@@ -49,7 +49,6 @@
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
-#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMText.hpp>
 #include <xercesc/dom/impl/XSDElementNSImpl.hpp>

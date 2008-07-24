@@ -1266,11 +1266,10 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
 
     if (!fUserDataTable) {
         // create the table on heap so that it can be cleaned in destructor
-        fUserDataTable = new (fMemoryManager) RefHash2KeysTableOf<DOMUserDataRecord>
+        fUserDataTable = new (fMemoryManager) RefHash2KeysTableOf<DOMUserDataRecord, PtrHasher>
         (
             109
             , true
-            , new (fMemoryManager) HashPtr()
             , fMemoryManager
         );
     }
@@ -1290,7 +1289,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
         fUserDataTable->put((void*)n, keyId, new (fMemoryManager) DOMUserDataRecord(data, handler));
     }
     else {
-        RefHash2KeysTableOfEnumerator<DOMUserDataRecord> enumKeys(fUserDataTable, false, fMemoryManager);
+        RefHash2KeysTableOfEnumerator<DOMUserDataRecord, PtrHasher> enumKeys(fUserDataTable, false, fMemoryManager);
         enumKeys.setPrimaryKey(n);
         if (!enumKeys.hasMoreElements())
             n->hasUserData(false);
@@ -1316,7 +1315,7 @@ void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
 void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHandler::DOMOperationType operation, const DOMNode* src, DOMNode* dst) const
 {
     if (fUserDataTable) {
-        RefHash2KeysTableOfEnumerator<DOMUserDataRecord> userDataEnum(fUserDataTable, false, fMemoryManager);
+        RefHash2KeysTableOfEnumerator<DOMUserDataRecord, PtrHasher> userDataEnum(fUserDataTable, false, fMemoryManager);
         userDataEnum.setPrimaryKey(n);
         // Create a snapshot of the handlers to be called, as the "handle" callback could be invalidating the enumerator by calling
         // setUserData on the dst node

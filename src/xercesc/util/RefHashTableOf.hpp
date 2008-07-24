@@ -22,49 +22,16 @@
 #if !defined(XERCESC_INCLUDE_GUARD_REFHASHTABLEOF_HPP)
 #define XERCESC_INCLUDE_GUARD_REFHASHTABLEOF_HPP
 
+#include <xercesc/util/Hashers.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashXMLCh.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// Default hasher for keys that are const XMLCh*.
-//
-struct StringHasher
-{
-  XMLSize_t getHashVal(const void* key, XMLSize_t mod) const
-  {
-    return XMLString::hash ((const XMLCh*)key, mod);
-  }
-
-  bool equals(const void *const key1, const void *const key2) const
-  {
-    return XMLString::equals ((const XMLCh*)key1, (const XMLCh*)key2);
-  }
-};
-
-// Some common hashers.
-//
-struct PtrHasher
-{
-  XMLSize_t getHashVal(const void* key, XMLSize_t mod) const
-  {
-    return ((XMLSize_t)key) % mod;
-  }
-
-  bool equals(const void *const key1, const void *const key2) const
-  {
-    return key1 == key2;
-  }
-};
-
-//
-//  Forward declare the enumerator so he can be our friend. Can you say
-//  friend? Sure...
+//  Forward declare the enumerator so it can be our friend.
 //
 template <class TVal, class THasher = StringHasher>
 class RefHashTableOfEnumerator;

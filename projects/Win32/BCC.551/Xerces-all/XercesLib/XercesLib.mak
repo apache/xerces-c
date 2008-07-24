@@ -41,8 +41,6 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\BinInputStream.obj \
     $(TARGETPATH)\obj\BinMemInputStream.obj \
     $(TARGETPATH)\obj\BitSet.obj \
-    $(TARGETPATH)\obj\HashPtr.obj \
-    $(TARGETPATH)\obj\HashXMLCh.obj \
     $(TARGETPATH)\obj\HeaderDummy.obj \
     $(TARGETPATH)\obj\HexBin.obj \
     $(TARGETPATH)\obj\KVStringPair.obj \

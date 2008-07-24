@@ -36,79 +36,22 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal>
-RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
-                                            , const bool         adoptElems
-                                            , const XMLSize_t    initSize
-                                            , MemoryManager* const manager) :
-    fMemoryManager(manager)
-    , fAdoptedElems(adoptElems)
-    , fBucketList(0)
-    , fHashModulus(modulus)
-    , fHash(0)
-    , fIdPtrs(0)
-    , fIdPtrsCount(initSize)
-    , fIdCounter(0)
-{
-    initialize(modulus);
+template <class TVal, class THasher>
+RefHash3KeysIdPool<TVal, THasher>::RefHash3KeysIdPool(
+  const XMLSize_t modulus,
+  const XMLSize_t initSize,
+  MemoryManager* const manager)
 
-    //
-    //  Allocate the initial id pointers array. We don't have to zero them
-    //  out since the fIdCounter value tells us which ones are valid. The
-    //  zeroth element is never used (and represents an invalid pool id.)
-    //
-    if (!fIdPtrsCount)
-        fIdPtrsCount = 256;
-    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
-    fIdPtrs[0] = 0;
-}
-
-template <class TVal>
-RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
-                                            , const bool         adoptElems
-                                            , HashBase*          hashBase
-                                            , const XMLSize_t    initSize
-                                            , MemoryManager* const manager) :
-    fMemoryManager(manager)
-    , fAdoptedElems(adoptElems)
-    , fBucketList(0)
-    , fHashModulus(modulus)
-    , fHash(0)
-    , fIdPtrs(0)
-    , fIdPtrsCount(initSize)
-    , fIdCounter(0)
-{
-    initialize(modulus);
-    // set hasher
-    fHash = hashBase;
-
-    //
-    //  Allocate the initial id pointers array. We don't have to zero them
-    //  out since the fIdCounter value tells us which ones are valid. The
-    //  zeroth element is never used (and represents an invalid pool id.)
-    //
-    if (!fIdPtrsCount)
-        fIdPtrsCount = 256;
-    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
-    fIdPtrs[0] = 0;
-}
-
-template <class TVal>
-RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
-                                            , const XMLSize_t    initSize
-                                            , MemoryManager* const manager) :
-    fMemoryManager(manager)
+    : fMemoryManager(manager)
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
 {
     initialize(modulus);
 
-    //
     //  Allocate the initial id pointers array. We don't have to zero them
     //  out since the fIdCounter value tells us which ones are valid. The
     //  zeroth element is never used (and represents an invalid pool id.)
@@ -119,7 +62,93 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const XMLSize_t    modulus
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const XMLSize_t modulus)
+template <class TVal, class THasher>
+RefHash3KeysIdPool<TVal, THasher>::RefHash3KeysIdPool(
+  const XMLSize_t modulus,
+  const THasher& hasher,
+  const XMLSize_t initSize,
+  MemoryManager* const manager)
+
+    : fMemoryManager(manager)
+    , fAdoptedElems(true)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHasher(hasher)
+    , fIdPtrs(0)
+    , fIdPtrsCount(initSize)
+    , fIdCounter(0)
+{
+    initialize(modulus);
+
+    //  Allocate the initial id pointers array. We don't have to zero them
+    //  out since the fIdCounter value tells us which ones are valid. The
+    //  zeroth element is never used (and represents an invalid pool id.)
+    //
+    if (!fIdPtrsCount)
+        fIdPtrsCount = 256;
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
+    fIdPtrs[0] = 0;
+}
+
+template <class TVal, class THasher>
+RefHash3KeysIdPool<TVal, THasher>::RefHash3KeysIdPool(
+  const XMLSize_t modulus,
+  const bool adoptElems,
+  const XMLSize_t initSize,
+  MemoryManager* const manager)
+
+    : fMemoryManager(manager)
+    , fAdoptedElems(adoptElems)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fIdPtrs(0)
+    , fIdPtrsCount(initSize)
+    , fIdCounter(0)
+
+{
+    initialize(modulus);
+
+    //  Allocate the initial id pointers array. We don't have to zero them
+    //  out since the fIdCounter value tells us which ones are valid. The
+    //  zeroth element is never used (and represents an invalid pool id.)
+    //
+    if (!fIdPtrsCount)
+        fIdPtrsCount = 256;
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
+    fIdPtrs[0] = 0;
+}
+
+template <class TVal, class THasher>
+RefHash3KeysIdPool<TVal, THasher>::RefHash3KeysIdPool(
+  const XMLSize_t modulus,
+  const bool adoptElems,
+  const THasher& hasher,
+  const XMLSize_t initSize,
+  MemoryManager* const manager)
+
+    : fMemoryManager(manager)
+    , fAdoptedElems(adoptElems)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHasher(hasher)
+    , fIdPtrs(0)
+    , fIdPtrsCount(initSize)
+    , fIdCounter(0)
+{
+    initialize(modulus);
+
+    //  Allocate the initial id pointers array. We don't have to zero them
+    //  out since the fIdCounter value tells us which ones are valid. The
+    //  zeroth element is never used (and represents an invalid pool id.)
+    //
+    if (!fIdPtrsCount)
+        fIdPtrsCount = 256;
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
+    fIdPtrs[0] = 0;
+}
+
+template <class TVal, class THasher>
+void RefHash3KeysIdPool<TVal, THasher>::initialize(const XMLSize_t modulus)
 {
     if (modulus == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus, fMemoryManager);
@@ -132,7 +161,8 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const XMLSize_t 
     memset(fBucketList, 0, sizeof(fBucketList[0]) * fHashModulus);
 }
 
-template <class TVal> RefHash3KeysIdPool<TVal>::~RefHash3KeysIdPool()
+template <class TVal, class THasher>
+RefHash3KeysIdPool<TVal, THasher>::~RefHash3KeysIdPool()
 {
     removeAll();
 
@@ -141,15 +171,14 @@ template <class TVal> RefHash3KeysIdPool<TVal>::~RefHash3KeysIdPool()
     fIdPtrs = 0;
     fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
     fBucketList = 0;
-    delete fHash;
-    fHash = 0;
 }
 
 
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Element management
 // ---------------------------------------------------------------------------
-template <class TVal> bool RefHash3KeysIdPool<TVal>::isEmpty() const
+template <class TVal, class THasher>
+bool RefHash3KeysIdPool<TVal, THasher>::isEmpty() const
 {
     // Just check the bucket list for non-empty elements
     for (XMLSize_t buckInd = 0; buckInd < fHashModulus; buckInd++)
@@ -160,7 +189,8 @@ template <class TVal> bool RefHash3KeysIdPool<TVal>::isEmpty() const
     return true;
 }
 
-template <class TVal> bool RefHash3KeysIdPool<TVal>::
+template <class TVal, class THasher>
+bool RefHash3KeysIdPool<TVal, THasher>::
 containsKey(const void* const key1, const int key2, const int key3) const
 {
     XMLSize_t hashVal;
@@ -168,7 +198,8 @@ containsKey(const void* const key1, const int key2, const int key3) const
     return (findIt != 0);
 }
 
-template <class TVal> void RefHash3KeysIdPool<TVal>::removeAll()
+template <class TVal, class THasher>
+void RefHash3KeysIdPool<TVal, THasher>::removeAll()
 {
     if (fIdCounter == 0) return;
 
@@ -210,8 +241,9 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::removeAll()
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Getters
 // ---------------------------------------------------------------------------
-template <class TVal> TVal*
-RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const int key3)
+template <class TVal, class THasher>
+TVal*
+RefHash3KeysIdPool<TVal, THasher>::getByKey(const void* const key1, const int key2, const int key3)
 {
     XMLSize_t hashVal;
     RefHash3KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, key3, hashVal);
@@ -220,8 +252,9 @@ RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const
     return findIt->fData;
 }
 
-template <class TVal> const TVal*
-RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const int key3) const
+template <class TVal, class THasher>
+const TVal*
+RefHash3KeysIdPool<TVal, THasher>::getByKey(const void* const key1, const int key2, const int key3) const
 {
     XMLSize_t hashVal;
     const RefHash3KeysTableBucketElem<TVal>* findIt = findBucketElem(key1, key2, key3, hashVal);
@@ -230,8 +263,9 @@ RefHash3KeysIdPool<TVal>::getByKey(const void* const key1, const int key2, const
     return findIt->fData;
 }
 
-template <class TVal> TVal*
-RefHash3KeysIdPool<TVal>::getById(const unsigned int elemId)
+template <class TVal, class THasher>
+TVal*
+RefHash3KeysIdPool<TVal, THasher>::getById(const unsigned int elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -240,8 +274,9 @@ RefHash3KeysIdPool<TVal>::getById(const unsigned int elemId)
     return fIdPtrs[elemId];
 }
 
-template <class TVal> const TVal*
-RefHash3KeysIdPool<TVal>::getById(const unsigned int elemId) const
+template <class TVal, class THasher>
+const TVal*
+RefHash3KeysIdPool<TVal, THasher>::getById(const unsigned int elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -250,14 +285,14 @@ RefHash3KeysIdPool<TVal>::getById(const unsigned int elemId) const
     return fIdPtrs[elemId];
 }
 
-template <class TVal>
-MemoryManager* RefHash3KeysIdPool<TVal>::getMemoryManager() const
+template <class TVal, class THasher>
+MemoryManager* RefHash3KeysIdPool<TVal, THasher>::getMemoryManager() const
 {
     return fMemoryManager;
 }
 
-template <class TVal>
-XMLSize_t RefHash3KeysIdPool<TVal>::getHashModulus() const
+template <class TVal, class THasher>
+XMLSize_t RefHash3KeysIdPool<TVal, THasher>::getHashModulus() const
 {
     return fHashModulus;
 }
@@ -265,8 +300,9 @@ XMLSize_t RefHash3KeysIdPool<TVal>::getHashModulus() const
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Putters
 // ---------------------------------------------------------------------------
-template <class TVal> XMLSize_t
-RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueToAdopt)
+template <class TVal, class THasher>
+XMLSize_t
+RefHash3KeysIdPool<TVal, THasher>::put(void* key1, int key2, int key3, TVal* const valueToAdopt)
 {
     // First see if the key exists already
     XMLSize_t hashVal;
@@ -337,18 +373,19 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Private methods
 // ---------------------------------------------------------------------------
-template <class TVal> RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal>::
+template <class TVal, class THasher>
+inline RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal, THasher>::
 findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal)
 {
     // Hash the key
-    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus) : fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHasher.getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if((key2==curElem->fKey2) && (key3==curElem->fKey3) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
+        if((key2==curElem->fKey2) && (key3==curElem->fKey3) && (fHasher.equals(key1, curElem->fKey1)))
             return curElem;
 
         curElem = curElem->fNext;
@@ -356,18 +393,19 @@ findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t
     return 0;
 }
 
-template <class TVal> const RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal>::
+template <class TVal, class THasher>
+inline const RefHash3KeysTableBucketElem<TVal>* RefHash3KeysIdPool<TVal, THasher>::
 findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t& hashVal) const
 {
     // Hash the key
-    hashVal = fHash==0?XMLString::hash((const XMLCh*)key1, fHashModulus) : fHash->getHashVal(key1, fHashModulus);
+    hashVal = fHasher.getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if((key2==curElem->fKey2) && (key3==curElem->fKey3) && (fHash==0?XMLString::equals((const XMLCh*)key1, (const XMLCh*)curElem->fKey1) : fHash->equals(key1, curElem->fKey1)))
+        if((key2==curElem->fKey2) && (key3==curElem->fKey3) && (fHasher.equals(key1, curElem->fKey1)))
             return curElem;
 
         curElem = curElem->fNext;
@@ -379,8 +417,9 @@ findBucketElem(const void* const key1, const int key2, const int key3, XMLSize_t
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPoolEnumerator: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
-RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum
+template <class TVal, class THasher>
+RefHash3KeysIdPoolEnumerator<TVal, THasher>::
+RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal, THasher>* const toEnum
                              , const bool adopt
                              , MemoryManager* const manager)
     : fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum), fMemoryManager(manager)
@@ -392,14 +431,16 @@ RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum
     resetKey();
 }
 
-template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::~RefHash3KeysIdPoolEnumerator()
+template <class TVal, class THasher>
+RefHash3KeysIdPoolEnumerator<TVal, THasher>::~RefHash3KeysIdPoolEnumerator()
 {
     if (fAdoptedElems)
         delete fToEnum;
 }
 
-template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
-RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal>& toCopy) :
+template <class TVal, class THasher>
+RefHash3KeysIdPoolEnumerator<TVal, THasher>::
+RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal, THasher>& toCopy) :
     XMLEnumerator<TVal>(toCopy)
     , XMemory(toCopy)
     , fAdoptedElems(toCopy.fAdoptedElems)
@@ -414,7 +455,8 @@ RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal>& toCopy) :
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPoolEnumerator: Enum interface
 // ---------------------------------------------------------------------------
-template <class TVal> bool RefHash3KeysIdPoolEnumerator<TVal>::hasMoreElements() const
+template <class TVal, class THasher>
+bool RefHash3KeysIdPoolEnumerator<TVal, THasher>::hasMoreElements() const
 {
     // If our index is zero or past the end, then we are done
     if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
@@ -422,7 +464,8 @@ template <class TVal> bool RefHash3KeysIdPoolEnumerator<TVal>::hasMoreElements()
     return true;
 }
 
-template <class TVal> TVal& RefHash3KeysIdPoolEnumerator<TVal>::nextElement()
+template <class TVal, class THasher>
+TVal& RefHash3KeysIdPoolEnumerator<TVal, THasher>::nextElement()
 {
     // If our index is zero or past the end, then we are done
     if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
@@ -432,7 +475,8 @@ template <class TVal> TVal& RefHash3KeysIdPoolEnumerator<TVal>::nextElement()
     return *fToEnum->fIdPtrs[fCurIndex++];
 }
 
-template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::Reset()
+template <class TVal, class THasher>
+void RefHash3KeysIdPoolEnumerator<TVal, THasher>::Reset()
 {
     //
     //  Find the next available bucket element in the pool. We use the id
@@ -444,19 +488,22 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::Reset()
 
 }
 
-template <class TVal> XMLSize_t RefHash3KeysIdPoolEnumerator<TVal>::size() const
+template <class TVal, class THasher>
+XMLSize_t RefHash3KeysIdPoolEnumerator<TVal, THasher>::size() const
 {
     return fToEnum->fIdCounter;
 }
 
-template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::resetKey()
+template <class TVal, class THasher>
+void RefHash3KeysIdPoolEnumerator<TVal, THasher>::resetKey()
 {
     fCurHash = (XMLSize_t)-1;
     fCurElem = 0;
     findNext();
 }
 
-template <class TVal> bool RefHash3KeysIdPoolEnumerator<TVal>::hasMoreKeys() const
+template <class TVal, class THasher>
+bool RefHash3KeysIdPoolEnumerator<TVal, THasher>::hasMoreKeys() const
 {
     //
     //  If our current has is at the max and there are no more elements
@@ -468,7 +515,8 @@ template <class TVal> bool RefHash3KeysIdPoolEnumerator<TVal>::hasMoreKeys() con
     return true;
 }
 
-template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::nextElementKey(void*& retKey1, int& retKey2, int& retKey3)
+template <class TVal, class THasher>
+void RefHash3KeysIdPoolEnumerator<TVal, THasher>::nextElementKey(void*& retKey1, int& retKey2, int& retKey3)
 {
     // Make sure we have an element to return
     if (!hasMoreKeys())
@@ -488,7 +536,8 @@ template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::nextElementKey(vo
     return;
 }
 
-template <class TVal> void RefHash3KeysIdPoolEnumerator<TVal>::findNext()
+template <class TVal, class THasher>
+void RefHash3KeysIdPoolEnumerator<TVal, THasher>::findNext()
 {
     //
     //  If there is a current element, move to its next element. If this

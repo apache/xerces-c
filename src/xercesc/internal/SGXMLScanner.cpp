@@ -49,7 +49,6 @@
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

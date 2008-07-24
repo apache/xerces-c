@@ -1367,7 +1367,7 @@ inline void XMLScanner::setAttrDupChkRegistry(const XMLSize_t    &attrNumber
         {
             fAttrDupChkRegistry = new (fMemoryManager) RefHash2KeysTableOf<XMLAttr>
             (
-              2*attrNumber+1, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+              2*attrNumber+1, false, fMemoryManager
             );
         }
         else

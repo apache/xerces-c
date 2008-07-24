@@ -27,8 +27,6 @@
 #include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/internal/XProtoType.hpp>
 
-#include <xercesc/util/HashPtr.hpp>
-
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/BinOutputStream.hpp>
 #include <xercesc/util/BinInputStream.hpp>

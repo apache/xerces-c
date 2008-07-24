@@ -150,8 +150,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
 	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
-	-@erase "$(INTDIR)\HashPtr.obj"
-	-@erase "$(INTDIR)\HashXMLCh.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -405,8 +403,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\BitSet.obj" \
 	"$(INTDIR)\DefaultPanicHandler.obj" \
 	"$(INTDIR)\EncodingValidator.obj" \
-	"$(INTDIR)\HashPtr.obj" \
-	"$(INTDIR)\HashXMLCh.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -793,8 +789,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
 	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
-	-@erase "$(INTDIR)\HashPtr.obj"
-	-@erase "$(INTDIR)\HashXMLCh.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -1049,8 +1043,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\BitSet.obj" \
 	"$(INTDIR)\DefaultPanicHandler.obj" \
 	"$(INTDIR)\EncodingValidator.obj" \
-	"$(INTDIR)\HashPtr.obj" \
-	"$(INTDIR)\HashXMLCh.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -1437,8 +1429,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
 	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
-	-@erase "$(INTDIR)\HashPtr.obj"
-	-@erase "$(INTDIR)\HashXMLCh.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -1694,8 +1684,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\BitSet.obj" \
 	"$(INTDIR)\DefaultPanicHandler.obj" \
 	"$(INTDIR)\EncodingValidator.obj" \
-	"$(INTDIR)\HashPtr.obj" \
-	"$(INTDIR)\HashXMLCh.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -2082,8 +2070,6 @@ CLEAN :
 	-@erase "$(INTDIR)\GeneralAttributeCheck.obj"
 	-@erase "$(INTDIR)\Grammar.obj"
 	-@erase "$(INTDIR)\GrammarResolver.obj"
-	-@erase "$(INTDIR)\HashPtr.obj"
-	-@erase "$(INTDIR)\HashXMLCh.obj"
 	-@erase "$(INTDIR)\HexBin.obj"
 	-@erase "$(INTDIR)\HexBinaryDatatypeValidator.obj"
 	-@erase "$(INTDIR)\IC_Field.obj"
@@ -2338,8 +2324,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\BitSet.obj" \
 	"$(INTDIR)\DefaultPanicHandler.obj" \
 	"$(INTDIR)\EncodingValidator.obj" \
-	"$(INTDIR)\HashPtr.obj" \
-	"$(INTDIR)\HashXMLCh.obj" \
 	"$(INTDIR)\HexBin.obj" \
 	"$(INTDIR)\KVStringPair.obj" \
 	"$(INTDIR)\Mutexes.obj" \
@@ -2910,18 +2894,6 @@ SOURCE=..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp
 
 
 SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.c
-SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.cpp
-
-"$(INTDIR)\HashPtr.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp
-
-"$(INTDIR)\HashXMLCh.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\..\..\..\src\xercesc\util\HexBin.cpp
 
 "$(INTDIR)\HexBin.obj" : $(SOURCE) "$(INTDIR)"

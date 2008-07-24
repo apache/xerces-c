@@ -54,7 +54,6 @@ CLEAN :"XercesLib - Win32 ReleaseCLEAN"
 CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\MemoryMonitor.obj"
-	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\MemHandlerTest.exe"
 
@@ -73,7 +72,6 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
-	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_3.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -105,7 +103,6 @@ CLEAN :"XercesLib - Win32 DebugCLEAN"
 CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\MemoryMonitor.obj"
-	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\MemHandlerTest.exe"
@@ -127,7 +124,6 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
-	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -159,7 +155,6 @@ CLEAN :"XercesLib - Win64 DebugCLEAN"
 CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\MemoryMonitor.obj"
-	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\MemHandlerTest.exe"
@@ -181,7 +176,6 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
-	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_3D.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -213,7 +207,6 @@ CLEAN :"XercesLib - Win64 ReleaseCLEAN"
 CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\MemoryMonitor.obj"
-	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\MemHandlerTest.exe"
 	-@erase "$(OUTDIR)\MemHandlerTest.ilk"
@@ -233,7 +226,6 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
-	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_3.lib"
 
 "$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -288,13 +280,6 @@ SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.cpp
 
 "$(INTDIR)\MemoryMonitor.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.cpp
-
-"$(INTDIR)\SimpleHashPtr.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
 
 !IF  "$(CFG)" == "MemHandlerTest - Win32 Release"
 

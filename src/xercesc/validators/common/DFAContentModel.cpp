@@ -39,7 +39,6 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesElementWildcard.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
-#include <xercesc/util/HashCMStateSet.hpp>
 #include <xercesc/util/XMLInteger.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

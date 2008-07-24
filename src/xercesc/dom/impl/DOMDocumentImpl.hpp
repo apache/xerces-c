@@ -300,7 +300,7 @@ protected:
     DOMConfiguration*     fDOMConfiguration;
 
     XMLStringPool         fUserDataTableKeys;
-    RefHash2KeysTableOf<DOMUserDataRecord>* fUserDataTable;
+    RefHash2KeysTableOf<DOMUserDataRecord, PtrHasher>* fUserDataTable;
 
 
     // Per-Document heap Variables.

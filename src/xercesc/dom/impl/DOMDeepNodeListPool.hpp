@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,24 +32,14 @@
 #define XERCESC_INCLUDE_GUARD_DOMDEEPNODELISTPOOL_HPP
 
 
-#include <xercesc/util/HashBase.hpp>
+#include <xercesc/util/Hashers.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashXMLCh.hpp>
-#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-
-// This hash table is modified from RefHash3KeysIdPool with first key as object ptr (DOMNode),
-// second and third keys are both XMLCh* string
-
-template <class TVal> struct DOMDeepNodeListPoolTableBucketElem;
-
 
 //
 //  This should really be a nested class, but some of the compilers we
@@ -90,20 +80,19 @@ struct DOMDeepNodeListPoolTableBucketElem : public XMemory
 };
 
 
-template <class TVal> class DOMDeepNodeListPool
+template <class TVal, class THasher = PtrHasher>
+class DOMDeepNodeListPool
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    // backwards compatability - default hasher is HashXMLCh
     DOMDeepNodeListPool
     (
         const XMLSize_t modulus
       , const XMLSize_t initSize = 128
     );
 
-    // backwards compatability - default hasher is HashXMLCh
     DOMDeepNodeListPool
     (
         const XMLSize_t modulus
@@ -111,14 +100,11 @@ public:
       , const XMLSize_t initSize = 128
     );
 
-    // if a hash function is passed in, it will be deleted when the hashtable is deleted.
-    // use a new instance of the hasher class for each hashtable, otherwise one hashtable
-    // may delete the hasher of a different hashtable if both use the same hasher.
     DOMDeepNodeListPool
     (
          const XMLSize_t modulus
        , const bool adoptElems
-       , HashBase* hashBase
+       , const THasher& hasher
        , const XMLSize_t initSize = 128
     );
 
@@ -145,7 +131,7 @@ public:
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-	unsigned int put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const valueToAdopt);
+    unsigned int put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const valueToAdopt);
 
 private:
 
@@ -159,8 +145,8 @@ private:
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    DOMDeepNodeListPool(const DOMDeepNodeListPool<TVal> &);
-    DOMDeepNodeListPool<TVal> & operator = (const DOMDeepNodeListPool<TVal> &);
+    DOMDeepNodeListPool(const DOMDeepNodeListPool<TVal, THasher> &);
+    DOMDeepNodeListPool<TVal, THasher> & operator = (const DOMDeepNodeListPool<TVal, THasher> &);
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -198,7 +184,7 @@ private:
     bool                                       fAdoptedElems;
     DOMDeepNodeListPoolTableBucketElem<TVal>** fBucketList;
     XMLSize_t                                  fHashModulus;
-    HashBase*                                  fHash;
+    THasher                                    fHasher;
     TVal**                                     fIdPtrs;
     XMLSize_t                                  fIdPtrsCount;
     unsigned int                               fIdCounter;

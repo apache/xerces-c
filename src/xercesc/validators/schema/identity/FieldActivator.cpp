@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,6 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
-#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -41,7 +40,7 @@ FieldActivator::FieldActivator(ValueStoreCache* const valueStoreCache,
     , fMayMatch(0)
     , fMemoryManager(manager)
 {
-    fMayMatch = new (manager) ValueHashTableOf<bool>(29, new (manager) HashPtr(), manager);
+    fMayMatch = new (manager) ValueHashTableOf<bool, PtrHasher>(29, manager);
 }
 
 FieldActivator::FieldActivator(const FieldActivator& other)
@@ -51,8 +50,8 @@ FieldActivator::FieldActivator(const FieldActivator& other)
     , fMayMatch(0)
     , fMemoryManager(other.fMemoryManager)
 {
-    fMayMatch = new (fMemoryManager) ValueHashTableOf<bool>(29, new (fMemoryManager) HashPtr(), fMemoryManager);
-    ValueHashTableOfEnumerator<bool> mayMatchEnum(other.fMayMatch, false, fMemoryManager);
+    fMayMatch = new (fMemoryManager) ValueHashTableOf<bool, PtrHasher>(29, fMemoryManager);
+    ValueHashTableOfEnumerator<bool, PtrHasher> mayMatchEnum(other.fMayMatch, false, fMemoryManager);
 
     // Build key set
     while (mayMatchEnum.hasMoreElements())
@@ -123,4 +122,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file FieldActivator.cpp
   */
-

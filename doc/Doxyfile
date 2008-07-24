@@ -428,10 +428,7 @@ EXCLUDE_PATTERNS       = *Impl.hpp \
                          TransENameMap.hpp \
                          EncodingValidator.hpp \
                          FlagJanitor.hpp \
-                         HashCMStateSet.hpp \
-                         HashBase.hpp \
-                         HashPtr.hpp \
-                         HashXMLCh.hpp \
+                         Hashers.hpp \
                          KeyValuePair.hpp \
                          KeyRefPair.hpp \
                          KVStringPair.hpp \

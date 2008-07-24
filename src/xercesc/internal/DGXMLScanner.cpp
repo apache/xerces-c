@@ -42,7 +42,6 @@
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
-#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

@@ -25,7 +25,6 @@
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
-#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -132,11 +131,10 @@ void ValueStoreCache::init() {
         , false
         , fMemoryManager
     );
-    fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore>
+    fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore, PtrHasher>
     (
         13
         , false
-        , new (fMemoryManager) HashPtr()
         , fMemoryManager
     );
     fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore, PtrHasher> >(8, true, fMemoryManager);

@@ -50,7 +50,6 @@
 #include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
-#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

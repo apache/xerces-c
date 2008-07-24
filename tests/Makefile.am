@@ -71,8 +71,6 @@ InitTermTest_SOURCES =                          src/InitTermTest/InitTermTest.cp
 testprogs +=                                    MemHandlerTest
 MemHandlerTest_SOURCES =                        src/MemHandlerTest/MemoryMonitor.cpp \
                                                 src/MemHandlerTest/MemoryMonitor.hpp \
-                                                src/MemHandlerTest/SimpleHashPtr.cpp \
-                                                src/MemHandlerTest/SimpleHashPtr.hpp \
                                                 src/MemHandlerTest/SimpleValueHashTableOf.hpp
 
 testprogs +=                                    NetAccessorTest

@@ -577,10 +577,7 @@ util_headers = \
 	xercesc/util/EncodingValidator.hpp \
 	xercesc/util/FlagJanitor.hpp \
 	xercesc/util/FlagJanitor.c \
-	xercesc/util/HashBase.hpp \
-	xercesc/util/HashCMStateSet.hpp \
-	xercesc/util/HashPtr.hpp \
-	xercesc/util/HashXMLCh.hpp \
+	xercesc/util/Hashers.hpp \
 	xercesc/util/HexBin.hpp \
 	xercesc/util/IllegalArgumentException.hpp \
 	xercesc/util/InvalidCastException.hpp \
@@ -715,8 +712,6 @@ util_sources = \
 	xercesc/util/BitSet.cpp \
 	xercesc/util/DefaultPanicHandler.cpp \
 	xercesc/util/EncodingValidator.cpp \
-	xercesc/util/HashPtr.cpp \
-	xercesc/util/HashXMLCh.cpp \
 	xercesc/util/HeaderDummy.cpp \
 	xercesc/util/HexBin.cpp \
 	xercesc/util/KVStringPair.cpp \

@@ -1084,10 +1084,6 @@
 				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -1095,10 +1091,6 @@
 			>
 			<File
 				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.hpp"
 				>
 			</File>
 			<File

@@ -463,22 +463,7 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\HashBase.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\HashCMStateSet.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\HashPtr.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\HashPtr.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\HashXMLCh.hpp">
+				RelativePath="..\..\..\..\..\src\xercesc\util\Hashers.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\HeaderDummy.cpp">

@@ -122,7 +122,7 @@ private:
     // -----------------------------------------------------------------------
     RefVectorOf<ValueStore>*                 fValueStores;
     RefHashTableOf<ValueStore, PtrHasher>*   fGlobalICMap;
-    RefHash2KeysTableOf<ValueStore>*         fIC2ValueStoreMap;
+    RefHash2KeysTableOf<ValueStore, PtrHasher>* fIC2ValueStoreMap;
     RefStackOf<RefHashTableOf<ValueStore, PtrHasher> >* fGlobalMapStack;
     XMLScanner*                              fScanner;
     MemoryManager*                           fMemoryManager;

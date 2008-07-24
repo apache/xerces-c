@@ -23,32 +23,29 @@
 #define XERCESC_INCLUDE_GUARD_REFHASH3KEYSIDPOOL_HPP
 
 
-#include <xercesc/util/HashBase.hpp>
+#include <xercesc/util/Hashers.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashXMLCh.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // This hash table is a combination of RefHash2KeyTableOf (with an additional integer as key3)
 // and NameIdPool with an id as index
 
+//  Forward declare the enumerator so it can be our friend.
 //
-//  Forward declare the enumerator so he can be our friend. Can you say
-//  friend? Sure...
-//
-template <class TVal> class RefHash3KeysIdPoolEnumerator;
-template <class TVal> struct RefHash3KeysTableBucketElem;
+template <class TVal, class THasher = StringHasher>
+class RefHash3KeysIdPoolEnumerator;
 
 
 //
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct RefHash3KeysTableBucketElem
+template <class TVal>
+struct RefHash3KeysTableBucketElem
 {
     RefHash3KeysTableBucketElem(
               void* key1
@@ -82,40 +79,36 @@ private:
 };
 
 
-template <class TVal> class RefHash3KeysIdPool : public XMemory
+template <class TVal, class THasher = StringHasher>
+class RefHash3KeysIdPool : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    // backwards compatability - default hasher is HashXMLCh
-    RefHash3KeysIdPool
-    (
-          const XMLSize_t     modulus
-        , const XMLSize_t     initSize = 128
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
-    );
+    RefHash3KeysIdPool(
+      const XMLSize_t modulus,
+      const XMLSize_t initSize = 128,
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    // backwards compatability - default hasher is HashXMLCh
-    RefHash3KeysIdPool
-    (
-          const XMLSize_t      modulus
-        , const bool           adoptElems
-        , const XMLSize_t      initSize = 128
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
-    );
+    RefHash3KeysIdPool(
+      const XMLSize_t modulus,
+      const THasher& hasher,
+      const XMLSize_t initSize = 128,
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    // if a hash function is passed in, it will be deleted when the hashtable is deleted.
-    // use a new instance of the hasher class for each hashtable, otherwise one hashtable
-    // may delete the hasher of a different hashtable if both use the same hasher.
-    RefHash3KeysIdPool
-    (
-          const XMLSize_t      modulus
-        , const bool           adoptElems
-        , HashBase* hashBase
-        , const XMLSize_t      initSize = 128
-        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
-    );
+    RefHash3KeysIdPool(
+      const XMLSize_t modulus,
+      const bool adoptElems,
+      const XMLSize_t initSize = 128,
+      MemoryManager* const manager =  XMLPlatformUtils::fgMemoryManager);
+
+    RefHash3KeysIdPool(
+      const XMLSize_t modulus,
+      const bool adoptElems,
+      const THasher& hasher,
+      const XMLSize_t initSize = 128,
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     ~RefHash3KeysIdPool();
 
@@ -142,21 +135,21 @@ public:
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-	XMLSize_t put(void* key1, int key2, int key3, TVal* const valueToAdopt);
+    XMLSize_t put(void* key1, int key2, int key3, TVal* const valueToAdopt);
 
 
 private :
     // -----------------------------------------------------------------------
     //  Declare our friends
     // -----------------------------------------------------------------------
-    friend class RefHash3KeysIdPoolEnumerator<TVal>;
+    friend class RefHash3KeysIdPoolEnumerator<TVal, THasher>;
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    RefHash3KeysIdPool(const RefHash3KeysIdPool<TVal>&);
-    RefHash3KeysIdPool<TVal>& operator=(const RefHash3KeysIdPool<TVal>&);
+    RefHash3KeysIdPool(const RefHash3KeysIdPool<TVal, THasher>&);
+    RefHash3KeysIdPool<TVal, THasher>& operator=(const RefHash3KeysIdPool<TVal, THasher>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -203,10 +196,10 @@ private:
     bool                                fAdoptedElems;
     RefHash3KeysTableBucketElem<TVal>** fBucketList;
     XMLSize_t                           fHashModulus;
-    HashBase*                           fHash;
+    THasher                             fHasher;
     TVal**                              fIdPtrs;
     XMLSize_t                           fIdPtrsCount;
-    XMLSize_t                          fIdCounter;
+    XMLSize_t                           fIdCounter;
 };
 
 
@@ -215,18 +208,19 @@ private:
 //  An enumerator for a value array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TVal> class RefHash3KeysIdPoolEnumerator : public XMLEnumerator<TVal>, public XMemory
+template <class TVal, class THasher>
+class RefHash3KeysIdPoolEnumerator : public XMLEnumerator<TVal>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum
+    RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal, THasher>* const toEnum
         , const bool adopt = false
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHash3KeysIdPoolEnumerator();
 
-    RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal>&);
+    RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal, THasher>&);
     // -----------------------------------------------------------------------
     //  Enum interface
     // -----------------------------------------------------------------------
@@ -246,7 +240,8 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    RefHash3KeysIdPoolEnumerator<TVal>& operator=(const RefHash3KeysIdPoolEnumerator<TVal>&);
+    RefHash3KeysIdPoolEnumerator<TVal, THasher>&
+    operator=(const RefHash3KeysIdPoolEnumerator<TVal, THasher>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -269,7 +264,7 @@ private :
     // -----------------------------------------------------------------------
     bool                                fAdoptedElems;
     XMLSize_t                           fCurIndex;
-    RefHash3KeysIdPool<TVal>*           fToEnum;
+    RefHash3KeysIdPool<TVal, THasher>*  fToEnum;
     RefHash3KeysTableBucketElem<TVal>*  fCurElem;
     XMLSize_t                           fCurHash;
     MemoryManager* const                fMemoryManager;

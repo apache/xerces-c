@@ -44,8 +44,6 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemInputStream.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\BitSet.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\EncodingValidator.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\HashPtr.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\HashXMLCh.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\HeaderDummy.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\HexBin.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\KVStringPair.obj
@@ -413,8 +411,6 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\BinMemInputStream.cpp" FORMNAME="" UNITNAME="BinMemInputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\BitSet.cpp" FORMNAME="" UNITNAME="BitSet" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\EncodingValidator.cpp" FORMNAME="" UNITNAME="EncodingValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\HashPtr.cpp" FORMNAME="" UNITNAME="HashPtr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp" FORMNAME="" UNITNAME="HashXMLCh" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\HeaderDummy.cpp" FORMNAME="" UNITNAME="HeaderDummy" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\HexBin.cpp" FORMNAME="" UNITNAME="HexBin" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\KVStringPair.cpp" FORMNAME="" UNITNAME="KVStringPair" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

@@ -25,7 +25,6 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/IGXMLScanner.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/util/UnexpectedEOFException.hpp>
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>

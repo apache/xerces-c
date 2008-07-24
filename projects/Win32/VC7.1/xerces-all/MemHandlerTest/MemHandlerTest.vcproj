@@ -380,18 +380,12 @@
 			<File
 				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.cpp">
 			</File>
-			<File
-				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\tests\src\MemHandlerTest\SimpleValueHashTableOf.hpp">

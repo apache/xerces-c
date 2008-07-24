@@ -545,27 +545,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\HashBase.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HashCMStateSet.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Hashers.hpp
 # End Source File
 # Begin Source File
 

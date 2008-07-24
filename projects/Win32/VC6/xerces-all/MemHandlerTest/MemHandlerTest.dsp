@@ -141,10 +141,6 @@ LINK32=link.exe
 
 SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -152,10 +148,6 @@ SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\MemoryMonitor.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\tests\src\MemHandlerTest\SimpleHashPtr.hpp
 # End Source File
 # Begin Source File
 

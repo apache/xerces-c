@@ -29,7 +29,6 @@
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#include <xercesc/util/HashPtr.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>

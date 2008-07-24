@@ -1168,39 +1168,7 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = HashBase.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		02058DE2FF8AF8CD7F000001 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = HashPtr.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		02058DE3FF8AF8CD7F000001 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = HashPtr.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		02058DE4FF8AF8CD7F000001 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = HashXMLCh.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		02058DE5FF8AF8CD7F000001 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = HashXMLCh.hpp;
+			path = Hashers.hpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -14006,14 +13974,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.h;
 			path = XPathSymbols.hpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F5A6C93701B968C801000102 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = HashCMStateSet.hpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};

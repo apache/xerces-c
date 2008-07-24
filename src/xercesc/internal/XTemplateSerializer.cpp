@@ -23,7 +23,6 @@
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
-#include <xercesc/util/HashPtr.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>

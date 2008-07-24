@@ -22,7 +22,6 @@
 
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include "SimpleHashPtr.hpp"
 #include <xercesc/dom/DOMLSParser.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMError.hpp>
@@ -60,8 +59,7 @@ public:
       */
     MemoryMonitor()
     {
-        fHashType = new SimpleHashPtr();
-        fHashTable = new SimpleValueHashTableOf<unsigned int>(1013, fHashType);
+      fHashTable = new SimpleValueHashTableOf<unsigned int>(1013);
     }
     //@}
 
@@ -74,7 +72,7 @@ public:
       */
     virtual ~MemoryMonitor()
     {
-        delete fHashTable;
+      delete fHashTable;
     }
     //@}
 
@@ -111,8 +109,5 @@ private:
     MemoryMonitor(const MemoryMonitor &);
     MemoryMonitor& operator=(const MemoryMonitor &);
     SimpleValueHashTableOf<unsigned int>* fHashTable;
-    SimpleHashPtr* fHashType;
 
 };
-
-
