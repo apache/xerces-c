@@ -142,7 +142,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
          *
          ***/
         XTemplateSerializer::storeObject(fList, serEng);
-        serEng << fCount;
+        serEng.writeSize (fCount);
 
         // do not serialize fEnum
     }
@@ -155,7 +155,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::loadObject(&fList, 29, true, serEng);
         // assume empty so we can size fArray just right
-        serEng >> fSize;
+        serEng.readSize (fSize);
         if (!fEnum && fList)
         {
              fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(fList, false, getMemoryManager());

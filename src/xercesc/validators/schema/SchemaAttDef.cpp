@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,9 +44,9 @@ const XMLCh* SchemaAttDef::getFullName() const
 SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
     XMLAttDef(XMLAttDef::CData, XMLAttDef::Implied, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
-    , fPSVIScope(PSVIDefs::SCP_ABSENT)    
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fAttName(0)
-    , fDatatypeValidator(0)    
+    , fDatatypeValidator(0)
     , fNamespaceList(0)
     , fBaseAttDecl(0)
 {
@@ -59,9 +59,9 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
                           , const XMLAttDef::DefAttTypes defType
                           , MemoryManager* const         manager) :
     XMLAttDef(type, defType, manager)
-    , fElemId(XMLElementDecl::fgInvalidElemId)  
+    , fElemId(XMLElementDecl::fgInvalidElemId)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)      
+    , fDatatypeValidator(0)
     , fNamespaceList(0)
     , fBaseAttDecl(0)
 {
@@ -78,9 +78,9 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
                           , MemoryManager* const         manager) :
 
     XMLAttDef(attValue, type, defType, enumValues, manager)
-    , fElemId(XMLElementDecl::fgInvalidElemId) 
+    , fElemId(XMLElementDecl::fgInvalidElemId)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)        
+    , fDatatypeValidator(0)
     , fNamespaceList(0)
     , fBaseAttDecl(0)
 {
@@ -95,7 +95,7 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fPSVIScope(other->fPSVIScope)
     , fAttName(0)
-    , fDatatypeValidator(other->fDatatypeValidator)       
+    , fDatatypeValidator(other->fDatatypeValidator)
     , fNamespaceList(0)
     , fBaseAttDecl(other->fBaseAttDecl)
 {
@@ -139,12 +139,12 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
-        serEng<<fElemId;
+        serEng.writeSize (fElemId);
         serEng<<(int)fPSVIScope;
 
         serEng<<fAttName;
 
-        DatatypeValidator::storeDV(serEng, fDatatypeValidator);                
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
 
         /***
          * Serialize ValueVectorOf<unsigned int>
@@ -156,20 +156,20 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
     else
     {
 
-        serEng>>fElemId;
-        int i;        
+        serEng.readSize (fElemId);
+        int i;
         serEng>>i;
         fPSVIScope = (PSVIDefs::PSVIScope)i;
 
         serEng>>fAttName;
 
-        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);               
+        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);
 
         /***
          * Deserialize ValueVectorOf<unsigned int>
          ***/
         XTemplateSerializer::loadObject(&fNamespaceList, 8, false, serEng);
-       
+
         serEng>>fBaseAttDecl;
     }
 }

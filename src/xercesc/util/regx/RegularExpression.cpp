@@ -704,7 +704,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const matchStr
     if(matches(XMLUni::fgZeroLenString, manager)){
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString, manager);
     }
-      
+
     RefVectorOf<Match> *subEx = new (manager) RefVectorOf<Match>(10, true, manager);
     Janitor<RefVectorOf<Match> > janSubEx(subEx);
 
@@ -746,11 +746,11 @@ void RegularExpression::allMatches(const XMLCh* const matchString, const XMLSize
     while(matchStart <= end) {
         XMLSize_t matchEnd = match(&context, fOperations, matchStart);
         if(matchEnd != (XMLSize_t)-1) {
-            context.fMatch->setStartPos(0, matchStart);
-            context.fMatch->setEndPos(0, matchEnd);
+            context.fMatch->setStartPos(0, (int)matchStart);
+            context.fMatch->setEndPos(0, (int)matchEnd);
 
             subEx->addElement(context.fMatch);
-        
+
             context.fMatch = new (manager) Match(*(context.fMatch));
             context.fAdoptMatch = true;
 
@@ -814,14 +814,14 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
     if(matches(XMLUni::fgZeroLenString, manager)){
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString, manager);
     }
-      
+
     RefVectorOf<Match> *subEx = new (manager) RefVectorOf<Match>(10, true, manager);
     Janitor<RefVectorOf<Match> > janSubEx(subEx);
 
     allMatches(matchString, start, end, subEx, manager);
 
     XMLBuffer result(1023, manager);
-    int tokStart = start;
+    int tokStart = (int)start;
 
     XMLSize_t i = 0;
     for(; i < subEx->size(); ++i) {
@@ -843,15 +843,15 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
 
 /*
  * Helper for Replace. This method prepares the replacement string by substituting
- * in actual values for parenthesized sub expressions. 
+ * in actual values for parenthesized sub expressions.
  *
  * An error will be thrown if:
  *  1) there is chBackSlash not followed by a chDollarSign or chBackSlash
  *  2) there is an unescaped chDollarSign which is not followed by a digit
  *
  */
-void RegularExpression::subInExp(const XMLCh* const repString, 
-                                 const XMLCh* const origString, 
+void RegularExpression::subInExp(const XMLCh* const repString,
+                                 const XMLCh* const origString,
                                  const Match* subEx,
                                  XMLBuffer &result,
                                  MemoryManager* const manager) const
@@ -861,7 +861,7 @@ void RegularExpression::subInExp(const XMLCh* const repString,
     for(const XMLCh *ptr = repString; *ptr != chNull; ++ptr) {
         if(*ptr == chDollarSign) {
             ++ptr;
-      
+
             // check that after the $ is a digit
             if(!XMLString::isDigit(*ptr)) {
                 // invalid replace string - $ must be followed by a digit
@@ -896,7 +896,7 @@ void RegularExpression::subInExp(const XMLCh* const repString,
                 ++ptr;
 
                 // if you have a slash and then a character that's not a $ or /,
-                // then it's an invalid replace string  
+                // then it's an invalid replace string
                 if(*ptr != chDollarSign && *ptr != chBackSlash) {
                     ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_InvalidRepPattern, manager);
                 }
@@ -1609,4 +1609,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   *    End of file RegularExpression.cpp
   */
-

@@ -2030,11 +2030,11 @@ SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
     // check Occurrence ranges
     XMLSize_t derivedCount = derivedNodes->size();
     XMLSize_t baseCount = baseNodes->size();
-    int derivedMin = derivedSpecNode->getMinOccurs() * derivedCount;
+    int derivedMin = derivedSpecNode->getMinOccurs() * (unsigned int)derivedCount;
     int derivedMax = derivedSpecNode->getMaxOccurs();
 
     if (derivedMax != SchemaSymbols::XSD_UNBOUNDED) {
-        derivedMax *= derivedCount;
+        derivedMax *= (unsigned int)derivedCount;
     }
 
     if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),

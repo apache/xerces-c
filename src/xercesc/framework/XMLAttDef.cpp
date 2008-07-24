@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -121,7 +121,7 @@ XMLAttDef::XMLAttDef( const XMLAttDef::AttTypes    type
 
     fDefaultType(defType)
     , fType(type)
-    , fCreateReason(XMLAttDef::NoReason)    
+    , fCreateReason(XMLAttDef::NoReason)
     , fExternalAttribute(false)
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
@@ -140,7 +140,7 @@ XMLAttDef::XMLAttDef( const XMLCh* const           attrValue
 
     fDefaultType(defType)
     , fType(type)
-    , fCreateReason(XMLAttDef::NoReason)    
+    , fCreateReason(XMLAttDef::NoReason)
     , fExternalAttribute(false)
     , fId(XMLAttDef::fgInvalidAttrId)
     , fValue(0)
@@ -190,9 +190,9 @@ void XMLAttDef::serialize(XSerializeEngine& serEng)
     {
         serEng<<(int)fDefaultType;
         serEng<<(int)fType;
-        serEng<<(int)fCreateReason;       
+        serEng<<(int)fCreateReason;
         serEng<<fExternalAttribute;
-        serEng<<fId;
+        serEng.writeSize (fId);
 
         serEng.writeString(fValue);
         serEng.writeString(fEnumeration);
@@ -208,9 +208,9 @@ void XMLAttDef::serialize(XSerializeEngine& serEng)
 
         serEng>>i;
         fCreateReason = (CreateReasons)i;
-       
+
         serEng>>fExternalAttribute;
-        serEng>>fId;
+        serEng.readSize (fId);
 
         serEng.readString(fValue);
         serEng.readString(fEnumeration);
@@ -218,4 +218,3 @@ void XMLAttDef::serialize(XSerializeEngine& serEng)
 }
 
 XERCES_CPP_NAMESPACE_END
-

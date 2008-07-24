@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -299,11 +299,11 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
 
      E2-35
      It is an error for both length and either of minLength or maxLength to be members of {facets},
-     unless they are specified in different derivation steps in which case the following must be true: 
-     the {value} of minLength <= the {value} of length <= the {value} of maxLength   
+     unless they are specified in different derivation steps in which case the following must be true:
+     the {value} of minLength <= the {value} of length <= the {value} of maxLength
     ***/
 
-    // error: length > base.maxLength 
+    // error: length > base.maxLength
     //        length < base.minLength
     if ((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0)
     {
@@ -315,7 +315,7 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
                              , XMLExcepts::FACET_Len_baseMaxLen
                              , manager)
         }
-        
+
         if (((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
              (thisLength < baseMinLength)                                   )
         {
@@ -326,7 +326,7 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
         }
     }
 
-    // error: baseLength > maxLength 
+    // error: baseLength > maxLength
     //        baseLength < minLength
     if ((baseFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0)
     {
@@ -338,7 +338,7 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
                              , XMLExcepts::FACET_maxLen_baseLen
                              , manager)
         }
-        
+
         if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
              (baseLength < thisMinLength)                                   )
         {
@@ -458,7 +458,7 @@ void AbstractStringValidator::inspectFacetBase(MemoryManager* const manager)
             // ask parent do a complete check
             pBaseValidator->checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
 #if 0
-// spec says that only base has to checkContent          
+// spec says that only base has to checkContent
             // enum shall pass this->checkContent() as well.
             checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false, manager);
 #endif
@@ -647,17 +647,17 @@ const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 
 void AbstractStringValidator::normalizeEnumeration(MemoryManager* const manager)
 {
-    AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) getBaseValidator();    
+    AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) getBaseValidator();
 
-    if (!fEnumeration || !pBaseValidator) 
+    if (!fEnumeration || !pBaseValidator)
         return;
 
     int baseFacetsDefined = pBaseValidator->getFacetsDefined();
     if ((baseFacetsDefined & DatatypeValidator::FACET_WHITESPACE) == 0)
-        return;    
-    
-    short whiteSpace = pBaseValidator->getWSFacet();   
-            
+        return;
+
+    short whiteSpace = pBaseValidator->getWSFacet();
+
     if ( whiteSpace == DatatypeValidator::PRESERVE )
     {
         return;
@@ -676,8 +676,8 @@ void AbstractStringValidator::normalizeEnumeration(MemoryManager* const manager)
         for ( XMLSize_t i=0; i < enumLength; i++)
         {
             XMLString::collapseWS(getEnumeration()->elementAt(i), manager);
-        }                
-    }   
+        }
+    }
 }
 
 void AbstractStringValidator::normalizeContent(XMLCh* const, MemoryManager* const) const
@@ -732,9 +732,9 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
-        serEng<<fLength;
-        serEng<<fMaxLength;
-        serEng<<fMinLength;
+        serEng.writeSize (fLength);
+        serEng.writeSize (fMaxLength);
+        serEng.writeSize (fMinLength);
         serEng<<fEnumerationInherited;
 
         /***
@@ -747,14 +747,14 @@ void AbstractStringValidator::serialize(XSerializeEngine& serEng)
     }
     else
     {
-        serEng>>fLength;
-        serEng>>fMaxLength;
-        serEng>>fMinLength;
+        serEng.readSize (fLength);
+        serEng.readSize (fMaxLength);
+        serEng.readSize (fMinLength);
         serEng>>fEnumerationInherited;
 
         /***
          *
-         *  Deserialize RefArrayVectorOf<XMLCh>         
+         *  Deserialize RefArrayVectorOf<XMLCh>
          *
         ***/
         XTemplateSerializer::loadObject(&fEnumeration, 8, true, serEng);
