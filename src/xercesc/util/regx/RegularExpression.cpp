@@ -713,7 +713,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const matchStr
     RefArrayVectorOf<XMLCh> *tokens = new (manager) RefArrayVectorOf<XMLCh>(16, true, manager);
     XMLSize_t tokStart = start;
 
-    unsigned int i = 0;
+    XMLSize_t i = 0;
     for(; i < subEx->size(); ++i) {
         Match *match = subEx->elementAt(i);
         XMLSize_t matchStart = match->getStartPos(0);
