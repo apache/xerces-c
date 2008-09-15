@@ -431,20 +431,35 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
 
     // Facets
 	RefHashTableOf<KVStringPair>* facets = dtValidator->getFacets();
-    if( facets )
+    if( facets && facets->getCount()>0)
     {
+        XMLSize_t i;
+        // Element's properties
+        XERCES_STD_QUALIFIER cout << "Facets:\t\t\n";
+        // use a list to print them sorted, or the list could be different on 64-bit machines
+        RefVectorOf<const XMLCh> sortedList(facets->getCount(), false);
         RefHashTableOfEnumerator<KVStringPair> enumFacets(facets);
-        if( enumFacets.hasMoreElements() )
+        while( enumFacets.hasMoreElements() )
         {
-            XERCES_STD_QUALIFIER cout << "Facets:\t\t\n";
+            const KVStringPair& curPair = enumFacets.nextElement();
+            const XMLCh* key=curPair.getKey();
+            XMLSize_t len=sortedList.size();
+            for(i=0;i<len;i++)
+                if(XMLString::compareString(key, sortedList.elementAt(i))<0)
+                {
+                    sortedList.insertElementAt(key,i);
+                    break;
+                }
+            if(i==len)
+                sortedList.addElement(key);
         }
 
-        while(enumFacets.hasMoreElements())
+        XMLSize_t len=sortedList.size();
+        for(i=0;i<len;i++)
         {
-            // Element's properties
-            const KVStringPair& curPair = enumFacets.nextElement();
-            XERCES_STD_QUALIFIER cout << "\t" << StrX( curPair.getKey() )    << "="
-                         << StrX( curPair.getValue() )  << "\n";
+            const XMLCh* key = sortedList.elementAt(i);
+            XERCES_STD_QUALIFIER cout << "\t" << StrX( key )    << "="
+                         << StrX( facets->get(key)->getValue() )  << "\n";
         }
     }
 
