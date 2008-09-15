@@ -18,9 +18,9 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	# If the transcoder has been explicitly "enable"d, then vote for it strongly,
 	# in upper case.
 	######################################################
-	
+
 	tc_list=
-	
+
 	# Check for GNU iconv support
 	no_GNUiconv=false
 	AC_CHECK_HEADERS([iconv.h wchar.h string.h stdlib.h stdio.h ctype.h locale.h errno.h endian.h], [], [no_GNUiconv=true])
@@ -75,8 +75,8 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 		[tc_list="$tc_list -$list_add-"; AC_MSG_RESULT(yes)],
 		[AC_MSG_RESULT(no)]
 	)
-	
-	
+
+
 	# Check for platform-specific transcoders
 	list_add=
 	case $host_os in
@@ -111,7 +111,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	esac
 
 	# TODO: Tests for additional transcoders
-	
+
 	######################################################
 	# Determine which transcoder to use.
 	#
@@ -121,14 +121,18 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	# which were not "disable"d (these won't even be in our list).
 	######################################################
 	transcoder=
+	az_lower=abcdefghijklmnopqrstuvwxyz
+	az_upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ
 	AC_MSG_CHECKING([for which Transcoder to use (choices:$tc_list)])
 	for i in 1 2; do
-		# Swap upper/lower case in the tc_list
-		tc_list=`echo $tc_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
-		
+ 		# Swap upper/lower case in the tc_list. Cannot use tr ranges
+                # because of the portability issues.
+                #
+		tc_list=`echo $tc_list | tr "$az_lower$az_upper" "$az_upper$az_lower"`
+
 		# Check for each transcoder, in implicit rank order
 		case $tc_list in
-		
+
 		*-icu-*)
 			transcoder=icu
 			AC_DEFINE([XERCES_USE_TRANSCODER_ICU], 1, [Define to use the ICU-based transcoder])
@@ -136,7 +140,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 			LIBS="${LIBS} -L${xerces_cv_icu_prefix}/lib -licuuc -licudata"
 			break
 			;;
-			
+
 		*-macosunicodeconverter-*)
 			transcoder=macosunicodeconverter
 			AC_DEFINE([XERCES_USE_TRANSCODER_MACOSUNICODECONVERTER], 1, [Define to use the Mac OS UnicodeConverter-based transcoder])
@@ -161,7 +165,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 			AC_DEFINE([XERCES_USE_TRANSCODER_ICONV], 1, [Define to use the iconv transcoder])
 			break
 			;;
-			
+
 		*)
 			AS_IF([test $i -eq 2], [
 				AC_MSG_RESULT([none])
@@ -174,7 +178,7 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	if test x"$transcoder" != x; then
 		AC_MSG_RESULT($transcoder)
 	fi
-	
+
 	# Define the auto-make conditionals which determine what actually gets compiled
 	# Note that these macros can't be executed conditionally, which is why they're here, not above.
 	AM_CONDITIONAL([XERCES_USE_TRANSCODER_ICU],			[test x"$transcoder" = xicu])
@@ -185,4 +189,3 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 
 	]
 )
-

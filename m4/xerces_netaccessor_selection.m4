@@ -118,10 +118,14 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	# which were not "disable"d (these won't even be in our list).
 	######################################################
 	netaccessor=
+	az_lower=abcdefghijklmnopqrstuvwxyz
+	az_upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ
 	AC_MSG_CHECKING([for which NetAccessor to use (choices:$na_list)])
 	for i in 1 2; do
-		# Swap upper/lower case in string:
-		na_list=`echo $na_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
+		# Swap upper/lower case in the na_list. Cannot use tr ranges
+                # because of the portability issues.
+                #
+		na_list=`echo $na_list | tr "$az_lower$az_upper" "$az_upper$az_lower"`
 
 		# Check for each netaccessor, in implicit rank order
 		case $na_list in
@@ -177,4 +181,3 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 
 	]
 )
-

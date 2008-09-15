@@ -85,10 +85,14 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	# which were not "disable"d (these won't even be in our list).
 	######################################################
 	msgloader=
+	az_lower=abcdefghijklmnopqrstuvwxyz
+	az_upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ
 	AC_MSG_CHECKING([for which MsgLoader to use (choices:$ml_list)])
 	for i in 1 2; do
-		# Swap upper/lower case in the ml_list
-		ml_list=`echo $ml_list | tr '[a-z][A-Z]' '[A-Z][a-z]'`
+		# Swap upper/lower case in the ml_list. Cannot use tr ranges
+                # because of the portability issues.
+                #
+		ml_list=`echo $ml_list | tr "$az_lower$az_upper" "$az_upper$az_lower"`
 
 		# Check for each msgloader, in implicit rank order
 		case $ml_list in
