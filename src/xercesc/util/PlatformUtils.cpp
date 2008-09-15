@@ -279,6 +279,23 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     XMLInitializer::initializeStaticData();
 }
 
+void XMLPlatformUtils::Initialize(XMLSize_t initialDOMHeapAllocSize
+                                , XMLSize_t maxDOMHeapAllocSize
+                                , XMLSize_t maxDOMSubAllocationSize
+                                , const char*          const locale
+                                , const char*          const nlsHome
+                                ,       PanicHandler*  const panicHandler
+                                ,       MemoryManager* const memoryManager)
+{
+  Initialize (locale, nlsHome, panicHandler, memoryManager);
+
+  // Don't change the parameters unless it is the first time.
+  //
+  if (gInitFlag == 1)
+    XMLInitializer::initializeDOMHeap(initialDOMHeapAllocSize,
+                                      maxDOMHeapAllocSize,
+                                      maxDOMSubAllocationSize);
+}
 
 void XMLPlatformUtils::Terminate()
 {

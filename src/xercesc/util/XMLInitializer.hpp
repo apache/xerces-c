@@ -142,6 +142,13 @@ private:
     static void terminateDOMDocumentTypeImpl();
     static void terminateDOMNodeListImpl();
     static void terminateDOMNormalizer();
+
+    //
+    // Extra initialization.
+    //
+    static void initializeDOMHeap (XMLSize_t initialHeapAllocSize,
+                                   XMLSize_t maxHeapAllocSize,
+                                   XMLSize_t maxSubAllocationSize);
 };
 
 

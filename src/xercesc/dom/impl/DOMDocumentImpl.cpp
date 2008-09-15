@@ -47,16 +47,26 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // The chunk size to allocate from the system allocator.
-static const XMLSize_t kInitialHeapAllocSize =  0x4000;
-static const XMLSize_t kMaxHeapAllocSize     = 0x80000;
-static const XMLSize_t kMaxSubAllocationSize =  0x0100;  // Any request for more bytes
-                                                         // than this will be handled by
-                                                         // allocating directly with system.
+static XMLSize_t kInitialHeapAllocSize =  0x4000;
+static XMLSize_t kMaxHeapAllocSize     = 0x80000;
+static XMLSize_t kMaxSubAllocationSize =  0x0100;  // Any request for more bytes
+                                                   // than this will be handled by
+                                                   // allocating directly with system.
+
+void XMLInitializer::initializeDOMHeap (XMLSize_t initialHeapAllocSize,
+                                        XMLSize_t maxHeapAllocSize,
+                                        XMLSize_t maxSubAllocationSize)
+{
+  kInitialHeapAllocSize = initialHeapAllocSize;
+  kMaxHeapAllocSize = maxHeapAllocSize;
+  kMaxSubAllocationSize = maxSubAllocationSize;
+}
 
 //
 //   Constructors.   Warning - be very careful with the ordering of initialization

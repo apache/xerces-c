@@ -136,15 +136,17 @@ public :
     //@}
 
 
-    /** @name Initialization amd Panic methods */
+    /** @name Initialization and Panic methods */
     //@{
 
     /** Perform per-process parser initialization
       *
       * Initialization <b>must</b> be called first in any client code.
       *
+      * @param locale The locale to use for messages.
+      *
       * The locale is set iff the Initialize() is invoked for the very first time,
-      * to ensure that each and every message loaders, in the process space, share
+      * to ensure that each and every message loader, in the process space, share
       * the same locale.
       *
       * All subsequent invocations of Initialize(), with a different locale, have
@@ -156,20 +158,76 @@ public :
       *
       * The default locale is "en_US".
       *
-      * nlsHome: user specified location where MsgLoader retrieves error message files.
-      *          the discussion above with regard to locale, applies to this nlsHome
-      *          as well.
+      * @param nlsHome User specified location where MsgLoader retrieves error message files.
+      *                the discussion above with regard to locale, applies to nlsHome as well.
       *
-      * panicHandler: application's panic handler, application owns this handler.
-      *               Application shall make sure that the plugged panic handler persists
-      *               through the call to XMLPlatformUtils::terminate().
+      * @param panicHandler Application's panic handler, application owns this handler.
+      *                     Application shall make sure that the plugged panic handler persists
+      *                     through the call to XMLPlatformUtils::Terminate().
       *
-      * memoryManager: plugged-in memory manager which is owned by user
-      *                applications. Applications must make sure that the
-      *                plugged-in memory manager persist through the call to
-      *                XMLPlatformUtils::terminate()
+      * @param memoryManager Plugged-in memory manager which is owned by the
+      *                      application. Applications must make sure that the
+      *                      plugged-in memory manager persist through the call to
+      *                      XMLPlatformUtils::Terminate()
       */
     static void Initialize(const char*          const locale = XMLUni::fgXercescDefaultLocale
+                         , const char*          const nlsHome = 0
+                         ,       PanicHandler*  const panicHandler = 0
+                         ,       MemoryManager* const memoryManager = 0);
+
+      /** Perform per-process parser initialization
+      *
+      * Initialization <b>must</b> be called first in any client code.
+      *
+      * @param initialDOMHeapAllocSize The size of the first memory block
+      * allocated by the DOMDocument heap. Note that changing this parameter
+      * may result in poor performance and/or excessive memory usage. For
+      * the default value refer to dom/impl/DOMDocumentImpl.cpp.
+      *
+      * @param maxDOMHeapAllocSize The maximum size of the memory block
+      * allocated by the DOMDocument heap. As the document grows, the
+      * allocated by the heap memory blocks grow from initialDOMHeapAllocSize
+      * to maxDOMHeapAllocSize. Note that changing this parameter may result
+      * in poor performance and/or excessive memory usage. For the default
+      * value refer to dom/impl/DOMDocumentImpl.cpp.
+      *
+      * @param maxDOMSubAllocationSize The maximum size of the memory block
+      * requested that is handled by the DOMDocument heap. A request for a
+      * larger block is handled directly by the memory manager. Note that
+      * changing this parameter may result in poor performance and/or
+      * excessive memory usage. For the default value refer to
+      * dom/impl/DOMDocumentImpl.cpp.
+      *
+      * @param locale The locale to use for messages.
+      *
+      * The locale is set iff the Initialize() is invoked for the very first time,
+      * to ensure that each and every message loader, in the process space, share
+      * the same locale.
+      *
+      * All subsequent invocations of Initialize(), with a different locale, have
+      * no effect on the message loaders, either instantiated, or to be instantiated.
+      *
+      * To set to a different locale, client application needs to Terminate() (or
+      * multiple Terminate() in the case where multiple Initialize() have been invoked
+      * before), followed by Initialize(new_locale).
+      *
+      * The default locale is "en_US".
+      *
+      * @param nlsHome User specified location where MsgLoader retrieves error message files.
+      * the discussion above with regard to locale, applies to nlsHome as well.
+      *
+      * @param panicHandler Application's panic handler, application owns this handler.
+      * Application shall make sure that the plugged panic handler persists
+      * through the call to XMLPlatformUtils::Terminate().
+      *
+      * @param memoryManager Plugged-in memory manager which is owned by the
+      * application. Applications must make sure that the plugged-in memory
+      * manager persist through the call to XMLPlatformUtils::Terminate()
+      */
+    static void Initialize(XMLSize_t initialDOMHeapAllocSize
+                         , XMLSize_t maxDOMHeapAllocSize
+                         , XMLSize_t maxDOMSubAllocationSize
+                         , const char*          const locale = XMLUni::fgXercescDefaultLocale
                          , const char*          const nlsHome = 0
                          ,       PanicHandler*  const panicHandler = 0
                          ,       MemoryManager* const memoryManager = 0);
