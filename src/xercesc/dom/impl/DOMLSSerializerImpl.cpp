@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -348,7 +348,7 @@ void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
     setFeature(featureId, state);
 
     //
-    // setting "canonical-form" to true will set the parameters "format-pretty-print", 
+    // setting "canonical-form" to true will set the parameters "format-pretty-print",
     // "discard-default-content", and "xml-declaration", to false
     //
     if ((featureId == CANONICAL_FORM_ID) && state)
@@ -423,14 +423,14 @@ bool DOMLSSerializerImpl::write(const DOMNode* nodeToWrite,
         janTarget.reset(pTarget);
     }
     /**
-     * When writing to a LSOutput, the encoding is found by looking at the encoding information 
+     * When writing to a LSOutput, the encoding is found by looking at the encoding information
      * that is reachable through the LSOutput and the item to be written (or its owner document) in this order:
      *
      *  1. LSOutput.encoding,
      *  2. Document.inputEncoding,
      *  3. Document.xmlEncoding.
      *
-     * If no encoding is reachable through the above properties, a default encoding of "UTF-8" will be used. 
+     * If no encoding is reachable through the above properties, a default encoding of "UTF-8" will be used.
      * If the specified encoding is not supported an "unsupported-encoding" fatal error is raised.
      */
     fEncodingUsed = gUTF8;
@@ -658,7 +658,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     {
                         break;
                     }
-                    else        
+                    else
                     {
                         //
                         // we need to trace if newline(s) have been printed out
@@ -719,11 +719,11 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
         {
 
             // output BOM if needed
-            processBOM();          
-            
+            processBOM();
+
             setURCharRef();
             const DOMDocument *docu = (const DOMDocument*)nodeToWrite;
-        
+
             //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
             //[24] VersionInfo  ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
             //[80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' | "'" EncName
@@ -731,13 +731,13 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             //
 
             if (getFeature(XML_DECLARATION)) {
-                // use the version and encoding resolved 
+                // use the version and encoding resolved
                 *fFormatter << gXMLDecl_VersionInfo << fDocumentVersion << gXMLDecl_separator;
                 *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
 
                 const XMLCh* st = (docu->getXmlStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
                 *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
-                
+
                 *fFormatter << gXMLDecl_endtag;
             }
 
@@ -753,7 +753,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
 
     case DOMNode::DOCUMENT_FRAGMENT_NODE:
         {
-           
+
             setURCharRef();
 
             DOMNode *child = nodeToWrite->getFirstChild();
@@ -875,7 +875,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     const XMLCh* ns = attribute->getNamespaceURI();
                     if (ns != 0 )
                     {
-                        if(XMLString::equals(ns, XMLUni::fgXMLNSURIName)) 
+                        if(XMLString::equals(ns, XMLUni::fgXMLNSURIName))
                         {
                             if(namespaceMap==NULL)
                             {
@@ -889,7 +889,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
 								continue;
                             namespaceMap->put((void*)attribute->getLocalName(),(XMLCh*)attribute->getNodeValue());
                         }
-                        else if(!XMLString::equals(ns, XMLUni::fgXMLURIName)) 
+                        else if(!XMLString::equals(ns, XMLUni::fgXMLURIName))
                         {
                             // check if the namespace for the current node is already defined
                             const XMLCh* prefix = attribute->getPrefix();
@@ -929,8 +929,8 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                                 if(child->getNodeType()==DOMNode::TEXT_NODE)
                                     *fFormatter  << child->getNodeValue();
                                 else if(child->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
-                                    *fFormatter << XMLFormatter::NoEscapes 
-                                                << chAmpersand << child->getNodeName() << chSemiColon 
+                                    *fFormatter << XMLFormatter::NoEscapes
+                                                << chAmpersand << child->getNodeName() << chSemiColon
                                                 << XMLFormatter::AttrEscapes;
                                 child = child->getNextSibling();
                             }
@@ -1031,7 +1031,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                              << nodeToWrite->getNodeName();
             else
                 *fFormatter  << XMLFormatter::NoEscapes
-                             << chOpenCurly << nodeToWrite->getNamespaceURI() 
+                             << chOpenCurly << nodeToWrite->getNamespaceURI()
                              << chCloseCurly << localName;
             *fFormatter  << chEqual << chDoubleQuote
                          << XMLFormatter::AttrEscapes;
@@ -1043,8 +1043,8 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                     if(child->getNodeType()==DOMNode::TEXT_NODE)
                         *fFormatter  << child->getNodeValue();
                     else if(child->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
-                        *fFormatter << XMLFormatter::NoEscapes 
-                                    << chAmpersand << child->getNodeName() << chSemiColon 
+                        *fFormatter << XMLFormatter::NoEscapes
+                                    << chAmpersand << child->getNodeName() << chSemiColon
                                     << XMLFormatter::AttrEscapes;
                     child = child->getNextSibling();
                 }
@@ -1116,17 +1116,11 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
-            if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
-                printNewLine();
-
-            printNewLine();
-            printIndent(level);
-
             if (getFeature(SPLIT_CDATA_SECTIONS_ID))
             {
                 // it is fairly complicated and we process this
                 // in a separate function.
-                procCdataSection(nodeValue, nodeToWrite, level);
+                procCdataSection(nodeValue, nodeToWrite);
             }
             else
             {
@@ -1150,12 +1144,6 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
         {
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
-
-            if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
-                printNewLine();
-
-            printNewLine();
-            printIndent(level);
 
             TRY_CATCH_THROW
             (
@@ -1403,8 +1391,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
 //
 //
 void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
-                                   , const DOMNode* const nodeToWrite
-                                   , int level)
+                                   , const DOMNode* const nodeToWrite)
 {
     static const XMLSize_t offset = XMLString::stringLen(gEndCDATA);
 
@@ -1447,8 +1434,6 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
         ***/
         if (endTagPos == 0)
         {
-            printNewLine();
-            printIndent(level);
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << gEndCDATA;
@@ -1456,7 +1441,7 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
         }
         else
         {
-            procUnrepCharInCdataSection(curPtr, nodeToWrite, level);
+            procUnrepCharInCdataSection(curPtr, nodeToWrite);
         }
 
         if (endTagFound)
@@ -1471,8 +1456,7 @@ void DOMLSSerializerImpl::procCdataSection(const XMLCh*   const nodeValue
 //
 //
 void DOMLSSerializerImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
-                                              , const DOMNode* const nodeToWrite
-                                              , int level)
+                                              , const DOMNode* const nodeToWrite)
 {
     //
     //  We have to check each character and see if it could be represented.
@@ -1504,8 +1488,6 @@ void DOMLSSerializerImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeV
 
         if (tmpPtr > srcPtr)
         {
-            printNewLine();
-            printIndent(level);
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA;
@@ -1640,7 +1622,7 @@ void DOMLSSerializerImpl::processBOM()
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString4) == 0) ||
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString5) == 0) ||
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString6) == 0) ||
-             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString7) == 0)  ) 
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString7) == 0)  )
     {
     	if (XMLPlatformUtils::fgXMLChBigEndian)
             fFormatter->writeBOM(BOM_utf16be, 2);
@@ -1695,4 +1677,3 @@ bool DOMLSSerializerImpl::isNamespaceBindingActive(const XMLCh* prefix, const XM
 }
 
 XERCES_CPP_NAMESPACE_END
-

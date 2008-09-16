@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ class DOMStringListImpl;
 
 class CDOM_EXPORT DOMLSSerializerImpl : public XMemory,
                                         public DOMLSSerializer,
-                                        public DOMConfiguration 
+                                        public DOMConfiguration
 {
 
 public:
@@ -67,7 +67,7 @@ public:
 
     virtual bool                    write(const DOMNode*        nodeToWrite,
                                           DOMLSOutput* const    destination);
-    virtual bool                    writeToURI(const DOMNode*   nodeToWrite, 
+    virtual bool                    writeToURI(const DOMNode*   nodeToWrite,
                                                const XMLCh*     uri);
     /**
 	  *  The caller is responsible for the release of the returned string
@@ -98,12 +98,10 @@ protected:
     void                          processNode(const DOMNode* const);
 
     void                          procCdataSection(const XMLCh*   const nodeValue
-                                                 , const DOMNode* const nodeToWrite
-                                                 , int level);
+                                                 , const DOMNode* const nodeToWrite);
 
     void                          procUnrepCharInCdataSection(const XMLCh*   const nodeValue
-                                                            , const DOMNode* const nodeToWrite
-                                                            , int level);
+                                                            , const DOMNode* const nodeToWrite);
 
 protected:
     /**
@@ -160,7 +158,7 @@ protected:
     //
     //  fDocumentVersion
     //      The XML Version of the document to be serialized.
-    // 
+    //
     //  fSupportedParameters
     //      A list of the parameters that can be set, including the ones
     //      specific of Xerces
