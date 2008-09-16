@@ -1259,7 +1259,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             {
                 // look in the list of undeclared elements, as would have been done
                 // before we made grammars stateless:
-                elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+                elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, (int)Grammar::TOP_LEVEL_SCOPE);
             }
             if(!elemDecl) {
                 // still not found in specified uri
@@ -1362,7 +1362,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             {
                 // look in the list of undeclared elements, as would have been done
                 // before we made grammars stateless:
-                elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+                elemDecl = fElemNonDeclPool->getByKey(nameRawBuf, uriId, (int)Grammar::TOP_LEVEL_SCOPE);
             }
             if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
                 // still Not found in specified uri

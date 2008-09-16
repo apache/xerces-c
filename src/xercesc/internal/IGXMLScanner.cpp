@@ -2379,7 +2379,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     // look in the list of undeclared elements, as would have been
                     // done before we made grammars stateless:
                     elemDecl = fSchemaElemNonDeclPool->getByKey(
-                        nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE
+                        nameRawBuf, uriId, (int)Grammar::TOP_LEVEL_SCOPE
                     );
                 }
             }
@@ -2402,7 +2402,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             );
             elemDecl->setId(
                 fSchemaElemNonDeclPool->put((void*)elemDecl->getBaseName()
-                , uriId, Grammar::TOP_LEVEL_SCOPE, (SchemaElementDecl*)elemDecl)
+                , uriId, (int)Grammar::TOP_LEVEL_SCOPE, (SchemaElementDecl*)elemDecl)
             );
         }
         wasAdded = true;

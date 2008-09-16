@@ -30,11 +30,11 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 const XMLCh *allocate(const XMLCh *href){
-    const XMLCh *allocated;
+    XMLCh *allocated;
     XMLSize_t length = XMLString::stringLen(href);
-    allocated = (const XMLCh *)XMLPlatformUtils::fgMemoryManager->allocate((length+1) * sizeof(XMLCh));
-    XMLString::copyString((XMLCh *)allocated, href);
-    XMLPlatformUtils::removeDotDotSlash((XMLCh *const)allocated);
+    allocated = (XMLCh*)XMLPlatformUtils::fgMemoryManager->allocate((length+1) * sizeof(XMLCh));
+    XMLString::copyString(allocated, href);
+    XMLPlatformUtils::removeDotDotSlash(allocated);
 
     return allocated;
 }
@@ -67,7 +67,7 @@ XIncludeLocation::prependPath(const XMLCh *baseToAdd){
         return fHref;
     }
 
-    XMLPlatformUtils::removeDotDotSlash((XMLCh *const)baseToAdd);
+    XMLPlatformUtils::removeDotDotSlash((XMLCh*)baseToAdd);
     XMLSize_t baseLength = XMLString::stringLen(baseToAdd);
 
     int lastSlash = XMLString::lastIndexOf(baseToAdd, chForwardSlash);

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,7 +78,7 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
 
     // Make sure that its the end of the element that we expect
     const XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
-    const ElemStack::StackElem* topElem = fElemStack.popTop(); 
+    const ElemStack::StackElem* topElem = fElemStack.popTop();
     if (!fReaderMgr.skippedString(elemName))
     {
         emitError
@@ -152,27 +152,27 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
                     , topElem->fChildren[failure]->getRawName()
                     , topElem->fThisElement->getFormattedContentModel()
                 );
-            }            
+            }
         }
     }
 
-    // now we can reset the datatype buffer, since the 
+    // now we can reset the datatype buffer, since the
     // application has had a chance to copy the characters somewhere else
     ((SchemaValidator *)fValidator)->clearDatatypeBuffer();
 
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
-    {        
+    {
         if (topElem->fPrefixColonPos != -1)
             fPrefixBuf.set(elemName, topElem->fPrefixColonPos);
         else
-            fPrefixBuf.reset();        
+            fPrefixBuf.reset();
         fDocHandler->endElement
         (
             *topElem->fThisElement
             , uriId
             , isRoot
-            , fPrefixBuf.getRawBuffer()            
+            , fPrefixBuf.getRawBuffer()
         );
     }
 
@@ -204,7 +204,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     //  in the element name.
     int prefixColonPos;
     if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
-    {       
+    {
         if (fQNameBuf.isEmpty())
             emitError(XMLErrs::ExpectedElementName);
         else
@@ -278,7 +278,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
 
     //  Resolve the qualified name to a URI and name so that we can look up
     //  the element decl for this element. We have now update the prefix to
-    //  namespace map so we should get the correct element now.    
+    //  namespace map so we should get the correct element now.
     unsigned int uriId = resolveQNameWithColon
     (
         qnameRawBuf, fPrefixBuf, ElemStack::Mode_Element, prefixColonPos
@@ -319,7 +319,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
         {
             // if still not found, look in list of undeclared elements
             elemDecl = fElemNonDeclPool->getByKey(
-                nameRawBuf, uriId, Grammar::TOP_LEVEL_SCOPE);
+                nameRawBuf, uriId, (int)Grammar::TOP_LEVEL_SCOPE);
 
             if (!elemDecl)
             {
@@ -329,14 +329,13 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
                     , SchemaElementDecl::Any, Grammar::TOP_LEVEL_SCOPE
                     , fMemoryManager
                 );
-                elemDecl->setId
-                (
-                    fElemNonDeclPool->put
-                    (
-                        (void*)elemDecl->getBaseName(), uriId
-                        , Grammar::TOP_LEVEL_SCOPE, (SchemaElementDecl*)elemDecl
-                    )
-                );
+
+                elemDecl->setId (fElemNonDeclPool->put(
+                      (void*)elemDecl->getBaseName(),
+                      uriId,
+                      (int)Grammar::TOP_LEVEL_SCOPE,
+                      (SchemaElementDecl*)elemDecl));
+
                 wasAdded = true;
             }
 		}
@@ -587,13 +586,13 @@ void XSAXMLScanner::scanReset(const InputSource& src)
     fReaderMgr.pushReader(newReader, 0);
 
     // and reset security-related things if necessary:
-    if(fSecurityManager != 0) 
+    if(fSecurityManager != 0)
     {
         fEntityExpansionLimit = fSecurityManager->getEntityExpansionLimit();
         fEntityExpansionCount = 0;
     }
     fElemCount = 0;
-    if (fUIntPoolRowTotal >= 32) 
+    if (fUIntPoolRowTotal >= 32)
     { // 8 KB tied up with validating attributes...
         fAttDefRegistry->removeAll();
         recreateUIntPool();
