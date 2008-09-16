@@ -110,7 +110,7 @@ protected:
     virtual void checkAdditionalFacet(const XMLCh* const content
                                     , MemoryManager* const manager) const;
 
-    virtual int getLength(const XMLCh* const content
+    virtual XMLSize_t getLength(const XMLCh* const content
         , MemoryManager* const manager) const;
     
     virtual void checkValueSpace(const XMLCh* const content

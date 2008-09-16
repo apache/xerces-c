@@ -835,7 +835,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
         tokStart = match->getEndPos(0);
     }
 
-    if(end > tokStart)
+    if(end > (XMLSize_t)tokStart)
         result.append(matchString + tokStart, end - tokStart);
 
     return XMLString::replicate(result.getRawBuffer(), manager);

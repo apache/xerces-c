@@ -901,6 +901,46 @@ public:
     /** @name Conversion functions */
     //@{
 
+      /** Converts size to a text string based a given radix
+      *
+      * @param toFormat The size to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
+      * will be done
+      */
+    static void sizeToText
+    (
+        const   XMLSize_t           toFormat
+        ,       char* const         toFill
+        , const XMLSize_t           maxChars
+        , const unsigned int        radix
+        , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    /** Converts size to a text string based a given radix
+      *
+      * @param toFormat The size to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
+      * will be done
+      */
+    static void sizeToText
+    (
+        const   XMLSize_t           toFormat
+        ,       XMLCh* const        toFill
+        , const XMLSize_t           maxChars
+        , const unsigned int        radix
+        , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
+    );
+
     /** Converts binary data to a text string based a given radix
       *
       * @param toFormat The number to convert

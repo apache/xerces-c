@@ -585,7 +585,7 @@ void AbstractStringValidator::checkContent( const XMLCh*             const conte
         return;
 
     checkValueSpace(content, manager);
-    int length = getLength(content, manager);
+    XMLSize_t length = getLength(content, manager);
 
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (length > getMaxLength()))
@@ -713,10 +713,10 @@ void AbstractStringValidator::assignAdditionalFacet( const XMLCh* const key
             , manager);
 }
 
-int AbstractStringValidator::getLength(const XMLCh* const content
-                                   , MemoryManager* const) const
+XMLSize_t AbstractStringValidator::getLength(const XMLCh* const content
+                                           , MemoryManager* const) const
 {
-    return (int)XMLString::stringLen(content);
+    return XMLString::stringLen(content);
 }
 
 /***

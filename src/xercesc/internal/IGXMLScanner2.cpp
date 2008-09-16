@@ -3080,8 +3080,8 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         // here's where we need to check if there's a SecurityManager,
         // how many entity references we've had
         if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
-            XMLCh expLimStr[16];
-            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
+            XMLCh expLimStr[32];
+            XMLString::sizeToText(fEntityExpansionLimit, expLimStr, 31, 10, fMemoryManager);
             emitError
             (
                 XMLErrs::EntityExpansionLimitExceeded
@@ -3138,8 +3138,8 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
         // here's where we need to check if there's a SecurityManager,
         // how many entity references we've had
         if(fSecurityManager != 0 && ++fEntityExpansionCount > fEntityExpansionLimit) {
-            XMLCh expLimStr[16];
-            XMLString::binToText(fEntityExpansionLimit, expLimStr, 15, 10, fMemoryManager);
+            XMLCh expLimStr[32];
+            XMLString::sizeToText(fEntityExpansionLimit, expLimStr, 31, 10, fMemoryManager);
             emitError
             (
                 XMLErrs::EntityExpansionLimitExceeded

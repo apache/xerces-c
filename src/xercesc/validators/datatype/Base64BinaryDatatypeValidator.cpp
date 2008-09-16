@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -70,8 +70,9 @@ void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
 {
     if (!content || !*content)
         return;
-    if (getLength(content, manager) < 0)
-    { 
+
+    if (Base64::getDataLength(content, manager, Base64::Conf_Schema) < 0)
+    {
         ThrowXMLwithMemMgr1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_Not_Base64
                 , content
@@ -79,12 +80,13 @@ void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content
     }
 }
 
-int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content
+XMLSize_t Base64BinaryDatatypeValidator::getLength(const XMLCh* const content
                                          , MemoryManager* const manager) const
 {
     if (!content || !*content)
         return 0;
-    return Base64::getDataLength(content, manager, Base64::Conf_Schema);
+
+    return (XMLSize_t)Base64::getDataLength(content, manager, Base64::Conf_Schema);
 }
 
 void Base64BinaryDatatypeValidator::normalizeEnumeration(MemoryManager* const manager)
@@ -101,7 +103,7 @@ void Base64BinaryDatatypeValidator::normalizeEnumeration(MemoryManager* const ma
 void Base64BinaryDatatypeValidator::normalizeContent(XMLCh* const content
                                                      , MemoryManager* const manager) const
 {
-    XMLString::removeWS(content, manager);     
+    XMLString::removeWS(content, manager);
 }
 
 /***

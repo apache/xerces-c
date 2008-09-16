@@ -80,6 +80,22 @@ MemoryManager* XMLString::fgMemoryManager = 0;
 // ---------------------------------------------------------------------------
 //  XMLString: Public static methods
 // ---------------------------------------------------------------------------
+
+void XMLString::sizeToText(  const   XMLSize_t           toFormat
+                            ,       char* const          toFill
+                            , const XMLSize_t            maxChars
+                            , const unsigned int         radix
+                            , MemoryManager* const       manager)
+{
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+    // Call the int 64-bit version.
+    binToText((XMLUInt64)toFormat, toFill, maxChars, radix, manager);
+#else
+    // Call the unsigned long version.
+    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
+#endif
+}
+
 #if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 void XMLString::binToText(  const   XMLUInt64            toFormat
                             ,       char* const          toFill
@@ -837,6 +853,22 @@ bool XMLString::isHex(XMLCh const theChar)
 // ---------------------------------------------------------------------------
 //  Wide char versions of most of the string methods
 // ---------------------------------------------------------------------------
+
+void XMLString::sizeToText(  const  XMLSize_t            toFormat
+                            ,       XMLCh* const         toFill
+                            , const XMLSize_t            maxChars
+                            , const unsigned int         radix
+                            , MemoryManager* const       manager)
+{
+#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
+    // Call the int 64-bit version.
+    binToText((XMLUInt64)toFormat, toFill, maxChars, radix, manager);
+#else
+    // Call the unsigned long version.
+    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
+#endif
+}
+
 #if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 void XMLString::binToText(  const   XMLUInt64            toFormat
                             ,       XMLCh* const         toFill

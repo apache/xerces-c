@@ -582,13 +582,13 @@ void XMLFormatter::writeCharRef(const XMLCh &toWrite)
 
 void XMLFormatter::writeCharRef(XMLSize_t toWrite)
 {
-    XMLCh tmpBuf[32];
+    XMLCh tmpBuf[64];
     tmpBuf[0] = chAmpersand;
     tmpBuf[1] = chPound;
     tmpBuf[2] = chLatin_x;
 
     // Build a char ref for the current char
-    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16, fMemoryManager);
+    XMLString::sizeToText(toWrite, &tmpBuf[3], 32, 16, fMemoryManager);
     const XMLSize_t bufLen = XMLString::stringLen(tmpBuf);
     tmpBuf[bufLen] = chSemiColon;
     tmpBuf[bufLen+1] = chNull;

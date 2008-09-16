@@ -835,7 +835,7 @@ XSerializable* XSerializeEngine::lookupLoadPool(XSerializedObjectId_t objectTag)
       ***/
     TEST_THROW_ARG2( (objectTag > fLoadPool->size())
               , objectTag
-              , fLoadPool->size()
+              , (unsigned long)fLoadPool->size() // @@ Need to use sizeToText directly.
               , XMLExcepts::XSer_LoadPool_UppBnd_Exceed
               )
 
@@ -853,7 +853,7 @@ void XSerializeEngine::addLoadPool(void* const objToAdd)
 
     TEST_THROW_ARG2( (fLoadPool->size() != fObjectCount)
                , fObjectCount
-               , fLoadPool->size()
+               , (unsigned long)fLoadPool->size() // @@ Need to use sizeToText directly.
                , XMLExcepts::XSer_LoadPool_NoTally_ObjCnt
                )
 
@@ -899,16 +899,16 @@ void XSerializeEngine::fillBuffer()
     /***
      * InputStream MUST fill in the exact amount of bytes as requested
      * to do: combine the checking and create a new exception code later
-     ***/
+    ***/
     TEST_THROW_ARG2( (bytesRead < fBufSize)
-               , (unsigned long)bytesRead
-               , (unsigned long)fBufSize
+               , (unsigned long)bytesRead // @@ Need to use sizeToText directly.
+               , (unsigned long)fBufSize  // @@ Need to use sizeToText directly.
                , XMLExcepts::XSer_InStream_Read_LT_Req
                )
 
     TEST_THROW_ARG2( (bytesRead > fBufSize)
-               , (unsigned long)bytesRead
-               , (unsigned long)fBufSize
+               , (unsigned long)bytesRead // @@ Need to use sizeToText directly.
+               , (unsigned long)fBufSize  // @@ Need to use sizeToText directly.
                , XMLExcepts::XSer_InStream_Read_OverFlow
                )
 
@@ -943,7 +943,7 @@ void XSerializeEngine::flushBuffer()
 inline void XSerializeEngine::checkAndFlushBuffer(XMLSize_t bytesNeedToWrite)
 {
     TEST_THROW_ARG1( (bytesNeedToWrite <= 0)
-                   , (unsigned long)bytesNeedToWrite
+                   , (unsigned long)bytesNeedToWrite // @@ Need to use sizeToText directly.
                    , XMLExcepts::XSer_Inv_checkFlushBuffer_Size
                    )
 
@@ -956,7 +956,7 @@ inline void XSerializeEngine::checkAndFillBuffer(XMLSize_t bytesNeedToRead)
 {
 
     TEST_THROW_ARG1( (bytesNeedToRead <= 0)
-                   , (unsigned long)bytesNeedToRead
+                   , (unsigned long)bytesNeedToRead // @@ Need to use sizeToText directly.
                    , XMLExcepts::XSer_Inv_checkFillBuffer_Size
                    )
 
@@ -972,8 +972,8 @@ inline void XSerializeEngine::ensureStoreBuffer() const
 {
 
     TEST_THROW_ARG2 ( !((fBufStart <= fBufCur) && (fBufCur <= fBufEnd))
-                    , (unsigned long)(fBufCur - fBufStart)
-                    , (unsigned long)(fBufEnd - fBufCur)
+                    , (unsigned long)(fBufCur - fBufStart) // @@ Need to use sizeToText directly.
+                    , (unsigned long)(fBufEnd - fBufCur)   // @@ Need to use sizeToText directly.
                     , XMLExcepts::XSer_StoreBuffer_Violation
                     )
 

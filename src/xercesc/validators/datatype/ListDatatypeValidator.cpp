@@ -175,8 +175,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     {
         XMLCh value1[BUF_LEN+1];
         XMLCh value2[BUF_LEN+1];
-        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
-        XMLString::binToText(getMaxLength(), value2, BUF_LEN, 10, manager);
+        XMLString::sizeToText(tokenNumber, value1, BUF_LEN, 10, manager);
+        XMLString::sizeToText(getMaxLength(), value2, BUF_LEN, 10, manager);
 
         ThrowXMLwithMemMgr3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_GT_maxLen
@@ -191,8 +191,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     {
         XMLCh value1[BUF_LEN+1];
         XMLCh value2[BUF_LEN+1];
-        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
-        XMLString::binToText(getMinLength(), value2, BUF_LEN, 10, manager);
+        XMLString::sizeToText(tokenNumber, value1, BUF_LEN, 10, manager);
+        XMLString::sizeToText(getMinLength(), value2, BUF_LEN, 10, manager);
 
         ThrowXMLwithMemMgr3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_LT_minLen
@@ -207,8 +207,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     {
         XMLCh value1[BUF_LEN+1];
         XMLCh value2[BUF_LEN+1];
-        XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
-        XMLString::binToText(AbstractStringValidator::getLength(), value2, BUF_LEN, 10, manager);
+        XMLString::sizeToText(tokenNumber, value1, BUF_LEN, 10, manager);
+        XMLString::sizeToText(AbstractStringValidator::getLength(), value2, BUF_LEN, 10, manager);
 
         ThrowXMLwithMemMgr3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NE_Len
@@ -286,13 +286,13 @@ void ListDatatypeValidator::checkValueSpace(const XMLCh* const
                                             , MemoryManager* const)
 {}
 
-int ListDatatypeValidator::getLength(const XMLCh* const content
+XMLSize_t ListDatatypeValidator::getLength(const XMLCh* const content
                                      , MemoryManager* const manager) const
 {
     BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content, manager);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
 
-    return (int)tokenVector->size();
+    return tokenVector->size();
 }
 
 void ListDatatypeValidator::inspectFacetBase(MemoryManager* const manager)

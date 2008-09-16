@@ -75,7 +75,7 @@ protected:
     virtual void checkValueSpace(const XMLCh* const content
                                 , MemoryManager* const manager);
 
-    virtual int  getLength(const XMLCh* const content
+    virtual XMLSize_t  getLength(const XMLCh* const content
                        , MemoryManager* const manager) const;
 
 private:
