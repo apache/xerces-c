@@ -1145,6 +1145,47 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
+            // Figure out if we want pretty-printing for this comment.
+            // If this comment node does not have any element siblings
+            // (i.e., it is a text node) then we don't want to add any
+            // whitespaces since that might be significant to the
+            // application. Otherwise we want pretty-printing.
+            //
+
+            bool pretty = (level == 0); // Document-level comments.
+
+            if (!pretty)
+            {
+              // See if we have any element siblings.
+              //
+              const DOMNode* s = nodeToWrite->getNextSibling ();
+
+              while (s != 0 && s->getNodeType () != DOMNode::ELEMENT_NODE)
+                s = s->getNextSibling ();
+
+              if (s != 0)
+                pretty = true;
+              else
+              {
+                s = nodeToWrite->getPreviousSibling ();
+
+                while (s != 0 && s->getNodeType () != DOMNode::ELEMENT_NODE)
+                  s = s->getPreviousSibling ();
+
+                if (s != 0)
+                  pretty = true;
+              }
+            }
+
+            if (pretty)
+            {
+              if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
+                printNewLine();
+
+              printNewLine();
+              printIndent(level);
+            }
+
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartComment
