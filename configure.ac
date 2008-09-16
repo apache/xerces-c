@@ -35,7 +35,8 @@ AC_CONFIG_FILES([Makefile \
                  src/xercesc/util/MsgLoaders/ICU/resources/Makefile \
                  src/xercesc/util/MsgLoaders/MsgCatalog/Makefile \
                  tests/Makefile \
-                 samples/Makefile])
+                 samples/Makefile \
+		 xerces-c.pc])
 
 # Check the target system
 AC_CANONICAL_HOST
@@ -187,11 +188,21 @@ XERCES_TRANSCODER_SELECTION
 XERCES_MSGLOADER_SELECTION
 XERCES_FILEMGR_SELECTION
 
+# Allow the user to specify the pkgconfig directory.
+#
+AC_ARG_WITH(pkgconfigdir,
+	AC_HELP_STRING([--with-pkgconfigdir=DIR],
+	[Specify location of pkgconfig dir (default is libdir/pkgconfig)]),
+	[pkgconfigdir=${withval}],
+	[pkgconfigdir='${libdir}/pkgconfig'])
+
+AC_SUBST([pkgconfigdir])
 
 ######################################################
-# Define some namespace-protected macros for use in the publicly visible
-# XercesConfig.h file.
+# Define some namespace-protected macros for use in the
+# publicly visible XercesConfig.h file.
 ######################################################
+
 AC_DEFINE([XERCES_AUTOCONF], 1, [Define to true if autoconf is used in this configuration])
 
 AS_IF([test x$ac_cv_header_sys_types_h = xyes],
