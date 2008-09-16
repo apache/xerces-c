@@ -637,7 +637,8 @@ MacOSTranscoder::canTranscodeTo(const unsigned int toCheck)
 // ---------------------------------------------------------------------------
 MacOSLCPTranscoder::MacOSLCPTranscoder(XMLTranscoder* const transcoder, MemoryManager* const manager)
  : mTranscoder(transcoder),
-   mManager(manager)
+   mManager(manager),
+   mMutex (manager)
 {
 }
 
