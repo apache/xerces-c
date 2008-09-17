@@ -698,11 +698,11 @@ startElement(   const   XMLElementDecl&         elemDecl
     {
         const QName* qName=elemDecl.getElementName();
         const XMLCh* baseName=qName->getLocalPart();
-        XMLCh* elemQName = 0;
+        const XMLCh* elemQName = 0;
         if(elemPrefix==0 || *elemPrefix==0)
-            elemQName=(XMLCh*)baseName;
+            elemQName=baseName;
         else if(XMLString::equals(elemPrefix, qName->getPrefix()))
-            elemQName=(XMLCh*)qName->getRawName();
+            elemQName=qName->getRawName();
         else
         {
             fTempQName->set(elemPrefix);
@@ -771,8 +771,8 @@ startElement(   const   XMLElementDecl&         elemDecl
             if(fDocHandler)
             {
                 fDocHandler->startElement(XMLUni::fgZeroLenString,
-                                          baseName,
-                                          elemQName,
+                                          XMLUni::fgZeroLenString,
+                                          qName->getRawName(),
                                           fAttrList);
             }
         }
@@ -807,8 +807,8 @@ startElement(   const   XMLElementDecl&         elemDecl
                 if(fDocHandler)
                 {
                     fDocHandler->endElement(XMLUni::fgZeroLenString,
-                                    baseName,
-                                    elemQName);
+                                    XMLUni::fgZeroLenString,
+                                    qName->getRawName());
                 }
             }
         }
@@ -843,11 +843,11 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
     {
         const QName* qName=elemDecl.getElementName();
         const XMLCh* baseName=qName->getLocalPart();
-        XMLCh* elemQName = 0;
+        const XMLCh* elemQName = 0;
         if(elemPrefix==0 || *elemPrefix==0)
-            elemQName=(XMLCh*)baseName;
+            elemQName=baseName;
         else if(XMLString::equals(elemPrefix, qName->getPrefix()))
-            elemQName=(XMLCh*)qName->getRawName();
+            elemQName=qName->getRawName();
         else
         {
             fTempQName->set(elemPrefix);
@@ -881,12 +881,9 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
         {
             if(fDocHandler)
             {
-                fDocHandler->endElement
-                (
-                    XMLUni::fgZeroLenString,
-                    baseName,
-                    elemQName
-                );
+              fDocHandler->endElement(XMLUni::fgZeroLenString,
+                                      XMLUni::fgZeroLenString,
+                                      qName->getRawName());
             }
         }
     }
