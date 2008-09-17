@@ -70,6 +70,7 @@ manipulating, and validating XML documents.
 %{_includedir}
 %{_libdir}/lib%{name}.so
 %{_libdir}/lib%{name}.a
+%{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
 * Fri Mar  7 2008 Boris Kolpackov <boris@codesynthesis.com>
