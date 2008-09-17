@@ -118,6 +118,11 @@ system ("SEnumVal personal-schema.xml");
 #  Run CreateDOMDocument
 system ("CreateDOMDocument");
 
+#  Run SAXPrint.  This tests long element names.
+print  ("\nTest of a long element name.\n");
+system ("SAXPrint -v=never long.xml");
+print  ("\n\n");
+
 #
 #  Run the test cases
 #

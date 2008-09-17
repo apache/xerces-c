@@ -1122,11 +1122,10 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
         //
         while (charsLeft < srcLen)
         {
-            refreshCharBuffer();
-            XMLSize_t t = charsLeftInBuffer();
-            if (t == charsLeft)   // if the refreshCharBuf() did not add anything new
-                return false;     //   give up and return.
-            charsLeft = t;
+            if (!refreshCharBuffer())
+                return false;     // if the refreshCharBuf() did not add anything new
+                                  // give up and return.
+            charsLeft = charsLeftInBuffer();
 	    }
 
         //
@@ -1151,29 +1150,62 @@ bool XMLReader::skippedString(const XMLCh* const toSkip)
             if (charsLeft == 0)
                 return false; // error situation
         }
-        if (memcmp(&fCharBuf[fCharIndex], toSkip, charsLeft*sizeof(XMLCh)))
+        if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip, charsLeft))
             return false;
 
-        fCharIndex += charsLeft;
+        // the remaining characters of toSkip could fail so we don't want to
+        // advance fCharIndex unless we have to.
+        // the majority of the calls to this routine are for constants stringed
+        // defined in mainly XMLUni.cpp and all the strings that call it are less
+        // than 10 characters and it could be possible that the above comparison
+        // passes but one of the next one will fail and that is why we don't want
+        // to update fCharIndex. The other possibility is that it is called for
+        // the matching endtag and the string could be really long, even longer
+        // than the buffer which forces us to advance the fCharIndex position.
+        if (srcLen < kCharBufSize/4) {
+            XMLSize_t saveCharsLeft = charsLeft;
+            //fCharIndex += charsLeft;
+    
+            XMLSize_t offset = charsLeft;
+            XMLSize_t remainingLen = srcLen - charsLeft;
 
-        XMLSize_t offset = charsLeft;
-        XMLSize_t remainingLen = srcLen - charsLeft;
-
-        while (remainingLen > 0) {
-            refreshCharBuffer();
-            charsLeft = charsLeftInBuffer();
-            if (charsLeft == 0)
-                return false; // error situation
-            if (charsLeft > remainingLen)
-                charsLeft = remainingLen;
-            if (memcmp(&fCharBuf[fCharIndex], toSkip+offset, charsLeft*sizeof(XMLCh)))
-                return false;
-            offset += charsLeft;
-            remainingLen -= charsLeft;
-            fCharIndex += charsLeft;
+            while (remainingLen > 0) {
+                refreshCharBuffer();
+                charsLeft = charsLeftInBuffer() - offset;
+                if (charsLeft == 0)
+                  return false; // error situation
+                if (charsLeft > remainingLen)
+                    charsLeft = remainingLen;
+                if (XMLString::compareNString(&fCharBuf[fCharIndex+saveCharsLeft], toSkip+offset, charsLeft))
+                    return false;
+                offset += charsLeft;
+                remainingLen -= charsLeft;
+                saveCharsLeft += charsLeft;
+            }
+            fCharIndex += saveCharsLeft;
 
         }
+        else {
+            // a really long name
+            fCharIndex += charsLeft;
+    
+            XMLSize_t offset = charsLeft;
+            XMLSize_t remainingLen = srcLen - charsLeft;
 
+            while (remainingLen > 0) {
+                refreshCharBuffer();
+                charsLeft = charsLeftInBuffer();
+                if (charsLeft == 0)
+                  return false; // error situation
+                if (charsLeft > remainingLen)
+                    charsLeft = remainingLen;
+                if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip+offset, charsLeft))
+                    return false;
+                offset += charsLeft;
+                remainingLen -= charsLeft;
+                fCharIndex += charsLeft;
+            }
+        }
     }
 
     // Add the source length to the current column to get it back right
