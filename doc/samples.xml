@@ -97,6 +97,8 @@ setenv XERCESC_NLS_HOME=&XercesC3InstallDir;/msg
 					<br/>PSVIWriter exposes the underlying PSVI of the parsed XML file.</li>
 				<li><link idref="scmprint-&XercesC3Series;">SCMPrint</link>
 					<br/>SCMPrint parses an XSD file and prints information about the Schema Component Model.</li>
+				<li><link idref="xinclude-&XercesC3Series;">XInclude</link>
+					<br/>XInclude parses an XML file and writes a new XML file with the xi:include elements expanded.</li>
 			</ul>
 		</s3>
     </s2>
