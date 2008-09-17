@@ -605,7 +605,7 @@ void DGXMLScanner::scanEndTag(bool& gotData)
     const bool isRoot = fElemStack.isEmpty();
 
     // Make sure that its the end of the element that we expect
-    if (!fReaderMgr.skippedString(tempElement->getFullName()))
+    if (!fReaderMgr.skippedStringLong(tempElement->getFullName()))
     {
         emitError
         (

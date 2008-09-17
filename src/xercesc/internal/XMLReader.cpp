@@ -471,7 +471,7 @@ XMLFilePos XMLReader::getSrcOffset() const
 
 bool XMLReader::refreshCharBuffer()
 {
-    // If the no more flag is set, then don't both doing anything
+    // If the no more flag is set, then don't bother doing anything.
     if (fNoMore)
         return false;
 
@@ -1103,113 +1103,97 @@ bool XMLReader::skippedSpace()
     return false;
 }
 
-
 bool XMLReader::skippedString(const XMLCh* const toSkip)
 {
-    // Get the length of the string to skip
+    // This function works on strings that are smaller than kCharBufSize.
+    // This function guarantees that in case the comparison is unsuccessful
+    // the fCharIndex will point to the original data.
+    //
+
+    // Get the length of the string to skip.
+    //
     const XMLSize_t srcLen = XMLString::stringLen(toSkip);
     XMLSize_t charsLeft = charsLeftInBuffer();
 
-    if (srcLen <= fCharsAvail) {
-        //
-        //  See if the current reader has enough chars to test against this
-        //  string. If not, then ask it to reload its buffer. If that does not
-        //  get us enough, then it cannot match.
-        //
-        //  NOTE: This works because strings never have to cross a reader! And
-        //  a string to skip will never have a new line in it, so we will never
-        //  miss adjusting the current line.
-        //
-        while (charsLeft < srcLen)
-        {
-            if (!refreshCharBuffer())
-                return false;     // if the refreshCharBuf() did not add anything new
-                                  // give up and return.
-            charsLeft = charsLeftInBuffer();
-	    }
+    //  See if the current reader has enough chars to test against this
+    //  string. If not, then ask it to reload its buffer. If that does not
+    //  get us enough, then it cannot match.
+    //
+    //  NOTE: This works because strings never have to cross a reader! And
+    //  a string to skip will never have a new line in it, so we will never
+    //  miss adjusting the current line.
+    //
+    while (charsLeft < srcLen)
+    {
+      if (!refreshCharBuffer())
+        return false;
 
-        //
-        //  Ok, now we now that the current reader has enough chars in its
-        //  buffer and that its index is back at zero. So we can do a quick and
-        //  dirty comparison straight to its buffer with no requirement to unget
-        //  if it fails.
-        //
-        if (memcmp(&fCharBuf[fCharIndex], toSkip, srcLen*sizeof(XMLCh)))
-            return false;
+      XMLSize_t tmp = charsLeftInBuffer();
+      if (tmp == charsLeft) // if the refreshCharBuf() did not add anything new
+        return false;     // give up and return.
 
-        //
-        //  And get the character buffer index back right by just adding the
-        //  source len to it.
-        //
-        fCharIndex += srcLen;
-    }
-    else {
-        if (charsLeft == 0) {
-            refreshCharBuffer();
-            charsLeft = charsLeftInBuffer();
-            if (charsLeft == 0)
-                return false; // error situation
-        }
-        if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip, charsLeft))
-            return false;
-
-        // the remaining characters of toSkip could fail so we don't want to
-        // advance fCharIndex unless we have to.
-        // the majority of the calls to this routine are for constants stringed
-        // defined in mainly XMLUni.cpp and all the strings that call it are less
-        // than 10 characters and it could be possible that the above comparison
-        // passes but one of the next one will fail and that is why we don't want
-        // to update fCharIndex. The other possibility is that it is called for
-        // the matching endtag and the string could be really long, even longer
-        // than the buffer which forces us to advance the fCharIndex position.
-        if (srcLen < kCharBufSize/4) {
-            XMLSize_t saveCharsLeft = charsLeft;
-            //fCharIndex += charsLeft;
-    
-            XMLSize_t offset = charsLeft;
-            XMLSize_t remainingLen = srcLen - charsLeft;
-
-            while (remainingLen > 0) {
-                refreshCharBuffer();
-                charsLeft = charsLeftInBuffer() - offset;
-                if (charsLeft == 0)
-                  return false; // error situation
-                if (charsLeft > remainingLen)
-                    charsLeft = remainingLen;
-                if (XMLString::compareNString(&fCharBuf[fCharIndex+saveCharsLeft], toSkip+offset, charsLeft))
-                    return false;
-                offset += charsLeft;
-                remainingLen -= charsLeft;
-                saveCharsLeft += charsLeft;
-            }
-            fCharIndex += saveCharsLeft;
-
-        }
-        else {
-            // a really long name
-            fCharIndex += charsLeft;
-    
-            XMLSize_t offset = charsLeft;
-            XMLSize_t remainingLen = srcLen - charsLeft;
-
-            while (remainingLen > 0) {
-                refreshCharBuffer();
-                charsLeft = charsLeftInBuffer();
-                if (charsLeft == 0)
-                  return false; // error situation
-                if (charsLeft > remainingLen)
-                    charsLeft = remainingLen;
-                if (XMLString::compareNString(&fCharBuf[fCharIndex], toSkip+offset, charsLeft))
-                    return false;
-                offset += charsLeft;
-                remainingLen -= charsLeft;
-                fCharIndex += charsLeft;
-            }
-        }
+      charsLeft = tmp;
     }
 
-    // Add the source length to the current column to get it back right
+    //  Ok, now we now that the current reader has enough chars in its
+    //  buffer and that its index is back at zero. So we can do a quick and
+    //  dirty comparison straight to its buffer with no requirement to unget
+    //  if it fails.
+    //
+    if (memcmp(&fCharBuf[fCharIndex], toSkip, srcLen * sizeof(XMLCh)))
+      return false;
+
+    // Add the source length to the current column to get it back right.
+    //
     fCurCol += (XMLFileLoc)srcLen;
+
+    //  And get the character buffer index back right by just adding the
+    //  source len to it.
+    //
+    fCharIndex += srcLen;
+
+    return true;
+}
+
+bool XMLReader::skippedStringLong(const XMLCh* toSkip)
+{
+    // This function works on strings that are potentially longer than
+    // kCharBufSize (e.g., end tag). This function does not guarantee
+    // that in case the comparison is unsuccessful the fCharIndex will
+    // point to the original data.
+    //
+
+    XMLSize_t srcLen = XMLString::stringLen(toSkip);
+    XMLSize_t charsLeft = charsLeftInBuffer();
+
+    while (srcLen != 0)
+    {
+      // Fill up the buffer with as much data as possible.
+      //
+      while (charsLeft < srcLen && charsLeft != kCharBufSize)
+      {
+        if (!refreshCharBuffer())
+          return false;
+
+        XMLSize_t tmp = charsLeftInBuffer();
+        if (tmp == charsLeft) // if the refreshCharBuf() did not add anything
+          return false;       // new give up and return.
+
+        charsLeft = tmp;
+      }
+
+      XMLSize_t n = charsLeft < srcLen ? charsLeft : srcLen;
+
+      if (memcmp(&fCharBuf[fCharIndex], toSkip, n * sizeof(XMLCh)))
+        return false;
+
+      toSkip += n;
+      srcLen -= n;
+
+      fCharIndex += n;
+      fCurCol += (XMLFileLoc)n;
+      charsLeft -= n;
+    }
 
     return true;
 }

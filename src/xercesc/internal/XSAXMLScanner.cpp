@@ -79,7 +79,7 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
     // Make sure that its the end of the element that we expect
     const XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
     const ElemStack::StackElem* topElem = fElemStack.popTop();
-    if (!fReaderMgr.skippedString(elemName))
+    if (!fReaderMgr.skippedStringLong(elemName))
     {
         emitError
         (

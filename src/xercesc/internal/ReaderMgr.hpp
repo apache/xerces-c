@@ -94,6 +94,7 @@ public :
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();
     bool skippedString(const XMLCh* const toSkip);
+    bool skippedStringLong(const XMLCh* const toSkip);
     void skipQuotedString(const XMLCh quoteCh);
     XMLCh skipUntilIn(const XMLCh* const listToSkip);
     XMLCh skipUntilInOrWS(const XMLCh* const listToSkip);
@@ -344,6 +345,11 @@ inline void ReaderMgr::setStandardUriConformant(const bool newValue)
 inline bool ReaderMgr::skippedString(const XMLCh* const toSkip)
 {
     return fCurReader->skippedString(toSkip);
+}
+
+inline bool ReaderMgr::skippedStringLong(const XMLCh* const toSkip)
+{
+    return fCurReader->skippedStringLong(toSkip);
 }
 
 inline void ReaderMgr::skipToChar(const XMLCh toSkipTo)

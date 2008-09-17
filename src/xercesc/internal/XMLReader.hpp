@@ -183,6 +183,7 @@ public:
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();
     bool skippedString(const XMLCh* const toSkip);
+    bool skippedStringLong(const XMLCh* toSkip);
     bool peekString(const XMLCh* const toPeek);
 
 

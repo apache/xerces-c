@@ -969,7 +969,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
         topElem = fElemStack.topElement();
         elemName = topElem->fThisElement->getFullName();
     }
-    if (!fReaderMgr.skippedString(elemName))
+    if (!fReaderMgr.skippedStringLong(elemName))
     {
         emitError
         (
