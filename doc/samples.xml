@@ -115,7 +115,7 @@ setenv XERCESC_NLS_HOME=$XERCESCROOT/msg
 					<br/>PParse demonstrates progressive parsing.</li>
 				<li><link idref="stdinparse-&XercesC2Series;">StdInParse</link>
 					<br/>StdInParse demonstrates streaming XML data from standard input.</li>
-				<li><link idref="enumva-&XercesC2Series;">EnumVal</link>
+				<li><link idref="enumval-&XercesC2Series;">EnumVal</link>
 					<br/>EnumVal shows how to enumerate the markup decls in a DTD Grammar.</li>
 				<li><link idref="senumval-&XercesC2Series;">SEnumVal</link>
 					<br/>SEnumVal shows how to enumerate the markup decls in a Schema Grammar.</li>
