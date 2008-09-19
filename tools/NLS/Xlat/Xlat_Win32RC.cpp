@@ -79,7 +79,7 @@ Win32RCFormatter::nextMessage(  const  XMLCh* const             msgText
     //  type prefix support, we have to put them out as numeric character
     //  values.
     //
-    fwprintf(fOutFl, L"    %-16d  L\"", messageId + fMsgOffset);
+    fwprintf(fOutFl, L"    %-16d  \"", messageId + fMsgOffset);
 
     bool isOnlyASCII=true;
     const XMLCh* rawData = msgText;
@@ -102,7 +102,7 @@ Win32RCFormatter::nextMessage(  const  XMLCh* const             msgText
         while (*rawData)
             fwprintf(fOutFl, L"\\x%04lX", *rawData++);
     }
-    fwprintf(fOutFl, L"\\x00\"\n");
+    fwprintf(fOutFl, L"\"\n");
 }
 
 

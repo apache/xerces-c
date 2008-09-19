@@ -437,7 +437,7 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
         // Element's properties
         XERCES_STD_QUALIFIER cout << "Facets:\t\t\n";
         // use a list to print them sorted, or the list could be different on 64-bit machines
-        RefVectorOf<const XMLCh> sortedList(facets->getCount(), false);
+        RefVectorOf<XMLCh> sortedList(facets->getCount(), false);
         RefHashTableOfEnumerator<KVStringPair> enumFacets(facets);
         while( enumFacets.hasMoreElements() )
         {
@@ -447,11 +447,11 @@ void processDatatypeValidator( const DatatypeValidator* dtValidator, bool margin
             for(i=0;i<len;i++)
                 if(XMLString::compareString(key, sortedList.elementAt(i))<0)
                 {
-                    sortedList.insertElementAt(key,i);
+                    sortedList.insertElementAt((XMLCh*)key,i);
                     break;
                 }
             if(i==len)
-                sortedList.addElement(key);
+                sortedList.addElement((XMLCh*)key);
         }
 
         XMLSize_t len=sortedList.size();
