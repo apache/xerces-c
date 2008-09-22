@@ -21,6 +21,7 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto280">Migrating from &XercesCName; 2.7.0 to 2.8.0</link></li>
         <li><link anchor="Migrateto270">Migrating from &XercesCName; 2.6.0 to 2.7.0</link></li>
         <li><link anchor="Migrateto260">Migrating from &XercesCName; 2.5.0 to 2.6.0</link></li>
         <li><link anchor="Migrateto250">Migrating from &XercesCName; 2.4.0 to 2.5.0</link></li>
@@ -36,6 +37,35 @@
       </ul>
     </s2>
 
+    <anchor name="Migrateto280"/>
+    <s2 title="Migrating from &XercesCName; 2.7.0 to &XercesCName; 2.8.0">
+    <p>The following section is a discussion of the technical differences between
+       &XercesCName; 2.7.0 code base and the &XercesCName; 2.8.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures280">New features in &XercesCName; 2.8.0</link></li>
+        <li><link anchor="API280">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI280">New Public API</link></li>
+            <li><link anchor="ModifiedAPI280">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI280">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures280"/>
+    <s3 title="New features in &XercesCName; 2.8.0">
+      <ul>
+        <li>Exponential growth of memory block (from 16KB to 128KB) that are allocated by the DOM heap.</li>
+        <li>The NODE_CLONED notification is now sent to each node's user data handler when cloning the entire DOMDocument.</li>
+        <li>On Windows extract the registry code page from MIME\Database\Charset\&lt;encoding>\@InternetEncoding instead of MIME\Database\Charset\&lt;encoding>\@Codepage.</li>
+        <li>Allow whitespace-only nodes to be added as children of a DOMDocument.</li>
+        <li>When a node is cloned or imported the type information (PSVI) is also copied.</li>
+        <li>When using SAX2, including XMLReaderFactory to use createXMLReader doesn't include xercesc/parsers/SAX2XMLReaderImpl.hpp anymore. If you need to cast the SAX2XMLReader to SAX2XMLReaderImpl,
+            you need to include this header yourself.</li>
+      </ul>
+    </s3>
+    </s2>
 
     <anchor name="Migrateto270"/>
     <s2 title="Migrating from &XercesCName; 2.6.0 to &XercesCName; 2.7.0">
@@ -641,28 +671,7 @@
 
     <anchor name="LibraryChange200"/>
     <s3 title="Unix Library Name Change">
-      <p>The &XercesCName; UNIX Library now follows the Unix Shared Library Naming Convention (libname.so.soname).
-         It is now called:</p>
-         <ul>
-            <li>AIX</li>
-            <ul>
-              <li>&XercesC3UnixLib;&XercesC3UnixSoName;.so</li>
-              <li>symbolic link: &XercesC3UnixLib;.so                      ----&gt; &XercesC3UnixLib;&XercesC3UnixVersion;.so</li>
-              <li>symbolic link: &XercesC3UnixLib;&XercesC3UnixVersion;.so  ----&gt; &XercesC3UnixLib;&XercesC3UnixSoName;.so</li>
-            </ul>
-            <li>Solaris / Linux</li>
-            <ul>
-              <li>&XercesC3UnixLib;.so.&XercesC3UnixSoName;</li>
-              <li>symbolic link: &XercesC3UnixLib;.so                      ----&gt; &XercesC3UnixLib;.so.&XercesC3UnixVersion;</li>
-              <li>symbolic link: &XercesC3UnixLib;.so.&XercesC3UnixVersion; ----&gt; &XercesC3UnixLib;.so.&XercesC3UnixSoName;</li>
-            </ul>
-            <li>HP-UX</li>
-            <ul>
-              <li>&XercesC3UnixLib;.sl.&XercesC3UnixSoName;</li>
-              <li>symbolic link: &XercesC3UnixLib;.sl                      ----&gt; &XercesC3UnixLib;.sl.&XercesC3UnixVersion;</li>
-              <li>symbolic link: &XercesC3UnixLib;.sl.&XercesC3UnixVersion; ----&gt; &XercesC3UnixLib;.sl.&XercesC3UnixSoName;</li>
-            </ul>
-         </ul>
+      <p>The &XercesCName; UNIX Library now follows the Unix Shared Library Naming Convention (libname.so.soname).</p>
     </s3>
 
     <anchor name="DirChange200"/>

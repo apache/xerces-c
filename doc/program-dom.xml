@@ -316,13 +316,10 @@
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
 
-    #if defined(XERCES_NEW_IOSTREAMS)
     #include &lt;iostream>
-    #else
-    #include &lt;iostream.h>
-    #endif
 
-    XERCES_CPP_NAMESPACE_USE
+    using namespace std;
+    using namespace xercesc;
 
     int main (int argc, char* args[]) {
 
@@ -833,13 +830,10 @@
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
 
-    #if defined(XERCES_NEW_IOSTREAMS)
     #include &lt;iostream>
-    #else
-    #include &lt;iostream.h>
-    #endif
 
-    XERCES_CPP_NAMESPACE_USE
+    using namespace std;
+    using namespace xercesc;
 
     int main (int argc, char* args[]) {
 
@@ -917,7 +911,7 @@
         provides some framework classes for specialized types of input source (i.e. LocalFileInputSource, etc.) that are
         derived from the SAX InputSource. In DOM L3, to allow users implementing their own DOMLSResourceResolver(s), which return
         a DOMLSInput, to utilize these framework classes, we need to provide a mechanism to map a SAX InputSource to a
-        DOMInputSource. We are introducing to wrapper classes to interchange DOMLSInput and SAX InputSource.
+        DOMInputSource. Two wrapper classes are available to interchange DOMLSInput and SAX InputSource:
         </p>
 
            <s4 title="Wrapper4DOMLSInput">
@@ -1250,8 +1244,8 @@
             </table>
 
             <p/>
-	    
-	    
+
+
             <anchor name="builder-load-schema"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/validating/load-schema</em></th></tr>
@@ -1632,7 +1626,7 @@
 
         <anchor name="ConstructDOMLSSerializer"/>
         <s3 title="Constructing a DOMLSSerializer">
-          <p>DOMWriter is a new interface introduced by the
+          <p>DOMLSSerializer is a new interface introduced by the
             <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/">
             W3C DOM Level 3.0 Load and Save Specification</jump>.
             DOMLSSerializer provides the "Save" interface for serializing (writing) a DOM document into
@@ -1646,13 +1640,11 @@
     #include &lt;xercesc/util/XMLString.hpp>
     #include &lt;xercesc/util/PlatformUtils.hpp>
 
-    #if defined(XERCES_NEW_IOSTREAMS)
     #include &lt;iostream>
-    #else
-    #include &lt;iostream.h>
-    #endif
 
-    XERCES_CPP_NAMESPACE_USE
+    using namespace std;
+    using namespace xercesc;
+
     int serializeDOM(DOMNode* node) {
 
         XMLCh tempStr[100];
@@ -1764,8 +1756,8 @@
 &lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ] ]&gt;&lt;/Test>
 &lt;/root>
 </source>
-            <p>To summarize, here is the table that summarize how built-in entity reference are handled for
-            different Node Type:</p>
+            <p>Below is the table that summarizes how built-in entity reference are handled for
+            different DOM node types:</p>
       <table>
         <tr>
           <th><em>Input/Output</em></th>

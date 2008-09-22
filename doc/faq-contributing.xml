@@ -18,20 +18,20 @@
 
 <!DOCTYPE faqs SYSTEM "sbk:/style/dtd/faqs.dtd">
 
-<faqs title='FAQs for Contributors'>
+<faqs title='Contributing to &XercesCName;'>
     <faq title="Submitting Patches">
     <q>I have a problem and I think I know how to fix it.  How can I
-        communicate my ideas to the Xerces team?
+        communicate my ideas to the &XercesCName; team?
     </q>
     <a>
         <p>To maximize the probability that your ideas will grab the
-        attention of one of the Xerces developers who knows about the
+        attention of one of the &XercesCName; developers who knows about the
         area of the parser you're concerned with, you should follow
         these steps:
     </p>
     <ol>
-        <li>Check out and build the most recent Xerces code.  For
-            instructions on how to do this, see <jump href="&RepURI;">Xerces-C++
+        <li>Check out and build the most recent &XercesCName; code.  For
+            instructions on how to do this, see <jump href="&RepURI;">&XercesCName;
             Repository Information</jump>.  If you do this, you can confirm that your
             bug still exists and has not been fixed since the last
             release.
@@ -44,10 +44,10 @@
             Describe why your solution works.
         </li>
         <li>
-            Prepare a patch to fix Xerces code.  To do this, when you
+            Prepare a patch to fix &XercesCName; code.  To do this, when you
             have applied your changes to a local copy of the most
-            recent xerces source code, do <code>svn diff file</code>
-	    for each file you&apos;ve changed.
+            recent &XercesCName; source code, do <code>svn diff file</code>
+	    for each file you have changed.
             Keep in mind the coding guidelines for &XercesCName; as
             described below.
         </li>
@@ -57,9 +57,9 @@
             apply.
         </li>
         <li>
-            Submit a bug report to the Xerces-C++ bug database as
+            Submit a bug report to the &XercesCName; bug database as
             described on the <jump href="&BugURI;">Bug-Reporting</jump> page.
-            Pick the product "Xerces-C++" (remembering to attach your patches
+            Pick the product "&XercesCName;" (remembering to attach your patches
             and test code) or, if you think your patch might need some discussion,
             post it to the <jump href="&MailURI;">developer mailing list</jump>.
         </li>
@@ -80,11 +80,9 @@
       <ul>
       <li>We don't try to enforce binary compatibility between new versions and releases.</li>
       <li>New versions and releases will be delivered when a certain number of bug fixes/new features have been added
-      (as decided by the committers) or when a dependent product, such as XALAN, wants to ship a new release that uses new Xerces features.</li>
+      (as decided by the committers).</li>
       <li>New modification levels will almost never be issued, the only exception is a showstopper bug encountered within
-      a release. if no commit has been made on the trunk which would result in binary incompatibility, and no commit has been made that is not thought to
-      be release-quality, then the modification release can be created by tagging the trunk; otherwise, a branch (new release) will need to be created and the show stopper
-      fixed there.</li>
+      a release.</li>
       <li>Any normal bug is fixed only in the HEAD branch (latest development code).</li>
       </ul>
 
@@ -108,14 +106,14 @@
       <li>Change the order of data members in the class declaration (other than STATIC members).</li>
       <li>Change the class hierarchy (other than adding new classes).</li>
       </ul>
-      <li>Methods that are deprecated should be marked with the JavaDoc tag @deprecated in the header file.</li>
+      <li>Methods that are deprecated should be marked with the Doxygen tag @deprecated in the header file.</li>
       </ul>
       <li>x.x.x to x.y.z: the API is source code compatible but not binary compatible (a recompilation of an application that uses the public headers of &XercesCName; should work).</li>
       <ul>
       <li>This means that to maintain release to release source code compatibility the signature of public methods can only be
       changed by adding default parameters.</li>
       <li>Signatures of private and protected methods can be changed and/or removed.</li>
-      <li>Methods that are deprecated should be marked with the JavaDoc tag @deprecated in the header file.</li>
+      <li>Methods that are deprecated should be marked with the Doxygen tag @deprecated in the header file.</li>
       </ul>
       <li>x.x.x to a.b.c: the API may not be source code compatible and is not binary compatible (a recompilation of an application using &XercesCName; may fail).</li>
       <ul>
@@ -161,15 +159,15 @@
       <li>Use a tab size of 4 and insert them as spaces instead of keeping tabs.</li>
 
       <li>The code is written to be platform independent.  Platform specific code should only be in the
-      util/Platforms, util/Transcoders, util/MsgLoaders, and util/NetAccessors directories.</li>
+      util/FileManagers, util/MutexManagers, util/Transcoders, util/MsgLoaders, and util/NetAccessors directories.</li>
 
       <li>The header file name and the source file name should both be named corresponding to the primary
       class they contain.  For example class StringPool should be in the header file StringPool.hpp and in
       the source file StringPool.cpp.</li>
 
-      <li>In general, code should be documented with comments.  Use JavaDoc tags to describe methods.</li>
+      <li>In general, code should be documented with comments.  Use Doxygen tags to describe methods.</li>
 
-      <li>The naming convention for ENUMS should be choosen to be unique and descriptive
+      <li>The naming convention for enumerations should be chosen to be unique and descriptive
       (i.e. INVALID or UNKNOWN) to avoid colliding with predefined macros in other
       products.  The current style of using ALL CAP enums should be phased out with
       Mixed Case instead, except for names specified in standards (for example, TEXT_NODE
@@ -178,159 +176,4 @@
       </ol>
     </a>
     </faq>
-
-    <faq title="Release Preparation">
-    <q>How does one do a Xerces-C release?
-    </q>
-    <a>
-        <p>Just follow these steps:
-        </p>
-        <ol>
-        <li>Update the release information in the following files:<br/>
-
-    		<code>projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp</code>
-    		<code>projects/Win32/VC6/xerces-all/XercesLib/XercesLib.mak</code>
-    		<code>projects/Win32/VC7.1/xerces-all/XercesLib/XercesLib.vcproj</code>
-    		<code>projects/Win32/VC8/xerces-all/XercesLib/XercesLib.vcproj</code>
-    		<br/>
-    		<code>projects/MacOS/Xcode/XercesLib/Info-XercesLib.plist</code>
-    		<code>scripts/packageBinaries.pl</code>
-    		<br/>
-    		<code>src/xercesc/configure.in</code>
-    		<br/>
-    		<code>src/xercesc/com/xml4com.idl</code>
-    		<code>src/xercesc/util/Platforms/Win32/Version.rc</code>
-    		<code>src/xercesc/util/XercesVersion.hpp</code>
-    		<code>src/xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp</code>
-    		<code>src/xercesc/util/MsgLoaders/ICU/resources/res-file-list-unix.txt</code>
-    		<code>src/xercesc/util/MsgLoaders/ICU/resources/res-file-list-wins.txt</code>
-    		<code>src/xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt</code>
-    		<br/>
-    		<code>version.incl</code>
-    		<br/>
-    		<code>xerces-c.spec</code>
-    		<br/>
-    		<code>doc/Doxyfile</code>
-    		<br/>
-    		<code>doc/style/dtd/entities.ent</code>
-
-         </li>
-
-         <li>Update the release documentation in the following files:<br/>
-    		<code>doc/migration.xml</code>
-    		<br/>
-    		<code>doc/migration_archive.xml</code>
-    		<br/>
-    		<code>doc/releases.xml</code>
-    		<br/>
-    		<code>doc/releases_archive.xml</code>
-    		<br/>
-        	<code>doc/feedback.xml</code>
-        	<br/>
-        	<code>credits.txt</code>
-        </li>
-
-        <li>Build and test the release on the platforms that binaries are being produced for.
-            <br/>The source packages should be named xerces-c-src_x_y_z.zip/tar.gz.  In order for
-            rpm to work correctly the actual directory containing the source that will be
-            zipped/tarred up should be xerces-c-src_x_y_z.
-            <br/>The binary packages should be named xerces-c_x_y_z.zip/tar.gz.
-        </li>
-
-        <li>
-            Generate PGP/GNUPG signatures for dist binaries and source packages.<br/>
-            That is, add public key to the SVN <code>KEYS</code> file if necessary
-            and make sure public key is on a key server or two.  You will also need
-            to update the KEYS file on the website:
-            <br/>
-            <code>scp KEYS username@minotaur.apache.org:/www/www.apache.org/dist/xml/xerces-c</code>
-        </li>
-
-        <li>Upload the binaries and signatures to the dist section of
-            the website, from the directory containing the binaries:
-            <br/>
-            <code>scp * username@minotaur.apache.org:/www/www.apache.org/dist/xml/xerces-c/binaries</code>
-        </li>
-
-        <li>Upload the source packages and signatures to the dist section of
-            the website, from the directory containing the sources:
-            <br/>
-            <code>scp * username@minotaur.apache.org:/www/www.apache.org/dist/xml/xerces-c/source</code>
-        </li>
-
-        <li>Logon to minotaur.
-        	<br/>
-        	<code>ssh minotaur.apache.org</code>
-       	</li>
-
-        <li>
-            Generate md5 signatures for dist binaries and sources on minotaur using:
-            <br/>
-            <code>md5 -r xerces-c_x_y_z.tar.gz > xerces-c_x_y_z.tar.gz.md5</code>
-        </li>
-
-        <li>Make sure the packages have the correct permissions (chmod 664*).</li>
-
-        <li>Remove the previous release source and binaries (double checked that they
-            are archived) in the source and binaries directories.  Remove the links in the
-            /www/www.apache.org/dist/xml/xerces-c directory (*current* that were pointing
-            at the old sources in the source directory).
-        </li>
-
-        <li>Create the new links for the source (do for each file including asc and md5):
-        <br/>
-        <code>ln -s ./source/xerces-c-src_x_y_z.zip xerces-c-current.zip</code>
-        </li>
-
-        <li>Go to the archive, /www/archive.apache.org/dist/xml/xerces-c and create a
-        directory for the previous release (Xerces-C_x_y_a).  Move over the contents of
-        the source and binaries directories to this new directory.  Remove the *current* links.
-        </li>
-
-        <li>Update the archive.
-        <br/>
-        <code>cd /www/www.apache.org/dist/xml/xerces-c</code>
-        <br/>
-        <code>cp -R * /www/archive.apache.org/dist/xml/xerces-c</code>
-        </li>
-
-        <li>Verify that the downloads are available.  Note that it can take up to 24 hours
-        to for the mirrors to be updated.
-        </li>
-
-        <li>Update the website by taking a binary package and extracting the doc/html directories.
-        The web pages are stored in /www/xml.apache.org/xerces-c.  You will also need to update
-        the documentation pdf in the pdf directory (which has both a pdf and pdf.tar.gz).  Recommend
-        copying the new documentation over the existing files.  Be sure to change the permissions
-        on the files and directories:
-        <br/>
-        <code>find . -type f -exec chmod 664 {} ;</code>
-        <br/>
-        <code>find . -type d -exec chmod 775 {} ;</code>
-        <br/>If the binaries are for different platforms you may also need to update the
-        download.html file to point to the new binaries.
-        <br/>Verify that the website is updated (may take a while to be refreshed on the
-        real webserver).
-        </li>
-
-        <li>Send out an announcement e-mail to the c-dev@xerces.apache.org and c-users@xerces.apache.org mailing lists
-            and cc the announcements@xml.apache.org and pmc@xerces.apache.org mailing lists.
-        </li>
-
-        <li>Update the list of versions in Jira for xerces-c.
-        </li>
-
-        <li>Tag the release in SVN
-            (tags for releases usually have the form Xerces-C_x_y_z
-            where x.y.z is the Xerces-C release number) by doing:
-            <br/>
-            <code>svn copy https://svn.apache.org/repos/asf/xerces/c \
-                           https://svn.apache.org/repos/asf/xerces/c/tags/Xerces-C_x_y_z \
-                           -m "Tagging the Xercesc x.y release" </code>
-            <br/>For more information on tagging see http://svnbook.red-bean.com/nightly/en/svn.branchmerge.tags.html.
-        </li>
-        </ol>
-    </a>
-    </faq>
-
 </faqs>

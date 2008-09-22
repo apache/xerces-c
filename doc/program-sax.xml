@@ -18,7 +18,7 @@
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="SAX1 Programming Guide">
+<s1 title="SAX Programming Guide">
 
     <anchor name="UsingSAX1API"/>
     <s2 title="Using the SAX API">
@@ -36,11 +36,11 @@
         commonly used handler classes are DocumentHandler which is
         called when XML constructs are recognized, and ErrorHandler
         which is called when an error occurs. The header files for the
-        various SAX handler classes are in
-        '&lt;&XercesC3InstallDir;>/include/xercesc/sax'</p>
+        various SAX handler classes are in the <code>xercesc/sax/</code>
+        directory.</p>
 
-      <p>As a convenience, &XercesCName; provides the class
-        HandlerBase, which is a single class which is publicly derived
+      <p>As a convenience, &XercesCName; provides
+        HandlerBase, a single class which is publicly derived
         from all the Handler classes. HandlerBase's default
         implementation of the handler callback methods is to do
         nothing. A convenient way to get started with &XercesCName; is
@@ -63,7 +63,9 @@ public:
       <p>This is the implementation file MySAXHandler.cpp:</p>
 
 <source>#include "MySAXHandler.hpp"
-#include &lt;iostream.h>
+#include &lt;iostream>
+
+using namespace std;
 
 MySAXHandler::MySAXHandler()
 {
@@ -87,8 +89,8 @@ void MySAXHandler::fatalError(const SAXParseException&amp; exception)
 }</source>
 
       <p>The XMLCh and AttributeList types are supplied by
-        &XercesCName; and are documented in the include
-        files. Examples of their usage appear in the source code to
+        &XercesCName; and are documented in the API reference.
+        Examples of their usage appear in the source code for
         the sample applications.</p>
     </s2>
 
@@ -96,7 +98,7 @@ void MySAXHandler::fatalError(const SAXParseException&amp; exception)
     <s2 title="SAXParser">
         <anchor name="ConstructParser"/>
         <s3 title="Constructing a SAXParser">
-          <p>In order to use &XercesCName; to parse XML files, you will
+          <p>In order to use &XercesCName; SAX to parse XML files, you will
             need to create an instance of the SAXParser class. The example
             below shows the code you need in order to create an instance
             of SAXParser. The DocumentHandler and ErrorHandler instances
@@ -108,13 +110,10 @@ void MySAXHandler::fatalError(const SAXParseException&amp; exception)
     #include &lt;xercesc/sax/HandlerBase.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
 
-    #if defined(XERCES_NEW_IOSTREAMS)
     #include &lt;iostream>
-    #else
-    #include &lt;iostream.h>
-    #endif
 
-    XERCES_CPP_NAMESPACE_USE
+    using namespace std;
+    using namespace xercesc;
 
     int main (int argc, char* args[]) {
 

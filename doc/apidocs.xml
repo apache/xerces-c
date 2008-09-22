@@ -28,7 +28,7 @@
 	    <p>&XercesCName; SAX is an implementation of the
 		<jump href="http://sax.sourceforge.net/">SAX 1.0/2.0</jump> specification.</p>
 
-	    <p>&XercesCName; DOM is an implementation of the</p>
+	    <p>&XercesCName; DOM is an implementation of the following specifications:</p>
               <ul>
                <li><jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/">
                    DOM Level 1 Specification</jump>, a W3C Recommendation of October 1, 1998</li>
@@ -44,11 +44,12 @@
                </ul>
 
            <p>For a complete understanding of how the &XercesCName; APIs work,
-		we recommend you to read these documents.</p>
+	      we recommend that you read these specifications.</p>
 
-	    <p>See the <em><jump href="apiDocs-&XercesC3Series;/index.html">&XercesCName; API documentation</jump></em> for more details.</p>
+	    <p>See the <em><jump href="apiDocs-&XercesC3Series;/index.html">&XercesCName; API Reference</jump></em>
+               for the detailed documentation of &XercesCName; interfaces.</p>
 
-	    <note>The API documentation is automatically generated using
+	    <note>The API Reference is automatically generated using
 		<jump href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</jump>.</note>
 
     </s2>

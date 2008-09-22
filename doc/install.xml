@@ -20,10 +20,13 @@
 
 <s1 title="Installation">
 
+    <p>Source and binary distributions installation instructions are
+       available for the following platforms:</p>
+
     <ul>
-      <li><link anchor="Windows">Installation Instructions for Windows</link></li>
-      <li><link anchor="Unix">Installation Instructions for UNIX/Mac OS X/Linux</link></li>
-      <li><link anchor="Cygwin">Installation Instructions for Cygwin</link></li>
+      <li><link anchor="Windows">Windows</link></li>
+      <li><link anchor="Unix">UNIX/Linux/Mac OS X</link></li>
+      <li><link anchor="Cygwin">Cygwin</link></li>
     </ul>
 
     <anchor name="Windows"/>
@@ -57,10 +60,10 @@ unzip &XercesC3SrcInstallDir;.zip
            WinZip, or any other UnZip utility. For example:</p>
 
 <source>
-unzip &XercesC3InstallDir;-x86-windows-vc_8_0.zip
+unzip &XercesC3InstallDir;-x86-windows-vc-8.0.zip
 </source>
 
-        <p>This creates a &apos;&XercesC3InstallDir;-x86-windows-vc_8_0&apos;
+        <p>This creates a &apos;&XercesC3InstallDir;-x86-windows-vc-8.0&apos;
            sub-directory containing the &XercesCName; binary distribution.</p>
 
         <p>You need to add the &apos;&XercesC3InstallDir;-{arch}-windows-{compiler}\bin&apos;
@@ -111,10 +114,10 @@ tar -xf &XercesC3SrcInstallDir;.tar
            and {compiler} denotes the C++ compiler of your choice.
            For example:</p>
 <source>
-gzip -d &XercesC3InstallDir;-x86-linux-gcc_3_4.tar.gz
-tar -xf &XercesC3InstallDir;-x86-linux-gcc_3_4.tar
+gzip -d &XercesC3InstallDir;-x86-linux-gcc-3.4.tar.gz
+tar -xf &XercesC3InstallDir;-x86-linux-gcc-3.4.tar
 </source>
-        <p>This will create an '&XercesC3InstallDir;-x86-linux-gcc_3_4'
+        <p>This will create an '&XercesC3InstallDir;-x86-linux-gcc-3.4'
            sub-directory containing the &XercesCName; binary distribution.</p>
 
         <p>You will need to add the
@@ -190,28 +193,13 @@ tar -xfz &XercesC3SrcInstallDir;.tar.gz
       </s3>
 
       <s3 title="Binary distribution">
-        <p>Install the binary distribution by running
-           <jump href="http://www.cygwin.com">Cygwin</jump> setup.exe.
-           When you reach the "Packages" step of the Cygwin Setup wizard,
-           expand the "Devel" category, then click in the "New" column next
+        <p>Precompiled Xerces-C++ libraries for Cygwin are provide as
+           part of the Cygwin package repository. To install the binary
+           distribution run Cygwin setup.exe.
+           When you reach the Packages step of the Cygwin Setup wizard,
+           expand the Devel category, then click in the New column next
            to "xerces-c-devel" until it reads "&XercesC3Version;-X".</p>
 
-        <p>This will install the necessary libraries and include files
-           for the &XercesCName; binary distribution.</p>
-
-        <p>If you wish to run programs linked to &XercesCName; that were
-           built in the Cygwin environment, you need to add your Cygwin
-           "bin" directory to your Windows PATH environment variable.
-           In typical Cygwin installations, the bin directory is in the
-           Cygwin directory on the drive that windows is installed on.
-           For instance, if windows is installed to "C:\Windows\System32",
-           Your Cygwin bin directory may be "C:\cygwin\bin".</p>
-
-        <p>The binary distribution contains the pre-built parser libraries.
-           Sample executables may be available in a future release on the
-           Cygwin platform.  In the meantime, they may be built from the
-           source distribution by following the
-           <jump href="build-&XercesC3Series;.html">Build Instructions</jump>.</p>
       </s3>
    </s2>
 </s1>

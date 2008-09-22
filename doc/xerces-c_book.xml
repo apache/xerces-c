@@ -25,9 +25,6 @@
      <document id="index"       label="Readme"             source="readme.xml"/>
      <document id="install-&XercesC3Series;" label="Installation" source="install.xml"/>
      <document id="build-&XercesC3Series;" label="Build Instructions" source="build.xml"/>
-     <hidden   id="build-winunix-&XercesC3Series;" source="build-winunix.xml"/>
-     <hidden   id="build-other-&XercesC3Series;" source="build-other.xml"/>
-     <hidden   id="build-misc-&XercesC3Series;" source="build-misc.xml"/>
 
   <separator-space/>
 
@@ -54,6 +51,7 @@
      <hidden   id="senumval-&XercesC3Series;"    source="senumval.xml"/>
      <hidden   id="psviwriter-&XercesC3Series;"  source="psviwriter.xml"/>
      <hidden   id="scmprint-&XercesC3Series;"    source="scmprint.xml"/>
+     <hidden   id="xinclude-&XercesC3Series;"    source="xinclude.xml"/>
 
      <group    id="faqs-&XercesC3Series;"        label="FAQs">
         <entry id="faq-distrib-&XercesC3Series;" source="faq-distrib.xml"/>

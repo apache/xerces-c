@@ -29,7 +29,8 @@
 <source>
 #include &lt;xercesc/util/PlatformUtils.hpp&gt;
 // Other include files, declarations, and non-&XercesCName; initializations.
-XERCES_CPP_NAMESPACE_USE
+
+using namespace xercesc;
 
 int main(int argc, char* argv[])
 {
@@ -97,19 +98,6 @@ int main(int argc, char* argv[])
     </ul>
   </s2>
 
-  <s2 title="SAX Programming Guide">
-    <p>Read the <jump href="program-sax-&XercesC3Series;.html">SAX Programming Guide</jump> document
-      or jump directly to:</p>
-    <ul>
-      <li><jump href="program-sax-&XercesC3Series;.html#UsingSAX1API">Using the SAX API</jump></li>
-      <li><jump href="program-sax-&XercesC3Series;.html#SAXParser">SAXParser</jump></li>
-      <ul>
-          <li><jump href="program-sax-&XercesC3Series;.html#ConstructParser">Constructing a SAXParser</jump></li>
-          <li><jump href="program-sax-&XercesC3Series;.html#SAXFeatures">Supported Features</jump></li>
-      </ul>
-    </ul>
-  </s2>
-
   <s2 title="SAX2 Programming Guide">
     <p>Read the <jump href="program-sax2-&XercesC3Series;.html">SAX2 Programming Guide</jump> document
       or jump directly to:</p>
@@ -124,6 +112,19 @@ int main(int argc, char* argv[])
     </ul>
   </s2>
 
+  <s2 title="SAX Programming Guide">
+    <p>Read the <jump href="program-sax-&XercesC3Series;.html">SAX Programming Guide</jump> document
+      or jump directly to:</p>
+    <ul>
+      <li><jump href="program-sax-&XercesC3Series;.html#UsingSAX1API">Using the SAX API</jump></li>
+      <li><jump href="program-sax-&XercesC3Series;.html#SAXParser">SAXParser</jump></li>
+      <ul>
+          <li><jump href="program-sax-&XercesC3Series;.html#ConstructParser">Constructing a SAXParser</jump></li>
+          <li><jump href="program-sax-&XercesC3Series;.html#SAXFeatures">Supported Features</jump></li>
+      </ul>
+    </ul>
+  </s2>
+
   <s2 title="Other Features">
     <p>Read the <jump href="program-others-&XercesC3Series;.html">&XercesCName; Programming Guide</jump> document
       or jump directly to:</p>
@@ -131,7 +132,7 @@ int main(int argc, char* argv[])
       <li><jump href="program-others-&XercesC3Series;.html#Macro">Version Macros</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#Schema">Schema Support</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#Progressive">Progressive Parsing</jump></li>
-      <li><jump href="program-others-&XercesC3Series;.html#GrammarCache">Preparsing Grammar and Grammar Caching</jump></li>
+      <li><jump href="program-others-&XercesC3Series;.html#GrammarCache">Pre-parsing Grammar and Grammar Caching</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#LoadableMessageText">Loadable Message Text</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#PluggableTranscoders">Pluggable Transcoders</jump></li>
       <li><jump href="program-others-&XercesC3Series;.html#PortingGuidelines">Porting Guidelines</jump></li>

@@ -36,11 +36,11 @@
         commonly used handler classes are ContentHandler which is
         called when XML constructs are recognized, and ErrorHandler
         which is called when an error occurs. The header files for the
-        various SAX2 handler classes are in
-        '&lt;&XercesC3InstallDir;>/include/xercesc/sax2'</p>
+        various SAX2 handler classes are in the <code>xercesc/sax2/</code>
+        directory.</p>
 
-      <p>As a convenience, &XercesCName; provides the class
-        DefaultHandler, which is a single class which is publicly derived
+      <p>As a convenience, &XercesCName; provides DefaultHandler,
+        a single class which is publicly derived
         from all the Handler classes. DefaultHandler's default
         implementation of the handler callback methods is to do
         nothing. A convenient way to get started with &XercesCName; is
@@ -68,7 +68,9 @@ public:
       <p>This is the implementation file MySAX2Handler.cpp:</p>
 
 <source>#include "MySAX2Handler.hpp"
-#include &lt;iostream.h>
+#include &lt;iostream>
+
+using namespace std;
 
 MySAX2Handler::MySAX2Handler()
 {
@@ -94,8 +96,8 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 }</source>
 
       <p>The XMLCh and Attributes types are supplied by
-        &XercesCName; and are documented in the include
-        files. Examples of their usage appear in the source code to
+        &XercesCName; and are documented in the API Reference.
+        Examples of their usage appear in the source code to
         the sample applications.</p>
     </s2>
 
@@ -103,11 +105,11 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
     <s2 title="SAX2XMLReader">
         <anchor name="ConstructParser2"/>
         <s3 title="Constructing an XML Reader">
-          <p>In order to use &XercesCName; to parse XML files, you will
+          <p>In order to use &XercesCName; SAX2 to parse XML files, you will
             need to create an instance of the SAX2XMLReader class. The example
             below shows the code you need in order to create an instance
             of SAX2XMLReader. The ContentHandler and ErrorHandler instances
-            required by the SAX API are provided using the DefaultHandler
+            required by the SAX2 API are provided using the DefaultHandler
             class supplied with &XercesCName;.</p>
 
     <source>
@@ -116,13 +118,10 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
     #include &lt;xercesc/sax2/DefaultHandler.hpp>
     #include &lt;xercesc/util/XMLString.hpp>
 
-    #if defined(XERCES_NEW_IOSTREAMS)
     #include &lt;iostream>
-    #else
-    #include &lt;iostream.h>
-    #endif
 
-    XERCES_CPP_NAMESPACE_USE
+    using namespace std;
+    using namespace xercesc;
 
     int main (int argc, char* args[]) {
 

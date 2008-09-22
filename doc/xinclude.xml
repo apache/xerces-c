@@ -21,9 +21,9 @@
 <s1 title="Sample: XInclude">
 
     <s2 title="XInclude">
-        <p>XInclude uses the provided DOM API to parse an XML file,
-		constructs the DOM tree, expands the xi:include elements
-		and writes the resulting tree to a file.</p>
+        <p>The XInclude example uses the provided DOM API to parse an XML file
+           while expanding the xi:include elements. It then writes
+           the resulting DOM tree in the expanded form.</p>
 
         <s3 title="Running XInclude">
 
