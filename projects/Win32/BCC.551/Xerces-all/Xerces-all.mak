@@ -18,7 +18,7 @@ PROJECTNAMES = XercesLib DOMCount DOMPrint SAXCount SAXPrint SAX2Count SAX2Print
   DOMTest DOMMemTest DOMRangeTest DOMTraversal EncodingTest InitTermTest \
   ThreadTest MemHandlerTest XSerializerTest PSVIWriter SCMPrint MemParse Redirect \
   StdInParse PParse EnumVal SEnumVal CreateDOMDocument XSValueTest \
-  DOMTypeInfoTest
+  DOMTypeInfoTest NetAccessorTest
 
 !include ..\..\..\..\version.incl
 XERCESVER=$(VER)
@@ -163,4 +163,10 @@ DOMTypeInfoTest: DOMTypeInfoTest\DOMTypeInfoTest.mak
   cd $<
   $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..
+
+NetAccessorTest: NetAccessorTest\NetAccessorTest.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
+  cd ..
+
 
