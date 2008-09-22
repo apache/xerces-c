@@ -108,6 +108,21 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 			[AC_MSG_RESULT(no)]
 		)
 		;;
+	cygwin*)
+		# Only add it to the list if the user explicitly asked
+                # for it.
+		#
+		AC_MSG_CHECKING([whether to use the Windows Transcoder])
+		AC_ARG_ENABLE([transcoder-windows],
+			AS_HELP_STRING([--enable-transcoder-windows],
+				[Enable Windows-based transcoder support]),
+			[AS_IF([test x"$enableval" = xyes],
+			       [list_add=WINDOWS])])
+		AS_IF([test x"$list_add" != x],
+			[tc_list="$tc_list -$list_add-"; AC_MSG_RESULT(yes)],
+			[AC_MSG_RESULT(no)]
+		)
+		;;
 	esac
 
 	# TODO: Tests for additional transcoders

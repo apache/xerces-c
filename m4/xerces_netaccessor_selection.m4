@@ -106,6 +106,26 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 			[AC_MSG_RESULT(no)]
 		)
 		;;
+	cygwin*)
+		# Only add it to the list if the user explicitly asked
+                # for it.
+		#
+		list_add=
+		no_winsock=false
+		AC_CHECK_HEADERS([winsock2.h], [], [no_winsock=true])
+		AC_MSG_CHECKING([whether to use the WinSock NetAccessor (Windows)])
+		AS_IF([! $no_winsock], [
+			AC_ARG_ENABLE([netaccessor-winsock],
+				AS_HELP_STRING([--enable-netaccessor-winsock],
+					[Enable winsock-based NetAccessor support]),
+				[AS_IF([test x"$enableval" = xyes],
+					[list_add=WINSOCK])])
+		])
+		AS_IF([test x"$list_add" != x],
+			[na_list="$na_list -$list_add-"; AC_MSG_RESULT(yes)],
+			[AC_MSG_RESULT(no)]
+		)
+		;;
 	esac
 
 
