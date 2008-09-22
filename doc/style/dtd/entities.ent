@@ -3,6 +3,7 @@
 <!ENTITY XercesCProjectName      "Xerces">                       <!-- projectname -->
 <!ENTITY XercesCFullName         "Xerces C++ XML Parser">        <!-- fullproductname -->
 <!ENTITY XercesCName             "Xerces-C++">                   <!-- productname -->
+
 <!ENTITY XercesC3Series          "3">                            <!-- release series -->
 <!ENTITY XercesC3Version         "3.0.0">                        <!-- 3-series version number -->
 <!ENTITY XercesC3InstallDir      "xerces-c-3.0.0">               <!-- installdirname -->
