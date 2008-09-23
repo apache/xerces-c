@@ -42,7 +42,7 @@ MsgCatFormatter::MsgCatFormatter() :
     //  <TBD> Right now we are just using an LCP transcoding, which is not
     //  really the right thing to do!
     //
-    fTranscoder = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
+    fTranscoder = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder(XMLPlatformUtils::fgMemoryManager);
     if (!fTranscoder)
     {
         wprintf(L"Could not create LCP transcoder\n");
