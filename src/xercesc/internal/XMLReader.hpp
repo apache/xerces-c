@@ -628,7 +628,7 @@ inline void XMLReader::movePlainContentChars(XMLBuffer &dest)
     const XMLSize_t chunkSize = fCharsAvail - fCharIndex;
     const XMLCh* cursor = &fCharBuf[fCharIndex];
     XMLSize_t count=0;
-    for(;count<chunkSize && (fgCharCharsTable[*cursor++] & gPlainContentCharMask) != 0;++count);    // yes, it's an empty loop
+    for(;count<chunkSize && (fgCharCharsTable[*cursor++] & gPlainContentCharMask) != 0;++count) /*noop*/ ;
 
     if (count!=0)
     {
