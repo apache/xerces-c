@@ -146,7 +146,7 @@ public:
      * the XPath expression into appropriate namespace URIs. If this is specified
      * as null, any namespace prefix within the expression will result in
      * <code>DOMException</code> being thrown with the code NAMESPACE_ERR.
-     * @param result type - If a specific type is specified, then
+     * @param type - If a specific type is specified, then
      * the result will be returned as the corresponding type. This must be one
      * of the codes of the <code>DOMXPathResult</code> interface.
      * @param result of type DOMXPathResult* - The result specifies a specific result object

@@ -574,7 +574,7 @@ public:
 
     /** Converts from the specified encoding to the internal XMLCh* encoding
       *
-      * @param in       the source buffer to be transcoded
+      * @param data     the source buffer to be transcoded
       * @param length   the length of the source buffer
       * @param encoding the name of the encoding to transcode to
       * @param manager  the memory manager to use
@@ -584,7 +584,7 @@ public:
 
     /** Converts from the specified encoding to the internal XMLCh* encoding
       *
-      * @param in       the source buffer to be transcoded
+      * @param data     the source buffer to be transcoded
       * @param length   the length of the source buffer
       * @param trans    the transcoder to use
       * @param manager  the memory manager to use

@@ -870,7 +870,7 @@ public :
       * the parser should store schema informations in the element
       * and attribute nodes in the DOM tree being produced.
       *
-      * @param newValue The state to set
+      * @param newState The state to set
       * @see #getCreateSchemaInfo
       */
     void  setCreateSchemaInfo(const bool newState);
@@ -881,7 +881,7 @@ public :
       * the parser should process XInclude nodes
       * in the DOM tree being produced.
       *
-      * @param newValue The state to set
+      * @param newState The state to set
       * @see #getDoXInclude
       */
     void  setDoXInclude(const bool newState);

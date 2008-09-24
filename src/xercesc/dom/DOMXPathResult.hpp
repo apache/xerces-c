@@ -316,7 +316,7 @@ public:
      * ORDERED_NODE_SNAPSHOT_TYPE (XPath 1.0) or if ResultType is not
      * SNAPSHOT_RESULT_TYPE (XPath 2.0).
      */
-    virtual bool snapshotItem(XMLSize_t) = 0;
+    virtual bool snapshotItem(XMLSize_t index) = 0;
 
     /**
      * The number of items in the result snapshot. Valid values for snapshotItem

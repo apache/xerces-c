@@ -107,7 +107,7 @@ public:
      * Associate the given namespace prefix to the namespace URI.
      * @param prefix of type XMLCh - The namespace prefix to bind. An empty
      * or null string denotes the default namespace.
-     * @param URI of type XMLCh - The associated namespace URI. If this
+     * @param uri of type XMLCh - The associated namespace URI. If this
      * argument is null or an empty string then the existing binding for this
      * prefix is removed.
      */

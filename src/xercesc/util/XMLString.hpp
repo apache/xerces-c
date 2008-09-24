@@ -470,7 +470,6 @@ public:
       * @param toHash The string to hash
       * @param numChars The maximum number of characters to consider for hashing
       * @param hashModulus The divisor to be used for hashing
-      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
     static XMLSize_t hashN

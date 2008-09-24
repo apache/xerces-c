@@ -166,11 +166,11 @@ public:
     /** @name Constructor and Destructor */
     //@{
     /**
-     * @param outEncoding the encoding for the formatted content
-     * @param docVersion
-     * @param target      the formatTarget where the formatted content is written to
-     * @param escapeFlags the escape style for certain character
-     * @param unrepFlags  the reaction to unrepresentable character
+     * @param outEncoding the encoding for the formatted content.
+     * @param docVersion  the document version.
+     * @param target      the formatTarget where the formatted content is written to.
+     * @param escapeFlags the escape style for certain character.
+     * @param unrepFlags  the reaction to unrepresentable character.
      * @param manager     Pointer to the memory manager to be used to
      *                    allocate objects.
      */

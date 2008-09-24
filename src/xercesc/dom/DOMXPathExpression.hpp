@@ -86,7 +86,7 @@ public:
      * <code>DOMCDATASection</code>, then the context is interpreted as the whole logical
      * text node as seen by XPath, unless the node is empty in which case it may not
      * serve as the XPath context.
-     * @param result type. If a specific type is specified, then the result
+     * @param type If a specific type is specified, then the result
      * will be coerced to return the specified type relying on XPath conversions and fail
      * if the desired coercion is not possible. This must be one of the type codes of <code>DOMXPathResult</code>.
      * @param result of type DOMXPathResult* The result specifies a specific result object which
