@@ -50,11 +50,11 @@ BEGIN
             VALUE "FileDescription", "Shared Library for Xerces-C++ Version 3.0.0\0"
             VALUE "FileVersion", "3, 0, 0\0"
             VALUE "InternalName", "xerces-c_3_0.dll\0"
-            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2000 subject to licensing terms\0"
+            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2008 subject to licensing terms\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "xerces-c_3_0.dll\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Xerces-C Version 3.0.0\0"
+            VALUE "ProductName", "Xerces-C++ Version 3.0.0\0"
             VALUE "ProductVersion", "3, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
