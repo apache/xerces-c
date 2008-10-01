@@ -568,4 +568,15 @@
       <current status="accepted" date="2008-07-17"/>
     </instanceTest>
   </testGroup>
+  <testGroup name="XERCESC-1832">
+    <annotation>
+      <documentation>Namespace definitions attached to xs:extension/xs:restriction are not processed</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1832"/>
+    <schemaTest name="XERCESC-1832">
+      <schemaDocument xlink:href="./XERCESC-1832/schema11.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2008-10-01"/>
+    </schemaTest>
+  </testGroup>
 </testSet>

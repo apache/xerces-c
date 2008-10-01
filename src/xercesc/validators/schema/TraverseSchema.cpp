@@ -3657,6 +3657,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
         throw TraverseSchema::InvalidComplexTypeInfo;
     }
 
+    NamespaceScopeManager nsMgr2(simpleContent, fSchemaInfo, this);
     // -----------------------------------------------------------------------
     // The content should be either "restriction" or "extension"
     // -----------------------------------------------------------------------
@@ -4079,6 +4080,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
        throw TraverseSchema::InvalidComplexTypeInfo;
     }
 
+    NamespaceScopeManager nsMgr2(complexContent, fSchemaInfo, this);
     // -----------------------------------------------------------------------
     // The content should be either "restriction" or "extension"
     // -----------------------------------------------------------------------
