@@ -433,7 +433,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     {
         // clean up after ourselves:
         // clear the map used to detect duplicate attributes
-        fUndeclaredAttrRegistryNS->removeAll();
+        fUndeclaredAttrRegistry->removeAll();
     }
 
     // Since the element may have default values, call start tag now regardless if it is empty or not
@@ -603,7 +603,7 @@ void XSAXMLScanner::scanReset(const InputSource& src)
         // though their buckets will still be tied up
         resetUIntPool();
     }
-    fUndeclaredAttrRegistryNS->removeAll();
+    fUndeclaredAttrRegistry->removeAll();
 }
 
 

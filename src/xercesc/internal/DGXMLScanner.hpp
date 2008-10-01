@@ -25,6 +25,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/NameIdPool.hpp>
+#include <xercesc/util/Hash2KeysSetOf.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -176,7 +177,7 @@ private :
     //      mapping from XMLAttDef instances to the count of the last
     //      start tag where they were utilized.
     // fUndeclaredAttrRegistry
-    //      mapping of attr QNames to the count of the last start tag in which they occurred
+    //      mapping of attr QNames to detect duplicates
     //
     // -----------------------------------------------------------------------
     ValueVectorOf<XMLAttr*>*    fAttrNSList;
@@ -185,7 +186,7 @@ private :
     NameIdPool<DTDElementDecl>* fDTDElemNonDeclPool;
     unsigned int                fElemCount;
     RefHashTableOf<unsigned int, PtrHasher>* fAttDefRegistry;
-    RefHashTableOf<unsigned int>* fUndeclaredAttrRegistry;
+    Hash2KeysSetOf<StringHasher>*            fUndeclaredAttrRegistry;
 };
 
 inline const XMLCh* DGXMLScanner::getName() const

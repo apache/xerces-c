@@ -84,7 +84,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fElemNonDeclPool(0)
     , fElemCount(0)
     , fAttDefRegistry(0)
-    , fUndeclaredAttrRegistryNS(0)
+    , fUndeclaredAttrRegistry(0)
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
@@ -133,7 +133,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fElemNonDeclPool(0)
     , fElemCount(0)
     , fAttDefRegistry(0)
-    , fUndeclaredAttrRegistryNS(0)
+    , fUndeclaredAttrRegistry(0)
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
@@ -1588,7 +1588,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     {
         // clean up after ourselves:
         // clear the map used to detect duplicate attributes
-        fUndeclaredAttrRegistryNS->removeAll();
+        fUndeclaredAttrRegistry->removeAll();
     }
 
     // activate identity constraints
@@ -2029,10 +2029,7 @@ void SGXMLScanner::commonInit()
     (
         131, false, fMemoryManager
     );
-    fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
-    (
-        7, false, fMemoryManager
-    );
+    fUndeclaredAttrRegistry = new (fMemoryManager) Hash2KeysSetOf<StringHasher>(7, fMemoryManager);
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 
     if (fValidator)
@@ -2058,7 +2055,7 @@ void SGXMLScanner::cleanUp()
     delete fICHandler;
     delete fElemNonDeclPool;
     delete fAttDefRegistry;
-    delete fUndeclaredAttrRegistryNS;
+    delete fUndeclaredAttrRegistry;
     delete fPSVIAttrList;
     if (fPSVIElement)
         delete fPSVIElement;
@@ -2234,7 +2231,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         if (isNSAttr)
         {
-            if(fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
+            if(!fUndeclaredAttrRegistry->putIfNotPresent(suffPtr, uriId))
             {
                 emitError
                 (
@@ -2299,8 +2296,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
 
                 if (!otherXSI) {
-                    fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
-
                     normalizeAttRawValue
                     (
                         namePtr
@@ -2472,9 +2467,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             }
             else
             {
-                if(!fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
-                    fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
-                else
+                if(!fUndeclaredAttrRegistry->putIfNotPresent(suffPtr, uriId))
                 {
                     emitError
                     (
@@ -3304,7 +3297,7 @@ void SGXMLScanner::scanReset(const InputSource& src)
         // though their buckets will still be tied up
         resetUIntPool();
     }
-    fUndeclaredAttrRegistryNS->removeAll();
+    fUndeclaredAttrRegistry->removeAll();
 }
 
 

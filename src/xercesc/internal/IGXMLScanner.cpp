@@ -80,7 +80,6 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fElemCount(0)
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistry(0)
-    , fUndeclaredAttrRegistryNS(0)
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
@@ -132,7 +131,6 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fElemCount(0)
     , fAttDefRegistry(0)
     , fUndeclaredAttrRegistry(0)
-    , fUndeclaredAttrRegistryNS(0)
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
@@ -542,14 +540,7 @@ void IGXMLScanner::commonInit()
     (
         131, false, fMemoryManager
     );
-    fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
-    (
-        7, false, fMemoryManager
-    );
-    fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
-    (
-        7, false, fMemoryManager
-    );
+    fUndeclaredAttrRegistry = new (fMemoryManager) Hash2KeysSetOf<StringHasher>(7, fMemoryManager);
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 
     // use fDTDValidator as the default validator
@@ -571,7 +562,6 @@ void IGXMLScanner::cleanUp()
     delete fSchemaElemNonDeclPool;
     delete fAttDefRegistry;
     delete fUndeclaredAttrRegistry;
-    delete fUndeclaredAttrRegistryNS;
     delete fPSVIAttrList;
     delete fPSVIElement;
     delete fErrorStack;
@@ -1814,9 +1804,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                         , elemDecl->getFullName()
                     );
                 }
-                if(!fUndeclaredAttrRegistry->containsKey(namePtr))
-                    fUndeclaredAttrRegistry->put((void *)namePtr, 0);
-                else
+                if(!fUndeclaredAttrRegistry->putIfNotPresent(namePtr, 0))
                 {
                     emitError
                     (
@@ -2602,7 +2590,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         // clean up after ourselves:
         // clear the map used to detect duplicate attributes
         fUndeclaredAttrRegistry->removeAll();
-        fUndeclaredAttrRegistryNS->removeAll();
     }
 
     // activate identity constraints

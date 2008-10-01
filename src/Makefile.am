@@ -578,6 +578,8 @@ util_headers = \
 	xercesc/util/FlagJanitor.hpp \
 	xercesc/util/FlagJanitor.c \
 	xercesc/util/Hashers.hpp \
+	xercesc/util/Hash2KeysSetOf.hpp \
+	xercesc/util/Hash2KeysSetOf.c \
 	xercesc/util/HexBin.hpp \
 	xercesc/util/IllegalArgumentException.hpp \
 	xercesc/util/InvalidCastException.hpp \

@@ -26,6 +26,7 @@
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
+#include <xercesc/util/Hash2KeysSetOf.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
@@ -271,10 +272,7 @@ private :
     //      mapping from XMLAttDef instances to the count of the last
     //      start tag where they were utilized.
     // fUndeclaredAttrRegistry
-    //      mapping of attr QNames to the count of the last start tag in which they occurred
-    // fUndeclaredAttrRegistryNS
-    //      mapping of namespaceId/localName pairs to the count of the last
-    //      start tag in which they occurred.
+    //      set of attr QNames to detect duplicates
     //  fPSVIAttrList
     //      PSVI attribute list implementation that needs to be
     //      filled when a PSVIHandler is registered
@@ -298,8 +296,7 @@ private :
     RefHash3KeysIdPool<SchemaElementDecl>*  fSchemaElemNonDeclPool;
     unsigned int                            fElemCount;
     RefHashTableOf<unsigned int, PtrHasher>*fAttDefRegistry;
-    RefHashTableOf<unsigned int>*           fUndeclaredAttrRegistry;
-    RefHash2KeysTableOf<unsigned int>*      fUndeclaredAttrRegistryNS;
+    Hash2KeysSetOf<StringHasher>*           fUndeclaredAttrRegistry;
     PSVIAttributeList *                     fPSVIAttrList;
     XSModel*                                fModel;
     PSVIElement*                            fPSVIElement;

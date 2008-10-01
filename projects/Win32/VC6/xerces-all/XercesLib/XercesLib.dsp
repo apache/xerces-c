@@ -545,6 +545,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\Hash2KeysSetOf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\Hashers.hpp
 # End Source File
 # Begin Source File

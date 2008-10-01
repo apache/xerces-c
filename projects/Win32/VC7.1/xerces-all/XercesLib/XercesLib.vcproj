@@ -463,6 +463,10 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\Hash2KeysSetOf.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\Hashers.hpp">
 			</File>
 			<File

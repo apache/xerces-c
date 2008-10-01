@@ -197,7 +197,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         if (isNSAttr && fGrammarType == Grammar::SchemaGrammarType)
         {
-            if(fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
+            if(!fUndeclaredAttrRegistry->putIfNotPresent(suffPtr, uriId))
             {
                 emitError
                 (
@@ -262,8 +262,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
 
                 if (!otherXSI) {
-                    fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
-
                     normalizeAttRawValue
                     (
                         namePtr
@@ -305,20 +303,20 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                     if(getPSVIHandler())
                     {
-	                    psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
-	                    XSSimpleTypeDefinition *validatingType = (attrValidator)
+                        psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
+                        XSSimpleTypeDefinition *validatingType = (attrValidator)
                             ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
                             : 0;
                         // no attribute declarations for these...
-	                    psviAttr->reset(
-	                        fRootElemName
-	                        , PSVIItem::VALIDITY_NOTKNOWN
-	                        , PSVIItem::VALIDATION_NONE
-	                        , validatingType
-	                        , 0
-	                        , 0
+                        psviAttr->reset(
+                            fRootElemName
+                            , PSVIItem::VALIDITY_NOTKNOWN
+                            , PSVIItem::VALIDATION_NONE
+                            , validatingType
+                            , 0
+                            , 0
                             , false
-	                        , 0
+                            , 0
                             , attrValidator
                             );
                     }
@@ -453,9 +451,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 if(fGrammarType == Grammar::DTDGrammarType)
                 {
-                    if(!fUndeclaredAttrRegistry->containsKey(namePtr))
-                        fUndeclaredAttrRegistry->put((void *)namePtr, 0);
-                    else
+                    if(!fUndeclaredAttrRegistry->putIfNotPresent(namePtr, 0))
                     {
                         emitError
                         (
@@ -467,9 +463,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
                 else // schema grammar
                 {
-                    if(!fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
-                        fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
-                    else
+                    if(!fUndeclaredAttrRegistry->putIfNotPresent(suffPtr, uriId))
                     {
                         emitError
                         (
@@ -641,69 +635,69 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             // now fill in the PSVIAttributes entry for this attribute:
             if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
-	        {
-	            psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
-	            SchemaAttDef *actualAttDef = 0;
-	            if(attDef)
-	                actualAttDef = (SchemaAttDef *)attDef;
-	            else if (attDefForWildCard)
-	                actualAttDef = (SchemaAttDef *)attDefForWildCard;
+            {
+                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
+                SchemaAttDef *actualAttDef = 0;
+                if(attDef)
+                    actualAttDef = (SchemaAttDef *)attDef;
+                else if (attDefForWildCard)
+                    actualAttDef = (SchemaAttDef *)attDefForWildCard;
                 if(actualAttDef)
                 {
-	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
+                    XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
-	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
-	                if(attrValid != PSVIItem::VALIDITY_VALID)
-	                {
-	                    psviAttr->reset
+                    XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
+                    if(attrValid != PSVIItem::VALIDITY_VALID)
+                    {
+                        psviAttr->reset
                         (
-	                        fRootElemName
-	                        , attrValid
-	                        , attrAssessed
-	                        , validatingType
-	                        , 0
-	                        , actualAttDef->getValue()
-	                        , false
-	                        , attrDecl
+                            fRootElemName
+                            , attrValid
+                            , attrAssessed
+                            , validatingType
                             , 0
-	                    );
-	                }
-	                else
-	                {
-	                    XSSimpleTypeDefinition *memberType = 0;
-	                    if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
-	                        memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-	                    psviAttr->reset
+                            , actualAttDef->getValue()
+                            , false
+                            , attrDecl
+                            , 0
+                        );
+                    }
+                    else
+                    {
+                        XSSimpleTypeDefinition *memberType = 0;
+                        if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
+                            memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
+                        psviAttr->reset
                         (
-	                        fRootElemName
-	                        , attrValid
-	                        , attrAssessed
-	                        , validatingType
-	                        , memberType
-	                        , actualAttDef->getValue()
-	                        , false
-	                        , attrDecl
+                            fRootElemName
+                            , attrValid
+                            , attrAssessed
+                            , validatingType
+                            , memberType
+                            , actualAttDef->getValue()
+                            , false
+                            , attrDecl
                             , (memberType)?attrValidator:attrDataType
-	                    );
-	                }
+                        );
+                    }
                 }
                 else
                 {
-	                psviAttr->reset
+                    psviAttr->reset
                     (
-	                    fRootElemName
-	                    , attrValid
-	                    , attrAssessed
+                        fRootElemName
+                        , attrValid
+                        , attrAssessed
                         , 0
-	                    , 0
-	                    , 0
-	                    , false
-	                    , 0
                         , 0
-	                );
+                        , 0
+                        , false
+                        , 0
+                        , 0
+                    );
                 }
-	        }
-	    }
+            }
+        }
 
         //  Add this attribute to the attribute list that we use to pass them
         //  to the handler. We reuse its existing elements but expand it as
@@ -1390,7 +1384,6 @@ void IGXMLScanner::scanReset(const InputSource& src)
         resetUIntPool();
     }
     fUndeclaredAttrRegistry->removeAll();
-    fUndeclaredAttrRegistryNS->removeAll();
     fDTDElemNonDeclPool->removeAll();
 }
 

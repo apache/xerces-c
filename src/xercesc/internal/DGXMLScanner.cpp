@@ -1365,10 +1365,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                 {
                     // reset namePtr so it refers to newly-allocated memory
                     namePtr = (XMLCh *)curAtt->getQName();
-                    if (!fUndeclaredAttrRegistry->containsKey(namePtr)) {
-                        fUndeclaredAttrRegistry->put((void *)namePtr, 0);
-                    }
-                    else
+                    if (!fUndeclaredAttrRegistry->putIfNotPresent(namePtr, 0))
                     {
                         emitError(
                             XMLErrs::AttrAlreadyUsedInSTag
@@ -2256,10 +2253,7 @@ void DGXMLScanner::commonInit()
     (
         131, false, fMemoryManager
     );
-    fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
-    (
-        7, false, fMemoryManager
-    );
+    fUndeclaredAttrRegistry = new (fMemoryManager) Hash2KeysSetOf<StringHasher>(7, fMemoryManager);
 
     if (fValidator)
     {
