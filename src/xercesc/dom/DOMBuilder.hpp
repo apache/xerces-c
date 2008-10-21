@@ -287,7 +287,7 @@ public:
       *
       * <p><b>"Experimental - subject to change"</b></p>
       *
-      * See http://xerces.apache.org/xerces-c/program-dom.html#DOMBuilderFeatures for
+      * See http://xerces.apache.org/xerces-c/program-dom-2.html#DOMBuilderFeatures for
       * the list of supported features.
       *
       * @param name  The feature name.
@@ -483,7 +483,7 @@ public:
       * is deleted, callers need to copy and store the returned information
       * somewhere else; otherwise you may get unexpected result.  Since the returned
       * pointer is a generic void pointer, see
-      * http://xerces.apache.org/xerces-c/program-dom.html#DOMBuilderProperties to learn
+      * http://xerces.apache.org/xerces-c/program-dom-2.html#DOMBuilderProperties to learn
       * exactly what type of property value each property returns for replication.
       *
       * @param name The unique identifier (URI) of the property being set.
@@ -498,18 +498,18 @@ public:
 
     /**
       * Set the value of any property in a DOMBuilder.
-      * See http://xerces.apache.org/xerces-c/program-dom.html#DOMBuilderProperties for
+      * See http://xerces.apache.org/xerces-c/program-dom-2.html#DOMBuilderProperties for
       * the list of supported properties.
       *
       * It takes a void pointer as the property value.  Application is required to initialize this void
-      * pointer to a correct type.  See http://xerces.apache.org/xerces-c/program-dom.html#DOMBuilderProperties
+      * pointer to a correct type.  See http://xerces.apache.org/xerces-c/program-dom-2.html#DOMBuilderProperties
       * to learn exactly what type of property value each property expects for processing.
       * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
       * If the same property is set more than once, the last one takes effect.
       *
       * @param name The unique identifier (URI) of the property being set.
       * @param value The requested value for the property.
-      *            See http://xerces.apache.org/xerces-c/program-dom.html#DOMBuilderProperties to learn
+      *            See http://xerces.apache.org/xerces-c/program-dom-2.html#DOMBuilderProperties to learn
       *            exactly what type of property value each property expects for processing.
       *            Passing a void pointer that was initialized with a wrong type will lead
       *            to unexpected result.
