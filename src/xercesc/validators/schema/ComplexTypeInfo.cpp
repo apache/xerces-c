@@ -610,7 +610,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
             ContentSpecNode::Loop
             , retNode
             , 0
-            , false
+            , true
             , true
             , fMemoryManager
         );
