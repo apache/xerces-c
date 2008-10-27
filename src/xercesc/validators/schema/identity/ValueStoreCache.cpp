@@ -124,7 +124,7 @@ void ValueStoreCache::cleanUp() {
 
 void ValueStoreCache::init() {
 
-    fValueStores = new (fMemoryManager) RefVectorOf<ValueStore>(8, true, fMemoryManager);
+    fValueStores = new (fMemoryManager) RefVectorOf<ValueStore>(8, false, fMemoryManager);
     fGlobalICMap = new (fMemoryManager) RefHashTableOf<ValueStore, PtrHasher>
     (
         13
@@ -134,7 +134,7 @@ void ValueStoreCache::init() {
     fIC2ValueStoreMap = new (fMemoryManager) RefHash2KeysTableOf<ValueStore, PtrHasher>
     (
         13
-        , false
+        , true
         , fMemoryManager
     );
     fGlobalMapStack = new (fMemoryManager) RefStackOf<RefHashTableOf<ValueStore, PtrHasher> >(8, true, fMemoryManager);
@@ -149,9 +149,15 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
     for (XMLSize_t i=0; i<icCount; i++) {
 
         IdentityConstraint* ic = elemDecl->getIdentityConstraintAt(i);
-        ValueStore* valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
+        ValueStore* valueStore=fIC2ValueStoreMap->get(ic, initialDepth);
+        if(valueStore==0)
+        {
+            valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
+            fIC2ValueStoreMap->put(ic, initialDepth, valueStore);
+        }
+        else
+            valueStore->clear();
         fValueStores->addElement(valueStore);
-        fIC2ValueStoreMap->put(ic, initialDepth, valueStore);
     }
 }
 
@@ -167,10 +173,7 @@ void ValueStoreCache::transplant(IdentityConstraint* const ic, const int initial
     if (currVals) {
         currVals->append(newVals);
     } else {
-        ValueStore* valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
-        fValueStores->addElement(valueStore);
-        valueStore->append(newVals);
-        fGlobalICMap->put(ic, valueStore);
+        fGlobalICMap->put(ic, newVals);
     }
 }
 

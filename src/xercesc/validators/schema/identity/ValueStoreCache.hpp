@@ -28,7 +28,7 @@
   * Sketch of algorithm:
   *  - When a constraint is first encountered, its values are stored in the
   *    (local) fIC2ValueStoreMap;
-  *  - Once it is validated (i.e., wen it goes out of scope), its values are
+  *  - Once it is validated (i.e., when it goes out of scope), its values are
   *    merged into the fGlobalICMap;
   *  - As we encounter keyref's, we look at the global table to validate them.
   *  - Validation always occurs against the fGlobalIDConstraintMap (which

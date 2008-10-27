@@ -44,7 +44,6 @@ ValueStore::ValueStore(IdentityConstraint* const ic,
     , fIdentityConstraint(ic)
     , fValues(manager)
     , fValueTuples(0)
-    , fKeyValueStore(0)
     , fScanner(scanner)
     , fMemoryManager(manager)
 {
@@ -235,6 +234,13 @@ bool ValueStore::isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const 
     return false;
 }
 
+void ValueStore::clear()
+{
+    fValuesCount=0;
+    fValues.clear();
+    if(fValueTuples)
+        fValueTuples->removeAllElements();
+}
 
 // ---------------------------------------------------------------------------
 //  ValueStore: Document handling methods
@@ -245,9 +251,9 @@ void ValueStore::endDocumentFragment(ValueStoreCache* const valueStoreCache) {
 
         // verify references
         // get the key store corresponding (if it exists):
-        fKeyValueStore = valueStoreCache->getGlobalValueStoreFor(((IC_KeyRef*) fIdentityConstraint)->getKey());
+        ValueStore* keyValueStore = valueStoreCache->getGlobalValueStoreFor(((IC_KeyRef*) fIdentityConstraint)->getKey());
 
-        if (!fKeyValueStore) {
+        if (!keyValueStore) {
 
             if (fDoReportError) {
                 fScanner->getValidator()->emitError(XMLValid::IC_KeyRefOutOfScope,
@@ -263,7 +269,7 @@ void ValueStore::endDocumentFragment(ValueStoreCache* const valueStoreCache) {
 
             FieldValueMap* valueMap = fValueTuples->elementAt(i);
 
-            if (!fKeyValueStore->contains(valueMap) && fDoReportError) {
+            if (!keyValueStore->contains(valueMap) && fDoReportError) {
 
                 fScanner->getValidator()->emitError(XMLValid::IC_KeyNotFound,
                     fIdentityConstraint->getElementName());

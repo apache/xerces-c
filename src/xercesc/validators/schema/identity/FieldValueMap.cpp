@@ -109,6 +109,16 @@ bool FieldValueMap::indexOf(const IC_Field* const key, XMLSize_t& location) cons
     return false;
 }
 
+void FieldValueMap::clear()
+{
+    if(fFields)
+        fFields->removeAllElements();
+    if(fValidators)
+        fValidators->removeAllElements();
+    if(fValues)
+        fValues->removeAllElements();
+}
+
 XERCES_CPP_NAMESPACE_END
 
 /**

@@ -73,6 +73,7 @@ public:
     // -----------------------------------------------------------------------
     XMLSize_t size() const;
     bool indexOf(const IC_Field* const key, XMLSize_t& location) const;
+    void clear();
 
 private:
     // -----------------------------------------------------------------------

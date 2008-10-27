@@ -72,6 +72,7 @@ public:
                   DatatypeValidator* const dv,
                   const XMLCh* const value);
     bool contains(const FieldValueMap* const other);
+    void clear();
 
     // -----------------------------------------------------------------------
     //  Document handling methods
@@ -114,7 +115,6 @@ private:
     IdentityConstraint*         fIdentityConstraint;
     FieldValueMap               fValues;
     RefVectorOf<FieldValueMap>* fValueTuples;
-    ValueStore*                 fKeyValueStore;
     XMLScanner*                 fScanner; // for error reporting - REVISIT
     MemoryManager*              fMemoryManager;
 };
