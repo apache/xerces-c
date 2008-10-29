@@ -1309,6 +1309,7 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode
             )
             , curIndex
             , true
+            , fLeafCount
             , fMemoryManager
         );
         fLeafListType[curIndex] = curType;
