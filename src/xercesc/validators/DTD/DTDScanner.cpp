@@ -2445,7 +2445,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
     //  If we have a doc type handler and we are not being called recursively
     //  to handle an include section, tell it the ext subset starts
     //
-    if (fDocTypeHandler && !inIncludeSect)
+    if (fDocTypeHandler && isDTD && !inIncludeSect)
         fDocTypeHandler->startExtSubset();
 
     //
@@ -2652,7 +2652,7 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
     }
 
     // If we have a doc type handler, tell it the ext subset ends
-    if (fDocTypeHandler && isDTD)
+    if (fDocTypeHandler && isDTD && !inIncludeSect)
         fDocTypeHandler->endExtSubset();
 }
 
