@@ -1057,7 +1057,7 @@ bool ReaderMgr::popReader()
     //  If there was a previous entity, and either the fThrowEOE flag is set
     //  or reader was marked as such, then throw an end of entity.
     //
-    if (prevEntity && fThrowEOE || prevReaderThrowAtEnd)
+    if (prevEntity && (fThrowEOE || prevReaderThrowAtEnd))
         throw EndOfEntityException(prevEntity, readerNum);
 
     while (true)
