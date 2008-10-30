@@ -2942,12 +2942,12 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
         return 0;
     }
 
-    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0)
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
-
     if (fNotationRegistry->containsKey(name, fTargetNSURI)) {
         return name;
     }
+
+    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0)
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
 
     const XMLCh* publicId = getElementAttValue(elem, SchemaSymbols::fgATT_PUBLIC);
     const XMLCh* systemId = getElementAttValue(elem, SchemaSymbols::fgATT_SYSTEM);
@@ -2967,8 +2967,6 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
     decl->setNameSpaceId(fTargetNSURI);
     fSchemaGrammar->putNotationDecl(decl);
 
-    //we don't really care if something inside <notation> is wrong..
-    checkContent(elem, XUtil::getFirstChildElement(elem), true);
     if (fAnnotation)
         fSchemaGrammar->putAnnotation(decl, fAnnotation);
     else if (fScanner->getGenerateSyntheticAnnotations() && fNonXSAttList->size())
