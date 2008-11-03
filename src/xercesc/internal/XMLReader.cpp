@@ -1270,13 +1270,13 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     //  are already in one of the endian versions of those encodings,
     //  then just keep it and go on. Otherwise, its not valid.
     //
-    if (!XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString)
-    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString2)
-    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString3)
-    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString4)
-    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString5)
-    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString6)
-    ||  !XMLString::compareString(inputEncoding, XMLUni::fgUTF16EncodingString7))
+    if (XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString)
+    ||  XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString2)
+    ||  XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString3)
+    ||  XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString4)
+    ||  XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString5)
+    ||  XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString6)
+    ||  XMLString::equals(inputEncoding, XMLUni::fgUTF16EncodingString7))
     {
         fMemoryManager->deallocate(inputEncoding);
 
@@ -1300,10 +1300,11 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             fEncodingStr = XMLString::replicate(XMLUni::fgUTF16BEncodingString, fMemoryManager);
         }
     }
-    else if (!XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString)
-         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString2)
-         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString3)
-         ||  !XMLString::compareString(inputEncoding, XMLUni::fgUCS4EncodingString4))
+    else if (XMLString::equals(inputEncoding, XMLUni::fgUCS4EncodingString)
+         ||  XMLString::equals(inputEncoding, XMLUni::fgUCS4EncodingString2)
+         ||  XMLString::equals(inputEncoding, XMLUni::fgUCS4EncodingString3)
+         ||  XMLString::equals(inputEncoding, XMLUni::fgUCS4EncodingString4)
+         ||  XMLString::equals(inputEncoding, XMLUni::fgUCS4EncodingString5))
     {
         fMemoryManager->deallocate(inputEncoding);
 

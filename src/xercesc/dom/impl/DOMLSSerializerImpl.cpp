@@ -1683,7 +1683,8 @@ void DOMLSSerializerImpl::processBOM()
     else if ((XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString)  == 0) ||
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString2) == 0) ||
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString3) == 0) ||
-             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString4) == 0)  )
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString4) == 0) ||
+             (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString5) == 0)  )
     {
 		if (XMLPlatformUtils::fgXMLChBigEndian)
 	        fFormatter->writeBOM(BOM_ucs4be, 4);
