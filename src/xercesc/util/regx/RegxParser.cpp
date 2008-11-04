@@ -502,7 +502,7 @@ Token* RegxParser::parseAtom() {
     case REGX_T_DOLLAR:
         return processDollar();
     case REGX_T_LBRACKET:
-        return parseCharacterClass();
+        return parseCharacterClass(true);
     case REGX_T_BACKSOLIDUS:
         switch(fCharData) {
 
@@ -598,29 +598,21 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
     return  fTokenFactory->getRange(rangeName, !(ch == chLatin_p));
 }
 
-RangeToken* RegxParser::parseCharacterClass() {
+RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 
     setParseContext(regexParserStateInBrackets);
     processNext();
 
-    RangeToken* base = 0;
     RangeToken* tok = 0;
     bool isNRange = false;
 
     if (getState() == REGX_T_CHAR && getCharData() == chCaret) {
-
         isNRange = true;
         processNext();
-
-        base = fTokenFactory->createRange();
-        base->addRange(0, Token::UTF16_MAX);
-        tok = fTokenFactory->createRange();
     }
-    else {
-        tok= fTokenFactory->createRange();
-    }
+    tok = fTokenFactory->createRange();
 
-    int type;
+    parserState type;
     bool firstLoop = true;
     bool wasDecoded;
 
@@ -629,15 +621,8 @@ RangeToken* RegxParser::parseCharacterClass() {
         wasDecoded = false;
 
         // single range | from-to-range | subtraction
-        if (type == REGX_T_CHAR && getCharData() == chCloseSquare && !firstLoop) {
-
-            if (isNRange) {
-
-                base->subtractRanges(tok);
-                tok = base;
-            }
+        if (type == REGX_T_CHAR && getCharData() == chCloseSquare && !firstLoop)
             break;
-        }
 
         XMLInt32 ch = getCharData();
         bool     end = false;
@@ -682,13 +667,12 @@ RangeToken* RegxParser::parseCharacterClass() {
         } // end if REGX_T_BACKSOLIDUS
         else if (type == REGX_T_XMLSCHEMA_CC_SUBTRACTION && !firstLoop) {
 
-            if (isNRange) {
-
-                base->subtractRanges(tok);
-                tok = base;
+            if (isNRange)
+            {
+                tok = RangeToken::complementRanges(tok, fTokenFactory, fMemoryManager);
+                isNRange=false;
             }
-
-            RangeToken* rangeTok = parseCharacterClass();
+            RangeToken* rangeTok = parseCharacterClass(false);
             tok->subtractRanges(rangeTok);
 
             if (getState() != REGX_T_CHAR || getCharData() != chCloseSquare) {
@@ -706,7 +690,7 @@ RangeToken* RegxParser::parseCharacterClass() {
                     || ch == chCloseSquare
                     || (ch == chDash && getCharData() == chCloseSquare && firstLoop))) {
                 // if regex = [-] then invalid...
-                // '[', ']', '-' not allowed and should be esacaped
+                // '[', ']', '-' not allowed and should be escaped
                 XMLCh chStr[] = { ch, chNull };
                 ThrowXMLwithMemMgr2(ParseException,XMLExcepts::Parser_CC6, chStr, chStr, getMemoryManager());
             }
@@ -743,7 +727,7 @@ RangeToken* RegxParser::parseCharacterClass() {
                         if (rangeEnd == chOpenSquare
                             || rangeEnd == chCloseSquare
                             || rangeEnd == chDash)
-                            // '[', ']', '-' not allowed and should be esacaped
+                            // '[', ']', '-' not allowed and should be escaped
                             ThrowXMLwithMemMgr2(ParseException, XMLExcepts::Parser_CC6, rangeEndStr, rangeEndStr, getMemoryManager());
                     }
                     else if (type == REGX_T_BACKSOLIDUS) {
@@ -766,6 +750,14 @@ RangeToken* RegxParser::parseCharacterClass() {
 
     if (getState() == REGX_T_EOF)
         ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_CC2, getMemoryManager());
+
+    if (isNRange)
+    {
+        if(useNRange)
+            tok->setTokenType(Token::T_NRANGE);
+        else
+            tok = RangeToken::complementRanges(tok, fTokenFactory, fMemoryManager);
+    }
 
     tok->sortRanges();
     tok->compactRanges();

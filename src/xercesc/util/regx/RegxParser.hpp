@@ -122,7 +122,7 @@ protected:
     virtual Token*      processQuestion(Token* const tok);
     virtual Token*      processParen();
 
-    RangeToken*         parseCharacterClass();
+    RangeToken*         parseCharacterClass(const bool useNRange);
     RangeToken*         processBacksolidus_pP(const XMLInt32 ch);
 
     // -----------------------------------------------------------------------
