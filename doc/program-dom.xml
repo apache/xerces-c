@@ -855,11 +855,11 @@
         DOMLSParser* parser = ((DOMImplementationLS*)impl)->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
 
         // optionally you can set some features on this builder
-        if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMValidation, true))
-            parser->getDomConfig()->setParameter(XMLUni::fgDOMValidation, true);
+        if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMValidate, true))
+            parser->getDomConfig()->setParameter(XMLUni::fgDOMValidate, true);
         if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMNamespaces, true))
             parser->getDomConfig()->setParameter(XMLUni::fgDOMNamespaces, true);
-        if (parser->getDomConfig()->canSetParameter((XMLUni::fgDOMDatatypeNormalization, true))
+        if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMDatatypeNormalization, true))
             parser->getDomConfig()->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
 
 
@@ -976,7 +976,7 @@
                 <tr><th><em>true:</em></th><td> Keep CDATASection nodes in the document. </td></tr>
                 <tr><th><em>false:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCDATASection </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCDATASections </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to false is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
@@ -1171,7 +1171,7 @@
                 <tr><th><em>true:</em></th><td> Report all validation errors. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMValidation </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMValidate </td></tr>
                 <tr><th><em>note:</em></th><td> If this feature is set to true, the document must
                 specify a grammar.  If this feature is set to false and document specifies a grammar,
                 that grammar might be parsed but no validation of the document contents will be
@@ -1197,7 +1197,7 @@
                 whitespace" in the DOM tree. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not include ignorable whitespace in the DOM tree. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWhitespaceInElementContent </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMElementContentWhitespace </td></tr>
                 <tr><th><em>note:</em></th><td> The only way that the parser can determine if text is
                 ignorable is by reading the associated grammar and having a content model for the
                 document. When ignorable whitespace text nodes are included in the DOM tree,
