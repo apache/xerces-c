@@ -152,7 +152,6 @@ void GeneralAttributeCheck::initialize()
 // ---------------------------------------------------------------------------
 GeneralAttributeCheck::GeneralAttributeCheck(MemoryManager* const manager)
     : fMemoryManager(manager)
-    , fValidationContext(0)
     , fIDValidator(manager)
 {
 }
@@ -302,7 +301,7 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
     bool isInvalid = false;
     DatatypeValidator* dv = 0;
 
-    fValidationContext = schema->fSchemaInfo->getValidationContext();
+    ValidationContext* fValidationContext = schema->fSchemaInfo->getValidationContext();
     switch (dvIndex) {
     case DV_Form:
         if (!XMLString::equals(attValue, SchemaSymbols::fgATTVAL_QUALIFIED)

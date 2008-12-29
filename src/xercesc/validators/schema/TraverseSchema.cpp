@@ -382,8 +382,6 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
         fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
     }
 
-    fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
-
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                           fSchemaInfo?fSchemaInfo->getNamespaceScope():NULL,
                                           schemaURL,
@@ -2059,7 +2057,7 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
                 else {
                     try {
                         anyURIDV->validate(tokenElem
-                                         , fSchemaGrammar->getValidationContext()
+                                         , fSchemaInfo->getValidationContext()
                                          , fMemoryManager);
                     }
                     catch(const XMLException& excep) {
@@ -2516,7 +2514,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         }
         try {
             dv->validate(valueToCheck
-                      , fSchemaGrammar->getValidationContext()
+                      , fSchemaInfo->getValidationContext()
                       , fMemoryManager);
         }
         catch (const XMLException& excep) {
@@ -4247,7 +4245,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
 
                 try {
                     anyURIDV->validate(token
-                                     , fSchemaGrammar->getValidationContext()
+                                     , fSchemaInfo->getValidationContext()
                                      , fMemoryManager);
                 }
                 catch(const XMLException& excep) {
@@ -5147,7 +5145,7 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
 const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
                                                 const XMLCh* const prefix) {
 
-    int nameSpaceIndex = fSchemaInfo->getNamespaceScope()->getNamespaceForPrefix(prefix);
+    unsigned int nameSpaceIndex = fSchemaInfo->getNamespaceScope()->getNamespaceForPrefix(prefix);
     const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
 
     if ((!uriStr || !*uriStr) && (prefix && *prefix)) {
@@ -6026,7 +6024,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                     else {
                         try {
                             attDV->validate(valueConstraint
-                                          , fSchemaGrammar->getValidationContext()
+                                          , fSchemaInfo->getValidationContext()
                                           , fMemoryManager);
                         }
                         catch(const XMLException& excep) {
@@ -6826,7 +6824,7 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
         SchemaAttDefList& baseAttList = (SchemaAttDefList&)
                                         baseTypeInfo->getAttDefList();
 
-        for (unsigned int i=0; i<baseAttList.getAttDefCount(); i++) {
+        for (XMLSize_t i=0; i<baseAttList.getAttDefCount(); i++) {
 
             SchemaAttDef& attDef = (SchemaAttDef&) baseAttList.getAttDef(i);
             QName* attName = attDef.getAttName();
@@ -6962,7 +6960,6 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         fAttributeDeclRegistry = fSchemaGrammar->getAttributeDeclRegistry();
         fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
         fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
-        fAttributeCheck.setValidationContext(fSchemaGrammar->getValidationContext());
 
     }
 
@@ -7892,7 +7889,7 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
     SchemaAttDefList& childAttList = (SchemaAttDefList&) childTypeInfo->getAttDefList();
     const SchemaAttDef* baseAttWildCard = baseTypeInfo->getAttWildCard();
 
-    for (unsigned int i=0; i<childAttList.getAttDefCount(); i++) {
+    for (XMLSize_t i=0; i<childAttList.getAttDefCount(); i++) {
 
         SchemaAttDef& childAttDef = (SchemaAttDef&) childAttList.getAttDef(i);
         QName* childAttName = childAttDef.getAttName();

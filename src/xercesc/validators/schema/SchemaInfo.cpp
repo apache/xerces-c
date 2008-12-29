@@ -80,6 +80,8 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     fNamespaceScope = new (fMemoryManager) NamespaceScope(currNamespaceScope, fMemoryManager);
     fCurrentSchemaURL = XMLString::replicate(schemaURL, fMemoryManager);
 	fTargetNSURIString = XMLString::replicate(targetNSURIString, fMemoryManager);
+
+    fValidationContext->setNamespaceScope(fNamespaceScope);
 }
 
 

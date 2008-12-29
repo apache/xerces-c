@@ -67,11 +67,10 @@ NamespaceScope::NamespaceScope(const NamespaceScope* const initialize, MemoryMan
         reset(initialize->fEmptyNamespaceId);
 
         // copy the existing bindings
-        int startAt = initialize->fStackTop-1;
-        for (int index = startAt; index >= 0; index--)
+        for (unsigned int index = initialize->fStackTop; index > 0; index--)
         {
             // Get a convenience pointer to the current element
-            StackElem* curRow = initialize->fStack[index];
+            StackElem* curRow = initialize->fStack[index-1];
 
             // If no prefixes mapped at this level, then go the next one
             if (!curRow->fMapCount)
@@ -208,11 +207,10 @@ NamespaceScope::getNamespaceForPrefix(const XMLCh* const prefixToMap) const {
     //  Start at the stack top and work backwards until we come to some
     //  element that mapped this prefix.
     //
-    int startAt = fStackTop-1;
-    for (int index = startAt; index >= 0; index--)
+    for (unsigned int index = fStackTop; index > 0; index--)
     {
         // Get a convenience pointer to the current element
-        StackElem* curRow = fStack[index];
+        StackElem* curRow = fStack[index-1];
 
         // If no prefixes mapped at this level, then go the next one
         if (!curRow->fMapCount)

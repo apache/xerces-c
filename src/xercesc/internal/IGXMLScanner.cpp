@@ -1957,7 +1957,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     {
         // N.B.:  this assumes DTD validation.
         XMLAttDefList& attDefList = elemDecl->getAttDefList();
-        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
+        for(XMLSize_t i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
             const XMLAttDef& curDef = attDefList.getAttDef(i);
@@ -2221,7 +2221,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if (elemDecl) {
                 if (elemDecl->hasAttDefs()) {
                     XMLAttDefList& attDefList = elemDecl->getAttDefList();
-                    for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
+                    for(XMLSize_t i=0; i<attDefList.getAttDefCount(); i++)
                     {
                         // Get the current att def, for convenience and its def type
                         const XMLAttDef& curDef = attDefList.getAttDef(i);

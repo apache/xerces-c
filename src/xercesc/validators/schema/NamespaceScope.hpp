@@ -100,6 +100,7 @@ public :
     // -----------------------------------------------------------------------
     bool isEmpty() const;
     void reset(const unsigned int emptyId);
+    unsigned int getEmptyNamespaceId() const;
 
 
 private :
@@ -151,6 +152,12 @@ inline bool NamespaceScope::isEmpty() const
 {
     return (fStackTop == 0);
 }
+
+inline unsigned int NamespaceScope::getEmptyNamespaceId() const
+{
+    return fEmptyNamespaceId;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -188,12 +188,6 @@ public:
     unsigned short getFacetId(const XMLCh* const facetName, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-
-    inline void setValidationContext(ValidationContext* const);
-
-    // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
     void checkAttributes(const DOMElement* const elem,
@@ -236,7 +230,6 @@ private:
     static unsigned short                    fgElemAttTable[E_Count][A_Count];
     static const XMLCh*                      fAttNames[A_Count];
     MemoryManager*                           fMemoryManager;
-    ValidationContext*                       fValidationContext;
     IDDatatypeValidator                      fIDValidator;
 
 private:
@@ -253,14 +246,6 @@ inline unsigned short
 GeneralAttributeCheck::getFacetId(const XMLCh* const facetName, MemoryManager* const manager) {
 
     return fFacetsMap->get(facetName, manager);
-}
-
-// ---------------------------------------------------------------------------
-//  GeneralAttributeCheck: Setter methods
-// ---------------------------------------------------------------------------
-inline void GeneralAttributeCheck::setValidationContext(ValidationContext* const newValidationContext)
-{
-    fValidationContext = newValidationContext;
 }
 
 XERCES_CPP_NAMESPACE_END

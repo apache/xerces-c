@@ -27,6 +27,7 @@
 #include <xercesc/framework/XMLRefInfo.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
+#include <xercesc/validators/schema/NamespaceScope.hpp>
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
@@ -50,6 +51,7 @@ ValidationContextImpl::ValidationContextImpl(MemoryManager* const manager)
 ,fValidatingMemberType(0)
 ,fElemStack(0)
 ,fScanner(0)
+,fNamespaceScope(0)
 {
     fIdRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(109, fMemoryManager);
 }
@@ -188,17 +190,23 @@ bool ValidationContextImpl::isPrefixUnknown(XMLCh* prefix) {
         return true;                
     }            
     else if (!XMLString::equals(prefix, XMLUni::fgXMLString)) {
-        fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);                
+        if(fElemStack && !fElemStack->isEmpty())
+            fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);
+        else if(fNamespaceScope)
+            unknown = (fNamespaceScope->getNamespaceForPrefix(prefix)==fNamespaceScope->getEmptyNamespaceId());
     }                
     return unknown;
 }
 
 const XMLCh* ValidationContextImpl::getURIForPrefix(XMLCh* prefix) { 
     bool unknown = false;
-    unsigned int uriId = fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);
-    if (!unknown) {
+    unsigned int uriId;
+    if(fElemStack)
+        uriId = fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);
+    else if(fNamespaceScope)
+        unknown = ((uriId = fNamespaceScope->getNamespaceForPrefix(prefix))==fNamespaceScope->getEmptyNamespaceId());
+    if (!unknown)
         return fScanner->getURIText(uriId);
-    }
     
     return XMLUni::fgZeroLenString; 
 }

@@ -478,7 +478,7 @@ void DTDValidator::preContentValidation(bool
         bool seenNOTATION = false;
         bool elemEmpty = (curElem.getModelType() == DTDElementDecl::Empty);
 
-        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
+        for(XMLSize_t i=0; i<attDefList.getAttDefCount(); i++)
         {
             const XMLAttDef& curAttDef = attDefList.getAttDef(i);
 

@@ -810,7 +810,7 @@ void SchemaValidator::preContentValidation(bool,
                 XMLAttDefList& attDefList = curElem.getAttDefList();
                 bool seenId = false;
 
-                for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
+                for(XMLSize_t i=0; i<attDefList.getAttDefCount(); i++)
                 {
                     const XMLAttDef& curAttDef = attDefList.getAttDef(i);
 

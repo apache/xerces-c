@@ -33,6 +33,7 @@ class XMLRefInfo;
 class DTDEntityDecl;
 class DatatypeValidator;
 class ElemStack;
+class NamespaceScope;
 class XMLScanner;
 
 class XMLPARSER_EXPORT ValidationContext : public XMemory
@@ -97,6 +98,7 @@ public :
     virtual void setElemStack(ElemStack* /* elemStack */) {};
     virtual const XMLCh* getURIForPrefix(XMLCh* /*prefix */) { return 0; };
     virtual void setScanner(XMLScanner* /* scanner */) { };
+    virtual void setNamespaceScope(NamespaceScope* /* nsStack */) { };
 
     //@}
 

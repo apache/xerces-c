@@ -2741,7 +2741,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
         XMLAttDefList& attDefList = getAttDefList(currType, elemDecl);
 
-        for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
+        for(XMLSize_t i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
             XMLAttDef *curDef = &attDefList.getAttDef(i);

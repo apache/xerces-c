@@ -170,6 +170,7 @@ public:
     DatatypeValidatorFactory* getDatatypeRegistry();
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
 
+    // @deprecated
     ValidationContext*          getValidationContext() const;
 
     // -----------------------------------------------------------------------
@@ -317,6 +318,7 @@ private:
     RefHashTableOf<XercesGroupInfo>*         fGroupInfoRegistry;
     RefHashTableOf<XercesAttGroupInfo>*      fAttGroupInfoRegistry;
     RefHash2KeysTableOf<ElemVector>*         fValidSubstitutionGroups;
+    // @deprecated
     ValidationContext*                       fValidationContext;
     MemoryManager*                           fMemoryManager;
     XMLSchemaDescription*                    fGramDesc;
@@ -376,6 +378,7 @@ SchemaGrammar::getValidSubstitutionGroups() const {
     return fValidSubstitutionGroups;
 }
 
+// @deprecated
 inline ValidationContext* SchemaGrammar::getValidationContext() const {
 
     return fValidationContext;
