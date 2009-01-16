@@ -206,6 +206,10 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             XMLCh *newURLString = findHeader("Location");
             ArrayJanitor<XMLCh> janNewURLString(newURLString, memoryManager);
 
+            if(newURLString == 0 || *newURLString == 0) {
+                ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, url.getURLText(), memoryManager);
+            }
+
             XMLURL newURL(memoryManager);
             newURL.setURL(url, newURLString);
             if(newURL.getProtocol() != XMLURL::HTTP) {
