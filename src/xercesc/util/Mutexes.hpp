@@ -60,8 +60,11 @@ private :
     //      The raw mutex handle. Its just a void pointer so we do not
     //      pass judgement on its value at all. We just pass it into the
     //      platform utilities methods which knows what's really in it.
+    // fManager
+    //      The MemoryManager that this XMLMutex was initialized with.
     // -----------------------------------------------------------------------
-    void*   fHandle;
+    void*          fHandle;
+    MemoryManager* fManager;
 
 
     // -----------------------------------------------------------------------

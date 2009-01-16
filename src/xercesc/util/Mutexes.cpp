@@ -35,7 +35,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XMLMutex::XMLMutex(MemoryManager* const manager) :
 
-    fHandle(0)
+    fHandle(0),
+    fManager(manager)
 {
     // Ask the per-platform driver to make us a mutex
     fHandle = XMLPlatformUtils::makeMutex(manager);
@@ -46,7 +47,7 @@ XMLMutex::~XMLMutex()
 {
     if (fHandle)
     {
-        XMLPlatformUtils::closeMutex(fHandle);
+        XMLPlatformUtils::closeMutex(fHandle, fManager);
         fHandle = 0;
     }
 }
