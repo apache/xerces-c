@@ -104,7 +104,7 @@ protected :
     static bool IsMacOSUnicodeConverterSupported(void);
 	
 	// Copy from a C string to a Str255
-	static void MacOSUnicodeConverter::CopyCStringToPascal(const char* c, Str255 pas);
+	static void CopyCStringToPascal(const char* c, Str255 pas);
 
 private :
 	friend class XMLPlatformUtils;
