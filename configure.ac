@@ -45,6 +45,14 @@ AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([foreign subdir-objects dist-bzip2 tar-ustar])
 AM_MAINTAINER_MODE
 
+# Check if rpath is disabled
+AC_MSG_CHECKING(whether to use rpath)
+AC_ARG_ENABLE(rpath,
+	[AC_HELP_STRING([--disable-rpath],
+			[Patches libtool to not use rpath in the libraries produced.])],
+	[xerces_cv_rpath="$enable_rpath"], [xerces_cv_rpath="yes"])
+AC_MSG_RESULT($xerces_cv_rpath)
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -64,6 +72,15 @@ AM_PROG_CC_C_O
 
 AS_IF([test x$AR = xfalse],
 	AC_MSG_ERROR([Cannot find a valid 'ar' tool]))
+
+# Patch libtool to not use rpath if requested.
+if test "$xerces_cv_rpath" = "no"; then
+ AC_MSG_RESULT([Patching libtool to not use rpath.])
+ sed < libtool > libtool-2 \
+   's/^hardcode_libdir_flag_spec.*$'/'hardcode_libdir_flag_spec=" -D__LIBTOOL_NO_RPATH__ "/'
+ mv libtool-2 libtool
+ chmod 755 libtool
+fi
 
 # Export information on whether we are building static/shared libraries.
 # enable_shared and enable_static are defined by AC_PROG_LIBTOOL.
