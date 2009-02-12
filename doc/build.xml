@@ -162,7 +162,8 @@
          <p>Once the configuration part is complete you can run
             <code>make</code> (or <code>gmake</code>). Running
             <code>make</code> from the <code>&XercesC3SrcInstallDir;</code>
-            directory builds &XercesCName; library and examples. If
+            directory builds &XercesCName; library and examples. The
+            library is placed into the <code>src/.libs</code> directory. If
             you like to build only the library, you can run make from
             <code>&XercesC3SrcInstallDir;/src</code>.</p>
 
@@ -171,6 +172,11 @@
             from the <code>&XercesC3SrcInstallDir;</code>
             directory. The automated test suite required
             Perl and the <code>diff</code> command.</p>
+
+         <p>Finally, to install the library and examples you can run
+            <code>make install</code> (or <code>gmake install</code>).
+            To change the installation directory, use the <code>--prefix</code>
+            <code>configure</code> option.</p>
 
          <p>Some platforms and configurations require extra
             <code>configure</code> and <code>make</code> options
@@ -195,7 +201,7 @@
         <tr>
           <td>Solaris SPARC</td>
           <td>Sun CC</td>
-          <td><code>/configure CXX=CC CC=cc</code></td>
+          <td><code>./configure CXX=CC CC=cc</code></td>
         </tr>
         <tr>
           <td>Solaris SPARCv9</td>
@@ -228,7 +234,7 @@
         <tr>
           <td>Mac OS X x86-64</td>
           <td>GCC</td>
-          <td><code>/configure CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64" </code></td>
+          <td><code>./configure CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64" </code></td>
         </tr>
         <tr>
           <td>Mac OS X PowerPC-64</td>
@@ -255,7 +261,7 @@
 
         <note>
          Note that different UNIX platforms use different system
-         environment variable for finding libraries. On Linux
+         environment variable for finding shared libraries. On Linux
          and Solaris, the environment variable name is
          <code>LD_LIBRARY_PATH</code>, on AIX it is
          <code>LIBPATH</code>, on Mac OS X it is
@@ -265,9 +271,10 @@
 
 	<note>
           Note that Cygwin and MinGW are different from the UNIX platforms
-          in the way they find libraries at run time. While UNIX platforms
-          may use the <code>LD_LIBRARY_PATH</code> environment variable,
-          Cygwin and MinGW use the <code>PATH</code> environment variable.
+          in the way they find shared libraries at run time. While UNIX
+          platforms may use the <code>LD_LIBRARY_PATH</code> environment
+          variable, Cygwin and MinGW use the <code>PATH</code> environment
+          variable.
         </note>
     </s3>
 
