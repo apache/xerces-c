@@ -56,6 +56,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fNotationBuf(0)
     , fDatatypeBuffer(1023, manager)
     , fTrailing(false)
+    , fSeenNonWhiteSpace(false)
     , fSeenId(false)
     , fTypeStack(0)
     , fMostRecentAttrValidator(0)
@@ -308,6 +309,7 @@ bool SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     // since it may need to query its contents after this method completes
     fNil = false;
     fTrailing=false;
+    fSeenNonWhiteSpace = false;
     fCurrentDatatypeValidator = 0;
 
     // Went ok, so return success
@@ -337,6 +339,7 @@ void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)
 void SchemaValidator::reset()
 {
     fTrailing = false;
+    fSeenNonWhiteSpace = false;
     fSeenId = false;
 	fTypeStack->removeAllElements();
     delete fXsiType;
@@ -523,8 +526,7 @@ void SchemaValidator::validateAttrValue (const XMLAttDef*      attDef
         fMostRecentAttrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYSIMPLETYPE);
     }
     fTrailing = false;
-
-
+    fSeenNonWhiteSpace = false;
 }
 
 void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
@@ -726,6 +728,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
     fDatatypeBuffer.reset();
     fTrailing = false;
+    fSeenNonWhiteSpace = false;
     fSeenId = false;
 }
 
@@ -967,12 +970,6 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     const XMLCh* srcPtr = value;
     XMLReader* fCurReader = getReaderMgr()->getCurrentReader();
 
-    if ((wsFacet==DatatypeValidator::COLLAPSE) && fTrailing) {
-        nextCh = *srcPtr;
-        if (!fCurReader->isWhitespace(nextCh))
-        toFill.append(chSpace);
-    }
-
     if (wsFacet == DatatypeValidator::REPLACE)
     {
         while (*srcPtr)
@@ -992,8 +989,7 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
             , InContent
         };
 
-        bool firstNonWS = false;
-        States curState = InContent;
+        States curState = fTrailing ? InWhitespace : InContent;
         while (*srcPtr)
         {
             nextCh = *srcPtr++;
@@ -1004,25 +1000,26 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
                     curState = InWhitespace;
                     continue;
                 }
-                firstNonWS = true;
+                fSeenNonWhiteSpace = true;
             }
             else if (curState == InWhitespace)
             {
                 if (fCurReader->isWhitespace(nextCh))
                     continue;
-                if (firstNonWS)
+                if (fSeenNonWhiteSpace)
                     toFill.append(chSpace);
                 curState = InContent;
-                firstNonWS = true;
+                fSeenNonWhiteSpace = true;
             }
             // Add this char to the target buffer
             toFill.append(nextCh);
         }
+
+        if (fCurReader->isWhitespace(*(srcPtr-1)))
+          fTrailing = true;
+        else
+          fTrailing = false;
     }
-    if (fCurReader->isWhitespace(*(srcPtr-1)))
-        fTrailing = true;
-    else
-        fTrailing = false;
 }
 
 
