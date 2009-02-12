@@ -75,6 +75,12 @@ unzip &XercesC3InstallDir;-x86-windows-vc-8.0.zip
            &lt;full-path-to-&XercesC3InstallDir;-{arch}-windows-{compiler}>\bin
            to the PATH variable.</p>
 
+        <p>Additionally, if you don't have the corresponding version of
+           Microsoft Visual C++ installed, you may need to download and
+           install the C/C++ runtime libraries from the Microsoft website.
+           For example, for Visual Studio 2008 (9.0) the package is called
+           "Microsoft Visual C++ 2008 Redistributable Package".</p>
+
         <p>The binary distribution contains the pre-built parser libraries
            and sample executables. Please refer to the
            <jump href="samples-&XercesC3Series;.html">Samples</jump> for how to run the
