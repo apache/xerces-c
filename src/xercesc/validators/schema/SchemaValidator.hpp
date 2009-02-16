@@ -295,8 +295,13 @@ private:
     DatatypeValidator*              fCurrentDatatypeValidator;
     XMLBuffer*                      fNotationBuf;
     XMLBuffer                       fDatatypeBuffer;
-    bool                            fTrailing;
-    bool                            fSeenNonWhiteSpace;
+    // Only for 3.0.1.
+    //
+    union
+    {
+      bool old;
+      unsigned char flags; // fTrailing - big 0; fSeenNonWhiteSpace - bit 1
+    } fTrailingSeenNonWhiteSpace;
     bool                            fSeenId;
     XSDErrorReporter                fSchemaErrorReporter;
     ValueStackOf<ComplexTypeInfo*>* fTypeStack;
