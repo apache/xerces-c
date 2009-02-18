@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,10 +56,12 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fData
-    //      Internal data structure (3.0.1 only).
+    //  fHandle
+    //      The raw mutex handle. Its just a void pointer so we do not
+    //      pass judgement on its value at all. We just pass it into the
+    //      platform utilities methods which knows what's really in it.
     // -----------------------------------------------------------------------
-    void*          fData;
+    void*   fHandle;
 
 
     // -----------------------------------------------------------------------
