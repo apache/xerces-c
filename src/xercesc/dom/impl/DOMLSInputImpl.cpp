@@ -48,6 +48,7 @@ DOMLSInputImpl::~DOMLSInputImpl()
 void DOMLSInputImpl::setStringData(const XMLCh* data)
 {
     fStringData=data;
+    setEncoding(XMLUni::fgXMLChEncodingString);
 }
 
 void DOMLSInputImpl::setByteStream(InputSource* stream)
