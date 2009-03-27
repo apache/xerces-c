@@ -632,7 +632,7 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
     }
 
     // null terminate
-    if(fBytesWritten > (allocSize - 4)) {
+    if(fBytesWritten + 4 > allocSize) {
         allocSize = fBytesWritten + 4;
         XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
         memcpy(newBuf, fString, fBytesWritten);
