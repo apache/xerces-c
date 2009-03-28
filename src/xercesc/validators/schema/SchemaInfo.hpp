@@ -367,10 +367,10 @@ inline SchemaInfo* SchemaInfo::getImportInfo(const unsigned int namespaceURI) co
         currInfo = fImportedInfoList->elementAt(i);
 
         if (currInfo->getTargetNSURI() == (int) namespaceURI)
-            break;
+            return currInfo;
     }
 
-    return currInfo;
+    return 0;
 }
 
 inline ValidationContext* SchemaInfo::getValidationContext() const {
