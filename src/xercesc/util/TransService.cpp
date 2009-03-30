@@ -613,7 +613,7 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
     XMLSize_t allocSize = len * sizeof(XMLCh);
     fString = (XMLByte*)fMemoryManager->allocate(allocSize);
 
-    XMLSize_t charsRead;
+    XMLSize_t charsRead = 0;
     XMLSize_t charsDone = 0;
 
     while(true) {
@@ -692,7 +692,7 @@ void TranscodeFromStr::transcode(const XMLByte *in, XMLSize_t length, XMLTransco
     ArrayJanitor<unsigned char> charSizes((unsigned char*)fMemoryManager->allocate(csSize * sizeof(unsigned char)),
                                           fMemoryManager);
 
-    XMLSize_t bytesRead;
+    XMLSize_t bytesRead = 0;
     XMLSize_t bytesDone = 0;
 
     while(true) {
