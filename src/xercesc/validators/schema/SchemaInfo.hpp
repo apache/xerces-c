@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -80,7 +80,6 @@ public:
                const int blockDefault,
                const int finalDefault,
                const int targetNSURI,
-               const int scopeCount,
                const NamespaceScope* const currNamespaceScope,
                const XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
@@ -99,7 +98,6 @@ public:
     int                               getBlockDefault() const;
     int                               getFinalDefault() const;
     int                               getTargetNSURI() const;
-    int                               getScopeCount() const;
     NamespaceScope*                   getNamespaceScope() const;
     unsigned short                    getElemAttrDefaultQualified() const;
     BaseRefVectorEnumerator<SchemaInfo>   getImportingListEnumerator() const;
@@ -112,7 +110,6 @@ public:
     //  Setter methods
     // -----------------------------------------------------------------------
     void setProcessed(const bool aValue = true);
-    void setScopeCount(const int aValue);
     void setBlockDefault(const int aValue);
     void setFinalDefault(const int aValue);
     void setElemAttrDefaultQualified(const unsigned short aValue);
@@ -159,7 +156,6 @@ private:
     int                               fBlockDefault;
     int                               fFinalDefault;
     int                               fTargetNSURI;
-    int                               fScopeCount;
     NamespaceScope*                   fNamespaceScope;
     XMLCh*                            fCurrentSchemaURL;
     XMLCh*                            fTargetNSURIString;
@@ -225,11 +221,6 @@ inline int SchemaInfo::getTargetNSURI() const {
     return fTargetNSURI;
 }
 
-inline int SchemaInfo::getScopeCount() const {
-
-    return fScopeCount;
-}
-
 inline BaseRefVectorEnumerator<SchemaInfo>
 SchemaInfo::getImportingListEnumerator() const {
 
@@ -257,11 +248,6 @@ inline ValueVectorOf<DOMNode*>* SchemaInfo::getNonXSAttList() const
 // ---------------------------------------------------------------------------
 //  Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaInfo::setScopeCount(const int aValue) {
-
-    fScopeCount = aValue;
-}
-
 inline void SchemaInfo::setBlockDefault(const int aValue) {
 
     fBlockDefault = aValue;
@@ -328,7 +314,7 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
 
         if (!fIncludeInfoList->containsElement(toAdd)) {
 
-		    fIncludeInfoList->addElement(toAdd);	    
+		    fIncludeInfoList->addElement(toAdd);
             //code was originally:
             //toAdd->fIncludeInfoList = fIncludeInfoList;
             //however for handling multiple imports this was causing
@@ -352,7 +338,7 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
 			}
 			else {
 				toAdd->fIncludeInfoList = fIncludeInfoList;
-			}			
+			}
         }
     }
 }
@@ -458,4 +444,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file SchemaInfo.hpp
   */
-

@@ -194,7 +194,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fTargetNSURI(-1)
     , fEmptyNamespaceURI(-1)
     , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
-    , fScopeCount(0)
+    , fScopeCount(schemaGrammar->getScopeCount ())
     , fAnonXSTypeCount(0)
     , fCircularCheckIndex(0)
     , fTargetNSURIString(0)
@@ -364,7 +364,6 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
         const XMLCh* targetNSURIStr = schemaRoot->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
         fSchemaGrammar->setTargetNamespace(targetNSURIStr);
 
-        fScopeCount = 0;
         fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
         fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
         fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
@@ -375,14 +374,13 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
         fGrammarResolver->putGrammar(fSchemaGrammar);
     }
     else {
-        fScopeCount = 0;
         fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
 
         fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
         fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
     }
 
-    SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
+    SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI,
                                           fSchemaInfo?fSchemaInfo->getNamespaceScope():NULL,
                                           schemaURL,
                                           fTargetNSURIString, schemaRoot,
@@ -687,7 +685,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
             // --------------------------------------------------------
             SchemaInfo* saveInfo = fSchemaInfo;
 
-            fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
+            fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI,
                                          fSchemaInfo->getNamespaceScope(),
                                          includeURL,
                                          fTargetNSURIString, root,
@@ -893,12 +891,14 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             // Preprocess new schema
             // --------------------------------------------------------
             SchemaInfo* saveInfo = fSchemaInfo;
+            fSchemaGrammar->setScopeCount (fScopeCount);
             if (grammarFound) {
                 fSchemaGrammar = (SchemaGrammar*) aGrammar;
             }
             else {
                 fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
             }
+            fScopeCount = fSchemaGrammar->getScopeCount ();
             XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();
             gramDesc->setContextType(XMLSchemaDescription::CONTEXT_IMPORT);
             gramDesc->setLocationHints(importURL);
@@ -6944,15 +6944,14 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
 
     if (aListType == SchemaInfo::IMPORT) { // restore grammar info
 
-        fSchemaInfo->setScopeCount(fScopeCount);
-
         int targetNSURI = toRestore->getTargetNSURI();
 
+        fSchemaGrammar->setScopeCount (fScopeCount);
         fSchemaGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(toRestore->getTargetNSURIString());
+        fScopeCount = fSchemaGrammar->getScopeCount ();
 
         fTargetNSURI = targetNSURI;
         fCurrentScope = saveScope;
-        fScopeCount = toRestore->getScopeCount();
         fDatatypeRegistry = fSchemaGrammar->getDatatypeRegistry();
         fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
         fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
@@ -8224,7 +8223,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         // Update schema information with redefined schema
         // --------------------------------------------------------
         redefSchemaInfo = fSchemaInfo;
-        Janitor<SchemaInfo> newSchemaInfo(new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
+        Janitor<SchemaInfo> newSchemaInfo(new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI,
                                      fSchemaInfo->getNamespaceScope(),
                                      includeURL,
                                      fTargetNSURIString, root,

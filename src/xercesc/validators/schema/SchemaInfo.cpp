@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const int blockDefault,
                        const int finalDefault,
                        const int targetNSURI,
-                       const int scopeCount,
                        const NamespaceScope* const currNamespaceScope,
                        const XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
@@ -50,7 +49,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fBlockDefault(blockDefault)
     , fFinalDefault(finalDefault)
     , fTargetNSURI(targetNSURI)
-    , fScopeCount(scopeCount)
     , fNamespaceScope(0)
     , fSchemaRootElement(root)
     , fIncludeInfoList(0)
@@ -69,12 +67,12 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
 	memset(
          fTopLevelComponents,
          0,
-         sizeof(fTopLevelComponents[0]) * C_Count);    
+         sizeof(fTopLevelComponents[0]) * C_Count);
     memset(
          fLastTopLevelComponent,
          0,
-         sizeof(fLastTopLevelComponent[0]) * C_Count);    
-    
+         sizeof(fLastTopLevelComponent[0]) * C_Count);
+
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(2, fMemoryManager);
     fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
     fNamespaceScope = new (fMemoryManager) NamespaceScope(currNamespaceScope, fMemoryManager);
@@ -94,17 +92,17 @@ SchemaInfo::~SchemaInfo()
     if (fAdoptInclude)
         delete fIncludeInfoList;
 
-    delete fImportingInfoList;  
+    delete fImportingInfoList;
     delete fImportedNSList;
     delete fFailedRedefineList;
     delete fRecursingAnonTypes;
-    delete fRecursingTypeNames;   
+    delete fRecursingTypeNames;
 
     for (unsigned int i = 0; i < C_Count; i++) {
         delete fTopLevelComponents[i];
     }
 
-    delete fNonXSAttList;  
+    delete fNonXSAttList;
     delete fValidationContext;
     delete fNamespaceScope;
 }
@@ -248,5 +246,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file SchemaInfo.cpp
   */
-
-

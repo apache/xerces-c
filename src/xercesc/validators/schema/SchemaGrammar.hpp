@@ -237,6 +237,12 @@ public:
     RefHashTableOf<XSAnnotation, PtrHasher>*  getAnnotations();
     const RefHashTableOf<XSAnnotation, PtrHasher>*  getAnnotations() const;
 
+    /**
+     * Get/set scope count.
+     */
+    unsigned int getScopeCount () const;
+    void setScopeCount (unsigned int);
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -326,6 +332,8 @@ private:
 
     bool                                   fValidated;
     DatatypeValidatorFactory               fDatatypeRegistry;
+
+    unsigned int                             fScopeCount;
 };
 
 
@@ -592,6 +600,18 @@ inline bool SchemaGrammar::getValidated() const
 inline void SchemaGrammar::setValidated(const bool newState)
 {
     fValidated = newState;
+}
+
+inline unsigned int
+SchemaGrammar::getScopeCount () const
+{
+  return fScopeCount;
+}
+
+inline void
+SchemaGrammar::setScopeCount (unsigned int scopeCount)
+{
+  fScopeCount = scopeCount;
 }
 
 XERCES_CPP_NAMESPACE_END
