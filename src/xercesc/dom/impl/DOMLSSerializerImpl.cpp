@@ -312,23 +312,23 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
     fSupportedParameters->add(XMLUni::fgDOMWRTXercesPrettyPrint);
 }
 
-bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
-                                        , const void*        /*value*/) const
+bool DOMLSSerializerImpl::canSetParameter(const XMLCh* featName
+                                        , const void*  /*value*/) const
 {
     if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
         return true;
     return false;
 }
 
-bool DOMLSSerializerImpl::canSetParameter(const XMLCh* const featName
-                                        , bool               state) const
+bool DOMLSSerializerImpl::canSetParameter(const XMLCh* featName
+                                        , bool         state) const
 {
     int featureId = INVALID_FEATURE_ID;
     return checkFeature(featName, false, featureId) ? canSetFeature(featureId, state) : false;
 }
 
-void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
-                                     , const void*        value)
+void DOMLSSerializerImpl::setParameter(const XMLCh* featName
+                                     , const void*  value)
 {
     if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
         fErrorHandler = (DOMErrorHandler*)value;
@@ -336,8 +336,8 @@ void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
 }
 
-void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
-                                     , bool               state)
+void DOMLSSerializerImpl::setParameter(const XMLCh* featName
+                                     , bool         state)
 {
     int featureId = INVALID_FEATURE_ID;
     checkFeature(featName, true, featureId);
@@ -363,7 +363,7 @@ void DOMLSSerializerImpl::setParameter(const XMLCh* const featName
         setFeature(CANONICAL_FORM_ID, false);
 }
 
-const void* DOMLSSerializerImpl::getParameter(const XMLCh* const featName) const
+const void* DOMLSSerializerImpl::getParameter(const XMLCh* featName) const
 {
     if(XMLString::compareIStringASCII(featName, XMLUni::fgDOMErrorHandler)==0)
     {
