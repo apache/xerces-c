@@ -334,11 +334,11 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         int n = wrap_getaddrinfo(hostNameAsCharStar,portBuffer.getRawBuffer(),&hints, &res);
-        if(n<0)
+        if(n != 0)
         {
             hints.ai_flags = AI_NUMERICHOST;
             n = wrap_getaddrinfo(hostNameAsCharStar,(const char*)tempbuf,&hints, &res);
-            if(n<0)
+            if(n != 0)
                 ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, memoryManager);
         }
         janSock.reset();

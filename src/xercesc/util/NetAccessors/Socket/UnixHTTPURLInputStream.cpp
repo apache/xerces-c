@@ -126,11 +126,11 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         int n = getaddrinfo(hostNameAsCharStar,portBuffer.getRawBuffer(),&hints, &res);
-        if(n<0)
+        if(n != 0)
         {
             hints.ai_flags = AI_NUMERICHOST;
             n = getaddrinfo(hostNameAsCharStar,portBuffer.getRawBuffer(),&hints, &res);
-            if(n<0)
+            if(n != 0)
                 ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, hostName, memoryManager);
         }
         janSock.reset();
