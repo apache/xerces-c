@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="XercesLib"
 	ProjectGUID="{152CE948-F659-4206-A50A-1D2B9658EF96}"
 	RootNamespace="XercesLib"
@@ -1390,7 +1390,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1399,8 +1399,8 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1410,7 +1410,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1419,8 +1419,8 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1430,7 +1430,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1439,8 +1439,8 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1450,7 +1450,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1459,8 +1459,8 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1470,7 +1470,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1479,8 +1479,8 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1490,7 +1490,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
@@ -1499,8 +1499,8 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;copy $(InputDir)\$(InputName).msvc.hpp $(InputPath)&#x0D;&#x0A;"
-						AdditionalDependencies="$(InputDir)\$(InputName).msvc.hpp"
+						CommandLine="echo copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;copy &quot;$(InputDir)$(InputName).msvc.hpp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)$(InputName).msvc.hpp"
 						Outputs="$(InputPath)"
 					/>
 				</FileConfiguration>
