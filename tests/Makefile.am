@@ -115,7 +115,9 @@ testprogs +=                                    XSTSHarness
 XSTSHarness_SOURCES =                           src/XSTSHarness/XSTSHarness.cpp \
                                                 src/XSTSHarness/XSTSHarness.hpp \
                                                 src/XSTSHarness/XSTSHarnessHandlers.cpp \
-                                                src/XSTSHarness/XSTSHarnessHandlers.hpp
+                                                src/XSTSHarness/XSTSHarnessHandlers.hpp \
+                                                src/XSTSHarness/XMLHarnessHandlers.cpp \
+                                                src/XSTSHarness/XMLHarnessHandlers.hpp
 
 # Fails to compile under gcc4 (values too long for long type)
 testprogs +=                                    XSValueTest

@@ -26,38 +26,19 @@
 #include "XSTSHarness.hpp"
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/Attributes.hpp>
-#include <xercesc/sax2/DefaultHandler.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/XMLURL.hpp>
+#include <xercesc/util/RefStackOf.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
-class XSTSTest
-{
-public:
-    XSTSTest() :
-      fXSDNames(1) 
-    {
-        fTestName[0]=0;
-        fExpectedResult=unknown;
-        fSkipped=false;
-    }
-
-    XMLCh           fTestName[256];
-    RefVectorOf<XMLURL> fXSDNames;
-    XMLURL          fXMLName;
-    ValidityOutcome fExpectedResult;
-    XMLURL          fSpecReference;
-    bool            fSkipped;
-};
-
-class XSTSHarnessHandlers : public BaseHarnessHandlers 
+class XMLHarnessHandlers : public BaseHarnessHandlers 
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    XSTSHarnessHandlers(const XMLCh* baseURL);
-    ~XSTSHarnessHandlers();
+    XMLHarnessHandlers(const XMLCh* baseURL);
+    ~XMLHarnessHandlers();
 
     // -----------------------------------------------------------------------
     //  Handlers for the SAX ContentHandler interface
@@ -66,8 +47,8 @@ public:
     void endElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname);
 
 private:
-    XSTSTest            fCurrentTest;
     SAX2XMLReader*      fParser;
     BaseErrorHandler    fErrorHandler;
+    RefStackOf<XMLURL>  fTestBaseURL;
 };
 

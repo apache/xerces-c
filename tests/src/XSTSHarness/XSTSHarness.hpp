@@ -19,6 +19,8 @@
  * $Id$
  */
 
+#ifndef XSTS_HARNESS_HPP
+#define XSTS_HARNESS_HPP
 
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
@@ -32,10 +34,21 @@
 #else
 #include <iostream.h>
 #endif
-#include "XSTSHarnessHandlers.hpp"
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
+#include <xercesc/util/XMLURL.hpp>
 
+XERCES_CPP_NAMESPACE_USE
+
+typedef enum
+{
+    unknown,
+    invalid,
+    valid
+} ValidityOutcome;
+
+extern const XMLCh dummy[];
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)
@@ -81,3 +94,80 @@ inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& ta
     target << toDump.localForm();
     return target;
 }
+
+class BaseHarnessHandlers : public DefaultHandler
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    BaseHarnessHandlers(const XMLCh* baseURL);
+
+    unsigned int getTotalTests() const
+    {
+        return fTests;
+    }
+    unsigned int getFailedTests() const
+    {
+        return fFailures;
+    }
+
+    bool getSawErrors() const
+    {
+        return fSawErrors;
+    }
+
+    void printFile(XMLURL& url);
+
+    // -----------------------------------------------------------------------
+    //  Handlers for the SAX ErrorHandler interface
+    // -----------------------------------------------------------------------
+	void warning(const SAXParseException& exc);
+    void error(const SAXParseException& exc);
+    void fatalError(const SAXParseException& exc);
+    void resetErrors()
+    {
+        fSawErrors = false;
+    }
+
+protected:
+    XMLURL              fBaseURL;
+    bool                fSawErrors;
+    unsigned int        fFailures, fTests;
+};
+
+class BaseErrorHandler : public ErrorHandler
+{
+public:
+    BaseErrorHandler() : fSawErrors(false) {}
+
+    bool getSawErrors() const
+    {
+        return fSawErrors;
+    }
+    const XMLCh* getErrorText()
+    {
+        return fErrorText.getRawBuffer();
+    }
+
+    // -----------------------------------------------------------------------
+    //  Handlers for the SAX ErrorHandler interface
+    // -----------------------------------------------------------------------
+    void warning(const SAXParseException& exc)      {}
+    void error(const SAXParseException& exc);
+    void fatalError(const SAXParseException& exc);
+    void resetErrors()                              { fSawErrors=false; fErrorText.reset(); }
+
+private:
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fSawErrors
+    //      This is set by the error handlers, and is queryable later to
+    //      see if any errors occured.
+    // -----------------------------------------------------------------------
+    bool            fSawErrors;
+    XMLBuffer       fErrorText;
+};
+
+#endif

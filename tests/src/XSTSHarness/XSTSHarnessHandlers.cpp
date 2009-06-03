@@ -22,22 +22,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include "XSTSHarness.hpp"
+#include "XSTSHarnessHandlers.hpp"
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#include <xercesc/util/BinInputStream.hpp>
 
 // ---------------------------------------------------------------------------
 //  XSTSHarnessHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XSTSHarnessHandlers::XSTSHarnessHandlers(const XMLCh* baseURL) :
-    fSawErrors(false),
-    fBaseURL(baseURL),
-    fFailures(0), 
-    fTests(0)
+XSTSHarnessHandlers::XSTSHarnessHandlers(const XMLCh* baseURL) : BaseHarnessHandlers(baseURL)
 {
     fParser = XMLReaderFactory::createXMLReader();
     fParser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
@@ -90,9 +85,6 @@ static XMLCh szTestSuite2[]={ chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColo
                         chLatin_t, chLatin_e, chLatin_s, chLatin_t, chDash, chLatin_s, chLatin_u, chLatin_i, chLatin_t, chLatin_e, chForwardSlash, chNull };
 
 static XMLCh szTestSetRef[]={ chLatin_t, chLatin_e, chLatin_s, chLatin_t, chLatin_S, chLatin_e, chLatin_t, chLatin_R, chLatin_e, chLatin_f, chNull };
-
-static XMLCh dummy[]={ chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chForwardSlash, chForwardSlash, 
-                       chLatin_d, chLatin_u, chLatin_m, chLatin_m, chLatin_y, chForwardSlash, chNull };
 
 // ---------------------------------------------------------------------------
 //  XSTSHarnessHandlers: Implementation of the SAX DocumentHandler interface
@@ -335,90 +327,5 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             }
         }
     }
-}
-
-// ---------------------------------------------------------------------------
-//  XSTSHarnessHandlers: Overrides of the SAX ErrorHandler interface
-// ---------------------------------------------------------------------------
-void XSTSHarnessHandlers::error(const SAXParseException& e)
-{
-    fSawErrors = true;
-    XERCES_STD_QUALIFIER cout << "\nError at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-}
-
-void XSTSHarnessHandlers::fatalError(const SAXParseException& e)
-{
-    fSawErrors = true;
-    XERCES_STD_QUALIFIER cout << "\nFatal Error at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-}
-
-void XSTSHarnessHandlers::warning(const SAXParseException& e)
-{
-    XERCES_STD_QUALIFIER cout << "\nWarning at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-}
-
-void XSTSHarnessHandlers::resetErrors()
-{
-    fSawErrors = false;
-}
-
-// ---------------------------------------------------------------------------
-//  XSTSHarnessHandlers: Helpers
-// ---------------------------------------------------------------------------
-void XSTSHarnessHandlers::printFile(XMLURL& url)
-{
-    if(XMLString::equals(url.getURLText(), dummy))
-        return;
-    BinInputStream* stream=url.makeNewStream();
-    if(stream==NULL)
-    {
-        XERCES_STD_QUALIFIER cout << "File " << StrX(url.getURLText()) << " is missing" << XERCES_STD_QUALIFIER endl;
-        return;
-    }
-    XERCES_STD_QUALIFIER cout << "Content of file " << StrX(url.getURLText()) << XERCES_STD_QUALIFIER endl;
-    XMLByte buffer[256];
-    XMLSize_t nRead;
-    while((nRead=stream->readBytes(buffer, 255)) >0)
-    {
-        buffer[nRead]=0;
-        // sending data containing \n\r to cout generates \n\n\r, so strip any \r
-        XMLSize_t idx=0;
-        while(true)
-        {
-            int cr=XMLString::indexOf((const char*)buffer, '\r', idx);
-            if(cr==-1)
-                break;
-            memmove(&buffer[cr], &buffer[cr+1], XMLString::stringLen((const char*)&buffer[cr+1])+1);
-            idx=cr;
-            if(buffer[idx]==0)
-                break;
-        }
-        XERCES_STD_QUALIFIER cout << (const char*)buffer;
-    }
-    XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
-    delete stream;
-}
-
-void XSTSErrorHandler::error(const SAXParseException& exc)
-{ 
-    fSawErrors=true; 
-    fErrorText.append(exc.getMessage()); 
-    fErrorText.append(chLF); 
-}
-
-void XSTSErrorHandler::fatalError(const SAXParseException& exc)
-{ 
-    fSawErrors=true; 
-    fErrorText.append(exc.getMessage()); 
-    fErrorText.append(chLF); 
 }
 

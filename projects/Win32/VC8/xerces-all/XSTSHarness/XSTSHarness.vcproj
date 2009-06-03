@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="XSTSHarness"
 	ProjectGUID="{D92806DD-C591-4782-BCF2-8A0D0338D67A}"
 	RootNamespace="XSTSHarness"
@@ -976,6 +976,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\..\..\..\tests\src\XSTSHarness\XMLHarnessHandlers.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\tests\src\XSTSHarness\XSTSHarness.cpp"
 				>
 			</File>
@@ -989,6 +993,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\..\..\..\tests\src\XSTSHarness\XMLHarnessHandlers.hpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\..\..\tests\src\XSTSHarness\XSTSHarness.hpp"
 				>

@@ -97,6 +97,10 @@ SOURCE=..\..\..\..\..\tests\src\XSTSHarness\XSTSHarness.cpp
 
 SOURCE=..\..\..\..\..\tests\src\XSTSHarness\XSTSHarnessHandlers.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\tests\src\XSTSHarness\XMLHarnessHandlers.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -108,6 +112,10 @@ SOURCE=..\..\..\..\..\tests\src\XSTSHarness\XSTSHarness.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\tests\src\XSTSHarness\XSTSHarnessHandlers.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\tests\src\XSTSHarness\XMLHarnessHandlers.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
