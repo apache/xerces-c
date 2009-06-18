@@ -27,7 +27,9 @@
 #include <xercesc/util/FlagJanitor.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/ValueStackOf.hpp>
 #include <xercesc/util/UnexpectedEOFException.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
@@ -39,7 +41,6 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDScanner.hpp>
-#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1041,338 +1042,354 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     // Check for a PE ref here, but don't require spaces
     checkForPERef(false, true);
 
-    // We have to check entity nesting here
-    XMLSize_t curReader;
-
+    ValueStackOf<XMLSize_t>* arrNestedDecl=NULL;
     //
     //  We know that the caller just saw an opening parenthesis, so we need
-    //  to parse until we hit the end of it, recursing for other nested
-    //  parentheses we see.
+    //  to parse until we hit the end of it; if we find several parenthesis,
+    //  store them in an array to be processed later.
     //
     //  We have to check for one up front, since it could be something like
     //  (((a)*)) etc...
     //
     ContentSpecNode* curNode = 0;
-    if (fReaderMgr->skippedChar(chOpenParen))
+    while(fReaderMgr->skippedChar(chOpenParen))
     {
-        curReader = fReaderMgr->getCurrentReaderNum();
-
-        // Lets call ourself and get back the resulting node
-        curNode = scanChildren(elemDecl, bufToUse);
-
-        // If that failed, no need to go further, return failure
-        if (!curNode)
-            return 0;
-
-        if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
-            fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
-    }
-     else
-    {
-        // Not a nested paren, so it must be a leaf node
-        if (!fReaderMgr->getName(bufToUse))
-        {
-            fScanner->emitError(XMLErrs::ExpectedElementName);
-            return 0;
-        }
-
-        //
-        //  Create a leaf node for it. If we can find the element id for
-        //  this element, then use it. Else, we have to fault in an element
-        //  decl, marked as created because of being in a content model.
-        //
-        XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
-        if (!decl)
-        {
-            decl = new (fGrammarPoolMemoryManager) DTDElementDecl
-            (
-                bufToUse.getRawBuffer()
-                , fEmptyNamespaceId
-                , DTDElementDecl::Any
-                , fGrammarPoolMemoryManager
-            );
-            decl->setCreateReason(XMLElementDecl::InContentModel);
-            decl->setExternalElemDeclaration(isReadingExternalEntity());
-            fDTDGrammar->putElemDecl(decl);
-        }
-        curNode = new (fGrammarPoolMemoryManager) ContentSpecNode
-        (
-            decl->getElementName()
-            , fGrammarPoolMemoryManager
-        );
+        // to check entity nesting
+        const XMLSize_t curReader = fReaderMgr->getCurrentReaderNum();
+        if(arrNestedDecl==NULL)
+            arrNestedDecl=new (fMemoryManager) ValueStackOf<XMLSize_t>(5, fMemoryManager);
+        arrNestedDecl->push(curReader);
 
         // Check for a PE ref here, but don't require spaces
-        const bool gotSpaces = checkForPERef(false, true);
-
-        // Check for a repetition character after the leaf
-        const XMLCh repCh = fReaderMgr->peekNextChar();
-        ContentSpecNode* tmpNode = makeRepNode(repCh, curNode, fGrammarPoolMemoryManager);
-        if (tmpNode != curNode)
-        {
-            if (gotSpaces)
-            {
-                if (fScanner->emitErrorWillThrowException(XMLErrs::UnexpectedWhitespace))
-                {
-                    delete tmpNode;
-                }
-                fScanner->emitError(XMLErrs::UnexpectedWhitespace);
-            }
-            fReaderMgr->getNextChar();
-            curNode = tmpNode;
-        }
+        checkForPERef(false, true);
     }
 
-    // Check for a PE ref here, but don't require spaces
-    checkForPERef(false, true);
-
-    //
-    //  Ok, the next character tells us what kind of content this particular
-    //  model this particular parentesized section is. Its either a choice if
-    //  we see ',', a sequence if we see '|', or a single leaf node if we see
-    //  a closing paren.
-    //
-    const XMLCh opCh = fReaderMgr->peekNextChar();
-
-    if ((opCh != chComma)
-    &&  (opCh != chPipe)
-    &&  (opCh != chCloseParen))
+    // We must find a leaf node here, either standalone or nested in the parenthesis
+    if (!fReaderMgr->getName(bufToUse))
     {
-        // Not a legal char, so delete our node and return failure
-        delete curNode;
-        fScanner->emitError(XMLErrs::ExpectedSeqChoiceLeaf);
+        fScanner->emitError(XMLErrs::ExpectedElementName);
         return 0;
     }
 
     //
-    //  Create the head node of the correct type. We need this to remember
-    //  the top of the local tree. If it was a single subexpr, then just
-    //  set the head node to the current node. For the others, we'll build
-    //  the tree off the second child as we move across.
+    //  Create a leaf node for it. If we can find the element id for
+    //  this element, then use it. Else, we have to fault in an element
+    //  decl, marked as created because of being in a content model.
     //
-    ContentSpecNode* headNode = 0;
-    ContentSpecNode::NodeTypes curType = ContentSpecNode::UnknownType;
-    if (opCh == chComma)
+    XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
+    if (!decl)
     {
-        curType = ContentSpecNode::Sequence;
-        headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
+        decl = new (fGrammarPoolMemoryManager) DTDElementDecl
         (
-            curType
-            , curNode
-            , 0
-            , true
-            , true
+            bufToUse.getRawBuffer()
+            , fEmptyNamespaceId
+            , DTDElementDecl::Any
             , fGrammarPoolMemoryManager
         );
-        curNode = headNode;
+        decl->setCreateReason(XMLElementDecl::InContentModel);
+        decl->setExternalElemDeclaration(isReadingExternalEntity());
+        fDTDGrammar->putElemDecl(decl);
     }
-     else if (opCh == chPipe)
-    {
-        curType = ContentSpecNode::Choice;
-        headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
-        (
-            curType
-            , curNode
-            , 0
-            , true
-            , true
-            , fGrammarPoolMemoryManager
-        );
-        curNode = headNode;
-    }
-     else
-    {
-        headNode = curNode;
-        fReaderMgr->getNextChar();
-    }
+    curNode = new (fGrammarPoolMemoryManager) ContentSpecNode
+    (
+        decl->getElementName()
+        , fGrammarPoolMemoryManager
+    );
 
-    //
-    //  If it was a sequence or choice, we just loop until we get to the
-    //  end of our section, adding each new leaf or sub expression to the
-    //  right child of the current node, and making that new node the current
-    //  node.
-    //
-    if ((opCh == chComma) || (opCh == chPipe))
+    // Check for a PE ref here, but don't require spaces
+    const bool gotSpaces = checkForPERef(false, true);
+
+    // Check for a repetition character after the leaf
+    XMLCh repCh = fReaderMgr->peekNextChar();
+    ContentSpecNode* tmpNode = makeRepNode(repCh, curNode, fGrammarPoolMemoryManager);
+    if (tmpNode != curNode)
     {
-        ContentSpecNode* lastNode = 0;
-        while (true)
+        if (gotSpaces)
         {
-            //
-            //  The next thing must either be another | or , character followed
-            //  by another leaf or subexpression, or a closing parenthesis, or a
-            //  PE ref.
-            //
-            if (fReaderMgr->lookingAtChar(chPercent))
+            if (fScanner->emitErrorWillThrowException(XMLErrs::UnexpectedWhitespace))
             {
-                checkForPERef(false, true);
+                delete tmpNode;
             }
-             else if (fReaderMgr->skippedSpace())
-            {
-                // Just skip whitespace
-                fReaderMgr->skipPastSpaces();
-            }
-             else if (fReaderMgr->skippedChar(chCloseParen))
+            fScanner->emitError(XMLErrs::UnexpectedWhitespace);
+        }
+        fReaderMgr->getNextChar();
+        curNode = tmpNode;
+    }
+
+    while(arrNestedDecl==NULL || !arrNestedDecl->empty())
+    {
+        // Check for a PE ref here, but don't require spaces
+        checkForPERef(false, true);
+
+        //
+        //  Ok, the next character tells us what kind of content this particular
+        //  model this particular parentesized section is. Its either a choice if
+        //  we see ',', a sequence if we see '|', or a single leaf node if we see
+        //  a closing paren.
+        //
+        const XMLCh opCh = fReaderMgr->peekNextChar();
+
+        if ((opCh != chComma)
+        &&  (opCh != chPipe)
+        &&  (opCh != chCloseParen))
+        {
+            // Not a legal char, so delete our node and return failure
+            delete curNode;
+            fScanner->emitError(XMLErrs::ExpectedSeqChoiceLeaf);
+            return 0;
+        }
+
+        //
+        //  Create the head node of the correct type. We need this to remember
+        //  the top of the local tree. If it was a single subexpr, then just
+        //  set the head node to the current node. For the others, we'll build
+        //  the tree off the second child as we move across.
+        //
+        ContentSpecNode* headNode = 0;
+        ContentSpecNode::NodeTypes curType = ContentSpecNode::UnknownType;
+        if (opCh == chComma)
+        {
+            curType = ContentSpecNode::Sequence;
+            headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
+            (
+                curType
+                , curNode
+                , 0
+                , true
+                , true
+                , fGrammarPoolMemoryManager
+            );
+            curNode = headNode;
+        }
+         else if (opCh == chPipe)
+        {
+            curType = ContentSpecNode::Choice;
+            headNode = new (fGrammarPoolMemoryManager) ContentSpecNode
+            (
+                curType
+                , curNode
+                , 0
+                , true
+                , true
+                , fGrammarPoolMemoryManager
+            );
+            curNode = headNode;
+        }
+         else
+        {
+            headNode = curNode;
+            fReaderMgr->getNextChar();
+        }
+
+        //
+        //  If it was a sequence or choice, we just loop until we get to the
+        //  end of our section, adding each new leaf or sub expression to the
+        //  right child of the current node, and making that new node the current
+        //  node.
+        //
+        if ((opCh == chComma) || (opCh == chPipe))
+        {
+            ContentSpecNode* lastNode = 0;
+            while (true)
             {
                 //
-                //  We've hit the end of this section, so break out. But, we
-                //  need to see if we left a partial sequence of choice node
-                //  without a second node. If so, we have to undo that and
-                //  put its left child into the right node of the previous
-                //  node.
+                //  The next thing must either be another | or , character followed
+                //  by another leaf or subexpression, or a closing parenthesis, or a
+                //  PE ref.
                 //
-                if ((curNode->getType() == ContentSpecNode::Choice)
-                ||  (curNode->getType() == ContentSpecNode::Sequence))
+                if (fReaderMgr->lookingAtChar(chPercent))
                 {
-                    if (!curNode->getSecond())
-                    {
-                        ContentSpecNode* saveFirst = curNode->orphanFirst();
-                        lastNode->setSecond(saveFirst);
-                        curNode = lastNode;
-                    }
+                    checkForPERef(false, true);
                 }
-                break;
-            }
-             else if (fReaderMgr->skippedChar(opCh))
-            {
-                // Check for a PE ref here, but don't require spaces
-                checkForPERef(false, true);
-
-                if (fReaderMgr->skippedChar(chOpenParen))
+                 else if (fReaderMgr->skippedSpace())
                 {
-                    curReader = fReaderMgr->getCurrentReaderNum();
-
-                    // Recurse to handle this new guy
-                    ContentSpecNode* subNode;
-                    try {
-                        subNode = scanChildren(elemDecl, bufToUse);
-                    }
-                    catch (const XMLErrs::Codes)
-                    {
-                        delete headNode;
-                        throw;
-                    }
-
-                    // If it failed, we are done, clean up here and return failure
-                    if (!subNode)
-                    {
-                        delete headNode;
-                        return 0;
-                    }
-
-                    if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
-                        fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
-
-                    // Else patch it in and make it the new current
-                    ContentSpecNode* newCur = new (fGrammarPoolMemoryManager) ContentSpecNode
-                    (
-                        curType
-                        , subNode
-                        , 0
-                        , true
-                        , true
-                        , fGrammarPoolMemoryManager
-                    );
-                    curNode->setSecond(newCur);
-                    lastNode = curNode;
-                    curNode = newCur;
+                    // Just skip whitespace
+                    fReaderMgr->skipPastSpaces();
                 }
-                 else
+                 else if (fReaderMgr->skippedChar(chCloseParen))
                 {
                     //
-                    //  Got to be a leaf node, so get a name. If we cannot get
-                    //  one, then clean up and get outa here.
+                    //  We've hit the end of this section, so break out. But, we
+                    //  need to see if we left a partial sequence of choice node
+                    //  without a second node. If so, we have to undo that and
+                    //  put its left child into the right node of the previous
+                    //  node.
                     //
-                    if (!fReaderMgr->getName(bufToUse))
+                    if ((curNode->getType() == ContentSpecNode::Choice)
+                    ||  (curNode->getType() == ContentSpecNode::Sequence))
                     {
-                        delete headNode;
-                        fScanner->emitError(XMLErrs::ExpectedElementName);
-                        return 0;
+                        if (!curNode->getSecond())
+                        {
+                            ContentSpecNode* saveFirst = curNode->orphanFirst();
+                            lastNode->setSecond(saveFirst);
+                            curNode = lastNode;
+                        }
                     }
+                    break;
+                }
+                 else if (fReaderMgr->skippedChar(opCh))
+                {
+                    // Check for a PE ref here, but don't require spaces
+                    checkForPERef(false, true);
 
-                    //
-                    //  Create a leaf node for it. If we can find the element
-                    //  id for this element, then use it. Else, we have to
-                    //  fault in an element decl, marked as created because
-                    //  of being in a content model.
-                    //
-                    XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
-                    if (!decl)
+                    if (fReaderMgr->skippedChar(chOpenParen))
                     {
-                        decl = new (fGrammarPoolMemoryManager) DTDElementDecl
+                        const XMLSize_t curReader = fReaderMgr->getCurrentReaderNum();
+
+                        // Recurse to handle this new guy
+                        ContentSpecNode* subNode;
+                        try {
+                            subNode = scanChildren(elemDecl, bufToUse);
+                        }
+                        catch (const XMLErrs::Codes)
+                        {
+                            delete headNode;
+                            throw;
+                        }
+
+                        // If it failed, we are done, clean up here and return failure
+                        if (!subNode)
+                        {
+                            delete headNode;
+                            return 0;
+                        }
+
+                        if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
+                            fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+
+                        // Else patch it in and make it the new current
+                        ContentSpecNode* newCur = new (fGrammarPoolMemoryManager) ContentSpecNode
                         (
-                            bufToUse.getRawBuffer()
-                            , fEmptyNamespaceId
-                            , DTDElementDecl::Any
+                            curType
+                            , subNode
+                            , 0
+                            , true
+                            , true
                             , fGrammarPoolMemoryManager
                         );
-                        decl->setCreateReason(XMLElementDecl::InContentModel);
-                        decl->setExternalElemDeclaration(isReadingExternalEntity());
-                        fDTDGrammar->putElemDecl(decl);
+                        curNode->setSecond(newCur);
+                        lastNode = curNode;
+                        curNode = newCur;
                     }
+                     else
+                    {
+                        //
+                        //  Got to be a leaf node, so get a name. If we cannot get
+                        //  one, then clean up and get outa here.
+                        //
+                        if (!fReaderMgr->getName(bufToUse))
+                        {
+                            delete headNode;
+                            fScanner->emitError(XMLErrs::ExpectedElementName);
+                            return 0;
+                        }
 
-                    ContentSpecNode* tmpLeaf = new (fGrammarPoolMemoryManager) ContentSpecNode
-                    (
-                        decl->getElementName()
-                        , fGrammarPoolMemoryManager
-                    );
+                        //
+                        //  Create a leaf node for it. If we can find the element
+                        //  id for this element, then use it. Else, we have to
+                        //  fault in an element decl, marked as created because
+                        //  of being in a content model.
+                        //
+                        XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
+                        if (!decl)
+                        {
+                            decl = new (fGrammarPoolMemoryManager) DTDElementDecl
+                            (
+                                bufToUse.getRawBuffer()
+                                , fEmptyNamespaceId
+                                , DTDElementDecl::Any
+                                , fGrammarPoolMemoryManager
+                            );
+                            decl->setCreateReason(XMLElementDecl::InContentModel);
+                            decl->setExternalElemDeclaration(isReadingExternalEntity());
+                            fDTDGrammar->putElemDecl(decl);
+                        }
 
-                    // Check for a repetition character after the leaf
-                    const XMLCh repCh = fReaderMgr->peekNextChar();
-                    ContentSpecNode* tmpLeaf2 = makeRepNode(repCh, tmpLeaf, fGrammarPoolMemoryManager);
-                    if (tmpLeaf != tmpLeaf2)
-                        fReaderMgr->getNextChar();
+                        ContentSpecNode* tmpLeaf = new (fGrammarPoolMemoryManager) ContentSpecNode
+                        (
+                            decl->getElementName()
+                            , fGrammarPoolMemoryManager
+                        );
 
-                    //
-                    //  Create a new sequence or choice node, with the leaf
-                    //  (or rep surrounding it) we just got as its first node.
-                    //  Make the new node the second node of the current node,
-                    //  and then make it the current node.
-                    //
-                    ContentSpecNode* newCur = new (fGrammarPoolMemoryManager) ContentSpecNode
-                    (
-                        curType
-                        , tmpLeaf2
-                        , 0
-                        , true
-                        , true
-                        , fGrammarPoolMemoryManager
-                    );
-                    curNode->setSecond(newCur);
-                    lastNode = curNode;
-                    curNode = newCur;
-                }
-            }
-             else
-            {
-                // Cannot be valid
-                delete headNode;  // emitError may do a throw so need to clean-up first
-                if (opCh == chComma)
-                {
-                    fScanner->emitError(XMLErrs::ExpectedChoiceOrCloseParen);
+                        // Check for a repetition character after the leaf
+                        const XMLCh repCh = fReaderMgr->peekNextChar();
+                        ContentSpecNode* tmpLeaf2 = makeRepNode(repCh, tmpLeaf, fGrammarPoolMemoryManager);
+                        if (tmpLeaf != tmpLeaf2)
+                            fReaderMgr->getNextChar();
+
+                        //
+                        //  Create a new sequence or choice node, with the leaf
+                        //  (or rep surrounding it) we just got as its first node.
+                        //  Make the new node the second node of the current node,
+                        //  and then make it the current node.
+                        //
+                        ContentSpecNode* newCur = new (fGrammarPoolMemoryManager) ContentSpecNode
+                        (
+                            curType
+                            , tmpLeaf2
+                            , 0
+                            , true
+                            , true
+                            , fGrammarPoolMemoryManager
+                        );
+                        curNode->setSecond(newCur);
+                        lastNode = curNode;
+                        curNode = newCur;
+                    }
                 }
                  else
                 {
-                    fScanner->emitError
-                    (
-                        XMLErrs::ExpectedSeqOrCloseParen
-                        , elemDecl.getFullName()
-                    );
-                }                
+                    // Cannot be valid
+                    delete headNode;  // emitError may do a throw so need to clean-up first
+                    if (opCh == chComma)
+                    {
+                        fScanner->emitError(XMLErrs::ExpectedChoiceOrCloseParen);
+                    }
+                     else
+                    {
+                        fScanner->emitError
+                        (
+                            XMLErrs::ExpectedSeqOrCloseParen
+                            , elemDecl.getFullName()
+                        );
+                    }                
+                    return 0;
+                }
+            }
+        }
+
+        //
+        //  We saw the terminating parenthesis so lets check for any repetition
+        //  character, and create a node for that, making the head node the child
+        //  of it.
+        //
+        const XMLCh repCh = fReaderMgr->peekNextChar();
+        curNode = makeRepNode(repCh, headNode, fGrammarPoolMemoryManager);
+        if (curNode != headNode)
+            fReaderMgr->getNextChar();
+
+        // prepare for recursion
+        if(arrNestedDecl==NULL)
+            break;
+        else
+        {
+            // If that failed, no need to go further, return failure
+            if (!curNode)
                 return 0;
+
+            const XMLSize_t curReader = arrNestedDecl->pop();
+            if (curReader != fReaderMgr->getCurrentReaderNum() && fScanner->getValidationScheme() == XMLScanner::Val_Always)
+                fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+
+            if(arrNestedDecl->empty())
+            {
+                delete arrNestedDecl;
+                arrNestedDecl=NULL;
             }
         }
     }
 
-    //
-    //  We saw the terminating parenthesis so lets check for any repetition
-    //  character, and create a node for that, making the head node the child
-    //  of it.
-    //
-    XMLCh repCh = fReaderMgr->peekNextChar();
-    ContentSpecNode* retNode = makeRepNode(repCh, headNode, fGrammarPoolMemoryManager);
-    if (retNode != headNode)
-        fReaderMgr->getNextChar();
-
-    return retNode;
+    return curNode;
 }
 
 
