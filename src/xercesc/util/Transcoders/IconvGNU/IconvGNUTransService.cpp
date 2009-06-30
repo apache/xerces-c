@@ -392,7 +392,7 @@ IconvGNUTransService::IconvGNUTransService(MemoryManager* manager)
     // Using an empty string instead of NULL, will modify the libc
     // behavior.
     //
-    char* fLocalCP = setlocale (LC_CTYPE, NULL);
+    const char* fLocalCP = setlocale (LC_CTYPE, NULL);
     if (fLocalCP == NULL || *fLocalCP == 0 ||
         strcmp (fLocalCP, "C") == 0 ||
         strcmp (fLocalCP, "POSIX") == 0) {
