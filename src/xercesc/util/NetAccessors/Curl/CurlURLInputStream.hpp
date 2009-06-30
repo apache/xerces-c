@@ -103,10 +103,10 @@ private :
     
     XMLURL				fURLSource;
     
-    unsigned long       fTotalBytesRead;
+    XMLSize_t           fTotalBytesRead;
     XMLByte*			fWritePtr;
-    unsigned long		fBytesRead;
-    unsigned long		fBytesToRead;
+    XMLSize_t           fBytesRead;
+    XMLSize_t           fBytesToRead;
     bool				fDataAvailable;
     
     // Overflow buffer for when curl writes more data to us

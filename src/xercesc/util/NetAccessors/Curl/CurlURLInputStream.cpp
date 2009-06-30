@@ -19,13 +19,25 @@
  * $Id$
  */
 
+#if HAVE_CONFIG_H
+  #include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/time.h>
+#if HAVE_ERRNO_H
+  #include <errno.h>
+#endif
+#if HAVE_UNISTD_H
+  #include <unistd.h>
+#endif
+#if HAVE_SYS_TYPES_H
+  #include <sys/types.h>
+#endif
+#if HAVE_SYS_TIME_H
+  #include <sys/time.h>
+#endif
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
@@ -310,10 +322,10 @@ bool CurlURLInputStream::readMore(int *runningHandles)
         FD_ZERO(&readSet);
         FD_ZERO(&writeSet);
         FD_ZERO(&exceptSet);
-			
+
         // Ask curl for the file descriptors to wait on
         curl_multi_fdset(fMulti, &readSet, &writeSet, &exceptSet, &fdcnt);
-			
+
         // Wait on the file descriptors
         timeval tv;
         tv.tv_sec  = 2;
