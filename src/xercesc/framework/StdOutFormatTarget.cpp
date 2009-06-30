@@ -39,7 +39,9 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
                                   , const XMLSize_t       count
                                   , XMLFormatter* const)
 {
-    fwrite(toWrite, sizeof(XMLByte), count, stdout);
+    XMLSize_t written=fwrite(toWrite, sizeof(XMLByte), count, stdout);
+    if(written!=count)
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
     fflush(stdout);
 }
 
