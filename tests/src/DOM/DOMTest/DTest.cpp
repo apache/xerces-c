@@ -946,6 +946,8 @@ int main(int /*argc*/, char ** /*argv*/)
         delete parser;
 
         OK = test.testLSExceptions();
+
+        OK = test.testElementTraversal();
     }
 
     XMLPlatformUtils::Terminate();
@@ -4949,6 +4951,127 @@ bool DOMTest::testLSExceptions() {
             return false;
         }
     }
+    input->release();
+    domBuilder->release();
+
+    return true;
+}
+
+bool DOMTest::testElementTraversal() {
+	const char* sXml="<?xml version='1.0'?>"
+				"<!DOCTYPE g ["
+                "<!ENTITY ent1 '<nestedEl>&ent2;</nestedEl>'>"
+                "<!ENTITY ent2 'text'>"
+                "]>"
+				"<g id='shapeGroup'>\n"
+                "\n"
+                "\t<rect id='rect1' x='5' y='5' width='310' height='220' rx='15' ry='15' fill='skyblue'/>\n"
+                "\t<rect id='rect2' x='15' y='15' width='210' height='180' rx='15' ry='15' fill='cornflowerblue'/>\n"
+                "\n"
+                "\t<ellipse id='ellipse1' cx='90' cy='70' rx='50' ry='30' fill='yellow' stroke='orange'/>\n"
+                "\n"
+                "\t<path id='path1' stroke-width='15' stroke='orange' fill='none' stroke-linecap='round'\n"
+                "\t\td='M25,150 C180,180 290,0 400,140 S420,100 460,90'/>\n"
+                "\t<text id='text1' x='0' y='0' font-size='35' fill='yellow' stroke='orange'\n"
+                "\t\tstroke-width='2' stroke-linejoin='round' font-weight='bold'>\n"
+                "\t\t<textPath id='textPath1' xlink:href='#path1'>&ent1;&ent2;&ent1;</textPath></text>\n"
+                "</g>";
+	MemBufInputSource is((XMLByte*)sXml, strlen(sXml), "bufId");
+
+    static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
+    DOMImplementationLS *impl = (DOMImplementationLS*)DOMImplementationRegistry::getDOMImplementation(gLS);
+    DOMLSParser       *domBuilder = impl->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+    DOMLSInput        *input = impl->createLSInput();
+    XMLString::transcode(sXml, tempStr, 3999);
+    input->setStringData(tempStr);
+    try
+    {
+        DOMDocument* doc=domBuilder->parse(input);
+
+        XMLSize_t c = doc->getDocumentElement()->getChildNodes()->getLength();
+	    if(c!=11)
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        DOMNode* firstNode = doc->getDocumentElement()->getFirstChild();
+        if(firstNode==NULL || firstNode->getNodeType()!=DOMNode::TEXT_NODE || *firstNode->getNodeValue()=='\r')
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        DOMElement* childNode = doc->getDocumentElement()->getFirstElementChild();
+        XMLString::transcode("id", tempStr, 3999);
+        XMLString::transcode("rect1", tempStr2, 3999);
+        if(childNode==NULL || childNode->getNodeType()!=DOMNode::ELEMENT_NODE || !XMLString::equals(childNode->getAttribute(tempStr),tempStr2))
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        XMLSize_t count=0;
+        while(childNode!=NULL)
+        {
+            count++;
+            childNode=childNode->getNextElementSibling();
+        }
+        if(count!=5)
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        count = doc->getDocumentElement()->getChildElementCount();
+        if(count!=5)
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        DOMElement* text=doc->getDocumentElement()->getLastElementChild();
+        XMLString::transcode("id", tempStr, 3999);
+        XMLString::transcode("text1", tempStr2, 3999);
+        if(text==NULL || text->getNodeType()!=DOMNode::ELEMENT_NODE || !XMLString::equals(text->getAttribute(tempStr),tempStr2))
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        DOMElement* textPath=text->getFirstElementChild();
+        XMLString::transcode("id", tempStr, 3999);
+        XMLString::transcode("textPath1", tempStr2, 3999);
+        if(textPath==NULL || textPath->getNodeType()!=DOMNode::ELEMENT_NODE || !XMLString::equals(textPath->getAttribute(tempStr),tempStr2))
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        count = textPath->getChildElementCount();
+        if(count!=2)
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        DOMElement* insideEntity=textPath->getFirstElementChild();
+        if(insideEntity==NULL || insideEntity->getNodeType()!=DOMNode::ELEMENT_NODE)
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        DOMElement* insideEntity2=textPath->getLastElementChild();
+        if(insideEntity2==NULL || insideEntity2->getNodeType()!=DOMNode::ELEMENT_NODE)
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        if(insideEntity->getNextElementSibling()!=insideEntity2 || insideEntity!=insideEntity2->getPreviousElementSibling())
+	    {
+            fprintf(stderr, "checking ElementTraversal failed at line %i\n",  __LINE__);
+		    return false;
+	    }
+        return true;
+    }
+    catch(DOMLSException&)
+    {
+        fprintf(stderr, "checking testElementTraversal failed at line %i\n",  __LINE__);
+        return false;
+    }
+
     input->release();
     domBuilder->release();
 

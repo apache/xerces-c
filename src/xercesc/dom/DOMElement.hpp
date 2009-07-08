@@ -58,6 +58,9 @@ class DOMTypeInfo;
  * safely be used as a convenience.
  *
  * @since DOM Level 1
+ *
+ * It also defines the ElementTraversal helper interface defined by http://www.w3.org/TR/2008/REC-ElementTraversal-20081222/
+ *
  */
 
 class CDOM_EXPORT DOMElement: public DOMNode {
@@ -464,6 +467,57 @@ public:
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  DOMElementTraversal interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in the ElementTraversal specification (http://www.w3.org/TR/2008/REC-ElementTraversal-20081222/)*/
+    //@{
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /**
+     * The first child of type DOMElement.
+     *
+     * @return The <code>DOMElement</code> object that is the first element node
+     *   among the child nodes of this node, or <code>null</code> if there is none.
+     */
+    virtual DOMElement *         getFirstElementChild() const = 0;
+
+    /**
+     * The last child of type DOMElement.
+     *
+     * @return The <code>DOMElement</code> object that is the last element node
+     *   among the child nodes of this node, or <code>null</code> if there is none.
+     */
+    virtual DOMElement *         getLastElementChild() const = 0;
+
+    /**
+     * The previous sibling node of type DOMElement.
+     *
+     * @return The <code>DOMElement</code> object that is the previous sibling element node
+     *   in document order, or <code>null</code> if there is none.
+     */
+    virtual DOMElement *         getPreviousElementSibling() const = 0;
+
+    /**
+     * The next sibling node of type DOMElement.
+     *
+     * @return The <code>DOMElement</code> object that is the next sibling element node
+     *   in document order, or <code>null</code> if there is none.
+     */
+    virtual DOMElement *         getNextElementSibling() const = 0;
+
+    /**
+     * The number of child nodes that are of type DOMElement.
+     *
+     * Note: the count is computed every time this function is invoked
+     *
+     * @return The number of <code>DOMElement</code> objects that are direct children
+     *   of this object (nested elements are not counted), or <code>0</code> if there is none.
+     * 
+     */
+    virtual XMLSize_t            getChildElementCount() const = 0;
+    //@}
 };
 
 XERCES_CPP_NAMESPACE_END

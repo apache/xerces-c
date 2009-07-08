@@ -114,9 +114,22 @@ public:
     // helper function for DOM Level 3 renameNode
     virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
 
+    // DOMElementTraversal
+    virtual DOMElement *         getFirstElementChild() const;
+    virtual DOMElement *         getLastElementChild() const;
+    virtual DOMElement *         getPreviousElementSibling() const;
+    virtual DOMElement *         getNextElementSibling() const;
+    virtual XMLSize_t            getChildElementCount() const;
+
 protected:
     // default attribute helper functions
     virtual void setupDefaultAttributes();
+
+    // helper function for DOMElementTraversal methods
+    DOMElement* getFirstElementChild(const DOMNode* n) const;
+    DOMElement* getLastElementChild(const DOMNode* n) const;
+    DOMNode* getNextLogicalSibling(const DOMNode* n) const;
+    DOMNode* getPreviousLogicalSibling(const DOMNode* n) const;
 
 private:
     // -----------------------------------------------------------------------

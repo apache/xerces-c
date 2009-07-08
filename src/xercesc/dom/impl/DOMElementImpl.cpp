@@ -672,4 +672,191 @@ const DOMTypeInfo *DOMElementImpl::getSchemaTypeInfo() const
     return &DOMTypeInfoImpl::g_DtdValidatedElement;
 }
 
+// DOMElementTraversal
+DOMElement * DOMElementImpl::getFirstElementChild() const
+{
+    DOMNode* n = getFirstChild();
+    while (n != NULL) {
+        switch (n->getNodeType()) {
+            case DOMNode::ELEMENT_NODE:
+                return (DOMElement*) n;
+            case DOMNode::ENTITY_REFERENCE_NODE:
+                {
+                    DOMElement* e = getFirstElementChild(n);
+                    if (e != NULL)
+                        return e;
+                }
+                break;
+        }
+        n = n->getNextSibling();
+    }
+    return NULL;
+}
+
+DOMElement * DOMElementImpl::getLastElementChild() const
+{
+    DOMNode* n = getLastChild();
+    while (n != NULL) {
+        switch (n->getNodeType()) {
+            case DOMNode::ELEMENT_NODE:
+                return (DOMElement*) n;
+            case DOMNode::ENTITY_REFERENCE_NODE:
+                {
+                    DOMElement* e = getLastElementChild(n);
+                    if (e != NULL)
+                        return e;
+                }
+                break;
+        }
+        n = n->getPreviousSibling();
+    }
+    return NULL;
+}
+
+DOMElement * DOMElementImpl::getNextElementSibling() const
+{
+    DOMNode* n = getNextLogicalSibling(this);
+    while (n != NULL) {
+        switch (n->getNodeType()) {
+            case DOMNode::ELEMENT_NODE:
+                return (DOMElement*) n;
+            case DOMNode::ENTITY_REFERENCE_NODE:
+                {
+                    DOMElement* e = getFirstElementChild(n);
+                    if (e != NULL)
+                        return e;
+                }
+                break;
+        }
+        n = getNextLogicalSibling(n);
+    }
+    return NULL;
+}
+
+DOMElement * DOMElementImpl::getPreviousElementSibling() const
+{
+    DOMNode* n = getPreviousLogicalSibling(this);
+    while (n != NULL) {
+        switch (n->getNodeType()) {
+            case DOMNode::ELEMENT_NODE:
+                return (DOMElement*) n;
+            case DOMNode::ENTITY_REFERENCE_NODE:
+                {
+                    DOMElement* e = getLastElementChild(n);
+                    if (e != NULL)
+                        return e;
+                }
+                break;
+        }
+        n = getPreviousLogicalSibling(n);
+    }
+    return NULL;
+}
+
+XMLSize_t DOMElementImpl::getChildElementCount() const
+{
+    XMLSize_t count = 0;
+    DOMElement* child = getFirstElementChild();
+    while (child != NULL) {
+        ++count;
+        child = child->getNextElementSibling();
+    }
+    return count;
+}
+
+// Returns the first element node found from a 
+// non-recursive in order traversal of the given node.
+DOMElement* DOMElementImpl::getFirstElementChild(const DOMNode* n) const
+{
+    const DOMNode* top = n;
+    while (n != NULL) {
+        if (n->getNodeType() == DOMNode::ELEMENT_NODE) {
+            return (DOMElement*) n;
+        }
+        DOMNode* next = n->getFirstChild();
+        while (next == NULL) {         
+            if (top == n) {
+                break;
+            }
+            next = n->getNextSibling();
+            if (next == NULL) {
+                n = n->getParentNode();
+                if (n == NULL || top == n) {
+                    return NULL;
+                }
+            }
+        }
+        n = next;
+    }
+    return NULL;
+}
+
+// Returns the first element node found from a 
+// non-recursive reverse order traversal of the given node.
+DOMElement* DOMElementImpl::getLastElementChild(const DOMNode* n) const
+{
+    const DOMNode* top = n;
+    while (n != NULL) {
+        if (n->getNodeType() == DOMNode::ELEMENT_NODE) {
+            return (DOMElement*) n;
+        }
+        DOMNode* next = n->getLastChild();
+        while (next == NULL) {         
+            if (top == n) {
+                break;
+            }
+            next = n->getPreviousSibling();
+            if (next == NULL) {
+                n = n->getParentNode();
+                if (n == NULL || top == n) {
+                    return NULL;
+                }
+            }
+        }
+        n = next;
+    }
+    return NULL;
+}
+
+// Returns the next logical sibling with respect to the given node.
+DOMNode* DOMElementImpl::getNextLogicalSibling(const DOMNode* n) const
+{
+    DOMNode* next = n->getNextSibling();
+    // If "n" has no following sibling and its parent is an entity reference node we 
+    // need to continue the search through the following siblings of the entity 
+    // reference as these are logically siblings of the given node.
+    if (next == NULL) {
+        DOMNode* parent = n->getParentNode();
+        while (parent != NULL && parent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+            next = parent->getNextSibling();
+            if (next != NULL) {
+                break;
+            }
+            parent = parent->getParentNode();
+        }
+    }
+    return next;
+}
+
+// Returns the previous logical sibling with respect to the given node.
+DOMNode* DOMElementImpl::getPreviousLogicalSibling(const DOMNode* n) const
+{
+    DOMNode* prev = n->getPreviousSibling();
+    // If "n" has no previous sibling and its parent is an entity reference node we 
+    // need to continue the search through the previous siblings of the entity 
+    // reference as these are logically siblings of the given node.
+    if (prev == NULL) {
+        DOMNode* parent = n->getParentNode();
+        while (parent != NULL && parent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+            prev = parent->getPreviousSibling();
+            if (prev != NULL) {
+                break;
+            }
+            parent = parent->getParentNode();
+        }
+    }
+    return prev;
+}
+
+
 XERCES_CPP_NAMESPACE_END
