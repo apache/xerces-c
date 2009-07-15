@@ -762,5 +762,6 @@ $set 4
 32  unrecognized node type
 33  parsing in progress
 34  parsing aborted by the user
+35  parsing failed
 
 

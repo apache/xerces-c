@@ -49,11 +49,12 @@ public :
       , Writer_NotRecognizedType           = 32
       , LSParser_ParseInProgress           = 33
       , LSParser_ParsingAborted            = 34
-      , F_HighBounds                       = 35
-      , W_LowBounds                        = 36
-      , W_HighBounds                       = 37
-      , E_LowBounds                        = 38
-      , E_HighBounds                       = 39
+      , LSParser_ParsingFailed             = 35
+      , F_HighBounds                       = 36
+      , W_LowBounds                        = 37
+      , W_HighBounds                       = 38
+      , E_LowBounds                        = 39
+      , E_HighBounds                       = 40
     };
 
     static bool isFatal(const XMLDOMMsg::Codes toCheck)

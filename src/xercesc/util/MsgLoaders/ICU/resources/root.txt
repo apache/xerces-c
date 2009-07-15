@@ -783,6 +783,7 @@ root {
 		"unrecognized node type" ,
 		"parsing in progress" ,
 		"parsing aborted by the user" ,
+		"parsing failed" ,
 		"F_ End " ,
 		} 
 

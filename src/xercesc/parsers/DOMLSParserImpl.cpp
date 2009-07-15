@@ -727,6 +727,9 @@ DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
     Wrapper4DOMLSInput isWrapper((DOMLSInput*)source, fEntityResolver, false, getMemoryManager());
 
     AbstractDOMParser::parse(isWrapper);
+    if(getErrorCount()!=0)
+        throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
+
     if (fUserAdoptsDocument)
         return adoptDocument();
     else
@@ -743,6 +746,9 @@ DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
         fFilter=0;
 
     AbstractDOMParser::parse(systemId);
+    if(getErrorCount()!=0)
+        throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
+
     if (fUserAdoptsDocument)
         return adoptDocument();
     else
@@ -759,6 +765,9 @@ DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
         fFilter=0;
 
     AbstractDOMParser::parse(systemId);
+    if(getErrorCount()!=0)
+        throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
+
     if (fUserAdoptsDocument)
         return adoptDocument();
     else

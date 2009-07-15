@@ -840,6 +840,7 @@
 <!--Messages used by DOMLSParser -->
             <Message Id="LSParser_ParseInProgress" Text="parsing in progress"/>
             <Message Id="LSParser_ParsingAborted" Text="parsing aborted by the user"/>
+            <Message Id="LSParser_ParsingFailed" Text="parsing failed"/>
         </FatalError>
     </MsgDomain>
 </MsgFile>

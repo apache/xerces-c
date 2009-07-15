@@ -867,6 +867,7 @@ BEGIN
     24608             L"unrecognized node type"
     24609             L"parsing in progress"
     24610             L"parsing aborted by the user"
+    24611             L"parsing failed"
 END
 
 #endif    // English (U.S.) resources
