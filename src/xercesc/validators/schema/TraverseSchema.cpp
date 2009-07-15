@@ -1018,7 +1018,7 @@ void TraverseSchema::traverseRedefine(const DOMElement* const redefineElem) {
 /**
   * Traverse the Choice, Sequence declaration
   *
-  *    <choice-sequqnce
+  *    <choice-sequence
   *        id = ID
   *        maxOccurs = (nonNegativeInteger | unbounded)  : 1
   *        minOccurs = nonNegativeInteger : 1
