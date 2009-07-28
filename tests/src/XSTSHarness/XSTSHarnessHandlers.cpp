@@ -196,7 +196,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             try
             {
                 fErrorHandler.resetErrors();
-                for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                 {
                     Grammar* grammar=fParser->loadGrammar(fCurrentTest.fXSDNames.elementAt(i)->getURLText(), Grammar::SchemaGrammarType, true);
                     success=(success && (grammar!=NULL));
@@ -226,7 +226,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                 // skip the rest of the group, as we had problems with the schema itself
                 fCurrentTest.fSkipped=true;
                 fFailures++;
-                for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                     printFile(*fCurrentTest.fXSDNames.elementAt(i));
             }
             else
@@ -239,7 +239,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                         fCurrentTest.fSkipped=true;
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
-                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                        for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                             printFile(*fCurrentTest.fXSDNames.elementAt(i));
                     }
                 }
@@ -252,7 +252,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
                         XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
-                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                        for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                             printFile(*fCurrentTest.fXSDNames.elementAt(i));
                     }
                 }
@@ -295,7 +295,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
             if(fatalFailure)
             {
                 fFailures++;
-                for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                     printFile(*fCurrentTest.fXSDNames.elementAt(i));
                 printFile(fCurrentTest.fXMLName);
             }
@@ -307,7 +307,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                     {
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
-                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                        for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                             printFile(*fCurrentTest.fXSDNames.elementAt(i));
                         printFile(fCurrentTest.fXMLName);
                     }
@@ -319,7 +319,7 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
                         fFailures++;
                         XERCES_STD_QUALIFIER cout << "Test " << StrX(fCurrentTest.fTestName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
                         XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
-                        for(unsigned int i=0;i<fCurrentTest.fXSDNames.size();i++)
+                        for(XMLSize_t i=0;i<fCurrentTest.fXSDNames.size();i++)
                             printFile(*fCurrentTest.fXSDNames.elementAt(i));
                         printFile(fCurrentTest.fXMLName);
                     }

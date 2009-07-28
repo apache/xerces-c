@@ -32,7 +32,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/FieldValueMap.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -44,6 +44,30 @@ class IdentityConstraint;
 class XMLScanner;
 class ValueStoreCache;
 
+struct ICValueHasher
+{
+    ICValueHasher(MemoryManager* const manager) : fMemoryManager(manager) {}
+
+    XMLSize_t getHashVal(const void* key, XMLSize_t mod) const;
+    bool equals(const void *const key1, const void *const key2) const;
+
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    /**
+      * Returns whether a field associated <DatatypeValidator, String> value
+      * is a duplicate of another associated value.
+      * It is a duplicate only if either of these conditions are true:
+      * - The Datatypes are the same or related by derivation and the values
+      *   are in the same valuespace.
+      * - The datatypes are unrelated and the values are Stringwise identical.
+      */
+    bool isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const val1,
+                       DatatypeValidator* const dv2, const XMLCh* const val2) const;
+
+
+    MemoryManager* fMemoryManager;
+};
 
 class VALIDATORS_EXPORT ValueStore : public XMemory
 {
@@ -93,28 +117,13 @@ private:
     ValueStore& operator= (const ValueStore& other);
 
     // -----------------------------------------------------------------------
-    //  Helper methods
-    // -----------------------------------------------------------------------
-    /**
-      * Returns whether a field associated <DatatypeValidator, String> value
-      * is a duplicate of another associated value.
-      * It is a duplicate only if either of these conditions are true:
-      * - The Datatypes are the same or related by derivation and the values
-      *   are in the same valuespace.
-      * - The datatypes are unrelated and the values are Stringwise identical.
-      */
-    bool isDuplicateOf(DatatypeValidator* const dv1, const XMLCh* const val1,
-                       DatatypeValidator* const dv2, const XMLCh* const val2);
-
-
-    // -----------------------------------------------------------------------
     //  Data
     // -----------------------------------------------------------------------
     bool                        fDoReportError;
     XMLSize_t                   fValuesCount;
     IdentityConstraint*         fIdentityConstraint;
     FieldValueMap               fValues;
-    RefVectorOf<FieldValueMap>* fValueTuples;
+    RefHashTableOf<FieldValueMap, ICValueHasher>* fValueTuples;
     XMLScanner*                 fScanner; // for error reporting - REVISIT
     MemoryManager*              fMemoryManager;
 };
