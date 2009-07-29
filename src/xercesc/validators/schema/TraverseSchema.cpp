@@ -8840,9 +8840,7 @@ void TraverseSchema::processElemDeclIC(DOMElement* const icElem,
             fIC_NodeListNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<DOMElement*>, PtrHasher>(29, true, fMemoryManager);
         }
 
-        if (fIC_ElementsNS->containsKey(fTargetNSURIString))
-            fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
-
+        fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
         if (!fIC_Elements) {
             fIC_Elements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fMemoryManager);
             fIC_ElementsNS->put((void*) fTargetNSURIString, fIC_Elements);

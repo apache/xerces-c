@@ -342,6 +342,22 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
+	<testGroup name="XERCESC-1583">
+		<annotation>
+			<documentation>keyref are not processing with imported schema</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1583"/>
+		<schemaTest name="XERCESC-1583">
+			<schemaDocument xlink:href="./XERCESC-1583/keyref-main.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-07-29"/>
+		</schemaTest>
+		<instanceTest name="XERCESC-1583-1">
+			<instanceDocument xlink:href="./XERCESC-1583/keyref.xml"/>
+			<expected validity="invalid"/>
+			<current status="accepted" date="2009-07-29"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-1591">
 		<annotation>
 			<documentation>Mishandling of recursive definition on complex content restriction</documentation>
