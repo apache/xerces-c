@@ -6679,15 +6679,24 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
         const XMLCh* childName = child->getLocalName();
 
         if (XMLString::equals(childName, SchemaSymbols::fgELT_ATTRIBUTE)) {
+            if(attWildCard)
+                reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::AnyAttributeBeforeAttribute);
+
             traverseAttributeDecl(child, typeInfo);
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
+            if(attWildCard)
+                reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::AnyAttributeBeforeAttribute);
+
             attGroupInfo = traverseAttributeGroupDecl(child, typeInfo);
             if (attGroupInfo && !attGroupList.containsElement(attGroupInfo)) {
                 attGroupList.addElement(attGroupInfo);
             }
         }
         else if (XMLString::equals(childName, SchemaSymbols::fgELT_ANYATTRIBUTE) ) {
+            if(attWildCard)
+                reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAnyAttribute);
+
             attWildCard = traverseAnyAttribute(child);
             janAttWildCard.reset(attWildCard);
         }

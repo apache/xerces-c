@@ -158,6 +158,8 @@ root {
 		"target namespace of attribute '{0}' cannot be http://www.w3.org/2001/XMLSchema-instance" ,
 		"invalid namespace declaration" ,
 		"namespace fix-up cannot be performed on DOM Level 1 node" ,
+		"more than one anyAttribute declaration found in complex type declaration" ,
+		"anyAttribute must not be followed by other declarations" ,
 		"E_ End " ,
 		"F_ Start " , 
 		"parser has encountered more than '{0}' entity expansions in the document; this is the limit imposed by the application" ,

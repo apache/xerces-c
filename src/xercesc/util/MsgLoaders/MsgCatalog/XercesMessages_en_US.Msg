@@ -153,137 +153,139 @@ $set 1
 154  target namespace of attribute '{0}' cannot be http://www.w3.org/2001/XMLSchema-instance
 155  invalid namespace declaration
 156  namespace fix-up cannot be performed on DOM Level 1 node
-159  parser has encountered more than '{0}' entity expansions in the document; this is the limit imposed by the application
-160  expected comment or CDATA section
-161  attribute name expected
-162  notation name expected
-163  illegal repetition of elements in mixed content model
-164  default attribute declaration expected
-165  equal sign expected
-166  element name expected
-167  comment must start with <!--
-168  invalid document structure
-169  expected version, encoding, or standalone declaration
-170  invalid XML version declaration
-171  unsupported XML version '{0}'
-172  unterminated XML declaration
-173  invalid XML encoding declaration '{0}'
-174  invalid standalone declaration
-175  unterminated comment
-176  processing instruction name expected
-177  unterminated processing instruction
-178  invalid character 0x{0}
-179  unterminated start tag '{0}'
-180  attribute value expected
-181  unterminated end tag '{0}'
-182  expected type for attribute '{0}' of element '{1}'
-183  expected end of tag '{0}'
-184  expected tag name, comment, PI, or other markup
-185  invalid content after root element's end tag
-186  comment expected
-187  comment or processing instruction expected
-188  whitespace expected
-189  expected root element in DOCTYPE declaration
-190  quoted string expected
-191  public id expected
-192  invalid character 0x{0} in public id
-193  unterminated DOCTYPE declaration
-194  invalid character 0x{0} in internal subset
-195  unexpected whitespace
-196  invalid character 0x{1} in attribute value '{0}'
-197  markup declaration expected
-198  TEXT declaration is illegal at this point
-199  conditional section in internal subset
-200  parameter entity name expected
-201  unterminated entity declaration '{0}'
-202  invalid character reference
-203  unterminated character reference
-204  expected entity name for reference
-205  entity '{0}' not found
-206  unparsed entity reference '{0}' is invalid at this point
-207  unterminated entity reference '{0}'
-208  recursive entity expansion '{0}'
-209  partial markup in entity value
-210  unterminated element declaration '{0}'
-211  expected content specification for element '{0}'
-212  '*' expected
-213  mixed content model '{0}' not terminated properly
-214  system or public id expected
-215  unterminated notation declaration
-216  expected ',', '|', or ')'
-217  expected '|' or ')'
-218  expected ',', '|', or ')' in content model of element '{0}'
-219  expected enumeration value for attribute '{0}'
-220  expected '|' or ')'
-221  unterminated entity literal
-222  unmatched end tag detected
-223  '(' expected
-224  attribute '{0}' is already specified for element '{1}'
-225  '<' character cannot be used in attribute value '{0}'; use &lt; instead
-226  leading surrogate character is not followed by a legal second character
-227  expected ']]>' sequence to end conditional section
-228  expected INCLUDE or IGNORE at this point
-229  expected '[' to follow INCLUDE or IGNORE
-230  unexpected end of entity '{0}'
-231  parameter entity propagated out of internal/external subset
-232  unmatched ']' character detected
-233  parameter entity references are not allowed inside markup in internal subset
-234  entity propagated out of the content section into miscellaneous
-235  expected &# to be followed by a numeric character value
-236  '[' expected
-237  ']]>' sequence is not allowed in character data
-238  '--' sequence is illegal in comment
-239  unterminated CDATA section
-240  NDATA expected
-241  NDATA is illegal for parameter entities
-242  hex radix character references must use 'x', not 'X'
-243  {0} declaration already seen
-244  XML declarations must be in this order: version, encoding, standalone
-245  external entity cannot be referred to from attribute value
-246  XML or TEXT declaration must start with '<?xml ', not '<?XML '
-247  expected literal entity value or public/system id
-248  '{0}' is not a valid digit for the specified radix
-249  input ended before all started tags were ended; last tag started is '{0}'
-250  nested CDATA section illegal
-251  prefix '{0}' can not be resolved to namespace URI
-252  start and the end tags are in different entities
-253  XML document cannot be empty
-254  CDATA section is illegal outside the root element
-255  unexpected trailing surrogate character
-256  processing instruction cannot start with 'xml'
-257  XML or TEXT declaration must start at line 1, column 1
-258  version declaration is required in XML declaration
-259  standalone declaration is only legal in the main XML entity
-260  encoding declaration is required in TEXT declaration
-261  colon is illegal in names when namespaces are enabled
-262  {0}
-263  schemaLocation does not contain namespace-location pairs
-264  fatal error during schema scan
-265  reference to external entity declaration '{0}' is illegal in standalone document
-266  partial markup in parameter entity replacement text in complete declaration
-267  invalid namespace value in prefix-namespace mapping '{0}'
-268  prefix 'xmlns' cannot be explicitly bound to namespace
-269  namespace for 'xmlns' cannot be explicitly bound to prefix
-270  prefix 'xml' cannot be bound to namespace other than its canonical namespace
-271  namespace for 'xml' cannot be bound to prefix other than 'xml'
-272  element '{0}' cannot have 'xmlns' as its prefix
-273  restriction must contain simpleType definition
-274  invalid root element '{0}' in DOCTYPE declaration
-275  invalid element name '{0}'
-276  invalid attribute name '{0}'
-277  invalid entity reference name '{0}'
-278  DOCTYPE declaration already seen
-279  fallback element is not a direct child of include element
-280  include element without 'href' attribute
-281  include element with XPointer specification; XPointer is not yet supported
-282  invalid 'parse' attribute value '{0}'; expected 'text' or 'xml'
-283  multiple fallback elements in document '{0}'
-284  include failed and no fallback element found in document '{0}'
-285  circular inclusion in document '{0}'
-286  self-inclusion in document '{0}'
-287  element '{0}' is not allowed as a child of include element
-288  included notation '{0}' conflicts with notation already defined
-289  included entity '{0}' conflicts with entity already defined
+157  more than one anyAttribute declaration found in complex type declaration
+158  anyAttribute must not be followed by other declarations
+161  parser has encountered more than '{0}' entity expansions in the document; this is the limit imposed by the application
+162  expected comment or CDATA section
+163  attribute name expected
+164  notation name expected
+165  illegal repetition of elements in mixed content model
+166  default attribute declaration expected
+167  equal sign expected
+168  element name expected
+169  comment must start with <!--
+170  invalid document structure
+171  expected version, encoding, or standalone declaration
+172  invalid XML version declaration
+173  unsupported XML version '{0}'
+174  unterminated XML declaration
+175  invalid XML encoding declaration '{0}'
+176  invalid standalone declaration
+177  unterminated comment
+178  processing instruction name expected
+179  unterminated processing instruction
+180  invalid character 0x{0}
+181  unterminated start tag '{0}'
+182  attribute value expected
+183  unterminated end tag '{0}'
+184  expected type for attribute '{0}' of element '{1}'
+185  expected end of tag '{0}'
+186  expected tag name, comment, PI, or other markup
+187  invalid content after root element's end tag
+188  comment expected
+189  comment or processing instruction expected
+190  whitespace expected
+191  expected root element in DOCTYPE declaration
+192  quoted string expected
+193  public id expected
+194  invalid character 0x{0} in public id
+195  unterminated DOCTYPE declaration
+196  invalid character 0x{0} in internal subset
+197  unexpected whitespace
+198  invalid character 0x{1} in attribute value '{0}'
+199  markup declaration expected
+200  TEXT declaration is illegal at this point
+201  conditional section in internal subset
+202  parameter entity name expected
+203  unterminated entity declaration '{0}'
+204  invalid character reference
+205  unterminated character reference
+206  expected entity name for reference
+207  entity '{0}' not found
+208  unparsed entity reference '{0}' is invalid at this point
+209  unterminated entity reference '{0}'
+210  recursive entity expansion '{0}'
+211  partial markup in entity value
+212  unterminated element declaration '{0}'
+213  expected content specification for element '{0}'
+214  '*' expected
+215  mixed content model '{0}' not terminated properly
+216  system or public id expected
+217  unterminated notation declaration
+218  expected ',', '|', or ')'
+219  expected '|' or ')'
+220  expected ',', '|', or ')' in content model of element '{0}'
+221  expected enumeration value for attribute '{0}'
+222  expected '|' or ')'
+223  unterminated entity literal
+224  unmatched end tag detected
+225  '(' expected
+226  attribute '{0}' is already specified for element '{1}'
+227  '<' character cannot be used in attribute value '{0}'; use &lt; instead
+228  leading surrogate character is not followed by a legal second character
+229  expected ']]>' sequence to end conditional section
+230  expected INCLUDE or IGNORE at this point
+231  expected '[' to follow INCLUDE or IGNORE
+232  unexpected end of entity '{0}'
+233  parameter entity propagated out of internal/external subset
+234  unmatched ']' character detected
+235  parameter entity references are not allowed inside markup in internal subset
+236  entity propagated out of the content section into miscellaneous
+237  expected &# to be followed by a numeric character value
+238  '[' expected
+239  ']]>' sequence is not allowed in character data
+240  '--' sequence is illegal in comment
+241  unterminated CDATA section
+242  NDATA expected
+243  NDATA is illegal for parameter entities
+244  hex radix character references must use 'x', not 'X'
+245  {0} declaration already seen
+246  XML declarations must be in this order: version, encoding, standalone
+247  external entity cannot be referred to from attribute value
+248  XML or TEXT declaration must start with '<?xml ', not '<?XML '
+249  expected literal entity value or public/system id
+250  '{0}' is not a valid digit for the specified radix
+251  input ended before all started tags were ended; last tag started is '{0}'
+252  nested CDATA section illegal
+253  prefix '{0}' can not be resolved to namespace URI
+254  start and the end tags are in different entities
+255  XML document cannot be empty
+256  CDATA section is illegal outside the root element
+257  unexpected trailing surrogate character
+258  processing instruction cannot start with 'xml'
+259  XML or TEXT declaration must start at line 1, column 1
+260  version declaration is required in XML declaration
+261  standalone declaration is only legal in the main XML entity
+262  encoding declaration is required in TEXT declaration
+263  colon is illegal in names when namespaces are enabled
+264  {0}
+265  schemaLocation does not contain namespace-location pairs
+266  fatal error during schema scan
+267  reference to external entity declaration '{0}' is illegal in standalone document
+268  partial markup in parameter entity replacement text in complete declaration
+269  invalid namespace value in prefix-namespace mapping '{0}'
+270  prefix 'xmlns' cannot be explicitly bound to namespace
+271  namespace for 'xmlns' cannot be explicitly bound to prefix
+272  prefix 'xml' cannot be bound to namespace other than its canonical namespace
+273  namespace for 'xml' cannot be bound to prefix other than 'xml'
+274  element '{0}' cannot have 'xmlns' as its prefix
+275  restriction must contain simpleType definition
+276  invalid root element '{0}' in DOCTYPE declaration
+277  invalid element name '{0}'
+278  invalid attribute name '{0}'
+279  invalid entity reference name '{0}'
+280  DOCTYPE declaration already seen
+281  fallback element is not a direct child of include element
+282  include element without 'href' attribute
+283  include element with XPointer specification; XPointer is not yet supported
+284  invalid 'parse' attribute value '{0}'; expected 'text' or 'xml'
+285  multiple fallback elements in document '{0}'
+286  include failed and no fallback element found in document '{0}'
+287  circular inclusion in document '{0}'
+288  self-inclusion in document '{0}'
+289  element '{0}' is not allowed as a child of include element
+290  included notation '{0}' conflicts with notation already defined
+291  included entity '{0}' conflicts with entity already defined
 
 
 $set 2
