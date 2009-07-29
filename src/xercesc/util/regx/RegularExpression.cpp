@@ -140,7 +140,7 @@ RegularExpression::Context::Context(Context* src) :
     }
     if(src->fMatch)
     {
-        fMatch=new Match(*src->fMatch);
+        fMatch=new (fMemoryManager) Match(*src->fMatch);
         fAdoptMatch=true;
     }
 }
@@ -152,30 +152,46 @@ RegularExpression::Context& RegularExpression::Context::operator=(const RegularE
         fStart=other.fStart;
         fLimit=other.fLimit;
         fLength=other.fLength;
-        fSize=other.fSize;
         fStringMaxLen=other.fStringMaxLen;
         fString=other.fString;
         fOptions=other.fOptions;
-        if (fOffsets)
-            fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
-        fOffsets=0;
-        if (fAdoptMatch)
-            delete fMatch;
-        fMatch=0;
-        fAdoptMatch=false;
 
-        fMemoryManager=other.fMemoryManager;
-        if(other.fOffsets)
+        // if offset and match are already allocated with the right size, reuse them 
+        // (fMatch can be provided by the user to get the data back)
+        if(fMatch && other.fMatch && fMatch->getNoGroups()==other.fMatch->getNoGroups())
+            *fMatch=*other.fMatch;
+        else
         {
-            fOffsets = (int*) fMemoryManager->allocate(fSize* sizeof(int));
+            if (fAdoptMatch)
+                delete fMatch;
+            fMatch=0;
+            if(other.fMatch)
+            {
+                fMatch=new (other.fMemoryManager) Match(*other.fMatch);
+                fAdoptMatch=true;
+            }
+        }
+
+        if (fOffsets && other.fOffsets && fSize==other.fSize)
+        {
             for (int i = 0; i< fSize; i++)
                 fOffsets[i] = other.fOffsets[i];
         }
-        if(other.fMatch)
+        else
         {
-            fMatch=new Match(*other.fMatch);
-            fAdoptMatch=true;
+            if(fOffsets)
+                fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+            fOffsets=0;
+            fSize=other.fSize;
+            if(other.fOffsets)
+            {
+                fOffsets = (int*) other.fMemoryManager->allocate(fSize* sizeof(int));
+                for (int i = 0; i< fSize; i++)
+                    fOffsets[i] = other.fOffsets[i];
+            }
         }
+
+        fMemoryManager=other.fMemoryManager;
     }
 
     return *this;
