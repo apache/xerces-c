@@ -568,7 +568,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const XMLSize_t s
 
             if (context.fMatch != 0) {
                 context.fMatch->setStartPos(0, ret);
-                context.fMatch->setEndPos(0, (int)(ret + strLength));
+                context.fMatch->setEndPos(0, (int)(ret + XMLString::stringLen(fPattern)));
             }
             return true;
         }
