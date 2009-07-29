@@ -134,7 +134,9 @@ bool SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         }
         else {
             // Get the element's content model or fault it in
-            XMLContentModel* elemCM = currType->getContentModel();
+            XMLContentModel* elemCM = (currType)
+                    ? currType->getContentModel()
+                    : ((SchemaElementDecl*)elemDecl)->getContentModel();
 
             // Ask it to validate and return its return
             unsigned int emptyNS = getScanner()->getEmptyNamespaceId();
