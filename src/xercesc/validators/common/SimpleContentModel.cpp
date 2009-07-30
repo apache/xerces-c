@@ -222,39 +222,47 @@ SimpleContentModel::validateContent(QName** const       children
                 return false;
             }
 
-            if (childCount == 2) {
+            // test first child
+            if (fDTD) {
+                if (!XMLString::equals(children[0]->getRawName(), fFirstChild->getRawName())) {
+                    *indexFailingChild=0;
+                    return false;
+                }
+            }
+            else {
+                if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                    !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
+                    *indexFailingChild=0;
+                    return false;
+                }
+            }
+            // test second child, if present
+            if( childCount == 1)
+            {
+                // missing second child
+                *indexFailingChild=1;
+                return false;
+            }
+            else
+            {
                 if (fDTD) {
-                    if (!XMLString::equals(children[0]->getRawName(), fFirstChild->getRawName())) {
-                        *indexFailingChild=0;
-                        return false;
-                    }
                     if (!XMLString::equals(children[1]->getRawName(), fSecondChild->getRawName())) {
                         *indexFailingChild=1;
                         return false;
                     }
                 }
                 else {
-                    if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                        !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
-                        *indexFailingChild=0;
-                        return false;
-                    }
-
                     if ((children[1]->getURI() != fSecondChild->getURI()) ||
                         !XMLString::equals(children[1]->getLocalPart(), fSecondChild->getLocalPart())) {
                         *indexFailingChild=1;
                         return false;
                     }
                 }
-            }
-            else {
+
                 if (childCount > 2) {
                     *indexFailingChild=2;
                     return false;
                 }
-
-                *indexFailingChild=childCount;
-                return false;
             }
             break;
 
@@ -429,18 +437,25 @@ bool SimpleContentModel::validateContentSpecial(QName** const         children
                 return false;
             }
 
-            if (childCount == 2)
+            // test first child
+            if ((children[0]->getURI() != fFirstChild->getURI()) ||
+                !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart()))
             {
-                if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                    !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart()))
+                if(!comparator.isEquivalentTo(children[0], fFirstChild))
                 {
-                    if(!comparator.isEquivalentTo(children[0], fFirstChild))
-                    {
-                        *indexFailingChild=0;
-                        return false;
-                    }
+                    *indexFailingChild=0;
+                    return false;
                 }
-
+            }
+            // test second child, if present
+            if( childCount == 1)
+            {
+                // missing second child
+                *indexFailingChild=1;
+                return false;
+            }
+            else
+            {
                 if ((children[1]->getURI() != fSecondChild->getURI()) ||
                     !XMLString::equals(children[1]->getLocalPart(), fSecondChild->getLocalPart()))
                 {
@@ -450,17 +465,12 @@ bool SimpleContentModel::validateContentSpecial(QName** const         children
                         return false;
                     }
                 }
-            }
-            else
-            {
-                if (childCount > 2)
-                {
+
+                if (childCount > 2) {
                     *indexFailingChild=2;
                     return false;
                 }
 
-                *indexFailingChild=childCount;
-                return false;
             }
             break;
 
