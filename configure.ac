@@ -55,7 +55,8 @@ AC_MSG_RESULT($xerces_cv_rpath)
 
 # Checks for programs.
 AC_PROG_CXX
-AC_PROG_CC
+# Use the C++ compiler for the compile tests
+AC_LANG(C++)
 # used by "make check"
 AC_PROG_SED
 #it would be nice to also check for PERL...
@@ -255,16 +256,38 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
                                      [[DeleteFileW(file);]])],
                     [
                       xerces_cv_type_xmlch=wchar_t
-                   	  AC_MSG_RESULT([yes])
+                      AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([XERCES_INCLUDE_WCHAR_H], 1, [Define to have Xerces_autoconf_config.hpp include wchar.h])
                     ],
-	                [
+                    [
                       xerces_cv_type_xmlch=$xerces_cv_type_u16bit_int
                       AC_MSG_RESULT([no])
                     ]
                  )
 
 AC_DEFINE_UNQUOTED([XERCES_XMLCH_T], [$xerces_cv_type_xmlch], [Define to the 16 bit type used to represent Xerces UTF-16 characters])
+
+AC_MSG_CHECKING([whether the compiler chokes on a placement operator delete])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <stdlib.h>
+                                        
+                                        class XMemory
+                                        {
+                                        public :
+                                            void* operator new(size_t s) { return 0; }
+                                            void* operator new(size_t s, void* ptr) { return 0; }
+                                            void operator delete(void* p) {}
+                                            void operator delete(void* p, void* ptr) {}
+                                        };]],
+                                     [[ ]])],
+                    [
+                      AC_MSG_RESULT([no])
+                    ],
+                    [
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([XERCES_NO_MATCHING_DELETE_OPERATOR], 1, [Define to have XMemory.hpp avoid declaring a matching operator delete for the placement operator new])
+                    ]
+                 )
+
 
 AS_IF([test x$ac_cv_type_size_t = xyes],
 	AC_DEFINE([XERCES_SIZE_T], [size_t], [Define as the appropriate size_t type]),
