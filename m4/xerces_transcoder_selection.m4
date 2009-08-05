@@ -24,8 +24,18 @@ AC_DEFUN([XERCES_TRANSCODER_SELECTION],
 	# Check for GNU iconv support
 	no_GNUiconv=false
 	AC_CHECK_HEADERS([iconv.h wchar.h string.h stdlib.h stdio.h ctype.h locale.h errno.h], [], [no_GNUiconv=true])
-    # The code in iconv loads either endian.h or machine/endian.h, so verify that at least one is present
-	AC_CHECK_HEADER([endian.h], [], [AC_CHECK_HEADER([machine/endian.h],[],[no_GNUiconv=true])])
+        # The code in iconv needs just on of these include files
+	AC_CHECK_HEADER([endian.h], 
+                        [], 
+                        [
+                         AC_CHECK_HEADER([machine/endian.h],
+                                         [],
+                                         [
+                                          AC_CHECK_HEADER([arpa/nameser_compat.h],
+                                                          [],
+                                                          [no_GNUiconv=true])
+                                         ])
+                        ])
 	AC_CHECK_FUNCS([iconv_open iconv_close iconv], [], [no_GNUiconv=true])
 	AC_MSG_CHECKING([whether we can support the GNU iconv Transcoder])
 	list_add=

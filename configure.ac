@@ -98,7 +98,7 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h loc
                   sys/param.h sys/socket.h sys/time.h sys/timeb.h \
                   unistd.h wchar.h wctype.h \
                   CoreServices/CoreServices.h \
-                  endian.h machine/endian.h \
+                  endian.h machine/endian.h arpa/nameser_compat.h \
                  ])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -157,7 +157,7 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                  )
 AC_MSG_CHECKING([for wcsrtombs])
 AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
-                                     [[mbstate_t st; char buffer[2]; wchar_t src[2]; wcsrtombs(buffer, &src, 2, &st);]])],
+                                     [[mbstate_t st; char buffer[2]; const wchar_t* src=0; wcsrtombs(buffer, &src, 2, &st);]])],
                     [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 1, [Define to 1 if you have the `wcsrtombs' function.])
@@ -169,7 +169,7 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                  )
 AC_MSG_CHECKING([for mbsrtowcs])
 AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
-                                     [[mbstate_t st; wchar_t buffer[2]; char src[2]; mbsrtowcs(buffer, &src, 2, &st);]])],
+                                     [[mbstate_t st; wchar_t buffer[2]; const char* src=0; mbsrtowcs(buffer, &src, 2, &st);]])],
                     [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 1, [Define to 1 if you have the `mbsrtowcs' function.])
