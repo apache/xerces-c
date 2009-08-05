@@ -185,10 +185,10 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <iconv.h>]],
                                      [[
                                        const char *fromPtr=0;
                                        size_t     fromLen=0;
-                                       const char *toPtr=0;
+                                       char       *toPtr=0;
                                        size_t     toLen=0;
                                        iconv_t    cv=0;
-                                       iconv(cv, &tmpPtr, &fromLen, &toPtr, &toLen);
+                                       iconv(cv, &fromPtr, &fromLen, &toPtr, &toLen);
                                       ]])],
                     [
                       AC_MSG_RESULT([yes])
