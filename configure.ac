@@ -180,6 +180,25 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                     ]
                  )
 
+AC_MSG_CHECKING([if iconv uses const pointers])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <iconv.h>]],
+                                     [[
+                                       const char *fromPtr=0;
+                                       size_t     fromLen=0;
+                                       const char *toPtr=0;
+                                       size_t     toLen=0;
+                                       iconv_t    cv=0;
+                                       iconv(cv, &tmpPtr, &fromLen, &toPtr, &toLen);
+                                      ]])],
+                    [
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([ICONV_USES_CONST_POINTER], 1, [Define to 1 if you have to use const char* with iconv, to 0 if you must use char*.])
+                    ],
+                    [
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([ICONV_USES_CONST_POINTER], 0, [Define to 1 if you have to use const char* with iconv, to 0 if you must use char*.])
+                    ]
+                 )
 
 AC_SUBST([SHREXT], [$shrext_cmds])
 

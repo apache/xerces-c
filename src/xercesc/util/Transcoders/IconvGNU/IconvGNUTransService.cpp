@@ -242,7 +242,11 @@ XMLCh IconvGNUWrapper::toUpper (const XMLCh ch)
     xmlChToMbc (ch, wcbuf);
 
     char    tmpArr[4];
+#if ICONV_USES_CONST_POINTER
     const char* ptr = wcbuf;
+#else
+    char* ptr = wcbuf;
+#endif
     size_t    len = fUChSize;
     char    *pTmpArr = tmpArr;
     size_t    bLen = 2;
@@ -271,7 +275,11 @@ XMLCh IconvGNUWrapper::toLower (const XMLCh ch)
     xmlChToMbc (ch, wcbuf);
 
     char    tmpArr[4];
+#if ICONV_USES_CONST_POINTER
     const char* ptr = wcbuf;
+#else
+    char* ptr = wcbuf;
+#endif
     size_t    len = fUChSize;
     char    *pTmpArr = tmpArr;
     size_t    bLen = 2;
@@ -372,7 +380,11 @@ size_t    IconvGNUWrapper::iconvFrom ( const char    *fromPtr,
                  char        **toPtr,
                  size_t        toLen )
 {
+#if ICONV_USES_CONST_POINTER
     const char ** tmpPtr = &fromPtr;
+#else
+    char ** tmpPtr = (char**)&fromPtr;
+#endif
     return ::iconv (fCDFrom, tmpPtr, fromLen, toPtr, &toLen);
 }
 
@@ -381,7 +393,11 @@ size_t    IconvGNUWrapper::iconvTo ( const char    *fromPtr,
                    char        **toPtr,
                    size_t        toLen )
 {
+#if ICONV_USES_CONST_POINTER
     const char ** tmpPtr = &fromPtr;
+#else
+    char ** tmpPtr = (char**)&fromPtr;
+#endif
     return ::iconv (fCDTo, tmpPtr, fromLen, toPtr, &toLen);
 }
 
