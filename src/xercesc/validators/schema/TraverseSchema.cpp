@@ -5222,26 +5222,17 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
             if ((blockSet & SchemaSymbols::XSD_SUBSTITUTION) == 0 ) {
                 blockSet += SchemaSymbols::XSD_SUBSTITUTION;
             }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionRepeated);
-            }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
             if ((blockSet & SchemaSymbols::XSD_EXTENSION) == 0) {
                 blockSet += SchemaSymbols::XSD_EXTENSION;
             }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
-            }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
             if ((blockSet & SchemaSymbols::XSD_RESTRICTION) == 0 ) {
                 blockSet += SchemaSymbols::XSD_RESTRICTION;
-            }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::RestrictionRepeated);
             }
         }
         else {
@@ -5283,18 +5274,12 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
             if ((finalSet & SchemaSymbols::XSD_UNION) == 0) {
                 finalSet += SchemaSymbols::XSD_UNION;
             }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UnionRepeated);
-            }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)
                  && (finalType == EC_Final || finalType == ECS_Final)) {
 
             if ((finalSet & SchemaSymbols::XSD_EXTENSION) == 0) {
                 finalSet += SchemaSymbols::XSD_EXTENSION;
-            }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
             }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgELT_LIST)
@@ -5303,17 +5288,11 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
             if ((finalSet & SchemaSymbols::XSD_LIST) == 0 ) {
                 finalSet += SchemaSymbols::XSD_LIST;
             }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ListRepeated);
-            }
         }
         else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
             if ((finalSet & SchemaSymbols::XSD_RESTRICTION) == 0 ) {
                 finalSet += SchemaSymbols::XSD_RESTRICTION;
-            }
-            else {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::RestrictionRepeated);
             }
         }
         else {
@@ -7919,6 +7898,11 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
                 && !(childAttDefType & XMLAttDef::Required)) {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_2, childLocalPart);
             }
+
+            // if the attribute in the derived type is prohibited, and it didn't try to override a required attribute,
+            // it's ok and shouldn't be tested for data type or fixed value
+            if (childAttDefType == XMLAttDef::Prohibited)
+                continue;
 
             // Constraint 2.1.2
             DatatypeValidator* baseDV = baseAttDef->getDatatypeValidator();

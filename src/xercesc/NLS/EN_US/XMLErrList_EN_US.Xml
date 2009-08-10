@@ -119,11 +119,6 @@
             <Message Id="InvalidChildInComplexContent" Text="invalid element following restriction or extension definition in complexContent"/>
             <Message Id="AnnotationError" Text="duplicate annotation in type '{0}'"/>
             <Message Id="DisallowedBaseDerivation" Text="type '{0}' cannot be used in its own union, list, or restriction definition"/>
-            <Message Id="SubstitutionRepeated" Text="value 'substitution' is already in the final list"/>
-            <Message Id="UnionRepeated" Text="value 'union' is already in the final list"/>
-            <Message Id="ExtensionRepeated" Text="value 'extension' is already in the final list"/>
-            <Message Id="ListRepeated" Text="value 'list' is already in the final list"/>
-            <Message Id="RestrictionRepeated" Text="value 'restriction' is already in the final list"/>
             <Message Id="InvalidBlockValue" Text="block value '{0}' is invalid"/>
             <Message Id="InvalidFinalValue" Text="final value '{0}' is invalid"/>
             <Message Id="InvalidSubstitutionGroupElement" Text="element '{0}' cannot be part of the substitution group headed by '{1}'"/>
