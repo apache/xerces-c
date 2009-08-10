@@ -1270,7 +1270,7 @@ void XMLScanner::scanProlog()
 
                     // if reusing grammar, this has been validated already in first scan
                     // skip for performance
-                    if (fValidate && !fGrammar->getValidated()) {
+                    if (fValidate && fGrammar && !fGrammar->getValidated()) {
                         //  validate the DTD scan so far
                         fValidator->preContentValidation(fUseCachedGrammar, true);
                     }
