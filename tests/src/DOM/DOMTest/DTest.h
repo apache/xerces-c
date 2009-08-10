@@ -111,6 +111,8 @@ bool testLSExceptions();
 bool testElementTraversal();
 
 bool testRegex();
+bool testScanner(XercesDOMParser* parser);
+
 };
 
 class myUserDataHandler : public DOMUserDataHandler {

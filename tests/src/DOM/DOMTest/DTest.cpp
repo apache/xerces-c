@@ -32,6 +32,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMLSException.hpp>
@@ -874,30 +875,30 @@ int main(int /*argc*/, char ** /*argv*/)
          // docDocType->getEntities()->setNamedItem(docEntity);
 
          XMLString::transcode("d", tempStr3, 3999);
-         OK = test.docBuilder(d, tempStr3);
+         OK &= test.docBuilder(d, tempStr3);
 
          test.findTestNodes((DOMNode*)d);
 
-         OK = test.testAttr(d);
-         OK = test.testCDATASection(d);
-         OK = test.testCharacterData(d);
-         OK = test.testChildNodeList(d);
-         OK = test.testComment(d);
-         OK = test.testDeepNodeList(d);
-         OK = test.testDocument(d);
-         OK = test.testDocumentFragment(d);
-         OK = test.testDocumentType(d);
-         OK = test.testDOMImplementation(d);
-         OK = test.testElement(d);
-//         OK = test.testEntity(d);  // Can not test entities;  only parser can create them.
-         OK = test.testEntityReference(d);
-         OK = test.testNode(d);
-         OK = test.testNotation(d);
-         OK = test.testPI(d);
-         OK = test.testText(d);
-         OK = test.testDOMerrors(d);
-         OK = test.testXPath(d);
-         OK = test.testRegex();
+         OK &= test.testAttr(d);
+         OK &= test.testCDATASection(d);
+         OK &= test.testCharacterData(d);
+         OK &= test.testChildNodeList(d);
+         OK &= test.testComment(d);
+         OK &= test.testDeepNodeList(d);
+         OK &= test.testDocument(d);
+         OK &= test.testDocumentFragment(d);
+         OK &= test.testDocumentType(d);
+         OK &= test.testDOMImplementation(d);
+         OK &= test.testElement(d);
+//         OK &= test.testEntity(d);  // Can not test entities;  only parser can create them.
+         OK &= test.testEntityReference(d);
+         OK &= test.testNode(d);
+         OK &= test.testNotation(d);
+         OK &= test.testPI(d);
+         OK &= test.testText(d);
+         OK &= test.testDOMerrors(d);
+         OK &= test.testXPath(d);
+         OK &= test.testRegex();
 
          // Null out the static object references in class DOMTest,
          // which will recover their storage.
@@ -930,24 +931,25 @@ int main(int /*argc*/, char ** /*argv*/)
         parser->setDoSchema(true);
         parser->setCreateEntityReferenceNodes(true);
 
-        OK = test.testBaseURI(parser);
+        OK &= test.testBaseURI(parser);
 
         parser->setCreateEntityReferenceNodes(false);
-        OK = test.testBaseURI(parser);
+        OK &= test.testBaseURI(parser);
 
         parser->setDoNamespaces(false);
         parser->setDoSchema(false);
-        OK = test.testBaseURI(parser);
+        OK &= test.testBaseURI(parser);
 
         parser->setCreateEntityReferenceNodes(true);
-        OK = test.testBaseURI(parser);
+        OK &= test.testBaseURI(parser);
 
-		OK = test.testWholeText(parser);
+		OK &= test.testWholeText(parser);
+        OK &= test.testScanner(parser);
         delete parser;
 
-        OK = test.testLSExceptions();
+        OK &= test.testLSExceptions();
 
-        OK = test.testElementTraversal();
+        OK &= test.testElementTraversal();
     }
 
     XMLPlatformUtils::Terminate();
@@ -5310,6 +5312,173 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("-0 +3989 -90.76754,+9E77, -0.3e+9", "(((\\+|\\-)?(0|[1-9][0-9]*)?(\\.[0-9]*)?((E|e)(\\+|\\-)?[0-9]+)?)?( )?(,)?( )?)*", __FILE__);
 
     delete hugeString;
+
+    return OK;
+}
+
+
+// support classes to feed data with variable chunks
+
+class Slicer : public BinInputStream
+{
+public:
+	Slicer(const XMLByte* src, XMLSize_t size, const XMLSize_t* slices = 0, XMLSize_t count = 0)
+	: mSrc(src), mSize(size), mSlices(slices), mCount(count), mPos(0), mSlice(0), mBoundary(0)
+	{
+	}
+
+	XMLFilePos curPos() const
+	{
+		return mPos;
+	}
+
+	XMLSize_t readBytes(XMLByte* const toFill, const XMLSize_t maxToRead)
+	{
+		if (mPos == mBoundary)
+		{
+			if (mSlice < mCount)
+			{
+                XMLSize_t next = mBoundary + mSlices[mSlice++];
+                mBoundary = (mSize<next)?mSize:next;
+			}
+			else
+			{
+				mBoundary = mSize;
+			}
+		}
+        XMLSize_t remain = mBoundary - mPos;
+        XMLSize_t toRead = (maxToRead<remain)?maxToRead:remain;
+		memcpy(toFill, mSrc + mPos, toRead);
+		mPos += toRead;
+		return toRead;
+	}
+
+    virtual const XMLCh* getContentType() const
+    {
+        return 0;
+    }
+
+private:
+
+	const XMLByte* const    mSrc;
+	const XMLSize_t         mSize;
+	const XMLSize_t* const  mSlices;
+	const XMLSize_t         mCount;
+
+	XMLSize_t               mPos, mSlice;
+	XMLSize_t               mBoundary;
+};
+
+
+class SlicerSource : public InputSource
+{
+public:
+	SlicerSource(const XMLByte* src, XMLSize_t size, const XMLSize_t* slices = 0, XMLSize_t count = 0)
+	: mSrc(src), mSize(size), mSlices(slices), mCount(count)
+	{
+	}
+
+	XERCES_CPP_NAMESPACE::BinInputStream* makeStream() const
+	{
+		return new Slicer(mSrc, mSize, mSlices, mCount);
+	}
+
+private:
+	const XMLByte* const    mSrc;
+	const XMLSize_t         mSize;
+	const XMLSize_t* const  mSlices;
+	const XMLSize_t         mCount;
+};
+
+bool DOMTest::testScanner(XercesDOMParser* parser) {
+    bool OK = true;
+
+    const char sampleDoc[] =
+	    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	    "<!-- Document element is document -->\n"
+	    "<document attr=\"value\">\n"
+	    "   <!-- a tag -->\n"
+	    "   <tag>foo</tag>\n"
+	    "\n"
+	    "   <!-- another tag -->\n"
+	    "   <tag/>\n"
+	    "</document>\n";
+    const size_t sampleDocSize = sizeof(sampleDoc) - 1;
+    const XMLByte* sampleDocXML = reinterpret_cast<const XMLByte*>(sampleDoc);
+
+    try
+	{
+		// First, try parsing the document in one hit
+		SlicerSource src(sampleDocXML, sampleDocSize);
+		parser->parse(src);
+	}
+	catch (...)
+	{
+        OK = false;
+        fprintf(stderr, "Variable chunks parsing failed at line %i\n", __LINE__);
+	}
+
+	try
+	{
+		// Now, parse it in blocks that end between the '<',  '!' and '--' of a comment
+		const XMLSize_t slices[] = { 142, 1 };
+		const XMLSize_t count = sizeof(slices) / sizeof(slices[0]);
+		SlicerSource src(sampleDocXML, sampleDocSize, slices, count);
+		parser->parse(src);
+	}
+	catch (...)
+	{
+        OK = false;
+        fprintf(stderr, "Variable chunks parsing failed at line %i\n", __LINE__);
+	}
+
+	try
+	{
+		// Now, parse it in blocks that end between the '<',  '!-' and '-' of a comment
+		const XMLSize_t slices[] = { 142, 2 };
+		const XMLSize_t count = sizeof(slices) / sizeof(slices[0]);
+		SlicerSource src(sampleDocXML, sampleDocSize, slices, count);
+		parser->parse(src);
+	}
+	catch (...)
+	{
+        OK = false;
+        fprintf(stderr, "Variable chunks parsing failed at line %i\n", __LINE__);
+	}
+
+	try
+	{
+		// Now, parse it in blocks that end between the '<',  '!-' and '-' of a comment
+		static const XMLSize_t slices[] =
+        {
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1};
+		static const XMLSize_t count = sizeof(slices) / sizeof(slices[0]);
+		SlicerSource src(sampleDocXML, sampleDocSize, slices, count);
+		parser->parse(src);
+	}
+	catch (...)
+	{
+        OK = false;
+        fprintf(stderr, "Variable chunks parsing failed at line %i\n", __LINE__);
+	}
 
     return OK;
 }
