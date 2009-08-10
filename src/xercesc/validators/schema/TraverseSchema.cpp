@@ -7980,6 +7980,11 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_2, childLocalPart);
             }
 
+            // if the attribute in the derived type is prohibited, and it didn't try to override a required attribute,
+            // it's ok and shouldn't be tested for data type or fixed value
+            if (childAttDefType == XMLAttDef::Prohibited)
+                continue;
+
             // Constraint 2.1.2
             DatatypeValidator* baseDV = baseAttDef->getDatatypeValidator();
             DatatypeValidator* childDV = childAttDef->getDatatypeValidator();
