@@ -224,7 +224,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                         ValueValidate = true;
                     }
-                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
+                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCATION))
                     {
                         // use anyURI as the validator
                         // tokenize the data and use the anyURI data for each piece
@@ -239,7 +239,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         ValueValidate = false;
                         tokenizeBuffer = true;
                     }
-                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
+                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCATION))
                     {
                         attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
                         //We should validate this value however
@@ -1711,9 +1711,9 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                 const XMLCh* valuePtr = curPair->getValue();
                 const XMLCh* suffPtr = &rawPtr[colonInd + 1];
 
-                if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
+                if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCATION))
                     parseSchemaLocation(valuePtr);
-                else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
+                else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCATION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
 
                 if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE)) {
@@ -1753,8 +1753,11 @@ void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
     if (size % 2 != 0 ) {
         emitError(XMLErrs::BadSchemaLocation);
     } else {
+        // We need a buffer to normalize the attribute value into
+        XMLBuffer normalBuf(1023, fMemoryManager);
         for(XMLSize_t i=0; i<size; i=i+2) {
-            resolveSchemaGrammar(fLocationPairs->elementAt(i+1), fLocationPairs->elementAt(i));
+            normalizeAttRawValue(SchemaSymbols::fgXSI_SCHEMALOCATION, fLocationPairs->elementAt(i), normalBuf);
+            resolveSchemaGrammar(fLocationPairs->elementAt(i+1), normalBuf.getRawBuffer());
         }
     }
 }
