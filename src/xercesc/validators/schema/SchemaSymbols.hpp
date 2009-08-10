@@ -38,8 +38,12 @@ public :
     // -----------------------------------------------------------------------
     static const XMLCh fgURI_XSI[];
     static const XMLCh fgURI_SCHEMAFORSCHEMA[];
+    // deprecated (typo)
     static const XMLCh fgXSI_SCHEMALOCACTION[];
+    // deprecated (typo)
     static const XMLCh fgXSI_NONAMESPACESCHEMALOCACTION[];
+    static const XMLCh fgXSI_SCHEMALOCATION[];
+    static const XMLCh fgXSI_NONAMESPACESCHEMALOCATION[];
     static const XMLCh fgXSI_TYPE[];
     static const XMLCh fgELT_ALL[];
     static const XMLCh fgELT_ANNOTATION[];
