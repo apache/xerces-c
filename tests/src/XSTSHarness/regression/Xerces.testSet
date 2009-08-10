@@ -86,7 +86,23 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
-	<testGroup name="XERCESC-711">
+  <testGroup name="XERCESC-697">
+    <annotation>
+      <documentation>Incorrect Schema Validation Failure When Redefining Complex Type with Simple Content</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-697"/>
+    <schemaTest name="XERCESC-697">
+      <schemaDocument xlink:href="./XERCESC-697/redefined.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2009-08-10"/>
+    </schemaTest>
+    <instanceTest name="XERCESC-697">
+      <instanceDocument xlink:href="./XERCESC-697/redefined.xml"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2009-08-10"/>
+    </instanceTest>
+  </testGroup>
+  <testGroup name="XERCESC-711">
 		<annotation>
 			<documentation>Validator doesn't enforce xsd:key</documentation>
 		</annotation>

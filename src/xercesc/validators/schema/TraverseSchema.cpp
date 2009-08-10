@@ -3710,9 +3710,21 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     const XMLCh* prefix = getPrefix(baseName);
     const XMLCh* localPart = getLocalPart(baseName);
     const XMLCh* uri = resolvePrefixToURI(simpleContent, prefix);
-    DatatypeValidator* baseValidator = getDatatypeValidator(uri, localPart);
 
-    if (baseValidator != 0) {
+    // check for 'anyType'
+    if (XMLString::equals(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        && XMLString::equals(localPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
+
+        reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContentBase, baseName);
+        throw TraverseSchema::InvalidComplexTypeInfo;
+    }
+
+    processBaseTypeInfo(simpleContent, baseName, localPart, uri, typeInfo);
+
+    ComplexTypeInfo* baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
+    DatatypeValidator* baseValidator = typeInfo->getBaseDatatypeValidator();
+
+    if (baseValidator != 0 && baseTypeInfo == 0) {
 
         // check that the simpleType does not preclude derivation by extension
         if ((baseValidator->getFinalSet() & SchemaSymbols::XSD_EXTENSION) == typeInfo->getDerivedBy()) {
@@ -3722,25 +3734,16 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             throw TraverseSchema::InvalidComplexTypeInfo;
         }
 
-        typeInfo->setBaseComplexTypeInfo(0);
-        typeInfo->setBaseDatatypeValidator(baseValidator);
-    }
-    else {
+        //Schema Spec: 5.11: Complex Type Definition Properties Correct: 2
+        if (typeInfo->getDerivedBy() == SchemaSymbols::XSD_RESTRICTION) {
 
-        // check for 'anyType'
-        if (XMLString::equals(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-            && XMLString::equals(localPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
-
-            reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContentBase, baseName);
+            reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeBase, baseName);
             throw TraverseSchema::InvalidComplexTypeInfo;
         }
-
-        processBaseTypeInfo(simpleContent, baseName, localPart, uri, typeInfo);
     }
 
     // check that the base isn't a complex type with complex content
     // and that derivation method is not included in 'final'
-    ComplexTypeInfo* baseTypeInfo = typeInfo->getBaseComplexTypeInfo();
     bool simpleTypeRequired = false;
 
     if (baseTypeInfo) {
@@ -3771,15 +3774,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     if (typeInfo->getDerivedBy() == SchemaSymbols::XSD_RESTRICTION) {
 
-        //Schema Spec: 5.11: Complex Type Definition Properties Correct: 2
-        if (typeInfo->getBaseDatatypeValidator() != 0) {
-
-            reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeBase, baseName);
-            throw TraverseSchema::InvalidComplexTypeInfo;
-        }
-        else {
-           typeInfo->setBaseDatatypeValidator(baseTypeInfo->getDatatypeValidator());
-        }
+        if(baseTypeInfo)
+            typeInfo->setBaseDatatypeValidator(baseTypeInfo->getDatatypeValidator());
 
         if (content != 0) {
 
