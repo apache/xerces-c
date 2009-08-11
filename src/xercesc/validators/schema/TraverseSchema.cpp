@@ -9158,6 +9158,46 @@ XSAnnotation* TraverseSchema::generateSyntheticAnnotation(const DOMElement* cons
     return annot;
 }
 
+class AnnotationErrorReporter : public XMLErrorReporter
+{
+public:
+    AnnotationErrorReporter(XMLErrorReporter* chainedErrorReporter)
+    {
+        fErrorReporter = chainedErrorReporter;
+        setSystemIdAndPosition(NULL, 0, 0);
+    }
+
+    void setSystemIdAndPosition(const XMLCh* systemId, XMLFileLoc line, XMLFileLoc column)
+    {
+        fSystemId=systemId;
+        fLine=line;
+        fColumn=column;
+    }
+
+    virtual void error
+    (
+        const   unsigned int        errCode
+        , const XMLCh* const        errDomain
+        , const ErrTypes            type
+        , const XMLCh* const        errorText
+        , const XMLCh* const        systemId
+        , const XMLCh* const        publicId
+        , const XMLFileLoc          lineNum
+        , const XMLFileLoc          colNum
+    )
+    {
+        if(fErrorReporter)
+            fErrorReporter->error(errCode, errDomain, type, errorText, fSystemId, publicId, fLine+lineNum-1, lineNum==1?fColumn+colNum:colNum);
+    }
+
+    virtual void resetErrors() {}
+
+protected:
+    XMLErrorReporter*   fErrorReporter;
+    const XMLCh*        fSystemId;
+    XMLFileLoc          fLine, fColumn;
+};
+
 void TraverseSchema::validateAnnotations() {
 
     MemoryManager  *memMgr = fMemoryManager;
@@ -9279,8 +9319,12 @@ void TraverseSchema::validateAnnotations() {
     );
     Janitor<XSAXMLScanner> janScanner(scanner);
 
-    scanner->setErrorReporter(fErrorReporter);
+    AnnotationErrorReporter annErrReporter(fErrorReporter);
+    scanner->setErrorReporter(&annErrReporter);
 
+    XMLFileLoc line, col;
+    xsAnnot.getLineCol(line, col);
+    annErrReporter.setSystemIdAndPosition(xsAnnot.getSystemId(), line, col);
     scanner->scanDocument(*memBufIS);
 
     nextAnnot = xsAnnot.getNext();
@@ -9290,12 +9334,16 @@ void TraverseSchema::validateAnnotations() {
         if (nextAnnot) {
             memBufIS->resetMemBufInputSource((const XMLByte*)nextAnnot->getAnnotationString()
                                         , XMLString::stringLen(nextAnnot->getAnnotationString())*sizeof(XMLCh));
+            nextAnnot->getLineCol(line, col);
+            annErrReporter.setSystemIdAndPosition(nextAnnot->getSystemId(), line, col);
             nextAnnot = nextAnnot->getNext();
         }
         else {
             XSAnnotation& xsAnnot = xsAnnotationEnum.nextElement();
             memBufIS->resetMemBufInputSource((const XMLByte*)xsAnnot.getAnnotationString()
                                         , XMLString::stringLen(xsAnnot.getAnnotationString())*sizeof(XMLCh));
+            xsAnnot.getLineCol(line, col);
+            annErrReporter.setSystemIdAndPosition(xsAnnot.getSystemId(), line, col);
             nextAnnot = xsAnnot.getNext();
         }
         scanner->scanDocument(*memBufIS);
