@@ -61,9 +61,11 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
                                    const unsigned int urlId,
                                    const XMLCh* const elemPrefix,
                                    const RefVectorOf<XMLAttr>& attrList,
-                                   const XMLSize_t attrCount) {
+                                   const XMLSize_t attrCount,
+                                   ValidationContext* validationContext /*=0*/) 
+{
 
-    XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
+    XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, validationContext);
     fElementDepth++;
 
     // activate the fields, if selector is matched
@@ -80,15 +82,17 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
         for (XMLSize_t i = 0; i < count; i++) {
 
             XPathMatcher* matcher = fFieldActivator->activateField(ic->getFieldAt(i), fInitialDepth);
-            matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount);
+            matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, validationContext);
         }
     }
 }
 
 void SelectorMatcher::endElement(const XMLElementDecl& elemDecl,
-                                 const XMLCh* const elemContent) {
+                                 const XMLCh* const elemContent, 
+                                 ValidationContext* validationContext /*=0*/) 
+{
 
-    XPathMatcher::endElement(elemDecl, elemContent);
+    XPathMatcher::endElement(elemDecl, elemContent, validationContext);
 
     if (fElementDepth-- == fMatchedDepth) {
 

@@ -102,14 +102,16 @@ public:
     // -----------------------------------------------------------------------
     //  XMLDocumentHandler methods
     // -----------------------------------------------------------------------
-    void startDocumentFragment();
-    void startElement(const XMLElementDecl& elemDecl,
-                      const unsigned int urlId,
-                      const XMLCh* const elemPrefix,
-		              const RefVectorOf<XMLAttr>& attrList,
-                      const XMLSize_t attrCount);
-    void endElement(const XMLElementDecl& elemDecl,
-                    const XMLCh* const elemContent);
+    virtual void startDocumentFragment();
+    virtual void startElement(const XMLElementDecl& elemDecl,
+                              const unsigned int urlId,
+                              const XMLCh* const elemPrefix,
+		                      const RefVectorOf<XMLAttr>& attrList,
+                              const XMLSize_t attrCount,
+                              ValidationContext* validationContext = 0);
+    virtual void endElement(const XMLElementDecl& elemDecl,
+                            const XMLCh* const elemContent,
+                            ValidationContext* validationContext = 0);
 
 private:
     // -----------------------------------------------------------------------

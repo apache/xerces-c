@@ -76,7 +76,8 @@ IdentityConstraintHandler::~IdentityConstraintHandler()
 //  IdentityConstraintHandler:  methods
 // ---------------------------------------------------------------------------
 void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const elem
-                                                , const XMLCh*             const content)
+                                                , const XMLCh*             const content
+                                                , ValidationContext*       validationContext /*=0*/)
 {
 
     XMLSize_t oldCount = fMatcherStack->getMatcherCount();
@@ -87,7 +88,7 @@ void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const
         for (XMLSize_t i = oldCount; i > 0; i--) 
         {
             XPathMatcher* matcher = fMatcherStack->getMatcherAt(i-1);
-            matcher->endElement(*(elem), content);
+            matcher->endElement(*(elem), content, validationContext);
         }
 
         if (fMatcherStack->size() > 0) 
@@ -136,7 +137,7 @@ void IdentityConstraintHandler::activateIdentityConstraint
                      , const XMLCh*                 const elemPrefix
                      , const RefVectorOf<XMLAttr>&        attrList
                      , const XMLSize_t                    attrCount
-                      )
+                     , ValidationContext*                 validationContext /*=0*/)
 {
 
     XMLSize_t count = elem->getIdentityConstraintCount();
@@ -159,7 +160,7 @@ void IdentityConstraintHandler::activateIdentityConstraint
         for (XMLSize_t j = 0; j < count; j++) 
         {
             XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-            matcher->startElement(*elem, uriId, elemPrefix, attrList, attrCount);
+            matcher->startElement(*elem, uriId, elemPrefix, attrList, attrCount, validationContext);
         }
     }
 }

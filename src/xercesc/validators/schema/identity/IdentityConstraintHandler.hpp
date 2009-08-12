@@ -72,7 +72,7 @@ public:
                              (
                                     SchemaElementDecl* const elem
                             , const XMLCh*             const content
-                              );
+                            , ValidationContext*       validationContext = 0);
 
             void         activateIdentityConstraint
                                (
@@ -82,7 +82,7 @@ public:
                              , const XMLCh*                 const elemPrefix
                              , const RefVectorOf<XMLAttr>&        attrList
                              , const XMLSize_t                    attrCount
-                               );
+                             , ValidationContext*                 validationContext = 0 );
 
             void         reset();
 
