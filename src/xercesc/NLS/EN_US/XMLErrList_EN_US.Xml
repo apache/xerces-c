@@ -405,7 +405,8 @@
             <Message Id="NoUseAbstractType" Text="type of element '{0}' is abstract; use 'xsi:type' to specify non-abstract type instead"/>
             <Message Id="BadXsiType" Text="type '{0}' specified in 'xsi:type' cannot be resolved"/>
             <Message Id="NonDerivedXsiType" Text="type '{0}' specified in 'xsi:type' does not derive from type of element '{1}'"/>
-            <Message Id="NoSubforBlock" Text="element '{0}' does not permit substitution"/>
+            <Message Id="ElemNoSubforBlock" Text="element '{0}' does not permit substitution"/>
+            <Message Id="TypeNoSubforBlock" Text="complex type '{0}' does not permit substitution"/>
             <Message Id="AttributeNotQualified" Text="attribute '{0}' must be qualified"/>
             <Message Id="AttributeNotUnQualified" Text="attribute '{0}' must be unqualified"/>
             <Message Id="IC_FieldMultipleMatch" Text="identity constraint field matches more than one value within the scope of its selector; field must match unique value"/>

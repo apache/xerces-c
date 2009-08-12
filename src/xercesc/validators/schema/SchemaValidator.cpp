@@ -573,10 +573,11 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                             emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
                             fErrorOccurred = true;
                         }
-                        else {
+                        else if(fCurrentDatatypeValidator != xsiTypeDV) 
+                        {
                             // the type is derived from ancestor
-                            if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION) {
-                                emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                            if ((((SchemaElementDecl*)elemDef)->getBlockSet() & SchemaSymbols::XSD_RESTRICTION) != 0) {
+                                emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
                                 fErrorOccurred = true;
                             }
                             if (elemDef->hasAttDefs()) {
@@ -635,10 +636,14 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                                     emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
                                     fErrorOccurred = true;
                                 }
-                                else {
+                                else if(elemTypeInfo != typeInfo) {
                                     int derivationMethod = typeInfo->getDerivedBy();
                                     if ((((SchemaElementDecl*)elemDef)->getBlockSet() & derivationMethod) != 0) {
-                                        emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                                        emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
+                                        fErrorOccurred = true;
+                                    }
+                                    if ((tempType->getBlockSet() & derivationMethod) != 0) {
+                                        emitError(XMLValid::TypeNoSubforBlock, tempType->getTypeName());
                                         fErrorOccurred = true;
                                     }
                                 }
@@ -676,10 +681,11 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                                 emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
                                 fErrorOccurred = true;
                             }
-                            else {
+                            else if(fCurrentDatatypeValidator != xsiTypeDV)
+                            {
                                 // the type is derived from ancestor
-                                if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::XSD_RESTRICTION) {
-                                    emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                                if ((((SchemaElementDecl*)elemDef)->getBlockSet() & SchemaSymbols::XSD_RESTRICTION) != 0) {
+                                    emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
                                     fErrorOccurred = true;
                                 }
                                 if (elemDef->hasAttDefs()) {

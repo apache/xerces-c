@@ -354,6 +354,7 @@ root {
 		"type '{0}' specified in 'xsi:type' cannot be resolved" ,
 		"type '{0}' specified in 'xsi:type' does not derive from type of element '{1}'" ,
 		"element '{0}' does not permit substitution" ,
+		"complex type '{0}' does not permit substitution" ,
 		"attribute '{0}' must be qualified" ,
 		"attribute '{0}' must be unqualified" ,
 		"identity constraint field matches more than one value within the scope of its selector; field must match unique value" ,

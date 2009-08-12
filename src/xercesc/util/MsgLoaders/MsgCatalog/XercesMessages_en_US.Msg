@@ -343,23 +343,24 @@ $set 2
 58  type '{0}' specified in 'xsi:type' cannot be resolved
 59  type '{0}' specified in 'xsi:type' does not derive from type of element '{1}'
 60  element '{0}' does not permit substitution
-61  attribute '{0}' must be qualified
-62  attribute '{0}' must be unqualified
-63  identity constraint field matches more than one value within the scope of its selector; field must match unique value
-64  unknown identity constraint field
-65  element '{0}' has identity constraint key with no value
-66  element '{0}' does not have enough values for identity constraint key '{1}'
-67  element '{0}' declares identity constraint key that matches nillable element
-68  element '{0}' declares duplicate identity constraint unique values
-69  element '{0}' declares duplicate identity constraint key values
-70  keyref '{0}' refers to out of scope key/unique
-71  identity constraint key for element '{0}' not found
-72  non-whitespace characters are not allowed in schema declarations other than appinfo and documentation
-73  element '{0}' declared EMPTY but has attribute '{1}' of type NOTATION
-74  element '{0}' declared EMPTY and cannot have content, not even entity references, comments, PIs, or whitespaces
-75  element '{0}' has more than one attribute of type NOTATION
-76  attribute '{0}' has non-distinct token '{1}'
-77  content model of element '{0}' does not allow escaped whitespaces
+61  complex type '{0}' does not permit substitution
+62  attribute '{0}' must be qualified
+63  attribute '{0}' must be unqualified
+64  identity constraint field matches more than one value within the scope of its selector; field must match unique value
+65  unknown identity constraint field
+66  element '{0}' has identity constraint key with no value
+67  element '{0}' does not have enough values for identity constraint key '{1}'
+68  element '{0}' declares identity constraint key that matches nillable element
+69  element '{0}' declares duplicate identity constraint unique values
+70  element '{0}' declares duplicate identity constraint key values
+71  keyref '{0}' refers to out of scope key/unique
+72  identity constraint key for element '{0}' not found
+73  non-whitespace characters are not allowed in schema declarations other than appinfo and documentation
+74  element '{0}' declared EMPTY but has attribute '{1}' of type NOTATION
+75  element '{0}' declared EMPTY and cannot have content, not even entity references, comments, PIs, or whitespaces
+76  element '{0}' has more than one attribute of type NOTATION
+77  attribute '{0}' has non-distinct token '{1}'
+78  content model of element '{0}' does not allow escaped whitespaces
 
 
 $set 3
