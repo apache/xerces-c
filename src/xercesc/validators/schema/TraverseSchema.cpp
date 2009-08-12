@@ -5245,9 +5245,9 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
     const XMLCh* finalVal = (isRoot) ? getElementAttValue(elem, SchemaSymbols::fgATT_FINALDEFAULT)
                                      : getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
 
-    if (!finalVal || !*finalVal) {
+    // finalVal == 0 means 'final attribute is missing'; *finalVal == 0 means 'final="" found'
+    if (finalVal == 0)
         return fSchemaInfo->getFinalDefault();
-    }
 
     int finalSet = 0;
 
@@ -5296,7 +5296,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
         }
     } //end while
 
-    return (finalSet == 0 ? fSchemaInfo->getFinalDefault() : finalSet);
+    return finalSet;
 }
 
 
