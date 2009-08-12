@@ -5194,9 +5194,9 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
     const XMLCh* blockVal = (isRoot) ? getElementAttValue(elem, SchemaSymbols::fgATT_BLOCKDEFAULT)
                                      : getElementAttValue(elem, SchemaSymbols::fgATT_BLOCK);
 
-    if (!blockVal || !*blockVal) {
+    // blockVal == 0 means 'block attribute is missing'; *blockVal == 0 means 'block="" found'
+    if (blockVal == 0)
         return fSchemaInfo->getBlockDefault();
-    }
 
     int blockSet = 0;
 
@@ -5236,7 +5236,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
         }
     } //end while
 
-    return (blockSet == 0 ? fSchemaInfo->getBlockDefault() : blockSet);
+    return blockSet;
 }
 
 int TraverseSchema::parseFinalSet(const DOMElement* const elem,
