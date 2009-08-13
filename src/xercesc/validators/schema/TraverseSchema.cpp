@@ -109,21 +109,6 @@ static const XMLCh fgUnbounded[] =
     chLatin_e, chLatin_d, chNull
 };
 
-static const XMLCh fgSkip[] =
-{
-    chLatin_s, chLatin_k, chLatin_i, chLatin_p, chNull
-};
-
-static const XMLCh fgLax[] =
-{
-    chLatin_l, chLatin_a, chLatin_x, chNull
-};
-
-static const XMLCh fgStrict[] =
-{
-    chLatin_s, chLatin_t, chLatin_r, chLatin_i, chLatin_c, chLatin_t, chNull
-};
-
 static const XMLCh fgValueOne[] =
 {
     chDigit_1, chNull
@@ -132,21 +117,6 @@ static const XMLCh fgValueOne[] =
 static const XMLCh fgValueZero[] =
 {
     chDigit_0, chNull
-};
-
-static const XMLCh fgForwardSlash[] =
-{
-    chForwardSlash, chNull
-};
-
-static const XMLCh fgDot[] =
-{
-    chPeriod, chNull
-};
-
-static const XMLCh fgDotForwardSlash[] =
-{
-    chPeriod, chForwardSlash, chNull
 };
 
 static const XMLCh* fgIdentityConstraints[] =
@@ -1985,15 +1955,15 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     ContentSpecNode::NodeTypes anyOtherType = ContentSpecNode::Any_Other;
 
     if ((processContents && *processContents)
-        && !XMLString::equals(processContents, fgStrict)) {
+        && !XMLString::equals(processContents, SchemaSymbols::fgATTVAL_STRICT)) {
 
-        if (XMLString::equals(processContents, fgLax)) {
+        if (XMLString::equals(processContents, SchemaSymbols::fgATTVAL_LAX)) {
 
             anyType = ContentSpecNode::Any_Lax;
             anyOtherType = ContentSpecNode::Any_Other_Lax;
             anyLocalType = ContentSpecNode::Any_NS_Lax;
         }
-        else if (XMLString::equals(processContents, fgSkip)) {
+        else if (XMLString::equals(processContents, SchemaSymbols::fgATTVAL_SKIP)) {
 
             anyType = ContentSpecNode::Any_Skip;
             anyOtherType = ContentSpecNode::Any_Other_Skip;
@@ -4548,41 +4518,12 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         return false;
     }
 
-    fBuffer.reset();
-
-    XMLSize_t startIndex = 0;
-
-    while (startIndex < xpathLen) {
-        if(XMLChar1_0::isWhitespace(*(xpathExpr+startIndex)))
-        {
-            fBuffer.append(xpathExpr + startIndex, 1);
-            startIndex++;
-            continue;
-        }
-
-        if (!XMLString::startsWith(xpathExpr + startIndex, fgForwardSlash)
-            && !XMLString::startsWith(xpathExpr + startIndex, fgDot)) {
-            fBuffer.append(fgDotForwardSlash);
-        }
-
-        int chOffset = XMLString::indexOf(xpathExpr, chPipe, startIndex, fMemoryManager);
-
-        if (chOffset == -1)
-            break;
-
-        fBuffer.append(xpathExpr + startIndex, chOffset + 1 - startIndex);
-        startIndex = chOffset + 1;
-    }
-
-    if (startIndex < xpathLen)
-        fBuffer.append(xpathExpr + startIndex);
-
     // ------------------------------------------------------------------
     // Parse xpath expression
     // ------------------------------------------------------------------
     try {
 
-        XercesXPath* sXPath = new (fGrammarPoolMemoryManager) XercesXPath(fBuffer.getRawBuffer(), fStringPool, fSchemaInfo->getNamespaceScope(), fEmptyNamespaceURI, true, fGrammarPoolMemoryManager);
+        XercesXPath* sXPath = new (fGrammarPoolMemoryManager) XercesXPath(xpathExpr, fStringPool, fSchemaInfo->getNamespaceScope(), fEmptyNamespaceURI, true, fGrammarPoolMemoryManager);
         IC_Selector* icSelector = new (fGrammarPoolMemoryManager) IC_Selector(sXPath, ic);
         ic->setSelector(icSelector);
     }
@@ -4636,21 +4577,11 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
                 return false;
             }
 
-            if (XMLString::startsWith(xpathExpr, fgForwardSlash)
-                || XMLString::startsWith(xpathExpr, fgDot)) {
-                fBuffer.set(xpathExpr);
-            }
-            else {
-
-                fBuffer.set(fgDotForwardSlash);
-                fBuffer.append(xpathExpr);
-            }
-
             try {
 
                 XercesXPath* fieldXPath = new (fGrammarPoolMemoryManager) XercesXPath
                 (
-                    fBuffer.getRawBuffer()
+                    xpathExpr
                     , fStringPool
                     , fSchemaInfo->getNamespaceScope()
                     , fEmptyNamespaceURI

@@ -420,6 +420,13 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                     ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_NoMultipleUnion, fMemoryManager);
                 }
 
+                if(stepsVector->elementAt(0)->getAxisType()!=XercesStep::AxisType_SELF)
+                {
+                    // prepend ./
+                    XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NodeType_NODE, fMemoryManager);
+                    XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_SELF, nodeTest);
+                    stepsVector->insertElementAt(step, 0);
+                }
                 fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
                 janSteps.orphan();
                 stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16, true, fMemoryManager);
@@ -624,6 +631,10 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                     ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_ExpectedStep3, fMemoryManager);
                 }
 
+                aToken = tokens.elementAt(i+1);
+                if(aToken == XercesXPath::EXPRTOKEN_OPERATOR_SLASH || aToken == XercesXPath::EXPRTOKEN_OPERATOR_DOUBLE_SLASH || aToken == XercesXPath::EXPRTOKEN_OPERATOR_UNION)
+                    ThrowXMLwithMemMgr(XPathException, XMLExcepts::XPath_ExpectedStep3, fMemoryManager);
+
                 firstTokenOfLocationPath=false;
                 break;
             }
@@ -643,6 +654,13 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         }
     }
 
+    if(stepsVector->elementAt(0)->getAxisType()!=XercesStep::AxisType_SELF)
+    {
+        // prepend ./
+        XercesNodeTest* nodeTest = new (fMemoryManager) XercesNodeTest(XercesNodeTest::NodeType_NODE, fMemoryManager);
+        XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_SELF, nodeTest);
+        stepsVector->insertElementAt(step, 0);
+    }
     fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
     janSteps.orphan();
 }
@@ -842,7 +860,7 @@ bool XPathScanner::scanExpression(const XMLCh* const data,
                     ch = data[currentOffset];
                 } while (XMLChar1_0::isWhitespace(ch));
 
-                if (currentOffset == endOffset || ch == chPipe) {
+                if (currentOffset == endOffset || ch == chPipe || ch == chForwardSlash) {
 				    addToken(tokens, XercesXPath::EXPRTOKEN_PERIOD);
                     starIsMultiplyOperator = true;
                     break;
