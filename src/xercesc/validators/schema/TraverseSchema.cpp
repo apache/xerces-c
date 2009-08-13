@@ -1174,7 +1174,7 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
-    const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME, true);
     bool nameEmpty = (!name || !*name);
 
     if (topLevel && nameEmpty) {
@@ -1306,7 +1306,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
     // Get the attributes of the complexType
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME, true);
     bool isAnonymous = false;
 
     if (!name || !*name) {
@@ -1530,8 +1530,8 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
+    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME, true);
+    const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF, true);
     bool         nameEmpty = (!name || !*name);
     bool         refEmpty = (!ref || !*ref);
 
@@ -1738,8 +1738,8 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
 
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
+    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME, true);
+    const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF, true);
     bool         nameEmpty = (!name || !*name) ? true : false;
     bool         refEmpty = (!ref || !*ref) ? true : false;
 
@@ -2230,8 +2230,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     NamespaceScopeManager nsMgr(elem, fSchemaInfo, this);
 
-    const XMLCh*   name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    const XMLCh*   ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
+    const XMLCh*   name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME, true);
+    const XMLCh*   ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF, true);
     bool           nameEmpty = (!name || !*name);
     bool           refEmpty = (!ref || !*ref);
 
@@ -2632,13 +2632,13 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     // if local element and ref attribute exists
     if (!topLevel)
     {
-        const XMLCh* refName = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
+        const XMLCh* refName = getElementAttValue(elem, SchemaSymbols::fgATT_REF, true);
         if (refName)
             return processElementDeclRef(elem, refName);
     }
 
     // check for empty name
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME, true);
     if (!name || !*name)
     {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameRefElement);
@@ -2782,7 +2782,7 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     }
 
     // Handle 'type' attribute
-    const XMLCh* typeStr = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
+    const XMLCh* typeStr = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE, true);
     if (typeStr)
     {
         if (anonymousType)
@@ -2895,7 +2895,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
     // -----------------------------------------------------------------------
     // Process notation attributes/elements
     // -----------------------------------------------------------------------
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME, true);
     bool         nameEmpty = (!name || !*name) ? true : false;
 
     if (nameEmpty) {
@@ -3015,7 +3015,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
     NamespaceScopeManager nsMgr(contentElem, fSchemaInfo, this);
 
     DatatypeValidator* baseValidator = 0;
-    const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_ITEMTYPE);
+    const XMLCh*       baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_ITEMTYPE, true);
 
     fAttributeCheck.checkAttributes(
         contentElem, GeneralAttributeCheck::E_List, this, false, fNonXSAttList
@@ -4268,7 +4268,7 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     // Create identity constraint
     // -----------------------------------------------------------------------
-    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME, true);
 
     if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
@@ -4329,7 +4329,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     // Create identity constraint
     // -----------------------------------------------------------------------
-    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME, true);
 
     if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
@@ -4391,7 +4391,7 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     // Verify that key reference "refer" attribute is valid
     // -----------------------------------------------------------------------
-    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME, true);
     const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER, true);
 
     if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
@@ -4691,7 +4691,7 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
         const XMLCh* name = child->getLocalName();
-        const XMLCh* typeName = getElementAttValue(child, SchemaSymbols::fgATT_NAME);
+        const XMLCh* typeName = getElementAttValue(child, SchemaSymbols::fgATT_NAME, true);
         int fullNameId = 0;
 
         if (typeName) {
@@ -4882,7 +4882,7 @@ DOMElement* TraverseSchema::checkContent( const DOMElement* const rootElem
                                         , const bool processAnnot)
 {
     DOMElement* content = contentElem;
-    const XMLCh* name = getElementAttValue(rootElem,SchemaSymbols::fgATT_NAME);
+    const XMLCh* name = getElementAttValue(rootElem,SchemaSymbols::fgATT_NAME, true);
 
     fAnnotation = 0;
     Janitor<XSAnnotation> janAnnot(0);
@@ -4962,7 +4962,7 @@ TraverseSchema::checkForSimpleTypeValidator(const DOMElement* const content,
 
     if (!baseValidator) {
 
-        const XMLCh* name = getElementAttValue(content,SchemaSymbols::fgATT_NAME);
+        const XMLCh* name = getElementAttValue(content,SchemaSymbols::fgATT_NAME, true);
         reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::UnknownSimpleType, name);
     }
 
@@ -4981,7 +4981,7 @@ TraverseSchema::checkForComplexTypeInfo(const DOMElement* const content) {
 
     if (typeNameIndex == -1 || baseTypeInfo == 0) {
 
-        const XMLCh* name = getElementAttValue(content,SchemaSymbols::fgATT_NAME);
+        const XMLCh* name = getElementAttValue(content,SchemaSymbols::fgATT_NAME, true);
         reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::UnknownComplexType, name);
     }
 
@@ -8168,7 +8168,7 @@ void TraverseSchema::renameRedefinedComponents(const DOMElement* const redefineE
         }
 
         // if component already redefined skip
-        const XMLCh* typeName = getElementAttValue(child, SchemaSymbols::fgATT_NAME);
+        const XMLCh* typeName = getElementAttValue(child, SchemaSymbols::fgATT_NAME, true);
 
         fBuffer.set(fTargetNSURIString);
         fBuffer.append(chComma);
@@ -8390,7 +8390,7 @@ int TraverseSchema::changeRedefineGroup(const DOMElement* const redefineChildEle
         if (!XMLString::equals(name, redefineChildComponentName)) {
             result += changeRedefineGroup(child, redefineChildComponentName, redefineChildTypeName, redefineNameCounter);
         } else {
-            const XMLCh* refName = getElementAttValue(child, SchemaSymbols::fgATT_REF);
+            const XMLCh* refName = getElementAttValue(child, SchemaSymbols::fgATT_REF, true);
 
             if (refName && *refName) {
 
@@ -8442,7 +8442,7 @@ void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
 
         if (XMLString::equals(name, redefineChildComponentName)) {
 
-            const XMLCh* infoItemName = getElementAttValue(child, SchemaSymbols::fgATT_NAME);
+            const XMLCh* infoItemName = getElementAttValue(child, SchemaSymbols::fgATT_NAME, true);
 
             if(!XMLString::equals(infoItemName, redefineChildTypeName)) {
                 continue;
@@ -8466,7 +8466,7 @@ void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
 
                 if (XMLString::equals(redefName, redefineChildComponentName)) {
 
-                    const XMLCh* infoItemName = getElementAttValue(redefChild, SchemaSymbols::fgATT_NAME);
+                    const XMLCh* infoItemName = getElementAttValue(redefChild, SchemaSymbols::fgATT_NAME, true);
 
                     if(!XMLString::equals(infoItemName, redefineChildTypeName)) {
                         continue;
