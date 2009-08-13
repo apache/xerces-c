@@ -109,7 +109,7 @@ public:
     // -----------------------------------------------------------------------
     //  Schema Validator methods
     // -----------------------------------------------------------------------
-    void normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill);
+    void normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill, bool bStandalone = false);
 
     // -----------------------------------------------------------------------
     //  Setter methods

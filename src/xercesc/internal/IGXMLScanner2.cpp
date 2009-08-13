@@ -271,6 +271,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
                     if (fValidate && attrValidator && ValueValidate)
                     {
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(attrValidator, normBuf.getRawBuffer(), normBuf, true);
+
                         ValidationContext* const    theContext =
                             getValidationContext();
 
@@ -548,7 +550,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                 {
                     // normalize the attribute according to schema whitespace facet
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, xsNormalized, fWSNormalizeBuf);
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, xsNormalized, fWSNormalizeBuf, true);
                     xsNormalized = fWSNormalizeBuf.getRawBuffer();
 
                     if (fNormalizeData && fValidate) {
@@ -590,7 +592,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                         {
                             // normalize the attribute according to schema whitespace facet
-                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, xsNormalized, fWSNormalizeBuf);
+                            ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, xsNormalized, fWSNormalizeBuf, true);
                             xsNormalized = fWSNormalizeBuf.getRawBuffer();
                             if (fNormalizeData && fValidate && !skipThisOne) {
                                 normBuf.set(xsNormalized);
@@ -1716,13 +1718,24 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                 else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCATION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
 
-                if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE)) {
-                        fXsiType.set(valuePtr);
-                }
-                else if (XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL)
-                         && fValidator && fValidator->handlesSchema()
-                         && XMLString::equals(valuePtr, SchemaSymbols::fgATTVAL_TRUE)) {
+                if( fValidator && fValidator->handlesSchema() )
+                {
+                    if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE)) 
+                    {
+                        // normalize the attribute according to schema whitespace facet
+                        DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME);
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, valuePtr, fXsiType, true);
+                    }
+                    else if (XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL))
+                    {
+                        // normalize the attribute according to schema whitespace facet
+                        XMLBuffer& fXsiNil = fBufMgr.bidOnBuffer();
+                        DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_BOOLEAN);
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, valuePtr, fXsiNil, true);
+                        if(XMLString::equals(fXsiNil.getRawBuffer(), SchemaSymbols::fgATTVAL_TRUE))
                             ((SchemaValidator*)fValidator)->setNillable(true);
+                        fBufMgr.releaseBuffer(fXsiNil);
+                    }
                 }
             }
         }

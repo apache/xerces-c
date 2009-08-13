@@ -962,15 +962,18 @@ void SchemaValidator::postParseValidation()
 //            contiguous sequences of #x20s are collapsed to a single #x20,
 //            and initial and/or final #x20s are deleted.
 //
-void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill)
+void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill, bool bStandalone /*= false*/)
 {
-    short wsFacet = dV->getWSFacet();
-
     toFill.reset();
 
     //empty string
     if (!*value)
         return;
+
+    if(bStandalone)
+        fTrailing = fSeenNonWhiteSpace = false;
+
+    short wsFacet = dV->getWSFacet();
 
     //  Loop through the chars of the source value and normalize it
     //  according to the whitespace facet
@@ -1028,6 +1031,8 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         else
           fTrailing = false;
     }
+    if(bStandalone)
+        fTrailing = fSeenNonWhiteSpace = false;
 }
 
 
