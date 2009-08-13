@@ -126,8 +126,7 @@ void XSTSHarnessHandlers::startElement(const XMLCh* const uri
             fCurrentTest.fXSDNames.removeAllElements();
             StrX x(attrs.getValue(szNAME));
             const char* groupName=x.localForm();
-            if(XMLString::equals(groupName,"isDefault072") ||     // this fails because of an access violation
-               XMLString::equals(groupName,"addB194") ||
+            if(XMLString::equals(groupName,"addB194") ||
                XMLString::equals(groupName,"particlesZ033_c") ||
                XMLString::equals(groupName,"particlesZ033_d") ||
                XMLString::equals(groupName,"particlesZ033_e") ||
@@ -137,7 +136,8 @@ void XSTSHarnessHandlers::startElement(const XMLCh* const uri
                XMLString::equals(groupName,"particlesZ036_b1") ||
                XMLString::equals(groupName,"particlesZ036_b2") ||
                XMLString::equals(groupName,"particlesZ036_c") ||
-               XMLString::equals(groupName,"wildG032") )
+               XMLString::equals(groupName,"wildG032") 
+               )
                 fCurrentTest.fSkipped=true;
             else
                 fCurrentTest.fSkipped=false;
