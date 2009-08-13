@@ -343,6 +343,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
 
     //  We do something different here according to whether we found the
     //  element or not.
+    bool bXsiTypeSet= (fValidator)?((SchemaValidator*)fValidator)->getIsXsiTypeSet():false;
     if (wasAdded || !elemDecl->isDeclared())
     {
         if (laxThisOne) {
@@ -357,10 +358,11 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
             // faulted-in, was not an element in the grammar pool originally
             elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
 
-            fValidator->emitError
-            (
-                XMLValid::ElementNotDefined, elemDecl->getFullName()
-            );
+            if(!bXsiTypeSet)
+                fValidator->emitError
+                (
+                    XMLValid::ElementNotDefined, elemDecl->getFullName()
+                );
         }
     }
 

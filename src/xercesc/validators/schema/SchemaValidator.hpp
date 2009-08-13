@@ -134,6 +134,7 @@ public:
     DatatypeValidator *getMostRecentAttrValidator() const;
     bool getErrorOccurred() const;
     bool getIsElemSpecified() const;
+    bool getIsXsiTypeSet() const;
     const XMLCh* getNormalizedValue() const;
 
 private:
@@ -420,6 +421,11 @@ inline bool SchemaValidator::getIsElemSpecified() const
 inline const XMLCh* SchemaValidator::getNormalizedValue() const
 {
     return fDatatypeBuffer.getRawBuffer();
+}
+
+inline bool SchemaValidator::getIsXsiTypeSet() const
+{
+    return (fXsiType!=0);
 }
 
 XERCES_CPP_NAMESPACE_END

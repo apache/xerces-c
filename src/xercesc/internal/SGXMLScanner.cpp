@@ -1423,6 +1423,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     //  We do something different here according to whether we found the
     //  element or not.
+    bool bXsiTypeSet= (fValidator)?((SchemaValidator*)fValidator)->getIsXsiTypeSet():false;
     if (wasAdded)
     {
         if (laxThisOne) {
@@ -1437,12 +1438,15 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             // faulted-in, was not an element in the grammar pool originally
             elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
 
-            fValidator->emitError
-            (
-                XMLValid::ElementNotDefined
-                , elemDecl->getFullName()
-            );
-            fPSVIElemContext.fErrorOccurred = true;
+            if(!bXsiTypeSet)
+            {
+                fValidator->emitError
+                (
+                    XMLValid::ElementNotDefined
+                    , elemDecl->getFullName()
+                );
+                fPSVIElemContext.fErrorOccurred = true;
+            }
         }
     }
     else
@@ -1450,15 +1454,16 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
             if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
-                fPSVIElemContext.fErrorOccurred = true;
+                if(!bXsiTypeSet)
+                    fPSVIElemContext.fErrorOccurred = true;
             }
             if (laxThisOne) {
                 fValidate = false;
                 fElemStack.setValidationFlag(fValidate);
             }
 
-            if (fValidate)
-                {
+            if (fValidate && !bXsiTypeSet)
+            {
                 fValidator->emitError
                 (
                     XMLValid::ElementNotDefined

@@ -2402,6 +2402,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     //  We do something different here according to whether we found the
     //  element or not.
+    bool bXsiTypeSet= (fValidator && fGrammarType == Grammar::SchemaGrammarType)?((SchemaValidator*)fValidator)->getIsXsiTypeSet():false;
     if (wasAdded)
     {
         if (laxThisOne) {
@@ -2416,15 +2417,19 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             // faulted-in, was not an element in the grammar pool originally
             elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
 
-            fValidator->emitError
-            (
-                XMLValid::ElementNotDefined
-                , elemDecl->getFullName()
-            );
-
-            if(fGrammarType == Grammar::SchemaGrammarType)
+            // xsi:type was specified, don't complain about missing definition
+            if(!bXsiTypeSet)
             {
-                fPSVIElemContext.fErrorOccurred = true;
+                fValidator->emitError
+                (
+                    XMLValid::ElementNotDefined
+                    , elemDecl->getFullName()
+                );
+
+                if(fGrammarType == Grammar::SchemaGrammarType)
+                {
+                    fPSVIElemContext.fErrorOccurred = true;
+                }
             }
         }
     }
@@ -2433,7 +2438,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
             if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
-                if(fGrammarType == Grammar::SchemaGrammarType) {
+                if(!bXsiTypeSet && fGrammarType == Grammar::SchemaGrammarType) {
                     fPSVIElemContext.fErrorOccurred = true;
                 }
             }
@@ -2442,7 +2447,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 fValidate = false;
                 fElemStack.setValidationFlag(fValidate);
             }
-            else if (fValidate)
+            else if (fValidate && !bXsiTypeSet)
             {
                 fValidator->emitError
                 (
