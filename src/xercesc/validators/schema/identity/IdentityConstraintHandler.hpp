@@ -72,7 +72,8 @@ public:
                              (
                                     SchemaElementDecl* const elem
                             , const XMLCh*             const content
-                            , ValidationContext*       validationContext = 0);
+                            , ValidationContext*       validationContext = 0
+                            , DatatypeValidator*       actualValidator = 0);
 
             void         activateIdentityConstraint
                                (

@@ -982,6 +982,7 @@ void SGXMLScanner::scanEndTag(bool& gotData)
                          (SchemaElementDecl *) topElem->fThisElement
                        , fContent.getRawBuffer()
                        , fValidationContext
+                       , fPSVIElemContext.fCurrentDV
                         );
         }
 
@@ -1717,6 +1718,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         (SchemaElementDecl *) elemDecl
                       , fContent.getRawBuffer()
                       , fValidationContext
+                      , fPSVIElemContext.fCurrentDV
                        );
             }
 

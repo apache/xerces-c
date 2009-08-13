@@ -77,7 +77,8 @@ IdentityConstraintHandler::~IdentityConstraintHandler()
 // ---------------------------------------------------------------------------
 void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const elem
                                                 , const XMLCh*             const content
-                                                , ValidationContext*       validationContext /*=0*/)
+                                                , ValidationContext*       validationContext /*=0*/
+                                                , DatatypeValidator*       actualValidator /*=0*/)
 {
 
     XMLSize_t oldCount = fMatcherStack->getMatcherCount();
@@ -88,7 +89,7 @@ void IdentityConstraintHandler::deactivateContext(      SchemaElementDecl* const
         for (XMLSize_t i = oldCount; i > 0; i--) 
         {
             XPathMatcher* matcher = fMatcherStack->getMatcherAt(i-1);
-            matcher->endElement(*(elem), content, validationContext);
+            matcher->endElement(*(elem), content, validationContext, actualValidator);
         }
 
         if (fMatcherStack->size() > 0) 

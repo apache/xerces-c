@@ -1134,6 +1134,7 @@ void IGXMLScanner::scanEndTag(bool& gotData)
                               (SchemaElementDecl *) topElem->fThisElement
                             , fContent.getRawBuffer()
                             , fValidationContext
+                            , fPSVIElemContext.fCurrentDV
                              );
             }
 
@@ -2721,6 +2722,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                                     (SchemaElementDecl *) elemDecl
                                   , fContent.getRawBuffer()
                                   , fValidationContext
+                                  , fPSVIElemContext.fCurrentDV
                                    );
                 }
 

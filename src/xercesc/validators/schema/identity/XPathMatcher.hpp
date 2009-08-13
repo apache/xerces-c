@@ -86,7 +86,8 @@ public:
                               ValidationContext* validationContext = 0);
     virtual void endElement(const XMLElementDecl& elemDecl,
                             const XMLCh* const elemContent,
-                            ValidationContext* validationContext = 0);
+                            ValidationContext* validationContext = 0,
+                            DatatypeValidator* actualValidator = 0);
 
     enum
     {

@@ -313,7 +313,8 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
 
 void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
                               const XMLCh* const elemContent,
-                              ValidationContext* validationContext /*=0*/) {
+                              ValidationContext* validationContext /*=0*/,
+                              DatatypeValidator* actualValidator /*=0*/) {
 
     for(XMLSize_t i = 0; i < fLocationPathSize; i++) {
 
@@ -338,7 +339,7 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
                 continue;
             }
 
-            DatatypeValidator* dv = ((SchemaElementDecl*) &elemDecl)->getDatatypeValidator();
+            DatatypeValidator* dv = actualValidator?actualValidator:((SchemaElementDecl*) &elemDecl)->getDatatypeValidator();
             bool isNillable = (((SchemaElementDecl *) &elemDecl)->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) != 0;
 
             // store QName using their Clark name

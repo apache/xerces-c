@@ -89,10 +89,11 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
 
 void SelectorMatcher::endElement(const XMLElementDecl& elemDecl,
                                  const XMLCh* const elemContent, 
-                                 ValidationContext* validationContext /*=0*/) 
+                                 ValidationContext* validationContext /*=0*/,
+                                 DatatypeValidator* actualValidator /*=0*/) 
 {
 
-    XPathMatcher::endElement(elemDecl, elemContent, validationContext);
+    XPathMatcher::endElement(elemDecl, elemContent, validationContext, actualValidator);
 
     if (fElementDepth-- == fMatchedDepth) {
 
