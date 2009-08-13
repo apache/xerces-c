@@ -4300,10 +4300,6 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
 
-    if (!name || !*name) {
-        return;
-    }
-
     if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
                           SchemaSymbols::fgELT_KEY, name);
@@ -4364,10 +4360,6 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     // Create identity constraint
     // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
-
-    if (!name || !*name) {
-        return;
-    }
 
     if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
@@ -4431,10 +4423,6 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
     const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER, true);
-
-    if ((!name || !*name) || (!refer || !*refer)) {
-        return;
-    }
 
     if (!XMLChar1_0::isValidNCName(name, XMLString::stringLen(name))) {
         reportSchemaError(icElem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
