@@ -8782,11 +8782,32 @@ TraverseSchema::checkElemDeclValueConstraint(const DOMElement* const elem,
 
         try
         {
-            validator->validate(valConstraint,0,fMemoryManager);
+            const XMLCh* valueToCheck = valConstraint;
+            short wsFacet = validator->getWSFacet();
+            if((wsFacet == DatatypeValidator::REPLACE && !XMLString::isWSReplaced(valueToCheck)) ||
+               (wsFacet == DatatypeValidator::COLLAPSE && !XMLString::isWSCollapsed(valueToCheck)))
+            {
+                XMLCh* normalizedValue=XMLString::replicate(valueToCheck, fMemoryManager);
+                ArrayJanitor<XMLCh> tempURIName(normalizedValue, fMemoryManager);
+                if(wsFacet == DatatypeValidator::REPLACE)
+                    XMLString::replaceWS(normalizedValue, fMemoryManager);
+                else if(wsFacet == DatatypeValidator::COLLAPSE)
+                    XMLString::collapseWS(normalizedValue, fMemoryManager);
+                valueToCheck=fStringPool->getValueForId(fStringPool->addOrFind(normalizedValue));
+            }
 
-            XMLCh* canonical = (XMLCh*) validator->getCanonicalRepresentation(valConstraint, fMemoryManager);
+            validator->validate(valueToCheck,0,fMemoryManager);
+
+            XMLCh* canonical = (XMLCh*) validator->getCanonicalRepresentation(valueToCheck, fMemoryManager);
             ArrayJanitor<XMLCh> tempCanonical(canonical, fMemoryManager);
-            validator->validate(canonical, 0, fMemoryManager);
+
+            if(!XMLString::equals(canonical, valueToCheck))
+            {
+                validator->validate(canonical, 0, fMemoryManager);
+                valueToCheck=fStringPool->getValueForId(fStringPool->addOrFind(canonical));
+            }
+
+            elemDecl->setDefaultValue(valueToCheck);
 
             isValid = true;
         }
