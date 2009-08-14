@@ -2406,7 +2406,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     bool bXsiTypeSet= (fValidator && fGrammarType == Grammar::SchemaGrammarType)?((SchemaValidator*)fValidator)->getIsXsiTypeSet():false;
     if (wasAdded)
     {
-        if (laxThisOne) {
+        if (laxThisOne && !bXsiTypeSet) {
             fValidate = false;
             fElemStack.setValidationFlag(fValidate);
         }

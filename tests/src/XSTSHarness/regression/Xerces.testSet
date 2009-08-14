@@ -433,6 +433,22 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
+	<testGroup name="XERCESC-1707">
+		<annotation>
+			<documentation>Processing of not-declared-element with "xsi:type" under anyType element does not clear SchemaValidator::fXsiType</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1707"/>
+		<schemaTest name="XERCESC-1707">
+			<schemaDocument xlink:href="./XERCESC-1707/test.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-08-14"/>
+		</schemaTest>
+		<instanceTest name="XERCESC-1707-1">
+			<instanceDocument xlink:href="./XERCESC-1707/test.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-08-14"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-1714">
 		<annotation>
 			<documentation>xerces-c reports "Base type definition does not have any attributes" for a valid complex type restriction</documentation>

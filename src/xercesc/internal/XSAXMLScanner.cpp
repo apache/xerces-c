@@ -346,7 +346,7 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
     bool bXsiTypeSet= (fValidator)?((SchemaValidator*)fValidator)->getIsXsiTypeSet():false;
     if (wasAdded || !elemDecl->isDeclared())
     {
-        if (laxThisOne) {
+        if (laxThisOne && !bXsiTypeSet) {
             fValidate = false;
             fElemStack.setValidationFlag(fValidate);
         }
