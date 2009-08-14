@@ -38,6 +38,7 @@
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/util/XMLURL.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -168,6 +169,15 @@ private:
     // -----------------------------------------------------------------------
     bool            fSawErrors;
     XMLBuffer       fErrorText;
+};
+
+class BaseEntityResolver : public XMLEntityResolver
+{
+public:
+    BaseEntityResolver() {};
+
+    virtual InputSource* resolveEntity(XMLResourceIdentifier* resourceIdentifier);
+
 };
 
 #endif

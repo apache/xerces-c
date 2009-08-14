@@ -28,6 +28,7 @@
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
 
 // ---------------------------------------------------------------------------
 //  XSTSHarnessHandlers: Constructors and Destructor
@@ -44,6 +45,7 @@ XSTSHarnessHandlers::XSTSHarnessHandlers(const XMLCh* baseURL) : BaseHarnessHand
     fParser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse, true);
     fParser->setFeature(XMLUni::fgXercesIdentityConstraintChecking, true);
     fParser->setErrorHandler(&fErrorHandler);
+    ((SAX2XMLReaderImpl*)fParser)->setXMLEntityResolver(&fEntityResolver);
 }
 
 XSTSHarnessHandlers::~XSTSHarnessHandlers()
@@ -328,4 +330,3 @@ void XSTSHarnessHandlers::endElement(const XMLCh* const uri,
         }
     }
 }
-

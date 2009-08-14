@@ -37,6 +37,7 @@
 #include <fstream.h>
 #endif
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
 static XMLCh sz_XMLTestSuiteRoot[]={ chLatin_T, chLatin_E, chLatin_S, chLatin_T, chLatin_S, chLatin_U, chLatin_I, chLatin_T, chLatin_E, chNull };
 const XMLCh dummy[]={ chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chForwardSlash, chForwardSlash, 
@@ -150,6 +151,56 @@ void BaseErrorHandler::fatalError(const SAXParseException& exc)
 
 /////////////////////////////////////////////////////////////////////
 
+InputSource* BaseEntityResolver::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
+{
+    if(XMLString::equals(resourceIdentifier->getNameSpace(), XMLUni::fgXMLURIName))
+    {
+        static const char* xmlXsd=  "<?xml version='1.0'?>"
+                                    "<xs:schema targetNamespace='http://www.w3.org/XML/1998/namespace' "
+                                    "  xmlns:xs='http://www.w3.org/2001/XMLSchema' "
+                                    "  xml:lang='en'>"
+                                    ""
+                                    " <xs:attribute name='lang'>"
+                                    "  <xs:simpleType>"
+                                    "   <xs:union memberTypes='xs:language'>"
+                                    "    <xs:simpleType>"
+                                    "     <xs:restriction base='xs:string'>"
+                                    "      <xs:enumeration value=''/>"
+                                    "     </xs:restriction>"
+                                    "    </xs:simpleType>"
+                                    "   </xs:union>"
+                                    "  </xs:simpleType>"
+                                    " </xs:attribute>"
+                                    ""
+                                    " <xs:attribute name='space'>"
+                                    "  <xs:simpleType>"
+                                    "   <xs:restriction base='xs:NCName'>"
+                                    "    <xs:enumeration value='default'/>"
+                                    "    <xs:enumeration value='preserve'/>"
+                                    "   </xs:restriction>"
+                                    "  </xs:simpleType>"
+                                    " </xs:attribute>"
+                                    ""
+                                    " <xs:attribute name='base' type='xs:anyURI'>"
+                                    " </xs:attribute>"
+                                    ""
+                                    " <xs:attribute name='id' type='xs:ID'>"
+                                    " </xs:attribute>"
+                                    ""
+                                    " <xs:attributeGroup name='specialAttrs'>"
+                                    "  <xs:attribute ref='xml:base'/>"
+                                    "  <xs:attribute ref='xml:lang'/>"
+                                    "  <xs:attribute ref='xml:space'/>"
+                                    "  <xs:attribute ref='xml:id'/>"
+                                    " </xs:attributeGroup>"
+                                    ""
+                                    "</xs:schema>";
+        return new MemBufInputSource((XMLByte*)xmlXsd, strlen(xmlXsd), "");
+    }
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////
 
 class RootExtractor : public DefaultHandler
 {

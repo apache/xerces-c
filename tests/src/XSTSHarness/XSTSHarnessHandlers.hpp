@@ -69,5 +69,6 @@ private:
     XSTSTest            fCurrentTest;
     SAX2XMLReader*      fParser;
     BaseErrorHandler    fErrorHandler;
+    BaseEntityResolver  fEntityResolver;
 };
 
