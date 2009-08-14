@@ -257,40 +257,34 @@ void XPathMatcher::startElement(const XMLElementDecl& elemDecl,
                         if (fCurrentStep[i] == stepSize) {
 
                             fMatched[i] = XP_MATCHED_A;
-                            XMLSize_t j=0;
 
-                            for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
-
-                            if(j == i) {
-
-                                SchemaAttDef* attDef = ((SchemaElementDecl&) elemDecl).getAttDef(curDef->getName(), curDef->getURIId());
-                                DatatypeValidator* dv = (attDef) ? attDef->getDatatypeValidator() : 0;
-                                const XMLCh* value = curDef->getValue();
-                                // store QName using their Clark name
-                                if(dv && dv->getType()==DatatypeValidator::QName)
-                                {
-                                    int index=XMLString::indexOf(value, chColon);
-                                    if(index==-1)
-                                        matched(value, dv, false);
-                                    else
-                                    {
-                                        XMLBuffer buff(1023, fMemoryManager);
-                                        buff.append(chOpenCurly);
-                                        if(validationContext)
-                                        {
-                                            XMLCh* prefix=(XMLCh*)fMemoryManager->allocate((index+1)*sizeof(XMLCh));
-                                            ArrayJanitor<XMLCh> janPrefix(prefix, fMemoryManager);
-                                            XMLString::subString(prefix, value, 0, (XMLSize_t)index, fMemoryManager);
-                                            buff.append(validationContext->getURIForPrefix(prefix));
-                                        }
-                                        buff.append(chCloseCurly);
-                                        buff.append(value+index+1);
-                                        matched(buff.getRawBuffer(), dv, false);
-                                    }
-                                }
-                                else
+                            SchemaAttDef* attDef = ((SchemaElementDecl&) elemDecl).getAttDef(curDef->getName(), curDef->getURIId());
+                            DatatypeValidator* dv = (attDef) ? attDef->getDatatypeValidator() : 0;
+                            const XMLCh* value = curDef->getValue();
+                            // store QName using their Clark name
+                            if(dv && dv->getType()==DatatypeValidator::QName)
+                            {
+                                int index=XMLString::indexOf(value, chColon);
+                                if(index==-1)
                                     matched(value, dv, false);
+                                else
+                                {
+                                    XMLBuffer buff(1023, fMemoryManager);
+                                    buff.append(chOpenCurly);
+                                    if(validationContext)
+                                    {
+                                        XMLCh* prefix=(XMLCh*)fMemoryManager->allocate((index+1)*sizeof(XMLCh));
+                                        ArrayJanitor<XMLCh> janPrefix(prefix, fMemoryManager);
+                                        XMLString::subString(prefix, value, 0, (XMLSize_t)index, fMemoryManager);
+                                        buff.append(validationContext->getURIForPrefix(prefix));
+                                    }
+                                    buff.append(chCloseCurly);
+                                    buff.append(value+index+1);
+                                    matched(buff.getRawBuffer(), dv, false);
+                                }
                             }
+                            else
+                                matched(value, dv, false);
                         }
                         break;
                     }
@@ -328,13 +322,10 @@ void XPathMatcher::endElement(const XMLElementDecl& elemDecl,
         // signal match, if appropriate
         else {
 
-            XMLSize_t j=0;
-            for(; j<i && ((fMatched[j] & XP_MATCHED) != XP_MATCHED); j++) ;
-
-            if ((j < i) || (fMatched[j] == 0)) {
+            if (fMatched[i] == 0)
                 continue;
-            }
-            if ((fMatched[j] & XP_MATCHED_A) == XP_MATCHED_A) {
+            
+            if ((fMatched[i] & XP_MATCHED_A) == XP_MATCHED_A) {
                 fMatched[i] = 0;
                 continue;
             }

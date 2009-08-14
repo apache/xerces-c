@@ -139,6 +139,22 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
+	<testGroup name="XERCESC-809">
+		<annotation>
+			<documentation>Does implement co-occurence constraints</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-809"/>
+		<schemaTest name="XERCESC-809-1">
+			<schemaDocument xlink:href="./XERCESC-809/test.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-08-14"/>
+		</schemaTest>
+		<instanceTest name="XERCESC-809-2">
+			<instanceDocument xlink:href="./XERCESC-809/test.xml"/>
+			<expected validity="invalid"/>
+			<current status="accepted" date="2009-08-14"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-830">
 		<annotation>
 			<documentation>Empty complex type definition is always non-mixed even if declaration says otherwise</documentation>

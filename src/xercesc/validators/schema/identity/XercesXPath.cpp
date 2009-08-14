@@ -427,8 +427,19 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
                     XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_SELF, nodeTest);
                     stepsVector->insertElementAt(step, 0);
                 }
-                fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
+                XercesLocationPath* newPath = new (fMemoryManager) XercesLocationPath(stepsVector);
                 janSteps.orphan();
+                bool bFound=false;
+                for(XMLSize_t i=0;i<fLocationPaths->size();i++)
+                    if((*(fLocationPaths->elementAt(i)))==(*newPath))
+                    {
+                        bFound=true;
+                        break;
+                    }
+                if(bFound)
+                    delete newPath;
+                else
+                    fLocationPaths->addElement(newPath);
                 stepsVector = new (fMemoryManager) RefVectorOf<XercesStep>(16, true, fMemoryManager);
                 janSteps.reset(stepsVector);
                 firstTokenOfLocationPath = true;
@@ -661,8 +672,19 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
         XercesStep* step = new (fMemoryManager) XercesStep(XercesStep::AxisType_SELF, nodeTest);
         stepsVector->insertElementAt(step, 0);
     }
-    fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
+    XercesLocationPath* newPath = new (fMemoryManager) XercesLocationPath(stepsVector);
     janSteps.orphan();
+    bool bFound=false;
+    for(XMLSize_t i=0;i<fLocationPaths->size();i++)
+        if((*(fLocationPaths->elementAt(i)))==(*newPath))
+        {
+            bFound=true;
+            break;
+        }
+    if(bFound)
+        delete newPath;
+    else
+        fLocationPaths->addElement(newPath);
 }
 
 /***

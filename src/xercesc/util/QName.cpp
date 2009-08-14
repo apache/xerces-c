@@ -399,6 +399,10 @@ void QName::setValues(const QName& qname)
 // -----------------------------------------------------------------------
 bool QName::operator==(const QName& qname) const
 {
+    // if we are an unitialized QName, check that the other is unitialized too
+    if (!fLocalPart && !fPrefix)
+        return !qname.fLocalPart && !qname.fPrefix;
+
     if (fURIId == 0) // null URI
         return (XMLString::equals(getRawName(),qname.getRawName()));
 
