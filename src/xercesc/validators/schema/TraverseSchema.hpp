@@ -237,6 +237,12 @@ private:
     //  Private Helper methods
     // -----------------------------------------------------------------------
     /**
+      * Keep track of the xs:import found
+      */
+    bool isImportingNS(const int namespaceURI);
+    void addImportedNS(const int namespaceURI);
+
+    /**
       * Retrived the Namespace mapping from the schema element
       */
     bool retrieveNamespaceMapping(const DOMElement* const elem);
@@ -756,6 +762,7 @@ private:
     ValueVectorOf<const DOMElement*>*              fDeclStack;
     ValueVectorOf<unsigned int>**                  fGlobalDeclarations;
     ValueVectorOf<DOMNode*>*                       fNonXSAttList;
+    ValueVectorOf<int>*                            fImportedNSList;
     RefHashTableOf<ValueVectorOf<DOMElement*>, PtrHasher>* fIC_NodeListNS;
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*                    fRedefineComponents;
@@ -914,6 +921,24 @@ inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeNam
     for (int i=0; i < redefineCounter; i++) {
         newTypeName.append(SchemaSymbols::fgRedefIdentifier);
     }
+}
+
+inline bool TraverseSchema::isImportingNS(const int namespaceURI) {
+
+    if (!fImportedNSList)
+        return false;
+
+    return (fImportedNSList->containsElement(namespaceURI));
+}
+
+inline void TraverseSchema::addImportedNS(const int namespaceURI) {
+
+    if (!fImportedNSList) {
+        fImportedNSList = new (fMemoryManager) ValueVectorOf<int>(4, fMemoryManager);
+    }
+
+    if (!fImportedNSList->containsElement(namespaceURI))
+        fImportedNSList->addElement(namespaceURI);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -55,7 +55,6 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     , fImportedInfoList(0)
     , fImportingInfoList(0)
     , fFailedRedefineList(0)
-    , fImportedNSList(0)
     , fRecursingAnonTypes(0)
     , fRecursingTypeNames(0)
     , fNonXSAttList(0)
@@ -93,7 +92,6 @@ SchemaInfo::~SchemaInfo()
         delete fIncludeInfoList;
 
     delete fImportingInfoList;
-    delete fImportedNSList;
     delete fFailedRedefineList;
     delete fRecursingAnonTypes;
     delete fRecursingTypeNames;

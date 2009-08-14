@@ -131,8 +131,6 @@ public:
     bool circularImportExist(const unsigned int nameSpaceURI);
     bool isFailedRedefine(const DOMElement* const anElem);
     void addFailedRedefine(const DOMElement* const anElem);
-    bool isImportingNS(const int namespaceURI);
-    void addImportedNS(const int namespaceURI);
     void addRecursingType(const DOMElement* const elem, const XMLCh* const name);
 
 private:
@@ -164,7 +162,6 @@ private:
     RefVectorOf<SchemaInfo>*          fImportedInfoList;
     RefVectorOf<SchemaInfo>*          fImportingInfoList;
     ValueVectorOf<const DOMElement*>* fFailedRedefineList;
-    ValueVectorOf<int>*               fImportedNSList;
     ValueVectorOf<const DOMElement*>* fRecursingAnonTypes;
     ValueVectorOf<const XMLCh*>*      fRecursingTypeNames;
     RefHashTableOf<DOMElement>*       fTopLevelComponents[C_Count];
@@ -279,16 +276,6 @@ inline void SchemaInfo::setProcessed(const bool aValue) {
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Access methods
 // ---------------------------------------------------------------------------
-inline void SchemaInfo::addImportedNS(const int namespaceURI) {
-
-    if (!fImportedNSList) {
-        fImportedNSList = new (fMemoryManager) ValueVectorOf<int>(4, fMemoryManager);
-    }
-
-    if (!fImportedNSList->containsElement(namespaceURI))
-        fImportedNSList->addElement(namespaceURI);
-}
-
 inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
                                       const ListType aListType) {
 
@@ -300,7 +287,6 @@ inline void SchemaInfo::addSchemaInfo(SchemaInfo* const toAdd,
         if (!fImportedInfoList->containsElement(toAdd)) {
 
             fImportedInfoList->addElement(toAdd);
-            addImportedNS(toAdd->getTargetNSURI());
             toAdd->updateImportingInfo(this);
         }
     }
@@ -405,14 +391,6 @@ inline void SchemaInfo::addFailedRedefine(const DOMElement* const anElem) {
     }
 
     fFailedRedefineList->addElement(anElem);
-}
-
-inline bool SchemaInfo::isImportingNS(const int namespaceURI) {
-
-    if (!fImportedNSList)
-        return false;
-
-    return (fImportedNSList->containsElement(namespaceURI));
 }
 
 inline void SchemaInfo::addRecursingType(const DOMElement* const elem,

@@ -193,6 +193,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fDeclStack(0)
     , fGlobalDeclarations(0)
     , fNonXSAttList(0)
+    , fImportedNSList(0)
     , fIC_NodeListNS(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
@@ -364,6 +365,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
         // Add mapping for the xml prefix
         currInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
     }
+    addImportedNS(currInfo->getTargetNSURI());
 
     fSchemaInfo = currInfo;
     fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
@@ -758,7 +760,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     bool grammarFound = (aGrammar && (aGrammar->getGrammarType() == Grammar::SchemaGrammarType));
 
     if (grammarFound) {
-        fSchemaInfo->addImportedNS(fURIStringPool->addOrFind(nameSpace));
+        addImportedNS(fURIStringPool->addOrFind(nameSpace));
     }
 
     // ------------------------------------------------------------------
@@ -787,7 +789,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // Nothing to do
     if (!srcToFill) {
         if (!grammarFound && nameSpace) {
-            fSchemaInfo->addImportedNS(fURIStringPool->addOrFind(nameSpace));
+            addImportedNS(fURIStringPool->addOrFind(nameSpace));
         }
 
         return;
@@ -805,6 +807,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     if (importSchemaInfo) {
 
         fSchemaInfo->addSchemaInfo(importSchemaInfo, SchemaInfo::IMPORT);
+        addImportedNS(importSchemaInfo->getTargetNSURI());
         return;
     }
 
@@ -2961,7 +2964,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+        if (!isImportingNS(uriId)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
             return 0;
@@ -5012,7 +5015,7 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
             // http://www.w3.org/TR/xmlschema-1/#src-resolve
             unsigned int uriId = fURIStringPool->addOrFind(uri);
 
-            if (!fSchemaInfo->isImportingNS(uriId)) {
+            if (!isImportingNS(uriId)) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uri);
                 return 0;
@@ -5283,7 +5286,7 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(otherSchemaURI);
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+        if (!isImportingNS(uriId)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, otherSchemaURI);
             return 0;
@@ -5361,7 +5364,7 @@ TraverseSchema::getAttrDatatypeValidatorNS(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(typeURI);
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+        if (!isImportingNS(uriId)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, typeURI);
             return 0;
@@ -5427,7 +5430,7 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(typeURI);
 
-        if (!fSchemaInfo->isImportingNS(uriId))
+        if (!isImportingNS(uriId))
             return 0;
 
         Grammar* aGrammar = fGrammarResolver->getGrammar(typeURI);
@@ -5499,7 +5502,7 @@ TraverseSchema::getGlobalElemDecl(const DOMElement* const elem,
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
-        if (!fSchemaInfo->isImportingNS(uriId))
+        if (!isImportingNS(uriId))
         {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, nameURI);
             return 0;
@@ -5760,7 +5763,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+        if (!isImportingNS(uriId)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
             return;
@@ -6410,7 +6413,7 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
             // http://www.w3.org/TR/xmlschema-1/#src-resolve
             unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
-            if (!fSchemaInfo->isImportingNS(uriId)) {
+            if (!isImportingNS(uriId)) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
                 throw TraverseSchema::InvalidComplexTypeInfo;
@@ -7097,7 +7100,7 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+        if (!isImportingNS(uriId)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
             return 0;
@@ -7196,7 +7199,7 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
         unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
-        if (!fSchemaInfo->isImportingNS(uriId)) {
+        if (!isImportingNS(uriId)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
             return 0;
@@ -8657,6 +8660,7 @@ void TraverseSchema::cleanUp() {
     }
 
     delete fNonXSAttList;
+    delete fImportedNSList;
     delete fNotationRegistry;
     delete fRedefineComponents;
     delete fIdentityConstraintNames;
