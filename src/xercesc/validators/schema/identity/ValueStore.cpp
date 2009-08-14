@@ -44,7 +44,10 @@ XMLSize_t ICValueHasher::getHashVal(const void* key, XMLSize_t mod) const
 
     XMLSize_t size = valueMap->size();
     for (XMLSize_t j=0; j<size; j++) {
-        DatatypeValidator* const dv = valueMap->getDatatypeValidatorAt(j);
+        // reach the most generic datatype validator
+        DatatypeValidator* dv = valueMap->getDatatypeValidatorAt(j);
+        while(dv && dv->getBaseValidator())
+            dv = dv->getBaseValidator();
         const XMLCh* const val = valueMap->getValueAt(j);
         const XMLCh* canonVal = (dv && val)?dv->getCanonicalRepresentation(val, fMemoryManager):0;
         if(canonVal)
