@@ -1417,7 +1417,7 @@ public:
       *        On return , this buffer also holds the converted string
       * @param manager The MemoryManager to use to allocate objects
       */
-    static void replaceWS(XMLCh* const toConvert
+    static void replaceWS(XMLCh* toConvert
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
 
 	/** Collapse whitespace
@@ -1425,7 +1425,7 @@ public:
       *        On return , this buffer also holds the converted string
       * @param manager The MemoryManager to use to allocate objects
       */
-    static void collapseWS(XMLCh* const toConvert
+    static void collapseWS(XMLCh* toConvert
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Remove whitespace

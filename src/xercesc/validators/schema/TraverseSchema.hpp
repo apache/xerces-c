@@ -439,7 +439,7 @@ private:
       */
     const XMLCh* getElementAttValue(const DOMElement* const elem,
                                     const XMLCh* const attName,
-                                    const bool toTrim = false);
+                                    const DatatypeValidator::ValidatorType attType = DatatypeValidator::UnKnown);
 
     /* return minOccurs */
     int checkMinMax(ContentSpecNode* const specNode,
@@ -816,35 +816,6 @@ inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
     }
 
     return fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
-}
-
-inline
-const XMLCh* TraverseSchema::getElementAttValue(const DOMElement* const elem,
-                                                const XMLCh* const attName,
-                                                const bool toTrim) {
-
-    DOMAttr* attNode = elem->getAttributeNode(attName);
-
-    if (attNode == 0) {
-        return 0;
-    }
-
-    const XMLCh* attValue = attNode->getValue();
-
-    if (toTrim) {
-
-        fBuffer.set(attValue);
-        XMLCh* bufValue = fBuffer.getRawBuffer();
-        XMLString::trim(bufValue);
-
-        if (!bufValue || !*bufValue) {
-            return XMLUni::fgZeroLenString;
-        }
-
-        return fStringPool->getValueForId(fStringPool->addOrFind(bufValue));
-    }
-
-    return attValue;
 }
 
 inline void
