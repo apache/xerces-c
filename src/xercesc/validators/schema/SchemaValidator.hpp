@@ -121,6 +121,7 @@ public:
        , const unsigned int        uriId);
 
     void setNillable(bool isNil);
+    void resetNillable();
     void setErrorReporter(XMLErrorReporter* const errorReporter);
     void setExitOnFirstFatal(const bool newValue);
     void setDatatypeBuffer(const XMLCh* const value);
@@ -256,6 +257,8 @@ private:
     //      Store the Schema Type Attribute Value if schema type is specified
     //
     //  fNil
+    //      Indicates if a nil value is acceptable
+    //  fNilFound
     //      Indicates if Nillable has been set
     // -----------------------------------------------------------------------
     //  The following used internally in the validator
@@ -293,6 +296,7 @@ private:
     GrammarResolver*                fGrammarResolver;
     QName*                          fXsiType;
     bool                            fNil;
+    bool                            fNilFound;
     DatatypeValidator*              fCurrentDatatypeValidator;
     XMLBuffer*                      fNotationBuf;
     XMLBuffer                       fDatatypeBuffer;
@@ -324,6 +328,12 @@ inline void SchemaValidator::setXsiType(const XMLCh* const        prefix
 
 inline void SchemaValidator::setNillable(bool isNil) {
     fNil = isNil;
+    fNilFound = true;
+}
+
+inline void SchemaValidator::resetNillable() {
+    fNil = false;
+    fNilFound = false;
 }
 
 inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {

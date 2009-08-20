@@ -1724,7 +1724,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
         }
         else if (fGrammarType == Grammar::SchemaGrammarType) {
-            ((SchemaValidator*)fValidator)->setNillable(false);
+            ((SchemaValidator*)fValidator)->resetNillable();
         }
 
         if (fPSVIHandler)
@@ -3627,6 +3627,10 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                         ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, valuePtr, fXsiNil, true);
                         if(XMLString::equals(fXsiNil.getRawBuffer(), SchemaSymbols::fgATTVAL_TRUE))
                             ((SchemaValidator*)fValidator)->setNillable(true);
+                        else if(XMLString::equals(fXsiNil.getRawBuffer(), SchemaSymbols::fgATTVAL_FALSE))
+                            ((SchemaValidator*)fValidator)->setNillable(false);
+                        else
+                            emitError(XMLErrs::InvalidAttValue, fXsiNil.getRawBuffer(), valuePtr);
                         fBufMgr.releaseBuffer(fXsiNil);
                     }
                 }

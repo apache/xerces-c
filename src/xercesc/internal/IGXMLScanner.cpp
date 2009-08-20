@@ -2729,7 +2729,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             }
         }
         else if (fGrammarType == Grammar::SchemaGrammarType) {
-            ((SchemaValidator*)fValidator)->setNillable(false);
+            ((SchemaValidator*)fValidator)->resetNillable();
         }
 
         if (fGrammarType == Grammar::SchemaGrammarType)

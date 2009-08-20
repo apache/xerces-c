@@ -52,6 +52,7 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
     , fGrammarResolver(0)
     , fXsiType(0)
     , fNil(false)
+    , fNilFound(false)
     , fCurrentDatatypeValidator(0)
     , fNotationBuf(0)
     , fDatatypeBuffer(1023, manager)
@@ -171,114 +172,104 @@ bool SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             XMLCh* value = fDatatypeBuffer.getRawBuffer();
             XMLCh* elemDefaultValue = ((SchemaElementDecl*) elemDecl)->getDefaultValue();
 
-			if (fCurrentDatatypeValidator)
+            if (fNil)
             {
-                if (fNil)
+                if ((!XMLString::equals(value, XMLUni::fgZeroLenString))
+                    || elemDefaultValue)
                 {
-                    if ((!XMLString::equals(value, XMLUni::fgZeroLenString))
-                        || elemDefaultValue)
-                    {
-                        emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
-                        fErrorOccurred = true;
+                    emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
+                    fErrorOccurred = true;
+                }
+            }
+			else if (fCurrentDatatypeValidator)
+            {
+                DatatypeValidator::ValidatorType eleDefDVType = fCurrentDatatypeValidator->getType();
+                bool validateCanonical = false;
+                if (eleDefDVType == DatatypeValidator::NOTATION)
+                {
+                    // if notation, need to bind URI to notation first
+                    if (!fNotationBuf)
+                        fNotationBuf = new (fMemoryManager) XMLBuffer(1023, fMemoryManager);
+
+                    //  Make sure that this value maps to one of the
+                    //  notation values in the enumList parameter. We don't have to
+                    //  look it up in the notation pool (if a notation) because we
+                    //  will look up the enumerated values themselves. If they are in
+                    //  the notation pool (after the Grammar is parsed), then obviously
+                    //  this value will be legal since it matches one of them.
+                    int colonPos = -1;
+                    unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);
+
+                    const XMLCh* uriText = getScanner()->getURIText(uriId);
+                    if (uriText && *uriText) {
+                        fNotationBuf->set(uriText);
+                        fNotationBuf->append(chColon);
+                        fNotationBuf->append(&value[colonPos + 1]);
+                        value = fNotationBuf->getRawBuffer();
                     }
                 }
-                else
+
+                if (elemDefaultValue)
                 {
-                    DatatypeValidator::ValidatorType eleDefDVType = fCurrentDatatypeValidator->getType();
-                    bool validateCanonical = false;
-                    if (eleDefDVType == DatatypeValidator::NOTATION)
+                    if (XMLString::equals(value, XMLUni::fgZeroLenString))
                     {
-                        // if notation, need to bind URI to notation first
-                        if (!fNotationBuf)
-                            fNotationBuf = new (fMemoryManager) XMLBuffer(1023, fMemoryManager);
+                        fElemIsSpecified = true;
+                        // if this element didn't specified any value
+                        // use default value
+                        if (getScanner()->getDocHandler())
+                            getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
 
-                        //  Make sure that this value maps to one of the
-                        //  notation values in the enumList parameter. We don't have to
-                        //  look it up in the notation pool (if a notation) because we
-                        //  will look up the enumerated values themselves. If they are in
-                        //  the notation pool (after the Grammar is parsed), then obviously
-                        //  this value will be legal since it matches one of them.
-                        int colonPos = -1;
-                        unsigned int uriId = getScanner()->resolveQName(value, *fNotationBuf, ElemStack::Mode_Element, colonPos);
-
-                        const XMLCh* uriText = getScanner()->getURIText(uriId);
-                        if (uriText && *uriText) {
-                            fNotationBuf->set(uriText);
-                            fNotationBuf->append(chColon);
-                            fNotationBuf->append(&value[colonPos + 1]);
-                            value = fNotationBuf->getRawBuffer();
-                        }
-                    }
-
-                    if (elemDefaultValue)
-                    {
-                        if (XMLString::equals(value, XMLUni::fgZeroLenString))
-                        {
-                            fElemIsSpecified = true;
-                            // if this element didn't specified any value
-                            // use default value
-                            if (getScanner()->getDocHandler())
-                                getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
-
-                            // Normally for default value, it has been validated already during TraverseSchema
-                            // But if there was a xsi:type and this validator is fXsiTypeValidator,
-                            // need to validate again
-                            // we determine this if the current content dataype validator
-                            // is neither the one in the element nor the one in the current
-                            // complex type (if any)
-                            if ((fCurrentDatatypeValidator != ((SchemaElementDecl*)elemDecl)->getDatatypeValidator())
-                                && (!fTypeStack->peek() || (fCurrentDatatypeValidator != fTypeStack->peek()->getDatatypeValidator()))) {
-                                value = elemDefaultValue;
-                                validateCanonical = true;
-                            }
-                            else
-                                value = 0;
+                        // Normally for default value, it has been validated already during TraverseSchema
+                        // But if there was a xsi:type and this validator is fXsiTypeValidator,
+                        // need to validate again
+                        // we determine this if the current content dataype validator
+                        // is neither the one in the element nor the one in the current
+                        // complex type (if any)
+                        if ((fCurrentDatatypeValidator != ((SchemaElementDecl*)elemDecl)->getDatatypeValidator())
+                            && (!fTypeStack->peek() || (fCurrentDatatypeValidator != fTypeStack->peek()->getDatatypeValidator()))) {
+                            value = elemDefaultValue;
+                            validateCanonical = true;
                         }
                         else
-                        {
-                            // this element has specified some value
-                            // if the flag is FIXED, then this value must be same as default value
-                            if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_FIXED) != 0)
-                            {
-                                if (fCurrentDatatypeValidator->compare(value, elemDefaultValue, fMemoryManager) != 0 )
-                                {
-                                    emitError(XMLValid::FixedDifferentFromActual, elemDecl->getFullName());
-                                    fErrorOccurred = true;
-                                }
-                            }
-                        }
+                            value = 0;
                     }
                     else
                     {
-                        // no default value, then check nillable
-                        if (XMLString::equals(value, XMLUni::fgZeroLenString)
-                            && (((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) != 0)
-                                value = 0;
-                    }
-
-                    if ((!fErrorOccurred) && value)
-                    {
-                        try {
-                            fCurrentDatatypeValidator->validate(value, getScanner()->getValidationContext(), fMemoryManager);
-                            if (validateCanonical) {
-                                XMLCh* canonical = (XMLCh*) fCurrentDatatypeValidator->getCanonicalRepresentation(value, fMemoryManager);
-                                ArrayJanitor<XMLCh> tempCanonical(canonical, fMemoryManager);
-                                fCurrentDatatypeValidator->validate(canonical, getScanner()->getValidationContext(), fMemoryManager);
+                        // this element has specified some value
+                        // if the flag is FIXED, then this value must be same as default value
+                        if ((((SchemaElementDecl*)elemDecl)->getMiscFlags() & SchemaSymbols::XSD_FIXED) != 0)
+                        {
+                            if (fCurrentDatatypeValidator->compare(value, elemDefaultValue, fMemoryManager) != 0 )
+                            {
+                                emitError(XMLValid::FixedDifferentFromActual, elemDecl->getFullName());
+                                fErrorOccurred = true;
                             }
                         }
-                        catch (XMLException& idve)
-                        {
-                            emitError (XMLValid::DatatypeError, idve.getCode(), idve.getMessage());
-                            fErrorOccurred = true;
+                    }
+                }
+
+                if ((!fErrorOccurred) && value)
+                {
+                    try {
+                        fCurrentDatatypeValidator->validate(value, getScanner()->getValidationContext(), fMemoryManager);
+                        if (validateCanonical) {
+                            XMLCh* canonical = (XMLCh*) fCurrentDatatypeValidator->getCanonicalRepresentation(value, fMemoryManager);
+                            ArrayJanitor<XMLCh> tempCanonical(canonical, fMemoryManager);
+                            fCurrentDatatypeValidator->validate(canonical, getScanner()->getValidationContext(), fMemoryManager);
                         }
-                        catch(const OutOfMemoryException&) {
-                            throw;
-                        }
-                        catch (...)
-                        {
-                            emitError(XMLValid::GenericError);
-                            throw;
-                        }
+                    }
+                    catch (XMLException& idve)
+                    {
+                        emitError (XMLValid::DatatypeError, idve.getCode(), idve.getMessage());
+                        fErrorOccurred = true;
+                    }
+                    catch(const OutOfMemoryException&) {
+                        throw;
+                    }
+                    catch (...)
+                    {
+                        emitError(XMLValid::GenericError);
+                        throw;
                     }
                 }
             }
@@ -310,6 +301,7 @@ bool SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     // must rely on scanner to clear fDatatypeBuffer
     // since it may need to query its contents after this method completes
     fNil = false;
+    fNilFound = false;
     fTrailing=false;
     fSeenNonWhiteSpace = false;
     fCurrentDatatypeValidator = 0;
@@ -348,6 +340,7 @@ void SchemaValidator::reset()
     fXsiType = 0;
     fCurrentDatatypeValidator = 0;
     fNil = false;
+    fNilFound = false;
     fDatatypeBuffer.reset();
     fErrorOccurred = false;
 }
@@ -728,8 +721,9 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     //
     // Check whether this element allows Nillable
     //
-    if (fNil && (miscFlags & SchemaSymbols::XSD_NILLABLE) == 0 ) {
+    if (fNilFound && (miscFlags & SchemaSymbols::XSD_NILLABLE) == 0 ) {
         fNil = false;
+        fNilFound = false;
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
         fErrorOccurred = true;
     }
