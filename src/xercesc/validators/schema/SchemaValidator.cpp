@@ -630,14 +630,21 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                                     fErrorOccurred = true;
                                 }
                                 else if(elemTypeInfo != typeInfo) {
-                                    int derivationMethod = typeInfo->getDerivedBy();
-                                    if ((((SchemaElementDecl*)elemDef)->getBlockSet() & derivationMethod) != 0) {
-                                        emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
-                                        fErrorOccurred = true;
-                                    }
-                                    if ((tempType->getBlockSet() & derivationMethod) != 0) {
-                                        emitError(XMLValid::TypeNoSubforBlock, tempType->getTypeName());
-                                        fErrorOccurred = true;
+                                    // perform the check on the entire inheritance chain
+                                    ComplexTypeInfo* tempType = typeInfo;
+                                    while (tempType) {
+                                        if (tempType == elemTypeInfo)
+                                            break;
+                                        int derivationMethod = tempType->getDerivedBy();
+                                        if ((((SchemaElementDecl*)elemDef)->getBlockSet() & derivationMethod) != 0) {
+                                            emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
+                                            fErrorOccurred = true;
+                                        }
+                                        if ((elemTypeInfo->getBlockSet() & derivationMethod) != 0) {
+                                            emitError(XMLValid::TypeNoSubforBlock, elemTypeInfo->getTypeName());
+                                            fErrorOccurred = true;
+                                        }
+                                        tempType = tempType->getBaseComplexTypeInfo();
                                     }
                                 }
                             }
