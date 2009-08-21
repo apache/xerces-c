@@ -112,6 +112,7 @@ bool testElementTraversal();
 
 bool testRegex();
 bool testScanner(XercesDOMParser* parser);
+bool testUtilFunctions();
 
 };
 

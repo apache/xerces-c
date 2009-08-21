@@ -950,6 +950,8 @@ int main(int /*argc*/, char ** /*argv*/)
         OK &= test.testLSExceptions();
 
         OK &= test.testElementTraversal();
+
+        OK &= test.testUtilFunctions();
     }
 
     XMLPlatformUtils::Terminate();
@@ -2743,11 +2745,27 @@ bool DOMTest::testDOMerrors(DOMDocument* document) {
         OK = false; \
     }
 
+#include <xercesc/framework/StdOutFormatTarget.hpp>
+
 bool DOMTest::testXPath(DOMDocument* document) {
     bool OK = true;
 
+#if 0
+            XMLCh tempLS[3] = {chLatin_L, chLatin_S, chNull};
+            DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempLS);
+            DOMLSSerializer   *theSerializer = ((DOMImplementationLS*)impl)->createLSSerializer();
+            DOMLSOutput       *theOutputDesc = ((DOMImplementationLS*)impl)->createLSOutput();
+            StdOutFormatTarget myFormTarget;
+            theOutputDesc->setByteStream(&myFormTarget);
+            theSerializer->getDomConfig()->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+            theSerializer->write(document, theOutputDesc);
+
+            theOutputDesc->release();
+            theSerializer->release();
+#endif
+
     TEST_VALID_XPATH("*", 1, __LINE__);
-    TEST_VALID_XPATH("dFirstElement/dTestBody/dBodyLevel24", 1, __LINE__);
+    TEST_VALID_XPATH("dTestBody/dBodyLevel24", 1, __LINE__);
     TEST_VALID_XPATH("//dBodyLevel34", 1, __LINE__);
     TEST_VALID_XPATH("/*", 1, __LINE__);
     TEST_VALID_XPATH("/dFirstElement/dTestBody/dBodyLevel24", 1, __LINE__);
@@ -5479,6 +5497,116 @@ bool DOMTest::testScanner(XercesDOMParser* parser) {
         OK = false;
         fprintf(stderr, "Variable chunks parsing failed at line %i\n", __LINE__);
 	}
+
+    return OK;
+}
+
+#define TEST_BOOLEAN(x) \
+    if(!x)  \
+    {       \
+        fprintf(stderr, "Boolean expression test failed at line %i\n", __LINE__); \
+        OK = false; \
+    }
+
+#define TEST_STRING(x,y) \
+    if(!XMLString::equals(x,y))  \
+    {       \
+        fprintf(stderr, "String expression test failed at line %i\n", __LINE__); \
+        OK = false; \
+    }
+
+bool DOMTest::testUtilFunctions()
+{
+    bool OK = true;
+    // test isWSReplaced
+    XMLString::transcode(" xyz ", tempStr, 3999);
+    TEST_BOOLEAN(XMLString::isWSReplaced(tempStr));
+    XMLString::transcode(" x\tyz ", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSReplaced(tempStr));
+    XMLString::transcode(" xyz\n", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSReplaced(tempStr));
+    XMLString::transcode("\rxyz", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSReplaced(tempStr));
+
+    // test replaceWS
+    XMLString::transcode(" x yz ", tempStr2, 3999);
+    XMLString::transcode(" x yz ", tempStr, 3999);
+    XMLString::replaceWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode(" x\tyz ", tempStr, 3999);
+    XMLString::replaceWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode(" x yz\n", tempStr, 3999);
+    XMLString::replaceWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("\rx yz ", tempStr, 3999);
+    XMLString::replaceWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+
+    // test isWSCollapsed
+    XMLString::transcode(" xyz ", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSCollapsed(tempStr));
+    XMLString::transcode(" x\tyz ", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSCollapsed(tempStr));
+    XMLString::transcode(" xyz\n", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSCollapsed(tempStr));
+    XMLString::transcode("\rxyz", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSCollapsed(tempStr));
+    XMLString::transcode("xyz", tempStr, 3999);
+    TEST_BOOLEAN(XMLString::isWSCollapsed(tempStr));
+    XMLString::transcode("x yz", tempStr, 3999);
+    TEST_BOOLEAN(XMLString::isWSCollapsed(tempStr));
+    XMLString::transcode("x  yz", tempStr, 3999);
+    TEST_BOOLEAN(!XMLString::isWSCollapsed(tempStr));
+
+    // test collapseWS
+    XMLString::transcode("x yz", tempStr2, 3999);
+    XMLString::transcode(" x\tyz ", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("x yz", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("x  yz", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+
+    XMLString::transcode("xyz", tempStr2, 3999);
+    XMLString::transcode(" xyz ", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode(" xyz\n", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("\rxyz", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("xyz", tempStr, 3999);
+    XMLString::collapseWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+
+    XMLString::transcode("xyz", tempStr2, 3999);
+    XMLString::transcode(" x\tyz ", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("x yz", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("x  yz", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode(" xyz ", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode(" xyz\n", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("\rxyz", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
+    XMLString::transcode("xyz", tempStr, 3999);
+    XMLString::removeWS(tempStr);
+    TEST_STRING(tempStr, tempStr2);
 
     return OK;
 }

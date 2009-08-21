@@ -9357,26 +9357,28 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOMElement* const elem,
         static short wsFacets[DatatypeValidator::ID] = {0};
         if(!bInitialized)
         {
-            wsFacets[DatatypeValidator::String]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_STRING)->getWSFacet();
-            wsFacets[DatatypeValidator::AnyURI]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI)->getWSFacet();
-            wsFacets[DatatypeValidator::QName]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME)->getWSFacet();
-            wsFacets[DatatypeValidator::Name]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_NAME)->getWSFacet();
-            wsFacets[DatatypeValidator::NCName]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_NCNAME)->getWSFacet();
-            wsFacets[DatatypeValidator::Boolean]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_BOOLEAN)->getWSFacet();
-            wsFacets[DatatypeValidator::Float]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_FLOAT)->getWSFacet();
-            wsFacets[DatatypeValidator::Double]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_DOUBLE)->getWSFacet();
-            wsFacets[DatatypeValidator::Decimal]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_DECIMAL)->getWSFacet();
-            wsFacets[DatatypeValidator::HexBinary]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_HEXBINARY)->getWSFacet();
-            wsFacets[DatatypeValidator::Base64Binary]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_BASE64BINARY)->getWSFacet();
-            wsFacets[DatatypeValidator::Duration]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_DURATION)->getWSFacet();
-            wsFacets[DatatypeValidator::DateTime]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_DATETIME)->getWSFacet();
-            wsFacets[DatatypeValidator::Date]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_DATE)->getWSFacet();
-            wsFacets[DatatypeValidator::Time]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_TIME)->getWSFacet();
-            wsFacets[DatatypeValidator::MonthDay]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_MONTHDAY)->getWSFacet();
-            wsFacets[DatatypeValidator::YearMonth]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_YEARMONTH)->getWSFacet();
-            wsFacets[DatatypeValidator::Year]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_YEAR)->getWSFacet();
-            wsFacets[DatatypeValidator::Month]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_MONTH)->getWSFacet();
-            wsFacets[DatatypeValidator::Day]=DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_DAY)->getWSFacet();
+            bInitialized=true;
+            DVHashTable* registry = DatatypeValidatorFactory::getBuiltInRegistry();
+            wsFacets[DatatypeValidator::String]      = registry->get(SchemaSymbols::fgDT_STRING)->getWSFacet();
+            wsFacets[DatatypeValidator::AnyURI]      = registry->get(SchemaSymbols::fgDT_ANYURI)->getWSFacet();
+            wsFacets[DatatypeValidator::QName]       = registry->get(SchemaSymbols::fgDT_QNAME)->getWSFacet();
+            wsFacets[DatatypeValidator::Name]        = registry->get(SchemaSymbols::fgDT_NAME)->getWSFacet();
+            wsFacets[DatatypeValidator::NCName]      = registry->get(SchemaSymbols::fgDT_NCNAME)->getWSFacet();
+            wsFacets[DatatypeValidator::Boolean]     = registry->get(SchemaSymbols::fgDT_BOOLEAN)->getWSFacet();
+            wsFacets[DatatypeValidator::Float]       = registry->get(SchemaSymbols::fgDT_FLOAT)->getWSFacet();
+            wsFacets[DatatypeValidator::Double]      = registry->get(SchemaSymbols::fgDT_DOUBLE)->getWSFacet();
+            wsFacets[DatatypeValidator::Decimal]     = registry->get(SchemaSymbols::fgDT_DECIMAL)->getWSFacet();
+            wsFacets[DatatypeValidator::HexBinary]   = registry->get(SchemaSymbols::fgDT_HEXBINARY)->getWSFacet();
+            wsFacets[DatatypeValidator::Base64Binary]= registry->get(SchemaSymbols::fgDT_BASE64BINARY)->getWSFacet();
+            wsFacets[DatatypeValidator::Duration]    = registry->get(SchemaSymbols::fgDT_DURATION)->getWSFacet();
+            wsFacets[DatatypeValidator::DateTime]    = registry->get(SchemaSymbols::fgDT_DATETIME)->getWSFacet();
+            wsFacets[DatatypeValidator::Date]        = registry->get(SchemaSymbols::fgDT_DATE)->getWSFacet();
+            wsFacets[DatatypeValidator::Time]        = registry->get(SchemaSymbols::fgDT_TIME)->getWSFacet();
+            wsFacets[DatatypeValidator::MonthDay]    = registry->get(SchemaSymbols::fgDT_MONTHDAY)->getWSFacet();
+            wsFacets[DatatypeValidator::YearMonth]   = registry->get(SchemaSymbols::fgDT_YEARMONTH)->getWSFacet();
+            wsFacets[DatatypeValidator::Year]        = registry->get(SchemaSymbols::fgDT_YEAR)->getWSFacet();
+            wsFacets[DatatypeValidator::Month]       = registry->get(SchemaSymbols::fgDT_MONTH)->getWSFacet();
+            wsFacets[DatatypeValidator::Day]         = registry->get(SchemaSymbols::fgDT_DAY)->getWSFacet();
         }
         short wsFacet = wsFacets[attType];
         if((wsFacet == DatatypeValidator::REPLACE && !XMLString::isWSReplaced(attValue)) ||

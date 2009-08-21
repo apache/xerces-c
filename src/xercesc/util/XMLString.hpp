@@ -1433,7 +1433,7 @@ public:
       *        On return , this buffer also holds the converted string
       * @param manager The MemoryManager to use to allocate objects
       */
-    static void removeWS(XMLCh* const toConvert
+    static void removeWS(XMLCh* toConvert
     , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
 
 

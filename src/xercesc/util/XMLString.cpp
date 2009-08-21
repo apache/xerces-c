@@ -1854,35 +1854,20 @@ bool XMLString::isWSReplaced(const XMLCh* const toCheck)
 void XMLString::replaceWS(XMLCh* toConvert
                           , MemoryManager* const  manager)
 {
-    XMLSize_t strLen = XMLString::stringLen(toConvert);
-    if (strLen == 0)
+    // If no string, then its a OK
+    if (( !toConvert ) || ( !*toConvert ))
         return;
 
-    XMLCh* retBuf = (XMLCh*) manager->allocate
-    (
-        (strLen+1) * sizeof(XMLCh)
-    );//new XMLCh[strLen+1];
-    XMLCh* retPtr = &retBuf[0];
-    XMLCh* startPtr = toConvert;
-
-    while ( *startPtr )
+    XMLCh* cursorPtr = toConvert;
+    while ( *cursorPtr )
     {
-        if ( ( *startPtr == chCR) ||
-             ( *startPtr == chLF) ||
-             ( *startPtr == chHTab))
-            *retPtr = chSpace;
-        else
-            *retPtr = *startPtr;
+        if ( ( *cursorPtr == chCR) ||
+             ( *cursorPtr == chLF) ||
+             ( *cursorPtr == chHTab))
+            *cursorPtr = chSpace;
 
-        retPtr++;
-        startPtr++;
+        cursorPtr++;
     }
-
-    retBuf[strLen] = chNull;
-
-    XMLString::moveChars(toConvert, retBuf, strLen);
-    manager->deallocate(retBuf);//delete[] retBuf;
-    return;
 }
 
 //
@@ -1960,31 +1945,27 @@ void XMLString::collapseWS(XMLCh* toConvert
         endPtr--;
     *endPtr = chNull;
 
-    XMLString::moveChars(toConvert, startPtr, endPtr - startPtr + 1);
+    // move data to beginning only if there were spaces in front
+    if(startPtr != toConvert)
+        XMLString::moveChars(toConvert, startPtr, endPtr - startPtr + 1);
+
     if(!isWSCollapsed(toConvert))
     {
         //
         //  Work through what remains and chop continuous spaces
         //
-        XMLCh* retBuf = (XMLCh*) manager->allocate
-        (
-            (stringLen(toConvert) + 1) * sizeof(XMLCh)
-        );
-        XMLCh* retPtr = &retBuf[0];
-        bool inSpace = false;
+        XMLCh* retPtr = toConvert;
         startPtr = toConvert;
+        bool inSpace = false;
         while (*startPtr)
         {
             if ( *startPtr == chSpace)
             {
-                if (inSpace)
-                {
-                    //discard it;
-                }
-                else
+                // copy a single space, then ignore subsequent
+                if (!inSpace)
                 {
                     inSpace = true;
-                    *retPtr++ = chSpace;  //copy the first chSpace
+                    *retPtr++ = chSpace;
                 }
             }
             else
@@ -1997,26 +1978,20 @@ void XMLString::collapseWS(XMLCh* toConvert
         }
 
         *retPtr = chNull;
-        XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
-        manager->deallocate(retBuf);
     }
 }
 
 //
 // remove whitespace
 //
-void XMLString::removeWS(XMLCh* const toConvert
+void XMLString::removeWS(XMLCh* toConvert
                          , MemoryManager* const manager)
 {
     // If no string, then its a failure
     if (( !toConvert ) || ( !*toConvert ))
         return;
 
-    XMLCh* retBuf = (XMLCh*) manager->allocate
-    (
-        (XMLString::stringLen(toConvert) + 1) * sizeof(XMLCh)
-    );//new XMLCh[ XMLString::stringLen(toConvert) + 1];
-    XMLCh* retPtr = &retBuf[0];
+    XMLCh* retPtr = toConvert;
     XMLCh* startPtr = toConvert;
 
     while (*startPtr)
@@ -2030,13 +2005,9 @@ void XMLString::removeWS(XMLCh* const toConvert
         }
 
         startPtr++;
-
     }
 
     *retPtr = chNull;
-    XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
-    manager->deallocate(retBuf);//delete[] retBuf;
-    return;
 }
 
 void XMLString::removeChar(const XMLCh*     const srcString
