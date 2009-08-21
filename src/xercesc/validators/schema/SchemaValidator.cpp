@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+/*
+ * $Id$
+ */
+
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -683,15 +687,23 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
                             }
                             else if(fCurrentDatatypeValidator != xsiTypeDV)
                             {
-                                // the type is derived from ancestor
-                                if ((((SchemaElementDecl*)elemDef)->getBlockSet() & SchemaSymbols::XSD_RESTRICTION) != 0) {
-                                    emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
-                                    fErrorOccurred = true;
+                                DatatypeValidator::ValidatorType derivedType=xsiTypeDV->getType();
+                                if((derivedType == DatatypeValidator::List || derivedType == DatatypeValidator::Union) && fCurrentDatatypeValidator==0)
+                                {
+                                    // the substitution is always allowed if the type is list or union and the base type was xs:anySimpleType
                                 }
-                                if (elemDef->hasAttDefs()) {
-                                    // if we have an attribute but xsi:type's type is simple, we have a problem...
-                                    emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
-                                    fErrorOccurred = true;
+                                else
+                                {
+                                    // the type is derived from ancestor
+                                    if ((((SchemaElementDecl*)elemDef)->getBlockSet() & SchemaSymbols::XSD_RESTRICTION) != 0) {
+                                        emitError(XMLValid::ElemNoSubforBlock, elemDef->getFullName());
+                                        fErrorOccurred = true;
+                                    }
+                                    if (elemDef->hasAttDefs()) {
+                                        // if we have an attribute but xsi:type's type is simple, we have a problem...
+                                        emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                                        fErrorOccurred = true;
+                                    }
                                 }
                             }
 
