@@ -40,6 +40,7 @@
 #include <xercesc/validators/schema/XercesElementWildcard.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/XMLInteger.hpp>
+#include <math.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -959,9 +960,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         // Bump up the unmarked state count, marking this state done
         unmarkedState++;
 
+#ifdef OPTIMIZED_BUT_STILL_LINEAR_SEARCH
         // Optimization(Jan, 2001)
         unsigned int sorterIndex = 0;
         // Optimization(Jan, 2001)
+#endif
 
         // Loop through each possible input symbol in the element map
         for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
@@ -1034,30 +1037,68 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             unsigned int fNumItems=fLeafIndexes[0];
             if(fNumItems!=0)
             {
-                CMStateSetEnumerator enumBits(setT);
-                while(enumBits.hasMoreElements())
+                // The algorithm requires finding the leaf that is present both in the bitfield of the current state, and in the
+                // list of places where the currently tested item can appear. When this occurs, the follow list of this parent item
+                // is added to the bitfield representing the next state.
+                // Both the bitfield and the list of places are sorted, so we can analyze them in two ways; either iterating over the
+                // parent items, testing the bitfield for the existence of the parent (N times a constant Tb), or by iterating over the 
+                // bitfield (restricted to the range of the sorted list of places), using a binary search to locate the leaf in the
+                // sorted list of places (M times log(N) testing operations Ts)
+                // Assuming that the time to test a bit is roughly the same of the time needed to compute the average of two integers,
+                // plus a couple of comparisons and additions, we compare N agains M*log(N) to decide which algorithm should be faster given 
+                // the two sets
+                if(fNumItems <= setT->getBitCountInRange(fLeafIndexes[1], fLeafIndexes[fNumItems])*log((float)fNumItems))
                 {
-                    unsigned int bitIndex=enumBits.nextElement();
-                    // Check if this leaf index (DFA position) is in the current set
-                    // (using binary search: the indexes are sorted)
-                    unsigned int first=1,last=fNumItems,i;
-                    while(first<=last)
-                    {
-                        i=(first+last)/2;
-                        if(fLeafIndexes[i]>bitIndex)
-                            last=i-1;
-                        else if(fLeafIndexes[i]<bitIndex)
-                            first=i+1;
-                        else
+                    for(unsigned int i=1; i<=fNumItems; ++i)
+                        if(setT->getBit(fLeafIndexes[i]))
                         {
-                            //  found!
                             //
                             //  If this leaf is the current input symbol, then we
                             //  want to add its follow list to the set of states to
                             //  transition to from the current state.
                             //
-                            *newSet |= *fFollowList[bitIndex];
+                            *newSet |= *fFollowList[ fLeafIndexes[i] ];
+                        }
+                }
+                else
+                {
+                    // Further optimization: given that the bitfield enumerator returns the numbers in order,
+                    // every time we raise the lower marker we know it will true also for the next bits, so
+                    // the next binary search will not start from 1 but from this index
+                    unsigned int lowIndex = 1;
+                    CMStateSetEnumerator enumBits(setT);
+                    while(enumBits.hasMoreElements())
+                    {
+                        unsigned int bitIndex=enumBits.nextElement();
+                        // if this leaf has an index less than the first index in the sorted list of places,
+                        // it cannot be here, so avoid starting the binary search
+                        if(bitIndex < fLeafIndexes[1])
+                            continue;
+                        // if this leaf is greater than the last index in the sorted list of places,
+                        // nothing can be found from now on, so get out of here
+                        else if(bitIndex > fLeafIndexes[fNumItems])
                             break;
+
+                        // Check if this leaf index (DFA position) is in the current set
+                        // (using binary search: the indexes are sorted)
+                        unsigned int first=lowIndex,last=fNumItems,i;
+                        while(first<=last)
+                        {
+                            i=(first+last)/2;
+                            if(fLeafIndexes[i]>bitIndex)
+                                last=i-1;
+                            else if(fLeafIndexes[i]<bitIndex)
+                                lowIndex=first=i+1;
+                            else
+                            {
+                                //
+                                //  If this leaf is the current input symbol, then we
+                                //  want to add its follow list to the set of states to
+                                //  transition to from the current state.
+                                //
+                                *newSet |= *fFollowList[bitIndex];
+                                break;
+                            }
                         }
                     }
                 }

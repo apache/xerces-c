@@ -1532,19 +1532,14 @@ inline void XMLString::moveChars(       XMLCh* const targetStr
 
 inline XMLSize_t XMLString::stringLen(const XMLCh* const src)
 {
-    if (src == 0 || *src == 0)
-    {
+    if (src == 0)
         return 0;
-    }
-    else
-    {
-        const XMLCh* pszTmp = src + 1;
 
-        while (*pszTmp)
-            ++pszTmp;
+    const XMLCh* pszTmp = src;
 
-        return (pszTmp - src);
-    }
+    while (*pszTmp++) ;
+
+    return (pszTmp - src - 1);
 }
 
 inline XMLCh* XMLString::replicate(const XMLCh* const toRep,

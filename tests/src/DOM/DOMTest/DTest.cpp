@@ -39,6 +39,7 @@
 #include <xercesc/dom/DOMLSParserFilter.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/validators/common/CMStateSet.hpp>
 
 #define UNUSED(x) { if(x!=0){} }
 
@@ -1751,7 +1752,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
 //    EXCEPTIONSTEST(charData->deleteData(2, -1), DOMException::INDEX_SIZE_ERR, OK, 102 );
     EXCEPTIONSTEST(charData->deleteData(100, 5), DOMException::INDEX_SIZE_ERR, OK,103 );
 
-//can't set negative unsigned int in c++ compiler
+//can't set negative XMLSize_t in c++ compiler
 
   //  EXCEPTIONSTEST(charData->insertData(-1, "Stuff inserted"), DOMException::INDEX_SIZE_ERR, OK, 104 );
     XMLString::transcode("Stuff inserted", tempStr, 3999);
@@ -5608,5 +5609,110 @@ bool DOMTest::testUtilFunctions()
     XMLString::removeWS(tempStr);
     TEST_STRING(tempStr, tempStr2);
 
+    if(XMLString::stringLen((XMLCh*)0)!=0)
+    {
+        fprintf(stderr, "strLen test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::stringLen(XMLUni::fgZeroLenString)!=0)
+    {
+        fprintf(stderr, "strLen test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    XMLCh one[2]={ chLatin_A, chNull };
+    if(XMLString::stringLen(one)!=1)
+    {
+        fprintf(stderr, "strLen test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    XMLCh two[3]={ chLatin_A, chLatin_B, chNull };
+    if(XMLString::stringLen(two)!=2)
+    {
+        fprintf(stderr, "strLen test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // this tests the cached bit storage
+    CMStateSet setT(60);
+    setT.setBit(8);
+    setT.setBit(52);
+    setT.setBit(34);
+
+    if(!setT.getBit(8) || !setT.getBit(52) || !setT.getBit(34))
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    CMStateSetEnumerator enumT(&setT);
+    if(!enumT.hasMoreElements() || enumT.nextElement()!=8)
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(!enumT.hasMoreElements() || enumT.nextElement()!=34)
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(!enumT.hasMoreElements() || enumT.nextElement()!=52)
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(enumT.hasMoreElements())
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // this tests the dynamic bit storage
+    CMStateSet setT2(3 * CMSTATE_BITFIELD_CHUNK);
+    setT2.setBit(0); // first block, begin
+    setT2.setBit(CMSTATE_BITFIELD_CHUNK/2 -1); // first block, middle
+    setT2.setBit(CMSTATE_BITFIELD_CHUNK/2); // first block, middle
+    setT2.setBit(CMSTATE_BITFIELD_CHUNK/2 +1); // first block, middle
+    setT2.setBit(CMSTATE_BITFIELD_CHUNK-1); // first block, end
+    setT2.setBit(2*CMSTATE_BITFIELD_CHUNK); // last block, begin
+    setT2.setBit(2*CMSTATE_BITFIELD_CHUNK + CMSTATE_BITFIELD_CHUNK/2 -1); // last block, middle
+    setT2.setBit(2*CMSTATE_BITFIELD_CHUNK + CMSTATE_BITFIELD_CHUNK/2); // last block, middle
+    setT2.setBit(2*CMSTATE_BITFIELD_CHUNK + CMSTATE_BITFIELD_CHUNK/2 +1); // last block, middle
+    setT2.setBit(3*CMSTATE_BITFIELD_CHUNK-1); // last block, end
+
+    // test just a few ones
+    if(!setT2.getBit(0) || !setT2.getBit(CMSTATE_BITFIELD_CHUNK-1) || !setT2.getBit(2*CMSTATE_BITFIELD_CHUNK + CMSTATE_BITFIELD_CHUNK/2 +1))
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    if(setT2.getBitCountInRange(0, 3*CMSTATE_BITFIELD_CHUNK)!=10)
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    CMStateSetEnumerator enumT2(&setT2);
+    XMLSize_t count=0;
+    while(enumT2.hasMoreElements())
+    {
+        count++;
+        enumT2.nextElement();
+    }
+    if(count!=10)
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // this tests the hash generator
+    CMStateSet setT3(3 * CMSTATE_BITFIELD_CHUNK), setT4(3 * CMSTATE_BITFIELD_CHUNK);
+    // these two sets will have a single bit set at the beginning of a chunk
+    setT3.setBit(0);
+    setT4.setBit(CMSTATE_BITFIELD_CHUNK);
+    if(setT3.hashCode()==setT4.hashCode())
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
     return OK;
 }
