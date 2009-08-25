@@ -58,7 +58,7 @@ struct CMDynamicBuffer
     //  fMemoryManager
     //      The memory manager used to allocate and deallocate memory
     //
-    XMLSize_t    fArraySize;
+    XMLSize_t       fArraySize;
     XMLInt32**      fBitArray;
     MemoryManager*  fMemoryManager;
 };
@@ -145,6 +145,7 @@ public :
                 if(fDynamicBuffer->fBitArray[index]!=NULL)
                     fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray[index]);
             }
+            fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray);
             fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer);
         }
     }
@@ -458,7 +459,7 @@ private :
     //      the memory
     //      
     // -----------------------------------------------------------------------
-    XMLSize_t     fBitCount;
+    XMLSize_t        fBitCount;
     XMLInt32         fBits[CMSTATE_CACHED_INT32_SIZE];
     CMDynamicBuffer* fDynamicBuffer;
 
@@ -468,12 +469,29 @@ private :
 class CMStateSetEnumerator : public XMemory
 {
 public:
-    CMStateSetEnumerator(const CMStateSet* toEnum) :
+    CMStateSetEnumerator(const CMStateSet* toEnum, XMLSize_t start = 0) :
       fToEnum(toEnum),
       fIndexCount((XMLSize_t)-1),
       fLastValue(0)
     {
+        // if a starting bit is specified, place fIndexCount at the beginning of the previous 32 bit area
+        // so the findNext moves to the one where 'start' is located
+        if(start > 32)
+            fIndexCount = (start/32 - 1) * 32;
         findNext();
+        // if we found data, and fIndexCount is still pointing to the area where 'start' is located, erase the bits before 'start'
+        if(hasMoreElements() && fIndexCount < start)
+        {
+            for(XMLSize_t i=0;i< (start - fIndexCount);i++)
+            {
+                XMLInt32 mask=(1UL << i);
+                if(fLastValue & mask)
+                    fLastValue &= ~mask;
+            }
+            // in case the 32 bit area contained only bits before 'start', advance 
+            if(fLastValue==0)
+                findNext();
+        }
     }
 
     bool hasMoreElements()
@@ -536,7 +554,7 @@ private:
     }
 
     const CMStateSet*   fToEnum;
-    XMLSize_t        fIndexCount;
+    XMLSize_t           fIndexCount;
     XMLInt32            fLastValue;
 };
 

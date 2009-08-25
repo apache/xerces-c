@@ -5704,6 +5704,26 @@ bool DOMTest::testUtilFunctions()
         OK = false;
     }
 
+    // test the enumerator with a non-default start
+    CMStateSetEnumerator enumT2a(&setT2, CMSTATE_BITFIELD_CHUNK/2);
+    if(!enumT2a.hasMoreElements() || enumT2a.nextElement()!= (CMSTATE_BITFIELD_CHUNK/2))
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    CMStateSetEnumerator enumT2b(&setT2, CMSTATE_BITFIELD_CHUNK/2+2);
+    if(!enumT2b.hasMoreElements() || enumT2b.nextElement()!= (CMSTATE_BITFIELD_CHUNK-1))
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    CMStateSetEnumerator enumT2c(&setT2, 2*CMSTATE_BITFIELD_CHUNK);
+    if(!enumT2c.hasMoreElements() || enumT2c.nextElement()!= (2*CMSTATE_BITFIELD_CHUNK))
+    {
+        fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
     // this tests the hash generator
     CMStateSet setT3(3 * CMSTATE_BITFIELD_CHUNK), setT4(3 * CMSTATE_BITFIELD_CHUNK);
     // these two sets will have a single bit set at the beginning of a chunk

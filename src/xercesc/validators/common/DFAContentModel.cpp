@@ -1066,17 +1066,15 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     // every time we raise the lower marker we know it will true also for the next bits, so
                     // the next binary search will not start from 1 but from this index
                     unsigned int lowIndex = 1;
-                    CMStateSetEnumerator enumBits(setT);
+                    // Start the enumerator from the first index in the sorted list of places,
+                    // as nothing before that point will match
+                    CMStateSetEnumerator enumBits(setT, fLeafIndexes[1]);
                     while(enumBits.hasMoreElements())
                     {
                         unsigned int bitIndex=enumBits.nextElement();
-                        // if this leaf has an index less than the first index in the sorted list of places,
-                        // it cannot be here, so avoid starting the binary search
-                        if(bitIndex < fLeafIndexes[1])
-                            continue;
                         // if this leaf is greater than the last index in the sorted list of places,
                         // nothing can be found from now on, so get out of here
-                        else if(bitIndex > fLeafIndexes[fNumItems])
+                        if(bitIndex > fLeafIndexes[fNumItems])
                             break;
 
                         // Check if this leaf index (DFA position) is in the current set
