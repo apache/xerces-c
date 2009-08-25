@@ -60,8 +60,7 @@
          <s3 title="out-of-bound float values">
          <p>
                 For float data, the specification does not explicitly prescribe how to deal with
-                out-of-bound data. &XercesCName; converts these values as shown below (the values
-                depend on the system specific values of FLT_MAX and FLT_MIN):
+                out-of-bound data. &XercesCName; converts these values as shown below:
          </p>
                <table>
                    <tr>
@@ -69,26 +68,26 @@
                        <td>Values converted</td>
                    </tr>
                    <tr>
-                       <td>less than -FLT_MAX (approx -3.402823466e+38) </td>
+                       <td>less than -2<sup>24</sup> * 2<sup>104</sup> (approx -3.402823669e+38) </td>
                        <td>-INF</td>
                    </tr>
                    <tr>
-                       <td>greater than -FLT_MIN (approx -1.175494351e-38) and less than -0 </td>
+                       <td>greater than -1 * 2<sup>-149</sup> (approx -1.401298464e-45) and less than -0 </td>
                        <td>-0</td>
                    </tr>
                    <tr>
-                       <td>greater than +0 and less than +FL_MIN (approx +1.175494351e-38) </td>
+                       <td>greater than +0 and less than +1 * 2<sup>-149</sup> (approx +1.401298464e-45) </td>
                        <td>+0</td>
                    </tr>
                    <tr>
-                       <td>greater than +FLT_MAX (approx 3.402823466e+38) </td>
+                       <td>greater than +2<sup>24</sup> * 2<sup>104</sup> (approx 3.402823669e+38) </td>
                        <td>+INF</td>
                    </tr>
                 </table>
             <p>
                 The effect of this conversion would invalidate an instance data, for example,
-                "1.1e-39", of a data type derived from float, with minExclusive value '+0',
-                since "1.1e-39" is converted to "+0", which is the same as the minExclusive.
+                "1.1e-46", of a data type derived from float, with minExclusive value '+0',
+                since "1.1e-46" is converted to "+0", which is the same as the minExclusive.
             </p>
 
          </s3>
@@ -131,7 +130,7 @@
                (default is off) for schema processing.
                </p>
 <source>// Instantiate the DOM parser.
-DOMParser parser;
+XercesDOMParser parser;
 parser.setDoNamespaces(true);
 parser.setDoSchema(true);
 parser.parse(xmlFile);
@@ -193,7 +192,7 @@ parser->parse(xmlFile);
                </p>
 <source>
 // Instantiate the DOM parser.
-DOMParser parser;
+XercesDOMParser parser;
 parser.setDoNamespaces(true);
 parser.setDoSchema(true);
 parser.setExternalNoNamespaceSchemaLocation("personal.xsd");
@@ -216,7 +215,7 @@ parser.parse("test.xml");
                </p>
 <source>
 // Instantiate the DOM parser.
-DOMParser parser;
+XercesDOMParser parser;
 parser.setDoNamespaces(true);
 parser.setDoSchema(true);
 parser.setExternalSchemaLocation(
@@ -230,7 +229,7 @@ XMLCh* propertyValue = XMLString::transcode(
 ArrayJanitor&lt;XMLCh&gt; janValue(propertyValue);
 
 parser->setProperty(
-       XMLCh XMLUni::fgXercesSchemaExternalSchemaLocation,
+       XMLUni::fgXercesSchemaExternalSchemaLocation,
        propertyValue);
 parser.parse("test.xml");
 </source>

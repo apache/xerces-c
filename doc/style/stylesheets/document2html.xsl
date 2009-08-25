@@ -292,6 +292,10 @@
     <li><xsl:apply-templates/></li>
   </xsl:template>
 
+  <xsl:template match="sup">
+    <sup><xsl:apply-templates/></sup>
+  </xsl:template>
+
     <!--Definition lists: gloss, term, label, item -->
   <xsl:template match="gloss">
     <dl><xsl:apply-templates/></dl>
