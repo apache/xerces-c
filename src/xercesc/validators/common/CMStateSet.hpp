@@ -37,12 +37,17 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
 
+#if XERCES_HAVE_EMMINTRIN_H
+#   include <emmintrin.h>
+#endif
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 class CMStateSetEnumerator;
 
 #define CMSTATE_CACHED_INT32_SIZE  4
 
+// This value must be a multiple of 128 in order to use the SSE2 instruction set
 #define CMSTATE_BITFIELD_CHUNK  1024
 #define CMSTATE_BITFIELD_INT32_SIZE (1024 / 32)
 
@@ -119,7 +124,7 @@ public :
             {
                 if(toCopy.fDynamicBuffer->fBitArray[index]!=NULL)
                 {
-                    fDynamicBuffer->fBitArray[index]=(XMLInt32*)fDynamicBuffer->fMemoryManager->allocate(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
+                    allocateChunk(index);
                     memcpy((void *) fDynamicBuffer->fBitArray[index],
                            (const void *) toCopy.fDynamicBuffer->fBitArray[index],
                            CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
@@ -141,10 +146,8 @@ public :
         if(fDynamicBuffer)
         {
             for(XMLSize_t index = 0; index < fDynamicBuffer->fArraySize; index++)
-            {
                 if(fDynamicBuffer->fBitArray[index]!=NULL)
-                    fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray[index]);
-            }
+                    deallocateChunk(index);
             fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray);
             fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer);
         }
@@ -158,7 +161,7 @@ public :
     {
         if(fDynamicBuffer==0)
         {
-            for (XMLSize_t index = 0; index < CMSTATE_CACHED_INT32_SIZE; index++)
+           for (XMLSize_t index = 0; index < CMSTATE_CACHED_INT32_SIZE; index++)
                 if(setToOr.fBits[index])
                     if(fBits[index])
                         fBits[index] |= setToOr.fBits[index];
@@ -168,27 +171,46 @@ public :
         else
         {
             for (XMLSize_t index = 0; index < fDynamicBuffer->fArraySize; index++)
-                if(setToOr.fDynamicBuffer->fBitArray[index]!=NULL)
+            {
+                XMLInt32 *& other = setToOr.fDynamicBuffer->fBitArray[index];
+                if(other!=NULL)
                 {
                     // if we haven't allocated the subvector yet, allocate it and copy
                     if(fDynamicBuffer->fBitArray[index]==NULL)
                     {
-                        fDynamicBuffer->fBitArray[index]=(XMLInt32*)fDynamicBuffer->fMemoryManager->allocate(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
-                        memcpy((void *) fDynamicBuffer->fBitArray[index],
-                               (const void *) setToOr.fDynamicBuffer->fBitArray[index],
+                        allocateChunk(index);
+                        memcpy((void *) fDynamicBuffer->fBitArray[index], 
+                               (const void *) other, 
                                CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
                     }
                     else
                     {
                         // otherwise, merge them
-                        for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex++)
-                            if(setToOr.fDynamicBuffer->fBitArray[index][subIndex])
-                                if(fDynamicBuffer->fBitArray[index][subIndex])
-                                    fDynamicBuffer->fBitArray[index][subIndex] |= setToOr.fDynamicBuffer->fBitArray[index][subIndex];
-                                else
-                                    fDynamicBuffer->fBitArray[index][subIndex] = setToOr.fDynamicBuffer->fBitArray[index][subIndex];
+                        XMLInt32*& mine = fDynamicBuffer->fBitArray[index];
+#ifdef XERCES_HAVE_SSE2_INTRINSIC
+                        if(XMLPlatformUtils::fgSSE2ok)
+                        {
+                            for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex+=4)
+                            {
+                               __m128i xmm1 = _mm_load_si128((__m128i*)&other[subIndex]);
+                               __m128i xmm2 = _mm_load_si128((__m128i*)&mine[subIndex]);
+                               __m128i xmm3 = _mm_or_si128(xmm1, xmm2);     //  OR  4 32-bit words
+                               _mm_store_si128((__m128i*)&mine[subIndex], xmm3);
+                            }
+                        }
+                        else
+#endif
+                        {
+                            for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex++)
+                                if(setToOr.fDynamicBuffer->fBitArray[index][subIndex])
+                                    if(fDynamicBuffer->fBitArray[index][subIndex])
+                                        fDynamicBuffer->fBitArray[index][subIndex] |= setToOr.fDynamicBuffer->fBitArray[index][subIndex];
+                                    else
+                                        fDynamicBuffer->fBitArray[index][subIndex] = setToOr.fDynamicBuffer->fBitArray[index][subIndex];
+                        }
                     }
                 }
+            }
         }
     }
 
@@ -209,14 +231,16 @@ public :
         {
             for (XMLSize_t index = 0; index < fDynamicBuffer->fArraySize; index++)
             {
-                if(fDynamicBuffer->fBitArray[index]==NULL && setToCompare.fDynamicBuffer->fBitArray[index]==NULL)
+                XMLInt32 *& other = setToCompare.fDynamicBuffer->fBitArray[index], 
+                         *& mine = fDynamicBuffer->fBitArray[index];
+                if(mine==NULL && other==NULL)
                     continue;
-                else if(fDynamicBuffer->fBitArray[index]==NULL || setToCompare.fDynamicBuffer->fBitArray[index]==NULL) // the other should have been empty too
+                else if(mine==NULL || other==NULL) // the other should have been empty too
                     return false;
                 else
                 {
                     for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex++)
-                        if(fDynamicBuffer->fBitArray[index][subIndex]!=setToCompare.fDynamicBuffer->fBitArray[index][subIndex])
+                        if(mine[subIndex]!=other[subIndex])
                             return false;
                 }
             }
@@ -248,16 +272,13 @@ public :
                 {
                     // delete this subentry
                     if(fDynamicBuffer->fBitArray[index]!=NULL)
-                    {
-                        fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray[index]);
-                        fDynamicBuffer->fBitArray[index]=NULL;
-                    }
+                        deallocateChunk(index);
                 }
                 else
                 {
                     // if we haven't allocated the subvector yet, allocate it and copy
                     if(fDynamicBuffer->fBitArray[index]==NULL)
-                        fDynamicBuffer->fBitArray[index]=(XMLInt32*)fDynamicBuffer->fMemoryManager->allocate(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
+                        allocateChunk(index);
                     memcpy((void *) fDynamicBuffer->fBitArray[index],
                            (const void *) srcSet.fDynamicBuffer->fBitArray[index],
                            CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
@@ -279,7 +300,7 @@ public :
                 if (fBits[index] != 0)
                     for(int i=0;i<32;i++)
                     {
-                        XMLInt32 mask=(1UL << i);
+                        const XMLInt32 mask = 1UL << i;
                         if(fBits[index] & mask)
                             count++;
                     }
@@ -298,7 +319,7 @@ public :
                     if (fDynamicBuffer->fBitArray[index][subIndex] != 0)
                         for(int i=0;i<32;i++)
                         {
-                            XMLInt32 mask=(1UL << i);
+                            const XMLInt32 mask = 1UL << i;
                             if(fDynamicBuffer->fBitArray[index][subIndex] & mask)
                                 count++;
                         }
@@ -319,7 +340,7 @@ public :
         // And access the right bit and byte
         if(fDynamicBuffer==0)
         {
-            const XMLInt32 mask = (0x1UL << (bitToGet % 32));
+            const XMLInt32 mask = 1UL << (bitToGet % 32);
             const XMLSize_t byteOfs = bitToGet / 32;
             return (fBits[byteOfs]!=0 && (fBits[byteOfs] & mask) != 0);
         }
@@ -328,7 +349,7 @@ public :
             const XMLSize_t vectorOfs = bitToGet / CMSTATE_BITFIELD_CHUNK;
             if(fDynamicBuffer->fBitArray[vectorOfs]==NULL)
                 return false;
-            const XMLInt32 mask = (0x1UL << (bitToGet % 32));
+            const XMLInt32 mask = 1UL << (bitToGet % 32);
             const XMLSize_t byteOfs = (bitToGet % CMSTATE_BITFIELD_CHUNK) / 32;
             return (fDynamicBuffer->fBitArray[vectorOfs][byteOfs]!=0 && (fDynamicBuffer->fBitArray[vectorOfs][byteOfs] & mask) != 0);
         }
@@ -368,7 +389,7 @@ public :
             else
                 ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
 
-        const XMLInt32 mask = (0x1UL << (bitToSet % 32));
+        const XMLInt32 mask = 1UL << (bitToSet % 32);
 
         // And access the right bit and byte
         if(fDynamicBuffer==0)
@@ -382,7 +403,7 @@ public :
             const XMLSize_t vectorOfs = bitToSet / CMSTATE_BITFIELD_CHUNK;
             if(fDynamicBuffer->fBitArray[vectorOfs]==NULL)
             {
-                fDynamicBuffer->fBitArray[vectorOfs]=(XMLInt32*)fDynamicBuffer->fMemoryManager->allocate(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
+                allocateChunk(vectorOfs);
                 for(XMLSize_t index=0;index < CMSTATE_BITFIELD_INT32_SIZE; index++)
                     fDynamicBuffer->fBitArray[vectorOfs][index]=0;
             }
@@ -404,10 +425,7 @@ public :
             for (XMLSize_t index = 0; index < fDynamicBuffer->fArraySize; index++)
                 // delete this subentry
                 if(fDynamicBuffer->fBitArray[index]!=NULL)
-                {
-                    fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray[index]);
-                    fDynamicBuffer->fBitArray[index]=NULL;
-                }
+                    deallocateChunk(index);
         }
     }
 
@@ -441,6 +459,29 @@ private :
     // -----------------------------------------------------------------------
     CMStateSet();
 
+    // -----------------------------------------------------------------------
+    // Helpers
+    // -----------------------------------------------------------------------
+    void allocateChunk(const XMLSize_t index)
+    {
+#ifdef XERCES_HAVE_SSE2_INTRINSIC
+        if(XMLPlatformUtils::fgSSE2ok)
+            fDynamicBuffer->fBitArray[index]=(XMLInt32*)_mm_malloc(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32), 16);
+        else
+#endif
+            fDynamicBuffer->fBitArray[index]=(XMLInt32*)fDynamicBuffer->fMemoryManager->allocate(CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
+    }
+
+    void deallocateChunk(const XMLSize_t index)
+    {
+#ifdef XERCES_HAVE_SSE2_INTRINSIC
+        if(XMLPlatformUtils::fgSSE2ok)
+            _mm_free(fDynamicBuffer->fBitArray[index]);
+        else
+#endif
+            fDynamicBuffer->fMemoryManager->deallocate(fDynamicBuffer->fBitArray[index]);
+        fDynamicBuffer->fBitArray[index]=NULL;
+    }
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -484,7 +525,7 @@ public:
         {
             for(XMLSize_t i=0;i< (start - fIndexCount);i++)
             {
-                XMLInt32 mask=(1UL << i);
+                XMLInt32 mask=1UL << i;
                 if(fLastValue & mask)
                     fLastValue &= ~mask;
             }
@@ -503,7 +544,7 @@ public:
     {
         for(int i=0;i<32;i++)
         {
-            XMLInt32 mask=(1UL << i);
+            XMLInt32 mask=1UL << i;
             if(fLastValue & mask)
             {
                 fLastValue &= ~mask;

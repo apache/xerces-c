@@ -132,7 +132,7 @@ public :
     static XMLMutex*            fgAtomicMutex;
 
     static bool                 fgXMLChBigEndian;
-
+    static bool                 fgSSE2ok;
     //@}
 
 

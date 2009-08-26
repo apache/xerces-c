@@ -37,6 +37,9 @@
 #if HAVE_SYS_TIMEB_H
 #	include <sys/timeb.h>
 #endif
+#if HAVE_CPUID_H
+#   include <cpuid.h>
+#endif
 
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -49,6 +52,10 @@
 #include <xercesc/util/DefaultPanicHandler.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
+
+#if XERCES_HAVE_INTRIN_H
+#   include <intrin.h>
+#endif
 
 #include <xercesc/util/XMLFileMgr.hpp>
 #if XERCES_USE_FILEMGR_POSIX
@@ -147,6 +154,7 @@ XMLMutexMgr*            XMLPlatformUtils::fgMutexMgr = 0;
 XMLMutex*               XMLPlatformUtils::fgAtomicMutex = 0;
 
 bool                    XMLPlatformUtils::fgXMLChBigEndian = true;
+bool                    XMLPlatformUtils::fgSSE2ok = false;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
@@ -215,6 +223,26 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     endianTest.ch = 1;
     fgXMLChBigEndian = (endianTest.ar[sizeof(XMLCh)-1] == 1);
 
+    // Determine if we can use SSE2 functions
+#if defined(XERCES_HAVE_CPUID_INTRINSIC)
+    int CPUInfo[4]={0};
+    __cpuid(CPUInfo, 1);
+    if(CPUInfo[3] & (1UL << 26))
+        fgSSE2ok = true;
+    else
+        fgSSE2ok = false;
+#elif defined(XERCES_HAVE_GETCPUID)
+    unsigned int eax, ebx, ecx, edx;
+    if(!__get_cpuid (1, &eax, &ebx, &ecx, &edx) || (edx & (1UL << 26))==0)
+        fgSSE2ok = true;
+    else
+        fgSSE2ok = false;
+#elif defined(XERCES_HAVE_SSE2_INTRINSIC)
+    // if we cannot find out at runtime, assume the define has it right
+    fgSSE2ok = true;
+#else
+    fgSSE2ok = false;
+#endif
 
     // Initialize the platform-specific mutex and file mgrs
     fgMutexMgr		= makeMutexMgr(fgMemoryManager);

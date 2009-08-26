@@ -99,6 +99,7 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h loc
                   unistd.h wchar.h wctype.h \
                   CoreServices/CoreServices.h \
                   endian.h machine/endian.h arpa/nameser_compat.h \
+                  intrin.h emmintrin.h cpuid.h \
                  ])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -228,16 +229,22 @@ XERCES_FILEMGR_SELECTION
 # Allow the user to specify the pkgconfig directory.
 #
 AC_ARG_WITH(pkgconfigdir,
-	AC_HELP_STRING([--with-pkgconfigdir=DIR],
-	[Specify location of pkgconfig dir (default is libdir/pkgconfig)]),
+	AC_HELP_STRING([--with-pkgconfigdir=DIR],[Specify location of pkgconfig dir (default is libdir/pkgconfig)]),
 	[pkgconfigdir=${withval}],
 	[pkgconfigdir='${libdir}/pkgconfig'])
 
 AC_SUBST([pkgconfigdir])
 
+# Allow the user to disable the SSE2 support
+#
+AC_ARG_ENABLE(sse2, 
+    AC_HELP_STRING([--disable-sse2],[disable SSE2 optimizations]), 
+    [have_sse2=${enableval}], 
+    [have_sse2=yes])
+
 ######################################################
 # Define some namespace-protected macros for use in the
-# publicly visible XercesConfig.h file.
+# publicly visible Xerces_autoconf_config.h file.
 ######################################################
 
 AC_DEFINE([XERCES_AUTOCONF], 1, [Define to true if autoconf is used in this configuration])
@@ -246,6 +253,10 @@ AS_IF([test x$ac_cv_header_sys_types_h = xyes],
 	AC_DEFINE([XERCES_HAVE_SYS_TYPES_H], 1, [Define to 1 if we have sys/types.h]))
 AS_IF([test x$ac_cv_header_inttypes_h = xyes],
 	AC_DEFINE([XERCES_HAVE_INTTYPES_H],    1, [Define to 1 if we have inttypes.h]))
+AS_IF([test x$ac_cv_header_intrin_h = xyes],
+	AC_DEFINE([XERCES_HAVE_INTRIN_H], 1, [Define to 1 if we have intrin.h]))
+AS_IF([test x$ac_cv_header_emmintrin_h = xyes],
+	AC_DEFINE([XERCES_HAVE_EMMINTRIN_H], 1, [Define to 1 if we have emmintrin.h]))
 
 case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
@@ -307,6 +318,89 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <stdlib.h>
                     ]
                  )
 
+if test "$have_sse2" = "yes"; then
+    save_CXXFLAGS="$CXXFLAGS"
+    CXXFLAGS="$CXXFLAGS -msse2"
+	AC_MSG_CHECKING([whether we need to add -msse2])
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <emmintrin.h>]], [[__m128i one;]])],
+						[msse2_ok=yes],
+						[msse2_ok=no]
+					 )
+    AC_MSG_RESULT($msse2_ok)
+    if test x"$msse2_ok" = xno; then
+        CXXFLAGS="$save_CXXFLAGS"
+    fi
+
+    save_CXXFLAGS="$CXXFLAGS"
+    CXXFLAGS="$CXXFLAGS -xarch=sse2"
+	AC_MSG_CHECKING([whether we need to add -xarch=sse2])
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <emmintrin.h>]], [[__m128i one;]])],
+						[xarchsse2_ok=yes],
+						[xarchsse2_ok=no]
+					 )
+    AC_MSG_RESULT($xarchsse2_ok)
+    if test x"$xarchsse2_ok" = xno; then
+        CXXFLAGS="$save_CXXFLAGS"
+    fi
+
+	AC_MSG_CHECKING([whether the compiler has the CPUID intrinsic])
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#if HAVE_INTRIN_H
+											#include <intrin.h>
+										   #endif
+										 ]],
+										 [[int CPUInfo[4];
+										   __cpuid(CPUInfo, 1);
+										 ]])],
+						[
+						  AC_MSG_RESULT([yes])
+						  AC_DEFINE_UNQUOTED([XERCES_HAVE_CPUID_INTRINSIC], 1, [Define to have SSE2 instruction support detected at runtime using __cpuid])
+						],
+						[
+						  AC_MSG_RESULT([no])
+						]
+					 )
+
+	AC_MSG_CHECKING([whether the compiler has the _get_cpuid intrinsic])
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#if HAVE_CPUID_H
+											#include <cpuid.h>
+										   #endif
+										 ]],
+										 [[unsigned int eax, ebx, ecx, edx;
+                                           __get_cpuid (1, &eax, &ebx, &ecx, &edx);
+										 ]])],
+						[
+						  AC_MSG_RESULT([yes])
+						  AC_DEFINE_UNQUOTED([XERCES_HAVE_GETCPUID], 1, [Define to have SSE2 instruction support detected at runtime using __get_cpuid])
+						],
+						[
+						  AC_MSG_RESULT([no])
+						]
+					 )
+
+	AC_MSG_CHECKING([whether the compiler has the SSE2 intrinsic])
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#if HAVE_EMMINTRIN_H
+											#include <emmintrin.h>
+										   #endif
+										 ]],
+										 [[__m128i* one=(__m128i*)_mm_malloc(4, 16);
+										   __m128i* two=(__m128i*)_mm_malloc(4, 16);
+										   __m128i xmm1 = _mm_load_si128(one);
+										   __m128i xmm2 = _mm_load_si128(two);
+										   __m128i xmm3 = _mm_or_si128(xmm1, xmm2);
+										   _mm_store_si128(one, xmm3);
+										   _mm_free(one);
+										   _mm_free(two);
+										 ]])],
+						[
+						  AC_MSG_RESULT([yes])
+						  AC_DEFINE_UNQUOTED([XERCES_HAVE_SSE2_INTRINSIC], 1, [Define to have SSE2 instruction used at runtime])
+						],
+						[
+						  AC_MSG_RESULT([no])
+						]
+					 )
+
+fi
 
 AS_IF([test x$ac_cv_type_size_t = xyes],
 	AC_DEFINE([XERCES_SIZE_T], [size_t], [Define as the appropriate size_t type]),

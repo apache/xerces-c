@@ -105,6 +105,11 @@
 
 #define XERCES_MFC_SUPPORT
 
+#define XERCES_HAVE_INTRIN_H 1
+#define XERCES_HAVE_EMMINTRIN_H 1
+#define XERCES_HAVE_CPUID_INTRINSIC
+#define XERCES_HAVE_SSE2_INTRINSIC
+
 // ---------------------------------------------------------------------------
 //  XMLSize_t is the unsigned integral type.
 // ---------------------------------------------------------------------------
