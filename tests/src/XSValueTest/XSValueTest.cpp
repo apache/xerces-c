@@ -949,8 +949,8 @@ void test_dt_float()
 
     const char lex_v_ran_iv_1[]="+3.402823466e+39";
     const char lex_v_ran_iv_2[]="-3.402823466e+39";
-    const char lex_v_ran_iv_3[]="+1.175494351e-39";
-    const char lex_v_ran_iv_4[]="-1.175494351e-39";
+    const char lex_v_ran_iv_3[]="+1.175494351e-46";
+    const char lex_v_ran_iv_4[]="-1.175494351e-46";
 
     XSValue::XSValue_Data lex_iv_ran_v_1; lex_iv_ran_v_1.fValue.f_float = (float)0.0;
     lex_iv_ran_v_1.fValue.f_floatType.f_floatEnum = XSValue::DoubleFloatType_PosINF;
@@ -963,8 +963,8 @@ void test_dt_float()
 
     const char lex_v_ran_iv_1_canrep[]="INF";  // " 3.402823466E39"
     const char lex_v_ran_iv_2_canrep[]="-INF"; // "-3.402823466E39";
-    const char lex_v_ran_iv_3_canrep[]="0";    // " 1.175494351E-39";
-    const char lex_v_ran_iv_4_canrep[]="0";    // "-1.175494351E-39";
+    const char lex_v_ran_iv_3_canrep[]="0";    // " 1.175494351E-46";
+    const char lex_v_ran_iv_4_canrep[]="0";    // "-1.175494351E-46";
 
     const char lex_iv_1[]="12x.e+10";
     const char lex_iv_2[]="12.e+1x";
