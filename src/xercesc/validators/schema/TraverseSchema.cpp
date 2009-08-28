@@ -53,6 +53,7 @@
 #include <xercesc/dom/DOMText.hpp>
 #include <xercesc/dom/impl/XSDElementNSImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
@@ -6020,12 +6021,17 @@ int TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         try {
             minOccurs = XMLString::parseInt(minOccursStr, fMemoryManager);
         }
+        catch(const NumberFormatException& e) 
+        {
+            // REVISIT: report a warning that we replaced a number too big?
+            if(e.getCode()==XMLExcepts::Str_ConvertOverflow)
+                minOccurs = 500;
+            else
+                minOccurs = 1;
+        }
         catch(const OutOfMemoryException&)
         {
             throw;
-        }
-        catch (...) {
-            minOccurs = 1;
         }
 
         if (specNode)
@@ -6048,12 +6054,17 @@ int TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             try {
                 maxOccurs = XMLString::parseInt(maxOccursStr, fMemoryManager);
             }
+            catch(const NumberFormatException& e) 
+            {
+                // REVISIT: report a warning that we replaced a number too big?
+                if(e.getCode()==XMLExcepts::Str_ConvertOverflow && minOccurs < 500)
+                    maxOccurs = 500;
+                else
+                    maxOccurs = minOccurs;
+            }
             catch(const OutOfMemoryException&)
             {
                 throw;
-            }
-            catch(...) {
-                maxOccurs = minOccurs;
             }
 
             if (specNode)
