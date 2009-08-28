@@ -234,9 +234,9 @@ void XMLPlatformUtils::Initialize(const char*          const locale
 #elif defined(XERCES_HAVE_GETCPUID)
     unsigned int eax, ebx, ecx, edx;
     if(!__get_cpuid (1, &eax, &ebx, &ecx, &edx) || (edx & (1UL << 26))==0)
-        fgSSE2ok = true;
-    else
         fgSSE2ok = false;
+    else
+        fgSSE2ok = true;
 #elif defined(XERCES_HAVE_SSE2_INTRINSIC)
     // if we cannot find out at runtime, assume the define has it right
     fgSSE2ok = true;

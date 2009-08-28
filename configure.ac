@@ -99,7 +99,6 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h loc
                   unistd.h wchar.h wctype.h \
                   CoreServices/CoreServices.h \
                   endian.h machine/endian.h arpa/nameser_compat.h \
-                  intrin.h emmintrin.h cpuid.h \
                  ])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -253,10 +252,6 @@ AS_IF([test x$ac_cv_header_sys_types_h = xyes],
 	AC_DEFINE([XERCES_HAVE_SYS_TYPES_H], 1, [Define to 1 if we have sys/types.h]))
 AS_IF([test x$ac_cv_header_inttypes_h = xyes],
 	AC_DEFINE([XERCES_HAVE_INTTYPES_H],    1, [Define to 1 if we have inttypes.h]))
-AS_IF([test x$ac_cv_header_intrin_h = xyes],
-	AC_DEFINE([XERCES_HAVE_INTRIN_H], 1, [Define to 1 if we have intrin.h]))
-AS_IF([test x$ac_cv_header_emmintrin_h = xyes],
-	AC_DEFINE([XERCES_HAVE_EMMINTRIN_H], 1, [Define to 1 if we have emmintrin.h]))
 
 case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
@@ -343,11 +338,42 @@ if test "$have_sse2" = "yes"; then
         CXXFLAGS="$save_CXXFLAGS"
     fi
 
+    AC_MSG_CHECKING([for intrin.h usability])
+    AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <intrin.h>]],
+                                         [[]])],
+                        [
+                          AC_MSG_RESULT([yes])
+                          AC_DEFINE_UNQUOTED([XERCES_HAVE_INTRIN_H], 1, [Define to 1 if you have intrin.h])
+                        ],
+                        [
+                          AC_MSG_RESULT([no])
+                        ]
+                     )
+    AC_MSG_CHECKING([for emmintrin.h usability])
+    AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <emmintrin.h>]],
+                                         [[]])],
+                        [
+                          AC_MSG_RESULT([yes])
+                          AC_DEFINE_UNQUOTED([XERCES_HAVE_EMMINTRIN_H], 1, [Define to 1 if you have emmintrin.h])
+                        ],
+                        [
+                          AC_MSG_RESULT([no])
+                        ]
+                     )
+    AC_MSG_CHECKING([for cpuid.h usability])
+    AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <cpuid.h>]],
+                                         [[]])],
+                        [
+                          AC_MSG_RESULT([yes])
+                          AC_DEFINE_UNQUOTED([HAVE_CPUID_H], 1, [Define to 1 if you have cpuid.h])
+                        ],
+                        [
+                          AC_MSG_RESULT([no])
+                        ]
+                     )
+
 	AC_MSG_CHECKING([whether the compiler has the CPUID intrinsic])
-	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#if HAVE_INTRIN_H
-											#include <intrin.h>
-										   #endif
-										 ]],
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <intrin.h>]],
 										 [[int CPUInfo[4];
 										   __cpuid(CPUInfo, 1);
 										 ]])],
@@ -361,10 +387,7 @@ if test "$have_sse2" = "yes"; then
 					 )
 
 	AC_MSG_CHECKING([whether the compiler has the _get_cpuid intrinsic])
-	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#if HAVE_CPUID_H
-											#include <cpuid.h>
-										   #endif
-										 ]],
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <cpuid.h>]],
 										 [[unsigned int eax, ebx, ecx, edx;
                                            __get_cpuid (1, &eax, &ebx, &ecx, &edx);
 										 ]])],
@@ -378,10 +401,7 @@ if test "$have_sse2" = "yes"; then
 					 )
 
 	AC_MSG_CHECKING([whether the compiler has the SSE2 intrinsic])
-	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#if HAVE_EMMINTRIN_H
-											#include <emmintrin.h>
-										   #endif
-										 ]],
+	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <emmintrin.h>]],
 										 [[__m128i* one=(__m128i*)_mm_malloc(4, 16);
 										   __m128i* two=(__m128i*)_mm_malloc(4, 16);
 										   __m128i xmm1 = _mm_load_si128(one);
