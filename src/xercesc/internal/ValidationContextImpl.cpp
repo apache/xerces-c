@@ -191,7 +191,7 @@ bool ValidationContextImpl::isPrefixUnknown(XMLCh* prefix) {
     }            
     else if (!XMLString::equals(prefix, XMLUni::fgXMLString)) {
         if(fElemStack && !fElemStack->isEmpty())
-            fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);
+            fElemStack->mapPrefixToURI(prefix, unknown);
         else if(fNamespaceScope)
             unknown = (fNamespaceScope->getNamespaceForPrefix(prefix)==fNamespaceScope->getEmptyNamespaceId());
     }                
@@ -202,7 +202,7 @@ const XMLCh* ValidationContextImpl::getURIForPrefix(XMLCh* prefix) {
     bool unknown = false;
     unsigned int uriId;
     if(fElemStack)
-        uriId = fElemStack->mapPrefixToURI(prefix, (ElemStack::MapModes) ElemStack::Mode_Element, unknown);
+        uriId = fElemStack->mapPrefixToURI(prefix, unknown);
     else if(fNamespaceScope)
         unknown = ((uriId = fNamespaceScope->getNamespaceForPrefix(prefix))==fNamespaceScope->getEmptyNamespaceId());
     if (!unknown)

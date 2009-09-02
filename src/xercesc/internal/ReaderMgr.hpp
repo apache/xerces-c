@@ -89,7 +89,8 @@ public :
     XMLCh peekNextChar();
     bool skipIfQuote(XMLCh& chGotten);
     void skipPastChar(const XMLCh toSkip);
-    bool skipPastSpaces(bool inDecl = false);
+    void skipPastSpaces(bool& skippedSomething, bool inDecl = false);
+    void skipPastSpaces();
     void skipToChar(const XMLCh toSkipTo);
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();

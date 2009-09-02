@@ -45,6 +45,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class CMStateSetEnumerator;
 
+// This value must be 4 in order to use the SSE2 instruction set
 #define CMSTATE_CACHED_INT32_SIZE  4
 
 // This value must be a multiple of 128 in order to use the SSE2 instruction set
@@ -161,12 +162,24 @@ public :
     {
         if(fDynamicBuffer==0)
         {
-           for (XMLSize_t index = 0; index < CMSTATE_CACHED_INT32_SIZE; index++)
-                if(setToOr.fBits[index])
-                    if(fBits[index])
-                        fBits[index] |= setToOr.fBits[index];
-                    else
-                        fBits[index] = setToOr.fBits[index];
+#ifdef XERCES_HAVE_SSE2_INTRINSIC
+            if(XMLPlatformUtils::fgSSE2ok)
+            {
+                __m128i xmm1 = _mm_loadu_si128((__m128i*)fBits);
+                __m128i xmm2 = _mm_loadu_si128((__m128i*)setToOr.fBits);
+                __m128i xmm3 = _mm_or_si128(xmm1, xmm2);     //  OR  4 32-bit words
+                _mm_storeu_si128((__m128i*)fBits, xmm3);
+            }
+            else
+#endif
+            {
+                for (XMLSize_t index = 0; index < CMSTATE_CACHED_INT32_SIZE; index++)
+                    if(setToOr.fBits[index])
+                        if(fBits[index])
+                            fBits[index] |= setToOr.fBits[index];
+                        else
+                            fBits[index] = setToOr.fBits[index];
+            }
         }
         else
         {

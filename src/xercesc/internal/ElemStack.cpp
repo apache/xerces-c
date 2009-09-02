@@ -292,19 +292,10 @@ void ElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
 
 
 unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
-                                        , const MapModes        mode
                                         ,       bool&           unknown) const
 {
     // Assume we find it
     unknown = false;
-
-    //
-    //  If the prefix is empty, and we are in attribute mode, then we assign
-    //  it to the empty namespace because the default namespace does not
-    //  apply to attributes.
-    //
-    if (!*prefixToMap && (mode == Mode_Attribute))
-        return fEmptyNamespaceId;
 
     //
     //  Map the prefix to its unique id, from the prefix string pool. If its
@@ -689,7 +680,6 @@ void WFElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
 
 
 unsigned int WFElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
-                                          , const MapModes        mode
                                           ,       bool&           unknown) const
 {
     // Assume we find it
@@ -705,14 +695,6 @@ unsigned int WFElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
         unknown = true;
         return fUnknownNamespaceId;
     }
-
-    //
-    //  If the prefix is empty, and we are in attribute mode, then we assign
-    //  it to the empty namespace because the default namespace does not
-    //  apply to attributes.
-    //
-    if (!*prefixToMap && (mode == Mode_Attribute))
-        return fEmptyNamespaceId;
 
     //
     //  Check for the special prefixes 'xml' and 'xmlns' since they cannot

@@ -432,9 +432,9 @@ public:
       */
     static bool copyNString
     (
-                XMLCh* const    target
-        , const XMLCh* const    src
-        , const XMLSize_t       maxChars
+                XMLCh* const   target
+        , const XMLCh* const   src
+        , const XMLSize_t      maxChars
     );
     //@}
 

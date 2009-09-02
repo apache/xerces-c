@@ -1824,76 +1824,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 }
 
 
-unsigned int
-SGXMLScanner::resolveQName(const   XMLCh* const qName
-                           ,       XMLBuffer&   prefixBuf
-                           , const short        mode
-                           ,       int&         prefixColonPos)
-{
-    prefixColonPos = XMLString::indexOf(qName, chColon);
-    return resolveQNameWithColon(qName, prefixBuf, mode, prefixColonPos);
-}
-
-unsigned int
-SGXMLScanner::resolveQNameWithColon(const   XMLCh* const qName
-                                    ,       XMLBuffer&   prefixBuf
-                                    , const short        mode
-                                    , const int          prefixColonPos)
-{
-    //  Lets split out the qName into a URI and name buffer first. The URI
-    //  can be empty.
-    if (prefixColonPos == -1)
-    {
-        //  Its all name with no prefix, so put the whole thing into the name
-        //  buffer. Then map the empty string to a URI, since the empty string
-        //  represents the default namespace. This will either return some
-        //  explicit URI which the default namespace is mapped to, or the
-        //  the default global namespace.
-        bool unknown = false;
-
-        prefixBuf.reset();
-        return fElemStack.mapPrefixToURI(XMLUni::fgZeroLenString, (ElemStack::MapModes) mode, unknown);
-    }
-    else
-    {
-        //  Copy the chars up to but not including the colon into the prefix
-        //  buffer.
-        prefixBuf.set(qName, prefixColonPos);
-
-        //  Watch for the special namespace prefixes. We always map these to
-        //  special URIs. 'xml' gets mapped to the official URI that its defined
-        //  to map to by the NS spec. xmlns gets mapped to a special place holder
-        //  URI that we define (so that it maps to something checkable.)
-        const XMLCh* prefixRawBuf = prefixBuf.getRawBuffer();
-        if (XMLString::equals(prefixRawBuf, XMLUni::fgXMLNSString)) {
-
-            // if this is an element, it is an error to have xmlns as prefix
-            if (mode == ElemStack::Mode_Element)
-                emitError(XMLErrs::NoXMLNSAsElementPrefix, qName);
-
-            return fXMLNSNamespaceId;
-        }
-        else if (XMLString::equals(prefixRawBuf, XMLUni::fgXMLString)) {
-            return  fXMLNamespaceId;
-        }
-        else
-        {
-            bool unknown = false;
-            unsigned int uriId = fElemStack.mapPrefixToURI(prefixRawBuf, (ElemStack::MapModes) mode, unknown);
-
-            if (unknown)
-                emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
-
-            // check to see if uriId is empty
-            if (fXMLVersion != XMLReader::XMLV1_0 &&
-                uriId == fElemStack.getEmptyNamespaceId())
-                emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
-
-            return uriId;
-        }
-    }
-}
-
 // ---------------------------------------------------------------------------
 //  SGXMLScanner: Grammar preparsing
 // ---------------------------------------------------------------------------
@@ -2174,9 +2104,13 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     XMLBufBid bbNormal(&fBufMgr);
     XMLBuffer& normBuf = bbNormal.getBuffer();
 
+    XMLBufBid bbPrefix(&fBufMgr);
+    XMLBuffer& prefixBuf = bbPrefix.getBuffer();
+
     //  Loop through our explicitly provided attributes, which are in the raw
     //  scanned form, and build up XMLAttr objects.
     XMLSize_t index;
+    const XMLCh* prefPtr, *suffPtr;
     for (index = 0; index < attCount; index++)
     {
         PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
@@ -2186,51 +2120,33 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  We have to split the name into its prefix and name parts. Then
         //  we map the prefix to its URI.
         const XMLCh* const namePtr = curPair->getKey();
-        ArrayJanitor <XMLCh> janName(0);
-
-        // use a stack-based buffer when possible.
-        XMLCh tempBuffer[100];
 
         const int colonInd = fRawAttrColonList[index];
-        const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-        const XMLCh* suffPtr = XMLUni::fgZeroLenString;
+        unsigned int uriId;
         if (colonInd != -1)
         {
-            // We have to split the string, so make a copy.
-            if (XMLString::stringLen(namePtr) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
-            {
-                XMLString::copyString(tempBuffer, namePtr);
-                tempBuffer[colonInd] = chNull;
-                prefPtr = tempBuffer;
-            }
-            else
-            {
-                janName.reset(XMLString::replicate(namePtr, fMemoryManager), fMemoryManager);
-                janName[colonInd] = chNull;
-                prefPtr = janName.get();
-            }
-
+            prefixBuf.set(namePtr, colonInd);
+            prefPtr = prefixBuf.getRawBuffer();
             suffPtr = namePtr + colonInd + 1;
+            //  Map the prefix to a URI id
+            uriId = resolvePrefix(prefPtr, ElemStack::Mode_Attribute);
         }
         else
         {
             // No colon, so we just have a name with no prefix
+            prefPtr = XMLUni::fgZeroLenString;
             suffPtr = namePtr;
+            // an empty prefix is always the empty namespace, when dealing with attributes
+            uriId = fEmptyNamespaceId;
         }
-
-        //  Map the prefix to a URI id. We tell him that we are mapping an
-        //  attr prefix, so any xmlns attrs at this level will not affect it.
-        const unsigned int uriId = resolvePrefix(prefPtr, ElemStack::Mode_Attribute);
 
         //  If the uri comes back as the xmlns or xml URI or its just a name
         //  and that name is 'xmlns', then we handle it specially. So set a
         //  boolean flag that lets us quickly below know which we are dealing
         //  with.
-        const bool isNSAttr = (uriId == fXMLNSNamespaceId)
-
-                              || XMLString::equals(suffPtr, XMLUni::fgXMLNSString)
-                              || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI);
-
+        const bool isNSAttr = (uriId == fEmptyNamespaceId)?
+                                XMLString::equals(suffPtr, XMLUni::fgXMLNSString) : 
+                                (uriId == fXMLNSNamespaceId || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI));
 
         //  If its not a special case namespace attr of some sort, then we
         //  do normal checking and processing.
@@ -3108,60 +3024,6 @@ bool SGXMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
     return retVal;
 }
 
-unsigned int
-SGXMLScanner::resolvePrefix(  const   XMLCh* const        prefix
-                              , const ElemStack::MapModes mode)
-{
-    //  Watch for the special namespace prefixes. We always map these to
-    //  special URIs. 'xml' gets mapped to the official URI that its defined
-    //  to map to by the NS spec. xmlns gets mapped to a special place holder
-    //  URI that we define (so that it maps to something checkable.)
-    if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
-        return fXMLNSNamespaceId;
-    else if (XMLString::equals(prefix, XMLUni::fgXMLString))
-        return fXMLNamespaceId;
-
-    //  Ask the element stack to search up itself for a mapping for the
-    //  passed prefix.
-    bool unknown;
-    unsigned int uriId = fElemStack.mapPrefixToURI(prefix, mode, unknown);
-
-    // If it was unknown, then the URI was faked in but we have to issue an error
-    if (unknown)
-        emitError(XMLErrs::UnknownPrefix, prefix);
-
-    return uriId;
-}
-
-unsigned int
-SGXMLScanner::resolvePrefix(  const   XMLCh* const        prefix
-                              ,       XMLBuffer&          bufToFill
-                              , const ElemStack::MapModes mode)
-{
-    //  Watch for the special namespace prefixes. We always map these to
-    //  special URIs. 'xml' gets mapped to the official URI that its defined
-    //  to map to by the NS spec. xmlns gets mapped to a special place holder
-    //  URI that we define (so that it maps to something checkable.)
-    if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
-        return fXMLNSNamespaceId;
-    else if (XMLString::equals(prefix, XMLUni::fgXMLString))
-        return fXMLNamespaceId;
-
-    //  Ask the element stack to search up itself for a mapping for the
-    //  passed prefix.
-    bool unknown;
-    unsigned int uriId = fElemStack.mapPrefixToURI(prefix, mode, unknown);
-
-    // If it was unknown, then the URI was faked in but we have to issue an error
-    if (unknown)
-        emitError(XMLErrs::UnknownPrefix, prefix);
-
-    getURIText(uriId,bufToFill);
-
-    return uriId;
-}
-
-
 //  This method will reset the scanner data structures, and related plugged
 //  in stuff, for a new scan session. We get the input source for the primary
 //  XML entity, create the reader for it, and push it on the stack so that
@@ -3552,8 +3414,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
     //  schema attributes.
     //  When we find one, send it off to be used to update the element stack's
     //  namespace mappings.
-    XMLSize_t index;
-    for (index = 0; index < attCount; index++)
+    for (XMLSize_t index = 0; index < attCount; index++)
     {
         // each attribute has the prefix:suffix="value"
         const KVStringPair* curPair = fRawAttrList->elementAt(index);
@@ -3582,7 +3443,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
         XMLBufBid bbXsi(&fBufMgr);
         XMLBuffer& fXsiType = bbXsi.getBuffer();
 
-        for (index = 0; index < attCount; index++)
+        for (XMLSize_t index = 0; index < attCount; index++)
         {
             // each attribute has the prefix:suffix="value"
             const KVStringPair* curPair = fRawAttrList->elementAt(index);

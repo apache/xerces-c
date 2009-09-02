@@ -1379,14 +1379,15 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     while (true)
     {
         // Skip any spaces
-        const bool spaceCount = fReaderMgr.skipPastSpaces(true);
+        bool skippedSomething;
+        fReaderMgr.skipPastSpaces(skippedSomething, true);
 
         // If we are looking at a question mark, then break out
         if (fReaderMgr.lookingAtChar(chQuestion))
             break;
 
         // If this is not the first string, then we require the spaces
-        if (!spaceCount && curCount)
+        if (!skippedSomething && curCount)
             emitError(XMLErrs::ExpectedWhitespace);
 
         //  Get characters up to the next whitespace or equal's sign.
@@ -2218,11 +2219,24 @@ void XMLScanner::scanComment()
 //  just makes the calling code cleaner by eating whitespace.
 bool XMLScanner::scanEq(bool inDecl)
 {
-    fReaderMgr.skipPastSpaces(inDecl);
-    if (fReaderMgr.skippedChar(chEqual))
+    if(inDecl)
     {
-        fReaderMgr.skipPastSpaces(inDecl);
-        return true;
+        bool skippedSomething;
+        fReaderMgr.skipPastSpaces(skippedSomething, inDecl);
+        if (fReaderMgr.skippedChar(chEqual))
+        {
+            fReaderMgr.skipPastSpaces(skippedSomething, inDecl);
+            return true;
+        }
+    }
+    else
+    {
+        fReaderMgr.skipPastSpaces();
+        if (fReaderMgr.skippedChar(chEqual))
+        {
+            fReaderMgr.skipPastSpaces();
+            return true;
+        }
     }
     return false;
 }
@@ -2292,6 +2306,88 @@ void XMLScanner::recreateUIntPool()
     fUIntPool[0] = (unsigned int *)fMemoryManager->allocate(sizeof(unsigned int) << 6);
     memset(fUIntPool[fUIntPoolRow], 0, sizeof(unsigned int) << 6);
     fUIntPool[1] = 0;
+}
+
+unsigned int XMLScanner::resolvePrefix(  const XMLCh* const        prefix
+                                       , const ElemStack::MapModes mode)
+{
+    //
+    //  If the prefix is empty, and we are in attribute mode, then we assign
+    //  it to the empty namespace because the default namespace does not
+    //  apply to attributes.
+    //
+    if (!*prefix)
+    {
+        if(mode == ElemStack::Mode_Attribute)
+            return fEmptyNamespaceId;
+    }
+    //  Watch for the special namespace prefixes. We always map these to
+    //  special URIs. 'xml' gets mapped to the official URI that its defined
+    //  to map to by the NS spec. xmlns gets mapped to a special place holder
+    //  URI that we define (so that it maps to something checkable.)
+    else
+    {
+        if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
+            return fXMLNSNamespaceId;
+        else if (XMLString::equals(prefix, XMLUni::fgXMLString))
+            return fXMLNamespaceId;
+    }
+
+    //  Ask the element stack to search up itself for a mapping for the
+    //  passed prefix.
+    bool unknown;
+    unsigned int uriId = fElemStack.mapPrefixToURI(prefix, unknown);
+
+    // If it was unknown, then the URI was faked in but we have to issue an error
+    if (unknown)
+        emitError(XMLErrs::UnknownPrefix, prefix);
+
+    // check to see if uriId is empty; in XML 1.1 an emptynamespace is okay unless
+    // we are trying to use it.
+    if (*prefix &&
+        mode == ElemStack::Mode_Element &&
+        fXMLVersion != XMLReader::XMLV1_0 &&
+        uriId == fElemStack.getEmptyNamespaceId())
+        emitError(XMLErrs::UnknownPrefix, prefix);
+
+    return uriId;
+}
+
+unsigned int
+XMLScanner::resolveQName(  const XMLCh* const           qName
+                         ,       XMLBuffer&             prefixBuf
+                         , const ElemStack::MapModes    mode
+                         ,       int&                   prefixColonPos)
+{
+    prefixColonPos = XMLString::indexOf(qName, chColon);
+    return resolveQNameWithColon(qName, prefixBuf, mode, prefixColonPos);
+}
+
+unsigned int
+XMLScanner::resolveQNameWithColon(  const XMLCh* const          qName
+                                  ,       XMLBuffer&            prefixBuf
+                                  , const ElemStack::MapModes   mode
+                                  , const int                   prefixColonPos)
+{
+    //  Lets split out the qName into a URI and name buffer first. The URI
+    //  can be empty.
+    if (prefixColonPos == -1)
+    {
+        //  Its all name with no prefix, so put the whole thing into the name
+        //  buffer. Then map the empty string to a URI, since the empty string
+        //  represents the default namespace. This will either return some
+        //  explicit URI which the default namespace is mapped to, or the
+        //  the default global namespace.
+        prefixBuf.reset();
+        return resolvePrefix(XMLUni::fgZeroLenString, mode);
+    }
+    else
+    {
+        //  Copy the chars up to but not including the colon into the prefix
+        //  buffer.
+        prefixBuf.set(qName, prefixColonPos);
+        return resolvePrefix(prefixBuf.getRawBuffer(), mode);
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

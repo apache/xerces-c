@@ -724,11 +724,18 @@ startElement(   const   XMLElementDecl&         elemDecl
                 const XMLCh*   nsURI    = 0;
 
                 const XMLAttr* tempAttr = attrList.elementAt(i);
-                if (XMLString::equals(tempAttr->getQName(), XMLUni::fgXMLNSString))
-                    nsURI = tempAttr->getValue();
-                if (XMLString::equals(tempAttr->getPrefix(), XMLUni::fgXMLNSString))
+                const XMLCh* prefix = tempAttr->getPrefix();
+                if(prefix && *prefix)
                 {
-                    nsPrefix = tempAttr->getName();
+                    if(XMLString::equals(prefix, XMLUni::fgXMLNSString))
+                    {
+                        nsPrefix = tempAttr->getName();
+                        nsURI = tempAttr->getValue();
+                    }
+                }
+                else if (XMLString::equals(tempAttr->getName(), XMLUni::fgXMLNSString))
+                {
+                    nsPrefix = XMLUni::fgZeroLenString;
                     nsURI = tempAttr->getValue();
                 }
                 if (!fNamespacePrefix)
@@ -738,8 +745,6 @@ startElement(   const   XMLElementDecl&         elemDecl
                 }
                 if (nsURI != 0)
                 {
-                    if (nsPrefix == 0)
-                        nsPrefix = XMLUni::fgZeroLenString;
                     if(fDocHandler)
                         fDocHandler->startPrefixMapping(nsPrefix, nsURI);
                     unsigned int nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);

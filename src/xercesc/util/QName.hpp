@@ -202,6 +202,16 @@ inline void QName::setURI(const unsigned int uriId)
     fURIId = uriId;
 }
 
+inline void QName::setPrefix(const XMLCh* prefix)
+{
+    setNPrefix(prefix, XMLString::stringLen(prefix));
+}
+
+inline void QName::setLocalPart(const XMLCh* localPart)
+{
+    setNLocalPart(localPart, XMLString::stringLen(localPart));
+}
+
 XERCES_CPP_NAMESPACE_END
 
 #endif

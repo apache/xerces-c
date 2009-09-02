@@ -75,13 +75,6 @@ public :
     virtual const XMLCh* getName() const;
     virtual NameIdPool<DTDEntityDecl>* getEntityDeclPool();
     virtual const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const;
-    virtual unsigned int resolveQName
-    (
-        const   XMLCh* const        qName
-        ,       XMLBuffer&          prefixBufToFill
-        , const short               mode
-        ,       int&                prefixColonPos
-    );
     virtual void scanDocument
     (
         const   InputSource&    src
@@ -131,11 +124,6 @@ protected:
         const   XMLCh* const    attrName
         , const XMLCh* const    attrValue
     );
-    unsigned int resolvePrefix
-    (
-        const   XMLCh* const        prefix
-        , const ElemStack::MapModes mode
-    );
     void resizeElemState();
 
     void updateNSMap
@@ -145,13 +133,6 @@ protected:
         , const int             colonPosition
     );
     void resizeRawAttrColonList();
-    unsigned int resolveQNameWithColon
-    (
-        const   XMLCh* const        qName
-        ,       XMLBuffer&          prefixBufToFill
-        , const short               mode
-        , const int                 prefixColonPos
-    );
     // -----------------------------------------------------------------------
     //  Data members
     //
@@ -253,12 +234,6 @@ private :
         const   XMLCh* const        attrName
         , const XMLCh* const        value
         ,       XMLBuffer&          toFill
-    );
-    unsigned int resolvePrefix
-    (
-        const   XMLCh* const        prefix
-        ,       XMLBuffer&          uriBufToFill
-        , const ElemStack::MapModes mode
     );
     void scanRawAttrListforNameSpaces(XMLSize_t attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);

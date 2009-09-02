@@ -1010,9 +1010,10 @@ void AbstractDOMParser::startElement(const XMLElementDecl&   elemDecl
             //
             unsigned int attrURIId = oneAttrib->getURIId();
             const XMLCh* localName = oneAttrib->getName();
+            const XMLCh* prefix = oneAttrib->getPrefix();
             namespaceURI = 0;
 
-            if (XMLString::equals(localName, XMLUni::fgXMLNSString))
+            if ((prefix==0 || *prefix==0) && XMLString::equals(localName, XMLUni::fgXMLNSString))
             {
                 // xmlns=...
                 attrURIId = xmlnsNSId;
@@ -1024,7 +1025,7 @@ void AbstractDOMParser::startElement(const XMLElementDecl&   elemDecl
             }
 
             attr = (DOMAttrImpl*) createAttrNS (namespaceURI,
-                                                oneAttrib->getPrefix (),
+                                                prefix,
                                                 localName,
                                                 oneAttrib->getQName());
 

@@ -1338,7 +1338,7 @@ void XMLString::copyString(XMLCh* const target, const XMLCh* const src)
     while (*pszIn)
         *pszOut++ = *pszIn++;
 
-    // Capp off the target where we ended
+    // Cap off the target where we ended
     *pszOut = 0;
 }
 
@@ -1347,18 +1347,16 @@ bool XMLString::copyNString(        XMLCh* const    target
                             , const XMLCh* const    src
                             , const XMLSize_t       maxChars)
 {
-    XMLCh* outPtr = target;
-    const XMLCh* srcPtr = src;
-    const XMLCh* endPtr = target + maxChars - 1;
-
-    while (*srcPtr && (outPtr <= endPtr))
-        *outPtr++ = *srcPtr++;
-
-    // Cap it off here
-    *outPtr = 0;
-
     // Return whether we copied it all or hit the max
-    return (*srcPtr == 0);
+    XMLSize_t len = stringLen(src);
+    if(len > maxChars)
+    {
+        XMLString::moveChars(target, src, maxChars);
+        target[maxChars] = 0;
+        return false;
+    }
+    XMLString::moveChars(target, src, len+1);
+    return true;
 }
 
 const XMLCh* XMLString::findAny(const   XMLCh* const    toSearch
@@ -1435,17 +1433,12 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 
 int XMLString::indexOf(const XMLCh* const toSearch, const XMLCh ch)
 {
-    if (toSearch)
-    {
-        const XMLCh* srcPtr = toSearch;
-        while (*srcPtr)
-        {
-            if (ch == *srcPtr)
-                return (int)(srcPtr - toSearch);
+    if (!toSearch || !*toSearch) return -1;
 
-            srcPtr++;
-        }
-    }
+    const XMLCh* srcPtr = toSearch;
+    while (*srcPtr)
+        if (ch == *srcPtr++)
+            return (int)(srcPtr - toSearch - 1);
     return -1;
 }
 
@@ -1458,14 +1451,13 @@ int XMLString::indexOf( const   XMLCh* const    toSearch
     const XMLSize_t len = stringLen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
-	if ((int)fromIndex > ((int)len)-1)
+	if (fromIndex >= len)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
-    for (XMLSize_t i = fromIndex; i < len; i++)
-    {
-        if (toSearch[i] == ch)
-            return (int)i;
-    }
+    const XMLCh* srcPtr = toSearch+fromIndex;
+    while (*srcPtr)
+        if (ch == *srcPtr++)
+            return (int)(srcPtr - toSearch - 1);
     return -1;
 }
 
@@ -1473,11 +1465,10 @@ int XMLString::lastIndexOf(const XMLCh ch,
                            const XMLCh* const toSearch,
                            const XMLSize_t    toSearchLen)
 {
-    for (int i = (int)toSearchLen-1; i >= 0; i--)
-    {
-        if (toSearch[i] == ch)
-            return i;
-    }
+    const XMLCh* srcPtr = toSearch+toSearchLen;
+    while (srcPtr >= toSearch)
+        if (ch == *srcPtr--)
+            return (int)(srcPtr + 1 - toSearch);
     return -1;
 }
 
@@ -1486,15 +1477,14 @@ int XMLString::lastIndexOf( const   XMLCh* const    toSearch
                             , const XMLSize_t       fromIndex
                             , MemoryManager* const  manager)
 {
-    const int len = (int)stringLen(toSearch);
-	if ((int)fromIndex > len-1)
+    const XMLSize_t len = stringLen(toSearch);
+	if (fromIndex >= len)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
-    for (int i = (int)fromIndex; i >= 0; i--)
-    {
-        if (toSearch[i] == ch)
-            return i;
-    }
+    const XMLCh* srcPtr = toSearch+fromIndex;
+    while (srcPtr >= toSearch)
+        if (ch == *srcPtr--)
+            return (int)(srcPtr + 1 - toSearch);
     return -1;
 }
 

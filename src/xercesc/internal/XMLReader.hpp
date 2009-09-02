@@ -172,6 +172,7 @@ public:
     // -----------------------------------------------------------------------
     bool getName(XMLBuffer& toFill, const bool token);
     bool getQName(XMLBuffer& toFill, int* colonPosition);
+    bool getNCName(XMLBuffer& toFill);
     bool getNextChar(XMLCh& chGotten);
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
     void movePlainContentChars(XMLBuffer &dest);

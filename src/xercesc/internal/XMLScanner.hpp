@@ -197,13 +197,6 @@ public :
     virtual const XMLCh* getName() const = 0;
     virtual NameIdPool<DTDEntityDecl>* getEntityDeclPool() = 0;
     virtual const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const = 0;
-    virtual unsigned int resolveQName
-    (
-        const   XMLCh* const        qName
-        ,       XMLBuffer&          prefixBufToFill
-        , const short               mode
-        ,       int&                prefixColonPos
-    ) = 0;
     virtual void scanDocument
     (
         const   InputSource&    src
@@ -446,6 +439,17 @@ public :
         , const bool            toCache = false
     );
 
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    unsigned int resolveQName
+    (
+        const   XMLCh* const        qName
+        ,       XMLBuffer&          prefixBufToFill
+        , const ElemStack::MapModes mode
+        ,       int&                prefixColonPos
+    );
+
 protected:
     // -----------------------------------------------------------------------
     //  Protected pure virtual methods
@@ -490,6 +494,18 @@ protected:
     unsigned int *getNewUIntPtr();
     void resetUIntPool();
     void recreateUIntPool();
+    unsigned int resolvePrefix
+    (
+        const   XMLCh* const        prefix
+        , const ElemStack::MapModes mode
+    );
+    unsigned int resolveQNameWithColon
+    (
+        const   XMLCh* const        qName
+        ,       XMLBuffer&          prefixBufToFill
+        , const ElemStack::MapModes mode
+        , const int                 prefixColonPos
+    );
 
     inline
     void setAttrDupChkRegistry

@@ -5321,6 +5321,7 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("abbbbx", "ab{2,4}x", __LINE__);
     TEST_INVALID_SCHEMA_REGEX("abx", "ab{2,4}x", __LINE__);
     TEST_INVALID_SCHEMA_REGEX("abbbbbx", "ab{2,4}x", __LINE__);
+    TEST_VALID_SCHEMA_REGEX("PAG_1", "PAG_[0-9]{1,}", __LINE__);
 
     TEST_VALID_SCHEMA_REGEX("5 Bedford Street Boston , MA 15604-1536", "\\d{1,5}\\s([A-Z][a-z]{1,20}\\s){1}Street\\s([A-Z][a-z]{1,20}\\s){1},\\s[A-Z]{2}\\s15604-1536", __LINE__);
 
@@ -5586,6 +5587,7 @@ bool DOMTest::testUtilFunctions()
     XMLString::collapseWS(tempStr);
     TEST_STRING(tempStr, tempStr2);
 
+    // test removeWS
     XMLString::transcode("xyz", tempStr2, 3999);
     XMLString::transcode(" x\tyz ", tempStr, 3999);
     XMLString::removeWS(tempStr);
@@ -5629,6 +5631,76 @@ bool DOMTest::testUtilFunctions()
     if(XMLString::stringLen(two)!=2)
     {
         fprintf(stderr, "strLen test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // test copyNString
+    XMLCh buffer[100];
+    XMLString::transcode("xyz", tempStr, 3999);
+    if(!XMLString::copyNString(buffer, tempStr, 100))
+    {
+        fprintf(stderr, "copyNString test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(!XMLString::copyNString(buffer, tempStr, 3))
+    {
+        fprintf(stderr, "copyNString test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::copyNString(buffer, tempStr, 2))
+    {
+        fprintf(stderr, "copyNString test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(!XMLString::copyNString(buffer, tempStr, 4))
+    {
+        fprintf(stderr, "copyNString test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // test indexOf
+    XMLString::transcode("1234567890", tempStr, 3999);
+    if(XMLString::indexOf(tempStr, '1')!=0)
+    {
+        fprintf(stderr, "indexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::indexOf(tempStr, '5')!=4)
+    {
+        fprintf(stderr, "indexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::indexOf(tempStr, '0')!=9)
+    {
+        fprintf(stderr, "indexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::indexOf(tempStr, 'A')!=-1)
+    {
+        fprintf(stderr, "indexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+
+    // test lastIndexOf
+    XMLString::transcode("1234567890", tempStr, 3999);
+    if(XMLString::lastIndexOf(tempStr, '1')!=0)
+    {
+        fprintf(stderr, "lastIndexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::lastIndexOf(tempStr, '5')!=4)
+    {
+        fprintf(stderr, "lastIndexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::lastIndexOf(tempStr, '0')!=9)
+    {
+        fprintf(stderr, "lastIndexOf test failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    if(XMLString::lastIndexOf(tempStr, 'A')!=-1)
+    {
+        fprintf(stderr, "lastIndexOf test failed at line %i\n", __LINE__);
         OK = false;
     }
 

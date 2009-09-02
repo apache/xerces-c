@@ -240,26 +240,39 @@ bool ReaderMgr::skipIfQuote(XMLCh& chGotten)
     return false;
 }
 
-
-bool ReaderMgr::skipPastSpaces(bool inDecl)
+void ReaderMgr::skipPastSpaces(bool& skippedSomething, bool inDecl /* = false */)
 {
-    bool skippedSomething = false;
+    // we rely on the fact that fCurReader->skipSpaces will NOT reset the flag to false, but only
+    // set it to true if a space is found
+    skippedSomething = false;
+    //
+    //  Skip all the spaces in the current reader. If it returned because
+    //  it hit a non-space, break out. Else we have to pop another entity
+    //  and keep going.
+    //
+    while (!fCurReader->skipSpaces(skippedSomething, inDecl))
+    {
+        // Try to pop another entity. If we can't then we are done
+        if (!popReader())
+            break;
+    }
+}
+
+void ReaderMgr::skipPastSpaces()
+{
+    // we are not using it, so we don't care to initialize it
     bool tmpFlag;
     //
     //  Skip all the spaces in the current reader. If it returned because
     //  it hit a non-space, break out. Else we have to pop another entity
     //  and keep going.
     //
-    while (!fCurReader->skipSpaces(tmpFlag, inDecl))
+    while (!fCurReader->skipSpaces(tmpFlag, false))
     {
-        if (tmpFlag)
-            skippedSomething = true;
-
-        // Try to pop another enitity. If we can't then we are done
+        // Try to pop another entity. If we can't then we are done
         if (!popReader())
             break;
     }
-    return (tmpFlag || skippedSomething);
 }
 
 void ReaderMgr::skipQuotedString(const XMLCh quoteCh)

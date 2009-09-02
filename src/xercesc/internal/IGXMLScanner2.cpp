@@ -130,9 +130,13 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         setAttrDupChkRegistry(attCount, toUseHashTable);
     }
 
+    XMLBufBid bbPrefix(&fBufMgr);
+    XMLBuffer& prefixBuf = bbPrefix.getBuffer();
+
     //  Loop through our explicitly provided attributes, which are in the raw
     //  scanned form, and build up XMLAttr objects.
     XMLSize_t index;
+    const XMLCh* prefPtr, *suffPtr;
     for (index = 0; index < attCount; index++)
     {
         PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
@@ -142,50 +146,33 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  We have to split the name into its prefix and name parts. Then
         //  we map the prefix to its URI.
         const XMLCh* const namePtr = curPair->getKey();
-        ArrayJanitor<XMLCh> janName(0);
-
-        // use a stack-based buffer when possible.
-        XMLCh tempBuffer[100];
 
         const int colonInd = fRawAttrColonList[index];
-        const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-        const XMLCh* suffPtr = XMLUni::fgZeroLenString;
+        unsigned int uriId;
         if (colonInd != -1)
         {
-            // We have to split the string, so make a copy.
-            if (XMLString::stringLen(namePtr) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
-            {
-                XMLString::copyString(tempBuffer, namePtr);
-                tempBuffer[colonInd] = chNull;
-                prefPtr = tempBuffer;
-            }
-            else
-            {
-                janName.reset(XMLString::replicate(namePtr, fMemoryManager), fMemoryManager);
-                janName[colonInd] = chNull;
-                prefPtr = janName.get();
-            }
-
+            prefixBuf.set(namePtr, colonInd);
+            prefPtr = prefixBuf.getRawBuffer();
             suffPtr = namePtr + colonInd + 1;
+            //  Map the prefix to a URI id
+            uriId = resolvePrefix(prefPtr, ElemStack::Mode_Attribute);
         }
         else
         {
             // No colon, so we just have a name with no prefix
+            prefPtr = XMLUni::fgZeroLenString;
             suffPtr = namePtr;
+            // an empty prefix is always the empty namespace, when dealing with attributes
+            uriId = fEmptyNamespaceId;
         }
-
-        //  Map the prefix to a URI id. We tell him that we are mapping an
-        //  attr prefix, so any xmlns attrs at this level will not affect it.
-        const unsigned int uriId = resolvePrefix(prefPtr, ElemStack::Mode_Attribute);
 
         //  If the uri comes back as the xmlns or xml URI or its just a name
         //  and that name is 'xmlns', then we handle it specially. So set a
         //  boolean flag that lets us quickly below know which we are dealing
         //  with.
-        const bool isNSAttr = (uriId == fXMLNSNamespaceId)
-
-                              || XMLString::equals(suffPtr, XMLUni::fgXMLNSString)
-                              || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI);
+        const bool isNSAttr = (uriId == fEmptyNamespaceId)?
+                                XMLString::equals(suffPtr, XMLUni::fgXMLNSString) : 
+                                (uriId == fXMLNSNamespaceId || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI));
 
 
         //  If its not a special case namespace attr of some sort, then we
@@ -712,7 +699,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         if (fGrammarType == Grammar::DTDGrammarType) {
             if (!toUseHashTable)
             {
-                for (unsigned int attrIndex=0; attrIndex < retCount; attrIndex++) {
+                for (XMLSize_t attrIndex=0; attrIndex < retCount; attrIndex++) {
                     curAttr = toFill.elementAt(attrIndex);
                     if (uriId == curAttr->getURIId() &&
                         XMLString::equals(suffPtr, curAttr->getName())) {
@@ -988,71 +975,62 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
     };
 
     // Get the type and name
-    const XMLAttDef::AttTypes type = (attDef)
-                    ?attDef->getType()
-                    :XMLAttDef::CData;
+    const XMLAttDef::AttTypes type = (attDef)?attDef->getType():XMLAttDef::CData;
 
     // Assume its going to go fine, and empty the target buffer in preperation
     bool retVal = true;
     toFill.reset();
 
-    // Get attribute def - to check to see if it's declared externally or not
-    bool  isAttExternal = (attDef)
-                ?attDef->isExternal()
-                :false;
-
     //  Loop through the chars of the source value and normalize it according
     //  to the type.
-    States curState = InContent;
-    bool firstNonWS = false;
     XMLCh nextCh;
     const XMLCh* srcPtr = value;
 
     if (type == XMLAttDef::CData || type > XMLAttDef::Notation) {
-        while (*srcPtr) {
-            //  Get the next character from the source. We have to watch for
-            //  escaped characters (which are indicated by a 0xFFFF value followed
-            //  by the char that was escaped.)
-            nextCh = *srcPtr;
-
-            // Do we have an escaped character ?
-            if (nextCh == 0xFFFF)
+        //  Get the next character from the source. We have to watch for
+        //  escaped characters (which are indicated by a 0xFFFF value followed
+        //  by the char that was escaped.)
+        while ((nextCh = *srcPtr++)!=0) 
+        {
+            switch(nextCh)
             {
-                nextCh = *++srcPtr;
-            }
-            else if ( (nextCh <= 0x0D) && (nextCh == 0x09 || nextCh == 0x0A || nextCh == 0x0D) ) {
+            // Do we have an escaped character ?
+            case 0xFFFF:
+                nextCh = *srcPtr++;
+                break;
+            case 0x09:
+            case 0x0A:
+            case 0x0D:
                 // Check Validity Constraint for Standalone document declaration
                 // XML 1.0, Section 2.9
-                if (fStandalone && fValidate && isAttExternal)
+                if (fStandalone && fValidate && attDef && attDef->isExternal())
                 {
                      // Can't have a standalone document declaration of "yes" if  attribute
                      // values are subject to normalisation
                      fValidator->emitError(XMLValid::NoAttNormForStandalone, attName);
                 }
                 nextCh = chSpace;
-            }
-            else if (nextCh == chOpenAngle) {
+                break;
+            case chOpenAngle:
                 //  If its not escaped, then make sure its not a < character, which is
                 //  not allowed in attribute values.
                 emitError(XMLErrs::BracketInAttrValue, attName);
                 retVal = false;
+                break;
             }
 
             // Add this char to the target buffer
             toFill.append(nextCh);
-
-            // And move up to the next character in the source
-            srcPtr++;
         }
     }
     else {
-        while (*srcPtr)
+        States curState = InContent;
+        bool firstNonWS = false;
+        //  Get the next character from the source. We have to watch for
+        //  escaped characters (which are indicated by a 0xFFFF value followed
+        //  by the char that was escaped.)
+        while ((nextCh = *srcPtr)!=0)
         {
-            //  Get the next character from the source. We have to watch for
-            //  escaped characters (which are indicated by a 0xFFFF value followed
-            //  by the char that was escaped.)
-            nextCh = *srcPtr;
-
             // Do we have an escaped character ?
             if (nextCh == 0xFFFF)
             {
@@ -1089,7 +1067,7 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
 
                     // Check Validity Constraint for Standalone document declaration
                     // XML 1.0, Section 2.9
-                    if (fStandalone && fValidate && isAttExternal)
+                    if (fStandalone && fValidate && attDef && attDef->isExternal())
                     {
                         if (!firstNonWS || (nextCh != chSpace) || (!*srcPtr) || fReaderMgr.getCurrentReader()->isWhitespace(*srcPtr))
                         {
@@ -1164,60 +1142,6 @@ bool IGXMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
     }
     return retVal;
 }
-
-unsigned int
-IGXMLScanner::resolvePrefix(  const   XMLCh* const        prefix
-                              , const ElemStack::MapModes mode)
-{
-    //  Watch for the special namespace prefixes. We always map these to
-    //  special URIs. 'xml' gets mapped to the official URI that its defined
-    //  to map to by the NS spec. xmlns gets mapped to a special place holder
-    //  URI that we define (so that it maps to something checkable.)
-    if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
-        return fXMLNSNamespaceId;
-    else if (XMLString::equals(prefix, XMLUni::fgXMLString))
-        return fXMLNamespaceId;
-
-    //  Ask the element stack to search up itself for a mapping for the
-    //  passed prefix.
-    bool unknown;
-    unsigned int uriId = fElemStack.mapPrefixToURI(prefix, mode, unknown);
-
-    // If it was unknown, then the URI was faked in but we have to issue an error
-    if (unknown)
-        emitError(XMLErrs::UnknownPrefix, prefix);
-
-    return uriId;
-}
-
-unsigned int
-IGXMLScanner::resolvePrefix(  const   XMLCh* const        prefix
-                              ,       XMLBuffer&          bufToFill
-                              , const ElemStack::MapModes mode)
-{
-    //  Watch for the special namespace prefixes. We always map these to
-    //  special URIs. 'xml' gets mapped to the official URI that its defined
-    //  to map to by the NS spec. xmlns gets mapped to a special place holder
-    //  URI that we define (so that it maps to something checkable.)
-    if (XMLString::equals(prefix, XMLUni::fgXMLNSString))
-        return fXMLNSNamespaceId;
-    else if (XMLString::equals(prefix, XMLUni::fgXMLString))
-        return fXMLNamespaceId;
-
-    //  Ask the element stack to search up itself for a mapping for the
-    //  passed prefix.
-    bool unknown;
-    unsigned int uriId = fElemStack.mapPrefixToURI(prefix, mode, unknown);
-
-    // If it was unknown, then the URI was faked in but we have to issue an error
-    if (unknown)
-        emitError(XMLErrs::UnknownPrefix, prefix);
-
-    getURIText(uriId,bufToFill);
-
-    return uriId;
-}
-
 
 //  This method will reset the scanner data structures, and related plugged
 //  in stuff, for a new scan session. We get the input source for the primary
@@ -1662,8 +1586,7 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
     //  schema attributes.
     //  When we find one, send it off to be used to update the element stack's
     //  namespace mappings.
-    XMLSize_t index = 0;
-    for (index = 0; index < attCount; index++)
+    for (XMLSize_t index = 0; index < attCount; index++)
     {
         // each attribute has the prefix:suffix="value"
         const KVStringPair* curPair = fRawAttrList->elementAt(index);
@@ -1692,7 +1615,7 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
         XMLBufBid bbXsi(&fBufMgr);
         XMLBuffer& fXsiType = bbXsi.getBuffer();
 
-        for (index = 0; index < attCount; index++)
+        for (XMLSize_t index = 0; index < attCount; index++)
         {
             // each attribute has the prefix:suffix="value"
             const KVStringPair* curPair = fRawAttrList->elementAt(index);

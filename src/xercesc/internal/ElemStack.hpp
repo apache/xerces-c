@@ -185,7 +185,6 @@ public :
     unsigned int mapPrefixToURI
     (
         const   XMLCh* const    prefixToMap
-        , const MapModes        mode
         ,       bool&           unknown
     )   const;
     ValueVectorOf<PrefMapElem*>* getNamespaceMap() const;
@@ -361,7 +360,6 @@ public :
     unsigned int mapPrefixToURI
     (
         const   XMLCh* const    prefixToMap
-        , const MapModes        mode
         ,       bool&           unknown
     )   const;
 

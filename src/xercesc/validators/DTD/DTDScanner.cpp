@@ -2705,7 +2705,9 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
         }
 
         // We must skip spaces
-        if (!fReaderMgr->skipPastSpaces())
+        bool skippedSomething;
+        fReaderMgr->skipPastSpaces(skippedSomething);
+        if (!skippedSomething)
         {
             fScanner->emitError(XMLErrs::ExpectedWhitespace);
             return false;
@@ -2730,7 +2732,9 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
     //  So following this we must have whitespace, a public literal, whitespace,
     //  and a system literal.
     //
-    if (!fReaderMgr->skipPastSpaces())
+    bool skippedSomething;
+    fReaderMgr->skipPastSpaces(skippedSomething);
+    if (!skippedSomething)
     {
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
@@ -2751,7 +2755,8 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
         return true;
 
     // check if there is any space follows
-    bool hasSpace = fReaderMgr->skipPastSpaces();
+    bool hasSpace;
+    fReaderMgr->skipPastSpaces(hasSpace);
 
     //
     //  In order to recover best here we need to see if

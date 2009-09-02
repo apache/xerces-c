@@ -605,18 +605,15 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
-                {
-                    // Ok, skip by them and get another char
-                    fReaderMgr.getNextChar();
-                    fReaderMgr.skipPastSpaces();
-                    nextCh = fReaderMgr.peekNextChar();
-                }
-                 else
+                bool bFoundSpace;
+                fReaderMgr.skipPastSpaces(bFoundSpace);
+                if (!bFoundSpace)
                 {
                     // Emit the error but keep on going
                     emitError(XMLErrs::ExpectedWhitespace);
                 }
+                // Ok, peek another char
+                nextCh = fReaderMgr.peekNextChar();
             }
         }
 
@@ -626,7 +623,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         //  the special case checks.
         if (!fReaderMgr.getCurrentReader()->isSpecialStartTagChar(nextCh))
         {
-            //  Assume its going to be an attribute, so get a name from
+            //  Assume it's going to be an attribute, so get a name from
             //  the input.
             int colonPosition;
             if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
@@ -748,10 +745,8 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
             if (attCount >= fRawAttrColonListSize) {
                 resizeRawAttrColonList();
             }
-            fRawAttrColonList[attCount] = colonPosition;
-
-            // And bump the count of attributes we've gotten
-            attCount++;
+            // Set the position of the colon and bump the count of attributes we've gotten
+            fRawAttrColonList[attCount++] = colonPosition;
 
             // And go to the top again for another attribute
             continue;
@@ -1237,7 +1232,9 @@ void IGXMLScanner::scanDocTypeDecl()
         fDocTypeHandler->resetDocType();
 
     // There must be some space after DOCTYPE
-    if (!fReaderMgr.skipPastSpaces())
+    bool skippedSomething;
+    fReaderMgr.skipPastSpaces(skippedSomething);
+    if (!skippedSomething)
     {
         emitError(XMLErrs::ExpectedWhitespace);
 
@@ -1681,17 +1678,15 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         {
             if ((nextCh != chForwardSlash) && (nextCh != chCloseAngle))
             {
-                if (fReaderMgr.getCurrentReader()->isWhitespace(nextCh))
-                {
-                    // Ok, skip by them and peek another char
-                    fReaderMgr.skipPastSpaces();
-                    nextCh = fReaderMgr.peekNextChar();
-                }
-                 else
+                bool bFoundSpace;
+                fReaderMgr.skipPastSpaces(bFoundSpace);
+                if (!bFoundSpace)
                 {
                     // Emit the error but keep on going
                     emitError(XMLErrs::ExpectedWhitespace);
                 }
+                // Ok, peek another char
+                nextCh = fReaderMgr.peekNextChar();
             }
         }
 
@@ -2843,76 +2838,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     return true;
 }
 
-
-unsigned int
-IGXMLScanner::resolveQName(const   XMLCh* const qName
-                           ,       XMLBuffer&   prefixBuf
-                           , const short        mode
-                           ,       int&         prefixColonPos)
-{
-    prefixColonPos = XMLString::indexOf(qName, chColon);
-    return resolveQNameWithColon(qName, prefixBuf, mode, prefixColonPos);
-}
-
-unsigned int
-IGXMLScanner::resolveQNameWithColon(const   XMLCh* const qName
-                                    ,       XMLBuffer&   prefixBuf
-                                    , const short        mode
-                                    , const int          prefixColonPos)
-{
-    //  Lets split out the qName into a URI and name buffer first. The URI
-    //  can be empty.
-    if (prefixColonPos == -1)
-    {
-        //  Its all name with no prefix, so put the whole thing into the name
-        //  buffer. Then map the empty string to a URI, since the empty string
-        //  represents the default namespace. This will either return some
-        //  explicit URI which the default namespace is mapped to, or the
-        //  the default global namespace.
-        bool unknown = false;
-
-        prefixBuf.reset();
-        return fElemStack.mapPrefixToURI(XMLUni::fgZeroLenString, (ElemStack::MapModes) mode, unknown);
-    }
-    else
-    {
-        //  Copy the chars up to but not including the colon into the prefix
-        //  buffer.
-        prefixBuf.set(qName, prefixColonPos);
-
-        //  Watch for the special namespace prefixes. We always map these to
-        //  special URIs. 'xml' gets mapped to the official URI that its defined
-        //  to map to by the NS spec. xmlns gets mapped to a special place holder
-        //  URI that we define (so that it maps to something checkable.)
-        const XMLCh* prefixRawBuf = prefixBuf.getRawBuffer();
-        if (XMLString::equals(prefixRawBuf, XMLUni::fgXMLNSString)) {
-
-            // if this is an element, it is an error to have xmlns as prefix
-            if (mode == ElemStack::Mode_Element)
-                emitError(XMLErrs::NoXMLNSAsElementPrefix, qName);
-
-            return fXMLNSNamespaceId;
-        }
-        else if (XMLString::equals(prefixRawBuf, XMLUni::fgXMLString)) {
-            return  fXMLNamespaceId;
-        }
-        else
-        {
-            bool unknown = false;
-            unsigned int uriId = fElemStack.mapPrefixToURI(prefixRawBuf, (ElemStack::MapModes) mode, unknown);
-
-            if (unknown)
-                emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
-
-            // check to see if uriId is empty
-            if (fXMLVersion != XMLReader::XMLV1_0 &&
-                uriId == fElemStack.getEmptyNamespaceId())
-                emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
-
-            return uriId;
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 //  IGXMLScanner: Helper methos
