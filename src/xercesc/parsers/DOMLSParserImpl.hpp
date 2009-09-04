@@ -29,6 +29,7 @@
 #include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/ValueHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -555,6 +556,10 @@ public :
         const   XMLCh* const    target
         , const XMLCh* const    data
     );
+    virtual void startEntityReference
+    (
+        const   XMLEntityDecl&  entDecl
+    );
     virtual void endElement
     (
         const   XMLElementDecl& elemDecl
@@ -579,6 +584,11 @@ private :
     //  Initialize/Cleanup methods
     // -----------------------------------------------------------------------
     void resetParse();
+
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
+    void applyFilter(DOMNode* node);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -607,6 +617,16 @@ private :
     //      A list of the parameters that can be set, including the ones
     //      specific of Xerces
 	//
+    //  fFilterAction
+    //      A map of elements rejected by the DOMLSParserFilter::startElement
+    //      callback, used to avoid invoking DOMLSParserFilter::acceptNode
+    //      on its children
+	//
+    //  fFilterDelayedTextNodes
+    //      As text nodes are filled incrementally, store them in a map
+    //      so that we ask DOMLSParserFilter::acceptNode only once, when it
+    //      is completely created
+	//
     //-----------------------------------------------------------------------
     DOMLSResourceResolver*      fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
@@ -615,6 +635,8 @@ private :
     bool                        fCharsetOverridesXMLEncoding;
     bool                        fUserAdoptsDocument;
     DOMStringListImpl*          fSupportedParameters;
+    ValueHashTableOf<DOMLSParserFilter::FilterAction, PtrHasher>*   fFilterAction;
+    ValueHashTableOf<bool, PtrHasher>*                              fFilterDelayedTextNodes;
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators

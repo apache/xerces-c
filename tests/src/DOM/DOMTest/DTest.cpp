@@ -4915,7 +4915,28 @@ public:
     DOMLSInput* m_input;
 };
 
+class ParserSkipper : public DOMLSParserFilter
+{
+public:
+    ParserSkipper() : fCallbackCalls(0) { }
+
+    virtual FilterAction acceptNode(DOMNode* node) { fCallbackCalls++; return DOMLSParserFilter::FILTER_ACCEPT;}
+    virtual FilterAction startElement(DOMElement* node) 
+    {
+        XMLCh elem[]={chLatin_e, chLatin_l, chLatin_e, chLatin_m, chNull };
+        if(XMLString::equals(node->getNodeName(), elem))
+            return DOMLSParserFilter::FILTER_REJECT; 
+        else
+            return DOMLSParserFilter::FILTER_ACCEPT; 
+    }
+    virtual DOMNodeFilter::ShowType getWhatToShow() const { return DOMNodeFilter::SHOW_ALL; }
+
+    unsigned int fCallbackCalls;
+};
+
 bool DOMTest::testLSExceptions() {
+    bool OK = true;
+
 	const char* sXml="<?xml version='1.0'?>"
 				"<!DOCTYPE root["
                 "<!ENTITY ent1 'Dallas. &ent3; #5668'>"
@@ -4929,7 +4950,6 @@ bool DOMTest::testLSExceptions() {
                   "<elem>Home </elem>"
                   "<elem>Test: &ent5;</elem>"
                 "</root>";
-	MemBufInputSource is((XMLByte*)sXml, strlen(sXml), "bufId");
 
     static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
     DOMImplementationLS *impl = (DOMImplementationLS*)DOMImplementationRegistry::getDOMImplementation(gLS);
@@ -4944,14 +4964,14 @@ bool DOMTest::testLSExceptions() {
         DOMDocument* doc=domBuilder->parse(input);
 
         fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
-        return false;
+        OK=false;
     }
     catch(DOMLSException& e)
     {
         if(e.code!=DOMLSException::PARSE_ERR)
         {
             fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
-            return false;
+            OK=false;
         }
     }
 
@@ -4962,20 +4982,70 @@ bool DOMTest::testLSExceptions() {
         DOMDocument* doc=domBuilder->parse(input);
 
         fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
-        return false;
+        OK=false;
     }
     catch(DOMException& e)
     {
         if(e.code!=DOMException::INVALID_STATE_ERR)
         {
             fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
-            return false;
+            OK=false;
         }
     }
+
+    try
+    {
+        ParserSkipper skipper;
+        domBuilder->setFilter(&skipper);
+        domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMEntities, false);
+        DOMDocument* doc=domBuilder->parse(input);
+
+        // verify that we get only 3 calls: for the text node, the CDATA section and the root element
+        if(doc==NULL || doc->getDocumentElement()==NULL || doc->getDocumentElement()->getChildElementCount()!=0 || skipper.fCallbackCalls!=3)
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+    }
+    catch(DOMException&)
+    {
+        fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+        OK=false;
+    }
+
+    // this XML should trigger reuse of DOMElement
+	const char* sXml2="<?xml version='1.0'?>"
+                "<root>"
+                  "<elem>Home</elem>"
+                  "<elem2>Test</elem2>"
+                  "<elem>Home</elem>"
+                  "<elem2>Test</elem2>"
+                "</root>";
+    XMLString::transcode(sXml2, tempStr, 3999);
+    input->setStringData(tempStr);
+    try
+    {
+        ParserSkipper skipper;
+        domBuilder->setFilter(&skipper);
+        DOMDocument* doc=domBuilder->parse(input);
+
+        // verify that we get only 5 calls: for the root element, the two elem2 and the two text nodes under them
+        if(doc==NULL || doc->getDocumentElement()==NULL || doc->getDocumentElement()->getChildElementCount()!=2 || skipper.fCallbackCalls!=5)
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+    }
+    catch(DOMException&)
+    {
+        fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+        OK=false;
+    }
+
     input->release();
     domBuilder->release();
 
-    return true;
+    return OK;
 }
 
 bool DOMTest::testElementTraversal() {

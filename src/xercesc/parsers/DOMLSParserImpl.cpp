@@ -83,6 +83,8 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
 , fCharsetOverridesXMLEncoding(true)
 , fUserAdoptsDocument(false)
 , fSupportedParameters(0)
+, fFilterAction(0)
+, fFilterDelayedTextNodes(0)
 {
     // dom spec has different default from scanner's default, so set explicitly
     getScanner()->setNormalizeData(false);
@@ -144,6 +146,8 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
 DOMLSParserImpl::~DOMLSParserImpl()
 {
     delete fSupportedParameters;
+    delete fFilterAction;
+    delete fFilterDelayedTextNodes;
 }
 
 
@@ -723,6 +727,10 @@ DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
+    if(fFilterAction)
+        fFilterAction->removeAll();
+    if(fFilterDelayedTextNodes)
+        fFilterDelayedTextNodes->removeAll();
 
     Wrapper4DOMLSInput isWrapper((DOMLSInput*)source, fEntityResolver, false, getMemoryManager());
 
@@ -744,6 +752,10 @@ DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
+    if(fFilterAction)
+        fFilterAction->removeAll();
+    if(fFilterDelayedTextNodes)
+        fFilterDelayedTextNodes->removeAll();
 
     AbstractDOMParser::parse(systemId);
     if(getErrorCount()!=0)
@@ -763,6 +775,10 @@ DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
     // remove the abort filter, if present
     if(fFilter==&g_AbortFilter)
         fFilter=0;
+    if(fFilterAction)
+        fFilterAction->removeAll();
+    if(fFilterDelayedTextNodes)
+        fFilterDelayedTextNodes->removeAll();
 
     AbstractDOMParser::parse(systemId);
     if(getErrorCount()!=0)
@@ -781,6 +797,15 @@ void DOMLSParserImpl::parseWithContext(const DOMLSInput*,
     if (getParseInProgress())
         throw DOMException(DOMException::INVALID_STATE_ERR, XMLDOMMsg::LSParser_ParseInProgress, fMemoryManager);
 
+    // remove the abort filter, if present
+    if(fFilter==&g_AbortFilter)
+        fFilter=0;
+    if(fFilterAction)
+        fFilterAction->removeAll();
+    if(fFilterDelayedTextNodes)
+        fFilterDelayedTextNodes->removeAll();
+
+    // TODO
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 }
 
@@ -988,6 +1013,28 @@ XMLFilePos DOMLSParserImpl::getSrcOffset() const
     return getScanner()->getSrcOffset();
 }
 
+void DOMLSParserImpl::applyFilter(DOMNode* node)
+{
+    DOMLSParserFilter::FilterAction action;
+    // if the parent was already rejected, reject this too
+    if(fFilterAction && fFilterAction->containsKey(fCurrentParent) && fFilterAction->get(fCurrentParent)==DOMLSParserFilter::FILTER_REJECT)
+        action = DOMLSParserFilter::FILTER_REJECT;
+    else
+        action = fFilter->acceptNode(node);
+
+    switch(action)
+    {
+    case DOMLSParserFilter::FILTER_ACCEPT:      break;
+    case DOMLSParserFilter::FILTER_REJECT:
+    case DOMLSParserFilter::FILTER_SKIP:        if(node==fCurrentNode)
+                                                    fCurrentNode = (node->getPreviousSibling()?node->getPreviousSibling():fCurrentParent);
+                                                fCurrentParent->removeChild(node);
+                                                node->release();
+                                                break;
+    case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
+    }
+}
+
 void DOMLSParserImpl::docCharacters(const XMLCh* const    chars
                                   , const XMLSize_t       length
                                   , const bool            cdataSection)
@@ -995,69 +1042,88 @@ void DOMLSParserImpl::docCharacters(const XMLCh* const    chars
     AbstractDOMParser::docCharacters(chars, length, cdataSection);
     if(fFilter)
     {
-        DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
-        if(cdataSection && (whatToShow & DOMNodeFilter::SHOW_CDATA_SECTION) ||
-           !cdataSection && (whatToShow & DOMNodeFilter::SHOW_TEXT))
+        // send the notification for the previous text node
+        if(fFilterDelayedTextNodes && fCurrentNode->getPreviousSibling() && fFilterDelayedTextNodes->containsKey(fCurrentNode->getPreviousSibling()))
         {
-            DOMLSParserFilter::FilterAction action =
-              fFilter->acceptNode(fCurrentNode);
-
-            switch(action)
-            {
-            case DOMLSParserFilter::FILTER_ACCEPT:      break;
-            case DOMLSParserFilter::FILTER_REJECT:
-            case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
-                                                        break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
-            }
+            DOMNode* textNode = fCurrentNode->getPreviousSibling();
+            fFilterDelayedTextNodes->removeKey(textNode);
+            applyFilter(textNode);
+        }
+        DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
+        if(cdataSection && (whatToShow & DOMNodeFilter::SHOW_CDATA_SECTION))
+        {
+            applyFilter(fCurrentNode);
+        }
+        else if(!cdataSection && (whatToShow & DOMNodeFilter::SHOW_TEXT))
+        {
+            if(fFilterDelayedTextNodes==0)
+                fFilterDelayedTextNodes=new (fMemoryManager) ValueHashTableOf<bool, PtrHasher>(7, fMemoryManager);
+            fFilterDelayedTextNodes->put(fCurrentNode, true);
         }
     }
 }
 
 void DOMLSParserImpl::docComment(const XMLCh* const  comment)
 {
+    if(fFilter)
+    {
+        // send the notification for the previous text node
+        if(fFilterDelayedTextNodes && fFilterDelayedTextNodes->containsKey(fCurrentNode))
+        {
+            fFilterDelayedTextNodes->removeKey(fCurrentNode);
+            applyFilter(fCurrentNode);
+        }
+    }
+
     AbstractDOMParser::docComment(comment);
     if(fFilter)
     {
         DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(whatToShow & DOMNodeFilter::SHOW_COMMENT)
-        {
-            DOMLSParserFilter::FilterAction action =
-              fFilter->acceptNode(fCurrentNode);
-
-            switch(action)
-            {
-            case DOMLSParserFilter::FILTER_ACCEPT:      break;
-            case DOMLSParserFilter::FILTER_REJECT:
-            case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
-                                                        break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
-            }
-        }
+            applyFilter(fCurrentNode);
     }
 }
 
 void DOMLSParserImpl::docPI(const XMLCh* const    target
                           , const XMLCh* const    data)
 {
+    if(fFilter)
+    {
+        // send the notification for the previous text node
+        if(fFilterDelayedTextNodes && fFilterDelayedTextNodes->containsKey(fCurrentNode))
+        {
+            fFilterDelayedTextNodes->removeKey(fCurrentNode);
+            applyFilter(fCurrentNode);
+        }
+    }
+
     AbstractDOMParser::docPI(target, data);
     if(fFilter)
     {
         DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(whatToShow & DOMNodeFilter::SHOW_PROCESSING_INSTRUCTION)
-        {
-            DOMLSParserFilter::FilterAction action =
-              fFilter->acceptNode(fCurrentNode);
+            applyFilter(fCurrentNode);
+    }
+}
 
-            switch(action)
-            {
-            case DOMLSParserFilter::FILTER_ACCEPT:      break;
-            case DOMLSParserFilter::FILTER_REJECT:
-            case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent->removeChild(fCurrentNode);
-                                                        break;
-            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
-            }
+void DOMLSParserImpl::startEntityReference(const XMLEntityDecl& entDecl)
+{
+    if(fCreateEntityReferenceNodes && fFilter)
+    {
+        // send the notification for the previous text node
+        if(fFilterDelayedTextNodes && fFilterDelayedTextNodes->containsKey(fCurrentNode))
+        {
+            fFilterDelayedTextNodes->removeKey(fCurrentNode);
+            applyFilter(fCurrentNode);
         }
+    }
+
+    DOMNode* origParent = fCurrentParent;
+    AbstractDOMParser::startEntityReference(entDecl);
+    if (fCreateEntityReferenceNodes && fFilter)
+    {
+        if(fFilterAction && fFilterAction->containsKey(origParent) && fFilterAction->get(origParent)==DOMLSParserFilter::FILTER_REJECT)
+            fFilterAction->put(fCurrentNode, DOMLSParserFilter::FILTER_REJECT);
     }
 }
 
@@ -1066,31 +1132,49 @@ void DOMLSParserImpl::endElement(const XMLElementDecl& elemDecl
                                , const bool            isRoot
                                , const XMLCh* const    elemPrefix)
 {
-    DOMNode* origParent=fCurrentParent;
-    DOMNode* origNode=fCurrentNode;
+    if(fFilter)
+    {
+        // send the notification for the previous text node
+        if(fFilterDelayedTextNodes && fFilterDelayedTextNodes->containsKey(fCurrentNode))
+        {
+            fFilterDelayedTextNodes->removeKey(fCurrentNode);
+            applyFilter(fCurrentNode);
+        }
+    }
+
     AbstractDOMParser::endElement(elemDecl, urlId, isRoot, elemPrefix);
     if(fFilter)
     {
         DOMNodeFilter::ShowType whatToShow=fFilter->getWhatToShow();
         if(whatToShow & DOMNodeFilter::SHOW_ELEMENT)
         {
-            DOMLSParserFilter::FilterAction action =
-              fFilter->acceptNode(origNode);
-
+            DOMNode* thisNode = fCurrentNode;
+            DOMLSParserFilter::FilterAction action;
+            if(fFilterAction && fFilterAction->containsKey(thisNode))
+            {
+                action = fFilterAction->get(thisNode);
+                fFilterAction->removeKey(thisNode);
+            }
+            else
+                action = fFilter->acceptNode(thisNode);
             switch(action)
             {
             case DOMLSParserFilter::FILTER_ACCEPT:      break;
-            case DOMLSParserFilter::FILTER_REJECT:      origParent->removeChild(origNode);
+            case DOMLSParserFilter::FILTER_REJECT:      fCurrentNode = (thisNode->getPreviousSibling()?thisNode->getPreviousSibling():fCurrentParent);
+                                                        fCurrentParent->removeChild(thisNode);
+                                                        thisNode->release();
                                                         break;
             case DOMLSParserFilter::FILTER_SKIP:        {
-                                                            DOMNode* child=origNode->getFirstChild();
+                                                            DOMNode* child=thisNode->getFirstChild();
                                                             while(child)
                                                             {
                                                                 DOMNode* next=child->getNextSibling();
-                                                                origParent->appendChild(child);
+                                                                fCurrentParent->appendChild(child);
                                                                 child=next;
                                                             }
-                                                            origParent->removeChild(origNode);
+                                                            fCurrentNode = (thisNode->getPreviousSibling()?thisNode->getPreviousSibling():fCurrentParent);
+                                                            fCurrentParent->removeChild(thisNode);
+                                                            thisNode->release();
                                                         }
                                                         break;
             case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
@@ -1107,21 +1191,37 @@ void DOMLSParserImpl::startElement(const XMLElementDecl&         elemDecl
                                  , const bool                    isEmpty
                                  , const bool                    isRoot)
 {
+    if(fFilter)
+    {
+        // send the notification for the previous text node
+        if(fFilterDelayedTextNodes && fFilterDelayedTextNodes->containsKey(fCurrentNode))
+        {
+            fFilterDelayedTextNodes->removeKey(fCurrentNode);
+            applyFilter(fCurrentNode);
+        }
+    }
+
+    DOMNode* origParent = fCurrentParent;
     AbstractDOMParser::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, false, isRoot);
     if(fFilter)
     {
-        DOMLSParserFilter::FilterAction action =
-          fFilter->startElement((DOMElement*)fCurrentNode);
-
-        switch(action)
+        // if the parent was already rejected, reject this too
+        if(fFilterAction && fFilterAction->containsKey(origParent) && fFilterAction->get(origParent)==DOMLSParserFilter::FILTER_REJECT)
+            fFilterAction->put(fCurrentNode, DOMLSParserFilter::FILTER_REJECT);
+        else
         {
-        case DOMLSParserFilter::FILTER_ACCEPT:      break;
-        case DOMLSParserFilter::FILTER_REJECT:      // TODO: reject also the children
-        case DOMLSParserFilter::FILTER_SKIP:        fCurrentParent=fCurrentNode->getParentNode();
-                                                    fCurrentParent->removeChild(fCurrentNode);
-                                                    fCurrentNode=fCurrentParent;
-                                                    break;
-        case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
+            DOMLSParserFilter::FilterAction action = fFilter->startElement((DOMElement*)fCurrentNode);
+
+            switch(action)
+            {
+            case DOMLSParserFilter::FILTER_ACCEPT:      break;
+            case DOMLSParserFilter::FILTER_REJECT:      
+            case DOMLSParserFilter::FILTER_SKIP:        if(fFilterAction==0)
+                                                            fFilterAction=new (fMemoryManager) ValueHashTableOf<DOMLSParserFilter::FilterAction, PtrHasher>(7, fMemoryManager);
+                                                        fFilterAction->put(fCurrentNode, action);
+                                                        break;
+            case DOMLSParserFilter::FILTER_INTERRUPT:   throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingAborted, fMemoryManager);
+            }
         }
     }
     if(isEmpty)

@@ -24,6 +24,7 @@
 #define XERCESC_INCLUDE_GUARD_DOMLSPARSER_HPP
 
 #include <xercesc/dom/DOMConfiguration.hpp>
+#include <xercesc/dom/DOMLSParserFilter.hpp>
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
@@ -32,7 +33,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMErrorHandler;
 class DOMLSInput;
-class DOMLSParserFilter;
 class DOMNode;
 class DOMDocument;
 
