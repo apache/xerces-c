@@ -477,7 +477,17 @@ void DOMElementImpl::release()
     DOMDocumentImpl* doc = (DOMDocumentImpl*) fParent.fOwnerDocument;
     if (doc) {
         fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
+        // release children
         fParent.release();
+        // release attributes
+        fAttributes->hasDefaults(false);
+        XMLSize_t count;
+        while((count = fAttributes->getLength()) != 0)
+        {
+            DOMNode* attr = fAttributes->removeNamedItemAt(count-1);
+            attr->release();
+        }
+
         doc->release(this, DOMMemoryManager::ELEMENT_OBJECT);
     }
     else {

@@ -916,6 +916,33 @@ int main(int /*argc*/, char ** /*argv*/)
          DOMTest::testDocumentFragmentNode = 0;
          DOMTest::testNotationNode = 0;
 
+        // test release of attributes
+        DOMElement* elt = d->createElement(tempStr3);
+        elt->setAttribute(tempStr3, tempStr3);
+        elt->release();
+        
+        elt = d->createElement(tempStr3);
+        DOMAttr *attr = d->createAttribute(tempStr3);
+        attr->setValue(tempStr3);
+        elt->setAttributeNode(attr);
+        elt->setIdAttributeNode(attr, true);
+
+        DOMElement *eleTest = d->getElementById(tempStr3);
+        if(eleTest==NULL)
+        {
+            fprintf(stderr, "getElementById test failed at line %i\n", __LINE__);
+            OK = false;
+        }
+
+        //all good until here
+        elt->release();
+        eleTest = d->getElementById(tempStr3);
+        if(eleTest!=NULL)
+        {
+            fprintf(stderr, "getElementById test failed at line %i\n", __LINE__);
+            OK = false;
+        }
+
         // we couldn't really test the user data handler call as the userhandler is already
         // deleted when the release() is done, but still set it to test the code internally
         d->setUserData(tempStr, (void*) tempStr, &userhandler);
