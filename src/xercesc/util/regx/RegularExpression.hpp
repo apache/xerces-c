@@ -565,8 +565,6 @@ protected:
     /**
       *    Helper methods used by compile
       */
-    Op* compileSingle(const Token* const token, Op* const next,
-                      const Token::tokType tkType);
     Op* compileUnion(const Token* const token, Op* const next,
                      const bool reverse);
     Op* compileParenthesis(const Token* const token, Op* const next,
@@ -626,45 +624,6 @@ protected:
   inline bool RegularExpression::isSet(const int options, const int flag) {
 
       return (options & flag) == flag;
-  }
-
-  inline Op* RegularExpression::compileSingle(const Token* const token,
-                                              Op* const next,
-                                              const Token::tokType tkType) {
-
-      Op* ret = 0;
-
-      switch (tkType) {
-      case Token::T_DOT:
-          ret = fOpFactory.createDotOp();
-          break;
-      case Token::T_CHAR:
-          ret = fOpFactory.createCharOp(token->getChar());
-          break;
-      case Token::T_ANCHOR:
-          ret = fOpFactory.createAnchorOp(token->getChar());
-          break;
-      case Token::T_RANGE:
-      case Token::T_NRANGE:
-          ret = fOpFactory.createRangeOp(token);
-          break;
-      case Token::T_EMPTY:
-          ret = next;
-          break;
-      case Token::T_STRING:
-          ret = fOpFactory.createStringOp(token->getString());
-          break;
-      case Token::T_BACKREFERENCE:
-          ret = fOpFactory.createBackReferenceOp(token->getReferenceNo());
-          break;
-      default:
-          break;
-      }
-
-      if (tkType != Token::T_EMPTY)
-          ret->setNextOp(next);
-
-      return ret;
   }
 
 

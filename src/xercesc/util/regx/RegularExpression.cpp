@@ -1446,14 +1446,32 @@ Op* RegularExpression::compile(const Token* const token, Op* const next,
 
     switch(tokenType) {
     case Token::T_DOT:
+        ret = fOpFactory.createDotOp();
+        ret->setNextOp(next);
+        break;
     case Token::T_CHAR:
+        ret = fOpFactory.createCharOp(token->getChar());
+        ret->setNextOp(next);
+        break;
     case Token::T_ANCHOR:
+        ret = fOpFactory.createAnchorOp(token->getChar());
+        ret->setNextOp(next);
+        break;
     case Token::T_RANGE:
     case Token::T_NRANGE:
+        ret = fOpFactory.createRangeOp(token);
+        ret->setNextOp(next);
+        break;
     case Token::T_STRING:
+        ret = fOpFactory.createStringOp(token->getString());
+        ret->setNextOp(next);
+        break;
     case Token::T_BACKREFERENCE:
+        ret = fOpFactory.createBackReferenceOp(token->getReferenceNo());
+        ret->setNextOp(next);
+        break;
     case Token::T_EMPTY:
-        ret = compileSingle(token, next, tokenType);
+        ret = next;
         break;
     case Token::T_CONCAT:
         ret = compileConcat(token, next, reverse);
