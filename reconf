@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 rm -f config.cache
-libtoolize --copy --force
+glibtoolize --copy --force
 aclocal -I m4
 autoheader
 automake -a -c -f
