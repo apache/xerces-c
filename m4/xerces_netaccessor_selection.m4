@@ -69,7 +69,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		[AC_MSG_RESULT(no)]
 	)
 
-	# Check for OS-specific transcoders
+	# Check for OS-specific netaccessors
 	case $host_os in
 	darwin*)
 		list_add=
@@ -152,7 +152,10 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		*-curl-*)
 			netaccessor=curl
 			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
-			LIBS="${LIBS} -L${xerces_cv_curl_prefix}/lib -lcurl"
+			CURL_LIBS=`${xerces_cv_curl_prefix}/bin/curl-config --libs`
+			CURL_CFLAGS=`${xerces_cv_curl_prefix}/bin/curl-config --cflags`
+			LIBS="${LIBS} $CURL_LIBS"
+			CXXFLAGS="${CXXFLAGS} ${CURL_CFLAGS}"
 			break
 			;;
 
