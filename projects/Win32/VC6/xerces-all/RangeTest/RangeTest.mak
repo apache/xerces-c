@@ -122,7 +122,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\RangeTest.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\RangeTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\RangeTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.1 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\RangeTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\RangeTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\RangeTest.obj" \
 	"$(OUTDIR)\xerces-c_3D.lib"
@@ -174,7 +174,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\RangeTest.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\RangeTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\RangeTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.1 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\RangeTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\RangeTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\RangeTest.obj" \
 	"$(OUTDIR)\xerces-c_3D.lib"

@@ -74,7 +74,7 @@ LINK32=link.exe
 BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib xerces-c_3D.lib /version:3.0 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_3D.lib /version:3.1 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 
 !ELSEIF  "$(CFG)" == "RangeTest - Win64 Debug"
 
@@ -97,8 +97,8 @@ LINK32=link.exe
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib /version:3.0 /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_3D.lib /version:3.0 /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib /version:3.1 /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_3D.lib /version:3.1 /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "RangeTest - Win64 Release"

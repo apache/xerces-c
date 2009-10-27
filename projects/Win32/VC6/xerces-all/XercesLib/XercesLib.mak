@@ -39,7 +39,7 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 # End Custom Macros
 
-ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_0.dll"
+ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_1.dll"
 
 
 CLEAN :
@@ -343,10 +343,10 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\obj\xerces-c_3_0.map"
+	-@erase "$(OUTDIR)\obj\xerces-c_3_1.map"
 	-@erase "$(OUTDIR)\xerces-c_3.exp"
 	-@erase "$(OUTDIR)\xerces-c_3.lib"
-	-@erase "$(OUTDIR)\xerces-c_3_0.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_1.dll"
 	-@erase "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp"
 
 "$(OUTDIR)" :
@@ -363,7 +363,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-c_3_0.pdb" /map:"$(INTDIR)\xerces-c_3_0.map" /machine:I386 /out:"$(OUTDIR)\xerces-c_3_0.dll" /implib:"$(OUTDIR)\xerces-c_3.lib" 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.1 /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-c_3_1.pdb" /map:"$(INTDIR)\xerces-c_3_1.map" /machine:I386 /out:"$(OUTDIR)\xerces-c_3_1.dll" /implib:"$(OUTDIR)\xerces-c_3.lib" 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
@@ -665,7 +665,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XIncludeLocation.obj" \
 	"$(INTDIR)\XIncludeUtils.obj"
 
-"$(OUTDIR)\xerces-c_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_1.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -678,7 +678,7 @@ INTDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 # End Custom Macros
 
-ALL : "$(OUTDIR)\xerces-c_3_0D.dll"
+ALL : "$(OUTDIR)\xerces-c_3_1D.dll"
 
 
 CLEAN :
@@ -983,9 +983,9 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\xerces-c_3_0D.dll"
-	-@erase "$(OUTDIR)\xerces-c_3_0D.ilk"
-	-@erase "$(OUTDIR)\xerces-c_3_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-c_3_1D.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_1D.ilk"
+	-@erase "$(OUTDIR)\xerces-c_3_1D.pdb"
 	-@erase "$(OUTDIR)\xerces-c_3D.exp"
 	-@erase "$(OUTDIR)\xerces-c_3D.lib"
 
@@ -1003,7 +1003,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_0D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-c_3_0D.dll" /implib:"$(OUTDIR)\xerces-c_3D.lib" /pdbtype:sept 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.1 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_1D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-c_3_1D.dll" /implib:"$(OUTDIR)\xerces-c_3D.lib" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
@@ -1305,7 +1305,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XIncludeLocation.obj" \
 	"$(INTDIR)\XIncludeUtils.obj"
 
-"$(OUTDIR)\xerces-c_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_1D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1318,7 +1318,7 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Debug\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 # End Custom Macros
 
-ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_0D.dll"
+ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_1D.dll"
 
 
 CLEAN :
@@ -1623,9 +1623,9 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\xerces-c_3_0D.dll"
-	-@erase "$(OUTDIR)\xerces-c_3_0D.ilk"
-	-@erase "$(OUTDIR)\xerces-c_3_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-c_3_1D.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_1D.ilk"
+	-@erase "$(OUTDIR)\xerces-c_3_1D.pdb"
 	-@erase "$(OUTDIR)\xerces-c_3D.exp"
 	-@erase "$(OUTDIR)\xerces-c_3D.lib"
 	-@erase "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp"
@@ -1644,7 +1644,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_0D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-c_3_0D.dll" /implib:"$(OUTDIR)\xerces-c_3D.lib" /pdbtype:sept /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.1 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_1D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-c_3_1D.dll" /implib:"$(OUTDIR)\xerces-c_3D.lib" /pdbtype:sept /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
@@ -1946,7 +1946,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XIncludeLocation.obj" \
 	"$(INTDIR)\XIncludeUtils.obj"
 
-"$(OUTDIR)\xerces-c_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_1D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -1959,7 +1959,7 @@ INTDIR=.\..\..\..\..\..\Build\Win64\VC6\Release\obj
 OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 # End Custom Macros
 
-ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_0.dll"
+ALL : "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp" "$(OUTDIR)\xerces-c_3_1.dll"
 
 
 CLEAN :
@@ -2263,11 +2263,11 @@ CLEAN :
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
-	-@erase "$(OUTDIR)\obj\xerces-c_3_0.map"
+	-@erase "$(OUTDIR)\obj\xerces-c_3_1.map"
 	-@erase "$(OUTDIR)\xerces-c_3.exp"
 	-@erase "$(OUTDIR)\xerces-c_3.lib"
-	-@erase "$(OUTDIR)\xerces-c_3_0.dll"
-	-@erase "$(OUTDIR)\xerces-c_3_0.ilk"
+	-@erase "$(OUTDIR)\xerces-c_3_1.dll"
+	-@erase "$(OUTDIR)\xerces-c_3_1.ilk"
 	-@erase "..\..\..\..\..\src\xercesc\util\Xerces_autoconf_config.hpp"
 
 "$(OUTDIR)" :
@@ -2284,7 +2284,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.0 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_0.pdb" /map:"$(INTDIR)\xerces-c_3_0.map" /machine:IX86 /out:"$(OUTDIR)\xerces-c_3_0.dll" /implib:"$(OUTDIR)\xerces-c_3.lib" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:3.1 /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-c_3_1.pdb" /map:"$(INTDIR)\xerces-c_3_1.map" /machine:IX86 /out:"$(OUTDIR)\xerces-c_3_1.dll" /implib:"$(OUTDIR)\xerces-c_3.lib" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\Win32MsgLoader.obj" \
 	"$(INTDIR)\Win32TransService.obj" \
@@ -2586,7 +2586,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XIncludeLocation.obj" \
 	"$(INTDIR)\XIncludeUtils.obj"
 
-"$(OUTDIR)\xerces-c_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-c_3_1.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<

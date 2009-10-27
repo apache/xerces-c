@@ -125,7 +125,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\StdInParse.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\StdInParse.pdb" /debug /machine:I386 /out:"$(OUTDIR)\StdInParse.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.1 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\StdInParse.pdb" /debug /machine:I386 /out:"$(OUTDIR)\StdInParse.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\StdInParse.obj" \
 	"$(INTDIR)\StdInParseHandlers.obj" \
@@ -179,7 +179,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\StdInParse.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\StdInParse.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\StdInParse.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /version:3.1 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\StdInParse.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\StdInParse.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\StdInParse.obj" \
 	"$(INTDIR)\StdInParseHandlers.obj" \
