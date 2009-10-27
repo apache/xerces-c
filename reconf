@@ -1,7 +1,15 @@
 #!/bin/sh
 set -x
 rm -f config.cache
-glibtoolize --copy --force
+
+type -p glibtoolize 1>/dev/null 2>&1
+
+if test "$?" = "0"; then
+  glibtoolize --copy --force
+else
+  libtoolize --copy --force
+fi
+
 aclocal -I m4
 autoheader
 automake -a -c -f
