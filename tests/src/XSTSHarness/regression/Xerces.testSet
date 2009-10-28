@@ -707,4 +707,15 @@
       <current status="accepted" date="2009-07-28"/>
     </instanceTest>
   </testGroup>
+  <testGroup name="XERCESC-1893">
+    <annotation>
+      <documentation>Error reported when defining a complex type as an extension of an imported simple type</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1893"/>
+    <schemaTest name="XERCESC-1893">
+      <schemaDocument xlink:href="./XERCESC-1893/main.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2009-10-28"/>
+    </schemaTest>
+  </testGroup>
 </testSet>
