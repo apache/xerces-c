@@ -584,7 +584,7 @@ public:
       *                                      if they wish to get details on the error.
       * @since DOM Level 3
       */
-    virtual void parseWithContext
+    virtual DOMNode* parseWithContext
     (
         const   DOMLSInput*     source
         ,       DOMNode*        contextNode

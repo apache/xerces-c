@@ -343,6 +343,7 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    void addGlobalPrefix(const XMLCh* const prefix, const unsigned int uriId);
     void setDocHandler(XMLDocumentHandler* const docHandler);
     void setDocTypeHandler(DocTypeHandler* const docTypeHandler);
     void setDoNamespaces(const bool doNamespaces);
@@ -1160,6 +1161,11 @@ inline bool XMLScanner::getHandleMultipleImports() const
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
+inline void XMLScanner::addGlobalPrefix(const XMLCh* const prefix, const unsigned int uriId)
+{
+    fElemStack.addGlobalPrefix(prefix, uriId);
+}
+
 inline void XMLScanner::setDocHandler(XMLDocumentHandler* const docHandler)
 {
     fDocHandler = docHandler;

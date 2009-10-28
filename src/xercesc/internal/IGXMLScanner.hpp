@@ -160,7 +160,7 @@ private :
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,
-                              const unsigned int parentElemDepth);
+                              const XMLSize_t parentElemDepth);
     bool anyAttributeValidation(SchemaAttDef* attWildCard,
                                 unsigned int uriId,
                                 bool& skipThisOne,

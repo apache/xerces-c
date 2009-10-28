@@ -112,7 +112,7 @@ protected:
     );
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,
-                              const unsigned int parentElemDepth);
+                              const XMLSize_t parentElemDepth);
     XMLSize_t rawAttrScan
     (
         const   XMLCh* const                elemName

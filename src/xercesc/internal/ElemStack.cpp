@@ -39,6 +39,7 @@ ElemStack::ElemStack(MemoryManager* const manager) :
     fEmptyNamespaceId(0)
     , fGlobalPoolId(0)
     , fPrefixPool(109, manager)
+    , fGlobalNamespaces(0)
     , fStack(0)
     , fStackCapacity(32)
     , fStackTop(0)
@@ -62,11 +63,17 @@ ElemStack::ElemStack(MemoryManager* const manager) :
 
 ElemStack::~ElemStack()
 {
+    if(fGlobalNamespaces)
+    {
+        fMemoryManager->deallocate(fGlobalNamespaces->fMap);
+        delete fGlobalNamespaces;
+    }
+
     //
     //  Start working from the bottom of the stack and clear it out as we
     //  go up. Once we hit an uninitialized one, we can break out.
     //
-    for (unsigned int stackInd = 0; stackInd < fStackCapacity; stackInd++)
+    for (XMLSize_t stackInd = 0; stackInd < fStackCapacity; stackInd++)
     {
         // If this entry has been set, then lets clean it up
         if (!fStack[stackInd])
@@ -87,7 +94,7 @@ ElemStack::~ElemStack()
 // ---------------------------------------------------------------------------
 //  ElemStack: Stack access
 // ---------------------------------------------------------------------------
-unsigned int ElemStack::addLevel()
+XMLSize_t ElemStack::addLevel()
 {
     // See if we need to expand the stack
     if (fStackTop == fStackCapacity)
@@ -124,8 +131,7 @@ unsigned int ElemStack::addLevel()
 }
 
 
-unsigned int
-ElemStack::addLevel(XMLElementDecl* const toSet, const XMLSize_t readerNum)
+XMLSize_t ElemStack::addLevel(XMLElementDecl* const toSet, const XMLSize_t readerNum)
 {
     // See if we need to expand the stack
     if (fStackTop == fStackCapacity)
@@ -208,9 +214,9 @@ XMLSize_t ElemStack::addChild(QName* const child, const bool toParent)
     if (curRow->fChildCount == curRow->fChildCapacity)
     {
         // Increase the capacity by a quarter and allocate a new row
-        const unsigned int newCapacity = curRow->fChildCapacity ?
-                                         (unsigned int)(curRow->fChildCapacity * 1.25) :
-                                         32;
+        const XMLSize_t newCapacity = curRow->fChildCapacity ?
+                                      (XMLSize_t)(curRow->fChildCapacity * 1.25) :
+                                      32;
         QName** newRow = (QName**) fMemoryManager->allocate
         (
             newCapacity * sizeof(QName*)
@@ -225,12 +231,8 @@ XMLSize_t ElemStack::addChild(QName* const child, const bool toParent)
         //  this code also does the initial faulting in of the array when
         //  both the current capacity and child count are zero.
         //
-        if (curRow->fChildCount)
-        {
-             unsigned int index = 0;
-             for (; index < curRow->fChildCount; index++)
-                 newRow[index] = curRow->fChildren[index];
-        }
+        for (XMLSize_t index = 0; index < curRow->fChildCount; index++)
+            newRow[index] = curRow->fChildren[index];
 
         // Clean up the old children and store the new info
         fMemoryManager->deallocate(curRow->fChildren);//delete [] curRow->fChildren;
@@ -257,6 +259,54 @@ const ElemStack::StackElem* ElemStack::topElement() const
 // ---------------------------------------------------------------------------
 //  ElemStack: Prefix map methods
 // ---------------------------------------------------------------------------
+void ElemStack::addGlobalPrefix(const XMLCh* const    prefixToAdd
+                              , const unsigned int    uriId)
+{
+    if (!fGlobalNamespaces)
+    {
+        fGlobalNamespaces = new (fMemoryManager) StackElem;
+        fGlobalNamespaces->fChildCapacity = 0;
+        fGlobalNamespaces->fChildren = 0;
+        fGlobalNamespaces->fMapCapacity = 0;
+        fGlobalNamespaces->fMap = 0;
+        fGlobalNamespaces->fMapCount = 0;
+        fGlobalNamespaces->fSchemaElemName = 0;
+        fGlobalNamespaces->fSchemaElemNameMaxLen = 0;
+        fGlobalNamespaces->fThisElement = 0;
+        fGlobalNamespaces->fReaderNum = 0xFFFFFFFF;
+        fGlobalNamespaces->fChildCount = 0;
+        fGlobalNamespaces->fValidationFlag = false;
+        fGlobalNamespaces->fCommentOrPISeen = false;
+        fGlobalNamespaces->fReferenceEscaped = false;
+        fGlobalNamespaces->fCurrentURI = fUnknownNamespaceId;
+        fGlobalNamespaces->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
+        fGlobalNamespaces->fCurrentGrammar = 0;
+    }
+
+    // Map the prefix to its unique id
+    const unsigned int prefId = fPrefixPool.addOrFind(prefixToAdd);
+
+    //
+    //  Add a new element to the prefix map for this element. If its full,
+    //  then expand it out.
+    //
+    if (fGlobalNamespaces->fMapCount == fGlobalNamespaces->fMapCapacity)
+        expandMap(fGlobalNamespaces);
+
+    //
+    //  And now add a new element for this prefix. Watch for the special case
+    //  of xmlns=="", and force it to ""=[globalid]
+    //
+    fGlobalNamespaces->fMap[fGlobalNamespaces->fMapCount].fPrefId = prefId;
+    if ((prefId == fGlobalPoolId) && (uriId == fEmptyNamespaceId))
+        fGlobalNamespaces->fMap[fGlobalNamespaces->fMapCount].fURIId = fEmptyNamespaceId;
+    else
+        fGlobalNamespaces->fMap[fGlobalNamespaces->fMapCount].fURIId = uriId;
+
+    // Bump the map count now
+    fGlobalNamespaces->fMapCount++;
+}
+
 void ElemStack::addPrefix(  const   XMLCh* const    prefixToAdd
                             , const unsigned int    uriId)
 {
@@ -320,17 +370,25 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
     //  Start at the stack top and work backwards until we come to some
     //  element that mapped this prefix.
     //
-    unsigned int index, mapIndex;
-    for (index = fStackTop; index > 0; index--)
+    for (XMLSize_t index = fStackTop; index > 0; index--)
     {
         // Get a convenience pointer to the current element
         StackElem* curRow = fStack[index-1];
 
         // Search the map at this level for the passed prefix
-        for (mapIndex = 0; mapIndex < curRow->fMapCount; mapIndex++)
+        for (XMLSize_t mapIndex = 0; mapIndex < curRow->fMapCount; mapIndex++)
         {
             if (curRow->fMap[mapIndex].fPrefId == prefixId)
                 return curRow->fMap[mapIndex].fURIId;
+        }
+    }
+    //  If the prefix wasn't found, try in the global namespaces
+    if(fGlobalNamespaces)
+    {
+        for (XMLSize_t mapIndex = 0; mapIndex < fGlobalNamespaces->fMapCount; mapIndex++)
+        {
+            if (fGlobalNamespaces->fMap[mapIndex].fPrefId == prefixId)
+                return fGlobalNamespaces->fMap[mapIndex].fURIId;
         }
     }
 
@@ -354,21 +412,24 @@ ValueVectorOf<PrefMapElem*>* ElemStack::getNamespaceMap() const
 
     //  Start at the stack top and work backwards until we come to some
     //  element that mapped this prefix.
-    int startAt = (int)(fStackTop - 1);
-    for (int index = startAt; index >= 0; index--)
+    for (XMLSize_t index = fStackTop; index > 0; index--)
     {
         // Get a convenience pointer to the current element
-        StackElem* curRow = fStack[index];
+        StackElem* curRow = fStack[index-1];
 
         // If no prefixes mapped at this level, then go the next one
         if (!curRow->fMapCount)
             continue;
 
         // Search the map at this level for the passed prefix
-        for (unsigned int mapIndex = 0; mapIndex < curRow->fMapCount; mapIndex++)
-        {
+        for (XMLSize_t mapIndex = 0; mapIndex < curRow->fMapCount; mapIndex++)
             fNamespaceMap->addElement(&(curRow->fMap[mapIndex]));
-        }
+    }
+    //  Add the global namespaces
+    if(fGlobalNamespaces)
+    {
+        for (XMLSize_t mapIndex = 0; mapIndex < fGlobalNamespaces->fMapCount; mapIndex++)
+            fNamespaceMap->addElement(&(fGlobalNamespaces->fMap[mapIndex]));
     }
 
     return fNamespaceMap;
@@ -382,6 +443,13 @@ void ElemStack::reset(  const   unsigned int    emptyId
                         , const unsigned int    xmlId
                         , const unsigned int    xmlNSId)
 {
+    if(fGlobalNamespaces)
+    {
+        fMemoryManager->deallocate(fGlobalNamespaces->fMap);
+        delete fGlobalNamespaces;
+        fGlobalNamespaces = 0;
+    }
+
     // Reset the stack top to clear the stack
     fStackTop = 0;
 
@@ -499,7 +567,7 @@ WFElemStack::~WFElemStack()
     //  Start working from the bottom of the stack and clear it out as we
     //  go up. Once we hit an uninitialized one, we can break out.
     //
-    for (unsigned int stackInd = 0; stackInd < fStackCapacity; stackInd++)
+    for (XMLSize_t stackInd = 0; stackInd < fStackCapacity; stackInd++)
     {
         // If this entry has been set, then lets clean it up
         if (!fStack[stackInd])
@@ -520,7 +588,7 @@ WFElemStack::~WFElemStack()
 // ---------------------------------------------------------------------------
 //  WFElemStack: Stack access
 // ---------------------------------------------------------------------------
-unsigned int WFElemStack::addLevel()
+XMLSize_t WFElemStack::addLevel()
 {
     // See if we need to expand the stack
     if (fStackTop == fStackCapacity)
@@ -550,7 +618,7 @@ unsigned int WFElemStack::addLevel()
 }
 
 
-unsigned int
+XMLSize_t
 WFElemStack::addLevel(const XMLCh* const toSet,
                       const unsigned int toSetLen,
                       const unsigned int readerNum)
@@ -767,8 +835,8 @@ void WFElemStack::expandMap()
     //  Expand the capacity by 25%, or initialize it to 16 if its currently
     //  empty. Then allocate a new temp buffer.
     //
-    const unsigned int newCapacity = fMapCapacity ?
-                                     (unsigned int)(fMapCapacity * 1.25) : 16;
+    const XMLSize_t newCapacity = fMapCapacity ?
+                                  (XMLSize_t)(fMapCapacity * 1.25) : 16;
     PrefMapElem* newMap = (PrefMapElem*) fMemoryManager->allocate
     (
         newCapacity * sizeof(PrefMapElem)
@@ -792,7 +860,7 @@ void WFElemStack::expandMap()
 void WFElemStack::expandStack()
 {
     // Expand the capacity by 25% and allocate a new buffer
-    const unsigned int newCapacity = (unsigned int)(fStackCapacity * 1.25);
+    const XMLSize_t newCapacity = (XMLSize_t)(fStackCapacity * 1.25);
     StackElem** newStack = (StackElem**) fMemoryManager->allocate
     (
         newCapacity * sizeof(StackElem*)

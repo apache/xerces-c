@@ -3148,7 +3148,7 @@ bool IGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 // if lax - validate only if the element if found
 bool IGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                                         const XMLContentModel* const cm,
-                                        const unsigned int parentElemDepth)
+                                        const XMLSize_t parentElemDepth)
 {
     bool skipThisOne = false;
     bool laxThisOne = false;

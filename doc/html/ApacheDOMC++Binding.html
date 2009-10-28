@@ -137,6 +137,13 @@ are owned by implementation</li>
 <br>- Updated to match the final DOM Level 3 Recommendation documents
 </td>
 </tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>Xerces-C++ 3.1</td>
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- added DOM ElementTraversal
+</td>
+</tr>
 </table>
 
 <p>
@@ -3139,6 +3146,61 @@ DOMElement
 <td><font face="Courier New,Courier"><font size=-1>const DOMTypeInfo*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getSchemaTypeInfo() const = 0;
+</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMElement *</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getFirstElementChild() const = 0;
+</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMElement *</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getLastElementChild() const = 0;
+</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMElement *</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getPreviousElementSibling() const = 0;
+</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>DOMElement *</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getNextElementSibling() const = 0;
+</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getChildElementCount() const = 0;
 </font></font></td>
 </tr>
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -6750,7 +6812,7 @@ DOMXPathResult
 
 <td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>snapshotItem(XMLSize_t) = 0;
+<td><font face="Courier New,Courier"><font size=-1>snapshotItem(XMLSize_t index) = 0;
 </font></font></td>
 </tr>
 
@@ -6795,7 +6857,7 @@ DOMXPathResult
 <tr ALIGN=LEFT VALIGN=TOP>
 <td ALIGN=CENTER><i><font color="#0086B2">
 <font size=-1>
-Copyright &copy; 1999-2008 The Apache Software Foundation. All Rights Reserved.
+Copyright &copy; 1999-2009 The Apache Software Foundation. All Rights Reserved.
 </font>
 </font>
 </i>

@@ -88,7 +88,7 @@ public:
      *
      * @param domError The error object that describes the error, this object
      *                 may be reused by the DOM implementation across multiple
-     *                 calls to the handleEvent method.
+     *                 calls to the handleError method.
      * @return If the handleError method returns <code>true</code> the DOM
      *         implementation should continue as if the error didn't happen
      *         when possible, if the method returns <code>false</code> then the

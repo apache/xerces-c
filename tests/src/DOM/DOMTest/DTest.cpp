@@ -5042,8 +5042,8 @@ bool DOMTest::testLSExceptions() {
 
     // this XML should trigger reuse of DOMElement
 	const char* sXml2="<?xml version='1.0'?>"
-                "<root>"
-                  "<elem>Home</elem>"
+                "<root xmlns:x='urn:yyy'>"
+                  "<elem xmlns:x='urn:xxx'>Home</elem>"
                   "<elem2>Test</elem2>"
                   "<elem>Home</elem>"
                   "<elem2>Test</elem2>"
@@ -5058,6 +5058,76 @@ bool DOMTest::testLSExceptions() {
 
         // verify that we get only 5 calls: for the root element, the two elem2 and the two text nodes under them
         if(doc==NULL || doc->getDocumentElement()==NULL || doc->getDocumentElement()->getChildElementCount()!=2 || skipper.fCallbackCalls!=5)
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+    }
+    catch(DOMException&)
+    {
+        fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+        OK=false;
+    }
+
+    // test for parseWithContext
+    try
+    {
+        XMLString::transcode("root", tempStr2, 3999);
+        domBuilder->setFilter(NULL);
+        DOMDocument* doc=domBuilder->parse(input);
+        domBuilder->parseWithContext(input, doc->getDocumentElement()->getFirstElementChild(), DOMLSParser::ACTION_APPEND_AS_CHILDREN);
+        // the first 'elem' child of 'root' must have a 'root' child
+        if(!XMLString::equals(doc->getDocumentElement()->getFirstElementChild()->getFirstElementChild()->getNodeName(), tempStr2))
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+
+        doc=domBuilder->parse(input);
+        domBuilder->parseWithContext(input, doc->getDocumentElement()->getFirstElementChild(), DOMLSParser::ACTION_REPLACE_CHILDREN);
+        // the first 'elem' child of 'root' must have a 'root' child
+        if(!XMLString::equals(doc->getDocumentElement()->getFirstElementChild()->getFirstElementChild()->getNodeName(), tempStr2))
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+
+        doc=domBuilder->parse(input);
+        domBuilder->parseWithContext(input, doc->getDocumentElement()->getFirstElementChild(), DOMLSParser::ACTION_INSERT_BEFORE);
+        // the first child of 'root' must be another 'root' child
+        if(!XMLString::equals(doc->getDocumentElement()->getFirstElementChild()->getNodeName(), tempStr2))
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+
+        doc=domBuilder->parse(input);
+        domBuilder->parseWithContext(input, doc->getDocumentElement()->getFirstElementChild(), DOMLSParser::ACTION_INSERT_AFTER);
+        // the node after the first child of 'root' must be another 'root' child
+        if(!XMLString::equals(doc->getDocumentElement()->getFirstElementChild()->getNextElementSibling()->getNodeName(), tempStr2))
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+
+        doc=domBuilder->parse(input);
+        domBuilder->parseWithContext(input, doc->getDocumentElement()->getFirstElementChild(), DOMLSParser::ACTION_REPLACE);
+        // the first child of 'root' must be another 'root' child
+        if(!XMLString::equals(doc->getDocumentElement()->getFirstElementChild()->getNodeName(), tempStr2))
+        {
+            fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
+            OK=false;
+        }
+
+        // verify that namespaces are in scope
+        doc=domBuilder->parse(input);
+	    const char* sXml3="<x:root/>";
+        XMLString::transcode(sXml3, tempStr2, 3999);
+        input->setStringData(tempStr2);
+        domBuilder->parseWithContext(input, doc->getDocumentElement()->getFirstElementChild(), DOMLSParser::ACTION_APPEND_AS_CHILDREN);
+        // the first 'elem' child of 'root' must have a 'x:root' child
+        XMLString::transcode("urn:xxx", tempStr2, 3999);
+        if(!XMLString::equals(doc->getDocumentElement()->getFirstElementChild()->getFirstElementChild()->getNamespaceURI(), tempStr2))
         {
             fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
             OK=false;
@@ -5092,7 +5162,7 @@ bool DOMTest::testElementTraversal() {
                 "\t\td='M25,150 C180,180 290,0 400,140 S420,100 460,90'/>\n"
                 "\t<text id='text1' x='0' y='0' font-size='35' fill='yellow' stroke='orange'\n"
                 "\t\tstroke-width='2' stroke-linejoin='round' font-weight='bold'>\n"
-                "\t\t<textPath id='textPath1' xlink:href='#path1'>&ent1;&ent2;&ent1;</textPath></text>\n"
+                "\t\t<textPath id='textPath1' href='#path1'>&ent1;&ent2;&ent1;</textPath></text>\n"
                 "</g>";
 	MemBufInputSource is((XMLByte*)sXml, strlen(sXml), "bufId");
 

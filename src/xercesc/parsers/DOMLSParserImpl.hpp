@@ -156,7 +156,7 @@ public :
     /**
       * @see DOMLSParser#parseWithContext
       */
-    virtual void parseWithContext
+    virtual DOMNode* parseWithContext
     (
         const   DOMLSInput*     source
         ,       DOMNode*        contextNode
@@ -578,6 +578,16 @@ public :
         , const bool                    isRoot
     );
 
+    // overriden callbacks to implement parseWithContext behavior
+    virtual void startDocument();
+    virtual void XMLDecl
+    (
+        const   XMLCh* const    versionStr
+        , const XMLCh* const    encodingStr
+        , const XMLCh* const    standaloneStr
+        , const XMLCh* const    actualEncStr
+    );
+
 
 private :
     // -----------------------------------------------------------------------
@@ -627,6 +637,11 @@ private :
     //      so that we ask DOMLSParserFilter::acceptNode only once, when it
     //      is completely created
 	//
+    //  fWrapNodesInDocumentFragment
+    //  fWrapNodesContext
+    //  fWrapNodesAction
+    //      Variables used to keep the state for parseWithContext API 
+    //
     //-----------------------------------------------------------------------
     DOMLSResourceResolver*      fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
@@ -637,6 +652,9 @@ private :
     DOMStringListImpl*          fSupportedParameters;
     ValueHashTableOf<DOMLSParserFilter::FilterAction, PtrHasher>*   fFilterAction;
     ValueHashTableOf<bool, PtrHasher>*                              fFilterDelayedTextNodes;
+    DOMDocumentFragment*        fWrapNodesInDocumentFragment;
+    DOMNode*                    fWrapNodesContext;
+    ActionType                  fWrapNodesAction;
 
     // -----------------------------------------------------------------------
     // Unimplemented constructors and operators
