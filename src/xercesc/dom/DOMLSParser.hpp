@@ -584,12 +584,7 @@ public:
       *                                      if they wish to get details on the error.
       * @since DOM Level 3
       */
-    virtual DOMNode* parseWithContext
-    (
-        const   DOMLSInput*     source
-        ,       DOMNode*        contextNode
-        , const ActionType      action
-    ) = 0;
+    virtual DOMNode* parseWithContext(const DOMLSInput* source, DOMNode* contextNode, const ActionType action) = 0;
 
     /**
       * Abort the loading of the document that is currently being loaded by the <code>DOMLSParser</code>.
