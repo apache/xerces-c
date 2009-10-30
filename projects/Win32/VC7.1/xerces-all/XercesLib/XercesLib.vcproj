@@ -62,7 +62,7 @@
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XercesLib.tlb"/>
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -127,7 +127,7 @@
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XercesLib.tlb"/>
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -183,7 +183,7 @@
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease/XercesLib.tlb"/>
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -221,7 +221,7 @@
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(OutDir)\XercesLib_vc71D.pdb"
+				ProgramDataBaseFileName="$(OutDir)\xerces-c_static_3D.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
@@ -235,7 +235,7 @@
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug/XercesLib.tlb"/>
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -298,7 +298,7 @@
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Debug/XercesLib.tlb"/>
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -370,7 +370,7 @@
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\..\..\..\Build\Win32\VC7.1\Release/XercesLib.tlb"/>
+				TypeLibraryName="$(OutDir)\XercesLib.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool

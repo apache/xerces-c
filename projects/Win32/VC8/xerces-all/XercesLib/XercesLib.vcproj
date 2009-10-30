@@ -590,7 +590,7 @@
 				PrecompiledHeaderFile="$(IntDir)\XercesLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\XercesLib_vc80"
+				ProgramDataBaseFileName="$(OutDir)\xerces-c_static_3D.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
