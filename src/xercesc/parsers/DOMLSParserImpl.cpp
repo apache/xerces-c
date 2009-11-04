@@ -743,8 +743,10 @@ DOMDocument* DOMLSParserImpl::parse(const DOMLSInput* source)
     Wrapper4DOMLSInput isWrapper((DOMLSInput*)source, fEntityResolver, false, getMemoryManager());
 
     AbstractDOMParser::parse(isWrapper);
-    if(getErrorCount()!=0)
-        throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
+
+    // Disabled until 4.0.0. See XERCESC-1894 for details.
+    //if(getErrorCount()!=0)
+    //    throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
 
     if (fUserAdoptsDocument)
         return adoptDocument();
@@ -766,8 +768,10 @@ DOMDocument* DOMLSParserImpl::parseURI(const XMLCh* const systemId)
         fFilterDelayedTextNodes->removeAll();
 
     AbstractDOMParser::parse(systemId);
-    if(getErrorCount()!=0)
-        throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
+
+    // Disabled until 4.0.0. See XERCESC-1894 for details.
+    //if(getErrorCount()!=0)
+    //    throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
 
     if (fUserAdoptsDocument)
         return adoptDocument();
@@ -789,8 +793,10 @@ DOMDocument* DOMLSParserImpl::parseURI(const char* const systemId)
         fFilterDelayedTextNodes->removeAll();
 
     AbstractDOMParser::parse(systemId);
-    if(getErrorCount()!=0)
-        throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
+
+    // Disabled until 4.0.0. See XERCESC-1894 for details.
+    //if(getErrorCount()!=0)
+    //    throw DOMLSException(DOMLSException::PARSE_ERR, XMLDOMMsg::LSParser_ParsingFailed, fMemoryManager);
 
     if (fUserAdoptsDocument)
         return adoptDocument();
@@ -852,7 +858,7 @@ void DOMLSParserImpl::XMLDecl(  const XMLCh* const    versionStr
 {
     if(fWrapNodesInDocumentFragment && !(fWrapNodesAction==ACTION_REPLACE_CHILDREN && fWrapNodesContext->getNodeType()==DOMNode::DOCUMENT_NODE))
     {
-        // don't change the properties for the context document, unless the context node is a 
+        // don't change the properties for the context document, unless the context node is a
         // DOMDocument node and the action is ACTION_REPLACE_CHILDREN
     }
     else
@@ -875,7 +881,7 @@ DOMNode* DOMLSParserImpl::parseWithContext(const DOMLSInput* source,
         fFilterDelayedTextNodes->removeAll();
 
     DOMDocumentFragment* holder = contextNode->getOwnerDocument()->createDocumentFragment();
-    // When parsing the input stream, the context node (or its parent, depending on where 
+    // When parsing the input stream, the context node (or its parent, depending on where
     // the result will be inserted) is used for resolving unbound namespace prefixes
     if(action==ACTION_INSERT_BEFORE || action==ACTION_INSERT_AFTER || action==ACTION_REPLACE)
         fWrapNodesContext = contextNode->getParentNode();
@@ -883,8 +889,8 @@ DOMNode* DOMLSParserImpl::parseWithContext(const DOMLSInput* source,
         fWrapNodesContext = contextNode;
     fWrapNodesInDocumentFragment = holder;
     fWrapNodesAction = action;
-    // When calling parseWithContext, the values of the following configuration parameters 
-    // will be ignored and their default values will always be used instead: "validate", 
+    // When calling parseWithContext, the values of the following configuration parameters
+    // will be ignored and their default values will always be used instead: "validate",
     // "validate-if-schema", and "element-content-whitespace".
     ValSchemes oldValidate = getValidationScheme();
     setValidationScheme(Val_Never);
@@ -935,8 +941,8 @@ DOMNode* DOMLSParserImpl::parseWithContext(const DOMLSInput* source,
     }
     holder->release();
 
-    // TODO whenever we add support for DOM Mutation Events: 
-    //   As the new data is inserted into the document, at least one mutation event is fired 
+    // TODO whenever we add support for DOM Mutation Events:
+    //   As the new data is inserted into the document, at least one mutation event is fired
     //   per new immediate child or sibling of the context node.
     return result;
 }
@@ -1347,7 +1353,7 @@ void DOMLSParserImpl::startElement(const XMLElementDecl&         elemDecl
             switch(action)
             {
             case DOMLSParserFilter::FILTER_ACCEPT:      break;
-            case DOMLSParserFilter::FILTER_REJECT:      
+            case DOMLSParserFilter::FILTER_REJECT:
             case DOMLSParserFilter::FILTER_SKIP:        if(fFilterAction==0)
                                                             fFilterAction=new (fMemoryManager) ValueHashTableOf<DOMLSParserFilter::FilterAction, PtrHasher>(7, fMemoryManager);
                                                         fFilterAction->put(fCurrentNode, action);
