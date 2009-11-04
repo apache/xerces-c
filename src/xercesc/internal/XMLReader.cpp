@@ -311,6 +311,13 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
     if (!fTranscoder)
     {
+        // We are about to throw which means the d-tor won't be called.
+        // Clean up some memory.
+        //
+        fMemoryManager->deallocate(fPublicId);
+        fMemoryManager->deallocate(fSystemId);
+        ArrayJanitor<XMLCh> jan (fEncodingStr, fMemoryManager);
+
         ThrowXMLwithMemMgr1
         (
             TranscodingException
@@ -407,6 +414,13 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
 
     if (!fTranscoder)
     {
+        // We are about to throw which means the d-tor won't be called.
+        // Clean up some memory.
+        //
+        fMemoryManager->deallocate(fPublicId);
+        fMemoryManager->deallocate(fSystemId);
+        ArrayJanitor<XMLCh> jan (fEncodingStr, fMemoryManager);
+
         ThrowXMLwithMemMgr1
         (
             TranscodingException
@@ -736,7 +750,7 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
     {
         if (fCharIndex == fCharsAvail)
         {
-            // we have to copy the accepted character(s), and update the column number, 
+            // we have to copy the accepted character(s), and update the column number,
             // before getting new data and losing the value of fCharIndex
             if((count = fCharIndex - charIndex_start)!=0)
             {
@@ -749,7 +763,7 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
         }
 
         //  Check the current char and take it if it's a name char
-        if (fXMLVersion == XMLV1_1) 
+        if (fXMLVersion == XMLV1_1)
         {
             while(fCharIndex < fCharsAvail)
             {
