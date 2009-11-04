@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,10 +54,8 @@ public :
      *
      * NOTE: The returned buffer is dynamically allocated and is the
      * responsibility of the caller to delete it when not longer needed.
-     * You can call XMLString::release to release this returned buffer.
-     *
-     * If a memory manager is provided, ask the memory manager to de-allocate
-     * the returned buffer.
+     * Use the memory manager to release the returned buffer or
+     * operator delete() if none was provided.
      *
      * @param inputData Binary data in XMLByte stream.
      * @param inputLength Length of the XMLByte stream.
@@ -65,7 +63,6 @@ public :
      * @param memMgr client provided memory manager
      * @return Encoded Base64 data in XMLByte stream,
      *      or NULL if input data can not be encoded.
-     * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* encode(const XMLByte* const inputData
                          , const XMLSize_t      inputLength
@@ -77,10 +74,8 @@ public :
      *
      * NOTE: The returned buffer is dynamically allocated and is the
      * responsibility of the caller to delete it when not longer needed.
-     * You can call XMLString::release to release this returned buffer.
-     *
-     * If a memory manager is provided, ask the memory manager to de-allocate
-     * the returned buffer.
+     * Use the memory manager to release the returned buffer or
+     * operator delete() if none was provided.
      *
      * @param inputData Base64 data in XMLByte stream.
      * @param decodedLength Length of decoded XMLByte stream.
@@ -92,7 +87,6 @@ public :
      *                between the quartets
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
-     * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* decode(
                            const XMLByte*        const   inputData
@@ -100,16 +94,14 @@ public :
                          ,       MemoryManager*  const   memMgr = 0
                          ,       Conformance             conform = Conf_RFC2045
                           );
-  
+
    /**
      * Decodes Base64 data into octets
      *
      * NOTE: The returned buffer is dynamically allocated and is the
      * responsibility of the caller to delete it when not longer needed.
-     * You can call XMLString::release to release this returned buffer.
-     *
-     * If a memory manager is provided, ask the memory manager to de-allocate
-     * the returned buffer.
+     * Use the memory manager to release the returned buffer or
+     * operator delete() if none was provided.
      *
      * @param inputData Base64 data in XMLCh stream.
      * @param decodedLength Length of decoded XMLByte stream.
@@ -121,7 +113,6 @@ public :
      *                between the quartets
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
-     * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* decodeToXMLByte(
                            const XMLCh*          const   inputData
@@ -154,7 +145,7 @@ public :
      *
      * Caller is responsible for the proper deallcation
      * of the string returned.
-     * 
+     *
      * @param inputData A string containing the Base64
      * @param memMgr client provided memory manager
      * @param conform conformance specified
