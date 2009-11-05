@@ -312,6 +312,13 @@ SecurityManager* AbstractDOMParser::getSecurityManager() const
     return fScanner->getSecurityManager();
 }
 
+// Return it as a reference so that we cn return as void* from getParameter.
+//
+const XMLSize_t& AbstractDOMParser::getLowWaterMark() const
+{
+    return fScanner->getLowWaterMark();
+}
+
 bool AbstractDOMParser::getLoadExternalDTD() const
 {
     return fScanner->getLoadExternalDTD();
@@ -443,6 +450,11 @@ void AbstractDOMParser::setSecurityManager(SecurityManager* const securityManage
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     fScanner->setSecurityManager(securityManager);
+}
+
+void AbstractDOMParser::setLowWaterMark(XMLSize_t lwm)
+{
+    fScanner->setLowWaterMark(lwm);
 }
 
 void AbstractDOMParser::setLoadExternalDTD(const bool newState)

@@ -217,21 +217,21 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, const void* value)
             fEntityResolver = 0;
         }
         else {
-            getScanner()->setEntityHandler(0);
+          getScanner()->setEntityHandler(0);
         }
     }
-	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
-	{
-		setExternalSchemaLocation((XMLCh*)value);
-	}
-	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
-	{
-		setExternalNoNamespaceSchemaLocation((XMLCh*)value);
-	}
-	else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
-	{
-		setSecurityManager((SecurityManager*)value);
-	}
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
+    {
+      setExternalSchemaLocation((XMLCh*)value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+    {
+      setExternalNoNamespaceSchemaLocation((XMLCh*)value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
+    {
+      setSecurityManager((SecurityManager*)value);
+    }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0)
     {
         AbstractDOMParser::useScanner((const XMLCh*) value);
@@ -239,6 +239,10 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, const void* value)
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0)
     {
         useImplementation((const XMLCh*) value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLowWaterMark) == 0)
+    {
+        setLowWaterMark(*(const XMLSize_t*)value);
     }
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
@@ -632,6 +636,10 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
     {
         return (void *)getDoXInclude();
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLowWaterMark) == 0)
+    {
+      return (void*)&getLowWaterMark();
+    }
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
 }
@@ -645,7 +653,8 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* /*value*/) 
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesScannerName) == 0 ||
-        XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0)
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesParserUseDocumentFromImplementation) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgXercesLowWaterMark) == 0)
       return true;
     else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaLocation) == 0 ||
             XMLString::compareIStringASCII(name, XMLUni::fgDOMSchemaType) == 0)

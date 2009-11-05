@@ -1439,6 +1439,10 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
     {
         fScanner->setSecurityManager((SecurityManager*)value);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLowWaterMark) == 0)
+    {
+        fScanner->setLowWaterMark(*(const XMLSize_t*)value);
+    }
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
     {
         XMLScanner* tempScanner = XMLScannerResolver::resolveScanner
@@ -1470,6 +1474,8 @@ void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
         return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSecurityManager) == 0)
         return (void*)fScanner->getSecurityManager();
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesLowWaterMark) == 0)
+        return (void*)&fScanner->getLowWaterMark();
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
         return (void*)fScanner->getName();
     else

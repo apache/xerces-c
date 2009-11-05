@@ -268,6 +268,7 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             , XMLReader::Source_External
             , srcUsed
             , fScanner->getCalculateSrcOfs()
+            , fScanner->getLowWaterMark()
             , fScanner->getDisableDefaultEntityResolution()
         );
 
@@ -2028,6 +2029,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
             , XMLReader::Source_External
             , srcUsed
             , fScanner->getCalculateSrcOfs()
+            , fScanner->getLowWaterMark()
             , fScanner->getDisableDefaultEntityResolution()
         );
 

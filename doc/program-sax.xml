@@ -537,6 +537,27 @@ void MySAXHandler::fatalError(const SAXParseException&amp; exception)
 
             <table>
                 <tr><th
+                colspan="2"><em>setLowWaterMark(XMLSize_t)</em></th></tr>
+                <tr><th><em>Description</em></th>
+                <td>
+                    If the number of available bytes in the raw buffer is less than
+                    the low water mark the parser will attempt to read more data before
+                    continuing parsing. By default the value for this parameter is 100
+                    bytes. You may want to set this parameter to 0 if you would like
+                    the parser to parse the available data immediately without
+                    potentially blocking while waiting for more date.
+                </td></tr>
+                <tr><th><em>Value</em></th>
+                <td>
+                    New low water mark.
+                </td></tr>
+                <tr><th><em>Value Type</em></th><td> XMLSize_t </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><th
                 colspan="2"><em>setInputBufferSize(const size_t bufferSize)</em></th></tr>
                 <tr><th><em>Description</em></th>
                 <td>

@@ -369,7 +369,8 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                                     , const XMLReader::RefFrom  refFrom
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source
-                                    , const bool                calcSrcOfs)
+                                    , const bool                calcSrcOfs
+                                    ,       XMLSize_t           lowWaterMark)
 {
     //
     //  Ask the input source to create us an input stream. The particular
@@ -409,6 +410,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , source
                 , false
                 , calcSrcOfs
+                , lowWaterMark
                 , fXMLVersion
                 , fMemoryManager
                 );
@@ -425,6 +427,7 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
                 , source
                 , false
                 , calcSrcOfs
+                , lowWaterMark
                 , fXMLVersion
                 , fMemoryManager
                 );
@@ -455,6 +458,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
                                     , const XMLReader::Sources  source
                                     ,       InputSource*&       srcToFill
                                     , const bool                calcSrcOfs
+                                    ,       XMLSize_t           lowWaterMark
                                     , const bool                disableDefaultEntityResolution)
 {
     //Normalize sysId
@@ -584,6 +588,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         , type
         , source
         , calcSrcOfs
+        , lowWaterMark
     );
 
     // Either way, we can release the input source now
@@ -608,6 +613,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
                                     , const XMLReader::Sources  source
                                     ,       InputSource*&       srcToFill
                                     , const bool                calcSrcOfs
+                                    ,       XMLSize_t           lowWaterMark
                                     , const bool                disableDefaultEntityResolution)
 {
     //Normalize sysId
@@ -702,6 +708,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
         , type
         , source
         , calcSrcOfs
+        , lowWaterMark
     );
 
     // Either way, we can release the input source now
@@ -724,7 +731,8 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
                                 , const XMLCh* const        dataBuf
                                 , const XMLSize_t           dataLen
                                 , const bool                copyBuf
-                                , const bool                calcSrcOfs)
+                                , const bool                calcSrcOfs
+                                ,       XMLSize_t           lowWaterMark)
 {
     //
     //  This one is easy, we just create an input stream for the data and
@@ -756,6 +764,7 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
         , XMLReader::Source_Internal
         , false
         , calcSrcOfs
+        , lowWaterMark
         , fXMLVersion
         , fMemoryManager
     );

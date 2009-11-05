@@ -123,6 +123,7 @@ public:
         , const Sources               source
         , const bool                  throwAtEnd = false
         , const bool                  calculateSrcOfs = true
+        ,       XMLSize_t             lowWaterMark = 100
         , const XMLVersion            xmlVersion = XMLV1_0
         ,       MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -138,6 +139,7 @@ public:
         , const Sources               source
         , const bool                  throwAtEnd = false
         , const bool                  calculateSrcOfs = true
+        ,       XMLSize_t             lowWaterMark = 100
         , const XMLVersion            xmlVersion = XMLV1_0
         ,       MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -153,6 +155,7 @@ public:
         , const Sources               source
         , const bool                  throwAtEnd = false
         , const bool                  calculateSrcOfs = true
+        ,       XMLSize_t             lowWaterMark = 100
         , const XMLVersion            xmlVersion = XMLV1_0
         ,       MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
@@ -346,6 +349,10 @@ private:
     //      helps deal with the last buffer's worth, which will usually not
     //      be a full one.
     //
+    //  fLowWaterMark
+    //      The low water mark for the raw byte buffer.
+    //
+    //
     //  fReaderNum
     //      Each reader from a particular reader manager (which means from a
     //      particular document) is given a unique number. The reader manager
@@ -442,6 +449,7 @@ private:
     XMLSize_t                   fRawBufIndex;
     XMLByte                     fRawByteBuf[kRawBufSize];
     XMLSize_t                   fRawBytesAvail;
+    XMLSize_t                   fLowWaterMark;
     XMLSize_t                   fReaderNum;
     RefFrom                     fRefFrom;
     bool                        fSentTrailingSpace;

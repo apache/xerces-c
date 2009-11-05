@@ -1010,6 +1010,7 @@ void DGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Type_General
                             , XMLReader::Source_External
                             , fCalculateSrcOfs
+                            , fLowWaterMark
                         );
             }
             else {
@@ -1023,6 +1024,7 @@ void DGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Source_External
                             , srcUsed
                             , fCalculateSrcOfs
+                            , fLowWaterMark
                             , fDisableDefaultEntityResolution
                         );
                 janSrc.reset(srcUsed);
@@ -2111,6 +2113,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
         , XMLReader::Type_General
         , XMLReader::Source_External
         , fCalculateSrcOfs
+        , fLowWaterMark
     );
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())
@@ -2462,6 +2465,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
         , XMLReader::Type_General
         , XMLReader::Source_External
         , fCalculateSrcOfs
+        , fLowWaterMark
     );
 
     if (!newReader) {
@@ -3457,6 +3461,7 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
             , XMLReader::Source_External
             , srcUsed
             , fCalculateSrcOfs
+            , fLowWaterMark
             , fDisableDefaultEntityResolution
         );
 

@@ -114,6 +114,7 @@ public :
         , const XMLReader::Types    type
         , const XMLReader::Sources  source
         , const bool                calcSrsOfs = true
+        ,       XMLSize_t           lowWaterMark = 100
     );
     XMLReader* createReader
     (
@@ -125,6 +126,7 @@ public :
         , const XMLReader::Sources  source
         ,       InputSource*&       srcToFill
         , const bool                calcSrcOfs = true
+        ,       XMLSize_t           lowWaterMark = 100
         , const bool                disableDefaultEntityResolution = false
     );
     XMLReader* createReader
@@ -138,6 +140,7 @@ public :
         , const XMLReader::Sources  source
         ,       InputSource*&       srcToFill
         , const bool                calcSrcOfs = true
+        ,       XMLSize_t           lowWaterMark = 100
         , const bool                disableDefaultEntityResolution = false
     );
     XMLReader* createIntEntReader
@@ -149,6 +152,7 @@ public :
         , const XMLSize_t           dataLen
         , const bool                copyBuf
         , const bool                calcSrcOfs = true
+        ,       XMLSize_t           lowWaterMark = 100
     );
     bool isScanningPERefOutOfLiteral() const;
     bool pushReader

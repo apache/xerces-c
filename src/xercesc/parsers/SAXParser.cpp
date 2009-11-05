@@ -307,6 +307,11 @@ SecurityManager* SAXParser::getSecurityManager() const
     return fScanner->getSecurityManager();
 }
 
+XMLSize_t SAXParser::getLowWaterMark() const
+{
+    return fScanner->getLowWaterMark();
+}
+
 bool SAXParser::getLoadExternalDTD() const
 {
     return fScanner->getLoadExternalDTD();
@@ -463,6 +468,11 @@ void SAXParser::setSecurityManager(SecurityManager* const securityManager)
         ThrowXMLwithMemMgr(IOException, XMLExcepts::Gen_ParseInProgress, fMemoryManager);
 
     fScanner->setSecurityManager(securityManager);
+}
+
+void SAXParser::setLowWaterMark(XMLSize_t lwm)
+{
+    fScanner->setLowWaterMark(lwm);
 }
 
 void SAXParser::setLoadExternalDTD(const bool newState)

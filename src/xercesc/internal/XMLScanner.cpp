@@ -84,6 +84,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
                        GrammarResolver* const grammarResolver,
                        MemoryManager* const manager)
     : fBufferSize(1024 * 1024)
+    , fLowWaterMark (100)
     , fStandardUriConformant(false)
     , fCalculateSrcOfs(false)
     , fDoNamespaces(false)
@@ -184,6 +185,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                           , MemoryManager* const     manager)
 
     : fBufferSize(1024 * 1024)
+    , fLowWaterMark (100)
     , fStandardUriConformant(false)
     , fCalculateSrcOfs(false)
     , fDoNamespaces(false)

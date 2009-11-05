@@ -365,6 +365,21 @@ public :
       */
     SecurityManager* getSecurityManager() const;
 
+    /** Get the raw buffer low water mark for this parser.
+      *
+      * If the number of available bytes in the raw buffer is less than
+      * the low water mark the parser will attempt to read more data before
+      * continuing parsing. By default the value for this parameter is 100
+      * bytes. You may want to set this parameter to 0 if you would like
+      * the parser to parse the available data immediately without
+      * potentially blocking while waiting for more date.
+      *
+      * @return current low water mark
+      *
+      * @see #setSecurityManager
+      */
+    XMLSize_t getLowWaterMark() const;
+
     /** Get the 'Loading External DTD' flag
       *
       * This method returns the state of the parser's loading external DTD
@@ -760,6 +775,21 @@ public :
       * @see #getSecurityManager
       */
     void setSecurityManager(SecurityManager* const securityManager);
+
+    /** Set the raw buffer low water mark for this parser.
+      *
+      * If the number of available bytes in the raw buffer is less than
+      * the low water mark the parser will attempt to read more data before
+      * continuing parsing. By default the value for this parameter is 100
+      * bytes. You may want to set this parameter to 0 if you would like
+      * the parser to parse the available data immediately without
+      * potentially blocking while waiting for more date.
+      *
+      * @param lwm new low water mark
+      *
+      * @see #getSecurityManager
+      */
+    void setLowWaterMark(XMLSize_t lwm);
 
     /** Set the 'Loading External DTD' flag
       *

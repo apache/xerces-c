@@ -272,6 +272,11 @@ public :
     unsigned int getPrefixId(const XMLCh* const prefix) const;
     const XMLCh* getPrefixForId(unsigned int prefId) const;
 
+    // Return is a reference so that we can return it as void* from
+    // getProperty.
+    //
+    const XMLSize_t& getLowWaterMark() const;
+
     bool getGenerateSyntheticAnnotations() const;
     bool getValidateAnnotations() const;
     bool getIgnoreCachedDTD() const;
@@ -375,6 +380,7 @@ public :
     void setParseSettings(XMLScanner* const refScanner);
     void setStandardUriConformant(const bool newValue);
     void setInputBufferSize(const XMLSize_t bufferSize);
+    void setLowWaterMark(XMLSize_t newValue);
 
     void setGenerateSyntheticAnnotations(const bool newValue);
     void setValidateAnnotations(const bool newValue);
@@ -520,6 +526,9 @@ protected:
     //
     //  fBufferSize
     //      Maximum input buffer size
+    //
+    //  fLowWaterMark
+    //      The low water mark for the raw byte buffer.
     //
     //  fAttrList
     //      Every time we get a new element start tag, we have to pass to
@@ -745,6 +754,7 @@ protected:
     //
     // -----------------------------------------------------------------------
     XMLSize_t                   fBufferSize;
+    XMLSize_t                   fLowWaterMark;
     bool                        fStandardUriConformant;
     bool                        fCalculateSrcOfs;
     bool                        fDoNamespaces;
@@ -1133,6 +1143,11 @@ inline bool XMLScanner::getValidateAnnotations() const
     return fValidateAnnotations;
 }
 
+inline const XMLSize_t& XMLScanner::getLowWaterMark() const
+{
+    return fLowWaterMark;
+}
+
 inline bool XMLScanner::getIgnoreCachedDTD() const
 {
     return fIgnoreCachedDTD;
@@ -1335,6 +1350,11 @@ inline void XMLScanner::setInputBufferSize(const XMLSize_t bufferSize)
 {
     fBufferSize = bufferSize;
     fCDataBuf.setFullHandler(this, fBufferSize);
+}
+
+inline void XMLScanner::setLowWaterMark(XMLSize_t newValue)
+{
+    fLowWaterMark = newValue;
 }
 
 inline void XMLScanner::setIgnoredCachedDTD(const bool newValue)

@@ -1482,6 +1482,7 @@ void IGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Type_General
                             , XMLReader::Source_External
                             , fCalculateSrcOfs
+                            , fLowWaterMark
                         );
             }
             else {
@@ -1495,6 +1496,7 @@ void IGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Source_External
                             , srcUsed
                             , fCalculateSrcOfs
+                            , fLowWaterMark
                             , fDisableDefaultEntityResolution
                         );
                 janSrc.reset(srcUsed);
@@ -3059,6 +3061,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         , XMLReader::Type_General
         , XMLReader::Source_External
         , fCalculateSrcOfs
+        , fLowWaterMark
     );
     if (!newReader) {
         if (src.getIssueFatalErrorIfNotFound())

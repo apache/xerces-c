@@ -93,6 +93,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
                     , const Sources               source
                     , const bool                  throwAtEnd
                     , const bool                  calculateSrcOfs
+                    ,       XMLSize_t             lowWaterMark
                     , const XMLVersion            version
                     ,       MemoryManager* const  manager) :
     fCharIndex(0)
@@ -105,6 +106,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fPublicId(XMLString::replicate(pubId, manager))
     , fRawBufIndex(0)
     , fRawBytesAvail(0)
+    , fLowWaterMark (lowWaterMark)
     , fReaderNum(0xFFFFFFFF)
     , fRefFrom(from)
     , fSentTrailingSpace(false)
@@ -173,6 +175,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
                     , const Sources               source
                     , const bool                  throwAtEnd
                     , const bool                  calculateSrcOfs
+                    ,       XMLSize_t             lowWaterMark
                     , const XMLVersion            version
                     ,       MemoryManager* const  manager) :
     fCharIndex(0)
@@ -186,6 +189,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fPublicId(XMLString::replicate(pubId, manager))
     , fRawBufIndex(0)
     , fRawBytesAvail(0)
+    , fLowWaterMark (lowWaterMark)
     , fReaderNum(0xFFFFFFFF)
     , fRefFrom(from)
     , fSentTrailingSpace(false)
@@ -354,6 +358,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
                     , const Sources               source
                     , const bool                  throwAtEnd
                     , const bool                  calculateSrcOfs
+                    ,       XMLSize_t             lowWaterMark
                     , const XMLVersion            version
                     ,       MemoryManager* const  manager) :
     fCharIndex(0)
@@ -367,6 +372,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
     , fPublicId(XMLString::replicate(pubId, manager))
     , fRawBufIndex(0)
     , fRawBytesAvail(0)
+    , fLowWaterMark (lowWaterMark)
     , fReaderNum(0xFFFFFFFF)
     , fRefFrom(from)
     , fSentTrailingSpace(false)
@@ -1739,42 +1745,52 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
                             ,       unsigned char* const    charSizes
                             , const XMLSize_t               maxChars)
 {
-    // If we are plain tuckered out, then return zero now
-    if (!fRawBytesAvail)
-        return 0;
+    XMLSize_t charsDone = 0;
+    XMLSize_t bytesEaten = 0;
+    bool needMode = false;
 
-    //
-    //  If our raw buffer is low, then lets load up another batch of
-    //  raw bytes now.  We can't check for exactly zero bytes left because
-    //  transcoding of multi-byte encodings may have left a few bytes
-    //  representing a partial character in the buffer that can't be
-    //  used until the next buffer (and the rest of the character)
-    //  is read.
-    //
-    XMLSize_t bytesLeft = fRawBytesAvail - fRawBufIndex;
-    if (bytesLeft < 100)
+    while (!bytesEaten)
     {
-        refreshRawBuffer();
+        // If our raw buffer is low, then lets load up another batch of
+        // raw bytes now.
+        //
+        XMLSize_t bytesLeft = fRawBytesAvail - fRawBufIndex;
+        if (needMode || bytesLeft == 0 || bytesLeft < fLowWaterMark)
+        {
+            refreshRawBuffer();
 
-        // If we didn't get anything more just return a zero now
-        if (!fRawBytesAvail)
-            return 0;
+            // If there are no characters or if we need more but didn't get
+            // any, return zero now.
+            //
+            if (fRawBytesAvail == 0 ||
+                (needMode && (bytesLeft == fRawBytesAvail - fRawBufIndex)))
+                return 0;
+        }
+
+        // Ask the transcoder to internalize another batch of chars. It is
+        // possible that there is data in the raw buffer but the transcoder
+        // is unable to produce anything because transcoding of multi-byte
+        // encodings may have left a few bytes representing a partial
+        // character in the buffer that can't be used until the next chunk
+        // (and the rest of the character) is read. In this case set the
+        // needMore flag and try again.
+        //
+
+        charsDone = fTranscoder->transcodeFrom
+          (
+            &fRawByteBuf[fRawBufIndex]
+            , fRawBytesAvail - fRawBufIndex
+            , bufToFill
+            , maxChars
+            , bytesEaten
+            , charSizes
+          );
+
+        if (bytesEaten == 0)
+            needMode = true;
+        else
+            fRawBufIndex += bytesEaten;
     }
-
-    // Ask the transcoder to internalize another batch of chars
-    XMLSize_t bytesEaten;
-    const XMLSize_t charsDone = fTranscoder->transcodeFrom
-    (
-        &fRawByteBuf[fRawBufIndex]
-        , fRawBytesAvail - fRawBufIndex
-        , bufToFill
-        , maxChars
-        , bytesEaten
-        , charSizes
-    );
-
-    // Update the raw buffer index
-    fRawBufIndex += bytesEaten;
 
     return charsDone;
 }

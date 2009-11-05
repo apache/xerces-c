@@ -1279,6 +1279,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
         , XMLReader::Type_General
         , XMLReader::Source_External
         , fCalculateSrcOfs
+        , fLowWaterMark
     );
 
     if (!newReader) {
@@ -2994,6 +2995,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
             , XMLReader::Source_External
             , srcUsed
             , fCalculateSrcOfs
+            , fLowWaterMark
             , fDisableDefaultEntityResolution
         );
 

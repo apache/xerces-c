@@ -236,7 +236,8 @@ public :
     static const XMLCh fgXercesSkipDTDValidation[];
     static const XMLCh fgXercesEntityResolver[];
     static const XMLCh fgXercesHandleMultipleImports[];
-	static const XMLCh fgXercesDoXInclude[];
+    static const XMLCh fgXercesDoXInclude[];
+    static const XMLCh fgXercesLowWaterMark[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];
