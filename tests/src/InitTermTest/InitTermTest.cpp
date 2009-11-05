@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -183,6 +183,7 @@ int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool g
     XercesDOMParser* parser = new XercesDOMParser;
     parser->setDoNamespaces(gDoNamespaces);
     parser->setDoSchema(gDoSchema);
+    parser->setHandleMultipleImports (true);
     parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     TESTINITPOST;
 }
@@ -196,6 +197,7 @@ int TestInit4SAX(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool g
     SAXParser* parser = new SAXParser;
     parser->setDoNamespaces(gDoNamespaces);
     parser->setDoSchema(gDoSchema);
+    parser->setHandleMultipleImports (true);
     parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     TESTINITPOST;
 }
@@ -214,11 +216,15 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
     XMLCh* doSchemaFeature = XMLString::transcode("http://apache.org/xml/features/validation/schema");
     parser->setFeature(doSchemaFeature, gDoSchema);
 
+    XMLCh* handleMultipleImportsFeature = XMLString::transcode("http://apache.org/xml/features/validation/schema/handle-multiple-imports");
+    parser->setFeature(handleMultipleImportsFeature, true);
+
     XMLCh* fullSchemaCheckFeature = XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking");
     parser->setFeature(fullSchemaCheckFeature, gSchemaFullChecking);
 
     XMLString::release(&doNamespaceFeature);
     XMLString::release(&doSchemaFeature);
+    XMLString::release(&handleMultipleImportsFeature);
     XMLString::release(&fullSchemaCheckFeature);
 
     TESTINITPOST;

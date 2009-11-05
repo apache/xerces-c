@@ -381,6 +381,7 @@ int main(int argC, char* argV[])
     parser->setValidationScheme(gValScheme);
     parser->setDoNamespaces(gDoNamespaces);
     parser->setDoSchema(gDoSchema);
+    parser->setHandleMultipleImports (true);
     parser->setValidationSchemaFullChecking(gSchemaFullChecking);
     parser->setCreateEntityReferenceNodes(gDoCreate);
 

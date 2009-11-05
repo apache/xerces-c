@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@
 #include <xercesc/framework/MemBufInputSource.hpp>
 
 static XMLCh sz_XMLTestSuiteRoot[]={ chLatin_T, chLatin_E, chLatin_S, chLatin_T, chLatin_S, chLatin_U, chLatin_I, chLatin_T, chLatin_E, chNull };
-const XMLCh dummy[]={ chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chForwardSlash, chForwardSlash, 
+const XMLCh dummy[]={ chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chForwardSlash, chForwardSlash,
                        chLatin_d, chLatin_u, chLatin_m, chLatin_m, chLatin_y, chForwardSlash, chNull };
 
 
@@ -49,7 +49,7 @@ const XMLCh dummy[]={ chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chFor
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout << 
+    XERCES_STD_QUALIFIER cout <<
             "\n"
             "Usage:\n"
             "    XSTSHarness <testSet>\n"
@@ -136,17 +136,17 @@ void BaseHarnessHandlers::printFile(XMLURL& url)
 /////////////////////////////////////////////////////////////////////
 
 void BaseErrorHandler::error(const SAXParseException& exc)
-{ 
-    fSawErrors=true; 
-    fErrorText.append(exc.getMessage()); 
-    fErrorText.append(chLF); 
+{
+    fSawErrors=true;
+    fErrorText.append(exc.getMessage());
+    fErrorText.append(chLF);
 }
 
 void BaseErrorHandler::fatalError(const SAXParseException& exc)
-{ 
-    fSawErrors=true; 
-    fErrorText.append(exc.getMessage()); 
-    fErrorText.append(chLF); 
+{
+    fSawErrors=true;
+    fErrorText.append(exc.getMessage());
+    fErrorText.append(chLF);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -260,7 +260,7 @@ int main(int argC, char* argV[])
             usage();
             return 2;
         }
-        // TODO: add option to generate the XML summarizing the result 
+        // TODO: add option to generate the XML summarizing the result
         else if (!strncmp(argV[argInd], "-v=", 3)
              ||  !strncmp(argV[argInd], "-V=", 3))
         {
@@ -295,7 +295,7 @@ int main(int argC, char* argV[])
     }
 
     //
-    //  Create a SAX parser object. 
+    //  Create a SAX parser object.
     //
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
@@ -325,7 +325,7 @@ int main(int argC, char* argV[])
     }
     else
     {
-        // XMLSchema Test Suite    
+        // XMLSchema Test Suite
         handler=new XSTSHarnessHandlers(uri);
     }
     XMLString::release(&uniFile);
@@ -394,4 +394,3 @@ int main(int argC, char* argV[])
         return 0;
 
 }
-

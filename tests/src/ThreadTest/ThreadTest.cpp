@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -216,21 +216,21 @@ XERCES_CPP_NAMESPACE_USE
 //------------------------------------------------------------------------------
 const int MAXINFILES = 25;
 struct RunInfo
-{    
-    bool                            doGrammarCaching;    
+{
+    bool                            doGrammarCaching;
     bool                            quiet;
     bool                            verbose;
-    bool                            stopNow;        
-    bool                            dom;    
-    bool                            sax;    
+    bool                            stopNow;
+    bool                            dom;
+    bool                            sax;
     bool                            reuseParser;
     bool                            inMemory;
     bool                            dumpOnErr;
     bool                            doSchema;
     bool                            schemaFullChecking;
     bool                            doNamespaces;
-    bool                            doInitialParse;    
-    bool                            doNamespacePrefixes;  // SAX2    
+    bool                            doInitialParse;
+    bool                            doNamespacePrefixes;  // SAX2
     SAXParser::ValSchemes           valScheme;
     int                             numThreads;
     int                             totalTime;
@@ -325,7 +325,7 @@ public:
     SAXHandler*     fSAXHandler;
     SAX2Handler*    fSAX2Handler;
     ErrorHandler*   fDOMErrorHandler;
-    
+
     //  This is the API used by the rest of the test program
     ThreadParser();
     ~ThreadParser();
@@ -346,17 +346,17 @@ public:
     void domPrint();                  //   including any children.  Default (no param)
                                        //   version dumps the entire document.
     void  addToCheckSum(const XMLCh *chars, XMLSize_t len=(XMLSize_t)-1);
-    
+
     //  These are the SAX call-back functions that this class implements. Can be used
     //  for SAX and SAX2.
     void characters(const XMLCh* const chars, const XMLSize_t length) {
         addToCheckSum(chars, length);
     }
-    
+
     void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length) {
         addToCheckSum(chars, length);
     }
-    
+
     void resetDocument() {
     }
 
@@ -420,13 +420,13 @@ private:
 //                              to create parsers.
 //
 ThreadParser::ThreadParser()
-{   
+{
     fSAXParser       = 0;
     fSAX2Parser      = 0;
     fXercesDOMParser = 0;
     fSAXHandler      = 0;
     fSAX2Handler     = 0;
-    fDOMErrorHandler = 0;    
+    fDOMErrorHandler = 0;
     fDoc             = 0;
     fCheckSum        = 0;
 
@@ -437,7 +437,7 @@ ThreadParser::ThreadParser()
             fXercesDOMParser = new XercesDOMParser(0, XMLPlatformUtils::fgMemoryManager, gp);
             fXercesDOMParser->cacheGrammarFromParse(true);
             fXercesDOMParser->useCachedGrammarInParse(true);
-        }        
+        }
         else {
             fXercesDOMParser = new XercesDOMParser;
         }
@@ -451,8 +451,9 @@ ThreadParser::ThreadParser()
             default: //SAXParser::Val_Always:
                 fXercesDOMParser->setValidationScheme(XercesDOMParser::Val_Always);
                 break;
-        }        
+        }
         fXercesDOMParser->setDoSchema(gRunInfo.doSchema);
+        fXercesDOMParser->setHandleMultipleImports (true);
         fXercesDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
         fXercesDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
         fDOMErrorHandler = (ErrorHandler*) new HandlerBase();
@@ -466,12 +467,13 @@ ThreadParser::ThreadParser()
             fSAXParser = new SAXParser(0, XMLPlatformUtils::fgMemoryManager, gp);
             fSAXParser->cacheGrammarFromParse(true);
             fSAXParser->useCachedGrammarInParse(true);
-        }        
+        }
         else {
             fSAXParser = new SAXParser();
         }
         fSAXParser->setValidationScheme(gRunInfo.valScheme);
         fSAXParser->setDoSchema(gRunInfo.doSchema);
+        fSAXParser->setHandleMultipleImports (true);
         fSAXParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
         fSAXParser->setDoNamespaces(gRunInfo.doNamespaces);
         fSAXHandler = new ThreadParser::SAXHandler();
@@ -480,10 +482,10 @@ ThreadParser::ThreadParser()
         fSAXParser->setErrorHandler(fSAXHandler);
     }
 
-    else { 
+    else {
         // Set up to use a SAX2 parser.
         /** Grammar caching thread testing */
-        if (gp) {            
+        if (gp) {
             fSAX2Parser = XMLReaderFactory::createXMLReader(gpMemMgr, gp);
             fSAX2Parser->setFeature(XMLUni::fgXercesCacheGrammarFromParse,true);
             fSAX2Parser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse,true);
@@ -494,6 +496,7 @@ ThreadParser::ThreadParser()
 
         fSAX2Parser->setFeature(XMLUni::fgSAX2CoreNameSpaces,(gRunInfo.doNamespaces));
         fSAX2Parser->setFeature(XMLUni::fgXercesSchema,(gRunInfo.doSchema));
+        fSAX2Parser->setFeature(XMLUni::fgXercesHandleMultipleImports, true);
         fSAX2Parser->setFeature(XMLUni::fgXercesSchemaFullChecking,(gRunInfo.schemaFullChecking));
 
         switch (gRunInfo.valScheme) {
@@ -508,9 +511,9 @@ ThreadParser::ThreadParser()
                 fSAX2Parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
                 fSAX2Parser->setFeature(XMLUni::fgXercesDynamic, false);
                 break;
-        }            
-        
-        fSAX2Parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes,(gRunInfo.doNamespacePrefixes));        
+        }
+
+        fSAX2Parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes,(gRunInfo.doNamespacePrefixes));
         fSAX2Handler = new ThreadParser::SAX2Handler();
         fSAX2Handler->SAX2Instance = this;
         fSAX2Parser->setContentHandler(fSAX2Handler);
@@ -520,11 +523,11 @@ ThreadParser::ThreadParser()
 
 ThreadParser::~ThreadParser()
 {
-     delete fSAXParser;          
+     delete fSAXParser;
      delete fSAX2Parser;
      delete fXercesDOMParser;
      delete fSAXHandler;
-     delete fSAX2Handler;     
+     delete fSAX2Handler;
      delete fDOMErrorHandler;
 }
 
@@ -578,7 +581,7 @@ int ThreadParser::parse(int fileNum)
     }
     catch (const OutOfMemoryException&)
     {
-	    fprintf(stderr, " during parsing: %s\n OutOfMemoryException.\n", fInfo->fileName);        
+	    fprintf(stderr, " during parsing: %s\n OutOfMemoryException.\n", fInfo->fileName);
 	    errors = true;
     }
     catch (const XMLException& e)
@@ -812,12 +815,12 @@ void ThreadParser::domPrint()
 
 void parseCommandLine(int argc, char **argv)
 {
-    gRunInfo.doGrammarCaching = false;     
+    gRunInfo.doGrammarCaching = false;
     gRunInfo.quiet = false;               // Set up defaults for run.
     gRunInfo.verbose = false;
-    gRunInfo.stopNow = false;            
+    gRunInfo.stopNow = false;
     gRunInfo.dom = false;
-    gRunInfo.sax = true;    
+    gRunInfo.sax = true;
     gRunInfo.reuseParser = false;
     gRunInfo.inMemory = false;
     gRunInfo.dumpOnErr = false;
@@ -825,8 +828,8 @@ void parseCommandLine(int argc, char **argv)
     gRunInfo.schemaFullChecking = false;
     gRunInfo.doNamespaces = false;
     gRunInfo.doInitialParse = false;
-    gRunInfo.doNamespacePrefixes = false;    
-    
+    gRunInfo.doNamespacePrefixes = false;
+
     gRunInfo.valScheme = SAXParser::Val_Auto;
     gRunInfo.numThreads = 2;
     gRunInfo.totalTime = 0;
@@ -850,7 +853,7 @@ void parseCommandLine(int argc, char **argv)
                 else if (!strcmp(parm, "always"))
                     gRunInfo.valScheme = SAXParser::Val_Always;
                 else {
-                    fprintf(stderr, "Unrecognized -v option \"%s\"\n", parm);                     
+                    fprintf(stderr, "Unrecognized -v option \"%s\"\n", parm);
                     throw 1;
                 }
             }
@@ -864,25 +867,25 @@ void parseCommandLine(int argc, char **argv)
             else if (strcmp(argv[argnum], "-f") == 0)
                 gRunInfo.schemaFullChecking = true;
             else if (strcmp(argv[argnum], "-n") == 0)
-                gRunInfo.doNamespaces = true;            
+                gRunInfo.doNamespaces = true;
             else if (strcmp(argv[argnum], "-p") == 0)
-                gRunInfo.doNamespacePrefixes = true;         
+                gRunInfo.doNamespacePrefixes = true;
             else if (!strncmp(argv[argnum], "-parser=", 8)) {
-                const char* const parm = &argv[argnum][8];                
+                const char* const parm = &argv[argnum][8];
                 if (!strcmp(parm, "dom")) {
                     gRunInfo.dom = true;
                     gRunInfo.sax = false;
                 }
                 else if (!strcmp(parm, "sax")) {
                     gRunInfo.dom = false;
-                    gRunInfo.sax = true;                    
+                    gRunInfo.sax = true;
                 }
                 else if (!strcmp(parm, "sax2")) {
                     gRunInfo.dom = false;
                     gRunInfo.sax = false;
-                }                
+                }
                 else {
-                    fprintf(stderr, "Unrecognized -parser option \"%s\"\n", parm);                    
+                    fprintf(stderr, "Unrecognized -parser option \"%s\"\n", parm);
                     throw 1;
                 }
             }
@@ -917,9 +920,9 @@ void parseCommandLine(int argc, char **argv)
                     fprintf(stderr, "Invalid -time option (time value < 1)\n");
                     throw 1;
                 }
-            }            
+            }
             else if (strcmp(argv[argnum], "-gc") == 0)
-                gRunInfo.doGrammarCaching = true;            
+                gRunInfo.doGrammarCaching = true;
             else if (strcmp(argv[argnum], "-parses") == 0) {
                 ++argnum;
                 if (argnum >= argc) {
@@ -962,7 +965,7 @@ void parseCommandLine(int argc, char **argv)
     }
     catch (int)
     {
-        fprintf(stderr, "usage:  ThreadTest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"            
+        fprintf(stderr, "usage:  ThreadTest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"
             "     -v=xxx         Validation scheme [always | never | auto].  Default is AUTO.\n"
             "     -n             Enable namespace processing. Defaults to off.\n"
             "     -s             Enable schema processing. Defaults to off.\n"
@@ -1092,7 +1095,7 @@ unsigned long WINAPI threadMain (void *param)
                 printf("Thread #%d: parse %d starting file %s\n", thInfo->fThreadNum, thInfo->fParses, fInfo->fileName);
 
             int checkSum = 0;
-                           
+
             checkSum = thParser->parse(docNum);
 
             // For the case where we skip the preparse we will have nothing to
@@ -1113,10 +1116,10 @@ unsigned long WINAPI threadMain (void *param)
 
 	            double totalParsesCompleted = 0;
                 for (int threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {
-                    totalParsesCompleted += gThreadInfo[threadNum].fParses;                
+                    totalParsesCompleted += gThreadInfo[threadNum].fParses;
                 }
                 fprintf(stderr, "Total number of parses completed is %f.\n", totalParsesCompleted);
-            
+
                 // Revisit - let the loop continue to run?
                 int secondTryCheckSum = thParser->reCheck();
                 fprintf(stderr, "   Retry checksum is %x\n", secondTryCheckSum);
@@ -1139,7 +1142,7 @@ unsigned long WINAPI threadMain (void *param)
             thInfo->fInProgress = false;
         }
         else {
-            ThreadFuncs::Sleep(1000); 
+            ThreadFuncs::Sleep(1000);
         }
     }
     delete thParser;
@@ -1182,12 +1185,12 @@ int main (int argc, char **argv)
     // Initialize memory manger and grammar pool
     // set doInitialParse to true so that the first parse will cache the
     // grammar and it'll be used in subsequent parses
-    
+
     if (gRunInfo.doSchema == true && gRunInfo.doNamespaces == true && gRunInfo.doGrammarCaching == true) {
         gpMemMgr = new MemoryManagerImpl();
         gp = new XMLGrammarPoolImpl(gpMemMgr);
         gRunInfo.doInitialParse = true;
-    }    
+    }
 
     //
     // If we will be parsing from memory, read each of the input files
@@ -1263,20 +1266,20 @@ int main (int argc, char **argv)
         gThreadInfo[threadNum].fThreadNum = threadNum;
         ThreadFuncs::startThread(threadMain, &gThreadInfo[threadNum]);
     }
-        
+
     if (gRunInfo.numParses)
     {
         bool notDone;
         while (true)
         {
-            ThreadFuncs::Sleep(1000);            
+            ThreadFuncs::Sleep(1000);
             notDone = false;
-           
+
             for (threadNum = 0; threadNum < gRunInfo.numThreads; threadNum++) {
-                if (gThreadInfo[threadNum].fParses < gRunInfo.numParses)                                    
+                if (gThreadInfo[threadNum].fParses < gRunInfo.numParses)
                     notDone = true;
             }
-            if (notDone == false) {                
+            if (notDone == false) {
                 break;
             }
         }
@@ -1294,7 +1297,7 @@ int main (int argc, char **argv)
         while (gRunInfo.totalTime == 0 || gRunInfo.totalTime > elapsedSeconds) {
             ThreadFuncs::Sleep(1000);
             if (gRunInfo.quiet == false && gRunInfo.verbose == false) {
-                char c = '+';                
+                char c = '+';
                 for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {
                     if (gThreadInfo[threadNum].fHeartBeat == false) {
                         c = '.';
@@ -1347,11 +1350,11 @@ int main (int argc, char **argv)
             printf("\n%8.2f parses per minute.\n", parsesPerMinute);
         }
     }
-    
+
     // delete grammar pool and memory manager
     if (gp) {
-        delete gp;    
-        delete gpMemMgr;    
+        delete gp;
+        delete gpMemMgr;
     }
 
     XMLPlatformUtils::Terminate();
@@ -1364,5 +1367,3 @@ int main (int argc, char **argv)
 
     return 0;
 }
-
-

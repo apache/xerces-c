@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -183,7 +183,7 @@ static void usage()
     "This program parses XML Schema file(s), to show how one can\n"
     "access the Schema Content Model information.\n\n"
     "Options:\n"
-	"    -f     Enable full schema constraint checking processing. Defaults to off.\n"	
+	"    -f     Enable full schema constraint checking processing. Defaults to off.\n"
     "    -l     Indicate the input file is a List File that has a list of XSD files.\n"
     "           Default to off (Input file is a XSD file).\n"
 	"    -?     Show this help.\n\n"
@@ -209,7 +209,7 @@ int main(int argC, char* argV[])
     {
         XMLPlatformUtils::Initialize();
     }
-    
+
     catch (const XMLException& toCatch)
     {
         XERCES_STD_QUALIFIER cerr   << "Error during initialization! Message:\n"
@@ -264,23 +264,24 @@ int main(int argC, char* argV[])
         usage();
         return 1;
     }
-    
+
     XMLGrammarPool *grammarPool;
     SAX2XMLReader* parser;
     try
-    {        
+    {
         grammarPool = new XMLGrammarPoolImpl(XMLPlatformUtils::fgMemoryManager);
 
         parser = XMLReaderFactory::createXMLReader(XMLPlatformUtils::fgMemoryManager, grammarPool);
         parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
         parser->setFeature(XMLUni::fgXercesSchema, true);
+        parser->setFeature(XMLUni::fgXercesHandleMultipleImports, true);
         parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
         parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, false);
         parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
         parser->setFeature(XMLUni::fgXercesDynamic, true);
         parser->setProperty(XMLUni::fgXercesScannerName, (void *)XMLUni::fgSGXMLScanner);
 
-        SCMPrintHandler handler;    
+        SCMPrintHandler handler;
         parser->setErrorHandler(&handler);
 
         bool more = true;
@@ -297,7 +298,7 @@ int main(int argC, char* argV[])
         }
 
         while (more)
-        {            
+        {
             char fURI[1000];
             //initialize the array to zeros
             memset(fURI,0,sizeof(fURI));
@@ -337,10 +338,10 @@ int main(int argC, char* argV[])
             bool updatedXSModel;
             XSModel *xsModel = grammarPool->getXSModel(updatedXSModel);
             if (xsModel)
-            {    
+            {
                 StringList *namespaces = xsModel->getNamespaces();
                 for (unsigned i = 0; i < namespaces->size(); i++) {
-    
+
                     XERCES_STD_QUALIFIER cout << "Processing Namespace:   ";
                     const XMLCh *nameSpace = namespaces->elementAt(i);
                     if (nameSpace && *nameSpace)
@@ -351,7 +352,7 @@ int main(int argC, char* argV[])
                                                                   nameSpace));
                     processTypeDefinitions(xsModel->getComponentsByNamespace(XSConstants::TYPE_DEFINITION,
                                                                          nameSpace));
-                }   
+                }
             }
             else
             {
@@ -362,7 +363,7 @@ int main(int argC, char* argV[])
         {
             XERCES_STD_QUALIFIER cout << "Did not parse a schema document cleanly so not printing Schema for Schema XSModel information";
         }
-        
+
         XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
     }
     catch (const OutOfMemoryException&)
@@ -380,13 +381,13 @@ int main(int argC, char* argV[])
     catch (...)
     {
         XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xsdFile << "'\n" << XERCES_STD_QUALIFIER endl;
-        errorCode = 5;        
+        errorCode = 5;
     }
-    
+
     delete parser;
     delete grammarPool;
     XMLPlatformUtils::Terminate();
-    
+
     return errorCode;
 }
 
@@ -406,11 +407,11 @@ void processElements(XSNamedMap<XSObject> *xsElements)
     if (!xsElements || xsElements->getLength() == 0) {
         XERCES_STD_QUALIFIER cout << "no elements\n\n"  << XERCES_STD_QUALIFIER endl;
         return;
-    }    
+    }
     for (XMLSize_t i=0; i < xsElements->getLength(); i++) {
         XSElementDeclaration *xsElement = (XSElementDeclaration *)xsElements->item(i);
         printBasic(xsElement, "Element");
-        
+
         // Content Model
         XSTypeDefinition *xsTypeDef = xsElement->getTypeDefinition();
         XERCES_STD_QUALIFIER cout << "Content Model" << "\n";
@@ -422,7 +423,7 @@ void processElements(XSNamedMap<XSObject> *xsElements)
         }
         XERCES_STD_QUALIFIER cout << "\tName:\t"
             << StrX(xsTypeDef->getName()) << "\n";
-        
+
         XERCES_STD_QUALIFIER cout << "\n--------------------------------------------" << XERCES_STD_QUALIFIER endl;
     }
 }
@@ -431,12 +432,12 @@ void processSimpleTypeDefinition(XSSimpleTypeDefinition * xsSimpleTypeDef)
 {
     XSTypeDefinition *xsBaseTypeDef = xsSimpleTypeDef->getBaseType();
     XERCES_STD_QUALIFIER cout << "Base:\t\t\t";
-    XERCES_STD_QUALIFIER cout << StrX(xsBaseTypeDef->getName()) << XERCES_STD_QUALIFIER endl;    
-    
+    XERCES_STD_QUALIFIER cout << StrX(xsBaseTypeDef->getName()) << XERCES_STD_QUALIFIER endl;
+
     int facets = xsSimpleTypeDef->getDefinedFacets();
     if (facets) {
         XERCES_STD_QUALIFIER cout << "Facets:\n";
-                
+
         if (facets & XSSimpleTypeDefinition::FACET_LENGTH)
                 XERCES_STD_QUALIFIER cout << "\tLength:\t\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_LENGTH)) << XERCES_STD_QUALIFIER endl;
         if (facets & XSSimpleTypeDefinition::FACET_MINLENGTH)
@@ -447,7 +448,7 @@ void processSimpleTypeDefinition(XSSimpleTypeDefinition * xsSimpleTypeDef)
             StringList *lexicalPatterns = xsSimpleTypeDef->getLexicalPattern();
             if (lexicalPatterns && lexicalPatterns->size()) {
                 XERCES_STD_QUALIFIER cout << "\tPattern:\t\t";
-                for (unsigned i = 0; i < lexicalPatterns->size(); i++) {                    
+                for (unsigned i = 0; i < lexicalPatterns->size(); i++) {
                     XERCES_STD_QUALIFIER cout << StrX(lexicalPatterns->elementAt(i));
                 }
                 XERCES_STD_QUALIFIER cout << XERCES_STD_QUALIFIER endl;
@@ -458,7 +459,7 @@ void processSimpleTypeDefinition(XSSimpleTypeDefinition * xsSimpleTypeDef)
         if (facets & XSSimpleTypeDefinition::FACET_MAXINCLUSIVE)
                 XERCES_STD_QUALIFIER cout << "\tMaxInclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXINCLUSIVE)) << XERCES_STD_QUALIFIER endl;
         if (facets & XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE)
-                XERCES_STD_QUALIFIER cout << "\tMaxExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE)) << XERCES_STD_QUALIFIER endl;      
+                XERCES_STD_QUALIFIER cout << "\tMaxExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MAXEXCLUSIVE)) << XERCES_STD_QUALIFIER endl;
         if (facets & XSSimpleTypeDefinition::FACET_MINEXCLUSIVE)
                 XERCES_STD_QUALIFIER cout << "\tMinExclusive:\t" << StrX(xsSimpleTypeDef->getLexicalFacetValue(XSSimpleTypeDefinition::FACET_MINEXCLUSIVE)) << XERCES_STD_QUALIFIER endl;
         if (facets & XSSimpleTypeDefinition::FACET_MININCLUSIVE)
@@ -492,13 +493,13 @@ void printCompositorTypeConnector(XSModelGroup::COMPOSITOR_TYPE type)
         case XSModelGroup::COMPOSITOR_ALL :
             XERCES_STD_QUALIFIER cout << "*";
             break;
-    }    
+    }
 }
 
 void processParticle(XSParticle *xsParticle)
 {
     if (!xsParticle) {
-        XERCES_STD_QUALIFIER cout << "xsParticle is NULL"; 
+        XERCES_STD_QUALIFIER cout << "xsParticle is NULL";
         return;
     }
     XSParticle::TERM_TYPE termType = xsParticle->getTermType();
@@ -507,7 +508,7 @@ void processParticle(XSParticle *xsParticle)
         XERCES_STD_QUALIFIER cout << StrX(xsElement->getName());
     } else if (termType == XSParticle::TERM_MODELGROUP) {
         XERCES_STD_QUALIFIER cout << "(";
-        
+
         XSModelGroup *xsModelGroup = xsParticle->getModelGroupTerm();
         XSModelGroup::COMPOSITOR_TYPE compositorType = xsModelGroup->getCompositor();
         XSParticleList *xsParticleList = xsModelGroup->getParticles();
@@ -516,7 +517,7 @@ void processParticle(XSParticle *xsParticle)
             printCompositorTypeConnector(compositorType);
         }
         processParticle(xsParticleList->elementAt(xsParticleList->size()-1));
-        
+
         XERCES_STD_QUALIFIER cout << ")";
     } else if (termType == XSParticle::TERM_WILDCARD) {
         XERCES_STD_QUALIFIER cout << "* (wildcard)";
@@ -530,7 +531,7 @@ void processComplexTypeDefinition(XSComplexTypeDefinition *xsComplexTypeDef)
         XERCES_STD_QUALIFIER cout << "Base:\t\t\t";
         XERCES_STD_QUALIFIER cout << StrX(xsBaseTypeDef->getName()) << "\n";
     }
-    
+
     XERCES_STD_QUALIFIER cout << "Content Model:\t";
     XSComplexTypeDefinition::CONTENT_TYPE contentType = xsComplexTypeDef->getContentType();
     if (contentType == XSComplexTypeDefinition::CONTENTTYPE_ELEMENT ||
@@ -543,12 +544,12 @@ void processComplexTypeDefinition(XSComplexTypeDefinition *xsComplexTypeDef)
 void processTypeDefinitions(XSNamedMap<XSObject> *xsTypeDefs)
 {
     if (!xsTypeDefs) return;
-    
+
     for (XMLSize_t i=0; i < xsTypeDefs->getLength(); i++) {
         XSTypeDefinition *xsTypeDef = (XSTypeDefinition *)xsTypeDefs->item(i);
-        
+
         printBasic(xsTypeDef, "Type Definition");
-        
+
         // Content Model
         XERCES_STD_QUALIFIER cout << "Category:\t";
         if (xsTypeDef->getTypeCategory() == XSTypeDefinition::SIMPLE_TYPE) {
@@ -558,7 +559,7 @@ void processTypeDefinitions(XSNamedMap<XSObject> *xsTypeDefs)
             XERCES_STD_QUALIFIER cout << "\tComplex\n";
             processComplexTypeDefinition((XSComplexTypeDefinition *)xsTypeDef);
         }
-        
+
         XERCES_STD_QUALIFIER cout << "\n--------------------------------------------" << XERCES_STD_QUALIFIER endl;
-    }    
+    }
 }

@@ -287,6 +287,10 @@ int main (int argC,  char *argV[])
     sax2parser->setFeature(XMLUni::fgXercesSchema, doSchema);
     saxParser->setDoSchema(doSchema);
 
+    domBuilder->getDomConfig()->setParameter(XMLUni::fgXercesHandleMultipleImports, true);
+    sax2parser->setFeature(XMLUni::fgXercesHandleMultipleImports, true);
+    saxParser->setHandleMultipleImports (true);
+
     domBuilder->getDomConfig()->setParameter(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     sax2parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     saxParser->setValidationSchemaFullChecking(schemaFullChecking);
@@ -436,4 +440,3 @@ int main (int argC,  char *argV[])
     delete staticMemMonitor;
     return 0;
 }
-

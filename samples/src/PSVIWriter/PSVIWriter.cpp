@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,20 +75,20 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-	static const char*				encodingName		= "UTF8";
-	static XMLFormatter::UnRepFlags unRepFlags			= XMLFormatter::UnRep_CharRef;
-    const char*						xmlFile				= 0;    
+    static const char* encodingName		= "UTF8";
+    static XMLFormatter::UnRepFlags unRepFlags = XMLFormatter::UnRep_CharRef;
+    const char*						xmlFile				= 0;
     bool							doList				= false; //REVISIT
     bool							schemaFullChecking	= false;
     bool							errorOccurred		= false;
     const char*						psviOut				= 0;
-    const char*						errorOut			= 0;    
+    const char*						errorOut			= 0;
     XMLFormatTarget* 				psviTarget 			= 0;
     XMLFormatTarget* 				errorTarget 		= 0;
     XMLFormatter* 					psviFormatter 		= 0;
     XMLFormatter* 					errorFormatter 		= 0;
-	char							fileName[80]		="";
-    
+    char							fileName[80]		="";
+
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -166,7 +166,7 @@ int main(int argC, char* argV[])
 
     // Initialize the XML4C2 system
     try
-    {   
+    {
         XMLPlatformUtils::Initialize();
     } catch (const XMLException& toCatch) {
         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
@@ -180,11 +180,12 @@ int main(int argC, char* argV[])
     SAX2XMLReaderImpl* parser = new SAX2XMLReaderImpl();
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
     parser->setFeature(XMLUni::fgXercesSchema, true);
+    parser->setFeature(XMLUni::fgXercesHandleMultipleImports, true);
     parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, false);
-	parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-	parser->setFeature(XMLUni::fgXercesDynamic, true);
-	
+    parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+    parser->setFeature(XMLUni::fgXercesDynamic, true);
+
 	//
 	//	Based on commandline arguments, create XMLFormatters for PSVI output and errors
 	//
@@ -196,7 +197,7 @@ int main(int argC, char* argV[])
 	    }
 		psviFormatter = new XMLFormatter(encodingName, psviTarget, XMLFormatter::NoEscapes, unRepFlags);
     }
-    
+
     if (errorOut==0) {
     	errorTarget = new StdOutFormatTarget();
     } else {
@@ -257,7 +258,7 @@ int main(int argC, char* argV[])
                     XMLString::trim((char*)xmlFile);
                     XERCES_STD_QUALIFIER cerr << "==Parsing== \"" << xmlFile << "\"" << XERCES_STD_QUALIFIER endl;
                 }
-                
+
 				if (psviOut==0) {
 					if (psviTarget==0 && psviFormatter==0) {
 			    		psviTarget = new StdOutFormatTarget();
@@ -344,4 +345,3 @@ int main(int argC, char* argV[])
         return 0;
 
 }
-

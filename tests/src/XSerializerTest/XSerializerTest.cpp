@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,33 +64,33 @@ static XSerializerHandlers*     handler     = 0;
 *
 *   Whenever a file is served, it does the following:
 *
-*   . parses the file 
+*   . parses the file
 *   . caches the grammar without issuing any error message with regards to the parsing
 *   . serializes(store) the grammar cached to a BinOutputStream
 *   . deserialize(load) the grammar from the BinInputStream
-*   . parses the instance document a second time 
+*   . parses the instance document a second time
 *   . validates the instance against the deserialized grammar if validation is on.
 *
 ***/
 
 #include <stdio.h>
 
-static 
+static
 void parseCase(const char* const xmlFile);
 
-static 
+static
 bool parseOne(BinOutputStream*    outStream
             , const char* const  xmlFile);
 
-static 
+static
 void parseTwo(BinInputStream*     inStream
             , const char* const  xmlFile);
 
-static 
+static
 void parseFile(SAX2XMLReader* const parser
              , const char* const xmlFile);
 
-static 
+static
 SAX2XMLReader* getParser(XMLGrammarPool* const theGramPool
                        , bool                  setHandler);
 
@@ -202,7 +202,7 @@ int main(int argC, char* argV[])
         {
              // Get out the end of line
              strcpy(localeStr, &(argV[argInd][8]));
-        }			
+        }
         else
         {
             XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
@@ -306,7 +306,7 @@ int main(int argC, char* argV[])
 //  Serialization/Deserialization
 // ---------------------------------------------------------------------------
 static const int BufSize = 1024;
- 
+
 static void parseCase(const char* const xmlFile)
 {
     //
@@ -333,7 +333,7 @@ static void parseCase(const char* const xmlFile)
 
 }
 
-static 
+static
 bool parseOne(BinOutputStream*    outStream
             , const char* const   xmlFile)
 {
@@ -385,7 +385,7 @@ bool parseOne(BinOutputStream*    outStream
     return retVal;
 }
 
-static 
+static
 void parseTwo(BinInputStream*     inStream
             , const char* const   xmlFile)
 {
@@ -439,6 +439,7 @@ static SAX2XMLReader* getParser(XMLGrammarPool* const theGramPool
 
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
     parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgXercesHandleMultipleImports, true);
     parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
 
@@ -516,4 +517,3 @@ static void parseFile(SAX2XMLReader* const parser
         errorOccurred = true;
 
 }
-

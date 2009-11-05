@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -261,6 +261,7 @@ int main(int argC, char* argV[])
 
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
     parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgXercesHandleMultipleImports, true);
     parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
 
@@ -283,7 +284,7 @@ int main(int argC, char* argV[])
     catch (const OutOfMemoryException&)
     {
         XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
-        errorCode = 5;          
+        errorCode = 5;
     }
     catch (const XMLException& toCatch)
     {
@@ -313,4 +314,3 @@ int main(int argC, char* argV[])
     else
         return 0;
 }
-

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,13 +28,13 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
-    
+
 #include "XInclude.hpp"
 
 // ---------------------------------------------------------------------------
 //  This is a simple program which tests the different XInclude mechanisms prototyped
-//  for my dissertation. Based largely on the DOMCount example provided with the 
-//  Xerces C++ project. 
+//  for my dissertation. Based largely on the DOMCount example provided with the
+//  Xerces C++ project.
 //  Simon Rowland 2006
 // ---------------------------------------------------------------------------
 static void usage()
@@ -96,12 +96,13 @@ int main(int argC, char* argV[])
 
     config->setParameter(XMLUni::fgDOMNamespaces, true);
     config->setParameter(XMLUni::fgXercesSchema, true);
+    config->setParameter(XMLUni::fgXercesHandleMultipleImports, true);
     config->setParameter(XMLUni::fgXercesSchemaFullChecking, true);
 
-	if(config->canSetParameter(XMLUni::fgXercesDoXInclude, true)){
-		config->setParameter(XMLUni::fgXercesDoXInclude, true);
-	}
-    
+    if(config->canSetParameter(XMLUni::fgXercesDoXInclude, true)){
+      config->setParameter(XMLUni::fgXercesDoXInclude, true);
+    }
+
     // enable datatype normalization - default is off
     //config->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
 
@@ -191,7 +192,7 @@ int main(int argC, char* argV[])
 }
 
 XIncludeErrorHandler::XIncludeErrorHandler() :
-    fSawErrors(false) 
+    fSawErrors(false)
 {
 }
 
@@ -231,4 +232,3 @@ void XIncludeErrorHandler::resetErrors()
 {
     fSawErrors = false;
 }
-
