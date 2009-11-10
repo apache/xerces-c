@@ -3155,7 +3155,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
   *         base = QName
   *         id = ID
   *         {any attributes with non-schema namespace . . .}>
-  *         Content: (annotation?, (simpleType?, 
+  *         Content: (annotation?, (simpleType?,
   *                  (minExclusive | minInclusive | maxExclusive | maxInclusive | totalDigits | fractionDigits | length | minLength | maxLength | enumeration | whiteSpace | pattern)*))
   *       </restriction>
   *
@@ -5050,6 +5050,14 @@ TraverseSchema::findDTValidator(const DOMElement* const elem,
 
     if (baseValidator == 0) {
 
+        // Check if the base is from the schema for schema namespace
+        //
+        if (XMLString::equals(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA))
+        {
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, uri, localPart);
+            return 0;
+        }
+
         SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
         SchemaInfo* saveInfo = fSchemaInfo;
         unsigned int         saveScope = fCurrentScope;
@@ -6021,7 +6029,7 @@ int TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         try {
             minOccurs = XMLString::parseInt(minOccursStr, fMemoryManager);
         }
-        catch(const NumberFormatException& e) 
+        catch(const NumberFormatException& e)
         {
             // REVISIT: report a warning that we replaced a number too big?
             if(e.getCode()==XMLExcepts::Str_ConvertOverflow)
@@ -6054,7 +6062,7 @@ int TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             try {
                 maxOccurs = XMLString::parseInt(maxOccursStr, fMemoryManager);
             }
-            catch(const NumberFormatException& e) 
+            catch(const NumberFormatException& e)
             {
                 // REVISIT: report a warning that we replaced a number too big?
                 if(e.getCode()==XMLExcepts::Str_ConvertOverflow && minOccurs < 500)
@@ -6458,7 +6466,7 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
             baseDTValidator = getDatatypeValidator(uriStr, localPart);
 
             if (!baseDTValidator) {
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, uriStr);
+                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
                 throw TraverseSchema::InvalidComplexTypeInfo;
             }
         }
@@ -6480,7 +6488,7 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
             if (!baseComplexTypeInfo) {
                 SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
 
-                if (!impInfo) 
+                if (!impInfo)
                 {
                     reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
                     throw TraverseSchema::InvalidComplexTypeInfo;
