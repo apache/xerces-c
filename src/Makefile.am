@@ -36,8 +36,8 @@ AM_CXXFLAGS = $(ICU_CXXFLAGS)
 
 libxerces_c_la_LDFLAGS = -release ${INTERFACE_VER_D}
 
- # This sets {install}/include as target for the headers
- libxerces_c_ladir = ${includedir}
+# This sets {install}/include as target for the headers
+libxerces_c_ladir = ${includedir}
 
 
 libxerces_c_la_SOURCES = ${util_sources} ${dom_sources} ${domimpl_sources} \
@@ -126,7 +126,19 @@ libxerces_c_la_SOURCES += ${msgicu_sources}
 nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
 AM_CPPFLAGS += -I${ICU_PREFIX}/include
 
-SUBDIRS += xercesc/util/MsgLoaders/ICU/resources
+# Resource shortname
+PKGNAME=xercesc_messages_${INTERFACE_VER_U}
+
+CLEANFILES = xercesc_messages.c root_res.c root.res
+BUILT_SOURCES = xercesc_messages.c root_res.c
+xercesc_messages.c: ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt
+	${ICU_PREFIX}/sbin/gencmn --name ${PKGNAME} -S ${PKGNAME}_dat.c -d . ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt
+	@mv ${PKGNAME}_dat.c xercesc_messages.c
+
+root_res.c: ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/root.txt
+	${ICU_PREFIX}/bin/genrb -d . ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/root.txt
+	${ICU_PREFIX}/sbin/genccode --name ${PKGNAME} -d . root.res
+
 endif
 
 if XERCES_USE_MSGLOADER_ICONV
@@ -1056,8 +1068,8 @@ msgicu_headers = \
 
 msgicu_sources = \
 	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp \
-        xercesc/util/MsgLoaders/ICU/resources/xercesc_messages.c \
-        xercesc/util/MsgLoaders/ICU/resources/root_res.c
+	xercesc_messages.c \
+	root_res.c
 
 msgiconv_headers = \
 	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp \
