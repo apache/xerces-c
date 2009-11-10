@@ -127,8 +127,6 @@ nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
 AM_CPPFLAGS += -I${ICU_PREFIX}/include
 
 SUBDIRS += xercesc/util/MsgLoaders/ICU/resources
-libxerces_c_la_LIBADD += xercesc/util/MsgLoaders/ICU/resources/xercesc_messages.lo \
-xercesc/util/MsgLoaders/ICU/resources/root_res.lo
 endif
 
 if XERCES_USE_MSGLOADER_ICONV
@@ -1057,7 +1055,9 @@ msgicu_headers = \
 	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp
 
 msgicu_sources = \
-	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp
+	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp \
+        xercesc/util/MsgLoaders/ICU/resources/xercesc_messages.c \
+        xercesc/util/MsgLoaders/ICU/resources/root_res.c
 
 msgiconv_headers = \
 	xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp \
