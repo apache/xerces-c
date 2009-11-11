@@ -123,8 +123,12 @@ endif
 
 if XERCES_USE_MSGLOADER_ICU
 libxerces_c_la_SOURCES += ${msgicu_sources}
+nodist_libxerces_c_la_SOURCES = ${msgicu_nodist_sources}
 nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
 AM_CPPFLAGS += -I${ICU_PREFIX}/include
+
+EXTRA_DIST += xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt \
+xercesc/util/MsgLoaders/ICU/resources/root.txt
 
 # Resource shortname
 PKGNAME=xercesc_messages_${INTERFACE_VER_U}
@@ -1067,7 +1071,9 @@ msgicu_headers = \
 	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp
 
 msgicu_sources = \
-	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp \
+	xercesc/util/MsgLoaders/ICU/ICUMsgLoader.cpp
+
+msgicu_nodist_sources = \
 	xercesc_messages.c \
 	root_res.c
 

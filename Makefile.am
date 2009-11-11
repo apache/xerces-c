@@ -4,8 +4,6 @@ EXTRA_DIST = version.incl \
              config/pretty-make \
              scripts/createBindingsFormatFromHPP.pl \
              scripts/makeStringDefinition.pl \
-             scripts/packageBinaries.pl \
-             scripts/packageSources.pl \
              scripts/sanityTest.pl \
              scripts/sanityTest_ExpectedResult.log
 
