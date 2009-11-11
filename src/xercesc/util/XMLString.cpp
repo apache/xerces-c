@@ -81,23 +81,7 @@ MemoryManager* XMLString::fgMemoryManager = 0;
 //  XMLString: Public static methods
 // ---------------------------------------------------------------------------
 
-void XMLString::sizeToText(  const   XMLSize_t           toFormat
-                            ,       char* const          toFill
-                            , const XMLSize_t            maxChars
-                            , const unsigned int         radix
-                            , MemoryManager* const       manager)
-{
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-    // Call the int 64-bit version.
-    binToText((XMLUInt64)toFormat, toFill, maxChars, radix, manager);
-#else
-    // Call the unsigned long version.
-    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
-#endif
-}
-
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-void XMLString::binToText(  const   XMLUInt64            toFormat
+void XMLString::sizeToText(  const  XMLSize_t           toFormat
                             ,       char* const          toFill
                             , const XMLSize_t            maxChars
                             , const unsigned int         radix
@@ -124,7 +108,7 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
-    XMLUInt64 tmpVal = toFormat;
+    XMLSize_t tmpVal = toFormat;
 
     //
     //  Convert into a temp buffer that we know is large enough. This avoids
@@ -153,7 +137,7 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     {
         while (tmpVal)
         {
-            const XMLUInt64 charInd = (tmpVal & 0xFUL);
+            const XMLSize_t charInd = (tmpVal & 0xFUL);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal >>= 4;
         }
@@ -162,7 +146,7 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     {
         while (tmpVal)
         {
-            const XMLUInt64 charInd = (tmpVal % radix);
+            const XMLSize_t charInd = (tmpVal % radix);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal /= radix;
         }
@@ -186,7 +170,6 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     // And cap off the caller's buffer
     toFill[outIndex] = char(0);
 }
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       char* const     toFill
@@ -194,10 +177,6 @@ void XMLString::binToText(  const   unsigned long   toFormat
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-    // Just call the 64-bit version
-    binToText((XMLUInt64)toFormat, toFill, maxChars, radix, manager);
-#else
     static const char digitList[16] =
     {
           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -219,7 +198,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
-    unsigned int tmpVal = toFormat;
+    unsigned long tmpVal = toFormat;
 
     //
     //  Convert into a temp buffer that we know is large enough. This avoids
@@ -248,7 +227,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal & 0xFUL);
+            const unsigned long charInd = (tmpVal & 0xFUL);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal >>= 4;
         }
@@ -257,7 +236,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal % radix);
+            const unsigned long charInd = (tmpVal % radix);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal /= radix;
         }
@@ -280,7 +259,6 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
     // And cap off the caller's buffer
     toFill[outIndex] = char(0);
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 }
 
 void XMLString::binToText(  const   unsigned int    toFormat
@@ -293,50 +271,12 @@ void XMLString::binToText(  const   unsigned int    toFormat
     binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
 }
 
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-void XMLString::binToText(  const   XMLInt64        toFormat
-                            ,       char* const     toFill
-                            , const XMLSize_t       maxChars
-                            , const unsigned int    radix
-                            , MemoryManager* const  manager)
-{
-    //
-    //  If it's negative, then put a negative sign into the output and flip
-    //  the sign of the local temp value.
-    //
-    XMLSize_t startInd = 0;
-    XMLUInt64 actualVal;
-    if (toFormat < 0)
-    {
-        toFill[0] = '-';
-        startInd++;
-        // Signed integers can represent one extra negative value
-        // compared to the positive values. If we simply do (v * -1)
-        // we will overflow on that extra value.
-        //
-        XMLInt64 v = toFormat;
-        v++;
-        actualVal = (XMLUInt64)(v * -1);
-        actualVal++;
-    }
-    else
-        actualVal = (XMLUInt64)(toFormat);
-
-    // And now call the XMLUInt64 version
-    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
-}
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-
 void XMLString::binToText(  const   long            toFormat
                             ,       char* const     toFill
                             , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-    // Just call the 64-bit version
-    binToText((XMLInt64)toFormat, toFill, maxChars, radix, manager);
-#else
     //
     //  If its negative, then put a negative sign into the output and flip
     //  the sign of the local temp value.
@@ -363,8 +303,6 @@ void XMLString::binToText(  const   long            toFormat
 
     // And now call the unsigned long version
     binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-
 }
 
 void XMLString::binToText(  const   int             toFormat
@@ -860,22 +798,6 @@ void XMLString::sizeToText(  const  XMLSize_t            toFormat
                             , const unsigned int         radix
                             , MemoryManager* const       manager)
 {
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-    // Call the int 64-bit version.
-    binToText((XMLUInt64)toFormat, toFill, maxChars, radix, manager);
-#else
-    // Call the unsigned long version.
-    binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
-#endif
-}
-
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-void XMLString::binToText(  const   XMLUInt64            toFormat
-                            ,       XMLCh* const         toFill
-                            , const XMLSize_t            maxChars
-                            , const unsigned int         radix
-                            , MemoryManager* const       manager)
-{
     static const XMLCh digitList[16] =
     {
             chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, chDigit_5
@@ -898,7 +820,7 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
-    XMLUInt64 tmpVal = toFormat;
+    XMLSize_t tmpVal = toFormat;
 
     //
     //  Convert into a temp buffer that we know is large enough. This avoids
@@ -927,7 +849,7 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     {
         while (tmpVal)
         {
-            const XMLUInt64 charInd = (tmpVal & 0xFUL);
+            const XMLSize_t charInd = (tmpVal & 0xFUL);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal >>= 4;
         }
@@ -936,7 +858,7 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     {
         while (tmpVal)
         {
-            const XMLUInt64 charInd = (tmpVal % radix);
+            const XMLSize_t charInd = (tmpVal % radix);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal /= radix;
         }
@@ -960,7 +882,6 @@ void XMLString::binToText(  const   XMLUInt64            toFormat
     // And cap off the caller's buffer
     toFill[outIndex] = chNull;
 }
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 
 void XMLString::binToText(  const   unsigned long   toFormat
                             ,       XMLCh* const    toFill
@@ -968,10 +889,6 @@ void XMLString::binToText(  const   unsigned long   toFormat
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-    // Just call the 64-bit version
-    binToText((XMLUInt64)toFormat, toFill, maxChars, radix, manager);
-#else
     static const XMLCh digitList[16] =
     {
             chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, chDigit_5
@@ -994,7 +911,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     XMLSize_t tmpIndex = 0;
 
     // A copy of the conversion value that we can modify
-    unsigned int tmpVal = toFormat;
+    unsigned long tmpVal = toFormat;
 
     //
     //  Convert into a temp buffer that we know is large enough. This avoids
@@ -1023,7 +940,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal & 0xFUL);
+            const unsigned long charInd = (tmpVal & 0xFUL);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal >>= 4;
         }
@@ -1032,7 +949,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
         while (tmpVal)
         {
-            const unsigned int charInd = (tmpVal % radix);
+            const unsigned long charInd = (tmpVal % radix);
             tmpBuf[tmpIndex++] = digitList[charInd];
             tmpVal /= radix;
         }
@@ -1055,7 +972,6 @@ void XMLString::binToText(  const   unsigned long   toFormat
 
     // And cap off the caller's buffer
     toFill[outIndex] = chNull;
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 }
 
 void XMLString::binToText(  const   unsigned int    toFormat
@@ -1068,52 +984,12 @@ void XMLString::binToText(  const   unsigned int    toFormat
     binToText((unsigned long)toFormat, toFill, maxChars, radix, manager);
 }
 
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-void XMLString::binToText(  const   XMLInt64        toFormat
-                            ,       XMLCh* const    toFill
-                            , const XMLSize_t       maxChars
-                            , const unsigned int    radix
-                            , MemoryManager* const  manager)
-{
-    //
-    //  If its negative, then put a negative sign into the output and flip
-    //  the sign of the local temp value.
-    //
-    XMLSize_t startInd = 0;
-    XMLUInt64 actualVal;
-    if (toFormat < 0)
-    {
-        toFill[0] = chDash;
-        startInd++;
-        // Signed integers can represent one extra negative value
-        // compared to the positive values. If we simply do (v * -1)
-        // we will overflow on that extra value.
-        //
-        XMLInt64 v = toFormat;
-        v++;
-        actualVal = (XMLUInt64)(v * -1);
-        actualVal++;
-    }
-     else
-    {
-        actualVal = (XMLUInt64)(toFormat);
-    }
-
-    // And now call the XMLUInt64 version
-    binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
-}
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-
 void XMLString::binToText(  const   long            toFormat
                             ,       XMLCh* const    toFill
                             , const XMLSize_t       maxChars
                             , const unsigned int    radix
                             , MemoryManager* const  manager)
 {
-#if XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
-    // Just call the 64-bit version
-    binToText((XMLInt64)toFormat, toFill, maxChars, radix, manager);
-#else
     //
     //  If its negative, then put a negative sign into the output and flip
     //  the sign of the local temp value.
@@ -1140,7 +1016,6 @@ void XMLString::binToText(  const   long            toFormat
 
     // And now call the unsigned long version
     binToText(actualVal, &toFill[startInd], maxChars, radix, manager);
-#endif // XERCES_SIZEOF_INT != 8 && XERCES_SIZEOF_LONG != 8 && XERCES_SIZEOF_INT64 != 4
 }
 
 void XMLString::binToText(  const   int             toFormat
@@ -1152,7 +1027,6 @@ void XMLString::binToText(  const   int             toFormat
     // Just call the long version
     binToText((long)toFormat, toFill, maxChars, radix, manager);
 }
-
 
 void XMLString::catString(XMLCh* const target, const XMLCh* const src)
 {

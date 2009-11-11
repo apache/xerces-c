@@ -858,7 +858,7 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix) {
 
     XMLCh anonCountStr[16]; // a count of 15 digits should be enough
 
-    XMLString::binToText(fAnonXSTypeCount++, anonCountStr, 15, 10, fMemoryManager);
+    XMLString::sizeToText(fAnonXSTypeCount++, anonCountStr, 15, 10, fMemoryManager);
     fBuffer.set(prefix);
     fBuffer.append(anonCountStr);
 

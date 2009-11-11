@@ -50,8 +50,8 @@ static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFF
 #define TEST_THROW_ARG1(condition, data, err_msg) \
 if (condition) \
 { \
-    XMLCh value1[17]; \
-    XMLString::binToText(data, value1, 16, 10, getMemoryManager()); \
+    XMLCh value1[64]; \
+    XMLString::sizeToText(data, value1, 65, 10, getMemoryManager()); \
     ThrowXMLwithMemMgr1(XSerializationException \
             , err_msg  \
             , value1 \
@@ -61,10 +61,10 @@ if (condition) \
 #define TEST_THROW_ARG2(condition, data1, data2, err_msg) \
 if (condition) \
 { \
-    XMLCh value1[17]; \
-    XMLCh value2[17]; \
-    XMLString::binToText(data1, value1, 16, 10, getMemoryManager()); \
-    XMLString::binToText(data2, value2, 16, 10, getMemoryManager()); \
+    XMLCh value1[64]; \
+    XMLCh value2[64]; \
+    XMLString::sizeToText(data1, value1, 65, 10, getMemoryManager()); \
+    XMLString::sizeToText(data2, value2, 65, 10, getMemoryManager()); \
     ThrowXMLwithMemMgr2(XSerializationException \
             , err_msg  \
             , value1   \
@@ -385,14 +385,21 @@ bool XSerializeEngine::read(XProtoType*            const    protoType
 	else
 	{
         // what follows class tag is an XSerializable object
-		XSerializedObjectId_t classIndex = (obTag & ~fgClassMask);
+	XSerializedObjectId_t classIndex = (obTag & ~fgClassMask);
         XSerializedObjectId_t loadPoolSize = (XSerializedObjectId_t)fLoadPool->size();
 
-        TEST_THROW_ARG2(((classIndex == 0 ) || (classIndex > loadPoolSize))
-                  , classIndex
-                  , loadPoolSize
-                  , XMLExcepts::XSer_Inv_ClassIndex
-                  )
+        if ((classIndex == 0 ) || (classIndex > loadPoolSize))
+        {
+          XMLCh value1[64];
+          XMLCh value2[64];
+          XMLString::binToText(classIndex, value1, 65, 10, getMemoryManager());
+          XMLString::binToText(loadPoolSize, value2, 65, 10, getMemoryManager());
+          ThrowXMLwithMemMgr2(XSerializationException
+                              , XMLExcepts::XSer_Inv_ClassIndex
+                              , value1
+                              , value2
+                              , getMemoryManager());
+        }
 
         ensurePointer(lookupLoadPool(classIndex));
    }
@@ -833,11 +840,19 @@ XSerializable* XSerializeEngine::lookupLoadPool(XSerializedObjectId_t objectTag)
       *  an object tag read from the binary refering to
       *  an object beyond the upper most boundary of the load pool
       ***/
-    TEST_THROW_ARG2( (objectTag > fLoadPool->size())
-              , objectTag
-              , (unsigned long)fLoadPool->size() // @@ Need to use sizeToText directly.
-              , XMLExcepts::XSer_LoadPool_UppBnd_Exceed
-              )
+
+    if (objectTag > fLoadPool->size())
+    {
+      XMLCh value1[64];
+      XMLCh value2[64];
+      XMLString::binToText(objectTag, value1, 65, 10, getMemoryManager());
+      XMLString::sizeToText(fLoadPool->size(), value2, 65, 10, getMemoryManager());
+      ThrowXMLwithMemMgr2(XSerializationException
+                          , XMLExcepts::XSer_LoadPool_UppBnd_Exceed
+                          , value1
+                          , value2
+                          , getMemoryManager());
+    }
 
     if (objectTag == 0)
         return 0;
@@ -853,7 +868,7 @@ void XSerializeEngine::addLoadPool(void* const objToAdd)
 
     TEST_THROW_ARG2( (fLoadPool->size() != fObjectCount)
                , fObjectCount
-               , (unsigned long)fLoadPool->size() // @@ Need to use sizeToText directly.
+               , fLoadPool->size()
                , XMLExcepts::XSer_LoadPool_NoTally_ObjCnt
                )
 
@@ -864,12 +879,18 @@ void XSerializeEngine::addLoadPool(void* const objToAdd)
 
 void XSerializeEngine::pumpCount()
 {
-
-    TEST_THROW_ARG2( (fObjectCount >= fgMaxObjectCount)
-               , fObjectCount
-               , fgMaxObjectCount
-               , XMLExcepts::XSer_ObjCount_UppBnd_Exceed
-               )
+    if (fObjectCount >= fgMaxObjectCount)
+    {
+      XMLCh value1[64];
+      XMLCh value2[64];
+      XMLString::sizeToText(fObjectCount, value1, 65, 10, getMemoryManager());
+      XMLString::binToText(fgMaxObjectCount, value2, 65, 10, getMemoryManager());
+      ThrowXMLwithMemMgr2(XSerializationException
+                          , XMLExcepts::XSer_ObjCount_UppBnd_Exceed
+                          , value1
+                          , value2
+                          , getMemoryManager());
+    }
 
     fObjectCount++;
 
@@ -901,14 +922,14 @@ void XSerializeEngine::fillBuffer()
      * to do: combine the checking and create a new exception code later
     ***/
     TEST_THROW_ARG2( (bytesRead < fBufSize)
-               , (unsigned long)bytesRead // @@ Need to use sizeToText directly.
-               , (unsigned long)fBufSize  // @@ Need to use sizeToText directly.
+               , bytesRead
+               , fBufSize
                , XMLExcepts::XSer_InStream_Read_LT_Req
                )
 
     TEST_THROW_ARG2( (bytesRead > fBufSize)
-               , (unsigned long)bytesRead // @@ Need to use sizeToText directly.
-               , (unsigned long)fBufSize  // @@ Need to use sizeToText directly.
+               , bytesRead
+               , fBufSize
                , XMLExcepts::XSer_InStream_Read_OverFlow
                )
 
@@ -943,7 +964,7 @@ void XSerializeEngine::flushBuffer()
 inline void XSerializeEngine::checkAndFlushBuffer(XMLSize_t bytesNeedToWrite)
 {
     TEST_THROW_ARG1( (bytesNeedToWrite <= 0)
-                   , (unsigned long)bytesNeedToWrite // @@ Need to use sizeToText directly.
+                   , bytesNeedToWrite
                    , XMLExcepts::XSer_Inv_checkFlushBuffer_Size
                    )
 
@@ -956,7 +977,7 @@ inline void XSerializeEngine::checkAndFillBuffer(XMLSize_t bytesNeedToRead)
 {
 
     TEST_THROW_ARG1( (bytesNeedToRead <= 0)
-                   , (unsigned long)bytesNeedToRead // @@ Need to use sizeToText directly.
+                   , bytesNeedToRead
                    , XMLExcepts::XSer_Inv_checkFillBuffer_Size
                    )
 
@@ -970,10 +991,12 @@ inline void XSerializeEngine::checkAndFillBuffer(XMLSize_t bytesNeedToRead)
 
 inline void XSerializeEngine::ensureStoreBuffer() const
 {
+    XMLSize_t a = (XMLSize_t) (fBufCur - fBufStart);
+    XMLSize_t b = (XMLSize_t) (fBufEnd - fBufCur);
 
     TEST_THROW_ARG2 ( !((fBufStart <= fBufCur) && (fBufCur <= fBufEnd))
-                    , (unsigned long)(fBufCur - fBufStart) // @@ Need to use sizeToText directly.
-                    , (unsigned long)(fBufEnd - fBufCur)   // @@ Need to use sizeToText directly.
+                    , a
+                    , b
                     , XMLExcepts::XSer_StoreBuffer_Violation
                     )
 
@@ -981,10 +1004,12 @@ inline void XSerializeEngine::ensureStoreBuffer() const
 
 inline void XSerializeEngine::ensureLoadBuffer() const
 {
+    XMLSize_t a = (XMLSize_t) (fBufCur - fBufStart);
+    XMLSize_t b = (XMLSize_t) (fBufLoadMax - fBufCur);
 
     TEST_THROW_ARG2 ( !((fBufStart <= fBufCur) && (fBufCur <= fBufLoadMax))
-                    , (unsigned long)(fBufCur - fBufStart)
-                    , (unsigned long)(fBufLoadMax - fBufCur)
+                    , a
+                    , b
                     , XMLExcepts::XSer_LoadBuffer_Violation
                     )
 

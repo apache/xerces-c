@@ -179,9 +179,5 @@ AC_DEFUN([XERCES_INT_TYPES],
 	AC_DEFINE_UNQUOTED([XERCES_U32BIT_INT], $xerces_cv_type_u32bit_int, [An appropriate unsigned 32 bit integer type])
 	AC_DEFINE_UNQUOTED([XERCES_S64BIT_INT], $xerces_cv_type_s64bit_int, [An appropriate signed 64 bit integer type])
 	AC_DEFINE_UNQUOTED([XERCES_U64BIT_INT], $xerces_cv_type_u64bit_int, [An appropriate unsigned 64 bit integer type])
-
-	AC_DEFINE_UNQUOTED([XERCES_SIZEOF_INT], $ac_cv_sizeof_int, [Size of the int type as returned by sizeof])
-	AC_DEFINE_UNQUOTED([XERCES_SIZEOF_LONG], $ac_cv_sizeof_long, [Size of the long type as returned by sizeof])
-	AC_DEFINE_UNQUOTED([XERCES_SIZEOF_INT64], $xerces_cv_sizeof_int64, [Size of the presumably int64 type which on lesser platforms can be int32])
 	]
 )

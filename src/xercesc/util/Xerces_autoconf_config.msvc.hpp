@@ -70,15 +70,6 @@
 #  define XERCES_U64BIT_INT   UINT32
 #endif
 
-#define XERCES_SIZEOF_INT   4
-#define XERCES_SIZEOF_LONG  4
-
-#if (_MSC_VER >= 1300)
-#  define XERCES_SIZEOF_INT64 8
-#else
-#  define XERCES_SIZEOF_INT64 4
-#endif
-
 #ifdef _NATIVE_WCHAR_T_DEFINED
 #define XERCES_XMLCH_T      wchar_t
 #else

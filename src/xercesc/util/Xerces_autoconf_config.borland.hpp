@@ -57,10 +57,6 @@
 #define XERCES_S64BIT_INT   INT64
 #define XERCES_U64BIT_INT   UINT64
 
-#define XERCES_SIZEOF_INT   4
-#define XERCES_SIZEOF_LONG  4
-#define XERCES_SIZEOF_INT64 8
-
 #define XERCES_XMLCH_T      wchar_t
 
 #define XERCES_SIZE_T       SIZE_T

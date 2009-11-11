@@ -36,20 +36,20 @@ static const int BUF_LEN = 64;
 #define  REPORT_FACET_ERROR(val1, val2, except_code, manager)    \
     XMLCh value1[BUF_LEN+1]; \
     XMLCh value2[BUF_LEN+1]; \
-   XMLString::binToText((unsigned long)val1, value1, BUF_LEN, 10, manager);     \
-   XMLString::binToText((unsigned long)val2, value2, BUF_LEN, 10, manager);     \
-   ThrowXMLwithMemMgr2(InvalidDatatypeFacetException             \
+   XMLString::sizeToText(val1, value1, BUF_LEN, 10, manager);     \
+   XMLString::sizeToText(val2, value2, BUF_LEN, 10, manager);     \
+   ThrowXMLwithMemMgr2(InvalidDatatypeFacetException              \
            , except_code                                \
            , value1                                     \
            , value2                                     \
            , manager);
 
-#define  REPORT_VALUE_ERROR(data, val1, val2, except_code, manager)      \
+#define  REPORT_VALUE_ERROR(data, val1, val2, except_code, manager)       \
     XMLCh value1[BUF_LEN+1]; \
     XMLCh value2[BUF_LEN+1]; \
-   XMLString::binToText((unsigned long)val1, value1, BUF_LEN, 10, manager);             \
-   XMLString::binToText((unsigned long)val2, value2, BUF_LEN, 10, manager);             \
-   ThrowXMLwithMemMgr3(InvalidDatatypeValueException                     \
+   XMLString::sizeToText(val1, value1, BUF_LEN, 10, manager);             \
+   XMLString::sizeToText(val2, value2, BUF_LEN, 10, manager);             \
+   ThrowXMLwithMemMgr3(InvalidDatatypeValueException                      \
            , except_code                                        \
            , data                                               \
            , value1                                             \
