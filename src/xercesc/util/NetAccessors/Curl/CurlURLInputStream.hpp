@@ -22,9 +22,9 @@
 #if !defined(XERCESC_INCLUDE_GUARD_CURLURLINPUTSTREAM_HPP)
 #define XERCESC_INCLUDE_GUARD_CURLURLINPUTSTREAM_HPP
 
-#include <curl.h>
-#include <multi.h>
-#include <easy.h>
+#include <curl/curl.h>
+#include <curl/multi.h>
+#include <curl/easy.h>
 
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>

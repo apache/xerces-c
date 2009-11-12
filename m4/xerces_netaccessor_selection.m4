@@ -29,8 +29,6 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	AC_CHECK_LIB([socket], [socket])
 	AC_CHECK_LIB([nsl], [gethostbyname])
 
-        XERCES_CURL_PREFIX
-
 	######################################################
 	# Test for availability of each netaccessor on this host.
 	# For each netaccessor that's available, and hasn't been disabled, add it to our list.
@@ -41,7 +39,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 	AC_REQUIRE([XERCES_CURL_PREFIX])
 	AC_MSG_CHECKING([whether we can support the libcurl-based NetAccessor])
 	list_add=
-	AS_IF([test x"$xerces_cv_curl_prefix" != x], [
+	AS_IF([test x"$xerces_cv_curl_present" != x"no"], [
 		AC_ARG_ENABLE([netaccessor-curl],
 			AS_HELP_STRING([--enable-netaccessor-curl],
 				[Enable libcurl-based NetAccessor support]),
@@ -152,10 +150,7 @@ AC_DEFUN([XERCES_NETACCESSOR_SELECTION],
 		*-curl-*)
 			netaccessor=curl
 			AC_DEFINE([XERCES_USE_NETACCESSOR_CURL], 1, [Define to use the CURL NetAccessor])
-			CURL_LIBS=`${xerces_cv_curl_prefix}/bin/curl-config --libs`
-			CURL_CFLAGS=`${xerces_cv_curl_prefix}/bin/curl-config --cflags`
-			LIBS="${LIBS} $CURL_LIBS"
-			CXXFLAGS="${CXXFLAGS} ${CURL_CFLAGS}"
+			LIBS="${LIBS} ${xerces_cv_curl_libs}"
 			break
 			;;
 

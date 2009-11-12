@@ -41,7 +41,7 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 	AC_REQUIRE([XERCES_ICU_PREFIX])
 	AC_MSG_CHECKING([whether we support the ICU MsgLoader])
 	list_add=
-	AS_IF([test x"$xerces_cv_icu_prefix" != x -a -x $xerces_cv_icu_prefix/bin/genrb], [
+	AS_IF([test x"$xerces_cv_icu_present" != x"no"], [
 		AC_ARG_ENABLE([msgloader-icu],
 			AS_HELP_STRING([--enable-msgloader-icu],
 				[Enable ICU-based MsgLoader support]),
@@ -105,7 +105,7 @@ AC_DEFUN([XERCES_MSGLOADER_SELECTION],
 		*-icu-*)
 			AC_DEFINE([XERCES_USE_MSGLOADER_ICU], 1, [Define to use the ICU-based MsgLoader])
 			msgloader=icu
-			LIBS="${LIBS} -L${xerces_cv_icu_prefix}/lib -licuuc -licudata"
+			LIBS="${LIBS} ${xerces_cv_icu_libs}"
 			break
 			;;
 

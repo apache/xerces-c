@@ -32,7 +32,6 @@ lib_LTLIBRARIES = libxerces-c.la
 # make pretty-printing won't work.
 #
 AM_CPPFLAGS =
-AM_CXXFLAGS = $(ICU_CXXFLAGS)
 
 libxerces_c_la_LDFLAGS = -release ${INTERFACE_VER_D}
 
@@ -60,13 +59,12 @@ nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autocon
 EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h
 libxerces_c_la_LIBADD = ${LTLIBOBJS}
 
-
 # NetAccessors, conditionally built based on settings from configure
 #
 if XERCES_USE_NETACCESSOR_CURL
 libxerces_c_la_SOURCES += ${curl_sources}
 nobase_libxerces_c_la_HEADERS += ${curl_headers}
-AM_CPPFLAGS += -I${CURL_PREFIX}/include/curl
+AM_CPPFLAGS += ${CURL_FLAGS}
 endif
 
 if XERCES_USE_NETACCESSOR_SOCKET
@@ -90,7 +88,7 @@ endif
 if XERCES_USE_TRANSCODER_ICU
 libxerces_c_la_SOURCES += ${icu_sources}
 nobase_libxerces_c_la_HEADERS += ${icu_headers}
-AM_CPPFLAGS += -I${ICU_PREFIX}/include
+AM_CPPFLAGS += ${ICU_FLAGS}
 endif
 
 if XERCES_USE_TRANSCODER_GNUICONV
@@ -125,7 +123,7 @@ if XERCES_USE_MSGLOADER_ICU
 libxerces_c_la_SOURCES += ${msgicu_sources}
 nodist_libxerces_c_la_SOURCES = ${msgicu_nodist_sources}
 nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
-AM_CPPFLAGS += -I${ICU_PREFIX}/include
+AM_CPPFLAGS += ${ICU_FLAGS}
 
 EXTRA_DIST += xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt \
 xercesc/util/MsgLoaders/ICU/resources/root.txt
@@ -136,12 +134,12 @@ PKGNAME=xercesc_messages_${INTERFACE_VER_U}
 CLEANFILES = xercesc_messages.c root_res.c root.res
 BUILT_SOURCES = xercesc_messages.c root_res.c
 xercesc_messages.c: ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt
-	${ICU_PREFIX}/sbin/gencmn --name ${PKGNAME} -S ${PKGNAME}_dat.c -d . ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt
+	${ICU_SBIN}gencmn --name ${PKGNAME} -S ${PKGNAME}_dat.c -d . ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt
 	@mv ${PKGNAME}_dat.c xercesc_messages.c
 
 root_res.c: ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/root.txt
-	${ICU_PREFIX}/bin/genrb -d . ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/root.txt
-	${ICU_PREFIX}/sbin/genccode --name ${PKGNAME} -d . root.res
+	${ICU_BIN}genrb -d . ${top_srcdir}/src/xercesc/util/MsgLoaders/ICU/resources/root.txt
+	${ICU_SBIN}genccode --name ${PKGNAME} -d . root.res
 
 endif
 

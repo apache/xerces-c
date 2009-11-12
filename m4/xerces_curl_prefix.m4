@@ -13,29 +13,67 @@ AC_DEFUN([XERCES_CURL_PREFIX],
 	[
 	AC_ARG_WITH([curl],
 		[AS_HELP_STRING([--with-curl[[[[=DIR]]]]],[Specify location of libcurl])],
-		[with_curl=m4_if($with_curl, [yes], [], $with_curl)],
+		[
+                  if test x"$with_curl" = x"yes"; then
+                    with_curl=
+                  fi
+                ],
 		[with_curl=])
 
 	# Determine if curl is available
-	AC_CACHE_CHECK([for libcurl], [xerces_cv_curl_prefix],
-	[	
-		xerces_cv_curl_prefix=
+	AC_CACHE_VAL([xerces_cv_curl_present],
+	[
+		xerces_cv_curl_present=no
 		if test x"$with_curl" != x"no"; then
-			pfix=$prefix
-			if test x"$pfix" == x"NONE"; then
-				pfix=
-			fi
-			search_list="$with_curl $pfix /usr/local /usr"
-			for i in $search_list; do
-				if test -r "$i/include/curl/easy.h" -a -r "$i/include/curl/multi.h" -a -x "$i/bin/curl-config" ; then
-					xerces_cv_curl_prefix=$i
-					break
-				fi
-			done
+
+                  # See if we were given a prefix.
+                  #
+		  if test -n "$with_curl"; then
+                    AC_PATH_PROG([curl_config], [curl-config],[],[$with_curl/bin])
+                  else
+                    AC_PATH_PROG([curl_config], [curl-config],[])
+                  fi
+
+                  if test -n "$curl_config"; then
+                    curl_flags=`$curl_config --cflags`
+		    curl_libs=`$curl_config --libs`
+                  else
+                    if test -n "$with_curl"; then
+                      curl_flags="-I$with_curl/include"
+     		      curl_libs="-L$with_curl/lib -lcurl"
+                    else
+                      # Default compiler paths.
+                      #
+                      curl_flags=
+     		      curl_libs=-lcurl
+                    fi
+                  fi
+
+                  # Check that the headers exist and can be compiled.
+                  #
+                  orig_cppflags=$CPPFLAGS
+                  if test -n "$curl_flags"; then
+		    CPPFLAGS="$curl_flags $CPPFLAGS"
+                  fi
+                  AC_CHECK_HEADER([curl/curl.h], [xerces_cv_curl_present=yes])
+		  CPPFLAGS=$orig_cppflags
+
+                  if test x"$xerces_cv_curl_present" != x"no"; then
+                    # Check that the library can be linked.
+                    #
+                    orig_ldflags=$LDFLAGS
+		    LDFLAGS="$curl_libs $LDFLAGS"
+                    AC_CHECK_LIB([curl], [curl_multi_init], [], [xerces_cv_curl_present=no])
+		    LDFLAGS=$orig_ldflags
+                  fi
 		fi
 	])
 
-	AC_SUBST([CURL_PREFIX], [$xerces_cv_curl_prefix])
+        AC_CACHE_VAL([xerces_cv_curl_flags], [xerces_cv_curl_flags=$curl_flags])
+	AC_CACHE_VAL([xerces_cv_curl_libs], [xerces_cv_curl_libs=$curl_libs])
+
+	AC_SUBST([CURL_PRESENT], [$xerces_cv_curl_present])
+	AC_SUBST([CURL_FLAGS], [$xerces_cv_curl_flags])
+	AC_SUBST([CURL_LIBS], [$xerces_cv_curl_libs])
 	]
 )
-
