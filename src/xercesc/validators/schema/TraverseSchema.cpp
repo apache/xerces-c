@@ -6486,26 +6486,22 @@ void TraverseSchema::processBaseTypeInfo(const DOMElement* const elem,
             baseComplexTypeInfo = getTypeInfoFromNS(elem, uriStr, localPart);
 
             if (!baseComplexTypeInfo) {
+
+              baseDTValidator = getDatatypeValidator(uriStr, localPart);
+
+              if (!baseDTValidator)
+              {
                 SchemaInfo* impInfo = fSchemaInfo->getImportInfo(fURIStringPool->addOrFind(uriStr));
 
-                if (!impInfo)
+                if (!impInfo || impInfo->getProcessed())
                 {
                     reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
                     throw TraverseSchema::InvalidComplexTypeInfo;
                 }
-                if (impInfo->getProcessed())
-                {
-                    // the schema has already been loaded, so check if it's a simple type before complaining
-                    baseDTValidator = getDatatypeValidator(uriStr, localPart);
-                    if(!baseDTValidator)
-                    {
-                        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
-                        throw TraverseSchema::InvalidComplexTypeInfo;
-                    }
-                }
 
                 infoType = SchemaInfo::IMPORT;
                 restoreSchemaInfo(impInfo, infoType);
+              }
             }
         }
     }
