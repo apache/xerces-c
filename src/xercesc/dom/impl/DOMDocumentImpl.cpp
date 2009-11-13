@@ -1067,6 +1067,9 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             else
             {
                 DOMElementNSImpl* nsElem = (DOMElementNSImpl*)createElementNS(source->getNamespaceURI(), source->getNodeName());
+                if(source->getNamespaceURI() != 0 && *source->getNamespaceURI() != 0) {
+                    nsElem->setPrefix(source->getPrefix());
+                }
                 DOMTypeInfoImpl* clonedTypeInfo=NULL;
                 // if the source has type informations, copy them
                 DOMPSVITypeInfo* sourcePSVI=(DOMPSVITypeInfo*)source->getFeature(XMLUni::fgXercescInterfacePSVITypeInfo, 0);
@@ -1113,8 +1116,12 @@ DOMNode *DOMDocumentImpl::importNode(const DOMNode *source, bool deep, bool clon
             DOMAttrImpl* newattr=NULL;
             if (source->getLocalName() == 0)
                 newattr = (DOMAttrImpl*)createAttribute(source->getNodeName());
-            else
+            else {
                 newattr = (DOMAttrImpl*)createAttributeNS(source->getNamespaceURI(), source->getNodeName());
+                if(source->getNamespaceURI() != 0 && *source->getNamespaceURI() != 0) {
+                    newattr->setPrefix(source->getPrefix());
+                }
+            }
             DOMTypeInfoImpl* clonedTypeInfo=NULL;
             // if the source has type informations, copy them
             DOMPSVITypeInfo* sourcePSVI=(DOMPSVITypeInfo*)source->getFeature(XMLUni::fgXercescInterfacePSVITypeInfo, 0);
