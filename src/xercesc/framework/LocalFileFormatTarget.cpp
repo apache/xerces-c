@@ -77,11 +77,18 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
 
 LocalFileFormatTarget::~LocalFileFormatTarget()
 {
-    // flush remaining buffer before destroy
-    flushBuffer();
+    try
+    {
+        // flush remaining buffer before destroy
+        flushBuffer();
 
-    if (fSource)
-        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
+        if (fSource)
+            XMLPlatformUtils::closeFile(fSource, fMemoryManager);
+    }
+    catch (...)
+    {
+      // There is nothing we can do about it here.
+    }
 
     fMemoryManager->deallocate(fDataBuf);//delete [] fDataBuf;
 }

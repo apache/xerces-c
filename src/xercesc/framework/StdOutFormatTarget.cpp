@@ -28,7 +28,9 @@ StdOutFormatTarget::StdOutFormatTarget()
 {}
 
 StdOutFormatTarget::~StdOutFormatTarget()
-{}
+{
+  flush ();
+}
 
 void StdOutFormatTarget::flush()
 {
