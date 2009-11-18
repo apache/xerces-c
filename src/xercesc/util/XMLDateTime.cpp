@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -246,7 +246,7 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
         fNewDate->fValue[Second]+= 60;
         carry--;
     }
-    
+
     //add minutes
     temp = DATETIMES[index][Minute] + fDuration->fValue[Minute] + carry;
     carry = fQuotient(temp, 60);
@@ -264,7 +264,7 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
         fNewDate->fValue[Hour]+= 24;
         carry--;
     }
-    
+
     fNewDate->fValue[Day] = DATETIMES[index][Day] + fDuration->fValue[Day] + carry;
 
     while ( true )
@@ -327,7 +327,7 @@ int XMLDateTime::compareResult(int resultA
     }
 
     return resultA;
-	
+
 }
 
 // ---------------------------------------------------------------------------
@@ -357,7 +357,7 @@ int XMLDateTime::compare(const XMLDateTime* const pDate1
         return getRetVal(c1, c2);
     }
 
-    return INDETERMINATE;	
+    return INDETERMINATE;
 }
 
 int XMLDateTime::compareResult(const XMLDateTime* const pDate1
@@ -421,9 +421,9 @@ int XMLDateTime::compareOrder(const XMLDateTime* const lValue
 //  ctor and dtor
 // ---------------------------------------------------------------------------
 XMLDateTime::~XMLDateTime()
-{    
+{
     if (fBuffer)
-        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;  
+        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
 }
 
 XMLDateTime::XMLDateTime(MemoryManager* const manager)
@@ -482,7 +482,6 @@ XMLDateTime& XMLDateTime::operator=(const XMLDateTime& rhs)
 //
 XMLCh*  XMLDateTime::getRawData() const
 {
-    assertBuffer();    
     return fBuffer;
 }
 
@@ -505,12 +504,17 @@ int XMLDateTime::getSign() const
 //
 void XMLDateTime::parseDateTime()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_dt_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
+
     getDate();
 
     //fStart is supposed to point to 'T'
     if (fBuffer[fStart++] != DATETIME_SEPARATOR)
-        ThrowXMLwithMemMgr1(SchemaDateTimeException
+          ThrowXMLwithMemMgr1(SchemaDateTimeException
                 , XMLExcepts::DateTime_dt_missingT
                 , fBuffer
                 , fMemoryManager);
@@ -526,7 +530,12 @@ void XMLDateTime::parseDateTime()
 //
 void XMLDateTime::parseDate()
 {
-    initParser();
+    if (!initParser())
+      ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_date_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
+
     getDate();
     parseTimeZone();
     validateDateTime();
@@ -535,7 +544,11 @@ void XMLDateTime::parseDate()
 
 void XMLDateTime::parseTime()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_time_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     // time initialize to default values
     fValue[CentYear]= YEAR_DEFAULT;
@@ -555,7 +568,11 @@ void XMLDateTime::parseTime()
 //
 void XMLDateTime::parseDay()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_gDay_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     if (fBuffer[0] != DATE_SEPARATOR ||
         fBuffer[1] != DATE_SEPARATOR ||
@@ -573,7 +590,7 @@ void XMLDateTime::parseDay()
     fValue[Day]      = parseInt(fStart+3, fStart+5);
 
     if ( DAY_SIZE < fEnd )
-    {        
+    {
         int pos = XMLString::indexOf(UTC_SET, fBuffer[DAY_SIZE]);
         if (pos == -1 )
         {
@@ -600,7 +617,11 @@ void XMLDateTime::parseDay()
 //
 void XMLDateTime::parseMonth()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_gMth_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     if (fBuffer[0] != DATE_SEPARATOR ||
         fBuffer[1] != DATE_SEPARATOR  )
@@ -616,20 +637,20 @@ void XMLDateTime::parseMonth()
     fValue[Day]      = DAY_DEFAULT;
     fValue[Month]    = parseInt(2, 4);
 
-    // REVISIT: allow both --MM and --MM-- now. 
-    // need to remove the following lines to disallow --MM-- 
-    // when the errata is officially in the rec. 
+    // REVISIT: allow both --MM and --MM-- now.
+    // need to remove the following lines to disallow --MM--
+    // when the errata is officially in the rec.
     fStart = 4;
-    if ( fEnd >= fStart+2 && fBuffer[fStart] == DATE_SEPARATOR && fBuffer[fStart+1] == DATE_SEPARATOR ) 
-    { 
-        fStart += 2; 
-    } 
+    if ( fEnd >= fStart+2 && fBuffer[fStart] == DATE_SEPARATOR && fBuffer[fStart+1] == DATE_SEPARATOR )
+    {
+        fStart += 2;
+    }
 
     //
     // parse TimeZone if any
     //
     if ( fStart < fEnd )
-    {      
+    {
         int pos = XMLString::indexOf(UTC_SET, fBuffer[fStart]);
         if ( pos == NOT_FOUND )
         {
@@ -655,7 +676,11 @@ void XMLDateTime::parseMonth()
 //
 void XMLDateTime::parseYear()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_year_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     // skip the first '-' and search for timezone
     //
@@ -685,7 +710,11 @@ void XMLDateTime::parseYear()
 //
 void XMLDateTime::parseMonthDay()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_gMthDay_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     if (fBuffer[0] != DATE_SEPARATOR ||
         fBuffer[1] != DATE_SEPARATOR ||
@@ -700,11 +729,11 @@ void XMLDateTime::parseMonthDay()
 
     //initialize
     fValue[CentYear] = YEAR_DEFAULT;
-    fValue[Month]    = parseInt(2, 4);	
+    fValue[Month]    = parseInt(2, 4);
     fValue[Day]      = parseInt(5, 7);
 
     if ( MONTHDAY_SIZE < fEnd )
-    {        
+    {
         int pos = XMLString::indexOf(UTC_SET, fBuffer[MONTHDAY_SIZE]);
         if ( pos == NOT_FOUND )
         {
@@ -726,7 +755,11 @@ void XMLDateTime::parseMonthDay()
 
 void XMLDateTime::parseYearMonth()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_ym_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     // get date
     getYearMonth();
@@ -747,7 +780,11 @@ void XMLDateTime::parseYearMonth()
 //
 void XMLDateTime::parseDuration()
 {
-    initParser();
+    if (!initParser())
+        ThrowXMLwithMemMgr1(SchemaDateTimeException
+                , XMLExcepts::DateTime_dur_invalid
+                , fBuffer ? fBuffer : XMLUni::fgZeroLenString
+                , fMemoryManager);
 
     // must start with '-' or 'P'
     //
@@ -869,9 +906,9 @@ void XMLDateTime::parseDuration()
 
             /***
              * Schema Errata: E2-23
-             * at least one digit must follow the decimal point if it appears. 
-             * That is, the value of the seconds component must conform 
-             * to the following pattern: [0-9]+(.[0-9]+)? 
+             * at least one digit must follow the decimal point if it appears.
+             * That is, the value of the seconds component must conform
+             * to the following pattern: [0-9]+(.[0-9]+)?
              */
             if ( mlsec != NOT_FOUND )
             {
@@ -1099,7 +1136,7 @@ void XMLDateTime::getYearMonth()
 
 void XMLDateTime::parseTimeZone()
 {
-    //fStart points right after the date   	 
+    //fStart points right after the date
   	if ( fStart < fEnd ) {
         int pos = XMLString::indexOf(UTC_SET, fBuffer[fStart]);
     	if (pos == NOT_FOUND) {
@@ -1108,9 +1145,9 @@ void XMLDateTime::parseTimeZone()
                     , fBuffer
                     , fMemoryManager);
    		}
-   		else { 
+   		else {
             fValue[utc] = pos+1;
-  	        getTimeZone(fStart);   		
+  	        getTimeZone(fStart);
    		}
     }
 
@@ -1136,9 +1173,9 @@ void XMLDateTime::getTimeZone(const XMLSize_t sign)
                     , fBuffer
                     , fMemoryManager);
             //"Error in parsing time zone");
-        }		
+        }
 
-        return;	
+        return;
     }
 
     //
@@ -1157,9 +1194,9 @@ void XMLDateTime::getTimeZone(const XMLSize_t sign)
         //("Error in parsing time zone");
     }
 
-    fTimeZone[hh] = parseInt(sign+1, sign+3);		
+    fTimeZone[hh] = parseInt(sign+1, sign+3);
     fTimeZone[mm] = parseInt(sign+4, fEnd);
-        		
+
     return;
 }
 
@@ -1183,7 +1220,7 @@ void XMLDateTime::normalize()
     int negate = (fValue[utc] == UTC_POS)? -1: 1;
     int temp;
     int carry;
-    
+
 
     // we normalize a duration so could have 200M...
     //update months (may be modified additionaly below)
@@ -1206,7 +1243,7 @@ void XMLDateTime::normalize()
         fValue[Minute] += 60;
         carry--;
     }
-   
+
     //add hours
     temp = fValue[Hour] + negate * fTimeZone[hh] + carry;
     carry = fQuotient(temp, 24);
@@ -1216,7 +1253,7 @@ void XMLDateTime::normalize()
         carry--;
     }
 
-    fValue[Day] += carry;   
+    fValue[Day] += carry;
 
     while (1)
     {
@@ -1345,7 +1382,7 @@ void XMLDateTime::validateDateTime() const
                 , fMemoryManager);
         //("Minute must have values 0-59");
     }
-	
+
     return;
 }
 
@@ -1407,7 +1444,7 @@ double XMLDateTime::parseMiliSecond(const XMLSize_t start, const XMLSize_t end) 
 {
     double div = 10;
     double retval = 0;
-    
+
     for (XMLSize_t i=start; i < end; i++) {
 
         if (fBuffer[i] < chDigit_0 || fBuffer[i] > chDigit_9)
@@ -1463,15 +1500,15 @@ int XMLDateTime::parseIntYear(const XMLSize_t end) const
  * E2-41
  *
  *  3.2.7.2 Canonical representation
- * 
- *  Except for trailing fractional zero digits in the seconds representation, 
- *  '24:00:00' time representations, and timezone (for timezoned values), 
- *  the mapping from literals to values is one-to-one. Where there is more 
- *  than one possible representation, the canonical representation is as follows: 
- *  redundant trailing zero digits in fractional-second literals are prohibited. 
+ *
+ *  Except for trailing fractional zero digits in the seconds representation,
+ *  '24:00:00' time representations, and timezone (for timezoned values),
+ *  the mapping from literals to values is one-to-one. Where there is more
+ *  than one possible representation, the canonical representation is as follows:
+ *  redundant trailing zero digits in fractional-second literals are prohibited.
  *  An hour representation of '24' is prohibited. Timezoned values are canonically
- *  represented by appending 'Z' to the nontimezoned representation. (All 
- *  timezoned dateTime values are UTC.) 
+ *  represented by appending 'Z' to the nontimezoned representation. (All
+ *  timezoned dateTime values are UTC.)
  *
  *  .'24:00:00' -> '00:00:00'
  *  .milisecond: trailing zeros removed
@@ -1537,38 +1574,38 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
  * E2-41
  *
  *  3.2.9.2 Canonical representation
- * 
- * Given a member of the date value space, the date 
- * portion of the canonical representation (the entire 
+ *
+ * Given a member of the date value space, the date
+ * portion of the canonical representation (the entire
  * representation for nontimezoned values, and all but
- * the timezone representation for timezoned values) 
+ * the timezone representation for timezoned values)
  * is always the date portion of the dateTime canonical
- * representation of the interval midpoint (the 
+ * representation of the interval midpoint (the
  * dateTime representation, truncated on the right
- * to eliminate 'T' and all following characters). 
- * For timezoned values, append the canonical 
- * representation of the recoverable timezone. 
+ * to eliminate 'T' and all following characters).
+ * For timezoned values, append the canonical
+ * representation of the recoverable timezone.
  *
  ***/
 XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) const
-{    
+{
     /*
      * Case Date               Actual Value    Canonical Value
      *    1 yyyy-mm-dd         yyyy-mm-dd          yyyy-mm-dd
      *    2 yyyy-mm-ddZ        yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
      *    3 yyyy-mm-dd+00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
-     *    4 yyyy-mm-dd+00:01   YYYY-MM-DCT23:59Z   yyyy-mm-dd+00:01              
-     *    5 yyyy-mm-dd+12:00   YYYY-MM-DCT12:00Z   yyyy-mm-dd+12:00    
-     *    6 yyyy-mm-dd+12:01   YYYY-MM-DCT11:59Z   YYYY-MM-DC-11:59 
-     *    7 yyyy-mm-dd+14:00   YYYY-MM-DCT10:00Z   YYYY-MM-DC-10:00 
+     *    4 yyyy-mm-dd+00:01   YYYY-MM-DCT23:59Z   yyyy-mm-dd+00:01
+     *    5 yyyy-mm-dd+12:00   YYYY-MM-DCT12:00Z   yyyy-mm-dd+12:00
+     *    6 yyyy-mm-dd+12:01   YYYY-MM-DCT11:59Z   YYYY-MM-DC-11:59
+     *    7 yyyy-mm-dd+14:00   YYYY-MM-DCT10:00Z   YYYY-MM-DC-10:00
      *    8 yyyy-mm-dd-00:00   yyyy-mm-ddT00:00Z   yyyy-mm-ddZ
-     *    9 yyyy-mm-dd-00:01   yyyy-mm-ddT00:01Z   yyyy-mm-dd-00:01 
+     *    9 yyyy-mm-dd-00:01   yyyy-mm-ddT00:01Z   yyyy-mm-dd-00:01
      *   11 yyyy-mm-dd-11:59   yyyy-mm-ddT11:59Z   YYYY-MM-DD-11:59
-     *   10 yyyy-mm-dd-12:00   yyyy-mm-ddT12:00Z   YYYY-MM-DD+12:00      
+     *   10 yyyy-mm-dd-12:00   yyyy-mm-ddT12:00Z   YYYY-MM-DD+12:00
      *   12 yyyy-mm-dd-14:00   yyyy-mm-ddT14:00Z   YYYY-MM-DD+10:00
      */
     int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
-    // YYYY-MM-DD  + chNull 
+    // YYYY-MM-DD  + chNull
     // 1234567890  + 1
     int memLength = 10 + 1 + utcSize;
 
@@ -1583,7 +1620,7 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
     XMLCh* retPtr = retBuf;
 
     if (fValue[Hour] < 12) {
-        
+
         int additionalLen = fillYearString(retPtr, fValue[CentYear]);
         if (additionalLen != 0) {
             // very bad luck; have to resize the buffer...
@@ -1596,11 +1633,11 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
         *retPtr++ = DATE_SEPARATOR;
         fillString(retPtr, fValue[Month], 2);
         *retPtr++ = DATE_SEPARATOR;
-        fillString(retPtr, fValue[Day], 2);        
+        fillString(retPtr, fValue[Day], 2);
 
         if (utcSize) {
             if (fTimeZone[hh] != 0 || fTimeZone[mm] != 0) {
-                *retPtr++ = UTC_NEG_CHAR;               
+                *retPtr++ = UTC_NEG_CHAR;
                 fillString(retPtr, fValue[Hour], 2);
                 *retPtr++ = TIME_SEPARATOR;
                 fillString(retPtr, fValue[Minute], 2);
@@ -1609,7 +1646,7 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
                 *retPtr++ = UTC_STD_CHAR;
             }
         }
-        *retPtr = chNull;    
+        *retPtr = chNull;
     }
     else {
         /*
@@ -1655,7 +1692,7 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
                 month+= 12;
                 year--;
             }
-            year += fQuotient(temp, 1, 13);         
+            year += fQuotient(temp, 1, 13);
         }
 
         int additionalLen = fillYearString(retPtr, year);
@@ -1670,14 +1707,14 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
         *retPtr++ = DATE_SEPARATOR;
         fillString(retPtr, month, 2);
         *retPtr++ = DATE_SEPARATOR;
-        fillString(retPtr, day, 2);        
-       
-        *retPtr++ = UTC_POS_CHAR;               
+        fillString(retPtr, day, 2);
+
+        *retPtr++ = UTC_POS_CHAR;
         fillString(retPtr, hour, 2);
         *retPtr++ = TIME_SEPARATOR;
-        fillString(retPtr, minute, 2);                                
+        fillString(retPtr, minute, 2);
         *retPtr = chNull;
-    }      
+    }
     return retBuf;
 }
 
@@ -1685,8 +1722,8 @@ XMLCh* XMLDateTime::getDateCanonicalRepresentation(MemoryManager* const memMgr) 
 /***
  * 3.2.8 time
  *
- *  . either the time zone must be omitted or, 
- *    if present, the time zone must be Coordinated Universal Time (UTC) indicated by a "Z".   
+ *  . either the time zone must be omitted or,
+ *    if present, the time zone must be Coordinated Universal Time (UTC) indicated by a "Z".
  *
  *  . Additionally, the canonical representation for midnight is 00:00:00.
  *
@@ -1697,7 +1734,7 @@ XMLCh* XMLDateTime::getTimeCanonicalRepresentation(MemoryManager* const memMgr) 
     searchMiliSeconds(miliStartPtr, miliEndPtr);
     XMLSize_t miliSecondsLen = miliEndPtr - miliStartPtr;
     int utcSize = (fValue[utc] == UTC_UNKNOWN) ? 0 : 1;
-    
+
     MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
     XMLCh* retBuf = (XMLCh*) toUse->allocate( (10 + miliSecondsLen + utcSize + 1) * sizeof(XMLCh));
     XMLCh* retPtr = retBuf;
