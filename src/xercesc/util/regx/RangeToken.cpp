@@ -72,6 +72,12 @@ RangeToken::RangeToken(const Token::tokType tkType,
 
 RangeToken::~RangeToken() {
 
+    // TODO(dbertoni) This is a temporary hack until we can change the ABI.
+    // See Jira issue XERCESC-1866 for more details.
+    if (fCaseIToken && fCaseIToken->fCaseIToken == this)
+    {
+        fCaseIToken->fCaseIToken = 0;
+    }
     fMemoryManager->deallocate(fMap);//delete [] fMap;
     fMemoryManager->deallocate(fRanges);//delete[] fRanges;
 }
@@ -286,6 +292,12 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
         lwrToken->createMap();
 
         fCaseIToken = lwrToken;
+        // TODO(dbertoni) This is a temporary hack until we can change the ABI.
+        // See Jira issue XERCESC-1866 for more details.
+        // Overload the fCaseIToken data member to be the case-insensitive token
+        // that's caching the case-insensitive one.  We need this because tokens
+        // have varying lifetimes.
+        fCaseIToken->setCaseInsensitiveToken(this);
     }
 
     return fCaseIToken;
