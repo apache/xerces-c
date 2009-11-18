@@ -647,83 +647,85 @@ $set 3
 284  invalid character '{0}' in XPath expression
 285  unsupported XPath token
 286  fractional values not supported in XPath expression
-287  buffer not initialized
+287  invalid dateTime value '{0}'
 288  missing 'T' separator in dateTime value '{0}'
 289  invalid gDay value '{0}'
 290  invalid gMonth value '{0}'
 291  invalid gMonthDay value '{0}'
-292  duration value '{0}' must start with '-' or 'P'
-293  duration value '{0}' must contain 'P'
-294  duration value '{0}' can contain '-' only as the first character
-295  duration value '{0}' contains invalid text before 'T'
-296  duration value '{0}' has no time component after 'T'
-297  duration value '{0}' must have at least one component
-298  duration value '{0}' must have at least one digit after '.'
-299  incomplete date value '{0}'
-300  invalid date value '{0}'
-301  incomplete time value '{0}'
-302  invalid time value '{0}'
-303  expected fractional seconds after '.' in time value '{0}'
-304  incomplete yearMonth value '{0}'
-305  year separator is missing or misplaced in yearMonth value '{0}'
-306  year value '{0}' must follow 'CCYY' format
-307  invalid leading zero in year value '{0}'
-308  month component missing in yearMonth value '{0}'
-309  time zone expected in '{0}'
-310  unexpected text after 'Z' in time zone value '{0}'
-311  invalid time zone value '{0}'
-312  illegal year value '{0}'
-313  month value '{0}' must be between 1 and 12
-314  day value '{0}' must be between 1 and {1}
-315  hours value '{0}' must be between 0 and 23
-316  minutes value '{0}' must be between 0 and 59
-317  seconds value '{0}' must be between 0 and 60
+292  invalid duration value '{0}'
+293  duration value '{0}' must start with '-' or 'P'
+294  duration value '{0}' must contain 'P'
+295  duration value '{0}' can contain '-' only as the first character
+296  duration value '{0}' contains invalid text before 'T'
+297  duration value '{0}' has no time component after 'T'
+298  duration value '{0}' must have at least one component
+299  duration value '{0}' must have at least one digit after '.'
+300  incomplete date value '{0}'
+301  invalid date value '{0}'
+302  incomplete time value '{0}'
+303  invalid time value '{0}'
+304  expected fractional seconds after '.' in time value '{0}'
+305  incomplete gYearMonth value '{0}'
+306  invalid gYearMonth value '{0}'
+307  invalid gYear value '{0}'
+308  year value '{0}' must follow 'CCYY' format
+309  invalid leading zero in gYear value '{0}'
+310  month component missing in gYearMonth value '{0}'
+311  time zone expected in '{0}'
+312  unexpected text after 'Z' in time zone value '{0}'
+313  invalid time zone value '{0}'
+314  illegal year value '{0}'
+315  month value '{0}' must be between 1 and 12
+316  day value '{0}' must be between 1 and {1}
+317  hours value '{0}' must be between 0 and 23
 318  minutes value '{0}' must be between 0 and 59
-319  derived by restriction complex type has content while base type is empty
-320  namespace of element '{0}' is not allowed by wildcard in the base
-321  occurrence range of element '{0}' is not a valid restriction of base element's range
-322  element name/namespace in restriction does not match that of corresponding element in the base
-323  element '{0}' is nillable in the restriction while it is non-nillable in the base
-324  element '{0}' is either not fixed or is fixed to a different value compared to corresponding element in the base
-325  disallowed substitutions for element '{0}' are not a superset of those for corresponding element in the base
-326  element '{0}' has type that does not derive from type of corresponding element in the base
-327  element '{0}' has fewer identity constraints compared to corresponding element '{1}' in the base
-328  element '{0}' has identity constraint that does not appear in corresponding element '{1}' in the base
-329  occurrence range of group is not a valid restriction of occurrence range of base group
-330  no complete functional mapping between particles
-331  forbidden restriction of any particle
-332  forbidden restriction of all compositor
-333  forbidden restriction of choice compositor
-334  forbidden restriction of sequence compositor
-335  occurrence range of wildcard is not a valid restriction of base wildcard's range
-336  wildcard is not a subset of corresponding wildcard in the base
-337  occurrence range of group is not a restriction of base wildcard's range
-338  no complete functional mapping between particles
-339  no complete functional mapping between particles
-340  invalid content spec node type
-341  NodeIDMap exceeds largest available size
-342  ProtoType has NULL class name
-343  ProtoType name length '{0}' differs from expected '{1}'
-344  ProtoType name '{0}' differs from expected '{1}'
-345  InputStream read '{0}' is less than required '{1}'
-346  InputStream read '{0}' is beyond available buffer size '{1}'
-347  storing violation
-348  store buffer violation '{0}', '{1}'
-349  object tag '{0}' exceeds load pool upper boundary '{1}'
-350  load pool size '{0}' does not tally with object count '{1}'
-351  loading violation
-352  load buffer violation '{0}', '{1}'
-353  invalid class index '{0}', '{1}'
-354  invalid checkFillBuffer size '{0}'
-355  invalid checkFlushBuffer size '{0}'
-356  invalid NULL pointer encountered '{0}'
-357  createObject fails
-358  object count '{0}' exceeds upper boundary '{1}'
-359  grammar pool is empty
-360  grammar pool is not empty
-361  string pool is not empty
-362  storer level '{0}' does not match loader level '{1}'
-363  undefined prefix in QName value '{0}'
+319  seconds value '{0}' must be between 0 and 60
+320  minutes value '{0}' must be between 0 and 59
+321  derived by restriction complex type has content while base type is empty
+322  namespace of element '{0}' is not allowed by wildcard in the base
+323  occurrence range of element '{0}' is not a valid restriction of base element's range
+324  element name/namespace in restriction does not match that of corresponding element in the base
+325  element '{0}' is nillable in the restriction while it is non-nillable in the base
+326  element '{0}' is either not fixed or is fixed to a different value compared to corresponding element in the base
+327  disallowed substitutions for element '{0}' are not a superset of those for corresponding element in the base
+328  element '{0}' has type that does not derive from type of corresponding element in the base
+329  element '{0}' has fewer identity constraints compared to corresponding element '{1}' in the base
+330  element '{0}' has identity constraint that does not appear in corresponding element '{1}' in the base
+331  occurrence range of group is not a valid restriction of occurrence range of base group
+332  no complete functional mapping between particles
+333  forbidden restriction of any particle
+334  forbidden restriction of all compositor
+335  forbidden restriction of choice compositor
+336  forbidden restriction of sequence compositor
+337  occurrence range of wildcard is not a valid restriction of base wildcard's range
+338  wildcard is not a subset of corresponding wildcard in the base
+339  occurrence range of group is not a restriction of base wildcard's range
+340  no complete functional mapping between particles
+341  no complete functional mapping between particles
+342  invalid content spec node type
+343  NodeIDMap exceeds largest available size
+344  ProtoType has NULL class name
+345  ProtoType name length '{0}' differs from expected '{1}'
+346  ProtoType name '{0}' differs from expected '{1}'
+347  InputStream read '{0}' is less than required '{1}'
+348  InputStream read '{0}' is beyond available buffer size '{1}'
+349  storing violation
+350  store buffer violation '{0}', '{1}'
+351  object tag '{0}' exceeds load pool upper boundary '{1}'
+352  load pool size '{0}' does not tally with object count '{1}'
+353  loading violation
+354  load buffer violation '{0}', '{1}'
+355  invalid class index '{0}', '{1}'
+356  invalid checkFillBuffer size '{0}'
+357  invalid checkFlushBuffer size '{0}'
+358  invalid NULL pointer encountered '{0}'
+359  createObject fails
+360  object count '{0}' exceeds upper boundary '{1}'
+361  grammar pool is empty
+362  grammar pool is not empty
+363  string pool is not empty
+364  storer level '{0}' does not match loader level '{1}'
+365  undefined prefix in QName value '{0}'
 
 
 $set 4
