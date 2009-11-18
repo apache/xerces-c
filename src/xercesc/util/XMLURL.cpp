@@ -635,7 +635,7 @@ BinInputStream* XMLURL::makeNewStream() const
                 realPath[i] = chNull;
                 end = i;
 
-                if (percentIndex + 1 < end)
+                if (((XMLSize_t)(percentIndex + 1)) < end)
                   percentIndex = XMLString::indexOf(realPath, chPercent, percentIndex + 1, fMemoryManager);
                 else
                   percentIndex = -1;

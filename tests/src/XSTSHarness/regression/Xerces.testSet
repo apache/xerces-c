@@ -300,7 +300,6 @@
 			<current status="accepted" date="2009-11-18"/>
 		</schemaTest>
 		<instanceTest name="XERCESC-1263-2">
-		        <schemaDocument xlink:href="./XERCESC-1263/test.xsd"/>
 			<instanceDocument xlink:href="./XERCESC-1263/test.xml"/>
 			<expected validity="valid"/>
 			<current status="accepted" date="2009-11-18"/>
