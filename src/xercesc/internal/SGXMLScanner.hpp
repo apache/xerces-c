@@ -236,8 +236,8 @@ private :
         ,       XMLBuffer&          toFill
     );
     void scanRawAttrListforNameSpaces(XMLSize_t attCount);
-    void parseSchemaLocation(const XMLCh* const schemaLocationStr);
-    void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
+    void parseSchemaLocation(const XMLCh* const schemaLocationStr, bool ignoreLoadSchema = false);
+    void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri, bool ignoreLoadSchema = false);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
     bool anyAttributeValidation(SchemaAttDef* attWildCard,
                                 unsigned int uriId,

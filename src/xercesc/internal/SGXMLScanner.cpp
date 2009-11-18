@@ -1167,9 +1167,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         && (fExternalSchemaLocation || fExternalNoNamespaceSchemaLocation)) {
 
         if (fExternalSchemaLocation)
-            parseSchemaLocation(fExternalSchemaLocation);
+            parseSchemaLocation(fExternalSchemaLocation, true);
         if (fExternalNoNamespaceSchemaLocation)
-            resolveSchemaGrammar(fExternalNoNamespaceSchemaLocation, XMLUni::fgZeroLenString);
+            resolveSchemaGrammar(fExternalNoNamespaceSchemaLocation, XMLUni::fgZeroLenString, true);
     }
 
     //  Make an initial pass through the list and find any xmlns attributes or
@@ -3514,7 +3514,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
     }
 }
 
-void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
+void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr, bool ignoreLoadSchema)
 {
     BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr, fMemoryManager);
     Janitor<BaseRefVectorOf<XMLCh> > janLoc(schemaLocation);
@@ -3527,12 +3527,12 @@ void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
         XMLBuffer normalBuf(1023, fMemoryManager);
         for(XMLSize_t i=0; i<size; i=i+2) {
             normalizeAttRawValue(SchemaSymbols::fgXSI_SCHEMALOCATION, schemaLocation->elementAt(i), normalBuf);
-            resolveSchemaGrammar(schemaLocation->elementAt(i+1), normalBuf.getRawBuffer());
+            resolveSchemaGrammar(schemaLocation->elementAt(i+1), normalBuf.getRawBuffer(), ignoreLoadSchema);
         }
     }
 }
 
-void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
+void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri, bool ignoreLoadSchema) {
 
     Grammar* grammar = 0;
 
@@ -3544,7 +3544,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType)
     {
-      if (fLoadSchema)
+      if (fLoadSchema || ignoreLoadSchema)
       {
         XSDDOMParser parser(0, fMemoryManager, 0);
 

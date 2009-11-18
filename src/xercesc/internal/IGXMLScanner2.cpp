@@ -1683,7 +1683,7 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
     }
 }
 
-void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
+void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr, bool ignoreLoadSchema)
 {
     XMLCh* locStr = XMLString::replicate(schemaLocationStr, fMemoryManager);
     ArrayJanitor<XMLCh> janLoc(locStr, fMemoryManager);
@@ -1698,12 +1698,12 @@ void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
         XMLBuffer normalBuf(1023, fMemoryManager);
         for(XMLSize_t i=0; i<size; i=i+2) {
             normalizeAttRawValue(SchemaSymbols::fgXSI_SCHEMALOCATION, fLocationPairs->elementAt(i), normalBuf);
-            resolveSchemaGrammar(fLocationPairs->elementAt(i+1), normalBuf.getRawBuffer());
+            resolveSchemaGrammar(fLocationPairs->elementAt(i+1), normalBuf.getRawBuffer(), ignoreLoadSchema);
         }
     }
 }
 
-void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
+void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri, bool ignoreLoadSchema) {
 
     Grammar* grammar = 0;
 
@@ -1715,7 +1715,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType)
     {
-      if (fLoadSchema)
+      if (fLoadSchema || ignoreLoadSchema)
       {
         XSDDOMParser parser(0, fMemoryManager, 0);
 
