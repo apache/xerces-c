@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -193,7 +193,7 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     CleanupType cleanup(this, &XMLURL::cleanUp);
 
 	try
-	{	
+	{
         setURL(baseURL, relativeURL);
 	}
     catch(const OutOfMemoryException&)
@@ -535,11 +535,11 @@ bool XMLURL::setURL(const XMLCh* const    baseURL
 	    //  parse the base URL string and conglomerate them.
 	    //
 	    if (isRelative() && baseURL && *baseURL)
-	    {		   
+	    {
 	        XMLURL basePart(fMemoryManager);
             if (parse(baseURL, basePart)  && conglomerateWithBase(basePart, false))
-            {    
-		        return true;			                    
+            {
+		        return true;
 		    }
 	    }
         else
@@ -635,7 +635,10 @@ BinInputStream* XMLURL::makeNewStream() const
                 realPath[i] = chNull;
                 end = i;
 
-                percentIndex = XMLString::indexOf(realPath, chPercent, percentIndex, fMemoryManager);
+                if (percentIndex + 1 < end)
+                  percentIndex = XMLString::indexOf(realPath, chPercent, percentIndex + 1, fMemoryManager);
+                else
+                  percentIndex = -1;
             }
 
 
@@ -1224,7 +1227,7 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 
     //
     //  The first thing we will do is to check for a file name, so that
-    //  we don't waste time thinking its a URL. If its in the form x:\ or x:/ 
+    //  we don't waste time thinking its a URL. If its in the form x:\ or x:/
     //  and x is an ASCII letter, then assume that's the deal.
     //
     if (((*urlText >= chLatin_A) && (*urlText <= chLatin_Z))
@@ -1485,4 +1488,3 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 }
 
 XERCES_CPP_NAMESPACE_END
-
