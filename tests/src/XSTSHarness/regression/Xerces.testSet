@@ -289,6 +289,23 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
+	<testGroup name="XERCESC-1263">
+		<annotation>
+			<documentation>Pre-loaded grammar and xsi:type in the root element</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1263"/>
+		<schemaTest name="XERCESC-1263-1">
+			<schemaDocument xlink:href="./XERCESC-1263/test.xsd"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-11-18"/>
+		</schemaTest>
+		<instanceTest name="XERCESC-1263-2">
+		        <schemaDocument xlink:href="./XERCESC-1263/test.xsd"/>
+			<instanceDocument xlink:href="./XERCESC-1263/test.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-11-18"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-1281">
 		<annotation>
 			<documentation>Regular expressions in schema should allow unescaped '-'</documentation>

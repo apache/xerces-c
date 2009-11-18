@@ -19,7 +19,6 @@
  * $Id$
  */
 
-
 // ---------------------------------------------------------------------------
 //  This file holds some of the grunt work methods of IGXMLScanner.cpp to keep
 //  it a little more readable.
@@ -171,7 +170,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  boolean flag that lets us quickly below know which we are dealing
         //  with.
         const bool isNSAttr = (uriId == fEmptyNamespaceId)?
-                                XMLString::equals(suffPtr, XMLUni::fgXMLNSString) : 
+                                XMLString::equals(suffPtr, XMLUni::fgXMLNSString) :
                                 (uriId == fXMLNSNamespaceId || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI));
 
 
@@ -990,7 +989,7 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
         //  Get the next character from the source. We have to watch for
         //  escaped characters (which are indicated by a 0xFFFF value followed
         //  by the char that was escaped.)
-        while ((nextCh = *srcPtr++)!=0) 
+        while ((nextCh = *srcPtr++)!=0)
         {
             switch(nextCh)
             {
@@ -1642,9 +1641,34 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                 else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCATION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
 
+                if ((!fValidator || !fValidator->handlesSchema()) &&
+                    (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE) ||
+                     XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL)))
+                {
+                  // If we are in the DTD mode, try to switch to the Schema
+                  // mode. For that we need to find any XML Schema grammar
+                  // that we can switch to. Such a grammar can only come
+                  // from the cache (if it came from the schemaLocation
+                  // attribute, we would be in the Schema mode already).
+                  //
+                  XMLGrammarPool* pool = fGrammarResolver->getGrammarPool ();
+                  RefHashTableOfEnumerator<Grammar> i = pool->getGrammarEnumerator ();
+
+                  while (i.hasMoreElements ())
+                  {
+                    Grammar& gr (i.nextElement ());
+
+                    if (gr.getGrammarType () == Grammar::SchemaGrammarType)
+                    {
+                      switchGrammar (gr.getTargetNamespace ());
+                      break;
+                    }
+                  }
+                }
+
                 if( fValidator && fValidator->handlesSchema() )
                 {
-                    if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE)) 
+                    if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE))
                     {
                         // normalize the attribute according to schema whitespace facet
                         DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME);
@@ -3223,7 +3247,7 @@ bool IGXMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVecto
         ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
         if ((type & 0x0f) == ContentSpecNode::Any ||
             (type & 0x0f) == ContentSpecNode::Any_Other ||
-            (type & 0x0f) == ContentSpecNode::Any_NS) 
+            (type & 0x0f) == ContentSpecNode::Any_NS)
         {
             if (type == ContentSpecNode::Any_Skip ||
                 type == ContentSpecNode::Any_NS_Skip ||
