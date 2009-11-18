@@ -713,11 +713,12 @@
             <Message Id="XPath_InvalidChar" Text="invalid character '{0}' in XPath expression"/>
             <Message Id="XPath_TokenNotSupported" Text="unsupported XPath token"/>
             <Message Id="XPath_FindSolution" Text="fractional values not supported in XPath expression"/>
-            <Message Id="DateTime_Assert_Buffer_Fail" Text="buffer not initialized"/>
+	    <Message Id="DateTime_dt_invalid"         Text="invalid dateTime value '{0}'"/>
             <Message Id="DateTime_dt_missingT"        Text="missing 'T' separator in dateTime value '{0}'"/>
             <Message Id="DateTime_gDay_invalid"       Text="invalid gDay value '{0}'"/>
             <Message Id="DateTime_gMth_invalid"       Text="invalid gMonth value '{0}'"/>
             <Message Id="DateTime_gMthDay_invalid"    Text="invalid gMonthDay value '{0}'"/>
+	    <Message Id="DateTime_dur_invalid"        Text="invalid duration value '{0}'"/>
             <Message Id="DateTime_dur_Start_dashP"    Text="duration value '{0}' must start with '-' or 'P'"/>
             <Message Id="DateTime_dur_noP"            Text="duration value '{0}' must contain 'P'"/>
             <Message Id="DateTime_dur_DashNotFirst"   Text="duration value '{0}' can contain '-' only as the first character"/>
@@ -730,11 +731,12 @@
             <Message Id="DateTime_time_incomplete"    Text="incomplete time value '{0}'"/>
             <Message Id="DateTime_time_invalid"       Text="invalid time value '{0}'"/>
             <Message Id="DateTime_ms_noDigit"         Text="expected fractional seconds after '.' in time value '{0}'"/>
-            <Message Id="DateTime_ym_incomplete"      Text="incomplete yearMonth value '{0}'"/>
-            <Message Id="DateTime_ym_invalid"         Text="year separator is missing or misplaced in yearMonth value '{0}'"/>
+            <Message Id="DateTime_ym_incomplete"      Text="incomplete gYearMonth value '{0}'"/>
+            <Message Id="DateTime_ym_invalid"         Text="invalid gYearMonth value '{0}'"/>
+	    <Message Id="DateTime_year_invalid"       Text="invalid gYear value '{0}'"/>
             <Message Id="DateTime_year_tooShort"      Text="year value '{0}' must follow 'CCYY' format"/>
-            <Message Id="DateTime_year_leadingZero"   Text="invalid leading zero in year value '{0}'"/>
-            <Message Id="DateTime_ym_noMonth"         Text="month component missing in yearMonth value '{0}'"/>
+            <Message Id="DateTime_year_leadingZero"   Text="invalid leading zero in gYear value '{0}'"/>
+            <Message Id="DateTime_ym_noMonth"         Text="month component missing in gYearMonth value '{0}'"/>
             <Message Id="DateTime_tz_noUTCsign"       Text="time zone expected in '{0}'"/>
             <Message Id="DateTime_tz_stuffAfterZ"     Text="unexpected text after 'Z' in time zone value '{0}'"/>
             <Message Id="DateTime_tz_invalid"         Text="invalid time zone value '{0}'"/>
