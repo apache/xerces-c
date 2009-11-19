@@ -19,7 +19,6 @@
  * $Id$
  */
 
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -2278,7 +2277,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         }
 
         if (fGrammarType == Grammar::SchemaGrammarType) {
-
             elemDecl = fGrammar->getElemDecl(
                 uriId, nameRawBuf, qnameRawBuf, currentScope
             );

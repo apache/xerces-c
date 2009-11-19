@@ -1737,7 +1737,14 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         grammar = fGrammarResolver->getGrammar(&theSchemaDescription);
     }
 
-    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType)
+    // If multi-import is enabled, make sure the existing grammar came
+    // from the import directive. Otherwise we may end up reloading
+    // the same schema that was previously loaded with loadGrammar, etc.
+    //
+    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType ||
+        (getHandleMultipleImports() &&
+         ((XMLSchemaDescription*)grammar->getGrammarDescription())->
+         getContextType () == XMLSchemaDescription::CONTEXT_IMPORT))
     {
       if (fLoadSchema || ignoreLoadSchema)
       {
@@ -1847,8 +1854,11 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     grammar = fGrammarResolver->getGrammar(newUri);
                 }
 
-                if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-
+                if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType ||
+                    (getHandleMultipleImports() &&
+                     ((XMLSchemaDescription*) grammar->getGrammarDescription())->
+                     getContextType () == XMLSchemaDescription::CONTEXT_IMPORT))
+                {
                     //  Since we have seen a grammar, set our validation flag
                     //  at this point if the validation scheme is auto
                     if (fValScheme == Val_Auto && !fValidate) {
@@ -1868,8 +1878,19 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         }
                     }
 
-                    SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
-                    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+                    bool grammarFound = grammar &&
+                      grammar->getGrammarType() == Grammar::SchemaGrammarType;
+
+                    SchemaGrammar* schemaGrammar;
+
+                    if (grammarFound) {
+                      schemaGrammar = (SchemaGrammar*) grammar;
+                    }
+                    else {
+                      schemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+                    }
+
+                    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) schemaGrammar->getGrammarDescription();
                     gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
                     gramDesc->setLocationHints(srcToFill->getSystemId());
 
@@ -1877,17 +1898,18 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     (
                         root
                         , fURIStringPool
-                        , grammar
+                        , schemaGrammar
                         , fGrammarResolver
                         , this
                         , srcToFill->getSystemId()
                         , fEntityHandler
                         , fErrorReporter
                         , fMemoryManager
+                        , grammarFound
                     );
 
                     if (fGrammarType == Grammar::DTDGrammarType) {
-                        fGrammar = grammar;
+                        fGrammar = schemaGrammar;
                         fGrammarType = Grammar::SchemaGrammarType;
                         fValidator->setGrammar(fGrammar);
                     }

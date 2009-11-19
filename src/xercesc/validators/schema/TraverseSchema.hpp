@@ -86,6 +86,7 @@ public:
         , XMLEntityHandler* const entityHandler
         , XMLErrorReporter* const errorReporter
         , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
+        , bool multipleImport = false
     );
 
     ~TraverseSchema();

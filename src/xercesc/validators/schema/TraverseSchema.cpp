@@ -160,7 +160,8 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
                               , const XMLCh* const     schemaURL
                               , XMLEntityHandler* const  entityHandler
                               , XMLErrorReporter* const errorReporter
-                              , MemoryManager* const    manager)
+                              , MemoryManager* const    manager
+                              , bool multipleImport)
     : fFullConstraintChecking(false)
     , fTargetNSURI(-1)
     , fEmptyNamespaceURI(-1)
@@ -215,7 +216,20 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
         if (fGrammarResolver && schemaRoot && fURIStringPool) {
 
             init();
-            preprocessSchema(schemaRoot, schemaURL);
+
+            if (multipleImport)
+            {
+              // If we are working on an existing schema, do some
+              // intitialization that is notherwise done by preprocessSchema.
+              //
+              fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
+              fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
+              fAttGroupRegistry = fSchemaGrammar->getAttGroupInfoRegistry();
+              fAttributeDeclRegistry = fSchemaGrammar->getAttributeDeclRegistry();
+              fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
+            }
+
+            preprocessSchema(schemaRoot, schemaURL, multipleImport);
             doTraverseSchema(schemaRoot);
         }
 
@@ -731,14 +745,15 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // Handle 'namespace' attribute
     // -----------------------------------------------------------------------
     const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE, DatatypeValidator::AnyURI);
+    const XMLCh* nameSpaceValue = nameSpace ? nameSpace : XMLUni::fgZeroLenString;
 
-    if (XMLString::equals(nameSpace, fTargetNSURIString)) {
+    if (XMLString::equals(nameSpaceValue, fTargetNSURIString)) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Import_1_1);
         return;
     }
 
-    if ((!nameSpace || !*nameSpace) && fTargetNSURI == fEmptyNamespaceURI) {
+    if (!*nameSpaceValue && fTargetNSURI == fEmptyNamespaceURI) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Import_1_2);
         return;
@@ -749,9 +764,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     Grammar* aGrammar = 0;
 
-    if (nameSpace)
     {
-        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpace);
+        XMLSchemaDescription* gramDesc =fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpaceValue);
         Janitor<XMLSchemaDescription> janName(gramDesc);
         gramDesc->setContextType(XMLSchemaDescription::CONTEXT_IMPORT);
         gramDesc->setLocationHints(getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION, DatatypeValidator::AnyURI));
@@ -761,18 +775,13 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     bool grammarFound = (aGrammar && (aGrammar->getGrammarType() == Grammar::SchemaGrammarType));
 
     if (grammarFound) {
-        addImportedNS(fURIStringPool->addOrFind(nameSpace));
+        addImportedNS(fURIStringPool->addOrFind(nameSpaceValue));
     }
 
     // ------------------------------------------------------------------
     // Get 'schemaLocation' attribute
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION, DatatypeValidator::AnyURI);
-
-    //if (!schemaLocation || !*schemaLocation) {
-    //    return;
-    //}
-    // With new XMLEntityResolver, it may resolve the nameSpace so call resolveSchemaLocation...
 
     // a bare <xs:import/> doesn't load anything
     if(!schemaLocation && !nameSpace)
@@ -789,8 +798,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
     // Nothing to do
     if (!srcToFill) {
-        if (!grammarFound && nameSpace) {
-            addImportedNS(fURIStringPool->addOrFind(nameSpace));
+        if (!grammarFound) {
+            addImportedNS(fURIStringPool->addOrFind(nameSpaceValue));
         }
 
         return;
@@ -855,9 +864,9 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
         const XMLCh* targetNSURIString = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
 
-        if (!XMLString::equals(targetNSURIString, nameSpace)) {
+        if (!XMLString::equals(targetNSURIString, nameSpaceValue)) {
             reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::ImportNamespaceDifference,
-                              schemaLocation, targetNSURIString, nameSpace);
+                              schemaLocation, targetNSURIString, nameSpaceValue);
         }
         else {
 

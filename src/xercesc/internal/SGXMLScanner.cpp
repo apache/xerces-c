@@ -2145,7 +2145,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  boolean flag that lets us quickly below know which we are dealing
         //  with.
         const bool isNSAttr = (uriId == fEmptyNamespaceId)?
-                                XMLString::equals(suffPtr, XMLUni::fgXMLNSString) : 
+                                XMLString::equals(suffPtr, XMLUni::fgXMLNSString) :
                                 (uriId == fXMLNSNamespaceId || XMLString::equals(getURIText(uriId), SchemaSymbols::fgURI_XSI));
 
         //  If its not a special case namespace attr of some sort, then we
@@ -3475,7 +3475,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
 
                 if( fValidator && fValidator->handlesSchema() )
                 {
-                    if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE)) 
+                    if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE))
                     {
                         // normalize the attribute according to schema whitespace facet
                         DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME);
@@ -3542,7 +3542,14 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         grammar = fGrammarResolver->getGrammar(&theSchemaDescription);
     }
 
-    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType)
+    // If multi-import is enabled, make sure the existing grammar came
+    // from the import directive. Otherwise we may end up reloading
+    // the same schema that was previously loaded with loadGrammar, etc.
+    //
+    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType ||
+        (getHandleMultipleImports() &&
+         ((XMLSchemaDescription*)grammar->getGrammarDescription())->
+         getContextType () == XMLSchemaDescription::CONTEXT_IMPORT))
     {
       if (fLoadSchema || ignoreLoadSchema)
       {
@@ -3653,8 +3660,11 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     grammar = fGrammarResolver->getGrammar(newUri);
                 }
 
-                if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-
+                if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType ||
+                    (getHandleMultipleImports() &&
+                     ((XMLSchemaDescription*) grammar->getGrammarDescription())->
+                     getContextType () == XMLSchemaDescription::CONTEXT_IMPORT))
+                {
                     //  Since we have seen a grammar, set our validation flag
                     //  at this point if the validation scheme is auto
                     if (fValScheme == Val_Auto && !fValidate) {
@@ -3662,8 +3672,20 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fElemStack.setValidationFlag(fValidate);
                     }
 
-                    grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
-                    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+                    bool grammarFound = grammar &&
+                      grammar->getGrammarType() == Grammar::SchemaGrammarType;
+
+                    SchemaGrammar* schemaGrammar;
+
+                    if (grammarFound) {
+                      schemaGrammar = (SchemaGrammar*) grammar;
+                    }
+                    else {
+                      schemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+                    }
+
+                    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) schemaGrammar->getGrammarDescription();
+
                     gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
                     gramDesc->setLocationHints(srcToFill->getSystemId());
 
@@ -3671,17 +3693,18 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     (
                         root
                         , fURIStringPool
-                        , (SchemaGrammar*) grammar
+                        , schemaGrammar
                         , fGrammarResolver
                         , this
                         , srcToFill->getSystemId()
                         , fEntityHandler
                         , fErrorReporter
                         , fMemoryManager
+                        , grammarFound
                     );
 
                     if (fGrammarType == Grammar::DTDGrammarType) {
-                        fGrammar = grammar;
+                        fGrammar = schemaGrammar;
                         fGrammarType = Grammar::SchemaGrammarType;
                         fValidator->setGrammar(fGrammar);
                     }

@@ -465,6 +465,50 @@
 			<current status="accepted" date="2008-02-13"/>
 		</instanceTest>
 	</testGroup>
+        <testGroup name="XERCESC-1659-1">
+		<annotation>
+			<documentation>Multi-import and schemaLocation ordering</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1659"/>
+		<instanceTest name="XERCESC-1659-1-1">
+			<instanceDocument xlink:href="./XERCESC-1659/test-1/test-users.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-11-19"/>
+		</instanceTest>
+	</testGroup>
+        <testGroup name="XERCESC-1659-2">
+		<annotation>
+			<documentation>Multi-import and schemaLocation ordering</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1659"/>
+		<instanceTest name="XERCESC-1659-2-1">
+			<instanceDocument xlink:href="./XERCESC-1659/test-2/test-users.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-11-19"/>
+		</instanceTest>
+	</testGroup>
+        <testGroup name="XERCESC-1659-3">
+		<annotation>
+			<documentation>Multi-import and schemaLocation ordering</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1659"/>
+		<instanceTest name="XERCESC-1659-3-1">
+			<instanceDocument xlink:href="./XERCESC-1659/test-3/test-users.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-11-19"/>
+		</instanceTest>
+	</testGroup>
+        <testGroup name="XERCESC-1659-4">
+		<annotation>
+			<documentation>Multi-import and schemaLocation ordering</documentation>
+		</annotation>
+		<documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1659"/>
+		<instanceTest name="XERCESC-1659-4-1">
+			<instanceDocument xlink:href="./XERCESC-1659/test-4/test-users.xml"/>
+			<expected validity="valid"/>
+			<current status="accepted" date="2009-11-19"/>
+		</instanceTest>
+	</testGroup>
 	<testGroup name="XERCESC-1707">
 		<annotation>
 			<documentation>Processing of not-declared-element with "xsi:type" under anyType element does not clear SchemaValidator::fXsiType</documentation>
