@@ -3856,8 +3856,21 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
-            XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+            const XMLCh* nsUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
+            Grammar* grammar = fGrammarResolver->getGrammar(nsUri);
+
+            bool grammarFound = grammar &&
+              grammar->getGrammarType() == Grammar::SchemaGrammarType &&
+              getHandleMultipleImports();
+
+            SchemaGrammar* schemaGrammar;
+
+            if (grammarFound)
+              schemaGrammar = (SchemaGrammar*) grammar;
+            else
+              schemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+
+            XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) schemaGrammar->getGrammarDescription();
             gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
             gramDesc->setLocationHints(src.getSystemId());
 
@@ -3865,18 +3878,19 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
             (
                 root
                 , fURIStringPool
-                , (SchemaGrammar*) grammar
+                , schemaGrammar
                 , fGrammarResolver
                 , this
                 , src.getSystemId()
                 , fEntityHandler
                 , fErrorReporter
                 , fMemoryManager
+                , grammarFound
             );
 
             if (fValidate) {
                 //  validate the Schema scan so far
-                fValidator->setGrammar(grammar);
+                fValidator->setGrammar(schemaGrammar);
                 fValidator->preContentValidation(false, true);
             }
 
@@ -3887,7 +3901,7 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
             if(getPSVIHandler())
                 fModel = fGrammarResolver->getXSModel();
 
-            return grammar;
+            return schemaGrammar;
         }
     }
 
