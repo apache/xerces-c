@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,12 +28,14 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+const XMLSize_t MAX_BUFFER_SIZE = 65536;
+
 LocalFileFormatTarget::LocalFileFormatTarget( const XMLCh* const   fileName
                                             , MemoryManager* const manager)
 : fSource(0)
 , fDataBuf(0)
 , fIndex(0)
-, fCapacity(1023)
+, fCapacity(1024)
 , fMemoryManager(manager)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
@@ -41,15 +43,8 @@ LocalFileFormatTarget::LocalFileFormatTarget( const XMLCh* const   fileName
     if (fSource == (FileHandle) XERCES_Invalid_File_Handle)
         ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
 
-    // Buffer is one larger than capacity, to allow for zero term
-    fDataBuf = (XMLByte*) fMemoryManager->allocate
-    (
-        (fCapacity+4) * sizeof(XMLByte)
-    );//new XMLByte[fCapacity+4];
-
-    // Keep it null terminated
-    fDataBuf[0] = XMLByte(0);
-
+    fDataBuf = (XMLByte*) fMemoryManager->allocate (
+      fCapacity * sizeof(XMLByte));
 }
 
 LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
@@ -57,7 +52,7 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
 : fSource(0)
 , fDataBuf(0)
 , fIndex(0)
-, fCapacity(1023)
+, fCapacity(1024)
 , fMemoryManager(manager)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName, manager);
@@ -65,14 +60,8 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
     if (fSource == (FileHandle) XERCES_Invalid_File_Handle)
         ThrowXMLwithMemMgr1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName, fMemoryManager);
 
-    // Buffer is one larger than capacity, to allow for zero term
-    fDataBuf = (XMLByte*) fMemoryManager->allocate
-    (
-        (fCapacity+4) * sizeof(XMLByte)
-    );//new XMLByte[fCapacity+4];
-
-    // Keep it null terminated
-    fDataBuf[0] = XMLByte(0);
+    fDataBuf = (XMLByte*) fMemoryManager->allocate (
+      fCapacity * sizeof(XMLByte));
 }
 
 LocalFileFormatTarget::~LocalFileFormatTarget()
@@ -80,10 +69,10 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
     try
     {
         // flush remaining buffer before destroy
-        flushBuffer();
+        XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
 
         if (fSource)
-            XMLPlatformUtils::closeFile(fSource, fMemoryManager);
+          XMLPlatformUtils::closeFile(fSource, fMemoryManager);
     }
     catch (...)
     {
@@ -95,86 +84,58 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
 
 void LocalFileFormatTarget::flush()
 {
-    flushBuffer();
+  XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
+  fIndex = 0;
 }
 
 void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
-                                     , const XMLSize_t      count
-                                     , XMLFormatter * const        )
+                                     , const XMLSize_t count
+                                     , XMLFormatter * const)
 {
-    if (count) {
-        if (insureCapacity(count))
+    if (count)
+    {
+      if (count < MAX_BUFFER_SIZE)
+      {
+        // If we don't have enough space, see if we can grow the buffer.
+        //
+        if (fIndex + count > fCapacity && fCapacity < MAX_BUFFER_SIZE)
+          insureCapacity (count);
+
+        // If still not enough space, flush the buffer.
+        //
+        if (fIndex + count > fCapacity)
         {
-            memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
-            fIndex += count;
+          XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
+          fIndex = 0;
         }
-        else
-        {
-            //flush whatever we have in the buffer and the incoming byte stream
-            flushBuffer();
-            XMLPlatformUtils::writeBufferToFile(fSource, count, toWrite, fMemoryManager);
-        }
+
+        memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
+        fIndex += count;
+      }
+      else
+        XMLPlatformUtils::writeBufferToFile(fSource, count, toWrite, fMemoryManager);
     }
 
     return;
 }
 
-void LocalFileFormatTarget::flushBuffer()
+void LocalFileFormatTarget::insureCapacity(const XMLSize_t extraNeeded)
 {
-    // Exception thrown in writeBufferToFile, if any, will be propagated to
-    // the XMLFormatter and then to the DOMLSSerializer, which may notify
-    // application through DOMErrorHandler, if any.
-    XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
-    fIndex = 0;
-    fDataBuf[0] = 0;
-    fDataBuf[fIndex + 1] = 0;
-    fDataBuf[fIndex + 2] = 0;
-    fDataBuf[fIndex + 3] = 0;
-}
+    XMLSize_t newCap = fCapacity * 2;
 
-/***
- *
- *   if the current capacity is not enough, and we can not have
- *   enough memory for the new buffer, we got to notify the caller 
- *
- ***/
-bool LocalFileFormatTarget::insureCapacity(const XMLSize_t extraNeeded)
-{
-    // If we can handle it, do nothing yet
-    if (fIndex + extraNeeded < fCapacity)
-        return true;
+    while (fIndex + extraNeeded > newCap)
+      newCap *= 2;
 
-    // Oops, not enough room. Calc new capacity and allocate new buffer
-    const XMLSize_t newCap = ((fIndex + extraNeeded) * 2);
-    XMLByte* newBuf = 0;
-
-    try
-    {
-        newBuf = (XMLByte*) fMemoryManager->allocate
-        (
-            (newCap+4) * sizeof(XMLByte)
-        );//new XMLByte[newCap+4];
-    }
-    catch(const OutOfMemoryException&)
-    {
-        return false;
-    }
-
-    assert(newBuf);
+    XMLByte* newBuf  = (XMLByte*) fMemoryManager->allocate (
+      newCap * sizeof(XMLByte));
 
     // Copy over the old stuff
-    memcpy(newBuf, fDataBuf, fCapacity * sizeof(XMLByte) + 4);
+    memcpy(newBuf, fDataBuf, fIndex * sizeof(XMLByte));
 
     // Clean up old buffer and store new stuff
-    fMemoryManager->deallocate(fDataBuf); //delete [] fDataBuf;
+    fMemoryManager->deallocate(fDataBuf);
     fDataBuf = newBuf;
     fCapacity = newCap;
-
-    // flush the buffer too
-    flushBuffer();
-    return true;
 }
 
 XERCES_CPP_NAMESPACE_END
-
-
