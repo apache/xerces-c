@@ -282,6 +282,9 @@ XMLScanner::~XMLScanner()
     cleanUp();
 }
 
+void XMLScanner::resetCachedGrammar ()
+{
+}
 
 void XMLScanner::setValidator(XMLValidator* const valToAdopt)
 {

@@ -1128,6 +1128,7 @@ Grammar* DOMLSParserImpl::loadGrammar(const DOMLSInput* source,
 void DOMLSParserImpl::resetCachedGrammarPool()
 {
     getGrammarResolver()->resetCachedGrammar();
+    getScanner()->resetCachedGrammar();
 }
 
 void DOMLSParserImpl::resetParse()

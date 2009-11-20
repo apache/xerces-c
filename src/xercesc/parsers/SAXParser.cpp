@@ -1345,6 +1345,7 @@ void SAXParser::resetInProgress()
 void SAXParser::resetCachedGrammarPool()
 {
     fGrammarResolver->resetCachedGrammar();
+    fScanner->resetCachedGrammar();
 }
 
 XERCES_CPP_NAMESPACE_END

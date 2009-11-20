@@ -3004,6 +3004,11 @@ Grammar* IGXMLScanner::loadGrammar(const   InputSource& src
     return loadedGrammar;
 }
 
+void IGXMLScanner::resetCachedGrammar ()
+{
+  fCachedSchemaInfoList->removeAll ();
+}
+
 Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
                                       const bool toCache)
 {

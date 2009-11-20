@@ -88,6 +88,8 @@ public :
         , const short           grammarType
         , const bool            toCache = false
     );
+
+    virtual void resetCachedGrammar ();
     virtual Grammar::GrammarType getCurrentGrammarType() const;
 
 protected:

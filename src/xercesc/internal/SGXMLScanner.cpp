@@ -1928,6 +1928,11 @@ Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
     return loadedGrammar;
 }
 
+void SGXMLScanner::resetCachedGrammar ()
+{
+  fCachedSchemaInfoList->removeAll ();
+}
+
 // ---------------------------------------------------------------------------
 //  SGXMLScanner: Private helper methods
 // ---------------------------------------------------------------------------

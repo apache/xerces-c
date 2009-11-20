@@ -343,6 +343,7 @@ void XercesDOMParser::resetParse()
 void XercesDOMParser::resetCachedGrammarPool()
 {
     getGrammarResolver()->resetCachedGrammar();
+    getScanner()->resetCachedGrammar();
 }
 
 XERCES_CPP_NAMESPACE_END
