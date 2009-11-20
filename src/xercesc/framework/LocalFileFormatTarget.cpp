@@ -113,7 +113,15 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
         fIndex += count;
       }
       else
+      {
+        if (fIndex)
+        {
+          XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
+          fIndex = 0;
+        }
+
         XMLPlatformUtils::writeBufferToFile(fSource, count, toWrite, fMemoryManager);
+      }
     }
 
     return;
