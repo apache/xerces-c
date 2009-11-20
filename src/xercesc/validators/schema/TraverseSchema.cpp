@@ -156,6 +156,8 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
                               , XMLStringPool* const   uriStringPool
                               , SchemaGrammar* const   schemaGrammar
                               , GrammarResolver* const grammarResolver
+                              , RefHash2KeysTableOf<SchemaInfo>* cachedSchemaInfoList
+                              , RefHash2KeysTableOf<SchemaInfo>* schemaInfoList
                               , XMLScanner* const      xmlScanner
                               , const XMLCh* const     schemaURL
                               , XMLEntityHandler* const  entityHandler
@@ -201,7 +203,8 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fRedefineComponents(0)
     , fIdentityConstraintNames(0)
     , fValidSubstitutionGroups(0)
-    , fSchemaInfoList(0)
+    , fSchemaInfoList(schemaInfoList)
+    , fCachedSchemaInfoList (cachedSchemaInfoList)
     , fParser(0)
     , fLocator(0)
     , fMemoryManager(manager)
@@ -608,7 +611,10 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     }
 
     const XMLCh* includeURL = srcToFill->getSystemId();
-    SchemaInfo* includeSchemaInfo = fSchemaInfoList->get(includeURL, fTargetNSURI);
+    SchemaInfo* includeSchemaInfo = fCachedSchemaInfoList->get(includeURL, fTargetNSURI);
+
+    if (!includeSchemaInfo && fSchemaInfoList != fCachedSchemaInfoList)
+      includeSchemaInfo = fSchemaInfoList->get(includeURL, fTargetNSURI);
 
     if (includeSchemaInfo) {
 
@@ -760,6 +766,11 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     }
 
     // ------------------------------------------------------------------
+    // Get 'schemaLocation' attribute
+    // ------------------------------------------------------------------
+    const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION, DatatypeValidator::AnyURI);
+
+    // ------------------------------------------------------------------
     // Resolve namespace to a grammar
     // ------------------------------------------------------------------
     Grammar* aGrammar = 0;
@@ -768,7 +779,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
         XMLSchemaDescription* gramDesc =fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpaceValue);
         Janitor<XMLSchemaDescription> janName(gramDesc);
         gramDesc->setContextType(XMLSchemaDescription::CONTEXT_IMPORT);
-        gramDesc->setLocationHints(getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION, DatatypeValidator::AnyURI));
+        gramDesc->setLocationHints(schemaLocation);
         aGrammar = fGrammarResolver->getGrammar(gramDesc);
     }
 
@@ -777,11 +788,6 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     if (grammarFound) {
         addImportedNS(fURIStringPool->addOrFind(nameSpaceValue));
     }
-
-    // ------------------------------------------------------------------
-    // Get 'schemaLocation' attribute
-    // ------------------------------------------------------------------
-    const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION, DatatypeValidator::AnyURI);
 
     // a bare <xs:import/> doesn't load anything
     if(!schemaLocation && !nameSpace)
@@ -807,15 +813,14 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
     Janitor<InputSource> janSrc(srcToFill);
     const XMLCh* importURL = srcToFill->getSystemId();
-    SchemaInfo* importSchemaInfo = 0;
+    unsigned int nameSpaceId = nameSpace ? fURIStringPool->addOrFind(nameSpace) : fEmptyNamespaceURI;
 
-    if (nameSpace)
-        importSchemaInfo = fSchemaInfoList->get(importURL, fURIStringPool->addOrFind(nameSpace));
-    else
-        importSchemaInfo = fSchemaInfoList->get(importURL, fEmptyNamespaceURI);
+    SchemaInfo* importSchemaInfo = fCachedSchemaInfoList->get(importURL, nameSpaceId);
+
+    if (!importSchemaInfo && fSchemaInfoList != fCachedSchemaInfoList)
+      importSchemaInfo = fSchemaInfoList->get(importURL, nameSpaceId);
 
     if (importSchemaInfo) {
-
         fSchemaInfo->addSchemaInfo(importSchemaInfo, SchemaInfo::IMPORT);
         addImportedNS(importSchemaInfo->getTargetNSURI());
         return;
@@ -8150,7 +8155,10 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         return false;
     }
 
-    SchemaInfo* redefSchemaInfo = fSchemaInfoList->get(includeURL, fTargetNSURI);
+    SchemaInfo* redefSchemaInfo = fCachedSchemaInfoList->get(includeURL, fTargetNSURI);
+
+    if (!redefSchemaInfo && fSchemaInfoList != fCachedSchemaInfoList)
+      redefSchemaInfo = fSchemaInfoList->get(includeURL, fTargetNSURI);
 
     if (redefSchemaInfo) {
 
@@ -8714,7 +8722,6 @@ void TraverseSchema::init() {
 
     fNonXSAttList = new (fMemoryManager) ValueVectorOf<DOMNode*>(4, fMemoryManager);
     fNotationRegistry = new (fMemoryManager) RefHash2KeysTableOf<XMLCh>(13, (bool) false, fMemoryManager);
-    fSchemaInfoList = new (fMemoryManager) RefHash2KeysTableOf<SchemaInfo>(29, fMemoryManager);
     fPreprocessedNodes = new (fMemoryManager) RefHashTableOf<SchemaInfo, PtrHasher>
     (
         29
@@ -8727,7 +8734,6 @@ void TraverseSchema::init() {
 
 void TraverseSchema::cleanUp() {
 
-    delete fSchemaInfoList;
     delete fCurrentTypeNameStack;
     delete fCurrentGroupStack;
 

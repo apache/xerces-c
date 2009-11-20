@@ -83,6 +83,8 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fModel(0)
     , fPSVIElement(0)
     , fErrorStack(0)
+    , fSchemaInfoList(0)
+    , fCachedSchemaInfoList (0)
 {
     CleanupType cleanup(this, &IGXMLScanner::cleanUp);
 
@@ -134,6 +136,8 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fModel(0)
     , fPSVIElement(0)
     , fErrorStack(0)
+    , fSchemaInfoList(0)
+    , fCachedSchemaInfoList (0)
 {
     CleanupType cleanup(this, &IGXMLScanner::cleanUp);
 
@@ -542,6 +546,9 @@ void IGXMLScanner::commonInit()
     fUndeclaredAttrRegistry = new (fMemoryManager) Hash2KeysSetOf<StringHasher>(7, fMemoryManager);
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 
+    fSchemaInfoList = new (fMemoryManager) RefHash2KeysTableOf<SchemaInfo>(29, fMemoryManager);
+    fCachedSchemaInfoList = new (fMemoryManager) RefHash2KeysTableOf<SchemaInfo>(29, fMemoryManager);
+
     // use fDTDValidator as the default validator
     if (!fValidator)
         fValidator = fDTDValidator;
@@ -564,6 +571,8 @@ void IGXMLScanner::cleanUp()
     delete fPSVIAttrList;
     delete fPSVIElement;
     delete fErrorStack;
+    delete fSchemaInfoList;
+    delete fCachedSchemaInfoList;
 }
 
 // ---------------------------------------------------------------------------

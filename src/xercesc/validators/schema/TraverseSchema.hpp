@@ -81,6 +81,8 @@ public:
         , XMLStringPool* const    uriStringPool
         , SchemaGrammar* const    schemaGrammar
         , GrammarResolver* const  grammarResolver
+        , RefHash2KeysTableOf<SchemaInfo>* cachedSchemaInfoList
+        , RefHash2KeysTableOf<SchemaInfo>* schemaInfoList
         , XMLScanner* const       xmlScanner
         , const XMLCh* const      schemaURL
         , XMLEntityHandler* const entityHandler
@@ -770,6 +772,7 @@ private:
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
     RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
     RefHash2KeysTableOf<SchemaInfo>*               fSchemaInfoList;
+    RefHash2KeysTableOf<SchemaInfo>*               fCachedSchemaInfoList;
     XSDDOMParser*                                  fParser;
     XSDErrorReporter                               fXSDErrorReporter;
     XSDLocator*                                    fLocator;

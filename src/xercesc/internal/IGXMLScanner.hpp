@@ -25,9 +25,11 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/NameIdPool.hpp>
+#include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
 #include <xercesc/util/Hash2KeysSetOf.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
+#include <xercesc/validators/schema/SchemaInfo.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -248,9 +250,13 @@ private :
     //      start tag where they were utilized.
     // fUndeclaredAttrRegistry
     //      set of attr QNames to detect duplicates
-    //  fPSVIAttrList
+    // fPSVIAttrList
     //      PSVI attribute list implementation that needs to be
     //      filled when a PSVIHandler is registered
+    // fSchemaInfoList
+    //      Transient schema info list that is passed to TraverseSchema instances.
+    // fCachedSchemaInfoList
+    //      Cached Schema info list that is passed to TraverseSchema instances.
     //
     // -----------------------------------------------------------------------
     bool                                    fSeeXsi;
@@ -277,6 +283,8 @@ private :
     PSVIElement*                            fPSVIElement;
     ValueStackOf<bool>*                     fErrorStack;
     PSVIElemContext                         fPSVIElemContext;
+    RefHash2KeysTableOf<SchemaInfo>*        fSchemaInfoList;
+    RefHash2KeysTableOf<SchemaInfo>*        fCachedSchemaInfoList;
 };
 
 inline const XMLCh* IGXMLScanner::getName() const

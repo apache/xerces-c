@@ -24,7 +24,6 @@
 //  it a little more readable.
 // ---------------------------------------------------------------------------
 
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -1148,7 +1147,6 @@ bool IGXMLScanner::normalizeAttRawValue( const   XMLCh* const        attrName
 //  upon successful return from here we are ready to go.
 void IGXMLScanner::scanReset(const InputSource& src)
 {
-
     //  This call implicitly tells us that we are going to reuse the scanner
     //  if it was previously used. So tell the validator to reset itself.
     //
@@ -1158,6 +1156,10 @@ void IGXMLScanner::scanReset(const InputSource& src)
     //          required to insure that files are closed.
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
+
+    // Clear transient schema info list.
+    //
+    fSchemaInfoList->removeAll ();
 
     // fModel may need updating, as fGrammarResolver could have cleaned it
     if(fModel && getPSVIHandler())
@@ -1739,9 +1741,13 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 
     // If multi-import is enabled, make sure the existing grammar came
     // from the import directive. Otherwise we may end up reloading
-    // the same schema that was previously loaded with loadGrammar, etc.
+    // the same schema that came from the external grammar pool. Ideally,
+    // we would move fSchemaInfoList to XMLGrammarPool so that it survives
+    // the destruction of the scanner in which case we could rely on the
+    // same logic we use to weed out duplicate schemas below.
     //
-    if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType ||
+    if (!grammar ||
+        grammar->getGrammarType() == Grammar::DTDGrammarType ||
         (getHandleMultipleImports() &&
          ((XMLSchemaDescription*)grammar->getGrammarDescription())->
          getContextType () == XMLSchemaDescription::CONTEXT_IMPORT))
@@ -1826,6 +1832,26 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         // Put a janitor on the input source
         Janitor<InputSource> janSrc(srcToFill);
 
+        // Check if this exact schema has already been seen.
+        //
+        const XMLCh* sysId = srcToFill->getSystemId();
+        unsigned int uriId = (uri && *uri) ? fURIStringPool->addOrFind(uri) : fEmptyNamespaceId;
+        SchemaInfo* importSchemaInfo = 0;
+
+        if (fUseCachedGrammar)
+          importSchemaInfo = fCachedSchemaInfoList->get(sysId, uriId);
+
+        if (!importSchemaInfo && !fToCacheGrammar)
+          importSchemaInfo = fSchemaInfoList->get(sysId, uriId);
+
+        if (importSchemaInfo)
+        {
+          // We haven't added any new grammars so it is safe to just
+          // return.
+          //
+          return;
+        }
+
         // Should just issue warning if the schema is not found
         bool flag = srcToFill->getIssueFatalErrorIfNotFound();
         srcToFill->setIssueFatalErrorIfNotFound(false);
@@ -1846,19 +1872,38 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             if (root != 0)
             {
                 const XMLCh* newUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
+                bool newGrammar = false;
                 if (!XMLString::equals(newUri, uri)) {
                     if (fValidate || fValScheme == Val_Auto) {
                         fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
                     }
 
                     grammar = fGrammarResolver->getGrammar(newUri);
+                    newGrammar = true;
                 }
 
-                if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType ||
+                if (!grammar ||
+                    grammar->getGrammarType() == Grammar::DTDGrammarType ||
                     (getHandleMultipleImports() &&
-                     ((XMLSchemaDescription*) grammar->getGrammarDescription())->
+                     ((XMLSchemaDescription*)grammar->getGrammarDescription())->
                      getContextType () == XMLSchemaDescription::CONTEXT_IMPORT))
                 {
+                    // If we switched namespace URI, recheck the schema info.
+                    //
+                    if (newGrammar)
+                    {
+                      unsigned int newUriId = (newUri && *newUri) ? fURIStringPool->addOrFind(newUri) : fEmptyNamespaceId;
+
+                      if (fUseCachedGrammar)
+                        importSchemaInfo = fCachedSchemaInfoList->get(sysId, newUriId);
+
+                      if (!importSchemaInfo && !fToCacheGrammar)
+                        importSchemaInfo = fSchemaInfoList->get(sysId, newUriId);
+
+                      if (importSchemaInfo)
+                        return;
+                    }
+
                     //  Since we have seen a grammar, set our validation flag
                     //  at this point if the validation scheme is auto
                     if (fValScheme == Val_Auto && !fValidate) {
@@ -1892,7 +1937,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
 
                     XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) schemaGrammar->getGrammarDescription();
                     gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
-                    gramDesc->setLocationHints(srcToFill->getSystemId());
+                    gramDesc->setLocationHints(sysId);
 
                     TraverseSchema traverseSchema
                     (
@@ -1900,8 +1945,10 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         , fURIStringPool
                         , schemaGrammar
                         , fGrammarResolver
+                        , fUseCachedGrammar ? fCachedSchemaInfoList : fSchemaInfoList
+                        , fToCacheGrammar ? fCachedSchemaInfoList : fSchemaInfoList
                         , this
-                        , srcToFill->getSystemId()
+                        , sysId
                         , fEntityHandler
                         , fErrorReporter
                         , fMemoryManager
@@ -2083,49 +2130,69 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
             const XMLCh* nsUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
             Grammar* grammar = fGrammarResolver->getGrammar(nsUri);
 
-            bool grammarFound = grammar &&
-              grammar->getGrammarType() == Grammar::SchemaGrammarType &&
-              getHandleMultipleImports();
+            // Check if this exact schema has already been seen.
+            //
+            const XMLCh* sysId = src.getSystemId();
+            SchemaInfo* importSchemaInfo = 0;
 
-            SchemaGrammar* schemaGrammar;
+            if (grammar)
+            {
+              if (nsUri && *nsUri)
+                importSchemaInfo = fCachedSchemaInfoList->get(sysId, fURIStringPool->addOrFind(nsUri));
+              else
+                importSchemaInfo = fCachedSchemaInfoList->get(sysId, fEmptyNamespaceId);
+            }
 
-            if (grammarFound)
-              schemaGrammar = (SchemaGrammar*) grammar;
-            else
-              schemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+            if (!importSchemaInfo)
+            {
+              bool grammarFound = grammar &&
+                grammar->getGrammarType() == Grammar::SchemaGrammarType &&
+                getHandleMultipleImports();
 
-            XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) schemaGrammar->getGrammarDescription();
-            gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
-            gramDesc->setLocationHints(src.getSystemId());
+              SchemaGrammar* schemaGrammar;
 
-            TraverseSchema traverseSchema
-            (
-                root
-                , fURIStringPool
-                , schemaGrammar
-                , fGrammarResolver
-                , this
-                , src.getSystemId()
-                , fEntityHandler
-                , fErrorReporter
-                , fMemoryManager
-                , grammarFound
-            );
+              if (grammarFound)
+                schemaGrammar = (SchemaGrammar*) grammar;
+              else
+                schemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+
+              XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) schemaGrammar->getGrammarDescription();
+              gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
+              gramDesc->setLocationHints(sysId);
+
+              TraverseSchema traverseSchema
+                (
+                  root
+                  , fURIStringPool
+                  , schemaGrammar
+                  , fGrammarResolver
+                  , fCachedSchemaInfoList
+                  , toCache ? fCachedSchemaInfoList : fSchemaInfoList
+                  , this
+                  , sysId
+                  , fEntityHandler
+                  , fErrorReporter
+                  , fMemoryManager
+                  , grammarFound
+                );
+
+              grammar = schemaGrammar;
+            }
 
             if (fValidate) {
-                //  validate the Schema scan so far
-                fValidator->setGrammar(schemaGrammar);
-                fValidator->preContentValidation(false, true);
+              //  validate the Schema scan so far
+              fValidator->setGrammar(grammar);
+              fValidator->preContentValidation(false, true);
             }
 
             if (toCache) {
-                fGrammarResolver->cacheGrammars();
+              fGrammarResolver->cacheGrammars();
             }
 
             if(getPSVIHandler())
-                fModel = fGrammarResolver->getXSModel();
+              fModel = fGrammarResolver->getXSModel();
 
-            return schemaGrammar;
+            return grammar;
         }
     }
 

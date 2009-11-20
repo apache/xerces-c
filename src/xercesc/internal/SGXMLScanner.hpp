@@ -25,9 +25,11 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
+#include <xercesc/util/RefHash2KeysTableOf.hpp>
 #include <xercesc/util/RefHash3KeysIdPool.hpp>
 #include <xercesc/util/Hash2KeysSetOf.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
+#include <xercesc/validators/schema/SchemaInfo.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 
@@ -163,9 +165,13 @@ protected:
     //      start tag where they were utilized.
     // fUndeclaredAttrRegistry
     //      set of namespaceId/localName pairs to detect duplicates
-    //  fPSVIAttrList
+    // fPSVIAttrList
     //      PSVI attribute list implementation that needs to be
     //      filled when a PSVIHandler is registered
+    // fSchemaInfoList
+    //      Transient schema info list that is passed to TraverseSchema instances.
+    // fCachedSchemaInfoList
+    //      Cached Schema info list that is passed to TraverseSchema instances.
     //
     // -----------------------------------------------------------------------
     bool                                    fSeeXsi;
@@ -190,6 +196,8 @@ protected:
     PSVIElement*                            fPSVIElement;
     ValueStackOf<bool>*                     fErrorStack;
     PSVIElemContext                         fPSVIElemContext;
+    RefHash2KeysTableOf<SchemaInfo>*        fSchemaInfoList;
+    RefHash2KeysTableOf<SchemaInfo>*        fCachedSchemaInfoList;
 
 private :
     // -----------------------------------------------------------------------
