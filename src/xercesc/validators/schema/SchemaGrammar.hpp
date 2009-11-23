@@ -243,6 +243,12 @@ public:
     unsigned int getScopeCount () const;
     void setScopeCount (unsigned int);
 
+    /**
+     * Get/set anonymous type count.
+     */
+    unsigned int getAnonTypeCount () const;
+    void setAnonTypeCount (unsigned int);
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -334,6 +340,7 @@ private:
     DatatypeValidatorFactory               fDatatypeRegistry;
 
     unsigned int                             fScopeCount;
+    unsigned int                             fAnonTypeCount;
 };
 
 
@@ -612,6 +619,18 @@ inline void
 SchemaGrammar::setScopeCount (unsigned int scopeCount)
 {
   fScopeCount = scopeCount;
+}
+
+inline unsigned int
+SchemaGrammar::getAnonTypeCount () const
+{
+  return fAnonTypeCount;
+}
+
+inline void
+SchemaGrammar::setAnonTypeCount (unsigned int count)
+{
+  fAnonTypeCount = count;
 }
 
 XERCES_CPP_NAMESPACE_END

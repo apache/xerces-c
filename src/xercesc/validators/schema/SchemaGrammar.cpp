@@ -59,6 +59,7 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fValidated(false)
     , fDatatypeRegistry(manager)
     , fScopeCount (0)
+    , fAnonTypeCount (0)
 {
     CleanupType cleanup(this, &SchemaGrammar::cleanUp);
 

@@ -169,7 +169,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fEmptyNamespaceURI(-1)
     , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
     , fScopeCount(schemaGrammar->getScopeCount ())
-    , fAnonXSTypeCount(0)
+    , fAnonXSTypeCount(schemaGrammar->getAnonTypeCount ())
     , fCircularCheckIndex(0)
     , fTargetNSURIString(0)
     , fDatatypeRegistry(0)
@@ -235,11 +235,12 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
             preprocessSchema(schemaRoot, schemaURL, multipleImport);
             doTraverseSchema(schemaRoot);
 
-            // Store the scope count in case we need to add more to this
-            // grammar (multi-import case). schemaGrammar and fSchemaGrammar
-            // should be the same here.
+            // Store the scope and anon type counts in case we need to add
+            // more to this grammar (multi-import case). schemaGrammar and
+            // fSchemaGrammar should be the same here.
             //
             fSchemaGrammar->setScopeCount (fScopeCount);
+            fSchemaGrammar->setAnonTypeCount (fAnonXSTypeCount);
         }
 
     }
@@ -885,6 +886,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
             // --------------------------------------------------------
             SchemaInfo* saveInfo = fSchemaInfo;
             fSchemaGrammar->setScopeCount (fScopeCount);
+            fSchemaGrammar->setAnonTypeCount (fAnonXSTypeCount);
             if (grammarFound) {
                 fSchemaGrammar = (SchemaGrammar*) aGrammar;
             }
@@ -892,6 +894,8 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
                 fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
             }
             fScopeCount = fSchemaGrammar->getScopeCount ();
+            fAnonXSTypeCount = fSchemaGrammar->getAnonTypeCount ();
+
             XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) fSchemaGrammar->getGrammarDescription();
             gramDesc->setContextType(XMLSchemaDescription::CONTEXT_IMPORT);
             gramDesc->setLocationHints(importURL);
@@ -6940,8 +6944,11 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         int targetNSURI = toRestore->getTargetNSURI();
 
         fSchemaGrammar->setScopeCount (fScopeCount);
+        fSchemaGrammar->setAnonTypeCount (fAnonXSTypeCount);
+
         fSchemaGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(toRestore->getTargetNSURIString());
         fScopeCount = fSchemaGrammar->getScopeCount ();
+        fAnonXSTypeCount = fSchemaGrammar->getAnonTypeCount ();
 
         fTargetNSURI = targetNSURI;
         fCurrentScope = saveScope;
