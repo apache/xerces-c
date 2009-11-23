@@ -71,11 +71,11 @@ DOMDeepNodeListPool<TVal, THasher>::DOMDeepNodeListPool( const XMLSize_t modulus
     fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHasher(hasher)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
     , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fHasher(hasher)
 {
     initialize(modulus);
 
@@ -246,7 +246,7 @@ DOMDeepNodeListPool<TVal, THasher>::getByKey(const void* const key1, const XMLCh
 
 template <class TVal, class THasher>
 TVal*
-DOMDeepNodeListPool<TVal, THasher>::getById(const unsigned int elemId)
+DOMDeepNodeListPool<TVal, THasher>::getById(const XMLSize_t elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -257,7 +257,7 @@ DOMDeepNodeListPool<TVal, THasher>::getById(const unsigned int elemId)
 
 template <class TVal, class THasher>
 const TVal*
-DOMDeepNodeListPool<TVal, THasher>::getById(const unsigned int elemId) const
+DOMDeepNodeListPool<TVal, THasher>::getById(const XMLSize_t elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -270,7 +270,7 @@ DOMDeepNodeListPool<TVal, THasher>::getById(const unsigned int elemId) const
 //  DOMDeepNodeListPool: Putters
 // ---------------------------------------------------------------------------
 template <class TVal, class THasher>
-unsigned int
+XMLSize_t
 DOMDeepNodeListPool<TVal, THasher>::put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const valueToAdopt)
 {
     // First see if the key exists already
@@ -344,7 +344,7 @@ DOMDeepNodeListPool<TVal, THasher>::put(void* key1, XMLCh* key2, XMLCh* key3, TV
         fIdPtrs = newArray;
         fIdPtrsCount = newCount;
     }
-    const unsigned int retId = ++fIdCounter;
+    const XMLSize_t retId = ++fIdCounter;
     fIdPtrs[retId] = valueToAdopt;
 
     // Return the id that we gave to this element

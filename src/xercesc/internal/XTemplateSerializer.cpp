@@ -2168,7 +2168,7 @@ void XTemplateSerializer::storeObject(NameIdPool<DTDElementDecl>* const objToSto
     {
         NameIdPoolEnumerator<DTDElementDecl> e(objToStore, objToStore->getMemoryManager());
 
-        serEng<<e.size();
+        serEng<<(unsigned int)e.size();
 
         while (e.hasMoreElements())
         {
@@ -2221,7 +2221,7 @@ void XTemplateSerializer::storeObject(NameIdPool<DTDEntityDecl>* const objToStor
     {
         NameIdPoolEnumerator<DTDEntityDecl> e(objToStore, objToStore->getMemoryManager());
 
-        serEng<<e.size();
+        serEng<<(unsigned int)e.size();
 
         while (e.hasMoreElements())
         {
@@ -2273,7 +2273,7 @@ void XTemplateSerializer::storeObject(NameIdPool<XMLNotationDecl>* const objToSt
     {
         NameIdPoolEnumerator<XMLNotationDecl> e(objToStore, objToStore->getMemoryManager());
 
-        serEng<<e.size();
+        serEng<<(unsigned int)e.size();
 
         while (e.hasMoreElements())
         {

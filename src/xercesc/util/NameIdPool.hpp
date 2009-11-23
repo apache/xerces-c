@@ -67,8 +67,8 @@ public :
     // -----------------------------------------------------------------------
     NameIdPool
     (
-        const   unsigned int    hashModulus
-        , const unsigned int    initSize = 128
+        const   XMLSize_t       hashModulus
+        , const XMLSize_t       initSize = 128
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -87,8 +87,8 @@ public :
     // -----------------------------------------------------------------------
     TElem* getByKey(const XMLCh* const key);
     const TElem* getByKey(const XMLCh* const key) const;
-    TElem* getById(const unsigned int elemId);
-    const TElem* getById(const unsigned int elemId) const;
+    TElem* getById(const XMLSize_t elemId);
+    const TElem* getById(const XMLSize_t elemId) const;
 
     MemoryManager* getMemoryManager() const;
     // -----------------------------------------------------------------------
@@ -97,7 +97,7 @@ public :
     //  Dups are not allowed and cause an IllegalArgumentException. The id
     //  of the new element is returned.
     // -----------------------------------------------------------------------
-    unsigned int put(TElem* const valueToAdopt);
+    XMLSize_t put(TElem* const valueToAdopt);
 
 
 protected :
@@ -136,10 +136,10 @@ private :
     //
     // -----------------------------------------------------------------------
     MemoryManager*                  fMemoryManager;
-    RefHashTableOf<TElem>           fBucketList;
     TElem**                         fIdPtrs;
-    unsigned int                    fIdPtrsCount;
-    unsigned int                    fIdCounter;
+    XMLSize_t                       fIdPtrsCount;
+    XMLSize_t                       fIdCounter;
+    RefHashTableOf<TElem>           fBucketList;
 };
 
 
@@ -180,7 +180,7 @@ public :
     bool hasMoreElements() const;
     TElem& nextElement();
     void Reset();
-    unsigned int  size()  const;
+    XMLSize_t size()  const;
 
 private :
     // -----------------------------------------------------------------------
@@ -193,7 +193,7 @@ private :
     //  fToEnum
     //      The name id pool that is being enumerated.
     // -----------------------------------------------------------------------
-    unsigned int            fCurIndex;
+    XMLSize_t               fCurIndex;
     NameIdPool<TElem>*      fToEnum;
     MemoryManager*          fMemoryManager;
 };

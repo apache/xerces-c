@@ -62,8 +62,8 @@ Hash2KeysSetOf<THasher>::Hash2KeysSetOf(
     , fBucketList(0)
     , fHashModulus(modulus)
     , fCount(0)
-    , fHasher (hasher)
     , fAvailable(0)
+    , fHasher (hasher)
 {
     initialize(modulus);
 }

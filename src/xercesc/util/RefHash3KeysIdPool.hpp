@@ -196,10 +196,10 @@ private:
     bool                                fAdoptedElems;
     RefHash3KeysTableBucketElem<TVal>** fBucketList;
     XMLSize_t                           fHashModulus;
-    THasher                             fHasher;
     TVal**                              fIdPtrs;
     XMLSize_t                           fIdPtrsCount;
     XMLSize_t                           fIdCounter;
+    THasher                             fHasher;
 };
 
 

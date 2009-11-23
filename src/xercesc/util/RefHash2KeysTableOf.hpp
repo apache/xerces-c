@@ -170,7 +170,7 @@ private:
     RefHash2KeysTableBucketElem<TVal>** fBucketList;
     XMLSize_t                           fHashModulus;
     XMLSize_t                           fCount;
-    THasher				fHasher;
+    THasher                             fHasher;
 };
 
 

@@ -135,8 +135,8 @@ private:
     Hash2KeysSetBucketElem**            fBucketList;
     XMLSize_t                           fHashModulus;
     XMLSize_t                           fCount;
-    THasher				                fHasher;
     Hash2KeysSetBucketElem*             fAvailable;
+    THasher				                fHasher;
 };
 
 

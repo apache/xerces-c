@@ -73,10 +73,10 @@ RefHash3KeysIdPool<TVal, THasher>::RefHash3KeysIdPool(
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHasher(hasher)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
+    , fHasher(hasher)
 {
     initialize(modulus);
 
@@ -130,10 +130,10 @@ RefHash3KeysIdPool<TVal, THasher>::RefHash3KeysIdPool(
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
-    , fHasher(hasher)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
+    , fHasher(hasher)
 {
     initialize(modulus);
 

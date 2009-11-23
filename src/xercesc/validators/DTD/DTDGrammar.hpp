@@ -163,7 +163,7 @@ public:
     // -----------------------------------------------------------------------
     //  Content management methods
     // -----------------------------------------------------------------------
-    unsigned int putEntityDecl(DTDEntityDecl* const entityDecl) const;
+    XMLSize_t putEntityDecl(DTDEntityDecl* const entityDecl) const;
 
     /***
      * Support for Serialization/De-serialization
@@ -275,7 +275,7 @@ inline const NameIdPool<DTDEntityDecl>* DTDGrammar::getEntityDeclPool() const
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
-inline unsigned int DTDGrammar::putEntityDecl(DTDEntityDecl* const entityDecl)   const
+inline XMLSize_t DTDGrammar::putEntityDecl(DTDEntityDecl* const entityDecl)   const
 {
     return fEntityDeclPool->put(entityDecl);
 }

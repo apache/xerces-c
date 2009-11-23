@@ -39,14 +39,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  NameIdPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
-NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
-                             , const unsigned int initSize
+NameIdPool<TElem>::NameIdPool( const XMLSize_t      hashModulus
+                             , const XMLSize_t      initSize
                              , MemoryManager* const manager) :
     fMemoryManager(manager)
-    , fBucketList(hashModulus, manager)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
+    , fBucketList(hashModulus, manager)
 {
     if (!hashModulus)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, fMemoryManager);
@@ -119,7 +119,7 @@ getByKey(const XMLCh* const key) const
 
 template <class TElem>
 inline TElem* NameIdPool<TElem>::
-getById(const unsigned int elemId)
+getById(const XMLSize_t elemId)
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -130,7 +130,7 @@ getById(const unsigned int elemId)
 
 template <class TElem>
 inline const TElem* NameIdPool<TElem>::
-getById(const unsigned int elemId) const
+getById(const XMLSize_t elemId) const
 {
     // If its either zero or beyond our current id, its an error
     if (!elemId || (elemId > fIdCounter))
@@ -149,7 +149,7 @@ inline MemoryManager* NameIdPool<TElem>::getMemoryManager() const
 //  NameIdPool: Setters
 // ---------------------------------------------------------------------------
 template <class TElem>
-unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
+XMLSize_t NameIdPool<TElem>::put(TElem* const elemToAdopt)
 {
     // First see if the key exists already. If so, its an error
     if(containsKey(elemToAdopt->getKey()))
@@ -172,7 +172,7 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
     if (fIdCounter + 1 == fIdPtrsCount)
     {
         // Create a new count 1.5 times larger and allocate a new array
-        unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
+        XMLSize_t newCount = (XMLSize_t)(fIdPtrsCount * 1.5);
         TElem** newArray = (TElem**) fMemoryManager->allocate
         (
             newCount * sizeof(TElem*)
@@ -186,7 +186,7 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
         fIdPtrs = newArray;
         fIdPtrsCount = newCount;
     }
-    const unsigned int retId = ++fIdCounter;
+    const XMLSize_t retId = ++fIdCounter;
     fIdPtrs[retId] = elemToAdopt;
 
     // Set the id on the passed element
@@ -276,7 +276,7 @@ template <class TElem> void NameIdPoolEnumerator<TElem>::Reset()
     fCurIndex = fToEnum->fIdCounter ? 1:0;
 }
 
-template <class TElem> unsigned int NameIdPoolEnumerator<TElem>::size() const
+template <class TElem> XMLSize_t NameIdPoolEnumerator<TElem>::size() const
 {
     return fToEnum->fIdCounter;
 }
