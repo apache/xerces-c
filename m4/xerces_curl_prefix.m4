@@ -59,12 +59,35 @@ AC_DEFUN([XERCES_CURL_PREFIX],
 		  CPPFLAGS=$orig_cppflags
 
                   if test x"$xerces_cv_curl_present" != x"no"; then
+
                     # Check that the library can be linked.
                     #
-                    orig_ldflags=$LDFLAGS
+                    AC_MSG_CHECKING([for curl_multi_init in -lcurl])
+
+		    orig_ldflags=$LDFLAGS
 		    LDFLAGS="$curl_libs $LDFLAGS"
-                    AC_CHECK_LIB([curl], [curl_multi_init], [], [xerces_cv_curl_present=no])
+
+                    AC_LINK_IFELSE(
+		    AC_LANG_SOURCE[[
+                    #include <curl/curl.h>
+                    #include <curl/multi.h>
+                    #include <curl/easy.h>
+
+                    int main ()
+                    {
+                      curl_multi_init();
+                      return 0;
+                    }
+		    ]],
+		    [], [xerces_cv_curl_present=no])
+
 		    LDFLAGS=$orig_ldflags
+
+                    if test x"$xerces_cv_curl_present" != x"no"; then
+		      AC_MSG_RESULT([yes])
+                    else
+                      AC_MSG_RESULT([no])
+                    fi
                   fi
 		fi
 	])
