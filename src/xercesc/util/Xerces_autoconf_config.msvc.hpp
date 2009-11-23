@@ -71,9 +71,9 @@
 #endif
 
 #ifdef _NATIVE_WCHAR_T_DEFINED
-#define XERCES_XMLCH_T      wchar_t
+#  define XERCES_XMLCH_T      wchar_t
 #else
-#define XERCES_XMLCH_T      unsigned short
+#  define XERCES_XMLCH_T      unsigned short
 #endif
 
 #define XERCES_SIZE_T       SIZE_T
@@ -86,20 +86,22 @@
 #define XERCES_LSTRSUPPORT          1
 
 #ifdef XERCES_STATIC_LIBRARY
-#define XERCES_PLATFORM_EXPORT
-#define XERCES_PLATFORM_IMPORT
+#  define XERCES_PLATFORM_EXPORT
+#  define XERCES_PLATFORM_IMPORT
 #else
-#define XERCES_PLATFORM_EXPORT __declspec(dllexport)
-#define XERCES_PLATFORM_IMPORT __declspec(dllimport)
-#define DLL_EXPORT
+#  define XERCES_PLATFORM_EXPORT __declspec(dllexport)
+#  define XERCES_PLATFORM_IMPORT __declspec(dllimport)
+#  define DLL_EXPORT
 #endif
 
 #define XERCES_MFC_SUPPORT
 
-#define XERCES_HAVE_INTRIN_H 1
-#define XERCES_HAVE_EMMINTRIN_H 1
-#define XERCES_HAVE_CPUID_INTRINSIC
-#define XERCES_HAVE_SSE2_INTRINSIC
+#if (_MSC_VER >= 1400)
+#  define XERCES_HAVE_INTRIN_H 1
+#  define XERCES_HAVE_EMMINTRIN_H 1
+#  define XERCES_HAVE_CPUID_INTRINSIC
+#  define XERCES_HAVE_SSE2_INTRINSIC
+#endif
 
 // ---------------------------------------------------------------------------
 //  XMLSize_t is the unsigned integral type.
@@ -140,7 +142,7 @@ typedef XMLUInt64			        XMLFileLoc;
 //  Force on the Xerces debug token if it is on in the build environment
 // ---------------------------------------------------------------------------
 #if defined(_DEBUG)
-#define XERCES_DEBUG
+#  define XERCES_DEBUG
 #endif
 
 #endif
