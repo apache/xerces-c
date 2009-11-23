@@ -3766,6 +3766,17 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         , grammarFound
                     );
 
+                    // Reset the now invalid schema roots in the collected
+                    // schema info entries.
+                    //
+                    {
+                      RefHash2KeysTableOfEnumerator<SchemaInfo> i (
+                        fToCacheGrammar ? fCachedSchemaInfoList : fSchemaInfoList);
+
+                      while (i.hasMoreElements ())
+                        i.nextElement().resetRoot ();
+                    }
+
                     if (fGrammarType == Grammar::DTDGrammarType) {
                         fGrammar = schemaGrammar;
                         fGrammarType = Grammar::SchemaGrammarType;
@@ -3969,6 +3980,17 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
                 );
 
               grammar = schemaGrammar;
+
+              // Reset the now invalid schema roots in the collected
+              // schema info entries.
+              //
+              {
+                RefHash2KeysTableOfEnumerator<SchemaInfo> i (
+                  toCache ? fCachedSchemaInfoList : fSchemaInfoList);
+
+                while (i.hasMoreElements ())
+                  i.nextElement().resetRoot ();
+              }
             }
 
             if (fValidate) {

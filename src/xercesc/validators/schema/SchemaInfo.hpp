@@ -113,6 +113,7 @@ public:
     void setBlockDefault(const int aValue);
     void setFinalDefault(const int aValue);
     void setElemAttrDefaultQualified(const unsigned short aValue);
+    void resetRoot ();
 
     // -----------------------------------------------------------------------
     //  Access methods
@@ -271,6 +272,11 @@ inline void SchemaInfo::setProcessed(const bool aValue) {
             fIncludeInfoList->elementAt(i)->clearTopLevelComponents();
         }
     }*/
+}
+
+inline void SchemaInfo::resetRoot ()
+{
+    fSchemaRootElement = 0;
 }
 
 // ---------------------------------------------------------------------------

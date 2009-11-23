@@ -223,7 +223,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
             if (multipleImport)
             {
               // If we are working on an existing schema, do some
-              // intitialization that is notherwise done by preprocessSchema.
+              // intitialization that is otherwise done by preprocessSchema.
               //
               fComplexTypeRegistry = fSchemaGrammar->getComplexTypeRegistry();
               fGroupRegistry = fSchemaGrammar->getGroupInfoRegistry();
@@ -5527,7 +5527,6 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
     }
 
     if (!typeInfo) {
-
         if (!XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
             XMLString::equals(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
@@ -5546,7 +5545,6 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
 
     // restore schema information
     restoreSchemaInfo(saveInfo, infoType, saveScope);
-
     return typeInfo;
 }
 

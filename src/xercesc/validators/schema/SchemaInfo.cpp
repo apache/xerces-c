@@ -114,6 +114,9 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
                                  const XMLCh* const name,
                                  SchemaInfo** enclosingSchema) {
 
+    if (fSchemaRootElement == 0)
+      return 0;
+
     SchemaInfo* currentInfo = this;
     DOMElement* child = getTopLevelComponent(compCategory, compName, name);
 
@@ -147,8 +150,8 @@ SchemaInfo::getTopLevelComponent(const unsigned short compCategory,
                                  const XMLCh* const compName,
                                  const XMLCh* const name) {
 
-    if (compCategory >= C_Count)
-        return 0;
+    if (fSchemaRootElement == 0 || compCategory >= C_Count)
+      return 0;
 
     DOMElement* child = XUtil::getFirstChildElement(fSchemaRootElement);
 
