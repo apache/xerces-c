@@ -234,6 +234,12 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
 
             preprocessSchema(schemaRoot, schemaURL, multipleImport);
             doTraverseSchema(schemaRoot);
+
+            // Store the scope count in case we need to add more to this
+            // grammar (multi-import case). schemaGrammar and fSchemaGrammar
+            // should be the same here.
+            //
+            fSchemaGrammar->setScopeCount (fScopeCount);
         }
 
     }
@@ -291,7 +297,6 @@ void TraverseSchema::doTraverseSchema(const DOMElement* const schemaRoot) {
 void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
                                       const XMLCh* const schemaURL,
                                       bool  multipleImport) {
-
     if (!multipleImport) {
         // Make sure namespace binding is defaulted
         const XMLCh* rootPrefix = schemaRoot->getPrefix();
