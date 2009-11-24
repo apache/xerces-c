@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -138,12 +138,15 @@ static XMLCh* convertToXMLCh( const UChar* const toConvert,
 // ---------------------------------------------------------------------------
 ICUTransService::ICUTransService(MemoryManager* manager)
 {
-#if (U_ICU_VERSION_MAJOR_NUM > 2 || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >= 6))
+  // Starting with ICU 3.4 we don't need to call init anymore.
+  //
+#if (U_ICU_VERSION_MAJOR_NUM > 2 || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >= 6)) && \
+  (U_ICU_VERSION_MAJOR_NUM < 3 || (U_ICU_VERSION_MAJOR_NUM == 3 && U_ICU_VERSION_MINOR_NUM < 4))
     UErrorCode errorCode=U_ZERO_ERROR;
     u_init(&errorCode);
     if(U_FAILURE(errorCode)) {
         XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
-    }    
+    }
 #endif
 
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
@@ -368,11 +371,11 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
                     , const XMLSize_t               blockSize
                     ,       MemoryManager* const    manager)
 {
-    //  
-    //  For encodings that end with "s390" we need to strip off the "s390" 
-    //  from the encoding name and add ",swaplfnl" to the encoding name	
-    //  that we pass into ICU on the ucnv_openU.  
-    //  
+    //
+    //  For encodings that end with "s390" we need to strip off the "s390"
+    //  from the encoding name and add ",swaplfnl" to the encoding name
+    //  that we pass into ICU on the ucnv_openU.
+    //
     XMLCh* encodingNameToUse = (XMLCh*) encodingName;
     XMLCh* workBuffer = 0;
 

@@ -199,7 +199,6 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
     {
         XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
-
 }
 
 ICUMsgLoader::~ICUMsgLoader()
