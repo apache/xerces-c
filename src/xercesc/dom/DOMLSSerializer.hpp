@@ -403,10 +403,10 @@ public:
      * the default to match the usual convention for text files in the
      * environment being used. Implementations must choose a default
      * sequence that matches one of those allowed by  2.11 "End-of-Line
-     * Handling". However, Xerces-C++ always uses LF ('\n') when this
+     * Handling". However, Xerces-C++ always uses LF when this
      * property is set to <code>null</code> since otherwise automatic
-     * translation of '\n' to '\r\n' on Windows for text files would
-     * result in such files containing '\r\r\n'. If you need Windows-style
+     * translation of LF to CR-LF on Windows for text files would
+     * result in such files containing CR-CR-LF. If you need Windows-style
      * end of line sequences in your output, consider writing to a file
      * opened in text mode or explicitly set this property to CR-LF.</dd>
      * <dt>CR</dt>

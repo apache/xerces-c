@@ -75,6 +75,7 @@ public:
       * @param  particleTerm
       * @param  minOccurs
       * @param  maxOccurs
+      * @param  unbounded
       * @param  manager     The configurable memory manager
       */
     XSParticle
