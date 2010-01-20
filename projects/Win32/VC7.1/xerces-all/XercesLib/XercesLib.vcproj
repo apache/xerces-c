@@ -403,9 +403,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\ArrayIndexOutOfBoundsException.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\AutoSense.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\Base64.cpp">
 			</File>
 			<File
@@ -1429,6 +1426,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp">
 			</File>
 			<File
@@ -1714,12 +1717,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarPoolImpl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLInternalErrorHandler.hpp">
