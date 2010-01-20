@@ -544,7 +544,7 @@ bool DFAContentModel::handleRepetitions(const QName* const curElem,
                     nextState = tempNextState;
                     Occurence* o = fCountingStates[nextState];
                     if (o != 0) {
-                        nextLoop = (elemIndex == o->elemIndex) ? 1 : 0;
+                      nextLoop = (elemIndex == XMLSize_t (o->elemIndex)) ? 1 : 0;
                     }
                 }
             }
@@ -557,7 +557,7 @@ bool DFAContentModel::handleRepetitions(const QName* const curElem,
                 // counting state, reset the counter.
                 o = fCountingStates[nextState];
                 if (o != 0) {
-                    nextLoop = (elemIndex == o->elemIndex) ? 1 : 0;
+                  nextLoop = (elemIndex == XMLSize_t (o->elemIndex)) ? 1 : 0;
                 }
             }
         }
@@ -568,7 +568,7 @@ bool DFAContentModel::handleRepetitions(const QName* const curElem,
                 // If we've already seen one instance of the looping
                 // particle set the counter to 1, otherwise set it
                 // to 0.
-                nextLoop = (elemIndex == o->elemIndex) ? 1 : 0;
+              nextLoop = (elemIndex == XMLSize_t (o->elemIndex)) ? 1 : 0;
             }
         }
     }
@@ -1041,11 +1041,11 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                 // list of places where the currently tested item can appear. When this occurs, the follow list of this parent item
                 // is added to the bitfield representing the next state.
                 // Both the bitfield and the list of places are sorted, so we can analyze them in two ways; either iterating over the
-                // parent items, testing the bitfield for the existence of the parent (N times a constant Tb), or by iterating over the 
+                // parent items, testing the bitfield for the existence of the parent (N times a constant Tb), or by iterating over the
                 // bitfield (restricted to the range of the sorted list of places), using a binary search to locate the leaf in the
                 // sorted list of places (M times log(N) testing operations Ts)
                 // Assuming that the time to test a bit is roughly the same of the time needed to compute the average of two integers,
-                // plus a couple of comparisons and additions, we compare N agains M*log(N) to decide which algorithm should be faster given 
+                // plus a couple of comparisons and additions, we compare N agains M*log(N) to decide which algorithm should be faster given
                 // the two sets
                 if(fNumItems <= setT->getBitCountInRange(fLeafIndexes[1], fLeafIndexes[fNumItems])*log((float)fNumItems))
                 {
@@ -1369,7 +1369,6 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode
             , fLeafCount
             , fMemoryManager
         );
-        CMLeaf* leaf=(CMLeaf*)retNode;
         fLeafList[curIndex] = new (fMemoryManager) CMLeaf
         (
             curNode->getElement()
@@ -1397,7 +1396,6 @@ CMNode* DFAContentModel::buildSyntaxTree(ContentSpecNode* const curNode
             , fLeafCount
             , fMemoryManager
         );
-        CMLeaf* leaf=(CMLeaf*)retNode;
         fLeafList[curIndex] = new (fMemoryManager) CMRepeatingLeaf
         (
             curNode->getFirst()->getElement()

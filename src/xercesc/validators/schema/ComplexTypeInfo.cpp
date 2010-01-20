@@ -98,7 +98,7 @@ void XMLInitializer::terminateComplexTypeInfo()
   ComplexTypeInfo::fAnyType = 0;
 }
 
-ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)
+ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int /*emptyNSId*/)
 {
     return fAnyType;
 }
@@ -288,12 +288,12 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     return newValue;
 }
 
-bool ComplexTypeInfo::useRepeatingLeafNodes(ContentSpecNode* particle) 
+bool ComplexTypeInfo::useRepeatingLeafNodes(ContentSpecNode* particle)
 {
     int maxOccurs = particle->getMaxOccurs();
     int minOccurs = particle->getMinOccurs();
     ContentSpecNode::NodeTypes type = particle->getType();
-    
+
     if (((type & 0x0f) == ContentSpecNode::Choice) ||  ((type & 0x0f) == ContentSpecNode::Sequence))
     {
         if (minOccurs != 1 || maxOccurs != 1) {
@@ -302,7 +302,7 @@ bool ComplexTypeInfo::useRepeatingLeafNodes(ContentSpecNode* particle)
                 ContentSpecNode* particle2 = particle->getFirst();
                 ContentSpecNode::NodeTypes type2 = particle2->getType();
                 return (((type2 == ContentSpecNode::Leaf) ||
-                        ((type2 & 0x0f) == ContentSpecNode::Any) || 
+                        ((type2 & 0x0f) == ContentSpecNode::Any) ||
                         ((type2 & 0x0f) == ContentSpecNode::Any_Other) ||
                         ((type2 & 0x0f) == ContentSpecNode::Any_NS)) &&
                         particle2->getMinOccurs() == 1 &&
@@ -347,7 +347,7 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(bool checkUPA)
         cmRet = new (fMemoryManager) MixedContentModel(false, aSpecNode, false, fMemoryManager);
     }
     else if (fContentType == SchemaElementDecl::Mixed_Complex ||
-             fContentType == SchemaElementDecl::Children) 
+             fContentType == SchemaElementDecl::Children)
     {
         bool isMixed = (fContentType == SchemaElementDecl::Mixed_Complex);
 
@@ -599,8 +599,8 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         );
     }
     // if what is being repeated is a leaf avoid expanding the tree
-    else if(bAllowCompactSyntax && 
-        (saveNode->getType()==ContentSpecNode::Leaf || 
+    else if(bAllowCompactSyntax &&
+        (saveNode->getType()==ContentSpecNode::Leaf ||
         (saveNode->getType() & 0x0f)==ContentSpecNode::Any ||
         (saveNode->getType() & 0x0f)==ContentSpecNode::Any_Other ||
         (saveNode->getType() & 0x0f)==ContentSpecNode::Any_NS))
@@ -616,7 +616,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         );
         retNode->setMinOccurs(minOccurs);
         retNode->setMaxOccurs(maxOccurs);
-        
+
         if(minOccurs==0)
             retNode = new (fMemoryManager) ContentSpecNode
             (
@@ -909,5 +909,3 @@ XERCES_CPP_NAMESPACE_END
 /**
   * End of file ComplexTypeInfo.cpp
   */
-
-

@@ -1071,7 +1071,7 @@ XMLSize_t    IconvGNUTranscoder::transcodeTo
     ,       XMLByte* const   toFill
     , const XMLSize_t        maxBytes
     ,       XMLSize_t&       charsEaten
-    , const UnRepOpts        options )
+    , const UnRepOpts        /*options*/ )
 {
     // Transcode FROM XMLCh
     char    tmpWBuff[gTempBuffArraySize];
@@ -1121,7 +1121,7 @@ bool IconvGNUTranscoder::canTranscodeTo
     unsigned int    srcCount = 1;
     if (toCheck & 0xFFFF0000) {
         XMLCh    ch1 = (toCheck >> 10) + 0xD800;
-        XMLCh    ch2 = toCheck & 0x3FF + 0xDC00;
+        XMLCh    ch2 = (toCheck & 0x3FF) + 0xDC00;
         xmlToMbs(&ch1, srcBuf, 1);
         xmlToMbs(&ch2, srcBuf + uChSize(), 1);
         srcCount++;
@@ -1138,5 +1138,3 @@ bool IconvGNUTranscoder::canTranscodeTo
 }
 
 XERCES_CPP_NAMESPACE_END
-
-

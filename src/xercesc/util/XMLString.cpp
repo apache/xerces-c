@@ -1715,8 +1715,7 @@ bool XMLString::isWSReplaced(const XMLCh* const toCheck)
 //    #xA  Line Feed
 //    #x9  TAB
 //
-void XMLString::replaceWS(XMLCh* toConvert
-                          , MemoryManager* const  manager)
+void XMLString::replaceWS(XMLCh* toConvert, MemoryManager* const)
 {
     // If no string, then its a OK
     if (( !toConvert ) || ( !*toConvert ))
@@ -1848,8 +1847,7 @@ void XMLString::collapseWS(XMLCh* toConvert
 //
 // remove whitespace
 //
-void XMLString::removeWS(XMLCh* toConvert
-                         , MemoryManager* const manager)
+void XMLString::removeWS(XMLCh* toConvert, MemoryManager* const)
 {
     // If no string, then its a failure
     if (( !toConvert ) || ( !*toConvert ))

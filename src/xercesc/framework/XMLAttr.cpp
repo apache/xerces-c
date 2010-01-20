@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ XMLAttr::XMLAttr(MemoryManager* const manager) :
     , fValueBufSz(0)
     , fValue(0)
     , fAttName(0)
-    , fMemoryManager(manager)  
+    , fMemoryManager(manager)
 {
     fAttName = new (fMemoryManager) QName(fMemoryManager);
 }
@@ -52,16 +52,16 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        attrValue
                     , const XMLAttDef::AttTypes type
                     , const bool                specified
-                    , MemoryManager* const      manager 
-                    , DatatypeValidator * datatypeValidator
-                    , const bool isSchema ):
+                    , MemoryManager* const      manager
+                    , DatatypeValidator*
+                    , const bool /*isSchema*/ ):
 
       fSpecified(specified)
     , fType(type)
     , fValueBufSz(0)
     , fValue(0)
     , fAttName(0)
-    , fMemoryManager(manager)   
+    , fMemoryManager(manager)
 {
     CleanupType cleanup(this, &XMLAttr::cleanUp);
 
@@ -89,16 +89,16 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
                     , const XMLCh* const        attrValue
                     , const XMLAttDef::AttTypes type
                     , const bool                specified
-                    , MemoryManager* const      manager 
-                    , DatatypeValidator * datatypeValidator
-                    , const bool isSchema ):
+                    , MemoryManager* const      manager
+                    , DatatypeValidator *
+                    , const bool /*isSchema*/ ):
 
       fSpecified(specified)
     , fType(type)
     , fValueBufSz(0)
     , fValue(0)
     , fAttName(0)
-    , fMemoryManager(manager)  
+    , fMemoryManager(manager)
 {
     CleanupType cleanup(this, &XMLAttr::cleanUp);
 
@@ -170,4 +170,3 @@ void XMLAttr::cleanUp()
 }
 
 XERCES_CPP_NAMESPACE_END
-

@@ -697,6 +697,8 @@ DOMElement * DOMElementImpl::getFirstElementChild() const
                         return e;
                 }
                 break;
+            default:
+                break;
         }
         n = n->getNextSibling();
     }
@@ -716,6 +718,8 @@ DOMElement * DOMElementImpl::getLastElementChild() const
                     if (e != NULL)
                         return e;
                 }
+                break;
+            default:
                 break;
         }
         n = n->getPreviousSibling();
@@ -737,6 +741,8 @@ DOMElement * DOMElementImpl::getNextElementSibling() const
                         return e;
                 }
                 break;
+            default:
+                break;
         }
         n = getNextLogicalSibling(n);
     }
@@ -757,6 +763,8 @@ DOMElement * DOMElementImpl::getPreviousElementSibling() const
                         return e;
                 }
                 break;
+            default:
+                break;
         }
         n = getPreviousLogicalSibling(n);
     }
@@ -774,7 +782,7 @@ XMLSize_t DOMElementImpl::getChildElementCount() const
     return count;
 }
 
-// Returns the first element node found from a 
+// Returns the first element node found from a
 // non-recursive in order traversal of the given node.
 DOMElement* DOMElementImpl::getFirstElementChild(const DOMNode* n) const
 {
@@ -784,7 +792,7 @@ DOMElement* DOMElementImpl::getFirstElementChild(const DOMNode* n) const
             return (DOMElement*) n;
         }
         DOMNode* next = n->getFirstChild();
-        while (next == NULL) {         
+        while (next == NULL) {
             if (top == n) {
                 break;
             }
@@ -801,7 +809,7 @@ DOMElement* DOMElementImpl::getFirstElementChild(const DOMNode* n) const
     return NULL;
 }
 
-// Returns the first element node found from a 
+// Returns the first element node found from a
 // non-recursive reverse order traversal of the given node.
 DOMElement* DOMElementImpl::getLastElementChild(const DOMNode* n) const
 {
@@ -811,7 +819,7 @@ DOMElement* DOMElementImpl::getLastElementChild(const DOMNode* n) const
             return (DOMElement*) n;
         }
         DOMNode* next = n->getLastChild();
-        while (next == NULL) {         
+        while (next == NULL) {
             if (top == n) {
                 break;
             }
@@ -832,8 +840,8 @@ DOMElement* DOMElementImpl::getLastElementChild(const DOMNode* n) const
 DOMNode* DOMElementImpl::getNextLogicalSibling(const DOMNode* n) const
 {
     DOMNode* next = n->getNextSibling();
-    // If "n" has no following sibling and its parent is an entity reference node we 
-    // need to continue the search through the following siblings of the entity 
+    // If "n" has no following sibling and its parent is an entity reference node we
+    // need to continue the search through the following siblings of the entity
     // reference as these are logically siblings of the given node.
     if (next == NULL) {
         DOMNode* parent = n->getParentNode();
@@ -852,8 +860,8 @@ DOMNode* DOMElementImpl::getNextLogicalSibling(const DOMNode* n) const
 DOMNode* DOMElementImpl::getPreviousLogicalSibling(const DOMNode* n) const
 {
     DOMNode* prev = n->getPreviousSibling();
-    // If "n" has no previous sibling and its parent is an entity reference node we 
-    // need to continue the search through the previous siblings of the entity 
+    // If "n" has no previous sibling and its parent is an entity reference node we
+    // need to continue the search through the previous siblings of the entity
     // reference as these are logically siblings of the given node.
     if (prev == NULL) {
         DOMNode* parent = n->getParentNode();

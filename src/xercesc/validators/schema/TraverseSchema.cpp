@@ -9219,7 +9219,7 @@ public:
         , const XMLCh* const        errDomain
         , const ErrTypes            type
         , const XMLCh* const        errorText
-        , const XMLCh* const        systemId
+        , const XMLCh* const        /*systemId*/
         , const XMLCh* const        publicId
         , const XMLFileLoc          lineNum
         , const XMLFileLoc          colNum

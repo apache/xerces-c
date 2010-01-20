@@ -63,13 +63,13 @@ static const XMLCh UTC_SET[]            = {UTC_STD_CHAR           //"Z+-"
                                          , UTC_NEG_CHAR
                                          , chNull};
 
-static const int YMD_MIN_SIZE    = 10;   // CCYY-MM-DD
-static const int YMONTH_MIN_SIZE = 7;    // CCYY_MM
-static const int TIME_MIN_SIZE   = 8;    // hh:mm:ss
-static const int TIMEZONE_SIZE   = 5;    // hh:mm
-static const int DAY_SIZE        = 5;    // ---DD
-//static const int MONTH_SIZE      = 6;    // --MM--
-static const int MONTHDAY_SIZE   = 7;    // --MM-DD
+static const XMLSize_t YMD_MIN_SIZE    = 10;   // CCYY-MM-DD
+static const XMLSize_t YMONTH_MIN_SIZE = 7;    // CCYY_MM
+static const XMLSize_t TIME_MIN_SIZE   = 8;    // hh:mm:ss
+static const XMLSize_t TIMEZONE_SIZE   = 5;    // hh:mm
+static const XMLSize_t DAY_SIZE        = 5;    // ---DD
+//static const XMLSize_t MONTH_SIZE      = 6;    // --MM--
+static const XMLSize_t MONTHDAY_SIZE   = 7;    // --MM-DD
 static const int NOT_FOUND       = -1;
 
 //define constants to be used in assigning default values for
@@ -865,7 +865,7 @@ void XMLDateTime::parseDuration()
         designator = true;
     }
 
-    if ( (fEnd == endDate) &&   // 'T' absent
+    if ( (fEnd == XMLSize_t (endDate)) &&   // 'T' absent
          (fStart != fEnd)   )   // something after Day
     {
         ThrowXMLwithMemMgr1(SchemaDateTimeException
@@ -874,7 +874,7 @@ void XMLDateTime::parseDuration()
                 , fMemoryManager);
     }
 
-    if ( fEnd != endDate ) // 'T' present
+    if ( fEnd != XMLSize_t (endDate) ) // 'T' present
     {
         //scan hours, minutes, seconds
         //
@@ -1068,7 +1068,7 @@ void XMLDateTime::getTime()
             fMiliSecond = parseMiliSecond(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
-    else if(sign == 0 || sign != fStart)
+    else if(sign == 0 || XMLSize_t (sign) != fStart)
     {
         // seconds has more than 2 digits
         ThrowXMLwithMemMgr1(SchemaDateTimeException

@@ -136,7 +136,7 @@ static XMLCh* convertToXMLCh( const UChar* const toConvert,
 // ---------------------------------------------------------------------------
 //  ICUTransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ICUTransService::ICUTransService(MemoryManager* manager)
+ICUTransService::ICUTransService(MemoryManager*)
 {
   // Starting with ICU 3.4 we don't need to call init anymore.
   //

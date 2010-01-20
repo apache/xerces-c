@@ -175,10 +175,12 @@ public :
             {
                 for (XMLSize_t index = 0; index < CMSTATE_CACHED_INT32_SIZE; index++)
                     if(setToOr.fBits[index])
+                    {
                         if(fBits[index])
                             fBits[index] |= setToOr.fBits[index];
                         else
                             fBits[index] = setToOr.fBits[index];
+                    }
             }
         }
         else
@@ -192,8 +194,8 @@ public :
                     if(fDynamicBuffer->fBitArray[index]==NULL)
                     {
                         allocateChunk(index);
-                        memcpy((void *) fDynamicBuffer->fBitArray[index], 
-                               (const void *) other, 
+                        memcpy((void *) fDynamicBuffer->fBitArray[index],
+                               (const void *) other,
                                CMSTATE_BITFIELD_INT32_SIZE * sizeof(XMLInt32));
                     }
                     else
@@ -216,10 +218,12 @@ public :
                         {
                             for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex++)
                                 if(setToOr.fDynamicBuffer->fBitArray[index][subIndex])
+                                {
                                     if(fDynamicBuffer->fBitArray[index][subIndex])
                                         fDynamicBuffer->fBitArray[index][subIndex] |= setToOr.fDynamicBuffer->fBitArray[index][subIndex];
                                     else
                                         fDynamicBuffer->fBitArray[index][subIndex] = setToOr.fDynamicBuffer->fBitArray[index][subIndex];
+                                }
                         }
                     }
                 }
@@ -244,7 +248,7 @@ public :
         {
             for (XMLSize_t index = 0; index < fDynamicBuffer->fArraySize; index++)
             {
-                XMLInt32 *& other = setToCompare.fDynamicBuffer->fBitArray[index], 
+                XMLInt32 *& other = setToCompare.fDynamicBuffer->fBitArray[index],
                          *& mine = fDynamicBuffer->fBitArray[index];
                 if(mine==NULL && other==NULL)
                     continue;
@@ -268,10 +272,12 @@ public :
 
         // They have to be the same size
         if (fBitCount != srcSet.fBitCount)
+        {
             if(fDynamicBuffer)
                 ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Bitset_NotEqualSize, fDynamicBuffer->fMemoryManager);
             else
                 ThrowXML(RuntimeException, XMLExcepts::Bitset_NotEqualSize);
+        }
 
         if(fDynamicBuffer==0)
         {
@@ -345,10 +351,12 @@ public :
     bool getBit(const XMLSize_t bitToGet) const
     {
         if (bitToGet >= fBitCount)
+        {
             if(fDynamicBuffer)
                 ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex, fDynamicBuffer->fMemoryManager);
             else
                 ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
+        }
 
         // And access the right bit and byte
         if(fDynamicBuffer==0)
@@ -397,10 +405,12 @@ public :
     void setBit(const XMLSize_t bitToSet)
     {
         if (bitToSet >= fBitCount)
+        {
             if(fDynamicBuffer)
                 ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex, fDynamicBuffer->fMemoryManager);
             else
                 ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Bitset_BadIndex);
+        }
 
         const XMLInt32 mask = 1UL << (bitToSet % 32);
 
@@ -511,7 +521,7 @@ private :
     //      If the bit count is greater than the threshold, then we allocate this structure to
     //      store the bits, the length, and the memory manager to allocate/deallocate
     //      the memory
-    //      
+    //
     // -----------------------------------------------------------------------
     XMLSize_t        fBitCount;
     XMLInt32         fBits[CMSTATE_CACHED_INT32_SIZE];
@@ -542,7 +552,7 @@ public:
                 if(fLastValue & mask)
                     fLastValue &= ~mask;
             }
-            // in case the 32 bit area contained only bits before 'start', advance 
+            // in case the 32 bit area contained only bits before 'start', advance
             if(fLastValue==0)
                 findNext();
         }

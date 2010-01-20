@@ -871,8 +871,10 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
     if (fCurrentParent == fDocument)
         fWithinElement = false;
 
-    if(fDoXInclude && XIncludeUtils::isXIIncludeDOMNode(fCurrentNode)
-        || (XIncludeUtils::isXIFallbackDOMNode(fCurrentNode) && !XMLString::equals(fCurrentParent->getNamespaceURI(), XIncludeUtils::fgXIIIncludeNamespaceURI)))
+    if(fDoXInclude &&
+       (XIncludeUtils::isXIIncludeDOMNode(fCurrentNode) ||
+        ((XIncludeUtils::isXIFallbackDOMNode(fCurrentNode) &&
+          !XMLString::equals(fCurrentParent->getNamespaceURI(), XIncludeUtils::fgXIIIncludeNamespaceURI)))))
     {
     	XIncludeUtils xiu((XMLErrorReporter *) this);
 	    // process the XInclude node, then update the fCurrentNode with the new content
