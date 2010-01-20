@@ -775,6 +775,7 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
             {
                 if(isNCNameChar(fCharBuf[fCharIndex])) fCharIndex++;
                 else if((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) && ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))) fCharIndex+=2;
+		else break;
             }
         }
         else
