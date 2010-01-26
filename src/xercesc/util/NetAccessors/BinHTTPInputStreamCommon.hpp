@@ -77,7 +77,7 @@ public:
         if(chars != 0 && *chars != 0) {
             // get length of chars
             XMLSize_t count = 0;
-            for(; *(chars+count); ++count);
+            for(; *(chars+count); ++count) ;
 
             if(fIndex + count >= fCapacity) {
                 insureCapacity(count);

@@ -168,7 +168,7 @@ XMLCh *BinHTTPInputStreamCommon::findHeader(const char *name)
 
             char *endP = strstr(p, CRLF);
             if(endP == 0) {
-                for(endP = p; *endP != 0; ++endP);
+                for(endP = p; *endP != 0; ++endP) ;
             }
 
             // Transcode from iso-8859-1
@@ -257,7 +257,8 @@ const XMLCh *BinHTTPInputStreamCommon::getContentType() const
 {
     if(fContentType == 0) {
         // mutable
-        const_cast<XMLCh*&>(fContentType) = const_cast<BinHTTPInputStreamCommon*>(this)->findHeader("Content-Type");
+        const_cast<BinHTTPInputStreamCommon*>(this)->fContentType =
+        const_cast<BinHTTPInputStreamCommon*>(this)->findHeader("Content-Type");
     }
     return fContentType;
 }
