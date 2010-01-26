@@ -91,7 +91,6 @@ public:
      * Returns the string value of the specified PSVI property associated to a 
      * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @return the string value of the specified PSVI property associated to a 
      * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
@@ -102,7 +101,6 @@ public:
      * Returns the numeric value of the specified PSVI property associated to a 
      * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @return the numeric value of the specified PSVI property associated to a 
      * <code>DOMElement</code> or <code>DOMAttr</code>, or null if not available.

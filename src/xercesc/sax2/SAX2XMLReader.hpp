@@ -746,7 +746,6 @@ public:
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param source A const reference to the SAX InputSource object which
       *               points to the schema grammar file to be preparsed.
@@ -776,7 +775,6 @@ public:
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML grammar file to be
@@ -805,7 +803,6 @@ public:
       * is enabled, the parser will cache the grammars for re-use. If a grammar
       * key is found in the pool, no caching of any grammar will take place.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const char pointer to a native string which contains
       *                 the path to the XML grammar file to be preparsed.

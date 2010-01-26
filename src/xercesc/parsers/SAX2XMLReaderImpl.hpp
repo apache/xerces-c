@@ -784,7 +784,6 @@ public :
       * This method invokes the preparsing process on a schema grammar XML
       * file specified by the SAX InputSource parameter.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param source A const reference to the SAX InputSource object which
       *               points to the schema grammar file to be preparsed.
@@ -812,7 +811,6 @@ public :
       * This method invokes the preparsing process on a schema grammar XML
       * file specified by the file path parameter.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML grammar file to be
@@ -839,7 +837,6 @@ public :
       * This method invokes the preparsing process on a schema grammar XML
       * file specified by the file path parameter.
       *
-      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const char pointer to a native string which contains
       *                 the path to the XML grammar file to be preparsed.
