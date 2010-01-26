@@ -91,7 +91,7 @@
                <li><jump href="http://www.w3.org/TR/2008/REC-ElementTraversal-20081222/">
             	   Element Traversal Specification</jump>, W3C Recommendation 22 December 2008</li>
             </ul>
-            <li>Source code, samples, and documentation is provided</li>
+            <li>Source code, samples, and documentation are provided</li>
             <li>Programmatic generation and validation of XML</li>
             <li>Pluggable catalogs, validators and encodings</li>
             <li>High performance</li>

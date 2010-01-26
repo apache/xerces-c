@@ -28,7 +28,6 @@
        <li><link anchor="UNIX">UNIX/Linux/Mac OS X/Cygwin/MinGW</link></li>
        <li><link anchor="Windows">Windows using Microsoft Visual C++</link></li>
        <li><link anchor="BorlandCC">Windows using Borland C++</link></li>
-       <li><link anchor="BorlandBuilder">Windows using Borland C++ Builder</link></li>
     </ul>
 
     <anchor name="UNIX"/>
@@ -290,7 +289,6 @@
             directory:</p>
 
 <source>
-(For VC6)   projects\Win32\VC6\xerces-all\xerces-all.dsw
 (For VC7.1) projects\Win32\VC7.1\xerces-all\xerces-all.sln
 (For VC8)   projects\Win32\VC8\xerces-all\xerces-all.sln
 (For VC9)   projects\Win32\VC9\xerces-all\xerces-all.sln
@@ -324,32 +322,12 @@
                only)" to build all the selected projects in one shot.</p>
     </s3>
 
-    <anchor name="BorlandBuilder"/>
-    <s3 title="Building on Windows using Borland C++ Builder">
-        <p>&XercesCName; source distribution comes with the
-           Borland C++ Builder 6 projects. The following describes the steps you
-           need to build with this compiler.</p>
-
-        <p>The library and example projects are all contained in the
-           Xerces-all project group:
-           <code>&XercesC3SrcInstallDir;\projects\Win32\BCB6\Xerces-all\Xerces-all.bpg</code>.
-	   Each project in the group refers a directory below <code>Xerces-all\</code>.
-	   For example, the XercesLib project files are contained in the directory
-           <code>&XercesC3SrcInstallDir;\projects\Win32\BCB6\Xerces-all\XercesLib</code>.</p>
-
-        <p>To build a project, open the project manager, double click on the project
-           name, and select "Project -> Build" from the menu. For example, double click
-           on XercesLib.dll in the manager then select "Project -> Build XercesLib" from
-           the menu.
-        </p>
-    </s3>
-
     <anchor name="BorlandCC"/>
     <s3 title="Building on Windows using Borland C++">
         <p>&XercesCName; source distribution comes with the Borland C++ makefiles. The
            following describes the steps you need to build &XercesCName; with this compiler.</p>
         <ol>
-	   <li>Change to the <code>&XercesC3SrcInstallDir;\projects\Win32\BCC.551\Xerces-all</code> directory</li>
+	   <li>Change to the <code>&XercesC3SrcInstallDir;\projects\Win32\BCC5\Xerces-all</code> directory</li>
            <li>Run <code>MakeBuildDirs.bat</code></li>
 	   <li><code>make -f Xerces-all.mak</code> to build the library, examples, and tests.</li>
 	</ol>
