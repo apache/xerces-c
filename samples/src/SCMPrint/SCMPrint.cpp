@@ -265,8 +265,8 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    XMLGrammarPool *grammarPool;
-    SAX2XMLReader* parser;
+    XMLGrammarPool *grammarPool = 0;
+    SAX2XMLReader* parser = 0;
     try
     {
         grammarPool = new XMLGrammarPoolImpl(XMLPlatformUtils::fgMemoryManager);
