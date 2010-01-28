@@ -74,13 +74,15 @@ AS_IF([test x$AR = xfalse],
 	AC_MSG_ERROR([Cannot find a valid 'ar' tool]))
 
 # Patch libtool to not use rpath if requested.
-if test "$xerces_cv_rpath" = "no"; then
- AC_MSG_RESULT([Patching libtool to not use rpath.])
- sed < libtool > libtool-2 \
-   's/^hardcode_libdir_flag_spec.*$'/'hardcode_libdir_flag_spec=" -D__LIBTOOL_NO_RPATH__ "/'
- mv libtool-2 libtool
- chmod 755 libtool
-fi
+#
+AC_CONFIG_COMMANDS([libtool-rpath-patch],
+[if test "$libtool_patch_use_rpath" = "no"; then
+   echo config.status: patching libtool to not use rpath
+   sed < libtool > libtool-2 's/^hardcode_libdir_flag_spec.*$'/'hardcode_libdir_flag_spec=" -D__LIBTOOL_NO_RPATH__ "/'
+   mv libtool-2 libtool
+   chmod 755 libtool
+fi],
+[libtool_patch_use_rpath=$xerces_cv_rpath])
 
 # Export information on whether we are building static/shared libraries.
 # enable_shared and enable_static are defined by AC_PROG_LIBTOOL.
