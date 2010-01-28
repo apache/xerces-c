@@ -36,10 +36,12 @@ cmd=$@
 # problems, and may not be reliable across all compilers. Given the
 # dependencies, this is usually the last argument, but sometimes libtool
 # adds additional flags, which throws this off. So we look
-# for the last arg that doesn't start with -.
+# for the last arg that doesn't start with - or + (HP aCC style).
 while [ $# -gt 0 ]; do
 	case ${1} in
 	-*)
+		;;
+	+*)
 		;;
 	*)
 		target=$1
