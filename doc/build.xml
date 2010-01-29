@@ -195,7 +195,8 @@
         <tr>
           <td>Solaris x86-64</td>
           <td>Sun CC</td>
-          <td><code>./configure CXX=CC CC=cc CFLAGS=-xarch=amd64 CXXFLAGS=-xarch=amd64</code></td>
+          <td><code>./configure CXX=CC CC=cc CFLAGS=-xarch=amd64 CXXFLAGS=-xarch=amd64</code><br/>
+              (for newer Sun CC versions use -m64 instead of -xarch=amd64)</td>
         </tr>
         <tr>
           <td>Solaris SPARC</td>
@@ -205,7 +206,8 @@
         <tr>
           <td>Solaris SPARCv9</td>
           <td>Sun CC</td>
-          <td><code>./configure CXX=CC CC=cc CFLAGS=-xarch=v9 CXXFLAGS=-xarch=v9</code></td>
+          <td><code>./configure CXX=CC CC=cc CFLAGS=-xarch=v9 CXXFLAGS=-xarch=v9</code><br/>
+              (for newer Sun CC versions use -m64 instead of -xarch=v9)</td>
         </tr>
         <tr>
           <td>AIX PowerPC</td>
