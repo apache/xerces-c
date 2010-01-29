@@ -237,9 +237,9 @@ AC_SUBST([pkgconfigdir])
 
 # Allow the user to disable the SSE2 support
 #
-AC_ARG_ENABLE(sse2, 
-    AC_HELP_STRING([--disable-sse2],[disable SSE2 optimizations]), 
-    [have_sse2=${enableval}], 
+AC_ARG_ENABLE(sse2,
+    AC_HELP_STRING([--disable-sse2],[disable SSE2 optimizations]),
+    [have_sse2=${enableval}],
     [have_sse2=yes])
 
 ######################################################
@@ -295,7 +295,7 @@ AC_DEFINE_UNQUOTED([XERCES_XMLCH_T], [$xerces_cv_type_xmlch], [Define to the 16 
 
 AC_MSG_CHECKING([whether the compiler chokes on a placement operator delete])
 AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <stdlib.h>
-                                        
+
                                         class XMemory
                                         {
                                         public :
@@ -315,6 +315,8 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <stdlib.h>
                  )
 
 if test "$have_sse2" = "yes"; then
+    no_sse2_CXXFLAGS="$CXXFLAGS"
+
     save_CXXFLAGS="$CXXFLAGS"
     CXXFLAGS="$CXXFLAGS -msse2"
 	AC_MSG_CHECKING([whether we need to add -msse2])
@@ -326,18 +328,22 @@ if test "$have_sse2" = "yes"; then
     if test x"$msse2_ok" = xno; then
         CXXFLAGS="$save_CXXFLAGS"
     fi
-
-    save_CXXFLAGS="$CXXFLAGS"
-    CXXFLAGS="$CXXFLAGS -xarch=sse2"
-	AC_MSG_CHECKING([whether we need to add -xarch=sse2])
-	AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <emmintrin.h>]], [[__m128i one;]])],
-						[xarchsse2_ok=yes],
-						[xarchsse2_ok=no]
-					 )
-    AC_MSG_RESULT($xarchsse2_ok)
-    if test x"$xarchsse2_ok" = xno; then
-        CXXFLAGS="$save_CXXFLAGS"
-    fi
+# Sun CC option test. Currently disabled since it doesn't work. Also note
+# that Sun CC will accept -msse2 (i.e., it won't fail) but will keep issuing
+# warnings. So if enabled this test needs to be moved before -msse2 and if
+# it passes, then -msse2 should be skipped.
+#
+#    save_CXXFLAGS="$CXXFLAGS"
+#    CXXFLAGS="$CXXFLAGS -xarch=sse2"
+#      AC_MSG_CHECKING([whether we need to add -xarch=sse2])
+#      AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <emmintrin.h>]], [[__m128i one;]])],
+#						[xarchsse2_ok=yes],
+#						[xarchsse2_ok=no]
+#					 )
+#    AC_MSG_RESULT($xarchsse2_ok)
+#    if test x"$xarchsse2_ok" = xno; then
+#        CXXFLAGS="$save_CXXFLAGS"
+#    fi
 
     AC_MSG_CHECKING([for intrin.h usability])
     AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <intrin.h>]],
@@ -414,13 +420,20 @@ if test "$have_sse2" = "yes"; then
 										 ]])],
 						[
 						  AC_MSG_RESULT([yes])
+						  sse2_usable=yes
 						  AC_DEFINE_UNQUOTED([XERCES_HAVE_SSE2_INTRINSIC], 1, [Define to have SSE2 instruction used at runtime])
 						],
 						[
 						  AC_MSG_RESULT([no])
+                                                  sse2_usable=no
 						]
-					 )
 
+					 )
+  # Restore original CXXFLAGS if SSE2 is not usable.
+  #
+  if test "$sse2_usable" = "no"; then
+    CXXFLAGS="$no_sse2_CXXFLAGS"
+  fi
 fi
 
 AS_IF([test x$ac_cv_type_size_t = xyes],
