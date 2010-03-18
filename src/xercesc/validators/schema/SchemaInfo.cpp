@@ -42,6 +42,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
                        const XMLCh* const schemaURL,
                        const XMLCh* const targetNSURIString,
                        const DOMElement* const root,
+                       XMLScanner* xmlScanner,
                        MemoryManager* const manager)
     : fAdoptInclude(false)
     , fProcessed(false)
@@ -78,6 +79,7 @@ SchemaInfo::SchemaInfo(const unsigned short elemAttrDefaultQualified,
     fCurrentSchemaURL = XMLString::replicate(schemaURL, fMemoryManager);
 	fTargetNSURIString = XMLString::replicate(targetNSURIString, fMemoryManager);
 
+    fValidationContext->setScanner (xmlScanner);
     fValidationContext->setNamespaceScope(fNamespaceScope);
 }
 

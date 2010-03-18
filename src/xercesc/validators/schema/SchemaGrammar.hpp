@@ -32,7 +32,6 @@
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
-#include <xercesc/framework/ValidationContext.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -169,9 +168,6 @@ public:
     RefHashTableOf<XercesAttGroupInfo>* getAttGroupInfoRegistry() const;
     DatatypeValidatorFactory* getDatatypeRegistry();
     RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
-
-    // @deprecated
-    ValidationContext*          getValidationContext() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -330,8 +326,6 @@ private:
     RefHashTableOf<XercesGroupInfo>*         fGroupInfoRegistry;
     RefHashTableOf<XercesAttGroupInfo>*      fAttGroupInfoRegistry;
     RefHash2KeysTableOf<ElemVector>*         fValidSubstitutionGroups;
-    // @deprecated
-    ValidationContext*                       fValidationContext;
     MemoryManager*                           fMemoryManager;
     XMLSchemaDescription*                    fGramDesc;
     RefHashTableOf<XSAnnotation, PtrHasher>* fAnnotations;
@@ -391,12 +385,6 @@ inline RefHash2KeysTableOf<ElemVector>*
 SchemaGrammar::getValidSubstitutionGroups() const {
 
     return fValidSubstitutionGroups;
-}
-
-// @deprecated
-inline ValidationContext* SchemaGrammar::getValidationContext() const {
-
-    return fValidationContext;
 }
 
 inline XMLGrammarDescription* SchemaGrammar::getGrammarDescription() const

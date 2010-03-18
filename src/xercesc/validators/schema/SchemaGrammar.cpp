@@ -32,7 +32,6 @@
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
-#include <xercesc/internal/ValidationContextImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -52,7 +51,6 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fGroupInfoRegistry(0)
     , fAttGroupInfoRegistry(0)
     , fValidSubstitutionGroups(0)
-    , fValidationContext(0)
     , fMemoryManager(manager)
     , fGramDesc(0)
     , fAnnotations(0)
@@ -77,7 +75,6 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
         // fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
         fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false, 128, fMemoryManager);
         fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
-        fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
 
         //REVISIT: use grammarPool to create
         fGramDesc = new (fMemoryManager) XMLSchemaDescriptionImpl(XMLUni::fgXMLNSURIName, fMemoryManager);
@@ -205,7 +202,6 @@ void SchemaGrammar::cleanUp()
     delete fGroupInfoRegistry;
     delete fAttGroupInfoRegistry;
     delete fValidSubstitutionGroups;
-    delete fValidationContext;
     delete fGramDesc;
     delete fAnnotations;
 }
@@ -251,8 +247,7 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
 {
 
     /***
-     * don't serialize ValidationContext* fValidationContext;
-     *                                    fElemNonDeclPool
+     * don't serialize fElemNonDeclPool
      ***/
 
     Grammar::serialize(serEng);
