@@ -379,6 +379,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
                                           fSchemaInfo?fSchemaInfo->getNamespaceScope():NULL,
                                           schemaURL,
                                           fTargetNSURIString, schemaRoot,
+                                          fScanner,
                                           fGrammarPoolMemoryManager);
 
     if (fSchemaInfo)
@@ -688,6 +689,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
                                          fSchemaInfo->getNamespaceScope(),
                                          includeURL,
                                          fTargetNSURIString, root,
+                                         fScanner,
                                          fGrammarPoolMemoryManager);
 
             fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(),
@@ -8240,6 +8242,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
                                      fSchemaInfo->getNamespaceScope(),
                                      includeURL,
                                      fTargetNSURIString, root,
+                                     fScanner,
                                      fGrammarPoolMemoryManager));
         fSchemaInfo = newSchemaInfo.get();
 

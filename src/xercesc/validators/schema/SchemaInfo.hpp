@@ -48,6 +48,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
+class XMLScanner;
 class ValidationContext;
 class NamespaceScope;
 
@@ -84,6 +85,7 @@ public:
                const XMLCh* const schemaURL,
                const XMLCh* const targetNSURIString,
                const DOMElement* const root,
+               XMLScanner* xmlScanner,
                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~SchemaInfo();
 

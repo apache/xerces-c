@@ -3996,7 +3996,7 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
             if (fValidate) {
               //  validate the Schema scan so far
               fValidator->setGrammar(grammar);
-              fValidator->preContentValidation(false, true);
+              fValidator->preContentValidation(false);
             }
 
             if (toCache) {
