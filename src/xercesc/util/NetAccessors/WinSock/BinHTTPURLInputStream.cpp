@@ -347,6 +347,7 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             fSocketHandle = wrap_socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
             if (fSocketHandle == INVALID_SOCKET)
                 continue;
+            janSock.reset(&fSocketHandle);
             if (wrap_connect(fSocketHandle, ai->ai_addr, (int)ai->ai_addrlen) == SOCKET_ERROR)
             {
                 wrap_freeaddrinfo(res);
@@ -363,7 +364,6 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             ThrowXMLwithMemMgr1(NetAccessorException,
                      XMLExcepts::NetAcc_CreateSocket, url.getURLText(), memoryManager);
         }
-        janSock.reset(&fSocketHandle);
 #else
         struct hostent*     hostEntPtr = 0;
         struct sockaddr_in  sa;
