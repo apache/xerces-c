@@ -139,6 +139,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             fSocket = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
             if (fSocket < 0)
                 continue;
+            janSock.reset(&fSocket);
             if (connect(fSocket, ai->ai_addr, ai->ai_addrlen) < 0)
             {
                 freeaddrinfo(res);
@@ -153,7 +154,6 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource, const XM
             ThrowXMLwithMemMgr1(NetAccessorException,
                      XMLExcepts::NetAcc_CreateSocket, url.getURLText(), memoryManager);
         }
-        janSock.reset(&fSocket);
 #else
         struct hostent *hostEntPtr = 0;
         struct sockaddr_in sa;
