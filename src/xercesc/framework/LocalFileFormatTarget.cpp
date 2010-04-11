@@ -99,7 +99,7 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
         // If we don't have enough space, see if we can grow the buffer.
         //
         if (fIndex + count > fCapacity && fCapacity < MAX_BUFFER_SIZE)
-          insureCapacity (count);
+          ensureCapacity (count);
 
         // If still not enough space, flush the buffer.
         //
@@ -127,7 +127,7 @@ void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
     return;
 }
 
-void LocalFileFormatTarget::insureCapacity(const XMLSize_t extraNeeded)
+void LocalFileFormatTarget::ensureCapacity(const XMLSize_t extraNeeded)
 {
     XMLSize_t newCap = fCapacity * 2;
 

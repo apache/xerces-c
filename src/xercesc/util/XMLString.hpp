@@ -484,7 +484,7 @@ public:
     /** @name Search functions */
     //@{
     /**
-      * Provides the index of the first occurance of a character within a string
+      * Provides the index of the first occurrence of a character within a string
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
@@ -494,7 +494,7 @@ public:
     static int indexOf(const char* const toSearch, const char ch);
 
     /**
-      * Provides the index of the first occurance of a character within a string
+      * Provides the index of the first occurrence of a character within a string
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
@@ -504,7 +504,7 @@ public:
     static int indexOf(const XMLCh* const toSearch, const XMLCh ch);
 
 	    /**
-      * Provides the index of the first occurance of a character within a string
+      * Provides the index of the first occurrence of a character within a string
       * starting from a given index
       *
       * @param toSearch The string to search
@@ -523,7 +523,7 @@ public:
     );
 
     /**
-      * Provides the index of the first occurance of a character within a string
+      * Provides the index of the first occurrence of a character within a string
       * starting from a given index
       *
       * @param toSearch The string to search
@@ -542,7 +542,7 @@ public:
     );
 
     /**
-      * Provides the index of the last occurance of a character within a string
+      * Provides the index of the last occurrence of a character within a string
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
@@ -552,7 +552,7 @@ public:
     static int lastIndexOf(const char* const toSearch, const char ch);
 
     /**
-      * Provides the index of the last occurance of a character within a string
+      * Provides the index of the last occurrence of a character within a string
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
@@ -562,7 +562,7 @@ public:
     static int lastIndexOf(const XMLCh* const toSearch, const XMLCh ch);
 
     /**
-      * Provides the index of the last occurance of a character within a string
+      * Provides the index of the last occurrence of a character within a string
       *
       * @param ch The character to search within the string
       * @param toSearch The string to search
@@ -578,7 +578,7 @@ public:
     );
 
     /**
-      * Provides the index of the last occurance of a character within a string
+      * Provides the index of the last occurrence of a character within a string
       * starting backward from a given index
       *
       * @param toSearch The string to search
@@ -597,7 +597,7 @@ public:
     );
 
     /**
-      * Provides the index of the last occurance of a character within a string
+      * Provides the index of the last occurrence of a character within a string
       * starting backward from a given index
       *
       * @param toSearch The string to search
@@ -790,7 +790,7 @@ public:
     );
 
 
-    /** Tells if a string has any occurance of any character of another
+    /** Tells if a string has any occurrence of any character of another
       * string within itself
       * @param toSearch The string to be searched
       * @param searchList The string from which characters to be searched for are drawn
@@ -804,7 +804,7 @@ public:
         , const XMLCh* const    searchList
     );
 
-    /** Tells if a string has any occurance of any character of another
+    /** Tells if a string has any occurrence of any character of another
       * string within itself
       * @param toSearch The string to be searched
       * @param searchList The string from which characters to be searched for are drawn
@@ -1103,7 +1103,7 @@ public:
     /**
       * Converts a string of decimal chars to a binary value
       *
-      * Note that leading and trailng whitespace is legal and will be ignored
+      * Note that leading and trailing whitespace is legal and will be ignored
       * but the remainder must be all decimal digits.
       *
       * @param toConvert The string of digits to convert
@@ -1121,7 +1121,7 @@ public:
     /**
       * Converts a string of decimal chars to a binary value
       *
-      * Note that leading and trailng whitespace is legal and will be ignored,
+      * Note that leading and trailing whitespace is legal and will be ignored,
       *
       * Only one and either of (+,-) after the leading whitespace, before
       * any other characters are allowed.
@@ -1356,7 +1356,7 @@ public:
     /** Remove character
       * @param srcString The string
       * @param toRemove  The character needs to be removed from the string
-      * @param dstBuffer The buffer containning the result
+      * @param dstBuffer The buffer containing the result
       */
     static void removeChar(const XMLCh*     const srcString
                          , const XMLCh&           toRemove

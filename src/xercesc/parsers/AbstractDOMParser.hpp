@@ -85,7 +85,7 @@ public :
 
 
     // -----------------------------------------------------------------------
-    //  Constructors and Detructor
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
@@ -276,7 +276,7 @@ public :
       */
     bool getIncludeIgnorableWhitespace() const;
 
-   /** Get the set of Namespace/SchemaLocation that is specified externaly.
+   /** Get the set of Namespace/SchemaLocation that is specified externally.
       *
       * This method returns the list of Namespace/SchemaLocation that was
       * specified using setExternalSchemaLocation.
@@ -284,7 +284,7 @@ public :
       * The parser owns the returned string, and the memory allocated for
       * the returned string will be destroyed when the parser is deleted.
       *
-      * To ensure assessiblity of the returned information after the parser
+      * To ensure accessibility of the returned information after the parser
       * is deleted, callers need to copy and store the returned information
       * somewhere else.
       *
@@ -297,7 +297,7 @@ public :
       */
     XMLCh* getExternalSchemaLocation() const;
 
-   /** Get the noNamespace SchemaLocation that is specified externaly.
+   /** Get the noNamespace SchemaLocation that is specified externally.
       *
       * This method returns the no target namespace XML Schema Location
       * that was specified using setExternalNoNamespaceSchemaLocation.
@@ -305,7 +305,7 @@ public :
       * The parser owns the returned string, and the memory allocated for
       * the returned string will be destroyed when the parser is deleted.
       *
-      * To ensure assessiblity of the returned information after the parser
+      * To ensure accessibility of the returned information after the parser
       * is deleted, callers need to copy and store the returned information
       * somewhere else.
       *
@@ -573,7 +573,7 @@ public :
 
     /**
       * This method allows users to set the parser's behaviour when it
-      * encounters a validtion constraint error. If set to true, and the
+      * encounters a validation constraint error. If set to true, and the
       * the parser will treat validation error as fatal and will exit depends on the
       * state of "getExitOnFirstFatalError". If false, then it will
       * report the error and continue processing.
@@ -677,7 +677,7 @@ public :
       *
       * Full schema constraint checking includes those checking that may
       * be time-consuming or memory intensive. Currently, particle unique
-      * attribution constraint checking and particle derivation resriction checking
+      * attribution constraint checking and particle derivation restriction checking
       * are controlled by this option.
       *
       * The parser's default state is: false.
@@ -706,7 +706,7 @@ public :
     /**
       * This method allows the user to specify a list of schemas to use.
       * If the targetNamespace of a schema specified using this method matches
-      * the targetNamespace of a schema occuring in the instance document in
+      * the targetNamespace of a schema occurring in the instance document in
       * the schemaLocation attribute, or if the targetNamespace matches the
       * namespace attribute of the "import" element, the schema specified by the
       * user using this method will be used (i.e., the schemaLocation attribute
@@ -1043,7 +1043,7 @@ public :
       * the scan of the prolog failed and the token is not going to work on
       * subsequent scanNext() calls.
       *
-      * @param systemId A pointer to a Unicode string represting the path
+      * @param systemId A pointer to a Unicode string representing the path
       *                 to the XML file to be parsed.
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
@@ -1075,7 +1075,7 @@ public :
       * the scan of the prolog failed and the token is not going to work on
       * subsequent scanNext() calls.
       *
-      * @param systemId A pointer to a regular native string represting
+      * @param systemId A pointer to a regular native string representing
       *                 the path to the XML file to be parsed.
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
@@ -1708,7 +1708,7 @@ protected:
     //      Indicates whether entity reference nodes should be created.
     //
     //  fIncludeIgnorableWhitespace
-    //      Indicates whether ignorable whiltespace should be added to
+    //      Indicates whether ignorable whitespace should be added to
     //      the DOM tree for validating parsers.
     //
     //  fScanner

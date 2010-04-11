@@ -94,7 +94,7 @@ public :
     );
 
     /**
-     *  This constructor is indentical to the previous one, except that it also
+     *  This constructor is identical to the previous one, except that it also
      *  allows you to set a public id if you want to.
      *
      *  @param  baseId      The base system id URL which provides the base
@@ -182,7 +182,7 @@ public :
 
     /**
      * This method will return a binary input stream derivative that will
-     * parse from the source refered to by the URL system id.
+     * parse from the source referred to by the URL system id.
      */
     BinInputStream* makeStream() const;
 

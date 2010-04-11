@@ -34,7 +34,7 @@ class XMLGrammarPool;
   * Creates a SAX2 parser (SAX2XMLReader).
   *
   * <p>Note: The parser object returned by XMLReaderFactory is owned by the
-  * calling users, and it's the responsiblity of the users to delete that
+  * calling users, and it's the responsibility of the users to delete that
   * parser object, once they no longer need it.</p>
   *
   * @see SAX2XMLReader#SAX2XMLReader

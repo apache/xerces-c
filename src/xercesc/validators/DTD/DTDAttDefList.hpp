@@ -36,7 +36,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //
 //  Since each validator can store attributes differently, this abstract
 //  interface allows each validator to provide an implementation of this
-//  data strucure that works best for it.
+//  data structure that works best for it.
 //
 //  For us, we just wrap the RefHashTableOf collection that the DTDElementDecl
 //  class uses to store the attributes that belong to it.

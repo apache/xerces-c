@@ -117,7 +117,7 @@ public:
     /** Get the memory manager
       *
       * This method returns the configurable memory manager used by the
-      * element declaration for dynamic allocation/deacllocation.
+      * element declaration for dynamic allocation/deallocation.
       *
       * @return the memory manager
       */

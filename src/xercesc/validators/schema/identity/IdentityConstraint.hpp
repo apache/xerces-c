@@ -109,7 +109,7 @@ protected:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IdentityConstraint(const IdentityConstraint& other);
     IdentityConstraint& operator= (const IdentityConstraint& other);

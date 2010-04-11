@@ -189,7 +189,7 @@ private:
     //  Private data members
     //
     //  fContent
-    //      temporary var referenceing the content to be validated,
+    //      temporary var referencing the content to be validated,
     //      for error reporting purpose.
     //
     // -----------------------------------------------------------------------

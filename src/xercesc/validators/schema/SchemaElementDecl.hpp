@@ -178,7 +178,7 @@ private :
     //      Stores 'abstract/nullable' values
     //
     //  fDefaultValue
-    //      The defalut/fixed value
+    //      The default/fixed value
     //
     //  fComplexTypeInfo
     //      Stores complex type information

@@ -731,7 +731,7 @@ public:
      * updates the replacement tree of <code>DOMEntityReference</code> nodes,
      * normalizes attribute values, etc.
      * <br>Mutation events, when supported, are generated to reflect the
-     * changes occuring on the document.
+     * changes occurring on the document.
      * Note that this is a partial implementation. Not all the required features are implemented.
      * Currently <code>DOMAttr</code> and <code>DOMText</code> nodes are normalized.
      * Features to remove <code>DOMComment</code> and <code>DOMCDATASection</code> work.

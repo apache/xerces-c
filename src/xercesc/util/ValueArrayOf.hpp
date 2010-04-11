@@ -34,7 +34,7 @@ template <class TElem> class ValueArrayOf : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
-    //  Contructors and Destructor
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
     ValueArrayOf
     (

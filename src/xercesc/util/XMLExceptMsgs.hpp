@@ -106,7 +106,7 @@ public :
       , UTF8_Invalid_3BytesSeq             = 90
       , UTF8_Irregular_3BytesSeq           = 91
       , UTF8_Invalid_4BytesSeq             = 92
-      , UTF8_Exceede_BytesLimit            = 93
+      , UTF8_Exceeds_BytesLimit            = 93
       , Vector_BadIndex                    = 94
       , Val_InvalidElemId                  = 95
       , Val_CantHaveIntSS                  = 96

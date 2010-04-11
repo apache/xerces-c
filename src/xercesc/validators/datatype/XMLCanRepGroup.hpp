@@ -36,9 +36,9 @@ public:
         DateTime,
         Time,
         Decimal,
-        Decimal_Derivated_signed,
-        Decimal_Derivated_unsigned,
-        Decimal_Derivated_npi,
+        Decimal_Derived_signed,
+        Decimal_Derived_unsigned,
+        Decimal_Derived_npi,
         String
     };
 

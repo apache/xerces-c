@@ -1434,7 +1434,7 @@ XSValue::getActValDateTimes(const XMLCh*         const input_content
         retVal->fData.fValue.f_datetime.f_hour    = coreDate.fValue[XMLDateTime::Hour];
         retVal->fData.fValue.f_datetime.f_min     = coreDate.fValue[XMLDateTime::Minute];
         retVal->fData.fValue.f_datetime.f_second  = coreDate.fValue[XMLDateTime::Second];
-        retVal->fData.fValue.f_datetime.f_milisec = coreDate.fMiliSecond;
+        retVal->fData.fValue.f_datetime.f_milisec = coreDate.fMilliSecond;
 
         return retVal;
     }

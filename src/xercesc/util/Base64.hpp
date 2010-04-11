@@ -143,7 +143,7 @@ public :
      /**
      * get canonical representation
      *
-     * Caller is responsible for the proper deallcation
+     * Caller is responsible for the proper deallocation
      * of the string returned.
      *
      * @param inputData A string containing the Base64
@@ -206,7 +206,7 @@ private :
     //     Table used in decoding base64.
     //
     //  isInitialized
-    //     Set once base64Inverse is initalized.
+    //     Set once base64Inverse is initialized.
     //
     //  quadsPerLine
     //     Number of quadruplets per one line. The encoded output

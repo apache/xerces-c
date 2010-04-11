@@ -89,7 +89,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IdentityConstraintHandler(const IdentityConstraintHandler& other);
     IdentityConstraintHandler& operator= (const IdentityConstraintHandler& other);

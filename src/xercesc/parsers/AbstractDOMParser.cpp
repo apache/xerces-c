@@ -686,7 +686,7 @@ void AbstractDOMParser::handleElementPSVI(const XMLCh* const            localNam
     {
         DOMTypeInfoImpl* typeInfo=new (getDocument()) DOMTypeInfoImpl();
         typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validity, elementInfo->getValidity());
-        typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted, elementInfo->getValidationAttempted());
+        typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validation_Attempted, elementInfo->getValidationAttempted());
         if(elementInfo->getTypeDefinition())
         {
             typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, elementInfo->getTypeDefinition()->getTypeCategory());
@@ -745,7 +745,7 @@ void AbstractDOMParser::handleAttributesPSVI( const XMLCh* const            loca
             {
                 DOMTypeInfoImpl* typeInfo=new (getDocument()) DOMTypeInfoImpl();
                 typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validity, attrInfo->getValidity());
-                typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted, attrInfo->getValidationAttempted());
+                typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Validation_Attempted, attrInfo->getValidationAttempted());
                 if(attrInfo->getTypeDefinition())
                 {
                     typeInfo->setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type, XSTypeDefinition::SIMPLE_TYPE);

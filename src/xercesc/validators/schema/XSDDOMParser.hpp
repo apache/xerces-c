@@ -41,7 +41,7 @@ class PARSERS_EXPORT XSDDOMParser : public XercesDOMParser
 public :
 
     // -----------------------------------------------------------------------
-    //  Constructors and Detructor
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
 
     /** @name Constructors and Destructor */

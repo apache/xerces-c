@@ -38,7 +38,7 @@ class XMLResourceIdentifier;
   * This class implements the Document Object Model (DOM) interface.
   * It should be used by applications which choose to parse and
   * process the XML document using the DOM api's. This implementation
-  * also allows the applications to install an error and an entitty
+  * also allows the applications to install an error and an entity
   * handler (useful extensions to the DOM specification).
   *
   * <p>It can be used to instantiate a validating or non-validating
@@ -48,7 +48,7 @@ class PARSERS_EXPORT XercesDOMParser : public AbstractDOMParser
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors and Detructor
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
 
     /** @name Constructors and Destructor */
@@ -298,7 +298,7 @@ public :
       * instead of building the grammar from scratch, to validate XML
       * documents.
       *
-      * If the 'Grammar caching' flag is set to true, this mehod ignore the
+      * If the 'Grammar caching' flag is set to true, this method ignore the
       * value passed in.
       *
       * The parser's default state is: false.
@@ -441,7 +441,7 @@ public :
     /** Expand a system id
       *
       * This method allows an installed XMLEntityHandler to further
-      * process any system id's of enternal entities encountered in
+      * process any system id's of external entities encountered in
       * the XML file being parsed, such as redirection etc.
       *
       * <b>This method always returns 'false'
@@ -526,7 +526,7 @@ public :
       *               points to the schema grammar file to be preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
-      *                otherwise, no chaching. Default is <code>false</code>.
+      *                otherwise, no caching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
       *
@@ -556,7 +556,7 @@ public :
       *                 preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
-      *                otherwise, no chaching. Default is <code>false</code>.
+      *                otherwise, no caching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
       *
@@ -583,7 +583,7 @@ public :
       *                 the path to the XML grammar file to be preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
-      *                otherwise, no chaching. Default is <code>false</code>.
+      *                otherwise, no caching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
       *

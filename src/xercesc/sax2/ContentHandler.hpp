@@ -128,7 +128,7 @@ public:
     * startElement() event for every endElement() event (even when the
     * element is empty).</p>
     *
-    * @param uri The URI of the asscioated namespace for this element
+    * @param uri The URI of the associated namespace for this element
 	* @param localname The local part of the element name
 	* @param qname The QName of this element
     * @exception SAXException Any SAX exception, possibly

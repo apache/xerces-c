@@ -65,7 +65,7 @@ public:
    /**
     * Receive notification of comments.
     *
-    * <p>The Parser will call this method to report each occurence of
+    * <p>The Parser will call this method to report each occurrence of
     * a comment in the XML document.</p>
     *
     * <p>The application must not attempt to read from the array

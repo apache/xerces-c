@@ -67,7 +67,7 @@ public:
     {
     }
 
-    /** Desctructor */
+    /** Destructor */
     virtual ~ErrorHandler()
     {
     }
@@ -144,7 +144,7 @@ public:
     * Reset the Error handler object on its reuse
     *
     * <p>This method helps in reseting the Error handler object
-    * implementational defaults each time the Error handler is begun.</p>
+    * implementation defaults each time the Error handler is begun.</p>
     *
     */
     virtual void resetErrors() = 0;

@@ -134,7 +134,7 @@ public :
     virtual void lowerCase(XMLCh* const toLowerCase) = 0;
 
     // -----------------------------------------------------------------------
-    //	Allow users to add their own encodings to the intrinsinc mapping
+    //	Allow users to add their own encodings to the intrinsic mapping
     //	table
     //	Usage:
     //		XMLTransService::addEncoding (

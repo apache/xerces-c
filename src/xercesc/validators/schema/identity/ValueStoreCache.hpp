@@ -53,7 +53,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  Forward Declcaration
+//  Forward Declaration
 // ---------------------------------------------------------------------------
 class ValueStore;
 class SchemaElementDecl;
@@ -92,7 +92,7 @@ public:
     //  Access methods
     // -----------------------------------------------------------------------
     ValueStore* getValueStoreFor(const IC_Field* const field, const int initialDepth);
-    ValueStore* getValueStoreFor(const IdentityConstraint* const ic, const int intialDepth);
+    ValueStore* getValueStoreFor(const IdentityConstraint* const ic, const int initialDepth);
     ValueStore* getGlobalValueStoreFor(const IdentityConstraint* const ic);
 
 	// -----------------------------------------------------------------------
@@ -106,7 +106,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ValueStoreCache(const ValueStoreCache& other);
     ValueStoreCache& operator= (const ValueStoreCache& other);

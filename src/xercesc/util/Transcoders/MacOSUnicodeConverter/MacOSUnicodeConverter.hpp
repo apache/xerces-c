@@ -271,7 +271,7 @@ private :
     // -----------------------------------------------------------------------
     XMLTranscoder* const	mTranscoder;
 	MemoryManager* const	mManager;
-	XMLMutex				mMutex;			// Mutex to enable rentrancy of LCP transcoder
+	XMLMutex				mMutex;			// Mutex to enable reentrancy of LCP transcoder
  };
 
 XERCES_CPP_NAMESPACE_END

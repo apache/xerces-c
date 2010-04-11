@@ -519,7 +519,7 @@
             <Message Id="UTF8_Invalid_3BytesSeq"   Text="invalid bytes '{0}' and '{1}' of a 3-byte sequence"/>
             <Message Id="UTF8_Irregular_3BytesSeq" Text="irregular bytes '{0}' and '{1}' of a 3-byte sequence"/>
             <Message Id="UTF8_Invalid_4BytesSeq"   Text="invalid bytes '{0}' and '{1}' of a 4-byte sequence"/>
-            <Message Id="UTF8_Exceede_BytesLimit"  Text="exceeded byte limit at byte '{0}' in a {1}-byte sequence"/>
+            <Message Id="UTF8_Exceeds_BytesLimit"  Text="exceeded byte limit at byte '{0}' in a {1}-byte sequence"/>
             <Message Id="Vector_BadIndex" Text="index is beyond vector bounds"/>
             <Message Id="Val_InvalidElemId" Text="invalid element id"/>
             <Message Id="Val_CantHaveIntSS" Text="internal subset is not allowed when reusing the grammar"/>

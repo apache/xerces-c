@@ -128,7 +128,7 @@ public:
      * Other Schema languages are outside the scope of the W3C and therefore should
      * recommend an absolute URI in order to use this method.
      * @param manager    Pointer to the memory manager to be used to allocate objects.
-     * @param gramPool   The collection of cached grammers.
+     * @param gramPool   The collection of cached grammars.
      * @return The newly created <code>DOMLSParser</code> object. This
      * <code>DOMLSParser</code> is either synchronous or asynchronous depending
      * on the value of the <code>mode</code> argument.

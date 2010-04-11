@@ -58,7 +58,7 @@ public:
     //@{
 
     /**
-      *  Deafult Constructor
+      *  Default Constructor
       */
     XMLEntityDecl(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
@@ -208,7 +208,7 @@ public:
 
     /**
       * Indicates that this entity is an external entity. If not, then it is
-      * assumed to be an internal entity, suprise.
+      * assumed to be an internal entity, surprise.
       */
     bool isExternal() const;
 
@@ -351,7 +351,7 @@ private :
     //      This is the unique id given to this entity decl.
     //
     //  fName
-    //      The name of the enitity. Entity names are never namespace based.
+    //      The name of the entity. Entity names are never namespace based.
     //
     //  fNotationName
     //      The optional notation of the entity. If there was none, then its

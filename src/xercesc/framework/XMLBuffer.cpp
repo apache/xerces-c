@@ -33,7 +33,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  XMLBuffer: Buffer management
 // ---------------------------------------------------------------------------
 
-void XMLBuffer::insureCapacity(const XMLSize_t extraNeeded)
+void XMLBuffer::ensureCapacity(const XMLSize_t extraNeeded)
 {    
     // If we can't handle it, try doubling the buffer size.
     XMLSize_t newCap = (fIndex + extraNeeded) * 2;

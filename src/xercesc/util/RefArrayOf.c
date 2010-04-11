@@ -30,7 +30,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  RefArrayOf: Contructors and Destructor
+//  RefArrayOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
 RefArrayOf<TElem>::RefArrayOf(const XMLSize_t size,
@@ -218,7 +218,7 @@ template <class TElem> void RefArrayOf<TElem>::resize(const XMLSize_t newSize)
     for (; index < newSize; index++)
         newArray[index] = 0;
 
-    // Delete the old array and udpate our members
+    // Delete the old array and update our members
     fMemoryManager->deallocate(fArray);//delete [] fArray;
     fArray = newArray;
     fSize = newSize;

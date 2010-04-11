@@ -55,7 +55,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IC_Key(const IC_Key& other);
     IC_Key& operator= (const IC_Key& other);

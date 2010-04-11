@@ -56,7 +56,7 @@ public :
      /**
      * get canonical representation
      *
-     * Caller is responsible for the proper deallcation
+     * Caller is responsible for the proper deallocation
      * of the string returned.
      *
      * @param hexData A string containing the HexBinary
@@ -99,7 +99,7 @@ private :
     //  Helper methods
     // -----------------------------------------------------------------------
 
-    static bool isHex(const XMLCh& octect);
+    static bool isHex(const XMLCh& octet);
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -113,7 +113,7 @@ private :
     //
     //  isInitialized
     //
-    //     set once hexNumberTable is initalized.
+    //     set once hexNumberTable is initialized.
     //
     //  hexNumberTable
     //

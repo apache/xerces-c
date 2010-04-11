@@ -30,7 +30,7 @@ public:
     enum PSVIScope
     {
         SCP_ABSENT    // declared in group/attribute group
-	    , SCP_GLOBAL  // global decalarion or ref
+	    , SCP_GLOBAL  // global declaration or ref
 	    , SCP_LOCAL   // local declaration
     };
 };

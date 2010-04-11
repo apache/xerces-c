@@ -90,13 +90,13 @@ public :
             // For example, say fullSize = 100 and fCapacity is 1023 (the default).
             // If the fIndex is less than the fullSize, then no problem.  We can just carry
             // on by resetting fCapacity to fullsize and proceed business as usual.
-            // If the fIndex is already bigger than the fullSize then we call insureCapacity
+            // If the fIndex is already bigger than the fullSize then we call ensureCapacity
             // to see if it can handle emptying the current buffer (it will throw an
             // exception if it can't).
             if (fullSize < fCapacity) {
                 fCapacity = fullSize;
                 if (fIndex >= fullSize) {
-                    insureCapacity(0);
+                    ensureCapacity(0);
                 }
             }
         }
@@ -113,7 +113,7 @@ public :
     {
         // Put in char and bump the index
         if (fIndex == fCapacity)
-            insureCapacity(1);
+            ensureCapacity(1);
         fBuffer[fIndex++] = toAppend;
     }
 
@@ -121,7 +121,7 @@ public :
     {
         if (count) {
             if (fIndex + count >= fCapacity) {
-                insureCapacity(count);
+                ensureCapacity(count);
             }
             memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
             fIndex += count;
@@ -139,7 +139,7 @@ public :
             for (; *(chars+count); count++ ) /*noop*/;
 
             if (fIndex + count >= fCapacity) {
-                insureCapacity(count);
+                ensureCapacity(count);
             }
             memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
             fIndex += count;
@@ -217,7 +217,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helpers
     // -----------------------------------------------------------------------
-    void insureCapacity(const XMLSize_t extraNeeded);
+    void ensureCapacity(const XMLSize_t extraNeeded);
 
 
     // -----------------------------------------------------------------------

@@ -135,7 +135,7 @@ public:
     /**
     * Reset the DocType object on its reuse
     *
-    * <p>This method helps in reseting the DTD object implementational
+    * <p>This method helps in reseting the DTD object implementation
     * defaults each time the DTD is begun.</p>
     *
     */

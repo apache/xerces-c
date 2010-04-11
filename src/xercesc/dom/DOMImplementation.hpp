@@ -57,7 +57,7 @@ private:
     // -----------------------------------------------------------------------
     /** @name Unimplemented constructors and operators */
     //@{
-        DOMImplementation(const DOMImplementation &);   // no copy construtor.
+        DOMImplementation(const DOMImplementation &);   // no copy constructor.
         DOMImplementation & operator = (const DOMImplementation &);  // No Assignment
     //@}
 

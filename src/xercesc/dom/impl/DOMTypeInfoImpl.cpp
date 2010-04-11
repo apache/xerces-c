@@ -61,8 +61,8 @@ DOMTypeInfoImpl::DOMTypeInfoImpl(DOMDocumentImpl* ownerDoc, const DOMPSVITypeInf
 {
     setNumericProperty(DOMPSVITypeInfo::PSVI_Validity,
         sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Validity));
-    setNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted,
-        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Validitation_Attempted));
+    setNumericProperty(DOMPSVITypeInfo::PSVI_Validation_Attempted,
+        sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Validation_Attempted));
     setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type,
         sourcePSVI->getNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Type));
     setNumericProperty(DOMPSVITypeInfo::PSVI_Type_Definition_Anonymous,
@@ -141,7 +141,7 @@ int DOMTypeInfoImpl::getNumericProperty(PSVIProperty prop) const {
     switch(prop)
     {
     case PSVI_Validity:                         return (PSVIItem::VALIDITY_STATE)(fBitFields & 0x0003);
-    case PSVI_Validitation_Attempted:           return (PSVIItem::ASSESSMENT_TYPE)((fBitFields >> 2) & 0x0003);
+    case PSVI_Validation_Attempted:             return (PSVIItem::ASSESSMENT_TYPE)((fBitFields >> 2) & 0x0003);
     case PSVI_Type_Definition_Type:             return (fBitFields & (1 << 5))?XSTypeDefinition::COMPLEX_TYPE:XSTypeDefinition::SIMPLE_TYPE;
     case PSVI_Type_Definition_Anonymous:        return (fBitFields & (1 << 6))?true:false;
     case PSVI_Nil:                              return (fBitFields & (1 << 7))?true:false;
@@ -169,7 +169,7 @@ void DOMTypeInfoImpl::setNumericProperty(PSVIProperty prop, int value) {
     switch(prop)
     {
     case PSVI_Validity:                         fBitFields |= (value & 0x0003); break;
-    case PSVI_Validitation_Attempted:           fBitFields |= ((value & 0x0003) << 2); break;
+    case PSVI_Validation_Attempted:             fBitFields |= ((value & 0x0003) << 2); break;
     case PSVI_Type_Definition_Type:             fBitFields |= (value==XSTypeDefinition::COMPLEX_TYPE)?(1 << 5):0; break;
     case PSVI_Type_Definition_Anonymous:        fBitFields |= (value!=0)?(1 << 6):0; break;
     case PSVI_Nil:                              fBitFields |= (value!=0)?(1 << 7):0; break;

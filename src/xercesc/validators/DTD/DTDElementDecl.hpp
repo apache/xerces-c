@@ -36,7 +36,7 @@ class DTDAttDefList;
 
 //
 //  This class is a derivative of the basic element decl. This one implements
-//  the virtuals so that they work for a DTD. THe big difference is that
+//  the virtuals so that they work for a DTD. The big difference is that
 //  they don't live in any URL in the DTD. The names are just stored as full
 //  QNames, so they are not split out and element decls don't live within
 //  URL namespaces or anything like that.

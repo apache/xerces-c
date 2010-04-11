@@ -246,7 +246,7 @@ private:
     void addImportedNS(const int namespaceURI);
 
     /**
-      * Retrived the Namespace mapping from the schema element
+      * Retrieved the Namespace mapping from the schema element
       */
     bool retrieveNamespaceMapping(const DOMElement* const elem);
 

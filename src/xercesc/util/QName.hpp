@@ -35,7 +35,7 @@ class XMLUTIL_EXPORT QName : public XSerializable, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
-    //  Contructors and Destructor
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
     /** Default constructor. */
     QName(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -134,7 +134,7 @@ private :
     //      The prefix that was applied to this attribute's name, and the
     //      current size of the buffer (minus one for the null.) Prefixes
     //      really don't matter technically but it might be required for
-    //      pratical reasons, to recreate the original document for instance.
+    //      practical reasons, to recreate the original document for instance.
     //
     //  fLocalPart
     //  fLocalPartBufSz
@@ -146,7 +146,7 @@ private :
     //      This is the QName form of the name, which is faulted in (from the
     //      prefix and name) upon request. The size field indicates the
     //      current size of the buffer (minus one for the null.) It will be
-    //      zero until fauled in.
+    //      zero until filled in.
     //
     //  fURIId
     //      The id of the URI that this attribute belongs to.

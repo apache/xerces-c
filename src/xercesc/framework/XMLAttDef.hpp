@@ -31,7 +31,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLAttr;
 
-/** Represents the core information of an atribute definition
+/** Represents the core information of an attribute definition
  *
  *  This class defines the basic characteristics of an attribute, no matter
  *  what type of validator is used. If a particular schema associates more
@@ -130,7 +130,7 @@ public:
 
     /** Get a string representation of the passed attribute type enum
       *
-      * This method allows you to get a textual representation of an attriubte
+      * This method allows you to get a textual representation of an attribute
       * type, mostly for debug or display.
       *
       * @param attrType The attribute type value to get the string for.
@@ -216,7 +216,7 @@ public:
 
     /** Get the enumeration value (if any) of this attribute type
       *
-      * If the attribute is of an enumeration or notatin type, then this
+      * If the attribute is of an enumeration or notation type, then this
       * method will return a const reference to a string that contains the
       * space separated values that can the attribute can have.
       *
@@ -238,7 +238,7 @@ public:
     /** Get the type of this attribute
       *
       * Gets the type of this attribute. This type is represented by an enum
-      * that convers the types of attributes allowed by XML, e.g. CDATA, NMTOKEN,
+      * that converts the types of attributes allowed by XML, e.g. CDATA, NMTOKEN,
       * NOTATION, etc...
       *
       * @return The attribute type enumeration value for this type of

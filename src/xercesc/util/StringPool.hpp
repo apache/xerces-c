@@ -29,7 +29,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 //
 //  This class implements a string pool, in which strings can be added and
-//  given a unique id by which they can be refered. It has to provide fast
+//  given a unique id by which they can be referred. It has to provide fast
 //  access both mapping from a string to its id and mapping from an id to
 //  its string. This requires that it provide two separate data structures.
 //  The map one is a hash table for quick storage and look up by name. The
@@ -126,7 +126,7 @@ protected:
 };
 
 
-// Provid inline versions of some of the simple functions to improve performance.
+// Provide inline versions of some of the simple functions to improve performance.
 inline unsigned int XMLStringPool::addOrFind(const XMLCh* const newString)
 {
     PoolElem* elemToFind = fHashTable->get(newString);

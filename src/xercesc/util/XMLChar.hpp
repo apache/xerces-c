@@ -135,7 +135,7 @@ private:
     //      code and then hard coded into the cpp file for speed.
     //
     //  fNEL
-    //      Flag to respresents whether NEL and LSEP newline recognition is enabled
+    //      Flag to represents whether NEL and LSEP newline recognition is enabled
     //      or disabled
     // -----------------------------------------------------------------------
     static XMLByte  fgCharCharsTable1_0[0x10000];

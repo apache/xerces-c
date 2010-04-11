@@ -55,7 +55,7 @@ void MemBufFormatTarget::writeChars(const XMLByte* const toWrite
     if (count)
     {
       if (fIndex + count >= fCapacity)
-        insureCapacity(count);
+        ensureCapacity(count);
 
       memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
       fIndex += count;
@@ -84,7 +84,7 @@ void MemBufFormatTarget::reset()
 // ---------------------------------------------------------------------------
 //  MemBufFormatTarget: Private helper methods
 // ---------------------------------------------------------------------------
-void MemBufFormatTarget::insureCapacity(const XMLSize_t extraNeeded)
+void MemBufFormatTarget::ensureCapacity(const XMLSize_t extraNeeded)
 {
     // Oops, not enough room. Calc new capacity and allocate new buffer
     const XMLSize_t newCap = ((fIndex + extraNeeded) * 2);

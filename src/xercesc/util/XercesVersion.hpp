@@ -47,7 +47,7 @@
  *
  *    The macro XERCES_GRAMMAR_SERIALIZATION_LEVEL has been added so that during
  *    development if users are using the latest code they can use the grammar
- *    serialization/desialization features.  Whenever a change is made to the
+ *    serialization/deserialization features.  Whenever a change is made to the
  *    serialization code this macro should be incremented.
  *
  * Xerces User Documentation:

@@ -83,7 +83,7 @@ public:
     /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
-     * This method is called on the error handler when an error occures.
+     * This method is called on the error handler when an error occurs.
      * If an exception is thrown from this method, it is considered to be equivalent of returning <code>true</code>.
      *
      * @param domError The error object that describes the error, this object

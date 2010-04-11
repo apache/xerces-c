@@ -76,7 +76,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IC_Selector(const IC_Selector& other);
     IC_Selector& operator= (const IC_Selector& other);
@@ -125,7 +125,7 @@ private:
                     MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     SelectorMatcher(const SelectorMatcher& other);
     SelectorMatcher& operator= (const SelectorMatcher& other);

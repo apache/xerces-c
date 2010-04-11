@@ -146,7 +146,7 @@ private:
     SchemaValidator& operator=(const SchemaValidator&);
 
     // -----------------------------------------------------------------------
-    //  Element Consitency Checking methods
+    //  Element Consistency Checking methods
     // -----------------------------------------------------------------------
     void checkRefElementConsistency(SchemaGrammar* const currentGrammar,
                                     const ComplexTypeInfo* const curTypeInfo,

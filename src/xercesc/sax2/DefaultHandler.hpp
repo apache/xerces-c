@@ -112,7 +112,7 @@ public:
     * each element (such as finalising a tree node or writing
     * output to a file).</p>
     *
-    * @param uri The URI of the asscioated namespace for this element
+    * @param uri The URI of the associated namespace for this element
 	* @param localname The local part of the element name
 	* @param qname The QName of this element
     * @exception SAXException Any SAX exception, possibly
@@ -169,7 +169,7 @@ public:
     );
 
     /**
-    * Reset the Docuemnt object on its reuse
+    * Reset the Document object on its reuse
     *
     * @see DocumentHandler#resetDocument
     */
@@ -214,7 +214,7 @@ public:
     * each element (such as allocating a new tree node or writing
     * output to a file).</p>
     *
-    * @param uri The URI of the asscioated namespace for this element
+    * @param uri The URI of the associated namespace for this element
 	* @param localname the local part of the element name
 	* @param qname the QName of this element
     * @param attrs The specified or defaulted attributes.
@@ -302,7 +302,7 @@ public:
     * in a subclass to do special translations such as catalog lookups
     * or URI redirection.</p>
     *
-    * @param publicId The public identifer, or null if none is
+    * @param publicId The public identifier, or null if none is
     *                 available.
     * @param systemId The system identifier provided in the XML
     *                 document.
@@ -445,7 +445,7 @@ public:
    /**
     * Receive notification of comments.
     *
-    * <p>The Parser will call this method to report each occurence of
+    * <p>The Parser will call this method to report each occurrence of
     * a comment in the XML document.</p>
     *
     * <p>The application must not attempt to read from the array

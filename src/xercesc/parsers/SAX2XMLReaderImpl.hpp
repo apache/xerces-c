@@ -147,7 +147,7 @@ public :
      * The parser owns the returned pointer.  The memory allocated for
      * the returned pointer will be destroyed when the parser is deleted.
      *
-     * To ensure assessiblity of the returned information after the parser
+     * To ensure accessibility of the returned information after the parser
      * is deleted, callers need to copy and store the returned information
      * somewhere else; otherwise you may get unexpected result.  Since the returned
      * pointer is a generic void pointer, see the SAX2 Programming Guide to learn
@@ -587,7 +587,7 @@ public :
 
     /**
       * This method allows users to set the parser's behaviour when it
-      * encounters a validtion constraint error. If set to true, and the
+      * encounters a validation constraint error. If set to true, and the
       * the parser will treat validation error as fatal and will exit depends on the
       * state of "getExitOnFirstFatalError". If false, then it will
       * report the error and continue processing.
@@ -633,7 +633,7 @@ public :
       * the scan of the prolog failed and the token is not going to work on
       * subsequent scanNext() calls.
       *
-      * @param systemId A pointer to a Unicode string represting the path
+      * @param systemId A pointer to a Unicode string representing the path
       *                 to the XML file to be parsed.
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
@@ -666,10 +666,10 @@ public :
       * the scan of the prolog failed and the token is not going to work on
       * subsequent scanNext() calls.
       *
-      * @param systemId A pointer to a regular native string represting
+      * @param systemId A pointer to a regular native string representing
       *                 the path to the XML file to be parsed.
       * @param toFill   A token maintaing state information to maintain
-      *                 internal consIstency between invocation of 'parseNext'
+      *                 internal consistency between invocation of 'parseNext'
       *                 calls.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
@@ -789,7 +789,7 @@ public :
       *               points to the schema grammar file to be preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
-      *                otherwise, no chaching. Default is <code>false</code>.
+      *                otherwise, no caching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
       *
@@ -817,7 +817,7 @@ public :
       *                 preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
-      *                otherwise, no chaching. Default is <code>false</code>.
+      *                otherwise, no caching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
       *
@@ -842,7 +842,7 @@ public :
       *                 the path to the XML grammar file to be preparsed.
       * @param grammarType The grammar type (Schema or DTD).
       * @param toCache If <code>true</code>, we cache the preparsed grammar,
-      *                otherwise, no chaching. Default is <code>false</code>.
+      *                otherwise, no caching. Default is <code>false</code>.
       * @return The preparsed schema grammar object (SchemaGrammar or
       *         DTDGrammar). That grammar object is owned by the parser.
       *
@@ -1020,7 +1020,7 @@ public :
       * was just scanned.
       *
       * <p>If any advanced callback handlers are installed, the
-      * corresponding 'endEnityReference' method is invoked.</p>
+      * corresponding 'endEntityReference' method is invoked.</p>
       *
       * @param entDecl A const reference to the object containing the
       *                entity declaration information.
@@ -1115,7 +1115,7 @@ public :
       * This method is used to indicate the start of an entity reference.
       *
       * <p>If any advanced callback handlers are installed, the
-      * corresponding 'endEnityReference' method is invoked.</p>
+      * corresponding 'endEntityReference' method is invoked.</p>
       *
       * @param entDecl A const reference to the object containing the
       *                entity declaration information.
@@ -1226,7 +1226,7 @@ public :
 
     /**
       * This method allows an installed XMLEntityHandler to further
-      * process any system id's of enternal entities encountered in
+      * process any system id's of external entities encountered in
       * the XML file being parsed, such as redirection etc.
       *
       * <b><font color="#FF0000">This method always returns 'false'
