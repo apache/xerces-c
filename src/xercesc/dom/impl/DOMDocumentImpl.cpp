@@ -200,6 +200,13 @@ void DOMDocumentImpl::setDocumentType(DOMDocumentType *doctype)
 
 DOMDocumentImpl::~DOMDocumentImpl()
 {
+    // While DOMConfiguration is allocated on the Document's heap, itself
+    // it uses the memory manager directly. This means that while we cannot
+    // delete with operator delete, we need to call its d-tor.
+    //
+    if (fDOMConfiguration)
+      fDOMConfiguration->~DOMConfiguration ();
+
     //  Clean up the fNodeListPool
     if (fNodeListPool)
         fNodeListPool->cleanup();

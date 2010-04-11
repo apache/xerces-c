@@ -265,7 +265,6 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
             XMLUri includedURI(fallback->getBaseURI());
 
             if (fallback->hasChildNodes()){
-                DOMDocumentFragment* frag = parsedDocument->createDocumentFragment();
                 DOMNode *child = fallback->getFirstChild();
                 /* add the content of the fallback element, and remove the fallback elem itself */
                 for ( ; child != NULL ; child=child->getNextSibling()){
@@ -288,11 +287,10 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                             ((DOMElement*)newNode)->setAttribute(fgXIBaseAttrName, xil.getLocation());
                         }
                     }
-                    DOMNode *newChild = frag->appendChild(newNode);
-                    parseDOMNodeDoingXInclude(newChild, parsedDocument, entityResolver);
+                    includeParent->insertBefore (newNode, xincludeNode);
+                    parseDOMNodeDoingXInclude(newNode, parsedDocument, entityResolver);
                 }
-                includeParent->replaceChild(frag, xincludeNode);
-                frag->release();
+                includeParent->removeChild(xincludeNode);
                 modifiedNode = true;
             } else {
                 /* empty fallback element - simply remove it! */
@@ -309,8 +307,6 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
             /* record the successful include while we process the children */
             addDocumentURIToCurrentInclusionHistoryStack(hrefLoc.getLocation());
 
-            DOMDocumentFragment* frag = parsedDocument->createDocumentFragment();
-            /* need to import the document prolog here */
             DOMNode *child = includedDoc->getFirstChild();
             for (; child != NULL; child = child->getNextSibling()) {
                 if (child->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
@@ -377,11 +373,10 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                     }
                 }
                 DOMNode *newNode = parsedDocument->importNode(child, true);
-                DOMNode *newChild = frag->appendChild(newNode);
-                parseDOMNodeDoingXInclude(newChild, parsedDocument, entityResolver);
+                includeParent->insertBefore (newNode, xincludeNode);
+                parseDOMNodeDoingXInclude(newNode, parsedDocument, entityResolver);
             }
-            includeParent->replaceChild(frag, xincludeNode);
-            frag->release();
+            includeParent->removeChild(xincludeNode);
             popFromCurrentInclusionHistoryStack(NULL);
             modifiedNode = true;
         } else if (includedText){
@@ -687,14 +682,12 @@ XIncludeUtils::popFromCurrentInclusionHistoryStack(const XMLCh * /*toPop*/){
         historyCursor = historyCursor->next;
     }
 
-    if (penultimateCursor == fIncludeHistoryHead){
-        historyCursor = fIncludeHistoryHead;
+    if (historyCursor == fIncludeHistoryHead){
         fIncludeHistoryHead = NULL;
     } else {
         penultimateCursor->next = NULL;
     }
 
-    // XERCES_STD_QUALIFIER cerr << "poppinURIofStack " << XMLString::transcode(historyCursor->URI) << XERCES_STD_QUALIFIER endl;
     XMLString::release(&(historyCursor->URI));
     XMLPlatformUtils::fgMemoryManager->deallocate((void *)historyCursor);
     return NULL;
@@ -705,8 +698,8 @@ XIncludeUtils::freeInclusionHistory(){
     XIncludeHistoryNode *historyCursor = XIncludeUtils::fIncludeHistoryHead;
     while (historyCursor != NULL){
         XIncludeHistoryNode *next = historyCursor->next;
-        /* XMLString::release(&(historyCursor->URI));
-           XMLPlatformUtils::fgMemoryManager->deallocate((void *)historyCursor); */
+        XMLString::release(&(historyCursor->URI));
+        XMLPlatformUtils::fgMemoryManager->deallocate((void *)historyCursor);
         historyCursor = next;
     }
     XIncludeUtils::fIncludeHistoryHead = NULL;
