@@ -37,7 +37,7 @@
 #if HAVE_SYS_TIMEB_H
 #	include <sys/timeb.h>
 #endif
-#if HAVE_CPUID_H
+#if HAVE_CPUID_H && !XERCES_HAVE_INTRIN_H
 #   include <cpuid.h>
 #endif
 
