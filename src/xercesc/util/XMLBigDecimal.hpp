@@ -123,7 +123,7 @@ private:
     void  cleanUp();
     
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------       
     XMLBigDecimal(const XMLBigDecimal& other);
     XMLBigDecimal& operator=(const XMLBigDecimal& other);        
@@ -135,7 +135,7 @@ private:
     //     sign
     //
     //  fTotalDigits
-    //     the total number of didits 
+    //     the total number of digits 
     //
     //  fScale
     //     the number of digits to the right of the decimal point

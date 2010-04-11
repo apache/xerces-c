@@ -153,7 +153,7 @@ private:
     //      The string to be parsed
 	//
     //  fDelimeters
-    //      A set of delimeter characters
+    //      A set of delimiter characters
     //
     //  fTokens
     //      A vector of the token strings

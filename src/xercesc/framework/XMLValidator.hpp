@@ -110,7 +110,7 @@ public:
 
     /**
       * The derived class should fault in the passed XMLAttr value. It should
-      * use the passed attribute definition (which is passed via the base
+      * use the passeed attribute definition (which is passed via the base
       * type so it must often be downcast to the appropriate type for the
       * derived validator class), to fill in the passed attribute. This is done
       * as a performance enhancement since the derived class has more direct
@@ -139,7 +139,7 @@ public:
 
     /**
       * This method is called by the scanner before a new document is about
-      * to start. It gives the validator a change to reset itself in preperation
+      * to start. It gives the validator a change to reset itself in preparation
       * for another validation pass.
       */
     virtual void reset() = 0;

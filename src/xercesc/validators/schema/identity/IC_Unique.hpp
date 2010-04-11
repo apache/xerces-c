@@ -59,7 +59,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IC_Unique(const IC_Unique& other);
     IC_Unique& operator= (const IC_Unique& other);

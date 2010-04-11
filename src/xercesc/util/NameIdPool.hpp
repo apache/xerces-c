@@ -53,7 +53,7 @@ template <class TElem> class NameIdPoolEnumerator;
 //  whole thing is flushed. This makes it very easy to maintain the two
 //  access methods in sync.
 //
-//  For efficiency reasons, the id refererence array is never flushed until
+//  For efficiency reasons, the id reference array is never flushed until
 //  the dtor. This way, it does not have to be regrown every time its reused.
 //
 //  All elements are assumed to be owned by the pool!
@@ -63,7 +63,7 @@ template <class TElem> class NameIdPool : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
-    //  Contructors and Destructor
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
     NameIdPool
     (

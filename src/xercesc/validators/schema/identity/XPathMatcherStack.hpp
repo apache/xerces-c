@@ -69,7 +69,7 @@ private:
     void cleanUp();
 
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XPathMatcherStack(const XPathMatcherStack& other);
     XPathMatcherStack& operator= (const XPathMatcherStack& other);

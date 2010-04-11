@@ -160,7 +160,7 @@ public:
 
     /**
      * [prohibited substitutions]: a subset of {extension, restriction}
-     * @param toTest  Extention or restriction constants (see 
+     * @param toTest  Extension or restriction constants (see 
      *   <code>XSObject</code>). 
      * @return True if toTest is a prohibited substitution, otherwise 
      *   false.

@@ -171,7 +171,7 @@ public:
       * Get the actual value, in the form of XSValue, for a given string of the
       * data type specified
       *
-      * Client application is responsible for the deleletion of the XSValue returned.
+      * Client application is responsible for the deletion of the XSValue returned.
       *
       * @param  content    raw data
       * @param  datatype   schema datatype

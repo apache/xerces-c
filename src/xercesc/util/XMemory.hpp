@@ -33,7 +33,7 @@ class MemoryManager;
  *  This class makes it possible to override the C++ memory management by
  *  adding new/delete operators to this base class.
  *
- *  This class is used in conjuction with the pluggable memory manager. It
+ *  This class is used in conjunction with the pluggable memory manager. It
  *  allows applications to control Xerces memory management.
  */
 

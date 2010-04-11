@@ -55,7 +55,7 @@ public:
     // Convert XMLCh into "native unicode" character
     void	xmlChToMbc (XMLCh xch, char *mbc) const;
 
-    // Fill array of XMLCh characters with data, supplyed in the array
+    // Fill array of XMLCh characters with data, supplied in the array
     // of "native unicode" characters.
     XMLCh*	mbsToXML (
       const char*	mbs_str,
@@ -64,7 +64,7 @@ public:
     ) const;
 
 
-    // Fill array of "native unicode" characters with data, supplyed
+    // Fill array of "native unicode" characters with data, supplied
     // in the array of XMLCh characters.
     char*	xmlToMbs
     (
@@ -90,7 +90,7 @@ protected:
     // Return uppercase equivalent for XMLCh
     XMLCh 	toLower (const XMLCh ch);
 
-    // Wrapper aroung the iconv() for transcoding from the local charset
+    // Wrapper around the iconv() for transcoding from the local charset
     size_t	iconvFrom
     (
       const char	*fromPtr,
@@ -99,7 +99,7 @@ protected:
       size_t		toLen
     );
 
-    // Wrapper aroung the iconv() for transcoding to the local charset
+    // Wrapper around the iconv() for transcoding to the local charset
     size_t	iconvTo
     (
       const char	*fromPtr,

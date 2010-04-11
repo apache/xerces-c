@@ -57,7 +57,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IC_KeyRef(const IC_KeyRef& other);
     IC_KeyRef& operator= (const IC_KeyRef& other);

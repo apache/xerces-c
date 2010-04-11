@@ -53,7 +53,7 @@ void BinMemOutputStream::writeBytes( const XMLByte*     const      toGo
 
     if (maxToWrite) 
     {
-        insureCapacity(maxToWrite);
+        ensureCapacity(maxToWrite);
         memcpy(&fDataBuf[fIndex], toGo, maxToWrite * sizeof(XMLByte));
         fIndex += maxToWrite;
     }
@@ -91,7 +91,7 @@ XMLFilePos BinMemOutputStream::getSize() const
 // ---------------------------------------------------------------------------
 //  BinMemOutputStream: Private helper methods
 // ---------------------------------------------------------------------------
-void BinMemOutputStream::insureCapacity(const XMLSize_t extraNeeded)
+void BinMemOutputStream::ensureCapacity(const XMLSize_t extraNeeded)
 {
     // If we can handle it, do nothing yet
     if (fIndex + extraNeeded < fCapacity)

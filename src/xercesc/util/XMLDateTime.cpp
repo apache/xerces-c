@@ -404,11 +404,11 @@ int XMLDateTime::compareOrder(const XMLDateTime* const lValue
 
     if ( lTemp.fHasTime)
     {
-        if ( lTemp.fMiliSecond < rTemp.fMiliSecond )
+        if ( lTemp.fMilliSecond < rTemp.fMilliSecond )
         {
             return LESS_THAN;
         }
-        else if ( lTemp.fMiliSecond > rTemp.fMiliSecond )
+        else if ( lTemp.fMilliSecond > rTemp.fMilliSecond )
         {
             return GREATER_THAN;
         }
@@ -430,7 +430,7 @@ XMLDateTime::XMLDateTime(MemoryManager* const manager)
 : fStart(0)
 , fEnd(0)
 , fBufferMaxLen(0)
-, fMiliSecond(0)
+, fMilliSecond(0)
 , fHasTime(false)
 , fBuffer(0)
 , fMemoryManager(manager)
@@ -443,7 +443,7 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
 : fStart(0)
 , fEnd(0)
 , fBufferMaxLen(0)
-, fMiliSecond(0)
+, fMilliSecond(0)
 , fHasTime(false)
 , fBuffer(0)
 , fMemoryManager(manager)
@@ -924,7 +924,7 @@ void XMLDateTime::parseDuration()
                 }
 
                 fValue[Second]     = negate * parseInt(fStart, mlsec);
-                fMiliSecond        = negate * parseMiliSecond(mlsec+1, end);
+                fMilliSecond        = negate * parseMiliSecond(mlsec+1, end);
             }
             else
             {
@@ -1060,12 +1060,12 @@ void XMLDateTime::getTime()
 
         if ( sign == NOT_FOUND )
         {
-            fMiliSecond = parseMiliSecond(fStart, fEnd);  //get ms between '.' and fEnd
+            fMilliSecond = parseMiliSecond(fStart, fEnd);  //get ms between '.' and fEnd
             fStart = fEnd;
         }
         else
         {
-            fMiliSecond = parseMiliSecond(fStart, sign);  //get ms between UTC sign and fEnd
+            fMilliSecond = parseMiliSecond(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
     else if(sign == 0 || XMLSize_t (sign) != fStart)
@@ -1331,7 +1331,7 @@ void XMLDateTime::validateDateTime() const
         (fValue[Hour] > 24) ||
         ((fValue[Hour] == 24) && ((fValue[Minute] !=0) ||
                                   (fValue[Second] !=0) ||
-                                  (fMiliSecond    !=0))))
+                                  (fMilliSecond    !=0))))
     {
         ThrowXMLwithMemMgr1(SchemaDateTimeException
                 , XMLExcepts::DateTime_hour_invalid

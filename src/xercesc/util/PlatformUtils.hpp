@@ -62,7 +62,7 @@ private :
   *
   * This class contains methods that must be implemented in a platform
   * specific manner. The actual implementations of these methods are
-  * available in the per-platform files indide <code>src/util/Platforms
+  * available in the per-platform files inside <code>src/util/Platforms
   * </code>.
   */
 class XMLUTIL_EXPORT XMLPlatformUtils
@@ -89,11 +89,11 @@ public :
     /** The transcoding service.
       *
       * This is provided by the per platform driver, so each platform can
-      * choose what implemenation it wants to use. When the platform
+      * choose what implementation it wants to use. When the platform
       * independent initialization code needs to get a transcoding service
       * object, it will call <code>makeTransService()</code> to ask the
       * per-platform code to create one. Only one transcoding service
-      * object is reqeusted per-process, so it is shared and synchronized
+      * object is requested per-process, so it is shared and synchronized
       * among parser instances within that process.
       */
     static XMLTransService*     fgTransService;
@@ -251,7 +251,7 @@ public :
       * in the absence of it, the default panic handler.
       *
       * In case the default panic handler does not support a particular
-      * platform, the platform specific panic hanlding shall be implemented
+      * platform, the platform specific panic handling shall be implemented
       * here </p>.
       *
       * @param reason The enumeration that defines the cause of the failure
@@ -275,7 +275,7 @@ public :
     /** Get the current file position
       *
       * This must be implemented by the per-platform driver, which should
-      * use local file services to deterine the current position within
+      * use local file services to determine the current position within
       * the passed file.
       *
       * Since the file API provided here only reads, if the host platform
@@ -486,7 +486,7 @@ public :
         MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    /** Check if a charater is a slash
+    /** Check if a character is a slash
       *
       * This must be implemented by the per-platform driver.
       *
@@ -497,7 +497,7 @@ public :
       */
     static inline bool isAnySlash(XMLCh c);
 
-    /** Remove occurences of the pair of dot slash
+    /** Remove occurrences of the pair of dot slash
       *
       * To remove the sequence, dot slash if it is part of the sequence,
       * slash dot slash.
@@ -509,7 +509,7 @@ public :
     static void   removeDotSlash(XMLCh* const srcPath
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    /** Remove occurences of the dot dot slash
+    /** Remove occurrences of the dot dot slash
       *
       * To remove the sequence, slash dot dot slash and its preceding path segment
       * if and only if the preceding path segment is not slash dot dot slash.
@@ -574,7 +574,7 @@ public :
       * This must be implemented by the per-platform driver, which should
       * use local services to return the current value of a running
       * millisecond timer. Note that the value returned is only as accurate
-      * as the millisecond time of the underyling host system.
+      * as the millisecond time of the underlying host system.
       *
       * @return Returns the system time as an unsigned long
       */
@@ -733,7 +733,7 @@ private :
       */
     static XMLNetAccessor* makeNetAccessor();
 
-    /** Creates a Transoding service
+    /** Creates a Transcoding service
       *
       * Each per-platform driver must implement this method and return some
       * derivative of the XMLTransService class. This object serves as the
@@ -749,7 +749,7 @@ private :
       *
       * @param srcPath the path to search
       *
-      * @return   the position of the first occurence of slash dot dot slash
+      * @return   the position of the first occurrence of slash dot dot slash
       *            -1 if no such sequence is found
       */
     static int  searchSlashDotDotSlash(XMLCh* const srcPath);

@@ -157,7 +157,7 @@ private :
     //
     //  fSrcOffsets
     //      This is an array of longs, which are allocated to the size of
-    //      the trancoding block (if any) indicated in the ctor. It is used
+    //      the transcoding block (if any) indicated in the ctor. It is used
     //      to get the character offsets from ICU, which are then translated
     //      into an array of char sizes for return.
     // -----------------------------------------------------------------------

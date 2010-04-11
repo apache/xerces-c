@@ -347,7 +347,7 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
                 char byte[2] = {*srcPtr,0};
 
                 ThrowXMLwithMemMgr2(UTFDataFormatException
-                                  , XMLExcepts::UTF8_Exceede_BytesLimit
+                                  , XMLExcepts::UTF8_Exceeds_BytesLimit
                                   , byte
                                   , len
                                   , getMemoryManager());

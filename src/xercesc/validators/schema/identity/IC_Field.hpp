@@ -80,7 +80,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IC_Field(const IC_Field& other);
     IC_Field& operator= (const IC_Field& other);
@@ -124,7 +124,7 @@ private:
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     FieldMatcher(const FieldMatcher& other);
     FieldMatcher& operator= (const FieldMatcher& other);

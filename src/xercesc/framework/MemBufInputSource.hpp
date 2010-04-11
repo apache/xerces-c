@@ -76,7 +76,7 @@ public :
       *
       * Note that the system id provided serves two purposes. Firstly it is
       * going to be displayed in error messages as the source of the error.
-      * And secondly, any entities which are refered to from this entity
+      * And secondly, any entities which are referred to from this entity
       * via relative paths/URLs will be relative to this fake system id.
       *
       * @param  srcDocBytes     The actual data buffer to be parsed from.

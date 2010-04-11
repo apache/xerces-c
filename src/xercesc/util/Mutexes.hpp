@@ -68,7 +68,7 @@ private :
 
 
     // -----------------------------------------------------------------------
-    //  Sun PlatformUtils needs acess to fHandle to initialize the
+    //  Sun PlatformUtils needs access to fHandle to initialize the
     //  atomicOpsMutex at startup.
     // -----------------------------------------------------------------------
     friend class XMLPlatformUtils;

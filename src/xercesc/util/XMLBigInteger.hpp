@@ -83,9 +83,9 @@ public:
     unsigned int       getTotalDigit() const;
    
     /**
-     *  Return a copy of the fMagnitue.
+     *  Return a copy of the fMagnitude.
      *  This is similar to toString, except the internal buffer is returned directly
-     *  Caller is not required to delet the returned memory.
+     *  Caller is not required to delete the returned memory.
      */
     inline XMLCh*      getRawData() const;
 

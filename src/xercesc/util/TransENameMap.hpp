@@ -151,7 +151,7 @@ private :
     //  Private data members
     //
     //  fSwapped
-    //      Indicates whether the endianess of the encoding is opposite of
+    //      Indicates whether the endianness of the encoding is opposite of
     //      that of the local host.
     // -----------------------------------------------------------------------
     bool    fSwapped;

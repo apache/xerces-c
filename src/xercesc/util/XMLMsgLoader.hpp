@@ -103,7 +103,7 @@ public :
       * This function enables set the locale information which
       * all concrete message loaders shall refer to during instantiation.
       *
-      * Note: for detailed discussion, refer to PlatformUtils::initalize()
+      * Note: for detailed discussion, refer to PlatformUtils::initialize()
       */
     static void           setLocale(const char* const localeToAdopt);
 
@@ -120,7 +120,7 @@ public :
       * This function enables set the NLSHome information which
       * all concrete message loaders shall refer to during instantiation.
       *
-      * Note: for detailed discussion, refer to PlatformUtils::initalize()
+      * Note: for detailed discussion, refer to PlatformUtils::initialize()
       */
     static void           setNLSHome(const char* const nlsHomeToAdopt);
 

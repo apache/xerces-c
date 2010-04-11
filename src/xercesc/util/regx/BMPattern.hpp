@@ -40,7 +40,7 @@ public:
     //@{
 
     /**
-      * This is the onstructor which takes the pattern information. A default
+      * This is the constructor which takes the pattern information. A default
       * shift table size is used.
       *
       * @param  pattern     The pattern to match against.

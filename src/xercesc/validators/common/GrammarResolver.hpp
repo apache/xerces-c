@@ -216,7 +216,7 @@ private:
     //
     //  fGrammarPool           The Grammar Set either plugged or created. 
     //
-    //  fDataTypeReg           DatatypeValidatorFactory registery
+    //  fDataTypeReg           DatatypeValidatorFactory registry
     //
     //  fMemoryManager         Pluggable memory manager for dynamic memory
     //                         allocation/deallocation

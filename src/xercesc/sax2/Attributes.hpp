@@ -166,7 +166,7 @@ public:
     *
     * If the parser has not read a declaration for the attribute,
     * or if the parser does not report attribute types, then it must
-    * return the value "CDATA" as stated in the XML 1.0 Recommentation
+    * return the value "CDATA" as stated in the XML 1.0 Recommendation
     * (clause 3.3.3, "Attribute-Value Normalization").
     *
     * For an enumerated attribute that is not a notation, the

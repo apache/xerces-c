@@ -169,7 +169,7 @@ public:
     //@{
 
     /**
-      * This methode returns the attribute name in a QName format.
+      * This method returns the attribute name in a QName format.
       */
     QName* getAttName() const;
 

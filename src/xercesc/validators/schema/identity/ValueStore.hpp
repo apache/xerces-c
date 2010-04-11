@@ -111,7 +111,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ValueStore(const ValueStore& other);
     ValueStore& operator= (const ValueStore& other);

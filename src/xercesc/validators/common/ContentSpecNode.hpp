@@ -161,7 +161,7 @@ private :
     //  fFirst
     //  fSecond
     //      The optional first and second nodes. The fType field indicates
-    //      which of these are valid. The validaty constraints are:
+    //      which of these are valid. The validity constraints are:
     //
     //          Leaf = Neither valid
     //          ZeroOrOne, ZeroOrMore = First

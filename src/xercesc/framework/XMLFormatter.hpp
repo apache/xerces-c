@@ -44,7 +44,7 @@ public:
     // -----------------------------------------------------------------------
     //  Class types
     // -----------------------------------------------------------------------
-    /** @name Public Contants */
+    /** @name Public Constants */
     //@{
     /**
      * EscapeFlags - Different styles of escape flags to control various formatting.
@@ -271,7 +271,7 @@ public:
     inline const XMLTranscoder*   getTranscoder() const;
 
     /**
-     * @return return the transcoder used internally for transcoding the formatter conent
+     * @return return the transcoder used internally for transcoding the formatter content
      */
     inline XMLTranscoder*   getTranscoder();
 

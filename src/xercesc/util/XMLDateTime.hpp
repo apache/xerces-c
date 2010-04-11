@@ -260,7 +260,7 @@ private:
     XMLSize_t    fEnd;
     XMLSize_t    fBufferMaxLen;
 
-    double       fMiliSecond;
+    double       fMilliSecond;
     bool         fHasTime;
 
     XMLCh*       fBuffer;
@@ -300,7 +300,7 @@ inline void XMLDateTime::reset()
     for ( int i=0; i < TOTAL_SIZE; i++ )
         fValue[i] = 0;
 
-    fMiliSecond   = 0;
+    fMilliSecond   = 0;
     fHasTime      = false;
     fTimeZone[hh] = fTimeZone[mm] = 0;
     fStart = fEnd = 0;
@@ -314,7 +314,7 @@ inline void XMLDateTime::copy(const XMLDateTime& rhs)
     for ( int i = 0; i < TOTAL_SIZE; i++ )
         fValue[i] = rhs.fValue[i];
 
-    fMiliSecond   = rhs.fMiliSecond;
+    fMilliSecond   = rhs.fMilliSecond;
     fHasTime      = rhs.fHasTime;
     fTimeZone[hh] = rhs.fTimeZone[hh];
     fTimeZone[mm] = rhs.fTimeZone[mm];

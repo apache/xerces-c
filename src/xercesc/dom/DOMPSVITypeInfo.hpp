@@ -57,7 +57,7 @@ public:
     enum PSVIProperty
     {
         PSVI_Validity
-        , PSVI_Validitation_Attempted
+        , PSVI_Validation_Attempted
         , PSVI_Type_Definition_Type
         , PSVI_Type_Definition_Name
         , PSVI_Type_Definition_Namespace

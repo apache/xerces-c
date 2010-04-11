@@ -161,7 +161,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ComplexTypeInfo(const ComplexTypeInfo& elemInfo);
     ComplexTypeInfo& operator= (const ComplexTypeInfo& other);

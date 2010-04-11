@@ -90,7 +90,7 @@ public:
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented contstructors and operators
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XercesAttGroupInfo(const XercesAttGroupInfo& elemInfo);
     XercesAttGroupInfo& operator= (const XercesAttGroupInfo& other);

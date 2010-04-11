@@ -220,7 +220,7 @@ public:
      *       if no memory manager is provided.
      *
      *    2. client application is responsible for the 
-     *       proper deallcation of the memory allocated
+     *       proper deallocation of the memory allocated
      *       for the returned value.
      *
      *    3. In the case where the rawData is not valid
@@ -346,7 +346,7 @@ public:
 
     /***
       *
-      *  Serialzie DatatypeValidator derivative 
+      *  Serialize DatatypeValidator derivative 
       *
       *  Param
       *     serEng: serialize engine

@@ -63,11 +63,11 @@ public:
     //@{
 
     /**
-	   * Checks that the "anElement" is within the subsitution group.
+	   * Checks that the "anElement" is within the substitution group.
 	   *
 	   * @param  anElement   QName of the element
 	   *
-	   * @param  exeplar     QName of the head element in the group
+	   * @param  exemplar     QName of the head element in the group
 	   */
     bool isEquivalentTo(const QName* const anElement
                       , const QName* const exemplar);

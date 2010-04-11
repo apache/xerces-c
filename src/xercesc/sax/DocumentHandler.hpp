@@ -190,9 +190,9 @@ public:
     ) = 0;
 
     /**
-    * Reset the Docuemnt object on its reuse
+    * Reset the Document object on its reuse
     *
-    * <p>This method helps in reseting the document implementational
+    * <p>This method helps in reseting the document implementation
     * defaults each time the document is begun.</p>
     *
     */

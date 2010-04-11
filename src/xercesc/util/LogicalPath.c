@@ -98,8 +98,8 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
 
     //
     // 1. concatenate the base and relative
-    // 2. remove all occurences of "/./"
-    // 3. remove all occurences of segment/../ where segment is not ../
+    // 2. remove all occurrences of "/./"
+    // 3. remove all occurrences of segment/../ where segment is not ../
 	// 
 
     XMLString::subString(tmpBuf, basePath, 0, (basePtr - basePath + 1), manager);
@@ -115,7 +115,7 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
 }
 
 //
-// Remove all occurences of './' when it is part of '/./'
+// Remove all occurrences of './' when it is part of '/./'
 //
 // Since it could be '.\' or other combination on windows ( eg, '.'+chYanSign)
 // we can't make use of patterMatch().
@@ -170,7 +170,7 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path
 }
 
 //
-// Remove all occurences of '/segment/../' when segment is not '..'
+// Remove all occurrences of '/segment/../' when segment is not '..'
 //
 // Cases with extra /../ is left to the underlying file system.
 //

@@ -87,7 +87,7 @@ typedef XMLUInt32           UCS4Ch;
 #endif
 
 // ---------------------------------------------------------------------------
-//  According to whether the compiler suports L"" type strings, we define
+//  According to whether the compiler supports L"" type strings, we define
 //  the XMLStrL() macro one way or another.
 // ---------------------------------------------------------------------------
 #if defined(XERCES_LSTRSUPPORT)

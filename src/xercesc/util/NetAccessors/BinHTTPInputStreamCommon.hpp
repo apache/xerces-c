@@ -80,7 +80,7 @@ public:
             for(; *(chars+count); ++count) ;
 
             if(fIndex + count >= fCapacity) {
-                insureCapacity(count);
+                ensureCapacity(count);
             }
             memcpy(&fBuffer[fIndex], chars, count * sizeof(char));
             fIndex += count;
@@ -91,7 +91,7 @@ public:
     {
         if(chars != 0 && len != 0) {
             if(fIndex + len >= fCapacity) {
-                insureCapacity(len);
+                ensureCapacity(len);
             }
             memcpy(&fBuffer[fIndex], chars, len * sizeof(char));
             fIndex += len;
@@ -106,7 +106,7 @@ public:
 	}
 
         if(fIndex + 1 >= fCapacity)
-            insureCapacity(1);
+            ensureCapacity(1);
 
         fBuffer[fIndex] = '0' + n;
         ++fIndex;
@@ -125,7 +125,7 @@ private:
     CharBuffer(const CharBuffer &);
     CharBuffer &operator=(const CharBuffer &);
 
-    void insureCapacity(XMLSize_t extraNeeded)
+    void ensureCapacity(XMLSize_t extraNeeded)
     {
         // If we can't handle it, try doubling the buffer size.
         XMLSize_t newCap = (fIndex + extraNeeded) * 2;

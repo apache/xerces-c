@@ -87,7 +87,7 @@ public:
     //@{
   /**
     * An input source can be set to force the parser to assume a particular
-    * encoding for the data that input source reprsents, via the setEncoding()
+    * encoding for the data that input source represents, via the setEncoding()
     * method. This method will delegate to the wrapped input source to return
     * name of the encoding that is to be forced. If the encoding has never
     * been forced, it returns a null pointer.

@@ -90,7 +90,7 @@ private :
     //
     //  fLocaleBundle
     //      pointer to the required locale specific resource bundle,
-	//           or to the default locale resrouce bundle in case the required
+	//           or to the default locale resource bundle in case the required
 	//              locale specific resource bundle unavailable.
     //
     //  fDomainBundle

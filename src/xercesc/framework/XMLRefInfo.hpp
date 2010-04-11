@@ -32,7 +32,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 /**
  *  This class provides a simple means to track ID Ref usage. Since id/idref
- *  semamatics are part of XML 1.0, any validator will likely to be able to
+ *  semantics are part of XML 1.0, any validator will likely to be able to
  *  track them. Instances of this class represent a reference and two markers,
  *  one for its being declared and another for its being used. When the
  *  document is done, one can look at each instance and, if used but not

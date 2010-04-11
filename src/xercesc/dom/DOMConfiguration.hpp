@@ -43,7 +43,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *   boolean     (boolean    parameters)    and    DOMUserData
  *   (parameters). The names used by the DOMConfiguration object are
  *   defined  throughout  the  DOM Level 3 specifications. Names are
- *   case-insensitives.   To   avoid   possible   conflicts,   as  a
+ *   case-insensitive.   To   avoid   possible   conflicts,   as  a
  *   convention,   names   referring   to   boolean  parameters  and
  *   parameters defined outside the DOM specification should be made
  *   unique.  Names  are  recommended  to  follow the XML name
@@ -219,7 +219,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *               This   forces   the  following  features  to  true:
  *               whitespace-in-element-content,            comments,
  *               namespaces.
- *               Other  features  are  not  changed unless explicity
+ *               Other  features  are  not  changed unless explicitly
  *               specified in the description of the features.
  *               Note  that  querying  this  feature with getFeature
  *               returns   true  only  if  the  individual  features
