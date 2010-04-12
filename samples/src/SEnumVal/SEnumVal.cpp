@@ -497,7 +497,9 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
         case ContentSpecNode::ZeroOrOne:           XERCES_STD_QUALIFIER cout << "ZeroOrOne";      break;
         case ContentSpecNode::ZeroOrMore:          XERCES_STD_QUALIFIER cout << "ZeroOrMore";     break;
         case ContentSpecNode::OneOrMore:           XERCES_STD_QUALIFIER cout << "OneOrMore";      break;
+        case ContentSpecNode::ModelGroupChoice:    
         case ContentSpecNode::Choice:              XERCES_STD_QUALIFIER cout << "Choice";         break;
+        case ContentSpecNode::ModelGroupSequence:  
         case ContentSpecNode::Sequence:            XERCES_STD_QUALIFIER cout << "Sequence";       break;
         case ContentSpecNode::All:                 XERCES_STD_QUALIFIER cout << "All";            break;
         case ContentSpecNode::Any:                 XERCES_STD_QUALIFIER cout << "Any";            break;
@@ -509,9 +511,7 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
         case ContentSpecNode::Any_Skip:            XERCES_STD_QUALIFIER cout << "Any_Skip";       break;
         case ContentSpecNode::Any_Other_Skip:      XERCES_STD_QUALIFIER cout << "Any_Other_Skip"; break;
         case ContentSpecNode::Any_NS_Skip:         XERCES_STD_QUALIFIER cout << "Any_NS_Skip";    break;
-        case ContentSpecNode::Any_NS_Choice:       XERCES_STD_QUALIFIER cout << "Any_NS_Choice";    break;
-        case ContentSpecNode::ModelGroupSequence:  XERCES_STD_QUALIFIER cout << "ModelGroupSequence";    break;
-        case ContentSpecNode::ModelGroupChoice:    XERCES_STD_QUALIFIER cout << "ModelGroupChoice";    break;
+        case ContentSpecNode::Any_NS_Choice:       XERCES_STD_QUALIFIER cout << "Any_NS_Choice";  break;
         case ContentSpecNode::UnknownType:         XERCES_STD_QUALIFIER cout << "UnknownType";    break;
     }
     XERCES_STD_QUALIFIER cout << "\n";
