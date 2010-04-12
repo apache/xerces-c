@@ -982,20 +982,20 @@ access the Schema information stored in internal data structures.
 Name:			personnel
 Model Type:		Children
 Create Reason:	Declared
-ContentType:	ModelGroupSequence
-Content Model:	(person,)
+ContentType:	Sequence
+Content Model:	(person+)
 ComplexType:
 	TypeName:	,__AnonC0
-	ContentType:	ModelGroupSequence
+	ContentType:	Sequence
 --------------------------------------------
 Name:			person
 Model Type:		Children
 Create Reason:	Declared
-ContentType:	ModelGroupSequence
-Content Model:	((name,email,url),link)
+ContentType:	Sequence
+Content Model:	(name,email*,url*,link?)
 ComplexType:
 	TypeName:	,__AnonC1
-	ContentType:	ModelGroupSequence
+	ContentType:	Sequence
 Attributes:
 	Name:			id
 	Type:			ID
