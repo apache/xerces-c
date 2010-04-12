@@ -247,6 +247,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
         return false;
     }
 
+    RefVectorOf<DOMNode> delayedProcessing(12,false);
     if (includedDoc == NULL && includedText == NULL){
         /* there was an error - this is now a resource error
            let's see if there is a fallback */
@@ -265,6 +266,7 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
             XMLUri includedURI(fallback->getBaseURI());
 
             if (fallback->hasChildNodes()){
+                DOMDocumentFragment* frag = parsedDocument->createDocumentFragment();
                 DOMNode *child = fallback->getFirstChild();
                 /* add the content of the fallback element, and remove the fallback elem itself */
                 for ( ; child != NULL ; child=child->getNextSibling()){
@@ -287,10 +289,19 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                             ((DOMElement*)newNode)->setAttribute(fgXIBaseAttrName, xil.getLocation());
                         }
                     }
-                    includeParent->insertBefore (newNode, xincludeNode);
-                    parseDOMNodeDoingXInclude(newNode, parsedDocument, entityResolver);
+                    DOMNode *newChild = frag->appendChild(newNode);
+                    // don't process the node now, wait until it is placed in the final position
+                    delayedProcessing.addElement(newChild);
+                    //parseDOMNodeDoingXInclude(newChild, parsedDocument, entityResolver);
                 }
-                includeParent->removeChild(xincludeNode);
+                includeParent->replaceChild(frag, xincludeNode);
+                frag->release();
+
+                for(XMLSize_t i=0;i<delayedProcessing.size();i++)
+                {
+                    DOMNode* childNode=delayedProcessing.elementAt(i);
+                    parseDOMNodeDoingXInclude(childNode, parsedDocument, entityResolver);
+                }
                 modifiedNode = true;
             } else {
                 /* empty fallback element - simply remove it! */
@@ -307,6 +318,8 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
             /* record the successful include while we process the children */
             addDocumentURIToCurrentInclusionHistoryStack(hrefLoc.getLocation());
 
+            DOMDocumentFragment* frag = parsedDocument->createDocumentFragment();
+            /* need to import the document prolog here */
             DOMNode *child = includedDoc->getFirstChild();
             for (; child != NULL; child = child->getNextSibling()) {
                 if (child->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE)
@@ -373,10 +386,19 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                     }
                 }
                 DOMNode *newNode = parsedDocument->importNode(child, true);
-                includeParent->insertBefore (newNode, xincludeNode);
-                parseDOMNodeDoingXInclude(newNode, parsedDocument, entityResolver);
+                DOMNode *newChild = frag->appendChild(newNode);
+                // don't process the node now, wait until it is placed in the final position
+                delayedProcessing.addElement(newChild);
+                //parseDOMNodeDoingXInclude(newChild, parsedDocument, entityResolver);
             }
-            includeParent->removeChild(xincludeNode);
+            includeParent->replaceChild(frag, xincludeNode);
+            frag->release();
+
+            for(XMLSize_t i=0;i<delayedProcessing.size();i++)
+            {
+                DOMNode* childNode=delayedProcessing.elementAt(i);
+                parseDOMNodeDoingXInclude(childNode, parsedDocument, entityResolver);
+            }
             popFromCurrentInclusionHistoryStack(NULL);
             modifiedNode = true;
         } else if (includedText){
