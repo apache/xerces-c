@@ -39,6 +39,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/TransENameMap.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
+#include <xercesc/util/TranscodingException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -620,6 +621,9 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
         fBytesWritten += trans->transcodeTo(in + charsDone, len - charsDone,
                                             fString + fBytesWritten, allocSize - fBytesWritten,
                                             charsRead, XMLTranscoder::UnRep_Throw);
+        if(charsRead == 0)
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, fMemoryManager);
+
         charsDone += charsRead;
 
         if(charsDone == len) break;
@@ -632,7 +636,7 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
     }
 
     // null terminate
-    if(fBytesWritten + 4 > allocSize) {
+    if((fBytesWritten + 4) > allocSize) {
         allocSize = fBytesWritten + 4;
         XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
         memcpy(newBuf, fString, fBytesWritten);
@@ -699,6 +703,9 @@ void TranscodeFromStr::transcode(const XMLByte *in, XMLSize_t length, XMLTransco
         fCharsWritten += trans->transcodeFrom(in + bytesDone, length - bytesDone,
                                               fString + fCharsWritten, allocSize - fCharsWritten,
                                               bytesRead, charSizes.get());
+        if(bytesRead == 0)
+            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, fMemoryManager);
+
         bytesDone += bytesRead;
         if(bytesDone == length) break;
 
