@@ -24,8 +24,6 @@
 *
 */
 
-
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -853,6 +851,15 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl&)
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fCurrentNode->getParentNode ();
 
+    // When the document is invalid but we continue parsing, we may
+    // end up seeing more 'end' events than the 'start' ones.
+    //
+    if (fCurrentParent == 0 && fDocument != 0)
+    {
+      fCurrentNode = fDocument->getDocumentElement ();
+      fCurrentParent = fCurrentNode;
+    }
+
     if (erImpl)
         erImpl->setReadOnly(true, true);
 }
@@ -865,6 +872,15 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
 {
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fCurrentNode->getParentNode ();
+
+    // When the document is invalid but we continue parsing, we may
+    // end up seeing more 'end' events than the 'start' ones.
+    //
+    if (fCurrentParent == 0 && fDocument != 0)
+    {
+      fCurrentNode = fDocument->getDocumentElement ();
+      fCurrentParent = fCurrentNode;
+    }
 
     // If we've hit the end of content, clear the flag.
     //
