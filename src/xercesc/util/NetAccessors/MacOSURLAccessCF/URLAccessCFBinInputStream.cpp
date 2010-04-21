@@ -100,8 +100,13 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
                 break;
 
             case kCFURLRemoteHostUnavailableError:
-                ThrowXML1(NetAccessorException,  XMLExcepts::NetAcc_TargetResolution, urlSource.getHost());
+              {
+                if (urlSource.getHost())
+                  ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_TargetResolution, urlSource.getHost());
+                else
+                  ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlText);
                 break;
+              }
 
             case kCFURLUnknownError:
                 ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlText);

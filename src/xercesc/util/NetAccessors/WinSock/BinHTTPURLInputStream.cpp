@@ -312,6 +312,13 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
     //   and transcode them back to ASCII.
     //
     const XMLCh*        hostName = urlSource.getHost();
+
+    if (hostName == 0)
+      ThrowXMLwithMemMgr1(NetAccessorException,
+                          XMLExcepts::File_CouldNotOpenFile,
+                          urlSource.getURLText(),
+                          memoryManager);
+
     char*               hostNameAsCharStar = XMLString::transcode(hostName, memoryManager);
     ArrayJanitor<char>  janHostNameAsCharStar(hostNameAsCharStar, memoryManager);
 
@@ -437,9 +444,16 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource, const XMLN
             }
 
             url = newURL;
+            hostName = newURL.getHost();
+
+            if (hostName == 0)
+              ThrowXMLwithMemMgr1(NetAccessorException,
+                                  XMLExcepts::File_CouldNotOpenFile,
+                                  newURL.getURLText(),
+                                  memoryManager);
 
             janHostNameAsCharStar.release();
-            hostNameAsCharStar = XMLString::transcode(newURL.getHost(), memoryManager);
+            hostNameAsCharStar = XMLString::transcode(hostName, memoryManager);
             janHostNameAsCharStar.reset(hostNameAsCharStar, memoryManager);
         }
         else {
