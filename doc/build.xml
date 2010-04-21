@@ -291,22 +291,25 @@
             directory:</p>
 
 <source>
-(For VC7.1) projects\Win32\VC7.1\xerces-all\xerces-all.sln
-(For VC8)   projects\Win32\VC8\xerces-all\xerces-all.sln
-(For VC9)   projects\Win32\VC9\xerces-all\xerces-all.sln
+(For VC7.1)  projects\Win32\VC7.1\xerces-all\xerces-all.sln
+(For VC8.0)  projects\Win32\VC8\xerces-all\xerces-all.sln
+(For VC9.0)  projects\Win32\VC9\xerces-all\xerces-all.sln
+(For VC10.0) projects\Win32\VC10\xerces-all\xerces-all.sln
 </source>
 
             <p>Once you have the solution open, you need to build the
                project named <code>XercesLib</code>. You can select
-               Debug/Release, Static/DLL, and, for VC8 and VC9, 32/64 bit
-               builds using the Configuration Manager dialog. You
-               can also select whether the &XercesCName; library
+               Debug/Release, Static/DLL, and, for VC8, VC9, and VC10,
+               32/64 bit builds using the Configuration Manager dialog.
+               You can also select whether the &XercesCName; library
                should use ICU for transcoding.</p>
 
             <p>When building your own applications you need to make sure
                that you are linking your application with the
-               &XercesC3WindowsLib;.lib library (or Debug/Static version of it)
-               and also that the associated DLL is somewhere in the
+               &XercesC3WindowsLib;.lib (Release) and/or
+               &XercesC3WindowsLib;D.lib (Debug)
+               libraries (or the static versions of them)
+               and also that the associated DLLs are somewhere in the
                executable/DLL search path (<code>PATH</code>).</p>
 
             <note>If you are linking your application to the static
@@ -316,8 +319,7 @@
                   to turn off the DLL import/export mechanism.</note>
 
             <p>If you would also like to build tests and/or samples, inside
-               the solution files mentioned above (<code>xerces-all.dsw</code>
-               or <code>xerces-all.sln</code>), you'll find several other
+               the solution files mentioned above, you'll find several other
                projects which are for the tests and samples. Select all
                the tests/samples that you would like to build and then
                right click on the selection. Choose "Build (selection
