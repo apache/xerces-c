@@ -825,6 +825,39 @@ copy "%(RootDir)%(Directory)%(Filename).msvc.hpp" "%(FullPath)"
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
 copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ICU Debug|Win32'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ICU Release|Win32'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ICU Debug|x64'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='ICU Release|x64'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">echo copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"
+copy "%(FullPath)" "%(RootDir)%(Directory)Xerces_autoconf_config.hpp"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ICU Debug|Win32'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ICU Release|Win32'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ICU Debug|x64'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='ICU Release|x64'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">%(RootDir)%(Directory)Xerces_autoconf_config.hpp</Outputs>
     </CustomBuild>
     <CustomBuildStep Include="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\InMemMsgLoader.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
