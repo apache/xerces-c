@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -141,7 +141,7 @@ Normalizer::~Normalizer() {
 }
 
 void Normalizer::printEntityRefNodes(DOMElement *ele) {
-    
+
     DOMNode *child = ele->getFirstChild();
 
     while(child != 0) {
@@ -162,7 +162,7 @@ void Normalizer::printEntityRefNodes(DOMElement *ele) {
 
         child = child->getNextSibling();
     }
-    
+
 }
 
 
@@ -186,7 +186,7 @@ bool Normalizer::handleError(const DOMError& domError)
     XERCES_STD_QUALIFIER cerr << msg <<XERCES_STD_QUALIFIER endl;
     XMLString::release(&msg);
 
- 
+
 
     // continue serialization if possible.
     return true;
@@ -200,7 +200,7 @@ DOMDocument* Normalizer::createDocument() {
 
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(coreStr);
     return impl->createDocument();
-};
+}
 
 void Normalizer::serializeNode(const DOMNode * const node) {
     XMLCh tempStr[100];
@@ -250,7 +250,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     normalizer->serializeNode(doc);
     XERCES_STD_QUALIFIER cout << "\n\n";
 
-    // this block is needed to destroy the XMLBuffer 
+    // this block is needed to destroy the XMLBuffer
     {
         //use a binding
         XMLBuffer buf;
@@ -282,7 +282,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
     XERCES_STD_QUALIFIER cout << "\n\n";
-    
+
     //conflicting default
     docFirstElementChildChild = doc->createElementNS(X("http://www.test4.com"),X("docEleChildChild5"));
     docFirstElementChild->appendChild(docFirstElementChildChild);
@@ -320,7 +320,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     docFirstElementChildChild->setAttributeNS(X("http://testattr2.com"), X("poFake:attr6"), X("value"));
     docFirstElementChildChild->setAttributeNS(X("http://testattr3.com"), X("po3:attr7"), X("value"));
     docFirstElementChildChild->setAttributeNS(X("http://testattr4.com"), X("po4:attr8"), X("value"));
-    
+
 
     //test for a clash with our NSx attrs
     docFirstElementChildChild->setAttributeNS(X("http://testclash.com"), X("NS1:attr9"), X("value"));
@@ -367,7 +367,7 @@ int main(int /*argc*/, char ** /*argv*/) {
 
     noNamespaceChild = doc->createElementNS(X("http://testclash.com"),X("NS1:testing1.1Stuff"));
     noNamespaceEle->appendChild(noNamespaceChild);
-    
+
     noNamespaceChild->setAttributeNS(X("http://www.someRandomUri.com"), X("attr"), X("value"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
@@ -424,5 +424,3 @@ int main(int /*argc*/, char ** /*argv*/) {
 
     return 0;
 }
-
-
