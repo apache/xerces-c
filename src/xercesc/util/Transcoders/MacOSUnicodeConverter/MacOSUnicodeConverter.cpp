@@ -458,9 +458,8 @@ MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
 bool
 MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported(void)
 {
-    return UpgradeScriptInfoToTextEncoding != (void*)NULL
-        && CreateTextToUnicodeInfoByEncoding != (void*)NULL
-        ;
+    return UpgradeScriptInfoToTextEncoding != 0
+        && CreateTextToUnicodeInfoByEncoding != 0;
 }
 
 
