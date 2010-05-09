@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,7 +79,7 @@ void ParseErrorHandler::error(const SAXParseException& e)
     XMLString::release(&message);
     throw e;
 
-};
+}
 
 void ParseErrorHandler::fatalError(const SAXParseException& e)
 {
@@ -93,7 +93,7 @@ void ParseErrorHandler::fatalError(const SAXParseException& e)
     XMLString::release(&systemId);
     XMLString::release(&message);
     throw e;
-};
+}
 
 void ParseErrorHandler::warning(const SAXParseException& e)
 {
@@ -108,7 +108,7 @@ void ParseErrorHandler::warning(const SAXParseException& e)
     XMLString::release(&message);
     throw e;
 
-};
+}
 
 
 //------------------------------------------------------------------------
@@ -130,7 +130,7 @@ static DOMDocument* parseFile(char *fileName)
     }
     catch (const OutOfMemoryException&)
     {
-	    fprintf(stderr, "OutOfMemoryException during parsing: %s\n", fileName);        
+	    fprintf(stderr, "OutOfMemoryException during parsing: %s\n", fileName);
 	    return 0;
     }
     catch (const XMLException& e )
@@ -169,7 +169,7 @@ static void writeUData(const XMLCh* s)
         printf("%4x ", c);
     }
     printf("\n</udata>\n");
-};
+}
 
 
 
@@ -440,4 +440,4 @@ int main(int argc, char ** argv) {
     delete parser;
     parser = 0;
    return 0;
-};
+}

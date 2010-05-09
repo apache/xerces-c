@@ -52,7 +52,7 @@ void tassert(bool c, const char *file, int line)
         printf("Failure.  Line %d,   file %s\n", line, file);
         errorOccurred = true;
     }
-};
+}
 
 
 #define EXCEPTION_TEST(operation, expected_exception)               \
@@ -554,4 +554,4 @@ int  main()
 
     printf("Test Run Successfully\n");
     return 0;
-};
+}
