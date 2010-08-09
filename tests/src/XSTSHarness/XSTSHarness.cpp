@@ -42,7 +42,7 @@
 static XMLCh sz_XMLTestSuiteRoot[]={ chLatin_T, chLatin_E, chLatin_S, chLatin_T, chLatin_S, chLatin_U, chLatin_I, chLatin_T, chLatin_E, chNull };
 const XMLCh dummy[]={ chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chForwardSlash, chForwardSlash,
                        chLatin_d, chLatin_u, chLatin_m, chLatin_m, chLatin_y, chForwardSlash, chNull };
-
+const XMLCh* g_scanner = XMLUni::fgIGXMLScanner;
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
@@ -247,6 +247,18 @@ int main(int argC, char* argV[])
         return 1;
     }
 
+    try
+    {
+        XMLPlatformUtils::Initialize();
+    }
+
+    catch (const XMLException& toCatch)
+    {
+        XERCES_STD_QUALIFIER cout << "Error during initialization! Message:\n"
+            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        return 1;
+    }
+
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
     {
@@ -261,9 +273,9 @@ int main(int argC, char* argV[])
             return 2;
         }
         // TODO: add option to generate the XML summarizing the result
-        else if (!strncmp(argV[argInd], "-v=", 3)
-             ||  !strncmp(argV[argInd], "-V=", 3))
+        else if (!strncmp(argV[argInd], "-scanner=", 9))
         {
+            g_scanner = XMLString::transcode(argV[argInd]+9);
         }
         else
         {
@@ -279,18 +291,6 @@ int main(int argC, char* argV[])
     if (argInd != argC - 1)
     {
         usage();
-        return 1;
-    }
-
-    try
-    {
-        XMLPlatformUtils::Initialize();
-    }
-
-    catch (const XMLException& toCatch)
-    {
-        XERCES_STD_QUALIFIER cout << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -321,24 +321,24 @@ int main(int argC, char* argV[])
     if(rootExtractor.isXMLSuite())
     {
         // XML Test Suite
-        handler=new XMLHarnessHandlers(uri);
+        handler=new XMLHarnessHandlers(uri, g_scanner);
     }
     else
     {
         // XMLSchema Test Suite
-        handler=new XSTSHarnessHandlers(uri);
+        handler=new XSTSHarnessHandlers(uri, g_scanner);
     }
     XMLString::release(&uniFile);
     delete [] uri;
     parser->setContentHandler(handler);
     parser->setErrorHandler(handler);
 
-    //
-    //  Get the starting time and kick off the parse of the indicated
-    //  file. Catch any exceptions that might propogate out of it.
-    //
     bool errorOccurred=false;
     const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+    //
+    //  Get the starting time and kick off the parse of the indicated
+    //  file. Catch any exceptions that might propagate out of it.
+    //
     try
     {
         parser->parse(xmlFile);
@@ -360,16 +360,18 @@ int main(int argC, char* argV[])
         XERCES_STD_QUALIFIER cout << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
         errorOccurred = true;
     }
+
     const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
     unsigned long duration = endMillis - startMillis;
 
     if (handler->getSawErrors())
         errorOccurred = true;
 
-    XERCES_STD_QUALIFIER cout << "Total tests: " << handler->getTotalTests() << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "Failed tests: " << handler->getFailedTests() << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "Success rate: " << ((double)(handler->getTotalTests()-handler->getFailedTests()))/(double)handler->getTotalTests()*100 << "%" << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "Duration: ";
+    XERCES_STD_QUALIFIER cout << "Scanner: " << StrX(g_scanner) << XERCES_STD_QUALIFIER endl;
+    XERCES_STD_QUALIFIER cout << "  Total tests: " << handler->getTotalTests() << XERCES_STD_QUALIFIER endl;
+    XERCES_STD_QUALIFIER cout << "  Failed tests: " << handler->getFailedTests() << XERCES_STD_QUALIFIER endl;
+    XERCES_STD_QUALIFIER cout << "  Success rate: " << ((double)(handler->getTotalTests()-handler->getFailedTests()))/(double)handler->getTotalTests()*100 << "%" << XERCES_STD_QUALIFIER endl;
+    XERCES_STD_QUALIFIER cout << "  Duration: ";
     if(duration > 60000)
     {
         XERCES_STD_QUALIFIER cout << duration/60000 << ":";

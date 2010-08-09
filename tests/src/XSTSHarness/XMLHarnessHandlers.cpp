@@ -33,10 +33,11 @@
 // ---------------------------------------------------------------------------
 //  XMLHarnessHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLHarnessHandlers::XMLHarnessHandlers(const XMLCh* baseURL) : BaseHarnessHandlers(baseURL)
+XMLHarnessHandlers::XMLHarnessHandlers(const XMLCh* baseURL, const XMLCh* scanner) : BaseHarnessHandlers(baseURL)
 , fTestBaseURL(5)
 {
     fParser = XMLReaderFactory::createXMLReader();
+    fParser->setProperty(XMLUni::fgXercesScannerName, (void*)scanner);
     fParser->setFeature(XMLUni::fgSAX2CoreValidation, true);
     fParser->setFeature(XMLUni::fgXercesDynamic, false);
     fParser->setErrorHandler(&fErrorHandler);

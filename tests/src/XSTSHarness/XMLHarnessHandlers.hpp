@@ -37,7 +37,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    XMLHarnessHandlers(const XMLCh* baseURL);
+    XMLHarnessHandlers(const XMLCh* baseURL, const XMLCh* scanner);
     ~XMLHarnessHandlers();
 
     // -----------------------------------------------------------------------
