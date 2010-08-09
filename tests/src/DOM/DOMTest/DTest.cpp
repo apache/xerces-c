@@ -40,6 +40,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
+#include <xercesc/util/regx/Match.hpp>
 
 #define UNUSED(x) { if(x!=0){} }
 
@@ -5497,6 +5498,22 @@ bool DOMTest::testRegex() {
     TEST_VALID_SCHEMA_REGEX("5.0e-2 .2 1", "((((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))) (((\\.[0-9]+|0(\\.[0-9]*)?)((E|e)(\\+|\\-)?[0-9]+)?)|(1(\\.[0]*)?((E|e)\\-[0-9]+)?)|([1-9](\\.[0-9]*)((E|e)\\-[0-9]+))))?", __LINE__);
 
     TEST_VALID_SCHEMA_REGEX("-0 +3989 -90.76754,+9E77, -0.3e+9", "(((\\+|\\-)?(0|[1-9][0-9]*)?(\\.[0-9]*)?((E|e)(\\+|\\-)?[0-9]+)?)?( )?(,)?( )?)*", __LINE__);
+
+    try
+    {
+        Match match;
+        RegularExpression p("([\\-\\(]?\\d{1,3}([, ]\\d{3})+\\.\\d+[\\)]?|[\\-\\(]?\\d+\\.\\d+[\\)]?).*");
+        if(!p.matches("13.13", &match) || match.getStartPos(0)!=0 || match.getEndPos(0)!=5)
+        {
+            fprintf(stderr, "Regular expression test failed at line %i\n", __LINE__);
+            OK = false;
+        }
+    }
+    catch(XMLException& )
+    {
+        fprintf(stderr, "Regular expression test failed at line %i\n", __LINE__);
+        OK = false;
+    }
 
     delete hugeString;
 
