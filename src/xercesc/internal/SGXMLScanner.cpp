@@ -3459,10 +3459,6 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
     // walk through the list again to deal with "xsi:...."
     if (fSeeXsi)
     {
-        //  Schema Xsi Type yyyy (e.g. xsi:type="yyyyy")
-        XMLBufBid bbXsi(&fBufMgr);
-        XMLBuffer& fXsiType = bbXsi.getBuffer();
-
         for (XMLSize_t index = 0; index < attCount; index++)
         {
             // each attribute has the prefix:suffix="value"
@@ -3481,7 +3477,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
             }
 
             // if schema URI has been seen, scan for the schema location and uri
-            // and resolve the schema grammar; or scan for schema type
+            // and resolve the schema grammar
             if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
 
                 const XMLCh* valuePtr = curPair->getValue();
@@ -3491,14 +3487,54 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                     parseSchemaLocation(valuePtr);
                 else if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCATION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
+            }
+        }
 
-                if( fValidator && fValidator->handlesSchema() )
-                {
+        // do it another time, as xsi:type and xsi:nill only work if the schema grammar has been already
+        // loaded (JIRA XERCESC-1937)
+        if (fValidator && fValidator->handlesSchema())
+        {
+            for (XMLSize_t index = 0; index < attCount; index++)
+            {
+                // each attribute has the prefix:suffix="value"
+                const KVStringPair* curPair = fRawAttrList->elementAt(index);
+                const XMLCh* rawPtr = curPair->getKey();
+                const XMLCh* prefPtr;
+
+                int   colonInd = fRawAttrColonList[index];
+
+                if (colonInd != -1) {
+                    fURIBuf.set(rawPtr, colonInd);
+                    prefPtr = fURIBuf.getRawBuffer();
+                }
+                else {
+                    prefPtr = XMLUni::fgZeroLenString;
+                }
+
+                // scan for schema type
+                if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
+
+                    const XMLCh* valuePtr = curPair->getValue();
+                    const XMLCh*  suffPtr = &rawPtr[colonInd + 1];
+
                     if (XMLString::equals(suffPtr, SchemaSymbols::fgXSI_TYPE))
                     {
+                        XMLBufBid bbXsi(&fBufMgr);
+                        XMLBuffer& fXsiType = bbXsi.getBuffer();
+
                         // normalize the attribute according to schema whitespace facet
                         DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME);
                         ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, valuePtr, fXsiType, true);
+                        if (!fXsiType.isEmpty()) {
+                            int colonPos = -1;
+                            unsigned int uriId = resolveQName (
+                                  fXsiType.getRawBuffer()
+                                , fPrefixBuf
+                                , ElemStack::Mode_Element
+                                , colonPos
+                            );
+                            ((SchemaValidator*)fValidator)->setXsiType(fPrefixBuf.getRawBuffer(), fXsiType.getRawBuffer() + colonPos + 1, uriId);
+                        }
                     }
                     else if (XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL))
                     {
@@ -3515,19 +3551,6 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                         fBufMgr.releaseBuffer(fXsiNil);
                     }
                 }
-            }
-        }
-
-        if (fValidator && fValidator->handlesSchema()) {
-            if (!fXsiType.isEmpty()) {
-                int colonPos = -1;
-                unsigned int uriId = resolveQName (
-                      fXsiType.getRawBuffer()
-                    , fPrefixBuf
-                    , ElemStack::Mode_Element
-                    , colonPos
-                );
-                ((SchemaValidator*)fValidator)->setXsiType(fPrefixBuf.getRawBuffer(), fXsiType.getRawBuffer() + colonPos + 1, uriId);
             }
         }
     }
