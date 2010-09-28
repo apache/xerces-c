@@ -826,4 +826,20 @@
       <current status="accepted" date="2010-08-09"/>
     </instanceTest>
   </testGroup>
+  <testGroup name="XERCESC-1945">
+    <annotation>
+      <documentation>Whitespace in xsi:type</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-1945"/>
+    <schemaTest name="XERCESC-1945-1">
+      <schemaDocument xlink:href="./XERCESC-1945/test.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2010-09-28"/>
+    </schemaTest>
+    <instanceTest name="XERCESC-1945-2">
+      <instanceDocument xlink:href="./XERCESC-1945/test.xml"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2010-09-28"/>
+    </instanceTest>
+  </testGroup>
 </testSet>
