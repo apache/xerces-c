@@ -3524,7 +3524,8 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
 
                         // normalize the attribute according to schema whitespace facet
                         DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_QNAME);
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, valuePtr, fXsiType, true);
+                        normalizeAttRawValue(SchemaSymbols::fgXSI_TYPE, valuePtr, fXsiType);
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, fXsiType.getRawBuffer(), fXsiType, true);
                         if (!fXsiType.isEmpty()) {
                             int colonPos = -1;
                             unsigned int uriId = resolveQName (
@@ -3539,16 +3540,18 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(XMLSize_t attCount)
                     else if (XMLString::equals(suffPtr, SchemaSymbols::fgATT_NILL))
                     {
                         // normalize the attribute according to schema whitespace facet
-                        XMLBuffer& fXsiNil = fBufMgr.bidOnBuffer();
+                        XMLBufBid bbXsi(&fBufMgr);
+                        XMLBuffer& fXsiNil = bbXsi.getBuffer();
+
                         DatatypeValidator* tempDV = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_BOOLEAN);
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, valuePtr, fXsiNil, true);
+                        normalizeAttRawValue(SchemaSymbols::fgATT_NILL, valuePtr, fXsiNil);
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, fXsiNil.getRawBuffer(), fXsiNil, true);
                         if(XMLString::equals(fXsiNil.getRawBuffer(), SchemaSymbols::fgATTVAL_TRUE))
                             ((SchemaValidator*)fValidator)->setNillable(true);
                         else if(XMLString::equals(fXsiNil.getRawBuffer(), SchemaSymbols::fgATTVAL_FALSE))
                             ((SchemaValidator*)fValidator)->setNillable(false);
                         else
                             emitError(XMLErrs::InvalidAttValue, fXsiNil.getRawBuffer(), valuePtr);
-                        fBufMgr.releaseBuffer(fXsiNil);
                     }
                 }
             }
