@@ -135,7 +135,12 @@ bool DOMCDATASectionImpl::getIsElementContentWhitespace() const
 const XMLCh* DOMCDATASectionImpl::getWholeText() const
 {
     DOMDocument *doc = getOwnerDocument();
-    DOMTreeWalker* pWalker=doc->createTreeWalker(doc->getDocumentElement(), DOMNodeFilter::SHOW_ALL, NULL, true);
+    if (!doc) {
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, GetDOMNodeMemoryManager);
+        return 0;
+    }
+    DOMNode* root=doc->getDocumentElement();
+    DOMTreeWalker* pWalker=doc->createTreeWalker(root!=NULL?root:(DOMNode*)this, DOMNodeFilter::SHOW_ALL, NULL, true);
     pWalker->setCurrentNode((DOMNode*)this);
     // Logically-adjacent text nodes are Text or CDATASection nodes that can be visited sequentially in document order or in
     // reversed document order without entering, exiting, or passing over Element, Comment, or ProcessingInstruction nodes.
@@ -156,7 +161,7 @@ const XMLCh* DOMCDATASectionImpl::getWholeText() const
     }
     pWalker->release();
 
-    XMLCh* wholeString = (XMLCh*) (GetDOMNodeMemoryManager->allocate((buff.getLen()+1)*sizeof(XMLCh)));
+	XMLCh* wholeString = (XMLCh*)((DOMDocumentImpl*)doc)->allocate((buff.getLen()+1) * sizeof(XMLCh));
 	XMLString::copyString(wholeString, buff.getRawBuffer());
 	return wholeString;
 }
