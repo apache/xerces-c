@@ -1045,6 +1045,7 @@ const XMLCh XMLUni::fgXercesLoadSchema[] =
     ,   chLatin_a, chLatin_t, chLatin_i, chLatin_n, chLatin_g, chForwardSlash
     ,   chLatin_l, chLatin_o, chLatin_a, chLatin_d, chDash
     ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a
+    ,   chNull
 };
 
 //Xerces: http://apache.org/xml/features/validation/identity-constraint-checking
