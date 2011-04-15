@@ -26,6 +26,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/ValueStackOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -64,122 +65,191 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy) :
         fSecond = new (fMemoryManager) ContentSpecNode(*tmp);
 }
 
+ContentSpecNode::~ContentSpecNode()
+{
+    // Delete our children, avoiding recursive cleanup
+    if (fAdoptFirst && fFirst) {
+		deleteChildNode(fFirst);
+    }
+
+    if (fAdoptSecond && fSecond) {
+		deleteChildNode(fSecond);
+    }
+
+    delete fElement;
+}
+
+void ContentSpecNode::deleteChildNode(ContentSpecNode* node)
+{
+	ValueStackOf<ContentSpecNode*> toBeDeleted(10, fMemoryManager);
+	toBeDeleted.push(node);
+	while(!toBeDeleted.empty())
+	{
+		ContentSpecNode* node = toBeDeleted.pop();
+		if(node==0)
+			continue;
+		if(node->isFirstAdopted())
+			toBeDeleted.push(node->orphanFirst());
+		if(node->isSecondAdopted())
+			toBeDeleted.push(node->orphanSecond());
+		delete node;
+	}
+}
+
+class formatNodeHolder
+{
+public:
+	formatNodeHolder(const ContentSpecNode* n, const ContentSpecNode::NodeTypes p, XMLCh c) : node(n), parentType(p), character(c) {}
+	formatNodeHolder& operator =(const formatNodeHolder* other)
+	{
+		node=other->node;
+		parentType=other->parentType;
+		character=other->character;
+	}
+
+	const ContentSpecNode* node;
+	ContentSpecNode::NodeTypes parentType;
+	XMLCh character;
+};
+
 // ---------------------------------------------------------------------------
 //  Local methods
 // ---------------------------------------------------------------------------
 static void formatNode( const   ContentSpecNode* const      curNode
-                        , const ContentSpecNode::NodeTypes  parentType
-                        ,       XMLBuffer&                  bufToFill)
+                        ,       XMLBuffer&                  bufToFill
+						,		MemoryManager* const		memMgr)
 {
     if (!curNode)
         return;
 
-    const ContentSpecNode* first = curNode->getFirst();
-    const ContentSpecNode* second = curNode->getSecond();
-    const ContentSpecNode::NodeTypes curType = curNode->getType();
+	ValueStackOf<formatNodeHolder> toBeProcessed(10, memMgr);
+	toBeProcessed.push(formatNodeHolder(curNode, ContentSpecNode::UnknownType, 0));
 
-    // Get the type of the first node
-    const ContentSpecNode::NodeTypes firstType = first ?
-                                                 first->getType() :
-                                                 ContentSpecNode::Leaf;
+	while(!toBeProcessed.empty())
+	{
+		formatNodeHolder item=toBeProcessed.pop();
+		if(item.character!=0)
+		{
+			bufToFill.append(item.character);
+			continue;
+		}
+		const ContentSpecNode* curNode = item.node;
+		if(!curNode)
+			continue;
+		const ContentSpecNode::NodeTypes parentType = item.parentType; 
+		const ContentSpecNode* first = curNode->getFirst();
+		const ContentSpecNode* second = curNode->getSecond();
+		const ContentSpecNode::NodeTypes curType = curNode->getType();
 
-    // Calculate the parens flag for the rep nodes
-    bool doRepParens = false;
-    if (((firstType != ContentSpecNode::Leaf)
-            && (parentType != ContentSpecNode::UnknownType))
-    ||  ((firstType == ContentSpecNode::Leaf)
-            && (parentType == ContentSpecNode::UnknownType)))
-    {
-        doRepParens = true;
-    }
+		// Get the type of the first node
+		const ContentSpecNode::NodeTypes firstType = first ?
+													 first->getType() :
+													 ContentSpecNode::Leaf;
 
-    // Now handle our type
-    switch(curType & 0x0f)
-    {
-        case ContentSpecNode::Leaf :
-            if (curNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-                bufToFill.append(XMLElementDecl::fgPCDataElemName);
-            else
-            {
-                bufToFill.append(curNode->getElement()->getRawName());
-                // show the + and * modifiers also when we have a non-infinite number of repetitions
-                if(curNode->getMinOccurs()==0 && (curNode->getMaxOccurs()==-1 || curNode->getMaxOccurs()>1))
-                    bufToFill.append(chAsterisk);
-                else if(curNode->getMinOccurs()==0 && curNode->getMaxOccurs()==1)
-                    bufToFill.append(chQuestion);
-                else if(curNode->getMinOccurs()==1 && (curNode->getMaxOccurs()==-1 || curNode->getMaxOccurs()>1))
-                    bufToFill.append(chPlus);
-            }
-            break;
+		// Calculate the parens flag for the rep nodes
+		bool doRepParens = false;
+		if (((firstType != ContentSpecNode::Leaf)
+				&& (parentType != ContentSpecNode::UnknownType))
+		||  ((firstType == ContentSpecNode::Leaf)
+				&& (parentType == ContentSpecNode::UnknownType)))
+		{
+			doRepParens = true;
+		}
 
-        case ContentSpecNode::ZeroOrOne :
-            if (doRepParens)
-                bufToFill.append(chOpenParen);
-            formatNode(first, curType, bufToFill);
-            if (doRepParens)
-                bufToFill.append(chCloseParen);
-            bufToFill.append(chQuestion);
-            break;
+		// Now handle our type
+		switch(curType & 0x0f)
+		{
+			case ContentSpecNode::Leaf :
+				if (curNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
+					bufToFill.append(XMLElementDecl::fgPCDataElemName);
+				else
+				{
+					bufToFill.append(curNode->getElement()->getRawName());
+					// show the + and * modifiers also when we have a non-infinite number of repetitions
+					if(curNode->getMinOccurs()==0 && (curNode->getMaxOccurs()==-1 || curNode->getMaxOccurs()>1))
+						bufToFill.append(chAsterisk);
+					else if(curNode->getMinOccurs()==0 && curNode->getMaxOccurs()==1)
+						bufToFill.append(chQuestion);
+					else if(curNode->getMinOccurs()==1 && (curNode->getMaxOccurs()==-1 || curNode->getMaxOccurs()>1))
+						bufToFill.append(chPlus);
+				}
+				break;
 
-        case ContentSpecNode::ZeroOrMore :
-            if (doRepParens)
-                bufToFill.append(chOpenParen);
-            formatNode(first, curType, bufToFill);
-            if (doRepParens)
-                bufToFill.append(chCloseParen);
-            bufToFill.append(chAsterisk);
-            break;
+			case ContentSpecNode::ZeroOrOne :
+				if (doRepParens)
+					bufToFill.append(chOpenParen);
 
-        case ContentSpecNode::OneOrMore :
-            if (doRepParens)
-                bufToFill.append(chOpenParen);
-            formatNode(first, curType, bufToFill);
-            if (doRepParens)
-                bufToFill.append(chCloseParen);
-            bufToFill.append(chPlus);
-            break;
+				toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chQuestion));
+				if (doRepParens)
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chCloseParen));
+				toBeProcessed.push(formatNodeHolder(first, curType, 0));
+				break;
 
-        case ContentSpecNode::Choice :
-            if ((parentType & 0x0f) != (curType & 0x0f))
-                bufToFill.append(chOpenParen);
-            formatNode(first, curType, bufToFill);
-            if(second!=NULL)
-            {
-                bufToFill.append(chPipe);
-                formatNode(second, curType, bufToFill);
-            }
-            if ((parentType & 0x0f) != (curType & 0x0f))
-                bufToFill.append(chCloseParen);
-            break;
+			case ContentSpecNode::ZeroOrMore :
+				if (doRepParens)
+					bufToFill.append(chOpenParen);
 
-        case ContentSpecNode::Sequence :
-            if ((parentType & 0x0f) != (curType & 0x0f))
-                bufToFill.append(chOpenParen);
-            formatNode(first, curType, bufToFill);
-            if(second!=NULL)
-            {
-                bufToFill.append(chComma);
-                formatNode(second, curType, bufToFill);
-            }
-            if ((parentType & 0x0f) != (curType & 0x0f))
-                bufToFill.append(chCloseParen);
-            break;
+				toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chAsterisk));
+				if (doRepParens)
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chCloseParen));
+				toBeProcessed.push(formatNodeHolder(first, curType, 0));
+				break;
 
-        case ContentSpecNode::All :
-            if ((parentType & 0x0f) != (curType & 0x0f))
-			{
-                bufToFill.append(chLatin_A);
-                bufToFill.append(chLatin_l);
-                bufToFill.append(chLatin_l);
-                bufToFill.append(chOpenParen);
-			}
-            formatNode(first, curType, bufToFill);
-            bufToFill.append(chComma);
-            formatNode(second, curType, bufToFill);
-            if ((parentType & 0x0f) != (curType & 0x0f))
-                bufToFill.append(chCloseParen);
-            break;
-    }
+			case ContentSpecNode::OneOrMore :
+				if (doRepParens)
+					bufToFill.append(chOpenParen);
+
+				toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chPlus));
+				if (doRepParens)
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chCloseParen));
+				toBeProcessed.push(formatNodeHolder(first, curType, 0));
+				break;
+
+			case ContentSpecNode::Choice :
+				if ((parentType & 0x0f) != (curType & 0x0f))
+					bufToFill.append(chOpenParen);
+
+				if ((parentType & 0x0f) != (curType & 0x0f))
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chCloseParen));
+				if(second!=NULL)
+				{
+					toBeProcessed.push(formatNodeHolder(second, curType, 0));
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chPipe));
+				}
+				toBeProcessed.push(formatNodeHolder(first, curType, 0));
+				break;
+
+			case ContentSpecNode::Sequence :
+				if ((parentType & 0x0f) != (curType & 0x0f))
+					bufToFill.append(chOpenParen);
+
+				if ((parentType & 0x0f) != (curType & 0x0f))
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chCloseParen));
+				if(second!=NULL)
+				{
+					toBeProcessed.push(formatNodeHolder(second, curType, 0));
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chComma));
+				}
+				toBeProcessed.push(formatNodeHolder(first, curType, 0));
+				break;
+
+			case ContentSpecNode::All :
+				if ((parentType & 0x0f) != (curType & 0x0f))
+				{
+					bufToFill.append(chLatin_A);
+					bufToFill.append(chLatin_l);
+					bufToFill.append(chLatin_l);
+					bufToFill.append(chOpenParen);
+				}
+
+				if ((parentType & 0x0f) != (curType & 0x0f))
+					toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chCloseParen));
+				toBeProcessed.push(formatNodeHolder(second, curType, 0));
+				toBeProcessed.push(formatNodeHolder(0, ContentSpecNode::UnknownType, chComma));
+				toBeProcessed.push(formatNodeHolder(first, curType, 0));
+				break;
+		}
+	}
 }
 
 
@@ -196,8 +266,8 @@ void ContentSpecNode::formatSpec(XMLBuffer&      bufToFill) const
     formatNode
     (
         this
-        , UnknownType
-        , bufToFill
+		, bufToFill
+        , fMemoryManager
     );
     if (fType == ContentSpecNode::Leaf)
         bufToFill.append(chCloseParen);

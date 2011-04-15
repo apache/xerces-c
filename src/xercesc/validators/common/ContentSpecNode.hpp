@@ -150,6 +150,10 @@ private :
     // -----------------------------------------------------------------------
     ContentSpecNode& operator=(const ContentSpecNode&);
 
+	// -----------------------------------------------------------------------
+    // Helper functions
+    // -----------------------------------------------------------------------
+	void deleteChildNode(ContentSpecNode* node);
 
     // -----------------------------------------------------------------------
     //  Private Data Members
@@ -301,20 +305,6 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes              type
     , fMinOccurs(1)
     , fMaxOccurs(1)
 {
-}
-
-inline ContentSpecNode::~ContentSpecNode()
-{
-    // Delete our children, which cause recursive cleanup
-    if (fAdoptFirst) {
-		delete fFirst;
-    }
-
-    if (fAdoptSecond) {
-		delete fSecond;
-    }
-
-    delete fElement;
 }
 
 // ---------------------------------------------------------------------------
