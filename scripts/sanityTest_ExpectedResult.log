@@ -982,7 +982,7 @@ Name:			personnel
 Model Type:		Children
 Create Reason:	Declared
 ContentType:	
-Content Model:	(person,)
+Content Model:	(person+)
 ComplexType:
 	TypeName:	,__AnonC0
 	ContentType:	
@@ -991,7 +991,7 @@ Name:			person
 Model Type:		Children
 Create Reason:	Declared
 ContentType:	
-Content Model:	((name,email,url),link)
+Content Model:	(name,email*,url*,link?)
 ComplexType:
 	TypeName:	,__AnonC1
 	ContentType:	
