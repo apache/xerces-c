@@ -225,6 +225,10 @@ int BinHTTPInputStreamCommon::sendRequest(const XMLURL &url, const XMLNetHTTPInf
             ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, url.getURLText(), fMemoryManager);
         }
 
+        // connection closed
+        if(ret == 0)
+            break;
+
         fBuffer.append(tmpBuf, ret);
 
         fBufferPos = strstr(fBuffer.getRawBuffer(), CRLF2X);
@@ -286,7 +290,7 @@ const XMLCh *BinHTTPInputStreamCommon::getEncoding() const
 					break;
 				}
 			}
-			// if the encoding=value entry was not present, check if we should use a default value
+			// if the charset=value entry was not present, check if we should use a default value
 			if(fEncoding==0 && tokens->size()>0)
 			{
 				const XMLCh szTextSlash[] = { chLatin_t, chLatin_e, chLatin_x, chLatin_t, chForwardSlash, chNull };
