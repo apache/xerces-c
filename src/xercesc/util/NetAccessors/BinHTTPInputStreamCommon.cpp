@@ -309,22 +309,20 @@ const XMLCh *BinHTTPInputStreamCommon::getEncoding() const
 					// text/xml, text/xml-external-parsed-entity, or a subtype like text/AnythingAtAll+xml 
 					// has a default encoding of us-ascii
 					XMLCh* subType = strType+XMLString::stringLen(szTextSlash);
-					XMLCh* cursor=subType;
-					int plusPos;
-					do
+
+					BaseRefVectorOf<XMLCh>* tokens=XMLString::tokenizeString(subType, chPlus, fMemoryManager);
+					for(XMLSize_t i=0;i<tokens->size();i++)
 					{
-						plusPos=XMLString::indexOf(cursor, chPlus);
-						if(plusPos!=-1)
-							*(cursor+plusPos)=0;
-						if(XMLString::compareIStringASCII(cursor, szXml)==0 || XMLString::startsWithI(cursor, szXmlDash))
+						XMLCh* part=tokens->elementAt(i);
+						if(XMLString::compareIStringASCII(part, szXml)==0 || XMLString::startsWithI(part, szXmlDash))
 						{
 							const_cast<BinHTTPInputStreamCommon*>(this)->fEncoding = XMLString::replicate(XMLUni::fgUSASCIIEncodingString, fMemoryManager);
 							break;
 						}
-						cursor+=plusPos+1;
-					} while(plusPos==-1);
+					}
 					if(fEncoding==0)
 						const_cast<BinHTTPInputStreamCommon*>(this)->fEncoding = XMLString::replicate(XMLUni::fgISO88591EncodingString, fMemoryManager);
+					delete tokens;
 				}
 			}
 			delete tokens;
