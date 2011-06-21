@@ -397,14 +397,17 @@ XMLReader* ReaderMgr::createReader( const   InputSource&        src
     // We need to handle this exception to avoid leak on newStream.
 
     try {
-        if (src.getEncoding())
+		const XMLCh* encoding = src.getEncoding();
+		if(encoding == 0)
+			encoding = newStream->getEncoding();
+        if (encoding)
         {
             retVal = new (fMemoryManager) XMLReader
                 (
                 src.getPublicId()
                 , src.getSystemId()
                 , newStream
-                , src.getEncoding()
+                , encoding
                 , refFrom
                 , type
                 , source

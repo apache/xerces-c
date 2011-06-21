@@ -66,6 +66,23 @@ public :
      */
     virtual const XMLCh* getContentType() const = 0;
 
+    /**
+     * Return the "out-of-band" encoding for the data supplied by this
+     * input stream. If no such content type is provided for the data, 0 is
+     * returned. This function is expected to return the correct value at
+     * any time after the construction of the stream.
+     *
+     * An example of the stream that may return non-0 from this function is
+     * an HTTP stream with the value returned taken from the "Content-Type"
+     * HTTP header. Note also that if the encoding of the data is known
+     * to the application by some other means then the setEncoding function
+     * in the InputSource object should be used instead. The getEncoding
+     * function should only be used to return information that is intrinsic
+     * to the stream.
+     *
+     * @return The name of the encoding, or 0 if one is not available.
+     */
+    virtual const XMLCh *getEncoding() const;
 
 protected :
     // -----------------------------------------------------------------------

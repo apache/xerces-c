@@ -169,6 +169,7 @@ public :
     );
 
     virtual const XMLCh *getContentType() const;
+    virtual const XMLCh *getEncoding() const;
 
 protected :
     BinHTTPInputStreamCommon(MemoryManager *manager);
@@ -208,12 +209,17 @@ private :
     //  fBufferPos
     //      Pointers into fBuffer, showing start and end+1 of content
     //      that readBytes must return.
+	//  fContentType
+	//      Holds the HTTP header for the Content-Type setting
+	//  fEncoding
+	//      Holds the encoding of this stream, extracted from the Content-Type setting
     // -----------------------------------------------------------------------
 
     XMLSize_t           fBytesProcessed;
     CharBuffer          fBuffer;
     char *              fBufferPos;
     XMLCh *             fContentType;
+    XMLCh *             fEncoding;
     MemoryManager*      fMemoryManager;
 };
 

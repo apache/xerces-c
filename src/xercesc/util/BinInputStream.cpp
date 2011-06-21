@@ -42,4 +42,12 @@ BinInputStream::BinInputStream()
 {
 }
 
+// ---------------------------------------------------------------------------
+//  BinInputStream: Default implementations
+// ---------------------------------------------------------------------------
+const XMLCh* BinInputStream::getEncoding() const
+{
+    return 0;
+}
+
 XERCES_CPP_NAMESPACE_END
