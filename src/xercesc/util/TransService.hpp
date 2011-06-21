@@ -634,7 +634,7 @@ private:
     //  fString
     //      The transcoded string
     //
-    //  fBytesWritten
+    //  fCharsWritten
     //      The length of the transcoded string in characters
     // -----------------------------------------------------------------------
     XMLCh *fString;

@@ -611,13 +611,13 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
 {
     if(!in) return;
 
-    XMLSize_t allocSize = len * sizeof(XMLCh);
+    XMLSize_t allocSize = (len * sizeof(XMLCh)) + 4;
     fString = (XMLByte*)fMemoryManager->allocate(allocSize);
 
-    XMLSize_t charsRead = 0;
     XMLSize_t charsDone = 0;
 
-    while(true) {
+    while(charsDone < len) {
+	    XMLSize_t charsRead = 0;
         fBytesWritten += trans->transcodeTo(in + charsDone, len - charsDone,
                                             fString + fBytesWritten, allocSize - fBytesWritten,
                                             charsRead, XMLTranscoder::UnRep_Throw);
@@ -626,13 +626,14 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
 
         charsDone += charsRead;
 
-        if(charsDone == len) break;
-
-        allocSize *= 2;
-        XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
-        memcpy(newBuf, fString, fBytesWritten);
-        fMemoryManager->deallocate(fString);
-        fString = newBuf;
+		if((allocSize - fBytesWritten) < (len - charsDone))
+		{
+			allocSize *= 2;
+			XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
+			memcpy(newBuf, fString, fBytesWritten);
+			fMemoryManager->deallocate(fString);
+			fString = newBuf;
+		}
     }
 
     // null terminate
@@ -692,14 +693,18 @@ void TranscodeFromStr::transcode(const XMLByte *in, XMLSize_t length, XMLTransco
     XMLSize_t allocSize = length + 1;
     fString = (XMLCh*)fMemoryManager->allocate(allocSize * sizeof(XMLCh));
 
-    XMLSize_t csSize = length;
+    XMLSize_t csSize = allocSize;
     ArrayJanitor<unsigned char> charSizes((unsigned char*)fMemoryManager->allocate(csSize * sizeof(unsigned char)),
                                           fMemoryManager);
 
-    XMLSize_t bytesRead = 0;
     XMLSize_t bytesDone = 0;
 
-    while(true) {
+    while(bytesDone < length) {
+        if((allocSize - fCharsWritten) > csSize) {
+            csSize = allocSize - fCharsWritten;
+            charSizes.reset((unsigned char*)fMemoryManager->allocate(csSize * sizeof(unsigned char)), fMemoryManager);
+        }
+	    XMLSize_t bytesRead = 0;
         fCharsWritten += trans->transcodeFrom(in + bytesDone, length - bytesDone,
                                               fString + fCharsWritten, allocSize - fCharsWritten,
                                               bytesRead, charSizes.get());
@@ -707,26 +712,22 @@ void TranscodeFromStr::transcode(const XMLByte *in, XMLSize_t length, XMLTransco
             ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, fMemoryManager);
 
         bytesDone += bytesRead;
-        if(bytesDone == length) break;
 
-        allocSize *= 2;
-        XMLCh *newBuf = (XMLCh*)fMemoryManager->allocate(allocSize * sizeof(XMLCh));
-        memcpy(newBuf, fString, fCharsWritten);
-        fMemoryManager->deallocate(fString);
-        fString = newBuf;
-
-        if((allocSize - fCharsWritten) > csSize) {
-            csSize = allocSize - fCharsWritten;
-            charSizes.reset((unsigned char*)fMemoryManager->allocate(csSize * sizeof(unsigned char)),
-                            fMemoryManager);
-        }
+		if(((allocSize - fCharsWritten)*sizeof(XMLCh)) < (length - bytesDone))
+		{
+			allocSize *= 2;
+			XMLCh *newBuf = (XMLCh*)fMemoryManager->allocate(allocSize * sizeof(XMLCh));
+			memcpy(newBuf, fString, fCharsWritten*sizeof(XMLCh));
+			fMemoryManager->deallocate(fString);
+			fString = newBuf;
+		}
     }
 
     // null terminate
-    if(fCharsWritten == allocSize) {
-        allocSize += 1;
+    if((fCharsWritten + 1) > allocSize) {
+        allocSize = fCharsWritten + 1;
         XMLCh *newBuf = (XMLCh*)fMemoryManager->allocate(allocSize * sizeof(XMLCh));
-        memcpy(newBuf, fString, fCharsWritten);
+        memcpy(newBuf, fString, fCharsWritten*sizeof(XMLCh));
         fMemoryManager->deallocate(fString);
         fString = newBuf;
     }
