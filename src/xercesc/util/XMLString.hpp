@@ -1247,6 +1247,17 @@ public:
     static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc
                                         , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
 
+    /** Break a string into tokens with the given character as delimiter, and
+      * stored in a string vector.  The caller owns the string vector
+      * that is returned, and is responsible for deleting it.
+      * @param tokenizeSrc String to be tokenized
+      * @param delimiter Delimiter character 
+      * @param manager The MemoryManager to use to allocate objects
+      * @return a vector of all the tokenized string
+      */
+    static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc
+                                        , XMLCh delimiter
+                                        , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
     //@}
 
     /** @name Formatting functions */
