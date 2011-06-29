@@ -376,20 +376,19 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     }
 
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI,
-                                          fSchemaInfo?fSchemaInfo->getNamespaceScope():NULL,
+                                          0,
                                           schemaURL,
                                           fTargetNSURIString, schemaRoot,
                                           fScanner,
                                           fGrammarPoolMemoryManager);
 
+    currInfo->getNamespaceScope()->reset(fEmptyNamespaceURI);
+    // Add mapping for the xml prefix
+    currInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
+
     if (fSchemaInfo)
         fSchemaInfo->addSchemaInfo(currInfo, SchemaInfo::IMPORT);
-    else
-    {
-        currInfo->getNamespaceScope()->reset(fEmptyNamespaceURI);
-        // Add mapping for the xml prefix
-        currInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
-    }
+
     addImportedNS(currInfo->getTargetNSURI());
 
     fSchemaInfo = currInfo;
@@ -686,11 +685,15 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
             SchemaInfo* saveInfo = fSchemaInfo;
 
             fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI,
-                                         fSchemaInfo->getNamespaceScope(),
+                                         0,
                                          includeURL,
                                          fTargetNSURIString, root,
                                          fScanner,
                                          fGrammarPoolMemoryManager);
+
+            fSchemaInfo->getNamespaceScope()->reset(fEmptyNamespaceURI);
+            // Add mapping for the xml prefix
+            fSchemaInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
 
             fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(),
                                  fSchemaInfo->getTargetNSURI(), fSchemaInfo);
@@ -8239,12 +8242,16 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         // --------------------------------------------------------
         redefSchemaInfo = fSchemaInfo;
         Janitor<SchemaInfo> newSchemaInfo(new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI,
-                                     fSchemaInfo->getNamespaceScope(),
+                                     0,
                                      includeURL,
                                      fTargetNSURIString, root,
                                      fScanner,
                                      fGrammarPoolMemoryManager));
         fSchemaInfo = newSchemaInfo.get();
+
+        fSchemaInfo->getNamespaceScope()->reset(fEmptyNamespaceURI);
+        // Add mapping for the xml prefix
+        fSchemaInfo->getNamespaceScope()->addPrefix(XMLUni::fgXMLString, fURIStringPool->addOrFind(XMLUni::fgXMLURIName));
 
         traverseSchemaHeader(root);
         fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
