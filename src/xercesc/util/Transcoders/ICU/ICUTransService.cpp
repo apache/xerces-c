@@ -666,7 +666,7 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     );
 
     // Rememember the status before we possibly overite the error code
-    const bool res = (err == U_ZERO_ERROR);
+    const bool res = ((err == U_ZERO_ERROR) || (err == U_BUFFER_OVERFLOW_ERROR && startSrc > srcPtr));
 
     // Put the old handler back
     err = U_ZERO_ERROR;
@@ -738,7 +738,7 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck)
          , &err
          );
 
-    // Set upa temp buffer to format into. Make it more than big enough
+    // Set up a temp buffer to format into. Make it more than big enough
     char            tmpBuf[64];
     char*           startTarget = tmpBuf;
     const UChar*    startSrc = srcBuf;
