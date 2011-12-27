@@ -46,6 +46,8 @@
 // silence the warning "while compiling class-template member function xxxx : identifier was truncated to '255'
 // characters in the browser information"
 #pragma warning( disable: 4786 )
+// silence the warning "class 'XXXX' needs to have dll-interface to be used by clients of class 'YYYY'"
+#pragma warning( disable: 4251)
 
 // ---------------------------------------------------------------------------
 //  These defines have been hardcoded for the Microsoft Visual C++ compilers

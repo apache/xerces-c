@@ -27,6 +27,7 @@
 #include <xercesc/framework/XMLRecognizer.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -122,7 +123,7 @@ public :
     virtual const XMLCh* getId() const = 0;
 
     // -----------------------------------------------------------------------
-    //	Create a new transcoder for the local code page.
+    //    Create a new transcoder for the local code page.
     //
     //  @param manager The memory manager to use.
     // -----------------------------------------------------------------------
@@ -134,13 +135,13 @@ public :
     virtual void lowerCase(XMLCh* const toLowerCase) = 0;
 
     // -----------------------------------------------------------------------
-    //	Allow users to add their own encodings to the intrinsic mapping
-    //	table
-    //	Usage:
-    //		XMLTransService::addEncoding (
-    //			gMyEncodingNameString
-    //			, new ENameMapFor<MyTransClassType>(gMyEncodingNameString)
-    //		);
+    //    Allow users to add their own encodings to the intrinsic mapping
+    //    table
+    //    Usage:
+    //        XMLTransService::addEncoding (
+    //            gMyEncodingNameString
+    //            , new ENameMapFor<MyTransClassType>(gMyEncodingNameString)
+    //        );
     // -----------------------------------------------------------------------
     static void addEncoding(const XMLCh* const encoding, ENameMap* const ownMapping);
 
@@ -215,29 +216,29 @@ class XMLUTIL_EXPORT XMLTranscoder : public XMemory
 {
 public :
 
-	/**
-	 * This enum is used by the <code>transcodeTo()</code> method
-	 * to indicate how to react to unrepresentable characters. The
-	 * <code>transcodeFrom()</code> method always works the
-	 * same. It will consider any invalid data to be an error and
-	 * throw.
-	 */
+    /**
+     * This enum is used by the <code>transcodeTo()</code> method
+     * to indicate how to react to unrepresentable characters. The
+     * <code>transcodeFrom()</code> method always works the
+     * same. It will consider any invalid data to be an error and
+     * throw.
+     */
     enum UnRepOpts
     {
-        UnRep_Throw		/**< Throw an exception */
-        , UnRep_RepChar		/**< Use the replacement char */
+        UnRep_Throw        /**< Throw an exception */
+        , UnRep_RepChar        /**< Use the replacement char */
     };
 
 
-	/** @name Destructor. */
-	//@{
+    /** @name Destructor. */
+    //@{
 
-	 /**
-	  * Destructor for XMLTranscoder
-	  *
-	  */
+     /**
+      * Destructor for XMLTranscoder
+      *
+      */
     virtual ~XMLTranscoder();
-	//@}
+    //@}
 
 
 
@@ -323,7 +324,7 @@ public :
       *    <code>XMLTranscoder</code> object is for
       */
     const XMLCh* getEncodingName() const;
-	//@}
+    //@}
 
     /** @name Getter methods*/
     //@{
@@ -337,7 +338,7 @@ public :
       */
     MemoryManager* getMemoryManager() const;
 
-	//@}
+    //@}
 
 protected :
     // -----------------------------------------------------------------------
@@ -532,7 +533,7 @@ public:
       */
     XMLSize_t length () const;
 
-	//@}
+    //@}
 
 private:
     // -----------------------------------------------------------------------
@@ -555,7 +556,7 @@ private:
     //  fBytesWritten
     //      The length of the transcoded string in bytes
     // -----------------------------------------------------------------------
-    XMLByte *fString;
+    ArrayJanitor<XMLByte> fString;
     XMLSize_t fBytesWritten;
     MemoryManager *fMemoryManager;
 };
@@ -614,7 +615,7 @@ public:
       */
     XMLSize_t length() const;
 
-	//@}
+    //@}
 
 private:
     // -----------------------------------------------------------------------
@@ -637,7 +638,7 @@ private:
     //  fCharsWritten
     //      The length of the transcoded string in characters
     // -----------------------------------------------------------------------
-    XMLCh *fString;
+    ArrayJanitor<XMLCh> fString;
     XMLSize_t fCharsWritten;
     MemoryManager *fMemoryManager;
 };
@@ -668,14 +669,13 @@ inline const XMLCh* XMLTranscoder::getEncodingName() const
 // ---------------------------------------------------------------------------
 inline const XMLByte *TranscodeToStr::str() const
 {
-    return fString;
+    return fString.get();
 }
 
 inline XMLByte *TranscodeToStr::adopt()
 {
-    XMLByte *tmp = fString;
-    fString = 0;
-    return tmp;
+    fBytesWritten = 0;
+    return fString.release();
 }
 
 inline XMLSize_t TranscodeToStr::length () const
@@ -688,14 +688,13 @@ inline XMLSize_t TranscodeToStr::length () const
 // ---------------------------------------------------------------------------
 inline const XMLCh *TranscodeFromStr::str() const
 {
-    return fString;
+    return fString.get();
 }
 
 inline XMLCh *TranscodeFromStr::adopt()
 {
-    XMLCh *tmp = fString;
-    fString = 0;
-    return tmp;
+    fCharsWritten = 0;
+    return fString.release();
 }
 
 inline XMLSize_t TranscodeFromStr::length() const
