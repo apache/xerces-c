@@ -666,7 +666,7 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     );
 
     // Rememember the status before we possibly overite the error code
-    const bool res = (err == U_ZERO_ERROR);
+    const bool res = ((err == U_ZERO_ERROR) || (err == U_BUFFER_OVERFLOW_ERROR && startSrc > srcPtr));
 
     // Put the old handler back
     err = U_ZERO_ERROR;

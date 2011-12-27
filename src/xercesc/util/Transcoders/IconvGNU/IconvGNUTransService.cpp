@@ -1041,7 +1041,7 @@ XMLSize_t    IconvGNUTranscoder::transcodeFrom
     char    *orgTarget = startTarget;
     size_t    srcLen = srcCount;
     size_t    prevSrcLen = srcLen;
-    unsigned int toReturn = 0;
+    XMLSize_t toReturn = 0;
     bytesEaten = 0;
 
     XMLMutexLock lockConverter(&fMutex);
@@ -1049,6 +1049,8 @@ XMLSize_t    IconvGNUTranscoder::transcodeFrom
     for (size_t cnt = 0; cnt < maxChars && srcLen; cnt++) {
         size_t    rc = iconvFrom(startSrc, &srcLen, &orgTarget, uChSize());
         if (rc == (size_t)-1) {
+            if (errno == EINVAL && cnt > 0)
+                break;
             if (errno != E2BIG || prevSrcLen == srcLen) {
                 ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, getMemoryManager());
             }
