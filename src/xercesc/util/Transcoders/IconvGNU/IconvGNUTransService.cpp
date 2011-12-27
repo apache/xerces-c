@@ -1220,6 +1220,8 @@ unsigned int    IconvGNUTranscoder::transcodeFrom
     for (size_t cnt = 0; cnt < maxChars && srcLen; cnt++) {
         size_t    rc = iconvFrom(startSrc, &srcLen, &orgTarget, uChSize());
         if (rc == (size_t)-1) {
+            if (errno == EINVAL && cnt > 0)
+                break;
             if (errno != E2BIG || prevSrcLen == srcLen) {
                 if (wBufPtr)
                     getMemoryManager()->deallocate(wBufPtr);//delete [] wBufPtr;
