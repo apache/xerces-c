@@ -277,6 +277,7 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 ,fCurrentLine(0)
 ,fLineFeedInTextNodePrinted(false)
 ,fLastWhiteSpaceInTextNode(0)
+,fIsXml11(false)
 ,fNamespaceStack(0)
 ,fMemoryManager(manager)
 {
@@ -486,6 +487,7 @@ bool DOMLSSerializerImpl::write(const DOMNode* nodeToWrite,
      *  get Document Version
      */
     fDocumentVersion = (docu && docu->getXmlVersion() && *(docu->getXmlVersion()))?docu->getXmlVersion():XMLUni::fgVersion1_0;
+    fIsXml11 = XMLString::equals(fDocumentVersion, XMLUni::fgVersion1_1);
 
     fErrorCount = 0;
 
@@ -646,6 +648,7 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
+            ensureValidString(nodeToWrite, nodeValue);
             if (getFeature(FORMAT_PRETTY_PRINT_ID))
             {
                 fLineFeedInTextNodePrinted = false;
@@ -696,6 +699,9 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
         {
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
+
+            ensureValidString(nodeToWrite, nodeName);
+            ensureValidString(nodeToWrite, nodeValue);
 
             if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
                 printNewLine();
@@ -882,11 +888,11 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                                 namespaceMap=new (fMemoryManager) RefHashTableOf<XMLCh>(12, false, fMemoryManager);
                                 fNamespaceStack->addElement(namespaceMap);
                             }
-			                const XMLCh* nsPrefix = attribute->getLocalName();
+                            const XMLCh* nsPrefix = attribute->getLocalName();
                             if(XMLString::equals(attribute->getNodeName(),XMLUni::fgXMLNSString))
-								nsPrefix = XMLUni::fgZeroLenString;
-							if(namespaceMap->containsKey((void*)nsPrefix))
-								continue;
+                                nsPrefix = XMLUni::fgZeroLenString;
+                            if(namespaceMap->containsKey((void*)nsPrefix))
+                                continue;
                             namespaceMap->put((void*)attribute->getLocalName(),(XMLCh*)attribute->getNodeValue());
                         }
                         else if(!XMLString::equals(ns, XMLUni::fgXMLURIName))
@@ -927,7 +933,10 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                             while( child != 0)
                             {
                                 if(child->getNodeType()==DOMNode::TEXT_NODE)
+                                {
+                                    ensureValidString(attribute, child->getNodeValue());
                                     *fFormatter  << child->getNodeValue();
+                                }
                                 else if(child->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
                                     *fFormatter << XMLFormatter::NoEscapes
                                                 << chAmpersand << child->getNodeName() << chSemiColon
@@ -936,7 +945,10 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                             }
                         }
                         else
+                        {
+                            ensureValidString(attribute, attribute->getNodeValue());
                             *fFormatter  << attribute->getNodeValue();
+                        }
                         *fFormatter  << XMLFormatter::NoEscapes
                                      << chDoubleQuote;
                     }
@@ -1041,7 +1053,10 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 while( child != 0)
                 {
                     if(child->getNodeType()==DOMNode::TEXT_NODE)
+                    {
+                        ensureValidString(nodeToWrite, child->getNodeValue());
                         *fFormatter  << child->getNodeValue();
+                    }
                     else if(child->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
                         *fFormatter << XMLFormatter::NoEscapes
                                     << chAmpersand << child->getNodeName() << chSemiColon
@@ -1050,7 +1065,10 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
                 }
             }
             else
+            {
+                ensureValidString(nodeToWrite, nodeValue);
                 *fFormatter  << nodeValue;
+            }
             *fFormatter  << XMLFormatter::NoEscapes
                          << chDoubleQuote;
 
@@ -1124,8 +1142,9 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             }
             else
             {
+                ensureValidString(nodeToWrite, nodeValue);
                 // search for "]]>", the node value is not supposed to have this
-                if (XMLString::patternMatch((XMLCh*) nodeValue, gEndCDATA) != -1)
+                if (XMLString::patternMatch(nodeValue, gEndCDATA) != -1)
                 {
                     reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NestedCDATA);
                 }
@@ -1145,6 +1164,8 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
             if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
                 break;
 
+            ensureValidString(nodeToWrite, nodeValue);
+
             // Figure out if we want pretty-printing for this comment.
             // If this comment node does not have any element siblings
             // (i.e., it is a text node) then we don't want to add any
@@ -1156,40 +1177,40 @@ void DOMLSSerializerImpl::processNode(const DOMNode* const nodeToWrite, int leve
 
             if (!pretty)
             {
-              // See if we have any element siblings.
-              //
-              const DOMNode* s = nodeToWrite->getNextSibling ();
-
-              while (s != 0 && s->getNodeType () != DOMNode::ELEMENT_NODE)
-                s = s->getNextSibling ();
-
-              if (s != 0)
-                pretty = true;
-              else
-              {
-                s = nodeToWrite->getPreviousSibling ();
+                // See if we have any element siblings.
+                //
+                const DOMNode* s = nodeToWrite->getNextSibling ();
 
                 while (s != 0 && s->getNodeType () != DOMNode::ELEMENT_NODE)
-                  s = s->getPreviousSibling ();
+                    s = s->getNextSibling ();
 
                 if (s != 0)
-                  pretty = true;
-              }
+                    pretty = true;
+                else
+                {
+                    s = nodeToWrite->getPreviousSibling ();
+
+                    while (s != 0 && s->getNodeType () != DOMNode::ELEMENT_NODE)
+                        s = s->getPreviousSibling ();
+
+                    if (s != 0)
+                       pretty = true;
+                }
             }
 
             if (pretty)
             {
-              if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
-                printNewLine();
+                if(level == 1 && getFeature(FORMAT_PRETTY_PRINT_1ST_LEVEL_ID))
+                    printNewLine();
 
-              printNewLine();
-              printIndent(level);
+                printNewLine();
+                printIndent(level);
             }
 
             TRY_CATCH_THROW
             (
                 *fFormatter << XMLFormatter::NoEscapes << gStartComment
-                << nodeValue << gEndComment;
+                            << nodeValue << gEndComment;
             )
             break;
         }
@@ -1423,7 +1444,7 @@ bool DOMLSSerializerImpl::reportError(const DOMNode* const    errorNode
         fErrorCount++;
 
     if (errorType == DOMError::DOM_SEVERITY_FATAL_ERROR || !toContinueProcess)
-        throw toEmit;
+        throw DOMLSException(DOMLSException::SERIALIZE_ERR, toEmit, fMemoryManager);
 
     return toContinueProcess;
 }
@@ -1665,7 +1686,7 @@ void DOMLSSerializerImpl::processBOM()
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString6) == 0) ||
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUTF16EncodingString7) == 0)  )
     {
-    	if (XMLPlatformUtils::fgXMLChBigEndian)
+        if (XMLPlatformUtils::fgXMLChBigEndian)
             fFormatter->writeBOM(BOM_utf16be, 2);
         else
             fFormatter->writeBOM(BOM_utf16le, 2);
@@ -1686,10 +1707,10 @@ void DOMLSSerializerImpl::processBOM()
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString4) == 0) ||
              (XMLString::compareIStringASCII(fEncodingUsed, XMLUni::fgUCS4EncodingString5) == 0)  )
     {
-		if (XMLPlatformUtils::fgXMLChBigEndian)
-	        fFormatter->writeBOM(BOM_ucs4be, 4);
-	    else
-			fFormatter->writeBOM(BOM_ucs4le, 4);
+        if (XMLPlatformUtils::fgXMLChBigEndian)
+            fFormatter->writeBOM(BOM_ucs4be, 4);
+        else
+            fFormatter->writeBOM(BOM_ucs4le, 4);
     }
 }
 
@@ -1716,6 +1737,15 @@ bool DOMLSSerializerImpl::isNamespaceBindingActive(const XMLCh* prefix, const XM
             return XMLString::equals(thisUri,uri);
     }
     return false;
+}
+
+void DOMLSSerializerImpl::ensureValidString(const DOMNode* nodeToWrite, const XMLCh* string)
+{
+    // XERCESC-1854: prevent illegal characters from being written
+    XMLSize_t count=XMLString::stringLen(string);
+    for(XMLSize_t i=0;i<count;i++)
+        if((fIsXml11 && !XMLChar1_1::isXMLChar(string[i])) || (!fIsXml11 && !XMLChar1_0::isXMLChar(string[i])))
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::INVALID_CHARACTER_ERR);
 }
 
 XERCES_CPP_NAMESPACE_END

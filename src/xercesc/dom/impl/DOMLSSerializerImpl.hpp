@@ -70,8 +70,8 @@ public:
     virtual bool                    writeToURI(const DOMNode*   nodeToWrite,
                                                const XMLCh*     uri);
     /**
-	  *  The caller is responsible for the release of the returned string
-	  */
+      *  The caller is responsible for the release of the returned string
+      */
     virtual XMLCh*                  writeToString(const DOMNode* nodeToWrite, MemoryManager* manager = NULL);
     virtual void                    release();
 
@@ -134,6 +134,7 @@ protected:
     void                          setURCharRef();
     bool                          isDefaultNamespacePrefixDeclared() const;
     bool                          isNamespaceBindingActive(const XMLCh* prefix, const XMLCh* uri) const;
+    void                          ensureValidString(const DOMNode* nodeToWrite, const XMLCh* string);
 
 
     void printIndent(unsigned int level);
@@ -201,6 +202,7 @@ protected:
     int                           fCurrentLine;
     bool                          fLineFeedInTextNodePrinted;
     unsigned int                  fLastWhiteSpaceInTextNode;
+    bool                          fIsXml11;
 
     RefVectorOf< RefHashTableOf<XMLCh> >* fNamespaceStack;
     MemoryManager*               fMemoryManager;

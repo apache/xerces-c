@@ -241,7 +241,6 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
     // Copy the encoding string
     fOutEncoding = XMLString::replicate(outEncoding, fMemoryManager);
 
-
     fIsXML11 = XMLString::equals(docVersion, XMLUni::fgVersion1_1);
 }
 
@@ -418,7 +417,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
      else
     {
         //
-        //  Escape chars that require it according tot he scale flags
+        //  Escape chars that require it according to the scale flags
         //  we were given. For the others, try to accumulate them and
         //  format them in as big as bulk as we can.
         //
