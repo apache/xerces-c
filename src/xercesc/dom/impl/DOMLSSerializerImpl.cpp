@@ -1742,10 +1742,15 @@ bool DOMLSSerializerImpl::isNamespaceBindingActive(const XMLCh* prefix, const XM
 void DOMLSSerializerImpl::ensureValidString(const DOMNode* nodeToWrite, const XMLCh* string)
 {
     // XERCESC-1854: prevent illegal characters from being written
-    XMLSize_t count=XMLString::stringLen(string);
-    for(XMLSize_t i=0;i<count;i++)
-        if((fIsXml11 && !XMLChar1_1::isXMLChar(string[i])) || (!fIsXml11 && !XMLChar1_0::isXMLChar(string[i])))
+	if(string==0)
+		return;
+	const XMLCh* cursor=string;
+	while(*cursor!=0)
+	{
+        if((fIsXml11 && !XMLChar1_1::isXMLChar(*cursor)) || (!fIsXml11 && !XMLChar1_0::isXMLChar(*cursor)))
             reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::INVALID_CHARACTER_ERR);
+		cursor++;
+	}
 }
 
 XERCES_CPP_NAMESPACE_END
