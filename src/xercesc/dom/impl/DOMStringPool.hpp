@@ -43,13 +43,14 @@ class   DOMDocumentImpl;
 //                      hash table array itself is a pointer to the head
 //                      of a singly-linked list of these structs.
 //
-//                      Although this struct is delcared with a string length of one,
+//                      Although this struct is declared with a string length of one,
 //                      the factory method allocates enough storage to hold the full
 //                      string length.
 //
 struct DOMStringPoolEntry
 {
     DOMStringPoolEntry    *fNext;
+    XMLSize_t             fLength;
     XMLCh                 fString[1];
 };
 
