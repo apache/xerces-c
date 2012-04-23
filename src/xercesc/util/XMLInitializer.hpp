@@ -106,6 +106,9 @@ private:
     static void initializeDOMNodeListImpl();
     static void initializeDOMNormalizer();
 
+    // XInclude
+    //
+    static void initializeXInclude();
 
     //
     // Terminate
@@ -142,6 +145,10 @@ private:
     static void terminateDOMDocumentTypeImpl();
     static void terminateDOMNodeListImpl();
     static void terminateDOMNormalizer();
+
+    // XInclude
+    //
+    static void terminateXInclude();
 
     //
     // Extra initialization.
