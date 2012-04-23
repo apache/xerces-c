@@ -281,7 +281,7 @@ DOMLSSerializerImpl::DOMLSSerializerImpl(MemoryManager* const manager)
 ,fNamespaceStack(0)
 ,fMemoryManager(manager)
 {
-    fNamespaceStack=new (fMemoryManager) RefVectorOf< RefHashTableOf<XMLCh> >(0,true, fMemoryManager);
+    fNamespaceStack=new (fMemoryManager) RefVectorOf< RefHashTableOf<XMLCh> >(1,true, fMemoryManager);
 
     //
     // set features to default setting
