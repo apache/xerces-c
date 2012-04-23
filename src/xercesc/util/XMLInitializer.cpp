@@ -70,7 +70,11 @@ void XMLInitializer::initializeStaticData()
         initializeDOMDocumentTypeImpl();
         initializeDOMNodeListImpl();
         initializeDOMNormalizer();
-    }
+
+        // XInclude
+        //
+        initializeXInclude();
+	}
     catch(...) {
         XMLPlatformUtils::panic(PanicHandler::Panic_AllStaticInitErr);
     }
@@ -85,7 +89,11 @@ void XMLInitializer::terminateStaticData()
     // a destructor).
     //
 
-    // DOM
+    // XInclude
+    //
+    terminateXInclude();
+
+	// DOM
     //
     terminateDOMNormalizer();
     terminateDOMNodeListImpl();
