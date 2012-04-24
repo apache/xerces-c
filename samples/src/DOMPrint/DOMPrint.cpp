@@ -562,7 +562,14 @@ int main(int argC, char* argV[])
             XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
             retval = 5;
         }
-        catch (XMLException& e)
+        catch (const DOMLSException& e)
+        {
+            XERCES_STD_QUALIFIER cerr << "An error occurred during serialization of the DOM tree. Msg is:"
+                << XERCES_STD_QUALIFIER endl
+                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+            retval = 4;
+        }
+        catch (const XMLException& e)
         {
             XERCES_STD_QUALIFIER cerr << "An error occurred during creation of output transcoder. Msg is:"
                 << XERCES_STD_QUALIFIER endl
