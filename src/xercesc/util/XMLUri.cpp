@@ -1537,7 +1537,8 @@ bool XMLUri::isValidRegistryBasedAuthority(const XMLCh* const authority,
         }
         else if (authority[index] == chPercent)               // '%'
         {
-            if (XMLString::isHex(authority[index+1]) &&     // 1st hex
+            if ((index+2) < authLen &&
+				XMLString::isHex(authority[index+1]) &&     // 1st hex
                 XMLString::isHex(authority[index+2])  )     // 2nd hex
                 index +=3;
             else
