@@ -144,6 +144,10 @@ AC_CHECK_FUNCS([getcwd pathconf realpath \
 # The check for mbrlen, wcsrtombs and mbsrtowcs gives a false
 # positive on HP-UX, so we use a different snippet to set the
 # corresponding macro
+# Furthermore, OpenBSD 5.1 doesn't follow the standard that states
+# that the "src" pointer must be set to NULL when a \0 has been 
+# converted in the source data, a behaviour that we rely on
+# So we also check for this scenario before using these functions
 AC_MSG_CHECKING([for mbrlen])
 AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                                      [[mbstate_t st; mbrlen( "t", 5, &st );]])],
@@ -157,8 +161,18 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                     ]
                  )
 AC_MSG_CHECKING([for wcsrtombs])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
-                                     [[mbstate_t st; char buffer[2]; const wchar_t* src=0; wcsrtombs(buffer, &src, 2, &st);]])],
+AC_RUN_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
+#include <string.h>]],
+                                 [[
+mbstate_t st;
+memset(&st, 0, sizeof(st));
+char buffer[32];
+const wchar_t* src=L"help";
+wcsrtombs(buffer, &src, 32, &st);
+if(src==0)
+    return 0;
+else
+    return 1;]])],
                     [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_WCSRTOMBS], 1, [Define to 1 if you have the `wcsrtombs' function.])
@@ -169,8 +183,18 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                     ]
                  )
 AC_MSG_CHECKING([for mbsrtowcs])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
-                                     [[mbstate_t st; wchar_t buffer[2]; const char* src=0; mbsrtowcs(buffer, &src, 2, &st);]])],
+AC_RUN_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
+#include <string.h>]],
+                                 [[
+mbstate_t st;
+memset(&st, 0, sizeof(st));
+wchar_t buffer[32];
+const char* src="help";
+mbsrtowcs(buffer, &src, 32, &st);
+if(src==0)
+    return 0;
+else
+    return 1;]])],
                     [
                       AC_MSG_RESULT([yes])
                       AC_DEFINE_UNQUOTED([HAVE_MBSRTOWCS], 1, [Define to 1 if you have the `mbsrtowcs' function.])
