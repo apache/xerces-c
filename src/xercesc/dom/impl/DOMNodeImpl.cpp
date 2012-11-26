@@ -748,20 +748,20 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
 short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
 
     if(pattern & DOMNode::DOCUMENT_POSITION_PRECEDING) {
-        pattern &= !DOMNode::DOCUMENT_POSITION_PRECEDING;
+        pattern &= ~DOMNode::DOCUMENT_POSITION_PRECEDING;
         pattern |= DOMNode::DOCUMENT_POSITION_FOLLOWING;
     }
     else if(pattern & DOMNode::DOCUMENT_POSITION_FOLLOWING) {
-        pattern &= !DOMNode::DOCUMENT_POSITION_FOLLOWING;
+        pattern &= ~DOMNode::DOCUMENT_POSITION_FOLLOWING;
         pattern |= DOMNode::DOCUMENT_POSITION_PRECEDING;
     }
 
     if(pattern & DOMNode::DOCUMENT_POSITION_CONTAINED_BY) {
-        pattern &= !DOMNode::DOCUMENT_POSITION_CONTAINED_BY;
+        pattern &= ~DOMNode::DOCUMENT_POSITION_CONTAINED_BY;
         pattern |= DOMNode::DOCUMENT_POSITION_CONTAINS;
     }
     else if(pattern & DOMNode::DOCUMENT_POSITION_CONTAINS) {
-        pattern &= !DOMNode::DOCUMENT_POSITION_CONTAINS;
+        pattern &= ~DOMNode::DOCUMENT_POSITION_CONTAINS;
         pattern |= DOMNode::DOCUMENT_POSITION_CONTAINED_BY;
     }
 
