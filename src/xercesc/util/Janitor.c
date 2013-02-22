@@ -134,7 +134,7 @@ ArrayJanitor<T>::orphan()
 
 //	Look, Ma! No hands! Don't call this with null data!
 template <class T> T&
-ArrayJanitor<T>::operator[](int index) const
+ArrayJanitor<T>::operator[](XMLSize_t index) const
 {
 	//	TODO: Add appropriate exception
 	return fData[index];

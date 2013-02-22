@@ -86,7 +86,7 @@ public  :
     void orphan();
 
 	//	small amount of auto_ptr compatibility
-	T&	operator[](int index) const;
+	T&	operator[](XMLSize_t index) const;
 	T*	get() const;
 	T*	release();
 	void reset(T* p = 0);

@@ -271,7 +271,7 @@ int main(int argC, char* argV[])
     //  that propogate out
     //
 
-    int errorCount = 0;
+	XMLSize_t errorCount = 0;
     int errorCode = 0;
     try
     {
