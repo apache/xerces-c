@@ -502,6 +502,7 @@ void processContentSpecNode( const ContentSpecNode* cSpecNode, bool margin )
         case ContentSpecNode::ModelGroupSequence:  
         case ContentSpecNode::Sequence:            XERCES_STD_QUALIFIER cout << "Sequence";       break;
         case ContentSpecNode::All:                 XERCES_STD_QUALIFIER cout << "All";            break;
+        case ContentSpecNode::Loop:                XERCES_STD_QUALIFIER cout << "Loop";           break;
         case ContentSpecNode::Any:                 XERCES_STD_QUALIFIER cout << "Any";            break;
         case ContentSpecNode::Any_Other:           XERCES_STD_QUALIFIER cout << "Any_Other";      break;
         case ContentSpecNode::Any_NS:              XERCES_STD_QUALIFIER cout << "Any_NS";         break;
