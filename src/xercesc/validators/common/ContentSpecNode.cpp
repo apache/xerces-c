@@ -105,6 +105,7 @@ public:
 		node=other->node;
 		parentType=other->parentType;
 		character=other->character;
+		return *this;
 	}
 
 	const ContentSpecNode* node;
