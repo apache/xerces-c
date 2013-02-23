@@ -218,7 +218,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>Default</CompileAs>
     </ClCompile>
@@ -254,7 +253,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>Default</CompileAs>
     </ClCompile>
@@ -289,7 +287,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -327,7 +324,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -365,7 +361,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>Default</CompileAs>
     </ClCompile>
@@ -401,7 +396,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>Default</CompileAs>
     </ClCompile>
@@ -436,7 +430,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -473,7 +466,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -511,7 +503,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -549,7 +540,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -587,7 +577,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>Default</CompileAs>
     </ClCompile>
@@ -623,7 +612,6 @@
       <PrecompiledHeaderOutputFile>$(IntDir)DOMTypeInfoTest.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)DOMTypeInfoTest_vc100.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>Default</CompileAs>
     </ClCompile>
