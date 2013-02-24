@@ -6041,5 +6041,25 @@ bool DOMTest::testUtilFunctions()
 	XMLString::release(&uc);
 	XMLString::release(&uc2);
 
+	XMLCh uc3[] = { 0x6B65, 0 }; // Unicode Han Character 'step, pace; walk, stroll' (U+6B65); UTF-8 = 0xE6 0xAD 0xA5 (e6ada5)
+	char* uc4 = (char*)TranscodeToStr(uc3, utf8).adopt();
+	if(!XMLString::equals(uc4, "\xE6\xAD\xA5"))
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&uc4);
+
+	// Input:                    U+7D5E U+308A U+8FBC U+307F U+691C U+7D22
+	// Expected byte sequence:   E7 B5 9E E3 82 8A E8 BE BC E3 81 BF E6 A4 9C E7 B4 A2
+	const XMLCh xmlStr [] = { 0x7D5E, 0x308A, 0x8FBC, 0x307F, 0x691C, 0x7D22, 0x0000};
+	char* bytes = (char*)TranscodeToStr(xmlStr, "UTF-8").adopt();
+	if(!XMLString::equals(bytes, "\xE7\xB5\x9E\xE3\x82\x8A\xE8\xBE\xBC\xE3\x81\xBF\xE6\xA4\x9C\xE7\xB4\xA2"))
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&bytes);
+
     return OK;
 }
