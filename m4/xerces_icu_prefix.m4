@@ -10,25 +10,25 @@ dnl
 dnl $Id$
 
 AC_DEFUN([XERCES_ICU_PREFIX],
-	[
-	AC_ARG_WITH([icu],
-		[AS_HELP_STRING([--with-icu[[[[=DIR]]]]],[Specify location of icu])],
-		[
+        [
+        AC_ARG_WITH([icu],
+                [AS_HELP_STRING([--with-icu[[[[=DIR]]]]],[Specify location of icu])],
+                [
                   if test x"$with_icu" = x"yes"; then
                     with_icu=
                   fi
                 ],
-		[with_icu=])
+                [with_icu=])
 
-	# Determine if icu is available
-	AC_CACHE_VAL([xerces_cv_icu_present],
-	[
-		xerces_cv_icu_present=no
-		if test x"$with_icu" != x"no"; then
+        # Determine if icu is available
+        AC_CACHE_VAL([xerces_cv_icu_present],
+        [
+                xerces_cv_icu_present=no
+                if test x"$with_icu" != x"no"; then
 
                   # See if we were given a prefix.
                   #
-		  if test -n "$with_icu"; then
+                  if test -n "$with_icu"; then
                     AC_PATH_PROG([icu_config], [icu-config],[],[$with_icu/bin])
                   else
                     AC_PATH_PROG([icu_config], [icu-config],[])
@@ -39,9 +39,9 @@ AC_DEFUN([XERCES_ICU_PREFIX],
                   #
                   if test -n "$icu_config"; then
                     icu_flags=`$icu_config --cppflags-searchpath`
-		    icu_libs=`$icu_config --ldflags`
-		    icu_bin=`$icu_config --bindir`
-		    icu_sbin=`$icu_config --sbindir`
+                    icu_libs=`$icu_config --ldflags`
+                    icu_bin=`$icu_config --bindir`
+                    icu_sbin=`$icu_config --sbindir`
 
                     if test -n "$icu_bin"; then
                       icu_bin="$icu_bin/"
@@ -54,16 +54,16 @@ AC_DEFUN([XERCES_ICU_PREFIX],
                   else
                     if test -n "$with_icu"; then
                       icu_flags="-I$with_icu/include"
-     		      icu_libs="-L$with_icu/lib -licuuc -licudata"
-		      icu_bin="$with_icu/bin/"
-		      icu_sbin="$with_icu/sbin/"
+                      icu_libs="-L$with_icu/lib -licuuc -licudata"
+                      icu_bin="$with_icu/bin/"
+                      icu_sbin="$with_icu/sbin/"
                     else
                       # Default compiler paths.
                       #
                       icu_flags=
-     		      icu_libs="-licuuc -licudata"
-		      icu_bin=
-		      icu_sbin=
+                      icu_libs="-licuuc -licudata"
+                      icu_bin=
+                      icu_sbin=
                     fi
                   fi
 
@@ -71,7 +71,7 @@ AC_DEFUN([XERCES_ICU_PREFIX],
                   #
                   orig_cppflags=$CPPFLAGS
                   if test -n "$icu_flags"; then
-		    CPPFLAGS="$icu_flags $CPPFLAGS"
+                    CPPFLAGS="$icu_flags $CPPFLAGS"
                   fi
                   AC_CHECK_HEADER([unicode/ucnv.h], [xerces_cv_icu_present=yes])
 
@@ -82,43 +82,43 @@ AC_DEFUN([XERCES_ICU_PREFIX],
                     #
                     AC_MSG_CHECKING([for ucnv_open in -licuuc])
 
-		    orig_ldflags=$LDFLAGS
-		    LDFLAGS="$icu_libs $LDFLAGS"
+                    orig_libs=$LIBS
+                    LIBS="$icu_libs $LIBS"
 
                     AC_LINK_IFELSE(
-		    AC_LANG_SOURCE[[
-		    #include <unicode/ucnv.h>
+                    AC_LANG_SOURCE[[
+                    #include <unicode/ucnv.h>
 
                     int main ()
                     {
                       ucnv_open (0, 0);
                       return 0;
                     }
-		    ]],
-		    [], [xerces_cv_icu_present=no])
+                    ]],
+                    [], [xerces_cv_icu_present=no])
 
-		    LDFLAGS=$orig_ldflags
+                    LIBS=$orig_libs
 
                     if test x"$xerces_cv_icu_present" != x"no"; then
-		      AC_MSG_RESULT([yes])
+                      AC_MSG_RESULT([yes])
                     else
                       AC_MSG_RESULT([no])
                     fi
                   fi
 
                   CPPFLAGS=$orig_cppflags
-		fi
-	])
+                fi
+        ])
 
         AC_CACHE_VAL([xerces_cv_icu_flags], [xerces_cv_icu_flags=$icu_flags])
-	AC_CACHE_VAL([xerces_cv_icu_libs], [xerces_cv_icu_libs=$icu_libs])
-	AC_CACHE_VAL([xerces_cv_icu_bin], [xerces_cv_icu_bin=$icu_bin])
-	AC_CACHE_VAL([xerces_cv_icu_sbin], [xerces_cv_icu_sbin=$icu_sbin])
+        AC_CACHE_VAL([xerces_cv_icu_libs], [xerces_cv_icu_libs=$icu_libs])
+        AC_CACHE_VAL([xerces_cv_icu_bin], [xerces_cv_icu_bin=$icu_bin])
+        AC_CACHE_VAL([xerces_cv_icu_sbin], [xerces_cv_icu_sbin=$icu_sbin])
 
-	AC_SUBST([ICU_PRESENT], [$xerces_cv_icu_present])
-	AC_SUBST([ICU_FLAGS], [$xerces_cv_icu_flags])
-	AC_SUBST([ICU_LIBS], [$xerces_cv_icu_libs])
-	AC_SUBST([ICU_BIN], [$xerces_cv_icu_bin])
-	AC_SUBST([ICU_SBIN], [$xerces_cv_icu_sbin])
-	]
+        AC_SUBST([ICU_PRESENT], [$xerces_cv_icu_present])
+        AC_SUBST([ICU_FLAGS], [$xerces_cv_icu_flags])
+        AC_SUBST([ICU_LIBS], [$xerces_cv_icu_libs])
+        AC_SUBST([ICU_BIN], [$xerces_cv_icu_bin])
+        AC_SUBST([ICU_SBIN], [$xerces_cv_icu_sbin])
+        ]
 )
