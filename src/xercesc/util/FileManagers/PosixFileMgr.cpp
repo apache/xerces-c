@@ -19,9 +19,16 @@
  * $Id$
  */
 
+#include <config.h>
 #include <stdio.h>
+
+#if HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#if HAVE_LIMITS_H
 #include <limits.h>
+#endif
 
 #include <xercesc/util/FileManagers/PosixFileMgr.hpp>
 
@@ -74,7 +81,7 @@ void
 PosixFileMgr::fileClose(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
-		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 
     if (fclose((FILE*)f))
         ThrowXMLwithMemMgr(XMLPlatformUtilsException,
@@ -86,7 +93,7 @@ void
 PosixFileMgr::fileReset(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
-		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 
     // Seek to the start of the file
     if (fseek((FILE*)f, 0, SEEK_SET))
@@ -99,7 +106,7 @@ XMLFilePos
 PosixFileMgr::curPos(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
-		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 		 
     long curPos = ftell((FILE*)f);
 	
@@ -114,7 +121,7 @@ XMLFilePos
 PosixFileMgr::fileSize(FileHandle f, MemoryManager* const manager)
 {
     if (!f)
-		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 		
     // Get the current position
     long curPos = ftell((FILE*)f);
@@ -141,16 +148,16 @@ XMLSize_t
 PosixFileMgr::fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager)
 {
     if (!f || !buffer)
-		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 		
     XMLSize_t bytesRead = 0;
-	if (byteCount > 0)
-	{
-    	bytesRead = fread((void*)buffer, 1, byteCount, (FILE*)f);
+    if (byteCount > 0)
+    {
+        bytesRead = fread((void*)buffer, 1, byteCount, (FILE*)f);
 
-		if (ferror((FILE*)f))
-			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
-	}
+        if (ferror((FILE*)f))
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile, manager);
+    }
 	
     return bytesRead;
 }
@@ -160,17 +167,17 @@ void
 PosixFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager)
 {
     if (!f || !buffer)
-		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::CPtr_PointerIsZero, manager);
 
     while (byteCount > 0)
     {
         XMLSize_t bytesWritten = fwrite(buffer, sizeof(XMLByte), byteCount, (FILE*)f);
 
         if (ferror((FILE*)f))
-			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
+            ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile, manager);
 
-		buffer		+= bytesWritten;
-		byteCount	-= bytesWritten;
+        buffer		+= bytesWritten;
+        byteCount	-= bytesWritten;
     }
 }
 
@@ -186,28 +193,47 @@ PosixFileMgr::getFullPath(const XMLCh* const srcPath, MemoryManager* const manag
     char* newSrc = XMLString::transcode(srcPath, manager);
     ArrayJanitor<char> janText(newSrc, manager);
 
+#if HAVE_PATH_MAX
     // Use a local buffer that is big enough for the largest legal path
     char absPath[PATH_MAX + 1];
     
     // get the absolute path
     if (!realpath(newSrc, absPath))
-   		ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
 
-    return XMLString::transcode(absPath, manager);
+    XMLCh* ret = XMLString::transcode(absPath, manager);
+#else
+    // get the absolute path
+    char *absPath = realpath(newSrc, NULL);
+    if(!absPath)
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
+
+    XMLCh* ret = XMLString::transcode(absPath, manager);
+    free(absPath);
+#endif
+    return ret;
 }
 
 
 XMLCh*
 PosixFileMgr::getCurrentDirectory(MemoryManager* const manager)
 {
+#if HAVE_PATH_MAX
     char dirBuf[PATH_MAX + 2];
     char *curDir = getcwd(&dirBuf[0], PATH_MAX + 1);
+#else
+    char *curDir = getcwd(NULL, 0);
+#endif
 
     if (!curDir)
         ThrowXMLwithMemMgr(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotGetBasePathName, manager);
 
-    return XMLString::transcode(curDir, manager);
+    XMLCh* ret = XMLString::transcode(curDir, manager);
+#if !HAVE_PATH_MAX
+    free(curDir);
+#endif
+    return ret;
 }
 
 

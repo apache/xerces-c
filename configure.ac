@@ -141,6 +141,20 @@ AC_CHECK_FUNCS([getcwd pathconf realpath \
         wcsupr wcslwr wcsnicmp wcsicmp \
 		])
 
+# Some Unix systems, like Gnu Hurd, don't define PATH_MAX
+AC_MSG_CHECKING([for PATH_MAX])
+AC_COMPILE_IFELSE( [AC_LANG_PROGRAM([[#include <limits.h>]],
+                                    [[char dummy[PATH_MAX];]])],
+                   [
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([HAVE_PATH_MAX], 1, [Define to 1 if you have the PATH_MAX macro.])
+                    ],
+                    [
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([HAVE_PATH_MAX], 0, [Define to 1 if you have the PATH_MAX macro.])
+                    ]
+                 )
+
 # The check for mbrlen, wcsrtombs and mbsrtowcs gives a false
 # positive on HP-UX, so we use a different snippet to set the
 # corresponding macro
