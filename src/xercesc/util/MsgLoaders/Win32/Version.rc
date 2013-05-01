@@ -7,8 +7,13 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
+#ifdef _USING_V110_SDK71_
+#include "VerRsrc.h"
+#include "winnt.rh"
+#else
 #include "winver.h"
 #include "winnt.h"
+#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -83,8 +88,13 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""winver.h""\r\n"
-    "#include ""winnt.h""\r\n"
+	"#ifdef _USING_V110_SDK71_\r\n"
+	"#include ""VerRsrc.h""\r\n"
+	"#include ""winnt.rh""\r\n"
+	"#else\r\n"
+	"#include ""winver.h""\r\n"
+	"#include ""winnt.h""\r\n"
+	"#endif\r\n"
     "\r\n"
     "\0"
 END
