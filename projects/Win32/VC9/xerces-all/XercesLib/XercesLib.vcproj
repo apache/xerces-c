@@ -85,7 +85,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.fullpdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.full.pdb"
 				StripPrivateSymbols="$(OutDir)\xerces-c_3_1.pdb"
 				GenerateMapFile="true"
 				MapFileName="$(IntDir)\xerces-c_3_1.map"
@@ -183,7 +183,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.fullpdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.full.pdb"
 				StripPrivateSymbols="$(OutDir)\xerces-c_3_1.pdb"
 				GenerateMapFile="true"
 				MapFileName="$(IntDir)\xerces-c_3_1.map"
@@ -955,7 +955,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.fullpdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.full.pdb"
 				StripPrivateSymbols="$(OutDir)\xerces-c_3_1.pdb"
 				GenerateMapFile="true"
 				MapFileName="$(IntDir)\xerces-c_3_1.map"
@@ -1053,7 +1053,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.fullpdb"
+				ProgramDatabaseFile="$(OutDir)\xerces-c_3_1.full.pdb"
 				StripPrivateSymbols="$(OutDir)\xerces-c_3_1.pdb"
 				GenerateMapFile="true"
 				MapFileName="$(IntDir)\xerces-c_3_1.map"
@@ -2064,34 +2064,6 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp"
@@ -2306,34 +2278,6 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.cpp"
 					>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\BinHTTPInputStreamCommon.hpp"
@@ -2342,34 +2286,6 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp"
 					>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.hpp"
@@ -2378,34 +2294,6 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp"
 					>
-					<FileConfiguration
-						Name="ICU Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Debug|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ICU Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.hpp"

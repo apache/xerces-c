@@ -228,7 +228,7 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.full.pdb</ProgramDatabaseFile>
       <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
@@ -274,7 +274,7 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.full.pdb</ProgramDatabaseFile>
       <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
@@ -605,7 +605,7 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.full.pdb</ProgramDatabaseFile>
       <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
@@ -651,7 +651,7 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.full.pdb</ProgramDatabaseFile>
       <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
