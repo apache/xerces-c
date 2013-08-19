@@ -126,6 +126,7 @@ private:
     void init(XercesXPath* const xpath);
     void cleanUp();
 
+protected:
     // -----------------------------------------------------------------------
     //  Data members
     //

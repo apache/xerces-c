@@ -95,7 +95,7 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
-    ~SelectorMatcher() {}
+    ~SelectorMatcher();
 
     int getInitialDepth() const { return fInitialDepth; }
 
@@ -140,7 +140,7 @@ private:
     // -----------------------------------------------------------------------
     int             fInitialDepth;
     int             fElementDepth;
-    int             fMatchedDepth;
+    int*            fMatchedDepth;
     IC_Selector*    fSelector;
     FieldActivator* fFieldActivator;
 };

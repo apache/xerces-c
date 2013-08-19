@@ -842,4 +842,25 @@
       <current status="accepted" date="2010-09-28"/>
     </instanceTest>
   </testGroup>
+  <testGroup name="XERCESC-2017">
+    <annotation>
+      <documentation>XPath selector with multiple matches stops matching in a subtree once one match succeeds</documentation>
+    </annotation>
+    <documentationReference xlink:href="https://issues.apache.org/jira/browse/XERCESC-2017"/>
+    <schemaTest name="XERCESC-2017-1">
+      <schemaDocument xlink:href="./XERCESC-2017/test.xsd"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2013-08-18"/>
+    </schemaTest>
+    <instanceTest name="XERCESC-2017-2">
+      <instanceDocument xlink:href="./XERCESC-2017/test.xml"/>
+      <expected validity="valid"/>
+      <current status="accepted" date="2013-08-18"/>
+    </instanceTest>
+    <instanceTest name="XERCESC-2017-3">
+      <instanceDocument xlink:href="./XERCESC-2017/test2.xml"/>
+      <expected validity="invalid"/>
+      <current status="accepted" date="2013-08-18"/>
+    </instanceTest>
+  </testGroup>
 </testSet>

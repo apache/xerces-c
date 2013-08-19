@@ -41,10 +41,21 @@ SelectorMatcher::SelectorMatcher(XercesXPath* const xpath,
     : XPathMatcher(xpath, selector->getIdentityConstraint(), manager)
     , fInitialDepth(initialDepth)
     , fElementDepth(0)
-    , fMatchedDepth(-1)
+    , fMatchedDepth(0)
     , fSelector(selector)
     , fFieldActivator(fieldActivator)
 {
+    fMatchedDepth = (int*) fMemoryManager->allocate
+    (
+        fLocationPathSize * sizeof(int)
+    );//new int[fLocationPathSize];
+    for(XMLSize_t k = 0;k<fLocationPathSize;k++)
+        fMatchedDepth[k] = -1;
+}
+
+SelectorMatcher::~SelectorMatcher()
+{
+    fMemoryManager->deallocate(fMatchedDepth);//delete [] fMatchedDepth;
 }
 
 // ---------------------------------------------------------------------------
@@ -54,7 +65,8 @@ void SelectorMatcher::startDocumentFragment() {
 
     XPathMatcher::startDocumentFragment();
     fElementDepth = 0;
-    fMatchedDepth = -1;
+    for(XMLSize_t k = 0;k<fLocationPathSize;k++)
+        fMatchedDepth[k] = -1;
 }
 
 void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
@@ -68,21 +80,28 @@ void SelectorMatcher::startElement(const XMLElementDecl& elemDecl,
     XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, validationContext);
     fElementDepth++;
 
-    // activate the fields, if selector is matched
-    unsigned char matched = isMatched();
-    if ((fMatchedDepth == -1 && ((matched & XP_MATCHED) == XP_MATCHED))
-        || ((matched & XP_MATCHED_D) == XP_MATCHED_D)) {
+    for(XMLSize_t k = 0;k<fLocationPathSize;k++)
+    {
+        // use the match flag of each member of the union
+        unsigned char matched = 0;
+        if (((fMatched[k] & XP_MATCHED) == XP_MATCHED)
+            && ((fMatched[k] & XP_MATCHED_DP) != XP_MATCHED_DP))
+            matched = fMatched[k];
+        if ((fMatchedDepth[k] == -1 && ((matched & XP_MATCHED) == XP_MATCHED))
+            || ((matched & XP_MATCHED_D) == XP_MATCHED_D)) {
 
-        IdentityConstraint* ic = fSelector->getIdentityConstraint();
-        XMLSize_t count = ic->getFieldCount();
+            IdentityConstraint* ic = fSelector->getIdentityConstraint();
+            XMLSize_t count = ic->getFieldCount();
 
-        fMatchedDepth = fElementDepth;
-        fFieldActivator->startValueScopeFor(ic, fInitialDepth);
+            fMatchedDepth[k] = fElementDepth;
+            fFieldActivator->startValueScopeFor(ic, fInitialDepth);
 
-        for (XMLSize_t i = 0; i < count; i++) {
+            for (XMLSize_t i = 0; i < count; i++) {
 
-            XPathMatcher* matcher = fFieldActivator->activateField(ic->getFieldAt(i), fInitialDepth);
-            matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, validationContext);
+                XPathMatcher* matcher = fFieldActivator->activateField(ic->getFieldAt(i), fInitialDepth);
+                matcher->startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, validationContext);
+            }
+            break;
         }
     }
 }
@@ -95,11 +114,16 @@ void SelectorMatcher::endElement(const XMLElementDecl& elemDecl,
 
     XPathMatcher::endElement(elemDecl, elemContent, validationContext, actualValidator);
 
-    if (fElementDepth-- == fMatchedDepth) {
+    for(XMLSize_t k = 0;k<fLocationPathSize;k++)
+    {
+        if (fElementDepth == fMatchedDepth[k]) {
 
-        fMatchedDepth = -1;
-        fFieldActivator->endValueScopeFor(fSelector->getIdentityConstraint(), fInitialDepth);
+            fMatchedDepth[k] = -1;
+            fFieldActivator->endValueScopeFor(fSelector->getIdentityConstraint(), fInitialDepth);
+            break;
+        }
     }
+    --fElementDepth;
 }
 
 // ---------------------------------------------------------------------------
