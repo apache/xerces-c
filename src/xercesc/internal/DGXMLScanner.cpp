@@ -2790,10 +2790,16 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
     //  quotes until we hit the same reader again.
     const XMLSize_t curReader = fReaderMgr.getCurrentReaderNum();
 
-    // Get attribute def - to check to see if it's declared externally or not
-    bool  isAttExternal = (attDef)
-                        ?attDef->isExternal()
-                        :false;
+    // check to see if it's a tokenized type that is declared externally 
+    bool  isAttTokenizedExternal = (attDef)
+                                   ?attDef->isExternal() && (type == XMLAttDef::ID || 
+                                                             type == XMLAttDef::IDRef || 
+                                                             type == XMLAttDef::IDRefs || 
+                                                             type == XMLAttDef::Entity || 
+                                                             type == XMLAttDef::Entities || 
+                                                             type == XMLAttDef::NmToken || 
+                                                             type == XMLAttDef::NmTokens)
+                                   :false;
 
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
@@ -2908,7 +2914,7 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                     {
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
-                        if (fStandalone && fValidate && isAttExternal)
+                        if (fStandalone && fValidate && isAttTokenizedExternal)
                         {
                              // Can't have a standalone document declaration of "yes" if  attribute
                              // values are subject to normalisation
@@ -2943,9 +2949,9 @@ bool DGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
 
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
-                        if (fStandalone && fValidate && isAttExternal)
+                        if (fStandalone && fValidate && isAttTokenizedExternal)
                         {
-                            if (!firstNonWS || (nextCh != chSpace) || (fReaderMgr.lookingAtSpace()))
+                            if (!firstNonWS || (nextCh != chSpace && fReaderMgr.lookingAtSpace()))
                             {
                                  // Can't have a standalone document declaration of "yes" if  attribute
                                  // values are subject to normalisation

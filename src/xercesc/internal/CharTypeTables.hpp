@@ -201,7 +201,7 @@ static const XMLCh gWhitespaceChars1_1[] =
     ,   0x00
 };
 
-static const XMLCh gFirstNameChars1_1[] =
+static const XMLCh gFirstNameChars[] =
 {
     // Ranges
     // Note: 0x10000 to 0xEFFFF are also allowed, need to separately check
@@ -211,12 +211,13 @@ static const XMLCh gFirstNameChars1_1[] =
     ,   0xFDF0, 0xFFFD
     ,   0x00
 
+    //  :       _
     ,   0x003A, 0x005F
     ,   0x00
 
 };
 
-static const XMLCh gNameChars1_1[] =
+static const XMLCh gNameChars[] =
 {
     // Ranges
     // Note: 0x10000 to 0xEFFFF are also allowed, need to separately check
@@ -226,6 +227,7 @@ static const XMLCh gNameChars1_1[] =
     ,   0xF900, 0xFDCF, 0xFDF0, 0xFFFD
     ,   0x00
 
+    //  -       .       :       _
     ,   0x002D, 0x002E, 0x003A, 0x005F, 0x00B7
     ,   0x00
 };

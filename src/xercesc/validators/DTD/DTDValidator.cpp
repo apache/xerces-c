@@ -137,6 +137,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
     const XMLCh* const              valueText = attDef->getValue();
     const XMLCh* const              fullName = attDef->getFullName();
     const XMLCh* const              enumList = attDef->getEnumeration();
+    const bool                      isExternal = attDef->isExternal();
 
     //
     //  If the default type is fixed, then make sure the passed value maps
@@ -221,6 +222,14 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
         janTmpVal.reset(XMLString::replicate(attrValue, getScanner()->getMemoryManager()), getScanner()->getMemoryManager());
         pszTmpVal = janTmpVal.get();
     }
+
+    //  if the type is an enumeration, normalize it, unless standalone = yes is specified
+    //  "The standalone document declaration MUST have the value "no" if any external markup declarations contain declarations of:
+    //   - ...
+    //   - attributes with tokenized types, where the attribute appears in the document with a value such that normalization will 
+    //     produce a different value from that which would be produced in the absence of the declaration"
+    if (multipleValues && (!isExternal || !getScanner()->getStandalone()))
+        XMLString::collapseWS(pszTmpVal, getScanner()->getMemoryManager());
 
     XMLCh* valPtr = pszTmpVal;
 

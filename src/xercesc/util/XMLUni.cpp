@@ -316,6 +316,11 @@ const XMLCh XMLUni::fgStandaloneString[] =
     chLatin_s, chLatin_t, chLatin_a, chLatin_n, chLatin_d, chLatin_a, chLatin_l, chLatin_o, chLatin_n, chLatin_e, chNull
 };
 
+const XMLCh XMLUni::fgVersion1[] =
+{
+    chDigit_1, chPeriod, chNull
+};
+
 const XMLCh XMLUni::fgVersion1_0[] =
 {
     chDigit_1, chPeriod, chDigit_0, chNull

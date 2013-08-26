@@ -98,6 +98,7 @@ public :
     static const XMLCh fgRefString[];
     static const XMLCh fgRequiredString[];
     static const XMLCh fgStandaloneString[];
+    static const XMLCh fgVersion1[];
     static const XMLCh fgVersion1_0[];
     static const XMLCh fgVersion1_1[];
     static const XMLCh fgSysIDString[];

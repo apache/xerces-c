@@ -645,7 +645,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
     //  if its a name and not a name token that they want.
     if (!token)
     {
-        if (fXMLVersion == XMLV1_1 && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
+        if ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F)) {
            // make sure one more char is in the buffer, the transcoder
            // should put only a complete surrogate pair into the buffer
            assert(fCharIndex+1 < fCharsAvail);
@@ -669,34 +669,22 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
     //  a non-name char.
     while (true)
     {
-        if (fXMLVersion == XMLV1_1)
+        while (fCharIndex < fCharsAvail)
         {
-            while (fCharIndex < fCharsAvail)
+            //  Check the current char and take it if its a name char. Else
+            //  break out.
+            if ( (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
             {
-                //  Check the current char and take it if its a name char. Else
-                //  break out.
-                if ( (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
-                {
-                    // make sure one more char is in the buffer, the transcoder
-                    // should put only a complete surrogate pair into the buffer
-                    assert(fCharIndex+1 < fCharsAvail);
-                    if ( (fCharBuf[fCharIndex+1] < 0xDC00) ||
-                         (fCharBuf[fCharIndex+1] > 0xDFFF)  )
-                        break;
-                    fCharIndex += 2;
+                // make sure one more char is in the buffer, the transcoder
+                // should put only a complete surrogate pair into the buffer
+                assert(fCharIndex+1 < fCharsAvail);
+                if ( (fCharBuf[fCharIndex+1] < 0xDC00) ||
+                        (fCharBuf[fCharIndex+1] > 0xDFFF)  )
+                    break;
+                fCharIndex += 2;
 
-                }
-                else
-                {
-                    if (!isNameChar(fCharBuf[fCharIndex]))
-                        break;
-                    fCharIndex++;
-                }
             }
-        }
-        else // XMLV1_0
-        {
-            while (fCharIndex < fCharsAvail)
+            else
             {
                 if (!isNameChar(fCharBuf[fCharIndex]))
                     break;
@@ -732,8 +720,7 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
     //  Lets check the first char for being a first name char. If not, then
     //  what's the point in living mannnn? Just give up now. We only do this
     //  if its a name and not a name token that they want.
-    if (fXMLVersion == XMLV1_1
-        && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
+    if ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F)) {
         // make sure one more char is in the buffer, the transcoder
         // should put only a complete surrogate pair into the buffer
         assert(fCharIndex+1 < fCharsAvail);
@@ -769,17 +756,12 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
         }
 
         //  Check the current char and take it if it's a name char
-        if (fXMLVersion == XMLV1_1)
+        while(fCharIndex < fCharsAvail)
         {
-            while(fCharIndex < fCharsAvail)
-            {
-                if(isNCNameChar(fCharBuf[fCharIndex])) fCharIndex++;
-                else if((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) && ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))) fCharIndex+=2;
-		else break;
-            }
+            if((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) && fCharIndex+1 < fCharsAvail && ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))) fCharIndex+=2;
+            else if(isNCNameChar(fCharBuf[fCharIndex])) fCharIndex++;
+            else break;
         }
-        else
-            while(fCharIndex < fCharsAvail && isNCNameChar(fCharBuf[fCharIndex])) fCharIndex++;
         // if we didn't consume the entire buffer, we are done
     } while(fCharIndex == fCharsAvail);
 

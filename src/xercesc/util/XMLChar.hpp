@@ -162,6 +162,11 @@ inline bool XMLChar1_0::isFirstNameChar(const XMLCh toCheck, const XMLCh toCheck
 {
     if (!toCheck2)
         return ((fgCharCharsTable1_0[toCheck] & gFirstNameCharMask) != 0);
+    else {
+        if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
+           if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
+               return true;
+    }
     return false;
 }
 
@@ -170,7 +175,11 @@ inline bool XMLChar1_0::isFirstNCNameChar(const XMLCh toCheck, const XMLCh toChe
     if (!toCheck2) {
         return (((fgCharCharsTable1_0[toCheck] & gFirstNameCharMask) != 0) && (toCheck != chColon));
     }
-
+    else {
+        if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
+           if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
+               return true;
+    }
     return false;
 }
 
@@ -178,6 +187,11 @@ inline bool XMLChar1_0::isNameChar(const XMLCh toCheck, const XMLCh toCheck2)
 {
     if (!toCheck2)
         return ((fgCharCharsTable1_0[toCheck] & gNameCharMask) != 0);
+    else {
+        if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
+           if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
+               return true;
+    }
     return false;
 }
 
@@ -185,6 +199,11 @@ inline bool XMLChar1_0::isNCNameChar(const XMLCh toCheck, const XMLCh toCheck2)
 {
     if (!toCheck2)
         return ((fgCharCharsTable1_0[toCheck] & gNCNameCharMask) != 0);
+    else {
+        if ((toCheck >= 0xD800) && (toCheck <= 0xDB7F))
+           if ((toCheck2 >= 0xDC00) && (toCheck2 <= 0xDFFF))
+               return true;
+    }
     return false;
 }
 
