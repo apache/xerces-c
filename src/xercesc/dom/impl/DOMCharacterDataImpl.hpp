@@ -62,6 +62,7 @@ public:
     void           setNodeValue(const XMLCh * value);
     void           appendData(const DOMNode *node, const  XMLCh *data);
     void           appendData(const DOMNode *node, const  XMLCh *data, XMLSize_t n);
+    void           appendDataFast(const DOMNode *node, const  XMLCh *data, XMLSize_t n);
     void           deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count);
     const XMLCh*   getData() const;
     XMLSize_t      getLength() const;

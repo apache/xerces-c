@@ -108,11 +108,21 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
 
 void DOMCharacterDataImpl::appendData(const DOMNode *node, const  XMLCh *dat, XMLSize_t n)
 {
-  if(castToNodeImpl(node)->isReadOnly())
+    if(castToNodeImpl(node)->isReadOnly())
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMCharacterDataImplMemoryManager);
 
-  fDataBuf->append(dat, n);
+    fDataBuf->append(dat, n);
+}
+
+void DOMCharacterDataImpl::appendDataFast(const DOMNode *node, const  XMLCh *dat, XMLSize_t n)
+{
+    // This function makes the following assumptions:
+    //
+    // - this node is not read-only
+    // - nobody has ever received a pointer to the current content of fDataBuf,
+    //   so it can be safely released
+    fDataBuf->appendInPlace(dat, n);
 }
 
 void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count)

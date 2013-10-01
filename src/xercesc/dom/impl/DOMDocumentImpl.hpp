@@ -159,6 +159,8 @@ public:
     virtual void setMemoryAllocationBlockSize(XMLSize_t size);
     virtual void* allocate(XMLSize_t amount);
     virtual void* allocate(XMLSize_t amount, DOMMemoryManager::NodeObjectType type);
+    // try to remove the block from the list of allocated memory
+    virtual void release(void* oldBuffer);
     virtual void release(DOMNode* object, DOMMemoryManager::NodeObjectType type);
     virtual XMLCh* cloneString(const XMLCh *src);
 
@@ -320,6 +322,7 @@ protected:
     //                  class, rather than hanging naked on Document.
     //
     void*                 fCurrentBlock;
+    void*                 fCurrentSingletonBlock;
     char*                 fFreePtr;
     XMLSize_t             fFreeBytesRemaining,
                           fHeapAllocSize;

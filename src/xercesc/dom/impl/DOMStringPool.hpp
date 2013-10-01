@@ -75,6 +75,7 @@ public :
     // -----------------------------------------------------------------------
     void append (const XMLCh* const chars);
     void append (const XMLCh* const chars, const XMLSize_t count);
+    void appendInPlace (const XMLCh* const chars, const XMLSize_t count);
 
     void set (const XMLCh* const chars);
     void set (const XMLCh* const chars, const XMLSize_t count);
@@ -117,7 +118,7 @@ public :
     // -----------------------------------------------------------------------
     //  Private helpers
     // -----------------------------------------------------------------------
-    void expandCapacity(const XMLSize_t extraNeeded);
+    void expandCapacity(const XMLSize_t extraNeeded, bool releasePrevious = false);
 
 
 private :
@@ -170,6 +171,19 @@ append (const XMLCh* const chars, const XMLSize_t count)
 {
   if (fIndex + count >= fCapacity)
     expandCapacity(count);
+
+  memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
+  fIndex += count;
+
+  // Keep it null terminated
+  fBuffer[fIndex] = 0;
+}
+
+inline void DOMBuffer::
+appendInPlace (const XMLCh* const chars, const XMLSize_t count)
+{
+  if (fIndex + count >= fCapacity)
+    expandCapacity(count, true);
 
   memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
   fIndex += count;

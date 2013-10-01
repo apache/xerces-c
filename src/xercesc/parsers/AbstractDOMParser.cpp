@@ -803,7 +803,7 @@ void AbstractDOMParser::docCharacters(  const   XMLCh* const    chars
         if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
         {
             DOMTextImpl *node = (DOMTextImpl*)fCurrentNode;
-            node->appendData(chars, length);
+            node->appendDataFast(chars, length);
         }
         else
         {
@@ -908,25 +908,18 @@ void AbstractDOMParser::ignorableWhitespace(  const XMLCh* const    chars
     if (!fWithinElement || !fIncludeIgnorableWhitespace)
         return;
 
-    // revisit.  Not safe to slam in a null like this.
-    XMLCh savedChar = chars[length];
-    XMLCh *ncChars  = (XMLCh *)chars;   // cast off const
-    ncChars[length] = chNull;
-
     if (fCurrentNode->getNodeType() == DOMNode::TEXT_NODE)
     {
-        DOMText *node = (DOMText *)fCurrentNode;
-        node->appendData(chars);
+        DOMTextImpl *node = (DOMTextImpl *)fCurrentNode;
+        node->appendDataFast(chars, length);
     }
     else
     {
-        DOMTextImpl *node = (DOMTextImpl *)fDocument->createTextNode(chars);
+        DOMTextImpl *node = (DOMTextImpl*)createText (chars, length);
         node->setIgnorableWhitespace(true);
         castToParentImpl (fCurrentParent)->appendChildFast (node);
-
         fCurrentNode = node;
     }
-    ncChars[length] = savedChar;
 }
 
 

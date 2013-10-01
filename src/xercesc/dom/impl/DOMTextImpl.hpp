@@ -86,6 +86,7 @@ public:
     // Non-standard extension.
     //
     virtual void            appendData(const XMLCh *arg, XMLSize_t n);
+    void                    appendDataFast(const XMLCh *arg, XMLSize_t n);
 
 protected:
     virtual void            setIgnorableWhitespace(bool ignorable);

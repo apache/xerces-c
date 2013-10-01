@@ -44,7 +44,7 @@ DOMBuffer(DOMDocumentImpl *doc, XMLSize_t capacity) :
 // ---------------------------------------------------------------------------
 //  DOMBuffer: Private helper methods
 // ---------------------------------------------------------------------------
-void DOMBuffer::expandCapacity(const XMLSize_t extraNeeded)
+void DOMBuffer::expandCapacity(const XMLSize_t extraNeeded, bool releasePrevious /*= false*/)
 {
     //not enough room. Calc new capacity and allocate new buffer
     const XMLSize_t newCap = (XMLSize_t)((fIndex + extraNeeded) * 1.25);
@@ -53,7 +53,12 @@ void DOMBuffer::expandCapacity(const XMLSize_t extraNeeded)
     // Copy over the old stuff
     memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
 
-    // revisit: Leave the old buffer in document heap, yes, this is a leak, but live with it!
+    // If the caller told us to deallocate the old memory, do it;
+    // it may know that nobody could possibly get a pointer to the old memory buffer
+    // (e.g. if the DOM node is being created by the parser). Otherwise leave the old 
+    // buffer in document heap; yes, this is a leak, but live with it!
+    if (releasePrevious)
+        fDoc->release(fBuffer);
     // store new stuff
     fBuffer = newBuf;
     fCapacity = newCap;

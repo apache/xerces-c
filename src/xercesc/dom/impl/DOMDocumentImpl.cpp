@@ -91,6 +91,7 @@ DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* cons
       fUserDataTableKeys(17, manager),
       fUserDataTable(0),
       fCurrentBlock(0),
+      fCurrentSingletonBlock(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fHeapAllocSize(kInitialHeapAllocSize),
@@ -133,6 +134,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fUserDataTableKeys(17, manager),
       fUserDataTable(0),
       fCurrentBlock(0),
+      fCurrentSingletonBlock(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fHeapAllocSize(kInitialHeapAllocSize),
@@ -829,6 +831,26 @@ void DOMDocumentImpl::setMemoryAllocationBlockSize(XMLSize_t size)
         fHeapAllocSize=size;
 }
 
+void DOMDocumentImpl::release(void* oldBuffer)
+{
+    // only release blocks that are stored in a block by itself
+    XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
+    void** cursor = &fCurrentSingletonBlock;
+    while (*cursor != 0)
+    {
+        void **nextBlock = (void **)(*cursor);
+        if ((char*)(*cursor) + sizeOfHeader == oldBuffer)
+        {
+            // found: deallocate and replace the pointer value with the next block
+            void* current = *cursor;
+            *cursor = *nextBlock;
+            fMemoryManager->deallocate(current);
+            break;
+        }
+        cursor = nextBlock;
+    }
+}
+
 void* DOMDocumentImpl::allocate(XMLSize_t amount)
 {
   //	Align the request size so that suballocated blocks
@@ -836,31 +858,28 @@ void* DOMDocumentImpl::allocate(XMLSize_t amount)
   amount = XMLPlatformUtils::alignPointerForNewBlockAllocation(amount);
 
   // If the request is for a largish block, hand it off to the system
-  //   allocator.  The block still must be linked into the list of
-  //   allocated blocks so that it will be deleted when the time comes.
+  //   allocator.  The block still must be linked into a special list of
+  //   allocated big blocks so that it will be deleted when the time comes.
   if (amount > kMaxSubAllocationSize)
   {
     //	The size of the header we add to our raw blocks
     XMLSize_t sizeOfHeader = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(void *));
 
     //	Try to allocate the block
-    void* newBlock;
-    newBlock = fMemoryManager->allocate(sizeOfHeader + amount);
+    void* newBlock = fMemoryManager->allocate(sizeOfHeader + amount);
 
     //	Link it into the list beyond current block, as current block
     //	is still being subdivided. If there is no current block
     //	then track that we have no bytes to further divide.
-    if (fCurrentBlock)
+    if (fCurrentSingletonBlock)
     {
-      *(void **)newBlock = *(void **)fCurrentBlock;
-      *(void **)fCurrentBlock = newBlock;
+      *(void **)newBlock = *(void **)fCurrentSingletonBlock;
+      *(void **)fCurrentSingletonBlock = newBlock;
     }
     else
     {
       *(void **)newBlock = 0;
-      fCurrentBlock = newBlock;
-      fFreePtr = 0;
-      fFreeBytesRemaining = 0;
+      fCurrentSingletonBlock = newBlock;
     }
 
     void *retPtr = (char*)newBlock + sizeOfHeader;
@@ -904,6 +923,12 @@ void DOMDocumentImpl::deleteHeap()
         void *nextBlock = *(void **)fCurrentBlock;
         fMemoryManager->deallocate(fCurrentBlock);
         fCurrentBlock = nextBlock;
+    }
+    while (fCurrentSingletonBlock != 0)
+    {
+        void *nextBlock = *(void **)fCurrentSingletonBlock;
+        fMemoryManager->deallocate(fCurrentSingletonBlock);
+        fCurrentSingletonBlock = nextBlock;
     }
 }
 
