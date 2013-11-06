@@ -66,17 +66,18 @@ LocalFileFormatTarget::LocalFileFormatTarget( const char* const    fileName
 
 LocalFileFormatTarget::~LocalFileFormatTarget()
 {
-    try
+    if (fSource && fSource != (FileHandle) XERCES_Invalid_File_Handle)
     {
-        // flush remaining buffer before destroy
-        XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
-
-        if (fSource)
-          XMLPlatformUtils::closeFile(fSource, fMemoryManager);
-    }
-    catch (...)
-    {
-      // There is nothing we can do about it here.
+        try
+        {
+            // flush remaining buffer before destroy
+            flush();
+        }
+        catch (...)
+        {
+            // There is nothing we can do about it here.
+        }
+        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
     }
 
     fMemoryManager->deallocate(fDataBuf);//delete [] fDataBuf;
@@ -84,47 +85,42 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
 
 void LocalFileFormatTarget::flush()
 {
-  XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
-  fIndex = 0;
+    XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
+    fIndex = 0;
 }
 
 void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite
                                      , const XMLSize_t count
                                      , XMLFormatter * const)
 {
-    if (count)
+    if (count == 0)
+        return;
+    if (count < MAX_BUFFER_SIZE)
     {
-      if (count < MAX_BUFFER_SIZE)
-      {
         // If we don't have enough space, see if we can grow the buffer.
         //
         if (fIndex + count > fCapacity && fCapacity < MAX_BUFFER_SIZE)
-          ensureCapacity (count);
+            ensureCapacity (count);
 
         // If still not enough space, flush the buffer.
         //
         if (fIndex + count > fCapacity)
-        {
-          XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
-          fIndex = 0;
-        }
+            flush();
 
         memcpy(&fDataBuf[fIndex], toWrite, count * sizeof(XMLByte));
         fIndex += count;
-      }
-      else
-      {
-        if (fIndex)
-        {
-          XMLPlatformUtils::writeBufferToFile(fSource, fIndex, fDataBuf, fMemoryManager);
-          fIndex = 0;
-        }
-
-        XMLPlatformUtils::writeBufferToFile(fSource, count, toWrite, fMemoryManager);
-      }
     }
+    else
+    {
+        // block is too big to cache, flush the current cache...
+        //
+        if (fIndex)
+            flush();
 
-    return;
+        //... then write the data directly to disk
+        //
+        XMLPlatformUtils::writeBufferToFile(fSource, count, toWrite, fMemoryManager);
+    }
 }
 
 void LocalFileFormatTarget::ensureCapacity(const XMLSize_t extraNeeded)
