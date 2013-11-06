@@ -39,6 +39,9 @@
 #if (U_ICU_VERSION_MAJOR_NUM >= 2)
     #include <unicode/uclean.h>
 #endif
+#if (U_ICU_VERSION_MAJOR_NUM >= 4)
+    #include <unicode/utf16.h>
+#endif
 
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
 // Forward reference the symbol which points to the ICU converter data.
