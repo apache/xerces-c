@@ -61,7 +61,16 @@ BinFileInputStream::BinFileInputStream(const FileHandle toAdopt
 BinFileInputStream::~BinFileInputStream()
 {
     if (getIsOpen())
-        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
+    {
+        try
+        {
+            XMLPlatformUtils::closeFile(fSource, fMemoryManager);
+        }
+        catch (...)
+        {
+            // There is nothing we can do about it here.
+        }
+    }
 }
 
 

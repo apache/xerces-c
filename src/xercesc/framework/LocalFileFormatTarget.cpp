@@ -72,12 +72,12 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
         {
             // flush remaining buffer before destroy
             flush();
+            XMLPlatformUtils::closeFile(fSource, fMemoryManager);
         }
         catch (...)
         {
             // There is nothing we can do about it here.
         }
-        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
     }
 
     fMemoryManager->deallocate(fDataBuf);//delete [] fDataBuf;
