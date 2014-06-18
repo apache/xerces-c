@@ -72,6 +72,15 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
         {
             // flush remaining buffer before destroy
             flush();
+        }
+        catch (...)
+        {
+            // There is nothing we can do about it here.
+        }
+        // XERCESC-2024: use separate try/catch so that we close the handle
+        // even when flush() failed (e.g. because of a disk full)
+        try
+        {
             XMLPlatformUtils::closeFile(fSource, fMemoryManager);
         }
         catch (...)
