@@ -33,14 +33,15 @@
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/util/regx/Match.hpp>
+#include <xercesc/util/TransService.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMLSException.hpp>
 #include <xercesc/dom/DOMLSParserFilter.hpp>
-#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
-#include <xercesc/util/regx/Match.hpp>
 
 #define UNUSED(x) { if(x!=0){} }
 
@@ -5990,5 +5991,75 @@ bool DOMTest::testUtilFunctions()
         fprintf(stderr, "bitset test failed at line %i\n", __LINE__);
         OK = false;
     }
+
+	// TranscodeFrom/ToStr
+
+	const char* utf8 = "UTF-8";
+	char* empty = (char*)TranscodeToStr(XMLUni::fgZeroLenString,utf8).adopt(); 
+	if(XMLString::stringLen(empty)!=0)
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLCh* empty2 = TranscodeFromStr((XMLByte*)empty,strlen(empty),utf8).adopt(); 
+	if(XMLString::stringLen(empty2)!=0)
+	{
+        fprintf(stderr, "TranscodeFromStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&empty);
+	XMLString::release(&empty2);
+
+	const XMLCh aval [] = { 0x0041, 0x0000}; //LATIN CAPITAL LETTER A
+	char* ac = (char*)TranscodeToStr(aval,utf8).adopt(); 
+	if(!XMLString::equals(ac, "A"))
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLCh* ac2=TranscodeFromStr((XMLByte*)ac, strlen(ac), utf8).adopt();
+	if(!XMLString::equals(ac2, aval))
+	{
+        fprintf(stderr, "TranscodeFromStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&ac);
+	XMLString::release(&ac2);
+	const XMLCh uval [] = { 0x254B, 0x0000}; //BOX DRAWINGS HEAVY VERTICAL AND HORIZONTAL (needs 3 bytes for utf-8)
+	char* uc = (char*)TranscodeToStr(uval,utf8).adopt(); 
+	if(!XMLString::equals(uc, "\xE2\x95\x8B"))
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLCh* uc2=TranscodeFromStr((XMLByte*)uc, strlen(uc), utf8).adopt();
+	if(!XMLString::equals(uc2, uval))
+	{
+        fprintf(stderr, "TranscodeFromStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&uc);
+	XMLString::release(&uc2);
+
+	XMLCh uc3[] = { 0x6B65, 0 }; // Unicode Han Character 'step, pace; walk, stroll' (U+6B65); UTF-8 = 0xE6 0xAD 0xA5 (e6ada5)
+	char* uc4 = (char*)TranscodeToStr(uc3, utf8).adopt();
+	if(!XMLString::equals(uc4, "\xE6\xAD\xA5"))
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&uc4);
+
+	// Input:                    U+7D5E U+308A U+8FBC U+307F U+691C U+7D22
+	// Expected byte sequence:   E7 B5 9E E3 82 8A E8 BE BC E3 81 BF E6 A4 9C E7 B4 A2
+	const XMLCh xmlStr [] = { 0x7D5E, 0x308A, 0x8FBC, 0x307F, 0x691C, 0x7D22, 0x0000};
+	char* bytes = (char*)TranscodeToStr(xmlStr, "UTF-8").adopt();
+	if(!XMLString::equals(bytes, "\xE7\xB5\x9E\xE3\x82\x8A\xE8\xBE\xBC\xE3\x81\xBF\xE6\xA4\x9C\xE7\xB4\xA2"))
+	{
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+	}
+	XMLString::release(&bytes);
+
     return OK;
 }
