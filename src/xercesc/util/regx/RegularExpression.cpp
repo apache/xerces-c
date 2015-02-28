@@ -1597,7 +1597,7 @@ bool RegularExpression::doTokenOverlap(const Op* op, Token* token)
             {
                 try
                 {
-                    RangeToken tempRange(Token::T_RANGE, fMemoryManager);
+                    RangeToken tempRange(t1->getTokenType(), fMemoryManager);
                     tempRange.mergeRanges(t1);
                     tempRange.intersectRanges((RangeToken*)token);
                     return !tempRange.empty();
