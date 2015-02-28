@@ -228,8 +228,8 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
-      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.pdb</ProgramDatabaseFile>
+      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.strip.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
       <SubSystem>Windows</SubSystem>
@@ -274,8 +274,8 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
-      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.pdb</ProgramDatabaseFile>
+      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.strip.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
       <SubSystem>Windows</SubSystem>
@@ -605,8 +605,8 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
-      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.pdb</ProgramDatabaseFile>
+      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.strip.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
       <SubSystem>Windows</SubSystem>
@@ -651,8 +651,8 @@
       <OutputFile>$(TargetPath)</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.fullpdb</ProgramDatabaseFile>
-      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.pdb</StripPrivateSymbols>
+      <ProgramDatabaseFile>$(OutDir)xerces-c_3_1.pdb</ProgramDatabaseFile>
+      <StripPrivateSymbols>$(OutDir)xerces-c_3_1.strip.pdb</StripPrivateSymbols>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)xerces-c_3_1.map</MapFileName>
       <SubSystem>Windows</SubSystem>
