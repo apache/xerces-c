@@ -222,6 +222,11 @@ int BinHTTPInputStreamCommon::sendRequest(const XMLURL &url, const XMLNetHTTPInf
             ThrowXMLwithMemMgr1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, url.getURLText(), fMemoryManager);
         }
 
+        // connection closed
+        if (ret == 0) {
+            break;
+        }
+
         fBuffer.append(tmpBuf, ret);
 
         fBufferPos = strstr(fBuffer.getRawBuffer(), CRLF2X);
