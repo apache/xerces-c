@@ -34,12 +34,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  BinFileOutputStream: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BinFileOutputStream::~BinFileOutputStream()
-{
-    if (getIsOpen())
-        XMLPlatformUtils::closeFile(fSource, fMemoryManager);
-}
-
 BinFileOutputStream::BinFileOutputStream(const XMLCh*   const fileName
                                          , MemoryManager* const manager)
 
@@ -53,6 +47,21 @@ BinFileOutputStream::BinFileOutputStream(const char*    const fileName
 :fSource(XMLPlatformUtils::openFileToWrite(fileName, manager))
 ,fMemoryManager(manager)
 {
+}
+
+BinFileOutputStream::~BinFileOutputStream()
+{
+    if (getIsOpen())
+    {
+        try
+        {
+            XMLPlatformUtils::closeFile(fSource, fMemoryManager);
+        }
+        catch (...)
+        {
+            // There is nothing we can do about it here.
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
