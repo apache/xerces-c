@@ -117,8 +117,8 @@ static const XMLCh gListSix[]    = { chPound, chNull };
 static bool isHexDigit(const XMLCh toCheck)
 {
     if (((toCheck >= chDigit_0) && (toCheck <= chDigit_9))
-    ||  ((toCheck >= chLatin_A) && (toCheck <= chLatin_Z))
-    ||  ((toCheck >= chLatin_a) && (toCheck <= chLatin_z)))
+    ||  ((toCheck >= chLatin_A) && (toCheck <= chLatin_F))
+    ||  ((toCheck >= chLatin_a) && (toCheck <= chLatin_f)))
     {
         return true;
     }
@@ -130,7 +130,7 @@ static unsigned int xlatHexDigit(const XMLCh toXlat)
     if ((toXlat >= chDigit_0) && (toXlat <= chDigit_9))
         return (unsigned int)(toXlat - chDigit_0);
 
-    if ((toXlat >= chLatin_A) && (toXlat <= chLatin_Z))
+    if ((toXlat >= chLatin_A) && (toXlat <= chLatin_F))
         return (unsigned int)(toXlat - chLatin_A) + 10;
 
     return (unsigned int)(toXlat - chLatin_a) + 10;
