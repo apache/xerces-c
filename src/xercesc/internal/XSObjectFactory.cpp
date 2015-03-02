@@ -919,7 +919,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
                 facetType = XSSimpleTypeDefinition::FACET_WHITESPACE;
                 isFixed = ((dvFixedFacets & DatatypeValidator::FACET_WHITESPACE) != 0);
             }
-            else if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
+            else if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN) && xsMultiFacetList)
             {
                 XMLStringTokenizer tokenizer(dv->getPattern(), regexSeparator, fMemoryManager);
                 patternList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(
@@ -994,7 +994,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
             }
         }
 
-        if (baseST->getMultiValueFacets())
+        if (baseST->getMultiValueFacets() && xsMultiFacetList)
         {
             XSMultiValueFacetList* baseMVFacets = baseST->getMultiValueFacets();
             for (unsigned int j=0; j<baseMVFacets->size(); j++)

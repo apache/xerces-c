@@ -2398,7 +2398,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 fSchemaElemNonDeclPool->put((void*)elemDecl->getBaseName()
                 , uriId, (int)Grammar::TOP_LEVEL_SCOPE, (SchemaElementDecl*)elemDecl)
             );
-        }
+        } else {
+             fValidator->emitError(
+                 XMLValid::GrammarNotFound, getURIText(uriId)
+             );
+	}
         wasAdded = true;
     }
 
