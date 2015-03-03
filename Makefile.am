@@ -2,6 +2,7 @@ SUBDIRS = src tests samples
 
 EXTRA_DIST = version.incl \
              config/pretty-make \
+             projects \
              scripts/createBindingsFormatFromHPP.pl \
              scripts/makeStringDefinition.pl \
              scripts/sanityTest.pl \
