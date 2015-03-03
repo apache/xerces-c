@@ -56,7 +56,11 @@ nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autocon
 
 # Compatibility library.
 #
-EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h
+EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h \
+	xercesc/util/Xerces_autoconf_config.msvc.hpp \
+	xercesc/util/Xerces_autoconf_config.borland.hpp \
+        xercesc/util/MsgLoaders/Win32
+
 libxerces_c_la_LIBADD = ${LTLIBOBJS}
 
 # NetAccessors, conditionally built based on settings from configure
@@ -126,7 +130,7 @@ nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
 AM_CPPFLAGS += ${ICU_FLAGS}
 
 EXTRA_DIST += xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt \
-xercesc/util/MsgLoaders/ICU/resources/root.txt
+	xercesc/util/MsgLoaders/ICU/resources/root.txt
 
 # Resource shortname
 PKGNAME=xercesc_messages_${INTERFACE_VER_U}
@@ -149,7 +153,6 @@ nobase_libxerces_c_la_HEADERS += ${msgiconv_headers}
 
 SUBDIRS += xercesc/util/MsgLoaders/MsgCatalog
 endif
-
 
 # Mutex Managers, conditionally built based on settings from configure
 #
