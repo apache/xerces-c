@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "all", "all\all.vcxproj", "{E305E46C-9D74-4755-BF57-29DEAEF4DCDD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateDOMDocument", "CreateDOMDocument\CreateDOMDocument.vcxproj", "{8709DC2A-0EC9-4B67-9E98-95D5174B2C3F}"
