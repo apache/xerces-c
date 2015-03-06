@@ -802,7 +802,7 @@ void XMLString::sizeToText(  const  XMLSize_t            toFormat
     {
             chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, chDigit_5
         ,   chDigit_6, chDigit_7, chDigit_8, chDigit_9, chLatin_A, chLatin_B
-        ,   chLatin_C, chLatin_D, chLatin_e, chLatin_F
+        ,   chLatin_C, chLatin_D, chLatin_E, chLatin_F
     };
 
     if (!maxChars)
@@ -893,7 +893,7 @@ void XMLString::binToText(  const   unsigned long   toFormat
     {
             chDigit_0, chDigit_1, chDigit_2, chDigit_3, chDigit_4, chDigit_5
         ,   chDigit_6, chDigit_7, chDigit_8, chDigit_9, chLatin_A, chLatin_B
-        ,   chLatin_C, chLatin_D, chLatin_e, chLatin_F
+        ,   chLatin_C, chLatin_D, chLatin_E, chLatin_F
     };
 
     if (!maxChars)
