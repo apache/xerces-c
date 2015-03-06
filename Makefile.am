@@ -8,6 +8,7 @@ EXTRA_DIST = version.incl \
              scripts/sanityTest.pl \
              scripts/sanityTest_ExpectedResult.log
 
+AUTOMAKE_OPTIONS = foreign dist-bzip2 dist-zip
 ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES = test-results.log
