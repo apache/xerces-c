@@ -15,7 +15,8 @@ EXTRA_DIST = version.incl \
              scripts/createBindingsFormatFromHPP.pl \
              scripts/makeStringDefinition.pl \
              scripts/sanityTest.pl \
-             scripts/sanityTest_ExpectedResult.log
+             scripts/sanityTest_ExpectedResult.log \
+             tools
 
 AUTOMAKE_OPTIONS = foreign dist-bzip2 dist-zip
 ACLOCAL_AMFLAGS = -I m4
