@@ -30,7 +30,8 @@ EXTRA_DIST =                        data/personal.dtd \
                                     data/personal.xml \
                                     data/personal.xsd \
                                     data/personal-schema.xml \
-                                    data/redirect.dtd
+                                    data/redirect.dtd \
+                                    data/long.xml
 
 sampleprogs =
 
