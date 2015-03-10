@@ -57,6 +57,7 @@ nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autocon
 # Compatibility library.
 #
 EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h \
+        xercesc/NLS \
 	xercesc/util/Xerces_autoconf_config.msvc.hpp \
 	xercesc/util/Xerces_autoconf_config.borland.hpp \
         xercesc/util/MsgLoaders/Win32
