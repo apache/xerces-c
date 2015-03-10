@@ -60,7 +60,8 @@ EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h \
         xercesc/NLS \
 	xercesc/util/Xerces_autoconf_config.msvc.hpp \
 	xercesc/util/Xerces_autoconf_config.borland.hpp \
-        xercesc/util/MsgLoaders/Win32
+        xercesc/util/MsgLoaders/Win32 \
+        xercesc/util/MsgLoaders/ICU/resources
 
 libxerces_c_la_LIBADD = ${LTLIBOBJS}
 
@@ -129,9 +130,6 @@ libxerces_c_la_SOURCES += ${msgicu_sources}
 nodist_libxerces_c_la_SOURCES = ${msgicu_nodist_sources}
 nobase_libxerces_c_la_HEADERS += ${msgicu_headers}
 AM_CPPFLAGS += ${ICU_FLAGS}
-
-EXTRA_DIST += xercesc/util/MsgLoaders/ICU/resources/res-file-list.txt \
-	xercesc/util/MsgLoaders/ICU/resources/root.txt
 
 # Resource shortname
 PKGNAME=xercesc_messages_${INTERFACE_VER_U}
