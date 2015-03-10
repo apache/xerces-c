@@ -1,7 +1,16 @@
 SUBDIRS = src tests samples
 
 EXTRA_DIST = version.incl \
+             xerces-c.spec \
+             xerces-c.pc.in \
+             CREDITS \
+             INSTALL \
+             KEYS \
+             LICENSE \
+             NOTICE \
+             README \
              config/pretty-make \
+             doc \
              projects \
              scripts/createBindingsFormatFromHPP.pl \
              scripts/makeStringDefinition.pl \
