@@ -56,11 +56,19 @@
     </s3>
 
     <s3 title="XML Security for C++">
-      <p><jump href="http://xml.apache.org/security/c/">XML Security
+      <p><jump href="http://santuario.apache.org/">XML Security
          for C++</jump> is an open-source implementation of the XML
-         Digital Signature specification and is based on &XercesCName;.
-         The library also provides support for serializing XML in the
-         canonical form.</p>
+         Digital Signature and Encryption specifications and is based
+         on &XercesCName;. The library also provides support for
+         serializing XML in the canonical form.</p>
+    </s3>
+
+    <s3 title="Shibboleth and OpenSAML">
+      <p><jump href="http://shibboleth.net/">Shibboleth</jump> is
+         an open source Web Single Sign-On and Federation implementation
+         that supports the SAML 2.0 and SAML 1.1 standards, among other
+         capabilities. The Service Provider and underlying OpenSAML
+         library use &XercesCName;.</p>
     </s3>
 
   </s2>
