@@ -18,7 +18,7 @@ EXTRA_DIST = version.incl \
              scripts/sanityTest_ExpectedResult.log \
              tools
 
-AUTOMAKE_OPTIONS = foreign dist-bzip2 dist-zip
+AUTOMAKE_OPTIONS = foreign dist-bzip2 dist-zip dist-xz
 ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES = test-results.log
