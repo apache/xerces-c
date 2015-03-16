@@ -295,11 +295,13 @@
 (For VC8.0)  projects\Win32\VC8\xerces-all\xerces-all.sln
 (For VC9.0)  projects\Win32\VC9\xerces-all\xerces-all.sln
 (For VC10.0) projects\Win32\VC10\xerces-all\xerces-all.sln
+(For VC11.0) projects\Win32\VC11\xerces-all\xerces-all.sln
+(For VC12.0) projects\Win32\VC12\xerces-all\xerces-all.sln
 </source>
 
             <p>Once you have the solution open, you need to build the
                project named <code>XercesLib</code>. You can select
-               Debug/Release, Static/DLL, and, for VC8, VC9, and VC10,
+               Debug/Release, Static/DLL, and, for VC8+,
                32/64 bit builds using the Configuration Manager dialog.
                You can also select whether the &XercesCName; library
                should use ICU for transcoding.</p>

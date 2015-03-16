@@ -20,15 +20,6 @@
 
 <s1 title="Installation">
 
-    <p>Source and binary distributions installation instructions are
-       available for the following platforms:</p>
-
-    <ul>
-      <li><link anchor="Windows">Windows</link></li>
-      <li><link anchor="Unix">UNIX/Linux/Mac OS X</link></li>
-      <li><link anchor="Cygwin">Cygwin</link></li>
-    </ul>
-
     <anchor name="Windows"/>
     <s2 title="Windows">
 
@@ -48,10 +39,12 @@ unzip &XercesC3SrcInstallDir;.zip
         <p>This creates the &apos;&XercesC3SrcInstallDir;&apos; sub-directory
 		containing the &XercesCName; source distribution. </p>
 
-        <p>If you need to build the &XercesCName; source after installation,
+        <p>To build the &XercesCName; source after installation,
         please follow the <jump href="build-&XercesC3Series;.html">Build Instructions</jump>.</p>
 
       </s3>
+
+<!--
       <s3 title="Binary distribution">
         <p>Install the &XercesCName; binary distribution by using <code>unzip</code>
 	   on the &XercesC3InstallDir;-{arch}-windows-{compiler}.zip archive in
@@ -87,6 +80,7 @@ unzip &XercesC3InstallDir;-x86-windows-vc-8.0.zip
            samples.</p>
 
       </s3>
+-->
     </s2>
 
     <anchor name="Unix"/>
@@ -97,7 +91,7 @@ unzip &XercesC3InstallDir;-x86-windows-vc-8.0.zip
 
       <s3 title="Source distribution">
         <p>The &XercesCName; source is available in the source distribution:
-           &XercesC3SrcInstallDir;.tar.gz.</p>
+           &XercesC3SrcInstallDir;.tar.gz (other formats also available).</p>
 
         <p>Install the &XercesCName; source distribution
            &XercesC3SrcInstallDir;.tar.gz by extracting the files
@@ -109,10 +103,12 @@ tar -xf &XercesC3SrcInstallDir;.tar
         <p>This creates the &apos;&XercesC3SrcInstallDir;&apos; sub-directory
 	   containing the &XercesCName; source distribution. </p>
 
-        <p>If you need to build the &XercesCName; source after installation,
+        <p>To build the &XercesCName; source after installation,
            please follow the <jump href="build-&XercesC3Series;.html">Build Instructions</jump>.</p>
 
       </s3>
+
+<!--
       <s3 title="Binary distribution">
         <p>Install the binary distribution &XercesC3InstallDir;-{arch}-{os}-{compiler}.tar.gz
            by extracting the files from the compressed archive. Here {arch}
@@ -171,6 +167,8 @@ setenv DYLD_LIBRARY_PATH "&lt;xerces-path>/lib:$DYLD_LIBRARY_PATH" (Mac OS X)
            <jump href="samples-&XercesC3Series;.html">Samples</jump> for how to run the
            samples.</p>
       </s3>
+-->
+
    </s2>
 
     <anchor name="Cygwin"/>
@@ -181,7 +179,7 @@ setenv DYLD_LIBRARY_PATH "&lt;xerces-path>/lib:$DYLD_LIBRARY_PATH" (Mac OS X)
 
       <s3 title="Source distribution">
         <p>The &XercesCName; source is available in the source distribution:
-           &XercesC3SrcInstallDir;.tar.gz.</p>
+           &XercesC3SrcInstallDir;.tar.gz (other formats available).</p>
 
         <p>Install the &XercesCName; source distribution
            &XercesC3SrcInstallDir;.tar.gz by extracting the files
@@ -192,7 +190,7 @@ tar -xfz &XercesC3SrcInstallDir;.tar.gz
         <p>This creates the &apos;&XercesC3SrcInstallDir;&apos; sub-directory
 	   containing the &XercesCName; source distribution. </p>
 
-        <p>If you need to build the &XercesCName; source after installation,
+        <p>To build the &XercesCName; source after installation,
            please follow the <jump href="build-&XercesC3Series;.html">Build Instructions</jump>.
         </p>
 
