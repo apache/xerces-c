@@ -24,9 +24,10 @@
 
   <separator/>
 
-     <document id="index"       label="Overview"             source="readme.xml"/>
-     <document id="charter"     label="Charter"             source="charter.xml"/>
+     <document id="index"       label="Overview"         source="readme.xml"/>
+     <document id="charter"     label="Charter"          source="charter.xml"/>
      <document id="releases"    label="Release Info"     source="releases.xml"/>
+     <document id="secadv"      label="Advisories"       source="secadv.xml"/>
      <hidden id="releases_archive"                   source="releases_archive.xml"/>
      <hidden id="releases_plan" source="releases_plan.xml"/>
      <external href="http://&XercesDistDir;"              label="Download"/>
