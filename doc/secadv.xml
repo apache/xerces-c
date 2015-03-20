@@ -20,6 +20,12 @@
 
 <s1 title="Security Advisories">
 
-<p>This is a place-holder for any future security advisories issued by the project.</p>
+<s2 title="Addressed in 3.1.2 and Later Releases">
+<p>The following security advisories apply to versions of
+Xerces-C older than V3.1.2:</p>
+<ul>
+  <li><jump href="secadv/CVE-2015-0252.txt">CVE-2015-0252: Apache Xerces-C XML Parser Crashes on Malformed Input</jump></li>
+</ul>
+</s2>
 
 </s1>
