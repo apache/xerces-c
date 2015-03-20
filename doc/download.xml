@@ -31,9 +31,13 @@
        distribution directory</jump> or, preferably, its <jump
        href="[preferred]/xerces/c/">mirror</jump>. Only current
        recommended releases are available on the main distribution
-       site and its mirrors. Older releases are available from the
-       <jump href="http://archive.apache.org/dist/xml/xerces-c/">archive
-       download site.</jump></p>
+       site and its mirrors.</p>
+       
+    <p>Older releases are available from the
+       <jump href="http://archive.apache.org/dist/xerces/c/">archive
+       download site</jump>, but you should be aware that there is a lot
+       of accumulated "cruft" in the archives, and many confusingly
+       named files. Anything labeled "current" is likely not.</p>
   </s2>
 
   <s2 title="Mirror">
@@ -72,19 +76,27 @@ Other mirrors: <select name="Preferred">
       <p>
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-3.1.2.zip">xerces-c-3.1.2.zip</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.zip.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.zip.md5">MD5</jump>]<br/>
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.zip.md5">MD5</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.zip.sha1">SHA1</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.zip.sha256">SHA2</jump>]<br/>
 
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-3.1.2.tar.gz">xerces-c-3.1.2.tar.gz</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.gz.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.gz.md5">MD5</jump>]<br/>
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.gz.md5">MD5</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.gz.sha1">SHA1</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.gz.sha256">SHA2</jump>]<br/>
 
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-3.1.2.tar.bz2">xerces-c-3.1.2.tar.bz2</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.bz2.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.bz2.md5">MD5</jump>]<br/>
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.bz2.md5">MD5</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.bz2.sha1">SHA1</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.bz2.sha256">SHA2</jump>]<br/>
 
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-3.1.2.tar.xz">xerces-c-3.1.2.tar.xz</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.xz.asc">PGP</jump>]
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.xz.md5">MD5</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.xz.sha1">SHA1</jump>]
+         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.2.tar.xz.sha256">SHA2</jump>]
 
       </p>
     </s3>
@@ -94,7 +106,7 @@ Other mirrors: <select name="Preferred">
   <s2 title="Verify the integrity of the files">
 
     <p>It is essential that you verify the integrity of the downloaded
-       files using the PGP or MD5 signatures.  Please read <jump
+       files using the PGP or MD5/SHA files.  Please read <jump
        href="http://httpd.apache.org/dev/verification.html">Verifying
        HTTP Server Releases</jump> for more information on why you
        should verify our releases.</p>
@@ -122,7 +134,7 @@ Other mirrors: <select name="Preferred">
 % gpg --verify &lt;distribution-name>.asc
 </source>
 
-    <p>Alternatively, you can verify the MD5 signature on the files. A
+    <p>Alternatively, you can verify the digests on the files. A
        command line program called <code>md5</code> or <code>md5sum</code>
        is included in most UNXI distributions.  It is also available as
        part of <jump href="http://www.gnu.org/software/textutils/textutils.html">GNU
