@@ -1454,7 +1454,7 @@ inline void XMLString::moveChars(       XMLCh* const targetStr
                                 , const XMLCh* const srcStr
                                 , const XMLSize_t    count)
 {
-    memcpy(targetStr, srcStr, count * sizeof(XMLCh));
+    memmove(targetStr, srcStr, count * sizeof(XMLCh));
 }
 
 inline XMLSize_t XMLString::stringLen(const XMLCh* const src)
