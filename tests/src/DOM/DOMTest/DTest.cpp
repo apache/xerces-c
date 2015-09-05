@@ -5516,7 +5516,7 @@ bool DOMTest::testRegex() {
         OK = false;
     }
 
-    delete hugeString;
+    delete [] hugeString;
 
     return OK;
 }
