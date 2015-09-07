@@ -64,7 +64,7 @@ class InputSource;
   *<br>
   *&nbsp;class MyResolver : public XMLEntityResolver {<br>
   *&nbsp;&nbsp;public:<br>
-  *&nbsp;&nbsp;&nbsp;InputSource resolveEntity (XMLResourceIdentifier* xmlri);<br>
+  *&nbsp;&nbsp;&nbsp;InputSource* resolveEntity (XMLResourceIdentifier* xmlri);<br>
   *&nbsp;&nbsp;&nbsp;...<br>
   *&nbsp;&nbsp;};<br>
   *<br>

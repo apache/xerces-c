@@ -55,7 +55,7 @@ class InputSource;
   *<br>
   *class MyResolver : public EntityResolver {<br>
   *  public:<br>&nbsp;
-  *    InputSource resolveEntity (const XMLCh* const publicId, const XMLCh* const systemId);<br>&nbsp;&nbsp;
+  *    InputSource* resolveEntity (const XMLCh* const publicId, const XMLCh* const systemId);<br>&nbsp;&nbsp;
   *    <br>
   *   ...<br>&nbsp;&nbsp;
   *   };<br>&nbsp;
