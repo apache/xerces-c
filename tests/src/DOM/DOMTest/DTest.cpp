@@ -6061,5 +6061,17 @@ bool DOMTest::testUtilFunctions()
 	}
 	XMLString::release(&bytes);
 
+    // XERCESC-2052
+    // Input:                    U+4E2D U+56FD U+5236 U+9020 U+4E2D U+570B U+88FD U+9020
+    // Expected byte sequence:   E4 B8 AD E5 9B BD E5 88 B6 E9 80 A0 20 2F 20 E4 B8 AD E5 9C 8B E8 A3 BD E9 80 A0
+    const XMLCh xmlStr2[] = { 0x4E2D, 0x56FD, 0x5236, 0x9020, 0x20, 0x2F, 0x20, 0x4E2D, 0x570B, 0x88FD, 0x9020, 0x0000 };
+    char* bytes2 = (char*)TranscodeToStr(xmlStr2, "UTF-8").adopt();
+    if (!XMLString::equals(bytes2, "\xE4\xB8\xAD\xE5\x9B\xBD\xE5\x88\xB6\xE9\x80\xA0\x20\x2F\x20\xE4\xB8\xAD\xE5\x9C\x8B\xE8\xA3\xBD\xE9\x80\xA0"))
+    {
+        fprintf(stderr, "TranscodeToStr failed at line %i\n", __LINE__);
+        OK = false;
+    }
+    XMLString::release(&bytes2);
+
     return OK;
 }

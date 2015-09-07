@@ -612,23 +612,30 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
     fString.reset((XMLByte*)fMemoryManager->allocate(allocSize), fMemoryManager);
 
     XMLSize_t charsDone = 0;
+    bool bufferExpanded = false;
 
     while(charsDone < len) {
         XMLSize_t charsRead = 0;
         fBytesWritten += trans->transcodeTo(in + charsDone, len - charsDone,
                                             fString.get() + fBytesWritten, allocSize - fBytesWritten,
                                             charsRead, XMLTranscoder::UnRep_Throw);
-        if(charsRead == 0)
-            ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, fMemoryManager);
-
-        charsDone += charsRead;
-
-        if((allocSize - fBytesWritten) < ((len - charsDone) * sizeof(XMLCh)))
+        if (charsRead == 0)
         {
+            if (bufferExpanded)
+            {
+                ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Trans_BadSrcSeq, fMemoryManager);
+            }
+            // it may have not enough space, try expanding the buffer
             allocSize *= 2;
             XMLByte *newBuf = (XMLByte*)fMemoryManager->allocate(allocSize);
             memcpy(newBuf, fString.get(), fBytesWritten);
             fString.reset(newBuf, fMemoryManager);
+            bufferExpanded = true;
+        }
+        else
+        {
+            charsDone += charsRead;
+            bufferExpanded = false;
         }
     }
 
