@@ -611,9 +611,20 @@ BinInputStream* XMLURL::makeNewStream() const
 
             while (percentIndex != -1) {
 
-                if (percentIndex+2 >= (int)end ||
-                    !isHexDigit(realPath[percentIndex+1]) ||
-                    !isHexDigit(realPath[percentIndex+2]))
+            	// Isolate the length/boundary check so we don't try and copy off the end.
+                if (percentIndex+2 >= (int)end)
+                {
+                    XMLCh value1[3];
+                    value1[1] = chNull;
+                    value1[2] = chNull;
+					XMLString::moveChars(value1, &(realPath[percentIndex]), (percentIndex + 1 >= (int)end ? 1 : 2));
+                    ThrowXMLwithMemMgr2(MalformedURLException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                            , realPath
+                            , value1
+                            , fMemoryManager);
+                }
+                else if (!isHexDigit(realPath[percentIndex+1]) || !isHexDigit(realPath[percentIndex+2]))
                 {
                     XMLCh value1[4];
                     XMLString::moveChars(value1, &(realPath[percentIndex]), 3);

@@ -875,11 +875,21 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 // check for valid escape sequence
                 if (testChar == chPercent)
                 {
-                    if (index+2 >= end ||
-                        !XMLString::isHex(uriSpec[index+1]) ||
-                        !XMLString::isHex(uriSpec[index+2]))
+                    if (index + 2 >= end)
                     {
-                        XMLCh value1[BUF_LEN+1];
+                        XMLCh value1[3];
+                        value1[1] = chNull;
+                        value1[2] = chNull;
+                        XMLString::moveChars(value1, &(uriSpec[index]), (index + 1 >= end ? 1 : 2));
+                        ThrowXMLwithMemMgr2(MalformedURLException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                            , errMsg_PATH
+                            , value1
+                            , fMemoryManager);
+                    }
+                    else if (!XMLString::isHex(uriSpec[index+1]) || !XMLString::isHex(uriSpec[index+2]))
+                    {
+                        XMLCh value1[4];
                         XMLString::moveChars(value1, &(uriSpec[index]), 3);
                         value1[3] = chNull;
                         ThrowXMLwithMemMgr2(MalformedURLException
@@ -892,7 +902,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 else if (!isUnreservedCharacter(testChar) &&
                          !isPathCharacter(testChar))
                 {
-                    XMLCh value1[BUF_LEN+1];
+                    XMLCh value1[2];
                     value1[0] = testChar;
                     value1[1] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -920,11 +930,21 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 // check for valid escape sequence
                 if (testChar == chPercent)
                 {
-                    if (index+2 >= end ||
-                        !XMLString::isHex(uriSpec[index+1]) ||
-                        !XMLString::isHex(uriSpec[index+2]))
+                    if (index + 2 >= end)
                     {
-                        XMLCh value1[BUF_LEN+1];
+                        XMLCh value1[3];
+                        value1[1] = chNull;
+                        value1[2] = chNull;
+                        XMLString::moveChars(value1, &(uriSpec[index]), (index + 1 >= end ? 1 : 2));
+                        ThrowXMLwithMemMgr2(MalformedURLException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                            , errMsg_PATH
+                            , value1
+                            , fMemoryManager);
+                    }
+                    else if (!XMLString::isHex(uriSpec[index+1]) || !XMLString::isHex(uriSpec[index+2]))
+                    {
+                        XMLCh value1[4];
                         XMLString::moveChars(value1, &(uriSpec[index]), 3);
                         value1[3] = chNull;
                         ThrowXMLwithMemMgr2(MalformedURLException
@@ -941,7 +961,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 // contains '[' and ']'.
                 else if (!isReservedOrUnreservedCharacter(testChar))
                 {
-                    XMLCh value1[BUF_LEN+1];
+                    XMLCh value1[2];
                     value1[0] = testChar;
                     value1[1] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -979,11 +999,21 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 
             if (testChar == chPercent)
             {
-                if (index+2 >= end ||
-                    !XMLString::isHex(uriSpec[index+1]) ||
-                    !XMLString::isHex(uriSpec[index+2]))
+                if (index + 2 >= end)
                 {
-                    XMLCh value1[BUF_LEN+1];
+                    XMLCh value1[3];
+                    value1[1] = chNull;
+                    value1[2] = chNull;
+                    XMLString::moveChars(value1, &(uriSpec[index]), (index + 1 >= end ? 1 : 2));
+                    ThrowXMLwithMemMgr2(MalformedURLException
+                        , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                        , errMsg_QUERY
+                        , value1
+                        , fMemoryManager);
+                }
+                if (!XMLString::isHex(uriSpec[index+1]) || !XMLString::isHex(uriSpec[index+2]))
+                {
+                    XMLCh value1[4];
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -995,7 +1025,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             }
             else if (!isReservedOrUnreservedCharacter(testChar))
             {
-                XMLCh value1[BUF_LEN+1];
+                XMLCh value1[2];
                 value1[0] = testChar;
                 value1[1] = chNull;
                 ThrowXMLwithMemMgr2(MalformedURLException
@@ -1030,11 +1060,21 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 
             if (testChar == chPercent)
             {
-                if (index+2 >= end ||
-                    !XMLString::isHex(uriSpec[index+1]) ||
-                    !XMLString::isHex(uriSpec[index+2]))
+                if (index + 2 >= end)
                 {
-                    XMLCh value1[BUF_LEN+1];
+                    XMLCh value1[3];
+                    value1[1] = chNull;
+                    value1[2] = chNull;
+                    XMLString::moveChars(value1, &(uriSpec[index]), (index + 1 >= end ? 1 : 2));
+                    ThrowXMLwithMemMgr2(MalformedURLException
+                        , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                        , errMsg_FRAGMENT
+                        , value1
+                        , fMemoryManager);
+                }
+                if (!XMLString::isHex(uriSpec[index+1]) || !XMLString::isHex(uriSpec[index+2]))
+                {
+                    XMLCh value1[4];
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -1046,7 +1086,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             }
             else if (!isReservedOrUnreservedCharacter(testChar))
             {
-                XMLCh value1[BUF_LEN+1];
+                XMLCh value1[2];
                 value1[0] = testChar;
                 value1[1] = chNull;
                 ThrowXMLwithMemMgr2(MalformedURLException
@@ -1410,14 +1450,15 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo
         }
         else if (*tmpStr == chPercent)               // '%'
         {
-            if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
-                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
+            if (XMLString::stringLen(tmpStr) >= 3
+                && XMLString::isHex(*(tmpStr+1))     // 1st hex
+                && XMLString::isHex(*(tmpStr+2))  )  // 2nd hex
             {
                 tmpStr+=3;
             }
             else
             {
-                XMLCh value1[BUF_LEN+1];
+                XMLCh value1[4];
                 value1[0] = chPercent;
                 value1[1] = *(tmpStr+1);
                 value1[2] = *(tmpStr+2);
@@ -1468,8 +1509,9 @@ bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host,
         }
         else if (userinfo[index] == chPercent)               // '%'
         {
-            if (XMLString::isHex(userinfo[index+1]) &&     // 1st hex
-                XMLString::isHex(userinfo[index+2])  )     // 2nd hex
+            if (index + 2 < userLen
+                && XMLString::isHex(userinfo[index+1])       // 1st hex
+                && XMLString::isHex(userinfo[index+2])  )    // 2nd hex
                 index +=3;
             else
                 return false;
@@ -1508,8 +1550,9 @@ bool XMLUri::isValidServerBasedAuthority(const XMLCh* const host
         }
         else if (*tmpStr == chPercent)               // '%'
         {
-            if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
-                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
+            if (XMLString::stringLen(tmpStr) >= 3
+                && XMLString::isHex(*(tmpStr+1))     // 1st hex
+                && XMLString::isHex(*(tmpStr+2))  )  // 2nd hex
             {
                 tmpStr+=3;
             }
@@ -1537,8 +1580,9 @@ bool XMLUri::isValidRegistryBasedAuthority(const XMLCh* const authority,
         }
         else if (authority[index] == chPercent)               // '%'
         {
-            if (XMLString::isHex(authority[index+1]) &&     // 1st hex
-                XMLString::isHex(authority[index+2])  )     // 2nd hex
+            if (index + 2 < authLen
+                && XMLString::isHex(authority[index+1])       // 1st hex
+                && XMLString::isHex(authority[index+2])  )    // 2nd hex
                 index +=3;
             else
                 return false;
@@ -1566,8 +1610,9 @@ bool XMLUri::isValidRegistryBasedAuthority(const XMLCh* const authority)
         }
         else if (*tmpStr == chPercent)               // '%'
         {
-            if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
-                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
+            if (XMLString::stringLen(tmpStr) >= 3
+                && XMLString::isHex(*(tmpStr + 1))     // 1st hex
+                && XMLString::isHex(*(tmpStr + 2)))  // 2nd hex
             {
                 tmpStr+=3;
             }
@@ -1602,8 +1647,9 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
         }
         else if (*tmpStr == chPercent)               // '%'
         {
-            if (XMLString::isHex(*(tmpStr+1)) &&     // 1st hex
-                XMLString::isHex(*(tmpStr+2))  )     // 2nd hex
+            if (XMLString::stringLen(tmpStr) >=3
+                && XMLString::isHex(*(tmpStr+1))     // 1st hex
+                && XMLString::isHex(*(tmpStr+2))  )  // 2nd hex
             {
                 tmpStr+=3;
             }

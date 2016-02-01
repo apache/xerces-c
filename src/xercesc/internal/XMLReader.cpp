@@ -1459,8 +1459,30 @@ void XMLReader::doInitDecode()
 
             while (fRawBufIndex < fRawBytesAvail)
             {
-                // Security fix: make sure there are at least sizeof(UCS4Ch) bytes to consume.
+                // Make sure there are at least sizeof(UCS4Ch) bytes to consume.
                 if (fRawBufIndex + sizeof(UCS4Ch) > fRawBytesAvail) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
                     ThrowXMLwithMemMgr1
                     (
                         TranscodingException
@@ -1546,6 +1568,23 @@ void XMLReader::doInitDecode()
                 const char curCh = *asChars++;
                 fRawBufIndex++;
 
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
                 // Looks ok, so store it
                 fCharSizeBuf[fCharsAvail] = 1;
                 fCharBuf[fCharsAvail++] = XMLCh(curCh);
@@ -1629,8 +1668,30 @@ void XMLReader::doInitDecode()
 
             while (fRawBufIndex < fRawBytesAvail)
             {
-                // Security fix: make sure there are at least sizeof(UTF16Ch) bytes to consume.
+                // Make sure there are at least sizeof(UTF16Ch) bytes to consume.
                 if (fRawBufIndex + sizeof(UTF16Ch) > fRawBytesAvail) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
                     ThrowXMLwithMemMgr1
                     (
                         TranscodingException
@@ -1674,6 +1735,24 @@ void XMLReader::doInitDecode()
                 // Transcode one char from the source
                 const XMLCh chCur = XMLEBCDICTranscoder::xlatThisOne(*srcPtr++);
                 fRawBufIndex++;
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
 
                 //
                 //  And put it into the character buffer. This stuff has to
@@ -1729,7 +1808,7 @@ void XMLReader::doInitDecode()
 //
 void XMLReader::refreshRawBuffer()
 {
-    // Security fix: make sure we don't underflow on the subtraction.
+    // Make sure we don't underflow on the subtraction.
     if (fRawBufIndex > fRawBytesAvail) {
         ThrowXMLwithMemMgr1
         (
