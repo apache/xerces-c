@@ -143,6 +143,7 @@ private:
     (
         const   DTDElementDecl&     elemDecl
         ,       XMLBuffer&          bufToUse
+        ,       unsigned int&       depth
     );
     bool scanCharRef(XMLCh& toFill, XMLCh& second);
     void scanComment();

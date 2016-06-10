@@ -44,6 +44,8 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+#define CONTENTSPEC_DEPTH_LIMIT 1000
+
 // ---------------------------------------------------------------------------
 //  Local methods
 // ---------------------------------------------------------------------------
@@ -1038,8 +1040,13 @@ bool DTDScanner::scanCharRef(XMLCh& first, XMLCh& second)
 
 
 ContentSpecNode*
-DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
+DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse, unsigned int& depth)
 {
+    if (depth++ > CONTENTSPEC_DEPTH_LIMIT) {
+        fScanner->emitError(XMLErrs::UnterminatedDOCTYPE);
+        return 0;
+    }
+
     // Check for a PE ref here, but don't require spaces
     checkForPERef(false, true);
 
@@ -1240,7 +1247,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         // Recurse to handle this new guy
                         ContentSpecNode* subNode;
                         try {
-                            subNode = scanChildren(elemDecl, bufToUse);
+                            subNode = scanChildren(elemDecl, bufToUse, depth);
                         }
                         catch (const XMLErrs::Codes)
                         {
@@ -1577,7 +1584,8 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
         //
         toFill.setModelType(DTDElementDecl::Children);
         XMLBufBid bbTmp(fBufMgr);
-        ContentSpecNode* resNode = scanChildren(toFill, bbTmp.getBuffer());
+        unsigned int depth = 0;
+        ContentSpecNode* resNode = scanChildren(toFill, bbTmp.getBuffer(), depth);
         status = (resNode != 0);
         if (status)
             toFill.setContentSpec(resNode);
@@ -2509,7 +2517,15 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect, const bool isDTD)
         {
             while (true)
             {
-                const XMLCh nextCh = fReaderMgr->peekNextChar();
+                XMLCh nextCh;
+                
+                try {
+                    nextCh = fReaderMgr->peekNextChar();
+                }
+                catch (XMLException& ex) {
+                    fScanner->emitError(XMLErrs::XMLException_Fatal, ex.getCode(), ex.getMessage(), NULL, NULL);
+                    nextCh = chNull;
+                }
 
                 if (!nextCh)
                 {
