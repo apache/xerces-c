@@ -1270,8 +1270,15 @@ void XMLScanner::scanProlog()
                     if (sawDocTypeDecl) {
                         emitError(XMLErrs::DuplicateDocTypeDecl);
                     }
-                    scanDocTypeDecl();
-                    sawDocTypeDecl = true;
+
+                    const char* envvar = getenv("XERCES_DISABLE_DTD");
+                    if (envvar && !strcmp(envvar, "1")) {
+                    	emitError(XMLErrs::InvalidDocumentStructure);
+                    }
+                    else {
+                    	scanDocTypeDecl();
+                    	sawDocTypeDecl = true;
+                    }
 
                     // if reusing grammar, this has been validated already in first scan
                     // skip for performance
