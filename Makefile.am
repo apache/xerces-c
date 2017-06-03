@@ -1,6 +1,9 @@
 SUBDIRS = src tests samples
 
 EXTRA_DIST = version.incl \
+             CMakeLists.txt \
+             cmake \
+             config.h.cmake.in \
              config/pretty-make \
              scripts/createBindingsFormatFromHPP.pl \
              scripts/makeStringDefinition.pl \

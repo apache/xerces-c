@@ -26,11 +26,13 @@ LDADD =                             ${top_builddir}/src/libxerces-c.la
 # header file when doing out-of-tree builds
 AM_CPPFLAGS =                       -I${top_builddir}/src -I${top_srcdir}/src
 
-EXTRA_DIST =                        data/personal.dtd \
+EXTRA_DIST =                        CMakeLists.txt \
+                                    data/personal.dtd \
                                     data/personal.xml \
                                     data/personal.xsd \
                                     data/personal-schema.xml \
                                     data/redirect.dtd
+                                    expected
 
 sampleprogs =
 

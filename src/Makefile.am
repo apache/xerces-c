@@ -56,7 +56,11 @@ nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autocon
 
 # Compatibility library.
 #
-EXTRA_DIST = stricmp.h strnicmp.h towlower.h towupper.h
+EXTRA_DIST = CMakeLists.txt \
+        XercesCConfig.cmake.in \
+        stricmp.h strnicmp.h towlower.h towupper.h \
+        xercesc/util/Xerces_autoconf_config.hpp.cmake.in
+
 libxerces_c_la_LIBADD = ${LTLIBOBJS}
 
 # NetAccessors, conditionally built based on settings from configure
