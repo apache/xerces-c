@@ -5,6 +5,7 @@ top_builddir = @top_builddir@
 prefix = @prefix@
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
+MKDIR_P = @MKDIR_P@
 mkdir_p = @mkdir_p@
 
 include $(top_srcdir)/version.incl
@@ -35,7 +36,7 @@ $(RESTARGET): $(RESFILES)
 	@echo building $(RESTARGET)
 	$(mkdir_p) $(top_builddir)/src/.libs
 	cp $(RESFILES) $(top_builddir)/src/.libs
-	
+
 # clean out files
 distclean clean: $(CLEAN_SUBDIR)
 	-rm -f $(RESTARGET)
