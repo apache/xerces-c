@@ -511,7 +511,7 @@
          and Solaris, the environment variable name is
          <code>LD_LIBRARY_PATH</code>, on AIX it is
          <code>LIBPATH</code>, on Mac OS X it is
-         <code>DYLD_LIBRARY_PATH</code>, and on HP-UX
+         <code>DYLD_FALLBACK_LIBRARY_PATH</code>, and on HP-UX
          it is <code>SHLIB_PATH</code>.
         </note>
 
