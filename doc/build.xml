@@ -323,7 +323,7 @@
           </tr>
 	  <tr>
             <td><code>--enable-netaccessor-winsock</code></td>
-            <td>use WinSock (only on Windows, Cygwin, MinGW)</td>
+            <td>use WinSock (only on Windows and MinGW)</td>
           </tr>
           <tr>
             <td><code>--disable-network</code></td>
@@ -356,7 +356,7 @@
           </tr>
           <tr>
             <td><code>--enable-transcoder-windows</code></td>
-            <td>use Windows APIs (only on Windows, Cygwin, MinGW)</td>
+            <td>use Windows APIs (only on Windows and MinGW)</td>
           </tr>
         </table>
 
