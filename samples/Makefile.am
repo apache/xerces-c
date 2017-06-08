@@ -31,7 +31,7 @@ EXTRA_DIST =                        CMakeLists.txt \
                                     data/personal.xml \
                                     data/personal.xsd \
                                     data/personal-schema.xml \
-                                    data/redirect.dtd
+                                    data/redirect.dtd \
                                     expected
 
 sampleprogs =
