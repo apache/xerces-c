@@ -110,7 +110,6 @@ static const int BUF_LEN = 64;
 
 //
 // "Scheme"
-// "SchemeSpecificPart"
 // "Parameters"
 // "UserInfo"
 // "Host"
@@ -124,14 +123,6 @@ static const XMLCh errMsg_SCHEME[] =
 {
     chLatin_s, chLatin_c, chLatin_h, chLatin_e,
     chLatin_m, chLatin_e, chNull
-};
-
-static const XMLCh errMsg_SCHEMESPART[] =
-{
-    chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_e,
-    chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f,
-    chLatin_i, chLatin_c, chLatin_P, chLatin_a, chLatin_r, chLatin_t,
-    chNull
 };
 
 static const XMLCh errMsg_PARAMS[] =
@@ -223,14 +214,6 @@ static const XMLCh SLASH_DOTDOT[] =
 static const XMLCh SCHEME_SEPARATORS[] =
 {
     chColon, chForwardSlash, chQuestion, chPound, chNull
-};
-
-//
-//  "?#"
-//
-static const XMLCh PATH_SEPARATORS[] =
-{
-    chQuestion, chPound, chNull
 };
 
 // ---------------------------------------------------------------------------
