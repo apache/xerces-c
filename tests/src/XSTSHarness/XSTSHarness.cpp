@@ -66,8 +66,8 @@ void usage()
 }
 
 BaseHarnessHandlers::BaseHarnessHandlers(const XMLCh* baseURL) :
-    fSawErrors(false),
     fBaseURL(baseURL),
+    fSawErrors(false),
     fFailures(0),
     fTests(0)
 {
