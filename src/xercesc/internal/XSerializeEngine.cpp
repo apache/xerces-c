@@ -564,7 +564,7 @@ XSerializeEngine& XSerializeEngine::operator<<(XMLCh xch)
     checkAndFlushBuffer(calBytesNeeded(sizeof(XMLCh)));
 
     alignBufCur(sizeof(XMLCh));
-    *(XMLCh*)fBufCur = xch;
+    *reinterpret_cast<XMLCh*>(fBufCur) = xch;
     fBufCur += sizeof(XMLCh);
     return *this;
 }
@@ -574,7 +574,7 @@ XSerializeEngine& XSerializeEngine::operator>>(XMLCh& xch)
     checkAndFillBuffer(calBytesNeeded(sizeof(XMLCh)));
 
     alignBufCur(sizeof(XMLCh));
-    xch = *(XMLCh*)fBufCur;
+    xch = *reinterpret_cast<XMLCh*>(fBufCur);
     fBufCur += sizeof(XMLCh);
     return *this;
 }
@@ -678,7 +678,7 @@ XSerializeEngine& XSerializeEngine::operator<<(short sh)
     checkAndFlushBuffer(calBytesNeeded(sizeof(short)));
 
     alignBufCur(sizeof(short));
-    *(short*)fBufCur = sh;
+    *reinterpret_cast<short*>(fBufCur) = sh;
     fBufCur += sizeof(short);
     return *this;
 }
@@ -688,7 +688,7 @@ XSerializeEngine& XSerializeEngine::operator>>(short& sh)
     checkAndFillBuffer(calBytesNeeded(sizeof(short)));
 
     alignBufCur(sizeof(short));
-    sh = *(short*)fBufCur;
+    sh = *reinterpret_cast<short*>(fBufCur);
     fBufCur += sizeof(short);
     return *this;
 }
@@ -698,7 +698,7 @@ XSerializeEngine& XSerializeEngine::operator<<(int i)
     checkAndFlushBuffer(calBytesNeeded(sizeof(int)));
 
     alignBufCur(sizeof(int));
-    *(int*)fBufCur = i;
+    *reinterpret_cast<int*>(fBufCur) = i;
     fBufCur += sizeof(int);
     return *this;
 }
@@ -708,7 +708,7 @@ XSerializeEngine& XSerializeEngine::operator>>(int& i)
     checkAndFillBuffer(calBytesNeeded(sizeof(int)));
 
     alignBufCur(sizeof(int));
-    i = *(int*)fBufCur;
+    i = *reinterpret_cast<int*>(fBufCur);
     fBufCur += sizeof(int);
     return *this;
 }
@@ -719,7 +719,7 @@ XSerializeEngine& XSerializeEngine::operator<<(unsigned int ui)
     checkAndFlushBuffer(calBytesNeeded(sizeof(unsigned int)));
 
     alignBufCur(sizeof(unsigned int));
-    *(unsigned int*)fBufCur = ui;
+    *reinterpret_cast<unsigned int*>(fBufCur) = ui;
     fBufCur += sizeof(unsigned int);
     return *this;
 }
@@ -730,7 +730,7 @@ XSerializeEngine& XSerializeEngine::operator>>(unsigned int& ui)
     checkAndFillBuffer(calBytesNeeded(sizeof(unsigned int)));
 
     alignBufCur(sizeof(unsigned int));
-    ui = *(unsigned int*)fBufCur;
+    ui = *reinterpret_cast<unsigned int*>(fBufCur);
     fBufCur += sizeof(unsigned int);
     return *this;
 }
@@ -740,7 +740,7 @@ XSerializeEngine& XSerializeEngine::operator<<(long l)
     checkAndFlushBuffer(calBytesNeeded(sizeof(long)));
 
     alignBufCur(sizeof(long));
-    *(long*)fBufCur = l;
+    *reinterpret_cast<long*>(fBufCur) = l;
     fBufCur += sizeof(long);
     return *this;
 }
@@ -750,7 +750,7 @@ XSerializeEngine& XSerializeEngine::operator>>(long& l)
     checkAndFillBuffer(calBytesNeeded(sizeof(long)));
 
     alignBufCur(sizeof(long));
-    l = *(long*)fBufCur;
+    l = *reinterpret_cast<long*>(fBufCur);
     fBufCur += sizeof(long);
     return *this;
 }
@@ -760,7 +760,7 @@ XSerializeEngine& XSerializeEngine::operator<<(unsigned long ul)
     checkAndFlushBuffer(calBytesNeeded(sizeof(unsigned long)));
 
     alignBufCur(sizeof(unsigned long));
-    *(unsigned long*)fBufCur = ul;
+    *reinterpret_cast<unsigned long*>(fBufCur) = ul;
     fBufCur += sizeof(unsigned long);
     return *this;
 }
@@ -770,7 +770,7 @@ XSerializeEngine& XSerializeEngine::operator>>(unsigned long& ul)
     checkAndFillBuffer(calBytesNeeded(sizeof(unsigned long)));
 
     alignBufCur(sizeof(unsigned long));
-    ul = *(unsigned long*)fBufCur;
+    ul = *reinterpret_cast<unsigned long*>(fBufCur);
     fBufCur += sizeof(unsigned long);
     return *this;
 }
@@ -780,7 +780,7 @@ XSerializeEngine& XSerializeEngine::operator<<(float f)
     checkAndFlushBuffer(calBytesNeeded(sizeof(float)));
 
     alignBufCur(sizeof(float));
-    *(float*)fBufCur = *(float*)&f;
+    *reinterpret_cast<float*>(fBufCur) = *reinterpret_cast<float*>(&f);
     fBufCur += sizeof(float);
     return *this;
 }
@@ -790,7 +790,7 @@ XSerializeEngine& XSerializeEngine::operator>>(float& f)
     checkAndFillBuffer(calBytesNeeded(sizeof(float)));
 
     alignBufCur(sizeof(float));
-    *(float*)&f = *(float*)fBufCur;
+    *reinterpret_cast<float*>(&f) = *reinterpret_cast<float*>(fBufCur);
     fBufCur += sizeof(float);
     return *this;
 }
@@ -800,7 +800,7 @@ XSerializeEngine& XSerializeEngine::operator<<(double d)
     checkAndFlushBuffer(calBytesNeeded(sizeof(double)));
 
     alignBufCur(sizeof(double));
-    *(double*)fBufCur = *(double*)&d;
+    *reinterpret_cast<double*>(fBufCur) = *reinterpret_cast<double*>(&d);
     fBufCur += sizeof(double);
     return *this;
 }
@@ -810,7 +810,7 @@ XSerializeEngine& XSerializeEngine::operator>>(double& d)
     checkAndFillBuffer(calBytesNeeded(sizeof(double)));
 
     alignBufCur(sizeof(double));
-    *(double*)&d = *(double*)fBufCur;
+    *reinterpret_cast<double*>(&d) = *reinterpret_cast<double*>(fBufCur);
     fBufCur += sizeof(double);
     return *this;
 }
