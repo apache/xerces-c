@@ -56,6 +56,14 @@ static const bool  EXP_RET_CANREP_FALSE = false;
 static const XSValue::Status DONT_CARE = XSValue::st_UnknownType;
 static bool  errSeen = false;
 
+// This code is deliberately exeeding the minimum and maxium limits of
+// the various integer types.  Don't warn about it since it's
+// expected.
+#ifdef __GNUC__
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wc++11-compat"
+#endif
+
 static const XMLCh* getDataTypeString(const XSValue::DataType dt)
 {
     switch(dt)
@@ -6764,3 +6772,7 @@ int main()
 
     return 0;
 }
+
+#ifdef __GNUC__
+#  pragma GCC diagnostic pop
+#endif
