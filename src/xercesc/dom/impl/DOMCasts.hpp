@@ -96,21 +96,29 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 static inline DOMNodeImpl *castToNodeImpl(const DOMNode *p)
 {
-    DOMElementImpl *pE = (DOMElementImpl *)p;
+    // Note: hairy cast which is used for all node types, not just
+    // DOMElementImpl.
+    DOMElementImpl *pE = const_cast<DOMElementImpl *>(static_cast<const DOMElementImpl *>(p));
     return &(pE->fNode);
 }
 
 
 static inline DOMParentNode *castToParentImpl(const DOMNode *p) {
-    DOMElementImpl *pE = (DOMElementImpl *)p;
+    // Note: hairy cast which is used for all node types, not just
+    // DOMElementImpl.
+    DOMElementImpl *pE = const_cast<DOMElementImpl *>(static_cast<const DOMElementImpl *>(p));
     return &(pE->fParent);
 }
 
 
 static inline DOMChildNode *castToChildImpl(const DOMNode *p) {
-    DOMElementImpl *pE = (DOMElementImpl *)p;
+    // Note: hairy cast which is used for all node types, not just
+    // DOMElementImpl.
+    DOMElementImpl *pE = const_cast<DOMElementImpl *>(static_cast<const DOMElementImpl *>(p));
     if (pE->fNode.isLeafNode())  {
-        DOMTextImpl *pT = (DOMTextImpl *)p;
+        // Note: hairy cast which is used for all leaf node types, not just
+        // DOMTextImpl.
+        DOMTextImpl *pT = const_cast<DOMTextImpl *>(static_cast<const DOMTextImpl *>(p));
         return &(pT->fChild);
     }
     return &(pE->fChild);
@@ -121,14 +129,14 @@ static inline DOMNode *castToNode(const DOMParentNode *p ) {
 	DOMElementImpl* dummy = 0;
     XMLSize_t parentOffset = (char *)&(dummy->fParent) - (char *)dummy;
     char *retPtr = (char *)p - parentOffset;
-    return (DOMNode *)retPtr;
+    return reinterpret_cast<DOMNode *>(retPtr);
 }
 
 static inline DOMNode *castToNode(const DOMNodeImpl *p) {
 	DOMElementImpl* dummy = 0;
     XMLSize_t nodeImplOffset = (char *)&(dummy->fNode) - (char *)dummy;
     char *retPtr = (char *)p - nodeImplOffset;
-    return (DOMNode *)retPtr;
+    return reinterpret_cast<DOMNode *>(retPtr);
 }
 
 
@@ -138,7 +146,7 @@ static inline DOMNodeImpl *castToNodeImpl(const DOMParentNode *p)
     XMLSize_t nodeImplOffset = (char *)&(dummy->fNode) - (char *)dummy;
     XMLSize_t parentOffset = (char *)&(dummy->fParent) - (char *)dummy;
     char *retPtr = (char *)p - parentOffset + nodeImplOffset;
-    return (DOMNodeImpl *)retPtr;
+    return reinterpret_cast<DOMNodeImpl *>(retPtr);
 }
 
 XERCES_CPP_NAMESPACE_END
