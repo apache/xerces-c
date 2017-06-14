@@ -71,9 +71,9 @@ void ParseErrorHandler::error(const SAXParseException& e)
     char* systemId = XMLString::transcode(e.getSystemId());
     char* message = XMLString::transcode(e.getMessage());
 
-    fprintf(stderr, "\nError at file \"%s\", line %d, char %d:  %s\n",
-        systemId, e.getLineNumber(),
-        e.getColumnNumber(), message);
+    fprintf(stderr, "\nError at file \"%s\", line %llu, char %llu:  %s\n",
+            systemId, (unsigned long long) e.getLineNumber(),
+            (unsigned long long) e.getColumnNumber(), message);
 
     XMLString::release(&systemId);
     XMLString::release(&message);
@@ -86,9 +86,9 @@ void ParseErrorHandler::fatalError(const SAXParseException& e)
     char* systemId = XMLString::transcode(e.getSystemId());
     char* message = XMLString::transcode(e.getMessage());
 
-    fprintf(stderr, "\nFatal Error at file \"%s\", line %d, char %d:  %s\n",
-        systemId, e.getLineNumber(),
-        e.getColumnNumber(), message);
+    fprintf(stderr, "\nFatal Error at file \"%s\", line %llu, char %llu:  %s\n",
+            systemId, (unsigned long long) e.getLineNumber(),
+            (unsigned long long) e.getColumnNumber(), message);
 
     XMLString::release(&systemId);
     XMLString::release(&message);
@@ -100,9 +100,9 @@ void ParseErrorHandler::warning(const SAXParseException& e)
     char* systemId = XMLString::transcode(e.getSystemId());
     char* message = XMLString::transcode(e.getMessage());
 
-    fprintf(stderr, "\nWarning at file \"%s\", line %d, char %d:  %s\n",
-        systemId, e.getLineNumber(),
-        e.getColumnNumber(), message);
+    fprintf(stderr, "\nWarning at file \"%s\", line %llu, char %llu:  %s\n",
+            systemId, (unsigned long long) e.getLineNumber(),
+            (unsigned long long) e.getColumnNumber(), message);
 
     XMLString::release(&systemId);
     XMLString::release(&message);
@@ -337,7 +337,8 @@ static bool  processTestFile(const XMLCh* fileName)
             if (rawIndex < rawUData.getLen())
             {
                 fprintf(stderr, "Test file \"%s\": Bad hex number in udata element.  "
-                    "Data character number %d\n", cFileName, uData.getLen());
+                        "Data character number %llu\n", cFileName,
+                        (unsigned long long) uData.getLen());
                 return false;
             }
     }
