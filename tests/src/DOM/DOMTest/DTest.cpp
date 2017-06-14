@@ -4956,7 +4956,7 @@ class ParserSkipper : public DOMLSParserFilter
 public:
     ParserSkipper() : fCallbackCalls(0) { }
 
-    virtual FilterAction acceptNode(DOMNode* node) { fCallbackCalls++; return DOMLSParserFilter::FILTER_ACCEPT;}
+    virtual FilterAction acceptNode(DOMNode* /* node */) { fCallbackCalls++; return DOMLSParserFilter::FILTER_ACCEPT;}
     virtual FilterAction startElement(DOMElement* node) 
     {
         XMLCh elem[]={chLatin_e, chLatin_l, chLatin_e, chLatin_m, chNull };
@@ -4997,7 +4997,7 @@ bool DOMTest::testLSExceptions() {
     {
         ParserAborter aborter;
         domBuilder->setFilter(&aborter);
-        DOMDocument* doc=domBuilder->parse(input);
+        domBuilder->parse(input);
 
         fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
         OK=false;
@@ -5015,7 +5015,7 @@ bool DOMTest::testLSExceptions() {
     {
         ParserNester nester(domBuilder, input);
         domBuilder->setFilter(&nester);
-        DOMDocument* doc=domBuilder->parse(input);
+        domBuilder->parse(input);
 
         fprintf(stderr, "checking testLSExceptions failed at line %i\n",  __LINE__);
         OK=false;
