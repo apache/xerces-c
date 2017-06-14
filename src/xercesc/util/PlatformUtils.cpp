@@ -34,7 +34,7 @@
 #if HAVE_SYS_TIME_H
 #	include <sys/time.h>
 #endif
-#if HAVE_SYS_TIMEB_H
+#if !HAVE_GETTIMEOFDAY && HAVE_SYS_TIMEB_H
 #	include <sys/timeb.h>
 #endif
 #if HAVE_CPUID_H && !XERCES_HAVE_INTRIN_H
