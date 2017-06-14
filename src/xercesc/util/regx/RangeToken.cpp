@@ -97,6 +97,7 @@ struct ExceptionCharsStruct
 };
 
 
+#if !(XERCES_USE_TRANSCODER_ICU && ((U_ICU_VERSION_MAJOR_NUM > 2) || (U_ICU_VERSION_MAJOR_NUM == 2 && U_ICU_VERSION_MINOR_NUM >=4)))
 // This is an array of character mappings that we will
 // add to ranges for case-insensitive matching.
 static const ExceptionCharsStruct   s_exceptions[] =
@@ -148,6 +149,7 @@ static const ExceptionCharsStruct   s_exceptions[] =
     { 0x1e60, 0x1e9b },
     { 0x1e61, 0x1e9b }
 };
+#endif
 
 // ---------------------------------------------------------------------------
 //  RangeToken: Getter methods
