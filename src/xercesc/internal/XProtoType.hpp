@@ -86,7 +86,7 @@ XSerializable* class_name::createObject(MemoryManager*) \
 
 #define IMPL_XPROTOTYPE_INSTANCE(class_name) \
 XProtoType class_name::class##class_name = \
-{(XMLByte*) #class_name, class_name::createObject };
+{const_cast<XMLByte*>(reinterpret_cast<const XMLByte *>(#class_name)), class_name::createObject };
 
 XERCES_CPP_NAMESPACE_END
 
