@@ -66,7 +66,7 @@ XMLUTF16Transcoder::transcodeFrom(  const   XMLByte* const       srcData
     const XMLSize_t countToDo = srcChars < maxChars ? srcChars : maxChars;
 
     // Look at the source data as UTF16 chars
-    const UTF16Ch* asUTF16 = (const UTF16Ch*)srcData;
+    const UTF16Ch* asUTF16 = reinterpret_cast<const UTF16Ch*>(srcData);
 
     // And get a mutable pointer to the output
     XMLCh* outPtr = toFill;
@@ -139,7 +139,7 @@ XMLUTF16Transcoder::transcodeTo(const   XMLCh* const    srcData
     //  that we need to work with. And get a mutable pointer to the source
     //  character buffer.
     //
-    UTF16Ch*        outPtr = (UTF16Ch*)toFill;
+    UTF16Ch*        outPtr = reinterpret_cast<UTF16Ch*>(toFill);
     const XMLCh*    srcPtr = srcData;
 
     //

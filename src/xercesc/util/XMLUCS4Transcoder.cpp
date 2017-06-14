@@ -60,7 +60,7 @@ XMLUCS4Transcoder::transcodeFrom(const  XMLByte* const          srcData
     //  Get pointers to the start and end of the source buffer in terms of
     //  UCS-4 characters.
     //
-    const UCS4Ch*   srcPtr = (const UCS4Ch*)srcData;
+    const UCS4Ch*   srcPtr = reinterpret_cast<const UCS4Ch*>(srcData);
     const UCS4Ch*   srcEnd = srcPtr + (srcCount / sizeof(UCS4Ch));
 
     //
@@ -157,7 +157,7 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
     //  Get pointers to the start and end of the target buffer, in terms
     //  of UCS-4 chars.
     //
-    UCS4Ch*   outPtr = (UCS4Ch*)toFill;
+    UCS4Ch*   outPtr = reinterpret_cast<UCS4Ch*>(toFill);
     UCS4Ch*   outEnd = outPtr + (maxBytes / sizeof(UCS4Ch));
 
     //
