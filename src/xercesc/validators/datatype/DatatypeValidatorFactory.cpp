@@ -78,46 +78,8 @@ const XMLCh fgIntegerPattern[] =
     chOpenSquare, chDigit_0, chDash, chDigit_9, chCloseSquare, chPlus, chNull
 };
 
-//"\\i\\c*"
-const XMLCh fgNamePattern[] =
-{
-    chBackSlash, chLatin_i, chBackSlash, chLatin_c, chAsterisk, chNull
-};
-
-//"[\\i-[:]][\\c-[:]]*"
-const XMLCh fgNCNamePattern[] =
-{
-    chOpenSquare, chBackSlash, chLatin_i, chDash, chOpenSquare, chColon, chCloseSquare,
-    chCloseSquare, chOpenSquare, chBackSlash, chLatin_c, chDash, chOpenSquare,
-    chColon, chCloseSquare, chCloseSquare, chAsterisk, chNull
-};
 
 
-
-const XMLCh fgP0Y[] =
-{
-    chLatin_P, chDigit_0, chLatin_Y, chNull
-};
-
-const XMLCh fgP1Y[] =
-{
-    chLatin_P, chDigit_1, chLatin_Y, chNull
-};
-
-const XMLCh fgP100Y[] =
-{
-    chLatin_P, chDigit_1, chDigit_0, chDigit_0, chLatin_Y, chNull
-};
-
-const XMLCh fgPT24H[] =
-{
-    chLatin_P, chLatin_T, chDigit_2, chDigit_4, chLatin_H, chNull
-};
-
-const XMLCh fgP1M[] =
-{
-    chLatin_P, chDigit_1, chLatin_M, chNull
-};
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Static member data
