@@ -22,6 +22,8 @@
 option(threads "Threading support" ON)
 
 if(threads)
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
+  add_definitions(-D_THREAD_SAFE)
   find_package(Threads)
 
   if(TARGET Threads::Threads)
