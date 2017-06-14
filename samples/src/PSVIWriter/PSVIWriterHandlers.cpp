@@ -1628,7 +1628,7 @@ const XMLCh* PSVIWriterHandlers::getIdName(XSObject* obj) {
 		fIdMap->put(objLoc, idName);
 		fObjectLocations->addElement(objLoc);
 	} else {
-		delete objLoc;
+		delete[] objLoc;
 	}
 	return idName;
 }
