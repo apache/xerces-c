@@ -129,11 +129,6 @@ static const XMLCh  gXMLDecl_VersionInfo[] =
     chLatin_n,   chEqual,    chDoubleQuote, chNull
 };
 
-static const XMLCh gXMLDecl_ver10[] =
-{
-    chDigit_1, chPeriod, chDigit_0, chNull
-};
-
 //encoding="
 static const XMLCh  gXMLDecl_EncodingDecl[] =
 {
