@@ -165,10 +165,10 @@ public :
 #ifdef XERCES_HAVE_SSE2_INTRINSIC
             if(XMLPlatformUtils::fgSSE2ok)
             {
-                __m128i xmm1 = _mm_loadu_si128((__m128i*)fBits);
-                __m128i xmm2 = _mm_loadu_si128((__m128i*)setToOr.fBits);
+                __m128i xmm1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(fBits));
+                __m128i xmm2 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(setToOr.fBits));
                 __m128i xmm3 = _mm_or_si128(xmm1, xmm2);     //  OR  4 32-bit words
-                _mm_storeu_si128((__m128i*)fBits, xmm3);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(fBits), xmm3);
             }
             else
 #endif
@@ -207,10 +207,10 @@ public :
                         {
                             for(XMLSize_t subIndex = 0; subIndex < CMSTATE_BITFIELD_INT32_SIZE; subIndex+=4)
                             {
-                               __m128i xmm1 = _mm_load_si128((__m128i*)&other[subIndex]);
-                               __m128i xmm2 = _mm_load_si128((__m128i*)&mine[subIndex]);
+                               __m128i xmm1 = _mm_load_si128(reinterpret_cast<const __m128i*>(&other[subIndex]));
+                               __m128i xmm2 = _mm_load_si128(reinterpret_cast<const __m128i*>(&mine[subIndex]));
                                __m128i xmm3 = _mm_or_si128(xmm1, xmm2);     //  OR  4 32-bit words
-                               _mm_store_si128((__m128i*)&mine[subIndex], xmm3);
+                               _mm_store_si128(reinterpret_cast<__m128i*>(&mine[subIndex]), xmm3);
                             }
                         }
                         else
