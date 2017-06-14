@@ -28,6 +28,13 @@ endif(POLICY CMP0053)
 if (POLICY CMP0054)
   cmake_policy(SET CMP0054 NEW)
 endif(POLICY CMP0054)
+if (POLICY CMP0067)
+  cmake_policy(SET CMP0067 NEW)
+endif(POLICY CMP0067)
+
+# Try C++14, then fall back to C++11 and C++98.  Used for feature tests
+# for optional features.
+set(CMAKE_CXX_STANDARD 14)
 
 # Use folders (for IDE project grouping)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
