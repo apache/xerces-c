@@ -69,7 +69,7 @@ static XMLCh szFive[]={ chDigit_5, chNull };
 // ---------------------------------------------------------------------------
 //  XMLHarnessHandlers: Implementation of the SAX DocumentHandler interface
 // ---------------------------------------------------------------------------
-void XMLHarnessHandlers::startElement(const XMLCh* const uri
+void XMLHarnessHandlers::startElement(const XMLCh* const /* uri */
                                    , const XMLCh* const localname
                                    , const XMLCh* const /* qname */
                                    , const Attributes& attrs)
@@ -185,7 +185,7 @@ void XMLHarnessHandlers::startElement(const XMLCh* const uri
     }
 }
 
-void XMLHarnessHandlers::endElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname)
+void XMLHarnessHandlers::endElement(const XMLCh* const /* uri */, const XMLCh* const localname, const XMLCh* const /* qname */)
 {
     if(XMLString::equals(localname, szTestCases))
     {

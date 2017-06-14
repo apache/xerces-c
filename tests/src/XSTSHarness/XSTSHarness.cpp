@@ -224,7 +224,7 @@ public:
     // -----------------------------------------------------------------------
     //  Handlers for the SAX DocumentHandler interface
     // -----------------------------------------------------------------------
-    void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attrs)
+    void startElement(const XMLCh* const /* uri */, const XMLCh* const /* localname */, const XMLCh* const qname, const Attributes& /* attrs */)
     {
         fIsXMLSuite=XMLString::equals(qname, sz_XMLTestSuiteRoot);
         throw fIsXMLSuite;

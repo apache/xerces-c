@@ -154,7 +154,7 @@ public:
     // -----------------------------------------------------------------------
     //  Handlers for the SAX ErrorHandler interface
     // -----------------------------------------------------------------------
-    void warning(const SAXParseException& exc)      {}
+    void warning(const SAXParseException& /* exc */)      {}
     void error(const SAXParseException& exc);
     void fatalError(const SAXParseException& exc);
     void resetErrors()                              { fSawErrors=false; fErrorText.reset(); }
