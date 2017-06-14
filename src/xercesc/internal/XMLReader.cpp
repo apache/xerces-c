@@ -258,7 +258,7 @@ XMLReader::XMLReader(const  XMLCh* const          pubId
             if (fRawBytesAvail < 2)
                 break;
 
-            const UTF16Ch* asUTF16 = (const UTF16Ch*)&fRawByteBuf[fRawBufIndex];
+            const UTF16Ch* asUTF16 = reinterpret_cast<const UTF16Ch*>(&fRawByteBuf[fRawBufIndex]);
             if ((*asUTF16 == chUnicodeMarker) || (*asUTF16 == chSwappedUnicodeMarker))
             {
                 fRawBufIndex += sizeof(UTF16Ch);
@@ -1438,7 +1438,7 @@ void XMLReader::doInitDecode()
             }
 
             // Look at the raw buffer as UCS4 chars
-            const UCS4Ch* asUCS = (const UCS4Ch*)fRawByteBuf;
+            const UCS4Ch* asUCS = reinterpret_cast<const UCS4Ch*>(fRawByteBuf);
 
             while (fRawBufIndex < fRawBytesAvail)
             {
@@ -1561,7 +1561,7 @@ void XMLReader::doInitDecode()
                 break;
 
             XMLSize_t postBOMIndex = 0;
-            const UTF16Ch* asUTF16 = (const UTF16Ch*)&fRawByteBuf[fRawBufIndex];
+            const UTF16Ch* asUTF16 = reinterpret_cast<const UTF16Ch*>(&fRawByteBuf[fRawBufIndex]);
             if ((*asUTF16 == chUnicodeMarker) || (*asUTF16 == chSwappedUnicodeMarker))
             {
                 fRawBufIndex += sizeof(UTF16Ch);
