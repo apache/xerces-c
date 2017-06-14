@@ -768,8 +768,10 @@ void test_dt_decimal()
     const char lex_v_ran64_iv_1[]="18446744073709551616.999";
     const char lex_v_ran64_iv_2[]="999.18446744073709551616";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_1[]="4294967295.999";
     const char lex_v_ran32_v_2[]="999.4294967295";
+#endif
 //    const char lex_v_ran32_iv_1[]="4294967296.999";
 //    const char lex_v_ran32_iv_2[]="999.4294967296";
 
@@ -1339,10 +1341,12 @@ void test_dt_integer()
     const char lex_v_ran64_iv_1[]="+9223372036854775808";
     const char lex_v_ran64_iv_2[]="-9223372036854775809";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_1[]="+2147483647";
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_1[]="+2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;   act_v_ran_v_1.fValue.f_long = (long)1234;
 #if SIZEOF_LONG == 8
@@ -1496,8 +1500,10 @@ void test_dt_nonPositiveInteger()
     const char lex_v_ran64_v_2[]="-9223372036854775808";
     const char lex_v_ran64_iv_2[]="-9223372036854775809";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)-1234;
 #if SIZEOF_LONG == 8
@@ -1642,8 +1648,10 @@ void test_dt_negativeInteger()
     const char lex_v_ran64_v_2[]="-9223372036854775808";
     const char lex_v_ran64_iv_2[]="-9223372036854775809";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)-1234;
 #if SIZEOF_LONG == 8
@@ -1784,10 +1792,12 @@ void test_dt_long()
     const char lex_v_ran64_iv_1[]="+9223372036854775808";
     const char lex_v_ran64_iv_2[]="-9223372036854775809";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_1[]="+2147483647";
     const char lex_v_ran32_v_2[]="-2147483648";
     const char lex_v_ran32_iv_1[]="+2147483648";
     const char lex_v_ran32_iv_2[]="-2147483649";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;     act_v_ran_v_1.fValue.f_long = (long)1234;
 #if SIZEOF_LONG == 8
@@ -2407,8 +2417,10 @@ void test_dt_nonNegativeInteger()
     const char lex_v_ran64_v_2[]="+18446744073709551615";
     const char lex_v_ran64_iv_2[]="+18446744073709551616";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_2[]="4294967295";
     const char lex_v_ran32_iv_2[]="4294967296";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;
 #if SIZEOF_LONG == 8
@@ -2555,10 +2567,12 @@ void test_dt_unsignedLong()
     const char lex_v_ran64_iv_1[]="+18446744073709551616";
     const char lex_v_ran64_iv_2[]="-1";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_1[]="+4294967295";
     const char lex_v_ran32_v_2[]="0";
     const char lex_v_ran32_iv_1[]="4294967296";
     const char lex_v_ran32_iv_2[]="-1";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;
 #if SIZEOF_LONG == 8
@@ -3170,8 +3184,10 @@ void test_dt_positiveInteger()
     const char lex_v_ran64_v_2[]="+18446744073709551615";
     const char lex_v_ran64_iv_2[]="+18446744073709551616";
 
+#if SIZEOF_LONG != 8
     const char lex_v_ran32_v_2[]="4294967295";
     const char lex_v_ran32_iv_2[]="4294967296";
+#endif
 
     XSValue::XSValue_Data act_v_ran_v_1;    act_v_ran_v_1.fValue.f_ulong = (unsigned long)1234;
 #if SIZEOF_LONG == 8
