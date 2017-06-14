@@ -20,13 +20,29 @@
 
 # Integer type checks.
 
+include(CheckCXXSourceCompiles)
 include(CheckIncludeFileCXX)
 include(CheckTypeSize)
 
-check_include_file_cxx(cstdint  HAVE_CSTDINT)
+check_include_file_cxx(cstdint HAVE_CSTDINT)
+
+check_cxx_source_compiles("
+#include <cstdint>
+
+int main() {
+  uint32_t v1 = 342;
+  int64_t v2 = -23;
+  return 0;
+}" CSTDINT_FUNCTIONAL)
+
 check_include_file_cxx(stdint.h HAVE_STDINT_H)
 check_include_file_cxx(inttypes.h HAVE_INTTYPES_H)
-set(XERCES_HAVE_CSTDINT ${HAVE_CSTDINT})
+
+if(HAVE_CSTDINT AND CSTDINT_FUNCTIONAL)
+  set(XERCES_HAVE_CSTDINT TRUE)
+else()
+  set(XERCES_HAVE_CSTDINT FALSE)
+endif()
 set(XERCES_HAVE_STDINT_H ${HAVE_STDINT_H})
 set(XERCES_HAVE_INTTYPES_H ${HAVE_INTTYPES_H})
 
