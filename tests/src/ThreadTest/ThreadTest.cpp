@@ -751,6 +751,13 @@ void ThreadParser::domCheckSum(const DOMNode *node)
                 domCheckSum(child);
             break;
         }
+    case DOMNode::ENTITY_NODE:
+    case DOMNode::PROCESSING_INSTRUCTION_NODE:
+    case DOMNode::COMMENT_NODE:
+    case DOMNode::DOCUMENT_TYPE_NODE:
+    case DOMNode::DOCUMENT_FRAGMENT_NODE:
+    case DOMNode::NOTATION_NODE:
+        break;
     }
 }
 
