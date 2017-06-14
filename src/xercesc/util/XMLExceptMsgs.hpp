@@ -8,6 +8,12 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// Ignore warning about private constructor
+#ifdef __GNUC__
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wctor-dtor-privacy"
+#endif
+
 class XMLExcepts
 {
 public :
@@ -391,6 +397,10 @@ private:
     // -----------------------------------------------------------------------
     XMLExcepts();
 };
+
+#ifdef __GNUC__
+#  pragma GCC diagnostic pop
+#endif
 
 XERCES_CPP_NAMESPACE_END
 
