@@ -40,7 +40,6 @@
 XERCES_CPP_NAMESPACE_USE
 
 static const XMLCh fgSpace[] = { chSpace, chNull };
-static const XMLCh fgRoot[] = { chLatin_r, chLatin_o, chLatin_o, chLatin_t, chNull };
 static const XMLCh fgChar[] = { chSpace, chLatin_C, chLatin_h, chLatin_a, chLatin_r, chNull }; // char
 static const XMLCh fgLine[] = { chSpace, chLatin_L, chLatin_i, chLatin_n, chLatin_e, chNull }; // line
 static const XMLCh fgError[] = { chLatin_E, chLatin_r, chLatin_r, chLatin_o, chLatin_r, chNull }; //Error
@@ -76,7 +75,6 @@ static const XMLCh gEqualsQuote[] = { chEqual, chDoubleQuote, chNull };
 static const XMLCh gAngleSlash[] = { chOpenAngle, chForwardSlash, chNull };
 static const XMLCh gAngleFeed[] = { chCloseAngle, chLF, chNull };
 static const XMLCh gSlashAngleFeed[] = { chForwardSlash, chCloseAngle, chLF, chNull };
-static const XMLCh gQuoteAngleFeed[] = { chDoubleQuote, chCloseAngle, chLF, chNull };
 
 static const XMLCh gActualValue[] = { chLatin_a, chLatin_c, chLatin_t, chLatin_u, chLatin_a,
                                       chLatin_l, chLatin_V, chLatin_a, chLatin_l, chLatin_u,
