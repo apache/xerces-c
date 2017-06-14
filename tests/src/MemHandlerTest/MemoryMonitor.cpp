@@ -382,7 +382,9 @@ int main (int argC,  char *argV[])
                     DOMTreeWalker* pWalker=doc->createTreeWalker(doc->getDocumentElement(), DOMNodeFilter::SHOW_TEXT, NULL, true);
 	                DOMText* textNode=(DOMText*)pWalker->nextNode();
                     pWalker->release();
-                    const XMLCh* txt=(textNode!=NULL?textNode->getWholeText():NULL);
+                    // this isn't stored or used, but might throw as part of the test?
+                    if (textNode!=NULL)
+                        textNode->getWholeText();
                 }
                 sax2parser->parse(xmlFile);
                 saxParser->parse(xmlFile);
