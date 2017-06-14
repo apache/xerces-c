@@ -32,7 +32,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
 AC_CONFIG_FILES([Makefile \
                  src/Makefile \
-                 src/xercesc/util/MsgLoaders/MsgCatalog/Makefile \
                  tests/Makefile \
                  samples/Makefile \
 		 xerces-c.pc])

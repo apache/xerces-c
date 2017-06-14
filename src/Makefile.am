@@ -22,7 +22,6 @@
 include ${top_srcdir}/version.incl
 
 DEFS += -DXERCES_BUILDING_LIBRARY
-SUBDIRS =
 
 #
 #
@@ -151,7 +150,19 @@ if XERCES_USE_MSGLOADER_ICONV
 libxerces_c_la_SOURCES += ${msgiconv_sources}
 nobase_libxerces_c_la_HEADERS += ${msgiconv_headers}
 
-SUBDIRS += xercesc/util/MsgLoaders/MsgCatalog
+# Resource shortname
+PKGNAME=XercesMessages
+
+# Resource file
+RESFILE=$(PKGNAME)_en_US.cat
+
+# Resources
+XercesMessages_en_US.cat: @srcdir@/xercesc/util/MsgLoaders/MsgCatalog/XercesMessages_en_US.Msg
+	@echo "generating $@ from @srcdir@/xercesc/util/MsgLoaders/MsgCatalog/XercesMessages_en_US.Msg"
+	gencat $@ @srcdir@/xercesc/util/MsgLoaders/MsgCatalog/XercesMessages_en_US.Msg
+
+iconv_msgdir=$(prefix)/msg
+iconv_msg_DATA = $(RESFILE)
 endif
 
 
