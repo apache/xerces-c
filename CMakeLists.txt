@@ -90,6 +90,7 @@ set(EXTRA_DIST
 )
 
 include(GNUInstallDirs)
+include(XercesWarnings)
 include(XercesIncludes)
 include(XercesFunctions)
 include(XercesDLL)

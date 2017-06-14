@@ -35,12 +35,22 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
    CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(test_flags
       -Wall
-      -Winline
-      -W
-      -Wformat-security
-      -Wpointer-arith
-      -Wdisabled-optimization
-      -Wno-unknown-pragmas
+      -Wcast-align
+      -Wcast-qual
+      -Wctor-dtor-privacy
+      -Wextra
+      -Wformat=2
+      -Wimplicit-atomic-properties
+      -Wmissing-declarations
+      -Wno-long-long
+      -Woverlength-strings
+      -Woverloaded-virtual
+      -Wredundant-decls
+      -Wreorder
+      -Wswitch-default
+      -Wunused-variable
+      -Wwrite-strings
+      -Wno-variadic-macros
       -fstrict-aliasing)
   if(extra-warnings)
     list(APPEND test_flags
