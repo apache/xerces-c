@@ -76,7 +76,7 @@ void EncodingValidator::initializeRegistry() {
     fEncodingRegistry = new ValueHashTableOf<bool>(109);
 
     for (unsigned int i=0; i < gEncodingArraySize; i++) {
-        fEncodingRegistry->put((void*) gEncodingArray[i], true);
+        fEncodingRegistry->put(const_cast<void *>(reinterpret_cast<const void *>(gEncodingArray[i])), true);
     }
 }
 
