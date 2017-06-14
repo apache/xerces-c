@@ -589,7 +589,7 @@ XMLCh* DOMLSSerializerImpl::writeToString(const DOMNode* nodeToWrite, MemoryMana
     }
 
     setFeature(BYTE_ORDER_MARK_ID, bBOMFlag);
-    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer(), manager) : 0);
+    return (retVal ? XMLString::replicate(reinterpret_cast<const XMLCh*>(destination.getRawBuffer()), manager) : 0);
 }
 
 //
