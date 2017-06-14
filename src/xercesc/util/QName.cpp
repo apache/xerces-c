@@ -181,10 +181,10 @@ const XMLCh* QName::getRawName() const
             {
                 fMemoryManager->deallocate(fRawName); //delete [] fRawName;
 
-                ((QName*)this)->fRawName = 0;
+                (const_cast<QName*>(this))->fRawName = 0;
                 // We have to cast off the const'ness to do this
-                ((QName*)this)->fRawNameBufSz = neededLen;
-                ((QName*)this)->fRawName = (XMLCh*) fMemoryManager->allocate
+                (const_cast<QName*>(this))->fRawNameBufSz = neededLen;
+                (const_cast<QName*>(this))->fRawName = (XMLCh*) fMemoryManager->allocate
                 (
                     (neededLen + 1) * sizeof(XMLCh)
                 ); //new XMLCh[neededLen + 1];
@@ -239,8 +239,8 @@ XMLCh* QName::getRawName()
                 
                 fRawName = 0;
                 // We have to cast off the const'ness to do this
-                ((QName*)this)->fRawNameBufSz = neededLen;
-                ((QName*)this)->fRawName = (XMLCh*) fMemoryManager->allocate
+                (const_cast<QName*>(this))->fRawNameBufSz = neededLen;
+                (const_cast<QName*>(this))->fRawName = (XMLCh*) fMemoryManager->allocate
                 (
                     (neededLen + 1) * sizeof(XMLCh)
                 ); //new XMLCh[neededLen + 1];
