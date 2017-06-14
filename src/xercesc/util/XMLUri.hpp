@@ -628,7 +628,7 @@ inline const XMLCh* XMLUri::getUriText() const
     //  we have to cast off the constness.
     //
     if (!fURIText)
-        ((XMLUri*)this)->buildFullText();
+        (const_cast<XMLUri *>(this))->buildFullText();
 
     return fURIText;
 }
