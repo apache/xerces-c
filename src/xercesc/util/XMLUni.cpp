@@ -342,7 +342,7 @@ const XMLCh XMLUni::fgUnknownURIName[] =
     ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c
     ,   chLatin_h, chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g
     ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chForwardSlash
-    ,   chLatin_U, chLatin_k, chLatin_n, chLatin_o, chLatin_w, chLatin_n
+    ,   chLatin_U, chLatin_n, chLatin_k, chLatin_n, chLatin_o, chLatin_w, chLatin_n
     ,   chLatin_N, chLatin_S, chNull
 };
 
