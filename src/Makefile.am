@@ -58,7 +58,8 @@ nodist_autoconfheaders_HEADERS = ${top_builddir}/src/xercesc/util/Xerces_autocon
 EXTRA_DIST = CMakeLists.txt \
         XercesCConfig.cmake.in \
         stricmp.h strnicmp.h towlower.h towupper.h \
-        xercesc/util/Xerces_autoconf_config.hpp.cmake.in
+        xercesc/util/Xerces_autoconf_config.hpp.cmake.in \
+	xercesc/util/MsgLoaders/Win32
 
 libxerces_c_la_LIBADD = ${LTLIBOBJS}
 
