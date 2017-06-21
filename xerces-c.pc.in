@@ -7,4 +7,5 @@ Name: Xerces-C++
 Description: Validating XML parser library for C++
 Version: @VERSION@
 Libs: -L${libdir} -lxerces-c
+Libs.private: @CURL_LIBS@
 Cflags: -I${includedir}
