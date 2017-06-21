@@ -81,7 +81,7 @@ static const XMLCh gEscapeChars[XMLFormatter::EscapeFlags_Count][kEscapeCount] =
         { chNull      , chNull       , chNull        , chNull       , chNull        , chNull    , chNull }
     ,   { chAmpersand , chCloseAngle , chDoubleQuote , chOpenAngle  , chSingleQuote , chNull    , chNull }
     ,   { chAmpersand , chOpenAngle  , chDoubleQuote , chLF         , chCR          , chHTab    , chNull }
-    ,   { chAmpersand , chOpenAngle  , chCloseAngle  , chNull       , chNull        , chNull    , chNull }
+    ,   { chAmpersand , chOpenAngle  , chCloseAngle  , chCR         , chNull        , chNull    , chNull }
 };
 
 // ---------------------------------------------------------------------------
