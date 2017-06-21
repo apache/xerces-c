@@ -1173,7 +1173,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fSchemaInfoList->removeAll ();
 
     // fModel may need updating, as fGrammarResolver could have cleaned it
-    if(fModel && getPSVIHandler())
+    if(getPSVIHandler())
         fModel = fGrammarResolver->getXSModel();
 
     {
