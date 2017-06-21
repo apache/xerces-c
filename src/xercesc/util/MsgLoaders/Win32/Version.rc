@@ -35,8 +35,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,0
- PRODUCTVERSION 3,1,0,0
+ FILEVERSION 3,2,0,0
+ PRODUCTVERSION 3,2,0,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG
@@ -53,15 +53,15 @@ BEGIN
         BEGIN
             VALUE "Comments", "Dynamic linked library for Xerces-C++\0"
             VALUE "CompanyName", "Apache Software Foundation\0"
-            VALUE "FileDescription", "Shared Library for Xerces-C++ Version 3.1.0\0"
-            VALUE "FileVersion", "3, 1, 0\0"
-            VALUE "InternalName", "xerces-c_3_1.dll\0"
-            VALUE "LegalCopyright", "Copyright © 1999-2014 Apache Software Foundation; subject to licensing terms\0"
+            VALUE "FileDescription", "Shared Library for Xerces-C++ Version 3.2.0\0"
+            VALUE "FileVersion", "3, 2, 0\0"
+            VALUE "InternalName", "xerces-c_3_2.dll\0"
+            VALUE "LegalCopyright", "Copyright © 1999-2017 Apache Software Foundation; subject to licensing terms\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "xerces-c_3_1.dll\0"
+            VALUE "OriginalFilename", "xerces-c_3_2.dll\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Xerces-C++ Version 3.1.0\0"
-            VALUE "ProductVersion", "3, 1, 0\0"
+            VALUE "ProductName", "Xerces-C++ Version 3.2.0\0"
+            VALUE "ProductVersion", "3, 2, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END

@@ -1,6 +1,6 @@
 Summary:	Xerces-C++ validating XML parser
 Name:		xerces-c
-Version:	3.1.0
+Version:	3.2.0
 Release:	1
 URL:		http://xerces.apache.org/xerces-c/
 Source0:	%{name}-%{version}.tar.gz
@@ -73,6 +73,9 @@ manipulating, and validating XML documents.
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Jun 20 2017 Scott Cantor <cantor.2@osu.edu>
+- Bumped version to 3.2.0
+
 * Fri Mar  7 2008 Boris Kolpackov <boris@codesynthesis.com>
 - Integrated updates for 3.0.0 from Scott Cantor.
 
