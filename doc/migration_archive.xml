@@ -21,6 +21,8 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto312">Migrating from &XercesCName; 3.1.1 to 3.1.2</link></li>
+        <li><link anchor="Migrateto311">Migrating from &XercesCName; 3.1.0 to 3.1.1</link></li>
         <li><link anchor="Migrateto310">Migrating from &XercesCName; 3.0.1 to 3.1.0</link></li>
         <li><link anchor="Migrateto301">Migrating from &XercesCName; 3.0.0 to 3.0.1</link></li>
 	<li><link anchor="Migrateto300">Migrating from &XercesCName; 2.8.0 to 3.0.0</link></li>
@@ -38,6 +40,18 @@
         <li><link anchor="Migrateto152">Migrating from &XercesCName; 1.4.0 to 1.5.2</link></li>
         <li><link anchor="Migrateto140">Migrating from XML4C 2.x to 1.4.0</link></li>
       </ul>
+    </s2>
+
+    <anchor name="Migrateto312"/>
+    <s2 title="Migrating from &XercesCName; 3.1.1 to &XercesCName; 3.1.2">
+      <p>&XercesCName; 3.1.2 is a bugfix-only release and is
+         binary-compatible with &XercesCName; 3.1.1.</p>
+    </s2>
+
+    <anchor name="Migrateto311"/>
+    <s2 title="Migrating from &XercesCName; 3.1.0 to &XercesCName; 3.1.1">
+      <p>&XercesCName; 3.1.1 is a bugfix-only release and is
+         binary-compatible with &XercesCName; 3.1.0.</p>
     </s2>
 
     <anchor name="Migrateto310"/>

@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,17 +18,21 @@
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="Migration">
-    <s2 title="Migration Archive">
+<s1 title="Future Releases Plan">
 
-       <p>For migration information on earlier versions of &XercesCName;
-          please refer to <link idref="migrate-archive-&XercesC3Series;">Migration Archive</link>.</p>
+<s2 title="&XercesCName; Future Releases Plan">
+<p>This document highlights the release plan for &XercesCName;.</p>
 
-    </s2>
+<s3 title="Current Status"><p>&XercesCName; &XercesCLatest; - released on June 29, 2016.</p></s3>
 
-    <s2 title="Migrating from &XercesCName; 3.1.2 to &XercesCName; &XercesC3Version;">
-      <p>&XercesCName; &XercesC3Version; is a bugfix-only release and is
-         binary-compatible with &XercesCName; 3.1.2.</p>
-    </s2>
+<s3 title="Next Target Release">
+        <p>There are feature additions checked into the trunk for
+        inclusion in a future 3.2.0 release, but there is no timetable
+        for this release.</p>
+
+	<p>There will be no further releases in the Xerces-C++ 2-series.</p>
+</s3>
+
+</s2>
 
 </s1>

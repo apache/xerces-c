@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0"  encoding="iso-8859-1" standalone="no"?>
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,17 +18,27 @@
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="Migration">
-    <s2 title="Migration Archive">
+<s1 title="Releases">
 
-       <p>For migration information on earlier versions of &XercesCName;
-          please refer to <link idref="migrate-archive-&XercesC3Series;">Migration Archive</link>.</p>
+<s2 title="Releases Plan">
+<p> For future release plan about &XercesCName;,
+please refer to <jump href="releases_plan.html">Releases Plan</jump>.
+</p>
+</s2>
 
-    </s2>
+<s2 title="Releases Archive">
 
-    <s2 title="Migrating from &XercesCName; 3.1.2 to &XercesCName; &XercesC3Version;">
-      <p>&XercesCName; &XercesC3Version; is a bugfix-only release and is
-         binary-compatible with &XercesCName; 3.1.2.</p>
-    </s2>
+    <p>For information about earlier &XercesCName; releases,
+       refer to the <jump href="releases_archive.html">Releases Archive</jump>.
+    </p>
+</s2>
+
+<s2 title="Release Information for &XercesCName; &XercesCLatest;">
+
+<p>For a list of bug fixes in &XercesCName; &XercesCLatest;, see the
+<jump href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10510&amp;version=12336069">Release Notes</jump>
+</p>
+
+</s2>
 
 </s1>
