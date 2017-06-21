@@ -1219,7 +1219,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     if ((curNode->getType() == ContentSpecNode::Choice)
                     ||  (curNode->getType() == ContentSpecNode::Sequence))
                     {
-                        if (!curNode->getSecond())
+                        if (!curNode->getSecond() && lastNode)
                         {
                             ContentSpecNode* saveFirst = curNode->orphanFirst();
                             lastNode->setSecond(saveFirst);

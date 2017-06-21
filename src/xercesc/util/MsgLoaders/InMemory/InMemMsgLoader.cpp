@@ -101,6 +101,8 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
             return false;
          else
              srcPtr = gXMLDOMMsgArray[msgToLoad - 1];
+    } else {
+	return false;
     }
 
      while (*srcPtr && (outPtr < endPtr))
