@@ -19,7 +19,7 @@
 
 # Definitions required for building
 add_definitions(
-  -DHAVE_CONFIG_H
+  -DHAVE_CONFIG_H=1
 )
 
 # Search the project binary dir for config.h

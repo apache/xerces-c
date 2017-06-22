@@ -1238,8 +1238,8 @@ endif()
 
 # Definitions required for building
 add_definitions(
-  -DHAVE_CONFIG_H
-  -DXERCES_BUILDING_LIBRARY
+  -DHAVE_CONFIG_H=1
+  -DXERCES_BUILDING_LIBRARY=1
 )
 
 # Search the project binary dir for config.h
