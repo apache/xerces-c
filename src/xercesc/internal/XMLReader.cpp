@@ -1442,6 +1442,39 @@ void XMLReader::doInitDecode()
 
             while (fRawBufIndex < fRawBytesAvail)
             {
+                // Make sure there are at least sizeof(UCS4Ch) bytes to consume.
+                if (fRawBufIndex + sizeof(UCS4Ch) > fRawBytesAvail) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
                 // Get out the current 4 byte value and inc our raw buf index
                 UCS4Ch curVal = *asUCS++;
                 fRawBufIndex += sizeof(UCS4Ch);
@@ -1517,6 +1550,23 @@ void XMLReader::doInitDecode()
             {
                 const char curCh = *asChars++;
                 fRawBufIndex++;
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
 
                 // Looks ok, so store it
                 fCharSizeBuf[fCharsAvail] = 1;
@@ -1601,6 +1651,39 @@ void XMLReader::doInitDecode()
 
             while (fRawBufIndex < fRawBytesAvail)
             {
+                // Make sure there are at least sizeof(UTF16Ch) bytes to consume.
+                if (fRawBufIndex + sizeof(UTF16Ch) > fRawBytesAvail) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
                 // Get out the current 2 byte value
                 UTF16Ch curVal = *asUTF16++;
                 fRawBufIndex += sizeof(UTF16Ch);
@@ -1635,6 +1718,24 @@ void XMLReader::doInitDecode()
                 // Transcode one char from the source
                 const XMLCh chCur = XMLEBCDICTranscoder::xlatThisOne(*srcPtr++);
                 fRawBufIndex++;
+
+                // Make sure we don't exhaust the limited prolog buffer size.
+                // Leave room for a space added at the end of this function.
+                if (fCharsAvail == kCharBufSize - 1) {
+                    fCharsAvail = 0;
+                    fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
+                    ThrowXMLwithMemMgr1
+                    (
+                        TranscodingException
+                        , XMLExcepts::Reader_CouldNotDecodeFirstLine
+                        , fSystemId
+                        , fMemoryManager
+                    );
+                }
+
 
                 //
                 //  And put it into the character buffer. This stuff has to
@@ -1690,6 +1791,17 @@ void XMLReader::doInitDecode()
 //
 void XMLReader::refreshRawBuffer()
 {
+    // Make sure we don't underflow on the subtraction.
+    if (fRawBufIndex > fRawBytesAvail) {
+        ThrowXMLwithMemMgr1
+        (
+            RuntimeException
+            , XMLExcepts::Str_StartIndexPastEnd
+            , fSystemId
+            , fMemoryManager
+        );
+    }
+
     //
     //  If there are any bytes left, move them down to the start. There
     //  should only ever be (max bytes per char - 1) at the most.
