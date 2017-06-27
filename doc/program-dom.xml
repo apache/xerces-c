@@ -1054,6 +1054,22 @@
             <p/>
 
             <table>
+                <tr><th colspan="2"><em>disallow-doctype</em></th></tr>
+                <tr><th><em>true:</em></th><td>Throw a fatal "doctype-not-allowed" error if a doctype node
+                is found while parsing the document. This is useful when dealing with things like SOAP
+                envelopes where doctype nodes are not allowed.</td></tr>
+                <tr><th><em>false:</em></th><td>Allow doctype nodes in the document.</td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMDisallowDoctype </td></tr>
+                <tr><th><em>see:</em></th><td>
+                <jump href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407">
+                DOM Level 3.0 Load and Save Specification</jump>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
                 <tr><th colspan="2"><em>entities</em></th></tr>
                 <tr><th><em>true:</em></th><td> Create EntityReference nodes in the DOM tree.   The
                 EntityReference nodes and their child nodes will be read-only. </td></tr>
