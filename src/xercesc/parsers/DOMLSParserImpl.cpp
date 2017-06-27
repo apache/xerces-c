@@ -257,7 +257,7 @@ void DOMLSParserImpl::setParameter(const XMLCh* name, bool state)
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0)
     {
-        // TODO
+        getScanner()->setDisallowDTD(state);
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0)
     {
@@ -445,8 +445,7 @@ const void* DOMLSParserImpl::getParameter(const XMLCh* name) const
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0)
     {
-        // TODO
-        return 0;
+        return (void*)getScanner()->getDisallowDTD();
     }
     else if (XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0)
     {
@@ -666,6 +665,7 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, const void* /*value*/) 
 bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
 {
     if (XMLString::compareIStringASCII(name, XMLUni::fgDOMCharsetOverridesXMLEncoding) == 0 ||
+        XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMNamespaces) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMValidate) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgDOMValidateIfSchema) == 0 ||
@@ -695,8 +695,7 @@ bool DOMLSParserImpl::canSetParameter(const XMLCh* name, bool value) const
 		XMLString::compareIStringASCII(name, XMLUni::fgXercesDoXInclude) == 0 ||
         XMLString::compareIStringASCII(name, XMLUni::fgXercesHandleMultipleImports) == 0)
       return true;
-    else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMDisallowDoctype) == 0 ||
-            XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||
+    else if(XMLString::compareIStringASCII(name, XMLUni::fgDOMIgnoreUnknownCharacterDenormalization) == 0 ||
             XMLString::compareIStringASCII(name, XMLUni::fgDOMCanonicalForm) == 0 ||
             XMLString::compareIStringASCII(name, XMLUni::fgDOMCDATASections) == 0 ||
             XMLString::compareIStringASCII(name, XMLUni::fgDOMCheckCharacterNormalization) == 0 ||

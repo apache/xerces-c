@@ -1272,7 +1272,7 @@ void XMLScanner::scanProlog()
                     }
 
                     const char* envvar = getenv("XERCES_DISABLE_DTD");
-                    if (envvar && !strcmp(envvar, "1")) {
+                    if (fDisallowDTD || (envvar && !strcmp(envvar, "1"))) {
                     	emitError(XMLErrs::InvalidDocumentStructure);
                     }
                     else {

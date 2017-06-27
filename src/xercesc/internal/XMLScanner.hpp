@@ -261,6 +261,7 @@ public :
     XMLCh* getExternalSchemaLocation() const;
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
     SecurityManager* getSecurityManager() const;
+    bool getDisallowDTD() const;
     bool getLoadExternalDTD() const;
     bool getLoadSchema() const;
     bool getNormalizeData() const;
@@ -375,6 +376,7 @@ public :
     void setExternalSchemaLocation(const char* const schemaLocation);
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
     void setSecurityManager(SecurityManager* const securityManager);
+    void setDisallowDTD(const bool disallowDTD);
     void setLoadExternalDTD(const bool loadDTD);
     void setLoadSchema(const bool loadSchema);
     void setNormalizeData(const bool normalizeData);
@@ -721,6 +723,9 @@ protected:
     //      The number of general entities expanded so far in this document.
     //      Only meaningful when fSecurityManager != null
     //
+    //  fDisallowDTD
+    //      This flag indicates whether the presence of a DTD should be fatal
+    //
     //  fLoadExternalDTD
     //      This flag indicates whether the external DTD be loaded or not
     //
@@ -772,6 +777,7 @@ protected:
     bool                        fIdentityConstraintChecking;
     bool                        fToCacheGrammar;
     bool                        fUseCachedGrammar;
+    bool                        fDisallowDTD;
     bool                        fLoadExternalDTD;
     bool                        fLoadSchema;
     bool                        fNormalizeData;
@@ -1070,6 +1076,11 @@ inline SecurityManager* XMLScanner::getSecurityManager() const
     return fSecurityManager;
 }
 
+inline bool XMLScanner::getDisallowDTD() const
+{
+    return fDisallowDTD;
+}
+
 inline bool XMLScanner::getLoadExternalDTD() const
 {
     return fLoadExternalDTD;
@@ -1300,6 +1311,11 @@ inline void XMLScanner::setSecurityManager(SecurityManager* const securityManage
         fEntityExpansionLimit = securityManager->getEntityExpansionLimit();
         fEntityExpansionCount = 0;
     }
+}
+
+inline void XMLScanner::setDisallowDTD(const bool disallowDTD)
+{
+    fDisallowDTD = disallowDTD;
 }
 
 inline void XMLScanner::setLoadExternalDTD(const bool loadDTD)
