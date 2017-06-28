@@ -64,6 +64,7 @@ static void usage()
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
+            "    -d          Disallow DOCTYPE. Defaults to false.\n"
             "    -locale=ll_CC specify the locale, default: en_US.\n"
             "    -p          Print out names of elements and attributes encountered.\n"
 		    "    -?          Show this help.\n\n"
@@ -142,6 +143,7 @@ int main(int argC, char* argV[])
     bool                       doNamespaces       = false;
     bool                       doSchema           = false;
     bool                       schemaFullChecking = false;
+    bool                       disallowDoctype    = false;
     bool                       doList = false;
     bool                       errorOccurred = false;
     bool                       recognizeNEL = false;
@@ -198,6 +200,11 @@ int main(int argC, char* argV[])
               ||  !strcmp(argV[argInd], "-L"))
         {
             doList = true;
+        }
+         else if (!strcmp(argV[argInd], "-d")
+              ||  !strcmp(argV[argInd], "-D"))
+        {
+            disallowDoctype = true;
         }
          else if (!strcmp(argV[argInd], "-special:nel"))
         {
@@ -270,6 +277,7 @@ int main(int argC, char* argV[])
     config->setParameter(XMLUni::fgXercesSchema, doSchema);
     config->setParameter(XMLUni::fgXercesHandleMultipleImports, true);
     config->setParameter(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+    config->setParameter(XMLUni::fgDOMDisallowDoctype, disallowDoctype);
 
     if (valScheme == AbstractDOMParser::Val_Auto)
     {
