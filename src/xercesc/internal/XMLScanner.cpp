@@ -100,6 +100,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fIdentityConstraintChecking(true)
     , fToCacheGrammar(false)
     , fUseCachedGrammar(false)
+    , fDisallowDTD(false)
     , fLoadExternalDTD(true)
     , fLoadSchema(true)
     , fNormalizeData(true)
@@ -201,7 +202,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fIdentityConstraintChecking(true)
     , fToCacheGrammar(false)
     , fUseCachedGrammar(false)
-	, fLoadExternalDTD(true)
+    , fDisallowDTD(false)
+    , fLoadExternalDTD(true)
     , fLoadSchema(true)
     , fNormalizeData(true)
     , fGenerateSyntheticAnnotations(false)
@@ -663,6 +665,7 @@ void XMLScanner::setParseSettings(XMLScanner* const refScanner)
     setValidationSchemaFullChecking(refScanner->getValidationSchemaFullChecking());
     cacheGrammarFromParse(refScanner->isCachingGrammarFromParse());
     useCachedGrammarInParse(refScanner->isUsingCachedGrammarInParse());
+    setDisallowDTD(refScanner->getDisallowDTD());
     setLoadExternalDTD(refScanner->getLoadExternalDTD());
     setLoadSchema(refScanner->getLoadSchema());
     setNormalizeData(refScanner->getNormalizeData());
