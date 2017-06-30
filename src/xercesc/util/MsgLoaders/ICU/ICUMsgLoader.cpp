@@ -51,8 +51,8 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  The application (this *.cpp) references that symbol here, and will pass the data address to ICU, which
  *  will then  be able to fetch resources from the data.
  */
-#define ENTRY_POINT xercesc_messages_3_1_dat
-#define BUNDLE_NAME "xercesc_messages_3_1"
+#define ENTRY_POINT xercesc_messages_3_2_dat
+#define BUNDLE_NAME "xercesc_messages_3_2"
 
 extern "C" void U_IMPORT *ENTRY_POINT;
 
