@@ -27,7 +27,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
-    : fNode(ownerDoc), fName(0), fPublicId(0), fSystemId(0), fBaseURI(0)
+    : fNode(this, ownerDoc), fName(0), fPublicId(0), fSystemId(0), fBaseURI(0)
 {
     fNode.setIsLeafNode(true);
     fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(nName);
@@ -35,7 +35,7 @@ DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
 
 DOMNotationImpl::DOMNotationImpl(const DOMNotationImpl &other, bool /*deep*/)
     : DOMNotation(other),
-      fNode(other.fNode),
+      fNode(this, other.fNode),
       fName(other.fName),
       fPublicId(other.fPublicId),
       fSystemId(other.fSystemId),
@@ -174,6 +174,9 @@ const XMLCh* DOMNotationImpl::getBaseURI() const
            bool             DOMNotationImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMNotationImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMNotationImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMNotationImpl);
 
 
 XERCES_CPP_NAMESPACE_END

@@ -43,7 +43,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMAttr;
 
 DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
-    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0), fDefaultAttributes(0)
+    : fNode(this, ownerDoc), fParent(this, ownerDoc), fAttributes(0), fDefaultAttributes(0)
 {
     DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
     fName = docImpl->getPooledString(eName);
@@ -60,8 +60,8 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 
 DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
     : DOMElement(other),
-      fNode (other.fParent.fOwnerDocument),
-      fParent (other.fParent.fOwnerDocument),
+      fNode(this, other.fParent.fOwnerDocument),
+      fParent(this, other.fParent.fOwnerDocument),
       fAttributes(0),
       fDefaultAttributes(0)
 {
@@ -579,7 +579,10 @@ const XMLCh* DOMElementImpl::getBaseURI() const
            const XMLCh*     DOMElementImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMElementImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
 
-
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMElementImpl);
+DOMPARENTIMPL_IMPL(DOMElementImpl);
+DOMCHILDIMPL_IMPL(DOMElementImpl);
 
 bool DOMElementImpl::isEqualNode(const DOMNode* arg) const
 {

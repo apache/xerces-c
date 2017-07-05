@@ -32,7 +32,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          const XMLCh *entityName)
-    : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
+    : fNode(this, ownerDoc), fParent(this, ownerDoc), fBaseURI(0)
 {
     fName = ((DOMDocumentImpl*)fParent.fOwnerDocument)->getPooledString(entityName);
     // EntityReference behaves as a read-only node, since its contents
@@ -61,7 +61,7 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
 DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
                                          const XMLCh *entityName,
                                          bool cloneChild)
-    : fNode(ownerDoc), fParent(ownerDoc), fBaseURI(0)
+    : fNode(this, ownerDoc), fParent(this, ownerDoc), fBaseURI(0)
 {
     fName = ((DOMDocumentImpl*)fParent.fOwnerDocument)->getPooledString(entityName);
     // EntityReference behaves as a read-only node, since its contents
@@ -88,11 +88,10 @@ DOMEntityReferenceImpl::DOMEntityReferenceImpl(DOMDocument *ownerDoc,
     fNode.setReadOnly(true, true);
 }
 
-DOMEntityReferenceImpl::DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other,
-                                         bool deep)
+DOMEntityReferenceImpl::DOMEntityReferenceImpl(const DOMEntityReferenceImpl &other, bool deep)
     : DOMEntityReference(other),
-      fNode(other.fNode),
-      fParent(other.fParent),
+      fNode(this, other.fNode),
+      fParent(this, other.fParent),
       fChild(other.fChild),
       fName(other.fName),
       fBaseURI(other.fBaseURI)
@@ -219,5 +218,10 @@ const XMLCh* DOMEntityReferenceImpl::getBaseURI() const
            bool             DOMEntityReferenceImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMEntityReferenceImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMEntityReferenceImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMEntityReferenceImpl);
+DOMPARENTIMPL_IMPL(DOMEntityReferenceImpl);
+DOMCHILDIMPL_IMPL(DOMEntityReferenceImpl);
 
 XERCES_CPP_NAMESPACE_END

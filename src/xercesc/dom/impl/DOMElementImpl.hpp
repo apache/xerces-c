@@ -36,6 +36,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 
+#include "DOMNodeBase.hpp"
 #include "DOMChildNode.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMParentNode.hpp"
@@ -52,7 +53,8 @@ class DOMDocument;
 
 
 
-class CDOM_EXPORT DOMElementImpl: public DOMElement {
+class CDOM_EXPORT DOMElementImpl: public DOMElement,
+        public HasDOMNodeImpl, public HasDOMParentImpl, public HasDOMChildImpl {
 public:
     DOMNodeImpl       fNode;
     DOMParentNode     fParent;
@@ -70,6 +72,11 @@ public:
 public:
     // Declare functions from DOMNode.  They all must be implemented by this class
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMPARENTIMPL_DECL;
+    DOMCHILDIMPL_DECL;
 
 public:
     // Functions introduced on Element...

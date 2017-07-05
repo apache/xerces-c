@@ -33,120 +33,75 @@
 
 //
 //  Define inline casting functions to convert from
-//    (DOMNode *) to DOMParentNode or DOMChildNode *.
+//    (DOMNode*) to the embedded instances of DOMNodeImpl,
+//    DOMParentNode, and DOMChildNode.
 //
-//  This requires knowledge of the structure of the fields of
-//   for all node types.  There are three categories -
+//  Each type of embedded object corresponds to a HasXXX virtual
+//  interface class that a given DOM implementation class will
+//  support to expose its embedded object(s) to other implementation
+//  classes.
 //
-//  Nodetypes that can have children and can be a child themselves.
-//    e.g.  Elements
-//
-//       Object
-//           DOMNodeImpl     fNode;
-//           DOMParentNode   fParent;
-//           DOMChildNode    fChild;
-//             ...            // other fields, depending on node type.
-//
-//  Nodetypes that can not have children, e.g. TEXT
-//
-//       Object
-//           DOMNodeImpl     fNode;
-//           DOMChildNode    fChild;
-//              ...            // other fields, depending on node type
-//
-//  Nodetypes that can not be a child of other nodes, but that can
-//  have children (are a parent)  e.g. ATTR
-//       Object
-//           DOMNodeImpl     fNode;
-//           DOMParentNode   fParent
-//               ...           // other fields, depending on node type
-//
-//   The casting functions make these assumptions:
-//      1.  The cast is possible.  Using code will not attempt to
-//          cast to something that does not exist, such as the child
-//          part of an ATTR
-//
-//      2.  The nodes belong to this implementation.
-//
-//    Some of the casts use the LEAFNODE flag in the common fNode part to
-//    determine whether an fParent field exists, and thus the
-//    position of the fChild part within the node.
-//
-//  These functions also cast off const.  It was either do that, or make
-//  a second overloaded set that took and returned const arguements.
+//  This replaces the previous implementation that relied upon unsafe
+//  casts and member offsets that rely on unspecified behavior in C++,
+//  with a hopefully small cost in memory and performance.
 //
 
-//
-//	Note that using offsetof, or taking the offset of an object member at
-//	a 0 address, is now undefined in C++. And gcc now warns about this behavior.
-//	This is because doing do so is unreliable for some types of objects.
-//		See: http://gcc.gnu.org/ml/gcc/2004-06/msg00227.html
-//		   : http://gcc.gnu.org/ml/gcc-bugs/2000-03/msg00805.html
-//  The casting code below works around gcc's warnings by using a dummy
-//	pointer, which the compiler cannot tell is null. The defeats the warning,
-//	but also masks the potential problem.
-//	The gcc option -Wno-invalid-offsetof may also be used to turn off this warning.
-//
-
+#include <xercesc/dom/DOMException.hpp>
+#include "DOMNodeBase.hpp"
 #include "DOMElementImpl.hpp"
 #include "DOMTextImpl.hpp"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-static inline DOMNodeImpl *castToNodeImpl(const DOMNode *p)
+static inline const DOMNodeImpl *castToNodeImpl(const DOMNode *p)
 {
-    // Note: hairy cast which is used for all node types, not just
-    // DOMElementImpl.
-    DOMElementImpl *pE = const_cast<DOMElementImpl *>(static_cast<const DOMElementImpl *>(p));
-    return &(pE->fNode);
-}
-
-
-static inline DOMParentNode *castToParentImpl(const DOMNode *p) {
-    // Note: hairy cast which is used for all node types, not just
-    // DOMElementImpl.
-    DOMElementImpl *pE = const_cast<DOMElementImpl *>(static_cast<const DOMElementImpl *>(p));
-    return &(pE->fParent);
-}
-
-
-static inline DOMChildNode *castToChildImpl(const DOMNode *p) {
-    // Note: hairy cast which is used for all node types, not just
-    // DOMElementImpl.
-    DOMElementImpl *pE = const_cast<DOMElementImpl *>(static_cast<const DOMElementImpl *>(p));
-    if (pE->fNode.isLeafNode())  {
-        // Note: hairy cast which is used for all leaf node types, not just
-        // DOMTextImpl.
-        DOMTextImpl *pT = const_cast<DOMTextImpl *>(static_cast<const DOMTextImpl *>(p));
-        return &(pT->fChild);
+    const HasDOMNodeImpl* pE = dynamic_cast<const HasDOMNodeImpl*>(p);
+    if (!pE || !pE->getNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     }
-    return &(pE->fChild);
+    return pE->getNodeImpl();
 }
 
-
-static inline DOMNode *castToNode(const DOMParentNode *p ) {
-	DOMElementImpl* dummy = 0;
-    XMLSize_t parentOffset = (char *)&(dummy->fParent) - (char *)dummy;
-    char *retPtr = (char *)p - parentOffset;
-    return reinterpret_cast<DOMNode *>(retPtr);
-}
-
-static inline DOMNode *castToNode(const DOMNodeImpl *p) {
-	DOMElementImpl* dummy = 0;
-    XMLSize_t nodeImplOffset = (char *)&(dummy->fNode) - (char *)dummy;
-    char *retPtr = (char *)p - nodeImplOffset;
-    return reinterpret_cast<DOMNode *>(retPtr);
-}
-
-
-static inline DOMNodeImpl *castToNodeImpl(const DOMParentNode *p)
+static inline DOMNodeImpl *castToNodeImpl(DOMNode *p)
 {
-	DOMElementImpl* dummy = 0;
-    XMLSize_t nodeImplOffset = (char *)&(dummy->fNode) - (char *)dummy;
-    XMLSize_t parentOffset = (char *)&(dummy->fParent) - (char *)dummy;
-    char *retPtr = (char *)p - parentOffset + nodeImplOffset;
-    return reinterpret_cast<DOMNodeImpl *>(retPtr);
+    HasDOMNodeImpl *pE = dynamic_cast<HasDOMNodeImpl*>(p);
+    if (!pE || !pE->getNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+    }
+    return pE->getNodeImpl();
+}
+
+static inline const DOMParentNode *castToParentImpl(const DOMNode *p) {
+    const HasDOMParentImpl *pE = dynamic_cast<const HasDOMParentImpl*>(p);
+    if (!pE || !pE->getParentNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+    }
+    return pE->getParentNodeImpl();
+}
+
+static inline DOMParentNode *castToParentImpl(DOMNode *p) {
+    HasDOMParentImpl *pE = dynamic_cast<HasDOMParentImpl*>(p);
+    if (!pE || !pE->getParentNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+    }
+    return pE->getParentNodeImpl();
+}
+
+static inline const DOMChildNode *castToChildImpl(const DOMNode *p) {
+    const HasDOMChildImpl *pE = dynamic_cast<const HasDOMChildImpl*>(p);
+    if (!pE || !pE->getChildNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+    }
+    return pE->getChildNodeImpl();
+}
+
+static inline DOMChildNode *castToChildImpl(DOMNode *p) {
+    HasDOMChildImpl *pE = dynamic_cast<HasDOMChildImpl*>(p);
+    if (!pE || !pE->getChildNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+    }
+    return pE->getChildNodeImpl();
 }
 
 XERCES_CPP_NAMESPACE_END

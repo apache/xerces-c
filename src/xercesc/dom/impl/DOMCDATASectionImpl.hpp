@@ -34,6 +34,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMCDATASection.hpp>
+#include "DOMNodeBase.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
 #include "DOMParentNode.hpp"
@@ -42,7 +43,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection {
+class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection, public HasDOMNodeImpl, public HasDOMChildImpl {
 protected:
     DOMNodeImpl           fNode;
     DOMChildNode          fChild;
@@ -70,6 +71,10 @@ public:
 public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMCHILDIMPL_DECL;
 
 public:
     // Functions introduced by DOMCharacterData

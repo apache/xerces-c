@@ -31,20 +31,47 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-DOMParentNode::DOMParentNode(DOMDocument *ownerDoc)
-    : fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(this)
+DOMParentNode::DOMParentNode(DOMNode* containingNode, DOMDocument *ownerDoc)
+    : fContainingNode(containingNode), fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(this)
 {
+    if (!fContainingNode) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeMemoryManager);
+    }
 }
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
-DOMParentNode::DOMParentNode(const DOMParentNode &other)  :
-    fChildNodeList(this)
+DOMParentNode::DOMParentNode(DOMNode* containingNode, const DOMParentNode &other)  :
+    fContainingNode(containingNode), fChildNodeList(this)
 {
+    if (!fContainingNode) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeMemoryManager);
+    }
+
     this->fOwnerDocument = other.fOwnerDocument;
 
     // Need to break the association w/ original kids
     this->fFirstChild = 0;
+}
+
+DOMParentNode::~DOMParentNode() {
+
+}
+
+DOMNode* DOMParentNode::getContainingNode() {
+    return fContainingNode;
+}
+
+const DOMNode* DOMParentNode::getContainingNode() const {
+    return fContainingNode;
+}
+
+const DOMNodeImpl* DOMParentNode::getContainingNodeImpl() const {
+    const HasDOMNodeImpl* p = dynamic_cast<const HasDOMNodeImpl*>(getContainingNode());
+    if (!p || !p->getNodeImpl()) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeMemoryManager);
+    }
+    return p->getNodeImpl();
 }
 
 void DOMParentNode::changed()
@@ -141,7 +168,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     if(newChild==NULL)
         throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
 
-    DOMNodeImpl *thisNodeImpl = castToNodeImpl(this);
+    const DOMNodeImpl *thisNodeImpl = getContainingNodeImpl();
     if (thisNodeImpl->isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMParentNodeMemoryManager);
 
@@ -152,7 +179,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     //only need to do this if the node has children
     if(newChild->hasChildNodes()) {
         bool treeSafe=true;
-        for(DOMNode *a=castToNode(this)->getParentNode();
+        for(DOMNode *a=getContainingNode()->getParentNode();
             treeSafe && a!=0;
             a=a->getParentNode())
             treeSafe=(newChild!=a);
@@ -161,7 +188,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     }
 
     // refChild must in fact be a child of this node (or 0)
-    if (refChild!=0 && refChild->getParentNode() != castToNode(this))
+    if (refChild!=0 && refChild->getParentNode() != getContainingNode())
         throw DOMException(DOMException::NOT_FOUND_ERR,0, GetDOMParentNodeMemoryManager);
 
     // if the new node has to be placed before itself, we don't have to do anything
@@ -192,14 +219,14 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
               kid!=0;
               kid=kid->getNextSibling())
         {
-            if (!DOMDocumentImpl::isKidOK(castToNode(this), kid))
+            if (!DOMDocumentImpl::isKidOK(getContainingNode(), kid))
               throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
         }
         while(newChild->hasChildNodes())     // Move
-            castToNode(this)->insertBefore(newChild->getFirstChild(),refChild);
+            getContainingNode()->insertBefore(newChild->getFirstChild(),refChild);
     }
 
-    else if (!DOMDocumentImpl::isKidOK(castToNode(this), newChild))
+    else if (!DOMDocumentImpl::isKidOK(getContainingNode(), newChild))
         throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0, GetDOMParentNodeMemoryManager);
 
     else
@@ -209,7 +236,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
             oldparent->removeChild(newChild);
 
         // Attach up
-        castToNodeImpl(newChild)->fOwnerNode = castToNode(this);
+        castToNodeImpl(newChild)->fOwnerNode = getContainingNode();
         castToNodeImpl(newChild)->isOwned(true);
 
         // Attach before and after
@@ -271,11 +298,11 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
 
 DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
 {
-    if (castToNodeImpl(this)->isReadOnly())
+    if (getContainingNodeImpl()->isReadOnly())
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0, GetDOMParentNodeMemoryManager);
 
-    if (oldChild == 0 || oldChild->getParentNode() != castToNode(this))
+    if (oldChild == 0 || oldChild->getParentNode() != getContainingNode())
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, GetDOMParentNodeMemoryManager);
 
     if (fOwnerDocument !=  0) {
@@ -364,7 +391,7 @@ DOMNode * DOMParentNode::appendChildFast(DOMNode *newChild)
     //
 
     // Attach up
-    castToNodeImpl(newChild)->fOwnerNode = castToNode(this);
+    castToNodeImpl(newChild)->fOwnerNode = getContainingNode();
     castToNodeImpl(newChild)->isOwned(true);
 
     // Attach before and after
@@ -427,10 +454,10 @@ void DOMParentNode::normalize()
 
 bool DOMParentNode::isEqualNode(const DOMNode* arg) const
 {
-    if (arg && castToNodeImpl(this)->isSameNode(arg))
+    if (arg && getContainingNodeImpl()->isSameNode(arg))
         return true;
 
-    if (arg && castToNodeImpl(this)->isEqualNode(arg))
+    if (arg && getContainingNodeImpl()->isEqualNode(arg))
     {
         DOMNode *kid, *argKid;
         for (kid = fFirstChild, argKid = arg->getFirstChild();

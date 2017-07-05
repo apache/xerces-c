@@ -31,7 +31,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMAttrImpl::DOMAttrImpl(DOMDocument *ownerDoc, const XMLCh *aName)
-    : fNode(ownerDoc), fParent (ownerDoc), fSchemaType(0)
+    : fNode(this, ownerDoc), fParent(this, ownerDoc), fSchemaType(0)
 {
     DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
     fName = docImpl->getPooledString(aName);
@@ -40,8 +40,8 @@ DOMAttrImpl::DOMAttrImpl(DOMDocument *ownerDoc, const XMLCh *aName)
 
 DOMAttrImpl::DOMAttrImpl(const DOMAttrImpl &other, bool /*deep*/)
     : DOMAttr(other)
-    , fNode(other.fNode)
-    , fParent (other.fParent)
+    , fNode(this, other.fNode)
+    , fParent(this, other.fParent)
     , fName(other.fName)
     , fSchemaType(other.fSchemaType)
 {
@@ -358,5 +358,9 @@ void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
            const XMLCh*     DOMAttrImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMAttrImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMAttrImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMAttrImpl);
+DOMPARENTIMPL_IMPL(DOMAttrImpl);
 
 XERCES_CPP_NAMESPACE_END

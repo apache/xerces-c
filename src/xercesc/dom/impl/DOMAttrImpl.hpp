@@ -33,6 +33,7 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
+#include "DOMNodeBase.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMDocumentImpl.hpp"
@@ -45,7 +46,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMElementImpl;
 class DOMTypeInfoImpl;
 
-class CDOM_EXPORT DOMAttrImpl: public DOMAttr {
+class CDOM_EXPORT DOMAttrImpl: public DOMAttr, public HasDOMNodeImpl, public HasDOMParentImpl {
 
 public:
     DOMNodeImpl        fNode;
@@ -63,6 +64,10 @@ public:
 public:
      // Add all functions that are pure virtual in DOMNODE
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMPARENTIMPL_DECL;
 
 public:
     virtual const XMLCh *       getName() const;

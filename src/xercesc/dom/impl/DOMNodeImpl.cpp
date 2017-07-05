@@ -76,17 +76,26 @@ void XMLInitializer::terminateDOMNodeListImpl()
 // -----------------------------------------------------------------------
 //  DOMNodeImpl Functions
 // -----------------------------------------------------------------------
-DOMNodeImpl::DOMNodeImpl(DOMNode *ownerNode)
-:  fOwnerNode(ownerNode)
+DOMNodeImpl::DOMNodeImpl(DOMNode* containingNode, DOMNode *ownerNode)
+:  fContainingNode(containingNode), fOwnerNode(ownerNode)
 {
+    if (!fContainingNode) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeMemoryManager);
+    }
+    
     this->flags = 0;
     // as long as we do not have any owner, fOwnerNode is our ownerDocument
 }
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
-DOMNodeImpl::DOMNodeImpl(const DOMNodeImpl &other)
+DOMNodeImpl::DOMNodeImpl(DOMNode* containingNode, const DOMNodeImpl &other)
+    : fContainingNode(containingNode)
 {
+    if (!fContainingNode) {
+        throw DOMException(DOMException::INVALID_STATE_ERR, 0, GetDOMNodeMemoryManager);
+    }
+
     this->flags = other.flags;
     this->isReadOnly(false);
 
@@ -100,6 +109,13 @@ DOMNodeImpl::DOMNodeImpl(const DOMNodeImpl &other)
 DOMNodeImpl::~DOMNodeImpl() {
 }
 
+DOMNode* DOMNodeImpl::getContainingNode() {
+    return fContainingNode;
+}
+
+const DOMNode* DOMNodeImpl::getContainingNode() const {
+    return fContainingNode;
+}
 
 DOMNode * DOMNodeImpl::appendChild(DOMNode *)
 {
@@ -151,8 +167,9 @@ DOMDocument *DOMNodeImpl::getOwnerDocument() const
 {
     if (!this->isLeafNode())
     {
-        DOMElementImpl *ep = (DOMElementImpl *)castToNode(this);
-        return ep->fParent.fOwnerDocument;
+        const DOMNode *ep = getContainingNode();
+        const DOMParentNode* parent = castToParentImpl(getContainingNode());
+        return parent ? parent->fOwnerDocument : 0;
     }
 
     //  Leaf node types - those that cannot have children, like Text.
@@ -236,7 +253,7 @@ void DOMNodeImpl::setReadOnly(bool readOnl, bool deep)
     this->isReadOnly(readOnl);
 
     if (deep) {
-        for (DOMNode *mykid = castToNode(this)->getFirstChild();
+        for (DOMNode *mykid = getContainingNode()->getFirstChild();
             mykid != 0;
             mykid = mykid->getNextSibling()) {
 
@@ -364,7 +381,7 @@ void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType oper
 
 bool DOMNodeImpl::isSameNode(const DOMNode* other) const
 {
-    return (castToNode(this) == other);
+    return (getContainingNode() == other);
 }
 
 bool DOMNodeImpl::isEqualNode(const DOMNode* arg) const
@@ -376,7 +393,7 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg) const
         return true;
     }
 
-    DOMNode* thisNode = castToNode(this);
+    const DOMNode* thisNode = getContainingNode();
 
     if (arg->getNodeType() != thisNode->getNodeType()) {
         return false;
@@ -413,7 +430,7 @@ const XMLCh* DOMNodeImpl::lookupPrefix(const XMLCh* namespaceURI) const {
         return 0;
     }
 
-    DOMNode *thisNode = castToNode(this);
+    const DOMNode *thisNode = getContainingNode();
 
     short type = thisNode->getNodeType();
 
@@ -462,7 +479,7 @@ DOMNode* DOMNodeImpl::getElementAncestor (const DOMNode* currentNode) const {
 
 
 const XMLCh* DOMNodeImpl::lookupPrefix(const XMLCh* const namespaceURI, DOMElement *originalElement) const {
-    DOMNode *thisNode = castToNode(this);
+    const DOMNode *thisNode = getContainingNode();
 
     const XMLCh* ns = thisNode->getNamespaceURI();
     // REVISIT: if no prefix is available is it null or empty string, or
@@ -510,7 +527,7 @@ const XMLCh* DOMNodeImpl::lookupPrefix(const XMLCh* const namespaceURI, DOMEleme
 }
 
 const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const  {
-    DOMNode *thisNode = castToNode(this);
+    const DOMNode *thisNode = getContainingNode();
 
     short type = thisNode->getNodeType();
     switch (type) {
@@ -575,7 +592,7 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
         return 0;
     }
     default:{
-        DOMNode *ancestor = getElementAncestor(castToNode(this));
+        DOMNode *ancestor = getElementAncestor(getContainingNode());
         if (ancestor != 0) {
             return ancestor->lookupNamespaceURI(specifiedPrefix);
         }
@@ -586,7 +603,7 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
 
 
 const XMLCh*     DOMNodeImpl::getBaseURI() const{
-    DOMNode *thisNode = castToNode(this);
+    const DOMNode *thisNode = getContainingNode();
     DOMNode* parent = thisNode->getParentNode();
     if (parent)
         return parent->getBaseURI();
@@ -608,8 +625,8 @@ const DOMNode*   DOMNodeImpl::getTreeParentNode(const DOMNode* node) const {
     return 0;
 }
 
-short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) const {
-    DOMNode* thisNode = castToNode(this);
+short DOMNodeImpl::compareDocumentPosition(const DOMNode* other) const {
+    const DOMNode* thisNode = getContainingNode();
 
     // If the two nodes being compared are the same node, then no flags are set on the return.
     if (thisNode == other)
@@ -639,7 +656,7 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
     // its attribute node and its child node, which both follow it.
 
     const DOMNode* tmpNode;
-    const DOMNode* myRoot = castToNode(this);
+    const DOMNode* myRoot = getContainingNode();
     int myDepth=0;
     while((tmpNode=getTreeParentNode(myRoot))!=0)
     {
@@ -676,7 +693,7 @@ short            DOMNodeImpl::compareDocumentPosition(const DOMNode* other) cons
     // are or contain the corresponding nodes being compared.
 
     // if the two depths are different, go to the same one
-    myRoot = castToNode(this);
+    myRoot = getContainingNode();
     hisRoot = other;
     if (myDepth > hisDepth) {
         for (int i= 0 ; i < myDepth - hisDepth; i++)
@@ -829,7 +846,7 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
 	if (pzBuffer)
 		*pzBuffer = 0;
 
-	DOMNode *thisNode = castToNode(this);
+	const DOMNode *thisNode = getContainingNode();
 
 	switch (thisNode->getNodeType())
 	{
@@ -907,8 +924,8 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, XMLSize_t& rnBuffer
 
 }
 
-void DOMNodeImpl::setTextContent(const XMLCh* textContent){
-    DOMNode *thisNode = castToNode(this);
+void DOMNodeImpl::setTextContent(const XMLCh* textContent) {
+    DOMNode *thisNode = getContainingNode();
     switch (thisNode->getNodeType())
     {
         case DOMNode::ELEMENT_NODE:
@@ -957,8 +974,8 @@ void DOMNodeImpl::setTextContent(const XMLCh* textContent){
 }
 
 
-bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
-	DOMNode *thisNode = castToNode(this);
+bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {
+	const DOMNode *thisNode = getContainingNode();
     short type = thisNode->getNodeType();
     switch (type) {
     case DOMNode::ELEMENT_NODE: {

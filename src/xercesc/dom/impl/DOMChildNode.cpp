@@ -64,7 +64,7 @@ DOMNode * DOMChildNode::getParentNode(const DOMNode *thisNode) const
 {
     // if we have an owner, ownerNode is our parent, otherwise it's
     // our ownerDocument and we don't have a parent
-    DOMNodeImpl *thisNodeImpl = castToNodeImpl(thisNode);
+    const DOMNodeImpl *thisNodeImpl = castToNodeImpl(thisNode);
     return thisNodeImpl->isOwned() ? thisNodeImpl->fOwnerNode : 0;
 }
 

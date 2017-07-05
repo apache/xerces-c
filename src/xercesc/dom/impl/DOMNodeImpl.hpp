@@ -65,6 +65,7 @@ class CDOM_EXPORT DOMNodeImpl {
 public:
 
     // data
+    DOMNode                *fContainingNode; // the impl object that we're contained by
     DOMNode                *fOwnerNode; // typically the parent but not always!
 
     unsigned short flags;
@@ -85,10 +86,18 @@ public:
 
 
 public:
-    DOMNodeImpl(DOMNode *ownerDocument);
-    DOMNodeImpl(const DOMNodeImpl &other);
+    DOMNodeImpl(DOMNode* containingNode, DOMNode *ownerDocument);
+    DOMNodeImpl(DOMNode* containingNode, const DOMNodeImpl &other);
     ~DOMNodeImpl();
 
+private:
+    // Make sure this can't be called to corrupt the containing node ptr.
+    DOMNodeImpl(const DOMNodeImpl &other);
+
+    DOMNode* getContainingNode();
+    const DOMNode* getContainingNode() const;
+
+public:
     DOMNode         * appendChild(DOMNode *newChild);
     DOMNamedNodeMap * getAttributes() const;
     DOMNodeList     * getChildNodes() const;

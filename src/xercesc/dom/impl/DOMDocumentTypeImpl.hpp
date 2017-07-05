@@ -35,6 +35,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
+#include "DOMNodeBase.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
 #include "DOMParentNode.hpp"
@@ -44,7 +45,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class DOMNamedNodeMapImpl;
 
-class CDOM_EXPORT DOMDocumentTypeImpl: public DOMDocumentType {
+class CDOM_EXPORT DOMDocumentTypeImpl: public DOMDocumentType,
+        public HasDOMNodeImpl, public HasDOMParentImpl, public HasDOMChildImpl {
 protected:
     DOMNodeImpl          fNode;
     DOMParentNode        fParent;
@@ -80,6 +82,11 @@ public:
 public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMPARENTIMPL_DECL;
+    DOMCHILDIMPL_DECL;
 
 public:
     virtual void setOwnerDocument(DOMDocument *doc);

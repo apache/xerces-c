@@ -35,6 +35,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMComment.hpp>
 
+#include "DOMNodeBase.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
 #include "DOMCharacterDataImpl.hpp"
@@ -42,7 +43,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DOMCommentImpl: public DOMComment {
+class CDOM_EXPORT DOMCommentImpl: public DOMComment, public HasDOMNodeImpl, public HasDOMChildImpl {
 public:
     DOMNodeImpl            fNode;
     DOMChildNode           fChild;
@@ -56,6 +57,10 @@ public:
 public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMCHILDIMPL_DECL;
 
 public:
     // Functions from DOMCharacterData

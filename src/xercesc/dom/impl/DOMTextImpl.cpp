@@ -44,21 +44,21 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMDocument;
 
 DOMTextImpl::DOMTextImpl(DOMDocument *ownerDoc, const XMLCh *dat)
-    : fNode(ownerDoc), fCharacterData(ownerDoc, dat)
+    : fNode(this, ownerDoc), fCharacterData(ownerDoc, dat)
 {
     fNode.setIsLeafNode(true);
 }
 
 DOMTextImpl::
 DOMTextImpl(DOMDocument *ownerDoc, const XMLCh* dat, XMLSize_t n)
-    : fNode(ownerDoc), fCharacterData(ownerDoc, dat, n)
+    : fNode(this, ownerDoc), fCharacterData(ownerDoc, dat, n)
 {
     fNode.setIsLeafNode(true);
 }
 
 DOMTextImpl::DOMTextImpl(const DOMTextImpl &other, bool)
     : DOMText(other)
-    , fNode(other.fNode)
+    , fNode(this, other.fNode)
     , fCharacterData(other.fCharacterData)
 {
     fNode.setIsLeafNode(true);
@@ -305,6 +305,10 @@ void DOMTextImpl::release()
            const XMLCh*     DOMTextImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMTextImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
 
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMTextImpl);
+DOMCHILDIMPL_IMPL(DOMTextImpl);
 
 
 //

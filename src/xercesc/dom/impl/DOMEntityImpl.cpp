@@ -28,8 +28,8 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
-   : fNode(ownerDoc),
-     fParent(ownerDoc),
+   : fNode(this, ownerDoc),
+     fParent(this, ownerDoc),
      fPublicId(0),
      fSystemId(0),
      fNotationName(0),
@@ -47,8 +47,8 @@ DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 
 DOMEntityImpl::DOMEntityImpl(const DOMEntityImpl &other, bool deep)
     : DOMEntity(other),
-      fNode(other.fNode),
-      fParent(other.fParent),
+      fNode(this, other.fNode),
+      fParent(this, other.fParent),
       fName(other.fName),
       fPublicId(other.fPublicId),
       fSystemId(other.fSystemId),
@@ -263,6 +263,9 @@ void DOMEntityImpl::release()
            const XMLCh*     DOMEntityImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMEntityImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
 
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMEntityImpl);
+DOMPARENTIMPL_IMPL(DOMEntityImpl);
 
 //Introduced in DOM Level 3
 const XMLCh* DOMEntityImpl::getInputEncoding() const {

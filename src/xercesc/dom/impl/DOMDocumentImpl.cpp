@@ -79,8 +79,8 @@ void XMLInitializer::initializeDOMHeap (XMLSize_t initialHeapAllocSize,
 //                             allocate.
 //
 DOMDocumentImpl::DOMDocumentImpl(DOMImplementation* domImpl, MemoryManager* const manager)
-    : fNode(this),
-      fParent(this),
+    : fNode(this, this),
+      fParent(this, this),
       fNodeIDMap(0),
       fInputEncoding(0),
       fXmlEncoding(0),
@@ -122,8 +122,8 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
                                DOMDocumentType *doctype,
                                DOMImplementation* domImpl,
                                MemoryManager* const manager)
-    : fNode(this),
-      fParent(this),
+    : fNode(this, this),
+      fParent(this, this),
       fNodeIDMap(0),
       fInputEncoding(0),
       fXmlEncoding(0),
@@ -709,7 +709,7 @@ void DOMDocumentImpl::removeRange(DOMRangeImpl* range)
     ????? It feels like there must be a more efficient solution,
     but for the life of me I can't think what it would be.
 */
-bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
+bool DOMDocumentImpl::isKidOK(const DOMNode *parent, const DOMNode *child)
 {
       static int kidOK[14];
 
@@ -797,6 +797,9 @@ int             DOMDocumentImpl::changes() const{
            const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
 
 
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMDocumentImpl);
+DOMPARENTIMPL_IMPL(DOMDocumentImpl);
 
 
 //-----------------------------------------------------------------------

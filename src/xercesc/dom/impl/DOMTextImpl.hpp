@@ -35,7 +35,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMText.hpp>
-
+#include "DOMNodeBase.hpp"
 #include "DOMChildNode.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMCharacterDataImpl.hpp"
@@ -43,7 +43,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DOMTextImpl: public DOMText {
+class CDOM_EXPORT DOMTextImpl: public DOMText, public HasDOMNodeImpl, public HasDOMChildImpl {
 public:
     DOMNodeImpl             fNode;
     DOMChildNode            fChild;
@@ -67,6 +67,10 @@ public:
 public:
     // Declare the functions coming from DOMNode.
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMCHILDIMPL_DECL;
 
 public:
     // All of the functions coming from DOMCharacterData

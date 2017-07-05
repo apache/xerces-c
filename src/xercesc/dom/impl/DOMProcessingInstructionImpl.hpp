@@ -34,6 +34,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMProcessingInstruction.hpp>
+#include "DOMNodeBase.hpp"
 #include "DOMCharacterDataImpl.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
@@ -44,7 +45,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 class    DocumentImpl;
 
 
-class CDOM_EXPORT DOMProcessingInstructionImpl: public DOMProcessingInstruction {
+class CDOM_EXPORT DOMProcessingInstructionImpl: public DOMProcessingInstruction,
+        public HasDOMNodeImpl, public HasDOMChildImpl {
 protected:
     DOMNodeImpl   fNode;
     DOMChildNode  fChild;
@@ -65,6 +67,10 @@ public:
 public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMCHILDIMPL_DECL;
 
 public:
     virtual const XMLCh *getData() const;

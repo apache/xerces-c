@@ -40,6 +40,7 @@
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
 #include <xercesc/dom/DOMMemoryManager.hpp>
+#include "DOMNodeBase.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMStringPool.hpp"
 #include "DOMParentNode.hpp"
@@ -79,7 +80,8 @@ typedef RefVectorOf<DOMNodeIteratorImpl>     NodeIterators;
 typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
 typedef RefStackOf<DOMNode>               DOMNodePtr;
 
-class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMMemoryManager, public DOMDocument {
+class CDOM_EXPORT DOMDocumentImpl: public XMemory, public DOMMemoryManager, public DOMDocument,
+        public HasDOMNodeImpl, public HasDOMParentImpl {
 public:
     // -----------------------------------------------------------------------
     //  data
@@ -102,6 +104,10 @@ public:
 public:
     // Add all functions that are pure virtual in DOMNODE
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMPARENTIMPL_DECL;
 
 public:
     // Add all functions that are pure virtual in DOMDocument
@@ -251,7 +257,7 @@ public:
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
     static  int                  indexofQualifiedName(const XMLCh * qName);
-    static  bool                 isKidOK(DOMNode *parent, DOMNode *child);
+    static  bool                 isKidOK(const DOMNode *parent, const DOMNode *child);
 
     inline DOMNodeIDMap*         getNodeIDMap() {return fNodeIDMap;};
 

@@ -33,7 +33,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMEntityReference.hpp>
-
+#include "DOMNodeBase.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMChildNode.hpp"
 #include "DOMNodeImpl.hpp"
@@ -41,7 +41,8 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 
-class CDOM_EXPORT DOMEntityReferenceImpl: public DOMEntityReference
+class CDOM_EXPORT DOMEntityReferenceImpl: public DOMEntityReference,
+        public HasDOMNodeImpl, public HasDOMParentImpl, public HasDOMChildImpl
 {
 protected:
     DOMNodeImpl      fNode;
@@ -62,6 +63,11 @@ public:
 public:
     // Declare all of the functions from DOMNode.
     DOMNODE_FUNCTIONS;
+
+    // Add accessors for implementation bits.
+    DOMNODEIMPL_DECL;
+    DOMPARENTIMPL_DECL;
+    DOMCHILDIMPL_DECL;
     
 public:
     virtual void setReadOnly(bool readOnly,bool deep);

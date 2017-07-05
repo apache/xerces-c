@@ -29,14 +29,14 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(DOMDocument *masterDoc)
-    : fNode(masterDoc), fParent(masterDoc)
+    : fNode(this, masterDoc), fParent(this, masterDoc)
 {
 }
 
 
 DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(const DOMDocumentFragmentImpl &other,
                                            bool deep)
-    : fNode(other.fNode), fParent(other.fParent)
+    : fNode(this, other.fNode), fParent(this, other.fParent)
 {
     if (deep)
         castToParentImpl(this)->cloneChildren(&other);
@@ -133,5 +133,9 @@ void DOMDocumentFragmentImpl::release()
            bool             DOMDocumentFragmentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMDocumentFragmentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMDocumentFragmentImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMDocumentFragmentImpl);
+DOMPARENTIMPL_IMPL(DOMDocumentFragmentImpl);
 
 XERCES_CPP_NAMESPACE_END

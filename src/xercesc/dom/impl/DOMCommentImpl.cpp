@@ -32,7 +32,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 DOMCommentImpl::DOMCommentImpl(DOMDocument *ownerDoc, const XMLCh *dat)
-    : fNode(ownerDoc),  fCharacterData(ownerDoc, dat)
+    : fNode(this, ownerDoc),  fCharacterData(ownerDoc, dat)
 {
     fNode.setIsLeafNode(true);
 }
@@ -40,7 +40,7 @@ DOMCommentImpl::DOMCommentImpl(DOMDocument *ownerDoc, const XMLCh *dat)
 
 DOMCommentImpl::DOMCommentImpl(const DOMCommentImpl &other, bool)
 
-    : fNode(other.fNode),
+    : fNode(this, other.fNode),
     fChild(other.fChild),
     fCharacterData(other.fCharacterData)
 {
@@ -185,5 +185,9 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
                                                                                     {fCharacterData.replaceData(this, offset, count, arg);}
            void             DOMCommentImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);}
            void             DOMCommentImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMCommentImpl);
+DOMCHILDIMPL_IMPL(DOMCommentImpl);
 
 XERCES_CPP_NAMESPACE_END

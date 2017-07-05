@@ -32,24 +32,22 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc,
-                                   const XMLCh *dat)
-    : fNode(ownerDoc), fCharacterData(ownerDoc, dat)
+DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc, const XMLCh *dat)
+    : fNode(this, ownerDoc), fCharacterData(ownerDoc, dat)
 {
     fNode.setIsLeafNode(true);
 }
 
-DOMCDATASectionImpl::
-DOMCDATASectionImpl(DOMDocument *ownerDoc, const XMLCh* data, XMLSize_t n)
-    : fNode(ownerDoc), fCharacterData(ownerDoc, data, n)
+DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc, const XMLCh* data, XMLSize_t n)
+    : fNode(this, ownerDoc), fCharacterData(ownerDoc, data, n)
 {
     fNode.setIsLeafNode(true);
 }
 
 DOMCDATASectionImpl::DOMCDATASectionImpl(const DOMCDATASectionImpl &other, bool /*deep*/)
     : DOMCDATASection(other),
-    fNode(*castToNodeImpl(&other)),
-    fChild(*castToChildImpl(&other)),
+    fNode(this, other.fNode),
+    fChild(other.fChild),
     fCharacterData(other.fCharacterData)
 {
     // revisit.  Something nees to make "deep" work.
@@ -317,5 +315,9 @@ void DOMCDATASectionImpl::release()
                                                                                          {fCharacterData.replaceData(this, offset, count, arg);}
            void             DOMCDATASectionImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);}
            void             DOMCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMCDATASectionImpl);
+DOMCHILDIMPL_IMPL(DOMCDATASectionImpl);
 
 XERCES_CPP_NAMESPACE_END

@@ -60,8 +60,8 @@ void XMLInitializer::terminateDOMDocumentTypeImpl()
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *dtName,
                                    bool heap)
-    : fNode(ownerDoc),
-    fParent(ownerDoc),
+    : fNode(this, ownerDoc),
+    fParent(this, ownerDoc),
     fName(0),
     fEntities(0),
     fNotations(0),
@@ -97,8 +97,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *pubId,
                                    const XMLCh *sysId,
                                    bool heap)
-    : fNode(ownerDoc),
-    fParent(ownerDoc),
+    : fNode(this, ownerDoc),
+    fParent(this, ownerDoc),
     fName(0),
     fEntities(0),
     fNotations(0),
@@ -169,8 +169,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
 
 
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool heap, bool deep)
-    : fNode(other.fNode),
-    fParent(other.fParent),
+    : fNode(this, other.fNode),
+    fParent(this, other.fParent),
     fChild(other.fChild),
     fName(0),
     fEntities(0),
@@ -439,6 +439,11 @@ void DOMDocumentTypeImpl::release()
            const XMLCh*     DOMDocumentTypeImpl::lookupPrefix(const XMLCh* namespaceURI) const  {return fNode.lookupPrefix(namespaceURI); }
            bool             DOMDocumentTypeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMDocumentTypeImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMDocumentTypeImpl);
+DOMPARENTIMPL_IMPL(DOMDocumentTypeImpl);
+DOMCHILDIMPL_IMPL(DOMDocumentTypeImpl);
 
 
 bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const

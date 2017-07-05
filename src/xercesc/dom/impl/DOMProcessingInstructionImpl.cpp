@@ -33,7 +33,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(DOMDocument *ownerDoc,
                                                      const XMLCh *targt,
                                                      const XMLCh *dat)
-    : fNode(ownerDoc), fCharacterData(ownerDoc, dat), fBaseURI(0)
+    : fNode(this, ownerDoc), fCharacterData(ownerDoc, dat), fBaseURI(0)
 {
     fNode.setIsLeafNode(true);
     this->fTarget = ((DOMDocumentImpl *)ownerDoc)->cloneString(targt);
@@ -44,7 +44,7 @@ DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(
                                         const DOMProcessingInstructionImpl &other,
                                         bool /*deep*/)
     : DOMProcessingInstruction(other),
-      fNode(other.fNode),
+      fNode(this, other.fNode),
       fChild(other.fChild),
       fCharacterData(other.fCharacterData),
       fTarget(other.fTarget),
@@ -197,6 +197,10 @@ DOMProcessingInstruction *DOMProcessingInstructionImpl::splitText(XMLSize_t offs
            bool             DOMProcessingInstructionImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
            const XMLCh*     DOMProcessingInstructionImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
            void*            DOMProcessingInstructionImpl::getFeature(const XMLCh* feature, const XMLCh* version) const {return fNode.getFeature(feature, version); }
+
+// Macro-in implementation accessors.
+DOMNODEIMPL_IMPL(DOMProcessingInstructionImpl);
+DOMCHILDIMPL_IMPL(DOMProcessingInstructionImpl);
 
 //
 //   Delegation of CharacerData functions.

@@ -148,6 +148,7 @@ set(domimpl_headers
   xercesc/dom/impl/DOMImplementationListImpl.hpp
   xercesc/dom/impl/DOMLocatorImpl.hpp
   xercesc/dom/impl/DOMNamedNodeMapImpl.hpp
+  xercesc/dom/impl/DOMNodeBase.hpp
   xercesc/dom/impl/DOMNodeIDMap.hpp
   xercesc/dom/impl/DOMNodeImpl.hpp
   xercesc/dom/impl/DOMNodeIteratorImpl.hpp
