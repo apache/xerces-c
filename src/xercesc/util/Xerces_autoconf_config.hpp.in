@@ -49,6 +49,8 @@
 //  These defines are set by configure as appropriate for the platform.
 // ---------------------------------------------------------------------------
 #undef XERCES_AUTOCONF
+#undef XERCES_HAVE_CSTDINT
+#undef XERCES_HAVE_STDINT_H
 #undef XERCES_HAVE_SYS_TYPES_H
 #undef XERCES_HAVE_INTTYPES_H
 #undef XERCES_HAVE_INTRIN_H
@@ -83,6 +85,14 @@
 // ---------------------------------------------------------------------------
 //  Include standard headers, if available, that we may rely on below.
 // ---------------------------------------------------------------------------
+#if defined(__cplusplus) && XERCES_HAVE_CSTDINT
+#	include <cstdint>
+#elif XERCES_HAVE_STDINT_H
+#		if defined(__cplusplus)
+#			define __STDC_LIMIT_MACROS
+#		endif
+#		include <stdint.h>
+#endif
 #if XERCES_HAVE_INTTYPES_H
 #	include <inttypes.h>
 #endif
@@ -98,6 +108,8 @@
 // ---------------------------------------------------------------------------
 typedef XERCES_SIZE_T				XMLSize_t;
 typedef XERCES_SSIZE_T				XMLSSize_t;
+#undef XERCES_SIZE_MAX
+#undef XERCES_SSIZE_MAX
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character

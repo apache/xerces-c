@@ -154,6 +154,24 @@ AC_COMPILE_IFELSE( [AC_LANG_PROGRAM([[#include <limits.h>]],
                     ]
                  )
 
+# Check for functional cstdint header
+AC_MSG_CHECKING([for cstdint])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <cstdint>]],
+[[
+  uint32_t v1 = 342;
+  int64_t v2 = -23;
+  return 0;
+]])],
+                    [
+                      AC_MSG_RESULT([yes])
+                      AC_DEFINE_UNQUOTED([XERCES_HAVE_CSTDINT], 1, [Define to 1 if cstdint is functional.])
+                    ],
+                    [
+                      AC_MSG_RESULT([no])
+                      AC_DEFINE_UNQUOTED([XERCES_HAVE_CSTDINT], 0, [Define to 1 if cstdint is functional.])
+                    ]
+                 )
+
 # The check for mbrlen, wcsrtombs and mbsrtowcs gives a false
 # positive on HP-UX, so we use a different snippet to set the
 # corresponding macro
@@ -286,6 +304,8 @@ AC_ARG_ENABLE(sse2,
 
 AC_DEFINE([XERCES_AUTOCONF], 1, [Define to true if autoconf is used in this configuration])
 
+AS_IF([test x$ac_cv_header_stdint_h = xyes],
+	AC_DEFINE([XERCES_HAVE_STDINT_H], 1, [Define to 1 if we have stdint.h]))
 AS_IF([test x$ac_cv_header_sys_types_h = xyes],
 	AC_DEFINE([XERCES_HAVE_SYS_TYPES_H], 1, [Define to 1 if we have sys/types.h]))
 AS_IF([test x$ac_cv_header_inttypes_h = xyes],
@@ -474,12 +494,16 @@ if test "$have_sse2" = "yes"; then
 fi
 
 AS_IF([test x$ac_cv_type_size_t = xyes],
-	AC_DEFINE([XERCES_SIZE_T], [size_t], [Define as the appropriate size_t type]),
-	AC_DEFINE([XERCES_SIZE_T], [unsigned long], [Define as the appropriate size_t type]))
+	AC_DEFINE([XERCES_SIZE_T], [size_t], [Define as the appropriate size_t type])
+	AC_DEFINE([XERCES_SIZE_MAX], [SIZE_MAX], [Define as the appropriate SIZE_MAX macro]),
+	AC_DEFINE([XERCES_SIZE_T], [unsigned long], [Define as the appropriate size_t type])
+	AC_DEFINE([XERCES_SIZE_MAX], [ULONG_MAX], [Define as the appropriate SIZE_MAX macro]))
 
 AS_IF([test x$ac_cv_type_ssize_t = xyes],
-	AC_DEFINE([XERCES_SSIZE_T], [ssize_t], [Define as the appropriate ssize_t type]),
-	AC_DEFINE([XERCES_SSIZE_T], [long], [Define as the appropriate ssize_t type]))
+	AC_DEFINE([XERCES_SSIZE_T], [ssize_t], [Define as the appropriate ssize_t type])
+	AC_DEFINE([XERCES_SSIZE_MAX], [SSIZE_MAX], [Define as the appropriate SSIZE_MAX macro]),
+	AC_DEFINE([XERCES_SSIZE_T], [long], [Define as the appropriate ssize_t type])
+	AC_DEFINE([XERCES_SSIZE_MAX], [LONG_MAX], [Define as the appropriate SSIZE_MAX macro]))
 
 AS_IF([test x$ac_cv_cxx_have_namespaces = xyes],
 	AC_DEFINE([XERCES_HAS_CPP_NAMESPACE], 1, [Define if namespaces is supported by the compiler]))
