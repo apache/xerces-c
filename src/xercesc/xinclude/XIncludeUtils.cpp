@@ -150,8 +150,8 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
     const XMLCh *parse = NULL;
     const XMLCh *xpointer = NULL;
     const XMLCh *encoding = NULL;
-    const XMLCh *accept = NULL;
-    const XMLCh *acceptlanguage = NULL;
+//    const XMLCh *accept = NULL;
+//    const XMLCh *acceptlanguage = NULL;
     DOMNode *includeParent = xincludeNode->getParentNode();
 
 
@@ -171,10 +171,10 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
                 xpointer = pAttributeNode->getValue();
             } else if (XMLString::equals(attrName, XIncludeUtils::fgXIIncludeEncodingAttrName)){
                 encoding = pAttributeNode->getValue();
-            } else if (XMLString::equals(attrName, XIncludeUtils::fgXIIncludeAcceptAttrName)){
-                accept = pAttributeNode->getValue();
-            } else if (XMLString::equals(attrName, XIncludeUtils::fgXIIncludeAcceptLanguageAttrName)){
-                acceptlanguage = pAttributeNode->getValue();
+//            } else if (XMLString::equals(attrName, XIncludeUtils::fgXIIncludeAcceptAttrName)){
+//                accept = pAttributeNode->getValue();
+//            } else if (XMLString::equals(attrName, XIncludeUtils::fgXIIncludeAcceptLanguageAttrName)){
+//                acceptlanguage = pAttributeNode->getValue();
             } else {
                 /* if any other attribute is in the xi namespace, it's an error */
                 const XMLCh *attrNamespaceURI = pAttributeNode->getNamespaceURI();
@@ -222,9 +222,9 @@ XIncludeUtils::doDOMNodeXInclude(DOMNode *xincludeNode, DOMDocument *parsedDocum
     }
 
     /* set up the accept and accept-language values */
-    if (accept != NULL){
-
-    }
+//    if (accept != NULL){
+//
+//    }
 
     if (parse == NULL){
         /* use the default, as specified */
