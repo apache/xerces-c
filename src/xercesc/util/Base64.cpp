@@ -143,15 +143,20 @@ XMLByte* Base64::encode(const XMLByte* const inputData
                       , XMLSize_t*           outputLength                      
                       , MemoryManager* const memMgr)
 {
-    if (!inputData || !outputLength)
+    if (!inputData || !outputLength) {
         return 0;
+    }
+    else if (XERCES_SIZE_MAX - inputLength < 2) {
+        return 0;
+    }
 
-    int quadrupletCount = ( (int)inputLength + 2 ) / 3;
-    if (quadrupletCount == 0)
+    XMLSize_t quadrupletCount = (inputLength + 2 ) / 3;
+    if (quadrupletCount == 0) {
         return 0;
+    }
 
     // number of rows in encoded stream ( including the last one )
-    int lineCount = ( quadrupletCount + quadsPerLine-1 ) / quadsPerLine;
+    XMLSize_t lineCount = ( quadrupletCount + quadsPerLine-1 ) / quadsPerLine;
 
     //
     // convert the triplet(s) to quadruplet(s)
@@ -165,7 +170,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData
     //
     // Process all quadruplet(s) except the last
     //
-    int quad = 1;
+    XMLSize_t quad = 1;
     for (; quad <= quadrupletCount-1; quad++ )
     {
         // read triplet from the input stream
@@ -512,7 +517,7 @@ XMLByte* Base64::decode (   const XMLByte*        const   inputData
     if (( rawInputLength % FOURBYTE ) != 0 )
         return 0;
 
-    int quadrupletCount = (int)rawInputLength / FOURBYTE;
+    XMLSize_t quadrupletCount = rawInputLength / FOURBYTE;
     if ( quadrupletCount == 0 )
         return 0;
 
@@ -529,7 +534,7 @@ XMLByte* Base64::decode (   const XMLByte*        const   inputData
     //
     // Process all quadruplet(s) except the last
     //
-    int quad = 1;
+    XMLSize_t quad = 1;
     for (; quad <= quadrupletCount-1; quad++ )
     {
         // read quadruplet from the input stream
