@@ -65,9 +65,7 @@
 #define XERCES_U64BIT_INT @XERCES_U64BIT_INT@
 #define XERCES_XMLCH_T @XERCES_XMLCH_T@
 #define XERCES_SIZE_T @XERCES_SIZE_T@
-#define XERCES_SIZE_MAX @XERCES_SIZE_MAX@
 #define XERCES_SSIZE_T @XERCES_SSIZE_T@
-#define XERCES_SSIZE_MAX @XERCES_SSIZE_MAX@
 
 #cmakedefine XERCES_HAS_CPP_NAMESPACE 1
 #cmakedefine XERCES_STD_NAMESPACE 1
@@ -113,6 +111,9 @@
 // ---------------------------------------------------------------------------
 typedef XERCES_SIZE_T				XMLSize_t;
 typedef XERCES_SSIZE_T				XMLSSize_t;
+
+#define XERCES_SIZE_MAX @XERCES_SIZE_MAX@
+#define XERCES_SSIZE_MAX @XERCES_SSIZE_MAX@
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
