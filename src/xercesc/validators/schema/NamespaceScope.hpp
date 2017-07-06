@@ -77,7 +77,7 @@ public :
     // -----------------------------------------------------------------------
     NamespaceScope(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     NamespaceScope(const NamespaceScope* const initialize, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-    ~NamespaceScope();
+    virtual ~NamespaceScope();
 
 
     // -----------------------------------------------------------------------
