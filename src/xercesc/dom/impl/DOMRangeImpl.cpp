@@ -1282,15 +1282,16 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
     else {
         // Copy nodes between the start/end offsets.
         DOMNode* n = getSelectedNode( fStartContainer, (int)fStartOffset );
-        int cnt = (int)fEndOffset - (int)fStartOffset;
-        while( cnt > 0 && n)
-        {
-            DOMNode* sibling = n->getNextSibling();
-            DOMNode* xferNode = traverseFullySelected( n, how );
-            if ( frag!=0 )
-                frag->appendChild( xferNode );
-            --cnt;
-            n = sibling;
+        if (fEndOffset > fStartOffset) {
+            XMLSize_t cnt = fEndOffset - fStartOffset;
+            while( cnt > 0 && n) {
+                DOMNode* sibling = n->getNextSibling();
+                DOMNode* xferNode = traverseFullySelected( n, how );
+                if ( frag!=0 )
+                    frag->appendChild( xferNode );
+               --cnt;
+               n = sibling;
+            }
         }
     }
 
