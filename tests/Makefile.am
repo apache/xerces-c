@@ -38,7 +38,9 @@ EXTRA_DIST =                                    CMakeLists.txt \
                                                 src/DOM/TypeInfo/data/TypeInfo.xsd \
                                                 src/DOM/TypeInfo/data/TypeInfoJustDTD.xml \
                                                 src/DOM/TypeInfo/data/TypeInfoNoDTD.xml \
-                                                src/DOM/TypeInfo/data/TypeInfoNoDTD.xsd
+                                                src/DOM/TypeInfo/data/TypeInfoNoDTD.xsd \
+                                                src/XSTSHarness/regression \
+                                                src/xinclude
 
 testprogs =
 
