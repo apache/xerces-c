@@ -264,7 +264,8 @@ int main(int argC, char* argV[])
 					if (strrchr(xmlFile, '\\')>strrchr(xmlFile, '/')) {
 						strcat(fileName, strrchr(xmlFile, '\\'));
 					} else {
-						strcat(fileName, strrchr(xmlFile, '/'));
+                        if (strrchr(xmlFile, '/'))
+                            strcat(fileName, strrchr(xmlFile, '/'));
 					}
 	                if (psviFormatter)
 	                	delete psviFormatter;
