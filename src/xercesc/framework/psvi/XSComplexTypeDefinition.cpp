@@ -159,7 +159,7 @@ const XMLCh *XSComplexTypeDefinition::getName() const
     return fComplexTypeInfo->getTypeLocalName();
 }
 
-const XMLCh *XSComplexTypeDefinition::getNamespace() 
+const XMLCh *XSComplexTypeDefinition::getNamespace() const
 {
     return fComplexTypeInfo->getTypeUri();
 }

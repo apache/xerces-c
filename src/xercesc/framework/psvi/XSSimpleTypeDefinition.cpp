@@ -175,7 +175,7 @@ const XMLCh *XSSimpleTypeDefinition::getName() const
     return fDatatypeValidator->getTypeLocalName();
 }
 
-const XMLCh *XSSimpleTypeDefinition::getNamespace()
+const XMLCh *XSSimpleTypeDefinition::getNamespace() const
 {
     return fDatatypeValidator->getTypeUri();
 }
