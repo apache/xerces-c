@@ -136,7 +136,7 @@ Other mirrors: <select name="Preferred">
 
     <p>Alternatively, you can verify the digests on the files. A
        command line program called <code>md5</code> or <code>md5sum</code>
-       is included in most UNXI distributions.  It is also available as
+       is included in most UNIX distributions.  It is also available as
        part of <jump href="http://www.gnu.org/software/textutils/textutils.html">GNU
        Textutils</jump>.  Windows users can get binary md5 programs from <jump
        href="http://www.fourmilab.ch/md5/">here</jump>, <jump
