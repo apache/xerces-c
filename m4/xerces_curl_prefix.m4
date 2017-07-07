@@ -68,7 +68,7 @@ AC_DEFUN([XERCES_CURL_PREFIX],
 			LIBS="$curl_libs $LIBS"
 
 			AC_LINK_IFELSE(
-				AC_LANG_SOURCE[[
+				[AC_LANG_SOURCE([
                     #include <curl/curl.h>
                     #include <curl/multi.h>
                     #include <curl/easy.h>
@@ -78,7 +78,7 @@ AC_DEFUN([XERCES_CURL_PREFIX],
                       curl_multi_init();
                       return 0;
                     }
-				]],
+				])],
 				[], [xerces_cv_curl_present=no])
 
 			LIBS=$orig_libs

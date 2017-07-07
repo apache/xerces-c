@@ -14,8 +14,8 @@ ac_cv_cxx_have_lstring,
 [AC_LANG_SAVE
  AC_LANG_CPLUSPLUS
  AC_COMPILE_IFELSE(
-	AC_LANG_SOURCE(
-		[[const wchar_t* s=L"wide string";]]),
+	[AC_LANG_SOURCE(
+		[[const wchar_t* s=L"wide string";]])],
  	ac_cv_cxx_have_lstring=yes, ac_cv_cxx_have_lstring=no)
  AC_LANG_RESTORE
 ])
