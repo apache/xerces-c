@@ -1657,6 +1657,8 @@ void AbstractDOMParser::notationDecl
 
         fInternalSubset.append(notDecl.getName());
 
+        bool publicKeywordPrinted = false;
+
         const XMLCh* id = notation->getPublicId();
         if (id != 0) {
             fInternalSubset.append(chSpace);
@@ -1665,16 +1667,21 @@ void AbstractDOMParser::notationDecl
             fInternalSubset.append(chDoubleQuote);
             fInternalSubset.append(id);
             fInternalSubset.append(chDoubleQuote);
+
+            publicKeywordPrinted = true;
         }
         id = notation->getSystemId();
         if (id != 0) {
             fInternalSubset.append(chSpace);
-            fInternalSubset.append(XMLUni::fgSysIDString);
-            fInternalSubset.append(chSpace);
+
+            if ( !publicKeywordPrinted ){
+				fInternalSubset.append(XMLUni::fgSysIDString);
+				fInternalSubset.append(chSpace);
+			}
+
             fInternalSubset.append(chDoubleQuote);
             fInternalSubset.append(id);
             fInternalSubset.append(chDoubleQuote);
-
         }
         fInternalSubset.append(chCloseAngle);
     }
