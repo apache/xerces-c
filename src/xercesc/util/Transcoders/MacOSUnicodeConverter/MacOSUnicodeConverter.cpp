@@ -361,8 +361,8 @@ void
 MacOSUnicodeConverter::CopyCStringToPascal(const char* c, Str255 pas)
 {
 	int len = strlen(c);
-	if (len > sizeof(pas)-1)
-		len = sizeof(pas)-1;
+	if (len > sizeof(Str255)-1)
+		len = sizeof(Str255)-1;
 	memmove(&pas[1], c, len);
 	pas[0] = len;
 }
