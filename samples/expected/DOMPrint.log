@@ -18,6 +18,7 @@ Options:
     -wddc=xxx   Enable/Disable discard-default-content.   Default on
     -wflt=xxx   Enable/Disable filtering.                 Default off
     -wfpp=xxx   Enable/Disable format-pretty-print.       Default off
+    -wfdecl=xxx Enable/Disable xml-declaration.           Default on
     -wbom=xxx   Enable/Disable write Byte-Order-Mark      Default off
     -xpath=xxx  Prints only the nodes matching the given XPath.
     -?          Show this help.

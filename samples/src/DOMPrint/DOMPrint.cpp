@@ -136,6 +136,7 @@ static bool                     gSplitCdataSections    = true;
 static bool                     gDiscardDefaultContent = true;
 static bool                     gUseFilter             = false;
 static bool                     gFormatPrettyPrint     = false;
+static bool                     gXMLDeclaration        = true;
 static bool                     gWriteBOM              = false;
 
 static XercesDOMParser::ValSchemes    gValScheme       = XercesDOMParser::Val_Auto;
@@ -170,6 +171,7 @@ void usage()
             "    -wddc=xxx   Enable/Disable discard-default-content.   Default on\n"
             "    -wflt=xxx   Enable/Disable filtering.                 Default off\n"
             "    -wfpp=xxx   Enable/Disable format-pretty-print.       Default off\n"
+            "    -wfdecl=xxx Enable/Disable xml-declaration.           Default on\n"
             "    -wbom=xxx   Enable/Disable write Byte-Order-Mark      Default off\n"
             "    -xpath=xxx  Prints only the nodes matching the given XPath.\n"
             "    -?          Show this help.\n\n"
@@ -334,6 +336,21 @@ int main(int argC, char* argV[])
                 return 2;
             }
         }
+         else if (!strncmp(argV[parmInd], "-wfdecl=", 8))
+        {
+             const char* const parm = &argV[parmInd][8];
+
+             if (!strcmp(parm, "on"))
+                 gXMLDeclaration = true;
+             else if (!strcmp(parm, "off"))
+                 gXMLDeclaration = false;
+             else
+             {
+                 XERCES_STD_QUALIFIER cerr << "Unknown -wfdecl= value: " << parm << XERCES_STD_QUALIFIER endl;
+                 XMLPlatformUtils::Terminate();
+                 return 2;
+             }
+        }
          else if (!strncmp(argV[parmInd], "-wbom=", 6))
         {
             const char* const parm = &argV[parmInd][6];
@@ -479,6 +496,9 @@ int main(int argC, char* argV[])
 
             if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTBOM, gWriteBOM))
                 serializerConfig->setParameter(XMLUni::fgDOMWRTBOM, gWriteBOM);
+            
+            if (serializerConfig->canSetParameter(XMLUni::fgDOMXMLDeclaration, gXMLDeclaration))
+                serializerConfig->setParameter(XMLUni::fgDOMXMLDeclaration, gXMLDeclaration);
 
             //
             // Plug in a format target to receive the resultant
