@@ -84,8 +84,6 @@ set(EXTRA_DIST
   reconf
   scripts/createBindingsFormatFromHPP.pl
   scripts/makeStringDefinition.pl
-  scripts/sanityTest.pl
-  scripts/sanityTest_ExpectedResult.log
   tools
 )
 

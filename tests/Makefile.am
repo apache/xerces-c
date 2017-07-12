@@ -171,5 +171,43 @@ LTCXXCOMPILE = ${PRETTY_COMPILE}  \
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 
+TESTS =					scripts/DOMTest \
+					scripts/DOMMemTest \
+					scripts/RangeTest \
+					scripts/DOMTraversalTest \
+					scripts/XSerializerTest \
+					scripts/XSerializerTest1 \
+					scripts/XSerializerTest2 \
+					scripts/XSerializerTest3 \
+					scripts/XSerializerTest4 \
+					scripts/XSerializerTest5 \
+					scripts/XSValueTest \
+					scripts/InitTermTest \
+					scripts/InitTermTest1 \
+					scripts/InitTermTest2 \
+					scripts/InitTermTest3 \
+					scripts/ThreadTest \
+					scripts/ThreadTest1 \
+					scripts/ThreadTest2 \
+					scripts/ThreadTest3 \
+					scripts/ThreadTest4 \
+					scripts/ThreadTest5 \
+					scripts/ThreadTest6 \
+					scripts/ThreadTest7 \
+					scripts/ThreadTest8 \
+					scripts/ThreadTest9 \
+					scripts/ThreadTest10 \
+					scripts/ThreadTest11 \
+					scripts/ThreadTest12 \
+					scripts/ThreadTest13 \
+					scripts/ThreadTest14 \
+					scripts/ThreadTest15 \
+					scripts/MemHandlerTest \
+					scripts/MemHandlerTest1 \
+					scripts/MemHandlerTest2 \
+					scripts/DOMTypeInfoTest
 
-
+XFAIL_TESTS =				scripts/XSerializerTest \
+					scripts/InitTermTest \
+					scripts/ThreadTest \
+					scripts/MemHandlerTest

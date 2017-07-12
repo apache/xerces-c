@@ -34,7 +34,8 @@ AC_CONFIG_FILES([Makefile \
                  src/Makefile \
                  tests/Makefile \
                  samples/Makefile \
-		 xerces-c.pc])
+		 xerces-c.pc
+                 scripts/run-test])
 
 # Check the target system
 AC_CANONICAL_HOST

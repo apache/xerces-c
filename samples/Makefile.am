@@ -164,5 +164,58 @@ LTCXXCOMPILE = ${PRETTY_COMPILE}  \
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 
+TESTS =					scripts/SAXCount \
+					scripts/SAXCount1 \
+					scripts/SAXCount2 \
+					scripts/SAXCount3 \
+					scripts/SAXPrint \
+					scripts/SAXPrint1 \
+					scripts/SAXPrint2 \
+					scripts/SAXPrint3 \
+					scripts/SAX2Count \
+					scripts/SAX2Count1 \
+					scripts/SAX2Count2 \
+					scripts/SAX2Count3 \
+					scripts/SAX2Print \
+					scripts/SAX2Print1 \
+					scripts/SAX2Print2 \
+					scripts/SAX2Print3 \
+					scripts/SAX2Print4 \
+					scripts/SAX2Print5 \
+					scripts/MemParse \
+					scripts/MemParse1 \
+					scripts/Redirect \
+					scripts/Redirect1 \
+					scripts/DOMCount \
+					scripts/DOMCount1 \
+					scripts/DOMCount2 \
+					scripts/DOMCount3 \
+					scripts/DOMPrint \
+					scripts/DOMPrint1 \
+					scripts/DOMPrint2 \
+					scripts/DOMPrint3 \
+					scripts/DOMPrint4 \
+					scripts/DOMPrint5 \
+					scripts/StdInParse1 \
+					scripts/StdInParse2 \
+					scripts/StdInParse3 \
+					scripts/PParse \
+					scripts/PParse1 \
+					scripts/PParse2 \
+					scripts/EnumVal \
+					scripts/EnumVal1 \
+					scripts/SEnumVal \
+					scripts/SEnumVal1 \
+					scripts/CreateDOMDocument \
+					scripts/SAXPrintLong
 
-
+XFAIL_TESTS =				scripts/SAXCount \
+					scripts/SAXPrint \
+					scripts/SAX2Count \
+					scripts/SAX2Print \
+					scripts/Redirect \
+					scripts/DOMCount \
+					scripts/DOMPrint \
+					scripts/PParse \
+					scripts/EnumVal \
+					scripts/SEnumVal
