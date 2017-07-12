@@ -41,6 +41,7 @@ AC_CONFIG_FILES([Makefile \
 AC_CANONICAL_HOST
 
 # Initialize automake
+AM_SILENT_RULES([yes])
 AM_INIT_AUTOMAKE([foreign subdir-objects dist-bzip2 tar-ustar])
 AM_MAINTAINER_MODE
 
@@ -273,7 +274,6 @@ AC_SUBST(abs_top_builddir)
 # Look for availability of available packages
 ######################################################
 
-XERCES_PRETTY_MAKE
 XERCES_PATH_DELIMITERS
 
 XERCES_MUTEXMGR_SELECTION
