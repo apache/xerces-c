@@ -169,7 +169,7 @@ add_xerces_test(XSerializerTest5 COMMAND XSerializerTest -v=always -f personal-s
 add_xerces_test(XSValueTest      COMMAND XSValueTest)
 
 add_xerces_test(InitTermTest     COMMAND InitTermTest EXPECT_FAIL)
-add_xerces_test(InitTermTest1    COMMAND InitTermTest  personal.xml)
+add_xerces_test(InitTermTest1    COMMAND InitTermTest personal.xml)
 add_xerces_test(InitTermTest2    COMMAND InitTermTest -n -s personal-schema.xml)
 add_xerces_test(InitTermTest3    COMMAND InitTermTest -n -s -f personal-schema.xml)
 

@@ -52,7 +52,7 @@ macro(test_command command)
   # Replace timings in output, and convert newlines for safe comparison
   file(READ "${OBSERVED_DIR}/${NAME}.log" output)
   string(REGEX REPLACE " *[0-9]+ *ms *" "{timing removed}" output "${output}")
-  file(WRITE "${OBSERVED_DIR}/${NAME}-mod.log" ${output})
+  file(WRITE "${OBSERVED_DIR}/${NAME}-mod.log" "${output}")
   configure_file("${OBSERVED_DIR}/${NAME}-mod.log" "${OBSERVED_DIR}/${NAME}.log"
     @ONLY NEWLINE_STYLE UNIX)
   configure_file("${EXPECTED_DIR}/${NAME}.log" "${OBSERVED_DIR}/${NAME}-exp.log"

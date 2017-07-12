@@ -5,7 +5,7 @@
    <xs:annotation>
      <xs:documentation>
         The schemaLocation of the relevant file is
-        "http://www.w3.org/2001/xml.xsd" however,
+        "http://www.w3.org/2001/xml.xsd"; however,
         we don't want to assume people are always
         connected to the 'net when playing with this file.
      </xs:documentation>
