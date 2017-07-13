@@ -1335,6 +1335,12 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
             fMemoryManager->deallocate(fEncodingStr);
             fEncodingStr = inputEncoding;
 
+            // Check for a pre-created transcoder to delete.
+            if (fTranscoder) {
+                delete fTranscoder;
+                fTranscoder = 0;
+            }
+
             XMLTransService::Codes failReason;
             fTranscoder = XMLPlatformUtils::fgTransService->makeNewTranscoderFor
             (
@@ -1343,6 +1349,9 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
                 , kCharBufSize
                 , fMemoryManager
             );
+
+            if (!fTranscoder)
+                ThrowXMLwithMemMgr1(TranscodingException, XMLExcepts::Trans_CantCreateCvtrFor, fEncodingStr, fMemoryManager);
         }
         else
         {
