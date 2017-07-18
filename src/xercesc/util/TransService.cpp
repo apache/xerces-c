@@ -552,13 +552,23 @@ XMLLCPTranscoder::~XMLLCPTranscoder()
 TranscodeToStr::TranscodeToStr(const XMLCh *in, const char *encoding,
                                MemoryManager *manager)
     : fString(0),
-	  fBytesWritten(0),
+      fBytesWritten(0),
       fMemoryManager(manager)
 {
     XMLTransService::Codes failReason;
     const XMLSize_t blockSize = 2048;
 
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, blockSize, fMemoryManager);
+    if (!trans) {
+        ThrowXMLwithMemMgr1
+        (
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
+            , encoding 
+            , fMemoryManager
+        );
+    }    
+
     Janitor<XMLTranscoder> janTrans(trans);
 
     transcode(in, XMLString::stringLen(in), trans);
@@ -567,13 +577,23 @@ TranscodeToStr::TranscodeToStr(const XMLCh *in, const char *encoding,
 TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLSize_t length, const char *encoding,
                                MemoryManager *manager)
     : fString(0),
-	  fBytesWritten(0),
+      fBytesWritten(0),
       fMemoryManager(manager)
 {
     XMLTransService::Codes failReason;
     const XMLSize_t blockSize = 2048;
 
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, blockSize, fMemoryManager);
+    if (!trans) {
+        ThrowXMLwithMemMgr1
+        (
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
+            , encoding
+            , fMemoryManager
+        );
+    }
+
     Janitor<XMLTranscoder> janTrans(trans);
 
     transcode(in, length, trans);
@@ -582,7 +602,7 @@ TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLSize_t length, const char *en
 TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLTranscoder* trans,
                                MemoryManager *manager)
     : fString(0),
-	  fBytesWritten(0),
+      fBytesWritten(0),
       fMemoryManager(manager)
 {
     transcode(in, XMLString::stringLen(in), trans);
@@ -591,7 +611,7 @@ TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLTranscoder* trans,
 TranscodeToStr::TranscodeToStr(const XMLCh *in, XMLSize_t length, XMLTranscoder* trans,
                                MemoryManager *manager)
     : fString(0),
-	  fBytesWritten(0),
+      fBytesWritten(0),
       fMemoryManager(manager)
 {
     transcode(in, length, trans);
@@ -658,13 +678,23 @@ void TranscodeToStr::transcode(const XMLCh *in, XMLSize_t len, XMLTranscoder* tr
 TranscodeFromStr::TranscodeFromStr(const XMLByte *data, XMLSize_t length, const char *encoding,
                                    MemoryManager *manager)
     : fString(0),
-	  fCharsWritten(0),
+      fCharsWritten(0),
       fMemoryManager(manager)
 {
     XMLTransService::Codes failReason;
     const XMLSize_t blockSize = 2048;
 
     XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, blockSize, fMemoryManager);
+    if (!trans) {
+        ThrowXMLwithMemMgr1
+        (
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
+            , encoding
+            , fMemoryManager
+        );
+    }
+
     Janitor<XMLTranscoder> janTrans(trans);
 
     transcode(data, length, trans);
@@ -673,7 +703,7 @@ TranscodeFromStr::TranscodeFromStr(const XMLByte *data, XMLSize_t length, const 
 TranscodeFromStr::TranscodeFromStr(const XMLByte *data, XMLSize_t length, XMLTranscoder *trans,
                                    MemoryManager *manager)
     : fString(0),
-	  fCharsWritten(0),
+      fCharsWritten(0),
       fMemoryManager(manager)
 {
     transcode(data, length, trans);
