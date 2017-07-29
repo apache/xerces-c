@@ -132,6 +132,44 @@ int _wcsicmp(LPCWSTR comp1, LPCWSTR comp2)
 }
 #endif
 
+
+static inline void xmlch_wcsupr(XMLCh* str)
+{
+#ifdef XERCES_USE_CHAR16_T
+    _wcsupr(reinterpret_cast<LPWSTR>(str));
+#else
+    _wcsupr(str);
+#endif
+}
+
+static inline int xmlch_wcsicmp(const XMLCh* comp1, const XMLCh* comp2)
+{
+#ifdef XERCES_USE_CHAR16_T
+    return _wcsicmp(reinterpret_cast<LPCWSTR>(comp1), reinterpret_cast<LPCWSTR>(comp2));
+#else
+    return _wcsicmp(comp1, comp2);
+#endif
+}
+
+static inline int xmlch_wcsnicmp(const XMLCh* comp1, const XMLCh* comp2, const XMLSize_t maxChars)
+{
+#ifdef XERCES_USE_CHAR16_T
+    return _wcsnicmp(reinterpret_cast<LPCWSTR>(comp1), reinterpret_cast<LPCWSTR>(comp2), maxChars);
+#else
+    return _wcsnicmp(comp1, comp2, maxChars);
+#endif
+}
+
+static inline void xmlch_wcslwr(XMLCh* str)
+{
+#ifdef XERCES_USE_CHAR16_T
+    _wcslwr(reinterpret_cast<LPWSTR>(str));
+#else
+    _wcslwr(str);
+#endif
+}
+
+
 // it's a local function (instead of a static function) so that we are not 
 // forced to include <windows.h> in the header
 bool isAlias(const   HKEY            encodingKey
@@ -235,7 +273,7 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
         //  Upper case it because we are using a hash table and need to be
         //  sure that we find all case combinations.
         //
-        _wcsupr(fEncodingName);
+        xmlch_wcsupr(fEncodingName);
   }
 }
 
@@ -253,7 +291,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
     //  Upper case it because we are using a hash table and need to be
     //  sure that we find all case combinations.
     //
-    _wcsupr(fEncodingName);
+    xmlch_wcsupr(fEncodingName);
 }
 
 CPMapEntry::~CPMapEntry()
@@ -478,7 +516,7 @@ Win32TransService::Win32TransService(MemoryManager* manager) :
                 );//new XMLCh[targetLen + 1];
                 ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, -1, (LPWSTR)uniAlias, targetLen);
                 uniAlias[targetLen] = 0;
-                _wcsupr(uniAlias);
+                xmlch_wcsupr(uniAlias);
 
                 // Look up the alias name
                 CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
@@ -493,7 +531,7 @@ Win32TransService::Win32TransService(MemoryManager* manager) :
                         );//new XMLCh[targetLen + 1];
                         ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, nameBuf, -1, (LPWSTR)uniName, targetLen);
                         uniName[targetLen] = 0;
-                        _wcsupr(uniName);
+                        xmlch_wcsupr(uniName);
 
                         //
                         //  If the name is actually different, then take it.
@@ -533,7 +571,7 @@ Win32TransService::~Win32TransService()
 int Win32TransService::compareIString(  const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2)
 {
-    return _wcsicmp(comp1, comp2);
+    return xmlch_wcsicmp(comp1, comp2);
 }
 
 
@@ -541,7 +579,7 @@ int Win32TransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
                                         , const XMLSize_t       maxChars)
 {
-    return _wcsnicmp(comp1, comp2, maxChars);
+    return xmlch_wcsnicmp(comp1, comp2, maxChars);
 }
 
 
@@ -570,12 +608,12 @@ bool Win32TransService::supportsSrcOfs() const
 
 void Win32TransService::upperCase(XMLCh* const toUpperCase)
 {
-    _wcsupr(toUpperCase);
+    xmlch_wcsupr(toUpperCase);
 }
 
 void Win32TransService::lowerCase(XMLCh* const toLowerCase)
 {
-    _wcslwr(toLowerCase);
+    xmlch_wcslwr(toLowerCase);
 }
 
 XMLTranscoder*
@@ -592,7 +630,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     //  table and we store them all in upper case.
     //
     XMLString::copyNString(upEncoding, encodingName, upLen);
-    _wcsupr(upEncoding);
+    xmlch_wcsupr(upEncoding);
 
     // Now to try to find this guy in the CP map
     CPMapEntry* theEntry = fCPMap->get(upEncoding);
@@ -744,7 +782,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
             , fFromFlags
             , (const char*)inPtr
             , toEat
-            , outPtr
+            , reinterpret_cast<LPWSTR>(outPtr)
             , 1
         );
 
@@ -816,7 +854,7 @@ Win32Transcoder::transcodeTo(const  XMLCh* const    srcData
         (
             fIECP
             , fToFlags
-            , srcPtr
+            , reinterpret_cast<LPCWSTR>(srcPtr)
             , 1
             , (char*)outPtr
             , (int)(outEnd - outPtr)
@@ -890,7 +928,7 @@ bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck)
     (
         fIECP
         , fToFlags
-        , srcBuf
+        , reinterpret_cast<LPCWSTR>(srcBuf)
         , srcCount
         , tmpBuf
         , 64
@@ -944,7 +982,7 @@ XMLSize_t Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (!srcText)
         return 0;
 
-    return ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
+    return ::WideCharToMultiByte(CP_ACP, 0, reinterpret_cast<LPCWSTR>(srcText), -1, NULL, 0, NULL, NULL);
 }
 
 char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,

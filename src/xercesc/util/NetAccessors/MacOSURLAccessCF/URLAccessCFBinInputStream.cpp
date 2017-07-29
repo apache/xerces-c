@@ -44,7 +44,7 @@ URLAccessCFBinInputStream::URLAccessCFBinInputStream(const XMLURL& urlSource)
     {
         stringRef = CFStringCreateWithCharacters(
             kCFAllocatorDefault,
-            urlText,
+            reinterpret_cast<const UniChar *>(urlText),
             urlLength
             );
     }

@@ -332,22 +332,41 @@ AS_IF([test ! $ac_cv_cxx_have_bool],
 AS_IF([test $ac_cv_cxx_have_lstring],
 	AC_DEFINE([XERCES_LSTRSUPPORT], 1, [Define if there is support for L"widestring"]))
 
-# check if the Windows API is defined as using wchar_t or unsigned short; if it's wchar_t, we need to map XMLCh to be wchar_t
-# (this is safe because on Windows wchar_t is used to store UTF-16 codepoints, while it is not true on Unix)
-AC_MSG_CHECKING([whether the Windows SDK is available and using wchar_t as wide string])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
-                                        wchar_t file[] = L"dummy.file";]],
-                                     [[DeleteFileW(file);]])],
+AC_MSG_CHECKING([whether C++11 char16_t is available])
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[]],
+                                     [[const char16_t *unicode = u"Test ünícodè → ©";]])],
                     [
-                      xerces_cv_type_xmlch=wchar_t
+                      xerces_cv_type_xmlch=char16_t
+                      AC_DEFINE_UNQUOTED([XERCES_USE_CHAR16_T], [1], [Define if the C++11 char16_t type is to be used])
                       AC_MSG_RESULT([yes])
-                      AC_DEFINE_UNQUOTED([XERCES_INCLUDE_WCHAR_H], 1, [Define to have Xerces_autoconf_config.hpp include wchar.h])
                     ],
                     [
                       xerces_cv_type_xmlch=$xerces_cv_type_u16bit_int
                       AC_MSG_RESULT([no])
                     ]
                  )
+AM_CONDITIONAL([XERCES_USE_CHAR16], [test "x$xerces_cv_type_xmlch" = "xchar16_t"])
+
+if test "$xerces_cv_type_xmlch" != "char16_t"; then
+# fallback to check if the Windows API is defined as using wchar_t or
+# unsigned short; if it's wchar_t, we need to map XMLCh to be wchar_t
+# (this is safe because on Windows wchar_t is used to store UTF-16
+# codepoints, while it is not true on Unix)
+        AC_MSG_CHECKING([whether the Windows SDK is available and using wchar_t as wide string])
+        AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <windows.h>
+                                                wchar_t file[] = L"dummy.file";]],
+                                             [[DeleteFileW(file);]])],
+                            [
+                              xerces_cv_type_xmlch=wchar_t
+                              AC_MSG_RESULT([yes])
+                              AC_DEFINE_UNQUOTED([XERCES_INCLUDE_WCHAR_H], 1, [Define to have Xerces_autoconf_config.hpp include wchar.h])
+                            ],
+                            [
+                              xerces_cv_type_xmlch=$xerces_cv_type_u16bit_int
+                              AC_MSG_RESULT([no])
+                            ]
+                         )
+fi
 
 AC_DEFINE_UNQUOTED([XERCES_XMLCH_T], [$xerces_cv_type_xmlch], [Define to the 16 bit type used to represent Xerces UTF-16 characters])
 

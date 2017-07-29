@@ -23,12 +23,37 @@
 # while it is not true on Unix)
 
 include(CheckCXXSourceCompiles)
+include(CheckTypeSize)
 include(XercesIntTypes)
 
 set(XERCES_XMLCH_T ${XERCES_U16BIT_INT})
+set(XERCES_USE_CHAR16_T 0)
 set(XERCES_INCLUDE_WCHAR_H 0)
-if(WIN32)
-  check_cxx_source_compiles("
+
+check_cxx_source_compiles("
+int main() {
+  const char16_t *unicode = u\"Test ünícodè → ©\";
+  return 0;
+}" HAVE_STD_char16_t)
+
+if(HAVE_STD_char16_t)
+  check_type_size("char16_t" SIZEOF_CHAR16_T LANGUAGE CXX)
+  check_type_size("wchar_t" SIZEOF_WCHAR_T LANGUAGE CXX)
+
+  if(NOT SIZEOF_CHAR16_T EQUAL 2)
+    message(FATAL_ERROR "char16_t is not a 16-bit type")
+  endif()
+  if(WIN32)
+    if(NOT SIZEOF_WCHAR_T EQUAL 2)
+      message(FATAL_ERROR "wchar_t is not a 16-bit type, and size differs from char16_t")
+    endif()
+  endif()
+
+  set(XERCES_XMLCH_T char16_t)
+  set(XERCES_USE_CHAR16_T 1)
+else()
+  if(WIN32)
+    check_cxx_source_compiles("
 #include <windows.h>
 
 wchar_t file[] = L\"dummy.file\";
@@ -37,10 +62,11 @@ int main() {
   DeleteFileW(file);
   return 0;
 }"
-    WINDOWS_wchar)
+      WINDOWS_wchar)
 
-  if(WINDOWS_wchar)
-    set(XERCES_XMLCH_T wchar_t)
-    set(XERCES_INCLUDE_WCHAR_H 1)
+    if(WINDOWS_wchar)
+      set(XERCES_XMLCH_T wchar_t)
+      set(XERCES_INCLUDE_WCHAR_H 1)
+    endif()
   endif()
 endif()

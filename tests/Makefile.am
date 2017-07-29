@@ -128,6 +128,11 @@ testprogs +=                                    XSValueTest
 XSValueTest_SOURCES =                           src/XSValueTest/XSValueTest.cpp \
                                                 src/XSValueTest/XSValueTest.hpp
 
+if XERCES_USE_CHAR16
+testprogs +=                                    Char16Test
+Char16Test_SOURCES =                            src/Char16Test/Char16Test.cpp
+endif
+
 
 TESTS =					scripts/DOMTest \
 					scripts/DOMMemTest \
@@ -164,6 +169,10 @@ TESTS =					scripts/DOMTest \
 					scripts/MemHandlerTest1 \
 					scripts/MemHandlerTest2 \
 					scripts/DOMTypeInfoTest
+
+if XERCES_USE_CHAR16
+TESTS += scripts/Char16Test
+endif
 
 XFAIL_TESTS =				scripts/XSerializerTest \
 					scripts/InitTermTest \
