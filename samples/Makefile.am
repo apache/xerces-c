@@ -32,7 +32,9 @@ EXTRA_DIST =                        CMakeLists.txt \
                                     data/personal.xsd \
                                     data/personal-schema.xml \
                                     data/redirect.dtd \
-                                    data/long.xml
+                                    data/long.xml \
+                                    expected \
+                                    scripts
 
 sampleprogs =
 

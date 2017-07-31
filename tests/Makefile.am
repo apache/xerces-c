@@ -28,6 +28,7 @@ AM_CPPFLAGS =                                   -I${top_builddir}/src -I${top_sr
 
 EXTRA_DIST =                                    CMakeLists.txt \
                                                 expected \
+                                                scripts \
                                                 src/DOM/Normalizer/expectedOutput \
                                                 src/DOM/TypeInfo/data/combined.dtd \
                                                 src/DOM/TypeInfo/data/combined.xml \
