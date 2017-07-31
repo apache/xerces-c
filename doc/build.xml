@@ -27,8 +27,6 @@
     <ul>
        <li><link anchor="CMake">All platforms</link></li>
        <li><link anchor="UNIX">UNIX/Linux/Mac OS X/Cygwin/MinGW</link></li>
-       <li><link anchor="Windows">Windows using Microsoft Visual C++</link></li>
-       <li><link anchor="BorlandCC">Windows using Borland C++</link></li>
     </ul>
 
     <anchor name="CMake"/>
@@ -524,24 +522,5 @@
         </note>
     </s3>
 
-    <anchor name="Windows"/>
-    <s3 title="Building on Windows using Microsoft Visual C++">
-        <p>Solution files for supported versions can be generated via CMake,
-        as described above.</p>
-
-        <p>When building your own applications you need to make sure
-               that you are linking your application with the
-               &XercesC3WindowsLib;.lib (Release) and/or
-               &XercesC3WindowsLib;D.lib (Debug)
-               libraries (or the static versions of them)
-               and also that the associated DLLs are somewhere in the
-               executable/DLL search path (<code>PATH</code>).</p>
-
-        <note>If you are linking your application to the static
-                  &XercesCName; library,
-                  then you will need to compile your application with the
-                  XERCES_STATIC_LIBRARY preprocessor macro defined in order
-                  to turn off the DLL import/export mechanism.</note>
-    </s3>
   </s2>
 </s1>
