@@ -36,6 +36,9 @@ EXTRA_DIST =                        CMakeLists.txt \
                                     expected \
                                     scripts
 
+clean-local:
+	-rm -rf observed
+
 sampleprogs =
 
 sampleprogs +=                      CreateDOMDocument

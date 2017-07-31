@@ -22,7 +22,5 @@ EXTRA_DIST = version.incl \
 AUTOMAKE_OPTIONS = foreign dist-bzip2 dist-zip dist-xz
 ACLOCAL_AMFLAGS = -I m4
 
-CLEANFILES = test-results.log
-
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA= xerces-c.pc

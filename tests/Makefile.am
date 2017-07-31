@@ -43,6 +43,9 @@ EXTRA_DIST =                                    CMakeLists.txt \
                                                 src/XSTSHarness/regression \
                                                 src/xinclude
 
+clean-local:
+	-rm -rf observed
+
 testprogs =
 
 testprogs +=                                    DOMTest
