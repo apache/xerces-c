@@ -14,7 +14,6 @@ EXTRA_DIST = version.incl \
              README \
              config/pretty-make \
              doc \
-             projects \
              reconf \
              scripts/createBindingsFormatFromHPP.pl \
              scripts/makeStringDefinition.pl \
