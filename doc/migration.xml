@@ -27,7 +27,7 @@
     </s2>
 
     <s2 title="Migrating from &XercesCName; 3.X to &XercesCName; &XercesC3Version;">
-      <p>&XercesCName; &XercesC3Version; is an API-compatible, but not ABI-compatible, update to the 3.x branch. Code designed for use with Xerces 3 should continue to compile, but existing applications <strong>MUST</strong> be recompiled to work with this version.</p>
+      <p>&XercesCName; &XercesC3Version; is an API-compatible, but not ABI-compatible, update to the 3.x branch. Code designed for use with Xerces 3 should continue to compile, but existing applications MUST be recompiled to work with this version.</p>
 
       <p>Most of the changes are purely bug fixes, but there is a new build system based on CMake that provides support for Windows compilers. Both CMake and autoconf-based builds work on non-Windows platforms.</p>
 
