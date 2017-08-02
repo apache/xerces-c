@@ -23,12 +23,10 @@
 <s2 title="&XercesCName; Future Releases Plan">
 <p>This document highlights the release plan for &XercesCName;.</p>
 
-<s3 title="Current Status"><p>&XercesCName; &XercesCLatest; - released on June 29, 2016.</p></s3>
+<s3 title="Current Status"><p>&XercesCName; &XercesCLatest; - released on August XX, 2017.</p></s3>
 
 <s3 title="Next Target Release">
-        <p>There are feature additions checked into the trunk for
-        inclusion in a future 3.2.0 release, but there is no timetable
-        for this release.</p>
+        <p>There are no specific plans for the next 3.x release.</p>
 
 	<p>There will be no further releases in the Xerces-C++ 2-series.</p>
 </s3>

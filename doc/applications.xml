@@ -64,7 +64,7 @@
     </s3>
 
     <s3 title="Shibboleth and OpenSAML">
-      <p><jump href="http://shibboleth.net/">Shibboleth</jump> is
+      <p><jump href="http://www.shibboleth.net/">Shibboleth</jump> is
          an open source Web Single Sign-On and Federation implementation
          that supports the SAML 2.0 and SAML 1.1 standards, among other
          capabilities. The Service Provider and underlying OpenSAML

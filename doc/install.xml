@@ -197,7 +197,7 @@ tar -xfz &XercesC3SrcInstallDir;.tar.gz
       </s3>
 
       <s3 title="Binary distribution">
-        <p>Precompiled Xerces-C++ libraries for Cygwin are provide as
+        <p>Precompiled Xerces-C++ libraries for Cygwin may be provided as
            part of the Cygwin package repository. To install the binary
            distribution run Cygwin setup.exe.
            When you reach the Packages step of the Cygwin Setup wizard,
