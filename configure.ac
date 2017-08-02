@@ -134,12 +134,12 @@ ACX_PTHREAD
 #AC_FUNC_STRTOD
 AC_CHECK_FUNCS([getcwd pathconf realpath \
 		getaddrinfo gethostbyaddr gethostbyname socket \
-		clock_gettime ftime gettimeofday \
+		clock_gettime ftime gettimeofday timegm gmtime_r \
 		memmove memset nl_langinfo setlocale localeconv \
 		strcasecmp strncasecmp stricmp strnicmp strchr strdup \
 		strrchr strstr strtol strtoul \
 		towupper towlower mblen \
-        wcsupr wcslwr wcsnicmp wcsicmp \
+		wcsupr wcslwr wcsnicmp wcsicmp \
 		])
 
 # Some Unix systems, like Gnu Hurd, don't define PATH_MAX

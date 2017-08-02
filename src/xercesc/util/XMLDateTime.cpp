@@ -23,6 +23,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -451,6 +452,52 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
     setBuffer(aString);
 }
 
+XMLDateTime::XMLDateTime(time_t epoch, bool duration, MemoryManager* const manager)
+: fStart(0)
+, fEnd(0)
+, fBufferMaxLen(0)
+, fMilliSecond(0)
+, fHasTime(false)
+, fBuffer(0)
+, fMemoryManager(manager)
+{
+    if (duration) {
+    		bool neg = false;
+		if (epoch < 0) {
+			neg = true;
+			epoch = -epoch;
+		}
+
+        unsigned long days = epoch / 86400;
+        epoch %= 86400;
+        unsigned long hours = epoch / 3600;
+        epoch %= 3600;
+        unsigned long minutes = epoch / 60;
+        epoch %= 60;
+        unsigned long seconds = epoch;
+
+		char timebuf[256];
+        snprintf(timebuf, 256, "%sP%luDT%luH%luM%luS", neg ? "-" : "", days, hours, minutes, seconds);
+
+        XMLCh* timeptr = XMLString::transcode(timebuf);
+        setBuffer(timeptr);
+        XMLString::release(&timeptr);
+    }
+    else {
+#ifndef HAVE_GMTIME_R
+        struct tm* ptime=gmtime(&epoch);
+#else
+        struct tm res;
+        struct tm* ptime=gmtime_r(&epoch,&res);
+#endif
+        char timebuf[32];
+        strftime(timebuf,32,"%Y-%m-%dT%H:%M:%SZ",ptime);
+        XMLCh* timeptr = XMLString::transcode(timebuf);
+        setBuffer(timeptr);
+        XMLString::release(&timeptr);
+    }
+}
+
 // -----------------------------------------------------------------------
 // Copy ctor and Assignment operators
 // -----------------------------------------------------------------------
@@ -494,6 +541,38 @@ int XMLDateTime::getSign() const
 {
     return 0;
 }
+
+time_t XMLDateTime::getEpoch(bool duration) const
+{
+    if (duration) {
+        time_t epoch = getSecond() + (60 * getMinute()) + (3600 * getHour()) + (86400 * getDay());
+        if (getMonth())
+            epoch += (((365 * 4) + 1)/48 * 86400);
+        if (getYear())
+            epoch += 365.25 * 86400;
+        return getSign()!=UTC_NEG ? epoch : -epoch;
+    }
+    else {
+        struct tm t;
+        t.tm_sec=getSecond();
+        t.tm_min=getMinute();
+        t.tm_hour=getHour();
+        t.tm_mday=getDay();
+        t.tm_mon=getMonth()-1;
+        t.tm_year=getYear()-1900;
+        t.tm_isdst=0;
+#if defined(HAVE_TIMEGM)
+        return timegm(&t);
+#elif defined(WIN32)
+        // Windows
+        return mktime(&t) - _timezone;
+#else
+        // Hopefully most others...?
+        return mktime(&t) - timezone;
+#endif
+    }
+}
+
 
 // ---------------------------------------------------------------------------
 //  Parsers
