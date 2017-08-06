@@ -394,8 +394,14 @@
 /* An appropriate signed 64 bit integer type */
 #define XERCES_S64BIT_INT @XERCES_S64BIT_INT@
 
+/* Define as the appropriate SIZE_MAX macro */
+#define XERCES_SIZE_MAX @XERCES_SIZE_MAX@
+
 /* Define as the appropriate size_t type */
 #define XERCES_SIZE_T @XERCES_SIZE_T@
+
+/* Define as the appropriate SSIZE_MAX macro */
+#define XERCES_SSIZE_MAX @XERCES_SSIZE_MAX@
 
 /* Define as the appropriate ssize_t type */
 #define XERCES_SSIZE_T @XERCES_SSIZE_T@
