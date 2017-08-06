@@ -27,6 +27,8 @@
 #include <assert.h>
 #include <errno.h>
 
+#include <config.h>
+
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
