@@ -90,7 +90,7 @@ public:
      *  The [target namespace] of this object, or <code>null</code> if it is
      * unspecified.
      */
-    virtual const XMLCh* getNamespace();
+    virtual const XMLCh* getNamespace() const;
 
     /**
      * A namespace schema information item corresponding to the target

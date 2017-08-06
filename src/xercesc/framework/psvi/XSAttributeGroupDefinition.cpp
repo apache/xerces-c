@@ -60,7 +60,7 @@ const XMLCh *XSAttributeGroupDefinition::getName() const
     return fXSModel->getURIStringPool()->getValueForId(fXercesAttGroupInfo->getNameId());        
 }
 
-const XMLCh *XSAttributeGroupDefinition::getNamespace() 
+const XMLCh *XSAttributeGroupDefinition::getNamespace() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fXercesAttGroupInfo->getNamespaceId());
 }

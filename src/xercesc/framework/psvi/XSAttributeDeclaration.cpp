@@ -61,7 +61,7 @@ const XMLCh *XSAttributeDeclaration::getName() const
     return fAttDef->getAttName()->getLocalPart();
 }
 
-const XMLCh *XSAttributeDeclaration::getNamespace() 
+const XMLCh *XSAttributeDeclaration::getNamespace() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fAttDef->getAttName()->getURI());
 }

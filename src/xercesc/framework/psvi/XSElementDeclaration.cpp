@@ -96,7 +96,7 @@ const XMLCh *XSElementDeclaration::getName() const
     return fSchemaElementDecl->getElementName()->getLocalPart();
 }
 
-const XMLCh *XSElementDeclaration::getNamespace() 
+const XMLCh *XSElementDeclaration::getNamespace() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fSchemaElementDecl->getURI());
 }

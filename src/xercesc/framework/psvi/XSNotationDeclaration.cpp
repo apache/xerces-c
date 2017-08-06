@@ -54,7 +54,7 @@ const XMLCh *XSNotationDeclaration::getName() const
     return fXMLNotationDecl->getName();
 }
 
-const XMLCh *XSNotationDeclaration::getNamespace() 
+const XMLCh *XSNotationDeclaration::getNamespace() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fXMLNotationDecl->getNameSpaceId());
 }

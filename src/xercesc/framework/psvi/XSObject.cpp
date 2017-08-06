@@ -53,7 +53,7 @@ const XMLCh *XSObject::getName() const
     return 0;
 }
 
-const XMLCh *XSObject::getNamespace()
+const XMLCh *XSObject::getNamespace() const
 {
     return 0;
 }

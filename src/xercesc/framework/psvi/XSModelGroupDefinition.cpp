@@ -56,7 +56,7 @@ const XMLCh *XSModelGroupDefinition::getName() const
     return fXSModel->getURIStringPool()->getValueForId(fGroupInfo->getNameId());
 }
 
-const XMLCh *XSModelGroupDefinition::getNamespace() 
+const XMLCh *XSModelGroupDefinition::getNamespace() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fGroupInfo->getNamespaceId());
 }

@@ -76,7 +76,7 @@ const XMLCh *XSIDCDefinition::getName() const
     return fIdentityConstraint->getIdentityConstraintName();
 }
 
-const XMLCh *XSIDCDefinition::getNamespace() 
+const XMLCh *XSIDCDefinition::getNamespace() const
 {
     return fXSModel->getURIStringPool()->getValueForId(fIdentityConstraint->getNamespaceURI());
 }
