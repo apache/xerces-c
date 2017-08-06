@@ -23,7 +23,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -476,9 +475,15 @@ XMLDateTime::XMLDateTime(time_t epoch, bool duration, MemoryManager* const manag
         epoch %= 60;
         unsigned long seconds = epoch;
 
+        // These should just be replaced with an ostringstream but there's no STL usage anywhere else.
+        // Modern compilers have snprintf. Anything older should accomodate unsigned longs of
+        // 20 characters each, and this accomodates over 50.
 		char timebuf[256];
+#ifdef HAVE_SNPRINTF
         snprintf(timebuf, 256, "%sP%luDT%luH%luM%luS", neg ? "-" : "", days, hours, minutes, seconds);
-
+#else
+        sprintf(timebuf, "%sP%luDT%luH%luM%luS", neg ? "-" : "", days, hours, minutes, seconds);
+#endif
         XMLCh* timeptr = XMLString::transcode(timebuf);
         setBuffer(timeptr);
         XMLString::release(&timeptr);

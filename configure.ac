@@ -137,7 +137,7 @@ AC_CHECK_FUNCS([getcwd pathconf realpath \
 		clock_gettime ftime gettimeofday timegm gmtime_r \
 		memmove memset nl_langinfo setlocale localeconv \
 		strcasecmp strncasecmp stricmp strnicmp strchr strdup \
-		strrchr strstr strtol strtoul \
+		strrchr strstr strtol strtoul snprintf \
 		towupper towlower mblen \
 		wcsupr wcslwr wcsnicmp wcsicmp \
 		])

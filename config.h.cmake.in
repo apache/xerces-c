@@ -171,6 +171,9 @@
 /* Define to 1 if you have the `setlocale' function. */
 #cmakedefine HAVE_SETLOCALE 1
 
+/* Define to 1 if you have the `snprintf' function. */
+#cmakedefine HAVE_SNPRINTF 1
+
 /* Define to 1 if you have the `socket' function. */
 #cmakedefine HAVE_SOCKET 1
 
