@@ -81,6 +81,9 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #cmakedefine HAVE_GETTIMEOFDAY 1
 
+/* Define to 1 if you have the `gmtime_r' function. */
+#cmakedefine HAVE_GMTIME_R 1
+
 /* Define to 1 if you have the `iconv' function. */
 #cmakedefine HAVE_ICONV 1
 
@@ -248,6 +251,9 @@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #cmakedefine HAVE_SYS_TYPES_H 1
+
+/* Define to 1 if you have the `timegm' function. */
+#cmakedefine HAVE_TIMEGM 1
 
 /* Define to 1 if you have the `towlower' function. */
 #cmakedefine HAVE_TOWLOWER 1
