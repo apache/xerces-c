@@ -245,7 +245,7 @@
           <td>msbuild with VS2015 x64</td>
           <td><code>mkdir build</code><br/>
           <code>cd build</code><br/>
-          <code>cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=D:\libs \path\to\xerces-c\source</code><br/>
+          <code>cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=D:\libs &nbsp;&nbsp; \path\to\xerces-c\source</code><br/>
           <code>cmake --build . --config Debug</code><br/>
           <code>ctest -V -C Debug -j 4</code><br/>
           <code>cmake --build . --config Debug --target install</code></td>
