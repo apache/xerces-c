@@ -1213,7 +1213,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     // if we're using counters.
     //
     if (elemOccurenceMap != 0) {
-        fCountingStates = (Occurence**)fMemoryManager->allocate(fTransTableSize*sizeof(Occurence));
+        fCountingStates = (Occurence**)fMemoryManager->allocate(fTransTableSize*sizeof(Occurence*));
         memset(fCountingStates, 0, fTransTableSize*sizeof(Occurence*));
         for (unsigned int i = 0; i < fTransTableSize; ++i) {
             unsigned int * transitions = fTransTable[i];
