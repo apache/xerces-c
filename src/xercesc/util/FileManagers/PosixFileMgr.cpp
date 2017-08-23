@@ -37,6 +37,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PanicHandler.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -247,7 +248,7 @@ PosixFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const /*mana
     //
     //  If it starts with a slash, then it cannot be relative.
     //
-    return toCheck[0] != XMLCh('/');
+    return toCheck[0] != chForwardSlash;
 }
 
 
