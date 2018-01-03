@@ -99,6 +99,8 @@ platform: x64
 
 init:
   - git config --global core.autocrlf input
+
+before_build:
   - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XERCES_DOWNLOAD%`) DO SET AV_XERCES_CYG_DOWNLOAD=%%F'
   - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XERCES_TOOLS%`) DO SET AV_XERCES_CYG_TOOLS=%%F'
   - 'FOR /F "tokens=* USEBACKQ" %%F IN (`C:\cygwin64\bin\cygpath -u %AV_XERCES_SOURCE%`) DO SET AV_XERCES_CYG_SOURCE=%%F'
@@ -121,8 +123,6 @@ init:
   - set "AV_XERCES_CMAKE_INSTALL=%AV_XERCES_INSTALL%"
   - 'if %compiler%==cygwin set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_CYG_SOURCE%'
   - 'if %compiler%==cygwin set "AV_XERCES_CMAKE_INSTALL=%AV_XERCES_CYG_INSTALL%'
-
-before_build:
   - 'C:\cygwin64\bin\bash %AV_XERCES_CYG_SOURCE%/scripts/ci-appveyor-setup'
   - set ICU_PLATFORM=x64
   - if [%platform%] == [x86] set ICU_PLATFORM=Win32
