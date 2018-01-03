@@ -110,7 +110,7 @@ before_build:
   - 'if %compiler%==cygwin C:\Cygwin64\setup-x86_64 -q -R C:\Cygwin64 -s http://cygwin.mirror.constant.com -l %AV_XERCES_DOWNLOAD%\cygwin -P libcurl-devel,cmake'
   - if [%msgloader%] == [icu] set AV_ICU_BUILD=true
   - if [%transcoder%] == [icu] set AV_ICU_BUILD=true
-  - 'if EXIST "%AV_PROJECTS%\icu" AV_ICU_BUILD=false'
+  - 'if EXIST "%AV_PROJECTS%\icu" set AV_ICU_BUILD=false'
   - 'set "PATH=C:\Program Files (x86)\cmake\bin;%AV_XERCES_TOOLS%;%PATH%"'
   - 'if %compiler%==cygwin set "PATH=C:\Cygwin64\bin;%PATH%"'
   - 'if %compiler%==mingw set "PATH=C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%"'
