@@ -920,7 +920,10 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
 
     XMLString::subString(tmpBuf, basePath, 0, (basePtr - basePath + 1), manager);
     tmpBuf[basePtr - basePath + 1] = 0;
-    XMLString::catString(tmpBuf, relativePath);
+    if (relativePath)
+    {
+        XMLString::catString(tmpBuf, relativePath);
+    }
 
     removeDotSlash(tmpBuf, manager);
 
