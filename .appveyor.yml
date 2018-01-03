@@ -150,7 +150,3 @@ after_build:
 before_test:
   - cd %AV_XERCES_BUILD%
   - ctest -V -C %configuration%
-
-artifacts:
-  - path: xerces-c.zip
-    name: xerces-c.zip
