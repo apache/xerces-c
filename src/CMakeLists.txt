@@ -1079,7 +1079,6 @@ if(XERCES_USE_NETACCESSOR_CURL)
   list(APPEND libxerces_c_SOURCES ${curl_sources})
   list(APPEND libxerces_c_HEADERS ${curl_headers})
   list(APPEND libxerces_c_DEPS ${CURL_LIBRARIES})
-  include_directories(${CURL_INCLUDE_DIRS})
 endif()
 
 if(XERCES_USE_NETACCESSOR_SOCKET)
@@ -1249,6 +1248,9 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
 )
+#if(XERCES_USE_NETACCESSOR_CURL)
+#  include_directories(SYSTEM ${CURL_INCLUDE_DIRS})
+#endif()
 
 add_custom_target(xerces-c-headers SOURCES ${libxerces_c_HEADERS})
 set_target_properties(xerces-c-headers PROPERTIES FOLDER "Library")
@@ -1257,6 +1259,10 @@ add_library(xerces-c
   ${libxerces_c_SOURCES}
   ${libxerces_c_RESOURCES})
 target_link_libraries(xerces-c ${libxerces_c_DEPS})
+if(XERCES_USE_NETACCESSOR_CURL)
+  target_include_directories(xerces-c SYSTEM PRIVATE ${CURL_INCLUDE_DIRS})
+endif()
+
 if(MSVC)
   # Add configuration-specific library name to resource file.
   target_compile_definitions(xerces-c PRIVATE "XERCES_DLL_NAME=\"$<TARGET_FILE_NAME:xerces-c>\\0\"")
