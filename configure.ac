@@ -337,7 +337,6 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[]],
                                      [[const char16_t *unicode = u"Test ünícodè → ©";]])],
                     [
                       xerces_cv_type_xmlch=char16_t
-                      AC_DEFINE_UNQUOTED([XERCES_USE_CHAR16_T], [1], [Define if the C++11 char16_t type is to be used])
                       AC_MSG_RESULT([yes])
                     ],
                     [
