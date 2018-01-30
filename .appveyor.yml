@@ -43,6 +43,7 @@ environment:
       netaccessor: curl
       msgloader: inmemory
       transcoder: iconv
+      xmlch: uint16_t
     - compiler: cygwin
       configuration: Debug
       generator: Unix Makefiles
@@ -51,6 +52,7 @@ environment:
       netaccessor:
       msgloader:
       transcoder:
+      xmlch: char16_t
     - compiler: mingw
       configuration: Release
       generator: Ninja
@@ -59,6 +61,7 @@ environment:
       netaccessor:
       msgloader:
       transcoder: windows
+      xmlch: wchar_t
     - compiler: mingw
       configuration: Debug
       generator: Ninja
@@ -67,6 +70,7 @@ environment:
       netaccessor:
       msgloader:
       transcoder: iconv
+      xmlch: uint16_t
     - compiler: vc14
       configuration: Release
       generator: Visual Studio 14 2015 Win64
@@ -75,6 +79,7 @@ environment:
       netaccessor:
       msgloader: icu
       transcoder: windows
+      xmlch: wchar_t
     - compiler: vc14
       configuration: Debug
       generator: Visual Studio 14 2015 Win64
@@ -83,6 +88,7 @@ environment:
       netaccessor: winsock
       msgloader: inmemory
       transcoder: icu
+      xmlch: char16_t
 
 cache:
   - 'c:\projects\download -> scripts/ci-appveyor-setup'
@@ -119,6 +125,7 @@ before_build:
   - if NOT [%netaccessor%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dnetwork-accessor=%netaccessor%"
   - if NOT [%msgloader%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmessage-loader=%msgloader%"
   - if NOT [%transcoder%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dtranscoder=%transcoder%"
+  - if NOT [%xmlch%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dxmlch-type=%xmlch%"
   - set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_SOURCE%"
   - set "AV_XERCES_CMAKE_INSTALL=%AV_XERCES_INSTALL%"
   - 'if %compiler%==cygwin set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_CYG_SOURCE%'
