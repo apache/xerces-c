@@ -1226,16 +1226,6 @@ if(XERCES_USE_FILEMGR_WINDOWS)
   list(APPEND libxerces_c_HEADERS ${winfmgr_headers})
 endif()
 
-# Windows resource.  With some additional work to clean it up, it
-# might be possible to use with Cygwin and MinGW.
-if(MSVC)
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/xercesc/util/MsgLoaders/Win32/Version.rc.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/MsgLoaders/Win32/Version.rc"
-    @ONLY)
-  list(APPEND libxerces_c_RESOURCES "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/MsgLoaders/Win32/Version.rc")
-endif()
-
 # Definitions required for building
 add_definitions(
   -DHAVE_CONFIG_H=1
@@ -1256,8 +1246,7 @@ add_custom_target(xerces-c-headers SOURCES ${libxerces_c_HEADERS})
 set_target_properties(xerces-c-headers PROPERTIES FOLDER "Library")
 
 add_library(xerces-c
-  ${libxerces_c_SOURCES}
-  ${libxerces_c_RESOURCES})
+  ${libxerces_c_SOURCES})
 target_link_libraries(xerces-c ${libxerces_c_DEPS})
 if(XERCES_USE_NETACCESSOR_CURL)
   target_include_directories(xerces-c SYSTEM PRIVATE ${CURL_INCLUDE_DIRS})

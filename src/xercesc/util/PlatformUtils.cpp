@@ -101,9 +101,6 @@
 #if XERCES_USE_MSGLOADER_INMEMORY
 #	include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #endif
-#if XERCES_USE_WIN32_MSGLOADER
-#	include <xercesc/util/MsgLoaders/Win32/Win32MsgLoader.hpp>
-#endif
 
 #include <xercesc/util/TransService.hpp>
 #if XERCES_USE_TRANSCODER_ICU
@@ -445,8 +442,6 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 		ms = new ICUMsgLoader(msgDomain);
 	#elif defined (XERCES_USE_MSGLOADER_ICONV)
 		ms = new MsgCatalogLoader(msgDomain);
-    #elif defined (XERCES_USE_WIN32_MSGLOADER)
-		ms = new Win32MsgLoader(msgDomain);
 	#elif defined (XERCES_USE_MSGLOADER_INMEMORY)
 		ms = new InMemMsgLoader(msgDomain);
 	#else
