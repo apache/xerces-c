@@ -60,7 +60,6 @@ EXTRA_DIST = CMakeLists.txt \
         stricmp.h strnicmp.h towlower.h towupper.h \
         xercesc/NLS \
         xercesc/util/Xerces_autoconf_config.hpp.cmake.in \
-	xercesc/util/MsgLoaders/Win32 \
         xercesc/util/MsgLoaders/ICU/resources
 
 libxerces_c_la_LIBADD = ${LTLIBOBJS}

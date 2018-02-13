@@ -27,7 +27,6 @@ set(EXTRA_DIST
   xercesc/util/Xerces_autoconf_config.hpp.in
   xercesc/util/Xerces_autoconf_config.msvc.hpp
   xercesc/util/Xerces_autoconf_config.borland.hpp
-  xercesc/util/MsgLoaders/Win32
   xercesc/util/MsgLoaders/ICU/resources
 )
 
