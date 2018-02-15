@@ -25,8 +25,8 @@ set(EXTRA_DIST
   xercesc/NLS
   xercesc/util/Xerces_autoconf_config.hpp.cmake.in
   xercesc/util/Xerces_autoconf_config.hpp.in
-  xercesc/util/Xerces_autoconf_config.msvc.hpp
-  xercesc/util/Xerces_autoconf_config.borland.hpp
+  xercesc/util/XercesVersion.hpp.cmake.in
+  xercesc/util/XercesVersion.hpp.in
   xercesc/util/MsgLoaders/ICU/resources
 )
 
@@ -1140,7 +1140,7 @@ if(XERCES_USE_MSGLOADER_ICU)
   list(APPEND libxerces_c_DEPS ICU::uc ICU::data)
 
   # Resource shortname
-  set(PKGNAME xercesc_messages_${LIB_INTERFACE_VER_U})
+  set(PKGNAME xercesc_messages_${INTERFACE_VERSION_U})
 
   add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/xercesc_messages.c"
@@ -1256,15 +1256,15 @@ if(MSVC)
   target_compile_definitions(xerces-c PRIVATE "XERCES_DLL_NAME=\"$<TARGET_FILE_NAME:xerces-c>\\0\"")
   # Different naming for Windows than for Unix builds for backward
   # compatibility with the existing project files.
-  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c_${LIB_INTERFACE_VER_U_MAJOR}")
-  set_target_properties(xerces-c PROPERTIES RUNTIME_OUTPUT_NAME "xerces-c_${LIB_INTERFACE_VER_U}")
+  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c_${INTERFACE_VERSION_U_MAJOR}")
+  set_target_properties(xerces-c PROPERTIES RUNTIME_OUTPUT_NAME "xerces-c_${INTERFACE_VERSION_U}")
   set_target_properties(xerces-c PROPERTIES DEBUG_POSTFIX "D")
 elseif(UNIX)
   # For strict libtool compatibility on Unix.  It's a horrible hack to
   # set the version in the filename, and create the symlink at install
   # time.  Note: could be dropped when the SONAME is updated and
   # libtool compatibility is no longer required.
-  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c-${LIB_INTERFACE_VER_D}")
+  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c-${INTERFACE_VERSION_D}")
   file(GENERATE
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/InstallLibrarySymlink.cmake"
     CONTENT "execute_process(COMMAND ln -sf \"$<TARGET_FILE_NAME:xerces-c>\" \"\$ENV{DESTDIR}${CMAKE_INSTALL_FULL_LIBDIR}/libxerces-c.so\")")
@@ -1272,13 +1272,13 @@ elseif(UNIX)
 else()
   # Not used for the common cases, though this would be the default if
   # not for libtool compatibility.
-  set_target_properties(xerces-c PROPERTIES SOVERSION ${LIB_INTERFACE_VER_D})
+  set_target_properties(xerces-c PROPERTIES SOVERSION ${INTERFACE_VERSION_D})
   if(NOT CYGWIN)
     # This property causes shared libraries on Linux to have the full
     # version encoded into their final filename.  We disable this on
     # Cygwin because it causes xerces-c-${XERCES_C_FULL_VERSION}.dll
     # to be created when xerces-c.dll seems to be the default.
-    set_target_properties(xerces-c PROPERTIES VERSION ${LIB_INTERFACE_VER_D})
+    set_target_properties(xerces-c PROPERTIES VERSION ${INTERFACE_VERSION_D})
   endif()
 endif()
 set_target_properties(xerces-c PROPERTIES FOLDER "Library")
@@ -1344,9 +1344,10 @@ endif()
 unset(group_dir)
 unset(group_files)
 
-# Make sure cmake-generated Xerces_autoconf_config.hpp ends up in a
-# proper place when installed.
+# Make sure cmake-generated Xerces_autoconf_config.hpp and
+# Xerces_version_config.hpp end up in a proper place when installed.
 install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/Xerces_autoconf_config.hpp"
+        "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/Xerces_version_config.hpp"
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/xercesc/util"
   COMPONENT "development")

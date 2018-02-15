@@ -25,15 +25,43 @@
 
 AC_PREREQ(2.60)
 AC_INIT([xerces-c],[3.2.1])
+INTERFACE_VERSION=3.2
+
+XERCES_VERSION_MAJOR=$(echo $PACKAGE_VERSION | cut -d. -f1)
+XERCES_VERSION_MINOR=$(echo $PACKAGE_VERSION | cut -d. -f2)
+XERCES_VERSION_REVISION=$(echo $PACKAGE_VERSION | cut -d. -f3)
+
+INTERFACE_VERSION_MAJOR=$(echo $INTERFACE_VERSION | cut -d. -f1)
+INTERFACE_VERSION_MINOR=$(echo $INTERFACE_VERSION | cut -d. -f2)
+
+INTERFACE_VERSION_D="${INTERFACE_VERSION_MAJOR}.${INTERFACE_VERSION_MINOR}"
+INTERFACE_VERSION_U="${INTERFACE_VERSION_MAJOR}_${INTERFACE_VERSION_MINOR}"
+
+AC_SUBST([XERCES_VERSION_MAJOR])
+AC_SUBST([XERCES_VERSION_MINOR])
+AC_SUBST([XERCES_VERSION_REVISION])
+AC_SUBST([INTERFACE_VERSION_MAJOR])
+AC_SUBST([INTERFACE_VERSION_MINOR])
+AC_SUBST([INTERFACE_VERSION_D])
+AC_SUBST([INTERFACE_VERSION_U])
+
+AC_DEFINE_UNQUOTED([XERCES_VERSION_MAJOR], $XERCES_VERSION_MAJOR, [Definition of Xerces major version])
+AC_DEFINE_UNQUOTED([XERCES_VERSION_MINOR], $XERCES_VERSION_MINOR, [Definition of Xerces minor version])
+AC_DEFINE_UNQUOTED([XERCES_VERSION_REVISION], $XERCES_VERSION_REVISION, [Definition of Xerces patch version])
+
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_LIBOBJ_DIR([src])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
-AC_CONFIG_FILES([Makefile \
-                 src/Makefile \
-                 tests/Makefile \
-                 samples/Makefile \
+AC_CONFIG_HEADER([src/xercesc/util/Xerces_version_config.hpp])
+AC_CONFIG_FILES([Makefile
+                 doc/Makefile
+                 doc/Doxyfile
+                 doc/style/dtd/entities.ent
+                 src/Makefile
+                 tests/Makefile
+                 samples/Makefile
 		 xerces-c.pc
                  scripts/run-test])
 
