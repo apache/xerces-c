@@ -80,6 +80,7 @@ environment:
       msgloader: icu
       transcoder: windows
       xmlch: wchar_t
+      mfc: ON
     - compiler: vc14
       configuration: Debug
       generator: Visual Studio 14 2015 Win64
@@ -89,6 +90,7 @@ environment:
       msgloader: inmemory
       transcoder: icu
       xmlch: char16_t
+      mfc: OFF
 
 cache:
   - 'c:\projects\download -> scripts/ci-appveyor-setup'
@@ -126,6 +128,7 @@ before_build:
   - if NOT [%msgloader%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmessage-loader=%msgloader%"
   - if NOT [%transcoder%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dtranscoder=%transcoder%"
   - if NOT [%xmlch%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dxmlch-type=%xmlch%"
+  - if NOT [%mfc%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmfc-debug=%mfc%"
   - set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_SOURCE%"
   - set "AV_XERCES_CMAKE_INSTALL=%AV_XERCES_INSTALL%"
   - 'if %compiler%==cygwin set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_CYG_SOURCE%'
