@@ -46,12 +46,12 @@ ${parsers_headers} ${sax_headers} ${sax2_headers} ${validators_headers} \
 ${xinclude_headers}
 
 # Make sure autoconf-generated Xerces_autoconf_config.hpp and
-# Xerces_version_config.hpp end up in a proper place when installed.
+# XercesVersion.hpp end up in a proper place when installed.
 #
 autoconfheadersdir = $(includedir)/xercesc/util
 nodist_autoconfheaders_HEADERS = \
 	${top_builddir}/src/xercesc/util/Xerces_autoconf_config.hpp \
-	${top_builddir}/src/xercesc/util/Xerces_version_config.hpp
+	${top_builddir}/src/xercesc/util/XercesVersion.hpp
 
 # Compatibility library.
 #
@@ -60,7 +60,7 @@ EXTRA_DIST = CMakeLists.txt \
         stricmp.h strnicmp.h towlower.h towupper.h \
         xercesc/NLS \
         xercesc/util/Xerces_autoconf_config.hpp.cmake.in \
-        xercesc/util/Xerces_version_config.hpp.cmake.in \
+        xercesc/util/XercesVersion.hpp.cmake.in \
         xercesc/util/MsgLoaders/ICU/resources
 
 libxerces_c_la_LIBADD = ${LTLIBOBJS}
@@ -694,7 +694,6 @@ util_headers = \
 	xercesc/util/ValueVectorOf.hpp \
 	xercesc/util/ValueVectorOf.c \
 	xercesc/util/XercesDefs.hpp \
-	xercesc/util/XercesVersion.hpp \
 	xercesc/util/XMemory.hpp \
 	xercesc/util/XML256TableTranscoder.hpp \
 	xercesc/util/XML88591Transcoder.hpp \

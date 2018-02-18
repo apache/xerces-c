@@ -56,6 +56,12 @@ foreach(line IN LISTS configure)
   string(REGEX REPLACE "^INTERFACE_VERSION=(.*)" "\\1" xerces_c_interface_version "${line}")
   break()
 endforeach()
+file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/configure.ac" configure
+     REGEX "^GRAMMAR_SERIALIZATION_LEVEL=.*")
+foreach(line IN LISTS configure)
+  string(REGEX REPLACE "^GRAMMAR_SERIALIZATION_LEVEL=(.*)" "\\1" xerces_c_grammar_serialization_level "${line}")
+  break()
+endforeach()
 
 message(STATUS "Configuring Apache Xerces-C++ version ${xerces_c_version}")
 
@@ -84,6 +90,8 @@ list(GET interface_version_parts 1 INTERFACE_VERSION_MINOR)
 
 set(INTERFACE_VERSION_D "${INTERFACE_VERSION_MAJOR}.${INTERFACE_VERSION_MINOR}")
 set(INTERFACE_VERSION_U "${INTERFACE_VERSION_MAJOR}_${INTERFACE_VERSION_MINOR}")
+
+set(XERCES_GRAMMAR_SERIALIZATION_LEVEL "${xerces_c_grammar_serialization_level}")
 
 set(EXTRA_DIST
   xerces-c.spec
@@ -143,8 +151,8 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/src/xercesc/util/Xerces_autoconf_config.hpp
   @ONLY)
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/xercesc/util/Xerces_version_config.hpp.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/src/xercesc/util/Xerces_version_config.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/xercesc/util/XercesVersion.hpp.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/src/xercesc/util/XercesVersion.hpp
   @ONLY)
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/doc/style/dtd/entities.ent.in

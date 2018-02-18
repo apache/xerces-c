@@ -26,6 +26,7 @@
 AC_PREREQ(2.60)
 AC_INIT([xerces-c],[3.2.1])
 INTERFACE_VERSION=3.2
+GRAMMAR_SERIALIZATION_LEVEL=7
 
 XERCES_VERSION_MAJOR=$(echo $PACKAGE_VERSION | cut -d. -f1)
 XERCES_VERSION_MINOR=$(echo $PACKAGE_VERSION | cut -d. -f2)
@@ -49,12 +50,17 @@ AC_DEFINE_UNQUOTED([XERCES_VERSION_MAJOR], $XERCES_VERSION_MAJOR, [Definition of
 AC_DEFINE_UNQUOTED([XERCES_VERSION_MINOR], $XERCES_VERSION_MINOR, [Definition of Xerces minor version])
 AC_DEFINE_UNQUOTED([XERCES_VERSION_REVISION], $XERCES_VERSION_REVISION, [Definition of Xerces patch version])
 
+AC_DEFINE_UNQUOTED([INTERFACE_VERSION_MAJOR], $INTERFACE_VERSION_MAJOR, [Definition of Xerces interface major version])
+AC_DEFINE_UNQUOTED([INTERFACE_VERSION_MINOR], $INTERFACE_VERSION_MINOR, [Definition of Xerces interface minor version])
+
+AC_DEFINE_UNQUOTED([XERCES_GRAMMAR_SERIALIZATION_LEVEL], $GRAMMAR_SERIALIZATION_LEVEL, [Definition of Xerces grammar serialization level])
+
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_LIBOBJ_DIR([src])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h src/xercesc/util/Xerces_autoconf_config.hpp])
-AC_CONFIG_HEADER([src/xercesc/util/Xerces_version_config.hpp])
+AC_CONFIG_HEADER([src/xercesc/util/XercesVersion.hpp])
 AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  doc/Doxyfile

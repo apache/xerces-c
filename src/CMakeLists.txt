@@ -553,7 +553,6 @@ set(util_headers
   xercesc/util/ValueVectorOf.hpp
   xercesc/util/ValueVectorOf.c
   xercesc/util/XercesDefs.hpp
-  xercesc/util/XercesVersion.hpp
   xercesc/util/XMemory.hpp
   xercesc/util/XML256TableTranscoder.hpp
   xercesc/util/XML88591Transcoder.hpp
@@ -1345,9 +1344,9 @@ unset(group_dir)
 unset(group_files)
 
 # Make sure cmake-generated Xerces_autoconf_config.hpp and
-# Xerces_version_config.hpp end up in a proper place when installed.
+# XercesVersion.hpp end up in a proper place when installed.
 install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/Xerces_autoconf_config.hpp"
-        "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/Xerces_version_config.hpp"
+        "${CMAKE_CURRENT_BINARY_DIR}/xercesc/util/XercesVersion.hpp"
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/xercesc/util"
   COMPONENT "development")
