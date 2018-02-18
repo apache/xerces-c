@@ -1256,7 +1256,7 @@ if(MSVC)
   target_compile_definitions(xerces-c PRIVATE "XERCES_DLL_NAME=\"$<TARGET_FILE_NAME:xerces-c>\\0\"")
   # Different naming for Windows than for Unix builds for backward
   # compatibility with the existing project files.
-  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c_${INTERFACE_VERSION_U_MAJOR}")
+  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c_${INTERFACE_VERSION_MAJOR}")
   set_target_properties(xerces-c PROPERTIES RUNTIME_OUTPUT_NAME "xerces-c_${INTERFACE_VERSION_U}")
   set_target_properties(xerces-c PROPERTIES DEBUG_POSTFIX "D")
 elseif(UNIX)
