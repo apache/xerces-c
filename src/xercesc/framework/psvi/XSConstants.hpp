@@ -53,9 +53,8 @@ typedef RefVectorOf <XSParticle> XSParticleList;
 typedef RefVectorOf <XSSimpleTypeDefinition> XSSimpleTypeDefinitionList;
 typedef RefArrayVectorOf <XMLCh> StringList;
 
-class XMLPARSER_EXPORT XSConstants 
+namespace XSConstants
 {
-public:
 
     // XML Schema Components
     enum COMPONENT_TYPE {
@@ -184,12 +183,7 @@ public:
 	     VALUE_CONSTRAINT_FIXED         = 2
     };
 
-private:
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    XSConstants();
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 
