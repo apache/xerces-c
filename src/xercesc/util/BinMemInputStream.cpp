@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/BinMemInputStream.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

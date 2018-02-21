@@ -28,7 +28,7 @@
 #endif
 
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>

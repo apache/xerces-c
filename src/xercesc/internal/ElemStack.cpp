@@ -22,7 +22,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>

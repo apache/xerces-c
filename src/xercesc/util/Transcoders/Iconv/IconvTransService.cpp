@@ -43,7 +43,7 @@
 #	include <towlower.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 #include <cstdio>
 

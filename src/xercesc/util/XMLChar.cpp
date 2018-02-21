@@ -25,7 +25,7 @@
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/internal/CharTypeTables.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

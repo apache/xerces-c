@@ -35,7 +35,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <string.h>
+#include <cstring>
 
 #if XERCES_HAVE_EMMINTRIN_H
 #   include <emmintrin.h>

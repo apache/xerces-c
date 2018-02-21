@@ -39,7 +39,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include "InitTermTest.hpp"
 
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 #include <fstream>

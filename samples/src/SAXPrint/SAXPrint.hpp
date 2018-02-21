@@ -22,7 +22,7 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include <cstdlib>
 #include "SAXPrintHandlers.hpp"

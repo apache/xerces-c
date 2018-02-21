@@ -33,7 +33,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLChar.hpp>
 
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

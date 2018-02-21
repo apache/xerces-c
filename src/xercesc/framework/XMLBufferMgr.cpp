@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-//#include <string.h>
+//#include <cstring>
 #include <xercesc/framework/XMLBufferMgr.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 

@@ -29,7 +29,7 @@
 #endif
 
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 
 #include <xercesc/util/NetAccessors/BinHTTPInputStreamCommon.hpp>
 

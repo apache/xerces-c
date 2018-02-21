@@ -30,7 +30,7 @@
  */
 
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>

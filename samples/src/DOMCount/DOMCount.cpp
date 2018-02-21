@@ -36,7 +36,7 @@
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMAttr.hpp>
 #include "DOMCount.hpp"
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 #include <fstream>

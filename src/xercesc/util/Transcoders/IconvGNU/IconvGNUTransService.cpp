@@ -103,7 +103,7 @@
 # endif /* BYTE_ORDER == LITTLE_ENDIAN */
 
 #include <wchar.h>
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 #include <cstdio>
 

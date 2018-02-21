@@ -80,7 +80,7 @@
 #include "DOMPrintErrorHandler.hpp"
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 // ---------------------------------------------------------------------------

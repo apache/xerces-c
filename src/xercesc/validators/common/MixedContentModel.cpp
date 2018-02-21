@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/framework/XMLElementDecl.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>

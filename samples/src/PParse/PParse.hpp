@@ -23,7 +23,7 @@
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 #include "PParseHandlers.hpp"
 

@@ -35,7 +35,7 @@
 #include <locale.h>
 #include <cstdlib>
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

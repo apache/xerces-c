@@ -25,7 +25,7 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 #if HAVE_ERRNO_H
   #include <errno.h>
 #endif

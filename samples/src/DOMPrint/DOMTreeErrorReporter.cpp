@@ -26,7 +26,7 @@
 #include "DOMTreeErrorReporter.hpp"
 #include <iostream>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 
 
 void DOMTreeErrorReporter::warning(const SAXParseException&)

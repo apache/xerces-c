@@ -27,7 +27,7 @@
 
 #include <cstdlib>
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>

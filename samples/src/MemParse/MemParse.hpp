@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 #include <xercesc/util/PlatformUtils.hpp>
 #include "MemParseHandlers.hpp"

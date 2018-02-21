@@ -26,7 +26,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

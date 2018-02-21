@@ -25,7 +25,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "MemParse.hpp"
-#include <string.h>
+#include <cstring>
 #include <xercesc/sax/AttributeList.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/sax/SAXException.hpp>

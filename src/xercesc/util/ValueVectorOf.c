@@ -26,7 +26,7 @@
 #if defined(XERCES_TMPLSINC)
 #include <xercesc/util/ValueVectorOf.hpp>
 #endif
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

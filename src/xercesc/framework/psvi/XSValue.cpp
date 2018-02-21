@@ -21,7 +21,7 @@
 
 #include <limits.h>
 #include <errno.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 #include <math.h>
 #include <float.h>

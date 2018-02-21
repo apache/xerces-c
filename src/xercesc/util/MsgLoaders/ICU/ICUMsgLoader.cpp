@@ -34,7 +34,7 @@
 #include "unicode/uloc.h"
 #include "unicode/udata.h"
 
-#include "string.h"
+#include <cstring>
 #include <cstdio>
 #include <cstdlib>
 

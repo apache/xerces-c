@@ -21,7 +21,7 @@
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

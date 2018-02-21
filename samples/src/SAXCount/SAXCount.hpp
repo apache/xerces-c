@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/PlatformUtils.hpp>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include <xercesc/parsers/SAXParser.hpp>
 #include "SAXCountHandlers.hpp"

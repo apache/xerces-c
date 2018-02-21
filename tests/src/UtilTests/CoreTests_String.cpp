@@ -26,7 +26,7 @@
 #include "CoreTests.hpp"
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/ValueArrayOf.hpp>
-#include <string.h>
+#include <cstring>
 
 
 // ---------------------------------------------------------------------------

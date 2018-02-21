@@ -22,7 +22,7 @@
 #include <xercesc/util/BitOps.hpp>
 #include <xercesc/util/XMLUTF16Transcoder.hpp>
 #include <xercesc/util/TranscodingException.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

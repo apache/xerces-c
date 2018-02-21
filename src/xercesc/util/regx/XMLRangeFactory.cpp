@@ -30,7 +30,7 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/UnicodeRangeFactory.hpp>
 #include <xercesc/util/Janitor.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

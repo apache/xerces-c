@@ -34,7 +34,7 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/framework/psvi/XSValue.hpp>
 
-#include <string.h>
+#include <cstring>
 #include <cstdio>
 
 XERCES_CPP_NAMESPACE_USE

@@ -23,7 +23,7 @@
 #  include <config.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 
 #if HAVE_UNISTD_H
 #  include <unistd.h>

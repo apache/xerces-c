@@ -32,7 +32,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <iostream>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 
 
 XERCES_CPP_NAMESPACE_USE

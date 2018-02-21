@@ -22,7 +22,7 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/XML88591Transcoder.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

@@ -130,7 +130,7 @@ AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h locale.h \
                   memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h \
-                  string.h strings.h \
+                  strings.h \
                   sys/param.h sys/socket.h sys/time.h sys/timeb.h \
                   unistd.h wchar.h wctype.h \
                   CoreServices/CoreServices.h \
@@ -225,7 +225,7 @@ AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>]],
                  )
 AC_MSG_CHECKING([for wcsrtombs])
 AC_RUN_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
-#include <string.h>]],
+#include <cstring>]],
                                  [[
 mbstate_t st;
 memset(&st, 0, sizeof(st));
@@ -247,7 +247,7 @@ else
                  )
 AC_MSG_CHECKING([for mbsrtowcs])
 AC_RUN_IFELSE(  [AC_LANG_PROGRAM([[#include <wchar.h>
-#include <string.h>]],
+#include <cstring>]],
                                  [[
 mbstate_t st;
 memset(&st, 0, sizeof(st));

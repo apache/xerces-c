@@ -57,7 +57,7 @@
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_USE
 

@@ -28,7 +28,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>

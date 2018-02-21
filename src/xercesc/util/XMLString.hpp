@@ -25,7 +25,7 @@
 #include <xercesc/util/BaseRefVectorOf.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
-#include <string.h>
+#include <cstring>
 #include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN

@@ -41,7 +41,7 @@
 #include    <cstdio>
 #include    <cstdlib>
 #include    <iostream.h>
-#include    <string.h>
+#include    <cstring>
 
 
 // ---------------------------------------------------------------------------

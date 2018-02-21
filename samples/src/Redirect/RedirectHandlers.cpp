@@ -31,7 +31,7 @@
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include "Redirect.hpp"
-#include <string.h>
+#include <cstring>
 
 
 // ---------------------------------------------------------------------------

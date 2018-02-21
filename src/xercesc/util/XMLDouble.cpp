@@ -27,7 +27,7 @@
 #include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 XERCES_CPP_NAMESPACE_BEGIN

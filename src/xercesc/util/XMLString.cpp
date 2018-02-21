@@ -34,7 +34,7 @@
 #	include <strnicmp.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 #include <cstdlib>
 #include <errno.h>

@@ -26,7 +26,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include "SAX2CountHandlers.hpp"
 #include <xercesc/sax2/XMLReaderFactory.hpp>

@@ -24,7 +24,7 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <assert.h>
-#include <string.h>
+#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
