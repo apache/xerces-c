@@ -130,7 +130,6 @@ AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h locale.h \
                   memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h \
-                  strings.h \
                   sys/param.h sys/socket.h sys/time.h sys/timeb.h \
                   unistd.h wchar.h wctype.h \
                   CoreServices/CoreServices.h \

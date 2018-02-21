@@ -22,10 +22,7 @@
 #include "strnicmp.h"
 #include "config.h"
 
-include <cstring>
-#if HAVE_STRINGS_H
-#	include <strings.h>
-#endif
+#include <string.h>
 
 int strnicmp(const char* str1, const char* str2, size_t count)
 {
