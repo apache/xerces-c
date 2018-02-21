@@ -144,9 +144,6 @@
 /* Define to 1 if you have the `memset' function. */
 #cmakedefine HAVE_MEMSET 1
 
-/* define if the compiler implements namespaces */
-#cmakedefine HAVE_NAMESPACES 1
-
 /* Define to 1 if you have the <netdb.h> header file. */
 #cmakedefine HAVE_NETDB_H 1
 
@@ -342,9 +339,6 @@
 
 /* Define if DLL symbols should be exported */
 #cmakedefine XERCES_DLL_EXPORT 1
-
-/* Define if namespaces is supported by the compiler */
-#cmakedefine XERCES_HAS_CPP_NAMESPACE 1
 
 /* Define to have SSE2 instruction support detected at runtime using __cpuid
    */

@@ -100,20 +100,13 @@ typedef XMLUInt32           UCS4Ch;
 // ---------------------------------------------------------------------------
 // Define namespace symbols if the compiler supports it.
 // ---------------------------------------------------------------------------
-#if defined(XERCES_HAS_CPP_NAMESPACE)
-    #define XERCES_CPP_NAMESPACE_BEGIN namespace XERCES_CPP_NAMESPACE {
-    #define XERCES_CPP_NAMESPACE_END  }
-    #define XERCES_CPP_NAMESPACE_USE using namespace XERCES_CPP_NAMESPACE;
-    #define XERCES_CPP_NAMESPACE_QUALIFIER XERCES_CPP_NAMESPACE::
+#define XERCES_CPP_NAMESPACE_BEGIN namespace XERCES_CPP_NAMESPACE {
+#define XERCES_CPP_NAMESPACE_END  }
+#define XERCES_CPP_NAMESPACE_USE using namespace XERCES_CPP_NAMESPACE;
+#define XERCES_CPP_NAMESPACE_QUALIFIER XERCES_CPP_NAMESPACE::
 
-    namespace XERCES_CPP_NAMESPACE { }
-    namespace xercesc = XERCES_CPP_NAMESPACE;
-#else
-    #define XERCES_CPP_NAMESPACE_BEGIN
-    #define XERCES_CPP_NAMESPACE_END
-    #define XERCES_CPP_NAMESPACE_USE
-    #define XERCES_CPP_NAMESPACE_QUALIFIER
-#endif
+namespace XERCES_CPP_NAMESPACE { }
+namespace xercesc = XERCES_CPP_NAMESPACE;
 
 #if defined(XERCES_STD_NAMESPACE)
 	#define XERCES_USING_STD(NAME) using std :: NAME;

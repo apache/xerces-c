@@ -20,26 +20,16 @@
 # C++ standard library includes
 
 include(CheckCXXSourceCompiles)
-include(XercesNamespaces)
-
-set(CMAKE_REQUIRED_DEFINITIONS_SAVE ${CMAKE_REQUIRED_DEFINITIONS})
-if(HAVE_NAMESPACES)
-  set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS} -DHAVE_NAMESPACES)
-endif()
 
 check_cxx_source_compiles("
 #include <map>
 #include <iomanip>
 #include <cmath>
-#ifdef HAVE_NAMESPACES
 using namespace std;
-#endif
 
 int main() {
   return 0;
 }"
   HAVE_STD_LIBS)
-
-set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS_SAVE})
 
 set(XERCES_NEW_IOSTREAMS ${HAVE_STD_LIBS})
