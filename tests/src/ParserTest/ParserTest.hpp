@@ -40,11 +40,7 @@ enum OutputTypes
 #include <stdlib.h>
 #include <xercesc/util/PlatformUtils.hpp>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
 
 // ---------------------------------------------------------------------------

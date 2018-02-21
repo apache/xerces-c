@@ -24,11 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/SAXParseException.hpp>
 #include "DOMTreeErrorReporter.hpp"
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 

@@ -26,11 +26,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <stdlib.h>
 #include <string.h>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <xercesc/parsers/SAXParser.hpp>
 #include "SAXCountHandlers.hpp"
 

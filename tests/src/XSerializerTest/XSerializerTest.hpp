@@ -28,11 +28,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <stdlib.h>
 #include <string.h>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include "XSerializerHandlers.hpp"
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>

@@ -21,11 +21,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

@@ -30,11 +30,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 

@@ -25,11 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <string.h>
 #include <stdlib.h>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <xercesc/util/PlatformUtils.hpp>
 #include "StdInParseHandlers.hpp"
 

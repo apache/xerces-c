@@ -24,13 +24,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "MemoryMonitor.hpp"
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #include <fstream>
-#else
-#include <iostream.h>
-#include <fstream.h>
-#endif
 #include <assert.h>
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>

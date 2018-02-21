@@ -42,11 +42,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 #include <limits.h>
 
 

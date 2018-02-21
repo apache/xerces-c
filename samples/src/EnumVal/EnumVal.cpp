@@ -28,11 +28,7 @@
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>    
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 

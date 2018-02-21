@@ -23,11 +23,7 @@
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
 #include <string.h>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 #include <stdlib.h>
 #include "SAXPrintHandlers.hpp"
 

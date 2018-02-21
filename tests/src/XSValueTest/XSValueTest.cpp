@@ -31,11 +31,7 @@
 #	include <config.h>
 #endif
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 
 #include <stdio.h>
 #include <math.h>

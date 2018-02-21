@@ -27,11 +27,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XercesDefs.hpp>
 
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
-#else
-#include <iostream.h>
-#endif
 
 #include <xercesc/util/XMLString.hpp>
 

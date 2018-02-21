@@ -33,13 +33,8 @@
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSParticle.hpp>
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #include <fstream>
-#else
-#include <iostream.h>
-#include <fstream.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include <xercesc/util/OutOfMemoryException.hpp>

@@ -24,11 +24,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "SAXCount.hpp"
-#if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
-#else
-#include <fstream.h>
-#endif
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 // ---------------------------------------------------------------------------

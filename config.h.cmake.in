@@ -186,9 +186,6 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #cmakedefine HAVE_STDLIB_H 1
 
-/* define if the compiler supports ISO C++ standard library */
-#cmakedefine HAVE_STD_LIBS 1
-
 /* Define to 1 if you have the `strcasecmp' function. */
 #cmakedefine HAVE_STRCASECMP 1
 
@@ -362,9 +359,6 @@
 
 /* Define if there is support for L"widestring" */
 #cmakedefine XERCES_LSTRSUPPORT 1
-
-/* Define if the isstream library can be included as <iostream> */
-#cmakedefine XERCES_NEW_IOSTREAMS 1
 
 /* Define to have XMemory.hpp avoid declaring a matching operator delete for
    the placement operator new */
