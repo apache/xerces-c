@@ -108,13 +108,8 @@ typedef XMLUInt32           UCS4Ch;
 namespace XERCES_CPP_NAMESPACE { }
 namespace xercesc = XERCES_CPP_NAMESPACE;
 
-#if defined(XERCES_STD_NAMESPACE)
-	#define XERCES_USING_STD(NAME) using std :: NAME;
-	#define XERCES_STD_QUALIFIER  std ::
-#else
-	#define XERCES_USING_STD(NAME)
-	#define XERCES_STD_QUALIFIER 
-#endif
+#define XERCES_USING_STD(NAME) using std :: NAME;
+#define XERCES_STD_QUALIFIER  std ::
 
 
 // ---------------------------------------------------------------------------

@@ -192,9 +192,6 @@
 /* define if the compiler supports ISO C++ standard library */
 #cmakedefine HAVE_STD_LIBS 1
 
-/* define if the compiler supports the std namespace */
-#cmakedefine HAVE_STD_NAMESPACE 1
-
 /* Define to 1 if you have the `strcasecmp' function. */
 #cmakedefine HAVE_STRCASECMP 1
 
@@ -411,9 +408,6 @@
 
 /* Define if building a static library */
 #cmakedefine XERCES_STATIC_LIBRARY 1
-
-/* Define if the std namespace is supported */
-#cmakedefine XERCES_STD_NAMESPACE 1
 
 /* An appropriate unsigned 16 bit integer type */
 #define XERCES_U16BIT_INT @XERCES_U16BIT_INT@
