@@ -29,14 +29,14 @@ bool DOMPrintErrorHandler::handleError(const DOMError &domError)
 {
     // Display whatever error message passed from the serializer
     if (domError.getSeverity() == DOMError::DOM_SEVERITY_WARNING)
-        XERCES_STD_QUALIFIER cerr << "\nWarning Message: ";
+        std::cerr << "\nWarning Message: ";
     else if (domError.getSeverity() == DOMError::DOM_SEVERITY_ERROR)
-        XERCES_STD_QUALIFIER cerr << "\nError Message: ";
+        std::cerr << "\nError Message: ";
     else
-        XERCES_STD_QUALIFIER cerr << "\nFatal Message: ";
+        std::cerr << "\nFatal Message: ";
 
     char *msg = XMLString::transcode(domError.getMessage());
-    XERCES_STD_QUALIFIER cerr<< msg <<XERCES_STD_QUALIFIER endl;
+    std::cerr<< msg <<std::endl;
     XMLString::release(&msg);
 
     // Instructs the serializer to continue serialization if possible.

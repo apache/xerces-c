@@ -56,13 +56,13 @@ int main()
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout << L"Parser Init Failed!\n   INFO: ("
+        std::wcout << L"Parser Init Failed!\n   INFO: ("
                    << toCatch.getSrcFile() << L"." << toCatch.getSrcLine()
-                   << L") -" << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+                   << L") -" << toCatch.getMessage() << std::endl;
         return 0xFFFF;
     }
 
-    XERCES_STD_QUALIFIER wcout << L"\nXML4C2 Core Utilities Unit Tester\n" << XERCES_STD_QUALIFIER endl;
+    std::wcout << L"\nXML4C2 Core Utilities Unit Tester\n" << std::endl;
 
     // This value will return the number of failed tests
     int retVal = 0;
@@ -75,10 +75,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testTranscoders())
         {
-            XERCES_STD_QUALIFIER wcout << L"Transcoder tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"Transcoder tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -86,10 +86,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testString())
         {
-            XERCES_STD_QUALIFIER wcout << L"String tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"String tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -97,10 +97,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testCountedPointer())
         {
-            XERCES_STD_QUALIFIER wcout << L"CountedPointerTo tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"CountedPointerTo tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -108,10 +108,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testURL())
         {
-            XERCES_STD_QUALIFIER wcout << L"URL tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"URL tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -119,10 +119,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testValueVector())
         {
-            XERCES_STD_QUALIFIER wcout << L"ValueVectorOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"ValueVectorOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -130,10 +130,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testValueArray())
         {
-            XERCES_STD_QUALIFIER wcout << L"ValueArrayOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"ValueArrayOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -141,10 +141,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testValueStack())
         {
-            XERCES_STD_QUALIFIER wcout << L"ValueStackOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"ValueStackOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -152,10 +152,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefArray())
         {
-            XERCES_STD_QUALIFIER wcout << L"RefArrayOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"RefArrayOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -163,10 +163,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefStack())
         {
-            XERCES_STD_QUALIFIER wcout << L"RefStackOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"RefStackOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -174,10 +174,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefVector())
         {
-            XERCES_STD_QUALIFIER wcout << L"RefVectorOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"RefVectorOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -185,10 +185,10 @@ int main()
         // -------------------------------------------------------------------
         if (!testRefHashTable())
         {
-            XERCES_STD_QUALIFIER wcout << L"RefHashTableOf tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"RefHashTableOf tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
 
 
         // -------------------------------------------------------------------
@@ -196,28 +196,28 @@ int main()
         // -------------------------------------------------------------------
         if (!testBitSet())
         {
-            XERCES_STD_QUALIFIER wcout << L"BitSet tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"BitSet tests failed" << std::endl;
             retVal++;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout  << L"Exception During Test!\n   INFO: ("
+        std::wcout  << L"Exception During Test!\n   INFO: ("
                     << toCatch.getSrcFile() << L"."
                     << toCatch.getSrcLine() << L") -"
-                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+                    << toCatch.getMessage() << std::endl;
         return 0xFFFF;
     }
 
     // If we failed any tests, display a message
-    XERCES_STD_QUALIFIER wcout << L"--------------------------------\n";
+    std::wcout << L"--------------------------------\n";
     if (retVal == 0)
-        XERCES_STD_QUALIFIER wcout << L"<<PASSED>>: All tests passed\n";
+        std::wcout << L"<<PASSED>>: All tests passed\n";
     else
-        XERCES_STD_QUALIFIER wcout << L"<<FAILED>>: Some tests failed\n";
-    XERCES_STD_QUALIFIER wcout << L"--------------------------------\n" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"<<FAILED>>: Some tests failed\n";
+    std::wcout << L"--------------------------------\n" << std::endl;
 
     return retVal;
 }

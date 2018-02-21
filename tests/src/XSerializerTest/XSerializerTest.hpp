@@ -73,7 +73,7 @@ private :
     char*   fLocalForm;
 };
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

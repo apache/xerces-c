@@ -51,14 +51,14 @@
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    Redirect <XML file>\n\n"
             "This program installs an entity resolver, traps the call to\n"
             "the external DTD file and redirects it to another application\n"
             "specific file which contains the actual dtd.\n\n"
             "The program then counts and reports the number of elements and\n"
             "attributes in the given XML file.\n"
-         << XERCES_STD_QUALIFIER endl;
+         << std::endl;
 }
 
 
@@ -74,8 +74,8 @@ int main(int argc, char* args[])
     }
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cerr << "Error during initialization! Message:\n"
+             << StrX(toCatch.getMessage()) << std::endl;
         return 1;
     }
 
@@ -124,14 +124,14 @@ int main(int argc, char* args[])
     }
     catch (const OutOfMemoryException&)
     {
-        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        std::cerr << "OutOfMemoryException" << std::endl;
         errorCode = 5;
     }
     catch (const XMLException& e)
     {
-        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
+        std::cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
-                << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+                << StrX(e.getMessage()) << "\n" << std::endl;
         errorCode = 4;
     }
 
@@ -142,11 +142,11 @@ int main(int argc, char* args[])
 
     // Print out the stats that we collected and time taken.
     if (!errorCount) {
-        XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
+        std::cout << xmlFile << ": " << duration << " ms ("
              << handler.getElementCount() << " elems, "
              << handler.getAttrCount() << " attrs, "
              << handler.getSpaceCount() << " spaces, "
-             << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
+             << handler.getCharacterCount() << " chars)" << std::endl;
     }
 
     //

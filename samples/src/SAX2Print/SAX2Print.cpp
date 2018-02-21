@@ -66,7 +66,7 @@ static bool                     sortAttributes  = false;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    SAX2Print [options] <XML file>\n\n"
             "This program invokes the SAX2XMLReader, and then prints the\n"
             "data returned by the various SAX2 handlers for the specified\n"
@@ -88,7 +88,7 @@ static void usage()
              "The parser has intrinsic support for the following encodings:\n"
              "    UTF-8, US-ASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
              "    WINDOWS-1252, IBM1140, IBM037, IBM1047.\n"
-         <<  XERCES_STD_QUALIFIER endl;
+         <<  std::endl;
 }
 
 
@@ -106,8 +106,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+         std::cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << std::endl;
          return 1;
     }
 
@@ -146,7 +146,7 @@ int main(int argC, char* argV[])
                 valScheme = SAX2XMLReader::Val_Always;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -v= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -175,7 +175,7 @@ int main(int argC, char* argV[])
                 unRepFlags = XMLFormatter::UnRep_CharRef;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -u= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -u= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -206,8 +206,8 @@ int main(int argC, char* argV[])
         }
          else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -283,14 +283,14 @@ int main(int argC, char* argV[])
     }
     catch (const OutOfMemoryException&)
     {
-        XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+        std::cerr << "OutOfMemoryException" << std::endl;
         errorCode = 5;
     }
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "\nAn error occurred\n  Error: "
+        std::cerr << "\nAn error occurred\n  Error: "
              << StrX(toCatch.getMessage())
-             << "\n" << XERCES_STD_QUALIFIER endl;
+             << "\n" << std::endl;
         errorCode = 4;
     }
 

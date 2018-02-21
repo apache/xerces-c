@@ -99,7 +99,7 @@ private :
 #define UniForm(str) StrX(str).unicodeForm()
 #define LocForm(str) StrX(str).localForm()
 
-inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

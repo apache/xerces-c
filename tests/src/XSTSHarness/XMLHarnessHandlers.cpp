@@ -131,18 +131,18 @@ void XMLHarnessHandlers::startElement(const XMLCh* const /* uri */
         catch (const OutOfMemoryException&)
         {
             fatalFailure=true;
-            XERCES_STD_QUALIFIER cout << "Test " << StrX(testName) << " ran out of memory" << XERCES_STD_QUALIFIER endl;
+            std::cout << "Test " << StrX(testName) << " ran out of memory" << std::endl;
             success=false;
         }
         catch(const XMLException& exc)
         {
-            XERCES_STD_QUALIFIER cout << "Test " << StrX(testName) << " threw " << StrX(exc.getMessage()) << XERCES_STD_QUALIFIER endl;
+            std::cout << "Test " << StrX(testName) << " threw " << StrX(exc.getMessage()) << std::endl;
             success=false;
         }
         catch (...)
         {
             fatalFailure=true;
-            XERCES_STD_QUALIFIER cout << "Test " << StrX(testName) << " crashed" << XERCES_STD_QUALIFIER endl;
+            std::cout << "Test " << StrX(testName) << " crashed" << std::endl;
             success=false;
             exit(1);
         }
@@ -161,13 +161,13 @@ void XMLHarnessHandlers::startElement(const XMLCh* const /* uri */
             else if(XMLString::equals(validity, szInvalid) || XMLString::equals(validity, szNotWellFormed) || XMLString::equals(validity, szError) )
                 expResult=invalid;
             else
-                XERCES_STD_QUALIFIER cerr << "Unknown result type " << StrX(validity) << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown result type " << StrX(validity) << std::endl;
             if(success && !fErrorHandler.getSawErrors())
             {
                 if(expResult!=valid)
                 {
                     fFailures++;
-                    XERCES_STD_QUALIFIER cout << "Test " << StrX(testName) << " succeeded but was expected to fail" << XERCES_STD_QUALIFIER endl;
+                    std::cout << "Test " << StrX(testName) << " succeeded but was expected to fail" << std::endl;
                     printFile(testSet);
                 }
             }
@@ -176,8 +176,8 @@ void XMLHarnessHandlers::startElement(const XMLCh* const /* uri */
                 if(expResult!=invalid)
                 {
                     fFailures++;
-                    XERCES_STD_QUALIFIER cout << "Test " << StrX(testName) << " failed but was expected to pass" << XERCES_STD_QUALIFIER endl;
-                    XERCES_STD_QUALIFIER cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << XERCES_STD_QUALIFIER endl;
+                    std::cout << "Test " << StrX(testName) << " failed but was expected to pass" << std::endl;
+                    std::cout << "Reported error: " << StrX(fErrorHandler.getErrorText()) << std::endl;
                     printFile(testSet);
                 }
             }

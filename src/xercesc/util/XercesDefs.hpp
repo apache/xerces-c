@@ -89,10 +89,6 @@ typedef XMLUInt32           UCS4Ch;
 namespace XERCES_CPP_NAMESPACE { }
 namespace xercesc = XERCES_CPP_NAMESPACE;
 
-#define XERCES_USING_STD(NAME) using std :: NAME;
-#define XERCES_STD_QUALIFIER  std ::
-
-
 // ---------------------------------------------------------------------------
 //  Set up the import/export keyword  for our core projects. The
 //  PLATFORM_XXXX keywords are set in the per-development environment

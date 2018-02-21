@@ -39,10 +39,10 @@
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
 			"    XInclude [-h] InputFile OutputFile\n"
 			"  -h :             Prints this help message and exits.\n"
-         << XERCES_STD_QUALIFIER endl;
+         << std::endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -81,8 +81,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+         std::cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << std::endl;
          return 1;
     }
 
@@ -115,32 +115,32 @@ int main(int argC, char* argV[])
     try
     {
         // load up the test source document
-		XERCES_STD_QUALIFIER cerr << "Parse " << testFileName << " in progress ...";
+		std::cerr << "Parse " << testFileName << " in progress ...";
         parser->resetDocumentPool();
 		doc = parser->parseURI(testFileName);
-		XERCES_STD_QUALIFIER cerr << " finished." << XERCES_STD_QUALIFIER endl;
+		std::cerr << " finished." << std::endl;
     }
     catch (const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << testFileName << "'\n"
+        std::cerr << "\nError during parsing: '" << testFileName << "'\n"
                 << "Exception message is:  \n"
-                << StrX(toCatch.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+                << StrX(toCatch.getMessage()) << "\n" << std::endl;
     }
     catch (const DOMException& toCatch)
     {
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << testFileName << "'\n"
-                << "DOMException code is:  " << toCatch.code << XERCES_STD_QUALIFIER endl;
+        std::cerr << "\nDOM Error during parsing: '" << testFileName << "'\n"
+                << "DOMException code is:  " << toCatch.code << std::endl;
 
         if (DOMImplementation::loadDOMExceptionMsg(toCatch.code, errText, maxChars))
-                XERCES_STD_QUALIFIER cerr << "Message is: " << StrX(errText) << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Message is: " << StrX(errText) << std::endl;
 
     }
     catch (...)
     {
-        XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << testFileName << "'\n";
+        std::cerr << "\nUnexpected exception during parsing: '" << testFileName << "'\n";
     }
 
     if (!errorHandler.getSawErrors() && doc) {
@@ -149,7 +149,7 @@ int main(int argC, char* argV[])
 
 		try {
 			// write out the results
-			XERCES_STD_QUALIFIER cerr << "Writing result to: " << outputFileName << XERCES_STD_QUALIFIER endl;
+			std::cerr << "Writing result to: " << outputFileName << std::endl;
 
 			XMLFormatTarget *myFormTarget = new LocalFileFormatTarget(outputFileName);
 			theOutputDesc->setByteStream(myFormTarget);
@@ -158,24 +158,24 @@ int main(int argC, char* argV[])
 		}
 		catch (const XMLException& toCatch)
 		{
-		    XERCES_STD_QUALIFIER cerr << "\nXMLException during writing: '" << testFileName << "'\n"
+		    std::cerr << "\nXMLException during writing: '" << testFileName << "'\n"
 				<< "Exception message is:  \n"
-				<< StrX(toCatch.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+				<< StrX(toCatch.getMessage()) << "\n" << std::endl;
 		}
 		catch (const DOMException& toCatch)
 		{
 			const unsigned int maxChars = 2047;
 			XMLCh errText[maxChars + 1];
 
-			XERCES_STD_QUALIFIER cerr << "\nDOM Error during writing: '" << testFileName << "'\n"
-				<< "DOMException code is:  " << toCatch.code << XERCES_STD_QUALIFIER endl;
+			std::cerr << "\nDOM Error during writing: '" << testFileName << "'\n"
+				<< "DOMException code is:  " << toCatch.code << std::endl;
 
 			if (DOMImplementation::loadDOMExceptionMsg(toCatch.code, errText, maxChars))
-				XERCES_STD_QUALIFIER cerr << "Message is: " << StrX(errText) << XERCES_STD_QUALIFIER endl;
+				std::cerr << "Message is: " << StrX(errText) << std::endl;
 		}
 		catch (...)
 		{
-			XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during writing: '" << testFileName << "'\n";
+			std::cerr << "\nUnexpected exception during writing: '" << testFileName << "'\n";
 		}
         writer->release();
         theOutputDesc->release();
@@ -208,22 +208,22 @@ bool XIncludeErrorHandler::handleError(const DOMError& domError)
 {
 	bool continueParsing = true;
     if (domError.getSeverity() == DOMError::DOM_SEVERITY_WARNING)
-        XERCES_STD_QUALIFIER cerr << "\nWarning at file ";
+        std::cerr << "\nWarning at file ";
     else if (domError.getSeverity() == DOMError::DOM_SEVERITY_ERROR)
     {
-        XERCES_STD_QUALIFIER cerr << "\nError at file ";
+        std::cerr << "\nError at file ";
         fSawErrors = true;
     }
 	else {
-        XERCES_STD_QUALIFIER cerr << "\nFatal Error at file ";
+        std::cerr << "\nFatal Error at file ";
 		continueParsing = false;
         fSawErrors = true;
 	}
 
-    XERCES_STD_QUALIFIER cerr << StrX(domError.getLocation()->getURI())
+    std::cerr << StrX(domError.getLocation()->getURI())
          << ", line " << domError.getLocation()->getLineNumber()
          << ", char " << domError.getLocation()->getColumnNumber()
-         << "\n  Message: " << StrX(domError.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(domError.getMessage()) << std::endl;
 
     return continueParsing;
 }

@@ -44,8 +44,8 @@ int main(int argC, char** argV)
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cout << "Error during platform init! Message:\n"
-             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cout << "Error during platform init! Message:\n"
+             << StrX(toCatch.getMessage()) << std::endl;
         return 1;
     }
 
@@ -88,13 +88,13 @@ int main(int argC, char** argV)
         else if (!XMLString::compareNIString(argV[index], "/URL=", 5))
             urlPath = XMLString::transcode(&argV[index][5]);
         else
-            XERCES_STD_QUALIFIER cout << "Unknown parameter: " << argV[index] << XERCES_STD_QUALIFIER endl;
+            std::cout << "Unknown parameter: " << argV[index] << std::endl;
     }
 
     // We have to have a URL to work on
     if (!urlPath)
     {
-        XERCES_STD_QUALIFIER cout << "A URL must be provided, /URL=xxxx" << XERCES_STD_QUALIFIER endl;
+        std::cout << "A URL must be provided, /URL=xxxx" << std::endl;
         return 1;
     }
 
@@ -134,9 +134,9 @@ int main(int argC, char** argV)
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER cout << "Exception during scan:\n    "
+        std::cout << "Exception during scan:\n    "
              << StrX(toCatch.getMessage())
-             << XERCES_STD_QUALIFIER endl;
+             << std::endl;
     }
 
     // And call the termination method

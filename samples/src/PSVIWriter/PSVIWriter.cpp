@@ -42,7 +42,7 @@
 // ---------------------------------------------------------------------------
 void usage()
 {
-	XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+	std::cout << "\nUsage:\n"
 			"    PSVIWriter [options] <XML file | List file>\n\n"
 			"This program invokes the SAX2XMLReaderImpl, and then exposes the\n"
 			"underlying PSVI of each parsed XML file, using SAX2 API.\n\n"
@@ -56,7 +56,7 @@ void usage()
             "                Default to off (Input file is an XML file).\n"
 			"    -?          Show this help.\n\n"
 			"  * = Default if not provided explicitly.\n"
-		<< XERCES_STD_QUALIFIER endl;
+		<< std::endl;
 }
 
 
@@ -140,15 +140,15 @@ int main(int argC, char* argV[])
                 unRepFlags = XMLFormatter::UnRep_CharRef;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -u= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -u= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
         else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
-                << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[argInd]
+                << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -167,8 +167,8 @@ int main(int argC, char* argV[])
     {
         XMLPlatformUtils::Initialize();
     } catch (const XMLException& toCatch) {
-        XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+        std::cerr << "Error during initialization! Message:\n"
+            << StrX(toCatch.getMessage()) << std::endl;
         return 1;
     }
 
@@ -223,14 +223,14 @@ int main(int argC, char* argV[])
     parser->setErrorHandler(handler);
 
     bool more = true;
-    XERCES_STD_QUALIFIER ifstream fin;
+    std::ifstream fin;
 
     // the input is a list file
     if (doList) //REVISIT
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
+        std::cerr <<"Cannot open the list file: " << argV[argInd] << std::endl;
         return 2;
     }
 
@@ -248,7 +248,7 @@ int main(int argC, char* argV[])
                 else {
                     xmlFile =fURI;
                     XMLString::trim((char*)xmlFile);
-                    XERCES_STD_QUALIFIER cerr << "==Parsing== \"" << xmlFile << "\"" << XERCES_STD_QUALIFIER endl;
+                    std::cerr << "==Parsing== \"" << xmlFile << "\"" << std::endl;
                 }
 
 				if (psviOut==0) {
@@ -291,22 +291,22 @@ int main(int argC, char* argV[])
         }
         catch (const OutOfMemoryException&)
         {
-            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "OutOfMemoryException" << std::endl;
             errorOccurred = true;
             continue;
         }
         catch (const XMLException& e)
         {
-            XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
+            std::cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
-                << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+                << StrX(e.getMessage()) << "\n" << std::endl;
             errorOccurred = true;
             continue;
         }
 
         catch (...)
         {
-            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n" << XERCES_STD_QUALIFIER endl;;
+            std::cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n" << std::endl;;
             errorOccurred = true;
             continue;
         }

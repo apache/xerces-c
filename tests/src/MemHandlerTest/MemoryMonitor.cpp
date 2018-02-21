@@ -69,7 +69,7 @@ unsigned int MemoryMonitor::getTotalMemory()
 
 static void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    MemHandlerTest [options] <XML file | List file>\n\n"
             "This program invokes the XercesDOMParser, DOMLSParser, SAXParser ,\n"
             "and the SAX2XMLReader, and ensures that MemoryManagers set on these\n"
@@ -86,7 +86,7 @@ static void usage()
             "    -r=n        Run file through domBuilders n times.\n"
 		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << XERCES_STD_QUALIFIER endl;
+         << std::endl;
 }
 
 class DOMLSParserHandler : public DOMErrorHandler
@@ -97,8 +97,8 @@ public:
     bool handleError(const DOMError &error)
     {
         char *message = 0;
-        XERCES_STD_QUALIFIER cerr << "Error occurred in DOMBuilder!  Message:  " <<
-            (message = XMLString::transcode(error.getMessage())) << " of severity " << error.getSeverity() << "." << XERCES_STD_QUALIFIER endl;
+        std::cerr << "Error occurred in DOMBuilder!  Message:  " <<
+            (message = XMLString::transcode(error.getMessage())) << " of severity " << error.getSeverity() << "." << std::endl;
         XMLString::release(&message);
         return true;
     }
@@ -112,22 +112,22 @@ public:
     void warning(const SAXParseException &exc )
     {
         char *message = 0;
-        XERCES_STD_QUALIFIER cerr << "SAX warning received!  Text:  " <<
-            (message = XMLString::transcode(exc.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
+        std::cerr << "SAX warning received!  Text:  " <<
+            (message = XMLString::transcode(exc.getMessage())) << "." << std::endl;
         XMLString::release(&message);
     }
     void error(const SAXParseException &exc )
     {
         char *message = 0;
-        XERCES_STD_QUALIFIER cerr << "SAX error received!  Text:  " <<
-            (message = XMLString::transcode(exc.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
+        std::cerr << "SAX error received!  Text:  " <<
+            (message = XMLString::transcode(exc.getMessage())) << "." << std::endl;
         XMLString::release(&message);
     }
     void fatalError(const SAXParseException &exc )
     {
         char *message = 0;
-        XERCES_STD_QUALIFIER cerr << "SAX fatalError received!  Text:  " <<
-            (message = XMLString::transcode(exc.getMessage())) << "." << XERCES_STD_QUALIFIER endl;
+        std::cerr << "SAX fatalError received!  Text:  " <<
+            (message = XMLString::transcode(exc.getMessage())) << "." << std::endl;
         XMLString::release(&message);
     }
 
@@ -158,8 +158,8 @@ int main (int argC,  char *argV[])
     catch (const XMLException& toCatch)
     {
          char *msg = XMLString::transcode(toCatch.getMessage());
-         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
-              << msg << XERCES_STD_QUALIFIER endl;
+         std::cerr << "Error during initialization! :\n"
+              << msg << std::endl;
          XMLString::release(&msg);
          return 1;
     }
@@ -205,7 +205,7 @@ int main (int argC,  char *argV[])
                 domBuilderValScheme = AbstractDOMParser::Val_Always;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -v= value: " << parm << std::endl;
                 return 2;
             }
         }
@@ -239,8 +239,8 @@ int main (int argC,  char *argV[])
         }
          else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
-                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -314,7 +314,7 @@ int main (int argC,  char *argV[])
     // enable datatype normalization - default is off
     domBuilder->getDomConfig()->setParameter(XMLUni::fgDOMDatatypeNormalization, true);
 
-    XERCES_STD_QUALIFIER ifstream fin;
+    std::ifstream fin;
     bool more = true;
 
     // the input is a list file
@@ -322,7 +322,7 @@ int main (int argC,  char *argV[])
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
+        std::cerr <<"Cannot open the list file: " << argV[argInd] << std::endl;
         return 2;
     }
 
@@ -339,7 +339,7 @@ int main (int argC,  char *argV[])
                     continue;
                 else {
                     xmlFile = fURI;
-                    XERCES_STD_QUALIFIER cerr << "==Parsing== " << xmlFile << XERCES_STD_QUALIFIER endl;
+                    std::cerr << "==Parsing== " << xmlFile << std::endl;
                 }
             }
             else
@@ -370,9 +370,9 @@ int main (int argC,  char *argV[])
                     else
                         list=doc->getElementsByTagName(doc->getDocumentElement()->getNodeName());
                     if(list==NULL)
-                        XERCES_STD_QUALIFIER cout << "getElementsByTagName didn't return a valid DOMNodeList." << XERCES_STD_QUALIFIER endl;
+                        std::cout << "getElementsByTagName didn't return a valid DOMNodeList." << std::endl;
                     else if(list->item(0)!=doc->getDocumentElement())
-                        XERCES_STD_QUALIFIER cout << "getElementsByTagName didn't find the root element." << XERCES_STD_QUALIFIER endl;
+                        std::cout << "getElementsByTagName didn't find the root element." << std::endl;
 
                     DOMTreeWalker* pWalker=doc->createTreeWalker(doc->getDocumentElement(), DOMNodeFilter::SHOW_TEXT, NULL, true);
 	                DOMText* textNode=(DOMText*)pWalker->nextNode();
@@ -386,15 +386,15 @@ int main (int argC,  char *argV[])
             }
             catch (const OutOfMemoryException&)
             {
-                XERCES_STD_QUALIFIER cerr << "OutOfMemoryException during parsing: '" << xmlFile << "'\n" << XERCES_STD_QUALIFIER endl;;
+                std::cerr << "OutOfMemoryException during parsing: '" << xmlFile << "'\n" << std::endl;;
                 continue;
             }
             catch (const XMLException& toCatch)
             {
                 char *msg = XMLString::transcode(toCatch.getMessage());
-                XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
+                std::cerr << "\nError during parsing: '" << xmlFile << "'\n"
                     << "Exception message is:  \n"
-                    << msg << "\n" << XERCES_STD_QUALIFIER endl;
+                    << msg << "\n" << std::endl;
                 XMLString::release(&msg);
                 continue;
             }
@@ -403,20 +403,20 @@ int main (int argC,  char *argV[])
                 const unsigned int maxChars = 2047;
                 XMLCh errText[maxChars + 1];
 
-                XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
-                    << "DOMException code is:  " << toCatch.code << XERCES_STD_QUALIFIER endl;
+                std::cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
+                    << "DOMException code is:  " << toCatch.code << std::endl;
 
                 if (DOMImplementation::loadDOMExceptionMsg(toCatch.code, errText, maxChars))
                 {
                     char * msg = XMLString::transcode(errText);
-                    XERCES_STD_QUALIFIER cerr << "Message is: " << msg << XERCES_STD_QUALIFIER endl;
+                    std::cerr << "Message is: " << msg << std::endl;
 
                     continue;
                 }
             }
             catch (...)
             {
-                XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+                std::cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
                 continue;
             }
 
@@ -430,15 +430,15 @@ int main (int argC,  char *argV[])
     delete sax2parser;
     delete saxParser;
 
-    XERCES_STD_QUALIFIER cout << "At destruction, domBuilderMemMonitor has " << domBuilderMemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "At destruction, sax2MemMonitor has " << sax2MemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
-    XERCES_STD_QUALIFIER cout << "At destruction, sax1MemMonitor has " << sax1MemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
+    std::cout << "At destruction, domBuilderMemMonitor has " << domBuilderMemMonitor->getTotalMemory() << " bytes." << std::endl;
+    std::cout << "At destruction, sax2MemMonitor has " << sax2MemMonitor->getTotalMemory() << " bytes." << std::endl;
+    std::cout << "At destruction, sax1MemMonitor has " << sax1MemMonitor->getTotalMemory() << " bytes." << std::endl;
     delete domBuilderMemMonitor;
     delete sax2MemMonitor;
     delete sax1MemMonitor;
 
     XMLPlatformUtils::Terminate();
-    XERCES_STD_QUALIFIER cout << "At destruction, staticMemMonitor has " << staticMemMonitor->getTotalMemory() << " bytes." << XERCES_STD_QUALIFIER endl;
+    std::cout << "At destruction, staticMemMonitor has " << staticMemMonitor->getTotalMemory() << " bytes." << std::endl;
     delete staticMemMonitor;
     return 0;
 }

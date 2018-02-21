@@ -59,7 +59,7 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 void usage()
 {
-    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
+    std::cout << "\nUsage:\n"
             "    StdInParse [options] < <XML file>\n\n"
             "This program demonstrates streaming XML data from standard\n"
             "input.  It then uses the SAX Parser, and prints the\n"
@@ -72,7 +72,7 @@ void usage()
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
 		      "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << XERCES_STD_QUALIFIER endl;
+         << std::endl;
 }
 
 
@@ -89,8 +89,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+         std::cerr << "Error during initialization! Message:\n"
+              << StrX(toCatch.getMessage()) << std::endl;
          return 1;
     }
 
@@ -121,7 +121,7 @@ int main(int argC, char* argV[])
                 valScheme = SAXParser::Val_Always;
             else
             {
-                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
+                std::cerr << "Unknown -v= value: " << parm << std::endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
@@ -143,8 +143,8 @@ int main(int argC, char* argV[])
         }
          else
         {
-            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[parmInd]
-                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "Unknown option '" << argV[parmInd]
+                 << "', ignoring it\n" << std::endl;
         }
     }
 
@@ -190,26 +190,26 @@ int main(int argC, char* argV[])
         }
         catch (const OutOfMemoryException&)
         {
-            XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
+            std::cerr << "OutOfMemoryException" << std::endl;
             errorCount = 2;
             return 4;
         }
         catch (const XMLException& e)
         {
-            XERCES_STD_QUALIFIER cerr << "\nError during parsing: \n"
+            std::cerr << "\nError during parsing: \n"
                  << StrX(e.getMessage())
-                 << "\n" << XERCES_STD_QUALIFIER endl;
+                 << "\n" << std::endl;
             errorCount = 1;
             return 4;
         }
 
         // Print out the stats that we collected and time taken
         if (!errorCount) {
-            XERCES_STD_QUALIFIER cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
+            std::cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
                  << handler.getElementCount() << " elems, "
                  << handler.getAttrCount() << " attrs, "
                  << handler.getSpaceCount() << " spaces, "
-                 << handler.getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
+                 << handler.getCharacterCount() << " chars)" << std::endl;
         }
     }
 

@@ -51,33 +51,33 @@ static bool basicTests()
 // ---------------------------------------------------------------------------
 bool testRefStack()
 {
-    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
+    std::wcout  << L"----------------------------------\n"
                 << L"Testing RefStackOf template class\n"
-                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
+                << L"----------------------------------" << std::endl;
 
     bool retVal = true;
 
     try
     {
         // Call other local methods to do specific tests
-        XERCES_STD_QUALIFIER wcout << L"Testing RefStackOf basics" << XERCES_STD_QUALIFIER endl;
+        std::wcout << L"Testing RefStackOf basics" << std::endl;
         if (!basicTests())
         {
-            XERCES_STD_QUALIFIER wcout << L"RefStackOf basic tests failed" << XERCES_STD_QUALIFIER endl;
+            std::wcout << L"RefStackOf basic tests failed" << std::endl;
             retVal = false;
         }
          else
         {
-            XERCES_STD_QUALIFIER wcout  << L"RefArrayOf constructor tests passed"
-                        << XERCES_STD_QUALIFIER endl;
+            std::wcout  << L"RefArrayOf constructor tests passed"
+                        << std::endl;
         }
-        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
+        std::wcout << std::endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
+        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << std::endl;
         return false;
     }
 

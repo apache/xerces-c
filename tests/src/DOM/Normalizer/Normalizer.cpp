@@ -124,9 +124,9 @@ Normalizer::Normalizer() {
 
     catch(const XMLException &toCatch)
     {
-        XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+        std::cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
-             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+             << StrX(toCatch.getMessage()) << std::endl;
     }
     parser = 0;
 
@@ -142,13 +142,13 @@ void Normalizer::printEntityRefNodes(DOMElement *ele) {
 
     while(child != 0) {
         if(child->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
-            XERCES_STD_QUALIFIER cout << "start of entity ref node" << XERCES_STD_QUALIFIER endl;
+            std::cout << "start of entity ref node" << std::endl;
             DOMNode *entChild = ((DOMEntityReference*)child)->getFirstChild();
             while(entChild != 0) {
                 serializeNode(entChild);
                 entChild = entChild->getNextSibling();
             }
-            XERCES_STD_QUALIFIER cout << "\nend of entity ref node\n\n" << XERCES_STD_QUALIFIER endl;
+            std::cout << "\nend of entity ref node\n\n" << std::endl;
 
         }
 
@@ -166,20 +166,20 @@ bool Normalizer::handleError(const DOMError& domError)
 {
     // Display whatever error message passed from the serializer
     if (domError.getSeverity() == DOMError::DOM_SEVERITY_WARNING)
-        XERCES_STD_QUALIFIER cerr << "\nWarning Message: ";
+        std::cerr << "\nWarning Message: ";
     else if (domError.getSeverity() == DOMError::DOM_SEVERITY_ERROR)
-        XERCES_STD_QUALIFIER cerr << "\nError Message: ";
+        std::cerr << "\nError Message: ";
     else
-        XERCES_STD_QUALIFIER cerr << "\nFatal Message: ";
+        std::cerr << "\nFatal Message: ";
 
     char *msg = XMLString::transcode(domError.getMessage());
-    XERCES_STD_QUALIFIER cerr<< msg <<XERCES_STD_QUALIFIER endl;
+    std::cerr<< msg <<std::endl;
     XMLString::release(&msg);
 
-    XERCES_STD_QUALIFIER cerr << "Related data ";
+    std::cerr << "Related data ";
 
     msg = XMLString::transcode(((DOMNode*)domError.getRelatedData())->getNodeName());
-    XERCES_STD_QUALIFIER cerr << msg <<XERCES_STD_QUALIFIER endl;
+    std::cerr << msg <<std::endl;
     XMLString::release(&msg);
 
 
@@ -231,20 +231,20 @@ int main(int /*argc*/, char ** /*argv*/) {
     //create default ns
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //add in binding
     docFirstElement->setPrefix(X("po"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //use default
     DOMElement* docFirstElementChildChild = doc->createElementNS(X("http://www.test2.com"),X("docEleChildChild"));
     docFirstElementChild->appendChild(docFirstElementChildChild);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     // this block is needed to destroy the XMLBuffer
     {
@@ -259,7 +259,7 @@ int main(int /*argc*/, char ** /*argv*/) {
         docFirstElementChild->setPrefix(X("po2"));
         doc->normalizeDocument();
         normalizer->serializeNode(doc);
-        XERCES_STD_QUALIFIER cout << "\n\n";
+        std::cout << "\n\n";
     }
 
     //some siblngs to ensure the scope stacks are working
@@ -271,13 +271,13 @@ int main(int /*argc*/, char ** /*argv*/) {
     docFirstElementChild->appendChild(docFirstElementChildChild);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //conflicting prefix
     docFirstElementChildChild->setAttributeNS(XMLUni::fgXMLNSURIName, X("po4"), X("conflict"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //conflicting default
     docFirstElementChildChild = doc->createElementNS(X("http://www.test4.com"),X("docEleChildChild5"));
@@ -285,14 +285,14 @@ int main(int /*argc*/, char ** /*argv*/) {
     docFirstElementChildChild->setAttributeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString, X("conflict"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //set the xmlns to ""
     DOMElement *noNamespaceEle = doc->createElementNS(X(""),X("noNamespace"));
     docFirstElementChildChild->appendChild(noNamespaceEle);
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
 
     //now lets do a bit off attribute testing on the doc ele
@@ -305,7 +305,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     docFirstElement->setAttributeNS(X("http://testattr3.com"), X("po3:attr7"), X("value"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //and now on one of its children
     docFirstElementChildChild->setAttributeNS(X("http://testattr.com"), X("attr1"), X("value"));
@@ -327,7 +327,7 @@ int main(int /*argc*/, char ** /*argv*/) {
 
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
 
     //2 prefix with the same uri
@@ -339,7 +339,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     docFirstElementChildChild->setAttributeNS(X("http://www.uri1.com"), X("uri1b:attr2"), X("value"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
     //check to see we use the nearest binding and for more inheritence
     DOMElement *docFirstElementChildChildChild = doc->createElementNS(X("http://www.uri1.com"),X("docEleChildChildChild"));
@@ -349,7 +349,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     docFirstElementChildChildChild->setAttributeNS(X("http://www.test.com"), X("attr1"), X("value"));
     doc->normalizeDocument();
     normalizer->serializeNode(doc);
-    XERCES_STD_QUALIFIER cout << "\n\n";
+    std::cout << "\n\n";
 
 
     //NS1.1 stuff
@@ -370,7 +370,7 @@ int main(int /*argc*/, char ** /*argv*/) {
 
 
     //check error conditions
-    XERCES_STD_QUALIFIER cout << "error conditions" << XERCES_STD_QUALIFIER endl;
+    std::cout << "error conditions" << std::endl;
 
     DOMConfiguration *conf = doc->getDOMConfig();
     conf->setParameter(XMLUni::fgDOMErrorHandler, normalizer);

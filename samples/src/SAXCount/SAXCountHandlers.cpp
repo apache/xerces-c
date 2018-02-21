@@ -84,27 +84,27 @@ void SAXCountHandlers::resetDocument()
 void SAXCountHandlers::error(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
+    std::cerr << "\nError at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SAXCountHandlers::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
-    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    std::cerr << "\nFatal Error at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SAXCountHandlers::warning(const SAXParseException& e)
 {
-    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
+    std::cerr << "\nWarning at file " << StrX(e.getSystemId())
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+         << "\n  Message: " << StrX(e.getMessage()) << std::endl;
 }
 
 void SAXCountHandlers::resetErrors()
