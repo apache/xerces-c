@@ -37,7 +37,7 @@ enum MsgTypes
 // ---------------------------------------------------------------------------
 #include <stdio.h>
 #include <wchar.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

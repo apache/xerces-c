@@ -129,7 +129,7 @@ AC_SUBST([BUILD_STATIC], [$enable_static])
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h locale.h \
-                  memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h stdlib.h \
+                  memory.h netdb.h netinet/in.h nl_types.h stddef.h stdint.h \
                   string.h strings.h \
                   sys/param.h sys/socket.h sys/time.h sys/timeb.h \
                   unistd.h wchar.h wctype.h \
@@ -362,7 +362,7 @@ AC_DEFINE_UNQUOTED([XERCES_TEMPLATE_EXTERN], [$template_extern], [Define as the 
 XERCES_XMLCH_SELECTION
 
 AC_MSG_CHECKING([whether the compiler chokes on a placement operator delete])
-AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <stdlib.h>
+AC_COMPILE_IFELSE(  [AC_LANG_PROGRAM([[#include <cstdlib>
 
                                         class XMemory
                                         {

@@ -37,7 +37,7 @@ enum OutputTypes
 //  Includes that everyone uses inside this program
 // ---------------------------------------------------------------------------
 #include "ParserTest_Parser.hpp"
-#include <stdlib.h>
+#include <cstdlib>
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <iostream>

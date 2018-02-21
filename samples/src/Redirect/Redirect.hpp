@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <iostream>
 #include <xercesc/util/PlatformUtils.hpp>

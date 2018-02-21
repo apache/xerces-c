@@ -40,7 +40,7 @@
 #include "InitTermTest.hpp"
 
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <fstream>
 #include <limits.h>

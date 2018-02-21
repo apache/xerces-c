@@ -36,7 +36,7 @@
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include "ParserTest.hpp"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <ctype.h>
 
 

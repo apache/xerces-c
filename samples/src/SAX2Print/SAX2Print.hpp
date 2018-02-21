@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <string.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include "SAX2PrintHandlers.hpp"
 
 

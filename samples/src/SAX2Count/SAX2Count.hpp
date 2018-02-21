@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 
 #include <xercesc/util/PlatformUtils.hpp>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <iostream>
 #include "SAX2CountHandlers.hpp"

@@ -28,7 +28,7 @@
 #include <xercesc/util/Janitor.hpp>
 
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 
 #include "PSVIWriterHandlers.hpp"
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLUni.hpp>

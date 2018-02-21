@@ -25,7 +25,7 @@
 #include <xercesc/validators/common/Grammar.hpp>
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN

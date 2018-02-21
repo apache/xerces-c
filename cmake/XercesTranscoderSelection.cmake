@@ -44,7 +44,6 @@ endif()
 check_include_file_cxx(iconv.h HAVE_ICONV_H)
 check_include_file_cxx(wchar.h HAVE_WCHAR_H)
 check_include_file_cxx(string.h HAVE_STRING_H)
-check_include_file_cxx(stdlib.h HAVE_STDLIB_H)
 check_include_file_cxx(stdio.h HAVE_STDIO_H)
 check_include_file_cxx(ctype.h HAVE_CTYPE_H)
 check_include_file_cxx(locale.h HAVE_LOCALE_H)
@@ -57,8 +56,8 @@ check_function_exists(iconv_close HAVE_ICONV_CLOSE)
 check_function_exists(iconv HAVE_ICONV)
 
 set(gnuiconv_available 0)
-if(HAVE_ICONV_H AND HAVE_WCHAR_H AND HAVE_STRING_H AND HAVE_STDLIB_H AND
-    HAVE_STDIO_H AND HAVE_CTYPE_H AND HAVE_LOCALE_H AND HAVE_ERRNO_H)
+if(HAVE_ICONV_H AND HAVE_WCHAR_H AND HAVE_STRING_H AND
+   HAVE_STDIO_H AND HAVE_CTYPE_H AND HAVE_LOCALE_H AND HAVE_ERRNO_H)
   if (HAVE_ENDIAN_H OR HAVE_MACHINE_ENDIAN_H OR HAVE_ARPA_NAMESER_COMPAT_H)
     if(HAVE_ICONV_OPEN AND HAVE_ICONV_CLOSE AND HAVE_ICONV)
       set(gnuiconv_available 1)

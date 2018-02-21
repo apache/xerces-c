@@ -26,7 +26,7 @@
 #    include <config.h>
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>

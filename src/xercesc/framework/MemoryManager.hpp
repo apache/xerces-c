@@ -24,7 +24,7 @@
 #define XERCESC_INCLUDE_GUARD_MEMORYMANAGER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <stdlib.h>
+#include <cstdlib>
 
 
 XERCES_CPP_NAMESPACE_BEGIN

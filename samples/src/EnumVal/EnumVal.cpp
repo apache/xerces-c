@@ -29,7 +29,7 @@
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>    
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 
 

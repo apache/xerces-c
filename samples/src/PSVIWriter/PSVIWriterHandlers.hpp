@@ -56,7 +56,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_USE

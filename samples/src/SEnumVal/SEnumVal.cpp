@@ -31,7 +31,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 
 

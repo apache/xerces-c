@@ -35,7 +35,7 @@
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>

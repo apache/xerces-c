@@ -81,7 +81,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 // ---------------------------------------------------------------------------
 //  Local data

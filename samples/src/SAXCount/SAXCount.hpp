@@ -24,7 +24,7 @@
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
 #include <xercesc/util/PlatformUtils.hpp>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <iostream>
 #include <xercesc/parsers/SAXParser.hpp>

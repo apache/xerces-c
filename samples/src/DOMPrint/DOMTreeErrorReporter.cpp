@@ -25,7 +25,7 @@
 #include <xercesc/sax/SAXParseException.hpp>
 #include "DOMTreeErrorReporter.hpp"
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 
 
