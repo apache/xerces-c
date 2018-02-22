@@ -138,7 +138,6 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h langinfo.h limits.h loc
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
-AC_C_CONST
 AC_C_INLINE
 AC_C_VOLATILE
 

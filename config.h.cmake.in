@@ -451,11 +451,6 @@
 /* Define to the 16 bit type used to represent Xerces UTF-16 characters */
 #define XERCES_XMLCH_T @XERCES_XMLCH_T@
 
-/* Define to empty if `const' does not conform to ANSI C. */
-#if !@HAVE_CONST@
-#define const
-#endif
-
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
 #ifndef __cplusplus
