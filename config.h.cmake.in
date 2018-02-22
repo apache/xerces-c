@@ -451,18 +451,6 @@
 /* Define to the 16 bit type used to represent Xerces UTF-16 characters */
 #define XERCES_XMLCH_T @XERCES_XMLCH_T@
 
-/* Define to `__inline__' or `__inline' if that's what the C compiler
-   calls it, or to nothing if 'inline' is not supported under any name.  */
-#ifndef __cplusplus
-#if !@HAVE_INLINE@
-#if @NEED_INLINE@
-#define inline @inline_keyword@
-#else
-#define inline
-#endif
-#endif
-#endif
-
 /* Define to empty if the keyword `volatile' does not work. Warning: valid
 code using `volatile' can become incorrect without. Disable with care. */
 #if !@HAVE_VOLATILE@
