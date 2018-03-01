@@ -20,6 +20,14 @@
 
 <s1 title="Security Advisories">
 
+<s2 title="Addressed in 3.2.1 and Later Releases">
+<p>The following security advisories apply to versions of
+Xerces-C older than V3.2.1:</p>
+<ul>
+  <li><jump href="secadv/CVE-2017-12627.txt">CVE-2017-12627: Apache Xerces-C DTD vulnerability processing external paths</jump></li>
+</ul>
+</s2>
+
 <s2 title="Addressed in 3.1.4 and Later Releases">
 <p>The following security advisories apply to versions of
 Xerces-C older than V3.1.4:</p>
