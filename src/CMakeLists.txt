@@ -1009,6 +1009,14 @@ set(nothreadmmgr_sources
   xercesc/util/MutexManagers/NoThreadMutexMgr.cpp
 )
 
+set(stdmmgr_headers
+  xercesc/util/MutexManagers/StdMutexMgr.hpp
+)
+
+set(stdmmgr_sources
+  xercesc/util/MutexManagers/StdMutexMgr.cpp
+)
+
 set(posixmmgr_headers
   xercesc/util/MutexManagers/PosixMutexMgr.hpp
 )
@@ -1199,6 +1207,12 @@ endif()
 if(XERCES_USE_MUTEXMGR_NOTHREAD)
   list(APPEND libxerces_c_SOURCES ${nothreadmmgr_sources})
   list(APPEND libxerces_c_HEADERS ${nothreadmmgr_headers})
+endif()
+
+if(XERCES_USE_MUTEXMGR_STD)
+  list(APPEND libxerces_c_SOURCES ${stdmmgr_sources})
+  list(APPEND libxerces_c_HEADERS ${stdmmgr_headers})
+  list(APPEND libxerces_c_DEPS Threads::Threads)
 endif()
 
 if(XERCES_USE_MUTEXMGR_POSIX)

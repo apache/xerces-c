@@ -31,12 +31,12 @@ os:
 
 env:
   matrix:
-    - BUILD=autoconf TYPE=Release NETWORK=ON NETACCESSOR=curl MSGLOADER=inmemory TRANSCODER=iconv XMLCH=char16_t
+    - BUILD=autoconf TYPE=Release MUTEXMGR=posix NETWORK=ON NETACCESSOR=curl MSGLOADER=inmemory TRANSCODER=iconv XMLCH=char16_t
     - BUILD=cmake TOOL="Unix Makefiles" TYPE=Debug NETWORK=ON NETACCESSOR=curl MSGLOADER=icu TRANSCODER=iconv XMLCH=uint16_t
-    - BUILD=cmake TOOL="Ninja" TYPE=Release NETWORK=ON NETACCESSOR=socket MSGLOADER=inmemory TRANSCODER=icu XMLCH=char16_t
+    - BUILD=cmake TOOL="Ninja" TYPE=Release MUTEXMGR=posix NETWORK=ON NETACCESSOR=socket MSGLOADER=inmemory TRANSCODER=icu XMLCH=char16_t
     - BUILD=autoconf TYPE=Debug NETWORK=ON MSGLOADER=iconv XMLCH=uint16_t
-    - BUILD=cmake TOOL="Unix Makefiles" TYPE=Release NETWORK=ON
-    - BUILD=cmake TOOL="Ninja" TYPE=Debug
+    - BUILD=cmake TOOL="Unix Makefiles" MUTEXMGR=standard TYPE=Release NETWORK=ON
+    - BUILD=cmake TOOL="Ninja" TYPE=Debug MUTEXMGR=nothreads
     - BUILD=cmake TOOL="Ninja" TYPE=Debug NETACCESSOR=cfurl TRANSCODER=macosunicodeconverter XMLCH=uint16_t
 
 matrix:
@@ -47,13 +47,13 @@ matrix:
     - os: osx
       env: BUILD=cmake TOOL="Unix Makefiles" TYPE=Debug NETWORK=ON NETACCESSOR=curl MSGLOADER=icu TRANSCODER=iconv XMLCH=uint16_t
     - os: osx
-      env: BUILD=cmake TOOL="Ninja" TYPE=Release NETWORK=ON NETACCESSOR=socket MSGLOADER=inmemory TRANSCODER=icu XMLCH=char16_t
+      env: BUILD=cmake TOOL="Ninja" TYPE=Release MUTEXMGR=posix NETWORK=ON NETACCESSOR=socket MSGLOADER=inmemory TRANSCODER=icu XMLCH=char16_t
     - os: osx
       env: BUILD=autoconf TYPE=Debug NETWORK=ON MSGLOADER=iconv XMLCH=uint16_t
     - os: osx
-      env: BUILD=cmake TOOL="Unix Makefiles" TYPE=Release NETWORK=ON
+      env: BUILD=cmake TOOL="Unix Makefiles" MUTEXMGR=standard TYPE=Release NETWORK=ON
     - os: osx
-      env: BUILD=cmake TOOL="Ninja" TYPE=Debug
+      env: BUILD=cmake TOOL="Ninja" TYPE=Debug MUTEXMGR=nothreads
 
 script:
-  - ./scripts/ci-travis "$BUILD" "$TOOL" "$TYPE" "$NETWORK" "$NETACCESSOR" "$MSGLOADER" "$TRANSCODER" "$XMLCH"
+  - ./scripts/ci-travis "$BUILD" "$TOOL" "$TYPE" "$MUTEXMGR" "$NETWORK" "$NETACCESSOR" "$MSGLOADER" "$TRANSCODER" "$XMLCH"

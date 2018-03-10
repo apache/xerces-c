@@ -173,6 +173,11 @@ libxerces_c_la_SOURCES += ${nothreadmmgr_sources}
 nobase_libxerces_c_la_HEADERS += ${nothreadmmgr_headers}
 endif
 
+if XERCES_USE_MUTEXMGR_STD
+libxerces_c_la_SOURCES += ${stdmmgr_sources}
+nobase_libxerces_c_la_HEADERS += ${stdmmgr_headers}
+endif
+
 if XERCES_USE_MUTEXMGR_POSIX
 libxerces_c_la_SOURCES += ${posixmmgr_sources}
 nobase_libxerces_c_la_HEADERS += ${posixmmgr_headers}
@@ -1117,6 +1122,12 @@ nothreadmmgr_headers = \
 
 nothreadmmgr_sources = \
 	xercesc/util/MutexManagers/NoThreadMutexMgr.cpp
+
+stdmmgr_headers = \
+	xercesc/util/MutexManagers/StdMutexMgr.hpp
+
+stdmmgr_sources = \
+	xercesc/util/MutexManagers/StdMutexMgr.cpp
 
 posixmmgr_headers = \
 	xercesc/util/MutexManagers/PosixMutexMgr.hpp

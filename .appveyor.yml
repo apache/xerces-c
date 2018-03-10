@@ -43,6 +43,7 @@ environment:
       netaccessor: curl
       msgloader: inmemory
       transcoder: iconv
+      mutexmanager: posix
       xmlch: uint16_t
     - compiler: cygwin
       configuration: Debug
@@ -52,6 +53,7 @@ environment:
       netaccessor:
       msgloader:
       transcoder:
+      mutexmanager: standard
       xmlch: char16_t
     - compiler: mingw
       configuration: Release
@@ -61,6 +63,7 @@ environment:
       netaccessor:
       msgloader:
       transcoder: windows
+      mutexmanager: windows
       xmlch: wchar_t
     - compiler: mingw
       configuration: Debug
@@ -70,6 +73,7 @@ environment:
       netaccessor:
       msgloader:
       transcoder: iconv
+      mutexmanager:
       xmlch: uint16_t
     - compiler: vc14
       configuration: Release
@@ -79,6 +83,7 @@ environment:
       netaccessor:
       msgloader: icu
       transcoder: windows
+      mutexmanager: windows
       xmlch: wchar_t
       mfc: ON
     - compiler: vc14
@@ -89,6 +94,7 @@ environment:
       netaccessor: winsock
       msgloader: inmemory
       transcoder: icu
+      mutexmanager: standard
       xmlch: char16_t
       mfc: OFF
 
@@ -127,6 +133,7 @@ before_build:
   - if NOT [%netaccessor%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dnetwork-accessor=%netaccessor%"
   - if NOT [%msgloader%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmessage-loader=%msgloader%"
   - if NOT [%transcoder%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dtranscoder=%transcoder%"
+  - if NOT [%mutexmanager%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmutex-manager=%mutexmanager%"
   - if NOT [%xmlch%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dxmlch-type=%xmlch%"
   - if NOT [%mfc%] == [] set "AV_CMAKE_ARGS=%AV_CMAKE_ARGS% -Dmfc-debug=%mfc%"
   - set "AV_XERCES_CMAKE_SOURCE=%AV_XERCES_SOURCE%"

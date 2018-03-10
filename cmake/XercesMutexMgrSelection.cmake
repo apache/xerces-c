@@ -21,16 +21,60 @@
 
 option(threads "Threading support" ON)
 
+include(CheckCXXSourceCompiles)
+
+find_package(Threads REQUIRED)
+
+function(thread_test outvar)
+  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+  check_cxx_source_compiles(
+"#include <thread>
+#include <mutex>
+#include <iostream>
+
+namespace
+{
+
+  std::mutex m1;
+  std::recursive_mutex m2;
+
+  void
+  threadmain()
+  {
+    std::lock_guard<std::mutex> lock1(m1);
+    std::lock_guard<std::recursive_mutex> lock2(m2);
+    std::cout << \"In thread\" << std::endl;
+  }
+
+}
+
+int main() {
+  std::thread foo(threadmain);
+  foo.join();
+
+  return 0;
+}"
+${outvar})
+
+  set(${outvar} ${${outvar}} PARENT_SCOPE)
+endfunction(thread_test)
+
 if(threads)
   set(THREADS_PREFER_PTHREAD_FLAG ON)
   add_definitions(-D_THREAD_SAFE=1)
   find_package(Threads)
 
+  thread_test(XERCES_HAVE_STD_THREAD)
+  if(XERCES_HAVE_STD_THREAD)
+    list(APPEND mutexmgrs standard)
+  endif()
+
   if(TARGET Threads::Threads)
     if(WIN32)
       list(APPEND mutexmgrs windows)
     else()
-      list(APPEND mutexmgrs POSIX)
+      list(APPEND mutexmgrs posix)
       set(HAVE_PTHREAD 1)
     endif()
   endif()
@@ -49,10 +93,13 @@ if(mutexmgr_found EQUAL -1)
   message(FATAL_ERROR "${mutexmgr} mutexmgr unavailable")
 endif()
 
+set(XERCES_USE_MUTEXMGR_STD 0)
 set(XERCES_USE_MUTEXMGR_POSIX 0)
 set(XERCES_USE_MUTEXMGR_WINDOWS 0)
 set(XERCES_USE_MUTEXMGR_NOTHREAD 0)
-if(mutexmgr STREQUAL "POSIX")
+if(mutexmgr STREQUAL "standard")
+  set(XERCES_USE_MUTEXMGR_STD 1)
+elseif(mutexmgr STREQUAL "posix")
   set(XERCES_USE_MUTEXMGR_POSIX 1)
 elseif(mutexmgr STREQUAL "windows")
   set(XERCES_USE_MUTEXMGR_WINDOWS 1)
