@@ -350,15 +350,18 @@ case $host in
 *-*-msdos* | *-*-mingw32* | *-*-cygwin* | *-*-windows* )
 	platform_export="__declspec(dllexport)"
 	platform_import="__declspec(dllimport)"
+        template_extern=""
 	;;
 * )
 	platform_export=""
 	platform_import=""
+        template_extern="extern"
 	;;
 esac
 
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_EXPORT], [$platform_export], [Define as the platform's export attribute])
 AC_DEFINE_UNQUOTED([XERCES_PLATFORM_IMPORT], [$platform_import], [Define as the platform's import attribute])
+AC_DEFINE_UNQUOTED([XERCES_TEMPLATE_EXTERN], [$template_extern], [Define as the platform's template extern attribute])
 
 AS_IF([test ! $ac_cv_cxx_have_bool],
 	AC_DEFINE([XERCES_NO_NATIVE_BOOL], 1, [Define if there is no native bool support in this environment]))

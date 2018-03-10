@@ -743,6 +743,7 @@ util_sources = \
 	xercesc/util/EncodingValidator.cpp \
 	xercesc/util/HeaderDummy.cpp \
 	xercesc/util/HexBin.cpp \
+        xercesc/util/JanitorExports.cpp \
 	xercesc/util/KVStringPair.cpp \
 	xercesc/util/Mutexes.cpp \
 	xercesc/util/PanicHandler.cpp \
