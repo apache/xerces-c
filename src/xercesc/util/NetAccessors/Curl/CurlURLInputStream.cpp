@@ -333,8 +333,14 @@ bool CurlURLInputStream::readMore(int *runningHandles)
 
         // Wait on the file descriptors
         timeval tv;
-        tv.tv_sec  = 2;
-        tv.tv_usec = 0;
+
+        long multi_timeout = 0;
+        curl_multi_timeout(fMulti, &multi_timeout);
+        if (multi_timeout < 0)
+            multi_timeout = 1000;
+
+        tv.tv_sec = multi_timeout / 1000;
+        tv.tv_usec = (multi_timeout % 1000) * 1000;
         select(fdcnt+1, &readSet, &writeSet, &exceptSet, &tv);
     }
 
