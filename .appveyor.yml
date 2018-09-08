@@ -98,10 +98,6 @@ environment:
       xmlch: char16_t
       mfc: OFF
 
-cache:
-  - 'c:\projects\download -> scripts/ci-appveyor-setup'
-  - 'c:\projects\icu -> scripts/ci-appveyor-setup'
-
 # Operating system (build VM template)
 os: 'Visual Studio 2015'
 
