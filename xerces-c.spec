@@ -3,7 +3,7 @@ Name:		xerces-c
 Version:	3.2.2
 Release:	1
 URL:		http://xerces.apache.org/xerces-c/
-Source0:	%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.bz2
 License:        Apache
 Group:		Libraries
 BuildRoot:	%{_tmppath}/%{name}-root
