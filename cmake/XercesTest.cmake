@@ -61,6 +61,10 @@ macro(add_generic_xerces_test name)
     ${xerces_test_extra_args}
     -P "${xerces_test_dir}/RunTest.cmake"
     )
+
+  if(AXT_STDIN)
+    set_property(TEST "${name}" PROPERTY RUN_SERIAL 1)
+  endif()
 endmacro()
 
 macro(add_xerces_test name)
