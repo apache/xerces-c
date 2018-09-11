@@ -61,7 +61,6 @@ EXTRA_DIST = CMakeLists.txt \
         xercesc/NLS \
         xercesc/util/Xerces_autoconf_config.hpp.cmake.in \
         xercesc/util/XercesVersion.hpp.cmake.in \
-        xercesc/util/version.rc.in \
         xercesc/util/version.rc.cmake.in \
         xercesc/util/MsgLoaders/ICU/resources
 
