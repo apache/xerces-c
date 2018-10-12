@@ -19,11 +19,15 @@
 
 # mutexmgr selection
 
-option(threads "Threading support" ON)
+set(xerces_thread_default ON)
+find_package(Threads)
+if(NOT TARGET Threads::Threads)
+  set(xerces_thread_default ON)
+endif()
+
+option(threads "Threading support" ${xerces_thread_default})
 
 include(CheckCXXSourceCompiles)
-
-find_package(Threads REQUIRED)
 
 function(thread_test outvar)
   set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
