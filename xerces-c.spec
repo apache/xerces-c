@@ -20,8 +20,8 @@ manipulating, and validating XML documents.
 
 The parser provides high performance, modularity, and scalability. Source
 code, samples and API documentation are provided with the parser. For
-portability, care has been taken to make minimal use of templates, no RTTI,
-and minimal use of #ifdefs.
+portability, care has been taken to make minimal use of templates and
+minimal use of #ifdefs.
 
 %package devel
 Requires:	%{name} = %{version}
