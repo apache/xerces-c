@@ -646,11 +646,16 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
     if (!token)
     {
         if ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F)) {
-           // make sure one more char is in the buffer, the transcoder
-           // should put only a complete surrogate pair into the buffer
-           assert(fCharIndex+1 < fCharsAvail);
-           if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
-               return false;
+            // if there isn't one more char in the buffer, read more data
+            if (fCharIndex+1 == fCharsAvail)
+            {
+                if (!refreshCharBuffer())
+                    return false;
+                // reset the start buffer to the new location of the cursor
+                charIndex_start = fCharIndex;
+            }
+            if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
+                return false;
 
             // Looks ok, so lets eat it
             fCharIndex += 2;
@@ -675,9 +680,21 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
             //  break out.
             if ( (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
             {
-                // make sure one more char is in the buffer, the transcoder
-                // should put only a complete surrogate pair into the buffer
-                assert(fCharIndex+1 < fCharsAvail);
+                // if there isn't one more char in the buffer, read more data
+                if (fCharIndex+1 == fCharsAvail)
+                {
+                    // but first copy the accepted character(s), and update column
+                    if (fCharIndex != charIndex_start)
+                    {
+                        fCurCol += (XMLFileLoc)(fCharIndex - charIndex_start);
+                        toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
+                    }
+
+                    if (!refreshCharBuffer())
+                        break;
+
+                    charIndex_start = fCharIndex;
+                }
                 if ( (fCharBuf[fCharIndex+1] < 0xDC00) ||
                         (fCharBuf[fCharIndex+1] > 0xDFFF)  )
                     break;
@@ -721,9 +738,14 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
     //  what's the point in living mannnn? Just give up now. We only do this
     //  if its a name and not a name token that they want.
     if ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F)) {
-        // make sure one more char is in the buffer, the transcoder
-        // should put only a complete surrogate pair into the buffer
-        assert(fCharIndex+1 < fCharsAvail);
+        // if there isn't one more char in the buffer, read more data
+        if (fCharIndex+1 == fCharsAvail)
+        {
+            if (!refreshCharBuffer())
+                return false;
+            // reset the start buffer to the new location of the cursor
+            charIndex_start = fCharIndex;
+        }
         if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
             return false;
 
@@ -758,7 +780,28 @@ bool XMLReader::getNCName(XMLBuffer& toFill)
         //  Check the current char and take it if it's a name char
         while(fCharIndex < fCharsAvail)
         {
-            if((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) && fCharIndex+1 < fCharsAvail && ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))) fCharIndex+=2;
+            if((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))
+            {
+                // if there isn't one more char in the buffer, read more data
+                if (fCharIndex+1 == fCharsAvail)
+                {
+                    // but first copy the accepted character(s), and update column
+                    if (fCharIndex != charIndex_start)
+                    {
+                        fCurCol += (XMLFileLoc)(fCharIndex - charIndex_start);
+                        toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
+                    }
+
+                    if (!refreshCharBuffer())
+                        break;
+
+                    charIndex_start = fCharIndex;
+                }
+                if ( (fCharBuf[fCharIndex+1] < 0xDC00) ||
+                    (fCharBuf[fCharIndex+1] > 0xDFFF)  )
+                    break;
+                fCharIndex += 2;
+            }
             else if(isNCNameChar(fCharBuf[fCharIndex])) fCharIndex++;
             else break;
         }
