@@ -81,7 +81,6 @@ template <class TElem> ValueVectorOf<TElem>::~ValueVectorOf()
 }
 
 
-
 // ---------------------------------------------------------------------------
 //  ValueVectorOf: Operators
 // ---------------------------------------------------------------------------
@@ -90,6 +89,11 @@ ValueVectorOf<TElem>::operator=(const ValueVectorOf<TElem>& toAssign)
 {
     if (this == &toAssign)
         return *this;
+ 
+    if (fCallDestructor) {
+        for (XMLSize_t index=fMaxCount; index > 0; index--)
+            fElemList[index-1].~TElem();
+    }
 
     // Reallocate if required
     if (fMaxCount < toAssign.fCurCount)
