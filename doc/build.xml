@@ -21,11 +21,23 @@
 <s1 title="Build Instructions">
   <s2 title="Build Instructions">
 
+    <p>Much of this documentation is historical in nature. The only
+    officially supported platforms with committed testing and maintenance
+    at this time are Windows (native, NOT Cygwin or other variants), 
+    Linux, and MacOS. All other builds are unsupported and untested
+    and should be expected to require patching and build debugging.
+    Patches are accepted for other platforms, as are maintainers
+    interested in taking over responsibility for supporting them.</p>
+
+    <p>While the CMake support is portable, officially the autoconf
+    support is intended to be used for Linux and MacOS and CMake used
+    for Windows.</p>
+
     <p>Build instructions are provided for the following platforms and
        compilers:</p>
 
     <ul>
-       <li><link anchor="CMake">All platforms</link></li>
+       <li><link anchor="CMake">All</link></li>
        <li><link anchor="UNIX">UNIX/Linux/Mac OS X/Cygwin/MinGW</link></li>
     </ul>
 
