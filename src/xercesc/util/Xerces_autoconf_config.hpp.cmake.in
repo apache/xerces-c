@@ -92,7 +92,7 @@
 // ---------------------------------------------------------------------------
 //  Include standard headers, if available, that we may rely on below.
 // ---------------------------------------------------------------------------
-#if defined(__cplusplus) && defined(HAVE_CSTDINT)
+#if defined(__cplusplus) && defined(XERCES_HAVE_CSTDINT)
 #  include <cstdint>
 #endif
 #if XERCES_HAVE_STDINT_H
