@@ -32,9 +32,24 @@ src/XercesCConfig.cmake
 src/XercesCConfigVersion.cmake
 *.ninja
 .ninja*
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+src/xercesc/util/version.rc
 
-# make generated files
+# build generated files
 .libs/
+*.dir/
+x64/
+Win32/
+ARM/
+ARM64/
+Debug/
+MinSizeRel/
+Release/
+RelWithDebInfo/
+.vs/
 .dirstamp
 *.o
 *.lo
@@ -42,6 +57,12 @@ src/XercesCConfigVersion.cmake
 *.a
 *.so
 *.dylib
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.exp
+*.lib
 samples/CreateDOMDocument
 samples/DOMCount
 samples/DOMPrint
