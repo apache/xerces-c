@@ -1,0 +1,10 @@
+# Default behaviour covering all source files and scripts
+* text=auto
+
+# Text files with explicit CRLF line endings
+*.bat text eof=crlf
+
+# Binary files
+*.gif binary
+*.jar binary
+*.jpg binary
