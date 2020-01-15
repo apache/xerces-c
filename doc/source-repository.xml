@@ -21,44 +21,21 @@
 <s1 title="Source Repository">
 
   <s2 title="Overview">
-    <p>The &XercesCName; source code is stored in the Subversion
-       repository (SVN). The SVN repository is public and everyone
-       has read access. The repository uses a standard layout of:</p>
+    <p>The &XercesCName; source code is stored in the Apache Git
+       repository. The repository is public and everyone
+       has read access.</p>
+
+   <p>The repository can be viewed online at <jump href="https://gitbox.apache.org/repos/asf?p=xerces-c.git">https://gitbox.apache.org/repos/asf?p=xerces-c.git</jump></p>
+
+   <p>The repository can be cloned via:</p>
 
 <source>
-https://svn.apache.org/repos/asf/xerces/c/
-                                        |
-                                        | - branches/
-                                        |
-                                        | - tags/
-                                        \
-                                          - trunk/
+git clone https://gitbox.apache.org/repos/asf/xerces-c.git
 </source>
 
-    <p>For example, to check out the trunk (the place where the main
-       development is taking place), execute:</p>
+   <p>A writeable mirror of the same official repository is also present in GitHub at <jump href="https://github.com/apache/xerces-c/">https://github.com/apache/xerces-c/</jump> but the official mechanism for contributions remains attaching patches to issues filed in the Apache Jira instance at <jump href="https://issues.apache.org/jira/projects/XERCESC">https://issues.apache.org/jira/projects/XERCESC</jump></p>
 
-<source>
-svn co https://svn.apache.org/repos/asf/xerces/c/trunk
-</source>
-
-    <p>To check out the code in the xerces-3.1 branch (the place where
-       the development for the next 3.1-series release, if any, is
-       taking place), execute:</p>
-
-<source>
-svn co https://svn.apache.org/repos/asf/xerces/c/branches/xerces-3.1
-</source>
-
-    <p>To check out the code for the &XercesC3Version; release, execute:</p>
-
-<source>
-svn co https://svn.apache.org/repos/asf/xerces/c/tags/Xerces-C_&XercesC3UVersion;
-</source>
-
-    <p>You can also browse the repository and examine individual
-       files using the <jump href="http://svn.apache.org/viewvc/xerces/c/?root=Apache-SVN">Web
-       interface</jump>.</p>
+   <p>Development generally takes place on the master branch, with legacy branches left open or closed depending on the status of older releases. At present, the master branch is the only open branch.</p>
 
   </s2>
 </s1>
