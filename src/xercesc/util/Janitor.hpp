@@ -155,8 +155,10 @@ private :
 };
 
 
+#if defined(__GNUC__) || (! defined(_AIX) && ! defined(__hpux) && ! defined(__sun))
 XERCES_TEMPLATE_EXTERN template class XMLUTIL_EXPORT ArrayJanitor<XMLByte>;
 XERCES_TEMPLATE_EXTERN template class XMLUTIL_EXPORT ArrayJanitor<XMLCh>;
+#endif
 
 
 XERCES_CPP_NAMESPACE_END
