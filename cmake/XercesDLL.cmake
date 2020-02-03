@@ -21,6 +21,7 @@
 # cache variable
 
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+set(BUILD_SHARED_RUNTIME ON CACHE BOOL "Build with shared linked runtime library (MSVC)")
 
 # Add a d postfix to Debug libraries on Windows
 
@@ -45,5 +46,22 @@ else()
       set(XERCES_TEMPLATE_EXTERN)
     endif()
     set(XERCES_DLL_EXPORT 1)
+  endif()
+endif()
+
+if(MSVC)
+  if(NOT BUILD_SHARED_RUNTIME)
+    set(CompilerFlags
+        CMAKE_CXX_FLAGS
+        CMAKE_CXX_FLAGS_DEBUG
+        CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_C_FLAGS
+        CMAKE_C_FLAGS_DEBUG
+        CMAKE_C_FLAGS_RELEASE
+        )
+    foreach(CompilerFlag ${CompilerFlags})
+      string(REPLACE "/MDd" "/MTd" ${CompilerFlag} "${${CompilerFlag}}")
+      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+    endforeach()
   endif()
 endif()
