@@ -111,6 +111,10 @@ set(EXTRA_DIST
   tools
 )
 
+option(XERCESC_BUILD_DOC "Build docs" ON)
+option(XERCESC_BUILD_TESTS "Build test" ON)
+option(XERCESC_BUILD_SAMPLES "Build samples" ON)
+
 include(GNUInstallDirs)
 include(XercesWarnings)
 include(XercesIncludes)
@@ -175,10 +179,17 @@ install(
   COMPONENT "development")
 
 # Process subdirectories
-add_subdirectory(doc)
+if (XERCESC_BUILD_DOC)
+  add_subdirectory(doc)
+endif()
 add_subdirectory(src)
-add_subdirectory(tests)
+if (XERCESC_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
 add_subdirectory(samples)
+if (XERCESC_BUILD_SAMPLES)
+  add_subdirectory(samples)
+endif()
 
 # Display configuration summary
 message(STATUS "")
@@ -193,6 +204,9 @@ message(STATUS "  C compiler:                ${CMAKE_C_COMPILER}")
 message(STATUS "  C++ compiler:              ${CMAKE_CXX_COMPILER}")
 message(STATUS "")
 message(STATUS "  Build shared libraries:    ${BUILD_SHARED_LIBS}")
+message(STATUS "  Build tests:               ${XERCESC_BUILD_TESTS}")
+message(STATUS "  Build samples:             ${XERCESC_BUILD_SAMPLES}")
+message(STATUS "  Build doc:                 ${XERCESC_BUILD_DOC}")
 message(STATUS "  Path delimiters:           \"${path_delims}\"")
 message(STATUS "  File Manager:              ${filemgr}")
 message(STATUS "  Mutex Manager:             ${mutexmgr}")
