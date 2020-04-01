@@ -96,24 +96,25 @@ private :
     //      that readBytes must return.
     // -----------------------------------------------------------------------
 	
-    CURLM*				fMulti;
-    CURL*				fEasy;
-    
+    CURLM*              fMulti;
+    CURL*               fEasy;
+    curl_slist*         fHeadersList;
+
     MemoryManager*      fMemoryManager;
     
-    XMLURL				fURLSource;
+    XMLURL              fURLSource;
     
     XMLSize_t           fTotalBytesRead;
-    XMLByte*			fWritePtr;
+    XMLByte*            fWritePtr;
     XMLSize_t           fBytesRead;
     XMLSize_t           fBytesToRead;
-    bool				fDataAvailable;
+    bool                fDataAvailable;
     
     // Overflow buffer for when curl writes more data to us
     // than we've asked for.
-    XMLByte				fBuffer[CURL_MAX_WRITE_SIZE];
-    XMLByte*			fBufferHeadPtr;
-    XMLByte*			fBufferTailPtr;
+    XMLByte             fBuffer[CURL_MAX_WRITE_SIZE];
+    XMLByte*            fBufferHeadPtr;
+    XMLByte*            fBufferTailPtr;
 
     // Upload data
     const char*         fPayload;

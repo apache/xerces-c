@@ -56,6 +56,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTPInfo* httpInfo/*=0*/)
       : fMulti(0)
       , fEasy(0)
+      , fHeadersList(0)
       , fMemoryManager(urlSource.getMemoryManager())
       , fURLSource(urlSource)
       , fTotalBytesRead(0)
@@ -69,23 +70,23 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
       , fPayloadLen(0)
       , fContentType(0)
 {
-	// Allocate the curl multi handle
-	fMulti = curl_multi_init();
+    // Allocate the curl multi handle
+    fMulti = curl_multi_init();
 
-	// Allocate the curl easy handle
-	fEasy = curl_easy_init();
+    // Allocate the curl easy handle
+    fEasy = curl_easy_init();
 
-	// Set URL option
+    // Set URL option
     TranscodeToStr url(fURLSource.getURLText(), "ISO8859-1", fMemoryManager);
-	curl_easy_setopt(fEasy, CURLOPT_URL, (char*)url.str());
+    curl_easy_setopt(fEasy, CURLOPT_URL, (char*)url.str());
 
     // Set up a way to recieve the data
-	curl_easy_setopt(fEasy, CURLOPT_WRITEDATA, this);						// Pass this pointer to write function
-	curl_easy_setopt(fEasy, CURLOPT_WRITEFUNCTION, staticWriteCallback);	// Our static write function
+    curl_easy_setopt(fEasy, CURLOPT_WRITEDATA, this);						// Pass this pointer to write function
+    curl_easy_setopt(fEasy, CURLOPT_WRITEFUNCTION, staticWriteCallback);	// Our static write function
 
-	// Do redirects
-	curl_easy_setopt(fEasy, CURLOPT_FOLLOWLOCATION, (long)1);
-	curl_easy_setopt(fEasy, CURLOPT_MAXREDIRS, (long)6);
+    // Do redirects
+    curl_easy_setopt(fEasy, CURLOPT_FOLLOWLOCATION, (long)1);
+    curl_easy_setopt(fEasy, CURLOPT_MAXREDIRS, (long)6);
 
     // Add username and password if authentication is required
     const XMLCh *username = urlSource.getUser();
@@ -117,8 +118,6 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
 
         // Add custom headers
         if(httpInfo->fHeaders) {
-            struct curl_slist *headersList = 0;
-
             const char *headersBuf = httpInfo->fHeaders;
             const char *headersBufEnd = httpInfo->fHeaders + httpInfo->fHeadersLen;
 
@@ -133,7 +132,7 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
                     memcpy(header.get(), headerStart, length);
                     header.get()[length] = 0;
 
-                    headersList = curl_slist_append(headersList, header.get());
+                    fHeadersList = curl_slist_append(fHeadersList, header.get());
 
                     headersBuf += 2;
                     headerStart = headersBuf;
@@ -141,8 +140,7 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
                 }
                 ++headersBuf;
             }
-            curl_easy_setopt(fEasy, CURLOPT_HTTPHEADER, headersList);
-            curl_slist_free_all(headersList);
+            curl_easy_setopt(fEasy, CURLOPT_HTTPHEADER, fHeadersList);
         }
 
         // Set up the payload
@@ -155,16 +153,16 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
         }
     }
 
-	// Add easy handle to the multi stack
-	curl_multi_add_handle(fMulti, fEasy);
+    // Add easy handle to the multi stack
+    curl_multi_add_handle(fMulti, fEasy);
 
     // Start reading, to get the content type
-	while(fBufferHeadPtr == fBuffer)
-	{
-		int runningHandles = 0;
+    while(fBufferHeadPtr == fBuffer)
+    {
+    	int runningHandles = 0;
         readMore(&runningHandles);
-		if(runningHandles == 0) break;
-	}
+    	if(runningHandles == 0) break;
+    }
 
     // Find the content type
     char *contentType8 = 0;
@@ -176,16 +174,18 @@ CurlURLInputStream::CurlURLInputStream(const XMLURL& urlSource, const XMLNetHTTP
 
 CurlURLInputStream::~CurlURLInputStream()
 {
-	// Remove the easy handle from the multi stack
-	curl_multi_remove_handle(fMulti, fEasy);
+    // Remove the easy handle from the multi stack
+    curl_multi_remove_handle(fMulti, fEasy);
 
-	// Cleanup the easy handle
-	curl_easy_cleanup(fEasy);
+    // Cleanup the easy handle
+    curl_easy_cleanup(fEasy);
 
-	// Cleanup the multi handle
-	curl_multi_cleanup(fMulti);
+    // Cleanup the multi handle
+    curl_multi_cleanup(fMulti);
 
     if(fContentType) fMemoryManager->deallocate(fContentType);
+
+    if(fHeadersList) curl_slist_free_all(fHeadersList);
 }
 
 
