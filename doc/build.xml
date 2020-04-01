@@ -572,14 +572,16 @@
           <td>AIX PowerPC</td>
           <td>IBM XL C++</td>
           <td><code>./configure CXX=xlC_r CC=xlc_r</code><br/>
-              <code>gmake libxerces_c_la_LDFLAGS=-qmkshrobj</code></td>
+              <code>gmake libxerces_c_la_LDFLAGS=-qmkshrobj</code><br/>
+              (for xlC v11-v13, libxerces_c_la_LDFLAGS is not needed, but CXXFLAGS=-rtti is needed otherwise RTTI is disabled by default)</td>
         </tr>
         <tr>
           <td>AIX PowerPC-64</td>
           <td>IBM XL C++</td>
           <td><code>export OBJECT_MODE=64</code><br/>
               <code>./configure CXX=xlC_r CC=xlc_r CXXFLAGS=-q64 CFLAGS=-q64</code><br/>
-              <code>gmake libxerces_c_la_LDFLAGS=-qmkshrobj</code></td>
+              <code>gmake libxerces_c_la_LDFLAGS=-qmkshrobj</code><br/>
+              (for xlC v11-v13, libxerces_c_la_LDFLAGS is not needed, but CXXFLAGS="-q64 -rtti" is needed otherwise RTTI is disabled by default)</td>
         </tr>
         <tr>
           <td>HP-UX IA-64-32</td>
