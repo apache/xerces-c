@@ -8837,7 +8837,7 @@ XMLByte XMLChar1_1::fgCharCharsTable1_1[0x10000] =
 
 #include <stdio.h>
 
-static XMLCh gTmpCharTable[0xFFFF];
+static XMLCh gTmpCharTable[0x10000];
 
 static void initOneTable(const  XMLCh* const    theTable
                         , const XMLByte         theMask)
