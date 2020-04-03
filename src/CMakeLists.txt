@@ -1289,11 +1289,13 @@ elseif(UNIX)
   # set the version in the filename, and create the symlink at install
   # time.  Note: could be dropped when the SONAME is updated and
   # libtool compatibility is no longer required.
-  set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c-${INTERFACE_VERSION_D}")
-  file(GENERATE
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/InstallLibrarySymlink.cmake"
-    CONTENT "execute_process(COMMAND ln -sf \"$<TARGET_FILE_NAME:xerces-c>\" \"\$ENV{DESTDIR}${CMAKE_INSTALL_FULL_LIBDIR}/libxerces-c.so\")")
-  install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/InstallLibrarySymlink.cmake")
+  if(BUILD_SHARED_LIBS)
+    set_target_properties(xerces-c PROPERTIES OUTPUT_NAME "xerces-c-${INTERFACE_VERSION_D}")
+    file(GENERATE
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/InstallLibrarySymlink.cmake"
+      CONTENT "execute_process(COMMAND ln -sf \"$<TARGET_FILE_NAME:xerces-c>\" \"\$ENV{DESTDIR}${CMAKE_INSTALL_FULL_LIBDIR}/libxerces-c${CMAKE_SHARED_LIBRARY_SUFFIX}\")")
+    install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/InstallLibrarySymlink.cmake")
+  endif()
 else()
   # Not used for the common cases, though this would be the default if
   # not for libtool compatibility.
