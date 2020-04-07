@@ -26,15 +26,15 @@
        integrity</link> of the downloaded files using signatures downloaded
        from our main distribution directory.</p>
 
-    <p>You can download the &XercesCName; distributions from
-       the <jump href="http://www.apache.org/dist/xerces/c/">master
+    <p>You can download the &XercesCName; source distributions from
+       the <jump href="https://downloads.apache.org/xerces/c/3/sources/">master
        distribution directory</jump> or, preferably, its <jump
        href="[preferred]/xerces/c/">mirror</jump>. Only current
        recommended releases are available on the main distribution
        site and its mirrors.</p>
        
     <p>Older releases are available from the
-       <jump href="http://archive.apache.org/dist/xerces/c/">archive
+       <jump href="https://archive.apache.org/dist/xerces/c/">archive
        download site</jump>, but you should be aware that there is a lot
        of accumulated "cruft" in the archives, and many confusingly
        named files. Anything labeled "current" is likely not.</p>
