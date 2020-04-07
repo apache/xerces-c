@@ -28,6 +28,14 @@
     Patches are accepted for other platforms, as are maintainers
     interested in taking over responsibility for supporting them.</p>
 
+    <p>The officially supported Windows platforms consist of only those
+    Windows versions that are actively supported by Microsoft, which at
+    time of writing excludes all releases prior to Server 2008 R2.
+    The currently supported Windows compilers include Visual Studio 2015
+    and later; this set is subject to change in the future.</p>
+
+    <p>Support for C++ RTTI is an absolute requirement when building.</p>
+
     <anchor name="Windows"/>
     <s2 title="Windows">
 

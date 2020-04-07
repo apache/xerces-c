@@ -35,7 +35,7 @@ git clone https://gitbox.apache.org/repos/asf/xerces-c.git
 
    <p>A writeable mirror of the same official repository is also present in GitHub at <jump href="https://github.com/apache/xerces-c/">https://github.com/apache/xerces-c/</jump> but the official mechanism for contributions remains attaching patches to issues filed in the Apache Jira instance at <jump href="https://issues.apache.org/jira/projects/XERCESC">https://issues.apache.org/jira/projects/XERCESC</jump></p>
 
-   <p>Development generally takes place on the master branch, with legacy branches left open or closed depending on the status of older releases. At present, the master branch is the only open branch.</p>
+   <p>Development generally takes place on the master branch, with legacy branches left open or closed depending on the status of older releases. At present, the master branch and the xerces-3.2 branches are open. Proposed work for a V3.3.0 release may be occurring on master.</p>
 
   </s2>
 </s1>
