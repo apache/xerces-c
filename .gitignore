@@ -49,6 +49,7 @@ Debug/
 MinSizeRel/
 Release/
 RelWithDebInfo/
+doc/html/
 .vs/
 .dirstamp
 *.o
