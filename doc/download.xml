@@ -76,22 +76,18 @@ Other mirrors: <select name="Preferred">
       <p>
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-&XercesCLatest;.zip">xerces-c-&XercesCLatest;.zip</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.zip.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.zip.sha1">SHA1</jump>]
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.zip.sha256">SHA2</jump>]<br/>
 
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.gz">xerces-c-&XercesCLatest;.tar.gz</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.gz.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.gz.sha1">SHA1</jump>]
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.gz.sha256">SHA2</jump>]<br/>
 
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.bz2">xerces-c-&XercesCLatest;.tar.bz2</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.bz2.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.bz2.sha1">SHA1</jump>]
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.bz2.sha256">SHA2</jump>]<br/>
 
          <jump href="[preferred]/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.xz">xerces-c-&XercesCLatest;.tar.xz</jump>
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.xz.asc">PGP</jump>]
-         [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.xz.sha1">SHA1</jump>]
          [<jump href="http://www.apache.org/dist/xerces/c/3/sources/xerces-c-&XercesCLatest;.tar.xz.sha256">SHA2</jump>]
 
       </p>

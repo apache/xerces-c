@@ -100,8 +100,8 @@
     </s2>
 
     <s2 title="License Information">
-       <p>The &XercesCName; Version &XercesC3Version; is available in both source distribution and
-          binary distribution.   &XercesCName; is made available under the
+       <p>The &XercesCName; Version &XercesC3Version; is available as a source
+          distribution only. &XercesCName; is made available under the
           <jump href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache Software License, Version 2.0</jump>.
        </p>
     </s2>
