@@ -40,11 +40,6 @@ static bool isBackSlash(XMLCh c) {
 
 WindowsFileMgr::WindowsFileMgr()
 {
-    // Figure out if we are on NT and save that flag for later use
-    OSVERSIONINFO   OSVer;
-    OSVer.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ::GetVersionEx(&OSVer);
-    _onNT = (OSVer.dwPlatformId == VER_PLATFORM_WIN32_NT);
 }
 
 
@@ -138,38 +133,17 @@ WindowsFileMgr::fileOpen(const XMLCh* fileName, bool toWrite, MemoryManager* con
         nameToOpen = tmpUName;
     }
     FileHandle retVal = 0;
-    if (_onNT)
-    {
-        retVal = ::CreateFileW
-            (
-            (LPCWSTR) nameToOpen
-            , toWrite?GENERIC_WRITE:GENERIC_READ
-            , FILE_SHARE_READ
-            , 0
-            , toWrite?CREATE_ALWAYS:OPEN_EXISTING
-            , toWrite?FILE_ATTRIBUTE_NORMAL:FILE_FLAG_SEQUENTIAL_SCAN
-            , 0
-            );
-    }
-    else
-    {
-        //
-        //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
-        //    so that we can open it.
-        //
-        char* tmpName = XMLString::transcode(nameToOpen, manager);
-        retVal = ::CreateFileA
-            (
-            tmpName
-            , toWrite?GENERIC_WRITE:GENERIC_READ
-            , FILE_SHARE_READ
-            , 0
-            , toWrite?CREATE_ALWAYS:OPEN_EXISTING
-            , toWrite?FILE_ATTRIBUTE_NORMAL:FILE_FLAG_SEQUENTIAL_SCAN
-            , 0
-            );
-        manager->deallocate(tmpName);//delete [] tmpName;
-    }
+
+    retVal = ::CreateFileW
+        (
+        (LPCWSTR) nameToOpen
+        , toWrite?GENERIC_WRITE:GENERIC_READ
+        , FILE_SHARE_READ
+        , 0
+        , toWrite?CREATE_ALWAYS:OPEN_EXISTING
+        , toWrite?FILE_ATTRIBUTE_NORMAL:FILE_FLAG_SEQUENTIAL_SCAN
+        , 0
+        );
 
     if (tmpUName)
         manager->deallocate(tmpUName);//delete [] tmpUName;
@@ -320,76 +294,33 @@ WindowsFileMgr::fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buff
 XMLCh*
 WindowsFileMgr::getFullPath(const XMLCh* const srcPath, MemoryManager* const manager)
 {
-    //
-    //  If we are on NT, then use wide character APIs, else use ASCII APIs.
-    //  We have to do it manually since we are only built in ASCII mode from
-    //  the standpoint of the APIs.
-    //
-    if (_onNT)
-    {
-        // Use a local buffer that is big enough for the largest legal path
-        const unsigned int bufSize = 1024;
-        XMLCh tmpPath[bufSize + 1];
+    // Use a local buffer that is big enough for the largest legal path
+    const unsigned int bufSize = 1024;
+    XMLCh tmpPath[bufSize + 1];
 
-        XMLCh* namePart = 0;
-        if (!::GetFullPathNameW((LPCWSTR)srcPath, bufSize, (LPWSTR)tmpPath, (LPWSTR*)&namePart))
-            return 0;
+    XMLCh* namePart = 0;
+    if (!::GetFullPathNameW((LPCWSTR)srcPath, bufSize, (LPWSTR)tmpPath, (LPWSTR*)&namePart))
+        return 0;
 
-        // Return a copy of the path
-        return XMLString::replicate(tmpPath, manager);
-    }
-     else
-    {
-        // Transcode the incoming string
-        char* tmpSrcPath = XMLString::transcode(srcPath, manager);
-        ArrayJanitor<char> janSrcPath(tmpSrcPath, manager);
+    // Return a copy of the path
+    return XMLString::replicate(tmpPath, manager);
 
-        // Use a local buffer that is big enough for the largest legal path
-        const unsigned int bufSize = 511;
-        char tmpPath[511 + 1];
-
-        char* namePart = 0;
-        if (!::GetFullPathNameA(tmpSrcPath, bufSize, tmpPath, &namePart))
-            return 0;
-
-        // Return a transcoded copy of the path
-        return XMLString::transcode(tmpPath, manager);
-    }
 }
 
 
 XMLCh*
 WindowsFileMgr::getCurrentDirectory(MemoryManager* const manager)
 {
-    //
-    //  If we are on NT, then use wide character APIs, else use ASCII APIs.
-    //  We have to do it manually since we are only built in ASCII mode from
-    //  the standpoint of the APIs.
-    //
-    if (_onNT)
-    {
-        // Use a local buffer that is big enough for the largest legal path
-        const unsigned int bufSize = 1024;
-        XMLCh tmpPath[bufSize + 1];
 
-        if (!::GetCurrentDirectoryW(bufSize, (LPWSTR)tmpPath))
-            return 0;
+    // Use a local buffer that is big enough for the largest legal path
+    const unsigned int bufSize = 1024;
+    XMLCh tmpPath[bufSize + 1];
 
-        // Return a copy of the path
-        return XMLString::replicate(tmpPath, manager);
-    }
-     else
-    {
-        // Use a local buffer that is big enough for the largest legal path
-        const unsigned int bufSize = 511;
-        char tmpPath[511 + 1];
+    if (!::GetCurrentDirectoryW(bufSize, (LPWSTR)tmpPath))
+        return 0;
 
-        if (!::GetCurrentDirectoryA(bufSize, tmpPath))
-            return 0;
-
-        // Return a transcoded copy of the path
-        return XMLString::transcode(tmpPath, manager);
-    }
+    // Return a copy of the path
+    return XMLString::replicate(tmpPath, manager);
 }
 
 

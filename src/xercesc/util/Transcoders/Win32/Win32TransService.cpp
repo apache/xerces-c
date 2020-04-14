@@ -35,7 +35,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include "Win32TransService.hpp"
-
+#include <versionhelpers.h>
 XERCES_CPP_NAMESPACE_BEGIN
 
 
@@ -317,15 +317,7 @@ Win32TransService::Win32TransService(MemoryManager* manager) :
 {
     // Figure out if we are on XP or later and save that flag for later use.
     // We need this because of certain code page conversion calls.
-    OSVERSIONINFO   OSVer;
-    OSVer.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    ::GetVersionEx(&OSVer);
-
-    if ((OSVer.dwPlatformId == VER_PLATFORM_WIN32_NT) &&
-        (OSVer.dwMajorVersion > 5 || (OSVer.dwMajorVersion == 5 && OSVer.dwMinorVersion > 0)))
-    {
-        onXPOrLater = true;
-    }
+    onXPOrLater = IsWindowsXPOrGreater();
 
     fCPMap = new RefHashTableOf<CPMapEntry>(109);
 

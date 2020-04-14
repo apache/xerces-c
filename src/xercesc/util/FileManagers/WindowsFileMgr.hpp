@@ -54,7 +54,6 @@ class WindowsFileMgr : public XMLFileMgr
         virtual bool		isRelative(const XMLCh* const toCheck, MemoryManager* const manager);
 
     private:
-        bool _onNT;
 };
 
 XERCES_CPP_NAMESPACE_END
