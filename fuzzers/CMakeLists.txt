@@ -28,27 +28,16 @@ include_directories(
   ${PROJECT_BINARY_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
-set(EXTRA_DIST
-  src/DOM/Normalizer/expectedOutput
-  src/DOM/TypeInfo/data/combined.dtd
-  src/DOM/TypeInfo/data/combined.xml
-  src/DOM/TypeInfo/data/combined.xsd
-  src/DOM/TypeInfo/data/SecondSchema.xsd
-  src/DOM/TypeInfo/data/TypeInfo.dtd
-  src/DOM/TypeInfo/data/TypeInfo.xml
-  src/DOM/TypeInfo/data/TypeInfo.xsd
-  src/DOM/TypeInfo/data/TypeInfoJustDTD.xml
-  src/DOM/TypeInfo/data/TypeInfoNoDTD.xml
-  src/DOM/TypeInfo/data/TypeInfoNoDTD.xsd
-  src/XSTSHarness/regression
-  src/xinclude
-)
 
 macro(add_fuzzer_executable name)
   add_executable(${name} ${ARGN})
   target_link_libraries(${name} xerces-c)
-  target_compile_options(${name} PUBLIC -fsanitize=fuzzer)
-  target_link_libraries(${name} -fsanitize=fuzzer)
+  if (XERCES_BUILD_FUZZERS)
+    target_compile_options(${name} PUBLIC -fsanitize=fuzzer)
+    target_link_libraries(${name} -fsanitize=fuzzer)
+  elseif(XERCES_BUILD_FOR_OSS_FUZZ)
+    target_link_libraries(${name} $ENV{LIB_FUZZING_ENGINE})
+  endif()
   set_target_properties(${name} PROPERTIES FOLDER "Fuzzers")
 endmacro()
 
@@ -92,9 +81,12 @@ add_fuzzer_executable(fuzz_parser_target_proto
 )
 add_dependencies(fuzz_parser_target_proto xml_proto_files)
 add_dependencies(fuzz_parser_target_proto libprotobuf-mutator)
-target_include_directories(fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LOCATION}/include)
-target_include_directories(fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LOCATION}/include/libprotobuf-mutator/)
-target_include_directories(fuzz_parser_target_proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/genfiles)
+target_include_directories(fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LOCATION}/include
+  fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LOCATION}/include/libprotobuf-mutator/
+  ${EXTERNAL_INSTALL_LOCATION}/../libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/include
+  fuzz_parser_target_proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/genfiles
+)
+#target_include_directories(fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LOCATION}/external.protobuf/include)
 target_link_libraries(fuzz_parser_target_proto ${EXTERNAL_INSTALL_LOCATION}/lib/libprotobuf-mutator-libfuzzer.a)
 target_link_libraries(fuzz_parser_target_proto ${EXTERNAL_INSTALL_LOCATION}/lib/libprotobuf-mutator.a)
 target_link_libraries(fuzz_parser_target_proto ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/src/external.protobuf-build/libprotobuf.a)

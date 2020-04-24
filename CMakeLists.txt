@@ -180,7 +180,7 @@ add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(samples)
 
-if (XERCES_BUILD_FUZZERS)
+if ((DEFINED XERCES_BUILD_FUZZERS) OR (DEFINED XERCES_BUILD_FOR_OSS_FUZZ))
   add_subdirectory(fuzzers)
 endif()
 
