@@ -69,8 +69,8 @@ ExternalProject_Add(libprotobuf-mutator
   CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=false -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
 )
 
-set(PROTOC_PATH /usr/local/bin/protoc) #${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/bin/protoc)
-#set(PROTOC_PATH ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/bin/protoc)
+#set(PROTOC_PATH /usr/local/bin/protoc) #${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/bin/protoc)
+set(PROTOC_PATH ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/bin/protoc)
 
 message(STATUS "### Vincent Debug: ${CMAKE_CURRENT_SOURCE_DIR} ${PROTOC_PATH} ${EXTERNAL_INSTALL_LOCATION} ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/src/external.protobuf-build/libprotobuf.a")
 
