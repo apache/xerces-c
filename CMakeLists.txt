@@ -180,6 +180,10 @@ add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(samples)
 
+if (XERCES_BUILD_FUZZERS)
+  add_subdirectory(fuzzers)
+endif()
+
 # Display configuration summary
 message(STATUS "")
 message(STATUS "Xerces-C++ configuration summary")

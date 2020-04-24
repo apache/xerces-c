@@ -21,9 +21,9 @@
 #include "xercesc/parsers/SAXParser.hpp"
 #include "xercesc/util/OutOfMemoryException.hpp"
 
-#include "genfiles/xml.pb.h"
+#include "xml.pb.h"
 
-#include "src/libfuzzer/libfuzzer_macro.h"
+#include "libprotobuf-mutator/src/libfuzzer/libfuzzer_macro.h"
 
 #include <iostream>
 
