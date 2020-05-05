@@ -58,10 +58,7 @@ ExternalProject_Add(libprotobuf-mutator
   CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON -DLIB_PROTO_MUTATOR_TESTING=false -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
 )
 
-#set(PROTOC_PATH /usr/local/bin/protoc) #${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/bin/protoc)
 set(PROTOC_PATH ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/bin/protoc)
-
-message(STATUS "### Vincent Debug: ${CMAKE_CURRENT_SOURCE_DIR} ${PROTOC_PATH} ${EXTERNAL_INSTALL_LOCATION} ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/src/external.protobuf-build/libprotobuf.a")
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/genfiles ${CMAKE_CURRENT_BINARY_DIR}/genfiles/xml.pb.cc
@@ -86,8 +83,8 @@ target_include_directories(fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LO
   ${EXTERNAL_INSTALL_LOCATION}/../libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/include
   fuzz_parser_target_proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/genfiles
 )
-#target_include_directories(fuzz_parser_target_proto PUBLIC ${EXTERNAL_INSTALL_LOCATION}/external.protobuf/include)
-target_link_libraries(fuzz_parser_target_proto ${EXTERNAL_INSTALL_LOCATION}/lib/libprotobuf-mutator-libfuzzer.a)
-target_link_libraries(fuzz_parser_target_proto ${EXTERNAL_INSTALL_LOCATION}/lib/libprotobuf-mutator.a)
-target_link_libraries(fuzz_parser_target_proto ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/src/external.protobuf-build/libprotobuf.a)
+target_link_libraries(fuzz_parser_target_proto
+  ${EXTERNAL_INSTALL_LOCATION}/lib/libprotobuf-mutator-libfuzzer.a
+  ${EXTERNAL_INSTALL_LOCATION}/lib/libprotobuf-mutator.a
+  ${CMAKE_CURRENT_BINARY_DIR}/libprotobuf-mutator-prefix/src/libprotobuf-mutator-build/external.protobuf/src/external.protobuf-build/libprotobuf.a)
 

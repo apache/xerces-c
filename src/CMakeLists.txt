@@ -1274,7 +1274,7 @@ add_library(xerces-c
 target_link_libraries(xerces-c ${libxerces_c_DEPS})
 if (XERCES_BUILD_FUZZERS)
   target_compile_options(xerces-c PUBLIC -fsanitize=fuzzer-no-link)
-  target_link_libraries(xerces-c -fsanitize=fuzzer-no-link)
+  #target_link_libraries(xerces-c -fsanitize=fuzzer-no-link)
 endif()
 if(XERCES_USE_NETACCESSOR_CURL)
   target_include_directories(xerces-c SYSTEM PRIVATE ${CURL_INCLUDE_DIRS})

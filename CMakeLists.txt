@@ -177,8 +177,10 @@ install(
 # Process subdirectories
 add_subdirectory(doc)
 add_subdirectory(src)
-add_subdirectory(tests)
-add_subdirectory(samples)
+if (NOT (DEFINED XERCES_BUILD_FUZZERS))
+  add_subdirectory(tests)
+  add_subdirectory(samples)
+endif()
 
 if ((DEFINED XERCES_BUILD_FUZZERS) OR (DEFINED XERCES_BUILD_FOR_OSS_FUZZ))
   add_subdirectory(fuzzers)
