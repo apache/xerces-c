@@ -400,7 +400,7 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
 
 #if defined(NEED_TO_GEN_ELEM_ATT_MAP_TABLE)
 
-#include <stdio.h>
+#include <cstdio>
 
 void GeneralAttributeCheck::initCharFlagTable()
 {

@@ -23,7 +23,7 @@
   #include <config.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 #include <cstdlib>
 #include <string.h>
 #if HAVE_ERRNO_H

@@ -28,7 +28,7 @@
  *  corner cases.
  */
 
-#include <stdio.h>
+#include <cstdio>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>

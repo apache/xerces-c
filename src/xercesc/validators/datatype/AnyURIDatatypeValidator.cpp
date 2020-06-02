@@ -22,7 +22,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <stdio.h>
+#include <cstdio>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>

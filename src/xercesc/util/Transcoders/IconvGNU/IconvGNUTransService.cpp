@@ -105,7 +105,7 @@
 #include <wchar.h>
 #include <string.h>
 #include <cstdlib>
-#include <stdio.h>
+#include <cstdio>
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

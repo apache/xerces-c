@@ -31,7 +31,7 @@
 #include <xercesc/framework/BinOutputStream.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 
-#include <stdio.h>
+#include <cstdio>
 #include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN

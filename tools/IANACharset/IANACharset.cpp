@@ -37,7 +37,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <stdio.h>
+#include <cstdio>
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/SAXParseException.hpp>

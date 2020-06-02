@@ -38,7 +38,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include    <ctype.h>
-#include    <stdio.h>
+#include    <cstdio>
 #include    <cstdlib>
 #include    <iostream.h>
 #include    <string.h>

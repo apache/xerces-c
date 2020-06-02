@@ -33,7 +33,7 @@
 
 #include <fstream>
 
-#include <stdio.h>
+#include <cstdio>
 #include <math.h>
 
 #include <xercesc/framework/psvi/XSValue.hpp>

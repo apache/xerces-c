@@ -24,7 +24,7 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-#include <stdio.h>
+#include <cstdio>
 #include <cstdlib>
 #include <assert.h>
 

@@ -69,7 +69,7 @@ static XSerializerHandlers*     handler     = 0;
 *
 ***/
 
-#include <stdio.h>
+#include <cstdio>
 
 static
 void parseCase(const char* const xmlFile);

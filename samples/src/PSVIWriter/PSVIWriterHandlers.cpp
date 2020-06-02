@@ -35,7 +35,7 @@
 #include <xercesc/framework/psvi/XSValue.hpp>
 
 #include <string.h>
-#include <stdio.h>
+#include <cstdio>
 
 XERCES_CPP_NAMESPACE_USE
 

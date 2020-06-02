@@ -45,7 +45,7 @@
 
 #include <string.h>
 #include <cstdlib>
-#include <stdio.h>
+#include <cstdio>
 
 #include "IconvTransService.hpp"
 #include <xercesc/util/XMLUniDefs.hpp>

@@ -180,9 +180,6 @@
 /* Define to 1 if you have the <stddef.h> header file. */
 #cmakedefine HAVE_STDDEF_H 1
 
-/* Define to 1 if you have the <stdio.h> header file. */
-#cmakedefine HAVE_STDIO_H 1
-
 /* Define to 1 if you have the `strcasecmp' function. */
 #cmakedefine HAVE_STRCASECMP 1
 

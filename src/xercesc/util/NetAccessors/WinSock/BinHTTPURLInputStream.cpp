@@ -27,7 +27,7 @@
 #include <ws2tcpip.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 #include <string.h>
 
 #include <xercesc/util/PlatformUtils.hpp>

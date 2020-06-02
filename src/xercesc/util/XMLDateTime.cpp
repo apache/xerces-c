@@ -27,7 +27,7 @@
 #endif
 
 #include <cstdlib>
-#include <stdio.h>
+#include <cstdio>
 #include <assert.h>
 #include <errno.h>
 

@@ -20,7 +20,7 @@
  */
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-#include <stdio.h>
+#include <cstdio>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

@@ -35,7 +35,7 @@
 #include "unicode/udata.h"
 
 #include "string.h"
-#include <stdio.h>
+#include <cstdio>
 #include <cstdlib>
 
 XERCES_CPP_NAMESPACE_BEGIN

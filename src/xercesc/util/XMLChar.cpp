@@ -8835,7 +8835,7 @@ XMLByte XMLChar1_1::fgCharCharsTable1_1[0x10000] =
 
 #if defined(NEED_TO_GEN_TABLE)
 
-#include <stdio.h>
+#include <cstdio>
 
 static XMLCh gTmpCharTable[0x10000];
 

@@ -36,7 +36,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
-#include <stdio.h>
+#include <cstdio>
 #include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN

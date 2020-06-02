@@ -24,7 +24,7 @@
  * $Id$
  */
 
-#include <stdio.h>
+#include <cstdio>
 #include <string.h>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

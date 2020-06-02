@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/DefaultPanicHandler.hpp>
 
-#include <stdio.h>
+#include <cstdio>
 #include <cstdlib>
 
 XERCES_CPP_NAMESPACE_BEGIN

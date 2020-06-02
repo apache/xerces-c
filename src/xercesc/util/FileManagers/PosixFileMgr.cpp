@@ -20,7 +20,7 @@
  */
 
 #include <config.h>
-#include <stdio.h>
+#include <cstdio>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>

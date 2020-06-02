@@ -26,7 +26,7 @@
 #endif
 
 #include <cstdlib>
-#include <stdio.h>
+#include <cstdio>
 #include <string.h>
 #include <ctype.h>
 #include <xercesc/parsers/SAXParser.hpp>

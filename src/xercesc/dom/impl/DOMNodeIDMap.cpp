@@ -25,7 +25,7 @@
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <stdio.h>
+#include <cstdio>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

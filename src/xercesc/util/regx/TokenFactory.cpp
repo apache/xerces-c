@@ -188,7 +188,7 @@ Token* TokenFactory::getDot() {
    #include <unicode/uchar.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 void TokenFactory::printUnicode() {
 
 #if XERCES_USE_TRANSCODER_ICU
