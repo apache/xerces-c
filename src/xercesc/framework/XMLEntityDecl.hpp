@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  *  This class defines that core information that defines an XML entity, no
@@ -507,6 +507,6 @@ inline const XMLCh* XMLEntityDecl::getKey() const
     return fName;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

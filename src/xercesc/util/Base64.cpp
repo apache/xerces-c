@@ -24,7 +24,7 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  constants
@@ -638,4 +638,4 @@ bool Base64::isData(const XMLByte& octet)
     return (base64Inverse[octet]!=(XMLByte)-1);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

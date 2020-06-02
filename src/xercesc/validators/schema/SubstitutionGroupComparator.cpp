@@ -32,7 +32,7 @@
 #include <xercesc/validators/schema/ComplexTypeInfo.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 bool SubstitutionGroupComparator::isEquivalentTo(const QName* const anElement
                                                , const QName* const exemplar)
@@ -203,7 +203,7 @@ bool SubstitutionGroupComparator::isAllowedByWildcard(SchemaGrammar* const pGram
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file SubstitutionGroupComparator.cpp

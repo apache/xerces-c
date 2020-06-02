@@ -28,7 +28,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const XMLCh fgXMLCategory[] =
 {
@@ -229,7 +229,7 @@ static const XMLCh fgUniSymbol[] =
     chLatin_S, chNull
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

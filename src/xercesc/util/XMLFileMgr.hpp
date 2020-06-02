@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef void* FileHandle;
 #define XERCES_Invalid_File_Handle 0
@@ -57,7 +57,7 @@ class XMLFileMgr : public XMemory
         virtual bool		isRelative(const XMLCh* const toCheck, MemoryManager* const manager) = 0;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

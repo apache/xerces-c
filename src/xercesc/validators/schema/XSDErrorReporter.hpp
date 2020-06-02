@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class Locator;
 class XMLErrorReporter;
@@ -110,6 +110,6 @@ inline void XSDErrorReporter::setErrorReporter(XMLErrorReporter* const errorRepo
     fErrorReporter = errorReporter;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -25,7 +25,7 @@
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 /**
@@ -183,6 +183,6 @@ inline void DOMErrorImpl::setRelatedData(void* relatedData)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

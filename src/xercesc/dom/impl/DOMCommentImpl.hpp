@@ -40,7 +40,7 @@
 #include "DOMChildNode.hpp"
 #include "DOMCharacterDataImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMCommentImpl: public DOMComment, public HasDOMNodeImpl, public HasDOMChildImpl {
@@ -83,7 +83,7 @@ private:
     DOMCommentImpl & operator = (const DOMCommentImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

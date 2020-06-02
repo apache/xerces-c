@@ -26,7 +26,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/dom/DOMXPathExpression.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMElement;
 class XercesXPath;
@@ -64,6 +64,6 @@ protected:
     MemoryManager* const        fMemoryManager;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

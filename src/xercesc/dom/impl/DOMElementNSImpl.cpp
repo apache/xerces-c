@@ -28,7 +28,7 @@
 #include <xercesc/util/XMLUri.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
     DOMElementImpl(ownerDoc, nam)
@@ -261,4 +261,4 @@ void* DOMElementNSImpl::getFeature(const XMLCh* feature, const XMLCh* version) c
     return DOMElementImpl::getFeature(feature, version);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

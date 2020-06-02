@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/AbstractNumericFacetValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT AbstractNumericValidator : public AbstractNumericFacetValidator
 {
@@ -100,7 +100,7 @@ inline void AbstractNumericValidator::init(RefArrayVectorOf<XMLCh>*  const enums
     AbstractNumericFacetValidator::init(enums, manager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

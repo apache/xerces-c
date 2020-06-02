@@ -29,7 +29,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // Forward references
 //class XMLPlatformUtils;
@@ -702,6 +702,6 @@ inline XMLSize_t TranscodeFromStr::length() const
     return fCharsWritten;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

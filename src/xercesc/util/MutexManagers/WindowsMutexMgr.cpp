@@ -24,7 +24,7 @@
 #include <xercesc/util/MutexManagers/WindowsMutexMgr.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 WindowsMutexMgr::WindowsMutexMgr()
 {
@@ -67,5 +67,5 @@ WindowsMutexMgr::unlock(XMLMutexHandle mtx)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

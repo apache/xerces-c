@@ -36,7 +36,7 @@
 	#include <CFURLAccess.h>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class implements the BinInputStream interface specified by the XML
@@ -70,6 +70,6 @@ URLAccessCFBinInputStream::curPos() const
     return mBytesProcessed;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // URLACCESSCFBININPUTSTREAM_HPP

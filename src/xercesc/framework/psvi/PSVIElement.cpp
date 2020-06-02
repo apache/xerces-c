@@ -24,7 +24,7 @@
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 PSVIElement::PSVIElement(MemoryManager* const manager):  
         PSVIItem(manager),
@@ -88,6 +88,6 @@ void PSVIElement::reset( const VALIDITY_STATE          validityState
     fCanonicalValue = canonicalValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

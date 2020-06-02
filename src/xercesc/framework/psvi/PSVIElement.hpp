@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/PSVIItem.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * Represent the PSVI contributions for one element information item.
@@ -169,6 +169,6 @@ inline XSModel* PSVIElement::getSchemaInformation()
     return fSchemaInfo;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

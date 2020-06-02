@@ -26,7 +26,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class InputSource;
 
@@ -173,6 +173,6 @@ private :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

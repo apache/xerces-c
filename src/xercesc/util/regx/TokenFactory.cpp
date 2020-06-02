@@ -31,7 +31,7 @@
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -227,7 +227,7 @@ void TokenFactory::printUnicode() {
 }
 */
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file TokenFactory.cpp

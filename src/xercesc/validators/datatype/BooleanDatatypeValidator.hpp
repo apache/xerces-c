@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT BooleanDatatypeValidator : public DatatypeValidator
 {
@@ -183,7 +183,7 @@ inline void BooleanDatatypeValidator::validate( const XMLCh*             const c
     checkContent(content, context, false, manager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

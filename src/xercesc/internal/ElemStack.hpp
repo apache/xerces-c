@@ -26,7 +26,7 @@
 #include <xercesc/util/QName.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLElementDecl;
 class Grammar;
@@ -587,6 +587,6 @@ inline void WFElemStack::setCurrentURI(unsigned int uri)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

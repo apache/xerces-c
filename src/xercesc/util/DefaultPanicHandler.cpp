@@ -28,7 +28,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 void DefaultPanicHandler::panic(const PanicHandler::PanicReasons reason)
 {
@@ -36,5 +36,5 @@ void DefaultPanicHandler::panic(const PanicHandler::PanicReasons reason)
     exit(-1);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

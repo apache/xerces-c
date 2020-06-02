@@ -51,7 +51,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 inline XMLAttDefList& getAttDefList(ComplexTypeInfo* currType, XMLElementDecl* elemDecl);
 
@@ -4961,4 +4961,4 @@ void SGXMLScanner::resetPSVIElemContext()
     fPSVIElemContext.fNormalizedValue = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

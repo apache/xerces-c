@@ -36,7 +36,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 typedef enum
 {

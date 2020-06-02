@@ -21,7 +21,7 @@
 
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSAttributeUse: Constructors and Destructor
@@ -56,6 +56,6 @@ void XSAttributeUse::set(const bool isRequired,
     fConstraintValue = constraintValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

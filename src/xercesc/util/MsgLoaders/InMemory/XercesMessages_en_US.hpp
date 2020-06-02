@@ -5,7 +5,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLCh gXMLErrArray[][128] = 
 {
@@ -1497,5 +1497,5 @@ const XMLCh gXMLDOMMsgArray[][128] =
 };
 const unsigned int gXMLDOMMsgArraySize = 41;
 
-XERCES_CPP_NAMESPACE_END
+}
 

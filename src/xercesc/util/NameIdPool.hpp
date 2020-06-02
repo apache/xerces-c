@@ -27,7 +27,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  Forward declare the enumerator so he can be our friend. Can you say
@@ -198,7 +198,7 @@ private :
     MemoryManager*          fMemoryManager;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/NameIdPool.c>

@@ -63,7 +63,7 @@ extern "C" const uint8_t U_IMPORT icudata_dat[];
 #endif
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local, const data
@@ -1222,4 +1222,4 @@ bool ICULCPTranscoder::transcode(   const   XMLCh* const    toTranscode
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

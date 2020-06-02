@@ -25,7 +25,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -215,4 +215,4 @@ XMLByte XML256TableTranscoder::xlatOneTo(const XMLCh toXlat) const
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

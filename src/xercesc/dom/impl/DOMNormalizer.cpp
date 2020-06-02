@@ -38,7 +38,7 @@
 #include "DOMNormalizer.hpp"
 #include "DOMTextImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static XMLMsgLoader*   gMsgLoader = 0;
 
@@ -497,4 +497,4 @@ void DOMNormalizer::error(const XMLErrs::Codes code, const DOMNode *node) const
 
 
 
-XERCES_CPP_NAMESPACE_END
+}

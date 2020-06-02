@@ -39,7 +39,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // constants used to process raw data (fBuffer)
@@ -1989,4 +1989,4 @@ void XMLDateTime::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}

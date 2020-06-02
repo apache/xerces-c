@@ -26,7 +26,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLAttDef;
 
@@ -166,6 +166,6 @@ fMemoryManager(manager)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

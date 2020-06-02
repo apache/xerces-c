@@ -7,7 +7,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMError.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLValid
 {
@@ -141,7 +141,7 @@ private:
     XMLValid();
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

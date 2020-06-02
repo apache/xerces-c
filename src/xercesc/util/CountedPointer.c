@@ -27,7 +27,7 @@
 #include <xercesc/util/CountedPointer.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  CountedPointerTo: Constructors and Destructor
@@ -104,4 +104,4 @@ template <class T> T& CountedPointerTo<T>::operator*()
     return *fPtr;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

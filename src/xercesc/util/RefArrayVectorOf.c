@@ -22,7 +22,7 @@
 #include "RefArrayVectorOf.hpp"
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefArrayVectorOf: Constructor and Destructor
@@ -119,4 +119,4 @@ template <class TElem> void RefArrayVectorOf<TElem>::cleanup()
     this->fMemoryManager->deallocate(this->fElemList);//delete [] fElemList;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

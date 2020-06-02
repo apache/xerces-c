@@ -28,7 +28,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  *  This class provides a simple means to track ID Ref usage. Since id/idref
@@ -176,6 +176,6 @@ inline void XMLRefInfo::setUsed(const bool newValue)
     fUsed = newValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,7 +26,7 @@
 #include    <xercesc/sax/InputSource.hpp>
 #include    <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  InputSource: Destructor
@@ -129,5 +129,5 @@ InputSource::InputSource(const  char* const systemId
     fSystemId = XMLString::transcode(systemId, fMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

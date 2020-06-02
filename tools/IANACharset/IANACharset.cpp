@@ -171,7 +171,7 @@ static void startOutput(const XMLCh* const outPath)
           L"#if !defined(IANAENCODINGS_HPP)\n"
           L"#define IANAENCODINGS_HPP\n\n"
           L"#include <xercesc/util/XercesDefs.hpp>\n\n"
-          L"XERCES_CPP_NAMESPACE_BEGIN\n\n"
+          L"namespace XERCES_CPP_NAMESPACE {\n\n"
     );
 
     //
@@ -217,7 +217,7 @@ static void endOutput(const unsigned int encCount)
     fwprintf
     (
         gOutFile
-        , L"XERCES_CPP_NAMESPACE_END\n\n"
+        , L"}\n\n"
           L"#endif\n\n"
     );
 

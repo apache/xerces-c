@@ -35,7 +35,7 @@
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/framework/ValidationContext.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward declaration
@@ -248,7 +248,7 @@ GeneralAttributeCheck::getFacetId(const XMLCh* const facetName, MemoryManager* c
     return fFacetsMap->get(facetName, manager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

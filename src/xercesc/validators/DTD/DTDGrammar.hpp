@@ -31,7 +31,7 @@
 #include <xercesc/framework/XMLDTDDescription.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class stores the DTD information
@@ -386,6 +386,6 @@ inline void DTDGrammar::setValidated(const bool newState)
     fValidated = newState;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

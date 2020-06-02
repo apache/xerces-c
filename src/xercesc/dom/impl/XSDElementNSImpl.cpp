@@ -24,7 +24,7 @@
 #include "DOMDocumentImpl.hpp"
 #include "XSDElementNSImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 XSDElementNSImpl::XSDElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
@@ -60,4 +60,4 @@ DOMNode * XSDElementNSImpl::cloneNode(bool deep) const {
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

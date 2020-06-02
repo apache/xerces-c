@@ -26,7 +26,7 @@
 #include <xercesc/util/NameIdPool.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT ENTITYDatatypeValidator : public StringDatatypeValidator
 {
@@ -135,7 +135,7 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

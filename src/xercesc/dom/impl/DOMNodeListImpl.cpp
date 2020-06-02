@@ -24,7 +24,7 @@
 #include "DOMNodeListImpl.hpp"
 #include "DOMCasts.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // revisit
@@ -69,4 +69,4 @@ DOMNode *DOMNodeListImpl::item(XMLSize_t index) const{
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

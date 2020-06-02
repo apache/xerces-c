@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLEntityDecl: Constructors and Destructor
@@ -197,4 +197,4 @@ void XMLEntityDecl::serialize(XSerializeEngine& serEng)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

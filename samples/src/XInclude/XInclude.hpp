@@ -27,7 +27,7 @@
 
 #include <iostream>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 // ---------------------------------------------------------------------------
 //  Simple error handler deriviative to install on parser

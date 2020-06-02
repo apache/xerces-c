@@ -25,7 +25,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT BinFileInputStream : public BinInputStream
 {
@@ -102,6 +102,6 @@ inline bool BinFileInputStream::getIsOpen() const
     return (fSource != (FileHandle) XERCES_Invalid_File_Handle);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

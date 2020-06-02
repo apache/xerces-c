@@ -79,12 +79,8 @@ typedef XMLUInt32           UCS4Ch;
 
 
 // ---------------------------------------------------------------------------
-// Define namespace symbols if the compiler supports it.
+// Define versioned namespace
 // ---------------------------------------------------------------------------
-#define XERCES_CPP_NAMESPACE_BEGIN namespace XERCES_CPP_NAMESPACE {
-#define XERCES_CPP_NAMESPACE_END  }
-#define XERCES_CPP_NAMESPACE_USE using namespace XERCES_CPP_NAMESPACE;
-#define XERCES_CPP_NAMESPACE_QUALIFIER XERCES_CPP_NAMESPACE::
 
 namespace XERCES_CPP_NAMESPACE { }
 namespace xercesc = XERCES_CPP_NAMESPACE;

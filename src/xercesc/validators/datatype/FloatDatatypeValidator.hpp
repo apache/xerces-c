@@ -26,7 +26,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLFloat.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT FloatDatatypeValidator : public AbstractNumericValidator
 {
@@ -136,7 +136,7 @@ private:
     FloatDatatypeValidator& operator = (const  FloatDatatypeValidator&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

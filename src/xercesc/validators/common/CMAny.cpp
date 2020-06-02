@@ -27,7 +27,7 @@
 #include <xercesc/validators/common/CMStateSet.hpp>
 #include <xercesc/validators/common/CMAny.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  CMUnaryOp: Constructors and Destructor
@@ -107,4 +107,4 @@ void CMAny::calcLastPos(CMStateSet& toSet) const
         toSet.setBit(fPosition);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

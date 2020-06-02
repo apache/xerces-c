@@ -28,7 +28,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class implements a simple expanding character buffer
@@ -229,6 +229,6 @@ inline XMLFilePos BinHTTPInputStreamCommon::curPos() const
     return fBytesProcessed;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -29,7 +29,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/sax/Locator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT XSDLocator: public XMemory, public Locator
 {
@@ -136,6 +136,6 @@ inline const XMLCh* XSDLocator::getSystemId() const
     return fSystemId;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

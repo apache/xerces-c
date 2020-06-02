@@ -26,7 +26,7 @@
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLNotationDecl: Constructors and operators
@@ -137,4 +137,4 @@ void XMLNotationDecl::serialize(XSerializeEngine& serEng)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

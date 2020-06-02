@@ -21,7 +21,7 @@
 
 #include    <xercesc/parsers/SAX2XMLFilterImpl.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class SAX2SortAttributesFilter : public SAX2XMLFilterImpl
 {

@@ -25,7 +25,7 @@
 #include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XMLNumber : public XSerializable, public XMemory
 {
@@ -97,6 +97,6 @@ private:
     XMLNumber& operator=(const XMLNumber&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

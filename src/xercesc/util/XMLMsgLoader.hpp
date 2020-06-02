@@ -25,7 +25,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This header defines an abstract message loading API. This is the API via
@@ -177,6 +177,6 @@ inline XMLMsgLoader::XMLMsgLoader()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

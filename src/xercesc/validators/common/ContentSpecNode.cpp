@@ -28,7 +28,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Copy Constructor
@@ -390,5 +390,5 @@ void ContentSpecNode::serialize(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

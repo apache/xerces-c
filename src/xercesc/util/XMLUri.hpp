@@ -28,7 +28,7 @@
 #include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*
  * This class is a direct port of Java's URI class, to distinguish
@@ -658,6 +658,6 @@ inline bool XMLUri::isUnreservedCharacter(const XMLCh theChar)
             XMLString::indexOf(MARK_CHARACTERS, theChar) != -1);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

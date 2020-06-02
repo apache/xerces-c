@@ -25,7 +25,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This contains constants needed in the schema component model.
@@ -185,6 +185,6 @@ namespace XSConstants
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

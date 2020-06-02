@@ -28,7 +28,7 @@
 #include <xercesc/sax/Locator.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLEntityDecl;
 class XMLEntityHandler;
@@ -442,6 +442,6 @@ private :
     ReaderMgr*  fMgr;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

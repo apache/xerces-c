@@ -24,7 +24,7 @@
 #include <xercesc/util/XMLString.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * The <code>DOMTypeInfo</code> interface represent a type used by
@@ -187,7 +187,7 @@ public:
     //@}
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

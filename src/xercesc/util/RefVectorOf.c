@@ -27,7 +27,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefVectorOf: Constructors and Destructor
@@ -51,4 +51,4 @@ template <class TElem> RefVectorOf<TElem>::~RefVectorOf()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

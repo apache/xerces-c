@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * When associating an object to a key on a node using <code>setUserData</code>
@@ -134,7 +134,7 @@ public:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

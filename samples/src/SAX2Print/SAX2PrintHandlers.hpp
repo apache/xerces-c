@@ -22,7 +22,7 @@
 #include    <xercesc/sax2/DefaultHandler.hpp>
 #include    <xercesc/framework/XMLFormatter.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 class SAX2PrintHandlers : public DefaultHandler, private XMLFormatTarget
 {

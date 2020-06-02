@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <limits.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 static const XMLCh kAstr[] = {chAsterisk, chNull};
@@ -216,4 +216,4 @@ DOMNode *DOMDeepNodeListImpl::nextMatchingElementAfter(DOMNode *current)
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

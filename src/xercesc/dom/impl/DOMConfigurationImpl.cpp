@@ -22,7 +22,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/dom/DOMException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const unsigned short DOMConfigurationImpl::fDEFAULT_VALUES = 0x2596;
 
@@ -263,7 +263,7 @@ void DOMConfigurationImpl::setSchemaLocation(const XMLCh* sl) {
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 /**

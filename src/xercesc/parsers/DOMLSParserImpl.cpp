@@ -54,7 +54,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -1375,4 +1375,4 @@ void DOMLSParserImpl::startElement(const XMLElementDecl&         elemDecl
         endElement(elemDecl, urlId, isRoot, elemPrefix);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

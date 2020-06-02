@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // forward declarations
 class XSNamespaceItem;
@@ -209,6 +209,6 @@ inline short XSTypeDefinition::getFinal() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

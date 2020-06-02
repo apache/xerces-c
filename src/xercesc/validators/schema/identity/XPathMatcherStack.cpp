@@ -26,7 +26,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<XPathMatcherStack>    CleanupType;
 
@@ -78,7 +78,7 @@ void XPathMatcherStack::clear() {
     fMatchersCount = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XPathMatcherStack.cpp

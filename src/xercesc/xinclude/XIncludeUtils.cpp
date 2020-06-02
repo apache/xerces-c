@@ -34,7 +34,7 @@
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -857,4 +857,4 @@ const XMLCh XIncludeUtils::fgXIBaseAttrName[] =
     chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
 };
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -116,7 +116,7 @@
 #include "IconvGNUTransService.hpp"
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -1139,4 +1139,4 @@ bool IconvGNUTranscoder::canTranscodeTo
     return (rc != (size_t)-1) && (len == 0);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

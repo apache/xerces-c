@@ -36,5 +36,5 @@
 #include <xercesc/util/UnsupportedEncodingException.hpp>
 #include <xercesc/util/UTFDataFormatException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
-XERCES_CPP_NAMESPACE_END
+namespace XERCES_CPP_NAMESPACE {
+}

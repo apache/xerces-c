@@ -27,7 +27,7 @@
 
 #include <winsock2.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class implements the BinInputStream interface specified by the XML
@@ -66,6 +66,6 @@ private :
     static void Initialize(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // BINHTTPURLINPUTSTREAM_HPP

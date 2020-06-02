@@ -28,7 +28,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT BMPattern : public XMemory
 {
@@ -147,7 +147,7 @@ private :
     MemoryManager* fMemoryManager; 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

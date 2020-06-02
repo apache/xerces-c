@@ -25,7 +25,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMLSOutput.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CDOM_EXPORT DOMLSOutputImpl : public XMemory, public DOMLSOutput
 {
@@ -87,6 +87,6 @@ inline const XMLCh* DOMLSOutputImpl::getSystemId() const
     return fSystemId;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

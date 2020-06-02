@@ -28,7 +28,7 @@
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -223,7 +223,7 @@ inline TokenFactory* RangeTokenMap::getTokenFactory() const {
     return fTokenFactory;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

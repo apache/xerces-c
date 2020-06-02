@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLEntityDecl;
 
@@ -111,6 +111,6 @@ inline XMLSize_t EndOfEntityException::getReaderNum() const
     return fReaderNum;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,7 +26,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLDouble.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT DoubleDatatypeValidator : public AbstractNumericValidator
 {
@@ -137,7 +137,7 @@ private:
     DoubleDatatypeValidator& operator = (const  DoubleDatatypeValidator&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

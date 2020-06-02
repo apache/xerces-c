@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  *   The PlatformUtils::initialize() would set fLocale
@@ -101,4 +101,4 @@ const char* XMLMsgLoader::getNLSHome()
     return fPath;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

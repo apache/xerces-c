@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static data
@@ -553,5 +553,5 @@ bool XMLUTF8Transcoder::canTranscodeTo(const unsigned int toCheck)
     return (toCheck <= 0x10FFFF);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

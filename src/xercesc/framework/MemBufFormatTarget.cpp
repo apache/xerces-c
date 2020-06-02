@@ -23,7 +23,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 MemBufFormatTarget::MemBufFormatTarget( XMLSize_t            initCapacity
                                       , MemoryManager* const manager)
@@ -102,4 +102,4 @@ void MemBufFormatTarget::ensureCapacity(const XMLSize_t extraNeeded)
     fCapacity = newCap;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

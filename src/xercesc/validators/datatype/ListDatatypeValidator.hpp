@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT ListDatatypeValidator : public AbstractStringValidator
 {
@@ -217,7 +217,7 @@ inline void ListDatatypeValidator::setContent(const XMLCh* const content)
     fContent = content;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

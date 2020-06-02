@@ -27,7 +27,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/RangeFactory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT BlockRangeFactory: public RangeFactory {
 
@@ -57,7 +57,7 @@ private:
     BlockRangeFactory& operator=(const BlockRangeFactory&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

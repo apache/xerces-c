@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XSerializeEngine;
 class XSerializable;
@@ -88,6 +88,6 @@ XSerializable* class_name::createObject(MemoryManager*) \
 XProtoType class_name::class##class_name = \
 {const_cast<XMLByte*>(reinterpret_cast<const XMLByte *>(#class_name)), class_name::createObject };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

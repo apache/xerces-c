@@ -35,7 +35,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 //---------------------
@@ -2112,5 +2112,5 @@ void DOMRangeImpl::updateSplitInfo(DOMNode* oldNode, DOMNode* startNode, XMLSize
 
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

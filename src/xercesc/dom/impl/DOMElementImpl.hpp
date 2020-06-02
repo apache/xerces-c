@@ -43,7 +43,7 @@
 
 #include "DOMAttrMapImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMTypeInfo;
 class DOMNodeList;
@@ -145,6 +145,6 @@ private:
     DOMElementImpl & operator = (const DOMElementImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

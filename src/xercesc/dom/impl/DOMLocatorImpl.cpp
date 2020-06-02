@@ -21,7 +21,7 @@
 
 #include "DOMLocatorImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -57,4 +57,4 @@ DOMLocatorImpl::~DOMLocatorImpl()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

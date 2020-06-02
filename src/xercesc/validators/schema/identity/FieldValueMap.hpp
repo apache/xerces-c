@@ -34,7 +34,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -188,7 +188,7 @@ inline void FieldValueMap::put(IC_Field* const key,
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

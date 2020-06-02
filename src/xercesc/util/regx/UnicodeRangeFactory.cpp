@@ -29,7 +29,7 @@
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -271,7 +271,7 @@ unsigned short UnicodeRangeFactory::getUniCategory(const unsigned short type)
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file UnicodeRangeFactory.cpp

@@ -33,7 +33,7 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class SchemaGrammar;
 class SchemaValidator;
@@ -302,6 +302,6 @@ inline Grammar::GrammarType SGXMLScanner::getCurrentGrammarType() const
     return fGrammarType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

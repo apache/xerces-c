@@ -29,7 +29,7 @@
 #include <xercesc/internal/SGXMLScanner.hpp>
 #include <xercesc/internal/IGXMLScanner.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLScannerResolver: Public static methods
@@ -85,4 +85,4 @@ XMLScannerResolver::resolveScanner( const XMLCh* const        scannerName
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

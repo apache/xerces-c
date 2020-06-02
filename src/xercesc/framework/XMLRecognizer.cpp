@@ -27,7 +27,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -267,4 +267,4 @@ XMLRecognizer::nameForEncoding(const XMLRecognizer::Encodings theEncoding
     return gEncodingNameMap[theEncoding];
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -29,7 +29,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/framework/XMLFormatter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMStringListImpl;
 
@@ -229,6 +229,6 @@ inline void DOMLSSerializerImpl::setURCharRef()
     fFormatter->setUnRepFlags(XMLFormatter::UnRep_CharRef);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

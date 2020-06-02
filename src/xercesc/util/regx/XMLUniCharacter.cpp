@@ -35,7 +35,7 @@
    #include <xercesc/util/regx/UniCharTable.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLUniCharacter: Public static methods
@@ -49,7 +49,7 @@ unsigned short XMLUniCharacter::getType(const XMLCh ch) {
 #endif
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XMLUniCharacter.cpp

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT HexBin
 {
@@ -123,6 +123,6 @@ private :
     static const XMLByte    hexNumberTable[];
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

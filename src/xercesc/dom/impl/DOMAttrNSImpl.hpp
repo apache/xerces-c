@@ -33,7 +33,7 @@
 
 #include "DOMAttrImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMAttrNSImpl: public DOMAttrImpl {
@@ -80,6 +80,6 @@ private:
     DOMAttrNSImpl & operator = (const DOMAttrNSImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

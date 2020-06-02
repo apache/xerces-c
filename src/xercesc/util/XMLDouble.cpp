@@ -30,7 +30,7 @@
 #include <cstring>
 #include <cstdlib>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ctor/dtor
@@ -67,4 +67,4 @@ void XMLDouble::serialize(XSerializeEngine& serEng)
     XMLAbstractDoubleFloat::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

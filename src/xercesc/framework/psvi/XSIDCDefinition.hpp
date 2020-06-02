@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class describes all properties of a Schema Identity Constraint
@@ -185,6 +185,6 @@ inline XSIDCDefinition* XSIDCDefinition::getRefKey() const
     return fKey;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -34,7 +34,7 @@
 #include <cstdio>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const bool XSerializeEngine::toWriteBufferLen = true;
 const bool XSerializeEngine::toReadBufferLen  = true;
@@ -1155,4 +1155,4 @@ void XSerializeEngine::trace(char* /*funcName*/) const
 */
 }
 
-XERCES_CPP_NAMESPACE_END
+}

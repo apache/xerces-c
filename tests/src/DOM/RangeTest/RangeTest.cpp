@@ -38,7 +38,7 @@
 #include <xercesc/dom/DOMRange.hpp>
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 bool errorOccurred = false;
 

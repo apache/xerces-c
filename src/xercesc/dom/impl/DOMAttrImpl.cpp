@@ -28,7 +28,7 @@
 #include "DOMCasts.hpp"
 #include "DOMTypeInfoImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMAttrImpl::DOMAttrImpl(DOMDocument *ownerDoc, const XMLCh *aName)
     : fNode(this, ownerDoc), fParent(this, ownerDoc), fSchemaType(0)
@@ -363,4 +363,4 @@ void* DOMAttrImpl::getFeature(const XMLCh* feature, const XMLCh* version) const
 DOMNODEIMPL_IMPL(DOMAttrImpl);
 DOMPARENTIMPL_IMPL(DOMAttrImpl);
 
-XERCES_CPP_NAMESPACE_END
+}

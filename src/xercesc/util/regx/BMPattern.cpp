@@ -28,7 +28,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BMPattern: Constructors
@@ -207,7 +207,7 @@ void BMPattern::cleanUp() {
     fMemoryManager->deallocate(fShiftTable);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file BMPattern.cpp

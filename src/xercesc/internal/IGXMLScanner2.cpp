@@ -56,7 +56,7 @@
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 inline XMLAttDefList& getAttDefList(bool              isSchemaGrammar
                                   , ComplexTypeInfo*  currType
@@ -3493,4 +3493,4 @@ inline XMLAttDefList& getAttDefList(bool              isSchemaGrammar
         return elemDecl->getAttDefList();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

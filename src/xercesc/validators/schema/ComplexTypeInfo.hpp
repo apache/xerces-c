@@ -40,7 +40,7 @@
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -521,7 +521,7 @@ inline bool ComplexTypeInfo::contains(const XMLCh* const attName) {
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

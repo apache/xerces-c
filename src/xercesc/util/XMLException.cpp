@@ -31,7 +31,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static XMLMsgLoader* sMsgLoader = 0;
 
@@ -252,4 +252,4 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     fMsg = XMLString::replicate(errText, fMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

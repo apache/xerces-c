@@ -28,7 +28,7 @@
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/StringToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -142,7 +142,7 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
     ((StringToken*) previousTok)->setString(stringBuf.getRawBuffer());
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file UnionToken.cpp

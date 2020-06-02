@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLFileMgr.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //	Concrete implementation of XMLFileMgr, implementing
 //	file access on Windows systems.
@@ -57,7 +57,7 @@ class WindowsFileMgr : public XMLFileMgr
         bool _onNT;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

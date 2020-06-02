@@ -17,9 +17,9 @@
 
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 template class ArrayJanitor<XMLByte>;
 template class ArrayJanitor<XMLCh>;
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <new>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Constructors and Destructor
@@ -569,4 +569,4 @@ void RefHash3KeysIdPoolEnumerator<TVal, THasher>::findNext()
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

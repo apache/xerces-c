@@ -39,7 +39,7 @@
 #include <cstdio>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //Though DOMNodeImpl does not derivate from DOMNode, it shares
 //the same GetDOMNodeMemoryManager
@@ -1041,5 +1041,5 @@ void DOMNodeImpl::release()
     throw DOMException(DOMException::INVALID_ACCESS_ERR,0, GetDOMNodeMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

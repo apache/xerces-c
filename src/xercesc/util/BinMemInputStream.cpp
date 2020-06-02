@@ -27,7 +27,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BinMemInputStream: Constructors and Destructor
@@ -95,4 +95,4 @@ const XMLCh* BinMemInputStream::getContentType() const
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

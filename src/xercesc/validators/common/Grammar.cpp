@@ -29,7 +29,7 @@
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  * Support for Serialization/De-serialization
@@ -81,4 +81,4 @@ Grammar* Grammar::loadGrammar(XSerializeEngine& serEng)
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}

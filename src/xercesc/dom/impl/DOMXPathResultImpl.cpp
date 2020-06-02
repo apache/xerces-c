@@ -19,7 +19,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMXPathException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMXPathResultImpl::DOMXPathResultImpl(ResultType type,
                                        MemoryManager* const manager)
@@ -135,4 +135,4 @@ void DOMXPathResultImpl::addResult(DOMNode* node)
     fSnapshot->addElement(node);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

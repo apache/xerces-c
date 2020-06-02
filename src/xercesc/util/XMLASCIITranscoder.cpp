@@ -24,7 +24,7 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLASCIITranscoder: Constructors and Destructor
@@ -169,4 +169,4 @@ bool XMLASCIITranscoder::canTranscodeTo(const unsigned int toCheck)
     return (toCheck < 0x80);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

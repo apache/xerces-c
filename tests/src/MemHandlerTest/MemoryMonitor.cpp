@@ -354,7 +354,7 @@ int main (int argC,  char *argV[])
         for (int i=0; i<numReps; i++)
         {
 
-            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc = 0;
+            xercesc::DOMDocument *doc = 0;
 
             try
             {
@@ -364,7 +364,7 @@ int main (int argC,  char *argV[])
                 doc = domBuilder->parseURI(xmlFile);
                 if(doc && doc->getDocumentElement())
                 {
-                    XERCES_CPP_NAMESPACE_QUALIFIER DOMNodeList *list=NULL;
+                    xercesc::DOMNodeList *list=NULL;
                     if(doNamespaces)
                         list=doc->getElementsByTagNameNS(doc->getDocumentElement()->getNamespaceURI(), doc->getDocumentElement()->getLocalName());
                     else

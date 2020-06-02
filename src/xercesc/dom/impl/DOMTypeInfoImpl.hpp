@@ -34,7 +34,7 @@
 #include <xercesc/dom/DOMTypeInfo.hpp>
 #include <xercesc/dom/DOMPSVITypeInfo.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMDocumentImpl;
 
@@ -97,7 +97,7 @@ private:
     DOMTypeInfoImpl & operator = (const DOMTypeInfoImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

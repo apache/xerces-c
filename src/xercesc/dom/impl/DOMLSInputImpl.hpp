@@ -25,7 +25,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMLSInput.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CDOM_EXPORT DOMLSInputImpl : public XMemory, public DOMLSInput
 {
@@ -129,6 +129,6 @@ inline bool DOMLSInputImpl::getIssueFatalErrorIfNotFound() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * Allow application to force the parser to behave in a security-conscious
@@ -111,6 +111,6 @@ private:
     SecurityManager& operator=(const SecurityManager&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

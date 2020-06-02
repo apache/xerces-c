@@ -38,7 +38,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef u_short (WSAAPI * LPFN_HTONS)(u_short hostshort);
 typedef SOCKET (WSAAPI * LPFN_SOCKET)(int af, int type, int protocol);
@@ -492,4 +492,4 @@ int BinHTTPURLInputStream::receive(char *buf, XMLSize_t len)
     return iLen;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

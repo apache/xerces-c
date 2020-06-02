@@ -34,7 +34,7 @@
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DocumentHandler;
@@ -2199,6 +2199,6 @@ inline GrammarResolver* SAXParser::getGrammarResolver() const
     return fGrammarResolver;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

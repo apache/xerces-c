@@ -25,7 +25,7 @@
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include "unicode/ures.h"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is the ICU specific implementation of the XMLMsgLoader interface.
@@ -102,6 +102,6 @@ private :
     UResourceBundle*      fDomainBundle;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

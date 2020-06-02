@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/AbstractNumericValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLBigDecimal;
 
@@ -209,7 +209,7 @@ inline void DecimalDatatypeValidator::setFractionDigits(unsigned int newFraction
     fFractionDigits = newFractionDigits;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

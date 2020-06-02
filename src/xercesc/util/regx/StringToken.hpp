@@ -28,7 +28,7 @@
 #include <xercesc/util/regx/Token.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT StringToken : public Token {
 public:
@@ -91,7 +91,7 @@ inline void StringToken::setString(const XMLCh* const literal) {
     fString = XMLString::replicate(literal, fMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -31,7 +31,7 @@
 #include <xercesc/util/regx/TokenInc.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RegxParser::ReferencePostion: Constructors and Destructor
@@ -861,7 +861,7 @@ bool RegxParser::checkQuestion(const XMLSize_t off) {
     return ((off < fStringLen) && fString[off] == chQuestion);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End file RegxParser.cpp

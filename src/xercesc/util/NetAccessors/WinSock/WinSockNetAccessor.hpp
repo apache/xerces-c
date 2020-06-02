@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLNetAccessor.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class is the wrapper for the WinSock library which provides
@@ -59,7 +59,7 @@ inline const XMLCh* WinSockNetAccessor::getId() const
     return fgMyName;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif // WINSOCKNETACCESSOR_HPP

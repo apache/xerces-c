@@ -27,7 +27,7 @@
 #include    <xercesc/sax/Locator.hpp>
 #include    <xercesc/sax/SAXParseException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SAXParseException: Constructors and Destructor
@@ -122,4 +122,4 @@ XMLFileLoc SAXParseException::getColumnNumber() const
     return fColumnNumber;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

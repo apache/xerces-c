@@ -32,7 +32,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLReader: Query Methods
@@ -2038,4 +2038,4 @@ void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

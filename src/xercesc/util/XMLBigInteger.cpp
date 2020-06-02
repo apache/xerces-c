@@ -31,7 +31,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLChar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawData
                                                ,       MemoryManager* const memMgr
@@ -399,4 +399,4 @@ int XMLBigInteger::intValue() const
     return retVal * getSign();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

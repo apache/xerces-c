@@ -41,7 +41,7 @@
 
 #include <xercesc/dom/DOMNodeFilter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class CDOM_EXPORT DOMLSSerializerFilter : public DOMNodeFilter {
@@ -102,6 +102,6 @@ public:
     //@}
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

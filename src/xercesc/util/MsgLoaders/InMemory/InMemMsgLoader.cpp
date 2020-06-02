@@ -31,7 +31,7 @@
 #include "InMemMsgLoader.hpp"
 #include "XercesMessages_en_US.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
@@ -176,4 +176,4 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     return bRet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

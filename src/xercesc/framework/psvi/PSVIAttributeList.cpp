@@ -23,7 +23,7 @@
 #include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):
     fMemoryManager(manager)
@@ -107,4 +107,4 @@ PSVIAttribute *PSVIAttributeList::getAttributePSVIByName(const XMLCh *attrName
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

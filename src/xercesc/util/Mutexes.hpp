@@ -25,7 +25,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XMLMutex : public XMemory
 {
@@ -103,6 +103,6 @@ private :
     XMLMutex*   fToLock;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,7 +26,7 @@
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /* This class is a smart pointer implementation over DOMNode interface and
 ** classes derived from it. It takes care of reference counting automatically.
@@ -89,7 +89,7 @@ public:
     typedef DOMElement* DOMElementSPtr;
 #endif
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

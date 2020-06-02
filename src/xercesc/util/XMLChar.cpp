@@ -27,7 +27,7 @@
 #include <xercesc/internal/CharTypeTables.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLChar1_0: static data initialization
@@ -9073,4 +9073,4 @@ static CharFlagKicker gKicker;
 #endif
 
 
-XERCES_CPP_NAMESPACE_END
+}

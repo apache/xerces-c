@@ -24,7 +24,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/CharToken.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Token: Constructors and Destructors
@@ -41,7 +41,7 @@ CharToken::~CharToken() {
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   *    End of file CharToken.cpp

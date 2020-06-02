@@ -29,7 +29,7 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XSAnnotation::XSAnnotation(const XMLCh*          const content,
                                  MemoryManager * const manager)
@@ -187,4 +187,4 @@ void XSAnnotation::serialize(XSerializeEngine& serEng)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -17,7 +17,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  These are Unicode character type lookup table. The table is used by the
@@ -4128,4 +4128,4 @@ const XMLByte fgUniCharsTable[0x10000] =
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}

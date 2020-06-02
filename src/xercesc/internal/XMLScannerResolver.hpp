@@ -24,7 +24,7 @@
 
 #include <xercesc/internal/XMLScanner.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLValidator;
 class XMLDocumentHandler;
@@ -74,6 +74,6 @@ private :
     ~XMLScannerResolver();
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

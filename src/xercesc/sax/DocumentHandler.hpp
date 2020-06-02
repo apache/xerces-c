@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class AttributeList;
 class Locator;
@@ -278,6 +278,6 @@ private :
     DocumentHandler& operator=(const DocumentHandler&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

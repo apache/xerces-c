@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XSDLocator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSDLocator: Constructors and Destructor
@@ -54,4 +54,4 @@ void XSDLocator::setValues(const XMLCh* const systemId,
     fPublicId = publicId;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

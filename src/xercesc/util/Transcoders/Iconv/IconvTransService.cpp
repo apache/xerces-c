@@ -53,7 +53,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local, const data
@@ -568,4 +568,4 @@ IconvLCPTranscoder::~IconvLCPTranscoder()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XMLBigDecimal : public XMLNumber
 {
@@ -201,6 +201,6 @@ inline XMLCh*  XMLBigDecimal::getIntVal() const
     return fIntVal;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

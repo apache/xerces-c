@@ -32,7 +32,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Constructors and Destructor
@@ -274,4 +274,4 @@ XMLElementDecl::objectType  SchemaElementDecl::getObjectType() const
     return Schema;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

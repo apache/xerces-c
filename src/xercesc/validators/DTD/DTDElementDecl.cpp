@@ -36,7 +36,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Constructors and Destructor
@@ -434,4 +434,4 @@ XMLElementDecl::objectType  DTDElementDecl::getObjectType() const
     return DTD;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

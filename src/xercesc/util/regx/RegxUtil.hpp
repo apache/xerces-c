@@ -28,7 +28,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class MemoryManager;
 
@@ -100,7 +100,7 @@ inline bool RegxUtil::isWordChar(const XMLCh ch) {
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

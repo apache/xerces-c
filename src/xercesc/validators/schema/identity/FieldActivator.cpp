@@ -27,7 +27,7 @@
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  FieldActivator: Constructors and Destructor
@@ -117,7 +117,7 @@ void FieldActivator::endValueScopeFor(const IdentityConstraint* const ic, const 
     valueStore->endValueScope();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file FieldActivator.cpp

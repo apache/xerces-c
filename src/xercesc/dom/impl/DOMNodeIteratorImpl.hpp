@@ -39,7 +39,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMNodeIterator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
     protected:
@@ -117,6 +117,6 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

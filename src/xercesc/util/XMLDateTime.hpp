@@ -31,7 +31,7 @@
 
 #include <time.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XSValue;
 
@@ -373,6 +373,6 @@ inline int XMLDateTime::getRetVal(int c1, int c2)
     return ( c1 != INDETERMINATE ) ? c1 : c2;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

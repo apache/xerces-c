@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BinFileInputStream: Constructors and Destructor
@@ -116,4 +116,4 @@ const XMLCh* BinFileInputStream::getContentType() const
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

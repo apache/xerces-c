@@ -27,7 +27,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLBufferFullHandler;
 
@@ -276,6 +276,6 @@ public :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

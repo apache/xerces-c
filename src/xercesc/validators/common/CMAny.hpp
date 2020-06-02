@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/common/CMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CMStateSet;
 
@@ -94,6 +94,6 @@ private :
     CMAny& operator=(const CMAny&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

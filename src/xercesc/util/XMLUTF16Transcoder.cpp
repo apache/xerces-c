@@ -24,7 +24,7 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 
@@ -193,5 +193,5 @@ bool XMLUTF16Transcoder::canTranscodeTo(const unsigned int)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

@@ -21,7 +21,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLWin1252Transcoder.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -193,5 +193,5 @@ XMLWin1252Transcoder::~XMLWin1252Transcoder()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

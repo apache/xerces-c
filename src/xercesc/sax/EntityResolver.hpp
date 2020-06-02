@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class InputSource;
 
@@ -160,6 +160,6 @@ private :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

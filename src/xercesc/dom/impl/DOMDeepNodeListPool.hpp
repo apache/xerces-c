@@ -39,7 +39,7 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This should really be a nested class, but some of the compilers we
@@ -191,7 +191,7 @@ private:
     THasher                                    fHasher;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/dom/impl/DOMDeepNodeListPool.c>

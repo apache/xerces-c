@@ -25,7 +25,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/ValueHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class RegularExpression;
 
@@ -401,6 +401,6 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

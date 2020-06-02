@@ -381,9 +381,9 @@ parser->parse(xmlFile2);
     </s2>
 
     <anchor name="CPPNamespace"/>
-    <s2 title="Using C++ Namespace">
+    <s2 title="Using C++ Namespaces">
 
-    <p>&XercesCName; makes use of C++ namespace to make sure its
+    <p>&XercesCName; makes use of C++ namespaces to make sure its
        definitions do not conflict with other libraries and
        applications. As a result applications must
        namespace-qualify all &XercesCName; classes, data and
@@ -395,23 +395,6 @@ parser->parse(xmlFile2);
        or <code>using namespace xercesc;</code>
        definition to make all &XercesCName; names visible in the
        current scope.</p>
-
-    <p>While the above information should be sufficient for the majority
-       of applications, for cases where several versions of the &XercesCName;
-       library must be used in the same application, namespace versioning is
-       provided. The following convenience macros can be used to access the
-       &XercesCName; namespace names with versions embedded
-       (see <code>src/xercesc/util/XercesDefs.hpp</code>):</p>
-
-<source>
-    #define XERCES_CPP_NAMESPACE_BEGIN    namespace &XercesC3NSVersion; {
-    #define XERCES_CPP_NAMESPACE_END    }
-    #define XERCES_CPP_NAMESPACE_USE    using namespace &XercesC3NSVersion;;
-    #define XERCES_CPP_NAMESPACE_QUALIFIER    &XercesC3NSVersion;::
-
-    namespace &XercesC3NSVersion; { }
-    namespace &XercesC3Namespace; = &XercesC3NSVersion;;
-</source>
     </s2>
 
 

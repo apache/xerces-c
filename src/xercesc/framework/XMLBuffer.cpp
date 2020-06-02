@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLBuffer: Buffer management
@@ -82,5 +82,5 @@ void XMLBuffer::ensureCapacity(const XMLSize_t extraNeeded)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

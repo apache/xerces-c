@@ -28,7 +28,7 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  This is the base class from which all the XML parser exceptions are
@@ -271,6 +271,6 @@ private : \
 
 #define ThrowXMLwithMemMgr4(type,code,p1,p2,p3,p4,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4, memMgr)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <xercesc/sax/SAXException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class Locator;
 
@@ -180,6 +180,6 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,7 +26,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward declarations
@@ -75,7 +75,7 @@ private:
     ~XercesElementWildcard();
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // XERCESELEMENTWILDCARD_HPP
 

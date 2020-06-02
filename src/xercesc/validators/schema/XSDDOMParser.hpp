@@ -27,7 +27,7 @@
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMElement;
 class XMLValidator;
@@ -317,6 +317,6 @@ inline bool XSDDOMParser::getSawFatal() const
     return fSawFatal;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef void* XMLMutexHandle;
 
@@ -43,7 +43,7 @@ class XMLMutexMgr : public XMemory
 		virtual void			unlock(XMLMutexHandle mtx) = 0;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif

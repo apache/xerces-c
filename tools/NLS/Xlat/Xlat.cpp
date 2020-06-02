@@ -623,7 +623,7 @@ int Xlat_main(int argC, XMLCh** argV)
                 //  Write out the namespace declaration
                 fwprintf(outHeader, L"#include <xercesc/util/XercesDefs.hpp>\n");
                 fwprintf(outHeader, L"#include <xercesc/dom/DOMError.hpp>\n\n");
-                fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_BEGIN\n\n");
+                fwprintf(outHeader, L"namespace XERCES_CPP_NAMESPACE {\n\n");
 
                 //  Now the message codes
                 fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", xmlStrToPrintable(errNameSpace) );
@@ -835,7 +835,7 @@ int Xlat_main(int argC, XMLCh** argV)
 
                 // And close out the class declaration, the namespace declaration and the header file
                 fwprintf(outHeader, L"};\n\n");
-                fwprintf(outHeader, L"XERCES_CPP_NAMESPACE_END\n\n");
+                fwprintf(outHeader, L"}\n\n");
                 fwprintf(outHeader, L"#endif\n\n");
                 fclose(outHeader);
                 XMLString::release(&headerName);

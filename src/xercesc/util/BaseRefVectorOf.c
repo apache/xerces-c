@@ -21,7 +21,7 @@
 #include <xercesc/util/BaseRefVectorOf.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  BaseRefVectorOf: Constructors and Destructor
@@ -341,4 +341,4 @@ template <class TElem> void BaseRefVectorEnumerator<TElem>::Reset()
     fCurIndex = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

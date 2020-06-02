@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/common/CMNode.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CMStateSet;
 
@@ -87,6 +87,6 @@ private :
     CMBinaryOp& operator=(const CMBinaryOp&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

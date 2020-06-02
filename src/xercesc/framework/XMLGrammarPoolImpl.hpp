@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLSynchronizedStringPool;
 
@@ -274,6 +274,6 @@ private:
     bool                                fXSModelIsValid;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

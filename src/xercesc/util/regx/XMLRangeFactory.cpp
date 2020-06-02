@@ -32,7 +32,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local static functions
@@ -247,7 +247,7 @@ void XMLRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
     fKeywordsInitialized = true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XMLRangeFactory.cpp

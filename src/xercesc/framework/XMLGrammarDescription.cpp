@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLGrammarDescription.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 XMLGrammarDescription::~XMLGrammarDescription()
 {
@@ -47,5 +47,5 @@ void XMLGrammarDescription::serialize(XSerializeEngine&)
     //no data
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

@@ -23,7 +23,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -87,4 +87,4 @@ void DOMErrorImpl::setRelatedException(void*) const
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -43,7 +43,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -423,7 +423,7 @@ inline void SchemaInfo::clearTopLevelComponents() {
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

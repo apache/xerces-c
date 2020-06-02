@@ -22,7 +22,7 @@
 #if !defined(XERCESC_INCLUDE_GUARD_XMLRESOURCEIDENTIFIER_HPP)
 #define XERCESC_INCLUDE_GUARD_XMLRESOURCEIDENTIFIER_HPP
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class Locator;
 
@@ -209,6 +209,6 @@ inline XMLResourceIdentifier::XMLResourceIdentifier(const ResourceIdentifierType
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

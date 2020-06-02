@@ -25,7 +25,7 @@
 #include <xercesc/util/regx/Op.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Op: Constructors and Destructors
@@ -209,7 +209,7 @@ const XMLCh* StringOp::getLiteral() const {
     return fLiteral;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End file Op.cpp

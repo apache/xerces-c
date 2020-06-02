@@ -29,7 +29,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static const unsigned int BUF_LEN = 64;
 
@@ -458,7 +458,7 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file UnionDatatypeValidator.cpp

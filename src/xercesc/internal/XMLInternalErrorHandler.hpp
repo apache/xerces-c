@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLInternalErrorHandler : public ErrorHandler
 {
@@ -134,6 +134,6 @@ inline void XMLInternalErrorHandler::resetErrors()
     fSawFatal = false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

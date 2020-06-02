@@ -22,7 +22,7 @@
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <cstdio>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 StdOutFormatTarget::StdOutFormatTarget()
 {}
@@ -47,5 +47,5 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
     fflush(stdout);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

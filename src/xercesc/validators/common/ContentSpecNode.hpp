@@ -27,7 +27,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLBuffer;
 class Grammar;
@@ -452,6 +452,6 @@ inline bool ContentSpecNode::hasAllContent() {
     return (fType == ContentSpecNode::All);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * Interface for associating a SAX event with a document location.
@@ -120,6 +120,6 @@ private :
     Locator& operator=(const Locator&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

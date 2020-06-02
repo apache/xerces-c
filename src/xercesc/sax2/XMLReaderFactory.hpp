@@ -25,7 +25,7 @@
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax/SAXException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class MemoryManager;
 class XMLGrammarPool;
@@ -66,6 +66,6 @@ inline SAX2XMLReader * XMLReaderFactory::createXMLReader(const XMLCh *)
 	return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

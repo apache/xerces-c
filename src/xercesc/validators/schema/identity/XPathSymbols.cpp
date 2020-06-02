@@ -26,7 +26,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/validators/schema/identity/XPathSymbols.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaSymbols: Static data
@@ -153,7 +153,7 @@ const XMLCh XPathSymbols::fgSYMBOL_SELF[] =
     chLatin_s, chLatin_e, chLatin_l, chLatin_f, chNull
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XPathSymbols.cpp

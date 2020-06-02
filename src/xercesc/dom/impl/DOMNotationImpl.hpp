@@ -34,7 +34,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMNotation.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 #include "DOMNodeBase.hpp"
 #include "DOMNodeImpl.hpp"
@@ -91,6 +91,6 @@ private:
     DOMNotationImpl& operator= (const DOMNotationImpl& other);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

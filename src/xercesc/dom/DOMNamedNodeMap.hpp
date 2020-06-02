@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMNode;
@@ -240,6 +240,6 @@ public:
 
 #define GetDOMNamedNodeMapMemoryManager   GET_INDIRECT_MM(fOwnerNode)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

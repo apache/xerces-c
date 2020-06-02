@@ -28,7 +28,7 @@
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This abstract class defines the document type handler API's which can be
@@ -140,6 +140,6 @@ private:
     DocTypeHandler& operator=(const DocTypeHandler&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

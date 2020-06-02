@@ -25,7 +25,7 @@
 #include <xercesc/util/regx/Match.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Match: Constructors and Destructors
@@ -113,7 +113,7 @@ void Match::cleanUp() {
     fEndPositions = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file Match.cpp

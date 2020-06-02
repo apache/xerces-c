@@ -30,7 +30,7 @@
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class Locator;
 class Attributes;
@@ -801,6 +801,6 @@ inline void DefaultHandler::internalEntityDecl(const XMLCh* const,
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // ! DEFAULTHANDLER_HPP

@@ -28,7 +28,7 @@
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ASCIIRangeFactory: Constructors and Destructor
@@ -153,7 +153,7 @@ void ASCIIRangeFactory::initializeKeywordMap(RangeTokenMap *rangeTokMap) {
     fKeywordsInitialized = true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file ASCIIRangeFactory.cpp

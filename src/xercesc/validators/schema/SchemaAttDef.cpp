@@ -28,7 +28,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaAttDef: Implementation of the XMLAttDef interface
@@ -175,4 +175,4 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

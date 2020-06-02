@@ -28,7 +28,7 @@
 #include "DOMStringPool.hpp"
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
 {
@@ -325,4 +325,4 @@ void DOMCharacterDataImpl::releaseBuffer() {
     fDoc->releaseBuffer(fDataBuf);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -29,7 +29,7 @@
 #include <xercesc/validators/datatype/UnionDatatypeValidator.hpp>
 #include <xercesc/validators/schema/PSVIDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DatatypeValidator;
 class QName;
@@ -247,6 +247,6 @@ inline void SchemaAttDef::setPSVIScope(const PSVIDefs::PSVIScope toSet)
     fPSVIScope = toSet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

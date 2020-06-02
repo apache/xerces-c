@@ -35,7 +35,7 @@
 
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -213,7 +213,7 @@ inline IC_Field* IdentityConstraint::getFieldAt(const XMLSize_t index) {
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -36,7 +36,7 @@
 #include <xercesc/framework/ValidationContext.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class InputSource;
 class XMLDocumentHandler;
@@ -1443,6 +1443,6 @@ inline Grammar::GrammarType XMLScanner::getCurrentGrammarType() const
     return Grammar::UnKnown;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

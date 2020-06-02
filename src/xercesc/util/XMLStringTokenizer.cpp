@@ -27,7 +27,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLStringTokenizer: Local const data
@@ -169,7 +169,7 @@ bool XMLStringTokenizer::hasMoreTokens() {
 	return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file XMLStringTokenizer.cpp

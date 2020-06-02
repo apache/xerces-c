@@ -28,7 +28,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Macro
@@ -295,7 +295,7 @@ void DateTimeValidator::serialize(XSerializeEngine& serEng)
     //dateTime can be instantiated during checkContent(), so don't serialize it.
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file DateTimeValidator::cpp

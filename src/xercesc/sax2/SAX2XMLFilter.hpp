@@ -24,7 +24,7 @@
 
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class SAX2_EXPORT SAX2XMLFilter : public SAX2XMLReader
 {
@@ -77,6 +77,6 @@ private :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

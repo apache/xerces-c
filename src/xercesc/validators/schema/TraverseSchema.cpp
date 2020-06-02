@@ -60,7 +60,7 @@
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/internal/XSAXMLScanner.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -9459,7 +9459,7 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOMElement* const elem,
     return attValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file TraverseSchema.cpp

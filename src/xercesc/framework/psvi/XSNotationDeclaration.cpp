@@ -24,7 +24,7 @@
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSNotationDeclaration: Constructors and Destructors
@@ -78,6 +78,6 @@ const XMLCh *XSNotationDeclaration::getPublicId()
    return fXMLNotationDecl->getPublicId();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

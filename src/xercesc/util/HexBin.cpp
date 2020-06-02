@@ -23,7 +23,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  constants
@@ -135,4 +135,4 @@ bool HexBin::isHex(const XMLCh& octet)
     return (hexNumberTable[octet] != (XMLByte) -1);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

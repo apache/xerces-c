@@ -24,7 +24,7 @@
 
 #include <xercesc/dom/DOMLocator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * Introduced in DOM Level 3
@@ -182,6 +182,6 @@ inline void DOMLocatorImpl::setURI(const XMLCh* const uri)
     fURI = uri;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

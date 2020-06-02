@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLFormatter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*
  * The MemBufFormatTarget is a derivative from XMLFormatTarget, which user code
@@ -130,7 +130,7 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

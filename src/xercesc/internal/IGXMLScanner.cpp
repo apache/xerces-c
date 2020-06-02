@@ -45,7 +45,7 @@
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 typedef JanitorMemFunCall<IGXMLScanner> CleanupType;
@@ -3268,4 +3268,4 @@ void IGXMLScanner::resetPSVIElemContext()
     fPSVIElemContext.fNormalizedValue = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

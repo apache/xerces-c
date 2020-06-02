@@ -26,7 +26,7 @@
 #include <xercesc/util/BitSet.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -267,4 +267,4 @@ void BitSet::ensureCapacity(const XMLSize_t size)
     fUnitLen = unitsNeeded;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

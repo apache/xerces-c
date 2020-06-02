@@ -30,7 +30,7 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  DTDValidator: Constructors and Destructor
@@ -663,4 +663,4 @@ void DTDValidator::checkTokenList(const XMLAttDef&  curAttDef
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

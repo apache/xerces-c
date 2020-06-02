@@ -52,7 +52,7 @@
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static XMLCh regexSeparator[] = {chPipe, chNull};
 
@@ -1053,4 +1053,4 @@ bool XSObjectFactory::isMultiValueFacetDefined(DatatypeValidator* const dv)
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

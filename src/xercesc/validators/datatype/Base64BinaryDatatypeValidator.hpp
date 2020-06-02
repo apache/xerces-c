@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT Base64BinaryDatatypeValidator : public AbstractStringValidator
 {
@@ -91,7 +91,7 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -23,7 +23,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 BinMemOutputStream::BinMemOutputStream( XMLSize_t            initCapacity
                                       , MemoryManager* const manager)
@@ -116,5 +116,5 @@ void BinMemOutputStream::ensureCapacity(const XMLSize_t extraNeeded)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

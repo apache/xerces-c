@@ -21,7 +21,7 @@
 
 #include <xercesc/framework/psvi/PSVIAttribute.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 PSVIAttribute::PSVIAttribute( MemoryManager* const manager ):  
         PSVIItem(manager)
@@ -66,6 +66,6 @@ void PSVIAttribute::setValue(const XMLCh * const       normalizedValue)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

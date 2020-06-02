@@ -24,7 +24,7 @@
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSAttributeGroupDefinition: Constructors and Destructor
@@ -71,6 +71,6 @@ XSNamespaceItem *XSAttributeGroupDefinition::getNamespaceItem()
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

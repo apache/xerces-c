@@ -29,7 +29,7 @@
 #include <xercesc/validators/common/CMBinaryOp.hpp>
 #include <xercesc/validators/common/CMStateSet.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  CMBinaryOp: Constructors
@@ -147,4 +147,4 @@ void CMBinaryOp::calcLastPos(CMStateSet& toSet) const
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

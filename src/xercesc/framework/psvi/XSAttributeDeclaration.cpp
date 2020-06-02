@@ -27,7 +27,7 @@
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSAttributeDeclaration: Constructors and Destructor
@@ -107,6 +107,6 @@ bool XSAttributeDeclaration::getRequired() const
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

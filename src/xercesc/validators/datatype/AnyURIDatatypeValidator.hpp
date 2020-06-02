@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/AbstractStringValidator.hpp>
 #include <xercesc/util/XMLUri.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLBuffer;
 
@@ -86,7 +86,7 @@ private:
     void encode(const XMLCh* const content, const XMLSize_t len, XMLBuffer& encoded, MemoryManager* const manager);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

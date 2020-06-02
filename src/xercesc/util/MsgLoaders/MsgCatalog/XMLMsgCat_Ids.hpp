@@ -5,12 +5,12 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const unsigned int CatId_XMLErrs = 1;
 const unsigned int CatId_XMLValid = 2;
 const unsigned int CatId_XMLExcepts = 3;
 const unsigned int CatId_XMLDOMMsg = 4;
 
-XERCES_CPP_NAMESPACE_END
+}
 

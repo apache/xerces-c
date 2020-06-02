@@ -24,7 +24,7 @@
 
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT NameDatatypeValidator : public StringDatatypeValidator
 {
@@ -141,7 +141,7 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

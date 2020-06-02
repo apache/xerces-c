@@ -47,7 +47,7 @@
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XTemplateSerializer
 {
@@ -360,6 +360,6 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

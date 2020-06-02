@@ -32,7 +32,7 @@
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSAXMLScanner: Constructors and Destructor
@@ -722,4 +722,4 @@ void XSAXMLScanner::switchGrammar( const XMLCh* const uriStr
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

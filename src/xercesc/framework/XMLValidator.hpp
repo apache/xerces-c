@@ -25,7 +25,7 @@
 #include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ReaderMgr;
 class XMLBufferMgr;
@@ -421,6 +421,6 @@ inline XMLScanner* XMLValidator::getScanner()
     return fScanner;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

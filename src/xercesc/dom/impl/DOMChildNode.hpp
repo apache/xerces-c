@@ -38,7 +38,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMDocument;
@@ -67,6 +67,6 @@ private:
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/internal/ValidationContextImpl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  SchemaInfo: Constructors and Destructor
@@ -244,7 +244,7 @@ void SchemaInfo::updateImportingInfo(SchemaInfo* const importingInfo) {
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file SchemaInfo.cpp

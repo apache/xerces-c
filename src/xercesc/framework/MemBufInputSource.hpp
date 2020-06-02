@@ -25,7 +25,7 @@
 
 #include <xercesc/sax/InputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class BinInputStream;
 
@@ -225,6 +225,6 @@ inline void MemBufInputSource::setCopyBufToStream(const bool newState)
     fCopyBufToStream = newState;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

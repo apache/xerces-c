@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLGrammarDescription.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT XMLDTDDescription : public XMLGrammarDescription
 {
@@ -98,6 +98,6 @@ private :
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

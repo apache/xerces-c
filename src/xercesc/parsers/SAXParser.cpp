@@ -40,7 +40,7 @@
 #include <xercesc/util/XMLEntityResolver.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -1348,4 +1348,4 @@ void SAXParser::resetCachedGrammarPool()
     fScanner->resetCachedGrammar();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

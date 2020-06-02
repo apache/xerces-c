@@ -31,7 +31,7 @@
 #include <xercesc/util/SecurityManager.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class ContentHandler;
@@ -1744,6 +1744,6 @@ inline XMLFilePos SAX2XMLReaderImpl::getSrcOffset() const
     return fScanner->getSrcOffset();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

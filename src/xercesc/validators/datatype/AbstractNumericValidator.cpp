@@ -26,7 +26,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/XMLAbstractDoubleFloat.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 #define  REPORT_VALUE_ERROR(val1, val2, except_code, manager)    \
   ThrowXMLwithMemMgr2(InvalidDatatypeValueException               \
@@ -173,7 +173,7 @@ void AbstractNumericValidator::serialize(XSerializeEngine& serEng)
      ***/
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file AbstractNumericValidator::cpp

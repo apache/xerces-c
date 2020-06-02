@@ -42,7 +42,7 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 
@@ -346,4 +346,4 @@ void XercesDOMParser::resetCachedGrammarPool()
     getScanner()->resetCachedGrammar();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

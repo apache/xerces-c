@@ -33,7 +33,7 @@
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<SchemaGrammar>    CleanupType;
 
@@ -361,4 +361,4 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

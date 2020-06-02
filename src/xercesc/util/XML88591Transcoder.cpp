@@ -24,7 +24,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XML88591Transcoder: Constructors and Destructor
@@ -143,4 +143,4 @@ bool XML88591Transcoder::canTranscodeTo(const unsigned int toCheck)
     return (toCheck < 256);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -25,7 +25,7 @@
 #include <xercesc/validators/common/CMLeaf.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  A compound content model leaf node which carries occurence information.
@@ -131,6 +131,6 @@ inline bool CMRepeatingLeaf::isRepeatableLeaf() const
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

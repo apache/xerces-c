@@ -25,7 +25,7 @@
 #include <xercesc/util/XMLFloat.hpp>
 #include <math.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ctor/dtor
@@ -97,4 +97,4 @@ void XMLFloat::serialize(XSerializeEngine& serEng)
     XMLAbstractDoubleFloat::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

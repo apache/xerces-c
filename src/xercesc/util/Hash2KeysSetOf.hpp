@@ -29,7 +29,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // This hash table is similar to Hash2KeysSetOf with an additional integer as key2
 
@@ -214,7 +214,7 @@ private :
     const void*                             fLockPrimaryKey;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/Hash2KeysSetOf.c>

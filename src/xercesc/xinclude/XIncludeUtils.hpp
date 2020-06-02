@@ -31,7 +31,7 @@
 #include <xercesc/xinclude/XIncludeLocation.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLEntityHandler;
 
@@ -262,6 +262,6 @@ private:
     friend class AbstractDOMParser;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

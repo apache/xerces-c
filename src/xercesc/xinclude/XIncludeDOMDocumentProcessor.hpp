@@ -26,7 +26,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLEntityHandler;
 
@@ -52,7 +52,7 @@ public:
     DOMDocument *doXIncludeDOMProcess(const DOMDocument * const source, XMLErrorReporter *errorHandler, XMLEntityHandler* entityResolver=NULL);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif /* XINCLUDEDOMDOCUMENTPROCESSOR_HPP */
 

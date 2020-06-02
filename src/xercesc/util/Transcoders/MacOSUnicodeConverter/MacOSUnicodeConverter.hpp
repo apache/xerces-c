@@ -34,7 +34,7 @@
     #include <UnicodeConverter.h>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  The transcoding service has to provide a couple of required string
@@ -274,6 +274,6 @@ private :
 	XMLMutex				mMutex;			// Mutex to enable reentrancy of LCP transcoder
  };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

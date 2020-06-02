@@ -33,7 +33,7 @@
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class stores the Schema information
@@ -621,6 +621,6 @@ SchemaGrammar::setAnonTypeCount (unsigned int count)
   fAnonTypeCount = count;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

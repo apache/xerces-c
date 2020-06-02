@@ -26,7 +26,7 @@
 #include "DOMChildNode.hpp"
 #include "DOMCasts.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 DOMChildNode::DOMChildNode()
@@ -74,5 +74,5 @@ DOMNode * DOMChildNode::getPreviousSibling(const DOMNode *thisNode) const {
     return castToNodeImpl(thisNode)->isFirstChild() ? 0 : previousSibling;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

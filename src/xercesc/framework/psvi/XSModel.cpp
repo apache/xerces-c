@@ -34,7 +34,7 @@
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSModelGroupDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSModel: Constructors and Destructor
@@ -796,4 +796,4 @@ XSObject* XSModel::getXSObject(void* key)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

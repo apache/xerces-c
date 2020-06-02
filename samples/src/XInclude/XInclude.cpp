@@ -110,7 +110,7 @@ int main(int argC, char* argV[])
     XIncludeErrorHandler errorHandler;
     config->setParameter(XMLUni::fgDOMErrorHandler, &errorHandler);
 
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc = 0;
+    xercesc::DOMDocument *doc = 0;
 
     try
     {

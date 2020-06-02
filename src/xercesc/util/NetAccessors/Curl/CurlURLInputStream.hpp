@@ -32,7 +32,7 @@
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 // This class implements the BinInputStream interface specified by the XML
@@ -131,7 +131,7 @@ CurlURLInputStream::curPos() const
     return fTotalBytesRead;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif // CURLURLINPUTSTREAM_HPP
 

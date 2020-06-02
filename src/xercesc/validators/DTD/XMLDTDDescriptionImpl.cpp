@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLDTDDescriptionImpl: constructor and destructor
@@ -130,4 +130,4 @@ XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(MemoryManager* const memMgr)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

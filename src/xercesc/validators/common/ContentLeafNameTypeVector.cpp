@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ContentLeafNameTypeVector: Constructors and Destructor
@@ -129,4 +129,4 @@ XMLSize_t ContentLeafNameTypeVector::getLeafCount() const
 	return fLeafCount;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

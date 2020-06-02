@@ -25,7 +25,7 @@
 #include <xercesc/framework/psvi/XSConstants.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XSObject;
 class XSAttributeUse;
@@ -232,6 +232,6 @@ inline XSObject* XSObjectFactory::getObjectFromMap(void* key)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

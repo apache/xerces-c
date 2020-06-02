@@ -40,7 +40,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <cstdio>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 static int gTestsFailed = 0;
 static int gTestsRun    = 0;

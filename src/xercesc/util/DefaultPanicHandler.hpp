@@ -25,7 +25,7 @@
 #include <xercesc/util/PanicHandler.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * Receive notification of panic.
@@ -75,6 +75,6 @@ private:
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

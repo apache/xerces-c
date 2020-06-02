@@ -26,7 +26,7 @@
 #include <xercesc/internal/MemoryManagerImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 MemoryManager* MemoryManagerImpl::getExceptionMemoryManager()
 {
@@ -53,4 +53,4 @@ void MemoryManagerImpl::deallocate(void* p)
         ::operator delete(p);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -28,7 +28,7 @@
 #include <xercesc/dom/DOMXPathNSResolver.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMNode;
 
@@ -51,7 +51,7 @@ protected:
     MemoryManager*                fManager;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

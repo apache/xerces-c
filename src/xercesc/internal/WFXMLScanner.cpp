@@ -35,7 +35,7 @@
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  WFXMLScanner: Constructors and Destructor
@@ -2052,4 +2052,4 @@ Grammar* WFXMLScanner::loadGrammar(const   InputSource&
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

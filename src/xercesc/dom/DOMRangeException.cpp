@@ -22,7 +22,7 @@
 #include "DOMRangeException.hpp"
 #include <xercesc/util/XMLDOMMsg.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 DOMRangeException::DOMRangeException()
@@ -49,4 +49,4 @@ DOMRangeException::~DOMRangeException()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

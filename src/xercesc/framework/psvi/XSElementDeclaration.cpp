@@ -27,7 +27,7 @@
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/util/StringPool.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
    
 // ---------------------------------------------------------------------------
 //  XSElementDeclaration: Constructors and Destructor
@@ -160,4 +160,4 @@ bool XSElementDeclaration::getAbstract() const
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -36,7 +36,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include "Win32TransService.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ---------------------------------------------------------------------------
@@ -1083,4 +1083,4 @@ bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

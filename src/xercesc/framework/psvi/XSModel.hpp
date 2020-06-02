@@ -29,7 +29,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class contains all properties of the Schema infoitem as determined
@@ -333,6 +333,6 @@ inline XSNamespaceItemList *XSModel::getNamespaceItems()
     return fXSNamespaceItemList;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

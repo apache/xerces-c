@@ -28,7 +28,7 @@
 #include <xercesc/framework/MemoryManager.hpp>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 void* XMemory::operator new(size_t size)
 {
@@ -120,5 +120,5 @@ void XMemory::operator delete(void* /*p*/, void* /*ptr*/)
 
 #endif
 
-XERCES_CPP_NAMESPACE_END
+}
 

@@ -24,7 +24,7 @@
 #include <xercesc/util/XMLString.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * The <code>DOMPSVITypeInfo</code> interface represent the PSVI info used by 
@@ -109,7 +109,7 @@ public:
     //@}
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

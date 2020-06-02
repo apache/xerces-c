@@ -27,7 +27,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/HexBin.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -94,7 +94,7 @@ void HexBinaryDatatypeValidator::serialize(XSerializeEngine& serEng)
     AbstractStringValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file HexBinaryDatatypeValidator.cpp

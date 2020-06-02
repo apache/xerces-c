@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT PSVIUni
 {
@@ -234,6 +234,6 @@ public :
 
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 #include <xercesc/util/StringPool.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // Define a pure interface to allow XercesXPath to work on both NamespaceScope and DOMXPathNSResolver
 class VALIDATORS_EXPORT XercesNamespaceResolver
@@ -159,7 +159,7 @@ inline unsigned int NamespaceScope::getEmptyNamespaceId() const
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

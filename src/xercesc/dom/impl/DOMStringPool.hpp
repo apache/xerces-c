@@ -33,7 +33,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class   DOMDocumentImpl;
 
@@ -221,6 +221,6 @@ set (const XMLCh* const chars, const XMLSize_t count)
   fBuffer[fIndex] = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

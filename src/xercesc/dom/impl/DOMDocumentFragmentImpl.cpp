@@ -26,7 +26,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(DOMDocument *masterDoc)
     : fNode(this, masterDoc), fParent(this, masterDoc)
@@ -138,4 +138,4 @@ void DOMDocumentFragmentImpl::release()
 DOMNODEIMPL_IMPL(DOMDocumentFragmentImpl);
 DOMPARENTIMPL_IMPL(DOMDocumentFragmentImpl);
 
-XERCES_CPP_NAMESPACE_END
+}

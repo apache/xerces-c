@@ -28,7 +28,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Mutexes.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLMutex: Constructors and Destructor
@@ -84,4 +84,4 @@ XMLMutexLock::~XMLMutexLock()
     fToLock->unlock();
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XML256TableTranscoder.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class provides an implementation of the XMLTranscoder interface
@@ -67,6 +67,6 @@ private :
     void operator=(const XMLIBM1047Transcoder&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

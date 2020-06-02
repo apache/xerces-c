@@ -41,7 +41,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include "DOMNodeIDMap.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMElementImpl;
 class DOMTypeInfoImpl;
@@ -137,6 +137,6 @@ inline void DOMAttrImpl::addAttrToIDNodeMap()
     doc->getNodeIDMap()->add(this);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

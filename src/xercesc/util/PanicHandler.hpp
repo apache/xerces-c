@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * Receive notification of panic.
@@ -107,6 +107,6 @@ private:
     PanicHandler& operator=(const PanicHandler&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -39,7 +39,7 @@
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/parsers/DOMLSParserImpl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 // ------------------------------------------------------------
@@ -288,4 +288,4 @@ DOMImplementationList* DOMImplementationImpl::getDOMImplementationList(const XML
     return list;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

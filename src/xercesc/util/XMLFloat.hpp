@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XMLAbstractDoubleFloat.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XMLFloat : public XMLAbstractDoubleFloat
 {
@@ -92,6 +92,6 @@ inline int XMLFloat::compareValues(const XMLFloat* const lValue
                                                  , ((XMLAbstractDoubleFloat*)lValue)->getMemoryManager());
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

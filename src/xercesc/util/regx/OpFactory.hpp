@@ -28,7 +28,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -107,7 +107,7 @@ inline void OpFactory::reset() {
     fOpVector->removeAllElements();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

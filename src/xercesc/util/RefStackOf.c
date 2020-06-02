@@ -27,7 +27,7 @@
 #include <xercesc/util/RefStackOf.hpp>
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  RefStackOf: Constructors and Destructor
@@ -157,4 +157,4 @@ template <class TElem> void RefStackEnumerator<TElem>::Reset()
     fCurIndex = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -37,7 +37,7 @@
 #include <xercesc/framework/XMLErrorCodes.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMConfigurationImpl;
 class DOMErrorHandler;
@@ -161,6 +161,6 @@ protected:
 
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

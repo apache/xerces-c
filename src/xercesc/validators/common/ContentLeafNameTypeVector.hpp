@@ -25,7 +25,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLPARSER_EXPORT ContentLeafNameTypeVector : public XMemory
 {
@@ -114,6 +114,6 @@ inline void ContentLeafNameTypeVector::init(const XMLSize_t size)
     fLeafCount = size;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -22,7 +22,7 @@
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
 #include <xercesc/framework/psvi/XSParticle.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSModelGroup: Constructors and Destructor
@@ -45,6 +45,6 @@ XSModelGroup::~XSModelGroup()
         delete fParticleList;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

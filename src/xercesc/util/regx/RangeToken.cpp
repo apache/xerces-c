@@ -43,7 +43,7 @@
 #endif
 #endif
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -869,7 +869,7 @@ void RangeToken::doCreateMap() {
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file RangeToken.cpp

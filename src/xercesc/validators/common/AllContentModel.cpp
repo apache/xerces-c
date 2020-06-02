@@ -32,7 +32,7 @@
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/XercesElementWildcard.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  AllContentModel: Constructors and Destructor
@@ -375,4 +375,4 @@ AllContentModel::buildChildList(ContentSpecNode* const       curNode
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::CM_UnknownCMSpecType, fMemoryManager);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

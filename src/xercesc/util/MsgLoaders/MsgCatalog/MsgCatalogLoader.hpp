@@ -27,7 +27,7 @@
 
 #include <nl_types.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is a simple in Iconv RC message loader implementation.
@@ -101,6 +101,6 @@ private :
 	
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

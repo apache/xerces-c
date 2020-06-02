@@ -35,7 +35,7 @@
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 
@@ -965,7 +965,7 @@ void AbstractNumericFacetValidator::loadClusive(XSerializeEngine&       serEng
 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file AbstractNumericFacetValidator::cpp

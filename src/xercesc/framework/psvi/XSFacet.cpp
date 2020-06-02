@@ -21,7 +21,7 @@
 
 #include <xercesc/framework/psvi/XSFacet.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XSFacet: Constructors and Destructor
@@ -44,6 +44,6 @@ XSFacet::~XSFacet()
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 

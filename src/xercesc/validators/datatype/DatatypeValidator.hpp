@@ -32,7 +32,7 @@
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 #include <xercesc/framework/ValidationContext.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class MemoryManager;
 
@@ -740,7 +740,7 @@ DatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -28,7 +28,7 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentHandler ;
 class DTDHandler;
@@ -891,6 +891,6 @@ inline void SAX2XMLReader::setInputBufferSize(const XMLSize_t /*bufferSize*/)
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

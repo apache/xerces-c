@@ -28,7 +28,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 template <class TElem> class ValueArrayOf : public XMemory
 {
@@ -141,7 +141,7 @@ private :
     ValueArrayOf<TElem>*    fToEnum;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/ValueArrayOf.c>

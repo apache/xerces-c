@@ -24,7 +24,7 @@
 
 #include <xercesc/util/NullPointerException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 template <class T> class CountedPointerTo : public XMemory
 {
@@ -60,7 +60,7 @@ private:
     T*  fPtr;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #if !defined(XERCES_TMPLSINC)
 #include <xercesc/util/CountedPointer.c>

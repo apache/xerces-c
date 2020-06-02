@@ -25,7 +25,7 @@
 #include <xercesc/framework/XMLGrammarDescription.hpp>
 #include <xercesc/util/RefArrayVectorOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef const XMLCh* const LocationHint;
 
@@ -173,6 +173,6 @@ private :
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

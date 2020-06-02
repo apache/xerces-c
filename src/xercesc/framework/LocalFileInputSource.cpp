@@ -25,7 +25,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /***
  *
@@ -168,5 +168,5 @@ BinInputStream* LocalFileInputSource::makeStream() const
     return retStrm;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 

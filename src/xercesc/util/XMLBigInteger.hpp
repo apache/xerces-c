@@ -25,7 +25,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT XMLBigInteger : public XMemory
 {
@@ -170,6 +170,6 @@ inline XMLCh*  XMLBigInteger::getRawData() const
     return fRawData;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -46,7 +46,7 @@
 #include "DOMParentNode.hpp"
 #include "DOMDeepNodeListPool.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMAttrImpl;
@@ -452,7 +452,7 @@ inline int DOMDocumentImpl::indexofQualifiedName(const XMLCh* name)
   return colon != -1 ? colon : 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 // ---------------------------------------------------------------------------
 //
@@ -460,30 +460,30 @@ XERCES_CPP_NAMESPACE_END
 //                 the heap owned by a document.
 //
 // ---------------------------------------------------------------------------
-inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType type)
+inline void * operator new(size_t amt, xercesc::DOMDocumentImpl *doc, xercesc::DOMMemoryManager::NodeObjectType type)
 {
     void *p = doc->allocate(amt, type);
     return p;
 }
 
-inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType type)
+inline void * operator new(size_t amt, xercesc::DOMDocument *doc, xercesc::DOMMemoryManager::NodeObjectType type)
 {
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
+    xercesc::DOMMemoryManager* mgr=(xercesc::DOMMemoryManager*)doc->getFeature(xercesc::XMLUni::fgXercescInterfaceDOMMemoryManager,0);
     void* p=0;
     if(mgr)
         p = mgr->allocate(amt, type);
     return p;
 }
 
-inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *doc)
+inline void * operator new(size_t amt, xercesc::DOMDocumentImpl *doc)
 {
     void* p = doc->allocate(amt);
     return p;
 }
 
-inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
+inline void * operator new(size_t amt, xercesc::DOMDocument *doc)
 {
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager* mgr=(XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager*)doc->getFeature(XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescInterfaceDOMMemoryManager,0);
+    xercesc::DOMMemoryManager* mgr=(xercesc::DOMMemoryManager*)doc->getFeature(xercesc::XMLUni::fgXercescInterfaceDOMMemoryManager,0);
     void* p=0;
     if(mgr)
         p = mgr->allocate(amt);
@@ -496,20 +496,20 @@ inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumen
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
 #if !defined(XERCES_NO_MATCHING_DELETE_OPERATOR)
-inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType /*type*/)
+inline void operator delete(void* /*ptr*/, xercesc::DOMDocumentImpl * /*doc*/, xercesc::DOMMemoryManager::NodeObjectType /*type*/)
 {
     return;
 }
-inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMMemoryManager::NodeObjectType /*type*/)
+inline void operator delete(void* /*ptr*/, xercesc::DOMDocument * /*doc*/, xercesc::DOMMemoryManager::NodeObjectType /*type*/)
 {
     return;
 }
 
-inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl * /*doc*/)
+inline void operator delete(void* /*ptr*/, xercesc::DOMDocumentImpl * /*doc*/)
 {
     return;
 }
-inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/)
+inline void operator delete(void* /*ptr*/, xercesc::DOMDocument * /*doc*/)
 {
     return;
 }

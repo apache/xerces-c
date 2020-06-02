@@ -35,7 +35,7 @@
 
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local data
@@ -701,4 +701,4 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -26,5 +26,5 @@
 
 #include <iostream>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 

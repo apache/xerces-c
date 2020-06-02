@@ -24,7 +24,7 @@
 
 #include <xercesc/dom/DOMException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * Range operations may throw a <code>DOMRangeException</code> as specified in
@@ -109,6 +109,6 @@ private:
     DOMRangeException & operator = (const DOMRangeException &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

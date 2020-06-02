@@ -28,7 +28,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/regx/Token.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -136,7 +136,7 @@ inline bool RangeToken::empty() const
     return fElemCount==0; 
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

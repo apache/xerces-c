@@ -27,7 +27,7 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 #include <xercesc/util/Base64.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -117,7 +117,7 @@ void Base64BinaryDatatypeValidator::serialize(XSerializeEngine& serEng)
     AbstractStringValidator::serialize(serEng);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file Base64BinaryDatatypeValidator.cpp

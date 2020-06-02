@@ -27,7 +27,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMemory.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -80,7 +80,7 @@ private:
     RangeFactory& operator=(const RangeFactory&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

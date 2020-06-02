@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class represents a simpleType definition
@@ -453,6 +453,6 @@ XSSimpleTypeDefinition::getDatatypeValidator() const
     return fDatatypeValidator;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

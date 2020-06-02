@@ -25,7 +25,7 @@
 #include <xercesc/framework/BinOutputStream.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLUTIL_EXPORT BinMemOutputStream : public BinOutputStream 
 {
@@ -97,7 +97,7 @@ private :
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

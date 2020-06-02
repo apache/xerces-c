@@ -30,7 +30,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -173,7 +173,7 @@ inline void XPathMatcher::cleanUp() {
     delete fStepIndexes;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

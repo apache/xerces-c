@@ -21,11 +21,11 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 class XercesDOMParser;
-XERCES_CPP_NAMESPACE_END
+}
 
 
 

@@ -28,7 +28,7 @@
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 static XMLMsgLoader* sMsgLoader = 0;
 
@@ -293,4 +293,4 @@ XMLValidator::XMLValidator(XMLErrorReporter* const errReporter) :
 {
 }
 
-XERCES_CPP_NAMESPACE_END
+}

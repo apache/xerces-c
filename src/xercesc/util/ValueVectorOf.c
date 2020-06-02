@@ -28,7 +28,7 @@
 #endif
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  ValueVectorOf: Constructors and Destructor
@@ -296,4 +296,4 @@ template <class TElem> void ValueVectorEnumerator<TElem>::Reset()
     fCurIndex = 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

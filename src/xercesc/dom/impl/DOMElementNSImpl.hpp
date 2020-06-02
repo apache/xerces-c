@@ -34,7 +34,7 @@
 
 #include "DOMElementImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMTypeInfoImpl;
 
@@ -90,6 +90,6 @@ private:
     DOMElementNSImpl & operator = (const DOMElementNSImpl &);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

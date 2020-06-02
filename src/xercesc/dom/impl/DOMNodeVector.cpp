@@ -32,7 +32,7 @@
 #include "DOMDocumentImpl.hpp"
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 DOMNodeVector::DOMNodeVector(DOMDocument *doc)
@@ -120,4 +120,4 @@ void DOMNodeVector::setElementAt(DOMNode *elem, XMLSize_t index) {
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -35,7 +35,7 @@
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMImplementationSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class XMLMsgLoader;
 
@@ -97,6 +97,6 @@ public:
 };
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

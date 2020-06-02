@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class describes all properties of a Schema Particle
@@ -193,6 +193,6 @@ inline XSParticle::TERM_TYPE XSParticle::getTermType() const
     return fTermType;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -29,7 +29,7 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMCommentImpl::DOMCommentImpl(DOMDocument *ownerDoc, const XMLCh *dat)
     : fNode(this, ownerDoc),  fCharacterData(ownerDoc, dat)
@@ -190,4 +190,4 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
 DOMNODEIMPL_IMPL(DOMCommentImpl);
 DOMCHILDIMPL_IMPL(DOMCommentImpl);
 
-XERCES_CPP_NAMESPACE_END
+}

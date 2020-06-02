@@ -29,7 +29,7 @@
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
@@ -246,4 +246,4 @@ void XSSimpleTypeDefinition::setFacetInfo
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}

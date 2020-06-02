@@ -40,7 +40,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 PosixFileMgr::PosixFileMgr()
@@ -252,5 +252,5 @@ PosixFileMgr::isRelative(const XMLCh* const toCheck, MemoryManager* const /*mana
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 

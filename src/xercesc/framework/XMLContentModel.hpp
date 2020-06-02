@@ -25,7 +25,7 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/QName.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentLeafNameTypeVector;
 class GrammarResolver;
@@ -140,6 +140,6 @@ private :
     XMLContentModel& operator=(const XMLContentModel&);
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

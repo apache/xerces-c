@@ -27,7 +27,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 const XMLCh *allocate(const XMLCh *href){
     XMLCh *allocated;
@@ -138,4 +138,4 @@ XIncludeLocation::findEndOfProtocol(const XMLCh *URI){
     return URI;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLAttDef.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This class is a derivative of the core XMLAttDef class. This class adds
@@ -136,6 +136,6 @@ inline void DTDAttDef::setElemId(const XMLSize_t newId)
 }
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -34,7 +34,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMNode;
@@ -84,7 +84,7 @@ private:
 
 #define GetDOMCharacterDataImplMemoryManager GET_DIRECT_MM(fDoc)
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif

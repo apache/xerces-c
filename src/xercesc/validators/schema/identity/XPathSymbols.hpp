@@ -24,7 +24,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /*
  * Collection of symbols used to parse a Schema Grammar
@@ -65,7 +65,7 @@ private:
     XPathSymbols();
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

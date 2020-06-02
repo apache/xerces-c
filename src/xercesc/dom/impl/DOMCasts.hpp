@@ -51,7 +51,7 @@
 #include "DOMElementImpl.hpp"
 #include "DOMTextImpl.hpp"
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 static inline const DOMNodeImpl *castToNodeImpl(const DOMNode *p)
@@ -104,6 +104,6 @@ static inline DOMChildNode *castToChildImpl(DOMNode *p) {
     return pE->getChildNodeImpl();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

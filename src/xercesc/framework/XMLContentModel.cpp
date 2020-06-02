@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/framework/XMLContentModel.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  public static data
@@ -34,5 +34,5 @@ const unsigned int   XMLContentModel::gInvalidTrans   = 0xFFFFFFFF;
 const unsigned int   XMLContentModel::gEOCFakeId      = 0xFFFFFFF1;
 const unsigned int   XMLContentModel::gEpsilonFakeId  = 0xFFFFFFF2;
 
-XERCES_CPP_NAMESPACE_END
+}
 

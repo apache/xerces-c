@@ -27,7 +27,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/ValueHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
   * A singleton class that checks whether an encoding name is a valid IANA
@@ -76,7 +76,7 @@ private:
     friend class XMLInitializer;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

@@ -32,7 +32,7 @@
 #include <xercesc/validators/schema/NamespaceScope.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -489,7 +489,7 @@ inline XMLCh* XercesXPath::getExpression() {
     return fExpression;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

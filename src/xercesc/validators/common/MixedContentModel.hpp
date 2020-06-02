@@ -26,7 +26,7 @@
 #include <xercesc/framework/XMLContentModel.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class ContentSpecNode;
 
@@ -207,6 +207,6 @@ inline void MixedContentModel::checkUniqueParticleAttribution
     // UPA checking is not necessary
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

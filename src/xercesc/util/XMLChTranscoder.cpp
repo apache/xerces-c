@@ -23,7 +23,7 @@
 #include <xercesc/util/XMLChTranscoder.hpp>
 #include <cstring>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLChTranscoder: Constructors and Destructor
@@ -114,4 +114,4 @@ bool XMLChTranscoder::canTranscodeTo(const unsigned int)
     return true;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

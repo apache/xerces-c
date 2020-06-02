@@ -30,7 +30,7 @@
 
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 
@@ -425,4 +425,4 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
     return 0;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

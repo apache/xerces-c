@@ -25,7 +25,7 @@
 #include <xercesc/validators/datatype/StringDatatypeValidator.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class VALIDATORS_EXPORT IDDatatypeValidator : public StringDatatypeValidator
 {
@@ -123,7 +123,7 @@ private:
     // -----------------------------------------------------------------------
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 /**

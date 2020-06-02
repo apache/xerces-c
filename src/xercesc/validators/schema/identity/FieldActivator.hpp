@@ -32,7 +32,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/ValueHashTableOf.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -132,7 +132,7 @@ inline void FieldActivator::setMayMatch(IC_Field* const field, bool value) {
     fMayMatch->put(field, value);
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

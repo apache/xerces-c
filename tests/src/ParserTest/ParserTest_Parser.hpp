@@ -27,7 +27,7 @@
 #include    <xercesc/framework/XMLErrorReporter.hpp>
 #include    <xercesc/validators/DTD/DocTypeHandler.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
 
 class TestParser :

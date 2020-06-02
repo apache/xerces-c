@@ -26,7 +26,7 @@
 #include <xercesc/util/StringPool.hpp>
 #include <assert.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  XMLStringPool: Constructors and Destructor
@@ -188,4 +188,4 @@ XMLStringPool::XMLStringPool(MemoryManager* const manager) :
     memset(fIdMap, 0, sizeof(PoolElem*) * fMapCapacity);
 }
 
-XERCES_CPP_NAMESPACE_END
+}

@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/psvi/XSObject.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * This class describes all properties of a Schema Attribute
@@ -205,6 +205,6 @@ inline void XSAttributeDeclaration::setEnclosingCTDefinition
     fEnclosingCTDefinition = toSet;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

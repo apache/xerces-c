@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XercesElementWildcard.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Local methods
@@ -117,4 +117,4 @@ bool XercesElementWildcard::wildcardIntersect(ContentSpecNode::NodeTypes t1,
     return false;
 }
 
-XERCES_CPP_NAMESPACE_END
+}

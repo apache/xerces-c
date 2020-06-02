@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <new>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Hash2KeysSetOf: Constructors and Destructor
@@ -588,4 +588,4 @@ void Hash2KeysSetOfEnumerator<THasher>::findNext()
     }
 }
 
-XERCES_CPP_NAMESPACE_END
+}

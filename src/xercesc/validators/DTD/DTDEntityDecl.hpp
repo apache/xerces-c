@@ -24,7 +24,7 @@
 
 #include <xercesc/framework/XMLEntityDecl.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 //
 //  This is a derivative of the abstract version of an entity decl in the
@@ -199,6 +199,6 @@ inline void DTDEntityDecl::setIsSpecialChar(const bool newValue)
     fIsSpecialChar = newValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,7 +26,7 @@
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 /**
  * Represent the PSVI contributions for one attribute information item.
@@ -174,6 +174,6 @@ inline void PSVIAttribute::updateValidity(VALIDITY_STATE newValue)
     fValidityState = newValue;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

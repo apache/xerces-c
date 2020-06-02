@@ -28,7 +28,7 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 // ---------------------------------------------------------------------------
 //  Forward Declaration
@@ -297,7 +297,7 @@ inline void Op::setNextOp(const Op* const nextOp) {
     fNextOp = nextOp;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
 

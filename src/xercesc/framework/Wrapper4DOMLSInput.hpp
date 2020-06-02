@@ -24,7 +24,7 @@
 
 #include <xercesc/sax/InputSource.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class DOMLSInput;
 class DOMLSResourceResolver;
@@ -224,7 +224,7 @@ private:
     DOMLSResourceResolver*  fEntityResolver;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 
 #endif

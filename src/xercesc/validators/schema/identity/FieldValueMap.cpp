@@ -26,7 +26,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 typedef JanitorMemFunCall<FieldValueMap>    CleanupType;
 
@@ -119,7 +119,7 @@ void FieldValueMap::clear()
         fValues->removeAllElements();
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file FieldValueMap.cpp

@@ -26,7 +26,7 @@
 #include <xercesc/internal/IANAEncodings.hpp>
 #include <xercesc/util/XMLInitializer.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 EncodingValidator* EncodingValidator::fInstance = 0;
 
@@ -89,7 +89,7 @@ EncodingValidator* EncodingValidator::instance()
     return fInstance;
 }
 
-XERCES_CPP_NAMESPACE_END
+}
 
 /**
   * End of file EncodingValidator.cpp

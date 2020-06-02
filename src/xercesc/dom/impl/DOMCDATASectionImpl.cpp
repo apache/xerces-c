@@ -30,7 +30,7 @@
 #include <xercesc/dom/DOMTreeWalker.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 DOMCDATASectionImpl::DOMCDATASectionImpl(DOMDocument *ownerDoc, const XMLCh *dat)
     : fNode(this, ownerDoc), fCharacterData(ownerDoc, dat)
@@ -320,4 +320,4 @@ void DOMCDATASectionImpl::release()
 DOMNODEIMPL_IMPL(DOMCDATASectionImpl);
 DOMCHILDIMPL_IMPL(DOMCDATASectionImpl);
 
-XERCES_CPP_NAMESPACE_END
+}

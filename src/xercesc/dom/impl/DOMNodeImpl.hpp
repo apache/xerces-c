@@ -52,7 +52,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMUserDataHandler.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 
 class DOMNamedNodeMap;
@@ -386,6 +386,6 @@ public: // should really be protected - ALH
 
 
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

@@ -26,11 +26,11 @@
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
 
-XERCES_CPP_NAMESPACE_USE
+using namespace XERCES_CPP_NAMESPACE;
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 class AttributeList;
-XERCES_CPP_NAMESPACE_END
+}
 
 
 class RedirectHandlers : public HandlerBase, public XMLEntityResolver

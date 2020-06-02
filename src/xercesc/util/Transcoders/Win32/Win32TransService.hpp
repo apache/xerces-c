@@ -26,7 +26,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <windows.h>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class CPMapEntry;
 
@@ -272,6 +272,6 @@ private :
     MemoryManager*  fManager;
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif

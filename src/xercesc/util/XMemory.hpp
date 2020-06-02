@@ -25,7 +25,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <cstdlib>
 
-XERCES_CPP_NAMESPACE_BEGIN
+namespace XERCES_CPP_NAMESPACE {
 
 class MemoryManager;
 
@@ -139,6 +139,6 @@ protected :
 #endif
 };
 
-XERCES_CPP_NAMESPACE_END
+}
 
 #endif
