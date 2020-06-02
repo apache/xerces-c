@@ -12,8 +12,7 @@ dnl @license AllPermissive
 AC_DEFUN([AC_CXX_HAVE_STD_THREAD],
 [AC_CACHE_CHECK(whether the compiler supports ISO C++11 <thread> and <mutex>,
 ac_cv_cxx_have_std_thread,
-[AC_REQUIRE([AC_CXX_HAVE_NAMESPACES])
- AC_REQUIRE([ACX_PTHREAD])
+[AC_REQUIRE([ACX_PTHREAD])
  AC_LANG_SAVE
  AC_LANG_CPLUSPLUS
  save_CFLAGS="$CFLAGS"
