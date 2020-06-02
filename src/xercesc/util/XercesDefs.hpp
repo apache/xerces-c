@@ -68,25 +68,6 @@ typedef XMLUInt32           UCS4Ch;
 
 
 // ---------------------------------------------------------------------------
-//  Handle boolean. If the platform can handle booleans itself, then we
-//  map our boolean type to the native type. Otherwise we create a default
-//  one as an int and define const values for true and false.
-//
-//  This flag will be set in the per-development environment stuff above.
-// ---------------------------------------------------------------------------
-#if defined(XERCES_NO_NATIVE_BOOL)
-  #ifndef bool
-    typedef int     bool;
-  #endif
-  #ifndef true
-    #define  true     1
-  #endif
-  #ifndef false
-    #define false 0
-  #endif
-#endif
-
-// ---------------------------------------------------------------------------
 //  According to whether the compiler supports L"" type strings, we define
 //  the XMLStrL() macro one way or another.
 // ---------------------------------------------------------------------------

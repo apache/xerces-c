@@ -24,9 +24,6 @@
 /* Define to 1 if you have the <arpa/nameser_compat.h> header file. */
 #cmakedefine HAVE_ARPA_NAMESER_COMPAT_H 1
 
-/* define if bool is a built-in type */
-#cmakedefine HAVE_BOOL 1
-
 /* Define to 1 if you have the `catclose' function. */
 #cmakedefine HAVE_CATCLOSE 1
 
@@ -372,9 +369,6 @@
 /* Define to have XMemory.hpp avoid declaring a matching operator delete for
    the placement operator new */
 #cmakedefine XERCES_NO_MATCHING_DELETE_OPERATOR 1
-
-/* Define if there is no native bool support in this environment */
-#cmakedefine XERCES_NO_NATIVE_BOOL 1
 
 /* Define to use backslash as an extra path delimiter character */
 #cmakedefine XERCES_PATH_DELIMITER_BACKSLASH 1
