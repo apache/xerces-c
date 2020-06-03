@@ -79,6 +79,15 @@ AM_SILENT_RULES([yes])
 AM_INIT_AUTOMAKE([foreign subdir-objects dist-bzip2 tar-ustar])
 AM_MAINTAINER_MODE
 
+# Checks for C++ standard version
+AX_CXX_COMPILE_STDCXX([17], [ext], [optional])
+if test "$HAVE_CXX17" = "0"; then
+  AX_CXX_COMPILE_STDCXX([14], [ext], [optional])
+  if test "$HAVE_CXX14" = "0"; then
+    AX_CXX_COMPILE_STDCXX([11], [ext], [optional])
+  fi
+fi
+
 # Check if rpath is disabled
 AC_MSG_CHECKING(whether to use rpath)
 AC_ARG_ENABLE(rpath,
